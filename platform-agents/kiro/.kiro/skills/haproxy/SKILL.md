@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(echo:*) Bash(haproxy:*)"
 
 Configures and operates HAProxy: config validation, hot reloads, and runtime inspection via the stats socket.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (haproxy)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Haproxy** (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `haproxy -c -f /etc/haproxy/haproxy.cfg`, `echo 'show info' | socat /run/haproxy/admin.sock -`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — infrastructure context for `haproxy`
+- Domain: Configures and operates HAProxy: config validation, hot reloads, and runtime inspection via the stats socket.
+- **config**: Validate and reload HAProxy configuration. — `haproxy -c -f /etc/haproxy/haproxy.cfg`
+- **stats**: Inspect runtime state via the admin socket. — `echo 'show info' | socat /run/haproxy/admin.sock -`
+- Check `knowledge` and `prerequisites: echo, haproxy`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `haproxy`
+- For `config`: Validate and reload HAProxy configuration. — decide which checks to run
+- For `stats`: Inspect runtime state via the admin socket. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `haproxy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Haproxy`, `Echo` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `haproxy:0557dfe1`
 
 # HAProxy
 

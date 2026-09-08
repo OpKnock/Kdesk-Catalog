@@ -1,15 +1,31 @@
 ---
 name: "terragrunt"
-description: "Wraps Terraform with Terragrunt: DRY configurations, remote state management, dependencies, run-all, and input validation."
+description: "Wraps Terraform with Terragrunt: DRY configurations, remote state management, dependencies, run-all, and input validation. Use when working with run and dependencies, config and state, devops or when the user mentions run and dependencies, config and state, devops."
 type: knowledge
 triggers: ["terragrunt", "run-and-dependencies", "config-and-state"]
 ---
 
-# terragrunt
-
 Wraps Terraform with Terragrunt: DRY configurations, remote state management, dependencies, run-all, and input validation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (terragrunt)
+
+You are **terragrunt** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `terragrunt`
+- Domain: Wraps Terraform with Terragrunt: DRY configurations, remote state management, dependencies, run-all, and input validation.
+- **run-and-dependencies**: Plan/apply modules and manage cross-module dependencies. — `terragrunt plan`
+- **config-and-state**: Generate remote state configs and read outputs across modules. — `terragrunt state list`
+- Check `knowledge` and `prerequisites: terragrunt`
+
+### 2. Reason — think for `terragrunt`
+- For `run-and-dependencies`: Plan/apply modules and manage cross-module dependencies. — decide which checks to run
+- For `config-and-state`: Generate remote state configs and read outputs across modules. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `terragrunt` tools
+- Tools: `Glob`, `Grep`, `Read`, `Terragrunt` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `terragrunt:4476f994`
 
 # Terragrunt
 
@@ -85,6 +101,10 @@ inputs = {
 ### run-and-dependencies
 Plan/apply modules and manage cross-module dependencies.
 
+**Parameters:**
+- `command` (string): Terraform command to wrap
+- `run-all` (boolean): Run across all modules in dependency order
+
 **Commands:**
 - `terragrunt plan`
 - `terragrunt apply -auto-approve`
@@ -101,6 +121,10 @@ Plan/apply modules and manage cross-module dependencies.
 ### config-and-state
 Generate remote state configs and read outputs across modules.
 
+**Parameters:**
+- `backend-config` (string): Backend config file
+- `target` (string): Resource or module target
+
 **Commands:**
 - `terragrunt state list`
 - `terragrunt output`
@@ -113,3 +137,7 @@ Generate remote state configs and read outputs across modules.
 - terragrunt output -json
 - terragrunt init --backend-config backend.tfvars
 - terragrunt hclfmt
+
+## References
+- [Terragrunt Documentation](https://terragrunt.gruntwork.io/docs/)
+- [Terragrunt Configuration](https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/)

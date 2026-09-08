@@ -1,8 +1,22 @@
-# Thrift
-
 Compile it IDL to client/server code in many languages.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (thrift)
+
+You are **Thrift** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `thrift`
+- Domain: Compile it IDL to client/server code in many languages.
+- **thrift-codegen**: Compile Thrift IDL to client/server code in many languages — `thrift --version`
+- Check `knowledge` and `prerequisites: thrift`
+
+### 2. Reason — think for `thrift`
+- For `thrift-codegen`: Compile Thrift IDL to client/server code in many languages — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `thrift` tools
+- Tools: `Glob`, `Grep`, `Read`, `Thrift` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `thrift:961981cf`
 
 # Apache Thrift
 
@@ -88,6 +102,11 @@ thrift --gen py --strict calculator.thrift
 ### thrift-codegen
 Compile Thrift IDL to client/server code in many languages
 
+**Parameters:**
+- `language` (string): Target language generator, e.g. py, go, java, cpp
+- `idl_file` (string): Input .thrift file
+- `out_dir` (string): Output directory with --out
+
 **Commands:**
 - `thrift --version`
 - `thrift --gen py shared.thrift`
@@ -99,3 +118,7 @@ Compile Thrift IDL to client/server code in many languages
 - thrift -r --gen go calculator.thrift
 - thrift --gen py shared.thrift
 - thrift -r --gen js:node calculator.thrift
+
+## References
+- [Thrift IDL docs](https://thrift.apache.org/docs/idl)
+- [Thrift compiler](https://thrift.apache.org/docs/UsingThrift)

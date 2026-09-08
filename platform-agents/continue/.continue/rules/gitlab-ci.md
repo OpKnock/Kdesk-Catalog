@@ -1,15 +1,29 @@
 ---
 name: "Gitlab Ci"
-description: "CI/CD pipelines with GitLab CI: validate pipeline YAML, run jobs via the API, manage runners, and debug job failures."
+description: "CI/CD pipelines with GitLab CI: validate pipeline YAML, run jobs via the API, manage runners, and debug job failures. Use when working with gitlab pipelines, api or when the user mentions gitlab pipelines, api."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Gitlab Ci
-
 CI/CD pipelines with GitLab CI: validate pipeline YAML, run jobs via the API, manage runners, and debug job failures.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (gitlab-ci)
+
+You are **Gitlab Ci** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `gitlab-ci`
+- Domain: CI/CD pipelines with GitLab CI: validate pipeline YAML, run jobs via the API, manage runners, and debug job failures.
+- **gitlab-pipelines**: Validate, run, and inspect GitLab CI pipelines and runners. — `curl -s -X POST --header 'Content-Type: application/json' --header "PRIVATE-TOKE`
+- Check `knowledge` and `prerequisites: gitlab-runner`
+
+### 2. Reason — think for `gitlab-ci`
+- For `gitlab-pipelines`: Validate, run, and inspect GitLab CI pipelines and runners. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gitlab-ci` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Gitlab-runner` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gitlab-ci:d83552bf`
 
 # GitLab CI
 
@@ -82,6 +96,11 @@ curl -s -X POST --header "PRIVATE-TOKEN: $GITLAB_TOKEN" https://gitlab.example.c
 ### gitlab-pipelines
 Validate, run, and inspect GitLab CI pipelines and runners.
 
+**Parameters:**
+- `project-id` (string): GitLab project id or URL-encoded path
+- `pipeline-id` (integer): Pipeline to inspect
+- `runner-token` (string): Runner registration token
+
 **Commands:**
 - `curl -s -X POST --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: $GITLAB_TOKEN" https://gitlab.example.com/api/v4/projects/$PROJECT_ID/ci/lint -d '{"content": "$(cat .gitlab-ci.yml | python -c "import sys,json;print(json.dumps(sys.stdin.read()))")"}' | jq '.errors'`
 - `curl -s --header "PRIVATE-TOKEN: $GITLAB_TOKEN" http://localhost:8080/api/v4/projects/$PROJECT_ID/pipelines?ref=main | jq '.[0] | {id, status}'`
@@ -94,3 +113,7 @@ Validate, run, and inspect GitLab CI pipelines and runners.
 - curl -s -X POST --header 'Content-Type: application/json' --header "PRIVATE-TOKEN: $GITLAB_TOKEN" https://gitlab.example.com/api/v4/projects/$PROJECT_ID/ci/lint -d '{"content": "$(cat .gitlab-ci.yml | python -c "import sys,json;print(json.dumps(sys.stdin.read()))")"}' | jq '.errors'
 - curl -s --header "PRIVATE-TOKEN: $GITLAB_TOKEN" http://localhost:8080/api/v4/projects/$PROJECT_ID/pipelines?ref=main | jq '.[0] | {id, status}'
 - gitlab-runner list
+
+## References
+- [GitLab CI/CD docs](https://docs.gitlab.com/ee/ci/)
+- [GitLab REST API pipelines](https://docs.gitlab.com/ee/api/pipelines.html)

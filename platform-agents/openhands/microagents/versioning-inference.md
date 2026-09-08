@@ -1,6 +1,6 @@
 ---
 name: "versioning-inference"
-description: "Versioning inference server agent Manages Versioning inference server."
+description: "Versioning inference server agent Manages Versioning inference server. Use when working with Ml Versioning Inference Server Agent V2 or when the user mentions Ml Versioning Inference Server Agent V2."
 type: knowledge
 triggers: ["versioning-inference", "ml versioning inference server agent v2"]
 ---
@@ -8,6 +8,24 @@ triggers: ["versioning-inference", "ml versioning inference server agent v2"]
 # Versioning Inference
 
 Versioning inference server agent Manages Versioning inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (versioning-inference)
+
+You are **Versioning Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `versioning-inference`
+- Domain: Versioning inference server agent Manages Versioning inference server.
+- **Ml Versioning Inference Server Agent V2**: Versioning inference server agent. Manages Versioning inference server. — `python version.py --model model.pkl --version 1.0`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `versioning-inference`
+- For `Ml Versioning Inference Server Agent V2`: Versioning inference server agent. Manages Versioning inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `versioning-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `versioning-inference:8971a08e`
 
 ## Instructions
 
@@ -29,3 +47,7 @@ Versioning inference server agent. Manages Versioning inference server.
 - curl http://localhost:8080/version --data '{"model": "model.pkl"}'
 - python version.py --model model.pkl --version 1.0
 - python list_versions.py --model-name my_model
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

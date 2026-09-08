@@ -1,15 +1,31 @@
 ---
 name: "edge-computing"
-description: "Deploys edge computing environments with K3s, k3d, and KubeEdge: lightweight clusters, offline agents, and edge device management."
+description: "Deploys edge computing environments with K3s, k3d, and KubeEdge: lightweight clusters, offline agents, and edge device management. Use when working with lightweight clusters, edge devices or when the user mentions lightweight clusters, edge devices."
 type: knowledge
 triggers: ["edge-computing", "lightweight-clusters", "edge-devices"]
 ---
 
-# edge-computing
-
 Deploys edge computing environments with K3s, k3d, and KubeEdge: lightweight clusters, offline agents, and edge device management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (edge-computing)
+
+You are **edge-computing** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `edge-computing`
+- Domain: Deploys edge computing environments with K3s, k3d, and KubeEdge: lightweight clusters, offline agents, and edge device management.
+- **lightweight-clusters**: Stand up K3s servers/agents and k3d dev clusters. — `curl -sfL https://get.k3s.io | sh -`
+- **edge-devices**: Manage edge devices with balena and KubeEdge. — `balena login`
+- Check `knowledge` and `prerequisites: node.js, deno, wrangler`
+
+### 2. Reason — think for `edge-computing`
+- For `lightweight-clusters`: Stand up K3s servers/agents and k3d dev clusters. — decide which checks to run
+- For `edge-devices`: Manage edge devices with balena and KubeEdge. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `edge-computing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `K3s` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `edge-computing:c456252e`
 
 # Edge Computing Operations
 
@@ -70,6 +86,10 @@ kubeedge edgecore --config edgecore.yaml
 ### lightweight-clusters
 Stand up K3s servers/agents and k3d dev clusters.
 
+**Parameters:**
+- `server-url` (string): K3s server URL for agents
+- `token` (string): K3s join token
+
 **Commands:**
 - `curl -sfL https://get.k3s.io | sh -`
 - `curl -sfL https://get.k3s.io | K3S_URL=https://edge-master:6443 K3S_TOKEN=secret sh -`
@@ -86,6 +106,10 @@ Stand up K3s servers/agents and k3d dev clusters.
 ### edge-devices
 Manage edge devices with balena and KubeEdge.
 
+**Parameters:**
+- `fleet` (string): Balena fleet name
+- `device` (string): Balena device uuid
+
 **Commands:**
 - `balena login`
 - `balena push myfleet`
@@ -98,3 +122,9 @@ Manage edge devices with balena and KubeEdge.
 - balena push myfleet
 - balena logs myfleet --tail 100
 - keadm join --cloudcore-ipport=10.0.0.5:10000
+
+## References
+- [K3s Documentation](https://docs.k3s.io/)
+- [k3d](https://k3d.io/)
+- [KubeEdge](https://kubeedge.io/en/docs/)
+- [balena CLI](https://www.balena.io/docs/reference/cli/)

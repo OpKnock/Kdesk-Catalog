@@ -5,27 +5,25 @@ description: "Secure Ktor applications: JWT bearer validation, Basic auth, sessi
 
 Secure Ktor applications: JWT bearer validation, Basic auth, session auth, and protected-route testing with curl.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (ktor-auth)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Ktor Auth** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `./gradlew run`, `curl -s -u alice:password http://localhost:8080/basic`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `ktor-auth`
+- Domain: Secure Ktor applications: JWT bearer validation, Basic auth, session auth, and protected-route testing with curl.
+- **jwt-auth**: Configure and test JWT authentication in Ktor. — `./gradlew run`
+- **basic-auth**: Configure Basic auth and test credentials via curl. — `curl -s -u alice:password http://localhost:8080/basic`
+- Check `knowledge` and `prerequisites: ./gradlew`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `ktor-auth`
+- For `jwt-auth`: Configure and test JWT authentication in Ktor. — decide which checks to run
+- For `basic-auth`: Configure Basic auth and test credentials via curl. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `ktor-auth` tools
+- Tools: `Glob`, `Grep`, `Read`, `./gradlew`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ktor-auth:47820f1e`
 
 # Ktor Auth
 

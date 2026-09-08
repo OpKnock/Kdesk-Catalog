@@ -1,8 +1,24 @@
-# documentation-devtools
-
 Builds project documentation sites with MkDocs, Sphinx, and Docusaurus: setup, build, serve, deploy, and API docs generation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (documentation-devtools)
+
+You are **documentation-devtools** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `documentation-devtools`
+- Domain: Builds project documentation sites with MkDocs, Sphinx, and Docusaurus: setup, build, serve, deploy, and API docs generation.
+- **mkdocs**: Create and build Python-based documentation sites from Markdown. — `mkdocs new mydocs`
+- **sphinx-and-docusaurus**: Generate API docs with Sphinx and JS sites with Docusaurus. — `sphinx-quickstart docs`
+- Check `knowledge` and `prerequisites: make, mkdocs, npm, npx`
+
+### 2. Reason — think for `documentation-devtools`
+- For `mkdocs`: Create and build Python-based documentation sites from Markdown. — decide which checks to run
+- For `sphinx-and-docusaurus`: Generate API docs with Sphinx and JS sites with Docusaurus. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `documentation-devtools` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mkdocs`, `Sphinx-quickstart` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `documentation-devtools:944c9885`
 
 # Documentation Engineering
 
@@ -71,6 +87,10 @@ plugins:
 ### mkdocs
 Create and build Python-based documentation sites from Markdown.
 
+**Parameters:**
+- `project` (string): Project directory name
+- `strict` (boolean): Fail on warnings
+
 **Commands:**
 - `mkdocs new mydocs`
 - `mkdocs serve`
@@ -87,6 +107,10 @@ Create and build Python-based documentation sites from Markdown.
 ### sphinx-and-docusaurus
 Generate API docs with Sphinx and JS sites with Docusaurus.
 
+**Parameters:**
+- `source-dir` (string): Docs source directory
+- `build-dir` (string): HTML output directory
+
 **Commands:**
 - `sphinx-quickstart docs`
 - `sphinx-build -b html docs docs/_build`
@@ -99,3 +123,8 @@ Generate API docs with Sphinx and JS sites with Docusaurus.
 - sphinx-quickstart docs
 - sphinx-build -b html docs docs/_build
 - npm run build --prefix site
+
+## References
+- [MkDocs Documentation](https://www.mkdocs.org/)
+- [Sphinx Documentation](https://www.sphinx-doc.org/en/master/)
+- [Docusaurus](https://docusaurus.io/docs)

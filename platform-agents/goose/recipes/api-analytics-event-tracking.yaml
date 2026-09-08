@@ -2,9 +2,19 @@ title: Api Analytics Event Tracking
 description: API analytics event tracking and funnels - capture custom events via Segment HTTP API, analyze
   conversion, and build retention views.
 version: 2.0.0
-instructions: "# Api Analytics Event Tracking\n\nAPI analytics event tracking and funnels - capture custom\
-  \ events via Segment HTTP API, analyze conversion, and build retention views.\n\n## Instructions\n\n\
-  # API Analytics (Event Tracking)\n\n## What this skill does\nTrack custom product events around your\
+instructions: "API analytics event tracking and funnels - capture custom events via Segment HTTP API,\
+  \ analyze conversion, and build retention views.\n\n## Agentic Workflow: Read -> Reason -> Act (api-analytics-event-tracking)\n\
+  \nYou are **Api Analytics Event Tracking** (sre) — a sub-agent that **Reads, Reasons, and Acts** via\
+  \ `allowed-tools`.\n\n### 1. Read — sre context for `api-analytics-event-tracking`\n- Domain: API analytics\
+  \ event tracking and funnels - capture custom events via Segment HTTP API, analyze conversion, and build\
+  \ retention views.\n- **event-tracking**: Track API events and analyze funnels — `curl -s -X POST https://api.segment.io/v1/track\
+  \ -u 'WRITE_KEY:' -H 'Content-Type`\n- Check `knowledge` and `prerequisites: prometheus, grafana, elasticsearch`\n\
+  \n### 2. Reason — think for `api-analytics-event-tracking`\n- For `event-tracking`: Track API events\
+  \ and analyze funnels — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `api-analytics-event-tracking` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `api-analytics-event-tracking:dde50a31`\n\
+  \n# API Analytics (Event Tracking)\n\n## What this skill does\nTrack custom product events around your\
   \ API - signups, orders, feature use - via the Segment HTTP API, then analyze funnels and retention\
   \ to understand conversion.\n\n## When to use\n- Measuring feature adoption\n- Building conversion funnels\n\
   - Cohort retention analysis\n\n## Real commands\n```bash\n# Track an event\ncurl -s -X POST https://api.segment.io/v1/track\
@@ -21,16 +31,19 @@ instructions: "# Api Analytics Event Tracking\n\nAPI analytics event tracking an
   \ events from server-side, not the browser, for APIs\n- Batch events and retry with backoff\n\n## Testing\n\
   ```bash\ncurl -s -X POST http://localhost:8080/api/analytics/test-event -H 'Content-Type: application/json'\
   \ -d '{\"name\":\"Test\"}'\ncurl -s 'http://localhost:8080/api/analytics/events?event=Test' | jq '.total'\n\
-  ```\n\n## Capabilities\n\n### event-tracking\nTrack API events and analyze funnels\n\n**Commands:**\n\
-  - `curl -s -X POST https://api.segment.io/v1/track -u 'WRITE_KEY:' -H 'Content-Type: application/json'\
-  \ -d '{\"userId\":\"u_123\",\"event\":\"API Call\",\"properties\":{\"endpoint\":\"/v1/orders\"}}'`\n\
-  - `curl -s -X POST https://api.segment.io/v1/identify -u 'WRITE_KEY:' -H 'Content-Type: application/json'\
-  \ -d '{\"userId\":\"u_123\",\"traits\":{\"plan\":\"enterprise\"}}'`\n- `curl -s 'http://localhost:8080/api/analytics/funnel?steps=visit,create_order,pay'\
+  ```\n\n## Capabilities\n\n### event-tracking\nTrack API events and analyze funnels\n\n**Parameters:**\n\
+  - `event` (string): Event name, e.g. API Call\n- `steps` (string): Comma-separated funnel steps\n- `cohort`\
+  \ (string): Cohort granularity: day, week, month\n\n**Commands:**\n- `curl -s -X POST https://api.segment.io/v1/track\
+  \ -u 'WRITE_KEY:' -H 'Content-Type: application/json' -d '{\"userId\":\"u_123\",\"event\":\"API Call\"\
+  ,\"properties\":{\"endpoint\":\"/v1/orders\"}}'`\n- `curl -s -X POST https://api.segment.io/v1/identify\
+  \ -u 'WRITE_KEY:' -H 'Content-Type: application/json' -d '{\"userId\":\"u_123\",\"traits\":{\"plan\"\
+  :\"enterprise\"}}'`\n- `curl -s 'http://localhost:8080/api/analytics/funnel?steps=visit,create_order,pay'\
   \ | jq '.steps[].conversion'`\n- `curl -s 'http://localhost:8080/api/analytics/retention?cohort=day'\
   \ | jq '.cohorts[-1]'`\n- `curl -s http://localhost:8080/api/analytics/events -H 'X-API-Key: key' |\
   \ jq '.events | group_by(.name) | map({name: .[0].name, count: length})'`\n\n**Examples:**\n- curl -s\
   \ -X POST https://api.segment.io/v1/track -u 'WRITE_KEY:' -d '{\"userId\":\"u_123\",\"event\":\"Checkout\
   \ Started\",\"properties\":{\"cart\":{\"total\":99.9}}}'\n- curl -s 'http://localhost:8080/api/analytics/funnel?steps=signup,activate,invite'\
   \ | jq '.steps'\n- curl -s 'http://localhost:8080/api/analytics/events?event=API%20Call&from=2024-06-01'\
-  \ | jq '.total'"
+  \ | jq '.total'\n\n## References\n- [Segment HTTP Tracking API](https://segment.com/docs/connections/sources/catalog/libraries/server/http/)\n\
+  - [Amplitude HTTP API](https://developers.amplitude.com/docs/http-api-v2)"
 prompt: Act as Api Analytics Event Tracking and handle the task per the instructions.

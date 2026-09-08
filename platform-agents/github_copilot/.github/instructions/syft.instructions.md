@@ -4,27 +4,25 @@ applyTo: "**/*.json **/*.r **/*.sh"
 
 Generate SBOMs from images, directories, and binaries. Emit SBOMs in standardized formats. and syft formats.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (syft)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **syft** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `syft alpine:latest`, `syft alpine:latest -o spdx-json > sbom.spdx.json`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `syft`
+- Domain: Generate SBOMs from images, directories, and binaries. Emit SBOMs in standardized formats. and syft formats.
+- **sbom-generation**: Generate SBOMs from images, directories, and binaries. — `syft alpine:latest`
+- **sbom-output**: Emit SBOMs in standardized formats. — `syft alpine:latest -o spdx-json > sbom.spdx.json`
+- Check `knowledge` and `prerequisites: syft`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `syft`
+- For `sbom-generation`: Generate SBOMs from images, directories, and binaries. — decide which checks to run
+- For `sbom-output`: Emit SBOMs in standardized formats. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `syft` tools
+- Tools: `Glob`, `Grep`, `Read`, `Syft` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `syft:b296be62`
 
 # Syft
 

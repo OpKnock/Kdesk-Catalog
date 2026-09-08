@@ -2,9 +2,20 @@ title: Nested Resources
 description: Designs and tests REST API nested resource hierarchies with URI structures, depth limits,
   pagination, and RFC 8288 Link headers for client navigation.
 version: 2.0.0
-instructions: "# Nested Resources\n\nDesigns and tests REST API nested resource hierarchies with URI structures,\
-  \ depth limits, pagination, and RFC 8288 Link headers for client navigation.\n\n## Instructions\n\n\
-  # Nested Resources\n\nNested resources model parent-child relationships directly in the URI, e.g. /users/{id}/posts/{postId}.\n\
+instructions: "Designs and tests REST API nested resource hierarchies with URI structures, depth limits,\
+  \ pagination, and RFC 8288 Link headers for client navigation.\n\n## Agentic Workflow: Read -> Reason\
+  \ -> Act (nested-resources)\n\nYou are **Nested Resources** (api/general) — a sub-agent that **Reads,\
+  \ Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `nested-resources`\n- Domain:\
+  \ Designs and tests REST API nested resource hierarchies with URI structures, depth limits, pagination,\
+  \ and RFC 8288 Link headers for client navigation.\n- **nested-resource-design**: Design and test nested\
+  \ REST resources: URI structure, sub-resources, and linked navigation. — `curl -s https://api.your-app.test/v1/users/42/posts`\n\
+  - Check `knowledge` references before acting\n\n### 2. Reason — think for `nested-resources`\n- For\
+  \ `nested-resource-design`: Design and test nested REST resources: URI structure, sub-resources, and\
+  \ linked navigation. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `nested-resources` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record\
+  \ evidence (paths, checksums)\n- Fingerprint: `nested-resources:06030e4b`\n\n# Nested Resources\n\n\
+  Nested resources model parent-child relationships directly in the URI, e.g. /users/{id}/posts/{postId}.\n\
   \n## What this skill does\n\n- Designs URI hierarchies that mirror domain relationships\n- Decides when\
   \ nesting is appropriate vs top-level resources\n- Tests endpoints and link relations with curl\n\n\
   ## When to use\n\n- Designing a new REST API from scratch\n- Reviewing an API where nesting is inconsistent\n\
@@ -19,11 +30,14 @@ instructions: "# Nested Resources\n\nDesigns and tests REST API nested resource 
   \ when flat\n\n```\nGET /posts?author=42\nPOST /posts { \"user_id\": 42 }\n```\n\n## Best practices\n\
   \n- Return `Link` headers or a `links` object for navigation\n- Keep names plural and consistent across\
   \ levels\n- Document depth limit in the OpenAPI spec\n\n## Capabilities\n\n### nested-resource-design\n\
-  Design and test nested REST resources: URI structure, sub-resources, and linked navigation.\n\n**Commands:**\n\
-  - `curl -s https://api.your-app.test/v1/users/42/posts`\n- `curl -s https://api.your-app.test/v1/users/42/posts/7/comments`\n\
-  - `curl -sI https://api.your-app.test/v1/users/42/posts`\n- `curl -s https://api.your-app.test/v1/users/42/posts?page=2&per_page=20`\n\
-  - `curl -s https://api.your-app.test/v1/users/42/posts/7 | jq '.links'`\n\n**Examples:**\n- curl -s\
-  \ https://api.your-app.test/v1/teams/3/members/5 | jq .\n- curl -s 'https://api.your-app.test/v1/users/42/posts?sort=created_at.desc'\
-  \ | jq '.data'\n- curl -sI -X POST -H 'Content-Type: application/json' -d '{\"title\":\"t\"}' https://api.your-app.test/v1/users/42/posts\
-  \ | grep -i location"
+  Design and test nested REST resources: URI structure, sub-resources, and linked navigation.\n\n**Parameters:**\n\
+  - `base_url` (string): API base URL\n- `parent_resource` (string): Parent resource path segment\n- `depth`\
+  \ (integer): Maximum nesting depth allowed\n\n**Commands:**\n- `curl -s https://api.your-app.test/v1/users/42/posts`\n\
+  - `curl -s https://api.your-app.test/v1/users/42/posts/7/comments`\n- `curl -sI https://api.your-app.test/v1/users/42/posts`\n\
+  - `curl -s https://api.your-app.test/v1/users/42/posts?page=2&per_page=20`\n- `curl -s https://api.your-app.test/v1/users/42/posts/7\
+  \ | jq '.links'`\n\n**Examples:**\n- curl -s https://api.your-app.test/v1/teams/3/members/5 | jq .\n\
+  - curl -s 'https://api.your-app.test/v1/users/42/posts?sort=created_at.desc' | jq '.data'\n- curl -sI\
+  \ -X POST -H 'Content-Type: application/json' -d '{\"title\":\"t\"}' https://api.your-app.test/v1/users/42/posts\
+  \ | grep -i location\n\n## References\n- [Microsoft REST API design](https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design)\n\
+  - [RESTful API Design (Fowler)](https://restfulapi.net/resource-naming/)"
 prompt: Act as Nested Resources and handle the task per the instructions.

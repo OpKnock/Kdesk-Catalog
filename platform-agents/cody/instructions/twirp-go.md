@@ -1,8 +1,22 @@
-# Twirp Go
-
 Builds Twirp services in Go using protoc code generation. Produces typed server skeletons and client stubs from protobuf definitions, runs the HTTP/JSON gateway, and verifies end-to-end with go test and curl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (twirp-go)
+
+You are **Twirp Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `twirp-go`
+- Domain: Builds Twirp services in Go using protoc code generation. Produces typed server skeletons and client stubs from protobuf definitions, runs the HTTP/JSON gateway, and verifies end-to-end with go test a
+- **go-codegen**: Generate Twirp Go code and call the service — `protoc --go_out=. --twirp_out=. --go_opt=paths=source_relative types.proto`
+- Check `knowledge` and `prerequisites: protoc, go`
+
+### 2. Reason — think for `twirp-go`
+- For `go-codegen`: Generate Twirp Go code and call the service — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `twirp-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Protoc`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `twirp-go:c0483e64`
 
 # Twirp Go
 
@@ -81,6 +95,11 @@ go test ./...
 ### go-codegen
 Generate Twirp Go code and call the service
 
+**Parameters:**
+- `proto` (string): Input .proto file
+- `package` (string): Go package path for output
+- `service` (string): Service name from the proto
+
 **Commands:**
 - `protoc --go_out=. --twirp_out=. --go_opt=paths=source_relative types.proto`
 - `go get github.com/twitchtv/twirp`
@@ -92,3 +111,8 @@ Generate Twirp Go code and call the service
 - protoc --go_out=. --twirp_out=. types.proto
 - go run ./cmd/server
 - go test ./...
+
+## References
+- [Twirp Go quickstart](https://github.com/twitchtv/twirp/tree/main/example)
+- [protoc-gen-twirp plugin](https://github.com/twitchtv/twirp/tree/main/protoc-gen-twirp)
+- [Twirp error handling](https://twitchtv.github.io/twirp/docs/errors.html)

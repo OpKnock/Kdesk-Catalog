@@ -1,15 +1,31 @@
 ---
 name: "git-hooks"
-description: "Automates git hooks with pre-commit, Husky, and core.hooksPath: linting, formatting, secret scanning, and commit message checks."
+description: "Automates git hooks with pre-commit, Husky, and core.hooksPath: linting, formatting, secret scanning, and commit message checks. Use when working with pre commit framework, husky and custom hooks, devtools or when the user mentions pre commit framework, husky and custom hooks, devtools."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# git-hooks
-
 Automates git hooks with pre-commit, Husky, and core.hooksPath: linting, formatting, secret scanning, and commit message checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (git-hooks)
+
+You are **git-hooks** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `git-hooks`
+- Domain: Automates git hooks with pre-commit, Husky, and core.hooksPath: linting, formatting, secret scanning, and commit message checks.
+- **pre-commit-framework**: Install and configure pre-commit hooks for Python/any-repo workflows. — `pre-commit install`
+- **husky-and-custom-hooks**: Set up Husky hooks and custom scripts for Node projects. — `npx husky init`
+- Check `knowledge` and `prerequisites: git, npx, pre-commit`
+
+### 2. Reason — think for `git-hooks`
+- For `pre-commit-framework`: Install and configure pre-commit hooks for Python/any-repo workflows. — decide which checks to run
+- For `husky-and-custom-hooks`: Set up Husky hooks and custom scripts for Node projects. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `git-hooks` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pre-commit`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `git-hooks:f67ccaf7`
 
 # Git Hooks Automation
 
@@ -76,6 +92,10 @@ repos:
 ### pre-commit-framework
 Install and configure pre-commit hooks for Python/any-repo workflows.
 
+**Parameters:**
+- `hook` (string): Hook ID to run
+- `hook-type` (string): Hook type to install, e.g. pre-push
+
 **Commands:**
 - `pre-commit install`
 - `pre-commit install --hook-type pre-push`
@@ -92,6 +112,10 @@ Install and configure pre-commit hooks for Python/any-repo workflows.
 ### husky-and-custom-hooks
 Set up Husky hooks and custom scripts for Node projects.
 
+**Parameters:**
+- `hook-file` (string): Hook file path, e.g. .husky/pre-commit
+- `command` (string): Command the hook runs
+
 **Commands:**
 - `npx husky init`
 - `npx husky add .husky/pre-commit 'npx lint-staged'`
@@ -104,3 +128,9 @@ Set up Husky hooks and custom scripts for Node projects.
 - npx husky add .husky/pre-commit 'npx lint-staged'
 - npx husky add .husky/commit-msg 'npx commitlint --edit $1'
 - git config core.hooksPath .husky
+
+## References
+- [pre-commit Documentation](https://pre-commit.com/)
+- [Git Hooks (git-scm)](https://git-scm.com/docs/githooks)
+- [Husky](https://typicode.github.io/husky/)
+- [commitlint](https://commitlint.js.org/)

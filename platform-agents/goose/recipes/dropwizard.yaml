@@ -2,31 +2,43 @@ title: Dropwizard
 description: 'Operates Dropwizard services: validates config, runs DB migrations, and checks healthchecks
   and metrics on the admin port from the fat jar.'
 version: 2.0.0
-instructions: "# Dropwizard\n\nOperates Dropwizard services: validates config, runs DB migrations, and\
-  \ checks healthchecks and metrics on the admin port from the fat jar.\n\n## Instructions\n\n# Dropwizard\n\
-  \n## What this skill does\n\nDropwizard bundles Jetty, Jersey, Jackson, and Dropwizard Metrics into\
-  \ one fat jar. The CLI supports `server`, `check`, and `db` commands; the admin port (8081 by default)\
-  \ exposes healthchecks, metrics, and threads.\n\n## When to use\n\n- Starting or stopping a Dropwizard\
-  \ service\n- Pre-deploy config validation and DB migration\n- Investigating unhealthy services via the\
-  \ admin endpoints\n\n## Real commands\n\n```bash\n# Validate config, then run\njava -jar app.jar check\
-  \ config.yml\njava -jar app.jar server config.yml\n\n# Run or verify DB migrations\njava -jar app.jar\
-  \ db migrate config.yml\njava -jar app.jar db status config.yml\n\n# Healthchecks and metrics on the\
-  \ admin port\ncurl -s localhost:8081/healthcheck | jq '.deadlocks, .database'\ncurl -s localhost:8081/metrics\
-  \ | jq '.meters'\ncurl -s localhost:8081/threads | head -50\n```\n\n## config.yml example\n\n```yaml\n\
-  server:\n  applicationConnectors:\n    - type: http\n      port: 8080\n  adminConnectors:\n    - type:\
-  \ http\n      port: 8081\ndatabase:\n  driverClass: org.postgresql.Driver\n  user: app\n  password:\
-  \ secret\n  url: jdbc:postgresql://db:5432/app\nlogging:\n  level: INFO\n```\n\n## Healthcheck example\n\
-  \n```java\nimport com.codahale.metrics.health.HealthCheck;\n\npublic class DatabaseHealthCheck extends\
-  \ HealthCheck {\n    @Override\n    protected Result check() {\n        return db.isValid(2) ? Result.healthy()\
-  \ : Result.unhealthy(\"db unreachable\");\n    }\n}\n```\n\n## Testing\n\n```bash\n# Gate deploys on\
-  \ healthcheck output\ncurl -sf localhost:8081/healthcheck | jq -e 'all(.; .healthy == true)'\n```\n\n\
-  ## Best practices\n\n- Always run `check` before `server` in CI.\n- Use `db status` to confirm migration\
-  \ drift before rollout.\n- Poll /healthcheck (not /metrics) for load balancer health.\n- Set adminConnectors\
-  \ to a private network or firewall it.\n\n## Capabilities\n\n### dropwizard-server\nStart, validate,\
-  \ migrate, and monitor a Dropwizard application from its fat jar.\n\n**Commands:**\n- `java -jar app.jar\
-  \ server config.yml`\n- `java -jar app.jar check config.yml`\n- `java -jar app.jar db migrate config.yml`\n\
-  - `curl -s localhost:8081/healthcheck | jq`\n- `curl -s localhost:8081/metrics | jq '.meters.\"com.example.orders.api\"\
-  '`\n- `curl -s localhost:8081/threads | head -50`\n\n**Examples:**\n- java -jar app.jar check config.yml\
-  \ && java -jar app.jar server config.yml\n- curl -s localhost:8081/healthcheck | jq '.deadlocks, .database'\n\
-  - java -jar app.jar db migrate config.yml --migrations migrations.xml"
+instructions: "Operates Dropwizard services: validates config, runs DB migrations, and checks healthchecks\
+  \ and metrics on the admin port from the fat jar.\n\n## Agentic Workflow: Read -> Reason -> Act (dropwizard)\n\
+  \nYou are **Dropwizard** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `dropwizard`\n- Domain: Operates Dropwizard services: validates config,\
+  \ runs DB migrations, and checks healthchecks and metrics on the admin port from the fat jar.\n- **dropwizard-server**:\
+  \ Start, validate, migrate, and monitor a Dropwizard application from its fat jar. — `java -jar app.jar\
+  \ server config.yml`\n- Check `knowledge` and `prerequisites: java`\n\n### 2. Reason — think for `dropwizard`\n\
+  - For `dropwizard-server`: Start, validate, migrate, and monitor a Dropwizard application from its fat\
+  \ jar. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `dropwizard` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Java`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record\
+  \ evidence (paths, checksums)\n- Fingerprint: `dropwizard:7d5f2055`\n\n# Dropwizard\n\n## What this\
+  \ skill does\n\nDropwizard bundles Jetty, Jersey, Jackson, and Dropwizard Metrics into one fat jar.\
+  \ The CLI supports `server`, `check`, and `db` commands; the admin port (8081 by default) exposes healthchecks,\
+  \ metrics, and threads.\n\n## When to use\n\n- Starting or stopping a Dropwizard service\n- Pre-deploy\
+  \ config validation and DB migration\n- Investigating unhealthy services via the admin endpoints\n\n\
+  ## Real commands\n\n```bash\n# Validate config, then run\njava -jar app.jar check config.yml\njava -jar\
+  \ app.jar server config.yml\n\n# Run or verify DB migrations\njava -jar app.jar db migrate config.yml\n\
+  java -jar app.jar db status config.yml\n\n# Healthchecks and metrics on the admin port\ncurl -s localhost:8081/healthcheck\
+  \ | jq '.deadlocks, .database'\ncurl -s localhost:8081/metrics | jq '.meters'\ncurl -s localhost:8081/threads\
+  \ | head -50\n```\n\n## config.yml example\n\n```yaml\nserver:\n  applicationConnectors:\n    - type:\
+  \ http\n      port: 8080\n  adminConnectors:\n    - type: http\n      port: 8081\ndatabase:\n  driverClass:\
+  \ org.postgresql.Driver\n  user: app\n  password: secret\n  url: jdbc:postgresql://db:5432/app\nlogging:\n\
+  \  level: INFO\n```\n\n## Healthcheck example\n\n```java\nimport com.codahale.metrics.health.HealthCheck;\n\
+  \npublic class DatabaseHealthCheck extends HealthCheck {\n    @Override\n    protected Result check()\
+  \ {\n        return db.isValid(2) ? Result.healthy() : Result.unhealthy(\"db unreachable\");\n    }\n\
+  }\n```\n\n## Testing\n\n```bash\n# Gate deploys on healthcheck output\ncurl -sf localhost:8081/healthcheck\
+  \ | jq -e 'all(.; .healthy == true)'\n```\n\n## Best practices\n\n- Always run `check` before `server`\
+  \ in CI.\n- Use `db status` to confirm migration drift before rollout.\n- Poll /healthcheck (not /metrics)\
+  \ for load balancer health.\n- Set adminConnectors to a private network or firewall it.\n\n## Capabilities\n\
+  \n### dropwizard-server\nStart, validate, migrate, and monitor a Dropwizard application from its fat\
+  \ jar.\n\n**Parameters:**\n- `jar-file` (string): Path to the Dropwizard fat jar\n- `config-file` (string):\
+  \ Path to the YAML config file\n- `command` (string): Dropwizard command: server, check, db migrate,\
+  \ db status\n\n**Commands:**\n- `java -jar app.jar server config.yml`\n- `java -jar app.jar check config.yml`\n\
+  - `java -jar app.jar db migrate config.yml`\n- `curl -s localhost:8081/healthcheck | jq`\n- `curl -s\
+  \ localhost:8081/metrics | jq '.meters.\"com.example.orders.api\"'`\n- `curl -s localhost:8081/threads\
+  \ | head -50`\n\n**Examples:**\n- java -jar app.jar check config.yml && java -jar app.jar server config.yml\n\
+  - curl -s localhost:8081/healthcheck | jq '.deadlocks, .database'\n- java -jar app.jar db migrate config.yml\
+  \ --migrations migrations.xml\n\n## References\n- [Dropwizard Documentation](https://www.dropwizard.io/en/stable/)"
 prompt: Act as Dropwizard and handle the task per the instructions.

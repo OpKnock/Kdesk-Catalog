@@ -1,8 +1,24 @@
-# dprint
-
 Formats multiple languages with dprint, the fast pluggable formatter, including plugin config and CI integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (dprint)
+
+You are **dprint** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `dprint`
+- Domain: Formats multiple languages with dprint, the fast pluggable formatter, including plugin config and CI integration.
+- **dprint-format**: Format code with dprint plugins. — `npm install -g dprint`
+- **dprint-config**: Manage plugins and configuration. — `dprint config add typescript`
+- Check `knowledge` and `prerequisites: dprint, npm`
+
+### 2. Reason — think for `dprint`
+- For `dprint-format`: Format code with dprint plugins. — decide which checks to run
+- For `dprint-config`: Manage plugins and configuration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `dprint` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Dprint` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `dprint:5c094be4`
 
 # dprint
 
@@ -66,6 +82,10 @@ dprint output-resolved-config
 ### dprint-format
 Format code with dprint plugins.
 
+**Parameters:**
+- `paths` (string): Paths or globs
+- `check` (boolean): Verify without writing
+
 **Commands:**
 - `npm install -g dprint`
 - `dprint init`
@@ -81,6 +101,10 @@ Format code with dprint plugins.
 ### dprint-config
 Manage plugins and configuration.
 
+**Parameters:**
+- `plugin` (string): Plugin name
+- `version` (string): Plugin version to pin
+
 **Commands:**
 - `dprint config add typescript`
 - `dprint config add markdown`
@@ -90,3 +114,7 @@ Manage plugins and configuration.
 **Examples:**
 - dprint config add "prettier:toml"
 - dprint output-resolved-config > dprint-resolved.json
+
+## References
+- [dprint Docs](https://dprint.dev)
+- [dprint on GitHub](https://github.com/dprint/dprint)

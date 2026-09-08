@@ -1,15 +1,29 @@
 ---
 name: "Fluent Bit"
-description: "Lightweight log and metric forwarding with Fluent Bit: configure inputs, parsers, and outputs, and validate configs before running."
+description: "Lightweight log and metric forwarding with Fluent Bit: configure inputs, parsers, and outputs, and validate configs before running. Use when working with fluentbit config, api or when the user mentions fluentbit config, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Fluent Bit
-
 Lightweight log and metric forwarding with Fluent Bit: configure inputs, parsers, and outputs, and validate configs before running.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (fluent-bit)
+
+You are **Fluent Bit** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `fluent-bit`
+- Domain: Lightweight log and metric forwarding with Fluent Bit: configure inputs, parsers, and outputs, and validate configs before running.
+- **fluentbit-config**: Validate configs, run Fluent Bit with tail/forward inputs, and test outputs. — `fluent-bit --dry-run -c fluent-bit.conf`
+- Check `knowledge` and `prerequisites: fluent-bit`
+
+### 2. Reason — think for `fluent-bit`
+- For `fluentbit-config`: Validate configs, run Fluent Bit with tail/forward inputs, and test outputs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `fluent-bit` tools
+- Tools: `Glob`, `Grep`, `Read`, `Fluent-bit` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fluent-bit:137e9721`
 
 # Fluent Bit
 
@@ -87,6 +101,11 @@ echo '{"log_level":"ERROR","msg":"boom"}' >> /tmp/demo.log
 ### fluentbit-config
 Validate configs, run Fluent Bit with tail/forward inputs, and test outputs.
 
+**Parameters:**
+- `config-file` (string): Path to fluent-bit.conf
+- `input-plugin` (string): tail, forward, syslog, dummy
+- `output-plugin` (string): stdout, es, loki, s3
+
 **Commands:**
 - `fluent-bit --dry-run -c fluent-bit.conf`
 - `fluent-bit -c fluent-bit.conf`
@@ -98,3 +117,7 @@ Validate configs, run Fluent Bit with tail/forward inputs, and test outputs.
 - fluent-bit --dry-run -c fluent-bit.conf
 - fluent-bit -i tail -p path=/var/log/app.log -o stdout -f 1
 - fluent-bit -R parsers.conf -i dummy -o stdout
+
+## References
+- [Fluent Bit docs](https://docs.fluentbit.io/manual/)
+- [Fluent Bit service config](https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/)

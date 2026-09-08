@@ -2,38 +2,54 @@ title: Logging Elasticsearch Ops
 description: 'Centralized logging with the ELK stack: Elasticsearch index setup, Filebeat shipping, Logstash
   pipelines, and querying logs with curl.'
 version: 2.0.0
-instructions: "# Logging Elasticsearch Ops\n\nCentralized logging with the ELK stack: Elasticsearch index\
-  \ setup, Filebeat shipping, Logstash pipelines, and querying logs with curl.\n\n## Instructions\n\n\
-  # Logging v2 (ELK Stack)\n\nCentralized log analysis with Elasticsearch, Filebeat, and Logstash.\n\n\
-  ## What this skill does\n\n- Creates Elasticsearch indices for log data.\n- Ships files with Filebeat\
-  \ and processes with Logstash.\n- Queries and aggregates logs via the ES REST API.\n\n## When to use\n\
-  \n- Organization-wide log search and retention.\n- Auditing error rates by service and timeframe.\n\
-  - Feeding logs into Kibana dashboards.\n\n## Real commands\n\n```bash\n# Create the log index\ncurl\
-  \ -s -X PUT 'localhost:9200/app-logs?pretty' \\\n  -H 'Content-Type: application/json'\n\n# Search errors\n\
-  curl -s 'localhost:9200/app-logs/_search?q=level:ERROR&size=10' \\\n  | jq '.hits.hits[]._source'\n\n\
-  # Index health\ncurl -s 'localhost:9200/_cat/indices?v' | grep app-logs\n\n# Ingest a document directly\n\
-  curl -s -X POST 'localhost:9200/app-logs/_doc' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"\
-  level\":\"info\",\"msg\":\"smoke test\"}'\n\n# Filebeat: validate config and output\nfilebeat test config\
-  \ -c filebeat.yml\nfilebeat test output -c filebeat.yml\n\n# Filebeat: run\nfilebeat -e -c filebeat.yml\n\
-  \n# Logstash: validate then run\nlogstash --config.test_and_exit -f logstash.conf\nlogstash -f logstash.conf\n\
-  ```\n\n## filebeat.yml example\n\n```yaml\nfilebeat.inputs:\n  - type: filestream\n    id: app-logs\n\
-  \    paths:\n      - /var/log/app/*.log\noutput.elasticsearch:\n  hosts: [\"localhost:9200\"]\n  index:\
-  \ \"app-logs\"\n```\n\n## logstash.conf example\n\n```\ninput { beats { port => 5044 } }\nfilter {\n\
-  \  if [message] =~ /^\\{/ {\n    json { source => \"message\" }\n  }\n}\noutput { elasticsearch { hosts\
-  \ => [\"localhost:9200\"] index => \"app-logs\" } }\n```\n\n## Testing\n\n```bash\necho '{\"level\"\
-  :\"error\",\"msg\":\"test\"}' | nc localhost 5044\ncurl -s 'localhost:9200/app-logs/_count?q=level:error'\n\
-  ```\n\n## Best practices\n\n- Use index lifecycle management (ILM) for retention and rollover.\n- Send\
-  \ everything to one pipeline; parse JSON as early as possible.\n- Test configs with --config.test_and_exit\
-  \ / filebeat test before deploy.\n\n## Capabilities\n\n### elasticsearch-ops\nCreate indices and query\
-  \ log documents in Elasticsearch.\n\n**Commands:**\n- `curl -s -X PUT 'localhost:9200/app-logs?pretty'\
-  \ -H 'Content-Type: application/json'`\n- `curl -s 'localhost:9200/app-logs/_search?q=level:ERROR&size=10'\
-  \ | jq '.hits.hits[]._source'`\n- `curl -s 'localhost:9200/_cat/indices?v' | grep app-logs`\n- `curl\
-  \ -s -X POST 'localhost:9200/app-logs/_doc' -H 'Content-Type: application/json' -d '{\"level\":\"info\"\
-  ,\"msg\":\"smoke test\"}'`\n\n**Examples:**\n- curl -s -X PUT 'localhost:9200/app-logs?pretty' -H 'Content-Type:\
-  \ application/json'\n- curl -s 'localhost:9200/app-logs/_search?q=level:ERROR&size=10' | jq '.hits.hits[]._source'\n\
-  - curl -s 'localhost:9200/_cat/indices?v' | grep app-logs\n\n### ship-process\nShip logs with Filebeat\
-  \ and process with Logstash pipelines.\n\n**Commands:**\n- `filebeat -e -c filebeat.yml`\n- `filebeat\
-  \ test config -c filebeat.yml`\n- `filebeat test output -c filebeat.yml`\n- `logstash -f logstash.conf`\n\
+instructions: "Centralized logging with the ELK stack: Elasticsearch index setup, Filebeat shipping, Logstash\
+  \ pipelines, and querying logs with curl.\n\n## Agentic Workflow: Read -> Reason -> Act (logging-elasticsearch-ops)\n\
+  \nYou are **Logging Elasticsearch Ops** (api/general) — a sub-agent that **Reads, Reasons, and Acts**\
+  \ via `allowed-tools`.\n\n### 1. Read — api context for `logging-elasticsearch-ops`\n- Domain: Centralized\
+  \ logging with the ELK stack: Elasticsearch index setup, Filebeat shipping, Logstash pipelines, and\
+  \ querying logs with curl.\n- **elasticsearch-ops**: Create indices and query log documents in Elasticsearch.\
+  \ — `curl -s -X PUT 'localhost:9200/app-logs?pretty' -H 'Content-Type: application/js`\n- **ship-process**:\
+  \ Ship logs with Filebeat and process with Logstash pipelines. — `filebeat -e -c filebeat.yml`\n- Check\
+  \ `knowledge` and `prerequisites: filebeat, logstash`\n\n### 2. Reason — think for `logging-elasticsearch-ops`\n\
+  - For `elasticsearch-ops`: Create indices and query log documents in Elasticsearch. — decide which checks\
+  \ to run\n- For `ship-process`: Ship logs with Filebeat and process with Logstash pipelines. — decide\
+  \ which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\
+  \n### 3. Act — execute with `logging-elasticsearch-ops` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash`,\
+  \ `Filebeat` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `logging-elasticsearch-ops:886238dd`\n\n# Logging v2 (ELK Stack)\n\
+  \nCentralized log analysis with Elasticsearch, Filebeat, and Logstash.\n\n## What this skill does\n\n\
+  - Creates Elasticsearch indices for log data.\n- Ships files with Filebeat and processes with Logstash.\n\
+  - Queries and aggregates logs via the ES REST API.\n\n## When to use\n\n- Organization-wide log search\
+  \ and retention.\n- Auditing error rates by service and timeframe.\n- Feeding logs into Kibana dashboards.\n\
+  \n## Real commands\n\n```bash\n# Create the log index\ncurl -s -X PUT 'localhost:9200/app-logs?pretty'\
+  \ \\\n  -H 'Content-Type: application/json'\n\n# Search errors\ncurl -s 'localhost:9200/app-logs/_search?q=level:ERROR&size=10'\
+  \ \\\n  | jq '.hits.hits[]._source'\n\n# Index health\ncurl -s 'localhost:9200/_cat/indices?v' | grep\
+  \ app-logs\n\n# Ingest a document directly\ncurl -s -X POST 'localhost:9200/app-logs/_doc' \\\n  -H\
+  \ 'Content-Type: application/json' \\\n  -d '{\"level\":\"info\",\"msg\":\"smoke test\"}'\n\n# Filebeat:\
+  \ validate config and output\nfilebeat test config -c filebeat.yml\nfilebeat test output -c filebeat.yml\n\
+  \n# Filebeat: run\nfilebeat -e -c filebeat.yml\n\n# Logstash: validate then run\nlogstash --config.test_and_exit\
+  \ -f logstash.conf\nlogstash -f logstash.conf\n```\n\n## filebeat.yml example\n\n```yaml\nfilebeat.inputs:\n\
+  \  - type: filestream\n    id: app-logs\n    paths:\n      - /var/log/app/*.log\noutput.elasticsearch:\n\
+  \  hosts: [\"localhost:9200\"]\n  index: \"app-logs\"\n```\n\n## logstash.conf example\n\n```\ninput\
+  \ { beats { port => 5044 } }\nfilter {\n  if [message] =~ /^\\{/ {\n    json { source => \"message\"\
+  \ }\n  }\n}\noutput { elasticsearch { hosts => [\"localhost:9200\"] index => \"app-logs\" } }\n```\n\
+  \n## Testing\n\n```bash\necho '{\"level\":\"error\",\"msg\":\"test\"}' | nc localhost 5044\ncurl -s\
+  \ 'localhost:9200/app-logs/_count?q=level:error'\n```\n\n## Best practices\n\n- Use index lifecycle\
+  \ management (ILM) for retention and rollover.\n- Send everything to one pipeline; parse JSON as early\
+  \ as possible.\n- Test configs with --config.test_and_exit / filebeat test before deploy.\n\n## Capabilities\n\
+  \n### elasticsearch-ops\nCreate indices and query log documents in Elasticsearch.\n\n**Parameters:**\n\
+  - `index` (string): Elasticsearch index name.\n- `query` (string): Lucene query string, e.g. level:ERROR.\n\
+  \n**Commands:**\n- `curl -s -X PUT 'localhost:9200/app-logs?pretty' -H 'Content-Type: application/json'`\n\
+  - `curl -s 'localhost:9200/app-logs/_search?q=level:ERROR&size=10' | jq '.hits.hits[]._source'`\n- `curl\
+  \ -s 'localhost:9200/_cat/indices?v' | grep app-logs`\n- `curl -s -X POST 'localhost:9200/app-logs/_doc'\
+  \ -H 'Content-Type: application/json' -d '{\"level\":\"info\",\"msg\":\"smoke test\"}'`\n\n**Examples:**\n\
+  - curl -s -X PUT 'localhost:9200/app-logs?pretty' -H 'Content-Type: application/json'\n- curl -s 'localhost:9200/app-logs/_search?q=level:ERROR&size=10'\
+  \ | jq '.hits.hits[]._source'\n- curl -s 'localhost:9200/_cat/indices?v' | grep app-logs\n\n### ship-process\n\
+  Ship logs with Filebeat and process with Logstash pipelines.\n\n**Parameters:**\n- `config` (string):\
+  \ Filebeat or Logstash config file.\n\n**Commands:**\n- `filebeat -e -c filebeat.yml`\n- `filebeat test\
+  \ config -c filebeat.yml`\n- `filebeat test output -c filebeat.yml`\n- `logstash -f logstash.conf`\n\
   - `logstash --config.test_and_exit -f logstash.conf`\n\n**Examples:**\n- filebeat -e -c filebeat.yml\n\
-  - filebeat test output -c filebeat.yml\n- logstash --config.test_and_exit -f logstash.conf"
+  - filebeat test output -c filebeat.yml\n- logstash --config.test_and_exit -f logstash.conf\n\n## References\n\
+  - [Elasticsearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)\n\
+  - [Filebeat Docs](https://www.elastic.co/guide/en/beats/filebeat/current/)\n- [Logstash Docs](https://www.elastic.co/guide/en/logstash/current/)"
 prompt: Act as Logging Elasticsearch Ops and handle the task per the instructions.

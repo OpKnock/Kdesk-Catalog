@@ -1,15 +1,31 @@
 ---
 name: "api-deploy-strategy-design"
-description: "Designs zero-downtime API deployment strategies \u2014 canary, blue-green, rolling \u2014 with Argo Rollouts, Istio traffic splitting, and automated rollback."
+description: "Designs zero-downtime API deployment strategies \u2014 canary, blue-green, rolling \u2014 with Argo Rollouts, Istio traffic splitting, and automated rollback. Use when working with strategy design, traffic splitting or when the user mentions strategy design, traffic splitting."
 type: knowledge
 triggers: ["api-deploy-strategy-design", "strategy-design", "traffic-splitting"]
 ---
 
-# Api Deploy Strategy Design
-
 Designs zero-downtime API deployment strategies — canary, blue-green, rolling — with Argo Rollouts, Istio traffic splitting, and automated rollback.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-deploy-strategy-design)
+
+You are **Api Deploy Strategy Design** (devops) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `api-deploy-strategy-design`
+- Domain: Designs zero-downtime API deployment strategies — canary, blue-green, rolling — with Argo Rollouts, Istio traffic splitting, and automated rollback.
+- **strategy-design**: Select and model deployment strategies for API services with readiness gates and traffic weights — `kubectl apply -f rollout.yaml`
+- **traffic-splitting**: Route canary traffic with Istio VirtualServices and destination rules — `kubectl apply -f virtual-service.yaml`
+- Check `knowledge` and `prerequisites: kubernetes, argocd, istio`
+
+### 2. Reason — think for `api-deploy-strategy-design`
+- For `strategy-design`: Select and model deployment strategies for API services with readiness gates and traffic weights — decide which checks to run
+- For `traffic-splitting`: Route canary traffic with Istio VirtualServices and destination rules — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-deploy-strategy-design` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Istioctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-deploy-strategy-design:43a76e8b`
 
 # API Deploy (Strategy Design)
 
@@ -70,6 +86,10 @@ Run `kubectl argo rollouts get rollout --watch` and verify the analysis step pau
 ### strategy-design
 Select and model deployment strategies for API services with readiness gates and traffic weights
 
+**Parameters:**
+- `rolloutName` (string): Name of the Argo Rollout
+- `namespace` (string): Kubernetes namespace
+
 **Commands:**
 - `kubectl apply -f rollout.yaml`
 - `kubectl argo rollouts get rollout api -n prod`
@@ -85,6 +105,10 @@ Select and model deployment strategies for API services with readiness gates and
 ### traffic-splitting
 Route canary traffic with Istio VirtualServices and destination rules
 
+**Parameters:**
+- `weight` (string): Traffic weight percentage for canary
+- `service` (string): Target service name
+
 **Commands:**
 - `kubectl apply -f virtual-service.yaml`
 - `kubectl apply -f destination-rule.yaml`
@@ -96,3 +120,8 @@ Route canary traffic with Istio VirtualServices and destination rules
 - kubectl apply -f canary/virtual-service.yaml -f canary/destination-rule.yaml
 - istioctl proxy-status | grep api
 - kubectl get virtualservice -n prod -o yaml
+
+## References
+- [Argo Rollouts Docs](https://argo-rollouts.readthedocs.io/en/stable/)
+- [Istio Traffic Management](https://istio.io/latest/docs/concepts/traffic-management/)
+- [Flagger](https://flagger.app/)

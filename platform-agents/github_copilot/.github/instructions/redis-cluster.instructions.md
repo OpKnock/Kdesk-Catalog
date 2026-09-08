@@ -4,27 +4,23 @@ applyTo: "**/*.r **/*.sh"
 
 Operate Redis Cluster topologies: create multi-node clusters, verify slot coverage, reshard, and manage replicas with redis-cli cluster commands.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (redis-cluster)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Redis Cluster** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `redis-cli -c -p 7000 cluster info`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `redis-cluster`
+- Domain: Operate Redis Cluster topologies: create multi-node clusters, verify slot coverage, reshard, and manage replicas with redis-cli cluster commands.
+- **redis-cluster-admin**: Create, inspect, and rebalance Redis Cluster topologies with redis-cli cluster commands — `redis-cli -c -p 7000 cluster info`
+- Check `knowledge` and `prerequisites: redis-cli`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `redis-cluster`
+- For `redis-cluster-admin`: Create, inspect, and rebalance Redis Cluster topologies with redis-cli cluster commands — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `redis-cluster` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `redis-cluster:e8913ad1`
 
 # Redis Cluster
 

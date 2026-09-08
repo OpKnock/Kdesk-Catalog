@@ -5,27 +5,23 @@ description: "Builds Twirp services in Go using protoc code generation. Produces
 
 Builds Twirp services in Go using protoc code generation. Produces typed server skeletons and client stubs from protobuf definitions, runs the HTTP/JSON gateway, and verifies end-to-end with go test and curl.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (twirp-go)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Twirp Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `protoc --go_out=. --twirp_out=. --go_opt=paths=source_relati`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `twirp-go`
+- Domain: Builds Twirp services in Go using protoc code generation. Produces typed server skeletons and client stubs from protobuf definitions, runs the HTTP/JSON gateway, and verifies end-to-end with go test a
+- **go-codegen**: Generate Twirp Go code and call the service — `protoc --go_out=. --twirp_out=. --go_opt=paths=source_relative types.proto`
+- Check `knowledge` and `prerequisites: protoc, go`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `twirp-go`
+- For `go-codegen`: Generate Twirp Go code and call the service — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `twirp-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Protoc`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `twirp-go:c0483e64`
 
 # Twirp Go
 

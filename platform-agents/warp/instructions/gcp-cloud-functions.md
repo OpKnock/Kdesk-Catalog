@@ -1,8 +1,22 @@
-# Gcp Cloud Functions
-
 Deploy and manage Cloud Functions (Gen2): deploy from source, set env vars, view logs, and invoke functions for testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (gcp-cloud-functions)
+
+You are **Gcp Cloud Functions** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `gcp-cloud-functions`
+- Domain: Deploy and manage Cloud Functions (Gen2): deploy from source, set env vars, view logs, and invoke functions for testing.
+- **gcf-deploy**: Deploy, invoke, log, and configure Cloud Functions. — `gcloud functions deploy orders-processor --runtime=nodejs20 --trigger-topic=orde`
+- Check `knowledge` and `prerequisites: gcloud`
+
+### 2. Reason — think for `gcp-cloud-functions`
+- For `gcf-deploy`: Deploy, invoke, log, and configure Cloud Functions. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gcp-cloud-functions` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gcloud` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gcp-cloud-functions:7b4b491e`
 
 # GCP Cloud Functions
 
@@ -60,6 +74,11 @@ curl -s -X POST "$URL" -H 'Content-Type: application/json' -d '{"msg":"ping"}'
 ### gcf-deploy
 Deploy, invoke, log, and configure Cloud Functions.
 
+**Parameters:**
+- `function-name` (string): Function name to deploy
+- `runtime` (string): nodejs20, python312, go122
+- `trigger` (string): http, topic, bucket, or schedule trigger
+
 **Commands:**
 - `gcloud functions deploy orders-processor --runtime=nodejs20 --trigger-topic=orders --region=us-central1 --gen2`
 - `gcloud functions deploy hello --runtime=python312 --trigger-http --allow-unauthenticated --gen2`
@@ -72,3 +91,7 @@ Deploy, invoke, log, and configure Cloud Functions.
 - gcloud functions deploy hello --runtime=python312 --trigger-http --allow-unauthenticated --gen2
 - gcloud functions call orders-processor --region=us-central1 --data='{"orderId":"1"}'
 - gcloud functions logs read orders-processor --region=us-central1 --limit=20
+
+## References
+- [Cloud Functions docs](https://cloud.google.com/functions/docs)
+- [gcloud functions reference](https://cloud.google.com/sdk/gcloud/reference/functions)

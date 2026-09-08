@@ -1,6 +1,6 @@
 ---
 name: "Opensearch Identity Py"
-description: "OpenSearch deployment agent. Manages OpenSearch ML deployment."
+description: "OpenSearch deployment agent. Manages OpenSearch ML deployment. Use when working with Ml Opensearch Deploy Agent, vector db or when the user mentions Ml Opensearch Deploy Agent, vector db."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Opensearch Identity Py
 
 OpenSearch deployment agent. Manages OpenSearch ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (opensearch-identity-py)
+
+You are **Opensearch Identity Py** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `opensearch-identity-py`
+- Domain: OpenSearch deployment agent. Manages OpenSearch ML deployment.
+- **Ml Opensearch Deploy Agent**: OpenSearch deployment agent. Manages OpenSearch ML deployment. — `docker build -t opensearch:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `opensearch-identity-py`
+- For `Ml Opensearch Deploy Agent`: OpenSearch deployment agent. Manages OpenSearch ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `opensearch-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Opensearch` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `opensearch-identity-py:b32711d2`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ OpenSearch deployment agent. Manages OpenSearch ML deployment.
 - python index_vectors.py --index my-index --vectors vectors.json
 - python search_vectors.py --index my-index --query query_vector --k 10
 - python delete_vectors.py --index my-index --ids ids.json
+
+## References
+- [OpenSearch Documentation](https://opensearch.org/docs/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

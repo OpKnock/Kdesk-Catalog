@@ -1,15 +1,29 @@
 ---
 name: "SMS OTP"
-description: "Delivers and verifies one-time passwords over SMS using Twilio Verify API with TOTP fallback via oathtool. Sends codes through Twilio's managed verification service, checks submitted codes, and generates time-based codes for offline scenarios."
+description: "Delivers and verifies one-time passwords over SMS using Twilio Verify API with TOTP fallback via oathtool. Sends codes through Twilio's managed verification service, checks submitted codes, and generates time-based codes for offline scenarios. Use when working with sms otp delivery, api or when the user mentions sms otp delivery, api."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# SMS OTP
-
 Delivers and verifies one-time passwords over SMS using Twilio Verify API with TOTP fallback via oathtool. Sends codes through Twilio's managed verification service, checks submitted codes, and generates time-based codes for offline scenarios.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (sms-otp)
+
+You are **SMS OTP** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `sms-otp`
+- Domain: Delivers and verifies one-time passwords over SMS using Twilio Verify API with TOTP fallback via oathtool. Sends codes through Twilio's managed verification service, checks submitted codes, and genera
+- **sms-otp-delivery**: Delivers and verifies one-time passwords over SMS using Twilio Verify API with TOTP fallback via oat — `curl -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/Verifications" -`
+- Check `knowledge` and `prerequisites: oathtool, pip`
+
+### 2. Reason — think for `sms-otp`
+- For `sms-otp-delivery`: Delivers and verifies one-time passwords over SMS using Twilio Verify API with TOTP fallback via oathtool. Sends codes t — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `sms-otp` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Oathtool` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sms-otp:5d0327df`
 
 # SMS OTP
 
@@ -70,6 +84,11 @@ curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Serv
 ### sms-otp-delivery
 Delivers and verifies one-time passwords over SMS using Twilio Verify API with TOTP fallback via oathtool. Sends codes through Twilio's managed verification service, checks submitted codes, and generates time-based codes for offline scenarios.
 
+**Parameters:**
+- `verify_sid` (string): Twilio Verify Service SID
+- `phone_number` (string): Destination phone number in E.164 format
+- `totp_secret` (string): Base32-encoded TOTP secret for fallback
+
 **Commands:**
 - `curl -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/Verifications" -u "$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN" --data-urlencode "To=+15551234567" --data-urlencode "Channel=sms"`
 - `curl -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/VerificationChecks" -u "$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN" --data-urlencode "To=+15551234567" --data-urlencode "Code=123456"`
@@ -80,3 +99,6 @@ Delivers and verifies one-time passwords over SMS using Twilio Verify API with T
 - curl -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/Verifications" -u "$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN" --data-urlencode "To=+15551234567" --data-urlencode "Channel=sms"
 - curl -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/VerificationChecks" -u "$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN" --data-urlencode "To=+15551234567" --data-urlencode "Code=123456"
 - oathtool --base32 --totp "JBSWY3DPEHPK3PXP"
+
+## References
+- [Twilio Verify API](https://www.twilio.com/docs/verify/api)

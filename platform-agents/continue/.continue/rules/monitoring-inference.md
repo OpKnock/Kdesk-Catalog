@@ -1,6 +1,6 @@
 ---
 name: "Monitoring Inference"
-description: "Monitoring inference server agent Manages Monitoring inference server."
+description: "Monitoring inference server agent Manages Monitoring inference server. Use when working with Ml Monitoring Inference Server Agent V2 or when the user mentions Ml Monitoring Inference Server Agent V2."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Monitoring Inference
 
 Monitoring inference server agent Manages Monitoring inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (monitoring-inference)
+
+You are **Monitoring Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `monitoring-inference`
+- Domain: Monitoring inference server agent Manages Monitoring inference server.
+- **Ml Monitoring Inference Server Agent V2**: Monitoring inference server agent. Manages Monitoring inference server. — `python track_drift.py --reference-data train.csv --current-data current.csv`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `monitoring-inference`
+- For `Ml Monitoring Inference Server Agent V2`: Monitoring inference server agent. Manages Monitoring inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `monitoring-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `monitoring-inference:7376c5ed`
 
 ## Instructions
 
@@ -17,6 +35,9 @@ Monitoring inference server operator (v2). Call on this agent to run the monitor
 
 ### Ml Monitoring Inference Server Agent V2
 Monitoring inference server agent. Manages Monitoring inference server.
+
+**Parameters:**
+- `model` (string): CLI flag --model observed in capability commands
 
 **Commands:**
 - `python track_drift.py --reference-data train.csv --current-data current.csv`
@@ -29,3 +50,8 @@ Monitoring inference server agent. Manages Monitoring inference server.
 - curl http://localhost:8080/monitor --data '{"model": "model.pkl"}'
 - python monitor.py --model model.pkl --data-stream data.json --alert-threshold 0.9
 - python track_drift.py --reference-data train.csv --current-data current.csv
+
+## References
+- [TensorFlow Serving](https://www.tensorflow.org/serving)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

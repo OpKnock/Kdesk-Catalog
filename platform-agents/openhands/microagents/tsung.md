@@ -1,15 +1,29 @@
 ---
 name: "tsung"
-description: "Runs distributed load tests using Tsung's XML scenario engine. Defines multi-phase arrival rates, simulates HTTP/WebSocket/AMQP workloads, aggregates latency and error stats into HTML reports, and scales across multiple load-generator nodes."
+description: "Runs distributed load tests using Tsung's XML scenario engine. Defines multi-phase arrival rates, simulates HTTP/WebSocket/AMQP workloads, aggregates latency and error stats into HTML reports, and scales across multiple load-generator nodes. Use when working with load test, api, load testing, performance or when the user mentions load test, api, load testing, performance."
 type: knowledge
 triggers: ["tsung", "load-test"]
 ---
 
-# Tsung
-
 Runs distributed load tests using Tsung's XML scenario engine. Defines multi-phase arrival rates, simulates HTTP/WebSocket/AMQP workloads, aggregates latency and error stats into HTML reports, and scales across multiple load-generator nodes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (tsung)
+
+You are **Tsung** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `tsung`
+- Domain: Runs distributed load tests using Tsung's XML scenario engine. Defines multi-phase arrival rates, simulates HTTP/WebSocket/AMQP workloads, aggregates latency and error stats into HTML reports, and sca
+- **load-test**: Define and run Tsung load scenarios — `tsung -f tsung.xml start`
+- Check `knowledge` and `prerequisites: tsung`
+
+### 2. Reason — think for `tsung`
+- For `load-test`: Define and run Tsung load scenarios — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tsung` tools
+- Tools: `Glob`, `Read`, `Tsung`, `Grep` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tsung:66452832`
 
 # Tsung
 
@@ -81,6 +95,11 @@ ls ~/.tsung/log/*/report.html
 ### load-test
 Define and run Tsung load scenarios
 
+**Parameters:**
+- `config` (string): Path to tsung.xml scenario
+- `logdir` (string): Report output directory
+- `servers` (integer): Number of load generator nodes
+
 **Commands:**
 - `tsung -f tsung.xml start`
 - `tsung -f tsung.xml -l /tmp/tsung-reports start`
@@ -92,3 +111,8 @@ Define and run Tsung load scenarios
 - tsung -f tsung.xml start
 - tsung -f tsung.xml -l /tmp/tsung-reports start
 - grep "session average" ~/.tsung/log/tsung.log | tail -5
+
+## References
+- [Tsung user's manual](https://tsung.erlang-projects.org/user_manual/)
+- [Tsung benchmark examples](https://tsung.erlang-projects.org/examples/)
+- [Tsung clustering guide](https://tsung.erlang-projects.org/user_manual/chapter-clustering.html)

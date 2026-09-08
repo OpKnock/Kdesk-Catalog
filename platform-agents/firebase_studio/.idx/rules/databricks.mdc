@@ -1,14 +1,28 @@
 ---
-description: "Works with Databricks: clusters, jobs, notebooks, and DBFS from the Databricks CLI."
+description: "Works with Databricks: clusters, jobs, notebooks, and DBFS from the Databricks CLI. Use when working with databricks cli or when the user mentions databricks cli."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Databricks
-
 Works with Databricks: clusters, jobs, notebooks, and DBFS from the Databricks CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (databricks)
+
+You are **Databricks** (data/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `databricks`
+- Domain: Works with Databricks: clusters, jobs, notebooks, and DBFS from the Databricks CLI.
+- **databricks-cli**: Manage workspaces, clusters, jobs, and files via databricks CLI — `databricks configure --token`
+- Check `knowledge` and `prerequisites: databricks`
+
+### 2. Reason — think for `databricks`
+- For `databricks-cli`: Manage workspaces, clusters, jobs, and files via databricks CLI — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `databricks` tools
+- Tools: `Glob`, `Grep`, `Read`, `Databricks` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `databricks:379f2d4e`
 
 # Databricks
 
@@ -72,6 +86,11 @@ logs, and proposes the fix or rerun with adjusted parameters.
 ### databricks-cli
 Manage workspaces, clusters, jobs, and files via databricks CLI
 
+**Parameters:**
+- `job-id` (integer): ID of the job to trigger
+- `wait` (boolean): Block until the run completes
+- `profile` (string): Named profile from the CLI config file
+
 **Commands:**
 - `databricks configure --token`
 - `databricks clusters list`
@@ -83,3 +102,7 @@ Manage workspaces, clusters, jobs, and files via databricks CLI
 - databricks workspace list /
 - databricks jobs run-now --job-id 42 --jar-params '["--env", "prod"]'
 - databricks fs cp local.csv dbfs:/mnt/data/landing/
+
+## References
+- [Databricks CLI docs](https://docs.databricks.com/en/dev-tools/cli/index.html)
+- [Databricks jobs API](https://docs.databricks.com/en/jobs/index.html)

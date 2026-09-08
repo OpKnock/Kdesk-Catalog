@@ -2,15 +2,25 @@ title: Gremlin
 description: 'Gremlin chaos engineering platform operations: launching and halting CPU, disk, memory,
   and network attacks against production and staging hosts.'
 version: 2.0.0
-instructions: "# Gremlin\n\nGremlin chaos engineering platform operations: launching and halting CPU,\
-  \ disk, memory, and network attacks against production and staging hosts.\n\n## Instructions\n\n# Gremlin\n\
-  \nReal chaos engineering experiments using the `gremlin` CLI.\n\n## What this skill does\n\n- Launches\
-  \ targeted attacks (CPU, memory, disk, network, process) on hosts or containers.\n- Runs and manages\
-  \ failure scenarios across teams and infrastructure.\n- Halts attacks before they reach the blast radius\
-  \ limit.\n- Resolves host IDs and API key configuration for the CLI.\n\n## When to use\n\n- A team wants\
-  \ to verify autoscaling or failover behavior under load.\n- An incident review asks: what happens if\
-  \ a node loses network or disk fills up.\n- Validating SLOs and retry logic with real failure injection.\n\
-  \n## Real commands\n\n```bash\n# Install and authenticate\ncurl -sSL https://www.gremlin.com/install\
+instructions: "Gremlin chaos engineering platform operations: launching and halting CPU, disk, memory,\
+  \ and network attacks against production and staging hosts.\n\n## Agentic Workflow: Read -> Reason ->\
+  \ Act (gremlin)\n\nYou are **Gremlin** (api/general) — a sub-agent that **Reads, Reasons, and Acts**\
+  \ via `allowed-tools`.\n\n### 1. Read — api context for `gremlin`\n- Domain: Gremlin chaos engineering\
+  \ platform operations: launching and halting CPU, disk, memory, and network attacks against production\
+  \ and staging hosts.\n- **attack-management**: Create, list, and halt chaos attacks and scenarios via\
+  \ the Gremlin CLI and API. — `gremlin i attack -t \"disk\" -a disk=50 -a path=/`\n- Check `knowledge`\
+  \ and `prerequisites: gremlin`\n\n### 2. Reason — think for `gremlin`\n- For `attack-management`: Create,\
+  \ list, and halt chaos attacks and scenarios via the Gremlin CLI and API. — decide which checks to run\n\
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute\
+  \ with `gremlin` tools\n- Tools: `Glob`, `Grep`, `Read`, `Gremlin` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `gremlin:91f555ba`\n\
+  \n# Gremlin\n\nReal chaos engineering experiments using the `gremlin` CLI.\n\n## What this skill does\n\
+  \n- Launches targeted attacks (CPU, memory, disk, network, process) on hosts or containers.\n- Runs\
+  \ and manages failure scenarios across teams and infrastructure.\n- Halts attacks before they reach\
+  \ the blast radius limit.\n- Resolves host IDs and API key configuration for the CLI.\n\n## When to\
+  \ use\n\n- A team wants to verify autoscaling or failover behavior under load.\n- An incident review\
+  \ asks: what happens if a node loses network or disk fills up.\n- Validating SLOs and retry logic with\
+  \ real failure injection.\n\n## Real commands\n\n```bash\n# Install and authenticate\ncurl -sSL https://www.gremlin.com/install\
   \ | bash\nsudo gremlin service install\nsudo gremlin service start\ngremlin api-key set abcd1234-your-api-key\n\
   \n# CPU attack: peg all cores for 2 minutes\nsudo gremlin i attack -t \"cpu\" -a cpu=100 -a duration=120\
   \ -a cores=4\n\n# Memory attack: consume 90% of RAM for 30s\nsudo gremlin i attack -t \"memory\" -a\
@@ -32,8 +42,12 @@ instructions: "# Gremlin\n\nGremlin chaos engineering platform operations: launc
   \ a 5-minute CPU attack on the prod-web host, halt after 2 minutes.\nAgent: sudo gremlin i attack -t\
   \ \"cpu\" -a cpu=100 -a duration=300 -a host_id=prod-web\n       # after 120s of observing: sudo gremlin\
   \ i shutdown\n```\n\n## Capabilities\n\n### attack-management\nCreate, list, and halt chaos attacks\
-  \ and scenarios via the Gremlin CLI and API.\n\n**Commands:**\n- `gremlin i attack -t \"disk\" -a disk=50\
-  \ -a path=/`\n- `gremlin i shutdown`\n- `gremlin attack list`\n- `gremlin scenario list`\n- `gremlin\
-  \ api-key set demo-key`\n\n**Examples:**\n- sudo gremlin i attack -t \"cpu\" -a cpu=100 -a duration=60\
-  \ -a cores=4\n- sudo gremlin i attack -t \"memory\" -a memory=90 -a duration=30\n- sudo gremlin i shutdown"
+  \ and scenarios via the Gremlin CLI and API.\n\n**Parameters:**\n- `attack_type` (string): Type of attack:\
+  \ cpu, memory, disk, io, network, process-killer, dns, or shutdown.\n- `duration` (integer): Attack\
+  \ duration in seconds (default 600).\n- `host_id` (string): Target host ID to scope the attack to.\n\
+  \n**Commands:**\n- `gremlin i attack -t \"disk\" -a disk=50 -a path=/`\n- `gremlin i shutdown`\n- `gremlin\
+  \ attack list`\n- `gremlin scenario list`\n- `gremlin api-key set demo-key`\n\n**Examples:**\n- sudo\
+  \ gremlin i attack -t \"cpu\" -a cpu=100 -a duration=60 -a cores=4\n- sudo gremlin i attack -t \"memory\"\
+  \ -a memory=90 -a duration=30\n- sudo gremlin i shutdown\n\n## References\n- [Gremlin Docs](https://www.gremlin.com/docs)\n\
+  - [Gremlin CLI Reference](https://www.gremlin.com/docs/cli)"
 prompt: Act as Gremlin and handle the task per the instructions.

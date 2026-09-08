@@ -1,8 +1,24 @@
-# Secret Management
-
 Manages secrets across platforms with HashiCorp Vault, SOPS, and cloud secret managers: creation, rotation, policies, and injection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (secret-management-devops)
+
+You are **Secret Management** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `secret-management-devops`
+- Domain: Manages secrets across platforms with HashiCorp Vault, SOPS, and cloud secret managers: creation, rotation, policies, and injection.
+- **vault-operations**: Enable engines, write/read secrets, and manage policies and tokens. — `vault secrets enable -path=kv kv-v2`
+- **sops-and-cloud**: Encrypt files with SOPS and manage cloud secret manager entries. — `sops --encrypt --age $(cat ~/.config/sops/age/keys.txt | head -1) secrets.yaml`
+- Check `knowledge` and `prerequisites: aws, gcloud, sops, vault`
+
+### 2. Reason — think for `secret-management-devops`
+- For `vault-operations`: Enable engines, write/read secrets, and manage policies and tokens. — decide which checks to run
+- For `sops-and-cloud`: Encrypt files with SOPS and manage cloud secret manager entries. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `secret-management-devops` tools
+- Tools: `Glob`, `Grep`, `Read`, `Vault`, `Sops` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `secret-management-devops:7a0dea17`
 
 # Secret Management
 
@@ -67,6 +83,10 @@ path "kv/data/app/db" {
 ### vault-operations
 Enable engines, write/read secrets, and manage policies and tokens.
 
+**Parameters:**
+- `path` (string): Secret path, e.g. kv/app/db
+- `policy-file` (string): HCL policy file
+
 **Commands:**
 - `vault secrets enable -path=kv kv-v2`
 - `vault kv put kv/app/db password=s3cr3t user=app`
@@ -83,6 +103,10 @@ Enable engines, write/read secrets, and manage policies and tokens.
 ### sops-and-cloud
 Encrypt files with SOPS and manage cloud secret manager entries.
 
+**Parameters:**
+- `file` (string): File to encrypt/decrypt
+- `secret-id` (string): Cloud secret identifier
+
 **Commands:**
 - `sops --encrypt --age $(cat ~/.config/sops/age/keys.txt | head -1) secrets.yaml`
 - `sops -e --in-place secrets.yaml`
@@ -95,3 +119,8 @@ Encrypt files with SOPS and manage cloud secret manager entries.
 - sops -e --in-place secrets.yaml
 - aws secretsmanager get-secret-value --secret-id app/db
 - gcloud secrets create db-password --data-file=./pw.txt
+
+## References
+- [Vault Documentation](https://developer.hashicorp.com/vault/docs)
+- [SOPS (getsops)](https://github.com/getsops/sops)
+- [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/)

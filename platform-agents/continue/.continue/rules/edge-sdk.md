@@ -1,6 +1,6 @@
 ---
 name: "Edge Sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Edge Deploy Sdk Agent or when the user mentions Ml Edge Deploy Sdk Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Edge Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (edge-sdk)
+
+You are **Edge Sdk** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `edge-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Edge Deploy Sdk Agent**: Edge SDK deployment agent for ML edge SDK deployment. — `docker build -t edge:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `edge-sdk`
+- For `Ml Edge Deploy Sdk Agent`: Edge SDK deployment agent for ML edge SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `edge-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Edge` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `edge-sdk:bd8e64e1`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Edge SDK deployment agent for ML edge SDK deployment.
 **Examples:**
 - Server: python -m edge.server --port 8080
 - Docker: docker run -p 8080:8080 edge-server
+
+## References
+- [KubeEdge](https://github.com/kubeedge/kubeedge)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

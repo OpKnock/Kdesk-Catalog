@@ -2,8 +2,19 @@ title: Grpc Security
 description: 'Secure gRPC communication: TLS/mTLS with generated certificates, grpcurl client auth flags,
   authorization interceptors, and channel credentials in Go.'
 version: 2.0.0
-instructions: "# Grpc Security\n\nSecure gRPC communication: TLS/mTLS with generated certificates, grpcurl\
-  \ client auth flags, authorization interceptors, and channel credentials in Go.\n\n## Instructions\n\
+instructions: "Secure gRPC communication: TLS/mTLS with generated certificates, grpcurl client auth flags,\
+  \ authorization interceptors, and channel credentials in Go.\n\n## Agentic Workflow: Read -> Reason\
+  \ -> Act (grpc-security)\n\nYou are **Grpc Security** (api/general) — a sub-agent that **Reads, Reasons,\
+  \ and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `grpc-security`\n- Domain: Secure\
+  \ gRPC communication: TLS/mTLS with generated certificates, grpcurl client auth flags, authorization\
+  \ interceptors, and channel credentials in Go.\n- **grpc-tls-mtls**: Configure TLS and mutual TLS for\
+  \ gRPC servers and clients, and verify with grpcurl. — `openssl req -x509 -newkey rsa:2048 -nodes -keyout\
+  \ ca.key -out ca.crt -days 365 -`\n- Check `knowledge` and `prerequisites: grpcurl, openssl`\n\n###\
+  \ 2. Reason — think for `grpc-security`\n- For `grpc-tls-mtls`: Configure TLS and mutual TLS for gRPC\
+  \ servers and clients, and verify with grpcurl. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `grpc-security`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Openssl`, `Grpcurl` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `grpc-security:0045e150`\n\
   \n# gRPC Security\n\nSecure gRPC endpoints with TLS, mutual TLS, and authorization interceptors.\n\n\
   ## What this skill does\n\n- Generates CA, server, and client certificates for gRPC TLS.\n- Configures\
   \ server-side TLS and client channel credentials.\n- Verifies encrypted gRPC connections with grpcurl\
@@ -30,7 +41,9 @@ instructions: "# Grpc Security\n\nSecure gRPC communication: TLS/mTLS with gener
   \ schedule.\n- Use interceptors for authz, never trust the client to be honest.\n\n## Example exchange\n\
   \n```\nUser: grpcurl says \"certificate signed by unknown authority\".\nAgent: Pass the CA bundle: grpcurl\
   \ -cacert ca.crt -servername localhost localhost:50051 list\n```\n\n## Capabilities\n\n### grpc-tls-mtls\n\
-  Configure TLS and mutual TLS for gRPC servers and clients, and verify with grpcurl.\n\n**Commands:**\n\
+  Configure TLS and mutual TLS for gRPC servers and clients, and verify with grpcurl.\n\n**Parameters:**\n\
+  - `ca_cert` (string): Path to the CA certificate for server verification.\n- `client_cert` (string):\
+  \ Client certificate for mTLS.\n- `client_key` (string): Client private key for mTLS.\n\n**Commands:**\n\
   - `openssl req -x509 -newkey rsa:2048 -nodes -keyout ca.key -out ca.crt -days 365 -subj \"/CN=my-ca\"\
   `\n- `openssl req -newkey rsa:2048 -nodes -keyout server.key -out server.csr -subj \"/CN=localhost\"\
   `\n- `grpcurl -cacert ca.crt -cert client.pem -key client.key -servername localhost -authority localhost\
@@ -38,5 +51,6 @@ instructions: "# Grpc Security\n\nSecure gRPC communication: TLS/mTLS with gener
   \ -servername localhost -tls1_2 2>/dev/null | grep -E \"Protocol|Cipher\"`\n\n**Examples:**\n- grpcurl\
   \ -cacert ca.crt localhost:50051 helloworld.Greeter/SayHello -d '{\"name\":\"tls\"}'\n- grpcurl -insecure\
   \ -plaintext false localhost:50051 list\n- openssl x509 -in server.crt -noout -text | grep -A1 \"Subject\
-  \ Alternative\""
+  \ Alternative\"\n\n## References\n- [gRPC Auth Guide](https://grpc.io/docs/guides/auth/)\n- [grpcurl\
+  \ TLS options](https://github.com/fullstorydev/grpcurl#using-grpcurl-with-tls)"
 prompt: Act as Grpc Security and handle the task per the instructions.

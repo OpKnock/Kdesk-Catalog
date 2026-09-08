@@ -1,8 +1,22 @@
-# Firebase Analytics
-
 Firebase Analytics operations: export events, query event data from BigQuery, manage measurement settings, and debug event flows with the Firebase CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (firebase-analytics)
+
+You are **Firebase Analytics** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `firebase-analytics`
+- Domain: Firebase Analytics operations: export events, query event data from BigQuery, manage measurement settings, and debug event flows with the Firebase CLI.
+- **analytics-ops**: Manage Firebase Analytics projects, export data, and query events. — `firebase projects:list`
+- Check `knowledge` and `prerequisites: firebase, gcloud`
+
+### 2. Reason — think for `firebase-analytics`
+- For `analytics-ops`: Manage Firebase Analytics projects, export data, and query events. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `firebase-analytics` tools
+- Tools: `Glob`, `Grep`, `Read`, `Firebase`, `Bq` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `firebase-analytics:36a7d35e`
 
 # Firebase Analytics
 
@@ -64,6 +78,11 @@ bq query --use_legacy_sql=false 'SELECT COUNT(*) FROM `project.analytics_123456.
 ### analytics-ops
 Manage Firebase Analytics projects, export data, and query events.
 
+**Parameters:**
+- `project-id` (string): Firebase project id
+- `dataset-id` (string): BigQuery dataset holding analytics events
+- `date` (string): YYYYMMDD date suffix for events tables
+
 **Commands:**
 - `firebase projects:list`
 - `firebase analytics:export`
@@ -75,3 +94,7 @@ Manage Firebase Analytics projects, export data, and query events.
 - bq query --use_legacy_sql=false 'SELECT event_name, COUNT(*) AS cnt FROM `project.analytics_123456.events_*` WHERE _TABLE_SUFFIX = FORMAT_DATE("%Y%m%d", CURRENT_DATE()) GROUP BY event_name ORDER BY cnt DESC LIMIT 20'
 - firebase analytics:export
 - firebase projects:list
+
+## References
+- [Firebase Analytics docs](https://firebase.google.com/docs/analytics)
+- [Analytics BigQuery export](https://firebase.google.com/docs/analytics/bigquery-export)

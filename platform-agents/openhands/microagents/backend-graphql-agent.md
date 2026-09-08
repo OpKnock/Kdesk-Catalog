@@ -1,6 +1,6 @@
 ---
 name: "backend-graphql-agent"
-description: "GraphQL agent for API development with Apollo/GraphQL Yoga."
+description: "GraphQL agent for API development with Apollo/GraphQL Yoga. Use when working with Backend Graphql Agent or when the user mentions Backend Graphql Agent."
 type: knowledge
 triggers: ["backend-graphql-agent", "backend graphql agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["backend-graphql-agent", "backend graphql agent"]
 # Backend Graphql Agent
 
 GraphQL agent for API development with Apollo/GraphQL Yoga.
+
+## Agentic Workflow: Read -> Reason -> Act (backend-graphql-agent)
+
+You are **Backend Graphql Agent** (backend/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `backend-graphql-agent`
+- Domain: GraphQL agent for API development with Apollo/GraphQL Yoga.
+- **Backend Graphql Agent**: GraphQL agent for API development with Apollo/GraphQL Yoga. — `npm run dev`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `backend-graphql-agent`
+- For `Backend Graphql Agent`: GraphQL agent for API development with Apollo/GraphQL Yoga. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `backend-graphql-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `backend-graphql-agent:29de2ec3`
 
 ## Instructions
 
@@ -29,3 +47,7 @@ GraphQL agent for API development with Apollo/GraphQL Yoga.
 - npx apollo server:start
 - node server.js
 - npx graphql-codegen
+
+## References
+- [Apollo Server Documentation](https://www.apollographql.com/docs/apollo-server/)
+- [GraphQL Yoga Documentation](https://the-guild.dev/graphql/yoga-server)

@@ -1,8 +1,22 @@
-# Terraform Validate
-
 Validates Terraform configurations: formatting, syntax, and plan validation against real providers.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (terraform-validate)
+
+You are **Terraform Validate** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `terraform-validate`
+- Domain: Validates Terraform configurations: formatting, syntax, and plan validation against real providers.
+- **terraform-validate**: Init, validate, format-check, and plan Terraform configurations — `terraform init -backend=false`
+- Check `knowledge` and `prerequisites: terraform`
+
+### 2. Reason — think for `terraform-validate`
+- For `terraform-validate`: Init, validate, format-check, and plan Terraform configurations — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `terraform-validate` tools
+- Tools: `Glob`, `Grep`, `Read`, `Terraform` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `terraform-validate:a48f25a1`
 
 # Terraform Validate
 
@@ -73,6 +87,11 @@ and the fmt compliance status.
 ### terraform-validate
 Init, validate, format-check, and plan Terraform configurations
 
+**Parameters:**
+- `backend` (boolean): Whether to initialize the backend (false = local only, no state access)
+- `detailed-exitcode` (boolean): Exit 2 if the plan contains changes
+- `var-file` (string): Variable definitions file, e.g. dev.tfvars
+
 **Commands:**
 - `terraform init -backend=false`
 - `terraform validate`
@@ -84,3 +103,7 @@ Init, validate, format-check, and plan Terraform configurations
 - terraform init -backend=false -upgrade
 - terraform fmt -recursive
 - terraform plan -var-file=environments/dev.tfvars -input=false
+
+## References
+- [terraform validate command](https://developer.hashicorp.com/terraform/cli/commands/validate)
+- [Terraform CLI docs](https://developer.hashicorp.com/terraform/cli/commands)

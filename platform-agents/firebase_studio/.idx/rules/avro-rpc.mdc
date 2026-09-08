@@ -1,14 +1,32 @@
 ---
-description: "Implements RPC services with Apache Avro: schema compilation, avro-tools operations, and Java RPC server/client testing."
+description: "Implements RPC services with Apache Avro: schema compilation, avro-tools operations, and Java RPC server/client testing. Use when working with schema tools, rpc protocol, java server, api or when the user mentions schema tools, rpc protocol, java server, api."
 globs: ["**/*.java", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Avro Rpc
-
 Implements RPC services with Apache Avro: schema compilation, avro-tools operations, and Java RPC server/client testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (avro-rpc)
+
+You are **Avro Rpc** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `avro-rpc`
+- Domain: Implements RPC services with Apache Avro: schema compilation, avro-tools operations, and Java RPC server/client testing.
+- **schema-tools**: Compile schemas and convert data with avro-tools. — `java -jar avro-tools.jar compile schema user.avsc .`
+- **rpc-protocol**: Define and compile RPC protocols with avro-tools. — `java -jar avro-tools.jar compile protocol chat.avpr .`
+- **java-server**: Build and test a Java Avro RPC server. — `mvn package`
+- Check `knowledge` and `prerequisites: java, mvn`
+
+### 2. Reason — think for `avro-rpc`
+- For `schema-tools`: Compile schemas and convert data with avro-tools. — decide which checks to run
+- For `rpc-protocol`: Define and compile RPC protocols with avro-tools. — decide which checks to run
+- For `java-server`: Build and test a Java Avro RPC server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `avro-rpc` tools
+- Tools: `Glob`, `Grep`, `Read`, `Java`, `Mvn` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `avro-rpc:a68a7717`
 
 # Avro RPC
 
@@ -65,6 +83,10 @@ protocol Chat {
 ### schema-tools
 Compile schemas and convert data with avro-tools.
 
+**Parameters:**
+- `schema_file` (string): Avro schema .avsc file
+- `output_dir` (string): Directory for compiled classes
+
 **Commands:**
 - `java -jar avro-tools.jar compile schema user.avsc .`
 - `java -jar avro-tools.jar tojson user.avro`
@@ -80,6 +102,10 @@ Compile schemas and convert data with avro-tools.
 ### rpc-protocol
 Define and compile RPC protocols with avro-tools.
 
+**Parameters:**
+- `protocol_file` (string): .avpr protocol file or .avdl IDL
+- `output_dir` (string): Output for generated stubs
+
 **Commands:**
 - `java -jar avro-tools.jar compile protocol chat.avpr .`
 - `java -jar avro-tools.jar idl src/main/avro/chat.avdl chat.avpr`
@@ -94,6 +120,10 @@ Define and compile RPC protocols with avro-tools.
 ### java-server
 Build and test a Java Avro RPC server.
 
+**Parameters:**
+- `main_class` (string): Server/client main class
+- `port` (number): RPC server port (default 8080)
+
 **Commands:**
 - `mvn package`
 - `mvn exec:java -Dexec.mainClass=com.example.ChatServer`
@@ -105,3 +135,8 @@ Build and test a Java Avro RPC server.
 - mvn package && java -jar target/chat-rpc-1.0.jar server
 - mvn exec:java -Dexec.mainClass=com.example.ChatClient -Dexec.args=localhost
 - mvn test -Dtest=ChatRpcTest
+
+## References
+- [Apache Avro Docs](https://avro.apache.org/docs/current/)
+- [Avro Spec](https://avro.apache.org/docs/current/specification/)
+- [avro-tools Reference](https://avro.apache.org/docs/current/getting-started-java/)

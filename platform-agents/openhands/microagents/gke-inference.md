@@ -1,6 +1,6 @@
 ---
 name: "gke-inference"
-description: "GKE inference server agent. Manages GKE ML inference server."
+description: "GKE inference server agent. Manages GKE ML inference server. Use when working with Ml Gke Inference Server Agent or when the user mentions Ml Gke Inference Server Agent."
 type: knowledge
 triggers: ["gke-inference", "ml gke inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["gke-inference", "ml gke inference server agent"]
 # Gke Inference
 
 GKE inference server agent. Manages GKE ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (gke-inference)
+
+You are **Gke Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `gke-inference`
+- Domain: GKE inference server agent. Manages GKE ML inference server.
+- **Ml Gke Inference Server Agent**: GKE inference server agent. Manages GKE ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `gke-inference`
+- For `Ml Gke Inference Server Agent`: GKE inference server agent. Manages GKE ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gke-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Gke` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gke-inference:35fea3dd`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ GKE inference server agent. Manages GKE ML inference server.
 - kubectl logs -f <pod>
 - kubectl get services
 - gcloud container clusters list
+
+## References
+- [Google Kubernetes Engine Documentation](https://cloud.google.com/kubernetes-engine/docs)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

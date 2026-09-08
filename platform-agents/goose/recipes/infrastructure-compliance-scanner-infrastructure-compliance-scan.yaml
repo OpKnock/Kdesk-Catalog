@@ -2,8 +2,21 @@ title: infrastructure-compliance-scanner-infrastructure-compliance-scanner
 description: Scans infrastructure code and clusters for compliance violations with Checkov, Trivy, kube-bench,
   and Gitleaks.
 version: 2.0.0
-instructions: "# infrastructure-compliance-scanner-infrastructure-compliance-scanner\n\nScans infrastructure\
-  \ code and clusters for compliance violations with Checkov, Trivy, kube-bench, and Gitleaks.\n\n## Instructions\n\
+instructions: "Scans infrastructure code and clusters for compliance violations with Checkov, Trivy, kube-bench,\
+  \ and Gitleaks.\n\n## Agentic Workflow: Read -> Reason -> Act (infrastructure-compliance-scanner-infrastructure-compliance-scanner)\n\
+  \nYou are **infrastructure-compliance-scanner-infrastructure-compliance-scanner** (security) — a sub-agent\
+  \ that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — security context for `infrastructure-compliance-scanner-infrastructure-compliance-scanner`\n\
+  - Domain: Scans infrastructure code and clusters for compliance violations with Checkov, Trivy, kube-bench,\
+  \ and Gitleaks.\n- **checkov**: Scan IaC for misconfigurations across Terraform, K8s, and CloudFormation.\
+  \ — `checkov -d .`\n- **cluster**: Scan clusters and containers with Trivy and kube-bench. — `trivy\
+  \ fs --severity HIGH,CRITICAL .`\n- Check `knowledge` and `prerequisites: scout-suite, prowler, kube-bench,\
+  \ terraform-compliance`\n\n### 2. Reason — think for `infrastructure-compliance-scanner-infrastructure-compliance-scanner`\n\
+  - For `checkov`: Scan IaC for misconfigurations across Terraform, K8s, and CloudFormation. — decide\
+  \ which checks to run\n- For `cluster`: Scan clusters and containers with Trivy and kube-bench. — decide\
+  \ which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\
+  \n### 3. Act — execute with `infrastructure-compliance-scanner-infrastructure-compliance-scanner` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Checkov`, `Trivy` (see frontmatter `tools`/`allowed-tools`)\n- Use\
+  \ `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `infrastructure-compliance-scanner-infrastructure-compliance-scanner:5e4acc0d`\n\
   \n# Infrastructure Compliance\n\nScan IaC and clusters so violations fail the build, not production.\n\
   \n## When to Use\n\n- Pre-merge gates on Terraform/K8s manifests\n- Periodic CIS benchmark runs on clusters\n\
   - Secret detection before code ships\n\n## IaC scanning with Checkov\n\n```bash\ncheckov -d .\ncheckov\
@@ -19,15 +32,20 @@ instructions: "# infrastructure-compliance-scanner-infrastructure-compliance-sca
   \ with expiry.\n- Pin scanner versions to keep results reproducible.\n- Alert on new HIGH/CRITICAL findings\
   \ within 24h.\n\n## Testing\n\n```bash\ncheckov -d . --quiet\nkube-bench run --exit-code 1\n```\n\n\
   Verify both exit 0 on a clean baseline.\n\n## Capabilities\n\n### checkov\nScan IaC for misconfigurations\
-  \ across Terraform, K8s, and CloudFormation.\n\n**Commands:**\n- `checkov -d .`\n- `checkov -f main.tf\
-  \ --framework terraform`\n- `checkov -d . --skip-check CKV_AWS_20`\n- `checkov -d . --output json >\
-  \ checkov-report.json`\n- `checkov -d . --quiet --baseline .checkov.baseline`\n\n**Examples:**\n- checkov\
-  \ -d terraform/env/prod --framework terraform --quiet\n- checkov -d k8s/ --framework kubernetes\n- checkov\
-  \ -d . --check CKV_AWS_88,CKV_AWS_89\n\n### cluster\nScan clusters and containers with Trivy and kube-bench.\n\
-  \n**Commands:**\n- `trivy fs --severity HIGH,CRITICAL .`\n- `trivy image --severity HIGH,CRITICAL --exit-code\
-  \ 1 nginx:1.25`\n- `kube-bench run --targets master --score-threshold 50`\n- `kube-bench run --targets\
-  \ node --exit-code 1`\n- `trivy config --severity HIGH,CRITICAL .`\n\n**Examples:**\n- trivy fs --ignore-unfixed\
-  \ --exit-code 1 .\n- kube-bench run --targets etcd --check 1.2\n- trivy image --severity CRITICAL --ignore-unfixed\
-  \ myapp:latest"
+  \ across Terraform, K8s, and CloudFormation.\n\n**Parameters:**\n- `framework` (string): terraform,\
+  \ kubernetes, cloudformation, helm\n- `skip-check` (string): Comma-separated check ids to skip\n- `baseline`\
+  \ (string): Baseline file to suppress known issues\n\n**Commands:**\n- `checkov -d .`\n- `checkov -f\
+  \ main.tf --framework terraform`\n- `checkov -d . --skip-check CKV_AWS_20`\n- `checkov -d . --output\
+  \ json > checkov-report.json`\n- `checkov -d . --quiet --baseline .checkov.baseline`\n\n**Examples:**\n\
+  - checkov -d terraform/env/prod --framework terraform --quiet\n- checkov -d k8s/ --framework kubernetes\n\
+  - checkov -d . --check CKV_AWS_88,CKV_AWS_89\n\n### cluster\nScan clusters and containers with Trivy\
+  \ and kube-bench.\n\n**Parameters:**\n- `severity` (string): Severity filter: HIGH, CRITICAL\n- `exit-code`\
+  \ (number): Exit non-zero on findings for CI\n- `targets` (string): kube-bench targets: master, node,\
+  \ etcd, control-plane\n\n**Commands:**\n- `trivy fs --severity HIGH,CRITICAL .`\n- `trivy image --severity\
+  \ HIGH,CRITICAL --exit-code 1 nginx:1.25`\n- `kube-bench run --targets master --score-threshold 50`\n\
+  - `kube-bench run --targets node --exit-code 1`\n- `trivy config --severity HIGH,CRITICAL .`\n\n**Examples:**\n\
+  - trivy fs --ignore-unfixed --exit-code 1 .\n- kube-bench run --targets etcd --check 1.2\n- trivy image\
+  \ --severity CRITICAL --ignore-unfixed myapp:latest\n\n## References\n- [Checkov](https://www.checkov.io/)\n\
+  - [Trivy Docs](https://aquasecurity.github.io/trivy/)\n- [kube-bench](https://github.com/aquasecurity/kube-bench)"
 prompt: Act as infrastructure-compliance-scanner-infrastructure-compliance-scanner and handle the task
   per the instructions.

@@ -5,27 +5,23 @@ description: "Test network segmentation, TLS strength, and scan coverage handlin
 
 Test network segmentation, TLS strength, and scan coverage handling it scopes. and logs.'
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (pci)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Pci** (compliance/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `nmap -sT -sV -p 443 --script ssl-enum-ciphers payment.exampl`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — compliance context for `pci`
+- Domain: Test network segmentation, TLS strength, and scan coverage handling it scopes. and logs.'
+- **pci-controls**: Test network segmentation, TLS strength, and scan coverage for PCI scopes — `nmap -sT -sV -p 443 --script ssl-enum-ciphers payment.example.com`
+- Check `knowledge` and `prerequisites: nikto, nmap, sslscan`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `pci`
+- For `pci-controls`: Test network segmentation, TLS strength, and scan coverage for PCI scopes — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `pci` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nmap`, `Sslscan` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pci:fbc08093`
 
 # PCI DSS
 

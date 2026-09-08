@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(ab:*) Bash(nginx:*) Bash(redis-cli:*) Bash(t
 
 Implements adaptive rate limiting with nginx limit_req zones, Redis sliding-window counters, and load-test verification with ab.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (adaptive-rate-limiting)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Adaptive Rate Limiting** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `nginx -t`, `redis-cli INCR rate:{userId}:{window}`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `adaptive-rate-limiting`
+- Domain: Implements adaptive rate limiting with nginx limit_req zones, Redis sliding-window counters, and load-test verification with ab.
+- **nginx-limits**: Configure and hot-reload nginx request-rate and connection limits. — `nginx -t`
+- **redis-counters**: Use Redis fixed-window and Lua sliding-window counters to adapt limits per client. — `redis-cli INCR rate:{userId}:{window}`
+- Check `knowledge` and `prerequisites: nginx, redis-cli, tail`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `adaptive-rate-limiting`
+- For `nginx-limits`: Configure and hot-reload nginx request-rate and connection limits. — decide which checks to run
+- For `redis-counters`: Use Redis fixed-window and Lua sliding-window counters to adapt limits per client. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `adaptive-rate-limiting` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nginx`, `Ab` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `adaptive-rate-limiting:475a7116`
 
 # Adaptive Rate Limiting
 

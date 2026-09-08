@@ -4,27 +4,27 @@ applyTo: "**/*.r **/*.sh"
 
 Builds, tests, and ships serverless functions on Azure using Core Tools: initializes projects, scaffolds HTTP and timer triggers, runs the local emulator, publishes to function apps, and validates endpoints with curl.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (azure-functions)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Azure Functions** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `func new --template "HttpTrigger" --name MyFunction`, `func azure functionapp publish MyFunctionApp`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `azure-functions`
+- Domain: Builds, tests, and ships serverless functions on Azure using Core Tools: initializes projects, scaffolds HTTP and timer triggers, runs the local emulator, publishes to function apps, and validates end
+- **local-dev**: Create and run functions locally with Core Tools. — `func new --template "HttpTrigger" --name MyFunction`
+- **publish**: Deploy functions to Azure. — `func azure functionapp publish MyFunctionApp`
+- **test-function**: Invoke functions locally and in Azure. — `curl -X POST http://localhost:7071/api/MyFunction -d '{"name":"test"}'`
+- Check `knowledge` and `prerequisites: func`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `azure-functions`
+- For `local-dev`: Create and run functions locally with Core Tools. — decide which checks to run
+- For `publish`: Deploy functions to Azure. — decide which checks to run
+- For `test-function`: Invoke functions locally and in Azure. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `azure-functions` tools
+- Tools: `Glob`, `Grep`, `Read`, `Func`, `Az` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `azure-functions:08cf1af4`
 
 # Azure Functions
 

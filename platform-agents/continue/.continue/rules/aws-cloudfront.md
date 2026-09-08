@@ -1,15 +1,31 @@
 ---
 name: "Aws Cloudfront"
-description: "Manages AWS CloudFront distributions: creation, cache invalidation, origin configuration, and edge behavior testing."
+description: "Manages AWS CloudFront distributions: creation, cache invalidation, origin configuration, and edge behavior testing. Use when working with distribution lifecycle, invalidation, api or when the user mentions distribution lifecycle, invalidation, api."
 globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Aws Cloudfront
-
 Manages AWS CloudFront distributions: creation, cache invalidation, origin configuration, and edge behavior testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (aws-cloudfront)
+
+You are **Aws Cloudfront** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `aws-cloudfront`
+- Domain: Manages AWS CloudFront distributions: creation, cache invalidation, origin configuration, and edge behavior testing.
+- **distribution-lifecycle**: Create and manage CloudFront distributions. — `aws cloudfront create-distribution --origin-domain-name my-bucket.s3.amazonaws.c`
+- **invalidation**: Invalidate cached objects at edge locations. — `aws cloudfront create-invalidation --distribution-id E2EXAMPLE --paths "/*"`
+- Check `knowledge` and `prerequisites: aws`
+
+### 2. Reason — think for `aws-cloudfront`
+- For `distribution-lifecycle`: Create and manage CloudFront distributions. — decide which checks to run
+- For `invalidation`: Invalidate cached objects at edge locations. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `aws-cloudfront` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `aws-cloudfront:4a5acbe7`
 
 # AWS CloudFront
 
@@ -59,6 +75,10 @@ curl -sI https://d111111abcdef8.cloudfront.net/index.html | grep -iE 'x-cache|ag
 ### distribution-lifecycle
 Create and manage CloudFront distributions.
 
+**Parameters:**
+- `origin_domain` (string): Origin domain name
+- `distribution_id` (string): CloudFront distribution ID
+
 **Commands:**
 - `aws cloudfront create-distribution --origin-domain-name my-bucket.s3.amazonaws.com`
 - `aws cloudfront get-distribution --id E2EXAMPLE`
@@ -74,6 +94,10 @@ Create and manage CloudFront distributions.
 ### invalidation
 Invalidate cached objects at edge locations.
 
+**Parameters:**
+- `paths` (string): Object paths to invalidate
+- `distribution_id` (string): Distribution ID
+
 **Commands:**
 - `aws cloudfront create-invalidation --distribution-id E2EXAMPLE --paths "/*"`
 - `aws cloudfront create-invalidation --distribution-id E2EXAMPLE --paths "/index.html" "/assets/*"`
@@ -85,3 +109,7 @@ Invalidate cached objects at edge locations.
 - aws cloudfront create-invalidation --distribution-id E2EXAMPLE --paths "/css/*" "/js/*"
 - aws cloudfront list-invalidations --distribution-id E2EXAMPLE --max-items 5
 - curl -sI https://d111111abcdef8.cloudfront.net/app.js | grep -i x-cache
+
+## References
+- [CloudFront Developer Guide](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/)
+- [AWS CLI cloudfront Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudfront/index.html)

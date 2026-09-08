@@ -1,8 +1,22 @@
-# type-checking
-
 Static type checking with TypeScript: strictness, incremental builds, and monorepo project references.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (type-checking)
+
+You are **type-checking** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `type-checking`
+- Domain: Static type checking with TypeScript: strictness, incremental builds, and monorepo project references.
+- **tsc-checking**: Type-check TypeScript projects with configurable strictness and outputs — `tsc --noEmit`
+- Check `knowledge` and `prerequisites: tsc`
+
+### 2. Reason — think for `type-checking`
+- For `tsc-checking`: Type-check TypeScript projects with configurable strictness and outputs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `type-checking` tools
+- Tools: `Glob`, `Grep`, `Read`, `Tsc` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `type-checking:3da49e41`
 
 # Type Checking
 
@@ -73,6 +87,11 @@ plus the total error count and suggestions for fixing each category.
 ### tsc-checking
 Type-check TypeScript projects with configurable strictness and outputs
 
+**Parameters:**
+- `noEmit` (boolean): Type-check without emitting files
+- `project` (string): Path to tsconfig.json to use
+- `strict` (boolean): Enable all strict type-checking options
+
 **Commands:**
 - `tsc --noEmit`
 - `tsc -p tsconfig.json --pretty false`
@@ -84,3 +103,7 @@ Type-check TypeScript projects with configurable strictness and outputs
 - npx vue-tsc --noEmit
 - tsc --noEmit --composite false
 - tsc --build --force
+
+## References
+- [TypeScript compiler options](https://www.typescriptlang.org/tsconfig)
+- [TypeScript handbook](https://www.typescriptlang.org/docs/handbook/)

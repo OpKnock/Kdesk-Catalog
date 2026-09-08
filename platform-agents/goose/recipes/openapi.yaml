@@ -2,8 +2,19 @@ title: Openapi
 description: Authors, validates, lints, bundles, and generates code from OpenAPI 3.x specifications. Supports
   contract-first development with Redocly, Spectral, and openapi-generator tooling.
 version: 2.0.0
-instructions: "# Openapi\n\nAuthors, validates, lints, bundles, and generates code from OpenAPI 3.x specifications.\
-  \ Supports contract-first development with Redocly, Spectral, and openapi-generator tooling.\n\n## Instructions\n\
+instructions: "Authors, validates, lints, bundles, and generates code from OpenAPI 3.x specifications.\
+  \ Supports contract-first development with Redocly, Spectral, and openapi-generator tooling.\n\n## Agentic\
+  \ Workflow: Read -> Reason -> Act (openapi)\n\nYou are **Openapi** (api/general) — a sub-agent that\
+  \ **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `openapi`\n- Domain:\
+  \ Authors, validates, lints, bundles, and generates code from OpenAPI 3.x specifications. Supports contract-first\
+  \ development with Redocly, Spectral, and openapi-generator tooling.\n- **openapi-authoring**: Validate,\
+  \ lint, bundle and generate code from OpenAPI 3.x specifications. — `openapi-generator-cli validate\
+  \ -i openapi.yaml`\n- Check `knowledge` and `prerequisites: npx, openapi-generator-cli, redocly, swagger-cli`\n\
+  \n### 2. Reason — think for `openapi`\n- For `openapi-authoring`: Validate, lint, bundle and generate\
+  \ code from OpenAPI 3.x specifications. — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `openapi` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `Openapi-generator-cli`, `Redocly` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `openapi:67db851b`\n\
   \n# OpenAPI\n\nOpenAPI 3.x is the standard for describing REST APIs: paths, schemas, parameters and\
   \ security.\n\n## What this skill does\n\n- Validates and lints specs\n- Bundles multi-file specs into\
   \ one\n- Generates clients and servers\n\n## When to use\n\n- Starting a new API contract\n- Keeping\
@@ -16,9 +27,12 @@ instructions: "# Openapi\n\nAuthors, validates, lints, bundles, and generates co
   \          description: OK\n```\n\n## Best practices\n\n- Write the spec before the code (contract-first)\n\
   - Keep one spec file per API, reference external $refs\n- Run lint + validate in CI\n\n## Capabilities\n\
   \n### openapi-authoring\nValidate, lint, bundle and generate code from OpenAPI 3.x specifications.\n\
-  \n**Commands:**\n- `openapi-generator-cli validate -i openapi.yaml`\n- `redocly lint openapi.yaml`\n\
-  - `npx @redocly/cli bundle openapi.yaml -o bundle.yaml`\n- `openapi-generator-cli generate -g python\
-  \ -i openapi.yaml -o generated/`\n- `swagger-cli validate openapi.yaml`\n\n**Examples:**\n- redocly\
-  \ lint openapi.yaml --extends recommended\n- openapi-generator-cli generate -g typescript-axios -i openapi.yaml\
-  \ -o out/\n- npx @redocly/cli bundle openapi.yaml --ext json"
+  \n**Parameters:**\n- `spec` (string): Path to the OpenAPI file\n- `generator` (string): Code generation\
+  \ language/target\n- `output` (string): Output directory for generated code\n\n**Commands:**\n- `openapi-generator-cli\
+  \ validate -i openapi.yaml`\n- `redocly lint openapi.yaml`\n- `npx @redocly/cli bundle openapi.yaml\
+  \ -o bundle.yaml`\n- `openapi-generator-cli generate -g python -i openapi.yaml -o generated/`\n- `swagger-cli\
+  \ validate openapi.yaml`\n\n**Examples:**\n- redocly lint openapi.yaml --extends recommended\n- openapi-generator-cli\
+  \ generate -g typescript-axios -i openapi.yaml -o out/\n- npx @redocly/cli bundle openapi.yaml --ext\
+  \ json\n\n## References\n- [OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0.html)\n- [Redocly\
+  \ CLI Docs](https://redocly.com/docs/cli/)\n- [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator)"
 prompt: Act as Openapi and handle the task per the instructions.

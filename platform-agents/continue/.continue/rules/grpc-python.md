@@ -1,15 +1,29 @@
 ---
 name: "Grpc Python"
-description: "gRPC services and clients in Python with grpcio and grpcio-tools: python -m grpc_tools.protoc codegen, async/await servers, and interceptors."
+description: "gRPC services and clients in Python with grpcio and grpcio-tools: python -m grpc_tools.protoc codegen, async/await servers, and interceptors. Use when working with python grpc, api or when the user mentions python grpc, api."
 globs: ["**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Grpc Python
-
 gRPC services and clients in Python with grpcio and grpcio-tools: python -m grpc_tools.protoc codegen, async/await servers, and interceptors.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (grpc-python)
+
+You are **Grpc Python** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `grpc-python`
+- Domain: gRPC services and clients in Python with grpcio and grpcio-tools: python -m grpc_tools.protoc codegen, async/await servers, and interceptors.
+- **python-grpc**: Generate Python stubs with grpc_tools and implement sync or asyncio gRPC servers. — `pip install grpcio grpcio-tools`
+- Check `knowledge` and `prerequisites: pip, python`
+
+### 2. Reason — think for `grpc-python`
+- For `python-grpc`: Generate Python stubs with grpc_tools and implement sync or asyncio gRPC servers. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `grpc-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grpc-python:d7b294f5`
 
 # gRPC Python
 
@@ -98,6 +112,11 @@ Agent: Switch to grpc.aio or increase ThreadPoolExecutor workers:
 ### python-grpc
 Generate Python stubs with grpc_tools and implement sync or asyncio gRPC servers.
 
+**Parameters:**
+- `proto_file` (string): Proto file to compile.
+- `out_dir` (string): Output directory for generated _pb2.py files.
+- `grpc_port` (integer): Port for the server thread, default 50051.
+
 **Commands:**
 - `pip install grpcio grpcio-tools`
 - `python -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. helloworld.proto`
@@ -109,3 +128,7 @@ Generate Python stubs with grpc_tools and implement sync or asyncio gRPC servers
 - python -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. -I . helloworld.proto
 - python server.py & python client.py
 - python -m grpc_tools.protoc --help
+
+## References
+- [gRPC Python Docs](https://grpc.io/docs/languages/python/)
+- [grpcio on PyPI](https://pypi.org/project/grpcio/)

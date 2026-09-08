@@ -4,27 +4,25 @@ applyTo: "**/*.r **/*.sh **/*.{yaml,yml}"
 
 Send and query traces and metrics with Lightstep: OpenTelemetry collector configuration, OTLP ingestion, and Lightstep API queries.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (lightstep-observability)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Lightstep Observability** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `otelcol-contrib --config otelcol.yaml`, `curl -s -H "Authorization: Bearer $LS_TOKEN" https://api.lig`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `lightstep-observability`
+- Domain: Send and query traces and metrics with Lightstep: OpenTelemetry collector configuration, OTLP ingestion, and Lightstep API queries.
+- **otel-ingest**: Run the OpenTelemetry Collector and emit OTLP telemetry. — `otelcol-contrib --config otelcol.yaml`
+- **lightstep-api**: Query Lightstep via the public API and the built-in CLI/curl. — `curl -s -H "Authorization: Bearer $LS_TOKEN" https://api.lightstep.com/public/v0`
+- Check `knowledge` and `prerequisites: docker, otel-cli, otelcol-contrib`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `lightstep-observability`
+- For `otel-ingest`: Run the OpenTelemetry Collector and emit OTLP telemetry. — decide which checks to run
+- For `lightstep-api`: Query Lightstep via the public API and the built-in CLI/curl. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `lightstep-observability` tools
+- Tools: `Glob`, `Grep`, `Read`, `Otelcol-contrib`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `lightstep-observability:0bb83971`
 
 # Lightstep Observability
 

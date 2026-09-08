@@ -1,15 +1,31 @@
 ---
 name: "terraform"
-description: "Writes and applies Terraform configurations: init, plan, apply, format, validate, workspaces, providers, and outputs."
+description: "Writes and applies Terraform configurations: init, plan, apply, format, validate, workspaces, providers, and outputs. Use when working with core workflow, modules and workspaces, devops or when the user mentions core workflow, modules and workspaces, devops."
 type: knowledge
 triggers: ["terraform", "core-workflow", "modules-and-workspaces"]
 ---
 
-# Terraform
-
 Writes and applies Terraform configurations: init, plan, apply, format, validate, workspaces, providers, and outputs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (terraform)
+
+You are **Terraform** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `terraform`
+- Domain: Writes and applies Terraform configurations: init, plan, apply, format, validate, workspaces, providers, and outputs.
+- **core-workflow**: Initialize, plan, apply, and destroy infrastructure. — `terraform init`
+- **modules-and-workspaces**: Work with modules, workspaces, outputs, and provider configs. — `terraform get -update`
+- Check `knowledge` and `prerequisites: terraform`
+
+### 2. Reason — think for `terraform`
+- For `core-workflow`: Initialize, plan, apply, and destroy infrastructure. — decide which checks to run
+- For `modules-and-workspaces`: Work with modules, workspaces, outputs, and provider configs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `terraform` tools
+- Tools: `Glob`, `Grep`, `Read`, `Terraform` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `terraform:53be2fe3`
 
 # Terraform Operations
 
@@ -67,6 +83,10 @@ terraform console
 ### core-workflow
 Initialize, plan, apply, and destroy infrastructure.
 
+**Parameters:**
+- `plan-file` (string): Saved plan file
+- `dir` (string): Config directory
+
 **Commands:**
 - `terraform init`
 - `terraform plan -out plan.tfplan`
@@ -83,6 +103,10 @@ Initialize, plan, apply, and destroy infrastructure.
 ### modules-and-workspaces
 Work with modules, workspaces, outputs, and provider configs.
 
+**Parameters:**
+- `workspace` (string): Workspace name
+- `output` (string): Output name to query
+
 **Commands:**
 - `terraform get -update`
 - `terraform workspace new prod`
@@ -95,3 +119,8 @@ Work with modules, workspaces, outputs, and provider configs.
 - terraform get -update
 - terraform workspace select prod
 - terraform output -json
+
+## References
+- [Terraform Documentation](https://developer.hashicorp.com/terraform/docs)
+- [Terraform Language](https://developer.hashicorp.com/terraform/language)
+- [Terraform Registry](https://registry.terraform.io/)

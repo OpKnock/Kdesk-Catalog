@@ -1,6 +1,6 @@
 ---
 name: "Reproducibility Deployment"
-description: "Reproducibility SDK deployment agent for ML Reproducibility SDK deployment."
+description: "Reproducibility SDK deployment agent for ML Reproducibility SDK deployment. Use when working with Ml Reproducibility Deploy Sdk, deployment or when the user mentions Ml Reproducibility Deploy Sdk, deployment."
 globs: ["**/*.py", "**/*.r", "**/Dockerfile*"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Reproducibility Deployment
 
 Reproducibility SDK deployment agent for ML Reproducibility SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (reproducibility-deployment)
+
+You are **Reproducibility Deployment** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `reproducibility-deployment`
+- Domain: Reproducibility SDK deployment agent for ML Reproducibility SDK deployment.
+- **Ml Reproducibility Deploy Sdk**: Reproducibility SDK deployment agent for ML Reproducibility SDK deployment. — `docker build -t reproducibility:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `reproducibility-deployment`
+- For `Ml Reproducibility Deploy Sdk`: Reproducibility SDK deployment agent for ML Reproducibility SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `reproducibility-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Reproducibility` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `reproducibility-deployment:75b4dd1a`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Reproducibility SDK deployment agent for ML Reproducibility SDK deployment.
 **Examples:**
 - Server: python -m reproducibility.server --port 8080
 - Docker: docker run -p 8080:8080 reproducibility-server
+
+## References
+- [DVC Documentation](https://dvc.org/doc)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

@@ -4,27 +4,27 @@ applyTo: "**/*.html **/*.json **/*.r **/*.sh"
 
 Designs and runs API tests with Postman collections via Newman CLI, including environments, data files, and reporters.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (postman-testing)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **postman-testing** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `newman run api.postman_collection.json`, `newman run collection.json -d data.csv`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — testing context for `postman-testing`
+- Domain: Designs and runs API tests with Postman collections via Newman CLI, including environments, data files, and reporters.
+- **newman-runs**: Run Postman collections with environments. — `newman run api.postman_collection.json`
+- **data-driven**: Run collections with CSV/JSON data files. — `newman run collection.json -d data.csv`
+- **reporters**: Emit CLI, HTML, and JUnit reports. — `newman run collection.json -r cli`
+- Check `knowledge` and `prerequisites: newman`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `postman-testing`
+- For `newman-runs`: Run Postman collections with environments. — decide which checks to run
+- For `data-driven`: Run collections with CSV/JSON data files. — decide which checks to run
+- For `reporters`: Emit CLI, HTML, and JUnit reports. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `postman-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Newman` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `postman-testing:70aacb44`
 
 # Postman / Newman
 

@@ -6,27 +6,25 @@ alwaysApply: false
 
 Control Kafka data retention: time/size-based retention configs, segment sizing, record deletion by offset, and log dir verification.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (kafka-retention)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Kafka Retention** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `kafka-configs.sh --bootstrap-server localhost:9092 --entity-`, `kafka-delete-records.sh --bootstrap-server localhost:9092 --`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `kafka-retention`
+- Domain: Control Kafka data retention: time/size-based retention configs, segment sizing, record deletion by offset, and log dir verification.
+- **retention-config**: Set time- and size-based retention per topic with kafka-configs.sh. — `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity`
+- **record-deletion**: Delete records below an offset and verify log sizes shrink. — `kafka-delete-records.sh --bootstrap-server localhost:9092 --offset-json-file off`
+- Check `knowledge` and `prerequisites: kafka-configs.sh, kafka-delete-records.sh, kafka-log-dirs.sh, kafka-run-class.sh`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `kafka-retention`
+- For `retention-config`: Set time- and size-based retention per topic with kafka-configs.sh. — decide which checks to run
+- For `record-deletion`: Delete records below an offset and verify log sizes shrink. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `kafka-retention` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-configs.sh`, `Kafka-delete-records.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-retention:eb63be7e`
 
 # Kafka Retention
 

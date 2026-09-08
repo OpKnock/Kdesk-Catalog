@@ -1,14 +1,28 @@
 ---
-description: "Capture and analyze API network traffic using tshark (Wireshark's CLI) and the Wireshark GUI. Use BPF capture filters, display filters, field extraction, and protocol statistics to debug HTTP/TLS issues."
+description: "Capture and analyze API network traffic using tshark (Wireshark's CLI) and the Wireshark GUI. Use BPF capture filters, display filters, field extraction, and protocol statistics to debug HTTP/TLS issues. Use when working with packet capture, api or when the user mentions packet capture, api."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Wireshark
-
 Capture and analyze API network traffic using tshark (Wireshark's CLI) and the Wireshark GUI. Use BPF capture filters, display filters, field extraction, and protocol statistics to debug HTTP/TLS issues.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (wireshark)
+
+You are **Wireshark** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `wireshark`
+- Domain: Capture and analyze API network traffic using tshark (Wireshark's CLI) and the Wireshark GUI. Use BPF capture filters, display filters, field extraction, and protocol statistics to debug HTTP/TLS issu
+- **packet-capture**: Capture and analyze network traffic for API debugging — `tshark -i eth0 -f 'tcp port 443' -w capture.pcapng`
+- Check `knowledge` and `prerequisites: dumpcap, tshark`
+
+### 2. Reason — think for `wireshark`
+- For `packet-capture`: Capture and analyze network traffic for API debugging — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `wireshark` tools
+- Tools: `Glob`, `Grep`, `Read`, `Tshark`, `Dumpcap` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `wireshark:d3130687`
 
 # Wireshark / tshark
 
@@ -72,6 +86,11 @@ sleep 12
 ### packet-capture
 Capture and analyze network traffic for API debugging
 
+**Parameters:**
+- `interface` (string): Capture interface, e.g. eth0, lo, Wi-Fi
+- `filter` (string): BPF capture filter, e.g. 'tcp port 443'
+- `duration` (string): Stop capture after N seconds (-a duration:N)
+
 **Commands:**
 - `tshark -i eth0 -f 'tcp port 443' -w capture.pcapng`
 - `tshark -r capture.pcapng -Y 'http.request' -T fields -e http.host -e http.request.uri`
@@ -83,3 +102,7 @@ Capture and analyze network traffic for API debugging
 - tshark -i lo -f 'tcp port 8080' -a duration:60 -w api.pcapng
 - tshark -r capture.pcapng -Y 'http.request.method == POST' -T fields -e ip.src -e http.user_agent | sort | uniq -c
 - tshark -r capture.pcapng -Y 'tls.handshake.type == 1' -T fields -e tls.handshake.extensions_server_name
+
+## References
+- [Wireshark Docs](https://www.wireshark.org/docs/)
+- [tshark man page](https://www.wireshark.org/docs/man-pages/tshark.html)

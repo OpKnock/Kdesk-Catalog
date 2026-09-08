@@ -1,14 +1,28 @@
 ---
-description: "Web performance analysis: Lighthouse audits, load testing, and request timing measurements."
+description: "Web performance analysis: Lighthouse audits, load testing, and request timing measurements. Use when working with web performance, code quality or when the user mentions web performance, code quality."
 globs: ["**/*.go", "**/*.html", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# performance
-
 Web performance analysis: Lighthouse audits, load testing, and request timing measurements.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (performance)
+
+You are **performance** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `performance`
+- Domain: Web performance analysis: Lighthouse audits, load testing, and request timing measurements.
+- **web-performance**: Measure page performance with Lighthouse, curl timing, and load tests — `npx lighthouse http://localhost:8080 --output=json --output-path=./lh-report.jso`
+- Check `knowledge` and `prerequisites: npx, wrk`
+
+### 2. Reason — think for `performance`
+- For `web-performance`: Measure page performance with Lighthouse, curl timing, and load tests — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `performance` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `performance:3c76393c`
 
 # Performance
 
@@ -84,6 +98,11 @@ Returns Lighthouse scores per category with the top 5 performance opportunities
 ### web-performance
 Measure page performance with Lighthouse, curl timing, and load tests
 
+**Parameters:**
+- `only-categories` (string): Lighthouse categories to audit: performance, accessibility, seo, best-practices
+- `budget-path` (string): JSON file with performance budgets (timings, sizes)
+- `output-path` (string): Where to write the report (html/json)
+
 **Commands:**
 - `npx lighthouse http://localhost:8080 --output=json --output-path=./lh-report.json`
 - `curl -o /dev/null -s -w 'total: %{time_total}s ttfb: %{time_starttransfer}s
@@ -96,3 +115,7 @@ Measure page performance with Lighthouse, curl timing, and load tests
 - npx lighthouse http://localhost:8080 --chrome-flags='--headless' --output=html
 - curl -w '%{http_code} %{time_total}' -o /dev/null http://localhost:8080/api/health
 - wrk -t8 -c200 -d60s http://localhost:8080/api --latency
+
+## References
+- [Lighthouse docs](https://developer.chrome.com/docs/lighthouse/)
+- [Web.dev measure](https://web.dev/measure/)

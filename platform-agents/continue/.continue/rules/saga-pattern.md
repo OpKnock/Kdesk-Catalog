@@ -1,15 +1,29 @@
 ---
 name: "Saga Pattern"
-description: "Expert saga pattern skill covering choreographed and orchestrated sagas with Temporal CLI, workflow inspection, compensation design, and failure injection."
+description: "Expert saga pattern skill covering choreographed and orchestrated sagas with Temporal CLI, workflow inspection, compensation design, and failure injection. Use when working with temporal saga, api or when the user mentions temporal saga, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Saga Pattern
-
 Expert saga pattern skill covering choreographed and orchestrated sagas with Temporal CLI, workflow inspection, compensation design, and failure injection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (saga-pattern)
+
+You are **Saga Pattern** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `saga-pattern`
+- Domain: Expert saga pattern skill covering choreographed and orchestrated sagas with Temporal CLI, workflow inspection, compensation design, and failure injection.
+- **temporal-saga**: Model distributed transactions as sagas and drive them with Temporal — `temporal server start-dev`
+- Check `knowledge` and `prerequisites: kubectl, temporal`
+
+### 2. Reason — think for `saga-pattern`
+- For `temporal-saga`: Model distributed transactions as sagas and drive them with Temporal — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `saga-pattern` tools
+- Tools: `Glob`, `Grep`, `Read`, `Temporal`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `saga-pattern:1d0b7168`
 
 # Saga Pattern
 
@@ -81,6 +95,11 @@ temporal workflow show --workflow-id order-43   # verify compensation ran
 ### temporal-saga
 Model distributed transactions as sagas and drive them with Temporal
 
+**Parameters:**
+- `workflow_id` (string): Unique workflow identifier for the saga run
+- `workflow_type` (string): Workflow class/function name
+- `task_queue` (string): Temporal task queue the workers poll
+
 **Commands:**
 - `temporal server start-dev`
 - `temporal workflow start --workflow-id order-42 --type OrderSaga --task-queue orders`
@@ -92,3 +111,7 @@ Model distributed transactions as sagas and drive them with Temporal
 - temporal workflow start --workflow-id order-42 --type OrderSaga --task-queue orders
 - temporal workflow show --workflow-id order-42
 - temporal workflow describe --workflow-id order-42
+
+## References
+- [Microsoft saga pattern](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/saga/saga)
+- [Temporal CLI reference](https://docs.temporal.io/cli/)

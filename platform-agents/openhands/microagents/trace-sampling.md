@@ -1,15 +1,29 @@
 ---
 name: "trace-sampling"
-description: "Control trace volume with head and tail sampling strategies. Configures OpenTelemetry SDK samplers via environment variables (traceidratio, parentbased_traceidratio, always_on), sets Jaeger probabilistic or rate-limiting sampling, and describes collector-side tail sampling policies that retain errors while dropping successful traces."
+description: "Control trace volume with head and tail sampling strategies. Configures OpenTelemetry SDK samplers via environment variables (traceidratio, parentbased_traceidratio, always_on), sets Jaeger probabilistic or rate-limiting sampling, and describes collector-side tail sampling policies that retain errors while dropping successful traces. Use when working with sampling strategy, api or when the user mentions sampling strategy, api."
 type: knowledge
 triggers: ["trace-sampling", "sampling-strategy"]
 ---
 
-# Trace Sampling
-
 Control trace volume with head and tail sampling strategies. Configures OpenTelemetry SDK samplers via environment variables (traceidratio, parentbased_traceidratio, always_on), sets Jaeger probabilistic or rate-limiting sampling, and describes collector-side tail sampling policies that retain errors while dropping successful traces.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (trace-sampling)
+
+You are **Trace Sampling** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `trace-sampling`
+- Domain: Control trace volume with head and tail sampling strategies. Configures OpenTelemetry SDK samplers via environment variables (traceidratio, parentbased_traceidratio, always_on), sets Jaeger probabilis
+- **sampling-strategy**: Configure head and tail trace sampling rates — `export OTEL_TRACES_SAMPLER=traceidratio OTEL_TRACES_SAMPLER_ARG=0.1`
+- Check `knowledge` and `prerequisites: docker, export`
+
+### 2. Reason — think for `trace-sampling`
+- For `sampling-strategy`: Configure head and tail trace sampling rates — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `trace-sampling` tools
+- Tools: `Glob`, `Grep`, `Read`, `Export`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `trace-sampling:be2d96da`
 
 # Trace Sampling
 
@@ -82,6 +96,11 @@ export OTEL_TRACES_SAMPLER=traceidratio OTEL_TRACES_SAMPLER_ARG=1.0
 ### sampling-strategy
 Configure head and tail trace sampling rates
 
+**Parameters:**
+- `sampler` (string): traceidratio, parentbased_traceidratio, always_on
+- `ratio` (float): Sampling fraction, e.g. 0.1 = 10%
+- `strategy` (string): probabilistic or ratelimiting for Jaeger
+
 **Commands:**
 - `export OTEL_TRACES_SAMPLER=traceidratio OTEL_TRACES_SAMPLER_ARG=0.1`
 - `export OTEL_TRACES_SAMPLER=parentbased_traceidratio OTEL_TRACES_SAMPLER_ARG=0.25`
@@ -93,3 +112,7 @@ Configure head and tail trace sampling rates
 - export OTEL_TRACES_SAMPLER=traceidratio OTEL_TRACES_SAMPLER_ARG=0.1
 - curl -g 'http://localhost:16686/api/sampling?service=api' | jq
 - docker run -p 16686:16686 jaegertracing/all-in-one --sampling.type=ratelimiting --sampling.param=10
+
+## References
+- [OpenTelemetry sampling docs](https://opentelemetry.io/docs/concepts/sampling/)
+- [Jaeger sampling strategies](https://www.jaegertracing.io/docs/1.57/sampling/)

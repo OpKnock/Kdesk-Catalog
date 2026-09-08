@@ -1,15 +1,31 @@
 ---
 name: "api-gateway-specialist"
-description: "Deep expertise in API gateways: Kong plugin ecosystems, Traefik middlewares, gateway security, and observability."
+description: "Deep expertise in API gateways: Kong plugin ecosystems, Traefik middlewares, gateway security, and observability. Use when working with gateway security, gateway observability or when the user mentions gateway security, gateway observability."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# api-gateway-specialist
-
 Deep expertise in API gateways: Kong plugin ecosystems, Traefik middlewares, gateway security, and observability.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-gateway-specialist)
+
+You are **api-gateway-specialist** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `api-gateway-specialist`
+- Domain: Deep expertise in API gateways: Kong plugin ecosystems, Traefik middlewares, gateway security, and observability.
+- **gateway-security**: Harden gateways: auth plugins, CORS, request validation, and IP allowlists — `curl -s -X POST http://localhost:8001/routes/orders/plugins -H 'Content-Type: ap`
+- **gateway-observability**: Enable logging, metrics, and tracing on gateway traffic — `curl -s -X POST http://localhost:8001/routes/orders/plugins -H 'Content-Type: ap`
+- Check `knowledge` and `prerequisites: kong, traefik, aws-cli`
+
+### 2. Reason — think for `api-gateway-specialist`
+- For `gateway-security`: Harden gateways: auth plugins, CORS, request validation, and IP allowlists — decide which checks to run
+- For `gateway-observability`: Enable logging, metrics, and tracing on gateway traffic — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-gateway-specialist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-gateway-specialist:8b5faf8e`
 
 # API Gateway Specialist
 
@@ -49,6 +65,10 @@ Attempt unauthenticated and cross-origin requests and verify rejection.
 ### gateway-security
 Harden gateways: auth plugins, CORS, request validation, and IP allowlists
 
+**Parameters:**
+- `route` (string): Route name
+- `plugin` (string): Plugin name
+
 **Commands:**
 - `curl -s -X POST http://localhost:8001/routes/orders/plugins -H 'Content-Type: application/json' -d '{"name":"oauth2"}'`
 - `curl -s -X POST http://localhost:8001/routes/orders/plugins -H 'Content-Type: application/json' -d '{"name":"cors","config":{"origins":["https://app.example.com"]}}'`
@@ -64,6 +84,10 @@ Harden gateways: auth plugins, CORS, request validation, and IP allowlists
 ### gateway-observability
 Enable logging, metrics, and tracing on gateway traffic
 
+**Parameters:**
+- `metricsUrl` (string): Prometheus metrics endpoint
+- `traceEndpoint` (string): Tracing endpoint
+
 **Commands:**
 - `curl -s -X POST http://localhost:8001/routes/orders/plugins -H 'Content-Type: application/json' -d '{"name":"http-log","config":{"http_endpoint":"http://elk:8080/logs"}}'`
 - `curl -s -X POST http://localhost:8001/routes/orders/plugins -H 'Content-Type: application/json' -d '{"name":"prometheus"}'`
@@ -75,3 +99,7 @@ Enable logging, metrics, and tracing on gateway traffic
 - curl -s http://localhost:9100/metrics | grep -E 'kong_http|kong_request' | head -10
 - curl -s -X POST http://localhost:8001/routes/orders/plugins -H 'Content-Type: application/json' -d '{"name":"zipkin","config":{"http_endpoint":"http://zipkin:9411/api/v2/spans"}}'
 - curl -s http://localhost:8001/status | python -m json.tool
+
+## References
+- [Kong Plugin Hub](https://docs.konghq.com/hub/)
+- [Traefik Middlewares](https://doc.traefik.io/traefik/middlewares/overview/)

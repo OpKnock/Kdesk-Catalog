@@ -1,15 +1,29 @@
 ---
 name: "Wget"
-description: "Download files and mirror websites with GNU wget: single-file downloads with resume, recursive site crawling, full mirroring with link conversion, authenticated requests, and batch downloads from URL lists."
+description: "Download files and mirror websites with GNU wget: single-file downloads with resume, recursive site crawling, full mirroring with link conversion, authenticated requests, and batch downloads from URL lists. Use when working with wget downloads, api or when the user mentions wget downloads, api."
 globs: ["**/*.css", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Wget
-
 Download files and mirror websites with GNU wget: single-file downloads with resume, recursive site crawling, full mirroring with link conversion, authenticated requests, and batch downloads from URL lists.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (wget)
+
+You are **Wget** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `wget`
+- Domain: Download files and mirror websites with GNU wget: single-file downloads with resume, recursive site crawling, full mirroring with link conversion, authenticated requests, and batch downloads from URL 
+- **wget-downloads**: Fetch, resume, and mirror HTTP resources — `wget -c https://httpbin.org/bytes/1024`
+- Check `knowledge` and `prerequisites: wget`
+
+### 2. Reason — think for `wget`
+- For `wget-downloads`: Fetch, resume, and mirror HTTP resources — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `wget` tools
+- Tools: `Glob`, `Grep`, `Read`, `Wget` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `wget:4b7f9d26`
 
 # wget
 
@@ -70,6 +84,11 @@ wget -q -O /dev/null -w '%{http_code}' https://httpbin.org/
 ### wget-downloads
 Fetch, resume, and mirror HTTP resources
 
+**Parameters:**
+- `recursive` (boolean): Follow links recursively (-r)
+- `level` (integer): Maximum recursion depth (-l)
+- `rate` (string): Bandwidth limit, e.g. 1m, 500k (--limit-rate)
+
 **Commands:**
 - `wget -c https://httpbin.org/bytes/1024`
 - `wget -r -l 2 -np https://httpbin.org/`
@@ -81,3 +100,7 @@ Fetch, resume, and mirror HTTP resources
 - wget -c -t 10 --timeout=30 https://httpbin.org/bytes/1048576
 - wget -r -A '*.pdf' -np -l 3 https://httpbin.org/
 - wget --user=ci --password=secret https://httpbin.org/bytes/1024
+
+## References
+- [GNU Wget Manual](https://www.gnu.org/software/wget/manual/wget.html)
+- [Wget WARC Guide](https://www.gnu.org/software/wget/manual/wget.html#WARC)

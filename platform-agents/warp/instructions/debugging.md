@@ -1,8 +1,24 @@
-# debugging
-
 Debug applications systematically with interactive debuggers, logging, tracing, and profilers across runtimes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (debugging)
+
+You are **debugging** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `debugging`
+- Domain: Debug applications systematically with interactive debuggers, logging, tracing, and profilers across runtimes.
+- **runtime-debuggers**: Attach interactive debuggers in Node, Python, and Go. — `node --inspect-brk server.js`
+- **tracing-observability**: Use logs and traces to isolate faults. — `tail -f logs/app.log`
+- Check `knowledge` and `prerequisites: dlv, kubectl, ngrep, node`
+
+### 2. Reason — think for `debugging`
+- For `runtime-debuggers`: Attach interactive debuggers in Node, Python, and Go. — decide which checks to run
+- For `tracing-observability`: Use logs and traces to isolate faults. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `debugging` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Dlv` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `debugging:8ac47b3d`
 
 # Debugging
 
@@ -59,6 +75,10 @@ curl -sv http://localhost:8080/api
 ### runtime-debuggers
 Attach interactive debuggers in Node, Python, and Go.
 
+**Parameters:**
+- `entry` (string): Entry point
+- `breakpoint` (string): file:line breakpoint
+
 **Commands:**
 - `node --inspect-brk server.js`
 - `python -m pdb app.py`
@@ -74,6 +94,10 @@ Attach interactive debuggers in Node, Python, and Go.
 ### tracing-observability
 Use logs and traces to isolate faults.
 
+**Parameters:**
+- `target` (string): Service or pod to inspect
+- `since` (string): Log window, e.g. 10m
+
 **Commands:**
 - `tail -f logs/app.log`
 - `kubectl logs -f deploy/myapp --tail=100`
@@ -85,3 +109,8 @@ Use logs and traces to isolate faults.
 - kubectl logs deploy/myapp -c sidecar --since=10m
 - tcpdump -i any -w traffic.pcap port 8080
 - curl -sv -X POST http://localhost:8080/api -d "{}"
+
+## References
+- [Node Debugger Docs](https://nodejs.org/api/debugger.html)
+- [pdb Docs](https://docs.python.org/3/library/pdb.html)
+- [Delve Docs](https://github.com/go-delve/delve)

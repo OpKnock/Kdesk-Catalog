@@ -1,15 +1,31 @@
 ---
 name: "nginx"
-description: "Configures and operates nginx servers: virtual hosts, TLS termination, log inspection, and zero-downtime reloads."
+description: "Configures and operates nginx servers: virtual hosts, TLS termination, log inspection, and zero-downtime reloads. Use when working with server, logs, infrastructure or when the user mentions server, logs, infrastructure."
 type: knowledge
 triggers: ["nginx", "server", "logs"]
 ---
 
-# nginx
-
 Configures and operates nginx servers: virtual hosts, TLS termination, log inspection, and zero-downtime reloads.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nginx)
+
+You are **nginx** (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `nginx`
+- Domain: Configures and operates nginx servers: virtual hosts, TLS termination, log inspection, and zero-downtime reloads.
+- **server**: Manage nginx runtime: test, reload, and inspect. — `nginx -t`
+- **logs**: Analyze access and error logs for issues. — `tail -f /var/log/nginx/error.log`
+- Check `knowledge` and `prerequisites: awk, grep, nginx, tail`
+
+### 2. Reason — think for `nginx`
+- For `server`: Manage nginx runtime: test, reload, and inspect. — decide which checks to run
+- For `logs`: Analyze access and error logs for issues. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nginx` tools
+- Tools: `Glob`, `Read`, `Nginx`, `Tail`, `Grep` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nginx:d6e61e88`
 
 # Nginx
 
@@ -94,6 +110,11 @@ Verify cache headers and TLS chain after each config change.
 ### server
 Manage nginx runtime: test, reload, and inspect.
 
+**Parameters:**
+- `c` (string): Config file path
+- `s` (string): Signal: reload, reopen, stop, quit
+- `T` (string): Dump full effective configuration
+
 **Commands:**
 - `nginx -t`
 - `nginx -s reload`
@@ -109,6 +130,11 @@ Manage nginx runtime: test, reload, and inspect.
 ### logs
 Analyze access and error logs for issues.
 
+**Parameters:**
+- `log-file` (string): Path to access or error log
+- `status-code` (string): HTTP status filter like 5xx
+- `lines` (number): Number of lines to tail
+
 **Commands:**
 - `tail -f /var/log/nginx/error.log`
 - `tail -n 100 /var/log/nginx/access.log | awk '{print $9}' | sort | uniq -c | sort -rn`
@@ -120,3 +146,8 @@ Analyze access and error logs for issues.
 - tail -f /var/log/nginx/error.log
 - grep 'upstream timed out' /var/log/nginx/error.log | tail
 - tail -n 1000 /var/log/nginx/access.log | awk '{print $9}' | sort | uniq -c | sort -rn
+
+## References
+- [nginx.org Docs](https://nginx.org/en/docs/)
+- [nginx Beginner Guide](https://nginx.org/en/docs/beginners_guide.html)
+- [nginx admin guide](https://nginx.org/en/docs/control.html)

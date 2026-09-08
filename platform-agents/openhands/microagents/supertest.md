@@ -1,15 +1,29 @@
 ---
 name: "supertest"
-description: "Write and run HTTP API tests with it and jest."
+description: "Write and run HTTP API tests with it and jest. Use when working with supertest http tests, api or when the user mentions supertest http tests, api."
 type: knowledge
 triggers: ["supertest", "supertest-http-tests"]
 ---
 
-# Supertest
-
 Write and run HTTP API tests with it and jest.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (supertest)
+
+You are **Supertest** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `supertest`
+- Domain: Write and run HTTP API tests with it and jest.
+- **supertest-http-tests**: Write and run HTTP API tests with supertest and jest — `npm init -y && npm i -D supertest jest`
+- Check `knowledge` and `prerequisites: node, npm, npx`
+
+### 2. Reason — think for `supertest`
+- For `supertest-http-tests`: Write and run HTTP API tests with supertest and jest — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `supertest` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `supertest:e4243697`
 
 # Supertest
 
@@ -84,6 +98,11 @@ npx jest --verbose --watch
 ### supertest-http-tests
 Write and run HTTP API tests with supertest and jest
 
+**Parameters:**
+- `app` (string): Express app export to attach supertest to
+- `test_file` (string): Test file path for jest
+- `path` (string): Endpoint under test
+
 **Commands:**
 - `npm init -y && npm i -D supertest jest`
 - `npx jest --verbose`
@@ -95,3 +114,7 @@ Write and run HTTP API tests with supertest and jest
 - npx jest tests/api.test.js -t 'should return 200'
 - npx jest --verbose
 - node -e 'const request = require("supertest"); request(require("./app")).get("/health").expect(200).end(() => console.log("ok"))'
+
+## References
+- [Supertest repo](https://github.com/ladjs/supertest)
+- [Jest docs](https://jestjs.io/docs/getting-started)

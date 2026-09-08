@@ -11,27 +11,23 @@ allowed-tools: "Glob Grep Read Bash(black:*)"
 
 Formats Python code deterministically with Black. Checks, diffs, and applies formatting with configurable line length.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (code-quality-black-agent)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Code Quality Black Agent** (code-quality/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `black --check .`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `code-quality-black-agent`
+- Domain: Formats Python code deterministically with Black. Checks, diffs, and applies formatting with configurable line length.
+- **format-python**: Format Python code with Black, check compliance, and show diffs — `black --check .`
+- Check `knowledge` and `prerequisites: black, python3`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `code-quality-black-agent`
+- For `format-python`: Format Python code with Black, check compliance, and show diffs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `code-quality-black-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Black` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-quality-black-agent:c95e3431`
 
 ## Instructions
 

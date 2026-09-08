@@ -1,6 +1,6 @@
 ---
 name: "Tgi Docker"
-description: "TGI SDK deployment agent for ML TGI SDK deployment."
+description: "TGI SDK deployment agent for ML TGI SDK deployment. Use when working with Ml Tgi Deploy Sdk, inference or when the user mentions Ml Tgi Deploy Sdk, inference."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Tgi Docker
 
 TGI SDK deployment agent for ML TGI SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (tgi-docker)
+
+You are **Tgi Docker** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `tgi-docker`
+- Domain: TGI SDK deployment agent for ML TGI SDK deployment.
+- **Ml Tgi Deploy Sdk**: TGI SDK deployment agent for ML TGI SDK deployment. — `Server: text-generation-launcher --model-id meta-llama/Llama-2-7b-chat-hf`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `tgi-docker`
+- For `Ml Tgi Deploy Sdk`: TGI SDK deployment agent for ML TGI SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tgi-docker` tools
+- Tools: `Glob`, `Grep`, `Read`, `Server`, `Docker` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tgi-docker:8397d1ee`
 
 ## Instructions
 
@@ -25,3 +43,7 @@ TGI SDK deployment agent for ML TGI SDK deployment.
 **Examples:**
 - Server: text-generation-launcher --model-id meta-llama/Llama-2-7b-chat-hf
 - Docker: docker run --gpus all -p 8080:80 ghcr.io/huggingface/text-generation-inference:latest --model-id meta-llama/Llama-2-7b-chat-hf
+
+## References
+- [Text Generation Inference](https://huggingface.co/docs/text-generation-inference/)
+- [Docker Documentation](https://docs.docker.com/)

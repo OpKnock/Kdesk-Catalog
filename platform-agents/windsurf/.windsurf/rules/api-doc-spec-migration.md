@@ -6,27 +6,25 @@ globs: ["**/*.html", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 
 Migrates API documentation: Swagger 2.0 to OpenAPI 3, doc site restructuring, and versioned docs with changelogs.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-doc-spec-migration)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Doc Spec Migration** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx swagger2openapi swagger.yaml -o openapi3.yaml`, `mkdir -p docs/v1 docs/v2`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `api-doc-spec-migration`
+- Domain: Migrates API documentation: Swagger 2.0 to OpenAPI 3, doc site restructuring, and versioned docs with changelogs.
+- **spec-migration**: Convert and upgrade OpenAPI specs between versions — `npx swagger2openapi swagger.yaml -o openapi3.yaml`
+- **doc-versioning**: Publish versioned documentation sites with changelogs — `mkdir -p docs/v1 docs/v2`
+- Check `knowledge` and `prerequisites: swagger-cli, redoc-cli, openapi-generator`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-doc-spec-migration`
+- For `spec-migration`: Convert and upgrade OpenAPI specs between versions — decide which checks to run
+- For `doc-versioning`: Publish versioned documentation sites with changelogs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-doc-spec-migration` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Redocly` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-doc-spec-migration:69aa5225`
 
 # API Doc (Migration & Versioning)
 

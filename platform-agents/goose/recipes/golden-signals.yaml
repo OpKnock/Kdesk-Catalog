@@ -2,13 +2,23 @@ title: Golden Signals
 description: Query the four it from Prometheus and set up alerting. them from Prometheus metrics and wire
   dashboards and alerts.'
 version: 2.0.0
-instructions: "# Golden Signals\n\nQuery the four it from Prometheus and set up alerting. them from Prometheus\
-  \ metrics and wire dashboards and alerts.'\n\n## Instructions\n\n# Golden Signals\n\n## What this skill\
-  \ does\n\nThe four golden signals are the minimum set of metrics to understand user-facing health: latency\
-  \ (time to serve), traffic (request rate), errors (failure rate), and saturation (how full the service\
-  \ is).\n\n## When to use\n\n- Building the first monitoring dashboard for a service\n- Deciding what\
-  \ to alert on before adding noise\n- Reviewing whether existing metrics cover all four signals\n\n##\
-  \ Real commands\n\n```bash\n# 1. Latency: p99 request duration\ncurl -s 'http://prometheus:9090/api/v1/query'\
+instructions: "Query the four it from Prometheus and set up alerting. them from Prometheus metrics and\
+  \ wire dashboards and alerts.'\n\n## Agentic Workflow: Read -> Reason -> Act (golden-signals)\n\nYou\
+  \ are **Golden Signals** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `golden-signals`\n- Domain: Query the four it from Prometheus and set\
+  \ up alerting. them from Prometheus metrics and wire dashboards and alerts.'\n- **golden-signals**:\
+  \ Query the four golden signals from Prometheus and set up alerting. — `curl -s 'http://prometheus:9090/api/v1/query'\
+  \ --data-urlencode 'query=histogram_`\n- Check `knowledge` and `prerequisites: promtool`\n\n### 2. Reason\
+  \ — think for `golden-signals`\n- For `golden-signals`: Query the four golden signals from Prometheus\
+  \ and set up alerting. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `golden-signals` tools\n- Tools: `Glob`,\
+  \ `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write;\
+  \ record evidence (paths, checksums)\n- Fingerprint: `golden-signals:722af707`\n\n# Golden Signals\n\
+  \n## What this skill does\n\nThe four golden signals are the minimum set of metrics to understand user-facing\
+  \ health: latency (time to serve), traffic (request rate), errors (failure rate), and saturation (how\
+  \ full the service is).\n\n## When to use\n\n- Building the first monitoring dashboard for a service\n\
+  - Deciding what to alert on before adding noise\n- Reviewing whether existing metrics cover all four\
+  \ signals\n\n## Real commands\n\n```bash\n# 1. Latency: p99 request duration\ncurl -s 'http://prometheus:9090/api/v1/query'\
   \ --data-urlencode 'query=histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m]))\
   \ by (le))' | jq '.data.result[0].value[1]'\n\n# 2. Traffic: requests per second\ncurl -s 'http://prometheus:9090/api/v1/query'\
   \ --data-urlencode 'query=sum(rate(http_requests_total[5m]))' | jq '.data.result[0].value[1]'\n\n# 3.\
@@ -26,15 +36,19 @@ instructions: "# Golden Signals\n\nQuery the four it from Prometheus and set up 
   \ as saturation proxies when no direct metric exists.\n- Attach each alert to a runbook; a signal without\
   \ a response path is noise.\n- Review the four signals before adding any other metric to dashboards.\n\
   \n## Capabilities\n\n### golden-signals\nQuery the four golden signals from Prometheus and set up alerting.\n\
-  \n**Commands:**\n- `curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_quantile(0.99,\
-  \ sum(rate(http_request_duration_seconds_bucket[5m])) by (le))' | jq '.data.result[0].value[1]'`\n-\
-  \ `curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=sum(rate(http_requests_total[5m]))'\
+  \n**Parameters:**\n- `prometheus-url` (string): Prometheus API endpoint\n- `signal` (string): latency,\
+  \ traffic, errors, or saturation\n- `threshold` (string): Alert threshold for the signal\n\n**Commands:**\n\
+  - `curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m]))\
+  \ by (le))' | jq '.data.result[0].value[1]'`\n- `curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode\
+  \ 'query=sum(rate(http_requests_total[5m]))' | jq '.data.result[0].value[1]'`\n- `curl -s 'http://prometheus:9090/api/v1/query'\
+  \ --data-urlencode 'query=sum(rate(http_requests_total{code=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))'\
   \ | jq '.data.result[0].value[1]'`\n- `curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode\
-  \ 'query=sum(rate(http_requests_total{code=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))' | jq\
-  \ '.data.result[0].value[1]'`\n- `curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=rate(process_cpu_seconds_total[1m])\
-  \ * 100' | jq '.data.result[0].value[1]'`\n- `promtool check rules golden-signals.rules.yml`\n\n**Examples:**\n\
-  - curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m]))\
+  \ 'query=rate(process_cpu_seconds_total[1m]) * 100' | jq '.data.result[0].value[1]'`\n- `promtool check\
+  \ rules golden-signals.rules.yml`\n\n**Examples:**\n- curl -s 'http://prometheus:9090/api/v1/query'\
+  \ --data-urlencode 'query=histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m]))\
   \ by (le))' | jq '.data.result[0].value[1]'\n- curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode\
   \ 'query=sum(rate(http_requests_total{code=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))' | jq\
-  \ '.data.result[0].value[1]'\n- promtool check rules golden-signals.rules.yml"
+  \ '.data.result[0].value[1]'\n- promtool check rules golden-signals.rules.yml\n\n## References\n- [The\
+  \ Four Golden Signals (Google SRE)](https://sre.google/sre-book/monitoring-distributed-systems/)\n-\
+  \ [Prometheus querying](https://prometheus.io/docs/prometheus/latest/querying/basics/)"
 prompt: Act as Golden Signals and handle the task per the instructions.

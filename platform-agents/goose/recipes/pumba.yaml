@@ -2,14 +2,42 @@ title: Pumba
 description: 'Inject container-level chaos with Pumba: kill, pause, network emulation, and CPU/memory
   stress to validate resilience.'
 version: 2.0.0
-instructions: '# Pumba
+instructions: 'Inject container-level chaos with Pumba: kill, pause, network emulation, and CPU/memory
+  stress to validate resilience.
 
 
-  Inject container-level chaos with Pumba: kill, pause, network emulation, and CPU/memory stress to validate
-  resilience.
+  ## Agentic Workflow: Read -> Reason -> Act (pumba)
 
 
-  ## Instructions
+  You are **Pumba** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — api context for `pumba`
+
+  - Domain: Inject container-level chaos with Pumba: kill, pause, network emulation, and CPU/memory stress
+  to validate resilience.
+
+  - **pumba-chaos-actions**: Inject chaos into containers: kill, pause, network emulation and resource
+  stress. — `pumba kill --signal SIGKILL docker://web-container`
+
+  - Check `knowledge` and `prerequisites: pumba`
+
+
+  ### 2. Reason — think for `pumba`
+
+  - For `pumba-chaos-actions`: Inject chaos into containers: kill, pause, network emulation and resource
+  stress. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `pumba` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Pumba` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `pumba:3e32a315`
 
 
   # Pumba
@@ -98,6 +126,15 @@ instructions: '# Pumba
   Inject chaos into containers: kill, pause, network emulation and resource stress.
 
 
+  **Parameters:**
+
+  - `action` (string): kill, pause, netem, stress, rm
+
+  - `container` (string): Container name, regex or docker:// URI
+
+  - `duration` (string): Chaos duration like 30s
+
+
   **Commands:**
 
   - `pumba kill --signal SIGKILL docker://web-container`
@@ -117,5 +154,12 @@ instructions: '# Pumba
 
   - pumba netem --duration 30s delay --time 1000 --jitter 200 docker://api-1
 
-  - pumba pause --duration 45s --regex ''^svc'' docker'
+  - pumba pause --duration 45s --regex ''^svc'' docker
+
+
+  ## References
+
+  - [Pumba GitHub](https://github.com/alexei-led/pumba)
+
+  - [Pumba Chaos Guide](https://github.com/alexei-led/pumba#chaos-commands)'
 prompt: Act as Pumba and handle the task per the instructions.

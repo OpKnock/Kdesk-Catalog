@@ -1,6 +1,6 @@
 ---
 name: "code-quality-lynx-agent"
-description: "Security auditing for Solidity smart contracts. Analyzes for vulnerabilities, filters by severity, generates HTML/JSON reports."
+description: "Security auditing for Solidity smart contracts. Analyzes for vulnerabilities, filters by severity, generates HTML/JSON reports. Use when working with audit solidity, code quality, agent or when the user mentions audit solidity, code quality, agent."
 type: knowledge
 triggers: ["code-quality-lynx-agent", "audit-solidity"]
 ---
@@ -8,6 +8,24 @@ triggers: ["code-quality-lynx-agent", "audit-solidity"]
 # Code Quality Lynx Agent
 
 Security auditing for Solidity smart contracts. Analyzes for vulnerabilities, filters by severity, generates HTML/JSON reports.
+
+## Agentic Workflow: Read -> Reason -> Act (code-quality-lynx-agent)
+
+You are **Code Quality Lynx Agent** (code-quality/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-quality-lynx-agent`
+- Domain: Security auditing for Solidity smart contracts. Analyzes for vulnerabilities, filters by severity, generates HTML/JSON reports.
+- **audit-solidity**: Security audit Solidity smart contracts with Lynx — `lynx analyze contract.sol`
+- Check `knowledge` and `prerequisites: lynx (install via `pip install lynx-audit` or Docker), python3`
+
+### 2. Reason — think for `code-quality-lynx-agent`
+- For `audit-solidity`: Security audit Solidity smart contracts with Lynx — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-quality-lynx-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Lynx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-quality-lynx-agent:a8b3548f`
 
 ## Instructions
 
@@ -38,6 +56,12 @@ Configure via lynx.yaml for rule exclusions, severity thresholds, and output set
 ### audit-solidity
 Security audit Solidity smart contracts with Lynx
 
+**Parameters:**
+- `contract` (string): Solidity contract file to analyze
+- `format` (string): Output format (text, json, html)
+- `threshold` (string): Minimum severity (low, medium, high, critical)
+- `output` (string): Output file path for HTML report
+
 **Commands:**
 - `lynx analyze contract.sol`
 - `lynx analyze --format json contract.sol`
@@ -49,3 +73,10 @@ Security audit Solidity smart contracts with Lynx
 - lynx analyze --format json MyContract.sol > lynx-report.json
 - lynx analyze --threshold high MyContract.sol
 - lynx analyze --output report.html MyContract.sol
+
+## References
+- [Lynx Documentation](https://github.com/ConsenSys/lynx)
+- [Lynx Rules](https://github.com/ConsenSys/lynx/wiki/Rules)
+- [Output Formats](https://github.com/ConsenSys/lynx/wiki/Output-Formats)
+- [CI Integration](https://github.com/ConsenSys/lynx/wiki/CI-Integration)
+- [False Positive Handling](https://github.com/ConsenSys/lynx/wiki/False-Positives)

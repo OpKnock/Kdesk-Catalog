@@ -1,6 +1,6 @@
 ---
 name: "versioning-agent"
-description: "Versioning inference server agent. Manages Versioning ML inference server."
+description: "Versioning inference server agent. Manages Versioning ML inference server. Use when working with Ml Versioning Inference Server Agent or when the user mentions Ml Versioning Inference Server Agent."
 type: knowledge
 triggers: ["versioning-agent", "ml versioning inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["versioning-agent", "ml versioning inference server agent"]
 # Versioning Agent
 
 Versioning inference server agent. Manages Versioning ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (versioning-agent)
+
+You are **Versioning Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `versioning-agent`
+- Domain: Versioning inference server agent. Manages Versioning ML inference server.
+- **Ml Versioning Inference Server Agent**: Versioning inference server agent. Manages Versioning ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `versioning-agent`
+- For `Ml Versioning Inference Server Agent`: Versioning inference server agent. Manages Versioning ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `versioning-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `versioning-agent:5c9e43dd`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Versioning inference server agent. Manages Versioning ML inference server.
 - curl http://localhost:8080/version --data '{"model": "model.pkl"}'
 - python version.py --model model.pkl --version 1.0
 - python list_versions.py --model-name my_model
+
+## References
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)
+- [Python Documentation](https://docs.python.org/3/)

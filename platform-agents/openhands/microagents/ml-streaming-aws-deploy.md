@@ -1,6 +1,6 @@
 ---
 name: "ml-streaming-aws-deploy"
-description: "AWS Streaming deployment agent for ML streaming inference on AWS."
+description: "AWS Streaming deployment agent for ML streaming inference on AWS. Use when working with Ml Streaming Aws Deploy, deployment or when the user mentions Ml Streaming Aws Deploy, deployment."
 type: knowledge
 triggers: ["ml-streaming-aws-deploy", "ml streaming aws deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-streaming-aws-deploy", "ml streaming aws deploy"]
 # Ml Streaming Aws Deploy
 
 AWS Streaming deployment agent for ML streaming inference on AWS.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-streaming-aws-deploy)
+
+You are **Ml Streaming Aws Deploy** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-streaming-aws-deploy`
+- Domain: AWS Streaming deployment agent for ML streaming inference on AWS.
+- **Ml Streaming Aws Deploy**: AWS Streaming deployment agent for ML streaming inference on AWS. — `SageMaker RealTime: aws sagemaker create-endpoint --endpoint-name my-realtime --`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-streaming-aws-deploy`
+- For `Ml Streaming Aws Deploy`: AWS Streaming deployment agent for ML streaming inference on AWS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-streaming-aws-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `SageMaker`, `Lambda` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-streaming-aws-deploy:eca12d28`
 
 ## Instructions
 
@@ -27,3 +45,8 @@ AWS Streaming deployment agent for ML streaming inference on AWS.
 - Kinesis: aws kinesis create-stream --stream-name ml-input --shard-count 2
 - SageMaker RealTime: aws sagemaker create-endpoint --endpoint-name my-realtime --endpoint-config-name my-config
 - Lambda: aws lambda create-function --function-name ml-stream --runtime python3.9 --handler stream.handler --zip-file fileb://deploy.zip
+
+## References
+- [Apache Kafka Documentation](https://kafka.apache.org/documentation/)
+- [Amazon SageMaker Documentation](https://docs.aws.amazon.com/sagemaker/)
+- [AWS Documentation](https://docs.aws.amazon.com/)

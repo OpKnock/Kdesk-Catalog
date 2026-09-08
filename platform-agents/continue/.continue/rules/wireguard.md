@@ -1,15 +1,31 @@
 ---
 name: "Wireguard"
-description: "Deploys WireGuard VPNs: key generation, peer configuration, and interface management with wg and wg-quick."
+description: "Deploys WireGuard VPNs: key generation, peer configuration, and interface management with wg and wg-quick. Use when working with keys, interfaces, networking or when the user mentions keys, interfaces, networking."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Wireguard
-
 Deploys WireGuard VPNs: key generation, peer configuration, and interface management with wg and wg-quick.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (wireguard)
+
+You are **Wireguard** (networking/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — networking context for `wireguard`
+- Domain: Deploys WireGuard VPNs: key generation, peer configuration, and interface management with wg and wg-quick.
+- **keys**: Generate WireGuard key pairs securely. — `umask 077 && wg genkey | tee privatekey | wg pubkey > publickey`
+- **interfaces**: Bring up, tear down, and inspect WireGuard interfaces. — `wg-quick up wg0`
+- Check `knowledge` and `prerequisites: cat, umask, wg-quick`
+
+### 2. Reason — think for `wireguard`
+- For `keys`: Generate WireGuard key pairs securely. — decide which checks to run
+- For `interfaces`: Bring up, tear down, and inspect WireGuard interfaces. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `wireguard` tools
+- Tools: `Glob`, `Grep`, `Read`, `Umask`, `Wg` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `wireguard:6dc75859`
 
 # WireGuard
 
@@ -92,6 +108,11 @@ Confirm handshake and ping before wiring services.
 ### keys
 Generate WireGuard key pairs securely.
 
+**Parameters:**
+- `umask` (string): Secure file permissions, e.g. 077
+- `output` (string): Key output file
+- `preshared` (string): Generate a preshared key
+
 **Commands:**
 - `umask 077 && wg genkey | tee privatekey | wg pubkey > publickey`
 - `wg genkey`
@@ -107,6 +128,11 @@ Generate WireGuard key pairs securely.
 ### interfaces
 Bring up, tear down, and inspect WireGuard interfaces.
 
+**Parameters:**
+- `interface` (string): wg0, wg1, or config path
+- `allowed-ips` (string): Show peer allowed IPs
+- `transfer` (string): Show transfer counters
+
 **Commands:**
 - `wg-quick up wg0`
 - `wg-quick down wg0`
@@ -118,3 +144,8 @@ Bring up, tear down, and inspect WireGuard interfaces.
 - wg-quick up /etc/wireguard/wg0.conf
 - wg show wg0 transfer
 - wg show wg0 peers | wc -l
+
+## References
+- [WireGuard Quickstart](https://www.wireguard.com/quickstart/)
+- [wg man page](https://man7.org/linux/man-pages/man8/wg.8.html)
+- [wg-quick man page](https://man7.org/linux/man-pages/man8/wg-quick.8.html)

@@ -1,15 +1,31 @@
 ---
 name: "circleci-devops"
-description: "Creates and validates CircleCI config.yml pipelines, runs jobs locally, and manages orbs, contexts, and runner pools."
+description: "Creates and validates CircleCI config.yml pipelines, runs jobs locally, and manages orbs, contexts, and runner pools. Use when working with config and validation, orbs and contexts, devops or when the user mentions config and validation, orbs and contexts, devops."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# circleci-devops
-
 Creates and validates CircleCI config.yml pipelines, runs jobs locally, and manages orbs, contexts, and runner pools.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (circleci-devops)
+
+You are **circleci-devops** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `circleci-devops`
+- Domain: Creates and validates CircleCI config.yml pipelines, runs jobs locally, and manages orbs, contexts, and runner pools.
+- **config-and-validation**: Validate, process, and execute CircleCI config locally before pushing. — `circleci config validate .circleci/config.yml`
+- **orbs-and-contexts**: Publish orbs and manage environment contexts and runner pools. — `circleci orb create myorg/myorb@volatile`
+- Check `knowledge` and `prerequisites: circleci`
+
+### 2. Reason — think for `circleci-devops`
+- For `config-and-validation`: Validate, process, and execute CircleCI config locally before pushing. — decide which checks to run
+- For `orbs-and-contexts`: Publish orbs and manage environment contexts and runner pools. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `circleci-devops` tools
+- Tools: `Glob`, `Grep`, `Read`, `Circleci` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `circleci-devops:a65e92b9`
 
 # CircleCI Pipeline Engineering
 
@@ -84,6 +100,10 @@ workflows:
 ### config-and-validation
 Validate, process, and execute CircleCI config locally before pushing.
 
+**Parameters:**
+- `config-path` (string): Path to config.yml or config directory
+- `job` (string): Job name to run locally
+
 **Commands:**
 - `circleci config validate .circleci/config.yml`
 - `circleci config process .circleci/config.yml`
@@ -99,6 +119,10 @@ Validate, process, and execute CircleCI config locally before pushing.
 ### orbs-and-contexts
 Publish orbs and manage environment contexts and runner pools.
 
+**Parameters:**
+- `org` (string): GitHub/GitLab organization name
+- `context` (string): Context name, e.g. myorg/production
+
 **Commands:**
 - `circleci orb create myorg/myorb@volatile`
 - `circleci orb publish orb.yml myorg/myorb@1.0.0`
@@ -111,3 +135,8 @@ Publish orbs and manage environment contexts and runner pools.
 - circleci orb publish orb.yml myorg/myorb@1.0.0
 - circleci context list myorg
 - circleci runner resource-class list
+
+## References
+- [CircleCI CLI Documentation](https://circleci.com/docs/local-cli/)
+- [CircleCI Configuration Reference](https://circleci.com/docs/configuration-reference/)
+- [CircleCI Orbs](https://circleci.com/developer/orbs)

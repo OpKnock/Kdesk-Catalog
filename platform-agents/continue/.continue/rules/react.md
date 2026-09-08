@@ -1,15 +1,31 @@
 ---
 name: "React"
-description: "Develops React applications with Vite: scaffolding, JSX, hooks, and production builds with strict TypeScript."
+description: "Develops React applications with Vite: scaffolding, JSX, hooks, and production builds with strict TypeScript. Use when working with vite, typescript check, frontend or when the user mentions vite, typescript check, frontend."
 globs: ["**/*.r", "**/*.sh", "**/*.{ts,tsx}"]
 alwaysApply: false
 ---
 
-# React
-
 Develops React applications with Vite: scaffolding, JSX, hooks, and production builds with strict TypeScript.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (react)
+
+You are **React** (frontend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `react`
+- Domain: Develops React applications with Vite: scaffolding, JSX, hooks, and production builds with strict TypeScript.
+- **vite**: Scaffold and run React apps on the Vite toolchain. — `npm create vite@latest my-app -- --template react-ts`
+- **typescript-check**: Type-check and optimize React code. — `npx tsc --noEmit`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `react`
+- For `vite`: Scaffold and run React apps on the Vite toolchain. — decide which checks to run
+- For `typescript-check`: Type-check and optimize React code. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `react` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `react:b3eaa858`
 
 # React
 
@@ -88,6 +104,11 @@ Verify coverage before every release.
 ### vite
 Scaffold and run React apps on the Vite toolchain.
 
+**Parameters:**
+- `template` (string): react, react-ts, or vanilla-ts
+- `port` (number): Dev server port
+- `open` (string): Open browser on dev start
+
 **Commands:**
 - `npm create vite@latest my-app -- --template react-ts`
 - `npm install`
@@ -103,6 +124,11 @@ Scaffold and run React apps on the Vite toolchain.
 ### typescript-check
 Type-check and optimize React code.
 
+**Parameters:**
+- `mode` (string): Vite build mode for env configs
+- `noEmit` (string): Type-check without emitting files
+- `minify` (string): esbuild or terser minifier
+
 **Commands:**
 - `npx tsc --noEmit`
 - `npm run build && npx tsc --noEmit`
@@ -114,3 +140,8 @@ Type-check and optimize React code.
 - npx tsc --noEmit --strict
 - npx vite build --minify esbuild
 - npx tsc --noEmit && npm run build
+
+## References
+- [React Quick Start](https://react.dev/learn)
+- [Vite Guide](https://vite.dev/guide/)
+- [TypeScript with React](https://www.typescriptlang.org/docs/handbook/react-&-webpack.html)

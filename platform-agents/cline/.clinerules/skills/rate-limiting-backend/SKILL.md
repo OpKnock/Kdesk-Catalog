@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(ab:*) Bash(curl:*) Bash(nginx:*) Bash(redis-
 
 Implements API rate limiting with Redis sliding windows, token buckets, and nginx/AWS strategies to protect services from abuse.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (rate-limiting-backend)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Rate Limiting** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `redis-cli incr ratelimit:user:42`, `nginx -t`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `rate-limiting-backend`
+- Domain: Implements API rate limiting with Redis sliding windows, token buckets, and nginx/AWS strategies to protect services from abuse.
+- **redis-rate-limit**: Enforce rate limits with Redis primitives. — `redis-cli incr ratelimit:user:42`
+- **proxy-limiting**: Configure limits at the reverse proxy layer. — `nginx -t`
+- Check `knowledge` and `prerequisites: nginx, redis-cli`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `rate-limiting-backend`
+- For `redis-rate-limit`: Enforce rate limits with Redis primitives. — decide which checks to run
+- For `proxy-limiting`: Configure limits at the reverse proxy layer. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `rate-limiting-backend` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`, `Nginx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rate-limiting-backend:1ba0906c`
 
 # Rate Limiting
 

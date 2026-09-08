@@ -4,27 +4,23 @@ applyTo: "**/*.json **/*.r **/*.sh **/*.{yaml,yml}"
 
 Ship, index, and query application logs into Elasticsearch with Filebeat, and run Elasticsearch log queries from the CLI.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (elastic-logs)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Elastic Logs** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `filebeat test config -c filebeat.yml`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `elastic-logs`
+- Domain: Ship, index, and query application logs into Elasticsearch with Filebeat, and run Elasticsearch log queries from the CLI.
+- **log-shipping**: Configure and run Filebeat, test pipelines, and query indexed logs via the Elasticsearch REST API. — `filebeat test config -c filebeat.yml`
+- Check `knowledge` and `prerequisites: filebeat`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `elastic-logs`
+- For `log-shipping`: Configure and run Filebeat, test pipelines, and query indexed logs via the Elasticsearch REST API. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `elastic-logs` tools
+- Tools: `Glob`, `Grep`, `Read`, `Filebeat`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `elastic-logs:10783352`
 
 # Elastic Logs
 

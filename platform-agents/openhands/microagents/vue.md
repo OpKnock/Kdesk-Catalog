@@ -1,15 +1,31 @@
 ---
 name: "vue"
-description: "Builds Vue 3 applications with the create-vue toolchain: SFCs, Pinia state, vue-router, and vue-tsc type checking."
+description: "Builds Vue 3 applications with the create-vue toolchain: SFCs, Pinia state, vue-router, and vue-tsc type checking. Use when working with scaffold, typecheck test, frontend or when the user mentions scaffold, typecheck test, frontend."
 type: knowledge
 triggers: ["vue", "scaffold", "typecheck-test"]
 ---
 
-# vue
-
 Builds Vue 3 applications with the create-vue toolchain: SFCs, Pinia state, vue-router, and vue-tsc type checking.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (vue)
+
+You are **vue** (frontend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `vue`
+- Domain: Builds Vue 3 applications with the create-vue toolchain: SFCs, Pinia state, vue-router, and vue-tsc type checking.
+- **scaffold**: Create Vue 3 projects and add libraries. — `npm create vue@latest my-app -- --typescript --router --pinia --eslint`
+- **typecheck-test**: Type-check, test, and analyze Vue components. — `npx vue-tsc --noEmit`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `vue`
+- For `scaffold`: Create Vue 3 projects and add libraries. — decide which checks to run
+- For `typecheck-test`: Type-check, test, and analyze Vue components. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `vue` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vue:0e7c8fd8`
 
 # Vue
 
@@ -95,6 +111,11 @@ Test stores and composables; keep coverage above 80% for critical logic.
 ### scaffold
 Create Vue 3 projects and add libraries.
 
+**Parameters:**
+- `typescript` (string): Enable TypeScript support
+- `router` (string): Add vue-router
+- `pinia` (string): Add Pinia state store
+
 **Commands:**
 - `npm create vue@latest my-app -- --typescript --router --pinia --eslint`
 - `npm install`
@@ -110,6 +131,11 @@ Create Vue 3 projects and add libraries.
 ### typecheck-test
 Type-check, test, and analyze Vue components.
 
+**Parameters:**
+- `noEmit` (string): Type-check SFC templates without emitting
+- `coverage` (string): Enable Vitest coverage
+- `fix` (string): Auto-fix ESLint issues
+
 **Commands:**
 - `npx vue-tsc --noEmit`
 - `npm run test`
@@ -121,3 +147,8 @@ Type-check, test, and analyze Vue components.
 - npx vue-tsc --noEmit --strict
 - npx vitest run tests/unit/cart.spec.ts
 - npm run lint -- --fix
+
+## References
+- [Vue 3 Guide](https://vuejs.org/guide/introduction.html)
+- [create-vue](https://github.com/vuejs/create-vue)
+- [Pinia](https://pinia.vuejs.org/)

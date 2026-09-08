@@ -1,8 +1,22 @@
-# Express Routing
-
 Build REST APIs with Express: scaffold projects, run the dev server, add middleware, and test routes with supertest.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (express-routing)
+
+You are **Express Routing** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `express-routing`
+- Domain: Build REST APIs with Express: scaffold projects, run the dev server, add middleware, and test routes with supertest.
+- **express-routing**: Scaffold, run, extend, and test Express applications. — `npx express-generator --view=ejs myapp`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `express-routing`
+- For `express-routing`: Scaffold, run, extend, and test Express applications. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `express-routing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `express-routing:6d53ed63`
 
 # Express v2
 
@@ -90,6 +104,11 @@ test('returns 404 for missing order', async () => {
 ### express-routing
 Scaffold, run, extend, and test Express applications.
 
+**Parameters:**
+- `port` (integer): Port for the Express server
+- `view-engine` (string): ejs, pug, or none for API-only
+- `dev-tool` (string): nodemon or node --watch for dev restarts
+
 **Commands:**
 - `npx express-generator --view=ejs myapp`
 - `npm install express morgan cors helmet`
@@ -102,3 +121,7 @@ Scaffold, run, extend, and test Express applications.
 - npx express-generator --view=ejs myapp && cd myapp && npm install && npm start
 - npm install express morgan cors helmet && npm run dev
 - curl -s localhost:3000/api/orders | jq
+
+## References
+- [Express Documentation](https://expressjs.com/)
+- [Supertest](https://github.com/ladjs/supertest)

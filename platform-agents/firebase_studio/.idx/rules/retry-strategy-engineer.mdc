@@ -1,14 +1,30 @@
 ---
-description: "Engineers retry policies: curl retry flags, exponential backoff, jitter, and network fault injection with tc-netem."
+description: "Engineers retry policies: curl retry flags, exponential backoff, jitter, and network fault injection with tc-netem. Use when working with curl retry, netem or when the user mentions curl retry, netem."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# retry-strategy-engineer
-
 Engineers retry policies: curl retry flags, exponential backoff, jitter, and network fault injection with tc-netem.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (retry-strategy-engineer)
+
+You are **retry-strategy-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `retry-strategy-engineer`
+- Domain: Engineers retry policies: curl retry flags, exponential backoff, jitter, and network fault injection with tc-netem.
+- **curl-retry**: Test and apply curl-level retry policies. — `curl --retry 5 --retry-delay 2 --retry-all-errors -fsS http://localhost:8080/hea`
+- **netem**: Inject network faults to test resilience. — `tc qdisc add dev eth0 root netem loss 10%`
+- Check `knowledge` and `prerequisites: node.js, python, redis, resilience4j`
+
+### 2. Reason — think for `retry-strategy-engineer`
+- For `curl-retry`: Test and apply curl-level retry policies. — decide which checks to run
+- For `netem`: Inject network faults to test resilience. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `retry-strategy-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Tc` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `retry-strategy-engineer:17ece86d`
 
 # Retry Strategy
 
@@ -66,6 +82,11 @@ Inject 10-30% loss, verify recovery within the retry budget, then remove the qdi
 ### curl-retry
 Test and apply curl-level retry policies.
 
+**Parameters:**
+- `retry` (number): Max retry count
+- `retry-delay` (number): Delay between retries
+- `retry-all-errors` (string): Retry on 4xx/5xx and transport errors
+
 **Commands:**
 - `curl --retry 5 --retry-delay 2 --retry-all-errors -fsS http://localhost:8080/healthz`
 - `curl --retry 3 --retry-connrefused --retry-delay 1 http://service:8080/`
@@ -81,6 +102,11 @@ Test and apply curl-level retry policies.
 ### netem
 Inject network faults to test resilience.
 
+**Parameters:**
+- `device` (string): Network device
+- `loss` (number): Packet loss percentage
+- `delay` (string): Latency and jitter
+
 **Commands:**
 - `tc qdisc add dev eth0 root netem loss 10%`
 - `tc qdisc add dev eth0 root netem delay 100ms 20ms distribution normal`
@@ -92,3 +118,8 @@ Inject network faults to test resilience.
 - tc qdisc add dev eth0 root netem loss 10% delay 100ms
 - tc qdisc change dev eth0 root netem loss 50%
 - tc qdisc del dev eth0 root && tc qdisc show dev eth0
+
+## References
+- [curl --retry](https://curl.se/docs/manpage.html#--retry)
+- [tc-netem](https://man7.org/linux/man-pages/man8/tc-netem.8.html)
+- [AWS retry guide](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/retries.html)

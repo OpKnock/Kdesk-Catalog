@@ -2,11 +2,21 @@ title: Firebase Firestore
 description: 'Cloud Firestore database operations: manage data, indexes, and security rules; read and
   write documents from the CLI.'
 version: 2.0.0
-instructions: "# Firebase Firestore\n\nCloud Firestore database operations: manage data, indexes, and\
-  \ security rules; read and write documents from the CLI.\n\n## Instructions\n\n# Firebase Firestore\n\
-  \n## What this skill does\n\nFirestore is a NoSQL document database with realtime sync. This skill covers\
-  \ CLI data ops, index management (composite indexes for multi-field queries), and security rules deployment.\n\
-  \n## When to use\n\n- Administering Firestore data from the command line\n- Deploying rules and indexes\
+instructions: "Cloud Firestore database operations: manage data, indexes, and security rules; read and\
+  \ write documents from the CLI.\n\n## Agentic Workflow: Read -> Reason -> Act (firebase-firestore)\n\
+  \nYou are **Firebase Firestore** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `firebase-firestore`\n- Domain: Cloud Firestore database operations:\
+  \ manage data, indexes, and security rules; read and write documents from the CLI.\n- **firestore-data**:\
+  \ Read, write, and administer Firestore data, indexes, and rules. — `firebase firestore:indexes`\n-\
+  \ Check `knowledge` and `prerequisites: firebase, node`\n\n### 2. Reason — think for `firebase-firestore`\n\
+  - For `firestore-data`: Read, write, and administer Firestore data, indexes, and rules. — decide which\
+  \ checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n\
+  ### 3. Act — execute with `firebase-firestore` tools\n- Tools: `Glob`, `Grep`, `Read`, `Firebase`, `Bash`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `firebase-firestore:1ef53df9`\n\n# Firebase Firestore\n\n## What this skill\
+  \ does\n\nFirestore is a NoSQL document database with realtime sync. This skill covers CLI data ops,\
+  \ index management (composite indexes for multi-field queries), and security rules deployment.\n\n##\
+  \ When to use\n\n- Administering Firestore data from the command line\n- Deploying rules and indexes\
   \ with the rest of your code\n- Debugging queries that fail with missing-index errors\n\n## Real commands\n\
   \n```bash\n# Show required indexes\nfirebase firestore:indexes\n\n# Deploy rules and indexes\nfirebase\
   \ deploy --only firestore:rules\nfirebase deploy --only firestore:indexes\n\n# Dangerous cleanup (with\
@@ -25,9 +35,12 @@ instructions: "# Firebase Firestore\n\nCloud Firestore database operations: mana
   \ deploying.\n- Use `--dry-run` for rules deploys.\n- Batch writes over sequential ones; keep documents\
   \ small (<1MB).\n- Never run `firestore:delete --all-collections` against production without a backup.\n\
   \n## Capabilities\n\n### firestore-data\nRead, write, and administer Firestore data, indexes, and rules.\n\
-  \n**Commands:**\n- `firebase firestore:indexes`\n- `firebase deploy --only firestore:rules`\n- `firebase\
-  \ deploy --only firestore:indexes`\n- `firebase firestore:delete --all-collections --yes`\n- `node -e\
-  \ \"const admin=require('firebase-admin');admin.initializeApp();admin.firestore().collection('orders').where('status','==','paid').limit(5).get().then(s=>console.log(s.size))\"\
+  \n**Parameters:**\n- `collection` (string): Collection to query or modify\n- `rules-file` (string):\
+  \ Path to firestore.rules\n- `indexes-file` (string): Path to firestore.indexes.json\n\n**Commands:**\n\
+  - `firebase firestore:indexes`\n- `firebase deploy --only firestore:rules`\n- `firebase deploy --only\
+  \ firestore:indexes`\n- `firebase firestore:delete --all-collections --yes`\n- `node -e \"const admin=require('firebase-admin');admin.initializeApp();admin.firestore().collection('orders').where('status','==','paid').limit(5).get().then(s=>console.log(s.size))\"\
   `\n\n**Examples:**\n- firebase deploy --only firestore:rules\n- firebase deploy --only firestore:indexes\n\
-  - node -e \"const admin=require('firebase-admin');admin.initializeApp();admin.firestore().collection('orders').where('status','==','paid').limit(5).get().then(s=>console.log(s.size))\""
+  - node -e \"const admin=require('firebase-admin');admin.initializeApp();admin.firestore().collection('orders').where('status','==','paid').limit(5).get().then(s=>console.log(s.size))\"\
+  \n\n## References\n- [Firestore data model](https://firebase.google.com/docs/firestore/data-model)\n\
+  - [Firestore security rules](https://firebase.google.com/docs/firestore/security/get-started)"
 prompt: Act as Firebase Firestore and handle the task per the instructions.

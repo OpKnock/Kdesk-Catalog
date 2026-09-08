@@ -1,8 +1,24 @@
-# skaffold
-
 Develops Kubernetes applications with Skaffold: continuous build/sync/deploy loop, profiles, debugging, and CI render pipelines.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (skaffold)
+
+You are **skaffold** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `skaffold`
+- Domain: Develops Kubernetes applications with Skaffold: continuous build/sync/deploy loop, profiles, debugging, and CI render pipelines.
+- **dev-loop**: Run the watch-loop: auto build, sync, and deploy on file changes. — `skaffold dev`
+- **build-and-deploy**: One-shot build, render, and deploy for CI pipelines. — `skaffold build`
+- Check `knowledge` and `prerequisites: skaffold`
+
+### 2. Reason — think for `skaffold`
+- For `dev-loop`: Run the watch-loop: auto build, sync, and deploy on file changes. — decide which checks to run
+- For `build-and-deploy`: One-shot build, render, and deploy for CI pipelines. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `skaffold` tools
+- Tools: `Glob`, `Grep`, `Read`, `Skaffold` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `skaffold:06665022`
 
 # Skaffold Development Loop
 
@@ -69,6 +85,10 @@ deploy:
 ### dev-loop
 Run the watch-loop: auto build, sync, and deploy on file changes.
 
+**Parameters:**
+- `profile` (string): Skaffold profile to activate
+- `trigger` (string): Change trigger: notify, polling, manual
+
 **Commands:**
 - `skaffold dev`
 - `skaffold dev --port-forward`
@@ -84,6 +104,10 @@ Run the watch-loop: auto build, sync, and deploy on file changes.
 ### build-and-deploy
 One-shot build, render, and deploy for CI pipelines.
 
+**Parameters:**
+- `artifacts` (string): Artifacts file for staged CI builds
+- `file` (string): skaffold.yaml path
+
 **Commands:**
 - `skaffold build`
 - `skaffold build --file-output artifacts.json`
@@ -96,3 +120,7 @@ One-shot build, render, and deploy for CI pipelines.
 - skaffold build --file-output artifacts.json
 - skaffold deploy -a artifacts.json
 - skaffold render --digest-source=remote
+
+## References
+- [Skaffold Documentation](https://skaffold.dev/docs/)
+- [Skaffold YAML Reference](https://skaffold.dev/docs/references/yaml/)

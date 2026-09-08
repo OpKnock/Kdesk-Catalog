@@ -1,15 +1,31 @@
 ---
 name: "prometheus-monitoring-2"
-description: "Queries Prometheus for live monitoring: PromQL, the HTTP API, targets health, and ad-hoc alert inspection."
+description: "Queries Prometheus for live monitoring: PromQL, the HTTP API, targets health, and ad-hoc alert inspection. Use when working with api query, promql, monitoring or when the user mentions api query, promql, monitoring."
 type: knowledge
 triggers: ["prometheus-monitoring-2", "api-query", "promql"]
 ---
 
-# prometheus-monitoring-2
-
 Queries Prometheus for live monitoring: PromQL, the HTTP API, targets health, and ad-hoc alert inspection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (prometheus-monitoring-2)
+
+You are **prometheus-monitoring-2** (monitoring/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — monitoring context for `prometheus-monitoring-2`
+- Domain: Queries Prometheus for live monitoring: PromQL, the HTTP API, targets health, and ad-hoc alert inspection.
+- **api-query**: Query Prometheus data with the HTTP API. — `curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=up'`
+- **promql**: Write and validate PromQL for dashboards and alerts. — `curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=sum by (job) `
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `prometheus-monitoring-2`
+- For `api-query`: Query Prometheus data with the HTTP API. — decide which checks to run
+- For `promql`: Write and validate PromQL for dashboards and alerts. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `prometheus-monitoring-2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `prometheus-monitoring-2:94ce1ef4`
 
 # Prometheus Monitoring
 
@@ -73,6 +89,11 @@ Assert expected target counts after config changes.
 ### api-query
 Query Prometheus data with the HTTP API.
 
+**Parameters:**
+- `query` (string): PromQL expression
+- `step` (number): Query range step in seconds
+- `timeout` (string): Query timeout
+
 **Commands:**
 - `curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=up'`
 - `curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=rate(http_requests_total[5m])'`
@@ -88,6 +109,11 @@ Query Prometheus data with the HTTP API.
 ### promql
 Write and validate PromQL for dashboards and alerts.
 
+**Parameters:**
+- `match` (string): Series matcher for /series
+- `labels` (string): Label name to list values
+- `topk` (number): Top-N aggregation
+
 **Commands:**
 - `curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=sum by (job) (rate(http_requests_total[5m]))'`
 - `curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=sum(rate(container_cpu_usage_seconds_total[5m])) by (namespace)'`
@@ -99,3 +125,8 @@ Write and validate PromQL for dashboards and alerts.
 - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=rate(node_network_receive_bytes_total[5m])'
 - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))' | jq '.data.result[0].value[1]'
 - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=topk(5, sum by (job) (rate(http_requests_total[5m])))'
+
+## References
+- [Prometheus Querying](https://prometheus.io/docs/prometheus/latest/querying/basics/)
+- [Prometheus HTTP API](https://prometheus.io/docs/prometheus/latest/querying/api/)
+- [Querying examples](https://prometheus.io/docs/prometheus/latest/querying/examples/)

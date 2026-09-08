@@ -1,15 +1,29 @@
 ---
 name: "prettier-config"
-description: "Creates and validates Prettier configuration files (.prettierrc) shared across projects."
+description: "Creates and validates Prettier configuration files (.prettierrc) shared across projects. Use when working with prettier config, code quality or when the user mentions prettier config, code quality."
 globs: ["**/*.css", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# prettier-config
-
 Creates and validates Prettier configuration files (.prettierrc) shared across projects.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (prettier-config)
+
+You are **prettier-config** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `prettier-config`
+- Domain: Creates and validates Prettier configuration files (.prettierrc) shared across projects.
+- **prettier-config**: Generate, validate, and extend Prettier configs — `npx prettier --config .prettierrc.json --check src/`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `prettier-config`
+- For `prettier-config`: Generate, validate, and extend Prettier configs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `prettier-config` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `prettier-config:bcf37233`
 
 # Prettier Config
 
@@ -83,6 +97,11 @@ files would change formatting when the config is applied.
 ### prettier-config
 Generate, validate, and extend Prettier configs
 
+**Parameters:**
+- `config` (string): Path to the config file to use
+- `config-precedence` (string): Priority: cli-override or file-override
+- `find-config-path` (string): Print the resolved config path for a file
+
 **Commands:**
 - `npx prettier --config .prettierrc.json --check src/`
 - `npx prettier --config-precedence cli-override --single-quote --print-width 100 --write .`
@@ -94,3 +113,7 @@ Generate, validate, and extend Prettier configs
 - npx prettier --config .prettierrc.yml --check 'src/**/*.js'
 - npx prettier --print-config .prettierrc.json
 - echo '{"semi": false}' | npx prettier --config - --check /dev/stdin
+
+## References
+- [Prettier configuration docs](https://prettier.io/docs/en/configuration.html)
+- [Prettier options reference](https://prettier.io/docs/en/options.html)

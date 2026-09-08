@@ -1,8 +1,22 @@
-# Rolling Deployment
-
 Expert Kubernetes rolling deployment skill covering set image, rollout status/history, undo, pause/resume, and canary verification with kubectl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rolling-deployment)
+
+You are **Rolling Deployment** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `rolling-deployment`
+- Domain: Expert Kubernetes rolling deployment skill covering set image, rollout status/history, undo, pause/resume, and canary verification with kubectl.
+- **k8s-rolling-deploy**: Roll out and roll back Kubernetes Deployments safely — `kubectl set image deployment/api api=ghcr.io/your-org/api:v2.1`
+- Check `knowledge` and `prerequisites: kubectl`
+
+### 2. Reason — think for `rolling-deployment`
+- For `k8s-rolling-deploy`: Roll out and roll back Kubernetes Deployments safely — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rolling-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rolling-deployment:1e28c341`
 
 # Rolling Deployment
 
@@ -72,6 +86,11 @@ kubectl get pods -l app=api -w
 ### k8s-rolling-deploy
 Roll out and roll back Kubernetes Deployments safely
 
+**Parameters:**
+- `deployment` (string): Deployment name, e.g. deployment/api
+- `image` (string): New image reference, e.g. ghcr.io/your-org/api:v2.1
+- `timeout` (string): Rollout wait timeout, e.g. 180s
+
 **Commands:**
 - `kubectl set image deployment/api api=ghcr.io/your-org/api:v2.1`
 - `kubectl rollout status deployment/api --timeout=180s`
@@ -84,3 +103,7 @@ Roll out and roll back Kubernetes Deployments safely
 - kubectl rollout status deployment/api --timeout=180s
 - kubectl rollout undo deployment/api --to-revision=3
 - kubectl get pods -l app=api -w
+
+## References
+- [K8s Deployment docs](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- [kubectl rollout reference](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_rollout/)

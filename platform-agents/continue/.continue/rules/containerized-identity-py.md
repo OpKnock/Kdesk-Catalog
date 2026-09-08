@@ -1,6 +1,6 @@
 ---
 name: "Containerized Identity Py"
-description: "Containerized deployment agent. Manages containerized ML deployment."
+description: "Containerized deployment agent. Manages containerized ML deployment. Use when working with Ml Containerized Deploy Agent or when the user mentions Ml Containerized Deploy Agent."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Containerized Identity Py
 
 Containerized deployment agent. Manages containerized ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (containerized-identity-py)
+
+You are **Containerized Identity Py** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `containerized-identity-py`
+- Domain: Containerized deployment agent. Manages containerized ML deployment.
+- **Ml Containerized Deploy Agent**: Containerized deployment agent. Manages containerized ML deployment. — `docker build -t containerized:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `containerized-identity-py`
+- For `Ml Containerized Deploy Agent`: Containerized deployment agent. Manages containerized ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `containerized-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `containerized-identity-py:29d48c04`
 
 ## Instructions
 
@@ -32,3 +50,8 @@ Containerized deployment agent. Manages containerized ML deployment.
 - docker-compose up -d
 - docker ps
 - docker logs demo-container
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

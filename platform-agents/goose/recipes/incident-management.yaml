@@ -2,14 +2,45 @@ title: incident-management
 description: 'Runs incident response with PagerDuty CLI: declare, acknowledge, communicate, and resolve
   incidents with timeline notes.'
 version: 2.0.0
-instructions: '# incident-management
+instructions: 'Runs incident response with PagerDuty CLI: declare, acknowledge, communicate, and resolve
+  incidents with timeline notes.
 
 
-  Runs incident response with PagerDuty CLI: declare, acknowledge, communicate, and resolve incidents
-  with timeline notes.
+  ## Agentic Workflow: Read -> Reason -> Act (incident-management)
 
 
-  ## Instructions
+  You are **incident-management** (sre) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — sre context for `incident-management`
+
+  - Domain: Runs incident response with PagerDuty CLI: declare, acknowledge, communicate, and resolve
+  incidents with timeline notes.
+
+  - **pagerduty**: Manage incidents end-to-end with the PagerDuty CLI. — `pd incident:list --status=triggered`
+
+  - **timeline**: Keep an auditable incident timeline with notes and comms. — `pd note:list INCIDENT_ID`
+
+  - Check `knowledge` and `prerequisites: pagerduty, opsgenie, slack, jira`
+
+
+  ### 2. Reason — think for `incident-management`
+
+  - For `pagerduty`: Manage incidents end-to-end with the PagerDuty CLI. — decide which checks to run
+
+  - For `timeline`: Keep an auditable incident timeline with notes and comms. — decide which checks to
+  run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `incident-management` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Pd` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `incident-management:82719651`
 
 
   # Incident Management
@@ -122,6 +153,15 @@ instructions: '# incident-management
   Manage incidents end-to-end with the PagerDuty CLI.
 
 
+  **Parameters:**
+
+  - `status` (string): triggered, acknowledged, or resolved
+
+  - `service-name` (string): Service to attach the incident to
+
+  - `urgency` (string): high or low severity
+
+
   **Commands:**
 
   - `pd incident:list --status=triggered`
@@ -149,6 +189,15 @@ instructions: '# incident-management
   Keep an auditable incident timeline with notes and comms.
 
 
+  **Parameters:**
+
+  - `incident` (string): Incident id like PXXXXX
+
+  - `note` (string): Timeline note content
+
+  - `team` (string): Team name filter for incident queries
+
+
   **Commands:**
 
   - `pd note:list INCIDENT_ID`
@@ -168,5 +217,14 @@ instructions: '# incident-management
 
   - pd incident:update PXXXXX --status=acknowledged
 
-  - pd schedule:oncall --time=2026-08-10T14:00:00Z'
+  - pd schedule:oncall --time=2026-08-10T14:00:00Z
+
+
+  ## References
+
+  - [PagerDuty CLI](https://github.com/PagerDuty/pagerduty-cli)
+
+  - [PagerDuty Incident Management](https://support.pagerduty.com/docs/incidents)
+
+  - [PagerDuty API](https://developer.pagerduty.com/api-reference)'
 prompt: Act as incident-management and handle the task per the instructions.

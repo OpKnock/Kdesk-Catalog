@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(curl:*)"
 
 Designs retry policies for webhook delivery with exponential backoff and jitter. Uses idempotency keys to make replays safe, manages dead-letter queues, and provides per-delivery retry and replay APIs.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (webhook-retry)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Webhook Retry** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl --retry 3 --retry-delay 2 --retry-all-errors -X POST -d`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `webhook-retry`
+- Domain: Designs retry policies for webhook delivery with exponential backoff and jitter. Uses idempotency keys to make replays safe, manages dead-letter queues, and provides per-delivery retry and replay APIs
+- **retry-policy**: Configure and test webhook retry and backoff behavior — `curl --retry 3 --retry-delay 2 --retry-all-errors -X POST -d "{\"event\":\"order`
+- Check `knowledge` and `prerequisites: curl, jq`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `webhook-retry`
+- For `retry-policy`: Configure and test webhook retry and backoff behavior — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `webhook-retry` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `webhook-retry:2392e974`
 
 # Webhook Retry
 

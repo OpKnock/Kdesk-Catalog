@@ -1,15 +1,31 @@
 ---
 name: "Api Cache Middleware Implementation"
-description: "Implements API caching end to end: HTTP caching headers, Express/FastAPI middleware, and Redis cache-aside."
+description: "Implements API caching end to end: HTTP caching headers, Express/FastAPI middleware, and Redis cache-aside. Use when working with middleware implementation, redis cache aside or when the user mentions middleware implementation, redis cache aside."
 globs: ["**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Api Cache Middleware Implementation
-
 Implements API caching end to end: HTTP caching headers, Express/FastAPI middleware, and Redis cache-aside.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-cache-middleware-implementation)
+
+You are **Api Cache Middleware Implementation** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `api-cache-middleware-implementation`
+- Domain: Implements API caching end to end: HTTP caching headers, Express/FastAPI middleware, and Redis cache-aside.
+- **middleware-implementation**: Add caching middleware to Node and Python APIs — `npm install apicache`
+- **redis-cache-aside**: Implement cache-aside with TTL and explicit invalidation on writes — `redis-cli SET api:products:42 '{"id":42}' EX 300`
+- Check `knowledge` and `prerequisites: redis, node.js, python`
+
+### 2. Reason — think for `api-cache-middleware-implementation`
+- For `middleware-implementation`: Add caching middleware to Node and Python APIs — decide which checks to run
+- For `redis-cache-aside`: Implement cache-aside with TTL and explicit invalidation on writes — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-cache-middleware-implementation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-cache-middleware-implementation:bad63a0f`
 
 # API Cache (Implementation)
 
@@ -54,6 +70,10 @@ Hit the endpoint twice and confirm the second read skips the DB (check query log
 ### middleware-implementation
 Add caching middleware to Node and Python APIs
 
+**Parameters:**
+- `ttl` (string): Cache TTL string
+- `store` (string): Backing store: memory or redis
+
 **Commands:**
 - `npm install apicache`
 - `npm install express-cache-middleware`
@@ -69,6 +89,10 @@ Add caching middleware to Node and Python APIs
 ### redis-cache-aside
 Implement cache-aside with TTL and explicit invalidation on writes
 
+**Parameters:**
+- `key` (string): Cache key
+- `ttlSeconds` (string): TTL in seconds
+
 **Commands:**
 - `redis-cli SET api:products:42 '{"id":42}' EX 300`
 - `redis-cli GET api:products:42`
@@ -80,3 +104,8 @@ Implement cache-aside with TTL and explicit invalidation on writes
 - redis-cli SET api:products:42 '{"id":42}' EX 300 && redis-cli TTL api:products:42
 - redis-cli GET api:products:42 || curl -s http://localhost:3000/api/products/42
 - redis-cli DEL api:products:42 && redis-cli EXISTS api:products:42
+
+## References
+- [apicache](https://github.com/kwhitley/apicache)
+- [fastapi-cache2](https://github.com/long2ice/fastapi-cache)
+- [Redis Commands](https://redis.io/docs/latest/commands/)

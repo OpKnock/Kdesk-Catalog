@@ -1,8 +1,24 @@
-# commitlint
-
 Enforces conventional commit message standards with commitlint: configs, hooks, and CI validation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (commitlint)
+
+You are **commitlint** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `commitlint`
+- Domain: Enforces conventional commit message standards with commitlint: configs, hooks, and CI validation.
+- **commitlint-cli**: Lint commit messages from stdin or files. — `npx commitlint --from HEAD~1 --to HEAD`
+- **commitlint-config**: Configure rules and plugins. — `npm install --save-dev @commitlint/cli @commitlint/config-conventional`
+- Check `knowledge` and `prerequisites: echo, npm, npx`
+
+### 2. Reason — think for `commitlint`
+- For `commitlint-cli`: Lint commit messages from stdin or files. — decide which checks to run
+- For `commitlint-config`: Configure rules and plugins. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `commitlint` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Echo` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `commitlint:2c9a2269`
 
 # commitlint
 
@@ -73,6 +89,10 @@ module.exports = {
 ### commitlint-cli
 Lint commit messages from stdin or files.
 
+**Parameters:**
+- `from` (string): Lower commit boundary
+- `to` (string): Upper commit boundary
+
 **Commands:**
 - `npx commitlint --from HEAD~1 --to HEAD`
 - `npx commitlint --from HEAD~10`
@@ -87,6 +107,10 @@ Lint commit messages from stdin or files.
 ### commitlint-config
 Configure rules and plugins.
 
+**Parameters:**
+- `config` (string): Config file path
+- `rule` (string): Rule name to override
+
 **Commands:**
 - `npm install --save-dev @commitlint/cli @commitlint/config-conventional`
 - `npx commitlint --init`
@@ -96,3 +120,7 @@ Configure rules and plugins.
 **Examples:**
 - npx commitlint --print-config | head -40
 - echo "module.exports = {extends: [\"@commitlint/config-conventional\"]}" > commitlint.config.cjs
+
+## References
+- [commitlint Docs](https://commitlint.js.org)
+- [Conventional Commits](https://www.conventionalcommits.org)

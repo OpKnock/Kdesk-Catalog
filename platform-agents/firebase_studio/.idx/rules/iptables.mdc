@@ -1,14 +1,28 @@
 ---
-description: "Netfilter iptables operations: listing rules, adding/removing accept and drop rules, port redirects with NAT, and persisting rule sets."
+description: "Netfilter iptables operations: listing rules, adding/removing accept and drop rules, port redirects with NAT, and persisting rule sets. Use when working with iptables rules, api or when the user mentions iptables rules, api."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# iptables
-
 Netfilter iptables operations: listing rules, adding/removing accept and drop rules, port redirects with NAT, and persisting rule sets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (iptables)
+
+You are **iptables** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `iptables`
+- Domain: Netfilter iptables operations: listing rules, adding/removing accept and drop rules, port redirects with NAT, and persisting rule sets.
+- **iptables-rules**: Inspect and modify iptables rulesets including NAT and persistence. — `iptables -L -n -v`
+- Check `knowledge` and `prerequisites: iptables, iptables-save`
+
+### 2. Reason — think for `iptables`
+- For `iptables-rules`: Inspect and modify iptables rulesets including NAT and persistence. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `iptables` tools
+- Tools: `Glob`, `Grep`, `Read`, `Iptables`, `Iptables-save` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `iptables:758683e3`
 
 # iptables
 
@@ -87,6 +101,11 @@ Agent: iptables64:    -A INPUT -p tcp --dport 8080 -s 10.0.0.0/8 -j ACCEPT
 ### iptables-rules
 Inspect and modify iptables rulesets including NAT and persistence.
 
+**Parameters:**
+- `chain` (string): Chain: INPUT, OUTPUT, FORWARD, or nat chains.
+- `proto` (string): Protocol: tcp, udp, icmp.
+- `dport` (integer): Destination port.
+
 **Commands:**
 - `iptables -L -n -v`
 - `iptables -A INPUT -p tcp --dport 22 -s 10.0.0.0/8 -j ACCEPT`
@@ -98,3 +117,7 @@ Inspect and modify iptables rulesets including NAT and persistence.
 - iptables -D INPUT -p tcp --dport 8080 -j DROP
 - iptables -L INPUT -n --line-numbers
 - iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+## References
+- [iptables man page](https://man7.org/linux/man-pages/man8/iptables.8.html)
+- [Netfilter HOWTO](https://www.netfilter.org/documentation/HOWTO/packet-filtering-HOWTO.html)

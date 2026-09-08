@@ -1,6 +1,6 @@
 ---
 name: "gis-geospatial"
-description: "Gis geospatial expertise and best practices."
+description: "Gis geospatial expertise and best practices. Use when working with geospatial expertise, gis, skill or when the user mentions geospatial expertise, gis, skill."
 type: knowledge
 triggers: ["gis-geospatial", "geospatial-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["gis-geospatial", "geospatial-expertise"]
 # Gis Geospatial
 
 Gis geospatial expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (gis-geospatial)
+
+You are **Gis Geospatial** (gis/geospatial) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — gis context for `gis-geospatial`
+- Domain: Gis geospatial expertise and best practices.
+- **geospatial-expertise**: gis geospatial expertise — `geospatial-cli`
+- Check `knowledge` and `prerequisites: geospatial`
+
+### 2. Reason — think for `gis-geospatial`
+- For `geospatial-expertise`: gis geospatial expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gis-geospatial` tools
+- Tools: `Glob`, `Grep`, `Read`, `Geospatial-cli`, `Geospatial-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gis-geospatial:d8676b90`
 
 ## Instructions
 

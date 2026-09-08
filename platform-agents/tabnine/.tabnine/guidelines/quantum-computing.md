@@ -1,8 +1,24 @@
-# quantum-computing
-
 Builds and runs quantum circuits with Qiskit: circuit design, simulation, and IBM Quantum runtime execution.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (quantum-computing)
+
+You are **quantum-computing** (emerging) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — emerging context for `quantum-computing`
+- Domain: Builds and runs quantum circuits with Qiskit: circuit design, simulation, and IBM Quantum runtime execution.
+- **qiskit**: Design and simulate quantum circuits. — `pip install qiskit qiskit-ibm-runtime qiskit-aer`
+- **ibm-runtime**: Run circuits on IBM Quantum devices. — `python -c "from qiskit_ibm_runtime import QiskitRuntimeService; svc = QiskitRunt`
+- Check `knowledge` and `prerequisites: python, qiskit, cirq, pennylane`
+
+### 2. Reason — think for `quantum-computing`
+- For `qiskit`: Design and simulate quantum circuits. — decide which checks to run
+- For `ibm-runtime`: Run circuits on IBM Quantum devices. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `quantum-computing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `quantum-computing:c05f7d1b`
 
 # Quantum Computing
 
@@ -61,6 +77,11 @@ Verify circuit unitaries with Statevector before running anything.
 ### qiskit
 Design and simulate quantum circuits.
 
+**Parameters:**
+- `circuit` (string): Quantum circuit definition
+- `shots` (number): Simulation shots
+- `backend` (string): Simulator or device backend
+
 **Commands:**
 - `pip install qiskit qiskit-ibm-runtime qiskit-aer`
 - `python -c "from qiskit import QuantumCircuit; qc = QuantumCircuit(2); qc.h(0); qc.cx(0,1); qc.measure_all(); print(qc.draw())"`
@@ -76,6 +97,11 @@ Design and simulate quantum circuits.
 ### ibm-runtime
 Run circuits on IBM Quantum devices.
 
+**Parameters:**
+- `token` (string): IBM Quantum API token
+- `shots` (number): Sampling shots on hardware
+- `backend` (string): Backend name filter
+
 **Commands:**
 - `python -c "from qiskit_ibm_runtime import QiskitRuntimeService; svc = QiskitRuntimeService(); print(svc.least_busy(operational=True, simulated=False))"`
 - `python -c "from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2 as Sampler; from qiskit import QuantumCircuit; svc=QiskitRuntimeService(); backend=svc.least_busy(); print(Sampler(backend).run([QuantumCircuit(1,1)], shots=1000).result().get_counts())"`
@@ -87,3 +113,8 @@ Run circuits on IBM Quantum devices.
 - python -c "from qiskit_ibm_runtime import QiskitRuntimeService; svc=QiskitRuntimeService(); print([b.name for b in svc.backends(simulator=False, operational=True)])"
 - python -c "from qiskit_ibm_runtime import QiskitRuntimeService; svc=QiskitRuntimeService(); print([(j.job_id(), j.status()) for j in svc.jobs(limit=3)])"
 - python -c "from qiskit_ibm_runtime import QiskitRuntimeService; QiskitRuntimeService().save_account('YOUR_TOKEN')"
+
+## References
+- [IBM Quantum Docs](https://docs.quantum.ibm.com/)
+- [Qiskit API](https://docs.quantum.ibm.com/api/qiskit)
+- [Qiskit Aer](https://qiskit.github.io/qiskit-aer/)

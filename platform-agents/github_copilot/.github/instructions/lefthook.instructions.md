@@ -4,27 +4,25 @@ applyTo: "**/*.go **/*.json **/*.py **/*.r **/*.rb **/*.sh **/*.{yaml,yml}"
 
 Manages Git hooks with Lefthook: parallel fast hooks, commands per glob, and CI-friendly behavior.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (lefthook)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **lefthook** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `lefthook install`, `lefthook run pre-commit`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `lefthook`
+- Domain: Manages Git hooks with Lefthook: parallel fast hooks, commands per glob, and CI-friendly behavior.
+- **lefthook-setup**: Install and configure Lefthook. — `lefthook install`
+- **lefthook-run**: Run hooks manually and debug. — `lefthook run pre-commit`
+- Check `knowledge` and `prerequisites: lefthook`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `lefthook`
+- For `lefthook-setup`: Install and configure Lefthook. — decide which checks to run
+- For `lefthook-run`: Run hooks manually and debug. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `lefthook` tools
+- Tools: `Glob`, `Grep`, `Read`, `Lefthook` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `lefthook:e7a97d05`
 
 # Lefthook
 

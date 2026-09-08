@@ -4,27 +4,25 @@ applyTo: "**/*.java **/*.r **/*.sh"
 
 Build Kafka clients in Java with the official kafka-clients library: Maven setup, producer/consumer apps, and end-to-end topic verification.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (kafka-java)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Kafka Java** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `mvn archetype:generate -DgroupId=com.mycompany -DartifactId=`, `kafka-topics.sh --bootstrap-server localhost:9092 --create -`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `kafka-java`
+- Domain: Build Kafka clients in Java with the official kafka-clients library: Maven setup, producer/consumer apps, and end-to-end topic verification.
+- **java-client-app**: Scaffold and run Java Kafka producer/consumer applications with Maven. — `mvn archetype:generate -DgroupId=com.mycompany -DartifactId=orders-consumer -Dar`
+- **end-to-end**: Produce and consume test data alongside the Java app for verification. — `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --part`
+- Check `knowledge` and `prerequisites: java, kafka-console-consumer.sh, kafka-console-producer.sh, kafka-consumer-groups.sh`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `kafka-java`
+- For `java-client-app`: Scaffold and run Java Kafka producer/consumer applications with Maven. — decide which checks to run
+- For `end-to-end`: Produce and consume test data alongside the Java app for verification. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `kafka-java` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `Java` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-java:3237381a`
 
 # Kafka (Java)
 

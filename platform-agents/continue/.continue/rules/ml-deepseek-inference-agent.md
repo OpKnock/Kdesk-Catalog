@@ -1,6 +1,6 @@
 ---
 name: "Ml Deepseek Inference Agent"
-description: "DeepSeek inference agent. Manages ML inference on DeepSeek."
+description: "DeepSeek inference agent. Manages ML inference on DeepSeek. Use when working with Ml Deepseek Inference Agent, deployment or when the user mentions Ml Deepseek Inference Agent, deployment."
 globs: ["**/*.json", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Deepseek Inference Agent
 
 DeepSeek inference agent. Manages ML inference on DeepSeek.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-deepseek-inference-agent)
+
+You are **Ml Deepseek Inference Agent** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-deepseek-inference-agent`
+- Domain: DeepSeek inference agent. Manages ML inference on DeepSeek.
+- **Ml Deepseek Inference Agent**: DeepSeek inference agent. Manages ML inference on DeepSeek. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-deepseek-inference-agent`
+- For `Ml Deepseek Inference Agent`: DeepSeek inference agent. Manages ML inference on DeepSeek. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-deepseek-inference-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Deepseek` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-deepseek-inference-agent:6abd3351`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ DeepSeek inference agent. Manages ML inference on DeepSeek.
 - deepseek run deepseek-chat --input '{"prompt": "Hello"}'
 - deepseek models list
 - deepseek predictions list
+
+## References
+- [DeepSeek API Documentation](https://api-docs.deepseek.com/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

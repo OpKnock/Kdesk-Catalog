@@ -2,29 +2,42 @@ title: Echo
 description: 'HTTP echo and request debugging: sends requests to public echo services (httpbin, Postman
   Echo) and local containers to verify headers, methods, and payloads during API development.'
 version: 2.0.0
-instructions: "# Echo\n\nHTTP echo and request debugging: sends requests to public echo services (httpbin,\
-  \ Postman Echo) and local containers to verify headers, methods, and payloads during API development.\n\
-  \n## Instructions\n\n# Echo\n\n## What this skill does\n\nEcho services like httpbin and Postman Echo\
-  \ accept a request and return everything about it (headers, query args, body, client IP). They are the\
-  \ fastest way to debug clients, proxies, and webhooks.\n\n## When to use\n\n- Verifying what headers\
-  \ your client actually sends\n- Testing webhook receivers against a known-good sender\n- Debugging proxy\
-  \ rewrites or load balancer header injection\n\n## Real commands\n\n```bash\n# Echo GET with query args\n\
-  curl https://httpbin.org/get?foo=bar | jq '.args'\n\n# Echo POST body and headers\ncurl -X POST https://httpbin.org/post\
-  \ -d '{\"hello\":\"world\"}' -H 'Content-Type: application/json' | jq '.json, .headers'\n\n# See your\
-  \ client IP and origin\ncurl -s https://postman-echo.com/get | jq '.headers'\n\n# Run a local echo server\
-  \ in Docker\n docker run -d -p 8080:80 mccutchen/go-httpbin\ncurl -s localhost:8080/anything | jq\n\
-  ```\n\n## Common use cases\n\n```bash\n# Webhook debugging: point the sender at httpbin and capture\n\
-  curl -X POST https://httpbin.org/anything/webhook -H 'Content-Type: application/json' -d '{\"event\"\
-  :\"deploy\",\"status\":\"ok\"}' | jq '.json'\n```\n\n## Testing\n\n```bash\n# Verify the request your\
-  \ SDK sends\ncurl -X PUT https://httpbin.org/put -H 'X-Custom: value' | jq '.headers[\"X-Custom\"]'\n\
-  ```\n\n## Best practices\n\n- Use `-i` to see both the response headers and body.\n- Prefer local go-httpbin\
-  \ for anything involving real payloads or credentials.\n- Never send production secrets to public echo\
-  \ services.\n- Combine with `--trace-ascii -` in curl for byte-level request dumps.\n\n## Capabilities\n\
-  \n### http-echo\nUse echo services and local echo containers to verify how requests arrive at a server.\n\
-  \n**Commands:**\n- `curl https://httpbin.org/get?foo=bar`\n- `curl -X POST https://httpbin.org/post\
-  \ -d '{\"hello\":\"world\"}' -H 'Content-Type: application/json'`\n- `curl -s https://postman-echo.com/get?foo=bar\
-  \ | jq '.args'`\n- `docker run -d -p 8080:80 mccutchen/go-httpbin`\n- `curl -i -X PUT https://httpbin.org/put\
-  \ -H 'X-Custom: value' | head -20`\n\n**Examples:**\n- curl -X POST https://httpbin.org/post -d '{\"\
-  hello\":\"world\"}' -H 'Content-Type: application/json' | jq '.json'\n- curl -s https://postman-echo.com/get?foo=bar\
-  \ | jq '.args'\n- curl -i -X PUT https://httpbin.org/put -H 'X-Custom: value' | head -20"
+instructions: "HTTP echo and request debugging: sends requests to public echo services (httpbin, Postman\
+  \ Echo) and local containers to verify headers, methods, and payloads during API development.\n\n##\
+  \ Agentic Workflow: Read -> Reason -> Act (echo)\n\nYou are **Echo** (api/general) — a sub-agent that\
+  \ **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `echo`\n- Domain:\
+  \ HTTP echo and request debugging: sends requests to public echo services (httpbin, Postman Echo) and\
+  \ local containers to verify headers, methods, and payloads during API development.\n- **http-echo**:\
+  \ Use echo services and local echo containers to verify how requests arrive at a server. — `curl https://httpbin.org/get?foo=bar`\n\
+  - Check `knowledge` and `prerequisites: docker`\n\n### 2. Reason — think for `echo`\n- For `http-echo`:\
+  \ Use echo services and local echo containers to verify how requests arrive at a server. — decide which\
+  \ checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n\
+  ### 3. Act — execute with `echo` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `echo:d5b515b9`\n\
+  \n# Echo\n\n## What this skill does\n\nEcho services like httpbin and Postman Echo accept a request\
+  \ and return everything about it (headers, query args, body, client IP). They are the fastest way to\
+  \ debug clients, proxies, and webhooks.\n\n## When to use\n\n- Verifying what headers your client actually\
+  \ sends\n- Testing webhook receivers against a known-good sender\n- Debugging proxy rewrites or load\
+  \ balancer header injection\n\n## Real commands\n\n```bash\n# Echo GET with query args\ncurl https://httpbin.org/get?foo=bar\
+  \ | jq '.args'\n\n# Echo POST body and headers\ncurl -X POST https://httpbin.org/post -d '{\"hello\"\
+  :\"world\"}' -H 'Content-Type: application/json' | jq '.json, .headers'\n\n# See your client IP and\
+  \ origin\ncurl -s https://postman-echo.com/get | jq '.headers'\n\n# Run a local echo server in Docker\n\
+  \ docker run -d -p 8080:80 mccutchen/go-httpbin\ncurl -s localhost:8080/anything | jq\n```\n\n## Common\
+  \ use cases\n\n```bash\n# Webhook debugging: point the sender at httpbin and capture\ncurl -X POST https://httpbin.org/anything/webhook\
+  \ -H 'Content-Type: application/json' -d '{\"event\":\"deploy\",\"status\":\"ok\"}' | jq '.json'\n```\n\
+  \n## Testing\n\n```bash\n# Verify the request your SDK sends\ncurl -X PUT https://httpbin.org/put -H\
+  \ 'X-Custom: value' | jq '.headers[\"X-Custom\"]'\n```\n\n## Best practices\n\n- Use `-i` to see both\
+  \ the response headers and body.\n- Prefer local go-httpbin for anything involving real payloads or\
+  \ credentials.\n- Never send production secrets to public echo services.\n- Combine with `--trace-ascii\
+  \ -` in curl for byte-level request dumps.\n\n## Capabilities\n\n### http-echo\nUse echo services and\
+  \ local echo containers to verify how requests arrive at a server.\n\n**Parameters:**\n- `method` (string):\
+  \ HTTP method to test: GET, POST, PUT, DELETE\n- `headers` (array): Custom headers to inspect in the\
+  \ echo response\n- `payload` (string): JSON body echoed back by the service\n\n**Commands:**\n- `curl\
+  \ https://httpbin.org/get?foo=bar`\n- `curl -X POST https://httpbin.org/post -d '{\"hello\":\"world\"\
+  }' -H 'Content-Type: application/json'`\n- `curl -s https://postman-echo.com/get?foo=bar | jq '.args'`\n\
+  - `docker run -d -p 8080:80 mccutchen/go-httpbin`\n- `curl -i -X PUT https://httpbin.org/put -H 'X-Custom:\
+  \ value' | head -20`\n\n**Examples:**\n- curl -X POST https://httpbin.org/post -d '{\"hello\":\"world\"\
+  }' -H 'Content-Type: application/json' | jq '.json'\n- curl -s https://postman-echo.com/get?foo=bar\
+  \ | jq '.args'\n- curl -i -X PUT https://httpbin.org/put -H 'X-Custom: value' | head -20\n\n## References\n\
+  - [httpbin docs](https://httpbin.org/)"
 prompt: Act as Echo and handle the task per the instructions.

@@ -1,8 +1,24 @@
-# Api Gateway Kong
-
 Implements API gateways hands-on: deploy Kong with deck, configure routes/services, and enable auth and rate-limit plugins.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-gateway-kong)
+
+You are **Api Gateway Kong** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `api-gateway-kong`
+- Domain: Implements API gateways hands-on: deploy Kong with deck, configure routes/services, and enable auth and rate-limit plugins.
+- **kong-operations**: Deploy and configure Kong gateway with declarative configuration — `docker run -d --name kong-gateway -p 8000:8000 -p 8001:8001 kong/kong-gateway`
+- **plugin-configuration**: Enable auth, rate limiting, and logging plugins on routes — `curl -s -X POST http://localhost:8001/services/orders/routes -H 'Content-Type: a`
+- Check `knowledge` and `prerequisites: kong, traefik, aws-cli`
+
+### 2. Reason — think for `api-gateway-kong`
+- For `kong-operations`: Deploy and configure Kong gateway with declarative configuration — decide which checks to run
+- For `plugin-configuration`: Enable auth, rate limiting, and logging plugins on routes — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-gateway-kong` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Deck` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-gateway-kong:03d79b49`
 
 # API Gateway (Implementation)
 
@@ -45,6 +61,10 @@ Send requests through the gateway and verify 401/429 behavior after enabling plu
 ### kong-operations
 Deploy and configure Kong gateway with declarative configuration
 
+**Parameters:**
+- `service` (string): Upstream service name
+- `route` (string): Route path or host
+
 **Commands:**
 - `docker run -d --name kong-gateway -p 8000:8000 -p 8001:8001 kong/kong-gateway`
 - `deck ping`
@@ -60,6 +80,10 @@ Deploy and configure Kong gateway with declarative configuration
 ### plugin-configuration
 Enable auth, rate limiting, and logging plugins on routes
 
+**Parameters:**
+- `plugin` (string): Plugin name
+- `config` (string): Plugin configuration JSON
+
 **Commands:**
 - `curl -s -X POST http://localhost:8001/services/orders/routes -H 'Content-Type: application/json' -d '{"paths":["/orders"]}'`
 - `curl -s -X POST http://localhost:8001/services/orders/plugins -H 'Content-Type: application/json' -d '{"name":"rate-limiting","config":{"minute":60}}'`
@@ -71,3 +95,7 @@ Enable auth, rate limiting, and logging plugins on routes
 - curl -s -X POST http://localhost:8001/services/orders/plugins -H 'Content-Type: application/json' -d '{"name":"rate-limiting","config":{"minute":60}}'
 - curl -s -X POST http://localhost:8001/services/orders/plugins -H 'Content-Type: application/json' -d '{"name":"jwt"}'
 - curl -s http://localhost:8001/services/orders/plugins | python -m json.tool
+
+## References
+- [Kong Gateway Docs](https://docs.konghq.com/gateway/)
+- [deck CLI](https://docs.konghq.com/deck/)

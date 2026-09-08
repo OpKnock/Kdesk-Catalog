@@ -4,27 +4,25 @@ applyTo: "**/*.json **/*.r **/*.sh"
 
 Operates webhook infrastructure with Svix and Hookdeck: endpoint management, message dispatch, retries, and delivery observability.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-webhook-svix-management)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Webhook Svix Management** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `svix webhook create --name "order-created" --url http://loca`, `hookdeck login`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `api-webhook-svix-management`
+- Domain: Operates webhook infrastructure with Svix and Hookdeck: endpoint management, message dispatch, retries, and delivery observability.
+- **svix-management**: Manage webhook endpoints and dispatch messages — `svix webhook create --name "order-created" --url http://localhost:8080/hook`
+- **hookdeck**: Route and observe webhooks with Hookdeck — `hookdeck login`
+- Check `knowledge` and `prerequisites: node.js, python, ngrok, redis`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-webhook-svix-management`
+- For `svix-management`: Manage webhook endpoints and dispatch messages — decide which checks to run
+- For `hookdeck`: Route and observe webhooks with Hookdeck — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-webhook-svix-management` tools
+- Tools: `Glob`, `Grep`, `Read`, `Svix`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-webhook-svix-management:ae3bef2c`
 
 # API Webhook v3 - Infrastructure
 

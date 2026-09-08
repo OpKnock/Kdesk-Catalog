@@ -1,15 +1,31 @@
 ---
 name: "micro-frontends"
-description: "Architects micro-frontend platforms with single-spa, Module Federation, and Nx workspaces: composition, sharing, and independent deploys."
+description: "Architects micro-frontend platforms with single-spa, Module Federation, and Nx workspaces: composition, sharing, and independent deploys. Use when working with single spa, nx or when the user mentions single spa, nx."
 globs: ["**/*.css", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# micro-frontends
-
 Architects micro-frontend platforms with single-spa, Module Federation, and Nx workspaces: composition, sharing, and independent deploys.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (micro-frontends)
+
+You are **micro-frontends** (frontend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `micro-frontends`
+- Domain: Architects micro-frontend platforms with single-spa, Module Federation, and Nx workspaces: composition, sharing, and independent deploys.
+- **single-spa**: Build and register micro-frontend applications. — `npx create-single-spa --moduleType root-config`
+- **nx**: Manage monorepo builds and dependencies with Nx. — `npx nx graph`
+- Check `knowledge` and `prerequisites: node.js, react, webpack, single-spa`
+
+### 2. Reason — think for `micro-frontends`
+- For `single-spa`: Build and register micro-frontend applications. — decide which checks to run
+- For `nx`: Manage monorepo builds and dependencies with Nx. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `micro-frontends` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `micro-frontends:9f84a812`
 
 # Micro-Frontends
 
@@ -80,6 +96,11 @@ Run integration smoke tests across the composed shell weekly.
 ### single-spa
 Build and register micro-frontend applications.
 
+**Parameters:**
+- `moduleType` (string): root-config, app-parcel, or utility-module
+- `framework` (string): react, vue, angular, svelte for the parcel
+- `port` (number): Serve port for the app
+
 **Commands:**
 - `npx create-single-spa --moduleType root-config`
 - `npx create-single-spa --moduleType app-parcel`
@@ -95,6 +116,11 @@ Build and register micro-frontend applications.
 ### nx
 Manage monorepo builds and dependencies with Nx.
 
+**Parameters:**
+- `target` (string): build, test, lint target
+- `base` (string): Git base for affected computation
+- `project` (string): Project name like shell or orders
+
 **Commands:**
 - `npx nx graph`
 - `npx nx run shell:build --configuration=production`
@@ -106,3 +132,8 @@ Manage monorepo builds and dependencies with Nx.
 - npx nx affected:test --base=origin/main
 - npx nx build shell --with-deps
 - npx nx run-many --target=lint --parallel=3
+
+## References
+- [single-spa Docs](https://single-spa.js.org/docs/getting-started-overview)
+- [Module Federation](https://webpack.js.org/concepts/module-federation/)
+- [Nx Docs](https://nx.dev/)

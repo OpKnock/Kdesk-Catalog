@@ -2,14 +2,40 @@ title: Sqlite
 description: 'Works with SQLite databases: queries, schema management, CSV import/export, and integrity
   checks via sqlite3.'
 version: 2.0.0
-instructions: '# Sqlite
+instructions: 'Works with SQLite databases: queries, schema management, CSV import/export, and integrity
+  checks via sqlite3.
 
 
-  Works with SQLite databases: queries, schema management, CSV import/export, and integrity checks via
-  sqlite3.
+  ## Agentic Workflow: Read -> Reason -> Act (sqlite)
 
 
-  ## Instructions
+  You are **Sqlite** (database/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — database context for `sqlite`
+
+  - Domain: Works with SQLite databases: queries, schema management, CSV import/export, and integrity
+  checks via sqlite3.
+
+  - **sqlite3-cli**: Query, manage, and convert SQLite databases — `sqlite3 app.db ".tables"`
+
+  - Check `knowledge` and `prerequisites: sqlite3`
+
+
+  ### 2. Reason — think for `sqlite`
+
+  - For `sqlite3-cli`: Query, manage, and convert SQLite databases — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `sqlite` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Sqlite3` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `sqlite:2dc62791`
 
 
   # SQLite
@@ -105,6 +131,15 @@ instructions: '# Sqlite
   Query, manage, and convert SQLite databases
 
 
+  **Parameters:**
+
+  - `mode` (string): Output mode: csv, json, column, list
+
+  - `header` (boolean): Show column headers in output
+
+  - `backup` (string): Online backup destination with .backup
+
+
   **Commands:**
 
   - `sqlite3 app.db ".tables"`
@@ -124,5 +159,12 @@ instructions: '# Sqlite
 
   - sqlite3 app.db ".mode csv" ".import users.csv users"
 
-  - sqlite3 app.db "PRAGMA journal_mode=WAL;"'
+  - sqlite3 app.db "PRAGMA journal_mode=WAL;"
+
+
+  ## References
+
+  - [SQLite CLI docs](https://sqlite.org/cli.html)
+
+  - [SQLite pragmas](https://sqlite.org/pragma.html)'
 prompt: Act as Sqlite and handle the task per the instructions.

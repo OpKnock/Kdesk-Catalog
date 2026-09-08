@@ -2,31 +2,45 @@ title: Websocket Mgmt
 description: 'Implements and operates WebSocket servers: connections, heartbeats, reconnects, broadcasting,
   and scaling with Redis pub/sub.'
 version: 2.0.0
-instructions: "# Websocket Mgmt\n\nImplements and operates WebSocket servers: connections, heartbeats,\
-  \ reconnects, broadcasting, and scaling with Redis pub/sub.\n\n## Instructions\n\n# WebSocket Management\n\
-  \nBuild and operate realtime WebSocket services.\n\n## When to Use\n\n- Live notifications, chat, and\
-  \ collaborative editing\n- Real-time dashboards and streaming updates\n- Bidirectional protocols where\
-  \ polling is wasteful\n\n## Core Concerns\n\n- Heartbeat: ping/pong to detect dead connections\n- Reconnect:\
-  \ exponential backoff with jitter on the client\n- Broadcasting: fan out messages to rooms or all clients\n\
-  - Scaling: one instance cannot hold every connection\n\n## Commands\n\n```bash\n# Test a server\nnpx\
-  \ wscat -c ws://localhost:3000\nnpx wscat -c wss://example.com/socket\n\n# With headers\nnpx wscat -c\
-  \ ws://localhost:3000 -H \"Authorization: Bearer token\"\n\n# Alternative client\nwebsocat ws://localhost:3000\n\
-  \n# Cross-instance broadcast via Redis\nredis-cli publish ws:channel '{\"userId\":1,\"msg\":\"hi\"}'\n\
-  redis-cli pubsub numsub ws:channel\n```\n\n## Node Example\n\n```javascript\nconst { WebSocketServer\
-  \ } = require(\"ws\");\nconst wss = new WebSocketServer({ port: 3000 });\n\nwss.on(\"connection\", (ws)\
-  \ => {\n  ws.isAlive = true;\n  ws.on(\"pong\", () => (ws.isAlive = true));\n  ws.on(\"message\", (data)\
-  \ => wss.clients.forEach((c) => c.send(data)));\n});\n\nsetInterval(() => {\n  wss.clients.forEach((ws)\
+instructions: "Implements and operates WebSocket servers: connections, heartbeats, reconnects, broadcasting,\
+  \ and scaling with Redis pub/sub.\n\n## Agentic Workflow: Read -> Reason -> Act (websocket-mgmt)\n\n\
+  You are **Websocket Mgmt** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — backend context for `websocket-mgmt`\n- Domain: Implements and operates WebSocket servers:\
+  \ connections, heartbeats, reconnects, broadcasting, and scaling with Redis pub/sub.\n- **ws-servers**:\
+  \ Run WebSocket servers and inspect traffic. — `npx wscat -c ws://localhost:3000`\n- **ws-scaling**:\
+  \ Scale WebSocket apps across instances. — `redis-cli publish ws:channel \"event\"`\n- Check `knowledge`\
+  \ and `prerequisites: docker, node, npx, redis-cli`\n\n### 2. Reason — think for `websocket-mgmt`\n\
+  - For `ws-servers`: Run WebSocket servers and inspect traffic. — decide which checks to run\n- For `ws-scaling`:\
+  \ Scale WebSocket apps across instances. — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `websocket-mgmt` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Npx`, `Websocat` (see frontmatter `tools`/`allowed-tools`)\n- Use\
+  \ `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `websocket-mgmt:1ea24967`\n\
+  \n# WebSocket Management\n\nBuild and operate realtime WebSocket services.\n\n## When to Use\n\n- Live\
+  \ notifications, chat, and collaborative editing\n- Real-time dashboards and streaming updates\n- Bidirectional\
+  \ protocols where polling is wasteful\n\n## Core Concerns\n\n- Heartbeat: ping/pong to detect dead connections\n\
+  - Reconnect: exponential backoff with jitter on the client\n- Broadcasting: fan out messages to rooms\
+  \ or all clients\n- Scaling: one instance cannot hold every connection\n\n## Commands\n\n```bash\n#\
+  \ Test a server\nnpx wscat -c ws://localhost:3000\nnpx wscat -c wss://example.com/socket\n\n# With headers\n\
+  npx wscat -c ws://localhost:3000 -H \"Authorization: Bearer token\"\n\n# Alternative client\nwebsocat\
+  \ ws://localhost:3000\n\n# Cross-instance broadcast via Redis\nredis-cli publish ws:channel '{\"userId\"\
+  :1,\"msg\":\"hi\"}'\nredis-cli pubsub numsub ws:channel\n```\n\n## Node Example\n\n```javascript\nconst\
+  \ { WebSocketServer } = require(\"ws\");\nconst wss = new WebSocketServer({ port: 3000 });\n\nwss.on(\"\
+  connection\", (ws) => {\n  ws.isAlive = true;\n  ws.on(\"pong\", () => (ws.isAlive = true));\n  ws.on(\"\
+  message\", (data) => wss.clients.forEach((c) => c.send(data)));\n});\n\nsetInterval(() => {\n  wss.clients.forEach((ws)\
   \ => {\n    if (!ws.isAlive) return ws.terminate();\n    ws.isAlive = false;\n    ws.ping();\n  });\n\
   }, 30000);\n```\n\n## Best Practices\n\n- Heartbeat every 20-30s and terminate silent sockets\n- Limit\
   \ payload size and rate per connection\n- Authenticate on the upgrade request, not after connect\n-\
   \ Use Redis pub/sub to broadcast across instances\n- Handle backpressure; do not buffer unbounded\n\
   - Load test with many concurrent connections before launch\n\n## Capabilities\n\n### ws-servers\nRun\
-  \ WebSocket servers and inspect traffic.\n\n**Commands:**\n- `npx wscat -c ws://localhost:3000`\n- `npx\
-  \ wscat -c wss://localhost/socket`\n- `websocat ws://localhost:3000`\n- `node server.js`\n\n**Examples:**\n\
-  - npx wscat -c ws://localhost:3000 -H \"Authorization: Bearer token\"\n- websocat -t ws://localhost:3000\n\
-  - wscat -c wss://localhost --header \"Origin: http://localhost:8080\"\n\n### ws-scaling\nScale WebSocket\
-  \ apps across instances.\n\n**Commands:**\n- `redis-cli publish ws:channel \"event\"`\n- `redis-cli\
-  \ pubsub numsub ws:channel`\n- `redis-cli llen ws:connections`\n- `docker compose up -d redis`\n\n**Examples:**\n\
-  - redis-cli publish notifications \"{\\\"userId\\\":1,\\\"msg\\\":\\\"hi\\\"}\"\n- redis-cli psubscribe\
-  \ \"ws:*\""
+  \ WebSocket servers and inspect traffic.\n\n**Parameters:**\n- `url` (string): WebSocket URL\n- `header`\
+  \ (string): Extra header\n\n**Commands:**\n- `npx wscat -c ws://localhost:3000`\n- `npx wscat -c wss://localhost/socket`\n\
+  - `websocat ws://localhost:3000`\n- `node server.js`\n\n**Examples:**\n- npx wscat -c ws://localhost:3000\
+  \ -H \"Authorization: Bearer token\"\n- websocat -t ws://localhost:3000\n- wscat -c wss://localhost\
+  \ --header \"Origin: http://localhost:8080\"\n\n### ws-scaling\nScale WebSocket apps across instances.\n\
+  \n**Parameters:**\n- `channel` (string): Pub/sub channel\n- `payload` (string): Message payload to publish\n\
+  \n**Commands:**\n- `redis-cli publish ws:channel \"event\"`\n- `redis-cli pubsub numsub ws:channel`\n\
+  - `redis-cli llen ws:connections`\n- `docker compose up -d redis`\n\n**Examples:**\n- redis-cli publish\
+  \ notifications \"{\\\"userId\\\":1,\\\"msg\\\":\\\"hi\\\"}\"\n- redis-cli psubscribe \"ws:*\"\n\n##\
+  \ References\n- [MDN WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)\n- [Socket.IO\
+  \ Docs](https://socket.io/docs/)"
 prompt: Act as Websocket Mgmt and handle the task per the instructions.

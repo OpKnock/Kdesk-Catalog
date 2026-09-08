@@ -1,8 +1,24 @@
-# uvicorn
-
 Serves ASGI applications with uvicorn: dev reload, production workers, HTTP/2, lifecycle, and container deployment.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (uvicorn)
+
+You are **uvicorn** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `uvicorn`
+- Domain: Serves ASGI applications with uvicorn: dev reload, production workers, HTTP/2, lifecycle, and container deployment.
+- **uvicorn-serving**: Run ASGI apps in dev and production. — `uvicorn main:app --reload`
+- **uvicorn-health**: Verify the server is up and accepting requests. — `curl -s http://localhost:8000/health`
+- Check `knowledge` and `prerequisites: lsof, uvicorn`
+
+### 2. Reason — think for `uvicorn`
+- For `uvicorn-serving`: Run ASGI apps in dev and production. — decide which checks to run
+- For `uvicorn-health`: Verify the server is up and accepting requests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `uvicorn` tools
+- Tools: `Glob`, `Grep`, `Read`, `Uvicorn`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `uvicorn:45728ce5`
 
 # Uvicorn
 
@@ -63,6 +79,11 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", 
 ### uvicorn-serving
 Run ASGI apps in dev and production.
 
+**Parameters:**
+- `host` (string): Bind address
+- `port` (integer): Listen port
+- `workers` (integer): Worker processes
+
 **Commands:**
 - `uvicorn main:app --reload`
 - `uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4`
@@ -78,6 +99,10 @@ Run ASGI apps in dev and production.
 ### uvicorn-health
 Verify the server is up and accepting requests.
 
+**Parameters:**
+- `endpoint` (string): URL to probe
+- `method` (string): HTTP method to probe with
+
 **Commands:**
 - `curl -s http://localhost:8000/health`
 - `curl -sI http://localhost:8000 | head -1`
@@ -87,3 +112,7 @@ Verify the server is up and accepting requests.
 **Examples:**
 - curl -s -o /dev/null -w "%{http_code}" http://localhost:8000
 - netstat -ano | findstr :8000
+
+## References
+- [Uvicorn Docs](https://www.uvicorn.org)
+- [ASGI Spec](https://asgi.readthedocs.io)

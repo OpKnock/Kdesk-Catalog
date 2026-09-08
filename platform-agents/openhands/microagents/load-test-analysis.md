@@ -1,15 +1,31 @@
 ---
 name: "load-test-analysis"
-description: "Analyze load test results: extract percentiles from k6/hey/ab outputs, compute error rates, and summarize performance regressions."
+description: "Analyze load test results: extract percentiles from k6/hey/ab outputs, compute error rates, and summarize performance regressions. Use when working with percentile analysis, compare runs, api or when the user mentions percentile analysis, compare runs, api."
 type: knowledge
 triggers: ["load-test-analysis", "percentile-analysis", "compare-runs"]
 ---
 
-# Load Test Analysis
-
 Analyze load test results: extract percentiles from k6/hey/ab outputs, compute error rates, and summarize performance regressions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (load-test-analysis)
+
+You are **Load Test Analysis** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `load-test-analysis`
+- Domain: Analyze load test results: extract percentiles from k6/hey/ab outputs, compute error rates, and summarize performance regressions.
+- **percentile-analysis**: Extract latency percentiles from k6 JSON exports and CLI summaries. — `k6 run --summary-export=summary.json load.js`
+- **compare-runs**: Compare baseline vs. after runs and summarize throughput/errors. — `ab -n 10000 -c 200 -k http://localhost:8080/ | grep -E 'Requests per second|Fail`
+- Check `knowledge` and `prerequisites: awk, hey`
+
+### 2. Reason — think for `load-test-analysis`
+- For `percentile-analysis`: Extract latency percentiles from k6 JSON exports and CLI summaries. — decide which checks to run
+- For `compare-runs`: Compare baseline vs. after runs and summarize throughput/errors. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `load-test-analysis` tools
+- Tools: `Glob`, `Grep`, `Read`, `K6`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `load-test-analysis:8c96da08`
 
 # Load Test Analysis
 
@@ -82,6 +98,10 @@ jq -e '.metrics.http_req_duration.values["p(95)"] < 300' summary.json && echo PA
 ### percentile-analysis
 Extract latency percentiles from k6 JSON exports and CLI summaries.
 
+**Parameters:**
+- `summary_file` (string): k6 --summary-export JSON file.
+- `percentile` (string): Percentile to extract, e.g. p(95), p(99).
+
 **Commands:**
 - `k6 run --summary-export=summary.json load.js`
 - `jq '.metrics.http_req_duration.values["p(95)"]' summary.json`
@@ -96,6 +116,10 @@ Extract latency percentiles from k6 JSON exports and CLI summaries.
 ### compare-runs
 Compare baseline vs. after runs and summarize throughput/errors.
 
+**Parameters:**
+- `baseline` (string): Baseline results file.
+- `after` (string): After-change results file.
+
 **Commands:**
 - `ab -n 10000 -c 200 -k http://localhost:8080/ | grep -E 'Requests per second|Failed requests'`
 - `jq '.metrics.http_reqs.values.count / .metrics.http_req_duration.values.avg' summary.json`
@@ -106,3 +130,7 @@ Compare baseline vs. after runs and summarize throughput/errors.
 - ab -n 10000 -c 200 -k http://localhost:8080/ | grep -E 'Requests per second|Failed requests'
 - awk '/^Requests per second/{print $4}' ab-before.txt ab-after.txt
 - jq '.metrics.http_reqs.values.count / .metrics.http_req_duration.values.avg' summary.json
+
+## References
+- [k6 Summary Export](https://grafana.com/docs/k6/latest/results-output/end-of-test/)
+- [jq manual](https://jqlang.github.io/jq/manual/)

@@ -2,19 +2,30 @@ title: Event Sourcing
 description: 'Event-sourcing architectures: append events to event stores (Kafka, EventStoreDB), rebuild
   projections, and replay events for audit and recovery.'
 version: 2.0.0
-instructions: "# Event Sourcing\n\nEvent-sourcing architectures: append events to event stores (Kafka,\
-  \ EventStoreDB), rebuild projections, and replay events for audit and recovery.\n\n## Instructions\n\
-  \n# Event Sourcing\n\n## What this skill does\n\nEvent sourcing stores state changes as immutable events\
-  \ rather than the current state. Aggregates are rebuilt by replaying events; projections produce read\
-  \ models. This skill covers event stores and replays.\n\n## When to use\n\n- Designing audit-complete\
-  \ systems (finance, compliance)\n- Rebuilding a read model from scratch\n- Debugging why a projection\
-  \ lagged\n\n## Real commands\n\n```bash\n# Append an event to EventStoreDB\ncurl -s -X POST http://localhost:2113/streams/orders-1\
-  \ -H 'Content-Type: application/vnd.eventstore.events+json' -d @order-event.json\n\n# Read a stream\
-  \ forward\ncurl -s http://localhost:2113/streams/orders-1/0/forward/20 | jq '.entries[].eventType'\n\
-  \n# Produce and consume on Kafka\nkafka-console-producer --bootstrap-server localhost:9092 --topic orders.events\n\
-  kafka-console-consumer --bootstrap-server localhost:9092 --topic orders.events --from-beginning\n\n\
-  # Projection lag\nkafka-consumer-groups --bootstrap-server localhost:9092 --group projections --describe\n\
-  ```\n\n## Event JSON example\n\n```json\n{\n  \"eventId\": \"3f3c3b24-1f4b-4b2c-9c1a-0c0d0e0f1a2b\"\
+instructions: "Event-sourcing architectures: append events to event stores (Kafka, EventStoreDB), rebuild\
+  \ projections, and replay events for audit and recovery.\n\n## Agentic Workflow: Read -> Reason -> Act\
+  \ (event-sourcing)\n\nYou are **Event Sourcing** (api/general) — a sub-agent that **Reads, Reasons,\
+  \ and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `event-sourcing`\n- Domain: Event-sourcing\
+  \ architectures: append events to event stores (Kafka, EventStoreDB), rebuild projections, and replay\
+  \ events for audit and recovery.\n- **event-store-ops**: Append and read events in EventStoreDB and\
+  \ Kafka, and manage projections. — `curl -s -X POST http://localhost:2113/streams/orders-1 -H 'Content-Type:\
+  \ applica`\n- Check `knowledge` and `prerequisites: kafka-console-consumer, kafka-console-producer,\
+  \ kafka-consumer-groups`\n\n### 2. Reason — think for `event-sourcing`\n- For `event-store-ops`: Append\
+  \ and read events in EventStoreDB and Kafka, and manage projections. — decide which checks to run\n\
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute\
+  \ with `event-sourcing` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Kafka-console-producer` (see\
+  \ frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths, checksums)\n\
+  - Fingerprint: `event-sourcing:e52d74a6`\n\n# Event Sourcing\n\n## What this skill does\n\nEvent sourcing\
+  \ stores state changes as immutable events rather than the current state. Aggregates are rebuilt by\
+  \ replaying events; projections produce read models. This skill covers event stores and replays.\n\n\
+  ## When to use\n\n- Designing audit-complete systems (finance, compliance)\n- Rebuilding a read model\
+  \ from scratch\n- Debugging why a projection lagged\n\n## Real commands\n\n```bash\n# Append an event\
+  \ to EventStoreDB\ncurl -s -X POST http://localhost:2113/streams/orders-1 -H 'Content-Type: application/vnd.eventstore.events+json'\
+  \ -d @order-event.json\n\n# Read a stream forward\ncurl -s http://localhost:2113/streams/orders-1/0/forward/20\
+  \ | jq '.entries[].eventType'\n\n# Produce and consume on Kafka\nkafka-console-producer --bootstrap-server\
+  \ localhost:9092 --topic orders.events\nkafka-console-consumer --bootstrap-server localhost:9092 --topic\
+  \ orders.events --from-beginning\n\n# Projection lag\nkafka-consumer-groups --bootstrap-server localhost:9092\
+  \ --group projections --describe\n```\n\n## Event JSON example\n\n```json\n{\n  \"eventId\": \"3f3c3b24-1f4b-4b2c-9c1a-0c0d0e0f1a2b\"\
   ,\n  \"eventType\": \"OrderPlaced\",\n  \"data\": {\"orderId\": \"o-1\", \"amount\": 4200}\n}\n```\n\
   \n## Rebuild workflow\n\n```bash\n# 1. Stop the projection consumer\nkafka-consumer-groups --bootstrap-server\
   \ localhost:9092 --group projections --reset-offsets --to-earliest --execute\n# 2. Let it replay from\
@@ -23,13 +34,16 @@ instructions: "# Event Sourcing\n\nEvent-sourcing architectures: append events t
   \ v2) and keep old readers working.\n- Idempotent projections: replay must yield the same read model.\n\
   - Use a dedicated topic per aggregate type to keep replay simple.\n- Store event type names as constants\
   \ shared across services.\n\n## Capabilities\n\n### event-store-ops\nAppend and read events in EventStoreDB\
-  \ and Kafka, and manage projections.\n\n**Commands:**\n- `curl -s -X POST http://localhost:2113/streams/orders-1\
-  \ -H 'Content-Type: application/vnd.eventstore.events+json' -d '[\"{\\\"eventId\\\":\\\"$(uuidgen)\\\
-  \",\\\"eventType\\\":\\\"OrderPlaced\\\",\\\"data\\\":{\\\"amount\\\":42}}\"]'`\n- `curl -s http://localhost:2113/streams/orders-1/0/forward/20\
+  \ and Kafka, and manage projections.\n\n**Parameters:**\n- `topic` (string): Kafka topic or EventStoreDB\
+  \ stream name\n- `event-type` (string): Event type like OrderPlaced\n- `stream-id` (string): Aggregate\
+  \ stream identifier\n\n**Commands:**\n- `curl -s -X POST http://localhost:2113/streams/orders-1 -H 'Content-Type:\
+  \ application/vnd.eventstore.events+json' -d '[\"{\\\"eventId\\\":\\\"$(uuidgen)\\\",\\\"eventType\\\
+  \":\\\"OrderPlaced\\\",\\\"data\\\":{\\\"amount\\\":42}}\"]'`\n- `curl -s http://localhost:2113/streams/orders-1/0/forward/20\
   \ | jq '.entries[].eventType'`\n- `kafka-console-producer --bootstrap-server localhost:9092 --topic\
   \ orders.events`\n- `kafka-console-consumer --bootstrap-server localhost:9092 --topic orders.events\
   \ --from-beginning`\n- `kafka-consumer-groups --bootstrap-server localhost:9092 --group projections\
   \ --describe`\n\n**Examples:**\n- kafka-console-producer --bootstrap-server localhost:9092 --topic orders.events\n\
   - curl -s http://localhost:2113/streams/orders-1/0/forward/20 | jq '.entries[].eventType'\n- kafka-consumer-groups\
-  \ --bootstrap-server localhost:9092 --group projections --describe"
+  \ --bootstrap-server localhost:9092 --group projections --describe\n\n## References\n- [EventStoreDB\
+  \ HTTP API](https://developers.eventstore.com/server/v24.2/http-api/)\n- [Kafka Consumers Guide](https://kafka.apache.org/documentation/)"
 prompt: Act as Event Sourcing and handle the task per the instructions.

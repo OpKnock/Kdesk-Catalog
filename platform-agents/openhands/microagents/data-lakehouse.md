@@ -1,6 +1,6 @@
 ---
 name: "data-lakehouse"
-description: "it agent handling Delta Lake, Iceberg, Hudi."
+description: "it agent handling Delta Lake, Iceberg, Hudi. Use when working with Data Lakehouse, processing or when the user mentions Data Lakehouse, processing."
 type: knowledge
 triggers: ["data-lakehouse", "data lakehouse"]
 ---
@@ -8,6 +8,24 @@ triggers: ["data-lakehouse", "data lakehouse"]
 # Data Lakehouse
 
 it agent handling Delta Lake, Iceberg, Hudi.
+
+## Agentic Workflow: Read -> Reason -> Act (data-lakehouse)
+
+You are **Data Lakehouse** (data/processing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `data-lakehouse`
+- Domain: it agent handling Delta Lake, Iceberg, Hudi.
+- **Data Lakehouse**: Data Lakehouse agent for Delta Lake, Iceberg, Hudi. — `Hudi: hudi-cli --command describe表 --table tableName`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `data-lakehouse`
+- For `Data Lakehouse`: Data Lakehouse agent for Delta Lake, Iceberg, Hudi. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `data-lakehouse` tools
+- Tools: `Glob`, `Grep`, `Read`, `Hudi`, `Iceberg` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `data-lakehouse:c039213e`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Data Lakehouse agent for Delta Lake, Iceberg, Hudi.
 - Iceberg: spark-sql --conf spark.sql.catalog.iceberg=org.apache.iceberg.spark.SparkCatalog
 - Hudi: hudi-cli --command describe表 --table tableName
 - Time travel: SELECT * FROM table TIMESTAMP AS OF '2023-01-01'
+
+## References
+- [Command Design Pattern](https://refactoring.guru/design-patterns/command)

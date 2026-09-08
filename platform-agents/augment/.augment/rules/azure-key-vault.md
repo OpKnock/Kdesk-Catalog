@@ -5,27 +5,27 @@ description: "Centralizes credentials and cryptographic material in a managed HS
 
 Centralizes credentials and cryptographic material in a managed HSM-backed store using the Azure CLI: provisions vault instances, performs secret CRUD with versioning and expiry, manages asymmetric keys, and configures access policies or RBAC for service identities.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (azure-key-vault)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Azure Key Vault** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `az keyvault create --name mykv --resource-group rg`, `az keyvault secret set --vault-name mykv --name db-password `
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `azure-key-vault`
+- Domain: Centralizes credentials and cryptographic material in a managed HSM-backed store using the Azure CLI: provisions vault instances, performs secret CRUD with versioning and expiry, manages asymmetric ke
+- **vault-lifecycle**: Create and manage Key Vault instances. — `az keyvault create --name mykv --resource-group rg`
+- **secrets**: Store and retrieve secrets. — `az keyvault secret set --vault-name mykv --name db-password --value secret123`
+- **keys-access**: Manage keys and access policies. — `az keyvault key create --vault-name mykv --name rsa-key --protection software`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `azure-key-vault`
+- For `vault-lifecycle`: Create and manage Key Vault instances. — decide which checks to run
+- For `secrets`: Store and retrieve secrets. — decide which checks to run
+- For `keys-access`: Manage keys and access policies. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `azure-key-vault` tools
+- Tools: `Glob`, `Grep`, `Read`, `Az` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `azure-key-vault:8f07adad`
 
 # Azure Key Vault
 

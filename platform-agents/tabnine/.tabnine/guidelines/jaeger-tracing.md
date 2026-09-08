@@ -1,8 +1,22 @@
-# Jaeger Tracing
-
 Jaeger distributed tracing: running all-in-one, generating sample traces with tracegen, and querying the Jaeger API for services and traces.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (jaeger-tracing)
+
+You are **Jaeger Tracing** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `jaeger-tracing`
+- Domain: Jaeger distributed tracing: running all-in-one, generating sample traces with tracegen, and querying the Jaeger API for services and traces.
+- **jaeger-ops**: Run Jaeger locally and query traces through the API and UI. — `docker run -d --name jaeger -p 16686:16686 -p 4317:4317 -p 4318:4318 jaegertraci`
+- Check `knowledge` and `prerequisites: docker`
+
+### 2. Reason — think for `jaeger-tracing`
+- For `jaeger-ops`: Run Jaeger locally and query traces through the API and UI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `jaeger-tracing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `jaeger-tracing:1c48a1e8`
 
 # Jaeger Tracing
 
@@ -75,6 +89,11 @@ Agent: curl -s 'http://localhost:16686/api/traces?service=checkout&lookback=1h' 
 ### jaeger-ops
 Run Jaeger locally and query traces through the API and UI.
 
+**Parameters:**
+- `service` (string): Service name to query traces for.
+- `lookback` (string): Time window, e.g. 1h, 24h.
+- `limit` (integer): Max traces to return.
+
 **Commands:**
 - `docker run -d --name jaeger -p 16686:16686 -p 4317:4317 -p 4318:4318 jaegertracing/all-in-one:1.57`
 - `curl 'http://localhost:16686/api/traces?service=myservice&limit=10' | jq '.data[0].traceID'`
@@ -86,3 +105,7 @@ Run Jaeger locally and query traces through the API and UI.
 - tracegen -service myservice -traces 100 -duration 2s
 - curl 'http://localhost:16686/api/traces?service=myservice&limit=1' | jq '.data[0].spans | length'
 - docker logs jaeger | tail -20
+
+## References
+- [Jaeger Docs](https://www.jaegertracing.io/docs/latest/)
+- [Jaeger API Reference](https://www.jaegertracing.io/docs/latest/apis/)

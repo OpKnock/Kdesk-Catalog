@@ -4,27 +4,23 @@ applyTo: "**/*.r **/*.sh **/*.{ts,tsx}"
 
 Scaffolds NestJS projects and generates modules, controllers, services, guards, and interceptors using the Nest CLI. Structures applications with dependency injection and modular architecture.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (nestjs-scaffolding)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Nestjs Scaffolding** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `nest new my-app --package-manager npm`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `nestjs-scaffolding`
+- Domain: Scaffolds NestJS projects and generates modules, controllers, services, guards, and interceptors using the Nest CLI. Structures applications with dependency injection and modular architecture.
+- **nestjs-scaffolding**: Scaffold NestJS projects and generate modules, controllers, services and guards with the Nest CLI. — `nest new my-app --package-manager npm`
+- Check `knowledge` and `prerequisites: nest, npm`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `nestjs-scaffolding`
+- For `nestjs-scaffolding`: Scaffold NestJS projects and generate modules, controllers, services and guards with the Nest CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `nestjs-scaffolding` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nest`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nestjs-scaffolding:afdef314`
 
 # NestJS
 

@@ -1,8 +1,24 @@
-# Java
-
 Develops Java backend services with Maven/Gradle, Spring Boot, and the JVM toolchain including build, test, and packaging.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (java)
+
+You are **Java** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `java`
+- Domain: Develops Java backend services with Maven/Gradle, Spring Boot, and the JVM toolchain including build, test, and packaging.
+- **maven-build**: Build and test Maven projects. — `mvn clean package`
+- **gradle-build**: Build and test Gradle projects. — `gradle build`
+- Check `knowledge` and `prerequisites: gradle, mvn`
+
+### 2. Reason — think for `java`
+- For `maven-build`: Build and test Maven projects. — decide which checks to run
+- For `gradle-build`: Build and test Gradle projects. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `java` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `Gradle` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `java:495a33f8`
 
 # Java
 
@@ -63,6 +79,10 @@ public class HealthController {
 ### maven-build
 Build and test Maven projects.
 
+**Parameters:**
+- `goal` (string): Maven goal to run
+- `test` (string): Test filter
+
 **Commands:**
 - `mvn clean package`
 - `mvn test`
@@ -78,6 +98,10 @@ Build and test Maven projects.
 ### gradle-build
 Build and test Gradle projects.
 
+**Parameters:**
+- `task` (string): Gradle task to run
+- `test` (string): Test class filter
+
 **Commands:**
 - `gradle build`
 - `gradle test`
@@ -89,3 +113,8 @@ Build and test Gradle projects.
 - gradle test --tests "com.example.OrderTest"
 - gradle build -x test
 - gradle bootJar
+
+## References
+- [Java SE Docs](https://docs.oracle.com/en/java/javase/)
+- [Spring Boot Docs](https://docs.spring.io/spring-boot/)
+- [Maven Docs](https://maven.apache.org/guides/)

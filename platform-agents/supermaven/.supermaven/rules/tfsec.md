@@ -1,8 +1,24 @@
-# tfsec
-
 Scans Terraform configurations with tfsec's focused security checks, severity gating, and SARIF/JUnit output.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (tfsec)
+
+You are **tfsec** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `tfsec`
+- Domain: Scans Terraform configurations with tfsec's focused security checks, severity gating, and SARIF/JUnit output.
+- **tfsec-scan**: Scan directories and files with severity and check filters. — `tfsec .`
+- **reporting-and-config**: Emit CI reports and manage custom configuration. — `tfsec . --format sarif --out scan.sarif`
+- Check `knowledge` and `prerequisites: tfsec`
+
+### 2. Reason — think for `tfsec`
+- For `tfsec-scan`: Scan directories and files with severity and check filters. — decide which checks to run
+- For `reporting-and-config`: Emit CI reports and manage custom configuration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tfsec` tools
+- Tools: `Glob`, `Grep`, `Read`, `Tfsec` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tfsec:a52ea3cd`
 
 # tfsec
 
@@ -64,6 +80,11 @@ exclude:
 ### tfsec-scan
 Scan directories and files with severity and check filters.
 
+**Parameters:**
+- `path` (string): Directory or file to scan
+- `minimumSeverity` (string): Minimum severity: LOW, MEDIUM, HIGH, CRITICAL
+- `excludeCheck` (string): Comma-separated check IDs to exclude
+
 **Commands:**
 - `tfsec .`
 - `tfsec ./modules`
@@ -79,6 +100,11 @@ Scan directories and files with severity and check filters.
 ### reporting-and-config
 Emit CI reports and manage custom configuration.
 
+**Parameters:**
+- `format` (string): Output: standard, json, sarif, junit, csv, html
+- `out` (string): Report output file
+- `configFile` (string): tfsec config YAML path
+
 **Commands:**
 - `tfsec . --format sarif --out scan.sarif`
 - `tfsec . --format json --out results.json`
@@ -90,3 +116,7 @@ Emit CI reports and manage custom configuration.
 - tfsec . --format sarif --out scan.sarif
 - tfsec . --config-file tfsec.yml
 - tfsec . --no-colour --format junit --out junit.xml
+
+## References
+- [tfsec GitHub](https://github.com/aquasecurity/tfsec)
+- [tfsec Documentation](https://aquasecurity.github.io/tfsec/)

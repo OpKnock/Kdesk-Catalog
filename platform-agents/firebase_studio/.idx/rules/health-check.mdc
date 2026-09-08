@@ -1,14 +1,28 @@
 ---
-description: "Endpoint health checking from the CLI: curl -f probes, TCP checks with nc, HTTP status verification, and Kubernetes readiness waits."
+description: "Endpoint health checking from the CLI: curl -f probes, TCP checks with nc, HTTP status verification, and Kubernetes readiness waits. Use when working with endpoint probing, api or when the user mentions endpoint probing, api."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Health Check
-
 Endpoint health checking from the CLI: curl -f probes, TCP checks with nc, HTTP status verification, and Kubernetes readiness waits.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (health-check)
+
+You are **Health Check** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `health-check`
+- Domain: Endpoint health checking from the CLI: curl -f probes, TCP checks with nc, HTTP status verification, and Kubernetes readiness waits.
+- **endpoint-probing**: Probe HTTP and TCP endpoints for availability from scripts and CI. — `curl -f -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/healthz`
+- Check `knowledge` and `prerequisites: kubectl, wget`
+
+### 2. Reason — think for `health-check`
+- For `endpoint-probing`: Probe HTTP and TCP endpoints for availability from scripts and CI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `health-check` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Nc` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `health-check:10a9c964`
 
 # Health Check
 
@@ -84,6 +98,11 @@ Agent: curl -fsS http://localhost:8080/health && echo OK
 ### endpoint-probing
 Probe HTTP and TCP endpoints for availability from scripts and CI.
 
+**Parameters:**
+- `url` (string): Health endpoint URL.
+- `timeout` (integer): Probe timeout in seconds.
+- `expected_code` (integer): Expected HTTP status, default 200.
+
 **Commands:**
 - `curl -f -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/healthz`
 - `curl -fsS http://localhost:8080/health && echo OK`
@@ -95,3 +114,7 @@ Probe HTTP and TCP endpoints for availability from scripts and CI.
 - curl -fsS --max-time 3 http://localhost:8080/health || exit 1
 - nc -zv -w 3 localhost 5432
 - curl -s -o /dev/null -w '%{time_total}\n' http://localhost:8080/health
+
+## References
+- [curl manual](https://curl.se/docs/manpage.html)
+- [kubectl wait reference](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_wait/)

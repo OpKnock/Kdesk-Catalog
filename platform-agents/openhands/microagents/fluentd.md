@@ -1,15 +1,29 @@
 ---
 name: "fluentd"
-description: "Log collection with Fluentd: run the agent, configure input/output plugins, test configs, and manage buffers."
+description: "Log collection with Fluentd: run the agent, configure input/output plugins, test configs, and manage buffers. Use when working with fluentd agent, api or when the user mentions fluentd agent, api."
 type: knowledge
 triggers: ["fluentd", "fluentd-agent"]
 ---
 
-# Fluentd
-
 Log collection with Fluentd: run the agent, configure input/output plugins, test configs, and manage buffers.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (fluentd)
+
+You are **Fluentd** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `fluentd`
+- Domain: Log collection with Fluentd: run the agent, configure input/output plugins, test configs, and manage buffers.
+- **fluentd-agent**: Validate, run, and monitor Fluentd configurations and plugins. — `fluentd --dry-run -c fluent.conf`
+- Check `knowledge` and `prerequisites: fluent-gem, fluentd`
+
+### 2. Reason — think for `fluentd`
+- For `fluentd-agent`: Validate, run, and monitor Fluentd configurations and plugins. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `fluentd` tools
+- Tools: `Glob`, `Grep`, `Read`, `Fluentd`, `Fluent-gem` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fluentd:16b6cf77`
 
 # Fluentd
 
@@ -93,6 +107,11 @@ curl -s http://localhost:24220/api/plugins.json | jq '.plugins[] | select(.type 
 ### fluentd-agent
 Validate, run, and monitor Fluentd configurations and plugins.
 
+**Parameters:**
+- `config-file` (string): Path to fluent.conf
+- `plugin-dir` (string): Custom plugin directory
+- `monitor-port` (integer): Fluentd monitor agent port (default 24220)
+
 **Commands:**
 - `fluentd --dry-run -c fluent.conf`
 - `fluentd -c fluent.conf -p /etc/fluent/plugin`
@@ -104,3 +123,7 @@ Validate, run, and monitor Fluentd configurations and plugins.
 - fluentd --dry-run -c fluent.conf
 - curl -s http://localhost:24220/api/plugins.json | jq '.plugins[] | {plugin_id, type, emit_records}'
 - fluent-gem install fluent-plugin-elasticsearch
+
+## References
+- [Fluentd docs](https://docs.fluentd.org/)
+- [Fluentd buffer plugins](https://docs.fluentd.org/configuration/buffer-section)

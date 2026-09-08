@@ -6,27 +6,25 @@ globs: ["**/*.r", "**/*.scala", "**/*.sh", "**/*.{ts,tsx}"]
 
 Builds structured Node.js services with NestJS: modules, controllers, providers, CLI scaffolding, and testing.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (nestjs)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **nestjs** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx @nestjs/cli new myapp`, `npm test`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `nestjs`
+- Domain: Builds structured Node.js services with NestJS: modules, controllers, providers, CLI scaffolding, and testing.
+- **nestjs-cli**: Scaffold modules, controllers, and services. — `npx @nestjs/cli new myapp`
+- **nestjs-testing**: Run unit and e2e tests. — `npm test`
+- Check `knowledge` and `prerequisites: npm, npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `nestjs`
+- For `nestjs-cli`: Scaffold modules, controllers, and services. — decide which checks to run
+- For `nestjs-testing`: Run unit and e2e tests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `nestjs` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nestjs:38c6b4c9`
 
 # NestJS
 

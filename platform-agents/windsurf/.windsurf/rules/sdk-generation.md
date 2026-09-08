@@ -6,27 +6,23 @@ globs: ["**/*.cs", "**/*.go", "**/*.java", "**/*.json", "**/*.py", "**/*.r", "**
 
 Expert reference for producing typed client SDKs for Go, Java, TypeScript, and Python from OpenAPI specs with openapi-generator and autorest.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (sdk-generation)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Sdk Generation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx @openapitools/openapi-generator-cli generate -i openapi.`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `sdk-generation`
+- Domain: Expert reference for producing typed client SDKs for Go, Java, TypeScript, and Python from OpenAPI specs with openapi-generator and autorest.
+- **multi-language-sdk**: Generate and validate client SDKs in multiple languages — `npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g go -o sdk/go`
+- Check `knowledge` and `prerequisites: npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `sdk-generation`
+- For `multi-language-sdk`: Generate and validate client SDKs in multiple languages — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `sdk-generation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sdk-generation:fce01244`
 
 # SDK Generation
 

@@ -6,27 +6,25 @@ alwaysApply: false
 
 Run and operate Kafka Connect clusters: standalone and distributed workers, connector lifecycle via the REST API, and status/offset inspection.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (kafka-connect)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Kafka Connect** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `connect-distributed.sh config/connect-distributed.properties`, `curl -s http://localhost:8083/connectors`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `kafka-connect`
+- Domain: Run and operate Kafka Connect clusters: standalone and distributed workers, connector lifecycle via the REST API, and status/offset inspection.
+- **worker-runtime**: Start Kafka Connect in standalone or distributed mode. — `connect-distributed.sh config/connect-distributed.properties`
+- **connector-rest**: Manage connectors through the Connect REST API (port 8083 by default). — `curl -s http://localhost:8083/connectors`
+- Check `knowledge` and `prerequisites: connect-distributed.sh, connect-standalone.sh, kafka-topics.sh`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `kafka-connect`
+- For `worker-runtime`: Start Kafka Connect in standalone or distributed mode. — decide which checks to run
+- For `connector-rest`: Manage connectors through the Connect REST API (port 8083 by default). — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `kafka-connect` tools
+- Tools: `Glob`, `Grep`, `Read`, `Connect-distributed.sh`, `Connect-standalone.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-connect:eb7c122f`
 
 # Kafka Connect
 

@@ -1,6 +1,6 @@
 ---
 name: "rag-identity-py"
-description: "Handles RAG identity in Python: API key auth for the retrieval API, JWT verification, tenant-scoped collections, and audit logging."
+description: "Handles RAG identity in Python: API key auth for the retrieval API, JWT verification, tenant-scoped collections, and audit logging. Use when working with api key auth, jwt verify, ml, rag or when the user mentions api key auth, jwt verify, ml, rag."
 type: knowledge
 triggers: ["rag-identity-py", "api-key-auth", "jwt-verify"]
 ---
@@ -8,6 +8,26 @@ triggers: ["rag-identity-py", "api-key-auth", "jwt-verify"]
 # RAG Identity Engineer (Python)
 
 Handles RAG identity in Python: API key auth for the retrieval API, JWT verification, tenant-scoped collections, and audit logging.
+
+## Agentic Workflow: Read -> Reason -> Act (rag-identity-py)
+
+You are **RAG Identity Engineer (Python)** (ml/rag) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `rag-identity-py`
+- Domain: Handles RAG identity in Python: API key auth for the retrieval API, JWT verification, tenant-scoped collections, and audit logging.
+- **api-key-auth**: Protect retrieval endpoints with API keys — `python -c "import secrets; print(secrets.token_urlsafe(32))"`
+- **jwt-verify**: Verify JWTs on the retrieval API with PyJWT — `python -c "import jwt; print(jwt.decode('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `rag-identity-py`
+- For `api-key-auth`: Protect retrieval endpoints with API keys — decide which checks to run
+- For `jwt-verify`: Verify JWTs on the retrieval API with PyJWT — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rag-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rag-identity-py:6d3f9475`
 
 ## Instructions
 
@@ -17,6 +37,9 @@ You are the RAG identity engineer in Python. You handle RAG identity: API key au
 
 ### api-key-auth
 Protect retrieval endpoints with API keys
+
+**Parameters:**
+- `header` (string): API key header name (default X-API-Key)
 
 **Commands:**
 - `python -c "import secrets; print(secrets.token_urlsafe(32))"`
@@ -30,6 +53,9 @@ Protect retrieval endpoints with API keys
 ### jwt-verify
 Verify JWTs on the retrieval API with PyJWT
 
+**Parameters:**
+- `secret` (string): HMAC secret for verification
+
 **Commands:**
 - `python -c "import jwt; print(jwt.decode('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidGVuYW50IjoiYWMtY29ycCJ9.7S97WQ7rkgDsPwdWTsK6BYGUm0tno9K2nlf1fnL0_iM', 'secret', algorithms=['HS256']))"`
 - `curl -s -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidGVuYW50IjoiYWMtY29ycCJ9.7S97WQ7rkgDsPwdWTsK6BYGUm0tno9K2nlf1fnL0_iM" http://127.0.0.1:8000/retrieve -d '{"query":"pricing"}'`
@@ -37,3 +63,7 @@ Verify JWTs on the retrieval API with PyJWT
 **Examples:**
 - jwt.decode validates signature and expiry
 - tenant claims scope retrieval to one collection
+
+## References
+- [PyJWT docs](https://pyjwt.readthedocs.io/en/stable/)
+- [OWASP API auth guidance](https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/)

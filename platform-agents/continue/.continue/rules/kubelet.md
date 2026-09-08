@@ -1,15 +1,31 @@
 ---
 name: "kubelet"
-description: "Operates and troubleshoots the kubelet: service management, journal logs, kubeadm join flow, config flags, and node registration."
+description: "Operates and troubleshoots the kubelet: service management, journal logs, kubeadm join flow, config flags, and node registration. Use when working with kubelet service, join and config, devops or when the user mentions kubelet service, join and config, devops."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# kubelet
-
 Operates and troubleshoots the kubelet: service management, journal logs, kubeadm join flow, config flags, and node registration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kubelet)
+
+You are **kubelet** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `kubelet`
+- Domain: Operates and troubleshoots the kubelet: service management, journal logs, kubeadm join flow, config flags, and node registration.
+- **kubelet-service**: Check, restart, and inspect the kubelet systemd service. — `systemctl status kubelet`
+- **join-and-config**: Join nodes to the cluster and inspect kubelet configuration. — `kubeadm token create --print-join-command`
+- Check `knowledge` and `prerequisites: journalctl, kubeadm, kubectl, kubelet`
+
+### 2. Reason — think for `kubelet`
+- For `kubelet-service`: Check, restart, and inspect the kubelet systemd service. — decide which checks to run
+- For `join-and-config`: Join nodes to the cluster and inspect kubelet configuration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kubelet` tools
+- Tools: `Glob`, `Grep`, `Read`, `Systemctl`, `Journalctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kubelet:21ecf225`
 
 # kubelet Operations
 
@@ -72,6 +88,10 @@ kubectl describe node worker-1
 ### kubelet-service
 Check, restart, and inspect the kubelet systemd service.
 
+**Parameters:**
+- `since` (string): Time window for journal logs
+- `follow` (boolean): Tail logs with -f
+
 **Commands:**
 - `systemctl status kubelet`
 - `systemctl restart kubelet`
@@ -88,6 +108,10 @@ Check, restart, and inspect the kubelet systemd service.
 ### join-and-config
 Join nodes to the cluster and inspect kubelet configuration.
 
+**Parameters:**
+- `config` (string): Kubelet config file path
+- `api-server` (string): Control plane endpoint address
+
 **Commands:**
 - `kubeadm token create --print-join-command`
 - `kubeadm join 10.0.0.5:6443 --token demo-token --discovery-token-ca-cert-hash sha256:demo-hash`
@@ -99,3 +123,8 @@ Join nodes to the cluster and inspect kubelet configuration.
 - kubeadm token create --print-join-command
 - kubeadm join 10.0.0.5:6443 --token ... --discovery-token-ca-cert-hash sha256:...
 - kubelet --config /var/lib/kubelet/config.yaml --dump-config
+
+## References
+- [kubelet Reference](https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/)
+- [Kubelet Configuration](https://kubernetes.io/docs/reference/config-api/kubelet-config.v1/)
+- [kubeadm Join](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/)

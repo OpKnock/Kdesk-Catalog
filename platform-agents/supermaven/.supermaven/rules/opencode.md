@@ -1,8 +1,24 @@
-# Opencode
-
 Operates the opencode CLI agent: run tasks headlessly, manage auth and providers, configure models, and manage sessions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (opencode)
+
+You are **Opencode** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `opencode`
+- Domain: Operates the opencode CLI agent: run tasks headlessly, manage auth and providers, configure models, and manage sessions.
+- **agent-runs**: Run opencode agents in the terminal and headlessly. — `opencode`
+- **auth-and-config**: Authenticate providers and manage opencode configuration. — `opencode auth login`
+- Check `knowledge` and `prerequisites: opencode`
+
+### 2. Reason — think for `opencode`
+- For `agent-runs`: Run opencode agents in the terminal and headlessly. — decide which checks to run
+- For `auth-and-config`: Authenticate providers and manage opencode configuration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `opencode` tools
+- Tools: `Glob`, `Grep`, `Read`, `Opencode` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `opencode:70a6d849`
 
 # opencode CLI Agent
 
@@ -61,6 +77,10 @@ opencode --help
 ### agent-runs
 Run opencode agents in the terminal and headlessly.
 
+**Parameters:**
+- `prompt` (string): Task prompt
+- `model` (string): Model provider:model id
+
 **Commands:**
 - `opencode`
 - `opencode run 'fix the failing test in src/'`
@@ -76,6 +96,10 @@ Run opencode agents in the terminal and headlessly.
 ### auth-and-config
 Authenticate providers and manage opencode configuration.
 
+**Parameters:**
+- `provider` (string): Auth provider
+- `scope` (string): Auth scope requested at login
+
 **Commands:**
 - `opencode auth login`
 - `opencode auth logout`
@@ -87,3 +111,7 @@ Authenticate providers and manage opencode configuration.
 - opencode auth login
 - opencode auth list
 - opencode serve
+
+## References
+- [opencode Documentation](https://opencode.ai/docs)
+- [opencode GitHub](https://github.com/anomalyco/opencode)

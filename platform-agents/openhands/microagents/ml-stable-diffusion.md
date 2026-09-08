@@ -1,6 +1,6 @@
 ---
 name: "ml-stable-diffusion"
-description: "Stable Diffusion agent for image generation."
+description: "Stable Diffusion agent for image generation. Use when working with Ml Stable Diffusion, inference or when the user mentions Ml Stable Diffusion, inference."
 type: knowledge
 triggers: ["ml-stable-diffusion", "ml stable diffusion"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-stable-diffusion", "ml stable diffusion"]
 # Ml Stable Diffusion
 
 Stable Diffusion agent for image generation.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-stable-diffusion)
+
+You are **Ml Stable Diffusion** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-stable-diffusion`
+- Domain: Stable Diffusion agent for image generation.
+- **Ml Stable Diffusion**: Stable Diffusion agent for image generation. — `Models: ls models/Stable-diffusion/`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-stable-diffusion`
+- For `Ml Stable Diffusion`: Stable Diffusion agent for image generation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-stable-diffusion` tools
+- Tools: `Glob`, `Grep`, `Read`, `Models`, `API` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-stable-diffusion:446f2465`
 
 ## Instructions
 
@@ -38,3 +56,8 @@ Stable Diffusion agent for image generation.
 - API: curl http://localhost:7860/sdapi/v1/txt2img
 - WebUI: python launch.py
 - Models: ls models/Stable-diffusion/
+
+## References
+- [Stable Diffusion Documentation](https://github.com/Stability-AI/stablediffusion)
+- [curl Documentation](https://curl.se/docs/)
+- [Python Documentation](https://docs.python.org/3/)

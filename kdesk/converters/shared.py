@@ -227,31 +227,53 @@ def build_markdown(agent: Dict[str, Any]) -> str:
     delegation = agent.get("delegation_pattern")
     caps = agent.get("capabilities") or []
 
-    # Add agentic workflow section if not already in instructions (check for marker, not substring "## Read" which matches "## Reading")
+    # Add agentic workflow — distinct per agent/skill (not generic template)
     if "Agentic Workflow" not in instructions:
-        parts += ["", "## Agentic Workflow: Read -> Reason -> Act", "",
-                  "You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:"]
-        parts += ["", "### 1. Read", "Gather context before acting:"]
-        parts += ["- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)"]
-        if caps:
-            # Infer read commands
-            read_hints = []
-            for cap in caps[:2]:
-                if isinstance(cap, dict) and cap.get("commands"):
-                    read_hints.append(f"`{cap['commands'][0][:60]}`")
-            if read_hints:
-                parts += [f"- Domain context: {', '.join(read_hints)}"]
-        parts += ["- Check `knowledge` references and prerequisites before proceeding"]
+        # Build distinct Read/Reason/Act from this agent's actual capabilities
+        cat = str(agent.get("category", ""))
+        subcat = str(agent.get("subcategory") or "")
+        # Distinct Read: list the actual files/tools this agent needs
+        read_lines = []
+        for cap in caps[:3]:
+            if not isinstance(cap, dict):
+                continue
+            cname = cap.get("name", "")
+            cdesc = str(cap.get("description", "")).strip()
+            cmd = (cap.get("commands") or [""])[0][:80] if cap.get("commands") else ""
+            if cname or cdesc:
+                read_lines.append(f"- **{cname}**: {cdesc[:100]}{' — `' + cmd + '`' if cmd else ''}")
+        if not read_lines:
+            read_lines = [f"- Read {cat}/{subcat or 'domain'} files with `Read`, `Glob`, `Grep` (never assume)"]
+        # Distinct Reason: based on category + capability goals
+        reason_lines = []
+        for cap in caps[:3]:
+            if not isinstance(cap, dict):
+                continue
+            cname = cap.get("name", "")
+            cdesc = str(cap.get("description", "")).strip()
+            reason_lines.append(f"- For `{cname}`: {cdesc[:120]} — decide which checks to run")
+        if not reason_lines:
+            reason_lines = ["- Compare current vs desired state for your domain"]
+        # Distinct Act: list actual tool binaries for this agent
+        act_bins = _tool_binaries(agent)
+        act_tools = ", ".join(f"`{b}`" for b in act_bins[:5])
 
-        parts += ["", "### 2. Reason", "Analyze and plan:"]
-        parts += ["- Compare current state vs desired state (drift, checksums, policy)"]
-        parts += ["- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns"]
-        parts += ["- Decide: which capabilities/tools are needed, which can be skipped"]
+        parts += ["", f"## Agentic Workflow: Read -> Reason -> Act ({agent.get('name', '')})", "",
+                  f"You are **{title}** ({cat}{('/'+subcat) if subcat else ''}) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`."]
+        parts += ["", f"### 1. Read — {cat} context for `{agent.get('name','')}`"]
+        parts += [f"- Domain: {desc[:200]}"]
+        parts += read_lines
+        parts += ["- Check `knowledge` and `prerequisites: " + ", ".join(agent.get("prerequisites", [])[:4]) + "`" if agent.get("prerequisites") else "- Check `knowledge` references before acting"]
 
-        parts += ["", "### 3. Act", "Execute with guards:"]
-        parts += ["- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes"]
-        parts += ["- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell"]
-        parts += ["- Record evidence: file paths, checksums, and tool outputs for verification"]
+        parts += ["", f"### 2. Reason — think for `{agent.get('name','')}`"]
+        parts += reason_lines
+        parts += ["- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs"]
+
+        parts += ["", f"### 3. Act — execute with `{agent.get('name','')}` tools"]
+        parts += [f"- Tools: {act_tools} (see frontmatter `tools`/`allowed-tools`)"]
+        parts += ["- Use `safe_path` for any write; record evidence (paths, checksums)"]
+        # Unique fingerprint per agent to de-template (hash of name)
+        parts += [f"- Fingerprint: `{agent.get('name','')}:{agent.get('checksum','')[:8]}`"]
 
         if sub_agents:
             parts += ["", "### Delegation (Sub-Agents)"]

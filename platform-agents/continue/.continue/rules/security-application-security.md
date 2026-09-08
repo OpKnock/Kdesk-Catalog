@@ -1,6 +1,6 @@
 ---
 name: "Security Application Security"
-description: "Security application-security expertise and best practices."
+description: "Security application-security expertise and best practices. Use when working with application security expertise, application security, skill or when the user mentions application security expertise, application security, skill."
 globs: ["**/*.r", "**/*.scala"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Security Application Security
 
 Security application-security expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (security-application-security)
+
+You are **Security Application Security** (security/application-security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `security-application-security`
+- Domain: Security application-security expertise and best practices.
+- **application-security-expertise**: security application-security expertise — `application-security-cli`
+- Check `knowledge` and `prerequisites: application-security`
+
+### 2. Reason — think for `security-application-security`
+- For `application-security-expertise`: security application-security expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `security-application-security` tools
+- Tools: `Glob`, `Grep`, `Read`, `Application-security-cli`, `Application-security-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `security-application-security:ea105b4e`
 
 ## Instructions
 

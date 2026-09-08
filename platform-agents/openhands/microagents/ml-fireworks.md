@@ -1,6 +1,6 @@
 ---
 name: "ml-fireworks"
-description: "Fireworks AI API agent for fast model inference."
+description: "Fireworks AI API agent for fast model inference. Use when working with Ml Fireworks, deployment or when the user mentions Ml Fireworks, deployment."
 type: knowledge
 triggers: ["ml-fireworks", "ml fireworks"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-fireworks", "ml fireworks"]
 # Ml Fireworks
 
 Fireworks AI API agent for fast model inference.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-fireworks)
+
+You are **Ml Fireworks** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-fireworks`
+- Domain: Fireworks AI API agent for fast model inference.
+- **Ml Fireworks**: Fireworks AI API agent for fast model inference. — `Chat: client.chat.completions.create(model='accounts/fireworks/models/llama-v3p3`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-fireworks`
+- For `Ml Fireworks`: Fireworks AI API agent for fast model inference. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-fireworks` tools
+- Tools: `Glob`, `Grep`, `Read`, `Chat`, `Embeddings` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-fireworks:7de8fd91`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Fireworks AI API agent for fast model inference.
 - Chat: client.chat.completions.create(model='accounts/fireworks/models/llama-v3p3-70b-instruct', messages=[{'role': 'user', 'content': 'Hello'}])
 - Models: client.models.list()
 - Embeddings: client.embeddings.create(model='accounts/fireworks/models/nomic-embed-text-v1', input='Hello')
+
+## References
+- [Fireworks AI Documentation](https://docs.fireworks.ai/)

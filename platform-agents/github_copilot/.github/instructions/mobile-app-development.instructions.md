@@ -4,27 +4,25 @@ applyTo: "**/*.r **/*.sh **/*.{ts,tsx}"
 
 Develops cross-platform mobile apps with Flutter and React Native/Expo: scaffolding, builds, and device deployments.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (mobile-app-development)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **mobile-app-development** (mobile) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `flutter create my_app --org com.example`, `npx create-expo-app@latest my-app --template blank-typescrip`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — mobile context for `mobile-app-development`
+- Domain: Develops cross-platform mobile apps with Flutter and React Native/Expo: scaffolding, builds, and device deployments.
+- **flutter**: Create, build, and test Flutter applications. — `flutter create my_app --org com.example`
+- **react-native**: Scaffold and run React Native apps with Expo. — `npx create-expo-app@latest my-app --template blank-typescript`
+- Check `knowledge` and `prerequisites: react-native, flutter, xcode, android-studio`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `mobile-app-development`
+- For `flutter`: Create, build, and test Flutter applications. — decide which checks to run
+- For `react-native`: Scaffold and run React Native apps with Expo. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `mobile-app-development` tools
+- Tools: `Glob`, `Grep`, `Read`, `Flutter`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mobile-app-development:b4f994cc`
 
 # Mobile App Development
 

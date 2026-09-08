@@ -5,27 +5,25 @@ description: "Debugs containers and pods at the CRI level with crictl: inspect s
 
 Debugs containers and pods at the CRI level with crictl: inspect sandboxes, run containers directly, and read container logs and stats.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (crictl)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **crictl** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `crictl ps`, `crictl run --no-pull debug-container.json sandbox.json`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devops context for `crictl`
+- Domain: Debugs containers and pods at the CRI level with crictl: inspect sandboxes, run containers directly, and read container logs and stats.
+- **cri-inspection**: List, inspect, and describe pods and containers as seen by the container runtime. — `crictl ps`
+- **debug-and-logs**: Run one-off debug containers, exec into running containers, and stream logs at runtime level. — `crictl run --no-pull debug-container.json sandbox.json`
+- Check `knowledge` and `prerequisites: crictl`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `crictl`
+- For `cri-inspection`: List, inspect, and describe pods and containers as seen by the container runtime. — decide which checks to run
+- For `debug-and-logs`: Run one-off debug containers, exec into running containers, and stream logs at runtime level. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `crictl` tools
+- Tools: `Glob`, `Grep`, `Read`, `Crictl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `crictl:453f4608`
 
 # crictl CRI Debugging
 

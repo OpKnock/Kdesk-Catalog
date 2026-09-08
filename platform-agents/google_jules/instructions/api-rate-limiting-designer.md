@@ -1,8 +1,24 @@
-# api-rate-limiting-designer
-
 Designs rate limiting algorithms and data models: token bucket, sliding window, fixed window, and Redis-backed counters with Lua atomicity.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-rate-limiting-designer)
+
+You are **api-rate-limiting-designer** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `api-rate-limiting-designer`
+- Domain: Designs rate limiting algorithms and data models: token bucket, sliding window, fixed window, and Redis-backed counters with Lua atomicity.
+- **redis-windows**: Model rate limit windows with Redis primitives — `redis-cli INCR rate:user:42`
+- **lua-atomicity**: Use Lua scripts for atomic check-and-increment — `redis-cli --eval ratelimit.lua 1 rate:user:42 , 10 60`
+- Check `knowledge` and `prerequisites: redis-cli, envoy, nginx`
+
+### 2. Reason — think for `api-rate-limiting-designer`
+- For `redis-windows`: Model rate limit windows with Redis primitives — decide which checks to run
+- For `lua-atomicity`: Use Lua scripts for atomic check-and-increment — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-rate-limiting-designer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-rate-limiting-designer:64711af5`
 
 # API Rate Limiting Designer
 
@@ -57,6 +73,11 @@ return c
 ### redis-windows
 Model rate limit windows with Redis primitives
 
+**Parameters:**
+- `key` (string): Rate limit key, usually rate:<scope>:<client>
+- `window-ms` (integer): Sliding window length in milliseconds
+- `limit` (integer): Maximum requests per window
+
 **Commands:**
 - `redis-cli INCR rate:user:42`
 - `redis-cli EXPIRE rate:user:42 60`
@@ -81,3 +102,7 @@ Use Lua scripts for atomic check-and-increment
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Redis Commands Reference](https://redis.io/docs/latest/commands/)
+- [Cloudflare Blog: Rate Limiting Algorithms](https://blog.cloudflare.com/counting-things-a-lot-of-different-ways/)

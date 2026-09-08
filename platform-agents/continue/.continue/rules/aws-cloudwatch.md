@@ -1,15 +1,31 @@
 ---
 name: "Aws Cloudwatch"
-description: "Manages CloudWatch metrics and alarms: metric retrieval, alarm creation, anomaly detection, and dashboard publishing."
+description: "Manages CloudWatch metrics and alarms: metric retrieval, alarm creation, anomaly detection, and dashboard publishing. Use when working with metrics, alarms, api or when the user mentions metrics, alarms, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Aws Cloudwatch
-
 Manages CloudWatch metrics and alarms: metric retrieval, alarm creation, anomaly detection, and dashboard publishing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (aws-cloudwatch)
+
+You are **Aws Cloudwatch** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `aws-cloudwatch`
+- Domain: Manages CloudWatch metrics and alarms: metric retrieval, alarm creation, anomaly detection, and dashboard publishing.
+- **metrics**: List, query, and publish metrics. — `aws cloudwatch list-metrics --namespace AWS/ApiGateway`
+- **alarms**: Create and manage CloudWatch alarms. — `aws cloudwatch put-metric-alarm --alarm-name api-5xx --alarm-description "API 5x`
+- Check `knowledge` and `prerequisites: aws`
+
+### 2. Reason — think for `aws-cloudwatch`
+- For `metrics`: List, query, and publish metrics. — decide which checks to run
+- For `alarms`: Create and manage CloudWatch alarms. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `aws-cloudwatch` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `aws-cloudwatch:629ef3fe`
 
 # AWS CloudWatch
 
@@ -60,6 +76,11 @@ Note: `eaws` is a typo for `aws`; always use `aws cloudwatch ...`.
 ### metrics
 List, query, and publish metrics.
 
+**Parameters:**
+- `namespace` (string): Metric namespace (AWS/... or Custom)
+- `metric_name` (string): Metric name
+- `statistics` (string): Sum, Average, Maximum, Minimum, SampleCount
+
 **Commands:**
 - `aws cloudwatch list-metrics --namespace AWS/ApiGateway`
 - `aws cloudwatch get-metric-statistics --namespace AWS/ApiGateway --metric-name 4XXError --start-time $(date -u -d '1 hour ago' +%Y-%m-%dT%H:%M:%SZ) --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) --period 300 --statistics Sum`
@@ -75,6 +96,11 @@ List, query, and publish metrics.
 ### alarms
 Create and manage CloudWatch alarms.
 
+**Parameters:**
+- `threshold` (number): Alarm threshold
+- `period` (number): Evaluation period in seconds
+- `evaluation_periods` (number): Consecutive periods before firing
+
 **Commands:**
 - `aws cloudwatch put-metric-alarm --alarm-name api-5xx --alarm-description "API 5xx errors" --metric-name 5XXError --namespace AWS/ApiGateway --statistic Sum --period 60 --evaluation-periods 3 --threshold 10 --comparison-operator GreaterThanOrEqualToThreshold`
 - `aws cloudwatch describe-alarms --state-value ALARM`
@@ -86,3 +112,8 @@ Create and manage CloudWatch alarms.
 - aws cloudwatch put-metric-alarm --alarm-name api-5xx --metric-name 5XXError --namespace AWS/ApiGateway --statistic Sum --period 60 --evaluation-periods 3 --threshold 10 --comparison-operator GreaterThanOrEqualToThreshold --alarm-actions arn:aws:sns:us-east-1:123456789012:oncall
 - aws cloudwatch describe-alarms --state-value ALARM --query 'MetricAlarms[].AlarmName'
 - aws cloudwatch describe-alarms-for-metric --metric-name 5XXError --namespace AWS/ApiGateway
+
+## References
+- [CloudWatch Monitoring Docs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/)
+- [AWS CLI cloudwatch Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudwatch/index.html)
+- [API Gateway Metrics](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-metrics-and-dimensions.html)

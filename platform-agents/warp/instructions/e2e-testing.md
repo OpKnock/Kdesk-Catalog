@@ -1,8 +1,26 @@
-# e2e-testing
-
 End-to-end testing across browsers and devices with Playwright, including codegen, tracing, and sharded CI runs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (e2e-testing)
+
+You are **e2e-testing** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `e2e-testing`
+- Domain: End-to-end testing across browsers and devices with Playwright, including codegen, tracing, and sharded CI runs.
+- **playwright-e2e**: Run E2E suites across browsers and projects. — `npx playwright test`
+- **codegen-and-tracing**: Generate tests by recording and debug with traces. — `npx playwright codegen http://localhost:8080`
+- **install-and-ci**: Install browsers and run sharded CI jobs. — `npx playwright install chromium`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `e2e-testing`
+- For `playwright-e2e`: Run E2E suites across browsers and projects. — decide which checks to run
+- For `codegen-and-tracing`: Generate tests by recording and debug with traces. — decide which checks to run
+- For `install-and-ci`: Install browsers and run sharded CI jobs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `e2e-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `e2e-testing:4d6fecea`
 
 # E2E Testing
 
@@ -67,6 +85,11 @@ test('user can checkout', async ({ page }) => {
 ### playwright-e2e
 Run E2E suites across browsers and projects.
 
+**Parameters:**
+- `project` (string): Browser project from config
+- `grep` (string): Tag or title filter
+- `headed` (boolean): Run with visible browser
+
 **Commands:**
 - `npx playwright test`
 - `npx playwright test --project=chromium`
@@ -81,6 +104,10 @@ Run E2E suites across browsers and projects.
 
 ### codegen-and-tracing
 Generate tests by recording and debug with traces.
+
+**Parameters:**
+- `url` (string): URL for codegen recording
+- `trace` (string): Trace mode: on, off, retain-on-failure
 
 **Commands:**
 - `npx playwright codegen http://localhost:8080`
@@ -97,6 +124,11 @@ Generate tests by recording and debug with traces.
 ### install-and-ci
 Install browsers and run sharded CI jobs.
 
+**Parameters:**
+- `shard` (string): Shard identifier, e.g. 1/4
+- `workers` (number): Parallel worker count
+- `retries` (number): Retry count
+
 **Commands:**
 - `npx playwright install chromium`
 - `npx playwright install --with-deps`
@@ -108,3 +140,7 @@ Install browsers and run sharded CI jobs.
 - npx playwright install --with-deps
 - npx playwright test --shard=1/4 --retries=2
 - npx playwright test --workers=8
+
+## References
+- [Playwright Documentation](https://playwright.dev/docs/intro)
+- [Playwright Test Config](https://playwright.dev/docs/test-configuration)

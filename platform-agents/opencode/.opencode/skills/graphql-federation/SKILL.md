@@ -5,27 +5,23 @@ description: "Apollo Federation: build supergraph schemas from subgraph services
 
 Apollo Federation: build supergraph schemas from subgraph services, compose with rover, and operate the gateway/router.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (graphql-federation)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Graphql Federation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `rover subgraph introspect http://orders:4001/graphql --outpu`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `graphql-federation`
+- Domain: Apollo Federation: build supergraph schemas from subgraph services, compose with rover, and operate the gateway/router.
+- **federation-tooling**: Compose subgraph schemas into a supergraph and manage the router with rover. — `rover subgraph introspect http://orders:4001/graphql --output subgraph-orders.gr`
+- Check `knowledge` and `prerequisites: rover`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `graphql-federation`
+- For `federation-tooling`: Compose subgraph schemas into a supergraph and manage the router with rover. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `graphql-federation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Rover` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `graphql-federation:59fc78cc`
 
 # GraphQL Federation
 

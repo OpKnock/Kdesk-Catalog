@@ -1,15 +1,31 @@
 ---
 name: "Api Integration Resilience Patterns"
-description: "Troubleshoots and hardens third-party API integrations: retries, circuit breakers, idempotency, and webhook reliability."
+description: "Troubleshoots and hardens third-party API integrations: retries, circuit breakers, idempotency, and webhook reliability. Use when working with resilience patterns, webhook debugging or when the user mentions resilience patterns, webhook debugging."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Api Integration Resilience Patterns
-
 Troubleshoots and hardens third-party API integrations: retries, circuit breakers, idempotency, and webhook reliability.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-integration-resilience-patterns)
+
+You are **Api Integration Resilience Patterns** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-integration-resilience-patterns`
+- Domain: Troubleshoots and hardens third-party API integrations: retries, circuit breakers, idempotency, and webhook reliability.
+- **resilience-patterns**: Add retry backoff, circuit breakers, and fallbacks around flaky third-party calls — `npm install p-retry`
+- **webhook-debugging**: Forward, replay, and verify webhooks from third-party services — `ngrok http 3000`
+- Check `knowledge` and `prerequisites: node.js, python, ngrok, redis`
+
+### 2. Reason — think for `api-integration-resilience-patterns`
+- For `resilience-patterns`: Add retry backoff, circuit breakers, and fallbacks around flaky third-party calls — decide which checks to run
+- For `webhook-debugging`: Forward, replay, and verify webhooks from third-party services — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-integration-resilience-patterns` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Ngrok` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-integration-resilience-patterns:34a9b331`
 
 # API Integration (Reliability)
 
@@ -53,6 +69,10 @@ Use `stripe trigger` and replay endpoints to simulate duplicates, late arrivals,
 ### resilience-patterns
 Add retry backoff, circuit breakers, and fallbacks around flaky third-party calls
 
+**Parameters:**
+- `retries` (string): Retry count
+- `timeoutMs` (string): Per-request timeout
+
 **Commands:**
 - `npm install p-retry`
 - `node -e "const r=require('p-retry'); const f=()=>Promise.reject(new Error('flaky')); r(f,{retries:3,onFailedAttempt:e=>console.log(e.attemptNumber)}).catch(()=>{})"`
@@ -68,6 +88,10 @@ Add retry backoff, circuit breakers, and fallbacks around flaky third-party call
 ### webhook-debugging
 Forward, replay, and verify webhooks from third-party services
 
+**Parameters:**
+- `port` (string): Local webhook listener port
+- `event` (string): Third-party event to trigger
+
 **Commands:**
 - `ngrok http 3000`
 - `stripe listen --forward-to localhost:3000/webhooks/stripe`
@@ -79,3 +103,8 @@ Forward, replay, and verify webhooks from third-party services
 - ngrok http 3000 --subdomain my-dev
 - stripe listen --forward-to localhost:3000/webhooks/stripe --events payment_intent.succeeded
 - stripe trigger invoice.paid
+
+## References
+- [Stripe CLI](https://docs.stripe.com/stripe-cli)
+- [ngrok Docs](https://ngrok.com/docs)
+- [Resilience Patterns](https://docs.aws.amazon.com/prescriptive-guidance/latest/backup-and-restore/resilience.html)

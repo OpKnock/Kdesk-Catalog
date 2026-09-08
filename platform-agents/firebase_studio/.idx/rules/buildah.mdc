@@ -1,14 +1,28 @@
 ---
-description: "Builds OCI container images without a daemon using buildah: containerfiles, commits, and pushes."
+description: "Builds OCI container images without a daemon using buildah: containerfiles, commits, and pushes. Use when working with buildah images, devops or when the user mentions buildah images, devops."
 globs: ["**/*.r", "**/*.sh", "**/Dockerfile*"]
 alwaysApply: false
 ---
 
-# buildah
-
 Builds OCI container images without a daemon using buildah: containerfiles, commits, and pushes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (buildah)
+
+You are **buildah** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `buildah`
+- Domain: Builds OCI container images without a daemon using buildah: containerfiles, commits, and pushes.
+- **buildah-images**: Create, modify, commit, and push container images — `buildah bud -t myapp:latest .`
+- Check `knowledge` and `prerequisites: buildah`
+
+### 2. Reason — think for `buildah`
+- For `buildah-images`: Create, modify, commit, and push container images — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `buildah` tools
+- Tools: `Glob`, `Grep`, `Read`, `Buildah` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `buildah:45baf924`
 
 # Buildah
 
@@ -73,6 +87,11 @@ intermediate build containers.
 ### buildah-images
 Create, modify, commit, and push container images
 
+**Parameters:**
+- `tag` (string): Image tag, e.g. myapp:latest
+- `file` (string): Containerfile path (-f)
+- `layers` (boolean): Use layer caching during bud
+
 **Commands:**
 - `buildah bud -t myapp:latest .`
 - `buildah from alpine:3.19`
@@ -84,3 +103,7 @@ Create, modify, commit, and push container images
 - buildah bud -f Containerfile.dev -t myapp:dev .
 - buildah images
 - buildah rm -a && buildah rmi -a
+
+## References
+- [buildah docs](https://buildah.io/)
+- [buildah command reference](https://github.com/containers/buildah/blob/main/docs/buildah.1.md)

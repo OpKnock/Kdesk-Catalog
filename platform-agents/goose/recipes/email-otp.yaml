@@ -2,15 +2,25 @@ title: Email Otp
 description: 'One-time password delivery by email: generate OTPs, send via SMTP/transactional APIs, and
   verify codes with rate limiting and expiry.'
 version: 2.0.0
-instructions: "# Email Otp\n\nOne-time password delivery by email: generate OTPs, send via SMTP/transactional\
-  \ APIs, and verify codes with rate limiting and expiry.\n\n## Instructions\n\n# Email OTP\n\n## What\
-  \ this skill does\n\nEmail OTPs deliver time-limited one-time codes by email for login or verification.\
-  \ Production systems store only a hash of the code, expire it, and throttle verification attempts.\n\
-  \n## When to use\n\n- Passwordless login or second-factor email verification\n- Confirming new devices\
-  \ or sensitive actions\n\n## Real commands\n\n```bash\n# Send via SMTP with curl (starttls)\ncurl -s\
-  \ --url 'smtp://smtp.gmail.com:587' --ssl-reqd --mail-from otp@yourdomain.com \\\n  --mail-rcpt user@gmail.com\
-  \ --upload-file email.txt --user 'otp@yourdomain.com:app-password'\n\n# Generate a TOTP (RFC 6238) for\
-  \ comparison\nnode -e \"const o=require('otplib');console.log(o.authenticator.generate('BASE32SECRET'))\"\
+instructions: "One-time password delivery by email: generate OTPs, send via SMTP/transactional APIs, and\
+  \ verify codes with rate limiting and expiry.\n\n## Agentic Workflow: Read -> Reason -> Act (email-otp)\n\
+  \nYou are **Email Otp** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `email-otp`\n- Domain: One-time password delivery by email: generate\
+  \ OTPs, send via SMTP/transactional APIs, and verify codes with rate limiting and expiry.\n- **otp-verification**:\
+  \ Send OTP emails and verify codes against stored hashes with expiry and attempt limits. — `curl -s\
+  \ --url 'smtp://smtp.gmail.com:587' --ssl-reqd --mail-from otp@yourdomain.`\n- Check `knowledge` and\
+  \ `prerequisites: node, redis-cli`\n\n### 2. Reason — think for `email-otp`\n- For `otp-verification`:\
+  \ Send OTP emails and verify codes against stored hashes with expiry and attempt limits. — decide which\
+  \ checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n\
+  ### 3. Act — execute with `email-otp` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Redis-cli` (see\
+  \ frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths, checksums)\n\
+  - Fingerprint: `email-otp:7916ba5e`\n\n# Email OTP\n\n## What this skill does\n\nEmail OTPs deliver\
+  \ time-limited one-time codes by email for login or verification. Production systems store only a hash\
+  \ of the code, expire it, and throttle verification attempts.\n\n## When to use\n\n- Passwordless login\
+  \ or second-factor email verification\n- Confirming new devices or sensitive actions\n\n## Real commands\n\
+  \n```bash\n# Send via SMTP with curl (starttls)\ncurl -s --url 'smtp://smtp.gmail.com:587' --ssl-reqd\
+  \ --mail-from otp@yourdomain.com \\\n  --mail-rcpt user@gmail.com --upload-file email.txt --user 'otp@yourdomain.com:app-password'\n\
+  \n# Generate a TOTP (RFC 6238) for comparison\nnode -e \"const o=require('otplib');console.log(o.authenticator.generate('BASE32SECRET'))\"\
   \n\n# Store the code with TTL in Redis\nredis-cli SET otp:user@gmail.com 482913 EX 300\nredis-cli GET\
   \ otp:user@gmail.com\n\n# Send via SendGrid API\ncurl -s -X POST https://api.sendgrid.com/v3/mail/send\
   \ -H 'Authorization: Bearer $SENDGRID_KEY' -H 'Content-Type: application/json' -d @email.json\n```\n\
@@ -24,14 +34,15 @@ instructions: "# Email Otp\n\nOne-time password delivery by email: generate OTPs
   \ attempt count per email; lock after 10 failed tries per hour.\n- Never reuse codes; always rotate\
   \ on resend.\n- Monitor SMTP delivery rate; bounced OTPs burn user trust.\n\n## Capabilities\n\n###\
   \ otp-verification\nSend OTP emails and verify codes against stored hashes with expiry and attempt limits.\n\
-  \n**Commands:**\n- `curl -s --url 'smtp://smtp.gmail.com:587' --ssl-reqd --mail-from otp@yourdomain.com\
-  \ --mail-rcpt user@gmail.com --upload-file email.txt --user 'otp@yourdomain.com:app-password'`\n- `node\
-  \ -e \"const o=require('otplib');console.log(o.authenticator.generate('BASE32SECRET'))\"`\n- `curl -s\
-  \ -X POST https://api.sendgrid.com/v3/mail/send -H 'Authorization: Bearer $SENDGRID_KEY' -H 'Content-Type:\
-  \ application/json' -d @email.json`\n- `redis-cli SET otp:user@gmail.com 482913 EX 300`\n- `redis-cli\
-  \ GET otp:user@gmail.com`\n\n**Examples:**\n- redis-cli SET otp:user@gmail.com 482913 EX 300 && curl\
-  \ -s --url 'smtp://smtp.gmail.com:587' --ssl-reqd --mail-from otp@yourdomain.com --mail-rcpt user@gmail.com\
-  \ --upload-file email.txt --user 'otp@yourdomain.com:app-password'\n- redis-cli GET otp:user@gmail.com\n\
+  \n**Parameters:**\n- `recipient` (string): Email address receiving the OTP\n- `ttl` (integer): OTP validity\
+  \ in seconds (e.g. 300)\n- `code-length` (integer): Number of digits in the OTP\n\n**Commands:**\n-\
+  \ `curl -s --url 'smtp://smtp.gmail.com:587' --ssl-reqd --mail-from otp@yourdomain.com --mail-rcpt user@gmail.com\
+  \ --upload-file email.txt --user 'otp@yourdomain.com:app-password'`\n- `node -e \"const o=require('otplib');console.log(o.authenticator.generate('BASE32SECRET'))\"\
+  `\n- `curl -s -X POST https://api.sendgrid.com/v3/mail/send -H 'Authorization: Bearer $SENDGRID_KEY'\
+  \ -H 'Content-Type: application/json' -d @email.json`\n- `redis-cli SET otp:user@gmail.com 482913 EX\
+  \ 300`\n- `redis-cli GET otp:user@gmail.com`\n\n**Examples:**\n- redis-cli SET otp:user@gmail.com 482913\
+  \ EX 300 && curl -s --url 'smtp://smtp.gmail.com:587' --ssl-reqd --mail-from otp@yourdomain.com --mail-rcpt\
+  \ user@gmail.com --upload-file email.txt --user 'otp@yourdomain.com:app-password'\n- redis-cli GET otp:user@gmail.com\n\
   - curl -s -X POST https://api.sendgrid.com/v3/mail/send -H 'Authorization: Bearer $SENDGRID_KEY' -H\
-  \ 'Content-Type: application/json' -d @email.json"
+  \ 'Content-Type: application/json' -d @email.json\n\n## References\n- [NIST OTP Guidelines 800-63B](https://pages.nist.gov/800-63-3/sp800-63b.html)"
 prompt: Act as Email Otp and handle the task per the instructions.

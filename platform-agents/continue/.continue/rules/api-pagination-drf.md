@@ -1,15 +1,31 @@
 ---
 name: "Api Pagination Drf"
-description: "Implements pagination in Django REST Framework: PageNumberPagination, LimitOffsetPagination, CursorPagination classes, and OpenAPI schema integration."
+description: "Implements pagination in Django REST Framework: PageNumberPagination, LimitOffsetPagination, CursorPagination classes, and OpenAPI schema integration. Use when working with drf pagination, custom pagination or when the user mentions drf pagination, custom pagination."
 globs: ["**/*.go", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Api Pagination Drf
-
 Implements pagination in Django REST Framework: PageNumberPagination, LimitOffsetPagination, CursorPagination classes, and OpenAPI schema integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-pagination-drf)
+
+You are **Api Pagination Drf** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-pagination-drf`
+- Domain: Implements pagination in Django REST Framework: PageNumberPagination, LimitOffsetPagination, CursorPagination classes, and OpenAPI schema integration.
+- **drf-pagination**: Configure DRF pagination classes and page metadata — `python manage.py runserver 8000`
+- **custom-pagination**: Subclass pagination classes for custom response shapes — `curl -s 'http://localhost:8000/api/users/?ordering=created_at' | jq '.next'`
+- Check `knowledge` and `prerequisites: node.js, python, postgresql`
+
+### 2. Reason — think for `api-pagination-drf`
+- For `drf-pagination`: Configure DRF pagination classes and page metadata — decide which checks to run
+- For `custom-pagination`: Subclass pagination classes for custom response shapes — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-pagination-drf` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-pagination-drf:e1fc4a77`
 
 # API Pagination v4 - Django REST Framework
 
@@ -57,6 +73,11 @@ REST_FRAMEWORK = {
 ### drf-pagination
 Configure DRF pagination classes and page metadata
 
+**Parameters:**
+- `page` (integer): Page number for PageNumberPagination
+- `page_size` (integer): Custom page size query param
+- `ordering` (string): Ordering field for CursorPagination
+
 **Commands:**
 - `python manage.py runserver 8000`
 - `curl -s 'http://localhost:8000/api/users/?page=2&page_size=10' | jq '.count, .next, .previous'`
@@ -80,3 +101,7 @@ Subclass pagination classes for custom response shapes
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [DRF Pagination Guide](https://www.django-rest-framework.org/api-guide/pagination/)
+- [DRF Schemas](https://www.django-rest-framework.org/api-guide/schemas/)

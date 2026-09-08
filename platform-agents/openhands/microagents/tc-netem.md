@@ -1,15 +1,29 @@
 ---
 name: "tc-netem"
-description: "Simulate network faults with the Linux tc netem qdisc to test API client resilience. Injects latency with jitter, packet loss, duplication, and corruption on any interface, then measures the impact with ping or curl timing. Removes faults instantly after testing."
+description: "Simulate network faults with the Linux tc netem qdisc to test API client resilience. Injects latency with jitter, packet loss, duplication, and corruption on any interface, then measures the impact with ping or curl timing. Removes faults instantly after testing. Use when working with netem injection, api or when the user mentions netem injection, api."
 type: knowledge
 triggers: ["tc-netem", "netem-injection"]
 ---
 
-# Tc Netem
-
 Simulate network faults with the Linux tc netem qdisc to test API client resilience. Injects latency with jitter, packet loss, duplication, and corruption on any interface, then measures the impact with ping or curl timing. Removes faults instantly after testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (tc-netem)
+
+You are **Tc Netem** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `tc-netem`
+- Domain: Simulate network faults with the Linux tc netem qdisc to test API client resilience. Injects latency with jitter, packet loss, duplication, and corruption on any interface, then measures the impact wi
+- **netem-injection**: Simulate network faults with tc netem qdiscs — `tc qdisc add dev eth0 root netem delay 100ms 20ms distribution normal`
+- Check `knowledge` and `prerequisites: ping`
+
+### 2. Reason — think for `tc-netem`
+- For `netem-injection`: Simulate network faults with tc netem qdiscs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tc-netem` tools
+- Tools: `Glob`, `Grep`, `Read`, `Tc`, `Ping` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tc-netem:33024338`
 
 # tc netem
 
@@ -71,6 +85,11 @@ tc qdisc del dev eth0 root
 ### netem-injection
 Simulate network faults with tc netem qdiscs
 
+**Parameters:**
+- `delay_ms` (integer): Base latency in milliseconds
+- `loss_percent` (float): Packet loss percentage
+- `jitter_ms` (integer): Delay variation around the base
+
 **Commands:**
 - `tc qdisc add dev eth0 root netem delay 100ms 20ms distribution normal`
 - `tc qdisc change dev eth0 root netem loss 10%`
@@ -83,3 +102,7 @@ Simulate network faults with tc netem qdiscs
 - tc qdisc change dev eth0 root netem loss 25%
 - tc qdisc add dev eth0 root netem delay 200ms
 - tc qdisc del dev eth0 root
+
+## References
+- [tc-netem man page](https://man7.org/linux/man-pages/man8/tc-netem.8.html)
+- [Linux tc man page](https://man7.org/linux/man-pages/man8/tc.8.html)

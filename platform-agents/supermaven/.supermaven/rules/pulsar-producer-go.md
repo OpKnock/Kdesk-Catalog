@@ -1,8 +1,22 @@
-# Pulsar Producer Go
-
 Pulsar producers in Go: send messages, batching, delivery semantics, and performance benchmarking with pulsar-perf.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (pulsar-producer-go)
+
+You are **Pulsar Producer Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `pulsar-producer-go`
+- Domain: Pulsar producers in Go: send messages, batching, delivery semantics, and performance benchmarking with pulsar-perf.
+- **pulsar-go-producer**: Write Go Pulsar producers with send options and benchmark throughput with pulsar-perf. — `go run producer.go`
+- Check `knowledge` and `prerequisites: bin/pulsar-client, bin/pulsar-perf`
+
+### 2. Reason — think for `pulsar-producer-go`
+- For `pulsar-go-producer`: Write Go Pulsar producers with send options and benchmark throughput with pulsar-perf. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pulsar-producer-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Bin/pulsar-client` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pulsar-producer-go:a21c0a6b`
 
 # Pulsar Producer (Go)
 
@@ -64,6 +78,11 @@ for i := 0; i < 100; i++ {
 ### pulsar-go-producer
 Write Go Pulsar producers with send options and benchmark throughput with pulsar-perf.
 
+**Parameters:**
+- `topic` (string): Topic to produce to
+- `num_messages` (integer): Messages to send in benchmark
+- `rate` (integer): Target publish rate (msg/s)
+
 **Commands:**
 - `go run producer.go`
 - `go vet ./...`
@@ -75,3 +94,7 @@ Write Go Pulsar producers with send options and benchmark throughput with pulsar
 - go run producer.go
 - bin/pulsar-perf produce my-topic --num-producers 4 --num-messages 1000000
 - bin/pulsar-client produce my-topic --messages '{"id":1}' -n 3
+
+## References
+- [Pulsar Go client docs](https://pulsar.apache.org/docs/3.0.x/client-libraries-go/)
+- [pulsar-perf tool](https://pulsar.apache.org/docs/3.0.x/reference-cli-tools/)

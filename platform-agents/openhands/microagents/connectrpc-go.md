@@ -1,15 +1,31 @@
 ---
 name: "connectrpc-go"
-description: "Build ConnectRPC services in Go: protobuf codegen with buf, connect handlers, and HTTP/JSON serving."
+description: "Build ConnectRPC services in Go: protobuf codegen with buf, connect handlers, and HTTP/JSON serving. Use when working with go scaffold, handlers testing, api or when the user mentions go scaffold, handlers testing, api."
 type: knowledge
 triggers: ["connectrpc-go", "go-scaffold", "handlers-testing"]
 ---
 
-# Connectrpc Go
-
 Build ConnectRPC services in Go: protobuf codegen with buf, connect handlers, and HTTP/JSON serving.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (connectrpc-go)
+
+You are **Connectrpc Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `connectrpc-go`
+- Domain: Build ConnectRPC services in Go: protobuf codegen with buf, connect handlers, and HTTP/JSON serving.
+- **go-scaffold**: Scaffold a Go ConnectRPC project, generate code from proto, and run the server — `go mod init github.com/acme/connectrpc-service`
+- **handlers-testing**: Implement Connect handlers and test with curl and go test — `curl -H "Content-Type: application/json" -d '{"name":"alice"}' http://localhost:`
+- Check `knowledge` and `prerequisites: buf`
+
+### 2. Reason — think for `connectrpc-go`
+- For `go-scaffold`: Scaffold a Go ConnectRPC project, generate code from proto, and run the server — decide which checks to run
+- For `handlers-testing`: Implement Connect handlers and test with curl and go test — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `connectrpc-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Buf` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `connectrpc-go:fafb126d`
 
 # ConnectRPC Go
 
@@ -100,6 +116,9 @@ go vet ./...
 ### go-scaffold
 Scaffold a Go ConnectRPC project, generate code from proto, and run the server
 
+**Parameters:**
+- `module` (string): Go module path such as github.com/acme/connectrpc-service
+
 **Commands:**
 - `go mod init github.com/acme/connectrpc-service`
 - `go get connectrpc.com/connect@latest`
@@ -115,6 +134,9 @@ Scaffold a Go ConnectRPC project, generate code from proto, and run the server
 ### handlers-testing
 Implement Connect handlers and test with curl and go test
 
+**Parameters:**
+- `service_path` (string): Connect service path, e.g. example.connectrpc.v1.GreetService/Greet
+
 **Commands:**
 - `curl -H "Content-Type: application/json" -d '{"name":"alice"}' http://localhost:8080/example.connectrpc.v1.GreetService/Greet`
 - `curl -s -H "Content-Type: application/json" -d '{"name":"alice"}' http://localhost:8080/example.connectrpc.v1.GreetService/Greet | jq '.greeting'`
@@ -125,3 +147,7 @@ Implement Connect handlers and test with curl and go test
 - curl -H "Content-Type: application/json" -d '{"name":"alice"}' http://localhost:8080/example.connectrpc.v1.GreetService/Greet
 - go test -v ./...
 - curl -s -H "Content-Type: application/json" -d '{"name":"alice"}' http://localhost:8080/example.connectrpc.v1.GreetService/Greet
+
+## References
+- [ConnectRPC Go Getting Started](https://connectrpc.com/docs/go/getting-started)
+- [Buf CLI Docs](https://buf.build/docs/)

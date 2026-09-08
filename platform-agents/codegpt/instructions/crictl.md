@@ -1,8 +1,24 @@
-# crictl
-
 Debugs containers and pods at the CRI level with crictl: inspect sandboxes, run containers directly, and read container logs and stats.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (crictl)
+
+You are **crictl** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `crictl`
+- Domain: Debugs containers and pods at the CRI level with crictl: inspect sandboxes, run containers directly, and read container logs and stats.
+- **cri-inspection**: List, inspect, and describe pods and containers as seen by the container runtime. — `crictl ps`
+- **debug-and-logs**: Run one-off debug containers, exec into running containers, and stream logs at runtime level. — `crictl run --no-pull debug-container.json sandbox.json`
+- Check `knowledge` and `prerequisites: crictl`
+
+### 2. Reason — think for `crictl`
+- For `cri-inspection`: List, inspect, and describe pods and containers as seen by the container runtime. — decide which checks to run
+- For `debug-and-logs`: Run one-off debug containers, exec into running containers, and stream logs at runtime level. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `crictl` tools
+- Tools: `Glob`, `Grep`, `Read`, `Crictl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `crictl:453f4608`
 
 # crictl CRI Debugging
 
@@ -69,6 +85,10 @@ crictl cleanup
 ### cri-inspection
 List, inspect, and describe pods and containers as seen by the container runtime.
 
+**Parameters:**
+- `id` (string): Container or pod sandbox ID prefix
+- `state` (string): Filter by state: Running, Exited, Ready
+
 **Commands:**
 - `crictl ps`
 - `crictl pods`
@@ -85,6 +105,10 @@ List, inspect, and describe pods and containers as seen by the container runtime
 ### debug-and-logs
 Run one-off debug containers, exec into running containers, and stream logs at runtime level.
 
+**Parameters:**
+- `container-id` (string): Container ID prefix
+- `tail` (integer): Number of log lines to show
+
 **Commands:**
 - `crictl run --no-pull debug-container.json sandbox.json`
 - `crictl exec -it $(docker ps -q) sh`
@@ -97,3 +121,7 @@ Run one-off debug containers, exec into running containers, and stream logs at r
 - crictl exec -it 3e2d1c4a sh
 - crictl logs --tail 200 3e2d1c4a
 - crictl stats
+
+## References
+- [crictl Reference (Kubernetes)](https://kubernetes.io/docs/reference/tools/mapcrictl/)
+- [crictl GitHub](https://github.com/kubernetes-sigs/cri-tools/blob/master/docs/crictl.md)

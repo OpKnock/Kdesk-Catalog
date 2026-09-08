@@ -1,14 +1,30 @@
 ---
-description: "Build Ktor server applications: routing, content negotiation, static files, and deployment as a standalone JVM app."
+description: "Build Ktor server applications: routing, content negotiation, static files, and deployment as a standalone JVM app. Use when working with server routes, json api or when the user mentions server routes, json api."
 globs: ["**/*.go", "**/*.java", "**/*.json", "**/*.kt", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Ktor Server
-
 Build Ktor server applications: routing, content negotiation, static files, and deployment as a standalone JVM app.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ktor-server)
+
+You are **Ktor Server** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `ktor-server`
+- Domain: Build Ktor server applications: routing, content negotiation, static files, and deployment as a standalone JVM app.
+- **server-routes**: Define Ktor routes and run the server. — `./gradlew run`
+- **json-api**: Serve JSON APIs with content negotiation and test them. — `curl -s http://localhost:8080/api/orders/42 | jq .`
+- Check `knowledge` and `prerequisites: ./gradlew, java`
+
+### 2. Reason — think for `ktor-server`
+- For `server-routes`: Define Ktor routes and run the server. — decide which checks to run
+- For `json-api`: Serve JSON APIs with content negotiation and test them. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ktor-server` tools
+- Tools: `Glob`, `Grep`, `Read`, `./gradlew`, `Java` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ktor-server:8b87871c`
 
 # Ktor Server
 
@@ -83,6 +99,10 @@ fun Application.module() {
 ### server-routes
 Define Ktor routes and run the server.
 
+**Parameters:**
+- `port` (integer): Listen port, default 8080.
+- `route` (string): Route path to test.
+
 **Commands:**
 - `./gradlew run`
 - `./gradlew build`
@@ -97,6 +117,10 @@ Define Ktor routes and run the server.
 ### json-api
 Serve JSON APIs with content negotiation and test them.
 
+**Parameters:**
+- `method` (string): HTTP method.
+- `body` (string): JSON body for POST/PUT.
+
 **Commands:**
 - `curl -s http://localhost:8080/api/orders/42 | jq .`
 - `curl -s -X POST http://localhost:8080/api/orders -H 'Content-Type: application/json' -d '{"id":43,"amount":99.5}'`
@@ -107,3 +131,7 @@ Serve JSON APIs with content negotiation and test them.
 - curl -s http://localhost:8080/api/orders/42 | jq .
 - curl -s -X POST http://localhost:8080/api/orders -H 'Content-Type: application/json' -d '{"id":43,"amount":99.5}'
 - ./gradlew test
+
+## References
+- [Ktor Server](https://ktor.io/docs/server-create-a-new-project.html)
+- [Ktor ContentNegotiation](https://ktor.io/docs/server-serialization.html)

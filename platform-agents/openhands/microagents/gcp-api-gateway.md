@@ -1,15 +1,29 @@
 ---
 name: "gcp-api-gateway"
-description: "Create API configs, deploy gateways, and manage keys via gcloud. API keys for access control.'"
+description: "Create API configs, deploy gateways, and manage keys via gcloud. API keys for access control.'. Use when working with gcp api gateway or when the user mentions gcp api gateway."
 type: knowledge
 triggers: ["gcp-api-gateway"]
 ---
 
-# Gcp Api Gateway
-
 Create API configs, deploy gateways, and manage keys via gcloud. API keys for access control.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (gcp-api-gateway)
+
+You are **Gcp Api Gateway** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `gcp-api-gateway`
+- Domain: Create API configs, deploy gateways, and manage keys via gcloud. API keys for access control.'
+- **gcp-api-gateway**: Create API configs, deploy gateways, and manage keys via gcloud. — `gcloud api-gateway apis create orders-api`
+- Check `knowledge` and `prerequisites: gcloud`
+
+### 2. Reason — think for `gcp-api-gateway`
+- For `gcp-api-gateway`: Create API configs, deploy gateways, and manage keys via gcloud. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gcp-api-gateway` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gcloud` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gcp-api-gateway:3a5e8715`
 
 # GCP API Gateway
 
@@ -78,6 +92,11 @@ curl -s "https://$HOST/v1/orders?key=$API_KEY" | jq
 ### gcp-api-gateway
 Create API configs, deploy gateways, and manage keys via gcloud.
 
+**Parameters:**
+- `api-name` (string): API Gateway API name
+- `config-name` (string): API config version name
+- `region` (string): Gateway location like us-central1
+
 **Commands:**
 - `gcloud api-gateway apis create orders-api`
 - `gcloud api-gateway api-configs create orders-v1 --api=orders-api --openapi-spec=openapi.yaml --display-name=orders-v1`
@@ -89,3 +108,7 @@ Create API configs, deploy gateways, and manage keys via gcloud.
 - gcloud api-gateway apis create orders-api && gcloud api-gateway api-configs create orders-v1 --api=orders-api --openapi-spec=openapi.yaml
 - gcloud api-gateway gateways create orders-gw --api=orders-api --api-config=orders-v1 --location=us-central1
 - gcloud api-gateway gateways describe orders-gw --location=us-central1 --format='value(defaultHostname)'
+
+## References
+- [API Gateway overview](https://cloud.google.com/api-gateway/docs)
+- [API Gateway gcloud reference](https://cloud.google.com/sdk/gcloud/reference/api-gateway)

@@ -1,15 +1,29 @@
 ---
 name: "grpc"
-description: "General gRPC API operations with grpcurl: listing services, describing schemas, invoking unary and streaming RPCs, and debugging from the CLI."
+description: "General gRPC API operations with grpcurl: listing services, describing schemas, invoking unary and streaming RPCs, and debugging from the CLI. Use when working with grpcurl ops, api or when the user mentions grpcurl ops, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# grpc
-
 General gRPC API operations with grpcurl: listing services, describing schemas, invoking unary and streaming RPCs, and debugging from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (grpc)
+
+You are **grpc** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `grpc`
+- Domain: General gRPC API operations with grpcurl: listing services, describing schemas, invoking unary and streaming RPCs, and debugging from the CLI.
+- **grpcurl-ops**: Inspect and call gRPC services from the command line with grpcurl. — `go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest`
+- Check `knowledge` and `prerequisites: grpcurl`
+
+### 2. Reason — think for `grpc`
+- For `grpcurl-ops`: Inspect and call gRPC services from the command line with grpcurl. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `grpc` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Grpcurl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grpc:56df7150`
 
 # gRPC
 
@@ -103,6 +117,11 @@ Agent: grpcurl -plaintext localhost:50051 list helloworld.Greeter
 ### grpcurl-ops
 Inspect and call gRPC services from the command line with grpcurl.
 
+**Parameters:**
+- `target` (string): gRPC endpoint host:port.
+- `method` (string): Fully-qualified method, e.g. mypackage.MyService/SayHello.
+- `data` (string): JSON payload for the call (-d).
+
 **Commands:**
 - `go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest`
 - `grpcurl -plaintext localhost:50051 list`
@@ -114,3 +133,7 @@ Inspect and call gRPC services from the command line with grpcurl.
 - grpcurl -plaintext -proto myservice.proto -d '{"name":"John"}' localhost:50051 mypackage.MyService/SayHello
 - grpcurl -plaintext localhost:50051 describe mypackage.HelloRequest
 - grpcurl -plaintext -d '{"name":"x"}' localhost:50051 mypackage.MyService/StreamMessages
+
+## References
+- [gRPC Core Docs](https://grpc.io/docs/)
+- [grpcurl README](https://github.com/fullstorydev/grpcurl)

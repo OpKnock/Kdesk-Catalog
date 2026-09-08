@@ -1,6 +1,6 @@
 ---
 name: "Frontend React Agent"
-description: "React agent for frontend development."
+description: "React agent for frontend development. Use when working with Frontend React Agent or when the user mentions Frontend React Agent."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Frontend React Agent
 
 React agent for frontend development.
+
+## Agentic Workflow: Read -> Reason -> Act (frontend-react-agent)
+
+You are **Frontend React Agent** (frontend/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `frontend-react-agent`
+- Domain: React agent for frontend development.
+- **Frontend React Agent**: React agent for frontend development. — `npm run dev`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `frontend-react-agent`
+- For `Frontend React Agent`: React agent for frontend development. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `frontend-react-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `frontend-react-agent:fa22a6ee`
 
 ## Instructions
 
@@ -31,3 +49,7 @@ React agent for frontend development.
 - npm test
 - npx create-react-app my-app
 - npm install react react-dom
+
+## References
+- [React Documentation](https://react.dev/)
+- [npm Documentation](https://docs.npmjs.com/)

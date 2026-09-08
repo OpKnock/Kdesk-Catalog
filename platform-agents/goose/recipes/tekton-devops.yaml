@@ -2,13 +2,24 @@ title: tekton-devops
 description: 'Builds CI/CD pipelines on Kubernetes with Tekton: Tasks, Pipelines, Triggers, and the tkn
   CLI for runs and logs.'
 version: 2.0.0
-instructions: "# tekton-devops\n\nBuilds CI/CD pipelines on Kubernetes with Tekton: Tasks, Pipelines,\
-  \ Triggers, and the tkn CLI for runs and logs.\n\n## Instructions\n\n# Tekton Pipelines\n\nRun Kubernetes-native\
-  \ CI/CD: Tasks and Pipelines as CRDs, driven by the tkn CLI.\n\n## What This Skill Does\n\n- Defines\
-  \ Tasks and Pipelines with steps, params, and workspaces\n- Starts runs with parameter and workspace\
-  \ bindings\n- Streams logs and describes run status\n- Cancels stuck runs and lists history\n- Reuses\
-  \ community Tasks from the Tekton catalog\n\n## When to Use\n\n- CI/CD inside Kubernetes without external\
-  \ services\n- Cluster-adjacent build pipelines (in-cluster builds, privileged steps)\n- GitOps-friendly\
+instructions: "Builds CI/CD pipelines on Kubernetes with Tekton: Tasks, Pipelines, Triggers, and the tkn\
+  \ CLI for runs and logs.\n\n## Agentic Workflow: Read -> Reason -> Act (tekton-devops)\n\nYou are **tekton-devops**\
+  \ (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read\
+  \ — devops context for `tekton-devops`\n- Domain: Builds CI/CD pipelines on Kubernetes with Tekton:\
+  \ Tasks, Pipelines, Triggers, and the tkn CLI for runs and logs.\n- **tasks-and-pipelines**: Create\
+  \ Tasks/Pipelines and start runs with parameters. — `kubectl apply -f task-build.yaml`\n- **runs-and-logs**:\
+  \ Monitor, inspect, and cancel pipeline runs. — `tkn pipelinerun list`\n- Check `knowledge` and `prerequisites:\
+  \ kubectl, tkn`\n\n### 2. Reason — think for `tekton-devops`\n- For `tasks-and-pipelines`: Create Tasks/Pipelines\
+  \ and start runs with parameters. — decide which checks to run\n- For `runs-and-logs`: Monitor, inspect,\
+  \ and cancel pipeline runs. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `tekton-devops` tools\n- Tools: `Glob`,\
+  \ `Grep`, `Read`, `Bash`, `Tkn` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any\
+  \ write; record evidence (paths, checksums)\n- Fingerprint: `tekton-devops:2839d095`\n\n# Tekton Pipelines\n\
+  \nRun Kubernetes-native CI/CD: Tasks and Pipelines as CRDs, driven by the tkn CLI.\n\n## What This Skill\
+  \ Does\n\n- Defines Tasks and Pipelines with steps, params, and workspaces\n- Starts runs with parameter\
+  \ and workspace bindings\n- Streams logs and describes run status\n- Cancels stuck runs and lists history\n\
+  - Reuses community Tasks from the Tekton catalog\n\n## When to Use\n\n- CI/CD inside Kubernetes without\
+  \ external services\n- Cluster-adjacent build pipelines (in-cluster builds, privileged steps)\n- GitOps-friendly\
   \ pipeline definitions in git\n\n## Real Commands\n\n```bash\n# Define and install\nkubectl apply -f\
   \ task-build.yaml\nkubectl apply -f pipeline-ci.yaml\ntkn task list\ntkn pipeline list\n\n# Start runs\n\
   tkn pipeline start ci -p revision=main   -w name=workspace,claimName=build-pvc\ntkn pipeline start ci\
@@ -21,12 +32,16 @@ instructions: "# tekton-devops\n\nBuilds CI/CD pipelines on Kubernetes with Tekt
   \ shared state between tasks\n- Add timeouts and retries on flaky steps\n- Run the Tekton dashboard\
   \ or use tkn for day-2 ops\n- Version pipelines in git and apply with kubectl apply for auditability\n\
   \n## Capabilities\n\n### tasks-and-pipelines\nCreate Tasks/Pipelines and start runs with parameters.\n\
-  \n**Commands:**\n- `kubectl apply -f task-build.yaml`\n- `tkn task create -f task-build.yaml`\n- `tkn\
-  \ task list`\n- `kubectl apply -f pipeline-ci.yaml`\n- `tkn pipeline start ci -p revision=main -w name=workspace,claimName=build-pvc`\n\
-  - `tkn pipeline list`\n\n**Examples:**\n- tkn pipeline start ci -p revision=main\n- kubectl apply -f\
-  \ pipeline-ci.yaml\n- tkn task list\n\n### runs-and-logs\nMonitor, inspect, and cancel pipeline runs.\n\
-  \n**Commands:**\n- `tkn pipelinerun list`\n- `tkn pipelinerun logs ci-run-123 -f`\n- `tkn pipelinerun\
-  \ describe ci-run-123`\n- `tkn pipelinerun cancel ci-run-123`\n- `tkn taskrun logs taskrun-abc --follow`\n\
-  - `kubectl get pipelineruns --sort-by=.metadata.creationTimestamp`\n\n**Examples:**\n- tkn pipelinerun\
-  \ logs ci-run-123 -f\n- tkn pipelinerun describe ci-run-123\n- tkn pipelinerun cancel ci-run-123"
+  \n**Parameters:**\n- `pipeline` (string): Pipeline name\n- `params` (object): Parameters passed with\
+  \ -p\n- `workspace` (string): Workspace binding\n\n**Commands:**\n- `kubectl apply -f task-build.yaml`\n\
+  - `tkn task create -f task-build.yaml`\n- `tkn task list`\n- `kubectl apply -f pipeline-ci.yaml`\n-\
+  \ `tkn pipeline start ci -p revision=main -w name=workspace,claimName=build-pvc`\n- `tkn pipeline list`\n\
+  \n**Examples:**\n- tkn pipeline start ci -p revision=main\n- kubectl apply -f pipeline-ci.yaml\n- tkn\
+  \ task list\n\n### runs-and-logs\nMonitor, inspect, and cancel pipeline runs.\n\n**Parameters:**\n-\
+  \ `run` (string): PipelineRun name\n- `follow` (boolean): Stream logs\n\n**Commands:**\n- `tkn pipelinerun\
+  \ list`\n- `tkn pipelinerun logs ci-run-123 -f`\n- `tkn pipelinerun describe ci-run-123`\n- `tkn pipelinerun\
+  \ cancel ci-run-123`\n- `tkn taskrun logs taskrun-abc --follow`\n- `kubectl get pipelineruns --sort-by=.metadata.creationTimestamp`\n\
+  \n**Examples:**\n- tkn pipelinerun logs ci-run-123 -f\n- tkn pipelinerun describe ci-run-123\n- tkn\
+  \ pipelinerun cancel ci-run-123\n\n## References\n- [Tekton Documentation](https://tekton.dev/docs/)\n\
+  - [tkn CLI](https://tekton.dev/docs/cli/)\n- [Tekton Catalog](https://github.com/tektoncd/catalog)"
 prompt: Act as tekton-devops and handle the task per the instructions.

@@ -2,14 +2,27 @@ title: Alerting Rules
 description: 'Authors and tests Prometheus alerting rules and Alertmanager config: rule files, promtool
   validation, unit tests, silences, and the HTTP API.'
 version: 2.0.0
-instructions: "# Alerting Rules\n\nAuthors and tests Prometheus alerting rules and Alertmanager config:\
-  \ rule files, promtool validation, unit tests, silences, and the HTTP API.\n\n## Instructions\n\n# Alerting\
-  \ Rules\n\n## What this skill does\n\nAuthors and operates Prometheus alerting: rule files, promtool\
-  \ validation and unit tests, Alertmanager routing and silences, and alert state queries via the HTTP\
-  \ API.\n\n## When to use\n\n- Creating an alert for a new SLO or error condition\n- Debugging an alert\
-  \ that fires (or fails to fire)\n- Managing an outage via silences without stopping metrics collection\n\
-  \n## Real commands\n\n```bash\n# Validate rules\npromtool check rules alerts.yml\n\n# Unit-test rule\
-  \ evaluation\npromtool test rules tests.yml\n\n# Inspect live alert state\ncurl -s 'http://localhost:9090/api/v1/rules?type=alert'\
+instructions: "Authors and tests Prometheus alerting rules and Alertmanager config: rule files, promtool\
+  \ validation, unit tests, silences, and the HTTP API.\n\n## Agentic Workflow: Read -> Reason -> Act\
+  \ (alerting-rules)\n\nYou are **Alerting Rules** (api/general) — a sub-agent that **Reads, Reasons,\
+  \ and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `alerting-rules`\n- Domain: Authors\
+  \ and tests Prometheus alerting rules and Alertmanager config: rule files, promtool validation, unit\
+  \ tests, silences, and the HTTP API.\n- **rules-authoring**: Author Prometheus alerting/recording rules\
+  \ and validate them. — `promtool check rules alerting-rules.yml`\n- **alertmanager**: Configure Alertmanager\
+  \ routing, manage silences, and inspect the API. — `amtool check-config /etc/alertmanager/alertmanager.yml`\n\
+  - Check `knowledge` and `prerequisites: amtool, promtool`\n\n### 2. Reason — think for `alerting-rules`\n\
+  - For `rules-authoring`: Author Prometheus alerting/recording rules and validate them. — decide which\
+  \ checks to run\n- For `alertmanager`: Configure Alertmanager routing, manage silences, and inspect\
+  \ the API. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `alerting-rules` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Bash`, `Amtool` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record\
+  \ evidence (paths, checksums)\n- Fingerprint: `alerting-rules:1481fe5a`\n\n# Alerting Rules\n\n## What\
+  \ this skill does\n\nAuthors and operates Prometheus alerting: rule files, promtool validation and unit\
+  \ tests, Alertmanager routing and silences, and alert state queries via the HTTP API.\n\n## When to\
+  \ use\n\n- Creating an alert for a new SLO or error condition\n- Debugging an alert that fires (or fails\
+  \ to fire)\n- Managing an outage via silences without stopping metrics collection\n\n## Real commands\n\
+  \n```bash\n# Validate rules\npromtool check rules alerts.yml\n\n# Unit-test rule evaluation\npromtool\
+  \ test rules tests.yml\n\n# Inspect live alert state\ncurl -s 'http://localhost:9090/api/v1/rules?type=alert'\
   \ | jq '.data.groups[].rules[] | {name,state}'\n\n# Alertmanager\namtool check-config alertmanager.yml\n\
   amtool alert list\namtool silence add --expires=2h --author=oncall 'severity=\"critical\"'\n```\n\n\
   ## Rules file\n\n```yaml\ngroups:\n- name: api\n  rules:\n  - alert: APIHighErrorRate\n    expr: sum(rate(http_requests_total{status=~\"\
@@ -21,14 +34,20 @@ instructions: "# Alerting Rules\n\nAuthors and tests Prometheus alerting rules a
   - Write promtool test rules cases for fire/no-fire thresholds\n\n## Best practices\n\n- Prefer SLO burn-rate\
   \ alerts over raw thresholds\n- Every alert needs a runbook URL in annotations\n- Use `for:` clauses\
   \ to avoid flapping\n\n## Capabilities\n\n### rules-authoring\nAuthor Prometheus alerting/recording\
-  \ rules and validate them.\n\n**Commands:**\n- `promtool check rules alerting-rules.yml`\n- `promtool\
-  \ test rules rules.test.yml`\n- `promtool query instant 'up'`\n- `promtool query range 'http_requests_total[5m]'`\n\
-  - `curl 'http://localhost:9090/api/v1/rules?type=alert'`\n\n**Examples:**\n- promtool check rules /etc/prometheus/alerts.yml\n\
-  - promtool test rules unit-tests.yml\n- curl -s 'http://localhost:9090/api/v1/rules' | jq '.data.groups[].rules[]\
-  \ | {name, state}'\n\n### alertmanager\nConfigure Alertmanager routing, manage silences, and inspect\
-  \ the API.\n\n**Commands:**\n- `amtool check-config /etc/alertmanager/alertmanager.yml`\n- `amtool alert\
-  \ list`\n- `amtool silence add --expires=1h 'severity=\"critical\"'`\n- `amtool silence list`\n- `curl\
-  \ -X POST http://localhost:9093/api/v2/silences -d @silence.json`\n\n**Examples:**\n- amtool check-config\
-  \ /etc/alertmanager/alertmanager.yml\n- amtool silence add --author=oncall --comment=\"draining node\"\
-  \ 'instance=\"node1\"'\n- curl -X GET http://localhost:9093/api/v2/alerts | jq '.[].labels.alertname'"
+  \ rules and validate them.\n\n**Parameters:**\n- `rules_file` (string): Path to the alerting rules YAML\n\
+  - `test_file` (string): Path to promtool unit test YAML\n- `query` (string): PromQL expression to evaluate\n\
+  \n**Commands:**\n- `promtool check rules alerting-rules.yml`\n- `promtool test rules rules.test.yml`\n\
+  - `promtool query instant 'up'`\n- `promtool query range 'http_requests_total[5m]'`\n- `curl 'http://localhost:9090/api/v1/rules?type=alert'`\n\
+  \n**Examples:**\n- promtool check rules /etc/prometheus/alerts.yml\n- promtool test rules unit-tests.yml\n\
+  - curl -s 'http://localhost:9090/api/v1/rules' | jq '.data.groups[].rules[] | {name, state}'\n\n###\
+  \ alertmanager\nConfigure Alertmanager routing, manage silences, and inspect the API.\n\n**Parameters:**\n\
+  - `expires` (string): Silence duration, e.g. 1h\n- `author` (string): Silence creator name\n- `matchers`\
+  \ (string): Label matchers like severity=\"critical\"\n\n**Commands:**\n- `amtool check-config /etc/alertmanager/alertmanager.yml`\n\
+  - `amtool alert list`\n- `amtool silence add --expires=1h 'severity=\"critical\"'`\n- `amtool silence\
+  \ list`\n- `curl -X POST http://localhost:9093/api/v2/silences -d @silence.json`\n\n**Examples:**\n\
+  - amtool check-config /etc/alertmanager/alertmanager.yml\n- amtool silence add --author=oncall --comment=\"\
+  draining node\" 'instance=\"node1\"'\n- curl -X GET http://localhost:9093/api/v2/alerts | jq '.[].labels.alertname'\n\
+  \n## References\n- [Alerting Rules](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/)\n\
+  - [Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/)\n- [promtool](https://prometheus.io/docs/prometheus/latest/command-line/promtool/)\n\
+  - [Alerting on SLOs](https://sre.google/workbook/alerting-on-slos/)"
 prompt: Act as Alerting Rules and handle the task per the instructions.

@@ -2,10 +2,21 @@ title: async-task-engineer
 description: 'Builds async task systems: Celery and RQ workers for Python, BullMQ queues for Node, Redis
   brokers, scheduled tasks, and retry policies.'
 version: 2.0.0
-instructions: "# async-task-engineer\n\nBuilds async task systems: Celery and RQ workers for Python, BullMQ\
-  \ queues for Node, Redis brokers, scheduled tasks, and retry policies.\n\n## Instructions\n\n# Async\
-  \ Task Engineer\n\nAsync task processing.\n\n## What This Skill Does\n- Processes background jobs with\
-  \ Celery/RQ/BullMQ\n- Schedules recurring tasks\n- Handles retries and failures\n\n## When to Use\n\
+instructions: "Builds async task systems: Celery and RQ workers for Python, BullMQ queues for Node, Redis\
+  \ brokers, scheduled tasks, and retry policies.\n\n## Agentic Workflow: Read -> Reason -> Act (async-task-engineer)\n\
+  \nYou are **async-task-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — backend context for `async-task-engineer`\n- Domain: Builds async task systems: Celery\
+  \ and RQ workers for Python, BullMQ queues for Node, Redis brokers, scheduled tasks, and retry policies.\n\
+  - **celery**: Run Celery tasks with Redis broker — `pip install celery redis`\n- **bullmq-node**: Queue\
+  \ async work with BullMQ — `npm install bullmq ioredis`\n- Check `knowledge` and `prerequisites: redis,\
+  \ rabbitmq, node.js, python`\n\n### 2. Reason — think for `async-task-engineer`\n- For `celery`: Run\
+  \ Celery tasks with Redis broker — decide which checks to run\n- For `bullmq-node`: Queue async work\
+  \ with BullMQ — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `async-task-engineer` tools\n- Tools: `Glob`,\
+  \ `Grep`, `Read`, `Bash`, `Celery` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for\
+  \ any write; record evidence (paths, checksums)\n- Fingerprint: `async-task-engineer:7c6e1c39`\n\n#\
+  \ Async Task Engineer\n\nAsync task processing.\n\n## What This Skill Does\n- Processes background jobs\
+  \ with Celery/RQ/BullMQ\n- Schedules recurring tasks\n- Handles retries and failures\n\n## When to Use\n\
   - Email and notification sending\n- Report generation\n- Webhook fan-out\n\n## Real Commands\n\n```bash\n\
   pip install celery redis\ncelery -A tasks worker --loglevel=info -c 4\ncelery -A tasks beat --loglevel=info\n\
   npm install bullmq ioredis\nnode worker.js\n```\n\n## Celery Task\n\n```python\nfrom celery import Celery\n\
@@ -14,12 +25,14 @@ instructions: "# async-task-engineer\n\nBuilds async task systems: Celery and RQ
   \ countdown=30)\n```\n\n## Testing\n- Enqueue jobs and verify execution\n- Test retry behavior on failures\n\
   - Monitor queue depths during bursts\n\n\n## Best Practices\n- Keep tasks idempotent\n- Set retries\
   \ with exponential backoff\n- Monitor dead-letter queues\n\n## Capabilities\n\n### celery\nRun Celery\
-  \ tasks with Redis broker\n\n**Commands:**\n- `pip install celery redis`\n- `celery -A tasks worker\
-  \ --loglevel=info -c 4`\n- `celery -A tasks beat --loglevel=info`\n- `celery -A tasks call tasks.send_email\
-  \ --args='[\"a@localhost\"]'`\n- `celery -A tasks inspect active`\n\n**Examples:**\n- celery worker\
-  \ -c 4 runs 4 worker processes\n- celery beat schedules periodic tasks\n- celery inspect active lists\
-  \ running tasks\n\n### bullmq-node\nQueue async work with BullMQ\n\n**Commands:**\n- `npm install bullmq\
-  \ ioredis`\n- `node -e \"const {Queue}=require('bullmq'); new Queue('jobs').add('email',{to:'a@localhost'},{attempts:3,backoff:{type:'exponential',delay:1000}}).then(j=>console.log('queued',j.id))\"\
+  \ tasks with Redis broker\n\n**Parameters:**\n- `app` (string): Celery app module\n- `concurrency` (integer):\
+  \ Worker processes\n- `queue` (string): Queue name\n\n**Commands:**\n- `pip install celery redis`\n\
+  - `celery -A tasks worker --loglevel=info -c 4`\n- `celery -A tasks beat --loglevel=info`\n- `celery\
+  \ -A tasks call tasks.send_email --args='[\"a@localhost\"]'`\n- `celery -A tasks inspect active`\n\n\
+  **Examples:**\n- celery worker -c 4 runs 4 worker processes\n- celery beat schedules periodic tasks\n\
+  - celery inspect active lists running tasks\n\n### bullmq-node\nQueue async work with BullMQ\n\n**Commands:**\n\
+  - `npm install bullmq ioredis`\n- `node -e \"const {Queue}=require('bullmq'); new Queue('jobs').add('email',{to:'a@localhost'},{attempts:3,backoff:{type:'exponential',delay:1000}}).then(j=>console.log('queued',j.id))\"\
   `\n- `node worker.js`\n- `redis-cli ping`\n- `rq worker --url redis://localhost:6379`\n\n**Examples:**\n\
-  - -cli --help\n- -api --help"
+  - -cli --help\n- -api --help\n\n## References\n- [Celery Docs](https://docs.celeryq.dev/en/stable/)\n\
+  - [BullMQ Docs](https://docs.bullmq.io/)"
 prompt: Act as async-task-engineer and handle the task per the instructions.

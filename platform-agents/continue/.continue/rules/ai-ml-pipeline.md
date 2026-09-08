@@ -1,15 +1,33 @@
 ---
 name: "ai-ml-pipeline"
-description: "Builds reproducible ML pipelines: DVC for data/model versioning, MLflow for experiment tracking and serving, and Kubeflow Pipelines for orchestration."
+description: "Builds reproducible ML pipelines: DVC for data/model versioning, MLflow for experiment tracking and serving, and Kubeflow Pipelines for orchestration. Use when working with data versioning, experiment tracking, pipeline orchestration or when the user mentions data versioning, experiment tracking, pipeline orchestration."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# ai-ml-pipeline
-
 Builds reproducible ML pipelines: DVC for data/model versioning, MLflow for experiment tracking and serving, and Kubeflow Pipelines for orchestration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ai-ml-pipeline)
+
+You are **ai-ml-pipeline** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `ai-ml-pipeline`
+- Domain: Builds reproducible ML pipelines: DVC for data/model versioning, MLflow for experiment tracking and serving, and Kubeflow Pipelines for orchestration.
+- **data-versioning**: Track datasets and model artifacts with DVC so training runs reproduce from any git commit. — `dvc init`
+- **experiment-tracking**: Log parameters, metrics, and models with MLflow and serve models as REST endpoints. — `mlflow run . -P alpha=0.5`
+- **pipeline-orchestration**: Package and run component pipelines on Kubeflow Pipelines. — `kubectl apply -f pipeline.yaml`
+- Check `knowledge` and `prerequisites: python, scikit-learn, tensorflow, mlflow`
+
+### 2. Reason — think for `ai-ml-pipeline`
+- For `data-versioning`: Track datasets and model artifacts with DVC so training runs reproduce from any git commit. — decide which checks to run
+- For `experiment-tracking`: Log parameters, metrics, and models with MLflow and serve models as REST endpoints. — decide which checks to run
+- For `pipeline-orchestration`: Package and run component pipelines on Kubeflow Pipelines. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ai-ml-pipeline` tools
+- Tools: `Glob`, `Grep`, `Read`, `Dvc`, `Mlflow` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ai-ml-pipeline:5bbd5080`
 
 # AI/ML Pipeline
 
@@ -80,6 +98,10 @@ stages:
 ### data-versioning
 Track datasets and model artifacts with DVC so training runs reproduce from any git commit.
 
+**Parameters:**
+- `stage` (string): DVC stage file (e.g. train.dvc) to reproduce
+- `targets` (string): Space-separated stages for dvc repro
+
 **Commands:**
 - `dvc init`
 - `dvc add data/train.csv`
@@ -95,6 +117,11 @@ Track datasets and model artifacts with DVC so training runs reproduce from any 
 ### experiment-tracking
 Log parameters, metrics, and models with MLflow and serve models as REST endpoints.
 
+**Parameters:**
+- `experiment` (string): MLflow experiment name or ID
+- `run_id` (string): Run ID used to reference a registered model
+- `params` (string): Hyperparameters passed with -P key=value
+
 **Commands:**
 - `mlflow run . -P alpha=0.5`
 - `mlflow experiments create --experiment-name ab-test`
@@ -109,6 +136,10 @@ Log parameters, metrics, and models with MLflow and serve models as REST endpoin
 ### pipeline-orchestration
 Package and run component pipelines on Kubeflow Pipelines.
 
+**Parameters:**
+- `pipeline_file` (string): Path to the compiled pipeline YAML/JSON
+- `run_id` (string): Pipeline run identifier for logs
+
 **Commands:**
 - `kubectl apply -f pipeline.yaml`
 - `kfp pipeline upload`
@@ -119,3 +150,8 @@ Package and run component pipelines on Kubeflow Pipelines.
 - kfp pipeline upload --name iris-pipeline pipeline.yaml
 - kubectl logs -n kubeflow -l pipeline-run-id=run-123 --tail=200
 - kubectl get experiments.pipelines.kubeflow.org
+
+## References
+- [DVC Documentation](https://dvc.org/doc)
+- [MLflow Docs](https://mlflow.org/docs/latest/index.html)
+- [Kubeflow Pipelines](https://www.kubeflow.org/docs/components/pipelines/)

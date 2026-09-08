@@ -2,8 +2,20 @@ title: Kafka Topics
 description: 'Full Kafka topic lifecycle: create with configs, list, describe layout, alter configurations,
   and delete topics safely with the Kafka CLI.'
 version: 2.0.0
-instructions: "# Kafka Topics\n\nFull Kafka topic lifecycle: create with configs, list, describe layout,\
-  \ alter configurations, and delete topics safely with the Kafka CLI.\n\n## Instructions\n\n# Kafka Topics\n\
+instructions: "Full Kafka topic lifecycle: create with configs, list, describe layout, alter configurations,\
+  \ and delete topics safely with the Kafka CLI.\n\n## Agentic Workflow: Read -> Reason -> Act (kafka-topics)\n\
+  \nYou are **Kafka Topics** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `kafka-topics`\n- Domain: Full Kafka topic lifecycle: create with configs,\
+  \ list, describe layout, alter configurations, and delete topics safely with the Kafka CLI.\n- **topic-lifecycle**:\
+  \ Create, list, and delete topics. — `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic\
+  \ orders --part`\n- **topic-config**: Describe topic layout and alter topic configurations. — `kafka-topics.sh\
+  \ --bootstrap-server localhost:9092 --describe --topic orders`\n- Check `knowledge` and `prerequisites:\
+  \ kafka-topics.sh`\n\n### 2. Reason — think for `kafka-topics`\n- For `topic-lifecycle`: Create, list,\
+  \ and delete topics. — decide which checks to run\n- For `topic-config`: Describe topic layout and alter\
+  \ topic configurations. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `kafka-topics` tools\n- Tools: `Glob`,\
+  \ `Grep`, `Read`, `Kafka-topics.sh` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for\
+  \ any write; record evidence (paths, checksums)\n- Fingerprint: `kafka-topics:1383380e`\n\n# Kafka Topics\n\
   \nManage topics through their full lifecycle with the Kafka CLI.\n\n## What this skill does\n\n- Creates\
   \ topics with partitions, replication, and configs.\n- Describes layout (leader, replicas, ISR) and\
   \ effective configs.\n- Alters and deletes topics safely.\n\n## When to use\n\n- Provisioning topics\
@@ -22,20 +34,24 @@ instructions: "# Kafka Topics\n\nFull Kafka topic lifecycle: create with configs
   \ --bootstrap-server localhost:9092 --describe --topic orders | grep PartitionCount\n```\n\n## Best\
   \ practices\n\n- Document partition count and rationale; it caps parallelism.\n- Keep overrides explicit\
   \ and reviewed; use --show-configs in audits.\n- Never delete topics holding consumer-group offsets\
-  \ still in use.\n\n## Capabilities\n\n### topic-lifecycle\nCreate, list, and delete topics.\n\n**Commands:**\n\
-  - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 6 --replication-factor\
-  \ 3 --config retention.ms=604800000 --config max.message.bytes=1048576`\n- `kafka-topics.sh --bootstrap-server\
-  \ localhost:9092 --list`\n- `kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic orders`\n\
-  - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --if-not-exists --partitions\
-  \ 6 --replication-factor 3`\n\n**Examples:**\n- kafka-topics.sh --bootstrap-server localhost:9092 --create\
-  \ --topic orders --partitions 6 --replication-factor 3\n- kafka-topics.sh --bootstrap-server localhost:9092\
-  \ --list | grep orders\n- kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic orders\n\
-  \n### topic-config\nDescribe topic layout and alter topic configurations.\n\n**Commands:**\n- `kafka-topics.sh\
-  \ --bootstrap-server localhost:9092 --describe --topic orders`\n- `kafka-topics.sh --bootstrap-server\
-  \ localhost:9092 --describe --topic orders --show-configs`\n- `kafka-topics.sh --bootstrap-server localhost:9092\
-  \ --alter --topic orders --config max.message.bytes=2097152`\n- `kafka-topics.sh --bootstrap-server\
-  \ localhost:9092 --alter --topic orders --delete-config max.message.bytes`\n\n**Examples:**\n- kafka-topics.sh\
-  \ --bootstrap-server localhost:9092 --describe --topic orders\n- kafka-topics.sh --bootstrap-server\
-  \ localhost:9092 --alter --topic orders --config max.message.bytes=2097152\n- kafka-topics.sh --bootstrap-server\
-  \ localhost:9092 --describe --topic orders --show-configs"
+  \ still in use.\n\n## Capabilities\n\n### topic-lifecycle\nCreate, list, and delete topics.\n\n**Parameters:**\n\
+  - `topic` (string): Topic name.\n- `partitions` (integer): Partition count.\n- `replication_factor`\
+  \ (integer): Replication factor.\n\n**Commands:**\n- `kafka-topics.sh --bootstrap-server localhost:9092\
+  \ --create --topic orders --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config\
+  \ max.message.bytes=1048576`\n- `kafka-topics.sh --bootstrap-server localhost:9092 --list`\n- `kafka-topics.sh\
+  \ --bootstrap-server localhost:9092 --delete --topic orders`\n- `kafka-topics.sh --bootstrap-server\
+  \ localhost:9092 --create --topic orders --if-not-exists --partitions 6 --replication-factor 3`\n\n\
+  **Examples:**\n- kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions\
+  \ 6 --replication-factor 3\n- kafka-topics.sh --bootstrap-server localhost:9092 --list | grep orders\n\
+  - kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic orders\n\n### topic-config\nDescribe\
+  \ topic layout and alter topic configurations.\n\n**Parameters:**\n- `topic` (string): Topic name.\n\
+  - `config` (string): Config key=value to set or remove.\n\n**Commands:**\n- `kafka-topics.sh --bootstrap-server\
+  \ localhost:9092 --describe --topic orders`\n- `kafka-topics.sh --bootstrap-server localhost:9092 --describe\
+  \ --topic orders --show-configs`\n- `kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic\
+  \ orders --config max.message.bytes=2097152`\n- `kafka-topics.sh --bootstrap-server localhost:9092 --alter\
+  \ --topic orders --delete-config max.message.bytes`\n\n**Examples:**\n- kafka-topics.sh --bootstrap-server\
+  \ localhost:9092 --describe --topic orders\n- kafka-topics.sh --bootstrap-server localhost:9092 --alter\
+  \ --topic orders --config max.message.bytes=2097152\n- kafka-topics.sh --bootstrap-server localhost:9092\
+  \ --describe --topic orders --show-configs\n\n## References\n- [kafka-topics.sh](https://kafka.apache.org/documentation/#basic_ops_add_topic)\n\
+  - [Topic Configs](https://kafka.apache.org/documentation/#topicconfigs)"
 prompt: Act as Kafka Topics and handle the task per the instructions.

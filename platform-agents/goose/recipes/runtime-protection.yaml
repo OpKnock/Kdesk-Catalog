@@ -2,9 +2,20 @@ title: runtime-protection
 description: 'Detects and responds to threats at runtime with Falco, Tracee, auditd, and strace: suspicious
   syscalls, containers, and process behavior.'
 version: 2.0.0
-instructions: "# runtime-protection\n\nDetects and responds to threats at runtime with Falco, Tracee,\
-  \ auditd, and strace: suspicious syscalls, containers, and process behavior.\n\n## Instructions\n\n\
-  # Runtime Protection\n\nDetect malicious behavior while it happens.\n\n## When to Use\n\n- Container\
+instructions: "Detects and responds to threats at runtime with Falco, Tracee, auditd, and strace: suspicious\
+  \ syscalls, containers, and process behavior.\n\n## Agentic Workflow: Read -> Reason -> Act (runtime-protection)\n\
+  \nYou are **runtime-protection** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — security context for `runtime-protection`\n- Domain: Detects and responds to threats\
+  \ at runtime with Falco, Tracee, auditd, and strace: suspicious syscalls, containers, and process behavior.\n\
+  - **falco**: Run Falco threat detection and manage rules. — `falco --version`\n- **syscall**: Trace\
+  \ and audit syscall activity. — `strace -f -e trace=execve,openat -o trace.log ./app`\n- Check `knowledge`\
+  \ and `prerequisites: openrasp, contrast-security, falco, sysdig`\n\n### 2. Reason — think for `runtime-protection`\n\
+  - For `falco`: Run Falco threat detection and manage rules. — decide which checks to run\n- For `syscall`:\
+  \ Trace and audit syscall activity. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust`\
+  \ + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `runtime-protection` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Falco`, `Falcoctl` (see frontmatter `tools`/`allowed-tools`)\n- Use\
+  \ `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `runtime-protection:d2b79741`\n\
+  \n# Runtime Protection\n\nDetect malicious behavior while it happens.\n\n## When to Use\n\n- Container\
   \ escape and privilege escalation detection\n- Suspicious process behavior monitoring\n- Forensics after\
   \ an incident\n\n## Falco\n\n```bash\nfalcoctl install falco\nfalco -r /etc/falco/falco_rules.yaml\n\
   ```\n\nRule example - terminal in container:\n\n```yaml\n- rule: Terminal shell in container\n  desc:\
@@ -18,13 +29,16 @@ instructions: "# runtime-protection\n\nDetects and responds to threats at runtim
   - Test rules with real attack simulations (e.g., kubectl exec).\n- Keep Falco/Tracee versions pinned\
   \ and updated.\n\n## Testing\n\nSimulate a known-bad action (shell in container) and verify the rule\
   \ fires within seconds.\n\n## Capabilities\n\n### falco\nRun Falco threat detection and manage rules.\n\
-  \n**Commands:**\n- `falco --version`\n- `falcoctl install falco`\n- `falco -r /etc/falco/falco_rules.yaml\
-  \ -e /dev/null`\n- `falco --json --output '{\"event\":\"%evt.type\",\"proc\":\"%proc.name\"}'`\n- `falcoctl\
-  \ artifact list --type rules`\n\n**Examples:**\n- falco -r my-rules.yaml | head -20\n- falcoctl artifact\
-  \ install falco_rules:2.0\n- falco --version && falco -h | head -20\n\n### syscall\nTrace and audit\
-  \ syscall activity.\n\n**Commands:**\n- `strace -f -e trace=execve,openat -o trace.log ./app`\n- `strace\
-  \ -p 1234 -f -e trace=network`\n- `auditctl -a always,exit -F arch=b64 -S execve -k exec-log`\n- `auditctl\
-  \ -l`\n- `ausearch -k exec-log -ts recent | head -30`\n\n**Examples:**\n- strace -f -e trace=openat\
-  \ ./app 2>&1 | grep ENOENT | head\n- auditctl -a always,exit -F arch=b64 -S socket -k net-conn\n- ausearch\
-  \ -k net-conn -i | head -20"
+  \n**Parameters:**\n- `rules` (string): Rules file path\n- `json` (string): JSON output mode\n- `output`\
+  \ (string): Output template\n\n**Commands:**\n- `falco --version`\n- `falcoctl install falco`\n- `falco\
+  \ -r /etc/falco/falco_rules.yaml -e /dev/null`\n- `falco --json --output '{\"event\":\"%evt.type\",\"\
+  proc\":\"%proc.name\"}'`\n- `falcoctl artifact list --type rules`\n\n**Examples:**\n- falco -r my-rules.yaml\
+  \ | head -20\n- falcoctl artifact install falco_rules:2.0\n- falco --version && falco -h | head -20\n\
+  \n### syscall\nTrace and audit syscall activity.\n\n**Parameters:**\n- `syscall` (string): Syscalls\
+  \ to trace\n- `key` (string): Audit rule key\n- `pid` (number): Process id to attach\n\n**Commands:**\n\
+  - `strace -f -e trace=execve,openat -o trace.log ./app`\n- `strace -p 1234 -f -e trace=network`\n- `auditctl\
+  \ -a always,exit -F arch=b64 -S execve -k exec-log`\n- `auditctl -l`\n- `ausearch -k exec-log -ts recent\
+  \ | head -30`\n\n**Examples:**\n- strace -f -e trace=openat ./app 2>&1 | grep ENOENT | head\n- auditctl\
+  \ -a always,exit -F arch=b64 -S socket -k net-conn\n- ausearch -k net-conn -i | head -20\n\n## References\n\
+  - [Falco Docs](https://falco.org/docs/)\n- [Tracee](https://github.com/aquasecurity/tracee)\n- [auditd](https://man7.org/linux/man-pages/man8/auditctl.8.html)"
 prompt: Act as runtime-protection and handle the task per the instructions.

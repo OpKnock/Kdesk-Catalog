@@ -1,8 +1,22 @@
-# Api Auth mTLS
-
 API auth with mutual TLS (mTLS) - generate CA and client certificates with openssl, configure the server, and test mTLS handshakes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-auth-mtls)
+
+You are **Api Auth mTLS** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `api-auth-mtls`
+- Domain: API auth with mutual TLS (mTLS) - generate CA and client certificates with openssl, configure the server, and test mTLS handshakes.
+- **mtls-auth**: Set up and verify mutual TLS authentication — `openssl req -x509 -newkey rsa:2048 -keyout ca.key -out ca.crt -days 365 -nodes -`
+- Check `knowledge` and `prerequisites: node.js, python, jsonwebtoken`
+
+### 2. Reason — think for `api-auth-mtls`
+- For `mtls-auth`: Set up and verify mutual TLS authentication — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-auth-mtls` tools
+- Tools: `Glob`, `Grep`, `Read`, `Openssl`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-auth-mtls:81b26d9e`
 
 # API Auth (mTLS)
 
@@ -67,6 +81,11 @@ curl -s --cacert ca.crt https://localhost:8443/api/data -o /dev/null -w '%{http_
 ### mtls-auth
 Set up and verify mutual TLS authentication
 
+**Parameters:**
+- `ca_cert` (string): Path to the CA certificate
+- `client_cert` (string): Path to the client certificate
+- `client_key` (string): Path to the client private key
+
 **Commands:**
 - `openssl req -x509 -newkey rsa:2048 -keyout ca.key -out ca.crt -days 365 -nodes -subj '/CN=Demo CA'`
 - `openssl req -newkey rsa:2048 -keyout client.key -out client.csr -nodes -subj '/CN=partner-1'`
@@ -78,3 +97,7 @@ Set up and verify mutual TLS authentication
 - openssl req -newkey rsa:2048 -keyout client.key -out client.csr -nodes -subj '/CN=partner-1/O=Acme' -addext 'subjectAltName=URI:spiffe://demo/acme/partner-1'
 - curl -s --cert client.crt --key client.key --cacert ca.crt https://localhost:8443/api/data | jq '.client_cn'
 - openssl s_client -connect localhost:8443 -CAfile ca.crt -brief 2>&1 | grep -i 'no peer certificate'
+
+## References
+- [Cloudflare mTLS Guide](https://www.cloudflare.com/learning/access-management/what-is-mutual-tls/)
+- [RFC 8446 TLS 1.3](https://datatracker.ietf.org/doc/html/rfc8446)

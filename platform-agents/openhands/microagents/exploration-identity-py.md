@@ -1,6 +1,6 @@
 ---
 name: "exploration-identity-py"
-description: "Exploration deployment agent. Manages Exploration ML deployment."
+description: "Exploration deployment agent. Manages Exploration ML deployment. Use when working with Ml Exploration Deploy Agent or when the user mentions Ml Exploration Deploy Agent."
 type: knowledge
 triggers: ["exploration-identity-py", "ml exploration deploy agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["exploration-identity-py", "ml exploration deploy agent"]
 # Exploration Identity Py
 
 Exploration deployment agent. Manages Exploration ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (exploration-identity-py)
+
+You are **Exploration Identity Py** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `exploration-identity-py`
+- Domain: Exploration deployment agent. Manages Exploration ML deployment.
+- **Ml Exploration Deploy Agent**: Exploration deployment agent. Manages Exploration ML deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `exploration-identity-py`
+- For `Ml Exploration Deploy Agent`: Exploration deployment agent. Manages Exploration ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `exploration-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `exploration-identity-py:139ce4be`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Exploration deployment agent. Manages Exploration ML deployment.
 - curl http://localhost:8080/explore --data '{"data": "data.csv"}'
 - python explore.py --data data.csv --output exploration.json
 - python visualize.py --data data.csv --output visualization.html
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

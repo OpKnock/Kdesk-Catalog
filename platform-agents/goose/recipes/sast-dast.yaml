@@ -2,11 +2,23 @@ title: Sast Dast
 description: Combines static analysis (bandit, semgrep, Trivy) with dynamic testing (OWASP ZAP, nikto,
   nuclei) for full application security coverage.
 version: 2.0.0
-instructions: "# Sast Dast\n\nCombines static analysis (bandit, semgrep, Trivy) with dynamic testing (OWASP\
-  \ ZAP, nikto, nuclei) for full application security coverage.\n\n## Instructions\n\n# SAST + DAST\n\n\
-  Layered application security: static analysis in CI, dynamic testing against running apps.\n\n## What\
-  \ This Skill Does\n\n- Runs language-specific SAST scanners (bandit, gosec, eslint)\n- Scans IaC and\
-  \ dependencies in the same pipeline\n- Executes OWASP ZAP baseline and full scans against environments\n\
+instructions: "Combines static analysis (bandit, semgrep, Trivy) with dynamic testing (OWASP ZAP, nikto,\
+  \ nuclei) for full application security coverage.\n\n## Agentic Workflow: Read -> Reason -> Act (sast-dast)\n\
+  \nYou are **Sast Dast** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — security context for `sast-dast`\n- Domain: Combines static analysis (bandit, semgrep,\
+  \ Trivy) with dynamic testing (OWASP ZAP, nikto, nuclei) for full application security coverage.\n-\
+  \ **sast-scanning**: Static scans for Python, JS, Go, and infrastructure code. — `bandit -r app/ -f\
+  \ json -o bandit.json`\n- **dast-scanning**: Dynamic scanning against running applications. — `zap-baseline.py\
+  \ -t http://localhost:8080 -r report.html`\n- Check `knowledge` and `prerequisites: bandit, gosec, nikto,\
+  \ npx`\n\n### 2. Reason — think for `sast-dast`\n- For `sast-scanning`: Static scans for Python, JS,\
+  \ Go, and infrastructure code. — decide which checks to run\n- For `dast-scanning`: Dynamic scanning\
+  \ against running applications. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust`\
+  \ + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `sast-dast` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `Bandit`, `Semgrep` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `sast-dast:7341b8aa`\n\n# SAST +\
+  \ DAST\n\nLayered application security: static analysis in CI, dynamic testing against running apps.\n\
+  \n## What This Skill Does\n\n- Runs language-specific SAST scanners (bandit, gosec, eslint)\n- Scans\
+  \ IaC and dependencies in the same pipeline\n- Executes OWASP ZAP baseline and full scans against environments\n\
   - Correlates findings into a single remediation report\n\n## When to Use\n\n- Pre-release security gate\
   \ for web applications\n- API security review with OpenAPI-driven ZAP scans\n- Investigating a suspected\
   \ app-level vulnerability\n\n## Real Commands\n\n```bash\n# SAST\nbandit -r src/ -f json -o bandit.json\n\
@@ -20,13 +32,17 @@ instructions: "# Sast Dast\n\nCombines static analysis (bandit, semgrep, Trivy) 
   \ deploy\n- Use ZAP's API scan against the OpenAPI spec to hit every endpoint\n- De-duplicate by CWE\
   \ across tools\n- Gate deploys on critical SAST; use DAST as release evidence\n- Protect staging environments\
   \ with auth tokens in ZAP scans\n\n## Capabilities\n\n### sast-scanning\nStatic scans for Python, JS,\
-  \ Go, and infrastructure code.\n\n**Commands:**\n- `bandit -r app/ -f json -o bandit.json`\n- `semgrep\
-  \ scan --config auto .`\n- `trivy fs --scanners vuln,secret,config .`\n- `npx eslint --format sarif\
-  \ .`\n- `gosec ./...`\n\n**Examples:**\n- bandit -r src/ -ll\n- semgrep scan --config p/owasp-top-ten\
-  \ .\n- trivy fs --scanners config --severity HIGH .\n\n### dast-scanning\nDynamic scanning against running\
-  \ applications.\n\n**Commands:**\n- `zap-baseline.py -t http://localhost:8080 -r report.html`\n- `zap-full-scan.py\
-  \ -t http://localhost:8080 -J zap.json`\n- `nikto -h http://localhost:8080 -o nikto.html`\n- `nuclei\
-  \ -u http://localhost:8080 -severity high,critical`\n- `zap-api-scan.py -t http://localhost:8080/v3/api-docs\
-  \ -f openapi`\n\n**Examples:**\n- zap-baseline.py -t http://localhost:8080 -r report.html\n- nikto -h\
-  \ http://localhost:8080\n- zap-api-scan.py -t http://localhost:8080/api/swagger.json -f openapi"
+  \ Go, and infrastructure code.\n\n**Parameters:**\n- `language` (string): Target language for scanner\
+  \ selection\n- `severity` (string): Minimum severity: LOW, MEDIUM, HIGH\n\n**Commands:**\n- `bandit\
+  \ -r app/ -f json -o bandit.json`\n- `semgrep scan --config auto .`\n- `trivy fs --scanners vuln,secret,config\
+  \ .`\n- `npx eslint --format sarif .`\n- `gosec ./...`\n\n**Examples:**\n- bandit -r src/ -ll\n- semgrep\
+  \ scan --config p/owasp-top-ten .\n- trivy fs --scanners config --severity HIGH .\n\n### dast-scanning\n\
+  Dynamic scanning against running applications.\n\n**Parameters:**\n- `target` (string): Base URL of\
+  \ the running app\n- `report` (string): Report output path\n\n**Commands:**\n- `zap-baseline.py -t http://localhost:8080\
+  \ -r report.html`\n- `zap-full-scan.py -t http://localhost:8080 -J zap.json`\n- `nikto -h http://localhost:8080\
+  \ -o nikto.html`\n- `nuclei -u http://localhost:8080 -severity high,critical`\n- `zap-api-scan.py -t\
+  \ http://localhost:8080/v3/api-docs -f openapi`\n\n**Examples:**\n- zap-baseline.py -t http://localhost:8080\
+  \ -r report.html\n- nikto -h http://localhost:8080\n- zap-api-scan.py -t http://localhost:8080/api/swagger.json\
+  \ -f openapi\n\n## References\n- [OWASP ZAP Documentation](https://www.zaproxy.org/docs/)\n- [Bandit\
+  \ GitHub](https://github.com/PyCQA/bandit)\n- [Nuclei Documentation](https://docs.projectdiscovery.io/tools/nuclei/overview)"
 prompt: Act as Sast Dast and handle the task per the instructions.

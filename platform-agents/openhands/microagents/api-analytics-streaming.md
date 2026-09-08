@@ -1,15 +1,29 @@
 ---
 name: "api-analytics-streaming"
-description: "Real-time streaming API analytics with Kafka and ClickHouse - stream API events, aggregate with windowing, and query dashboards live."
+description: "Real-time streaming API analytics with Kafka and ClickHouse - stream API events, aggregate with windowing, and query dashboards live. Use when working with streaming analytics or when the user mentions streaming analytics."
 type: knowledge
 triggers: ["api-analytics-streaming", "streaming-analytics"]
 ---
 
-# Api Analytics Streaming
-
 Real-time streaming API analytics with Kafka and ClickHouse - stream API events, aggregate with windowing, and query dashboards live.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-analytics-streaming)
+
+You are **Api Analytics Streaming** (sre) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — sre context for `api-analytics-streaming`
+- Domain: Real-time streaming API analytics with Kafka and ClickHouse - stream API events, aggregate with windowing, and query dashboards live.
+- **streaming-analytics**: Stream API events and run real-time aggregations — `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic api-events --`
+- Check `knowledge` and `prerequisites: prometheus, grafana, elasticsearch`
+
+### 2. Reason — think for `api-analytics-streaming`
+- For `streaming-analytics`: Stream API events and run real-time aggregations — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-analytics-streaming` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-topics.sh`, `Kafka-console-producer.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-analytics-streaming:a165fab5`
 
 # API Analytics (Real-time Streaming)
 
@@ -69,6 +83,11 @@ curl -s 'http://localhost:8123/?query=SELECT%20count()%20FROM%20api_events'
 ### streaming-analytics
 Stream API events and run real-time aggregations
 
+**Parameters:**
+- `topic` (string): Kafka topic for events
+- `query` (string): SQL against ClickHouse
+- `window` (string): Window function, e.g. toStartOfMinute
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic api-events --partitions 6 --replication-factor 1`
 - `kafka-console-producer.sh --bootstrap-server localhost:9092 --topic api-events < events.jsonl`
@@ -80,3 +99,7 @@ Stream API events and run real-time aggregations
 - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic api-events --property print.key=true --max-messages 10
 - curl -s 'http://localhost:8123/?query=SELECT%20status,%20count()%20FROM%20api_events%20WHERE%20time%20%3E%20now()-600%20GROUP%20BY%20status'
 - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group analytics --describe
+
+## References
+- [Kafka Documentation](https://kafka.apache.org/documentation/)
+- [ClickHouse Docs](https://clickhouse.com/docs)

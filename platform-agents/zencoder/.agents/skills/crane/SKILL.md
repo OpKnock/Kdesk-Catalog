@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(crane:*)"
 
 Manipulates container images and registries with google/crane: copy, move, tag, export, and validate image manifests and digests.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (crane)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **crane** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `crane copy nginx:latest ghcr.io/nginx:latest`, `crane manifest nginx:latest | jq .`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devops context for `crane`
+- Domain: Manipulates container images and registries with google/crane: copy, move, tag, export, and validate image manifests and digests.
+- **registry-operations**: Copy, move, tag, and delete images across registries without a full daemon. — `crane copy nginx:latest ghcr.io/nginx:latest`
+- **manifest-and-digest**: Inspect manifests, digests, and export images for offline analysis. — `crane manifest nginx:latest | jq .`
+- Check `knowledge` and `prerequisites: crane`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `crane`
+- For `registry-operations`: Copy, move, tag, and delete images across registries without a full daemon. — decide which checks to run
+- For `manifest-and-digest`: Inspect manifests, digests, and export images for offline analysis. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `crane` tools
+- Tools: `Glob`, `Grep`, `Read`, `Crane` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `crane:89c9bbcb`
 
 # crane Registry Tooling
 

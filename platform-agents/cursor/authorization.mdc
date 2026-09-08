@@ -6,27 +6,27 @@ alwaysApply: false
 
 Configures Kubernetes RBAC roles and bindings with can-i verification, manages AWS IAM policies with permission simulation, and validates role-based access patterns for API endpoints.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (authorization)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Authorization** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `kubectl create role reader --verb=get,list --resource=pods`, `aws iam attach-user-policy --user-name deploy-bot --policy-a`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `authorization`
+- Domain: Configures Kubernetes RBAC roles and bindings with can-i verification, manages AWS IAM policies with permission simulation, and validates role-based access patterns for API endpoints.
+- **kubernetes-rbac**: Create and test RBAC roles and bindings. — `kubectl create role reader --verb=get,list --resource=pods`
+- **aws-iam**: Manage IAM policies, roles, and verify effective permissions. — `aws iam attach-user-policy --user-name deploy-bot --policy-arn arn:aws:iam::aws:`
+- **design-patterns**: Design RBAC/ABAC models with verification checks. — `curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $ADMIN" https`
+- Check `knowledge` and `prerequisites: aws, kubectl, mysql`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `authorization`
+- For `kubernetes-rbac`: Create and test RBAC roles and bindings. — decide which checks to run
+- For `aws-iam`: Manage IAM policies, roles, and verify effective permissions. — decide which checks to run
+- For `design-patterns`: Design RBAC/ABAC models with verification checks. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `authorization` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `authorization:e6838cb8`
 
 # Authorization
 

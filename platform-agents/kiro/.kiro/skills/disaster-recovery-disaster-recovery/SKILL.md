@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(aws:*) Bash(mongodump:*) Bash(mongorestore:*
 
 Plans and executes disaster recovery for databases and files: RTO/RPO design, pg_dump/restic/rclone backups, and restore drills.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (disaster-recovery-disaster-recovery)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **disaster-recovery-disaster-recovery** (devops) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `pg_dump -Fc -d mydb -f mydb.dump`, `restic init --repo s3:s3.amazonaws.com/bucket/restic`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devops context for `disaster-recovery-disaster-recovery`
+- Domain: Plans and executes disaster recovery for databases and files: RTO/RPO design, pg_dump/restic/rclone backups, and restore drills.
+- **database-backup**: Back up and restore PostgreSQL, MySQL, and MongoDB. — `pg_dump -Fc -d mydb -f mydb.dump`
+- **file-and-object-backup**: Encrypted incremental file backups and cloud object sync. — `restic init --repo s3:s3.amazonaws.com/bucket/restic`
+- Check `knowledge` and `prerequisites: aws, terraform, velero, postgresql`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `disaster-recovery-disaster-recovery`
+- For `database-backup`: Back up and restore PostgreSQL, MySQL, and MongoDB. — decide which checks to run
+- For `file-and-object-backup`: Encrypted incremental file backups and cloud object sync. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `disaster-recovery-disaster-recovery` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pg_dump`, `Pg_restore` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `disaster-recovery-disaster-recovery:0f1b5bb1`
 
 # Disaster Recovery Planning
 

@@ -1,8 +1,22 @@
-# Serialization
-
 Generates typed code from Protocol Buffers and FlatBuffers schemas, validates and pretty-prints JSON payloads, and compares wire formats for size and schema evolution fit. Supports Go, Python, TypeScript, and Rust code generation pipelines.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (serialization)
+
+You are **Serialization** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `serialization`
+- Domain: Generates typed code from Protocol Buffers and FlatBuffers schemas, validates and pretty-prints JSON payloads, and compares wire formats for size and schema evolution fit. Supports Go, Python, TypeScr
+- **serialization-toolchain**: Compile and inspect serialization schemas and payloads — `protoc --version`
+- Check `knowledge` and `prerequisites: protoc, flatc, python, jq`
+
+### 2. Reason — think for `serialization`
+- For `serialization-toolchain`: Compile and inspect serialization schemas and payloads — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `serialization` tools
+- Tools: `Glob`, `Grep`, `Read`, `Protoc`, `Flatc` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `serialization:3505a071`
 
 # Serialization
 
@@ -75,6 +89,11 @@ python -m json.tool payload.json > /dev/null && echo valid
 ### serialization-toolchain
 Compile and inspect serialization schemas and payloads
 
+**Parameters:**
+- `schema_file` (string): Input .proto or .fbs schema
+- `language` (string): Target language for code generation
+- `input_file` (string): Data file to validate or pretty-print
+
 **Commands:**
 - `protoc --version`
 - `protoc --python_out=. --proto_path=. user.proto`
@@ -86,3 +105,8 @@ Compile and inspect serialization schemas and payloads
 - protoc --go_out=. --go_opt=paths=source_relative user.proto
 - flatc --ts user.fbs
 - python -m json.tool payload.json
+
+## References
+- [Protocol Buffers Documentation](https://protobuf.dev/)
+- [FlatBuffers Documentation](https://flatbuffers.dev/)
+- [jq Manual](https://jqlang.github.io/jq/manual/)

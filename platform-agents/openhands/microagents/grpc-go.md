@@ -1,15 +1,29 @@
 ---
 name: "grpc-go"
-description: "gRPC servers and clients in Go: protoc-gen-go codegen, grpc.NewClient channels, interceptors, streaming RPCs, and vet-clean service wiring."
+description: "gRPC servers and clients in Go: protoc-gen-go codegen, grpc.NewClient channels, interceptors, streaming RPCs, and vet-clean service wiring. Use when working with go grpc server, api or when the user mentions go grpc server, api."
 type: knowledge
 triggers: ["grpc-go", "go-grpc-server"]
 ---
 
-# Grpc Go
-
 gRPC servers and clients in Go: protoc-gen-go codegen, grpc.NewClient channels, interceptors, streaming RPCs, and vet-clean service wiring.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (grpc-go)
+
+You are **Grpc Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `grpc-go`
+- Domain: gRPC servers and clients in Go: protoc-gen-go codegen, grpc.NewClient channels, interceptors, streaming RPCs, and vet-clean service wiring.
+- **go-grpc-server**: Build and run Go gRPC servers with registration, interceptors, and reflection. — `go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest`
+- Check `knowledge` and `prerequisites: protoc`
+
+### 2. Reason — think for `grpc-go`
+- For `go-grpc-server`: Build and run Go gRPC servers with registration, interceptors, and reflection. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `grpc-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Protoc` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grpc-go:c3303210`
 
 # gRPC Go
 
@@ -97,6 +111,11 @@ Agent: Add a timeout context and check the server address:
 ### go-grpc-server
 Build and run Go gRPC servers with registration, interceptors, and reflection.
 
+**Parameters:**
+- `listen_addr` (string): TCP address the server listens on, e.g. :50051.
+- `dial_target` (string): Client target address, e.g. localhost:50051.
+- `secure` (boolean): Use TLS credentials (true) or insecure credentials (false).
+
 **Commands:**
 - `go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest`
 - `go get google.golang.org/grpc@latest`
@@ -108,3 +127,7 @@ Build and run Go gRPC servers with registration, interceptors, and reflection.
 - go run ./server & grpcurl -plaintext localhost:50051 list
 - go test ./...
 - go vet ./...
+
+## References
+- [gRPC Go Docs](https://grpc.io/docs/languages/go/)
+- [grpc-go Reference](https://pkg.go.dev/google.golang.org/grpc)

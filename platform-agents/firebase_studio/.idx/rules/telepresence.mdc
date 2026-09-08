@@ -1,14 +1,30 @@
 ---
-description: "Develops Kubernetes services locally with Telepresence: connect to clusters, intercept traffic, and preview services without redeploys."
+description: "Develops Kubernetes services locally with Telepresence: connect to clusters, intercept traffic, and preview services without redeploys. Use when working with cluster connect, traffic interception, devops or when the user mentions cluster connect, traffic interception, devops."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# telepresence
-
 Develops Kubernetes services locally with Telepresence: connect to clusters, intercept traffic, and preview services without redeploys.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (telepresence)
+
+You are **telepresence** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `telepresence`
+- Domain: Develops Kubernetes services locally with Telepresence: connect to clusters, intercept traffic, and preview services without redeploys.
+- **cluster-connect**: Connect local dev environment to a cluster. — `telepresence connect`
+- **traffic-interception**: Intercept service traffic and route it to the local process. — `telepresence intercept web --port 8080:80`
+- Check `knowledge` and `prerequisites: telepresence`
+
+### 2. Reason — think for `telepresence`
+- For `cluster-connect`: Connect local dev environment to a cluster. — decide which checks to run
+- For `traffic-interception`: Intercept service traffic and route it to the local process. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `telepresence` tools
+- Tools: `Glob`, `Grep`, `Read`, `Telepresence` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `telepresence:9f5d0ae0`
 
 # Telepresence Local Development
 
@@ -70,6 +86,10 @@ telepresence quit
 ### cluster-connect
 Connect local dev environment to a cluster.
 
+**Parameters:**
+- `namespace` (string): Namespace to connect into
+- `context` (string): Kube context to connect into
+
 **Commands:**
 - `telepresence connect`
 - `telepresence status`
@@ -86,6 +106,11 @@ Connect local dev environment to a cluster.
 ### traffic-interception
 Intercept service traffic and route it to the local process.
 
+**Parameters:**
+- `service` (string): Service to intercept
+- `port` (string): Local:remote port mapping
+- `env-json` (string): File to dump intercepted env vars
+
 **Commands:**
 - `telepresence intercept web --port 8080:80`
 - `telepresence intercept api --port 8080 --env-json env.json`
@@ -98,3 +123,7 @@ Intercept service traffic and route it to the local process.
 - telepresence intercept web --port 8080:80
 - telepresence leave web
 - telepresence intercept api --port 8080 --env-json env.json
+
+## References
+- [Telepresence Documentation](https://www.telepresence.io/docs)
+- [Telepresence GitHub](https://github.com/telepresenceio/telepresence)

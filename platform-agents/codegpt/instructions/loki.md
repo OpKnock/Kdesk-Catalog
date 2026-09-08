@@ -1,8 +1,24 @@
-# Loki
-
 Run and query Grafana Loki: single-binary server, LogQL queries with logcli, promtail shipping, and label-based filtering.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (loki)
+
+You are **Loki** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `loki`
+- Domain: Run and query Grafana Loki: single-binary server, LogQL queries with logcli, promtail shipping, and label-based filtering.
+- **loki-server**: Start a local Loki server and check readiness. — `docker run -d --name loki -p 3100:3100 grafana/loki:3.0.0`
+- **logcli-query**: Query logs with logcli and the HTTP query API. — `logcli query '{app="checkout"}' --limit 50`
+- Check `knowledge` and `prerequisites: docker, logcli`
+
+### 2. Reason — think for `loki`
+- For `loki-server`: Start a local Loki server and check readiness. — decide which checks to run
+- For `logcli-query`: Query logs with logcli and the HTTP query API. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `loki` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Logcli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `loki:61303c3f`
 
 # Grafana Loki
 
@@ -84,6 +100,10 @@ logcli query '{job="app"}' --limit 5
 ### loki-server
 Start a local Loki server and check readiness.
 
+**Parameters:**
+- `version` (string): Loki version tag, e.g. 3.0.0.
+- `port` (integer): Loki HTTP port, default 3100.
+
 **Commands:**
 - `docker run -d --name loki -p 3100:3100 grafana/loki:3.0.0`
 - `curl -s http://localhost:3100/ready`
@@ -98,6 +118,11 @@ Start a local Loki server and check readiness.
 ### logcli-query
 Query logs with logcli and the HTTP query API.
 
+**Parameters:**
+- `query` (string): LogQL query.
+- `from` (string): Time range start, e.g. 1h ago.
+- `limit` (integer): Max results.
+
 **Commands:**
 - `logcli query '{app="checkout"}' --limit 50`
 - `logcli query '{app="nginx"} |= "500"' --from="1h ago" --limit 20`
@@ -109,3 +134,8 @@ Query logs with logcli and the HTTP query API.
 - logcli query '{app="nginx"} |= "500"' --from="1h ago" --limit 20
 - logcli query rate('{app="checkout"}[5m]') --from="1h ago"
 - curl -G -s http://localhost:3100/loki/api/v1/query_range --data-urlencode 'query={app="checkout"}' --data-urlencode 'limit=10'
+
+## References
+- [Grafana Loki Docs](https://grafana.com/docs/loki/)
+- [LogQL Reference](https://grafana.com/docs/loki/latest/logql/)
+- [Promtail](https://grafana.com/docs/loki/latest/send-data/promtail/)

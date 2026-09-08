@@ -2,35 +2,51 @@ title: deployment
 description: 'Performs Kubernetes deployments and rollouts: create, update, rollback, scale, and canary
   traffic shifts with real kubectl commands.'
 version: 2.0.0
-instructions: "# deployment\n\nPerforms Kubernetes deployments and rollouts: create, update, rollback,\
-  \ scale, and canary traffic shifts with real kubectl commands.\n\n## Instructions\n\n# Kubernetes Deployment\
-  \ Operations\n\nShip code to Kubernetes safely: create, update, roll back, and scale Deployments.\n\n\
-  ## What This Skill Does\n\n- Creates Deployments from images\n- Performs zero-downtime updates (RollingUpdate)\
-  \ and rollbacks\n- Scales manually or via HorizontalPodAutoscaler\n- Exposes workloads via Services\n\
-  - Diagnoses rollout stalls and CrashLoopBackOff\n\n## When to Use\n\n- Releasing a new image version\n\
-  - A deployment is failing and needs rollback or diagnosis\n- Adding autoscaling to handle load\n\n##\
-  \ Real Commands\n\n```bash\n# Create and update\nkubectl create deployment web --image=nginx:1.25\n\
-  kubectl set image deployment/web web=nginx:1.26\nkubectl annotate deployment/web kubernetes.io/change-cause=\"\
-  bump nginx 1.26\"\n\n# Rollout control\nkubectl rollout status deployment/web --timeout=120s\nkubectl\
-  \ rollout history deployment/web\nkubectl rollout undo deployment/web --to-revision=2\nkubectl rollout\
-  \ restart deployment/web\n\n# Scale and expose\nkubectl scale deployment/web --replicas=5\nkubectl autoscale\
-  \ deployment/web --min=2 --max=10 --cpu-percent=70\nkubectl expose deployment web --type=ClusterIP --port=80\
-  \ --target-port=8080\nkubectl get hpa,svc,pods -l app=web\n```\n\n## Manifest Notes\n\n```yaml\nspec:\n\
-  \  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxUnavailable: 1\n      maxSurge:\
+instructions: "Performs Kubernetes deployments and rollouts: create, update, rollback, scale, and canary\
+  \ traffic shifts with real kubectl commands.\n\n## Agentic Workflow: Read -> Reason -> Act (deployment)\n\
+  \nYou are **deployment** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — devops context for `deployment`\n- Domain: Performs Kubernetes deployments and rollouts:\
+  \ create, update, rollback, scale, and canary traffic shifts with real kubectl commands.\n- **deployment-rollouts**:\
+  \ Create and manage Deployments with rollout control, updates, and rollbacks. — `kubectl create deployment\
+  \ web --image=nginx:1.25`\n- **scaling-and-exposure**: Scale replicas and expose deployments as services\
+  \ or ingress routes. — `kubectl scale deployment/web --replicas=5`\n- Check `knowledge` and `prerequisites:\
+  \ kubectl`\n\n### 2. Reason — think for `deployment`\n- For `deployment-rollouts`: Create and manage\
+  \ Deployments with rollout control, updates, and rollbacks. — decide which checks to run\n- For `scaling-and-exposure`:\
+  \ Scale replicas and expose deployments as services or ingress routes. — decide which checks to run\n\
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute\
+  \ with `deployment` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `deployment:03b85df4`\n\
+  \n# Kubernetes Deployment Operations\n\nShip code to Kubernetes safely: create, update, roll back, and\
+  \ scale Deployments.\n\n## What This Skill Does\n\n- Creates Deployments from images\n- Performs zero-downtime\
+  \ updates (RollingUpdate) and rollbacks\n- Scales manually or via HorizontalPodAutoscaler\n- Exposes\
+  \ workloads via Services\n- Diagnoses rollout stalls and CrashLoopBackOff\n\n## When to Use\n\n- Releasing\
+  \ a new image version\n- A deployment is failing and needs rollback or diagnosis\n- Adding autoscaling\
+  \ to handle load\n\n## Real Commands\n\n```bash\n# Create and update\nkubectl create deployment web\
+  \ --image=nginx:1.25\nkubectl set image deployment/web web=nginx:1.26\nkubectl annotate deployment/web\
+  \ kubernetes.io/change-cause=\"bump nginx 1.26\"\n\n# Rollout control\nkubectl rollout status deployment/web\
+  \ --timeout=120s\nkubectl rollout history deployment/web\nkubectl rollout undo deployment/web --to-revision=2\n\
+  kubectl rollout restart deployment/web\n\n# Scale and expose\nkubectl scale deployment/web --replicas=5\n\
+  kubectl autoscale deployment/web --min=2 --max=10 --cpu-percent=70\nkubectl expose deployment web --type=ClusterIP\
+  \ --port=80 --target-port=8080\nkubectl get hpa,svc,pods -l app=web\n```\n\n## Manifest Notes\n\n```yaml\n\
+  spec:\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxUnavailable: 1\n      maxSurge:\
   \ 1\n```\n\n## Best Practices\n\n- Always add `kubernetes.io/change-cause` annotations for audit history\n\
   - Use `kubectl rollout status` with a timeout so CI fails fast\n- Prefer `set image` over editing manifests\
   \ in prod\n- Add liveness/readiness probes before doing rollouts\n- Set HPA with both CPU and custom\
   \ metrics; test scale-up behavior\n- Keep old revisions: bump `spec.revisionHistoryLimit` when needed\n\
   \n## Capabilities\n\n### deployment-rollouts\nCreate and manage Deployments with rollout control, updates,\
-  \ and rollbacks.\n\n**Commands:**\n- `kubectl create deployment web --image=nginx:1.25`\n- `kubectl\
-  \ set image deployment/web web=nginx:1.26`\n- `kubectl rollout status deployment/web`\n- `kubectl rollout\
-  \ history deployment/web`\n- `kubectl rollout undo deployment/web`\n- `kubectl rollout restart deployment/web`\n\
-  \n**Examples:**\n- kubectl set image deployment/web web=nginx:1.26\n- kubectl rollout undo deployment/web\
-  \ --to-revision=2\n- kubectl rollout status deployment/web --timeout=120s\n\n### scaling-and-exposure\n\
-  Scale replicas and expose deployments as services or ingress routes.\n\n**Commands:**\n- `kubectl scale\
-  \ deployment/web --replicas=5`\n- `kubectl autoscale deployment/web --min=2 --max=10 --cpu-percent=70`\n\
-  - `kubectl expose deployment web --type=LoadBalancer --port=80 --target-port=8080`\n- `kubectl get svc\
-  \ -l app=web`\n- `kubectl get hpa`\n\n**Examples:**\n- kubectl scale deployment/web --replicas=5\n-\
-  \ kubectl autoscale deployment/web --min=2 --max=10 --cpu-percent=70\n- kubectl expose deployment web\
-  \ --type=LoadBalancer --port=80"
+  \ and rollbacks.\n\n**Parameters:**\n- `deployment` (string): Deployment name, e.g. web\n- `image` (string):\
+  \ New container image reference\n- `revision` (integer): Rollback target revision\n\n**Commands:**\n\
+  - `kubectl create deployment web --image=nginx:1.25`\n- `kubectl set image deployment/web web=nginx:1.26`\n\
+  - `kubectl rollout status deployment/web`\n- `kubectl rollout history deployment/web`\n- `kubectl rollout\
+  \ undo deployment/web`\n- `kubectl rollout restart deployment/web`\n\n**Examples:**\n- kubectl set image\
+  \ deployment/web web=nginx:1.26\n- kubectl rollout undo deployment/web --to-revision=2\n- kubectl rollout\
+  \ status deployment/web --timeout=120s\n\n### scaling-and-exposure\nScale replicas and expose deployments\
+  \ as services or ingress routes.\n\n**Parameters:**\n- `replicas` (integer): Desired replica count\n\
+  - `min` (integer): Minimum HPA replicas\n- `max` (integer): Maximum HPA replicas\n\n**Commands:**\n\
+  - `kubectl scale deployment/web --replicas=5`\n- `kubectl autoscale deployment/web --min=2 --max=10\
+  \ --cpu-percent=70`\n- `kubectl expose deployment web --type=LoadBalancer --port=80 --target-port=8080`\n\
+  - `kubectl get svc -l app=web`\n- `kubectl get hpa`\n\n**Examples:**\n- kubectl scale deployment/web\
+  \ --replicas=5\n- kubectl autoscale deployment/web --min=2 --max=10 --cpu-percent=70\n- kubectl expose\
+  \ deployment web --type=LoadBalancer --port=80\n\n## References\n- [Kubernetes Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)\n\
+  - [Kubectl Rollout Reference](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_rollout/)"
 prompt: Act as deployment and handle the task per the instructions.

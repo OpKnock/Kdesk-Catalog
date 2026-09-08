@@ -1,5 +1,5 @@
 ---
-description: "Creation inference server agent. Manages Creation ML inference server."
+description: "Creation inference server agent. Manages Creation ML inference server. Use when working with Ml Creation Inference Server Agent or when the user mentions Ml Creation Inference Server Agent."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Creation Agent
 
 Creation inference server agent. Manages Creation ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (creation-agent)
+
+You are **Creation Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `creation-agent`
+- Domain: Creation inference server agent. Manages Creation ML inference server.
+- **Ml Creation Inference Server Agent**: Creation inference server agent. Manages Creation ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `creation-agent`
+- For `Ml Creation Inference Server Agent`: Creation inference server agent. Manages Creation ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `creation-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `creation-agent:c7443b31`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Creation inference server agent. Manages Creation ML inference server.
 - curl http://localhost:8080/create --data '{"architecture": "transformer"}'
 - python create.py --architecture 'transformer' --output model.py
 - python generate.py --config config.json --output model.pkl
+
+## References
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)
+- [Python Documentation](https://docs.python.org/3/)

@@ -2,30 +2,42 @@ title: Helm Charts
 description: 'Helm chart authoring and lifecycle: chart scaffolding, linting, template rendering, installs,
   upgrades, rollbacks, and values management.'
 version: 2.0.0
-instructions: "# Helm Charts\n\nHelm chart authoring and lifecycle: chart scaffolding, linting, template\
-  \ rendering, installs, upgrades, rollbacks, and values management.\n\n## Instructions\n\n# Helm Charts\n\
-  \nAuthor and operate Kubernetes applications with Helm.\n\n## What this skill does\n\n- Scaffolds charts\
-  \ with standard directory structure.\n- Lints charts and renders templates for review.\n- Installs,\
-  \ upgrades, and rolls back releases.\n- Manages values across environments.\n\n## When to use\n\n- Packaging\
-  \ an application for repeatable deployment.\n- Parameterizing manifests per environment.\n- Auditing\
-  \ what a chart will actually create before install.\n\n## Real commands\n\n```bash\n# Scaffold a chart\n\
-  helm create mychart\n\n# Lint\nhelm lint ./mychart\n\n# Render templates (no cluster needed)\nhelm template\
-  \ ./mychart\nhelm template ./mychart --values values-prod.yaml\n\n# Install\nhelm install myapp ./mychart\
-  \ -n default\n\n# Upgrade with values\nhelm upgrade --install myapp ./mychart --set image.tag=v2 --namespace\
-  \ default\n\n# Roll back and list\nhelm rollback myapp 1 -n default\nhelm list -n default\n```\n\n##\
-  \ Chart layout\n\n```text\nmychart/\n  Chart.yaml\n  values.yaml\n  charts/\n  templates/\n    deployment.yaml\n\
-  \    service.yaml\n    _helpers.tpl\n```\n\n## Example values\n\n```yaml\nreplicaCount: 3\nimage:\n\
-  \  repository: nginx\n  tag: 1.27\n  pullPolicy: IfNotPresent\nservice:\n  type: ClusterIP\n  port:\
-  \ 80\nresources:\n  limits:\n    cpu: 500m\n    memory: 512Mi\n```\n\n## Testing\n\n```bash\nhelm lint\
-  \ ./mychart && helm template ./mychart --dry-run\nhelm install myapp ./mychart -n default --dry-run\
-  \ --debug\n```\n\n## Best practices\n\n- Use `helm template` + `kubectl diff` before every prod upgrade.\n\
-  - Never edit a release's live manifests; always `helm upgrade`.\n- Pin images via values, not hardcoded\
-  \ tags in templates.\n- Add dependency charts with `helm dependency update` and commit Chart.lock.\n\
-  \n## Example exchange\n\n```\nUser: Preview what mychart would deploy with prod values.\nAgent: helm\
-  \ template ./mychart --values values-prod.yaml | kubectl diff -f -\n```\n\n## Capabilities\n\n### chart-lifecycle\n\
-  Create, lint, render, install, upgrade, and roll back Helm charts.\n\n**Commands:**\n- `helm create\
-  \ mychart`\n- `helm lint ./mychart`\n- `helm template ./mychart`\n- `helm install myapp ./mychart -n\
-  \ default`\n- `helm upgrade --install myapp ./mychart --set image.tag=v2 --namespace default`\n\n**Examples:**\n\
-  - helm template ./mychart --values values-prod.yaml | kubectl apply --dry-run=client -f -\n- helm rollback\
-  \ myapp 1 -n default\n- helm list -n default"
+instructions: "Helm chart authoring and lifecycle: chart scaffolding, linting, template rendering, installs,\
+  \ upgrades, rollbacks, and values management.\n\n## Agentic Workflow: Read -> Reason -> Act (helm-charts)\n\
+  \nYou are **Helm Charts** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `helm-charts`\n- Domain: Helm chart authoring and lifecycle: chart scaffolding,\
+  \ linting, template rendering, installs, upgrades, rollbacks, and values management.\n- **chart-lifecycle**:\
+  \ Create, lint, render, install, upgrade, and roll back Helm charts. — `helm create mychart`\n- Check\
+  \ `knowledge` and `prerequisites: helm`\n\n### 2. Reason — think for `helm-charts`\n- For `chart-lifecycle`:\
+  \ Create, lint, render, install, upgrade, and roll back Helm charts. — decide which checks to run\n\
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute\
+  \ with `helm-charts` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `helm-charts:eb3c1e4d`\n\
+  \n# Helm Charts\n\nAuthor and operate Kubernetes applications with Helm.\n\n## What this skill does\n\
+  \n- Scaffolds charts with standard directory structure.\n- Lints charts and renders templates for review.\n\
+  - Installs, upgrades, and rolls back releases.\n- Manages values across environments.\n\n## When to\
+  \ use\n\n- Packaging an application for repeatable deployment.\n- Parameterizing manifests per environment.\n\
+  - Auditing what a chart will actually create before install.\n\n## Real commands\n\n```bash\n# Scaffold\
+  \ a chart\nhelm create mychart\n\n# Lint\nhelm lint ./mychart\n\n# Render templates (no cluster needed)\n\
+  helm template ./mychart\nhelm template ./mychart --values values-prod.yaml\n\n# Install\nhelm install\
+  \ myapp ./mychart -n default\n\n# Upgrade with values\nhelm upgrade --install myapp ./mychart --set\
+  \ image.tag=v2 --namespace default\n\n# Roll back and list\nhelm rollback myapp 1 -n default\nhelm list\
+  \ -n default\n```\n\n## Chart layout\n\n```text\nmychart/\n  Chart.yaml\n  values.yaml\n  charts/\n\
+  \  templates/\n    deployment.yaml\n    service.yaml\n    _helpers.tpl\n```\n\n## Example values\n\n\
+  ```yaml\nreplicaCount: 3\nimage:\n  repository: nginx\n  tag: 1.27\n  pullPolicy: IfNotPresent\nservice:\n\
+  \  type: ClusterIP\n  port: 80\nresources:\n  limits:\n    cpu: 500m\n    memory: 512Mi\n```\n\n## Testing\n\
+  \n```bash\nhelm lint ./mychart && helm template ./mychart --dry-run\nhelm install myapp ./mychart -n\
+  \ default --dry-run --debug\n```\n\n## Best practices\n\n- Use `helm template` + `kubectl diff` before\
+  \ every prod upgrade.\n- Never edit a release's live manifests; always `helm upgrade`.\n- Pin images\
+  \ via values, not hardcoded tags in templates.\n- Add dependency charts with `helm dependency update`\
+  \ and commit Chart.lock.\n\n## Example exchange\n\n```\nUser: Preview what mychart would deploy with\
+  \ prod values.\nAgent: helm template ./mychart --values values-prod.yaml | kubectl diff -f -\n```\n\n\
+  ## Capabilities\n\n### chart-lifecycle\nCreate, lint, render, install, upgrade, and roll back Helm charts.\n\
+  \n**Parameters:**\n- `chart_path` (string): Path to the chart directory.\n- `release_name` (string):\
+  \ Release name for install/upgrade.\n- `values_file` (string): YAML values file to merge.\n\n**Commands:**\n\
+  - `helm create mychart`\n- `helm lint ./mychart`\n- `helm template ./mychart`\n- `helm install myapp\
+  \ ./mychart -n default`\n- `helm upgrade --install myapp ./mychart --set image.tag=v2 --namespace default`\n\
+  \n**Examples:**\n- helm template ./mychart --values values-prod.yaml | kubectl apply --dry-run=client\
+  \ -f -\n- helm rollback myapp 1 -n default\n- helm list -n default\n\n## References\n- [Helm Docs](https://helm.sh/docs/)\n\
+  - [Chart Template Guide](https://helm.sh/docs/chart_template_guide/)"
 prompt: Act as Helm Charts and handle the task per the instructions.

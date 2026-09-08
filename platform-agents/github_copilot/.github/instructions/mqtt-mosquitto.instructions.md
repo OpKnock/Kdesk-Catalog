@@ -4,27 +4,23 @@ applyTo: "**/*.r **/*.sh"
 
 Run and manage the Mosquitto MQTT broker: config, pub/sub clients, password files, and TLS listeners.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (mqtt-mosquitto)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Mqtt Mosquitto** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `mosquitto -c /etc/mosquitto/mosquitto.conf`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `mqtt-mosquitto`
+- Domain: Run and manage the Mosquitto MQTT broker: config, pub/sub clients, password files, and TLS listeners.
+- **mosquitto-operations**: Run the mosquitto broker and use mosquitto_pub/mosquitto_sub clients with QoS, retained messages and — `mosquitto -c /etc/mosquitto/mosquitto.conf`
+- Check `knowledge` and `prerequisites: mosquitto, mosquitto_passwd, mosquitto_pub, mosquitto_sub`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `mqtt-mosquitto`
+- For `mosquitto-operations`: Run the mosquitto broker and use mosquitto_pub/mosquitto_sub clients with QoS, retained messages and TLS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `mqtt-mosquitto` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mosquitto`, `Mosquitto_pub` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mqtt-mosquitto:293856b3`
 
 # Mosquitto
 

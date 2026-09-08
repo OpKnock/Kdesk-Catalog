@@ -6,27 +6,23 @@ globs: ["**/*.py", "**/*.r", "**/*.sh"]
 
 Implements the Builder pattern in Python: constructing complex objects step-by-step with fluent APIs.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (builder)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Builder** (patterns/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `python -m venv .venv && .venv/Scripts/activate`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — patterns context for `builder`
+- Domain: Implements the Builder pattern in Python: constructing complex objects step-by-step with fluent APIs.
+- **python**: Implement and test Builder pattern examples. — `python -m venv .venv && .venv/Scripts/activate`
+- Check `knowledge` and `prerequisites: python`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `builder`
+- For `python`: Implement and test Builder pattern examples. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `builder` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `builder:390b71a1`
 
 # Builder Pattern
 

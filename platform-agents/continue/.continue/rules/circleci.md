@@ -1,15 +1,31 @@
 ---
 name: "Circleci"
-description: "Build, validate, and debug CircleCI pipelines with the circleci CLI, including orbs and local execution."
+description: "Build, validate, and debug CircleCI pipelines with the circleci CLI, including orbs and local execution. Use when working with pipeline validate, orbs and runs, api or when the user mentions pipeline validate, orbs and runs, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Circleci
-
 Build, validate, and debug CircleCI pipelines with the circleci CLI, including orbs and local execution.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (circleci)
+
+You are **Circleci** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `circleci`
+- Domain: Build, validate, and debug CircleCI pipelines with the circleci CLI, including orbs and local execution.
+- **pipeline-validate**: Validate, process, and inspect CircleCI config files — `circleci config validate`
+- **orbs-and-runs**: Manage orbs and run jobs locally with the CircleCI CLI — `circleci orb publish orb.yml myorg/myorb@0.0.1`
+- Check `knowledge` and `prerequisites: circleci`
+
+### 2. Reason — think for `circleci`
+- For `pipeline-validate`: Validate, process, and inspect CircleCI config files — decide which checks to run
+- For `orbs-and-runs`: Manage orbs and run jobs locally with the CircleCI CLI — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `circleci` tools
+- Tools: `Glob`, `Grep`, `Read`, `Circleci` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `circleci:6d8dcaca`
 
 # CircleCI
 
@@ -91,6 +107,9 @@ circleci config pack .circleci/config | circleci config validate
 ### pipeline-validate
 Validate, process, and inspect CircleCI config files
 
+**Parameters:**
+- `config_path` (string): Path to config.yml, default .circleci/config.yml
+
 **Commands:**
 - `circleci config validate`
 - `circleci config validate .circleci/config.yml`
@@ -105,6 +124,10 @@ Validate, process, and inspect CircleCI config files
 ### orbs-and-runs
 Manage orbs and run jobs locally with the CircleCI CLI
 
+**Parameters:**
+- `job` (string): Job name to execute locally
+- `orb_ref` (string): Orb reference like namespace/orb@version
+
 **Commands:**
 - `circleci orb publish orb.yml myorg/myorb@0.0.1`
 - `circleci orb validate orb.yml`
@@ -116,3 +139,7 @@ Manage orbs and run jobs locally with the CircleCI CLI
 - circleci orb validate my-orb.yml && circleci orb publish my-orb.yml myorg/api-orb@1.0.0
 - circleci local execute --job build
 - circleci orb list myorg | grep api
+
+## References
+- [CircleCI CLI Docs](https://circleci.com/docs/local-cli/)
+- [CircleCI Config Docs](https://circleci.com/docs/configuration-reference/)

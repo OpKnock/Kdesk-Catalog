@@ -2,8 +2,19 @@ title: Ktor Auth
 description: 'Secure Ktor applications: JWT bearer validation, Basic auth, session auth, and protected-route
   testing with curl.'
 version: 2.0.0
-instructions: "# Ktor Auth\n\nSecure Ktor applications: JWT bearer validation, Basic auth, session auth,\
-  \ and protected-route testing with curl.\n\n## Instructions\n\n# Ktor Auth\n\nProtect Ktor routes with\
+instructions: "Secure Ktor applications: JWT bearer validation, Basic auth, session auth, and protected-route\
+  \ testing with curl.\n\n## Agentic Workflow: Read -> Reason -> Act (ktor-auth)\n\nYou are **Ktor Auth**\
+  \ (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read\
+  \ — api context for `ktor-auth`\n- Domain: Secure Ktor applications: JWT bearer validation, Basic auth,\
+  \ session auth, and protected-route testing with curl.\n- **jwt-auth**: Configure and test JWT authentication\
+  \ in Ktor. — `./gradlew run`\n- **basic-auth**: Configure Basic auth and test credentials via curl.\
+  \ — `curl -s -u alice:password http://localhost:8080/basic`\n- Check `knowledge` and `prerequisites:\
+  \ ./gradlew`\n\n### 2. Reason — think for `ktor-auth`\n- For `jwt-auth`: Configure and test JWT authentication\
+  \ in Ktor. — decide which checks to run\n- For `basic-auth`: Configure Basic auth and test credentials\
+  \ via curl. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `ktor-auth` tools\n- Tools: `Glob`, `Grep`, `Read`, `./gradlew`,\
+  \ `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `ktor-auth:47820f1e`\n\n# Ktor Auth\n\nProtect Ktor routes with\
   \ JWT, Basic, and session authentication.\n\n## What this skill does\n\n- Adds JWT bearer validation\
   \ with HS256/RS256 keys.\n- Adds Basic auth for simple service credentials.\n- Tests 401/200 behavior\
   \ with curl.\n\n## When to use\n\n- Securing Ktor APIs behind bearer tokens.\n- Service-to-service auth\
@@ -21,15 +32,18 @@ instructions: "# Ktor Auth\n\nSecure Ktor applications: JWT bearer validation, B
   alice\", \"admin\")) }\n    }\n}\n```\n\n## Testing\n\n```bash\n./gradlew test\n```\n\n## Best practices\n\
   \n- Verify signature AND claims (exp, iss, aud) in the validate block.\n- Use JWK providers for RS256;\
   \ rotate secrets without redeploys.\n- Return 401 for missing/invalid, 403 for valid-but-forbidden.\n\
-  \n## Capabilities\n\n### jwt-auth\nConfigure and test JWT authentication in Ktor.\n\n**Commands:**\n\
-  - `./gradlew run`\n- `curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/me`\n- `curl -s\
-  \ -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZSJ9.signature' http://localhost:8080/me`\n\
-  - `curl -s -H 'Authorization: Bearer $TOKEN' http://localhost:8080/me | jq .`\n\n**Examples:**\n- curl\
-  \ -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/me\n- curl -s -H 'Authorization: Bearer\
-  \ $TOKEN' http://localhost:8080/me\n- ./gradlew run\n\n### basic-auth\nConfigure Basic auth and test\
-  \ credentials via curl.\n\n**Commands:**\n- `curl -s -u alice:password http://localhost:8080/basic`\n\
-  - `curl -s -o /dev/null -w '%{http_code}\\n' -u alice:wrong http://localhost:8080/basic`\n- `curl -s\
-  \ -H 'Authorization: Basic YWxpY2U6cGFzc3dvcmQ=' http://localhost:8080/basic`\n- `./gradlew test`\n\n\
-  **Examples:**\n- curl -s -u alice:password http://localhost:8080/basic\n- curl -s -o /dev/null -w '%{http_code}\\\
-  n' -u alice:wrong http://localhost:8080/basic\n- ./gradlew test"
+  \n## Capabilities\n\n### jwt-auth\nConfigure and test JWT authentication in Ktor.\n\n**Parameters:**\n\
+  - `token` (string): JWT bearer token.\n- `endpoint` (string): Protected path.\n\n**Commands:**\n- `./gradlew\
+  \ run`\n- `curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/me`\n- `curl -s -H 'Authorization:\
+  \ Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGljZSJ9.signature' http://localhost:8080/me`\n- `curl -s\
+  \ -H 'Authorization: Bearer $TOKEN' http://localhost:8080/me | jq .`\n\n**Examples:**\n- curl -s -o\
+  \ /dev/null -w '%{http_code}\\n' http://localhost:8080/me\n- curl -s -H 'Authorization: Bearer $TOKEN'\
+  \ http://localhost:8080/me\n- ./gradlew run\n\n### basic-auth\nConfigure Basic auth and test credentials\
+  \ via curl.\n\n**Parameters:**\n- `username` (string): Basic auth user.\n- `password` (string): Basic\
+  \ auth password.\n\n**Commands:**\n- `curl -s -u alice:password http://localhost:8080/basic`\n- `curl\
+  \ -s -o /dev/null -w '%{http_code}\\n' -u alice:wrong http://localhost:8080/basic`\n- `curl -s -H 'Authorization:\
+  \ Basic YWxpY2U6cGFzc3dvcmQ=' http://localhost:8080/basic`\n- `./gradlew test`\n\n**Examples:**\n- curl\
+  \ -s -u alice:password http://localhost:8080/basic\n- curl -s -o /dev/null -w '%{http_code}\\n' -u alice:wrong\
+  \ http://localhost:8080/basic\n- ./gradlew test\n\n## References\n- [Ktor Authentication](https://ktor.io/docs/server-authentication.html)\n\
+  - [Ktor JWT](https://ktor.io/docs/server-jwt.html)"
 prompt: Act as Ktor Auth and handle the task per the instructions.

@@ -1,8 +1,22 @@
-# Vegeta
-
 HTTP load testing with Vegeta: attack targets at fixed or ramp rates, analyze latency histograms, error rates, and generate HTML plots.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (vegeta)
+
+You are **Vegeta** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `vegeta`
+- Domain: HTTP load testing with Vegeta: attack targets at fixed or ramp rates, analyze latency histograms, error rates, and generate HTML plots.
+- **load-testing**: Run HTTP attacks against API targets and produce reports — `vegeta attack -targets=targets.txt -rate=100 -duration=30s | vegeta report`
+- Check `knowledge` and `prerequisites: vegeta`
+
+### 2. Reason — think for `vegeta`
+- For `load-testing`: Run HTTP attacks against API targets and produce reports — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `vegeta` tools
+- Tools: `Glob`, `Grep`, `Read`, `Vegeta` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vegeta:ce491eda`
 
 # Vegeta
 
@@ -84,6 +98,11 @@ vegeta attack -targets=targets.txt -rate=10 -duration=5s | vegeta report
 ### load-testing
 Run HTTP attacks against API targets and produce reports
 
+**Parameters:**
+- `rate` (integer): Requests per second; 0 means unlimited
+- `duration` (string): Attack duration e.g. 30s, 5m, 1h
+- `targets` (string): File with HTTP method, URL, headers, and optional body per target
+
 **Commands:**
 - `vegeta attack -targets=targets.txt -rate=100 -duration=30s | vegeta report`
 - `vegeta attack -rate=50 -duration=10s -targets=urls.txt | vegeta plot > plot.html`
@@ -95,3 +114,7 @@ Run HTTP attacks against API targets and produce reports
 - vegeta attack -targets=targets.txt -rate=200 -duration=2m | vegeta report -type=json > report.json
 - vegeta encode --to=gob < results.bin > results.gob
 - vegeta attack -name=soak-test -rate=25 -duration=1h -targets=urls.txt | vegeta report
+
+## References
+- [Vegeta README](https://github.com/tsenart/vegeta)
+- [Vegeta pkg.go.dev](https://pkg.go.dev/github.com/tsenart/vegeta/v12/lib)

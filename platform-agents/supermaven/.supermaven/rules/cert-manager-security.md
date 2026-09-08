@@ -1,8 +1,24 @@
-# cert-manager-security
-
 Issues, renews, and troubleshoots TLS certificates in Kubernetes with cert-manager, ACME issuers, and the cmctl CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cert-manager-security)
+
+You are **cert-manager-security** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `cert-manager-security`
+- Domain: Issues, renews, and troubleshoots TLS certificates in Kubernetes with cert-manager, ACME issuers, and the cmctl CLI.
+- **cmctl-management**: Inspect and manage certificates, issuers, and renewals with cmctl. — `kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/`
+- **acme-issuer-setup**: Configure ClusterIssuers with Let's Encrypt and manage issuance resources. — `kubectl get clusterissuers`
+- Check `knowledge` and `prerequisites: cmctl, kubectl`
+
+### 2. Reason — think for `cert-manager-security`
+- For `cmctl-management`: Inspect and manage certificates, issuers, and renewals with cmctl. — decide which checks to run
+- For `acme-issuer-setup`: Configure ClusterIssuers with Let's Encrypt and manage issuance resources. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cert-manager-security` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Cmctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cert-manager-security:19ac58ac`
 
 # cert-manager
 
@@ -74,6 +90,10 @@ spec:
 ### cmctl-management
 Inspect and manage certificates, issuers, and renewals with cmctl.
 
+**Parameters:**
+- `name` (string): Certificate resource name
+- `namespace` (string): Namespace of the certificate
+
 **Commands:**
 - `kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml`
 - `kubectl get certificates -A`
@@ -90,6 +110,10 @@ Inspect and manage certificates, issuers, and renewals with cmctl.
 ### acme-issuer-setup
 Configure ClusterIssuers with Let's Encrypt and manage issuance resources.
 
+**Parameters:**
+- `issuerFile` (string): ClusterIssuer manifest path
+- `server` (string): ACME directory URL, e.g. https://acme-v02.api.letsencrypt.org/directory
+
 **Commands:**
 - `kubectl get clusterissuers`
 - `kubectl apply -f cluster-issuer-letsencrypt.yaml`
@@ -101,3 +125,7 @@ Configure ClusterIssuers with Let's Encrypt and manage issuance resources.
 - kubectl apply -f cluster-issuer-letsencrypt.yaml
 - kubectl get orders.acme.cert-manager.io -n istio-system
 - kubectl get certificaterequests -A
+
+## References
+- [cert-manager Documentation](https://cert-manager.io/docs/)
+- [cmctl Reference](https://cert-manager.io/docs/usage/cmctl/)

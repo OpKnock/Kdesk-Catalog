@@ -1,15 +1,31 @@
 ---
 name: "circuit-breaker-implementer-circuit-breaker-implementer"
-description: "Implements circuit breakers and bulkheads in services with resilience4j, Hystrix-style patterns, and fallback strategies."
+description: "Implements circuit breakers and bulkheads in services with resilience4j, Hystrix-style patterns, and fallback strategies. Use when working with resilience4j, failure probing or when the user mentions resilience4j, failure probing."
 globs: ["**/*.java", "**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# circuit-breaker-implementer-circuit-breaker-implementer
-
 Implements circuit breakers and bulkheads in services with resilience4j, Hystrix-style patterns, and fallback strategies.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (circuit-breaker-implementer-circuit-breaker-implementer)
+
+You are **circuit-breaker-implementer-circuit-breaker-implementer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `circuit-breaker-implementer-circuit-breaker-implementer`
+- Domain: Implements circuit breakers and bulkheads in services with resilience4j, Hystrix-style patterns, and fallback strategies.
+- **resilience4j**: Configure circuit breaker, retry, and bulkhead policies. — `mvn dependency:tree | grep resilience4j`
+- **failure-probing**: Verify breaker behavior under failure. — `curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/orders`
+- Check `knowledge` and `prerequisites: node.js, python, resilience4j, redis`
+
+### 2. Reason — think for `circuit-breaker-implementer-circuit-breaker-implementer`
+- For `resilience4j`: Configure circuit breaker, retry, and bulkhead policies. — decide which checks to run
+- For `failure-probing`: Verify breaker behavior under failure. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `circuit-breaker-implementer-circuit-breaker-implementer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `Gradle` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `circuit-breaker-implementer-circuit-breaker-implementer:ff17d589`
 
 # Circuit Breaker Implementer
 
@@ -81,6 +97,10 @@ public List<Order> ordersFallback(Exception ex) {
 ### resilience4j
 Configure circuit breaker, retry, and bulkhead policies.
 
+**Parameters:**
+- `service` (string): Downstream service name
+- `threshold` (number): Failure rate threshold
+
 **Commands:**
 - `mvn dependency:tree | grep resilience4j`
 - `gradle dependencies | grep resilience4j`
@@ -95,6 +115,10 @@ Configure circuit breaker, retry, and bulkhead policies.
 ### failure-probing
 Verify breaker behavior under failure.
 
+**Parameters:**
+- `endpoint` (string): Protected endpoint
+- `concurrency` (integer): Concurrent requests for load probing
+
 **Commands:**
 - `curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/orders`
 - `ab -n 500 -c 20 http://localhost:8080/api/orders`
@@ -104,3 +128,7 @@ Verify breaker behavior under failure.
 **Examples:**
 - ab -n 500 -c 20 -H "Accept: application/json" http://localhost:8080/api/orders
 - curl -s http://localhost:8080/actuator/circuitbreakerevents | python -m json.tool
+
+## References
+- [Resilience4j Docs](https://resilience4j.readme.io)
+- [Circuit Breaker Pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)

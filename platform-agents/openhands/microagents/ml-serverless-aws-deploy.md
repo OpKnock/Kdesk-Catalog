@@ -1,6 +1,6 @@
 ---
 name: "ml-serverless-aws-deploy"
-description: "AWS Serverless deployment agent for ML serverless on AWS."
+description: "AWS Serverless deployment agent for ML serverless on AWS. Use when working with Ml Serverless Aws Deploy, deployment or when the user mentions Ml Serverless Aws Deploy, deployment."
 type: knowledge
 triggers: ["ml-serverless-aws-deploy", "ml serverless aws deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-serverless-aws-deploy", "ml serverless aws deploy"]
 # Ml Serverless Aws Deploy
 
 AWS Serverless deployment agent for ML serverless on AWS.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-serverless-aws-deploy)
+
+You are **Ml Serverless Aws Deploy** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-serverless-aws-deploy`
+- Domain: AWS Serverless deployment agent for ML serverless on AWS.
+- **Ml Serverless Aws Deploy**: AWS Serverless deployment agent for ML serverless on AWS. — `Step Functions: aws stepfunctions start-execution --state-machine-arn arn:aws:st`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-serverless-aws-deploy`
+- For `Ml Serverless Aws Deploy`: AWS Serverless deployment agent for ML serverless on AWS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-serverless-aws-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Step`, `Lambda` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-serverless-aws-deploy:b74930d4`
 
 ## Instructions
 
@@ -27,3 +45,8 @@ AWS Serverless deployment agent for ML serverless on AWS.
 - Lambda: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler handler.predict --zip-file fileb://deploy.zip
 - API Gateway: aws apigateway create-rest-api --name ml-api
 - Step Functions: aws stepfunctions start-execution --state-machine-arn arn:aws:states:us-east-1:123456789012:stateMachine:ml-pipeline
+
+## References
+- [AWS Documentation](https://docs.aws.amazon.com/)
+- [AWS Lambda Documentation](https://docs.aws.amazon.com/lambda/)
+- [TensorFlow Serving](https://www.tensorflow.org/serving)

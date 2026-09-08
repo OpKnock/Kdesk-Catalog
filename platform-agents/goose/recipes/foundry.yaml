@@ -2,8 +2,21 @@ title: Foundry
 description: 'Develops Solidity with Foundry: forge build/test/fuzz, cast interactions, anvil local node,
   and deployment scripts.'
 version: 2.0.0
-instructions: "# Foundry\n\nDevelops Solidity with Foundry: forge build/test/fuzz, cast interactions,\
-  \ anvil local node, and deployment scripts.\n\n## Instructions\n\n# Foundry\n\nRust-based Solidity development\
+instructions: "Develops Solidity with Foundry: forge build/test/fuzz, cast interactions, anvil local node,\
+  \ and deployment scripts.\n\n## Agentic Workflow: Read -> Reason -> Act (foundry)\n\nYou are **Foundry**\
+  \ (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n###\
+  \ 1. Read — code-quality context for `foundry`\n- Domain: Develops Solidity with Foundry: forge build/test/fuzz,\
+  \ cast interactions, anvil local node, and deployment scripts.\n- **forge-build-test**: Build, test,\
+  \ and fuzz contracts. — `forge init myapp`\n- **cast-ops**: Interact with chains and contracts. — `cast\
+  \ call 0xToken --rpc-url $RPC_URL \"symbol()(string)\"`\n- **forge-deploy**: Deploy contracts and run\
+  \ scripts. — `forge create src/Token.sol:Token --rpc-url $RPC_URL --private-key $PK`\n- Check `knowledge`\
+  \ and `prerequisites: anvil, cast, forge`\n\n### 2. Reason — think for `foundry`\n- For `forge-build-test`:\
+  \ Build, test, and fuzz contracts. — decide which checks to run\n- For `cast-ops`: Interact with chains\
+  \ and contracts. — decide which checks to run\n- For `forge-deploy`: Deploy contracts and run scripts.\
+  \ — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for\
+  \ your inputs\n\n### 3. Act — execute with `foundry` tools\n- Tools: `Glob`, `Grep`, `Read`, `Forge`,\
+  \ `Cast` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `foundry:21815d5b`\n\n# Foundry\n\nRust-based Solidity development\
   \ toolkit.\n\n## When to Use\n\n- Fast contract compilation and tests\n- Fuzz and invariant testing\n\
   - On-chain interaction without custom tooling\n- Local forking with anvil\n\n## Commands\n\n```bash\n\
   # Project\nforge init myapp\nforge build\nforge build --sizes\n\n# Test\nforge test\nforge test -vvv\n\
@@ -17,17 +30,21 @@ instructions: "# Foundry\n\nDevelops Solidity with Foundry: forge build/test/fuz
   \ put private keys in command history; use env vars\n- Use vm.prank/vm.expectRevert in tests\n- Run\
   \ fuzz campaigns before audits\n- Test against an anvil fork of mainnet for integration\n- Use cast\
   \ sig to double-check selectors\n- Keep scripts idempotent; verify with --slow on mainnet\n\n## Capabilities\n\
-  \n### forge-build-test\nBuild, test, and fuzz contracts.\n\n**Commands:**\n- `forge init myapp`\n- `forge\
-  \ build`\n- `forge test`\n- `forge test -vvv`\n- `forge test --fuzz-runs 1000`\n\n**Examples:**\n- forge\
-  \ test --match-test testOnlyOwner -vvvv\n- forge test --gas-report\n- forge build --sizes\n\n### cast-ops\n\
-  Interact with chains and contracts.\n\n**Commands:**\n- `cast call 0xToken --rpc-url $RPC_URL \"symbol()(string)\"\
-  `\n- `cast send 0xToken --private-key $PK \"transfer(address,uint256)\" 0xTo 1000`\n- `cast balance\
-  \ 0xAddress`\n- `cast block latest`\n- `cast code 0xContract`\n\n**Examples:**\n- cast call --rpc-url\
-  \ $RPC_URL 0xToken \"balanceOf(address)(uint256)\" 0xAccount\n- cast receipt 0xtxhash --rpc-url $RPC_URL\n\
-  - cast sig \"transfer(address,uint256)\"\n\n### forge-deploy\nDeploy contracts and run scripts.\n\n\
-  **Commands:**\n- `forge create src/Token.sol:Token --rpc-url $RPC_URL --private-key $PK`\n- `forge script\
-  \ script/Deploy.s.sol:Deploy --rpc-url $RPC_URL --broadcast`\n- `forge script script/Deploy.s.sol --fork-url\
-  \ $RPC_URL --verify`\n- `anvil`\n\n**Examples:**\n- forge script script/Deploy.s.sol --rpc-url $RPC_URL\
-  \ --broadcast --slow\n- anvil --fork-url $RPC_URL\n- forge create src/Token.sol:Token --constructor-args\
-  \ \"MyToken\" \"MTK\" 18"
+  \n### forge-build-test\nBuild, test, and fuzz contracts.\n\n**Parameters:**\n- `match-test` (string):\
+  \ Test name filter\n- `fuzz-runs` (integer): Fuzz iterations\n\n**Commands:**\n- `forge init myapp`\n\
+  - `forge build`\n- `forge test`\n- `forge test -vvv`\n- `forge test --fuzz-runs 1000`\n\n**Examples:**\n\
+  - forge test --match-test testOnlyOwner -vvvv\n- forge test --gas-report\n- forge build --sizes\n\n\
+  ### cast-ops\nInteract with chains and contracts.\n\n**Parameters:**\n- `address` (string): Contract\
+  \ address\n- `signature` (string): Function signature\n- `rpc-url` (string): RPC endpoint\n\n**Commands:**\n\
+  - `cast call 0xToken --rpc-url $RPC_URL \"symbol()(string)\"`\n- `cast send 0xToken --private-key $PK\
+  \ \"transfer(address,uint256)\" 0xTo 1000`\n- `cast balance 0xAddress`\n- `cast block latest`\n- `cast\
+  \ code 0xContract`\n\n**Examples:**\n- cast call --rpc-url $RPC_URL 0xToken \"balanceOf(address)(uint256)\"\
+  \ 0xAccount\n- cast receipt 0xtxhash --rpc-url $RPC_URL\n- cast sig \"transfer(address,uint256)\"\n\n\
+  ### forge-deploy\nDeploy contracts and run scripts.\n\n**Parameters:**\n- `contract` (string): Contract\
+  \ path:Name\n- `broadcast` (boolean): Broadcast the transaction\n\n**Commands:**\n- `forge create src/Token.sol:Token\
+  \ --rpc-url $RPC_URL --private-key $PK`\n- `forge script script/Deploy.s.sol:Deploy --rpc-url $RPC_URL\
+  \ --broadcast`\n- `forge script script/Deploy.s.sol --fork-url $RPC_URL --verify`\n- `anvil`\n\n**Examples:**\n\
+  - forge script script/Deploy.s.sol --rpc-url $RPC_URL --broadcast --slow\n- anvil --fork-url $RPC_URL\n\
+  - forge create src/Token.sol:Token --constructor-args \"MyToken\" \"MTK\" 18\n\n## References\n- [Foundry\
+  \ Book](https://book.getfoundry.sh)\n- [Forge Test Reference](https://book.getfoundry.sh/forge/test-examples)"
 prompt: Act as Foundry and handle the task per the instructions.

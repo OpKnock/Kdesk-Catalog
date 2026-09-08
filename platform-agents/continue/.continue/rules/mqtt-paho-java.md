@@ -1,15 +1,29 @@
 ---
 name: "Mqtt Paho Java"
-description: "Build Java MQTT clients with Eclipse Paho Java: MqttClient API, callbacks, persistence and Maven setup."
+description: "Build Java MQTT clients with Eclipse Paho Java: MqttClient API, callbacks, persistence and Maven setup. Use when working with paho java client, api or when the user mentions paho java client, api."
 globs: ["**/*.java", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Mqtt Paho Java
-
 Build Java MQTT clients with Eclipse Paho Java: MqttClient API, callbacks, persistence and Maven setup.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (mqtt-paho-java)
+
+You are **Mqtt Paho Java** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `mqtt-paho-java`
+- Domain: Build Java MQTT clients with Eclipse Paho Java: MqttClient API, callbacks, persistence and Maven setup.
+- **paho-java-client**: Add the paho.mqttv3 dependency, write synchronous/async clients and manage connections in Maven proj — `mvn dependency:tree`
+- Check `knowledge` and `prerequisites: mvn`
+
+### 2. Reason — think for `mqtt-paho-java`
+- For `paho-java-client`: Add the paho.mqttv3 dependency, write synchronous/async clients and manage connections in Maven projects. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mqtt-paho-java` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mqtt-paho-java:df0b7bd6`
 
 # Paho MQTT Java
 
@@ -78,6 +92,11 @@ client.setCallback(new MqttCallback() {
 ### paho-java-client
 Add the paho.mqttv3 dependency, write synchronous/async clients and manage connections in Maven projects.
 
+**Parameters:**
+- `version` (string): paho.mqttv3 version, e.g. 1.2.5
+- `main_class` (string): Java main class to run via exec plugin
+- `broker_url` (string): tcp:// or ssl:// broker URL
+
 **Commands:**
 - `mvn dependency:tree`
 - `mvn compile`
@@ -89,3 +108,7 @@ Add the paho.mqttv3 dependency, write synchronous/async clients and manage conne
 - mvn dependency:tree -Dincludes=org.eclipse.paho
 - mvn package -DskipTests
 - mvn exec:java -Dexec.mainClass=com.example.Subscriber
+
+## References
+- [Paho Java client page](https://www.eclipse.org/paho/index.php?page=clients/java/index.php)
+- [Paho Java GitHub](https://github.com/eclipse/paho.mqtt.java)

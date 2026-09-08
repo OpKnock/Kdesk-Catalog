@@ -2,13 +2,23 @@ title: Firestore Realtime
 description: 'Firestore realtime updates: subscribe to document and collection snapshots, handle listener
   lifecycle, and debug sync lag.'
 version: 2.0.0
-instructions: "# Firestore Realtime\n\nFirestore realtime updates: subscribe to document and collection\
-  \ snapshots, handle listener lifecycle, and debug sync lag.\n\n## Instructions\n\n# Firestore Realtime\n\
-  \n## What this skill does\n\nFirestore pushes document changes to subscribed clients via snapshot listeners.\
-  \ `onSnapshot` fires on server updates, local writes, and cache events; listeners auto-reconnect and\
-  \ dedupe.\n\n## When to use\n\n- Chat, presence, or collaborative screens\n- Dashboards that must reflect\
-  \ DB state instantly\n- Any screen that should update without polling\n\n## Real commands\n\n```bash\n\
-  # Document listener\nnode -e \"const {onSnapshot,doc}=require('firebase/firestore');onSnapshot(doc(db,'orders','o1'),s=>console.log(s.data()));setTimeout(()=>{},10000)\"\
+instructions: "Firestore realtime updates: subscribe to document and collection snapshots, handle listener\
+  \ lifecycle, and debug sync lag.\n\n## Agentic Workflow: Read -> Reason -> Act (firestore-realtime)\n\
+  \nYou are **Firestore Realtime** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `firestore-realtime`\n- Domain: Firestore realtime updates: subscribe\
+  \ to document and collection snapshots, handle listener lifecycle, and debug sync lag.\n- **realtime-listeners**:\
+  \ Attach, manage, and debug Firestore snapshot listeners. — `node -e \"const {onSnapshot,doc}=require('firebase/firestore');onSnapshot(doc(db,`\n\
+  - Check `knowledge` and `prerequisites: firebase, grep, node`\n\n### 2. Reason — think for `firestore-realtime`\n\
+  - For `realtime-listeners`: Attach, manage, and debug Firestore snapshot listeners. — decide which checks\
+  \ to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3.\
+  \ Act — execute with `firestore-realtime` tools\n- Tools: `Glob`, `Read`, `Bash`, `Grep`, `Firebase`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `firestore-realtime:4f63807a`\n\n# Firestore Realtime\n\n## What this skill\
+  \ does\n\nFirestore pushes document changes to subscribed clients via snapshot listeners. `onSnapshot`\
+  \ fires on server updates, local writes, and cache events; listeners auto-reconnect and dedupe.\n\n\
+  ## When to use\n\n- Chat, presence, or collaborative screens\n- Dashboards that must reflect DB state\
+  \ instantly\n- Any screen that should update without polling\n\n## Real commands\n\n```bash\n# Document\
+  \ listener\nnode -e \"const {onSnapshot,doc}=require('firebase/firestore');onSnapshot(doc(db,'orders','o1'),s=>console.log(s.data()));setTimeout(()=>{},10000)\"\
   \n\n# Query listener with filter\nnode -e \"const {onSnapshot,collection,query,where}=require('firebase/firestore');onSnapshot(query(collection(db,'orders'),where('status','==','paid')),s=>console.log('size',s.size))\"\
   \n\n# Unsubscribe properly\nnode -e \"const unsub=onSnapshot(doc(db,'orders','o1'),()=>{});setTimeout(unsub,5000);console.log('unsubscribed')\"\
   \n\n# Find all listeners in code\n grep -rn 'onSnapshot' src/ | head -10\n```\n\n## Metadata handling\n\
@@ -20,11 +30,14 @@ instructions: "# Firestore Realtime\n\nFirestore realtime updates: subscribe to 
   - Prefer filtered queries over listening to whole collections.\n- Use `includeMetadataChanges` to distinguish\
   \ cache vs server events.\n- Cap concurrent listeners; each one is a connection/session on the backend.\n\
   - Handle listener errors: log, retry, and surface offline state.\n\n## Capabilities\n\n### realtime-listeners\n\
-  Attach, manage, and debug Firestore snapshot listeners.\n\n**Commands:**\n- `node -e \"const {onSnapshot,doc}=require('firebase/firestore');onSnapshot(doc(db,'orders','o1'),s=>console.log(s.data()));setTimeout(()=>{},10000)\"\
+  Attach, manage, and debug Firestore snapshot listeners.\n\n**Parameters:**\n- `document-path` (string):\
+  \ Document to listen to\n- `query-filter` (string): Where clause for collection listeners\n- `listener-name`\
+  \ (string): Label used in logs to identify the listener\n\n**Commands:**\n- `node -e \"const {onSnapshot,doc}=require('firebase/firestore');onSnapshot(doc(db,'orders','o1'),s=>console.log(s.data()));setTimeout(()=>{},10000)\"\
   `\n- `node -e \"const {onSnapshot,collection,query,where}=require('firebase/firestore');onSnapshot(query(collection(db,'orders'),where('status','==','paid')),s=>console.log('size',s.size))\"\
   `\n- `grep -rn 'onSnapshot' src/ | head -10`\n- `firebase emulators:start --only firestore`\n- `node\
   \ -e \"const unsub=onSnapshot(doc(db,'orders','o1'),()=>{});setTimeout(unsub,5000);console.log('unsubscribed')\"\
   `\n\n**Examples:**\n- node -e \"const {onSnapshot,doc}=require('firebase/firestore');onSnapshot(doc(db,'orders','o1'),s=>console.log(s.data()));setTimeout(()=>{},10000)\"\
   \n- node -e \"const {onSnapshot,collection,query,where}=require('firebase/firestore');onSnapshot(query(collection(db,'orders'),where('status','==','paid')),s=>console.log('size',s.size))\"\
-  \n- grep -rn 'onSnapshot' src/ | head -10"
+  \n- grep -rn 'onSnapshot' src/ | head -10\n\n## References\n- [Listen to realtime updates](https://firebase.google.com/docs/firestore/query-data/listen)\n\
+  - [Get realtime updates (web SDK)](https://firebase.google.com/docs/firestore/query-data/listen#web_2)"
 prompt: Act as Firestore Realtime and handle the task per the instructions.

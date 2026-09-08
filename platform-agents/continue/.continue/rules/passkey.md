@@ -1,15 +1,29 @@
 ---
 name: "Passkey"
-description: "Passkeys and WebAuthn: registration/authentication flows, relying party setup, and the SimpleWebAuthn libraries."
+description: "Passkeys and WebAuthn: registration/authentication flows, relying party setup, and the SimpleWebAuthn libraries. Use when working with passkey integration, api or when the user mentions passkey integration, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Passkey
-
 Passkeys and WebAuthn: registration/authentication flows, relying party setup, and the SimpleWebAuthn libraries.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (passkey)
+
+You are **Passkey** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `passkey`
+- Domain: Passkeys and WebAuthn: registration/authentication flows, relying party setup, and the SimpleWebAuthn libraries.
+- **passkey-integration**: Integrate WebAuthn passkeys into web apps: registration, authentication, and verification with Simpl — `npm install @simplewebauthn/server @simplewebauthn/browser`
+- Check `knowledge` and `prerequisites: npm`
+
+### 2. Reason — think for `passkey`
+- For `passkey-integration`: Integrate WebAuthn passkeys into web apps: registration, authentication, and verification with SimpleWebAuthn. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `passkey` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `passkey:a3cf3430`
 
 # Passkeys
 
@@ -63,6 +77,11 @@ const verification = await verifyRegistrationResponse({ response, expectedChalle
 ### passkey-integration
 Integrate WebAuthn passkeys into web apps: registration, authentication, and verification with SimpleWebAuthn.
 
+**Parameters:**
+- `rp_id` (string): Relying party ID (effective domain)
+- `rp_name` (string): Relying party display name
+- `origin` (string): Allowed origin(s) for attestation
+
 **Commands:**
 - `npm install @simplewebauthn/server @simplewebauthn/browser`
 - `npm install @simplewebauthn/server --save`
@@ -74,3 +93,7 @@ Integrate WebAuthn passkeys into web apps: registration, authentication, and ver
 - curl -s -X POST http://localhost:3000/register/start -d '{"email":"alice@example.com"}' -H 'Content-Type: application/json' | jq .
 - curl -s -X POST http://localhost:3000/login/start | jq '.options.publicKey'
 - npm install @simplewebauthn/server
+
+## References
+- [Passkeys on Google](https://developers.google.com/identity/passkeys)
+- [SimpleWebAuthn Docs](https://simplewebauthn.dev/docs/)

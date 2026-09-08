@@ -2,9 +2,19 @@ title: Gatling
 description: 'Load and performance testing with Gatling: write Scala simulations, run scenarios with the
   CLI, and parse HTML/JSON reports.'
 version: 2.0.0
-instructions: "# Gatling\n\nLoad and performance testing with Gatling: write Scala simulations, run scenarios\
-  \ with the CLI, and parse HTML/JSON reports.\n\n## Instructions\n\n# Gatling\n\n## What this skill does\n\
-  \nGatling is a Scala-based load testing tool with a code-first DSL. Simulations describe scenarios (users\
+instructions: "Load and performance testing with Gatling: write Scala simulations, run scenarios with\
+  \ the CLI, and parse HTML/JSON reports.\n\n## Agentic Workflow: Read -> Reason -> Act (gatling)\n\n\
+  You are **Gatling** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `gatling`\n- Domain: Load and performance testing with Gatling: write\
+  \ Scala simulations, run scenarios with the CLI, and parse HTML/JSON reports.\n- **gatling-simulations**:\
+  \ Author and run Gatling simulations, and inspect results. — `gatling.sh --simulation orders.Simulation\
+  \ --results-folder ./results`\n- Check `knowledge` and `prerequisites: gatling.sh, tail`\n\n### 2. Reason\
+  \ — think for `gatling`\n- For `gatling-simulations`: Author and run Gatling simulations, and inspect\
+  \ results. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `gatling` tools\n- Tools: `Glob`, `Grep`, `Read`, `Gatling.sh`,\
+  \ `Tail` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `gatling:43d87403`\n\n# Gatling\n\n## What this skill does\n\n\
+  Gatling is a Scala-based load testing tool with a code-first DSL. Simulations describe scenarios (users\
   \ ramping, injecting, asserting); the CLI runs them and renders HTML and JSON reports.\n\n## When to\
   \ use\n\n- Scripted load tests with assertions in CI\n- Ramp/steady-state soak testing\n- Comparing\
   \ build-to-build performance\n\n## Real commands\n\n```bash\n# List available simulations\ngatling.sh\
@@ -22,9 +32,12 @@ instructions: "# Gatling\n\nLoad and performance testing with Gatling: write Sca
   \ vary per environment.\n- Use `--run-description` to tag builds for report comparison.\n- Keep simulations\
   \ short in smoke runs; soak separately.\n- Store simulation.log and global_stats.json for trend dashboards.\n\
   \n## Capabilities\n\n### gatling-simulations\nAuthor and run Gatling simulations, and inspect results.\n\
-  \n**Commands:**\n- `gatling.sh --simulation orders.Simulation --results-folder ./results`\n- `gatling.sh\
-  \ --list`\n- `gatling.sh --run-description 'smoke v1.2.3' --simulation orders.Simulation`\n- `gatling.sh\
-  \ --results-folder results --reports-only results/orderapi-20240101`\n- `tail -20 results/orderapi-20240101/simulation.log\
-  \ | grep -E 'request|assert'`\n\n**Examples:**\n- gatling.sh --simulation orders.Simulation --results-folder\
-  \ ./results\n- gatling.sh --list\n- gatling.sh --results-folder results --reports-only results/orderapi-20240101"
+  \n**Parameters:**\n- `simulation-class` (string): Fully qualified simulation class\n- `users` (integer):\
+  \ Number of virtual users\n- `duration` (string): Ramp/steady duration in the scenario\n\n**Commands:**\n\
+  - `gatling.sh --simulation orders.Simulation --results-folder ./results`\n- `gatling.sh --list`\n- `gatling.sh\
+  \ --run-description 'smoke v1.2.3' --simulation orders.Simulation`\n- `gatling.sh --results-folder results\
+  \ --reports-only results/orderapi-20240101`\n- `tail -20 results/orderapi-20240101/simulation.log |\
+  \ grep -E 'request|assert'`\n\n**Examples:**\n- gatling.sh --simulation orders.Simulation --results-folder\
+  \ ./results\n- gatling.sh --list\n- gatling.sh --results-folder results --reports-only results/orderapi-20240101\n\
+  \n## References\n- [Gatling documentation](https://docs.gatling.io/)\n- [Gatling CLI reference](https://docs.gatling.io/reference/script/cli/)"
 prompt: Act as Gatling and handle the task per the instructions.

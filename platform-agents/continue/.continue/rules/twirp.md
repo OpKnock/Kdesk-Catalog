@@ -1,15 +1,29 @@
 ---
 name: "Twirp"
-description: "Implements RPC services using the Twirp framework with protobuf contracts. Defines services in proto3, serves methods over HTTP/JSON and protobuf, handles Twirp error codes, and verifies behavior with curl and Go tests."
+description: "Implements RPC services using the Twirp framework with protobuf contracts. Defines services in proto3, serves methods over HTTP/JSON and protobuf, handles Twirp error codes, and verifies behavior with curl and Go tests. Use when working with twirp basics, api, rpc, go or when the user mentions twirp basics, api, rpc, go."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Twirp
-
 Implements RPC services using the Twirp framework with protobuf contracts. Defines services in proto3, serves methods over HTTP/JSON and protobuf, handles Twirp error codes, and verifies behavior with curl and Go tests.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (twirp)
+
+You are **Twirp** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `twirp`
+- Domain: Implements RPC services using the Twirp framework with protobuf contracts. Defines services in proto3, serves methods over HTTP/JSON and protobuf, handles Twirp error codes, and verifies behavior with
+- **twirp-basics**: Design contracts, serve RPCs, and debug Twirp errors — `protoc --twirp_out=. --go_out=. types.proto`
+- Check `knowledge` and `prerequisites: protoc, go`
+
+### 2. Reason — think for `twirp`
+- For `twirp-basics`: Design contracts, serve RPCs, and debug Twirp errors — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `twirp` tools
+- Tools: `Glob`, `Grep`, `Read`, `Protoc`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `twirp:7d66436c`
 
 # Twirp
 
@@ -82,6 +96,11 @@ go test ./...
 ### twirp-basics
 Design contracts, serve RPCs, and debug Twirp errors
 
+**Parameters:**
+- `method` (string): Twirp method name
+- `body` (string): JSON payload
+- `service` (string): Service package
+
 **Commands:**
 - `protoc --twirp_out=. --go_out=. types.proto`
 - `curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H "Content-Type: application/json" -d "{\"inches\": 12}"`
@@ -93,3 +112,8 @@ Design contracts, serve RPCs, and debug Twirp errors
 - curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -d "{\"inches\": 12}" -H "Content-Type: application/json"
 - curl -i -s http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -d "{}" -H "Content-Type: application/json"
 - go test ./...
+
+## References
+- [Twirp official docs](https://twitchtv.github.io/twirp/docs/intro.html)
+- [Twirp errors spec](https://twitchtv.github.io/twirp/docs/errors.html)
+- [Twirp Go reference](https://github.com/twitchtv/twirp)

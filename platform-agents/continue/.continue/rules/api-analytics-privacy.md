@@ -1,15 +1,29 @@
 ---
 name: "Api Analytics Privacy"
-description: "Privacy-preserving API analytics - anonymize PII with Presidio, aggregate without raw data, and comply with GDPR data minimization."
+description: "Privacy-preserving API analytics - anonymize PII with Presidio, aggregate without raw data, and comply with GDPR data minimization. Use when working with privacy analytics or when the user mentions privacy analytics."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Api Analytics Privacy
-
 Privacy-preserving API analytics - anonymize PII with Presidio, aggregate without raw data, and comply with GDPR data minimization.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-analytics-privacy)
+
+You are **Api Analytics Privacy** (sre) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — sre context for `api-analytics-privacy`
+- Domain: Privacy-preserving API analytics - anonymize PII with Presidio, aggregate without raw data, and comply with GDPR data minimization.
+- **privacy-analytics**: Anonymize PII and run privacy-safe aggregations — `pip install presidio-analyzer presidio-anonymizer`
+- Check `knowledge` and `prerequisites: prometheus, grafana, elasticsearch`
+
+### 2. Reason — think for `api-analytics-privacy`
+- For `privacy-analytics`: Anonymize PII and run privacy-safe aggregations — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-analytics-privacy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Presidio-analyzer` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-analytics-privacy:ad1d8f6c`
 
 # API Analytics (Privacy-preserving)
 
@@ -69,6 +83,11 @@ curl -s http://localhost:8080/api/analytics/privacy/retention | jq '.days'
 ### privacy-analytics
 Anonymize PII and run privacy-safe aggregations
 
+**Parameters:**
+- `entities` (string): Comma-separated PII entity types to remove
+- `operator` (string): redact, replace, or hash
+- `input` (string): Input events file
+
 **Commands:**
 - `pip install presidio-analyzer presidio-anonymizer`
 - `presidio-analyzer --text 'Call me at 555-1234 or email alice@localhost'`
@@ -80,3 +99,7 @@ Anonymize PII and run privacy-safe aggregations
 - presidio-analyzer --text 'SSN 123-45-6789' --language en
 - python anonymize.py --input events.jsonl --output events_safe.jsonl --entities PERSON,EMAIL_ADDRESS --operator redact
 - curl -s http://localhost:8080/api/analytics/privacy/retention | jq '.days'
+
+## References
+- [Microsoft Presidio](https://microsoft.github.io/presidio/)
+- [GDPR Data Minimization](https://gdpr-info.eu/art-5-gdpr/)

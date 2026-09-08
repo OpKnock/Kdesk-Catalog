@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(checkov:*)"
 
 Scan infrastructure files handling policy violations. Generate machine-readable reports. Checkov policy-as-code.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (checkov)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Checkov** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `checkov -d .`, `checkov -d . --output sarif --output-file-path ./reports`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `checkov`
+- Domain: Scan infrastructure files handling policy violations. Generate machine-readable reports. Checkov policy-as-code.
+- **checkov-scan**: Scan infrastructure files for policy violations. — `checkov -d .`
+- **checkov-output**: Generate machine-readable reports. — `checkov -d . --output sarif --output-file-path ./reports`
+- Check `knowledge` and `prerequisites: checkov`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `checkov`
+- For `checkov-scan`: Scan infrastructure files for policy violations. — decide which checks to run
+- For `checkov-output`: Generate machine-readable reports. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `checkov` tools
+- Tools: `Glob`, `Grep`, `Read`, `Checkov` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `checkov:5dc3666b`
 
 # Checkov
 

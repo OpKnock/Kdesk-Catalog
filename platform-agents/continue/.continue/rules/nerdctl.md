@@ -1,15 +1,31 @@
 ---
 name: "nerdctl"
-description: "Runs containers with the Docker-compatible containerd CLI (nerdctl): lifecycle, compose, build, and debug on Kubernetes node runtimes."
+description: "Runs containers with the Docker-compatible containerd CLI (nerdctl): lifecycle, compose, build, and debug on Kubernetes node runtimes. Use when working with container lifecycle, compose and build, devops or when the user mentions container lifecycle, compose and build, devops."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# nerdctl
-
 Runs containers with the Docker-compatible containerd CLI (nerdctl): lifecycle, compose, build, and debug on Kubernetes node runtimes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nerdctl)
+
+You are **nerdctl** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `nerdctl`
+- Domain: Runs containers with the Docker-compatible containerd CLI (nerdctl): lifecycle, compose, build, and debug on Kubernetes node runtimes.
+- **container-lifecycle**: Pull, run, list, exec, and remove containers on containerd. — `nerdctl pull nginx:alpine`
+- **compose-and-build**: Build images with BuildKit and run compose stacks via containerd. — `nerdctl build -t myapp:1.0 .`
+- Check `knowledge` and `prerequisites: nerdctl`
+
+### 2. Reason — think for `nerdctl`
+- For `container-lifecycle`: Pull, run, list, exec, and remove containers on containerd. — decide which checks to run
+- For `compose-and-build`: Build images with BuildKit and run compose stacks via containerd. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nerdctl` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nerdctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nerdctl:53c8b8a3`
 
 # nerdctl with containerd
 
@@ -67,6 +83,11 @@ nerdctl --namespace k8s.io ps   # inspect pods' containers on k8s nodes
 ### container-lifecycle
 Pull, run, list, exec, and remove containers on containerd.
 
+**Parameters:**
+- `name` (string): Container name
+- `image` (string): Image reference
+- `ports` (string): Port mapping
+
 **Commands:**
 - `nerdctl pull nginx:alpine`
 - `nerdctl run -d --name web -p 8080:80 nginx:alpine`
@@ -83,6 +104,10 @@ Pull, run, list, exec, and remove containers on containerd.
 ### compose-and-build
 Build images with BuildKit and run compose stacks via containerd.
 
+**Parameters:**
+- `tag` (string): Image tag
+- `compose-file` (string): Compose file path
+
 **Commands:**
 - `nerdctl build -t myapp:1.0 .`
 - `nerdctl compose -f compose.yaml up -d`
@@ -95,3 +120,7 @@ Build images with BuildKit and run compose stacks via containerd.
 - nerdctl build -t myapp:1.0 .
 - nerdctl compose -f compose.yaml up -d
 - nerdctl images
+
+## References
+- [nerdctl GitHub](https://github.com/containerd/nerdctl)
+- [containerd](https://containerd.io/docs/)

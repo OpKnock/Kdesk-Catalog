@@ -1,15 +1,29 @@
 ---
 name: "Fallback Pattern"
-description: "Resilience patterns for API durability: circuit breakers that halt calls to failing dependencies, retries with exponential backoff and jitter for transient errors, timeout bounds on outbound requests, and cached fallback responses so degraded answers still succeed."
+description: "Resilience patterns for API durability: circuit breakers that halt calls to failing dependencies, retries with exponential backoff and jitter for transient errors, timeout bounds on outbound requests, and cached fallback responses so degraded answers still succeed. Use when working with resilience patterns, api or when the user mentions resilience patterns, api."
 globs: ["**/*.go", "**/*.java", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Fallback Pattern
-
 Resilience patterns for API durability: circuit breakers that halt calls to failing dependencies, retries with exponential backoff and jitter for transient errors, timeout bounds on outbound requests, and cached fallback responses so degraded answers still succeed.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (fallback-pattern)
+
+You are **Fallback Pattern** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `fallback-pattern`
+- Domain: Resilience patterns for API durability: circuit breakers that halt calls to failing dependencies, retries with exponential backoff and jitter for transient errors, timeout bounds on outbound requests,
+- **resilience-patterns**: Configure and test circuit breakers and fallbacks in Java (Resilience4j) and verify behavior. — `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/api/orders`
+- Check `knowledge` and `prerequisites: grep, node`
+
+### 2. Reason — think for `fallback-pattern`
+- For `resilience-patterns`: Configure and test circuit breakers and fallbacks in Java (Resilience4j) and verify behavior. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `fallback-pattern` tools
+- Tools: `Glob`, `Read`, `Bash`, `Grep` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fallback-pattern:58c21421`
 
 # Fallback Pattern
 
@@ -84,6 +98,11 @@ curl -s http://localhost:8080/actuator/health | jq '.components.ordersCircuit'
 ### resilience-patterns
 Configure and test circuit breakers and fallbacks in Java (Resilience4j) and verify behavior.
 
+**Parameters:**
+- `service-url` (string): Endpoint to test fallback behavior against
+- `retries` (integer): Retry count before falling back
+- `timeout-ms` (integer): Per-call timeout before failure
+
 **Commands:**
 - `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/api/orders`
 - `curl -s http://localhost:8080/api/orders | jq '.source'`
@@ -95,3 +114,7 @@ Configure and test circuit breakers and fallbacks in Java (Resilience4j) and ver
 - curl -s http://localhost:8080/api/orders | jq '.source'
 - curl -s http://localhost:8080/actuator/health | jq '.components.ordersCircuit'
 - grep -rn 'CircuitBreaker' src/ | head -10
+
+## References
+- [Resilience4j Docs](https://resilience4j.readme.io/docs/circuitbreaker)
+- [p-retry (Node)](https://github.com/sindresorhus/p-retry)

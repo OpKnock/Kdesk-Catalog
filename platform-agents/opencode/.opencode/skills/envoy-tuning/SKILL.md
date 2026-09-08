@@ -5,27 +5,23 @@ description: "Envoy proxy tuning: inspect listeners, clusters, and endpoints via
 
 Envoy proxy tuning: inspect listeners, clusters, and endpoints via admin API; tune buffer, timeout, and connection pool settings.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (envoy-tuning)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Envoy Tuning** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -s http://localhost:15000/listeners | jq`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `envoy-tuning`
+- Domain: Envoy proxy tuning: inspect listeners, clusters, and endpoints via admin API; tune buffer, timeout, and connection pool settings.
+- **envoy-admin**: Query the Envoy admin API for listeners, clusters, and stats, and drain or reset connections. — `curl -s http://localhost:15000/listeners | jq`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `envoy-tuning`
+- For `envoy-admin`: Query the Envoy admin API for listeners, clusters, and stats, and drain or reset connections. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `envoy-tuning` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `envoy-tuning:c2832f27`
 
 # Envoy Tuning
 

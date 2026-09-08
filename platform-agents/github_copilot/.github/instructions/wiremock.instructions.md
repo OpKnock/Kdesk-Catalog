@@ -4,27 +4,27 @@ applyTo: "**/*.java **/*.json **/*.r **/*.sh"
 
 Stubs HTTP APIs with WireMock standalone, managing mappings, requests journal, and delays via the admin API.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (wiremock)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **wiremock** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `java -jar wiremock-standalone.jar --port 8080`, `curl -X POST http://localhost:8080/__admin/mappings -d '{"re`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — testing context for `wiremock`
+- Domain: Stubs HTTP APIs with WireMock standalone, managing mappings, requests journal, and delays via the admin API.
+- **wiremock-start**: Start WireMock standalone or in Docker. — `java -jar wiremock-standalone.jar --port 8080`
+- **stub-mappings**: Create and manage stub mappings via admin API. — `curl -X POST http://localhost:8080/__admin/mappings -d '{"request":{"method":"GE`
+- **requests-journal**: Verify received requests. — `curl -s http://localhost:8080/__admin/requests`
+- Check `knowledge` and `prerequisites: docker, java`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `wiremock`
+- For `wiremock-start`: Start WireMock standalone or in Docker. — decide which checks to run
+- For `stub-mappings`: Create and manage stub mappings via admin API. — decide which checks to run
+- For `requests-journal`: Verify received requests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `wiremock` tools
+- Tools: `Glob`, `Grep`, `Read`, `Java`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `wiremock:d2724675`
 
 # WireMock
 

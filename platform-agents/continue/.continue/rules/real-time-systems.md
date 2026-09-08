@@ -1,15 +1,31 @@
 ---
 name: "real-time-systems"
-description: "Builds real-time features: WebSockets with wscat/websocat, SSE streams, and gRPC bidirectional streaming."
+description: "Builds real-time features: WebSockets with wscat/websocat, SSE streams, and gRPC bidirectional streaming. Use when working with websocket, grpc streams or when the user mentions websocket, grpc streams."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# real-time-systems
-
 Builds real-time features: WebSockets with wscat/websocat, SSE streams, and gRPC bidirectional streaming.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (real-time-systems)
+
+You are **real-time-systems** (embedded) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — embedded context for `real-time-systems`
+- Domain: Builds real-time features: WebSockets with wscat/websocat, SSE streams, and gRPC bidirectional streaming.
+- **websocket**: Test and debug WebSocket endpoints. — `wscat -c ws://localhost:8080/ws`
+- **grpc-streams**: Exercise streaming gRPC services. — `grpcurl -plaintext localhost:50051 list`
+- Check `knowledge` and `prerequisites: c, rust, rtos, linux`
+
+### 2. Reason — think for `real-time-systems`
+- For `websocket`: Test and debug WebSocket endpoints. — decide which checks to run
+- For `grpc-streams`: Exercise streaming gRPC services. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `real-time-systems` tools
+- Tools: `Glob`, `Grep`, `Read`, `Wscat`, `Websocat` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `real-time-systems:0f82bb1c`
 
 # Real-Time Systems
 
@@ -70,6 +86,11 @@ Verify reconnect behavior by killing the client mid-stream.
 ### websocket
 Test and debug WebSocket endpoints.
 
+**Parameters:**
+- `url` (string): ws/wss endpoint
+- `protocol` (string): Subprotocol header
+- `header` (string): Extra HTTP headers
+
 **Commands:**
 - `wscat -c ws://localhost:8080/ws`
 - `websocat ws://localhost:8080/ws`
@@ -85,6 +106,11 @@ Test and debug WebSocket endpoints.
 ### grpc-streams
 Exercise streaming gRPC services.
 
+**Parameters:**
+- `service` (string): Service/Method name
+- `data` (string): Request JSON
+- `max-msg-sz` (number): Max message size
+
 **Commands:**
 - `grpcurl -plaintext localhost:50051 list`
 - `grpcurl -plaintext -d '{"message":"hello"}' localhost:50051 chat.ChatService/Chat`
@@ -96,3 +122,8 @@ Exercise streaming gRPC services.
 - grpcurl -plaintext -d '{"message":"hi"}' localhost:50051 chat.ChatService/Chat | head -20
 - grpcurl -plaintext -d '{}' localhost:50051 logs.LogService/Stream --max-msg-sz 10000000
 - curl -N -H 'Accept: text/event-stream' http://localhost:8080/stream
+
+## References
+- [MDN WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
+- [websocat](https://github.com/vi/websocat)
+- [gRPC streaming](https://grpc.io/docs/what-is-grpc/core-concepts/)

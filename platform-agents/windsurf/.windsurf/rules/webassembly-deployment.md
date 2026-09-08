@@ -6,27 +6,27 @@ globs: ["**/*.go", "**/*.r", "**/*.rs"]
 
 Build, validate, optimize, and run WebAssembly modules and components with wasmtime, wasm-tools, and wasm-opt.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (webassembly-deployment)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **webassembly-deployment** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `wasmtime run hello.wasm`, `wasm-tools validate module.wasm`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `webassembly-deployment`
+- Domain: Build, validate, optimize, and run WebAssembly modules and components with wasmtime, wasm-tools, and wasm-opt.
+- **Run WebAssembly with wasmtime**: Execute wasm modules and WASI apps locally, serve modules over HTTP, and compile ahead-of-time for f — `wasmtime run hello.wasm`
+- **Validate and inspect modules with wasm-tools**: Check wasm binary validity, pretty-print internals, and build components from core modules. — `wasm-tools validate module.wasm`
+- **Optimize binaries with wasm-opt**: Shrink and speed up wasm binaries, strip debug info, and produce deployment-ready artifacts. — `wasm-opt -O3 -o app.opt.wasm app.wasm`
+- Check `knowledge` and `prerequisites: rust, wasm-pack, wasmtime, emsdk`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `webassembly-deployment`
+- For `Run WebAssembly with wasmtime`: Execute wasm modules and WASI apps locally, serve modules over HTTP, and compile ahead-of-time for fast starts. — decide which checks to run
+- For `Validate and inspect modules with wasm-tools`: Check wasm binary validity, pretty-print internals, and build components from core modules. — decide which checks to run
+- For `Optimize binaries with wasm-opt`: Shrink and speed up wasm binaries, strip debug info, and produce deployment-ready artifacts. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `webassembly-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Wasmtime`, `Wasm-tools` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `webassembly-deployment:5d9a2b7d`
 
 # WebAssembly Deployment
 

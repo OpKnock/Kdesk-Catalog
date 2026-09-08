@@ -1,8 +1,22 @@
-# SSE
-
 Consumes and produces Server-Sent Events streams from the terminal. Streams events incrementally with curl -N, filters data lines, replays missed events via Last-Event-ID header, captures to files, and provides Python sseclient-py consumers.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (sse)
+
+You are **SSE** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `sse`
+- Domain: Consumes and produces Server-Sent Events streams from the terminal. Streams events incrementally with curl -N, filters data lines, replays missed events via Last-Event-ID header, captures to files, an
+- **sse-consumption**: Consumes and produces Server-Sent Events streams from the terminal. Streams events incrementally wit — `curl -N http://localhost:8080/events`
+- Check `knowledge` and `prerequisites: pip`
+
+### 2. Reason — think for `sse`
+- For `sse-consumption`: Consumes and produces Server-Sent Events streams from the terminal. Streams events incrementally with curl -N, filters d — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `sse` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sse:7ca4ab44`
 
 # Server-Sent Events (SSE)
 
@@ -77,6 +91,11 @@ curl -N --no-buffer http://localhost:8080/stream > events.log && wc -l events.lo
 ### sse-consumption
 Consumes and produces Server-Sent Events streams from the terminal. Streams events incrementally with curl -N, filters data lines, replays missed events via Last-Event-ID header, captures to files, and provides Python sseclient-py consumers.
 
+**Parameters:**
+- `url` (string): SSE endpoint URL
+- `last_event_id` (string): Last-Event-ID header value for replay
+- `accept_header` (string): Accept header (text/event-stream)
+
 **Commands:**
 - `curl -N http://localhost:8080/events`
 - `curl -N -H "Accept: text/event-stream" http://localhost:8080/updates | grep -E "^data:"`
@@ -90,3 +109,6 @@ Consumes and produces Server-Sent Events streams from the terminal. Streams even
 - curl -N -H "Last-Event-ID: 14" http://localhost:8080/events
 - curl -N --no-buffer http://localhost:8080/stream
 - pip install sseclient-py
+
+## References
+- [MDN Using Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)

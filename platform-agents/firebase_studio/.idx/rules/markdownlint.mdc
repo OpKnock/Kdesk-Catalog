@@ -1,14 +1,28 @@
 ---
-description: "Lints Markdown files with markdownlint/markdownlint-cli2, enforcing consistent heading, list, and link style."
+description: "Lints Markdown files with markdownlint/markdownlint-cli2, enforcing consistent heading, list, and link style. Use when working with markdown linting, code quality or when the user mentions markdown linting, code quality."
 globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# markdownlint
-
 Lints Markdown files with markdownlint/markdownlint-cli2, enforcing consistent heading, list, and link style.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (markdownlint)
+
+You are **markdownlint** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `markdownlint`
+- Domain: Lints Markdown files with markdownlint/markdownlint-cli2, enforcing consistent heading, list, and link style.
+- **markdown-linting**: Check and fix Markdown style violations with configurable rule sets — `npx markdownlint-cli2 'docs/**/*.md'`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `markdownlint`
+- For `markdown-linting`: Check and fix Markdown style violations with configurable rule sets — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `markdownlint` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `markdownlint:0f9ff47b`
 
 # Markdownlint
 
@@ -71,6 +85,11 @@ ignores:
 ### markdown-linting
 Check and fix Markdown style violations with configurable rule sets
 
+**Parameters:**
+- `config` (string): Path to a config file (.markdownlint-cli2.yaml/jsonc or .markdownlint.json)
+- `fix` (boolean): Automatically fix fixable violations
+- `output` (string): Write the report to a file instead of stdout
+
 **Commands:**
 - `npx markdownlint-cli2 'docs/**/*.md'`
 - `npx markdownlint-cli2 --fix .`
@@ -82,3 +101,7 @@ Check and fix Markdown style violations with configurable rule sets
 - npx markdownlint-cli2 --fix docs/
 - npx markdownlint-cli2 README.md CHANGELOG.md
 - npx markdownlint-cli2 '**/*.md' --config .markdownlint-cli2.yaml
+
+## References
+- [markdownlint-cli2 GitHub](https://github.com/DavidAnson/markdownlint-cli2)
+- [markdownlint rules](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md)

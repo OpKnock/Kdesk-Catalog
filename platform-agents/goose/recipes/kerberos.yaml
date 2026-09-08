@@ -2,16 +2,28 @@ title: Kerberos
 description: 'Authenticate and administer Kerberos: kinit/klist sessions, keytab management with kadmin,
   and troubleshooting ticket errors.'
 version: 2.0.0
-instructions: "# Kerberos\n\nAuthenticate and administer Kerberos: kinit/klist sessions, keytab management\
-  \ with kadmin, and troubleshooting ticket errors.\n\n## Instructions\n\n# Kerberos\n\nAuthenticate and\
-  \ administer MIT Kerberos realms.\n\n## What this skill does\n\n- Obtains and manages TGT/ticket sessions\
-  \ with kinit/klist/kdestroy.\n- Creates principals and keytabs with kadmin.\n- Troubleshoots ticket\
-  \ expiry and preauth errors.\n\n## When to use\n\n- SSO authentication for Hadoop, NFS, or LDAP.\n-\
-  \ Service principals for hosts and daemons.\n- Debugging kinit failures (KDC unreachable, clock skew,\
-  \ preauth).\n\n## Real commands\n\n```bash\n# Obtain a ticket (prompts for password)\nkinit alice@STAGING.MYAPP.TEST\n\
-  \n# Ticket with explicit lifetime\nkinit -l 10h alice@STAGING.MYAPP.TEST\n\n# List active tickets\n\
-  klist\nklist -f    # with flags (A=preauth, F=forwardable)\n\n# Keytab tickets\nklist -kt /etc/krb5.keytab\n\
-  \n# Destroy the ticket cache\nkdestroy\n\n# Admin: create a user principal\nkadmin -p admin/admin@STAGING.MYAPP.TEST\
+instructions: "Authenticate and administer Kerberos: kinit/klist sessions, keytab management with kadmin,\
+  \ and troubleshooting ticket errors.\n\n## Agentic Workflow: Read -> Reason -> Act (kerberos)\n\nYou\
+  \ are **Kerberos** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `kerberos`\n- Domain: Authenticate and administer Kerberos: kinit/klist\
+  \ sessions, keytab management with kadmin, and troubleshooting ticket errors.\n- **session-mgmt**: Obtain,\
+  \ list, and destroy Kerberos tickets. — `kinit alice@STAGING.MYAPP.TEST`\n- **admin-ops**: Create principals\
+  \ and manage keytabs with kadmin. — `kadmin -p admin/admin@STAGING.MYAPP.TEST -q \"addprinc -pw s3cret\
+  \ bob@STAGING.MYA`\n- Check `knowledge` and `prerequisites: kadmin, kdestroy, kinit, klist`\n\n### 2.\
+  \ Reason — think for `kerberos`\n- For `session-mgmt`: Obtain, list, and destroy Kerberos tickets. —\
+  \ decide which checks to run\n- For `admin-ops`: Create principals and manage keytabs with kadmin. —\
+  \ decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your\
+  \ inputs\n\n### 3. Act — execute with `kerberos` tools\n- Tools: `Glob`, `Grep`, `Read`, `Kinit`, `Klist`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `kerberos:4e334173`\n\n# Kerberos\n\nAuthenticate and administer MIT Kerberos\
+  \ realms.\n\n## What this skill does\n\n- Obtains and manages TGT/ticket sessions with kinit/klist/kdestroy.\n\
+  - Creates principals and keytabs with kadmin.\n- Troubleshoots ticket expiry and preauth errors.\n\n\
+  ## When to use\n\n- SSO authentication for Hadoop, NFS, or LDAP.\n- Service principals for hosts and\
+  \ daemons.\n- Debugging kinit failures (KDC unreachable, clock skew, preauth).\n\n## Real commands\n\
+  \n```bash\n# Obtain a ticket (prompts for password)\nkinit alice@STAGING.MYAPP.TEST\n\n# Ticket with\
+  \ explicit lifetime\nkinit -l 10h alice@STAGING.MYAPP.TEST\n\n# List active tickets\nklist\nklist -f\
+  \    # with flags (A=preauth, F=forwardable)\n\n# Keytab tickets\nklist -kt /etc/krb5.keytab\n\n# Destroy\
+  \ the ticket cache\nkdestroy\n\n# Admin: create a user principal\nkadmin -p admin/admin@STAGING.MYAPP.TEST\
   \ \\\n  -q \"addprinc -pw s3cret bob@STAGING.MYAPP.TEST\"\n\n# Admin: add service principal to a keytab\n\
   kadmin -p admin/admin@STAGING.MYAPP.TEST \\\n  -q \"ktadd -k /etc/krb5.keytab host/web-01.staging.myapp.test@STAGING.MYAPP.TEST\"\
   \n\n# List principals\nkadmin -p admin/admin@STAGING.MYAPP.TEST -q \"listprincs\"\n```\n\n## krb5.conf\
@@ -22,13 +34,18 @@ instructions: "# Kerberos\n\nAuthenticate and administer Kerberos: kinit/klist s
   ```\n\n## Best practices\n\n- Never embed passwords in scripts; use keytabs with restricted principals.\n\
   - Keep the clock in sync; skew > 5 minutes breaks preauth.\n- Use -l and -r lifetimes matching service\
   \ requirements; renew with kinit -R.\n\n## Capabilities\n\n### session-mgmt\nObtain, list, and destroy\
-  \ Kerberos tickets.\n\n**Commands:**\n- `kinit alice@STAGING.MYAPP.TEST`\n- `kinit -l 10h alice@STAGING.MYAPP.TEST`\n\
-  - `klist`\n- `klist -f`\n- `kdestroy`\n\n**Examples:**\n- kinit alice@STAGING.MYAPP.TEST\n- klist -f\n\
-  - kdestroy\n\n### admin-ops\nCreate principals and manage keytabs with kadmin.\n\n**Commands:**\n- `kadmin\
-  \ -p admin/admin@STAGING.MYAPP.TEST -q \"addprinc -pw s3cret bob@STAGING.MYAPP.TEST\"`\n- `kadmin -p\
-  \ admin/admin@STAGING.MYAPP.TEST -q \"ktadd -k /etc/krb5.keytab host/web-01.staging.myapp.test@STAGING.MYAPP.TEST\"\
+  \ Kerberos tickets.\n\n**Parameters:**\n- `principal` (string): User principal, e.g. alice@STAGING.MYAPP.TEST.\n\
+  - `lifetime` (string): Ticket lifetime, e.g. 10h.\n\n**Commands:**\n- `kinit alice@STAGING.MYAPP.TEST`\n\
+  - `kinit -l 10h alice@STAGING.MYAPP.TEST`\n- `klist`\n- `klist -f`\n- `kdestroy`\n\n**Examples:**\n\
+  - kinit alice@STAGING.MYAPP.TEST\n- klist -f\n- kdestroy\n\n### admin-ops\nCreate principals and manage\
+  \ keytabs with kadmin.\n\n**Parameters:**\n- `principal` (string): Principal to create or add to keytab.\n\
+  - `keytab` (string): Keytab file path.\n- `password` (string): Password for new principals.\n\n**Commands:**\n\
+  - `kadmin -p admin/admin@STAGING.MYAPP.TEST -q \"addprinc -pw s3cret bob@STAGING.MYAPP.TEST\"`\n- `kadmin\
+  \ -p admin/admin@STAGING.MYAPP.TEST -q \"ktadd -k /etc/krb5.keytab host/web-01.staging.myapp.test@STAGING.MYAPP.TEST\"\
   `\n- `kadmin -p admin/admin@STAGING.MYAPP.TEST -q \"listprincs\"`\n- `kadmin -p admin/admin@STAGING.MYAPP.TEST\
   \ -q \"delprinc bob@STAGING.MYAPP.TEST\"`\n- `klist -kt /etc/krb5.keytab`\n\n**Examples:**\n- kadmin\
   \ -p admin/admin@STAGING.MYAPP.TEST -q \"addprinc -pw s3cret bob@STAGING.MYAPP.TEST\"\n- kadmin -p admin/admin@STAGING.MYAPP.TEST\
-  \ -q \"ktadd -k /etc/krb5.keytab host/web-01.staging.myapp.test@STAGING.MYAPP.TEST\"\n- klist -kt /etc/krb5.keytab"
+  \ -q \"ktadd -k /etc/krb5.keytab host/web-01.staging.myapp.test@STAGING.MYAPP.TEST\"\n- klist -kt /etc/krb5.keytab\n\
+  \n## References\n- [MIT Kerberos Documentation](https://web.mit.edu/kerberos/krb5-latest/doc/)\n- [kinit/klist\
+  \ man pages](https://web.mit.edu/kerberos/krb5-latest/doc/user/user_commands/kinit.html)"
 prompt: Act as Kerberos and handle the task per the instructions.

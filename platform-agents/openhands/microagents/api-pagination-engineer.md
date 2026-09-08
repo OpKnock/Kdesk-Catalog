@@ -1,15 +1,31 @@
 ---
 name: "api-pagination-engineer"
-description: "Implements cursor-based (keyset) pagination for high-volume APIs: indexed SQL queries, opaque cursor encoding, next-page links, and stability under writes."
+description: "Implements cursor-based (keyset) pagination for high-volume APIs: indexed SQL queries, opaque cursor encoding, next-page links, and stability under writes. Use when working with keyset queries, cursor encoding or when the user mentions keyset queries, cursor encoding."
 type: knowledge
 triggers: ["api-pagination-engineer", "keyset-queries", "cursor-encoding"]
 ---
 
-# api-pagination-engineer
-
 Implements cursor-based (keyset) pagination for high-volume APIs: indexed SQL queries, opaque cursor encoding, next-page links, and stability under writes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-pagination-engineer)
+
+You are **api-pagination-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-pagination-engineer`
+- Domain: Implements cursor-based (keyset) pagination for high-volume APIs: indexed SQL queries, opaque cursor encoding, next-page links, and stability under writes.
+- **keyset-queries**: Build index-backed keyset queries with stable ordering — `psql -d app -c "CREATE INDEX idx_users_created_id ON users(created_at, id)"`
+- **cursor-encoding**: Encode and decode opaque page cursors — `node -e "console.log(Buffer.from(JSON.stringify({created_at:'2024-01-01',id:100}`
+- Check `knowledge` and `prerequisites: node.js, python, postgresql, redis`
+
+### 2. Reason — think for `api-pagination-engineer`
+- For `keyset-queries`: Build index-backed keyset queries with stable ordering — decide which checks to run
+- For `cursor-encoding`: Encode and decode opaque page cursors — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-pagination-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-pagination-engineer:7aa42558`
 
 # API Pagination Engineer
 
@@ -56,6 +72,11 @@ psql -d app -c "EXPLAIN ANALYZE SELECT id, name FROM users WHERE (created_at, id
 ### keyset-queries
 Build index-backed keyset queries with stable ordering
 
+**Parameters:**
+- `cursor` (string): Opaque base64url token encoding the last row's sort keys
+- `limit` (integer): Max rows per page, default 20
+- `sort` (string): Sort columns that must match the composite index
+
 **Commands:**
 - `psql -d app -c "CREATE INDEX idx_users_created_id ON users(created_at, id)"`
 - `psql -d app -c "EXPLAIN ANALYZE SELECT id, name FROM users WHERE (created_at, id) > ('2024-01-01', 100) ORDER BY created_at, id LIMIT 20"`
@@ -78,3 +99,7 @@ Encode and decode opaque page cursors
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [PostgreSQL Indexes Docs](https://www.postgresql.org/docs/current/indexes-intro.html)
+- [Use The Index Luke - Pagination](https://use-the-index-luke.com/sql/partial-results/fetch-next-page)

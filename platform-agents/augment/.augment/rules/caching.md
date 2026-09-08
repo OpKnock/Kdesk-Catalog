@@ -5,27 +5,27 @@ description: "Accelerates API responses with Redis TTL caches for computed data,
 
 Accelerates API responses with Redis TTL caches for computed data, HTTP cache-control and ETag headers for clients and proxies, and hit-rate measurement to validate effectiveness.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (caching)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Caching** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `redis-cli SET mykey "hello" EX 60`, `curl -sI https://api.your-app.test/static/app.js | grep -i c`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `caching`
+- Domain: Accelerates API responses with Redis TTL caches for computed data, HTTP cache-control and ETag headers for clients and proxies, and hit-rate measurement to validate effectiveness.
+- **redis-cache**: Cache values in Redis with TTLs. — `redis-cli SET mykey "hello" EX 60`
+- **http-caching**: Control browser/proxy caching with headers. — `curl -sI https://api.your-app.test/static/app.js | grep -i cache-control`
+- **cache-stats**: Measure hit rates and invalidate selectively. — `redis-cli INFO stats | grep -E 'keyspace_hits|keyspace_misses'`
+- Check `knowledge` and `prerequisites: redis-cli, varnishstat`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `caching`
+- For `redis-cache`: Cache values in Redis with TTLs. — decide which checks to run
+- For `http-caching`: Control browser/proxy caching with headers. — decide which checks to run
+- For `cache-stats`: Measure hit rates and invalidate selectively. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `caching` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `caching:dc5079f3`
 
 # Caching
 

@@ -1,15 +1,29 @@
 ---
 name: "rest-assured"
-description: "Expert Java REST API testing reference with Given/When/Then flows, JSONPath assertions, response validation, and Maven/Gradle integration."
+description: "Expert Java REST API testing reference with Given/When/Then flows, JSONPath assertions, response validation, and Maven/Gradle integration. Use when working with rest assured bdd, api or when the user mentions rest assured bdd, api."
 type: knowledge
 triggers: ["rest-assured", "rest-assured-bdd"]
 ---
 
-# Rest Assured
-
 Expert Java REST API testing reference with Given/When/Then flows, JSONPath assertions, response validation, and Maven/Gradle integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rest-assured)
+
+You are **Rest Assured** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `rest-assured`
+- Domain: Expert Java REST API testing reference with Given/When/Then flows, JSONPath assertions, response validation, and Maven/Gradle integration.
+- **rest-assured-bdd**: Write and run BDD-style REST tests in Java with Rest Assured — `mvn dependency:get -Dartifact=io.rest-assured:rest-assured:5.4.0`
+- Check `knowledge` and `prerequisites: ./gradlew, mvn`
+
+### 2. Reason — think for `rest-assured`
+- For `rest-assured-bdd`: Write and run BDD-style REST tests in Java with Rest Assured — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rest-assured` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `./gradlew` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rest-assured:6a0360f7`
 
 # Rest Assured
 
@@ -90,6 +104,11 @@ mvn test -Dtest=OrderApiTest
 ### rest-assured-bdd
 Write and run BDD-style REST tests in Java with Rest Assured
 
+**Parameters:**
+- `baseURI` (string): RestAssured.baseURI, e.g. http://localhost:8080
+- `port` (integer): RestAssured.port when not 80/443
+- `jsonPath` (string): GPath expression like data.items[0].id
+
 **Commands:**
 - `mvn dependency:get -Dartifact=io.rest-assured:rest-assured:5.4.0`
 - `mvn test -Dtest=OrderApiTest`
@@ -101,3 +120,7 @@ Write and run BDD-style REST tests in Java with Rest Assured
 - mvn test -Dtest=OrderApiTest
 - mvn test -q -Dtest=OrderApiTest#shouldReturn201
 - ./gradlew test --tests '*ApiTest' --info
+
+## References
+- [Rest Assured docs](https://github.com/rest-assured/rest-assured/wiki/Usage)
+- [Rest Assured on Maven Central](https://central.sonatype.com/artifact/io.rest-assured/rest-assured)

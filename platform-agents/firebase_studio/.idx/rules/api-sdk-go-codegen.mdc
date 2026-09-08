@@ -1,14 +1,30 @@
 ---
-description: "Generates Go SDKs with oapi-codegen: typed clients from OpenAPI, server stubs, config generation, and go test verification."
+description: "Generates Go SDKs with oapi-codegen: typed clients from OpenAPI, server stubs, config generation, and go test verification. Use when working with go codegen, go testing or when the user mentions go codegen, go testing."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Api Sdk Go Codegen
-
 Generates Go SDKs with oapi-codegen: typed clients from OpenAPI, server stubs, config generation, and go test verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-sdk-go-codegen)
+
+You are **Api Sdk Go Codegen** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-sdk-go-codegen`
+- Domain: Generates Go SDKs with oapi-codegen: typed clients from OpenAPI, server stubs, config generation, and go test verification.
+- **go-codegen**: Generate Go client code from OpenAPI — `go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest`
+- **go-testing**: Test the generated Go client — `go test ./...`
+- Check `knowledge` and `prerequisites: openapi-generator, node.js, python`
+
+### 2. Reason — think for `api-sdk-go-codegen`
+- For `go-codegen`: Generate Go client code from OpenAPI — decide which checks to run
+- For `go-testing`: Test the generated Go client — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-sdk-go-codegen` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Oapi-codegen` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-sdk-go-codegen:067e1170`
 
 # API SDK v4 - Go
 
@@ -59,6 +75,11 @@ generate:
 ### go-codegen
 Generate Go client code from OpenAPI
 
+**Parameters:**
+- `package` (string): Go package name
+- `generate` (string): Comma-separated generation targets
+- `output` (string): Output Go file
+
 **Commands:**
 - `go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest`
 - `oapi-codegen -package api -generate types,client -o client.gen.go openapi.yaml`
@@ -83,3 +104,7 @@ Test the generated Go client
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [oapi-codegen](https://github.com/oapi-codegen/oapi-codegen)
+- [Go Tooling](https://go.dev/doc/modules/)

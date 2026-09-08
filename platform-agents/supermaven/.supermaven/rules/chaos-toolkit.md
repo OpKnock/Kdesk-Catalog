@@ -1,8 +1,24 @@
-# Chaos Toolkit
-
 Design and run repeatable chaos experiments with the Chaos Toolkit CLI, including probes, steady-state checks, and Docker/Kubernetes actions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (chaos-toolkit)
+
+You are **Chaos Toolkit** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `chaos-toolkit`
+- Domain: Design and run repeatable chaos experiments with the Chaos Toolkit CLI, including probes, steady-state checks, and Docker/Kubernetes actions.
+- **experiment-run**: Create, validate, and run Chaos Toolkit experiments from JSON manifests — `chaos init`
+- **extensions**: Install Chaos Toolkit extension packages for Docker, Kubernetes, HTTP, and other platforms — `pip install chaostoolkit`
+- Check `knowledge` and `prerequisites: chaos, pip`
+
+### 2. Reason — think for `chaos-toolkit`
+- For `experiment-run`: Create, validate, and run Chaos Toolkit experiments from JSON manifests — decide which checks to run
+- For `extensions`: Install Chaos Toolkit extension packages for Docker, Kubernetes, HTTP, and other platforms — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `chaos-toolkit` tools
+- Tools: `Glob`, `Grep`, `Read`, `Chaos`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `chaos-toolkit:13ffec8c`
 
 # Chaos Toolkit
 
@@ -103,6 +119,10 @@ chaos run --hypothesis-strategy after experiment.json
 ### experiment-run
 Create, validate, and run Chaos Toolkit experiments from JSON manifests
 
+**Parameters:**
+- `experiment_path` (string): Path to the experiment JSON file
+- `hypothesis_strategy` (string): before, after, or before-and-after
+
 **Commands:**
 - `chaos init`
 - `chaos run experiment.json`
@@ -117,6 +137,9 @@ Create, validate, and run Chaos Toolkit experiments from JSON manifests
 ### extensions
 Install Chaos Toolkit extension packages for Docker, Kubernetes, HTTP, and other platforms
 
+**Parameters:**
+- `package` (string): Extension package name such as chaostoolkit-kubernetes
+
 **Commands:**
 - `pip install chaostoolkit`
 - `pip install chaostoolkit-kubernetes`
@@ -127,3 +150,7 @@ Install Chaos Toolkit extension packages for Docker, Kubernetes, HTTP, and other
 - pip install chaostoolkit chaostoolkit-kubernetes
 - pip install chaostoolkit-docker chaostoolkit-http
 - chaos info
+
+## References
+- [Chaos Toolkit Docs](https://docs.chaostoolkit.org/)
+- [Chaos Toolkit Extensions](https://docs.chaostoolkit.org/reference/extensions/)

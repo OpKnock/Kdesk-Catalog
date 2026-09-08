@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(asyncapi-go:*) Bash(curl:*) Bash(go:*) Bash(
 
 Generates Go models and typed publisher/subscriber code from AsyncAPI documents using Modelina and asyncapi-go.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (asyncapi-go)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Asyncapi Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx @asyncapi/modelina generate --input asyncapi.yaml --outp`, `go install github.com/lerayjin/asyncapi-go@latest`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `asyncapi-go`
+- Domain: Generates Go models and typed publisher/subscriber code from AsyncAPI documents using Modelina and asyncapi-go.
+- **go-generation**: Generate Go types from an AsyncAPI spec with Modelina. — `npx @asyncapi/modelina generate --input asyncapi.yaml --output ./internal/models`
+- **asyncapi-go-codegen**: Produce typed publisher/subscriber interfaces with asyncapi-go. — `go install github.com/lerayjin/asyncapi-go@latest`
+- Check `knowledge` and `prerequisites: asyncapi-go, gofmt, npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `asyncapi-go`
+- For `go-generation`: Generate Go types from an AsyncAPI spec with Modelina. — decide which checks to run
+- For `asyncapi-go-codegen`: Produce typed publisher/subscriber interfaces with asyncapi-go. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `asyncapi-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `asyncapi-go:f1dac5c4`
 
 # AsyncAPI Go
 

@@ -1,6 +1,6 @@
 ---
 name: "Embedding Inference 2"
-description: "Embedding inference server agent. Manages Embedding ML inference server."
+description: "Embedding inference server agent. Manages Embedding ML inference server. Use when working with Ml Embedding Inference Server Agent or when the user mentions Ml Embedding Inference Server Agent."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Embedding Inference 2
 
 Embedding inference server agent. Manages Embedding ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (embedding-inference-2)
+
+You are **Embedding Inference 2** (ml/embedding) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `embedding-inference-2`
+- Domain: Embedding inference server agent. Manages Embedding ML inference server.
+- **Ml Embedding Inference Server Agent**: Embedding inference server agent. Manages Embedding ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `embedding-inference-2`
+- For `Ml Embedding Inference Server Agent`: Embedding inference server agent. Manages Embedding ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `embedding-inference-2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Embedding` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `embedding-inference-2:dfe3d987`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Embedding inference server agent. Manages Embedding ML inference server.
 - curl http://localhost:8080/embed --data '{"text": "Hello world"}'
 - python embed.py --input texts.txt --output embeddings.npy
 - python search.py --query 'hello world' --index embeddings.npy
+
+## References
+- [OpenAI Embeddings Guide](https://platform.openai.com/docs/guides/embeddings)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

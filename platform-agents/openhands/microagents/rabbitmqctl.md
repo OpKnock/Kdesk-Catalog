@@ -1,15 +1,29 @@
 ---
 name: "rabbitmqctl"
-description: "Administers RabbitMQ: queues, users, permissions, bindings, and server status via rabbitmqctl."
+description: "Administers RabbitMQ: queues, users, permissions, bindings, and server status via rabbitmqctl. Use when working with rabbitmqctl, database or when the user mentions rabbitmqctl, database."
 type: knowledge
 triggers: ["rabbitmqctl"]
 ---
 
-# rabbitmqctl
-
 Administers RabbitMQ: queues, users, permissions, bindings, and server status via rabbitmqctl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rabbitmqctl)
+
+You are **rabbitmqctl** (database/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `rabbitmqctl`
+- Domain: Administers RabbitMQ: queues, users, permissions, bindings, and server status via rabbitmqctl.
+- **rabbitmqctl**: Manage vhosts, users, queues, and inspect server state — `rabbitmqctl status`
+- Check `knowledge` and `prerequisites: rabbitmqctl`
+
+### 2. Reason — think for `rabbitmqctl`
+- For `rabbitmqctl`: Manage vhosts, users, queues, and inspect server state — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rabbitmqctl` tools
+- Tools: `Glob`, `Grep`, `Read`, `Rabbitmqctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rabbitmqctl:b9c1a9bc`
 
 # rabbitmqctl
 
@@ -66,6 +80,11 @@ then recommends purge, consumer fix, or queue redeclare.
 ### rabbitmqctl
 Manage vhosts, users, queues, and inspect server state
 
+**Parameters:**
+- `vhost` (string): Virtual host to scope the operation (-p)
+- `queue` (string): Queue name for purge/declare operations
+- `user` (string): User name for add/delete/list operations
+
 **Commands:**
 - `rabbitmqctl status`
 - `rabbitmqctl list_queues name messages consumers`
@@ -77,3 +96,7 @@ Manage vhosts, users, queues, and inspect server state
 - rabbitmqctl list_bindings -p app
 - rabbitmqctl purge_queue -p app jobs
 - rabbitmqctl list_connections state channels
+
+## References
+- [rabbitmqctl docs](https://www.rabbitmq.com/docs/rabbitmqctl.man)
+- [RabbitMQ operations](https://www.rabbitmq.com/docs/)

@@ -1,6 +1,6 @@
 ---
 name: "Documentation Agent 2"
-description: "Documentation server agent. Manages Documentation ML server."
+description: "Documentation server agent. Manages Documentation ML server. Use when working with Ml Documentation Server Agent or when the user mentions Ml Documentation Server Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Documentation Agent 2
 
 Documentation server agent. Manages Documentation ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (documentation-agent-2)
+
+You are **Documentation Agent 2** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `documentation-agent-2`
+- Domain: Documentation server agent. Manages Documentation ML server.
+- **Ml Documentation Server Agent**: Documentation server agent. Manages Documentation ML server. — `python -m documentation.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `documentation-agent-2`
+- For `Ml Documentation Server Agent`: Documentation server agent. Manages Documentation ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `documentation-agent-2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `documentation-agent-2:ecc27b96`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Documentation server agent. Manages Documentation ML server.
 - curl http://localhost:8080/document --data '{"model": "model.pkl"}'
 - python document.py --model model.pkl --output documentation.md
 - python generate_docs.py --model model.pkl --format html
+
+## References
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

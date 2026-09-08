@@ -1,6 +1,6 @@
 ---
 name: "Vllm Python Sdk"
-description: "ML it agent handling vLLM integration."
+description: "ML it agent handling vLLM integration. Use when working with Ml Vllm Python Sdk Agent, inference or when the user mentions Ml Vllm Python Sdk Agent, inference."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Vllm Python Sdk
 
 ML it agent handling vLLM integration.
+
+## Agentic Workflow: Read -> Reason -> Act (vllm-python-sdk)
+
+You are **Vllm Python Sdk** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `vllm-python-sdk`
+- Domain: ML it agent handling vLLM integration.
+- **Ml Vllm Python Sdk Agent**: ML vLLM Python SDK agent for vLLM integration. — `Status: curl http://localhost:8000/v1/models`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `vllm-python-sdk`
+- For `Ml Vllm Python Sdk Agent`: ML vLLM Python SDK agent for vLLM integration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `vllm-python-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Status`, `Serve` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vllm-python-sdk:f9b6264d`
 
 ## Instructions
 
@@ -27,3 +45,8 @@ ML vLLM Python SDK agent for vLLM integration.
 - Serve: python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-chat-hf
 - Client: python -c 'from openai import OpenAI; c = OpenAI(base_url="http://localhost:8000/v1", api_key="none"); r = c.chat.completions.create(model="meta-llama/Llama-2-7b-chat-hf", messages=[{"role": "user", "content": "Hello"}]); print(r.choices[0].message.content)'
 - Status: curl http://localhost:8000/v1/models
+
+## References
+- [vLLM Documentation](https://docs.vllm.ai/)
+- [curl Documentation](https://curl.se/docs/)
+- [Python Documentation](https://docs.python.org/3/)

@@ -1,8 +1,22 @@
-# Webhook
-
 Builds webhook endpoints that receive events from external systems. Registers endpoints, forwards traffic locally with smee, POSTs test payloads with headers, and inspects received events with timing and status verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (webhook)
+
+You are **Webhook** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `webhook`
+- Domain: Builds webhook endpoints that receive events from external systems. Registers endpoints, forwards traffic locally with smee, POSTs test payloads with headers, and inspects received events with timing 
+- **webhook-ops**: Create, receive, and debug webhook endpoints — `smee --url https://smee.io/your-channel --port 8080`
+- Check `knowledge` and `prerequisites: smee, curl`
+
+### 2. Reason — think for `webhook`
+- For `webhook-ops`: Create, receive, and debug webhook endpoints — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `webhook` tools
+- Tools: `Glob`, `Grep`, `Read`, `Smee`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `webhook:46dc4499`
 
 # Webhook
 
@@ -65,6 +79,11 @@ curl -s http://localhost:8080/hooks/received | jq ".[-1]"
 ### webhook-ops
 Create, receive, and debug webhook endpoints
 
+**Parameters:**
+- `event_type` (string): X-Event-Type header describing the event
+- `port` (integer): Port for smee forwarding (default 3000)
+- `url` (string): smee.io channel URL
+
 **Commands:**
 - `smee --url https://smee.io/your-channel --port 8080`
 - `curl -s -X POST http://localhost:8080/hooks -H "Content-Type: application/json" -H "X-Event-Type: order.created" -d "{\"id\":42}" -w "\n%{http_code}\n"`
@@ -76,3 +95,8 @@ Create, receive, and debug webhook endpoints
 - smee --url https://smee.io/demo-channel --port 8080
 - curl -s -X POST http://localhost:8080/hooks -H "Content-Type: application/json" -d "{\"event\":\"payment.succeeded"}" | jq ".received"
 - curl -sI http://localhost:8080/hooks -X OPTIONS | grep -i "x-webhook"
+
+## References
+- [Webhooks.fyi](https://webhooks.fyi/)
+- [GitHub Webhooks](https://docs.github.com/en/webhooks)
+- [Stripe Webhooks](https://docs.stripe.com/webhooks)

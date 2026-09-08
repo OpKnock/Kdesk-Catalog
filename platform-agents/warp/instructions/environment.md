@@ -1,8 +1,24 @@
-# environment
-
 Manages development environments: dotfiles, asdf/mise version managers, direnv environment switching, and shell init configs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (environment)
+
+You are **environment** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `environment`
+- Domain: Manages development environments: dotfiles, asdf/mise version managers, direnv environment switching, and shell init configs.
+- **runtime-version-managers**: Install and switch tool versions with asdf/mise. — `asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git`
+- **directory-env-and-shell**: Load environment variables per directory with direnv and manage shell init. — `direnv allow .`
+- Check `knowledge` and `prerequisites: asdf, direnv, env, mise`
+
+### 2. Reason — think for `environment`
+- For `runtime-version-managers`: Install and switch tool versions with asdf/mise. — decide which checks to run
+- For `directory-env-and-shell`: Load environment variables per directory with direnv and manage shell init. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `environment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Asdf`, `Mise` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `environment:674693a2`
 
 # Environment Engineering
 
@@ -66,6 +82,10 @@ use asdf
 ### runtime-version-managers
 Install and switch tool versions with asdf/mise.
 
+**Parameters:**
+- `tool` (string): Tool name, e.g. nodejs, python, ruby
+- `version` (string): Version to install or set
+
 **Commands:**
 - `asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git`
 - `asdf install nodejs 20.11.0`
@@ -82,6 +102,10 @@ Install and switch tool versions with asdf/mise.
 ### directory-env-and-shell
 Load environment variables per directory with direnv and manage shell init.
 
+**Parameters:**
+- `dir` (string): Directory with .envrc
+- `env-var` (string): Environment variable to inspect or set
+
 **Commands:**
 - `direnv allow .`
 - `direnv edit .`
@@ -94,3 +118,8 @@ Load environment variables per directory with direnv and manage shell init.
 - direnv allow .
 - direnv edit .
 - direnv status
+
+## References
+- [asdf Documentation](https://asdf-vm.com/)
+- [direnv](https://direnv.net/)
+- [mise](https://mise.jdx.dev/)

@@ -1,6 +1,6 @@
 ---
 name: "testing-cucumber"
-description: "Cucumber BDD testing agent for behavior-driven development."
+description: "Cucumber BDD testing agent for behavior-driven development. Use when working with Testing Cucumber, automation or when the user mentions Testing Cucumber, automation."
 type: knowledge
 triggers: ["testing-cucumber", "testing cucumber"]
 ---
@@ -8,6 +8,24 @@ triggers: ["testing-cucumber", "testing cucumber"]
 # Testing Cucumber
 
 Cucumber BDD testing agent for behavior-driven development.
+
+## Agentic Workflow: Read -> Reason -> Act (testing-cucumber)
+
+You are **Testing Cucumber** (testing/automation) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `testing-cucumber`
+- Domain: Cucumber BDD testing agent for behavior-driven development.
+- **Testing Cucumber**: Cucumber BDD testing agent for behavior-driven development. — `Report: cucumber-js --format json:cucumber-report.json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `testing-cucumber`
+- For `Testing Cucumber`: Cucumber BDD testing agent for behavior-driven development. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `testing-cucumber` tools
+- Tools: `Glob`, `Grep`, `Read`, `Report`, `Generate` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `testing-cucumber:c93d7d3c`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Cucumber BDD testing agent for behavior-driven development.
 - Tags: cucumber-js --tags @smoke
 - Generate: cucumber-js --dry-run
 - Report: cucumber-js --format json:cucumber-report.json
+
+## References
+- [Cucumber Documentation](https://cucumber.io/docs/)

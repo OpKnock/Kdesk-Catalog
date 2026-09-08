@@ -1,8 +1,22 @@
-# Nessus
-
 Manages Tenable Nessus scans from the CLI: creating, launching, and reporting vulnerability scans.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nessus)
+
+You are **Nessus** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `nessus`
+- Domain: Manages Tenable Nessus scans from the CLI: creating, launching, and reporting vulnerability scans.
+- **nessus-cli**: Manage Nessus scans, users, and reports via nessuscli — `nessuscli scan list`
+- Check `knowledge` and `prerequisites: nessuscli`
+
+### 2. Reason — think for `nessus`
+- For `nessus-cli`: Manage Nessus scans, users, and reports via nessuscli — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nessus` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nessuscli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nessus:9973efe4`
 
 # Nessus
 
@@ -66,6 +80,11 @@ by severity (Critical/High/Medium/Low) parsed from the downloaded report.
 ### nessus-cli
 Manage Nessus scans, users, and reports via nessuscli
 
+**Parameters:**
+- `scan-id` (integer): Numeric ID of the scan to start, stop, or report on
+- `targets` (string): IP addresses, CIDRs, or hostnames to scan
+- `format` (string): Report format: nessus, html, pdf, csv, or db
+
 **Commands:**
 - `nessuscli scan list`
 - `nessuscli scan new --name web-scan --targets 10.0.0.10 --policy Basic Network Scan`
@@ -77,3 +96,7 @@ Manage Nessus scans, users, and reports via nessuscli
 - nessuscli scan new --name prod-scan --targets 10.1.2.0/24 --policy 'Advanced Scan'
 - nessuscli scan list | grep -i prod
 - nessuscli report download --scan-id 7 --format html --output scan-report.html
+
+## References
+- [Tenable Nessus docs](https://docs.tenable.com/nessus/)
+- [Nessus CLI commands](https://docs.tenable.com/nessus/Content/CLICommands.htm)

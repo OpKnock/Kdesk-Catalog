@@ -1,8 +1,24 @@
-# dramatiq
-
 Builds and operates Dramatiq task queues with Redis/RabbitMQ brokers, worker CLI, delays, and actor middleware.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (dramatiq)
+
+You are **dramatiq** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `dramatiq`
+- Domain: Builds and operates Dramatiq task queues with Redis/RabbitMQ brokers, worker CLI, delays, and actor middleware.
+- **dramatiq-workers**: Run and manage Dramatiq worker processes. — `dramatiq worker tasks:broker`
+- **dramatiq-broker**: Inspect broker queues and message state directly. — `redis-cli llen dramatiq:default`
+- Check `knowledge` and `prerequisites: dramatiq, python, redis-cli`
+
+### 2. Reason — think for `dramatiq`
+- For `dramatiq-workers`: Run and manage Dramatiq worker processes. — decide which checks to run
+- For `dramatiq-broker`: Inspect broker queues and message state directly. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `dramatiq` tools
+- Tools: `Glob`, `Grep`, `Read`, `Dramatiq`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `dramatiq:c9828ad1`
 
 # Dramatiq
 
@@ -79,6 +95,11 @@ send_welcome.send_with_options(args=(42,), delay=3600000)
 ### dramatiq-workers
 Run and manage Dramatiq worker processes.
 
+**Parameters:**
+- `processes` (integer): Worker process count
+- `threads` (integer): Threads per process
+- `queues` (string): Queues to consume
+
 **Commands:**
 - `dramatiq worker tasks:broker`
 - `dramatiq worker --processes 4 --threads 8 tasks:broker`
@@ -94,6 +115,10 @@ Run and manage Dramatiq worker processes.
 ### dramatiq-broker
 Inspect broker queues and message state directly.
 
+**Parameters:**
+- `queue` (string): Queue name to inspect
+- `pattern` (string): Redis key pattern to scan
+
 **Commands:**
 - `redis-cli llen dramatiq:default`
 - `redis-cli zrange dramatiq:delayed 0 -1`
@@ -103,3 +128,7 @@ Inspect broker queues and message state directly.
 **Examples:**
 - redis-cli llen dramatiq:email
 - redis-cli hgetall dramatiq:message-state
+
+## References
+- [Dramatiq Docs](https://dramatiq.io/)
+- [Dramatiq Examples](https://dramatiq.io/examples.html)

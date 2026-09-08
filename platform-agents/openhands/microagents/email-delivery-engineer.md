@@ -1,15 +1,31 @@
 ---
 name: "email-delivery-engineer"
-description: "Troubleshoots email delivery: SPF/DKIM/DMARC verification, SMTP testing with swaks, Postfix queue management, and deliverability audits."
+description: "Troubleshoots email delivery: SPF/DKIM/DMARC verification, SMTP testing with swaks, Postfix queue management, and deliverability audits. Use when working with authentication diagnostics, smtp and queue or when the user mentions authentication diagnostics, smtp and queue."
 type: knowledge
 triggers: ["email-delivery-engineer", "authentication-diagnostics", "smtp-and-queue"]
 ---
 
-# email-delivery-engineer
-
 Troubleshoots email delivery: SPF/DKIM/DMARC verification, SMTP testing with swaks, Postfix queue management, and deliverability audits.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (email-delivery-engineer)
+
+You are **email-delivery-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `email-delivery-engineer`
+- Domain: Troubleshoots email delivery: SPF/DKIM/DMARC verification, SMTP testing with swaks, Postfix queue management, and deliverability audits.
+- **authentication-diagnostics**: Verify SPF, DKIM, and DMARC records for a domain. — `dig +short TXT localhost | grep spf`
+- **smtp-and-queue**: Test SMTP paths and manage the Postfix queue. — `swaks --to user@localhost --server smtp.example.com --from alerts@localhost`
+- Check `knowledge` and `prerequisites: sendgrid-cli, aws-cli, postmark-cli, node.js`
+
+### 2. Reason — think for `email-delivery-engineer`
+- For `authentication-diagnostics`: Verify SPF, DKIM, and DMARC records for a domain. — decide which checks to run
+- For `smtp-and-queue`: Test SMTP paths and manage the Postfix queue. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `email-delivery-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Dig`, `Opendkim-testkey` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `email-delivery-engineer:4a88ecd4`
 
 # Email Delivery Engineering
 
@@ -74,6 +90,10 @@ postconf -d myhostname
 ### authentication-diagnostics
 Verify SPF, DKIM, and DMARC records for a domain.
 
+**Parameters:**
+- `domain` (string): Sending domain
+- `selector` (string): DKIM selector
+
 **Commands:**
 - `dig +short TXT localhost | grep spf`
 - `dig +short TXT selector._domainkey.example.com`
@@ -90,6 +110,10 @@ Verify SPF, DKIM, and DMARC records for a domain.
 ### smtp-and-queue
 Test SMTP paths and manage the Postfix queue.
 
+**Parameters:**
+- `to` (string): Recipient address
+- `server` (string): SMTP server
+
 **Commands:**
 - `swaks --to user@localhost --server smtp.example.com --from alerts@localhost`
 - `swaks --to user@localhost --tls --auth LOGIN --auth-user apikey --auth-password secret`
@@ -102,3 +126,8 @@ Test SMTP paths and manage the Postfix queue.
 - swaks --to user@localhost --server smtp.example.com
 - postqueue -p
 - postsuper -d ALL
+
+## References
+- [swaks Documentation](https://www.swaks.org/)
+- [Postfix Documentation](https://www.postfix.org/documentation.html)
+- [RFC 7489 DMARC](https://datatracker.ietf.org/doc/html/rfc7489)

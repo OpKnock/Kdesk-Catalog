@@ -1,26 +1,22 @@
 Generate mock servers from OpenAPI specs: Prism, WireMock stubs, and OpenAPI Generator server skeletons.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (mock-server-generation)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Mock Server Generation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx @stoplight/prism-cli mock openapi.yaml`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `mock-server-generation`
+- Domain: Generate mock servers from OpenAPI specs: Prism, WireMock stubs, and OpenAPI Generator server skeletons.
+- **mock-server-generate**: Generate and run mock servers from an OpenAPI/Swagger specification, and manage WireMock stubs. — `npx @stoplight/prism-cli mock openapi.yaml`
+- Check `knowledge` and `prerequisites: java, npx, openapi-generator-cli`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `mock-server-generation`
+- For `mock-server-generate`: Generate and run mock servers from an OpenAPI/Swagger specification, and manage WireMock stubs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `mock-server-generation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Java` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mock-server-generation:358c60e0`
 
 # Mock Server Generation
 

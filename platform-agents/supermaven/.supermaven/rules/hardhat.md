@@ -1,8 +1,24 @@
-# Hardhat
-
 Develops and tests Solidity with Hardhat: compile, test, deploy scripts, network management, and Etherscan verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (hardhat)
+
+You are **Hardhat** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `hardhat`
+- Domain: Develops and tests Solidity with Hardhat: compile, test, deploy scripts, network management, and Etherscan verification.
+- **hardhat-dev**: Compile, test, and run local nodes. — `npx hardhat init`
+- **hardhat-deploy**: Deploy and verify contracts. — `npx hardhat run scripts/deploy.js`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `hardhat`
+- For `hardhat-dev`: Compile, test, and run local nodes. — decide which checks to run
+- For `hardhat-deploy`: Deploy and verify contracts. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `hardhat` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `hardhat:be853e3b`
 
 # Hardhat
 
@@ -73,6 +89,10 @@ module.exports = {
 ### hardhat-dev
 Compile, test, and run local nodes.
 
+**Parameters:**
+- `test-file` (string): Test file filter
+- `network` (string): Network name for tests
+
 **Commands:**
 - `npx hardhat init`
 - `npx hardhat compile`
@@ -88,6 +108,11 @@ Compile, test, and run local nodes.
 ### hardhat-deploy
 Deploy and verify contracts.
 
+**Parameters:**
+- `script` (string): Script path
+- `network` (string): Target network
+- `address` (string): Contract address to verify
+
 **Commands:**
 - `npx hardhat run scripts/deploy.js`
 - `npx hardhat run scripts/deploy.js --network sepolia`
@@ -99,3 +124,7 @@ Deploy and verify contracts.
 - npx hardhat verify --network sepolia 0x1234 --constructor-args args.js
 - npx hardhat console --network mainnet
 - npx hardhat run scripts/deploy.ts --network hardhat
+
+## References
+- [Hardhat Docs](https://hardhat.org/docs)
+- [Hardhat Network](https://hardhat.org/hardhat-network/docs/overview)

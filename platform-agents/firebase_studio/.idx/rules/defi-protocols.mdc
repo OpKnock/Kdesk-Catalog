@@ -1,14 +1,28 @@
 ---
-description: "Develops and tests DeFi protocols with Foundry: compile, test, fork mainnet, and deploy."
+description: "Develops and tests DeFi protocols with Foundry: compile, test, fork mainnet, and deploy. Use when working with foundry workflow or when the user mentions foundry workflow."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# defi-protocols
-
 Develops and tests DeFi protocols with Foundry: compile, test, fork mainnet, and deploy.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (defi-protocols)
+
+You are **defi-protocols** (web3) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — web3 context for `defi-protocols`
+- Domain: Develops and tests DeFi protocols with Foundry: compile, test, fork mainnet, and deploy.
+- **foundry-workflow**: Build, test, and deploy smart contracts with forge and cast — `forge init my_protocol`
+- Check `knowledge` and `prerequisites: solidity, uniswap, aave, hardhat`
+
+### 2. Reason — think for `defi-protocols`
+- For `foundry-workflow`: Build, test, and deploy smart contracts with forge and cast — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `defi-protocols` tools
+- Tools: `Glob`, `Grep`, `Read`, `Forge`, `Cast` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `defi-protocols:c3216307`
 
 # DeFi Protocols
 
@@ -78,6 +92,11 @@ outlines the deployment and verification steps.
 ### foundry-workflow
 Build, test, and deploy smart contracts with forge and cast
 
+**Parameters:**
+- `match-test` (string): Test name filter, e.g. testFuzz_*
+- `fork-url` (string): RPC URL to fork mainnet state for tests
+- `fork-block-number` (integer): Block to fork at for deterministic tests
+
 **Commands:**
 - `forge init my_protocol`
 - `forge build`
@@ -89,3 +108,8 @@ Build, test, and deploy smart contracts with forge and cast
 - forge create src/Token.sol:Token --rpc-url $RPC_URL --private-key $PK
 - cast balance 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B --rpc-url $RPC_URL
 - forge test --gas-report
+
+## References
+- [Foundry Book](https://book.getfoundry.sh/)
+- [EIP-20 token standard](https://eips.ethereum.org/EIPS/eip-20)
+- [OpenZeppelin contracts](https://docs.openzeppelin.com/contracts/)

@@ -1,15 +1,29 @@
 ---
 name: "vector"
-description: "Operates observability pipelines end-to-end. Defines sources, transforms, and sinks in TOML, validates topology before running, inspects live events with tap and top, and generates scaffold configs targeting common log sources."
+description: "Operates observability pipelines end-to-end. Defines sources, transforms, and sinks in TOML, validates topology before running, inspects live events with tap and top, and generates scaffold configs targeting common log sources. Use when working with vector pipelines, api, observability, logging or when the user mentions vector pipelines, api, observability, logging."
 type: knowledge
 triggers: ["vector", "vector-pipelines"]
 ---
 
-# Vector
-
 Operates observability pipelines end-to-end. Defines sources, transforms, and sinks in TOML, validates topology before running, inspects live events with tap and top, and generates scaffold configs targeting common log sources.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (vector)
+
+You are **Vector** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `vector`
+- Domain: Operates observability pipelines end-to-end. Defines sources, transforms, and sinks in TOML, validates topology before running, inspects live events with tap and top, and generates scaffold configs ta
+- **vector-pipelines**: Build and run Vector observability pipelines — `vector validate /etc/vector/vector.toml`
+- Check `knowledge` and `prerequisites: vector`
+
+### 2. Reason — think for `vector`
+- For `vector-pipelines`: Build and run Vector observability pipelines — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `vector` tools
+- Tools: `Glob`, `Grep`, `Read`, `Vector` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vector:d3183602`
 
 # Vector
 
@@ -85,6 +99,11 @@ vector tap file_logs --config /etc/vector/vector.toml
 ### vector-pipelines
 Build and run Vector observability pipelines
 
+**Parameters:**
+- `config` (string): Path to vector config file
+- `component` (string): Component id for tap/top
+- `encoding` (string): toml or yaml for generated config
+
 **Commands:**
 - `vector validate /etc/vector/vector.toml`
 - `vector --config /etc/vector/vector.toml`
@@ -96,3 +115,8 @@ Build and run Vector observability pipelines
 - vector validate /etc/vector/vector.toml
 - vector --config /etc/vector/vector.toml
 - vector generate --encoding toml file_nginx_logs/console
+
+## References
+- [Vector config reference](https://vector.dev/docs/reference/configuration/)
+- [Vector CLI commands](https://vector.dev/docs/reference/cli/)
+- [Vector remap language](https://vector.dev/docs/reference/transforms/remap/)

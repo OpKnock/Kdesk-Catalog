@@ -1,15 +1,31 @@
 ---
 name: "cicd-pipeline"
-description: "Designs pipeline-as-code flows, runs CI locally with act, and enforces pipeline quality gates with linters and security scanners."
+description: "Designs pipeline-as-code flows, runs CI locally with act, and enforces pipeline quality gates with linters and security scanners. Use when working with local pipeline runtime, pipeline quality gates, devops or when the user mentions local pipeline runtime, pipeline quality gates, devops."
 type: knowledge
 triggers: ["cicd-pipeline", "local-pipeline-runtime", "pipeline-quality-gates"]
 ---
 
-# Cicd Pipeline
-
 Designs pipeline-as-code flows, runs CI locally with act, and enforces pipeline quality gates with linters and security scanners.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cicd-pipeline)
+
+You are **Cicd Pipeline** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `cicd-pipeline`
+- Domain: Designs pipeline-as-code flows, runs CI locally with act, and enforces pipeline quality gates with linters and security scanners.
+- **local-pipeline-runtime**: Execute GitHub Actions workflows locally without a runner using nektos/act. — `act -l`
+- **pipeline-quality-gates**: Enforce pipeline quality with linting, shell checks, and image scanning in CI. — `actionlint .github/workflows/ci.yml`
+- Check `knowledge` and `prerequisites: act, actionlint, hadolint, semgrep`
+
+### 2. Reason — think for `cicd-pipeline`
+- For `local-pipeline-runtime`: Execute GitHub Actions workflows locally without a runner using nektos/act. — decide which checks to run
+- For `pipeline-quality-gates`: Enforce pipeline quality with linting, shell checks, and image scanning in CI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cicd-pipeline` tools
+- Tools: `Glob`, `Grep`, `Read`, `Act`, `Actionlint` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cicd-pipeline:5b40f2ba`
 
 # Pipeline-as-Code Engineering
 
@@ -68,6 +84,11 @@ semgrep ci --config auto                # SAST on the repo
 ### local-pipeline-runtime
 Execute GitHub Actions workflows locally without a runner using nektos/act.
 
+**Parameters:**
+- `event` (string): Event to simulate, e.g. push, pull_request, schedule
+- `job` (string): Single job to execute, e.g. -j test
+- `secret-file` (string): File containing secrets for local run
+
 **Commands:**
 - `act -l`
 - `act push -j test`
@@ -83,6 +104,10 @@ Execute GitHub Actions workflows locally without a runner using nektos/act.
 ### pipeline-quality-gates
 Enforce pipeline quality with linting, shell checks, and image scanning in CI.
 
+**Parameters:**
+- `config-path` (string): Path to workflow or Dockerfile to lint
+- `severity` (string): Minimum severity threshold for scanners
+
 **Commands:**
 - `actionlint .github/workflows/ci.yml`
 - `shellcheck scripts/*.sh`
@@ -94,3 +119,8 @@ Enforce pipeline quality with linting, shell checks, and image scanning in CI.
 - actionlint .github/workflows/ci.yml
 - shellcheck deploy.sh && hadolint Dockerfile
 - trufflehog filesystem --only-verified .
+
+## References
+- [act - Run GitHub Actions locally](https://github.com/nektos/act)
+- [GitHub Actions Security Hardening](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions)
+- [Hadolint](https://github.com/hadolint/hadolint)

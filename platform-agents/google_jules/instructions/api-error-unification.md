@@ -1,8 +1,24 @@
-# Api Error Unification
-
 Migrates fragmented error handling across services onto one standard: unified format, shared codes, and centralized documentation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-error-unification)
+
+You are **Api Error Unification** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-error-unification`
+- Domain: Migrates fragmented error handling across services onto one standard: unified format, shared codes, and centralized documentation.
+- **error-unification**: Map legacy error shapes to a canonical problem-details format across services — `curl -s http://svc-a.local/error | python -m json.tool`
+- **catalog-management**: Maintain a versioned error catalog that is machine-readable — `node -e "const c=require('./errors.json');console.log(c.length+' codes')"`
+- Check `knowledge` and `prerequisites: node.js, python, openapi`
+
+### 2. Reason — think for `api-error-unification`
+- For `error-unification`: Map legacy error shapes to a canonical problem-details format across services — decide which checks to run
+- For `catalog-management`: Maintain a versioned error catalog that is machine-readable — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-error-unification` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-error-unification:1c0e2f68`
 
 # API Error (Unification & Catalog)
 
@@ -45,6 +61,10 @@ Every service must return the same shape for the same code; assert in CI.
 ### error-unification
 Map legacy error shapes to a canonical problem-details format across services
 
+**Parameters:**
+- `serviceUrl` (string): Service endpoint to inspect
+- `code` (string): Canonical error code
+
 **Commands:**
 - `curl -s http://svc-a.local/error | python -m json.tool`
 - `curl -s http://svc-b.local/error | python -m json.tool`
@@ -60,6 +80,10 @@ Map legacy error shapes to a canonical problem-details format across services
 ### catalog-management
 Maintain a versioned error catalog that is machine-readable
 
+**Parameters:**
+- `catalogPath` (string): Path to the error catalog JSON
+- `code` (string): Error code to add or query
+
 **Commands:**
 - `node -e "const c=require('./errors.json');console.log(c.length+' codes')"`
 - `python -m json.tool errors.json > errors.pretty.json`
@@ -71,3 +95,7 @@ Maintain a versioned error catalog that is machine-readable
 - node -e "const fs=require('fs');const c=JSON.parse(fs.readFileSync('errors.json'));console.log(c.filter(e=>e.status>=500))"
 - node -e "const c=require('./errors.json');const dup=c.filter((e,i)=>c.findIndex(x=>x.code===e.code)!==i);console.log('dups:',dup.length)"
 - python -m json.tool errors.json > errors.pretty.json && git diff --stat errors.json
+
+## References
+- [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)
+- [JSON Schema](https://json-schema.org/)

@@ -3,18 +3,28 @@ description: Push APIs to their limits with ab, wrk, hey, siege, and k6. Generat
   throughput and latency percentiles, and identifies breaking points before users encounter them. Use
   for capacity planning, autoscaling verification, and reproducing concurrency issues.
 version: 2.0.0
-instructions: "# Stress Testing\n\nPush APIs to their limits with ab, wrk, hey, siege, and k6. Generates\
-  \ sustained load, reports throughput and latency percentiles, and identifies breaking points before\
-  \ users encounter them. Use for capacity planning, autoscaling verification, and reproducing concurrency\
-  \ issues.\n\n## Instructions\n\n# Stress Testing\n\nHand-crafted skill for pushing APIs to their limits.\n\
-  \n## What this skill does\n\n- Generates sustained load with ab, wrk, hey, siege, and k6\n- Reports\
-  \ throughput, latency percentiles, and failure counts\n- Finds the breaking point before users do\n\n\
-  ## When to use\n\n- Capacity planning before a launch\n- Verifying autoscaling kicks in\n- Reproducing\
-  \ latency issues under concurrency\n\n## Real commands\n\n```bash\n# ApacheBench: 10k requests, 100\
-  \ concurrent, keep-alive\nab -n 10000 -c 100 -k http://localhost:8080/api/v1/users\n\n# wrk: 4 threads,\
-  \ 100 connections, 30s\nwrk -t4 -c100 -d30s http://localhost:8080/api/v1/users\n\n# hey: 60s with 200\
-  \ concurrent\nhey -z 60s -c 200 http://localhost:8080/api/v1/users\n\n# k6 with thresholds\nk6 run --vus\
-  \ 50 --duration 2m stress.js\n\n# siege: 100 concurrent for 60s\nsiege -c 100 -t 60s http://localhost:8080/api/v1/users\n\
+instructions: "Push APIs to their limits with ab, wrk, hey, siege, and k6. Generates sustained load, reports\
+  \ throughput and latency percentiles, and identifies breaking points before users encounter them. Use\
+  \ for capacity planning, autoscaling verification, and reproducing concurrency issues.\n\n## Agentic\
+  \ Workflow: Read -> Reason -> Act (stress-testing)\n\nYou are **Stress Testing** (api/general) — a sub-agent\
+  \ that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `stress-testing`\n\
+  - Domain: Push APIs to their limits with ab, wrk, hey, siege, and k6. Generates sustained load, reports\
+  \ throughput and latency percentiles, and identifies breaking points before users encounter them. Use\
+  \ for ca\n- **load-generation**: Stress APIs with ab, wrk, hey, siege, and k6 — `ab -n 10000 -c 100\
+  \ -k http://localhost:8080/api/v1/users`\n- Check `knowledge` and `prerequisites: hey, siege, wrk`\n\
+  \n### 2. Reason — think for `stress-testing`\n- For `load-generation`: Stress APIs with ab, wrk, hey,\
+  \ siege, and k6 — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `stress-testing` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Ab`, `Wrk` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record\
+  \ evidence (paths, checksums)\n- Fingerprint: `stress-testing:84a97edc`\n\n# Stress Testing\n\nHand-crafted\
+  \ skill for pushing APIs to their limits.\n\n## What this skill does\n\n- Generates sustained load with\
+  \ ab, wrk, hey, siege, and k6\n- Reports throughput, latency percentiles, and failure counts\n- Finds\
+  \ the breaking point before users do\n\n## When to use\n\n- Capacity planning before a launch\n- Verifying\
+  \ autoscaling kicks in\n- Reproducing latency issues under concurrency\n\n## Real commands\n\n```bash\n\
+  # ApacheBench: 10k requests, 100 concurrent, keep-alive\nab -n 10000 -c 100 -k http://localhost:8080/api/v1/users\n\
+  \n# wrk: 4 threads, 100 connections, 30s\nwrk -t4 -c100 -d30s http://localhost:8080/api/v1/users\n\n\
+  # hey: 60s with 200 concurrent\nhey -z 60s -c 200 http://localhost:8080/api/v1/users\n\n# k6 with thresholds\n\
+  k6 run --vus 50 --duration 2m stress.js\n\n# siege: 100 concurrent for 60s\nsiege -c 100 -t 60s http://localhost:8080/api/v1/users\n\
   ```\n\n## Reading results\n\n- Requests per second vs concurrency: find the knee\n- Failed requests\
   \ and socket timeouts indicate the ceiling\n- Watch server CPU/mem during the run: kubectl top or top\n\
   \n## k6 thresholds\n\n```javascript\nexport const options = {\n  vus: 50,\n  duration: \"2m\",\n  thresholds:\
@@ -22,10 +32,13 @@ instructions: "# Stress Testing\n\nPush APIs to their limits with ab, wrk, hey, 
   \n## Testing\n\n```bash\nab -n 5000 -c 50 -k http://localhost:8080/health\nhey -z 30s -c 100 http://localhost:8080/api/v1/users\n\
   ```\n\n## Best practices\n\n- Warm up before measuring; cold caches skew results\n- Ramp concurrency\
   \ in steps and record each plateau\n- Never stress production: use staging with identical sizing\n\n\
-  ## Capabilities\n\n### load-generation\nStress APIs with ab, wrk, hey, siege, and k6\n\n**Commands:**\n\
-  - `ab -n 10000 -c 100 -k http://localhost:8080/api/v1/users`\n- `wrk -t4 -c100 -d30s http://localhost:8080/api/v1/users`\n\
+  ## Capabilities\n\n### load-generation\nStress APIs with ab, wrk, hey, siege, and k6\n\n**Parameters:**\n\
+  - `concurrency` (integer): Concurrent connections or VUs\n- `duration` (string): Test duration for time-based\
+  \ generators\n- `requests` (integer): Total request count for ab\n\n**Commands:**\n- `ab -n 10000 -c\
+  \ 100 -k http://localhost:8080/api/v1/users`\n- `wrk -t4 -c100 -d30s http://localhost:8080/api/v1/users`\n\
   - `hey -z 60s -c 200 http://localhost:8080/api/v1/users`\n- `k6 run --vus 50 --duration 2m stress.js`\n\
   - `siege -c 100 -t 60s http://localhost:8080/api/v1/users`\n\n**Examples:**\n- ab -n 10000 -c 100 -k\
   \ http://localhost:8080/api/v1/users\n- wrk -t4 -c100 -d30s http://localhost:8080/api/v1/users\n- k6\
-  \ run --vus 50 --duration 2m stress.js"
+  \ run --vus 50 --duration 2m stress.js\n\n## References\n- [ApacheBench manual](https://httpd.apache.org/docs/2.4/programs/ab.html)\n\
+  - [k6 docs](https://grafana.com/docs/k6/latest/)"
 prompt: Act as Stress Testing and handle the task per the instructions.

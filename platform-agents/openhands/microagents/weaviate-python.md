@@ -1,6 +1,6 @@
 ---
 name: "weaviate-python"
-description: "Weaviate SDK deployment agent for ML Weaviate vector database SDK deployment."
+description: "Weaviate SDK deployment agent for ML Weaviate vector database SDK deployment. Use when working with Ml Weaviate Deploy Sdk, vector db or when the user mentions Ml Weaviate Deploy Sdk, vector db."
 type: knowledge
 triggers: ["weaviate-python", "ml weaviate deploy sdk"]
 ---
@@ -8,6 +8,24 @@ triggers: ["weaviate-python", "ml weaviate deploy sdk"]
 # Weaviate Python
 
 Weaviate SDK deployment agent for ML Weaviate vector database SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (weaviate-python)
+
+You are **Weaviate Python** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `weaviate-python`
+- Domain: Weaviate SDK deployment agent for ML Weaviate vector database SDK deployment.
+- **Ml Weaviate Deploy Sdk**: Weaviate SDK deployment agent for ML Weaviate vector database SDK deployment. — `Python: python -c "import weaviate; client = weaviate.Client('http://localhost:8`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `weaviate-python`
+- For `Ml Weaviate Deploy Sdk`: Weaviate SDK deployment agent for ML Weaviate vector database SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `weaviate-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Python`, `Node` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `weaviate-python:9c8dcace`
 
 ## Instructions
 
@@ -25,3 +43,7 @@ Weaviate SDK deployment agent for ML Weaviate vector database SDK deployment.
 **Examples:**
 - Python: python -c "import weaviate; client = weaviate.Client('http://localhost:8080'); print(client.is_ready())"
 - Node: node -e "const weaviate = require('weaviate-client'); const client = weaviate.client({scheme: 'http', host: 'localhost:8080'}); console.log(client.schema);"
+
+## References
+- [Weaviate Documentation](https://weaviate.io/developers/weaviate/)
+- [Python Documentation](https://docs.python.org/3/)

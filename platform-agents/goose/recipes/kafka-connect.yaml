@@ -2,39 +2,55 @@ title: Kafka Connect
 description: 'Run and operate Kafka Connect clusters: standalone and distributed workers, connector lifecycle
   via the REST API, and status/offset inspection.'
 version: 2.0.0
-instructions: "# Kafka Connect\n\nRun and operate Kafka Connect clusters: standalone and distributed workers,\
-  \ connector lifecycle via the REST API, and status/offset inspection.\n\n## Instructions\n\n# Kafka\
-  \ Connect\n\nRun and manage Kafka Connect for streaming data between Kafka and external systems.\n\n\
-  ## What this skill does\n\n- Starts standalone and distributed Connect workers.\n- Creates, lists, pauses,\
-  \ and deletes connectors via the REST API.\n- Inspects task status, configs, and offset topics.\n\n\
-  ## When to use\n\n- Ingesting DB/file/S3 data into Kafka (source connectors).\n- Sinking Kafka data\
-  \ to Elasticsearch, S3, or JDBC (sink connectors).\n- CDC pipelines with Debezium.\n\n## Real commands\n\
-  \n```bash\n# Distributed worker\nconnect-distributed.sh config/connect-distributed.properties\n\n# Standalone\
-  \ (dev) with one source connector\nconnect-standalone.sh config/connect-standalone.properties \\\n \
-  \ config/connector-file-source.properties\n\n# List connectors\ncurl -s http://localhost:8083/connectors\n\
-  \n# Create a connector from JSON\ncurl -s -X POST http://localhost:8083/connectors \\\n  -H 'Content-Type:\
-  \ application/json' -d @file-source.json\n\n# Check status (task assignment, errors)\ncurl -s http://localhost:8083/connectors/file-source/status\
-  \ | jq .\n\n# List installed connector plugins\ncurl -s http://localhost:8083/connector-plugins | jq\
-  \ '.[].class'\n\n# Delete a connector\ncurl -s -X DELETE http://localhost:8083/connectors/file-source\n\
-  ```\n\n## Connector JSON example\n\n```json\n{\n  \"name\": \"file-source\",\n  \"config\": {\n    \"\
-  connector.class\": \"org.apache.kafka.connect.file.FileStreamSourceConnector\",\n    \"tasks.max\":\
-  \ \"1\",\n    \"topic\": \"orders\",\n    \"file\": \"/data/orders.log\"\n  }\n}\n```\n\n## Testing\n\
-  \n```bash\n# Verify offsets topic exists in distributed mode\nkafka-topics.sh --bootstrap-server localhost:9092\
-  \ --describe --topic connect-offsets\n```\n\n## Best practices\n\n- Use distributed mode in production\
-  \ for rebalancing and failover.\n- Name connectors <source|sink>-<system>-<name>; one connector per\
-  \ logical pipeline.\n- Monitor /connectors/<name>/status in your alerting; tasks fail fast on bad schemas.\n\
-  \n## Capabilities\n\n### worker-runtime\nStart Kafka Connect in standalone or distributed mode.\n\n\
-  **Commands:**\n- `connect-distributed.sh config/connect-distributed.properties`\n- `connect-standalone.sh\
-  \ config/connect-standalone.properties config/connector-file-source.properties`\n- `connect-distributed.sh\
-  \ config/connect-distributed.properties config/worker-log4j.properties`\n- `kafka-topics.sh --bootstrap-server\
-  \ localhost:9092 --describe --topic connect-offsets`\n\n**Examples:**\n- connect-distributed.sh config/connect-distributed.properties\n\
-  - connect-standalone.sh config/connect-standalone.properties config/connector-file-source.properties\n\
-  - kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic connect-offsets\n\n### connector-rest\n\
-  Manage connectors through the Connect REST API (port 8083 by default).\n\n**Commands:**\n- `curl -s\
-  \ http://localhost:8083/connectors`\n- `curl -s -X POST http://localhost:8083/connectors -H 'Content-Type:\
-  \ application/json' -d @file-source.json`\n- `curl -s http://localhost:8083/connectors/file-source/status`\n\
-  - `curl -s http://localhost:8083/connector-plugins`\n- `curl -s -X DELETE http://localhost:8083/connectors/file-source`\n\
-  \n**Examples:**\n- curl -s -X POST http://localhost:8083/connectors -H 'Content-Type: application/json'\
-  \ -d @file-source.json\n- curl -s http://localhost:8083/connectors/file-source/status | jq .tasks\n\
-  - curl -s http://localhost:8083/connector-plugins | jq '.[].class'"
+instructions: "Run and operate Kafka Connect clusters: standalone and distributed workers, connector lifecycle\
+  \ via the REST API, and status/offset inspection.\n\n## Agentic Workflow: Read -> Reason -> Act (kafka-connect)\n\
+  \nYou are **Kafka Connect** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `kafka-connect`\n- Domain: Run and operate Kafka Connect clusters: standalone\
+  \ and distributed workers, connector lifecycle via the REST API, and status/offset inspection.\n- **worker-runtime**:\
+  \ Start Kafka Connect in standalone or distributed mode. — `connect-distributed.sh config/connect-distributed.properties`\n\
+  - **connector-rest**: Manage connectors through the Connect REST API (port 8083 by default). — `curl\
+  \ -s http://localhost:8083/connectors`\n- Check `knowledge` and `prerequisites: connect-distributed.sh,\
+  \ connect-standalone.sh, kafka-topics.sh`\n\n### 2. Reason — think for `kafka-connect`\n- For `worker-runtime`:\
+  \ Start Kafka Connect in standalone or distributed mode. — decide which checks to run\n- For `connector-rest`:\
+  \ Manage connectors through the Connect REST API (port 8083 by default). — decide which checks to run\n\
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute\
+  \ with `kafka-connect` tools\n- Tools: `Glob`, `Grep`, `Read`, `Connect-distributed.sh`, `Connect-standalone.sh`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `kafka-connect:eb7c122f`\n\n# Kafka Connect\n\nRun and manage Kafka Connect\
+  \ for streaming data between Kafka and external systems.\n\n## What this skill does\n\n- Starts standalone\
+  \ and distributed Connect workers.\n- Creates, lists, pauses, and deletes connectors via the REST API.\n\
+  - Inspects task status, configs, and offset topics.\n\n## When to use\n\n- Ingesting DB/file/S3 data\
+  \ into Kafka (source connectors).\n- Sinking Kafka data to Elasticsearch, S3, or JDBC (sink connectors).\n\
+  - CDC pipelines with Debezium.\n\n## Real commands\n\n```bash\n# Distributed worker\nconnect-distributed.sh\
+  \ config/connect-distributed.properties\n\n# Standalone (dev) with one source connector\nconnect-standalone.sh\
+  \ config/connect-standalone.properties \\\n  config/connector-file-source.properties\n\n# List connectors\n\
+  curl -s http://localhost:8083/connectors\n\n# Create a connector from JSON\ncurl -s -X POST http://localhost:8083/connectors\
+  \ \\\n  -H 'Content-Type: application/json' -d @file-source.json\n\n# Check status (task assignment,\
+  \ errors)\ncurl -s http://localhost:8083/connectors/file-source/status | jq .\n\n# List installed connector\
+  \ plugins\ncurl -s http://localhost:8083/connector-plugins | jq '.[].class'\n\n# Delete a connector\n\
+  curl -s -X DELETE http://localhost:8083/connectors/file-source\n```\n\n## Connector JSON example\n\n\
+  ```json\n{\n  \"name\": \"file-source\",\n  \"config\": {\n    \"connector.class\": \"org.apache.kafka.connect.file.FileStreamSourceConnector\"\
+  ,\n    \"tasks.max\": \"1\",\n    \"topic\": \"orders\",\n    \"file\": \"/data/orders.log\"\n  }\n\
+  }\n```\n\n## Testing\n\n```bash\n# Verify offsets topic exists in distributed mode\nkafka-topics.sh\
+  \ --bootstrap-server localhost:9092 --describe --topic connect-offsets\n```\n\n## Best practices\n\n\
+  - Use distributed mode in production for rebalancing and failover.\n- Name connectors <source|sink>-<system>-<name>;\
+  \ one connector per logical pipeline.\n- Monitor /connectors/<name>/status in your alerting; tasks fail\
+  \ fast on bad schemas.\n\n## Capabilities\n\n### worker-runtime\nStart Kafka Connect in standalone or\
+  \ distributed mode.\n\n**Parameters:**\n- `config` (string): Worker properties file.\n- `connector_config`\
+  \ (string): Standalone connector properties file.\n\n**Commands:**\n- `connect-distributed.sh config/connect-distributed.properties`\n\
+  - `connect-standalone.sh config/connect-standalone.properties config/connector-file-source.properties`\n\
+  - `connect-distributed.sh config/connect-distributed.properties config/worker-log4j.properties`\n- `kafka-topics.sh\
+  \ --bootstrap-server localhost:9092 --describe --topic connect-offsets`\n\n**Examples:**\n- connect-distributed.sh\
+  \ config/connect-distributed.properties\n- connect-standalone.sh config/connect-standalone.properties\
+  \ config/connector-file-source.properties\n- kafka-topics.sh --bootstrap-server localhost:9092 --describe\
+  \ --topic connect-offsets\n\n### connector-rest\nManage connectors through the Connect REST API (port\
+  \ 8083 by default).\n\n**Parameters:**\n- `connector` (string): Connector name.\n- `payload` (string):\
+  \ JSON config file posted to /connectors.\n\n**Commands:**\n- `curl -s http://localhost:8083/connectors`\n\
+  - `curl -s -X POST http://localhost:8083/connectors -H 'Content-Type: application/json' -d @file-source.json`\n\
+  - `curl -s http://localhost:8083/connectors/file-source/status`\n- `curl -s http://localhost:8083/connector-plugins`\n\
+  - `curl -s -X DELETE http://localhost:8083/connectors/file-source`\n\n**Examples:**\n- curl -s -X POST\
+  \ http://localhost:8083/connectors -H 'Content-Type: application/json' -d @file-source.json\n- curl\
+  \ -s http://localhost:8083/connectors/file-source/status | jq .tasks\n- curl -s http://localhost:8083/connector-plugins\
+  \ | jq '.[].class'\n\n## References\n- [Kafka Connect Guide](https://kafka.apache.org/documentation/#connect)\n\
+  - [Connect REST API](https://docs.confluent.io/platform/current/connect/references/restapi.html)"
 prompt: Act as Kafka Connect and handle the task per the instructions.

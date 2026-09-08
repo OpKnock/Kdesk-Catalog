@@ -1,15 +1,33 @@
 ---
 name: "cargo-test"
-description: "Runs Rust test suites with cargo test, nextest, and coverage tools, including doctests and race condition checks."
+description: "Runs Rust test suites with cargo test, nextest, and coverage tools, including doctests and race condition checks. Use when working with cargo testing, nextest and coverage, concurrency and vet or when the user mentions cargo testing, nextest and coverage, concurrency and vet."
 type: knowledge
 triggers: ["cargo-test", "cargo-testing", "nextest-and-coverage", "concurrency-and-vet"]
 ---
 
-# cargo-test
-
 Runs Rust test suites with cargo test, nextest, and coverage tools, including doctests and race condition checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cargo-test)
+
+You are **cargo-test** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `cargo-test`
+- Domain: Runs Rust test suites with cargo test, nextest, and coverage tools, including doctests and race condition checks.
+- **cargo-testing**: Run unit, integration, and doc tests. — `cargo test`
+- **nextest-and-coverage**: Faster parallel testing and coverage measurement. — `cargo nextest run`
+- **concurrency-and-vet**: Race detection and lints for tests. — `cargo test -- --test-threads=1`
+- Check `knowledge` and `prerequisites: cargo, rustflags='-c`
+
+### 2. Reason — think for `cargo-test`
+- For `cargo-testing`: Run unit, integration, and doc tests. — decide which checks to run
+- For `nextest-and-coverage`: Faster parallel testing and coverage measurement. — decide which checks to run
+- For `concurrency-and-vet`: Race detection and lints for tests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cargo-test` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `RUSTFLAGS='-C` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cargo-test:a78e3336`
 
 # cargo test
 
@@ -80,6 +98,11 @@ mod tests {
 ### cargo-testing
 Run unit, integration, and doc tests.
 
+**Parameters:**
+- `filter` (string): Test name substring filter
+- `nocapture` (boolean): Show println output from tests
+- `threads` (number): Test thread count
+
 **Commands:**
 - `cargo test`
 - `cargo test my_module::test_name`
@@ -94,6 +117,10 @@ Run unit, integration, and doc tests.
 
 ### nextest-and-coverage
 Faster parallel testing and coverage measurement.
+
+**Parameters:**
+- `outFormat` (string): Coverage format: html, xml, json
+- `partition` (string): Test partition for sharding
 
 **Commands:**
 - `cargo nextest run`
@@ -110,6 +137,10 @@ Faster parallel testing and coverage measurement.
 ### concurrency-and-vet
 Race detection and lints for tests.
 
+**Parameters:**
+- `features` (string): Cargo features to enable
+- `testThreads` (integer): Number of parallel test threads via --test-threads.
+
 **Commands:**
 - `cargo test -- --test-threads=1`
 - `RUSTFLAGS='-C target-feature=+crt-static' cargo test`
@@ -120,3 +151,8 @@ Race detection and lints for tests.
 - cargo test -- --test-threads=1
 - cargo clippy --all-targets -- -D warnings
 - cargo test --features integration
+
+## References
+- [cargo test Reference](https://doc.rust-lang.org/cargo/commands/cargo-test.html)
+- [Nextest Documentation](https://nexte.st/)
+- [cargo-tarpaulin](https://github.com/xd009642/tarpaulin)

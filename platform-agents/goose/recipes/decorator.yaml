@@ -2,12 +2,21 @@ title: Decorator
 description: 'Implements the Decorator pattern in Python with unittest: adding behavior to objects at
   runtime without subclass explosion.'
 version: 2.0.0
-instructions: "# Decorator\n\nImplements the Decorator pattern in Python with unittest: adding behavior\
-  \ to objects at runtime without subclass explosion.\n\n## Instructions\n\n# Decorator Pattern\n\nWrap\
-  \ objects with behavior without changing their contract.\n\n## When to Use\n\n- Adding logging, caching,\
-  \ retries to operations\n- Layering behavior without subclass explosion\n- Compose combinations at runtime\n\
-  \n## Example (Python)\n\n```python\nfrom abc import ABC, abstractmethod\n\nclass Notifier(ABC):\n  \
-  \  @abstractmethod\n    def send(self, message: str) -> str: ...\n\nclass EmailNotifier(Notifier):\n\
+instructions: "Implements the Decorator pattern in Python with unittest: adding behavior to objects at\
+  \ runtime without subclass explosion.\n\n## Agentic Workflow: Read -> Reason -> Act (decorator)\n\n\
+  You are **Decorator** (patterns/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — patterns context for `decorator`\n- Domain: Implements the Decorator pattern in Python\
+  \ with unittest: adding behavior to objects at runtime without subclass explosion.\n- **python-unittest**:\
+  \ Implement and test Decorator pattern examples. — `python -m unittest discover -s tests`\n- Check `knowledge`\
+  \ and `prerequisites: python`\n\n### 2. Reason — think for `decorator`\n- For `python-unittest`: Implement\
+  \ and test Decorator pattern examples. — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `decorator` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `decorator:002dc4ad`\n\n# Decorator\
+  \ Pattern\n\nWrap objects with behavior without changing their contract.\n\n## When to Use\n\n- Adding\
+  \ logging, caching, retries to operations\n- Layering behavior without subclass explosion\n- Compose\
+  \ combinations at runtime\n\n## Example (Python)\n\n```python\nfrom abc import ABC, abstractmethod\n\
+  \nclass Notifier(ABC):\n    @abstractmethod\n    def send(self, message: str) -> str: ...\n\nclass EmailNotifier(Notifier):\n\
   \    def send(self, message: str) -> str:\n        return f\"email: {message}\"\n\nclass LoggingDecorator(Notifier):\n\
   \    def __init__(self, inner: Notifier) -> None:\n        self._inner = inner\n\n    def send(self,\
   \ message: str) -> str:\n        result = self._inner.send(message)\n        return f\"[logged] {result}\"\
@@ -20,9 +29,12 @@ instructions: "# Decorator\n\nImplements the Decorator pattern in Python with un
   \ interface as the wrapped object.\n- Keep decorators stateless and order-independent where possible.\n\
   - Prefer composition (decorators) over inheritance trees.\n- Document wrapper order - it matters.\n\n\
   ## Testing\n\nTest each decorator in isolation and in combination.\n\n## Capabilities\n\n### python-unittest\n\
-  Implement and test Decorator pattern examples.\n\n**Commands:**\n- `python -m unittest discover -s tests`\n\
-  - `python -m unittest tests.test_decorators -v`\n- `python -m unittest tests.test_decorators.DecoratorTest.test_logging_wrapper`\n\
-  - `python -m compileall decorators.py`\n- `python -m unittest discover -s tests -p '*_test.py'`\n\n\
-  **Examples:**\n- python -m unittest discover -s tests -v\n- python -m unittest tests.test_decorators\
-  \ -k log\n- python -m unittest tests.test_decorators.DecoratorTest -v"
+  Implement and test Decorator pattern examples.\n\n**Parameters:**\n- `discover` (string): Auto-discover\
+  \ tests in a directory\n- `pattern` (string): Test file glob pattern\n- `k` (string): Test name filter\n\
+  \n**Commands:**\n- `python -m unittest discover -s tests`\n- `python -m unittest tests.test_decorators\
+  \ -v`\n- `python -m unittest tests.test_decorators.DecoratorTest.test_logging_wrapper`\n- `python -m\
+  \ compileall decorators.py`\n- `python -m unittest discover -s tests -p '*_test.py'`\n\n**Examples:**\n\
+  - python -m unittest discover -s tests -v\n- python -m unittest tests.test_decorators -k log\n- python\
+  \ -m unittest tests.test_decorators.DecoratorTest -v\n\n## References\n- [Refactoring Guru: Decorator](https://refactoring.guru/design-patterns/decorator)\n\
+  - [Python unittest](https://docs.python.org/3/library/unittest.html)"
 prompt: Act as Decorator and handle the task per the instructions.

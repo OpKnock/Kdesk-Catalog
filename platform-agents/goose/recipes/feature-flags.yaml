@@ -2,20 +2,30 @@ title: Feature Flags
 description: 'Feature flag management: launch, evaluate, and retire flags with LaunchDarkly, toggling
   features by environment and user segments.'
 version: 2.0.0
-instructions: "# Feature Flags\n\nFeature flag management: launch, evaluate, and retire flags with LaunchDarkly,\
-  \ toggling features by environment and user segments.\n\n## Instructions\n\n# Feature Flags\n\n## What\
-  \ this skill does\n\nFeature flags decouple deployment from release: code ships dark, and flags enable\
-  \ features per environment, percentage, or user segment. This skill covers LaunchDarkly flag lifecycle\
-  \ via the API and SDK.\n\n## When to use\n\n- Shipping a feature behind a kill switch\n- Progressive\
-  \ rollouts (10% -> 50% -> 100%)\n- Per-customer or per-plan feature gating\n\n## Real commands\n\n```bash\n\
-  # Create a flag\ncurl -s -X POST https://api.launchdarkly.com/api/v2/flags/default -H 'Authorization:\
-  \ $LD_API_KEY' -H 'Content-Type: application/json' -d '{\"name\":\"new-checkout\",\"key\":\"new-checkout\"\
-  ,\"variations\":[{\"value\":false},{\"value\":true}]}' | jq '.key'\n\n# Roll out to 10%\ncurl -s -X\
-  \ PATCH https://api.launchdarkly.com/api/v2/flags/default/new-checkout -H 'Authorization: $LD_API_KEY'\
-  \ -H 'Content-Type: application/json' -d '{\"comment\":\"enable 10%\",\"patch\":[{\"op\":\"replace\"\
-  ,\"path\":\"/fallthrough/rollout\",\"value\":{\"variations\":[{\"variation\":0,\"weight\":90000},{\"\
-  variation\":1,\"weight\":10000}]}}]}' | jq '.key'\n\n# Evaluate in Node\nnode -e \"const {LDClient}=require('launchdarkly-node-server-sdk');const\
-  \ c=LDClient.init(process.env.LD_SDK_KEY);c.on('ready',()=>c.variation('new-checkout',{key:'user-1'},false).then(v=>{console.log('flag\
+instructions: "Feature flag management: launch, evaluate, and retire flags with LaunchDarkly, toggling\
+  \ features by environment and user segments.\n\n## Agentic Workflow: Read -> Reason -> Act (feature-flags)\n\
+  \nYou are **Feature Flags** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `feature-flags`\n- Domain: Feature flag management: launch, evaluate,\
+  \ and retire flags with LaunchDarkly, toggling features by environment and user segments.\n- **flag-ops**:\
+  \ Create and toggle flags in LaunchDarkly, evaluate via the SDK, and audit flag usage. — `curl -s -X\
+  \ POST https://api.launchdarkly.com/api/v2/flags/default -H 'Authorizat`\n- Check `knowledge` and `prerequisites:\
+  \ grep, node`\n\n### 2. Reason — think for `feature-flags`\n- For `flag-ops`: Create and toggle flags\
+  \ in LaunchDarkly, evaluate via the SDK, and audit flag usage. — decide which checks to run\n- Evaluate\
+  \ trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with\
+  \ `feature-flags` tools\n- Tools: `Glob`, `Read`, `Bash`, `Grep` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `feature-flags:6113d63b`\n\
+  \n# Feature Flags\n\n## What this skill does\n\nFeature flags decouple deployment from release: code\
+  \ ships dark, and flags enable features per environment, percentage, or user segment. This skill covers\
+  \ LaunchDarkly flag lifecycle via the API and SDK.\n\n## When to use\n\n- Shipping a feature behind\
+  \ a kill switch\n- Progressive rollouts (10% -> 50% -> 100%)\n- Per-customer or per-plan feature gating\n\
+  \n## Real commands\n\n```bash\n# Create a flag\ncurl -s -X POST https://api.launchdarkly.com/api/v2/flags/default\
+  \ -H 'Authorization: $LD_API_KEY' -H 'Content-Type: application/json' -d '{\"name\":\"new-checkout\"\
+  ,\"key\":\"new-checkout\",\"variations\":[{\"value\":false},{\"value\":true}]}' | jq '.key'\n\n# Roll\
+  \ out to 10%\ncurl -s -X PATCH https://api.launchdarkly.com/api/v2/flags/default/new-checkout -H 'Authorization:\
+  \ $LD_API_KEY' -H 'Content-Type: application/json' -d '{\"comment\":\"enable 10%\",\"patch\":[{\"op\"\
+  :\"replace\",\"path\":\"/fallthrough/rollout\",\"value\":{\"variations\":[{\"variation\":0,\"weight\"\
+  :90000},{\"variation\":1,\"weight\":10000}]}}]}' | jq '.key'\n\n# Evaluate in Node\nnode -e \"const\
+  \ {LDClient}=require('launchdarkly-node-server-sdk');const c=LDClient.init(process.env.LD_SDK_KEY);c.on('ready',()=>c.variation('new-checkout',{key:'user-1'},false).then(v=>{console.log('flag\
   \ =',v);c.close()}))\"\n\n# Audit usage before removal\n grep -rn 'new-checkout' src/ | head -20\n```\n\
   \n## Best practices\n\n- Flags need a default in code (false) so SDK failure degrades safely.\n- Add\
   \ a permanent kill-switch flag for each new major code path.\n- Remove flags within 2-4 weeks of full\
@@ -23,13 +33,15 @@ instructions: "# Feature Flags\n\nFeature flag management: launch, evaluate, and
   \ behavior behind a flag rollout.\n\n## Testing\n\n```bash\n# Verify the flag toggles correctly per\
   \ environment\ncurl -s https://app.launchdarkly.com/api/v2/flags/default/new-checkout -H 'Authorization:\
   \ $LD_API_KEY' | jq '{key, on: .on}'\n```\n\n## Capabilities\n\n### flag-ops\nCreate and toggle flags\
-  \ in LaunchDarkly, evaluate via the SDK, and audit flag usage.\n\n**Commands:**\n- `curl -s -X POST\
-  \ https://api.launchdarkly.com/api/v2/flags/default -H 'Authorization: $LD_API_KEY' -H 'Content-Type:\
-  \ application/json' -d '{\"name\":\"new-checkout\",\"key\":\"new-checkout\",\"variations\":[{\"value\"\
-  :false},{\"value\":true}]}' | jq '.key'`\n- `curl -s -X PATCH https://api.launchdarkly.com/api/v2/flags/default/new-checkout\
-  \ -H 'Authorization: $LD_API_KEY' -H 'Content-Type: application/json' -d '{\"comment\":\"enable 10%\"\
-  ,\"patch\":[{\"op\":\"replace\",\"path\":\"/fallthrough/rollout\",\"value\":{\"variations\":[{\"variation\"\
-  :0,\"weight\":90000},{\"variation\":1,\"weight\":10000}]}}]}' | jq '.key'`\n- `node -e \"const {LDClient}=require('launchdarkly-node-server-sdk');const\
+  \ in LaunchDarkly, evaluate via the SDK, and audit flag usage.\n\n**Parameters:**\n- `flag-key` (string):\
+  \ Flag identifier used in code and API\n- `percentage` (integer): Rollout percentage for the true variation\n\
+  - `context-key` (string): User or context key for evaluation\n\n**Commands:**\n- `curl -s -X POST https://api.launchdarkly.com/api/v2/flags/default\
+  \ -H 'Authorization: $LD_API_KEY' -H 'Content-Type: application/json' -d '{\"name\":\"new-checkout\"\
+  ,\"key\":\"new-checkout\",\"variations\":[{\"value\":false},{\"value\":true}]}' | jq '.key'`\n- `curl\
+  \ -s -X PATCH https://api.launchdarkly.com/api/v2/flags/default/new-checkout -H 'Authorization: $LD_API_KEY'\
+  \ -H 'Content-Type: application/json' -d '{\"comment\":\"enable 10%\",\"patch\":[{\"op\":\"replace\"\
+  ,\"path\":\"/fallthrough/rollout\",\"value\":{\"variations\":[{\"variation\":0,\"weight\":90000},{\"\
+  variation\":1,\"weight\":10000}]}}]}' | jq '.key'`\n- `node -e \"const {LDClient}=require('launchdarkly-node-server-sdk');const\
   \ c=LDClient.init(process.env.LD_SDK_KEY);c.on('ready',()=>c.variation('new-checkout',{key:'user-1'},false).then(v=>{console.log('flag\
   \ =',v);c.close()}))\"`\n- `grep -rn 'new-checkout' src/ | head -20`\n- `curl -s https://app.launchdarkly.com/api/v2/flags/default/new-checkout\
   \ -H 'Authorization: $LD_API_KEY' | jq '{key, on: .on, targeting: .fallthrough.rollout}'`\n\n**Examples:**\n\
@@ -38,5 +50,6 @@ instructions: "# Feature Flags\n\nFeature flag management: launch, evaluate, and
   :\"replace\",\"path\":\"/fallthrough/rollout\",\"value\":{\"variations\":[{\"variation\":0,\"weight\"\
   :90000},{\"variation\":1,\"weight\":10000}]}}]}' | jq '.key'\n- node -e \"const {LDClient}=require('launchdarkly-node-server-sdk');const\
   \ c=LDClient.init(process.env.LD_SDK_KEY);c.on('ready',()=>c.variation('new-checkout',{key:'user-1'},false).then(v=>{console.log('flag\
-  \ =',v);c.close()}))\"\n- grep -rn 'new-checkout' src/ | head -20"
+  \ =',v);c.close()}))\"\n- grep -rn 'new-checkout' src/ | head -20\n\n## References\n- [LaunchDarkly\
+  \ REST API](https://apidocs.launchdarkly.com/)\n- [LaunchDarkly Node SDK](https://docs.launchdarkly.com/sdk/server-side/node-js)"
 prompt: Act as Feature Flags and handle the task per the instructions.

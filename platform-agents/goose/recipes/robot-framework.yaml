@@ -2,8 +2,21 @@ title: Robot Framework
 description: Writes keyword-driven acceptance tests with Robot Framework, using tags, variables, data-driven
   tables, and reports.
 version: 2.0.0
-instructions: "# Robot Framework\n\nWrites keyword-driven acceptance tests with Robot Framework, using\
-  \ tags, variables, data-driven tables, and reports.\n\n## Instructions\n\n# Robot Framework\n\nKeyword-driven\
+instructions: "Writes keyword-driven acceptance tests with Robot Framework, using tags, variables, data-driven\
+  \ tables, and reports.\n\n## Agentic Workflow: Read -> Reason -> Act (robot-framework)\n\nYou are **Robot\
+  \ Framework** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — testing context for `robot-framework`\n- Domain: Writes keyword-driven acceptance tests\
+  \ with Robot Framework, using tags, variables, data-driven tables, and reports.\n- **robot-runs**: Run\
+  \ Robot test suites with tags and outputs. — `robot tests.robot`\n- **data-driven-tests**: Write table-driven\
+  \ test cases. — `robot --dryrun tests.robot`\n- **reports-and-tools**: Rebuild logs and run postprocessing\
+  \ tools. — `rebot --outputdir results/rebot output.xml`\n- Check `knowledge` and `prerequisites: python,\
+  \ rebot, robot`\n\n### 2. Reason — think for `robot-framework`\n- For `robot-runs`: Run Robot test suites\
+  \ with tags and outputs. — decide which checks to run\n- For `data-driven-tests`: Write table-driven\
+  \ test cases. — decide which checks to run\n- For `reports-and-tools`: Rebuild logs and run postprocessing\
+  \ tools. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `robot-framework` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Robot`, `Rebot` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record\
+  \ evidence (paths, checksums)\n- Fingerprint: `robot-framework:2a90e4c0`\n\n# Robot Framework\n\nKeyword-driven\
   \ acceptance testing with readable tables.\n\n## What This Skill Does\n\n- Writes tests in the Robot\
   \ data table syntax\n- Filters by tags and test names\n- Overrides variables per environment\n- Merges\
   \ and rebuilds logs with rebot\n\n## When to Use\n\n- Acceptance and BDD-style test suites\n- UI/API\
@@ -19,16 +32,21 @@ instructions: "# Robot Framework\n\nWrites keyword-driven acceptance tests with 
   \n- Write custom keywords for reusable steps\n- Use [Template] for data-driven cases\n- Tag suites (smoke,\
   \ slow, broken) and run subsets\n- Keep variables in variable files per environment\n- Archive output.xml/log.html\
   \ for audit trails\n\n## Capabilities\n\n### robot-runs\nRun Robot test suites with tags and outputs.\n\
-  \n**Commands:**\n- `robot tests.robot`\n- `robot --outputdir results tests/`\n- `robot -t \"User Login\"\
-  \ tests.robot`\n- `robot -i smoke -e slow tests/`\n- `robot -v HOST:localhost:8000 tests.robot`\n\n\
-  **Examples:**\n- robot --outputdir results tests/\n- robot -t \"User Login\" tests.robot\n- robot -i\
-  \ smoke -e slow tests/\n\n### data-driven-tests\nWrite table-driven test cases.\n\n**Commands:**\n-\
-  \ `robot --dryrun tests.robot`\n- `robot --listener RobotMongo?db=mongotest.robot`\n- `robot --metadata\
-  \ version:1.2 tests/`\n- `robot --logtitle \"Release tests\" tests.robot`\n\n**Examples:**\n- robot\
-  \ --dryrun tests.robot\n- robot --metadata version:1.2 tests/\n- robot --logtitle \"Release tests\"\
-  \ tests.robot\n\n### reports-and-tools\nRebuild logs and run postprocessing tools.\n\n**Commands:**\n\
-  - `rebot --outputdir results/rebot output.xml`\n- `rebot --merge output1.xml output2.xml`\n- `robot\
-  \ --console verbose tests.robot`\n- `python -m robot.tidy --format robot tests.robot`\n\n**Examples:**\n\
-  - rebot --merge output1.xml output2.xml\n- rebot --outputdir merged results/output.xml\n- robot --console\
-  \ verbose tests.robot"
+  \n**Parameters:**\n- `testName` (string): Test name filter (-t)\n- `include` (string): Tag to include\
+  \ (-i)\n- `variable` (string): Variable override (-v)\n\n**Commands:**\n- `robot tests.robot`\n- `robot\
+  \ --outputdir results tests/`\n- `robot -t \"User Login\" tests.robot`\n- `robot -i smoke -e slow tests/`\n\
+  - `robot -v HOST:localhost:8000 tests.robot`\n\n**Examples:**\n- robot --outputdir results tests/\n\
+  - robot -t \"User Login\" tests.robot\n- robot -i smoke -e slow tests/\n\n### data-driven-tests\nWrite\
+  \ table-driven test cases.\n\n**Parameters:**\n- `dryrun` (boolean): Validate without executing\n- `metadata`\
+  \ (string): Metadata key:value\n\n**Commands:**\n- `robot --dryrun tests.robot`\n- `robot --listener\
+  \ RobotMongo?db=mongotest.robot`\n- `robot --metadata version:1.2 tests/`\n- `robot --logtitle \"Release\
+  \ tests\" tests.robot`\n\n**Examples:**\n- robot --dryrun tests.robot\n- robot --metadata version:1.2\
+  \ tests/\n- robot --logtitle \"Release tests\" tests.robot\n\n### reports-and-tools\nRebuild logs and\
+  \ run postprocessing tools.\n\n**Parameters:**\n- `outputXml` (string): output.xml path for rebot\n\
+  - `merge` (boolean): Merge multiple output.xml files with rebot --merge.\n\n**Commands:**\n- `rebot\
+  \ --outputdir results/rebot output.xml`\n- `rebot --merge output1.xml output2.xml`\n- `robot --console\
+  \ verbose tests.robot`\n- `python -m robot.tidy --format robot tests.robot`\n\n**Examples:**\n- rebot\
+  \ --merge output1.xml output2.xml\n- rebot --outputdir merged results/output.xml\n- robot --console\
+  \ verbose tests.robot\n\n## References\n- [Robot Framework User Guide](https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html)\n\
+  - [Robot Framework GitHub](https://github.com/robotframework/robotframework)"
 prompt: Act as Robot Framework and handle the task per the instructions.

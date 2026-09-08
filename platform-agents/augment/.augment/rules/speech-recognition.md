@@ -5,27 +5,27 @@ description: "Transcribes audio to text with OpenAI Whisper and Vosk, converting
 
 Transcribes audio to text with OpenAI Whisper and Vosk, converting formats, tuning models, and producing SRT/VTT subtitles.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (speech-recognition)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **speech-recognition** (ai) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `whisper audio.mp3 --model small`, `vosk-transcriber -i audio.wav -o transcript.txt`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — ai context for `speech-recognition`
+- Domain: Transcribes audio to text with OpenAI Whisper and Vosk, converting formats, tuning models, and producing SRT/VTT subtitles.
+- **whisper-transcription**: Transcribe audio files with Whisper models and options. — `whisper audio.mp3 --model small`
+- **vosk-offline**: Stream and transcribe with the lightweight Vosk models. — `vosk-transcriber -i audio.wav -o transcript.txt`
+- **audio-preparation**: Convert and inspect audio before transcription. — `ffmpeg -i input.m4a -ar 16000 -ac 1 output.wav`
+- Check `knowledge` and `prerequisites: python, whisper, pyttsx3, vosk`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `speech-recognition`
+- For `whisper-transcription`: Transcribe audio files with Whisper models and options. — decide which checks to run
+- For `vosk-offline`: Stream and transcribe with the lightweight Vosk models. — decide which checks to run
+- For `audio-preparation`: Convert and inspect audio before transcription. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `speech-recognition` tools
+- Tools: `Glob`, `Grep`, `Read`, `Whisper`, `Vosk-transcriber` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `speech-recognition:09bf6477`
 
 # Speech Recognition
 

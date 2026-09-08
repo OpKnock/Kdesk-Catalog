@@ -2,14 +2,47 @@ title: Terraform
 description: 'Writes and applies Terraform configurations: init, plan, apply, format, validate, workspaces,
   providers, and outputs.'
 version: 2.0.0
-instructions: '# Terraform
+instructions: 'Writes and applies Terraform configurations: init, plan, apply, format, validate, workspaces,
+  providers, and outputs.
 
 
-  Writes and applies Terraform configurations: init, plan, apply, format, validate, workspaces, providers,
-  and outputs.
+  ## Agentic Workflow: Read -> Reason -> Act (terraform)
 
 
-  ## Instructions
+  You are **Terraform** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — devops context for `terraform`
+
+  - Domain: Writes and applies Terraform configurations: init, plan, apply, format, validate, workspaces,
+  providers, and outputs.
+
+  - **core-workflow**: Initialize, plan, apply, and destroy infrastructure. — `terraform init`
+
+  - **modules-and-workspaces**: Work with modules, workspaces, outputs, and provider configs. — `terraform
+  get -update`
+
+  - Check `knowledge` and `prerequisites: terraform`
+
+
+  ### 2. Reason — think for `terraform`
+
+  - For `core-workflow`: Initialize, plan, apply, and destroy infrastructure. — decide which checks to
+  run
+
+  - For `modules-and-workspaces`: Work with modules, workspaces, outputs, and provider configs. — decide
+  which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `terraform` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Terraform` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `terraform:53be2fe3`
 
 
   # Terraform Operations
@@ -110,6 +143,13 @@ instructions: '# Terraform
   Initialize, plan, apply, and destroy infrastructure.
 
 
+  **Parameters:**
+
+  - `plan-file` (string): Saved plan file
+
+  - `dir` (string): Config directory
+
+
   **Commands:**
 
   - `terraform init`
@@ -139,6 +179,13 @@ instructions: '# Terraform
   Work with modules, workspaces, outputs, and provider configs.
 
 
+  **Parameters:**
+
+  - `workspace` (string): Workspace name
+
+  - `output` (string): Output name to query
+
+
   **Commands:**
 
   - `terraform get -update`
@@ -160,5 +207,14 @@ instructions: '# Terraform
 
   - terraform workspace select prod
 
-  - terraform output -json'
+  - terraform output -json
+
+
+  ## References
+
+  - [Terraform Documentation](https://developer.hashicorp.com/terraform/docs)
+
+  - [Terraform Language](https://developer.hashicorp.com/terraform/language)
+
+  - [Terraform Registry](https://registry.terraform.io/)'
 prompt: Act as Terraform and handle the task per the instructions.

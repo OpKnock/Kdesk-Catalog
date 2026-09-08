@@ -1,15 +1,31 @@
 ---
 name: "api-cache-engineer"
-description: "Implements API caching layers: Redis cache-aside with TTLs, HTTP conditional caching, and cache monitoring basics."
+description: "Implements API caching layers: Redis cache-aside with TTLs, HTTP conditional caching, and cache monitoring basics. Use when working with redis ops, conditional requests or when the user mentions redis ops, conditional requests."
 type: knowledge
 triggers: ["api-cache-engineer", "redis-ops", "conditional-requests"]
 ---
 
-# api-cache-engineer
-
 Implements API caching layers: Redis cache-aside with TTLs, HTTP conditional caching, and cache monitoring basics.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-cache-engineer)
+
+You are **api-cache-engineer** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `api-cache-engineer`
+- Domain: Implements API caching layers: Redis cache-aside with TTLs, HTTP conditional caching, and cache monitoring basics.
+- **redis-ops**: Operate Redis caches: keys, TTLs, eviction, and hit-ratio checks — `redis-cli SET api:users:42 '{"id":42}' EX 300`
+- **conditional-requests**: Implement ETag and If-None-Match conditional responses — `curl -s -D - http://localhost:3000/api/users/42 | grep -i etag`
+- Check `knowledge` and `prerequisites: redis, node.js, python`
+
+### 2. Reason — think for `api-cache-engineer`
+- For `redis-ops`: Operate Redis caches: keys, TTLs, eviction, and hit-ratio checks — decide which checks to run
+- For `conditional-requests`: Implement ETag and If-None-Match conditional responses — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-cache-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-cache-engineer:ba4cff30`
 
 # API Cache Engineer
 
@@ -54,6 +70,10 @@ Verify 304 responses for unchanged resources and key expiry with TTL.
 ### redis-ops
 Operate Redis caches: keys, TTLs, eviction, and hit-ratio checks
 
+**Parameters:**
+- `key` (string): Cache key
+- `ttl` (string): TTL seconds
+
 **Commands:**
 - `redis-cli SET api:users:42 '{"id":42}' EX 300`
 - `redis-cli GET api:users:42`
@@ -69,6 +89,10 @@ Operate Redis caches: keys, TTLs, eviction, and hit-ratio checks
 ### conditional-requests
 Implement ETag and If-None-Match conditional responses
 
+**Parameters:**
+- `url` (string): Endpoint URL
+- `etag` (string): ETag value
+
 **Commands:**
 - `curl -s -D - http://localhost:3000/api/users/42 | grep -i etag`
 - `curl -s -H 'If-None-Match: "etag123"' -o /dev/null -w '%{http_code}' http://localhost:3000/api/users/42`
@@ -80,3 +104,7 @@ Implement ETag and If-None-Match conditional responses
 - curl -s -H 'If-None-Match: "etag123"' -o /dev/null -w '%{http_code}' http://localhost:3000/api/users/42
 - node -e "const c=require('crypto');const h=c.createHash('sha1').update(JSON.stringify({id:42})).digest('hex');console.log('ETag: \"'+h+'\"')"
 - curl -s -D - http://localhost:3000/api/users/42 | grep -i -E 'etag|cache-control'
+
+## References
+- [Redis Commands](https://redis.io/docs/latest/commands/)
+- [ETag Conditional Requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/ETag)

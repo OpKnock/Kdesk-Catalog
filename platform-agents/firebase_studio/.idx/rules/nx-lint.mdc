@@ -1,14 +1,28 @@
 ---
-description: "Linting in Nx monorepos: running lints per project, on affected sets, and with parallel execution."
+description: "Linting in Nx monorepos: running lints per project, on affected sets, and with parallel execution. Use when working with nx lint, code quality or when the user mentions nx lint, code quality."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# nx-lint
-
 Linting in Nx monorepos: running lints per project, on affected sets, and with parallel execution.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nx-lint)
+
+You are **nx-lint** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `nx-lint`
+- Domain: Linting in Nx monorepos: running lints per project, on affected sets, and with parallel execution.
+- **nx-lint**: Run lint targets across Nx projects and affected graph — `npx nx lint web`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `nx-lint`
+- For `nx-lint`: Run lint targets across Nx projects and affected graph — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nx-lint` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nx-lint:a56224df`
 
 # Nx Lint
 
@@ -67,6 +81,11 @@ were skipped because they were unaffected and cached.
 ### nx-lint
 Run lint targets across Nx projects and affected graph
 
+**Parameters:**
+- `affected` (boolean): Run lint only on projects affected by the changed files
+- `base` (string): Base commit for the affected graph, e.g. main~1
+- `parallel` (integer): Maximum number of projects linted in parallel
+
 **Commands:**
 - `npx nx lint web`
 - `npx nx run-many -t lint`
@@ -78,3 +97,7 @@ Run lint targets across Nx projects and affected graph
 - npx nx affected -t lint --base=main~1
 - npx nx run-many -t lint --projects=web,api
 - npx nx lint api --skip-nx-cache
+
+## References
+- [Nx linting guide](https://nx.dev/features/lint-project)
+- [nx run-many reference](https://nx.dev/nx-api/nx/documents/run-many)

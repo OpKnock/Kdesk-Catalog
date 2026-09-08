@@ -1,6 +1,6 @@
 ---
 name: "ml-agent-crewai-deploy"
-description: "CrewAI Agent deployment agent for multi-agent orchestration."
+description: "CrewAI Agent deployment agent for multi-agent orchestration. Use when working with Ml Agent Crewai Deploy or when the user mentions Ml Agent Crewai Deploy."
 type: knowledge
 triggers: ["ml-agent-crewai-deploy", "ml agent crewai deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-agent-crewai-deploy", "ml agent crewai deploy"]
 # Ml Agent Crewai Deploy
 
 CrewAI Agent deployment agent for multi-agent orchestration.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-agent-crewai-deploy)
+
+You are **Ml Agent Crewai Deploy** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-agent-crewai-deploy`
+- Domain: CrewAI Agent deployment agent for multi-agent orchestration.
+- **Ml Agent Crewai Deploy**: CrewAI Agent deployment agent for multi-agent orchestration. — `Run: python -m crewai run --config crew.yaml`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-agent-crewai-deploy`
+- For `Ml Agent Crewai Deploy`: CrewAI Agent deployment agent for multi-agent orchestration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-agent-crewai-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Run`, `Server` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-agent-crewai-deploy:884b9416`
 
 ## Instructions
 
@@ -25,3 +43,7 @@ CrewAI Agent deployment agent for multi-agent orchestration.
 **Examples:**
 - Run: python -m crewai run --config crew.yaml
 - Server: python -m crewai.server --port 8080
+
+## References
+- [CrewAI Documentation](https://docs.crewai.com/)
+- [Python Documentation](https://docs.python.org/3/)

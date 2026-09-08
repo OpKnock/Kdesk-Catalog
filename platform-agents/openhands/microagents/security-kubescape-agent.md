@@ -1,6 +1,6 @@
 ---
 name: "security-kubescape-agent"
-description: "Kubescape agent for Kubernetes security scanning."
+description: "Kubescape agent for Kubernetes security scanning. Use when working with Security Kubescape Agent or when the user mentions Security Kubescape Agent."
 type: knowledge
 triggers: ["security-kubescape-agent", "security kubescape agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["security-kubescape-agent", "security kubescape agent"]
 # Security Kubescape Agent
 
 Kubescape agent for Kubernetes security scanning.
+
+## Agentic Workflow: Read -> Reason -> Act (security-kubescape-agent)
+
+You are **Security Kubescape Agent** (security/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `security-kubescape-agent`
+- Domain: Kubescape agent for Kubernetes security scanning.
+- **Security Kubescape Agent**: Kubescape agent for Kubernetes security scanning. — `kubescape scan --format json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `security-kubescape-agent`
+- For `Security Kubescape Agent`: Kubescape agent for Kubernetes security scanning. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `security-kubescape-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kubescape` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `security-kubescape-agent:699d2d23`
 
 ## Instructions
 
@@ -29,3 +47,7 @@ Kubescape agent for Kubernetes security scanning.
 - kubescape scan --format json
 - kubescape scan framework mitre
 - kubescape scan framework cis
+
+## References
+- [Kubescape Documentation](https://kubescape.io/docs/)
+- [CIS Benchmarks](https://www.cisecurity.org/benchmark/)

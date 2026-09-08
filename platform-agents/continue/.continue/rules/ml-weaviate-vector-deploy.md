@@ -1,6 +1,6 @@
 ---
 name: "Ml Weaviate Vector Deploy"
-description: "Weaviate Vector deployment agent handling ML Weaviate vector deployment."
+description: "Weaviate Vector deployment agent handling ML Weaviate vector deployment. Use when working with Ml Weaviate Vector Deploy, vector db or when the user mentions Ml Weaviate Vector Deploy, vector db."
 globs: ["**/*.json", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Weaviate Vector Deploy
 
 Weaviate Vector deployment agent handling ML Weaviate vector deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-weaviate-vector-deploy)
+
+You are **Ml Weaviate Vector Deploy** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-weaviate-vector-deploy`
+- Domain: Weaviate Vector deployment agent handling ML Weaviate vector deployment.
+- **Ml Weaviate Vector Deploy**: Weaviate Vector deployment agent for ML Weaviate vector deployment. — `Schema: curl -X POST http://localhost:8080/v1/schema -H 'Content-Type: applicati`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-weaviate-vector-deploy`
+- For `Ml Weaviate Vector Deploy`: Weaviate Vector deployment agent for ML Weaviate vector deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-weaviate-vector-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Schema`, `Object` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-weaviate-vector-deploy:38e8df1d`
 
 ## Instructions
 
@@ -27,3 +45,8 @@ Weaviate Vector deployment agent for ML Weaviate vector deployment.
 - Schema: curl -X POST http://localhost:8080/v1/schema -H 'Content-Type: application/json' -d '{"class": "Article", "vectorizer": "text2vec-openai"}'
 - Object: curl -X POST http://localhost:8080/v1/objects -H 'Content-Type: application/json' -d '{"class": "Article", "properties": {"title": "Hello"}}'
 - Query: curl -X POST http://localhost:8080/v1/graphql -H 'Content-Type: application/json' -d '{"query": "{Get {Article(nearText: {concepts: [\"machine learning\"]}) {title}}}'}'
+
+## References
+- [Weaviate Documentation](https://weaviate.io/developers/weaviate/)
+- [curl Documentation](https://curl.se/docs/)
+- [GraphQL Specification](https://graphql.org/learn/)

@@ -1,6 +1,6 @@
 ---
 name: "ml-agent-node-agent"
-description: "AI Agent Node.js agent for building autonomous agents."
+description: "AI Agent Node.js agent for building autonomous agents. Use when working with Ml Agent Node Agent or when the user mentions Ml Agent Node Agent."
 type: knowledge
 triggers: ["ml-agent-node-agent", "ml agent node agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-agent-node-agent", "ml agent node agent"]
 # Ml Agent Node Agent
 
 AI Agent Node.js agent for building autonomous agents.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-agent-node-agent)
+
+You are **Ml Agent Node Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-agent-node-agent`
+- Domain: AI Agent Node.js agent for building autonomous agents.
+- **Ml Agent Node Agent**: AI Agent Node.js agent for building autonomous agents. — `AutoGPT.js: node -e "const { AutoGPT } = require('autogptjs'); const agent = new`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-agent-node-agent`
+- For `Ml Agent Node Agent`: AI Agent Node.js agent for building autonomous agents. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-agent-node-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `AutoGPT.js`, `LangChain` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-agent-node-agent:1bd07840`
 
 ## Instructions
 
@@ -25,3 +43,7 @@ AI Agent Node.js agent for building autonomous agents.
 **Examples:**
 - LangChain Agent: node -e "const { initializeAgentExecutor } = require('langchain/agents'); const { ChatOpenAI } = require('langchain/chat_models/openai'); const executor = await initializeAgentExecutor([tool], new ChatOpenAI(), 'zero-shot-react-description'); console.log(await executor.call({input: 'What is the capital of France?'}))"
 - AutoGPT.js: node -e "const { AutoGPT } = require('autogptjs'); const agent = new AutoGPT({name: 'Researcher', goals: ['Research AI']}); console.log(await agent.run())"
+
+## References
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
+- [LangChain Documentation](https://python.langchain.com/docs/)

@@ -1,6 +1,6 @@
 ---
 name: "Serverless Sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Serverless Deploy Sdk Agent or when the user mentions Ml Serverless Deploy Sdk Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Serverless Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (serverless-sdk)
+
+You are **Serverless Sdk** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `serverless-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Serverless Deploy Sdk Agent**: Serverless SDK deployment agent for ML serverless SDK deployment. — `docker build -t less:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `serverless-sdk`
+- For `Ml Serverless Deploy Sdk Agent`: Serverless SDK deployment agent for ML serverless SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `serverless-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `serverless-sdk:3fa16f9f`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Serverless SDK deployment agent for ML serverless SDK deployment.
 **Examples:**
 - Server: python -m serverless.server --port 8080
 - Docker: docker run -p 8080:8080 serverless-server
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

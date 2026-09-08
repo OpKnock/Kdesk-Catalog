@@ -1,14 +1,30 @@
 ---
-description: "Builds schema-driven validation for APIs and data pipelines using JSON Schema, Ajv, and Redocly, with compile-time checks and CI enforcement."
+description: "Builds schema-driven validation for APIs and data pipelines using JSON Schema, Ajv, and Redocly, with compile-time checks and CI enforcement. Use when working with ajv, redocly or when the user mentions ajv, redocly."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# field-validation-engineer-field-validation-engineer
-
 Builds schema-driven validation for APIs and data pipelines using JSON Schema, Ajv, and Redocly, with compile-time checks and CI enforcement.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (field-validation-engineer-field-validation-engineer)
+
+You are **field-validation-engineer-field-validation-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `field-validation-engineer-field-validation-engineer`
+- Domain: Builds schema-driven validation for APIs and data pipelines using JSON Schema, Ajv, and Redocly, with compile-time checks and CI enforcement.
+- **ajv**: Compile and validate data against JSON Schema with Ajv CLI. — `npx ajv-cli compile -s schema.json`
+- **redocly**: Lint OpenAPI definitions for request/response schema quality. — `npx @redocly/cli lint openapi.yaml`
+- Check `knowledge` and `prerequisites: node.js, python, pydantic, zod`
+
+### 2. Reason — think for `field-validation-engineer-field-validation-engineer`
+- For `ajv`: Compile and validate data against JSON Schema with Ajv CLI. — decide which checks to run
+- For `redocly`: Lint OpenAPI definitions for request/response schema quality. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `field-validation-engineer-field-validation-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `field-validation-engineer-field-validation-engineer:b592600a`
 
 # Field Validation
 
@@ -73,6 +89,11 @@ npx ajv-cli test -s schema.json -d cases.json --valid
 ### ajv
 Compile and validate data against JSON Schema with Ajv CLI.
 
+**Parameters:**
+- `schema` (string): Path to the JSON Schema file
+- `data` (string): Path or glob of data files to validate
+- `strict` (string): true|false|log — strict mode for schema correctness
+
 **Commands:**
 - `npx ajv-cli compile -s schema.json`
 - `npx ajv-cli validate -s schema.json -d data.json --strict=true`
@@ -88,6 +109,11 @@ Compile and validate data against JSON Schema with Ajv CLI.
 ### redocly
 Lint OpenAPI definitions for request/response schema quality.
 
+**Parameters:**
+- `extends` (string): Config preset: recommended, minimal, or a local config
+- `format` (string): Output format: stylish, json, or codeframe
+- `skip-rule` (string): Rule id to skip during linting
+
 **Commands:**
 - `npx @redocly/cli lint openapi.yaml`
 - `npx @redocly/cli lint --extends=recommended --format=stylish openapi.yaml`
@@ -99,3 +125,8 @@ Lint OpenAPI definitions for request/response schema quality.
 - npx @redocly/cli lint openapi.yaml --format=json > lint-report.json
 - npx @redocly/cli bundle src/openapi.yaml -o build/openapi.yaml
 - npx @redocly/cli lint --extends=minimal openapi.yaml
+
+## References
+- [JSON Schema Spec](https://json-schema.org/)
+- [Ajv Docs](https://ajv.js.org/)
+- [Redocly CLI](https://www.redocly.com/docs/cli/)

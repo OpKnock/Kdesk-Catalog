@@ -1,8 +1,22 @@
-# kyverno
-
 Kyverno Kubernetes policy engine. Real kyverno CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kyverno)
+
+You are **kyverno** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `kyverno`
+- Domain: Kyverno Kubernetes policy engine. Real kyverno CLI.
+- **kyverno**: Kyverno Kubernetes policy engine. Real kyverno CLI. — `brew install kyverno-cli`
+- Check `knowledge` and `prerequisites: brew, cat, eof, helm`
+
+### 2. Reason — think for `kyverno`
+- For `kyverno`: Kyverno Kubernetes policy engine. Real kyverno CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kyverno` tools
+- Tools: `Glob`, `Grep`, `Read`, `Brew`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kyverno:536f36fe`
 
 # Kyverno
 
@@ -199,3 +213,6 @@ Kyverno Kubernetes policy engine. Real kyverno CLI.
 - brew install kyverno-cli
 - helm install kyverno kyverno/kyverno -n kyverno --create-namespace
 - kyverno apply policy.yaml -r resource.yaml
+
+## References
+- [kyverno Skill Documentation](skills/security/kyverno.md)

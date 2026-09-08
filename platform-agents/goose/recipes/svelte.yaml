@@ -2,15 +2,26 @@ title: svelte
 description: 'Builds reactive Svelte 5 apps with runes, SvelteKit routing, and the sv CLI: dev, check,
   and build workflows.'
 version: 2.0.0
-instructions: "# svelte\n\nBuilds reactive Svelte 5 apps with runes, SvelteKit routing, and the sv CLI:\
-  \ dev, check, and build workflows.\n\n## Instructions\n\n# Svelte\n\nBuild reactive Svelte 5 apps with\
-  \ runes and SvelteKit.\n\n## When to Use\n\n- Small-to-medium apps wanting minimal framework weight\n\
-  - Strong compile-time reactivity with tiny bundles\n- Transitioning from React with a simpler mental\
-  \ model\n\n## Scaffold\n\n```bash\nnpx sv create my-app --template minimal --types ts\nnpm run dev\n\
-  ```\n\n## Runes (Svelte 5)\n\n```svelte\n<script lang=\"ts\">\n  let count = $state(0);\n  const doubled\
-  \ = $derived(count * 2);\n  $effect(() => {\n    console.log('count is', count);\n  });\n</script>\n\
-  \n<button onclick={() => count++}>Count: {count}</button>\n<p>Doubled: {doubled}</p>\n```\n\n## SvelteKit\
-  \ routing\n\n```svelte\n<!-- src/routes/+page.svelte -->\n<h1>Home</h1>\n\n<!-- src/routes/about/+page.svelte\
+instructions: "Builds reactive Svelte 5 apps with runes, SvelteKit routing, and the sv CLI: dev, check,\
+  \ and build workflows.\n\n## Agentic Workflow: Read -> Reason -> Act (svelte)\n\nYou are **svelte**\
+  \ (frontend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1.\
+  \ Read — frontend context for `svelte`\n- Domain: Builds reactive Svelte 5 apps with runes, SvelteKit\
+  \ routing, and the sv CLI: dev, check, and build workflows.\n- **sv-cli**: Create and manage Svelte\
+  \ projects with the sv CLI. — `npx sv create my-app --template minimal --types ts`\n- **check-build**:\
+  \ Type-check and build SvelteKit applications. — `npx svelte-check --tsconfig ./tsconfig.json`\n- Check\
+  \ `knowledge` and `prerequisites: npm, npx`\n\n### 2. Reason — think for `svelte`\n- For `sv-cli`: Create\
+  \ and manage Svelte projects with the sv CLI. — decide which checks to run\n- For `check-build`: Type-check\
+  \ and build SvelteKit applications. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust`\
+  \ + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `svelte` tools\n- Tools: `Glob`,\
+  \ `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any\
+  \ write; record evidence (paths, checksums)\n- Fingerprint: `svelte:84c458b8`\n\n# Svelte\n\nBuild reactive\
+  \ Svelte 5 apps with runes and SvelteKit.\n\n## When to Use\n\n- Small-to-medium apps wanting minimal\
+  \ framework weight\n- Strong compile-time reactivity with tiny bundles\n- Transitioning from React with\
+  \ a simpler mental model\n\n## Scaffold\n\n```bash\nnpx sv create my-app --template minimal --types\
+  \ ts\nnpm run dev\n```\n\n## Runes (Svelte 5)\n\n```svelte\n<script lang=\"ts\">\n  let count = $state(0);\n\
+  \  const doubled = $derived(count * 2);\n  $effect(() => {\n    console.log('count is', count);\n  });\n\
+  </script>\n\n<button onclick={() => count++}>Count: {count}</button>\n<p>Doubled: {doubled}</p>\n```\n\
+  \n## SvelteKit routing\n\n```svelte\n<!-- src/routes/+page.svelte -->\n<h1>Home</h1>\n\n<!-- src/routes/about/+page.svelte\
   \ -->\n<h1>About</h1>\n```\n\n```ts\n// src/routes/+page.server.ts\nexport async function load({ fetch\
   \ }) {\n  const res = await fetch('/api/featured');\n  return { featured: await res.json() };\n}\n```\n\
   \n## Check and build\n\n```bash\nnpx svelte-check --tsconfig ./tsconfig.json --fail-on-warnings\nnpm\
@@ -19,11 +30,16 @@ instructions: "# svelte\n\nBuilds reactive Svelte 5 apps with runes, SvelteKit r
   \ loads lean and streaming for slow APIs.\n- Gate CI on svelte-check with --fail-on-warnings.\n- Use\
   \ `$derived` for anything computed from state.\n\n## Testing\n\n```bash\nnpm run check\nnpm run build\n\
   ```\n\nRun both before release; build failures here are usually adapter config.\n\n## Capabilities\n\
-  \n### sv-cli\nCreate and manage Svelte projects with the sv CLI.\n\n**Commands:**\n- `npx sv create\
-  \ my-app --template minimal --types ts`\n- `npm run dev`\n- `npx sv add tailwindcss`\n- `npx sv add\
-  \ eslint`\n- `npm run preview`\n\n**Examples:**\n- npx sv create blog --template demo --no-install\n\
-  - npx sv add adapter-node\n- npx sv add --check\n\n### check-build\nType-check and build SvelteKit applications.\n\
-  \n**Commands:**\n- `npx svelte-check --tsconfig ./tsconfig.json`\n- `npm run check`\n- `npm run build`\n\
-  - `npx svelte-kit sync`\n- `npm run build && npx svelte-check`\n\n**Examples:**\n- npx svelte-check\
-  \ --tsconfig ./tsconfig.json --fail-on-warnings\n- npx svelte-kit sync\n- npm run check && npm run build"
+  \n### sv-cli\nCreate and manage Svelte projects with the sv CLI.\n\n**Parameters:**\n- `template` (string):\
+  \ minimal, demo, or skeleton starter\n- `types` (string): ts or js type setup\n- `add` (string): Package/adapter\
+  \ to add via sv add\n\n**Commands:**\n- `npx sv create my-app --template minimal --types ts`\n- `npm\
+  \ run dev`\n- `npx sv add tailwindcss`\n- `npx sv add eslint`\n- `npm run preview`\n\n**Examples:**\n\
+  - npx sv create blog --template demo --no-install\n- npx sv add adapter-node\n- npx sv add --check\n\
+  \n### check-build\nType-check and build SvelteKit applications.\n\n**Parameters:**\n- `tsconfig` (string):\
+  \ Path to tsconfig for svelte-check\n- `fail-on-warnings` (string): Exit non-zero on warnings\n- `adapter`\
+  \ (string): Deployment adapter: node, vercel, netlify, static\n\n**Commands:**\n- `npx svelte-check\
+  \ --tsconfig ./tsconfig.json`\n- `npm run check`\n- `npm run build`\n- `npx svelte-kit sync`\n- `npm\
+  \ run build && npx svelte-check`\n\n**Examples:**\n- npx svelte-check --tsconfig ./tsconfig.json --fail-on-warnings\n\
+  - npx svelte-kit sync\n- npm run check && npm run build\n\n## References\n- [Svelte Docs](https://svelte.dev/docs)\n\
+  - [SvelteKit Docs](https://svelte.dev/docs/kit)\n- [sv CLI](https://svelte.dev/docs/cli)"
 prompt: Act as svelte and handle the task per the instructions.

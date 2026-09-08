@@ -2,14 +2,47 @@ title: stern
 description: 'Tails and aggregates logs from multiple Kubernetes pods with regex matching using stern:
   multi-pod, multi-container, and namespace-wide views.'
 version: 2.0.0
-instructions: '# stern
+instructions: 'Tails and aggregates logs from multiple Kubernetes pods with regex matching using stern:
+  multi-pod, multi-container, and namespace-wide views.
 
 
-  Tails and aggregates logs from multiple Kubernetes pods with regex matching using stern: multi-pod,
+  ## Agentic Workflow: Read -> Reason -> Act (stern)
+
+
+  You are **stern** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — devops context for `stern`
+
+  - Domain: Tails and aggregates logs from multiple Kubernetes pods with regex matching using stern: multi-pod,
   multi-container, and namespace-wide views.
 
+  - **multi-pod-tailing**: Tail logs from pod groups matched by regex across namespaces. — `stern web-*`
 
-  ## Instructions
+  - **filtering-and-format**: Filter lines, colorize, and control timestamps and output. — `stern web
+  -i ''GET /health''`
+
+  - Check `knowledge` and `prerequisites: stern`
+
+
+  ### 2. Reason — think for `stern`
+
+  - For `multi-pod-tailing`: Tail logs from pod groups matched by regex across namespaces. — decide which
+  checks to run
+
+  - For `filtering-and-format`: Filter lines, colorize, and control timestamps and output. — decide which
+  checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `stern` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Stern` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `stern:7afdf4c1`
 
 
   # stern Multi-Pod Logging
@@ -110,6 +143,15 @@ instructions: '# stern
   Tail logs from pod groups matched by regex across namespaces.
 
 
+  **Parameters:**
+
+  - `pattern` (string): Pod name regex, e.g. web-*
+
+  - `namespace` (string): Namespace scope
+
+  - `exclude` (string): Regex to exclude lines
+
+
   **Commands:**
 
   - `stern web-*`
@@ -139,6 +181,15 @@ instructions: '# stern
   Filter lines, colorize, and control timestamps and output.
 
 
+  **Parameters:**
+
+  - `include` (string): Regex to include lines
+
+  - `since` (string): Look back window, e.g. 30m
+
+  - `template` (string): Go template for output
+
+
   **Commands:**
 
   - `stern web -i ''GET /health''`
@@ -160,5 +211,12 @@ instructions: '# stern
 
   - stern web --since 30m
 
-  - stern web --template ''{{.PodName}} {{.Message}}'''
+  - stern web --template ''{{.PodName}} {{.Message}}''
+
+
+  ## References
+
+  - [stern GitHub](https://github.com/stern/stern)
+
+  - [stern Documentation](https://stern.io/)'
 prompt: Act as stern and handle the task per the instructions.

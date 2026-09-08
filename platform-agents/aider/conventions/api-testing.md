@@ -1,8 +1,26 @@
-# api-testing
-
 Tests REST APIs with curl, httpie, and Newman, covering auth, contracts, and response validation from the terminal.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-testing)
+
+You are **api-testing** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `api-testing`
+- Domain: Tests REST APIs with curl, httpie, and Newman, covering auth, contracts, and response validation from the terminal.
+- **curl-testing**: Craft and assert on API requests with curl. — `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/users`
+- **httpie-testing**: Human-friendly API testing with httpie. — `http GET http://localhost:8080/v1/users`
+- **newman-collections**: Run Postman collections with assertions in CI. — `newman run api.postman_collection.json`
+- Check `knowledge` and `prerequisites: http, newman`
+
+### 2. Reason — think for `api-testing`
+- For `curl-testing`: Craft and assert on API requests with curl. — decide which checks to run
+- For `httpie-testing`: Human-friendly API testing with httpie. — decide which checks to run
+- For `newman-collections`: Run Postman collections with assertions in CI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Http` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-testing:348794e5`
 
 # API Testing
 
@@ -62,6 +80,11 @@ pm.test("returns 201 and user id", () => {
 ### curl-testing
 Craft and assert on API requests with curl.
 
+**Parameters:**
+- `method` (string): HTTP method: GET, POST, PUT, DELETE
+- `headers` (object): Request headers
+- `data` (object): JSON request body
+
 **Commands:**
 - `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/users`
 - `curl -s -X POST http://localhost:8080/v1/users -H 'Content-Type: application/json' -d '{"name":"alice"}'`
@@ -76,6 +99,10 @@ Craft and assert on API requests with curl.
 
 ### httpie-testing
 Human-friendly API testing with httpie.
+
+**Parameters:**
+- `url` (string): Request URL
+- `fields` (object): Form or JSON fields
 
 **Commands:**
 - `http GET http://localhost:8080/v1/users`
@@ -92,6 +119,11 @@ Human-friendly API testing with httpie.
 ### newman-collections
 Run Postman collections with assertions in CI.
 
+**Parameters:**
+- `collection` (string): Collection JSON path
+- `environment` (string): Environment JSON path
+- `dataFile` (string): CSV/JSON data file for iteration
+
 **Commands:**
 - `newman run api.postman_collection.json`
 - `newman run collection.json -e staging.postman_environment.json`
@@ -103,3 +135,8 @@ Run Postman collections with assertions in CI.
 - newman run collection.json -e staging.env.json
 - newman run collection.json -r html,cli --reporter-html-export report.html
 - newman run collection.json --env-var baseUrl=http://localhost:8080
+
+## References
+- [curl Documentation](https://curl.se/docs/)
+- [httpie Documentation](https://httpie.io/docs/cli)
+- [Newman Documentation](https://learning.postman.com/docs/running-collections/using-newman-cli/)

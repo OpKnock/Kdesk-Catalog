@@ -1,6 +1,6 @@
 ---
 name: "Ml Fairness Deploy"
-description: "Fairness deployment agent for ML fairness service deployment."
+description: "Fairness deployment agent for ML fairness service deployment. Use when working with Ml Fairness Deploy or when the user mentions Ml Fairness Deploy."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Fairness Deploy
 
 Fairness deployment agent for ML fairness service deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-fairness-deploy)
+
+You are **Ml Fairness Deploy** (ml/fairness) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-fairness-deploy`
+- Domain: Fairness deployment agent for ML fairness service deployment.
+- **Ml Fairness Deploy**: Fairness deployment agent for ML fairness service deployment. — `Server: python -m fairness.server --port 8080`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-fairness-deploy`
+- For `Ml Fairness Deploy`: Fairness deployment agent for ML fairness service deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-fairness-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Server`, `Health` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-fairness-deploy:3507d18b`
 
 ## Instructions
 
@@ -27,3 +45,8 @@ Fairness deployment agent for ML fairness service deployment.
 - Server: python -m fairness.server --port 8080
 - API: curl http://localhost:8080/fairness -X POST -H 'Content-Type: application/json' -d '{"model": "my_model", "protected_attributes": ["gender"]}'
 - Health: curl http://localhost:8080/health
+
+## References
+- [Fairlearn Documentation](https://fairlearn.org/)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

@@ -1,8 +1,22 @@
-# confluent-cli
-
 Manages Confluent Cloud/Platform Kafka clusters via the confluent CLI: topics, schemas, and connectors.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (confluent-cli)
+
+You are **confluent-cli** (database/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `confluent-cli`
+- Domain: Manages Confluent Cloud/Platform Kafka clusters via the confluent CLI: topics, schemas, and connectors.
+- **confluent-cli**: Authenticate and manage Kafka clusters, topics, and schema registry — `confluent login --prompt`
+- Check `knowledge` and `prerequisites: confluent`
+
+### 2. Reason — think for `confluent-cli`
+- For `confluent-cli`: Authenticate and manage Kafka clusters, topics, and schema registry — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `confluent-cli` tools
+- Tools: `Glob`, `Grep`, `Read`, `Confluent` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `confluent-cli:13f17bd6`
 
 # Confluent CLI
 
@@ -65,6 +79,11 @@ produce/consume roundtrip with the CLI.
 ### confluent-cli
 Authenticate and manage Kafka clusters, topics, and schema registry
 
+**Parameters:**
+- `partitions` (integer): Partition count for topic creation
+- `from-beginning` (boolean): Consume from the earliest offset
+- `schema` (string): Schema file path for schema create
+
 **Commands:**
 - `confluent login --prompt`
 - `confluent kafka cluster list`
@@ -76,3 +95,7 @@ Authenticate and manage Kafka clusters, topics, and schema registry
 - confluent kafka topic list
 - confluent kafka topic produce orders --parse-key --delimiter :
 - confluent schema-registry schema create --subject orders-value --schema orders.avsc
+
+## References
+- [Confluent CLI docs](https://docs.confluent.io/confluent-cli/)
+- [Schema Registry docs](https://docs.confluent.io/cloud/current/sr/)

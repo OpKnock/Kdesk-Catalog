@@ -1,15 +1,31 @@
 ---
 name: "Api Sec Sql Injection"
-description: "Tests APIs for injection and parameter tampering: sqlmap for SQLi, manual payload probes, fuzzing inputs, and HTTP method abuse checks."
+description: "Tests APIs for injection and parameter tampering: sqlmap for SQLi, manual payload probes, fuzzing inputs, and HTTP method abuse checks. Use when working with sql injection, method abuse or when the user mentions sql injection, method abuse."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# Api Sec Sql Injection
-
 Tests APIs for injection and parameter tampering: sqlmap for SQLi, manual payload probes, fuzzing inputs, and HTTP method abuse checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-sec-sql-injection)
+
+You are **Api Sec Sql Injection** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `api-sec-sql-injection`
+- Domain: Tests APIs for injection and parameter tampering: sqlmap for SQLi, manual payload probes, fuzzing inputs, and HTTP method abuse checks.
+- **sql-injection**: Detect SQL injection in API parameters — `sqlmap -u "http://localhost:8080/search?q=1" --batch --level=2`
+- **method-abuse**: Test HTTP method handling and fuzzing — `curl -s -X OPTIONS http://localhost:8080/users -D- -o /dev/null | grep -i allow`
+- Check `knowledge` and `prerequisites: node.js, python, owasp-zap`
+
+### 2. Reason — think for `api-sec-sql-injection`
+- For `sql-injection`: Detect SQL injection in API parameters — decide which checks to run
+- For `method-abuse`: Test HTTP method handling and fuzzing — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-sec-sql-injection` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sqlmap`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-sec-sql-injection:56049570`
 
 # API Security v3 - Injection Testing
 
@@ -54,6 +70,11 @@ curl -s -X OPTIONS https://api.example.com/users -D- -o /dev/null | grep -i allo
 ### sql-injection
 Detect SQL injection in API parameters
 
+**Parameters:**
+- `url` (string): Target URL with parameters
+- `level` (integer): sqlmap test level 1-5
+- `data` (string): POST body for parameter testing
+
 **Commands:**
 - `sqlmap -u "http://localhost:8080/search?q=1" --batch --level=2`
 - `sqlmap -u "http://localhost:8080/login" --data "email=a&pass=b" --batch`
@@ -77,3 +98,7 @@ Test HTTP method handling and fuzzing
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [sqlmap Docs](https://sqlmap.org/usage.html)
+- [OWASP Injection Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html)

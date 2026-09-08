@@ -1,6 +1,6 @@
 ---
 name: "Serverless Less Server"
-description: "Serverless server agent. Manages serverless ML server."
+description: "Serverless server agent. Manages serverless ML server. Use when working with Ml Serverless Server Agent or when the user mentions Ml Serverless Server Agent."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Serverless Less Server
 
 Serverless server agent. Manages serverless ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (serverless-less-server)
+
+You are **Serverless Less Server** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `serverless-less-server`
+- Domain: Serverless server agent. Manages serverless ML server.
+- **Ml Serverless Server Agent**: Serverless server agent. Manages serverless ML server. — `python -m less.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `serverless-less-server`
+- For `Ml Serverless Server Agent`: Serverless server agent. Manages serverless ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `serverless-less-server` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `serverless-less-server:2f207c2f`
 
 ## Instructions
 
@@ -30,3 +48,7 @@ Serverless server agent. Manages serverless ML server.
 - sam deploy --guided
 - aws lambda invoke --function-name my-function --payload '{"text": "Hello"}' output.json
 - curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

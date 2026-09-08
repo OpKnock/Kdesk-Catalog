@@ -6,27 +6,27 @@ globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.sh"]
 
 Measures and reduces software carbon footprint with Cloud Carbon Footprint, InfraCost, and workload efficiency analysis.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (sustainability-practices)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **sustainability-practices** (environment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `ccf estimate --configfile ccf.config.json --period 2024-01-0`, `infracost breakdown --path .`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — environment context for `sustainability-practices`
+- Domain: Measures and reduces software carbon footprint with Cloud Carbon Footprint, InfraCost, and workload efficiency analysis.
+- **carbon-measurement**: Estimate cloud carbon emissions and energy usage. — `ccf estimate --configfile ccf.config.json --period 2024-01-01 2024-01-31`
+- **cost-efficiency**: Align efficiency with cost using InfraCost and cloud queries. — `infracost breakdown --path .`
+- **workload-efficiency**: Analyze cluster utilization and right-sizing opportunities. — `kubectl top nodes`
+- Check `knowledge` and `prerequisites: green-software, cloud-carbon, energy-api, prometheus`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `sustainability-practices`
+- For `carbon-measurement`: Estimate cloud carbon emissions and energy usage. — decide which checks to run
+- For `cost-efficiency`: Align efficiency with cost using InfraCost and cloud queries. — decide which checks to run
+- For `workload-efficiency`: Analyze cluster utilization and right-sizing opportunities. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `sustainability-practices` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ccf`, `Infracost` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sustainability-practices:d9525cf9`
 
 # Sustainability Practices
 

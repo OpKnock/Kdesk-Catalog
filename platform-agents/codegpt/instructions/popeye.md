@@ -1,8 +1,24 @@
-# popeye
-
 Run full-cluster sanitizer scans and review reports. Customize scans with lint rules, ignore lists, and severity config. misconfigurations, and security issues.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (popeye)
+
+You are **popeye** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `popeye`
+- Domain: Run full-cluster sanitizer scans and review reports. Customize scans with lint rules, ignore lists, and severity config. misconfigurations, and security issues.'
+- **cluster-sanitize**: Run full-cluster sanitizer scans and review reports. — `popeye`
+- **rules-and-overrides**: Customize scans with lint rules, ignore lists, and severity config. — `popeye --lint < rules.yaml`
+- Check `knowledge` and `prerequisites: popeye`
+
+### 2. Reason — think for `popeye`
+- For `cluster-sanitize`: Run full-cluster sanitizer scans and review reports. — decide which checks to run
+- For `rules-and-overrides`: Customize scans with lint rules, ignore lists, and severity config. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `popeye` tools
+- Tools: `Glob`, `Grep`, `Read`, `Popeye` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `popeye:ad92c125`
 
 # Popeye Cluster Sanitizer
 
@@ -66,6 +82,11 @@ popeye --clear-cache
 ### cluster-sanitize
 Run full-cluster sanitizer scans and review reports.
 
+**Parameters:**
+- `namespace` (string): Namespace scope
+- `output` (string): Report format: standard, json, yaml, junit
+- `save` (boolean): Write report to file
+
 **Commands:**
 - `popeye`
 - `popeye -n kube-system`
@@ -82,6 +103,10 @@ Run full-cluster sanitizer scans and review reports.
 ### rules-and-overrides
 Customize scans with lint rules, ignore lists, and severity config.
 
+**Parameters:**
+- `lint` (string): Inline YAML lint rules via stdin
+- `overrides` (string): Overrides file
+
 **Commands:**
 - `popeye --lint < rules.yaml`
 - `popeye --overrides overrides.yaml`
@@ -93,3 +118,7 @@ Customize scans with lint rules, ignore lists, and severity config.
 - popeye --lint < rules.yaml
 - popeye --overrides overrides.yaml
 - popeye -n app -o json > report.json
+
+## References
+- [Popeye GitHub](https://github.com/derailed/popeye)
+- [Popeye Config Reference](https://github.com/derailed/popeye/blob/master/README.md#configuration)

@@ -1,15 +1,31 @@
 ---
 name: "ksql"
-description: "Stream processing with ksqlDB: create streams/tables from Kafka topics, run push/pull queries, and build materialized views with SQL."
+description: "Stream processing with ksqlDB: create streams/tables from Kafka topics, run push/pull queries, and build materialized views with SQL. Use when working with ksql shell, sql queries, api or when the user mentions ksql shell, sql queries, api."
 type: knowledge
 triggers: ["ksql", "ksql-shell", "sql-queries"]
 ---
 
-# Ksql
-
 Stream processing with ksqlDB: create streams/tables from Kafka topics, run push/pull queries, and build materialized views with SQL.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ksql)
+
+You are **Ksql** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `ksql`
+- Domain: Stream processing with ksqlDB: create streams/tables from Kafka topics, run push/pull queries, and build materialized views with SQL.
+- **ksql-shell**: Connect to the ksqlDB server and run SQL statements. — `docker exec -it ksqldb-cli ksql http://ksqldb-server:8088`
+- **sql-queries**: Run push and pull queries against streams and tables. — `curl -X POST http://localhost:8088/query -H 'Content-Type: application/vnd.ksql.`
+- Check `knowledge` and `prerequisites: docker, ksql`
+
+### 2. Reason — think for `ksql`
+- For `ksql-shell`: Connect to the ksqlDB server and run SQL statements. — decide which checks to run
+- For `sql-queries`: Run push and pull queries against streams and tables. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ksql` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Ksql` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ksql:14491c65`
 
 # ksqlDB
 
@@ -93,6 +109,10 @@ echo '{"ID":7,"AMOUNT":2500,"CURRENCY":"USD"}' | \
 ### ksql-shell
 Connect to the ksqlDB server and run SQL statements.
 
+**Parameters:**
+- `server` (string): ksqlDB server endpoint.
+- `file` (string): SQL file to execute.
+
 **Commands:**
 - `docker exec -it ksqldb-cli ksql http://ksqldb-server:8088`
 - `ksql http://localhost:8088 --file statements.sql`
@@ -107,6 +127,10 @@ Connect to the ksqlDB server and run SQL statements.
 ### sql-queries
 Run push and pull queries against streams and tables.
 
+**Parameters:**
+- `sql` (string): ksqlDB SQL statement.
+- `query_type` (string): push (EMIT CHANGES) or pull query.
+
 **Commands:**
 - `curl -X POST http://localhost:8088/query -H 'Content-Type: application/vnd.ksql.v1+json' -d '{"ksql":"SELECT * FROM ORDERS EMIT CHANGES;"}'`
 - `curl -X POST http://localhost:8088/query -H 'Content-Type: application/vnd.ksql.v1+json' -d '{"ksql":"SELECT COUNT(*) FROM ORDERS WINDOW TUMBLING (SIZE 1 MINUTE) GROUP BY CURRENCY EMIT CHANGES;"}'`
@@ -116,3 +140,7 @@ Run push and pull queries against streams and tables.
 **Examples:**
 - curl -X POST http://localhost:8088/query -H 'Content-Type: application/vnd.ksql.v1+json' -d '{"ksql":"SELECT * FROM ORDERS EMIT CHANGES;"}'
 - curl -X POST http://localhost:8088/ksql -H 'Content-Type: application/vnd.ksql.v1+json' -d '{"ksql":"SHOW TABLES;"}'
+
+## References
+- [ksqlDB Documentation](https://docs.ksqldb.io/en/latest/)
+- [ksqlDB REST API](https://docs.ksqldb.io/en/latest/developer-guide/api/)

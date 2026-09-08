@@ -2,17 +2,28 @@ title: Debezium
 description: Registers, inspects, and troubleshoots Kafka Connect connectors that stream row-level changes
   from MySQL, PostgreSQL, and MongoDB via Debezium CDC.
 version: 2.0.0
-instructions: "# Debezium\n\nRegisters, inspects, and troubleshoots Kafka Connect connectors that stream\
-  \ row-level changes from MySQL, PostgreSQL, and MongoDB via Debezium CDC.\n\n## Instructions\n\n# Debezium\n\
-  \n## What this skill does\n\nDebezium is a CDC platform built on Kafka Connect that captures row-level\
-  \ changes from databases and publishes them as events to Kafka. This skill covers connector registration,\
-  \ status inspection, task restart, and snapshot handling.\n\n## When to use\n\n- Streaming database\
-  \ changes into Kafka for event-driven systems\n- Building change-data pipelines (audit, search indexing,\
-  \ cache invalidation)\n- Investigating connectors stuck in FAILED or UNASSIGNED state\n\n## Real commands\n\
-  \n```bash\n# Register a connector from a JSON config file\ncurl -X POST http://localhost:8083/connectors\
-  \ -H 'Content-Type: application/json' -d @mysql-source.json\n\n# List all connectors and their status\n\
-  curl -s http://localhost:8083/connectors | jq\ncurl -s http://localhost:8083/connectors/mysql-source/status\
-  \ | jq '.connector.state, .tasks'\n\n# Restart a failed task\ncurl -X POST http://localhost:8083/connectors/mysql-source/tasks/0/restart\n\
+instructions: "Registers, inspects, and troubleshoots Kafka Connect connectors that stream row-level changes\
+  \ from MySQL, PostgreSQL, and MongoDB via Debezium CDC.\n\n## Agentic Workflow: Read -> Reason -> Act\
+  \ (debezium)\n\nYou are **Debezium** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via\
+  \ `allowed-tools`.\n\n### 1. Read — api context for `debezium`\n- Domain: Registers, inspects, and troubleshoots\
+  \ Kafka Connect connectors that stream row-level changes from MySQL, PostgreSQL, and MongoDB via Debezium\
+  \ CDC.\n- **connector-management**: Register, list, inspect status, and restart Debezium Kafka Connect\
+  \ connectors via the Connect REST A — `curl -X POST http://localhost:8083/connectors -H 'Content-Type:\
+  \ application/json`\n- Check `knowledge` references before acting\n\n### 2. Reason — think for `debezium`\n\
+  - For `connector-management`: Register, list, inspect status, and restart Debezium Kafka Connect connectors\
+  \ via the Connect REST API. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `debezium` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record\
+  \ evidence (paths, checksums)\n- Fingerprint: `debezium:7f230314`\n\n# Debezium\n\n## What this skill\
+  \ does\n\nDebezium is a CDC platform built on Kafka Connect that captures row-level changes from databases\
+  \ and publishes them as events to Kafka. This skill covers connector registration, status inspection,\
+  \ task restart, and snapshot handling.\n\n## When to use\n\n- Streaming database changes into Kafka\
+  \ for event-driven systems\n- Building change-data pipelines (audit, search indexing, cache invalidation)\n\
+  - Investigating connectors stuck in FAILED or UNASSIGNED state\n\n## Real commands\n\n```bash\n# Register\
+  \ a connector from a JSON config file\ncurl -X POST http://localhost:8083/connectors -H 'Content-Type:\
+  \ application/json' -d @mysql-source.json\n\n# List all connectors and their status\ncurl -s http://localhost:8083/connectors\
+  \ | jq\ncurl -s http://localhost:8083/connectors/mysql-source/status | jq '.connector.state, .tasks'\n\
+  \n# Restart a failed task\ncurl -X POST http://localhost:8083/connectors/mysql-source/tasks/0/restart\n\
   \n# Remove a connector and its Kafka topics are kept\ncurl -X DELETE http://localhost:8083/connectors/mysql-source\n\
   ```\n\n## Connector configuration example\n\n```json\n{\n  \"name\": \"mysql-source\",\n  \"config\"\
   : {\n    \"connector.class\": \"io.debezium.connector.mysql.MySqlConnector\",\n    \"database.hostname\"\
@@ -27,11 +38,15 @@ instructions: "# Debezium\n\nRegisters, inspects, and troubleshoots Kafka Connec
   \ catch up once the binlog position is purged.\n- Prefer `snapshot.mode: when_needed` or incremental\
   \ snapshots for large tables.\n- Use offset storage topics with enough partitions and a sane retention.\n\
   \n## Capabilities\n\n### connector-management\nRegister, list, inspect status, and restart Debezium\
-  \ Kafka Connect connectors via the Connect REST API.\n\n**Commands:**\n- `curl -X POST http://localhost:8083/connectors\
-  \ -H 'Content-Type: application/json' -d @mysql-source.json`\n- `curl -s http://localhost:8083/connectors\
-  \ | jq`\n- `curl -s http://localhost:8083/connectors/mysql-source/status | jq '.connector.state, .tasks'`\n\
-  - `curl -X POST http://localhost:8083/connectors/mysql-source/tasks/0/restart`\n- `curl -X DELETE http://localhost:8083/connectors/mysql-source`\n\
+  \ Kafka Connect connectors via the Connect REST API.\n\n**Parameters:**\n- `connector-name` (string):\
+  \ Name of the connector to inspect or restart (e.g. mysql-source)\n- `connect-url` (string): Kafka Connect\
+  \ REST endpoint, default http://localhost:8083\n- `task-id` (integer): Zero-based index of the failing\
+  \ task to restart\n\n**Commands:**\n- `curl -X POST http://localhost:8083/connectors -H 'Content-Type:\
+  \ application/json' -d @mysql-source.json`\n- `curl -s http://localhost:8083/connectors | jq`\n- `curl\
+  \ -s http://localhost:8083/connectors/mysql-source/status | jq '.connector.state, .tasks'`\n- `curl\
+  \ -X POST http://localhost:8083/connectors/mysql-source/tasks/0/restart`\n- `curl -X DELETE http://localhost:8083/connectors/mysql-source`\n\
   \n**Examples:**\n- curl -X POST http://localhost:8083/connectors -H 'Content-Type: application/json'\
   \ -d @mysql-source.json\n- curl -s http://localhost:8083/connectors/mysql-source/status | jq '.connector.state,\
-  \ .tasks'\n- curl -s http://localhost:8083/connectors/mysql-source/config | jq"
+  \ .tasks'\n- curl -s http://localhost:8083/connectors/mysql-source/config | jq\n\n## References\n- [Debezium\
+  \ Documentation](https://debezium.io/documentation/reference/stable/index.html)"
 prompt: Act as Debezium and handle the task per the instructions.

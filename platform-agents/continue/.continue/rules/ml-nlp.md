@@ -1,6 +1,6 @@
 ---
 name: "Ml Nlp"
-description: "NLP agent for text processing, sentiment analysis, chatbots."
+description: "NLP agent for text processing, sentiment analysis, chatbots. Use when working with Ml Nlp, inference or when the user mentions Ml Nlp, inference."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Nlp
 
 NLP agent for text processing, sentiment analysis, chatbots.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-nlp)
+
+You are **Ml Nlp** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-nlp`
+- Domain: NLP agent for text processing, sentiment analysis, chatbots.
+- **Ml Nlp**: NLP agent for text processing, sentiment analysis, chatbots. — `OpenAI: openai chat.completions.create()`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-nlp`
+- For `Ml Nlp`: NLP agent for text processing, sentiment analysis, chatbots. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-nlp` tools
+- Tools: `Glob`, `Grep`, `Read`, `OpenAI`, `Hugging` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-nlp:7877fdba`
 
 ## Instructions
 
@@ -38,3 +56,7 @@ NLP agent for text processing, sentiment analysis, chatbots.
 - NLTK: python -c 'import nltk; nltk.download("punkt")'
 - Hugging Face: transformers.pipeline('sentiment-analysis')
 - OpenAI: openai chat.completions.create()
+
+## References
+- [OpenAI API Documentation](https://platform.openai.com/docs/)
+- [Python Documentation](https://docs.python.org/3/)

@@ -1,15 +1,31 @@
 ---
 name: "git-flow"
-description: "Applies the GitFlow branching model with git-flow extensions: features, releases, hotfixes, and support branches."
+description: "Applies the GitFlow branching model with git-flow extensions: features, releases, hotfixes, and support branches. Use when working with feature branches, releases and hotfixes, devops or when the user mentions feature branches, releases and hotfixes, devops."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# git-flow
-
 Applies the GitFlow branching model with git-flow extensions: features, releases, hotfixes, and support branches.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (git-flow)
+
+You are **git-flow** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `git-flow`
+- Domain: Applies the GitFlow branching model with git-flow extensions: features, releases, hotfixes, and support branches.
+- **feature-branches**: Start, finish, and publish feature branches under git-flow. — `git flow feature start login-passwordless`
+- **releases-and-hotfixes**: Cut releases from develop and patch production from master/main. — `git flow release start 1.2.0`
+- Check `knowledge` and `prerequisites: git`
+
+### 2. Reason — think for `git-flow`
+- For `feature-branches`: Start, finish, and publish feature branches under git-flow. — decide which checks to run
+- For `releases-and-hotfixes`: Cut releases from develop and patch production from master/main. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `git-flow` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `git-flow:a19d0550`
 
 # GitFlow Branching Model
 
@@ -73,6 +89,10 @@ support/x.y -> off main
 ### feature-branches
 Start, finish, and publish feature branches under git-flow.
 
+**Parameters:**
+- `name` (string): Feature branch name
+- `origin` (string): Remote to sync with
+
 **Commands:**
 - `git flow feature start login-passwordless`
 - `git flow feature publish login-passwordless`
@@ -88,6 +108,10 @@ Start, finish, and publish feature branches under git-flow.
 ### releases-and-hotfixes
 Cut releases from develop and patch production from master/main.
 
+**Parameters:**
+- `version` (string): Release or hotfix version tag
+- `message` (string): Tag message on finish
+
 **Commands:**
 - `git flow release start 1.2.0`
 - `git flow release publish 1.2.0`
@@ -100,3 +124,8 @@ Cut releases from develop and patch production from master/main.
 - git flow release start 1.2.0
 - git flow release finish 1.2.0 -m 'Release 1.2.0'
 - git flow hotfix finish 1.2.1
+
+## References
+- [GitFlow Cheatsheet](https://danielkummer.github.io/git-flow-cheatsheet/)
+- [A Successful Git Branching Model](https://nvie.com/posts/a-successful-git-branching-model/)
+- [gitflow-avh](https://github.com/petervanderdoes/gitflow-avh)

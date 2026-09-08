@@ -5,27 +5,27 @@ description: "Enforces API evolution safety with semantic versioning discipline,
 
 Enforces API evolution safety with semantic versioning discipline, additive-only schema changes, media-type and URL-path versioning, and automated breaking-change detection between OpenAPI specifications.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (backward-compatibility)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Backward Compatibility** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npm version minor`, `curl -s -H "Accept: application/vnd.myapi.v2+json" https://a`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `backward-compatibility`
+- Domain: Enforces API evolution safety with semantic versioning discipline, additive-only schema changes, media-type and URL-path versioning, and automated breaking-change detection between OpenAPI specificati
+- **semver**: Apply semantic versioning rules to releases. — `npm version minor`
+- **api-versioning**: Version APIs via media types or URL prefixes. — `curl -s -H "Accept: application/vnd.myapi.v2+json" https://api.your-app.test/use`
+- **compat-checks**: Detect breaking changes between specs. — `npx openapi-diff old.yaml new.yaml`
+- Check `knowledge` and `prerequisites: git, npm, npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `backward-compatibility`
+- For `semver`: Apply semantic versioning rules to releases. — decide which checks to run
+- For `api-versioning`: Version APIs via media types or URL prefixes. — decide which checks to run
+- For `compat-checks`: Detect breaking changes between specs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `backward-compatibility` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `backward-compatibility:3bd8758d`
 
 # Backward Compatibility
 

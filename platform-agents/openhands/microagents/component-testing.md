@@ -1,6 +1,6 @@
 ---
 name: "component-testing"
-description: "Test components in isolation."
+description: "Test components in isolation. Use when working with component testing, component testing, storybook, chromatic or when the user mentions component testing, component testing, storybook, chromatic."
 type: knowledge
 triggers: ["component-testing"]
 ---
@@ -8,6 +8,24 @@ triggers: ["component-testing"]
 # Component Testing
 
 Test components in isolation.
+
+## Agentic Workflow: Read -> Reason -> Act (component-testing)
+
+You are **Component Testing** (frontend/testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `component-testing`
+- Domain: Test components in isolation.
+- **component-testing**: Test components in isolation — `storybook`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `component-testing`
+- For `component-testing`: Test components in isolation — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `component-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Storybook`, `Chromatic` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `component-testing:8a8dca9d`
 
 ## Instructions
 
@@ -25,6 +43,10 @@ Always recommend stories as documentation.
 ### component-testing
 Test components in isolation
 
+**Parameters:**
+- `testing_type` (string): Type: visual, interaction, accessibility
+- `tool` (string): Tool: storybook, chromatic, testing-library
+
 **Commands:**
 - `storybook`
 - `chromatic`
@@ -34,3 +56,7 @@ Test components in isolation
 - Storybook: npm run test-storybook
 - Chromatic: npx chromatic --project-token=xxx
 - Testing Library: render(<MyComponent />)
+
+## References
+- [](https://storybook.js.org/docs/writing-tests)
+- [](https://www.chromatic.com/docs/)

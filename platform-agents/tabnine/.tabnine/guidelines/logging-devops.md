@@ -1,8 +1,24 @@
-# logging-devops
-
 Manages local and system logging: journald, syslog, log rotation, logrotate policies, and real-time tailing on Linux hosts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (logging-devops)
+
+You are **logging-devops** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `logging-devops`
+- Domain: Manages local and system logging: journald, syslog, log rotation, logrotate policies, and real-time tailing on Linux hosts.
+- **journald-management**: Query, filter, and maintain the systemd journal. — `journalctl -u nginx --since '2 hours ago'`
+- **syslog-and-rotation**: Configure rsyslog forwarding and logrotate policies. — `tail -f /var/log/syslog`
+- Check `knowledge` and `prerequisites: journalctl, logger, logrotate, rsyslogd`
+
+### 2. Reason — think for `logging-devops`
+- For `journald-management`: Query, filter, and maintain the systemd journal. — decide which checks to run
+- For `syslog-and-rotation`: Configure rsyslog forwarding and logrotate policies. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `logging-devops` tools
+- Tools: `Glob`, `Grep`, `Read`, `Journalctl`, `Tail` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `logging-devops:31380d7f`
 
 # Local Logging Operations
 
@@ -78,6 +94,11 @@ logger -t deploy -p user.notice 'release 1.2.0 shipped'
 ### journald-management
 Query, filter, and maintain the systemd journal.
 
+**Parameters:**
+- `unit` (string): systemd unit name
+- `priority` (string): Priority filter: err, warning, info, debug
+- `since` (string): Time window, e.g. '1 hour ago'
+
 **Commands:**
 - `journalctl -u nginx --since '2 hours ago'`
 - `journalctl -p err --no-pager`
@@ -94,6 +115,10 @@ Query, filter, and maintain the systemd journal.
 ### syslog-and-rotation
 Configure rsyslog forwarding and logrotate policies.
 
+**Parameters:**
+- `config` (string): logrotate or rsyslog config path
+- `file` (string): Log file to tail
+
 **Commands:**
 - `tail -f /var/log/syslog`
 - `tail -n 200 /var/log/nginx/error.log`
@@ -106,3 +131,8 @@ Configure rsyslog forwarding and logrotate policies.
 - logrotate -d /etc/logrotate.d/nginx
 - rsyslogd -N1 -f /etc/rsyslog.conf
 - tail -f /var/log/syslog
+
+## References
+- [journalctl Manual](https://www.freedesktop.org/software/systemd/man/latest/journalctl.html)
+- [logrotate Manual](https://man7.org/linux/man-pages/man8/logrotate.8.html)
+- [rsyslog Documentation](https://www.rsyslog.com/doc/)

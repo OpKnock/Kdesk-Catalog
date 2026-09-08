@@ -1,5 +1,5 @@
 ---
-description: "Weaviate agent for vector database operations."
+description: "Weaviate agent for vector database operations. Use when working with Ml Weaviate, vector db or when the user mentions Ml Weaviate, vector db."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Ml Weaviate
 
 Weaviate agent for vector database operations.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-weaviate)
+
+You are **Ml Weaviate** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-weaviate`
+- Domain: Weaviate agent for vector database operations.
+- **Ml Weaviate**: Weaviate agent for vector database operations. — `Create: client.schema.create_class({'class': 'Article', 'vectorizer': 'text2vec-`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-weaviate`
+- For `Ml Weaviate`: Weaviate agent for vector database operations. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-weaviate` tools
+- Tools: `Glob`, `Grep`, `Read`, `Create`, `Schema` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-weaviate:fed89f0c`
 
 ## Instructions
 
@@ -37,3 +55,6 @@ Weaviate agent for vector database operations.
 - Schema: client.schema.get()
 - Create: client.schema.create_class({'class': 'Article', 'vectorizer': 'text2vec-openai'})
 - Query: client.query.get('Article').with_near_text({'concepts': ['machine learning']}).do()
+
+## References
+- [Weaviate Documentation](https://weaviate.io/developers/weaviate/)

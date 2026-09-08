@@ -1,14 +1,28 @@
 ---
-description: "Rate limiting architecture patterns: edge vs service-level, distributed limits with Redis, and Envoy filter setup."
+description: "Rate limiting architecture patterns: edge vs service-level, distributed limits with Redis, and Envoy filter setup. Use when working with rate limit patterns, api or when the user mentions rate limit patterns, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Rate Limiting Pattern
-
 Rate limiting architecture patterns: edge vs service-level, distributed limits with Redis, and Envoy filter setup.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rate-limiting-pattern)
+
+You are **Rate Limiting Pattern** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `rate-limiting-pattern`
+- Domain: Rate limiting architecture patterns: edge vs service-level, distributed limits with Redis, and Envoy filter setup.
+- **rate-limit-patterns**: Implement distributed rate limiting patterns with Redis sliding window and Envoy rate limit filters. — `envoy --config-path envoy.yaml`
+- Check `knowledge` and `prerequisites: envoy, redis-cli`
+
+### 2. Reason — think for `rate-limiting-pattern`
+- For `rate-limit-patterns`: Implement distributed rate limiting patterns with Redis sliding window and Envoy rate limit filters. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rate-limiting-pattern` tools
+- Tools: `Glob`, `Grep`, `Read`, `Envoy`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rate-limiting-pattern:8115d48e`
 
 # Rate Limiting Patterns
 
@@ -73,6 +87,11 @@ http_filters:
 ### rate-limit-patterns
 Implement distributed rate limiting patterns with Redis sliding window and Envoy rate limit filters.
 
+**Parameters:**
+- `key` (string): Redis sorted set key for the window
+- `window_seconds` (integer): Sliding window size
+- `limit` (integer): Max requests per window
+
 **Commands:**
 - `envoy --config-path envoy.yaml`
 - `redis-cli ZREMRANGEBYSCORE user:42:rl 0 $(date +%s000 -d '-60 seconds')`
@@ -84,3 +103,7 @@ Implement distributed rate limiting patterns with Redis sliding window and Envoy
 - redis-cli ZADD user:42:rl 1710000000000 1710000000000; redis-cli ZCARD user:42:rl
 - curl -s -o /dev/null -w "%{http_code}\n" http://localhost:10000/api
 - redis-cli ZREMRANGEBYSCORE user:42:rl 0 1710000000000
+
+## References
+- [Envoy Rate Limit Filter](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/rate_limit_filter)
+- [Redis sliding window pattern](https://redis.io/glossary/rate-limiting/)

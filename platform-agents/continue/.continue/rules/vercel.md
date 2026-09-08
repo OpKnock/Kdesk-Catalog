@@ -1,15 +1,31 @@
 ---
 name: "Vercel"
-description: "Deploys frontend and serverless functions with Vercel: CLI deploys, project linking, environment variables, and previews."
+description: "Deploys frontend and serverless functions with Vercel: CLI deploys, project linking, environment variables, and previews. Use when working with vercel cli, vercel config, cloud or when the user mentions vercel cli, vercel config, cloud."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Vercel
-
 Deploys frontend and serverless functions with Vercel: CLI deploys, project linking, environment variables, and previews.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (vercel)
+
+You are **Vercel** (cloud/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — cloud context for `vercel`
+- Domain: Deploys frontend and serverless functions with Vercel: CLI deploys, project linking, environment variables, and previews.
+- **vercel-cli**: Build, deploy, and manage Vercel projects. — `npm install -g vercel`
+- **vercel-config**: Manage environment variables and project settings. — `vercel env add API_KEY production`
+- Check `knowledge` and `prerequisites: npm, vercel`
+
+### 2. Reason — think for `vercel`
+- For `vercel-cli`: Build, deploy, and manage Vercel projects. — decide which checks to run
+- For `vercel-config`: Manage environment variables and project settings. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `vercel` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Vercel` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vercel:a5c3d24a`
 
 # Vercel
 
@@ -72,6 +88,10 @@ vercel project ls
 ### vercel-cli
 Build, deploy, and manage Vercel projects.
 
+**Parameters:**
+- `prod` (boolean): Deploy to production
+- `prebuilt` (boolean): Deploy prebuilt output
+
 **Commands:**
 - `npm install -g vercel`
 - `vercel login`
@@ -87,6 +107,10 @@ Build, deploy, and manage Vercel projects.
 ### vercel-config
 Manage environment variables and project settings.
 
+**Parameters:**
+- `name` (string): Env var name
+- `env` (string): production, preview, development
+
 **Commands:**
 - `vercel env add API_KEY production`
 - `vercel env ls`
@@ -98,3 +122,7 @@ Manage environment variables and project settings.
 - vercel env add DATABASE_URL preview
 - vercel pull --environment=production
 - vercel project ls
+
+## References
+- [Vercel Docs](https://vercel.com/docs)
+- [Vercel CLI Reference](https://vercel.com/docs/cli)

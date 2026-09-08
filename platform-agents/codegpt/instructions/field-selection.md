@@ -1,8 +1,22 @@
-# Field Selection
-
 API field selection: allow clients to request only the fields they need (sparse fieldsets), reduce payload size, and validate selections with jq and GraphQL-style patterns.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (field-selection)
+
+You are **Field Selection** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `field-selection`
+- Domain: API field selection: allow clients to request only the fields they need (sparse fieldsets), reduce payload size, and validate selections with jq and GraphQL-style patterns.
+- **sparse-fieldsets**: Implement and test field selection parameters like ?fields= and verify payload savings. — `curl -s 'http://localhost:8080/api/orders/1?fields=id,status,total' | jq 'keys'`
+- Check `knowledge` and `prerequisites: grep`
+
+### 2. Reason — think for `field-selection`
+- For `sparse-fieldsets`: Implement and test field selection parameters like ?fields= and verify payload savings. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `field-selection` tools
+- Tools: `Glob`, `Read`, `Bash`, `Grep` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `field-selection:eb38ca8c`
 
 # Field Selection
 
@@ -62,6 +76,11 @@ curl -s 'http://localhost:8080/api/orders/1?fields=id,__proto__,total' | jq 'key
 ### sparse-fieldsets
 Implement and test field selection parameters like ?fields= and verify payload savings.
 
+**Parameters:**
+- `fields` (array): Comma-separated field names to include
+- `endpoint` (string): API endpoint to test selection on
+- `allow-list` (array): Server-side allowlist of selectable fields
+
 **Commands:**
 - `curl -s 'http://localhost:8080/api/orders/1?fields=id,status,total' | jq 'keys'`
 - `curl -s 'http://localhost:8080/api/orders/1?fields=id,status,total' | jq 'length'`
@@ -73,3 +92,6 @@ Implement and test field selection parameters like ?fields= and verify payload s
 - curl -s 'http://localhost:8080/api/orders/1?fields=id,status,total' | jq 'keys'
 - curl -s 'http://localhost:8080/api/orders/1?fields=id,status,total' | jq 'length'
 - grep -rn 'req.query.fields' src/ | head -10
+
+## References
+- [JSON:API sparse fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)

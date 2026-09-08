@@ -1,15 +1,29 @@
 ---
 name: "Profiling"
-description: "CPU and memory profiling: perf record/report, Go pprof, and flamegraph generation."
+description: "CPU and memory profiling: perf record/report, Go pprof, and flamegraph generation. Use when working with profiling analysis, api or when the user mentions profiling analysis, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Profiling
-
 CPU and memory profiling: perf record/report, Go pprof, and flamegraph generation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (profiling)
+
+You are **Profiling** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `profiling`
+- Domain: CPU and memory profiling: perf record/report, Go pprof, and flamegraph generation.
+- **profiling-analysis**: Capture CPU profiles with perf, analyze Go profiles with pprof, and visualize as flamegraphs. — `perf record -g ./myapp`
+- Check `knowledge` and `prerequisites: perf`
+
+### 2. Reason — think for `profiling`
+- For `profiling-analysis`: Capture CPU profiles with perf, analyze Go profiles with pprof, and visualize as flamegraphs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `profiling` tools
+- Tools: `Glob`, `Grep`, `Read`, `Perf`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `profiling:a1962e62`
 
 # Profiling
 
@@ -58,6 +72,11 @@ go tool pprof -http=:8081 http://localhost:6060/debug/pprof/goroutine
 ### profiling-analysis
 Capture CPU profiles with perf, analyze Go profiles with pprof, and visualize as flamegraphs.
 
+**Parameters:**
+- `pid` (integer): Process ID to profile
+- `profile_source` (string): pprof URL or profile file
+- `duration` (string): Capture duration
+
 **Commands:**
 - `perf record -g ./myapp`
 - `perf report --stdio`
@@ -69,3 +88,7 @@ Capture CPU profiles with perf, analyze Go profiles with pprof, and visualize as
 - perf record -g -p 1234 -- sleep 60
 - go tool pprof -top http://localhost:6060/debug/pprof/cpu
 - go tool pprof -http=:8081 http://localhost:6060/debug/pprof/goroutine
+
+## References
+- [perf wiki](https://perf.wiki.kernel.org/index.php/Main_Page)
+- [pprof docs](https://pkg.go.dev/net/http/pprof)

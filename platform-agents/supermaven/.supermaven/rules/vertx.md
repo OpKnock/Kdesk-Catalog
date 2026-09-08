@@ -1,8 +1,22 @@
-# Vertx
-
 Builds reactive APIs with Eclipse Vert.x on the JVM. Scaffolds Maven projects via the official archetype, runs verticles with hot reload, packages executable fat jars, and verifies endpoints with curl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (vertx)
+
+You are **Vertx** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `vertx`
+- Domain: Builds reactive APIs with Eclipse Vert.x on the JVM. Scaffolds Maven projects via the official archetype, runs verticles with hot reload, packages executable fat jars, and verifies endpoints with curl
+- **vertx-project**: Scaffold, run, and package Vert.x applications — `mvn archetype:generate -DarchetypeGroupId=io.vertx -DarchetypeArtifactId=vertx-m`
+- Check `knowledge` and `prerequisites: java, mvn`
+
+### 2. Reason — think for `vertx`
+- For `vertx-project`: Scaffold, run, and package Vert.x applications — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `vertx` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `Java` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vertx:6a6132fe`
 
 # Vert.x
 
@@ -79,6 +93,11 @@ curl -s http://localhost:8080/hello -w '\n%{http_code}\n'
 ### vertx-project
 Scaffold, run, and package Vert.x applications
 
+**Parameters:**
+- `groupId` (string): Maven groupId for the scaffolded project
+- `artifactId` (string): Project artifactId
+- `vertx.id` (string): Verticle ID to run with vertx:run
+
 **Commands:**
 - `mvn archetype:generate -DarchetypeGroupId=io.vertx -DarchetypeArtifactId=vertx-maven-archetype -DarchetypeVersion=4.5.10`
 - `mvn compile vertx:run`
@@ -90,3 +109,8 @@ Scaffold, run, and package Vert.x applications
 - mvn compile vertx:run -Dvertx.id=main-verticle
 - mvn clean package -DskipTests
 - curl -s http://localhost:8080/api/tasks | jq ".length"
+
+## References
+- [Vert.x Docs](https://vertx.io/docs/)
+- [Vert.x Maven Archetype](https://start.vertx.io/)
+- [Vert.x Web Router](https://vertx.io/docs/vertx-web/java/)

@@ -1,5 +1,5 @@
 ---
-description: "Manages Redis and Memcached cache clusters with real redis-cli and memcached-tool operations, memory tuning, and eviction analysis."
+description: "Manages Redis and Memcached cache clusters with real redis-cli and memcached-tool operations, memory tuning, and eviction analysis. Use when working with redis operations, memcached operations, memory tuning, ttl management or when the user mentions redis operations, memcached operations, memory tuning, ttl management."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,28 @@ alwaysApply: false
 # Cache Infrastructure Manager
 
 Manages Redis and Memcached cache clusters with real redis-cli and memcached-tool operations, memory tuning, and eviction analysis.
+
+## Agentic Workflow: Read -> Reason -> Act (cache-manager-infrastructure)
+
+You are **Cache Infrastructure Manager** (infrastructure/provisioning) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `cache-manager-infrastructure`
+- Domain: Manages Redis and Memcached cache clusters with real redis-cli and memcached-tool operations, memory tuning, and eviction analysis.
+- **redis-operations**: Full Redis cluster operations: keys, memory, TTL, persistence, and replication — `redis-cli -h localhost -p 6379 INFO memory`
+- **memcached-operations**: Memcached stats, key inspection, and memory analysis with memcached-tool — `echo "stats" | nc -w 1 localhost 11211`
+- **memory-tuning**: Analyze memory usage and tune eviction policies, maxmemory, and fragmentation — `redis-cli CONFIG GET maxmemory`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `cache-manager-infrastructure`
+- For `redis-operations`: Full Redis cluster operations: keys, memory, TTL, persistence, and replication — decide which checks to run
+- For `memcached-operations`: Memcached stats, key inspection, and memory analysis with memcached-tool — decide which checks to run
+- For `memory-tuning`: Analyze memory usage and tune eviction policies, maxmemory, and fragmentation — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cache-manager-infrastructure` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`, `Echo` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cache-manager-infrastructure:875e2811`
 
 ## Instructions
 
@@ -39,6 +61,10 @@ Anti-patterns:
 ### redis-operations
 Full Redis cluster operations: keys, memory, TTL, persistence, and replication
 
+**Parameters:**
+- `host` (string): Redis host
+- `port` (string): Redis port (default 6379)
+
 **Commands:**
 - `redis-cli -h localhost -p 6379 INFO memory`
 - `redis-cli --scan --pattern "session:*" | head -100`
@@ -55,6 +81,9 @@ Full Redis cluster operations: keys, memory, TTL, persistence, and replication
 ### memcached-operations
 Memcached stats, key inspection, and memory analysis with memcached-tool
 
+**Parameters:**
+- `server` (string): Memcached host:port
+
 **Commands:**
 - `echo "stats" | nc -w 1 localhost 11211`
 - `memcached-tool localhost:11211 stats`
@@ -69,6 +98,9 @@ Memcached stats, key inspection, and memory analysis with memcached-tool
 
 ### memory-tuning
 Analyze memory usage and tune eviction policies, maxmemory, and fragmentation
+
+**Parameters:**
+- `policy` (string): Eviction policy: allkeys-lru, volatile-lru, allkeys-lfu
 
 **Commands:**
 - `redis-cli CONFIG GET maxmemory`
@@ -85,6 +117,10 @@ Analyze memory usage and tune eviction policies, maxmemory, and fragmentation
 ### ttl-management
 Manage key expiry, find expired/expiring keys, and fix unbounded growth
 
+**Parameters:**
+- `key` (string): Cache key name
+- `ttl_seconds` (number): TTL in seconds
+
 **Commands:**
 - `redis-cli TTL session:user123`
 - `redis-cli --scan --pattern "*" | xargs -I{} redis-cli TTL {} | sort -n | head -20`
@@ -96,3 +132,15 @@ Manage key expiry, find expired/expiring keys, and fix unbounded growth
 - Check TTL: redis-cli TTL session:user123
 - Expire key: redis-cli EXPIRE cache:key 3600
 - Keyspace info: redis-cli INFO keyspace
+
+## References
+- [Redis CLI Documentation](https://redis.io/docs/latest/operate/oss_and_stack/management/)
+- [Memcached Wiki](https://github.com/memcached/memcached/wiki)
+- [Redis Memory Optimization](https://redis.io/docs/latest/operate/oss_and_stack/management/optimization/memory-optimization/)
+
+## Progressive Disclosure
+This skill has many capabilities. For detailed reference:
+- `references/REFERENCE.md` — full capability docs and edge cases
+- `scripts/` — executable helpers (see `allowed-tools`)
+- `assets/` — templates and data files
+Load references on demand via relative paths, not at startup.

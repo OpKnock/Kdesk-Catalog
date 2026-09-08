@@ -1,14 +1,28 @@
 ---
-description: "HTTP Strict Transport Security: verifying HSTS headers with curl, configuring Strict-Transport-Security in Nginx/Caddy, and checking preload status."
+description: "HTTP Strict Transport Security: verifying HSTS headers with curl, configuring Strict-Transport-Security in Nginx/Caddy, and checking preload status. Use when working with hsts header ops, api or when the user mentions hsts header ops, api."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# HSTS
-
 HTTP Strict Transport Security: verifying HSTS headers with curl, configuring Strict-Transport-Security in Nginx/Caddy, and checking preload status.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (hsts)
+
+You are **HSTS** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `hsts`
+- Domain: HTTP Strict Transport Security: verifying HSTS headers with curl, configuring Strict-Transport-Security in Nginx/Caddy, and checking preload status.
+- **hsts-header-ops**: Inspect and configure HSTS headers on servers and check preload eligibility. — `curl -sI https://api.your-app.test | grep -i strict-transport-security`
+- Check `knowledge` and `prerequisites: openssl`
+
+### 2. Reason — think for `hsts`
+- For `hsts-header-ops`: Inspect and configure HSTS headers on servers and check preload eligibility. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `hsts` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Echo` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `hsts:9b89b63c`
 
 # HSTS
 
@@ -86,6 +100,11 @@ Agent: curl -sI https://api.your-app.test | grep -i65:    strict-transport-secur
 ### hsts-header-ops
 Inspect and configure HSTS headers on servers and check preload eligibility.
 
+**Parameters:**
+- `domain` (string): Domain to check.
+- `max_age` (integer): HSTS max-age in seconds.
+- `include_subdomains` (boolean): Apply the policy to subdomains.
+
 **Commands:**
 - `curl -sI https://api.your-app.test | grep -i strict-transport-security`
 - `curl -s -o /dev/null -w '%{http_code}\n' https://api.your-app.test`
@@ -97,3 +116,7 @@ Inspect and configure HSTS headers on servers and check preload eligibility.
 - curl -sI https://api.your-app.test | grep -i "strict-transport-security"
 - curl -s "https://hstspreload.org/api/v2/status?domain=your-app.test" | jq .status
 - curl -sI http://api.your-app.test | grep -i strict-transport-security
+
+## References
+- [Strict-Transport-Security MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security)
+- [HSTS Preload](https://hstspreload.org/)

@@ -1,14 +1,28 @@
 ---
-description: "Automates infrastructure with Ansible: ad-hoc commands, playbooks, roles, and vault secrets."
+description: "Automates infrastructure with Ansible: ad-hoc commands, playbooks, roles, and vault secrets. Use when working with ansible playbooks, devops or when the user mentions ansible playbooks, devops."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# ansible
-
 Automates infrastructure with Ansible: ad-hoc commands, playbooks, roles, and vault secrets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ansible)
+
+You are **ansible** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `ansible`
+- Domain: Automates infrastructure with Ansible: ad-hoc commands, playbooks, roles, and vault secrets.
+- **ansible-playbooks**: Run ad-hoc tasks and playbooks across inventories — `ansible all -i inventory.yml -m ping`
+- Check `knowledge` and `prerequisites: ansible, ansible-galaxy, ansible-playbook`
+
+### 2. Reason — think for `ansible`
+- For `ansible-playbooks`: Run ad-hoc tasks and playbooks across inventories — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ansible` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ansible`, `Ansible-playbook` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ansible:4546cecf`
 
 # Ansible
 
@@ -84,6 +98,11 @@ hosts, and reports changed/ok/failed per host.
 ### ansible-playbooks
 Run ad-hoc tasks and playbooks across inventories
 
+**Parameters:**
+- `inventory` (string): Inventory file or directory (-i)
+- `check` (boolean): Dry-run: report changes without applying
+- `tags` (string): Run only tasks with these tags
+
 **Commands:**
 - `ansible all -i inventory.yml -m ping`
 - `ansible-playbook -i inventory.yml playbooks/deploy.yml`
@@ -95,3 +114,7 @@ Run ad-hoc tasks and playbooks across inventories
 - ansible all -i inventory.yml -m command -a 'uptime'
 - ansible-playbook -i inventory.yml playbooks/deploy.yml --limit web --tags nginx
 - ansible-vault encrypt secrets.yml
+
+## References
+- [Ansible docs](https://docs.ansible.com/ansible/latest/index.html)
+- [Ansible Galaxy](https://galaxy.ansible.com/)

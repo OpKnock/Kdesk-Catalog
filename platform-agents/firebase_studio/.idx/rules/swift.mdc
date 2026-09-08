@@ -1,14 +1,30 @@
 ---
-description: "Develops iOS and Swift apps: SwiftPM packages, SwiftLint gates, swift-format, and xcodebuild CI builds."
+description: "Develops iOS and Swift apps: SwiftPM packages, SwiftLint gates, swift-format, and xcodebuild CI builds. Use when working with swiftpm, xcodebuild or when the user mentions swiftpm, xcodebuild."
 globs: ["**/*.r", "**/*.sh", "**/*.swift"]
 alwaysApply: false
 ---
 
-# Swift
-
 Develops iOS and Swift apps: SwiftPM packages, SwiftLint gates, swift-format, and xcodebuild CI builds.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (swift)
+
+You are **Swift** (mobile/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — mobile context for `swift`
+- Domain: Develops iOS and Swift apps: SwiftPM packages, SwiftLint gates, swift-format, and xcodebuild CI builds.
+- **swiftpm**: Create and manage Swift packages. — `swift package init --type executable`
+- **xcodebuild**: Build and test iOS apps in CI. — `xcodebuild -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 15' bu`
+- Check `knowledge` and `prerequisites: swift, xcodebuild`
+
+### 2. Reason — think for `swift`
+- For `swiftpm`: Create and manage Swift packages. — decide which checks to run
+- For `xcodebuild`: Build and test iOS apps in CI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `swift` tools
+- Tools: `Glob`, `Grep`, `Read`, `Swift`, `Xcodebuild` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `swift:c242892a`
 
 # Swift
 
@@ -83,6 +99,11 @@ Run unit tests and lint in CI on every PR.
 ### swiftpm
 Create and manage Swift packages.
 
+**Parameters:**
+- `type` (string): executable, library, or empty package
+- `filter` (string): Test name filter
+- `parallel` (string): Run tests in parallel
+
 **Commands:**
 - `swift package init --type executable`
 - `swift build`
@@ -98,6 +119,11 @@ Create and manage Swift packages.
 ### xcodebuild
 Build and test iOS apps in CI.
 
+**Parameters:**
+- `scheme` (string): Xcode scheme name
+- `destination` (string): Simulator or device destination
+- `archivePath` (string): Archive output path
+
 **Commands:**
 - `xcodebuild -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 15' build`
 - `xcodebuild test -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 15'`
@@ -109,3 +135,8 @@ Build and test iOS apps in CI.
 - xcodebuild -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 15,OS=18.0' test
 - xcodebuild -scheme MyApp archive -archivePath build/MyApp.xcarchive
 - xcodebuild -project MyApp.xcodeproj -scheme MyApp -showBuildSettings | grep PRODUCT_BUNDLE_IDENTIFIER
+
+## References
+- [Swift Docs](https://www.swift.org/documentation/)
+- [SwiftLint](https://github.com/realm/SwiftLint)
+- [xcodebuild manual](https://manpagez.com/man/1/xcodebuild/)

@@ -1,15 +1,29 @@
 ---
 name: "react-native"
-description: "React Native mobile development. Real react-native CLI."
+description: "React Native mobile development. Real react-native CLI. Use when working with mobile react native or when the user mentions mobile react native."
 type: knowledge
 triggers: ["react-native", "mobile-react-native"]
 ---
 
-# mobile-react-native
-
 React Native mobile development. Real react-native CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (react-native)
+
+You are **mobile-react-native** (mobile/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — mobile context for `react-native`
+- Domain: React Native mobile development. Real react-native CLI.
+- **mobile-react-native**: React Native mobile development. Real react-native CLI. — `npx react-native init MyApp`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `react-native`
+- For `mobile-react-native`: React Native mobile development. Real react-native CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `react-native` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Cd` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `react-native:4e561f8c`
 
 # React Native
 
@@ -167,3 +181,6 @@ React Native mobile development. Real react-native CLI.
 - npx react-native init MyApp
 - npx react-native run-ios
 - npx react-native run-android
+
+## References
+- [react-native Skill Documentation](skills/mobile/react-native.md)

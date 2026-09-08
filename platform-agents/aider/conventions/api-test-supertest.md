@@ -1,8 +1,24 @@
-# Api Test Supertest
-
 Tests Express APIs with supertest and jest: request assertions, route coverage, snapshot testing, and CI-friendly test configuration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-test-supertest)
+
+You are **Api Test Supertest** (testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `api-test-supertest`
+- Domain: Tests Express APIs with supertest and jest: request assertions, route coverage, snapshot testing, and CI-friendly test configuration.
+- **supertest**: Test HTTP APIs in-process with supertest — `npm install -D supertest jest`
+- **assertion-patterns**: Assert status, body, and headers — `node -e "const request=require('supertest'); console.log(typeof request)"`
+- Check `knowledge` and `prerequisites: jest, pytest, postman`
+
+### 2. Reason — think for `api-test-supertest`
+- For `supertest`: Test HTTP APIs in-process with supertest — decide which checks to run
+- For `assertion-patterns`: Assert status, body, and headers — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-test-supertest` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-test-supertest:ddcd3df7`
 
 # API Test v3 - Supertest/Jest
 
@@ -55,6 +71,11 @@ test('creates a user', async () => {
 ### supertest
 Test HTTP APIs in-process with supertest
 
+**Parameters:**
+- `test-file` (string): Test file path
+- `coverage` (boolean): Collect coverage
+- `test-name` (string): Filter by test name
+
 **Commands:**
 - `npm install -D supertest jest`
 - `npx jest test/api.test.js --verbose`
@@ -78,3 +99,7 @@ Assert status, body, and headers
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Supertest Docs](https://github.com/ladjs/supertest)
+- [Jest Docs](https://jestjs.io/docs/getting-started)

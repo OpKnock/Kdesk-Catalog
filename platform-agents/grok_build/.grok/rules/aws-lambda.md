@@ -1,26 +1,26 @@
 Creates, updates, and invokes AWS Lambda functions with the AWS CLI, including packaging, configuration, and log inspection.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (aws-lambda)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Aws Lambda** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `aws lambda create-function --function-name my-fn --runtime n`, `aws lambda invoke --function-name my-fn --payload '{"a":1}' `
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `aws-lambda`
+- Domain: Creates, updates, and invokes AWS Lambda functions with the AWS CLI, including packaging, configuration, and log inspection.
+- **function-lifecycle**: Create, update, and manage Lambda functions. — `aws lambda create-function --function-name my-fn --runtime nodejs20.x --role arn`
+- **invoke-and-config**: Invoke functions and manage configuration. — `aws lambda invoke --function-name my-fn --payload '{"a":1}' out.json`
+- **logs-and-metrics**: Inspect function logs and metric alarms. — `aws logs tail /aws/lambda/my-fn --follow`
+- Check `knowledge` and `prerequisites: aws`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `aws-lambda`
+- For `function-lifecycle`: Create, update, and manage Lambda functions. — decide which checks to run
+- For `invoke-and-config`: Invoke functions and manage configuration. — decide which checks to run
+- For `logs-and-metrics`: Inspect function logs and metric alarms. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `aws-lambda` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `aws-lambda:3a440b20`
 
 # AWS Lambda
 

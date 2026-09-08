@@ -1,8 +1,24 @@
-# Akka Http
-
 Builds streaming, reactive HTTP services in Scala with Akka HTTP: route DSL, JSON marshalling, TestKit testing, and sbt workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (akka-http)
+
+You are **Akka Http** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `akka-http`
+- Domain: Builds streaming, reactive HTTP services in Scala with Akka HTTP: route DSL, JSON marshalling, TestKit testing, and sbt workflows.
+- **project-scaffold**: Create an Akka HTTP project from the giter8 template and manage deps. — `sbt new akka/akka-http-quickstart-scala.g8`
+- **test-and-build**: Test routes with akka-http-testkit, package, and run in CI. — `sbt test`
+- Check `knowledge` and `prerequisites: java, sbt`
+
+### 2. Reason — think for `akka-http`
+- For `project-scaffold`: Create an Akka HTTP project from the giter8 template and manage deps. — decide which checks to run
+- For `test-and-build`: Test routes with akka-http-testkit, package, and run in CI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `akka-http` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sbt`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `akka-http:a20e74cf`
 
 # Akka HTTP
 
@@ -64,6 +80,10 @@ val route =
 ### project-scaffold
 Create an Akka HTTP project from the giter8 template and manage deps.
 
+**Parameters:**
+- `name` (string): Project name for the giter8 template
+- `port` (number): Port for the HTTP server binding
+
 **Commands:**
 - `sbt new akka/akka-http-quickstart-scala.g8`
 - `sbt update`
@@ -79,6 +99,10 @@ Create an Akka HTTP project from the giter8 template and manage deps.
 ### test-and-build
 Test routes with akka-http-testkit, package, and run in CI.
 
+**Parameters:**
+- `test_filter` (string): Test name pattern for testOnly
+- `assembly_output` (string): Path to the fat jar
+
 **Commands:**
 - `sbt test`
 - `sbt "testOnly com.acme.RouteSpec"`
@@ -90,3 +114,8 @@ Test routes with akka-http-testkit, package, and run in CI.
 - sbt test
 - sbt assembly && java -jar target/scala-2.13/my-api-assembly-0.1.0.jar
 - sbt "testOnly *HealthSpec*"
+
+## References
+- [Akka HTTP Docs](https://doc.akka.io/docs/akka-http/current/)
+- [Akka HTTP TestKit](https://doc.akka.io/docs/akka-http/current/routing-dsl/testkit.html)
+- [Akka Quickstart](https://doc.akka.io/docs/akka-http/current/introduction.html)

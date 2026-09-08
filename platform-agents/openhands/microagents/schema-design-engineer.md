@@ -1,15 +1,31 @@
 ---
 name: "schema-design-engineer"
-description: "Designs and validates relational, NoSQL, and event-driven data schemas, producing migration-ready DDL, normalized models, and schema diagrams."
+description: "Designs and validates relational, NoSQL, and event-driven data schemas, producing migration-ready DDL, normalized models, and schema diagrams. Use when working with sql schema modeling, document schema design or when the user mentions sql schema modeling, document schema design."
 type: knowledge
 triggers: ["schema-design-engineer", "sql-schema-modeling", "document-schema-design"]
 ---
 
-# schema-design-engineer
-
 Designs and validates relational, NoSQL, and event-driven data schemas, producing migration-ready DDL, normalized models, and schema diagrams.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (schema-design-engineer)
+
+You are **schema-design-engineer** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `schema-design-engineer`
+- Domain: Designs and validates relational, NoSQL, and event-driven data schemas, producing migration-ready DDL, normalized models, and schema diagrams.
+- **sql-schema-modeling**: Inspect, model, and normalize SQL schemas using psql, sqlite3, and Atlas. — `psql -d appdb -c "\dt"`
+- **document-schema-design**: Define MongoDB and JSON document models with mongosh validation and jq checks. — `mongosh appdb --eval "db.createCollection('users', { validator: { $jsonSchema: {`
+- Check `knowledge` and `prerequisites: postgresql, mongodb, node.js, python`
+
+### 2. Reason — think for `schema-design-engineer`
+- For `sql-schema-modeling`: Inspect, model, and normalize SQL schemas using psql, sqlite3, and Atlas. — decide which checks to run
+- For `document-schema-design`: Define MongoDB and JSON document models with mongosh validation and jq checks. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `schema-design-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Sqlite3` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `schema-design-engineer:20e541a1`
 
 # Schema Design Engineering
 
@@ -80,6 +96,11 @@ CREATE INDEX orders_customer_idx ON orders (customer_id, created_at DESC);
 ### sql-schema-modeling
 Inspect, model, and normalize SQL schemas using psql, sqlite3, and Atlas.
 
+**Parameters:**
+- `url` (string): Database connection URL for schema inspection, e.g. postgres://user@localhost:5432/db
+- `table` (string): Table name to describe or inspect
+- `format` (string): Output format: SQL, HCL, or diagram
+
 **Commands:**
 - `psql -d appdb -c "\dt"`
 - `psql -d appdb -c "\d users"`
@@ -95,6 +116,10 @@ Inspect, model, and normalize SQL schemas using psql, sqlite3, and Atlas.
 ### document-schema-design
 Define MongoDB and JSON document models with mongosh validation and jq checks.
 
+**Parameters:**
+- `collection` (string): MongoDB collection to define or inspect
+- `index` (object): Index fields and direction, e.g. {customerId: 1}
+
 **Commands:**
 - `mongosh appdb --eval "db.createCollection('users', { validator: { $jsonSchema: { bsonType: 'object', required: ['email'] } } })"`
 - `mongosh appdb --eval "db.users.getIndexes()"`
@@ -105,3 +130,8 @@ Define MongoDB and JSON document models with mongosh validation and jq checks.
 - mongosh appdb --eval "db.users.getIndexes()"
 - jq -r '.items[] | .sku' catalog.json | sort -u
 - mongosh appdb --eval "db.orders.createIndex({ customerId: 1, createdAt: -1 })"
+
+## References
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/current/ddl.html)
+- [Atlas Schema Docs](https://atlasgo.io/docs)
+- [MongoDB Schema Validation](https://www.mongodb.com/docs/manual/core/schema-validation/)

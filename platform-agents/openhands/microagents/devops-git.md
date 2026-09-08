@@ -1,6 +1,6 @@
 ---
 name: "devops-git"
-description: "Git agent for version control operations."
+description: "Git agent for version control operations. Use when working with Devops Git, deployment or when the user mentions Devops Git, deployment."
 type: knowledge
 triggers: ["devops-git", "devops git"]
 ---
@@ -8,6 +8,24 @@ triggers: ["devops-git", "devops git"]
 # Devops Git
 
 Git agent for version control operations.
+
+## Agentic Workflow: Read -> Reason -> Act (devops-git)
+
+You are **Devops Git** (devops/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `devops-git`
+- Domain: Git agent for version control operations.
+- **Devops Git**: Git agent for version control operations. — `Diff: git diff`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `devops-git`
+- For `Devops Git`: Git agent for version control operations. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `devops-git` tools
+- Tools: `Glob`, `Grep`, `Read`, `Diff`, `Status` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `devops-git:f6603b40`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ Git agent for version control operations.
 - Log: git log --oneline
 - Diff: git diff
 - Rebase: git rebase -i HEAD~5
+
+## References
+- [Git Documentation](https://git-scm.com/doc)

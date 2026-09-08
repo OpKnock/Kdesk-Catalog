@@ -1,15 +1,31 @@
 ---
 name: "ci-cd"
-description: "Sets up and maintains CI/CD pipelines with GitHub Actions and GitLab CI, including workflow authoring, secrets handling, and run debugging."
+description: "Sets up and maintains CI/CD pipelines with GitHub Actions and GitLab CI, including workflow authoring, secrets handling, and run debugging. Use when working with github actions, gitlab ci, devops or when the user mentions github actions, gitlab ci, devops."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# ci-cd
-
 Sets up and maintains CI/CD pipelines with GitHub Actions and GitLab CI, including workflow authoring, secrets handling, and run debugging.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ci-cd)
+
+You are **ci-cd** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `ci-cd`
+- Domain: Sets up and maintains CI/CD pipelines with GitHub Actions and GitLab CI, including workflow authoring, secrets handling, and run debugging.
+- **github-actions**: Create, trigger, and inspect GitHub Actions workflows via the gh CLI and YAML configs. — `gh workflow list`
+- **gitlab-ci**: Manage GitLab CI pipelines, runners, and pipeline schedules. — `glab ci status`
+- Check `knowledge` and `prerequisites: actionlint, glab`
+
+### 2. Reason — think for `ci-cd`
+- For `github-actions`: Create, trigger, and inspect GitHub Actions workflows via the gh CLI and YAML configs. — decide which checks to run
+- For `gitlab-ci`: Manage GitLab CI pipelines, runners, and pipeline schedules. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ci-cd` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gh`, `Actionlint` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ci-cd:b61f572f`
 
 # CI/CD Pipeline Engineering
 
@@ -90,6 +106,11 @@ jobs:
 ### github-actions
 Create, trigger, and inspect GitHub Actions workflows via the gh CLI and YAML configs.
 
+**Parameters:**
+- `workflow` (string): Workflow file name or ID to run, e.g. deploy.yml
+- `run-id` (string): Workflow run ID for inspection (gh run view)
+- `inputs` (object): Key-value inputs passed with -f, e.g. environment=staging
+
 **Commands:**
 - `gh workflow list`
 - `gh workflow run deploy.yml -f environment=staging`
@@ -106,6 +127,10 @@ Create, trigger, and inspect GitHub Actions workflows via the gh CLI and YAML co
 ### gitlab-ci
 Manage GitLab CI pipelines, runners, and pipeline schedules.
 
+**Parameters:**
+- `pipeline-id` (string): Pipeline ID to trace, retry, or inspect
+- `branch` (string): Branch to run the pipeline on
+
 **Commands:**
 - `glab ci status`
 - `glab ci lint .gitlab-ci.yml`
@@ -118,3 +143,8 @@ Manage GitLab CI pipelines, runners, and pipeline schedules.
 - glab ci lint .gitlab-ci.yml
 - glab pipeline run -b main
 - glab ci trace 2846210
+
+## References
+- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+- [GitLab CI/CD Documentation](https://docs.gitlab.com/ci/)
+- [actionlint](https://github.com/rhysd/actionlint)

@@ -2,10 +2,19 @@ title: Graphql Sangria
 description: 'GraphQL in Scala with Sangria: define schemas programmatically, run async resolvers, and
   test queries with the execution API.'
 version: 2.0.0
-instructions: "# Graphql Sangria\n\nGraphQL in Scala with Sangria: define schemas programmatically, run\
-  \ async resolvers, and test queries with the execution API.\n\n## Instructions\n\n# GraphQL Sangria\n\
-  \n## What this skill does\n\nSangria is a Scala GraphQL library with a powerful programmatic schema\
-  \ DSL. Resolvers return Futures for async sources; `Executor.execute` runs queries and `SchemaRenderer`\
+instructions: "GraphQL in Scala with Sangria: define schemas programmatically, run async resolvers, and\
+  \ test queries with the execution API.\n\n## Agentic Workflow: Read -> Reason -> Act (graphql-sangria)\n\
+  \nYou are **Graphql Sangria** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `graphql-sangria`\n- Domain: GraphQL in Scala with Sangria: define schemas\
+  \ programmatically, run async resolvers, and test queries with the execution API.\n- **sangria-schema**:\
+  \ Define Sangria schemas, execute queries, and export SDL. — `sbt run`\n- Check `knowledge` and `prerequisites:\
+  \ sbt`\n\n### 2. Reason — think for `graphql-sangria`\n- For `sangria-schema`: Define Sangria schemas,\
+  \ execute queries, and export SDL. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust`\
+  \ + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `graphql-sangria` tools\n-\
+  \ Tools: `Glob`, `Grep`, `Read`, `Sbt`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `graphql-sangria:d9d62c6c`\n\n#\
+  \ GraphQL Sangria\n\n## What this skill does\n\nSangria is a Scala GraphQL library with a powerful programmatic\
+  \ schema DSL. Resolvers return Futures for async sources; `Executor.execute` runs queries and `SchemaRenderer`\
   \ exports SDL.\n\n## When to use\n\n- Scala/Akka services adding GraphQL\n- Teams that prefer explicit\
   \ schema DSLs over macros\n- Type-safe async resolvers with Future/Task\n\n## Real commands\n\n```bash\n\
   # Build and test with sbt\nsbt compile\nsbt test\n\n# Run the server\nsbt run\n\n# Query it\ncurl -s\
@@ -21,9 +30,11 @@ instructions: "# Graphql Sangria\n\nGraphQL in Scala with Sangria: define schema
   \ (MyCtx) for DI of repos and caches.\n- Export SDL from CI to catch breaking changes.\n- Use deferred\
   \ resolution (Deferred/Projector) for N+1 batching.\n- Keep schema construction lazy or cached; it is\
   \ expensive.\n\n## Capabilities\n\n### sangria-schema\nDefine Sangria schemas, execute queries, and\
-  \ export SDL.\n\n**Commands:**\n- `sbt run`\n- `sbt compile`\n- `sbt test`\n- `curl -s -X POST http://localhost:8080/graphql\
-  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ characters { name } }\"}' | jq`\n- `sbt 'runMain\
-  \ example.SchemaExport'`\n\n**Examples:**\n- sbt compile && sbt test\n- curl -s -X POST http://localhost:8080/graphql\
-  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ characters { name } }\"}' | jq\n- sbt 'runMain\
-  \ example.SchemaExport'"
+  \ export SDL.\n\n**Parameters:**\n- `schema-object` (string): Scala object exposing the Schema\n- `endpoint`\
+  \ (string): GraphQL HTTP endpoint\n- `main-class` (string): Sangria main class for SDL export\n\n**Commands:**\n\
+  - `sbt run`\n- `sbt compile`\n- `sbt test`\n- `curl -s -X POST http://localhost:8080/graphql -H 'Content-Type:\
+  \ application/json' -d '{\"query\":\"{ characters { name } }\"}' | jq`\n- `sbt 'runMain example.SchemaExport'`\n\
+  \n**Examples:**\n- sbt compile && sbt test\n- curl -s -X POST http://localhost:8080/graphql -H 'Content-Type:\
+  \ application/json' -d '{\"query\":\"{ characters { name } }\"}' | jq\n- sbt 'runMain example.SchemaExport'\n\
+  \n## References\n- [Sangria docs](https://sangria-graphql.org/learn/)\n- [Sangria GitHub](https://github.com/sangria-graphql/sangria)"
 prompt: Act as Graphql Sangria and handle the task per the instructions.

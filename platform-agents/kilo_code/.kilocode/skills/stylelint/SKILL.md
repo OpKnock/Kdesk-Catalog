@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(npx:*)"
 
 Lints CSS/SCSS and CSS-in-JS with Stylelint, enforcing order, naming, and browser-compatibility rules.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (stylelint)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **stylelint** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx stylelint "src/**/*.css"`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `stylelint`
+- Domain: Lints CSS/SCSS and CSS-in-JS with Stylelint, enforcing order, naming, and browser-compatibility rules.
+- **stylelint-css**: Check and fix CSS/SCSS with Stylelint and its standard configs — `npx stylelint "src/**/*.css"`
+- Check `knowledge` and `prerequisites: npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `stylelint`
+- For `stylelint-css`: Check and fix CSS/SCSS with Stylelint and its standard configs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `stylelint` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `stylelint:c254510b`
 
 # Stylelint
 

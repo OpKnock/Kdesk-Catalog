@@ -6,27 +6,23 @@ globs: ["**/*.json", "**/*.r", "**/*.sh"]
 
 Hoppscotch API workspace: running collections from the CLI, environment variables, and browser-based request testing with real-time responses.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (hoppscotch)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Hoppscotch** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx @hoppscotch/cli run collection.json`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `hoppscotch`
+- Domain: Hoppscotch API workspace: running collections from the CLI, environment variables, and browser-based request testing with real-time responses.
+- **hoppscotch-cli**: Run Hoppscotch collections and manage environments from the command line. — `npx @hoppscotch/cli run collection.json`
+- Check `knowledge` and `prerequisites: hoppscotch, npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `hoppscotch`
+- For `hoppscotch-cli`: Run Hoppscotch collections and manage environments from the command line. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `hoppscotch` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Hoppscotch` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `hoppscotch:578e2de5`
 
 # Hoppscotch
 

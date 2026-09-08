@@ -1,6 +1,6 @@
 ---
 name: "Ml Clearml Server"
-description: "ClearML server agent for experiment tracking server."
+description: "ClearML server agent for experiment tracking server. Use when working with Ml Clearml Server, inference or when the user mentions Ml Clearml Server, inference."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Clearml Server
 
 ClearML server agent for experiment tracking server.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-clearml-server)
+
+You are **Ml Clearml Server** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-clearml-server`
+- Domain: ClearML server agent for experiment tracking server.
+- **Ml Clearml Server**: ClearML server agent for experiment tracking server. — `Backup: clearml-server backup`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-clearml-server`
+- For `Ml Clearml Server`: ClearML server agent for experiment tracking server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-clearml-server` tools
+- Tools: `Glob`, `Grep`, `Read`, `Backup`, `Server` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-clearml-server:d5fe7e41`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ ClearML server agent for experiment tracking server.
 - Docker: docker-compose up -d
 - Config: cat clearml-server.conf
 - Backup: clearml-server backup
+
+## References
+- [ClearML Documentation](https://clear.ml/docs/)

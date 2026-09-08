@@ -1,6 +1,6 @@
 ---
 name: "communication-identity-py"
-description: "Communication deployment agent. Manages Communication ML deployment."
+description: "Communication deployment agent. Manages Communication ML deployment. Use when working with Ml Communication Deploy Agent or when the user mentions Ml Communication Deploy Agent."
 type: knowledge
 triggers: ["communication-identity-py", "ml communication deploy agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["communication-identity-py", "ml communication deploy agent"]
 # Communication Identity Py
 
 Communication deployment agent. Manages Communication ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (communication-identity-py)
+
+You are **Communication Identity Py** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `communication-identity-py`
+- Domain: Communication deployment agent. Manages Communication ML deployment.
+- **Ml Communication Deploy Agent**: Communication deployment agent. Manages Communication ML deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `communication-identity-py`
+- For `Ml Communication Deploy Agent`: Communication deployment agent. Manages Communication ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `communication-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Communication` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `communication-identity-py:cd867dd4`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Communication deployment agent. Manages Communication ML deployment.
 - curl http://localhost:8080/communicate --data '{"model": "model.pkl"}'
 - python report.py --model model.pkl --results results.json --output report.html
 - python visualize.py --model model.pkl --data data.csv --output visualization.html
+
+## References
+- [arXiv](https://arxiv.org/)
+- [Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- [Docker Documentation](https://docs.docker.com/)

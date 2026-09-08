@@ -1,6 +1,6 @@
 ---
 name: "devtools-opencode-agent"
-description: "OpenCode CLI agent. Manages OpenCode configuration and usage."
+description: "OpenCode CLI agent. Manages OpenCode configuration and usage. Use when working with Devtools Opencode Agent or when the user mentions Devtools Opencode Agent."
 type: knowledge
 triggers: ["devtools-opencode-agent", "devtools opencode agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["devtools-opencode-agent", "devtools opencode agent"]
 # Devtools Opencode Agent
 
 OpenCode CLI agent. Manages OpenCode configuration and usage.
+
+## Agentic Workflow: Read -> Reason -> Act (devtools-opencode-agent)
+
+You are **Devtools Opencode Agent** (devtools/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `devtools-opencode-agent`
+- Domain: OpenCode CLI agent. Manages OpenCode configuration and usage.
+- **Devtools Opencode Agent**: OpenCode CLI agent. Manages OpenCode configuration and usage. — `opencode plugin list`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `devtools-opencode-agent`
+- For `Devtools Opencode Agent`: OpenCode CLI agent. Manages OpenCode configuration and usage. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `devtools-opencode-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Opencode` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `devtools-opencode-agent:e4d40240`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ OpenCode CLI agent. Manages OpenCode configuration and usage.
 - opencode --help
 - opencode config list
 - opencode plugin list
+
+## References
+- [opencode Documentation](https://opencode.ai/docs)

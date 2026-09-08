@@ -1,15 +1,31 @@
 ---
 name: "background-job-scheduler"
-description: "Architects background job schedulers: cron systems, retry policies, dead-letter handling, and idempotency across frameworks."
+description: "Architects background job schedulers: cron systems, retry policies, dead-letter handling, and idempotency across frameworks. Use when working with scheduler systems, scheduler resilience or when the user mentions scheduler systems, scheduler resilience."
 type: knowledge
 triggers: ["background-job-scheduler", "scheduler-systems", "scheduler-resilience"]
 ---
 
-# background-job-scheduler
-
 Architects background job schedulers: cron systems, retry policies, dead-letter handling, and idempotency across frameworks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (background-job-scheduler)
+
+You are **background-job-scheduler** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `background-job-scheduler`
+- Domain: Architects background job schedulers: cron systems, retry policies, dead-letter handling, and idempotency across frameworks.
+- **scheduler-systems**: Configure cron, systemd timers, and application schedulers. — `crontab -e`
+- **scheduler-resilience**: Design retries, idempotency, and dead-letter policies. — `python -c "from celery import Celery; app=Celery(); print(app.conf.task_default_`
+- Check `knowledge` and `prerequisites: redis, node.js, python, rabbitmq`
+
+### 2. Reason — think for `background-job-scheduler`
+- For `scheduler-systems`: Configure cron, systemd timers, and application schedulers. — decide which checks to run
+- For `scheduler-resilience`: Design retries, idempotency, and dead-letter policies. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `background-job-scheduler` tools
+- Tools: `Glob`, `Grep`, `Read`, `Crontab`, `Systemctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `background-job-scheduler:5e7a1a50`
 
 # Background Job Scheduler
 
@@ -77,6 +93,10 @@ def cleanup(self):
 ### scheduler-systems
 Configure cron, systemd timers, and application schedulers.
 
+**Parameters:**
+- `schedule` (string): Cron expression
+- `backend` (string): Scheduler backend: cron, systemd, beat
+
 **Commands:**
 - `crontab -e`
 - `crontab -l`
@@ -92,6 +112,10 @@ Configure cron, systemd timers, and application schedulers.
 ### scheduler-resilience
 Design retries, idempotency, and dead-letter policies.
 
+**Parameters:**
+- `queue` (string): Queue name
+- `policy` (string): Retry or dead-letter policy name
+
 **Commands:**
 - `python -c "from celery import Celery; app=Celery(); print(app.conf.task_default_queue)"`
 - `redis-cli llen failed-jobs`
@@ -101,3 +125,7 @@ Design retries, idempotency, and dead-letter policies.
 **Examples:**
 - redis-cli llen failed-jobs
 - redis-cli lrange failed-jobs 0 20
+
+## References
+- [Celery Scheduling](https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html)
+- [Cron Manual](https://man7.org/linux/man-pages/man5/crontab.5.html)

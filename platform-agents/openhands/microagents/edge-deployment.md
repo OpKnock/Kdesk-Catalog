@@ -1,15 +1,29 @@
 ---
 name: "edge-deployment"
-description: "Deploys static and serverless content to the edge with CloudFront + S3: syncs assets, creates and invalidates distributions, and updates Lambda@Edge functions."
+description: "Deploys static and serverless content to the edge with CloudFront + S3: syncs assets, creates and invalidates distributions, and updates Lambda@Edge functions. Use when working with cloudfront edge, api or when the user mentions cloudfront edge, api."
 type: knowledge
 triggers: ["edge-deployment", "cloudfront-edge"]
 ---
 
-# Edge Deployment
-
 Deploys static and serverless content to the edge with CloudFront + S3: syncs assets, creates and invalidates distributions, and updates Lambda@Edge functions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (edge-deployment)
+
+You are **Edge Deployment** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `edge-deployment`
+- Domain: Deploys static and serverless content to the edge with CloudFront + S3: syncs assets, creates and invalidates distributions, and updates Lambda@Edge functions.
+- **cloudfront-edge**: Manage S3-backed CloudFront distributions and edge invalidations for static deployments. — `aws s3 sync ./public s3://my-bucket --delete`
+- Check `knowledge` and `prerequisites: aws`
+
+### 2. Reason — think for `edge-deployment`
+- For `cloudfront-edge`: Manage S3-backed CloudFront distributions and edge invalidations for static deployments. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `edge-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `edge-deployment:0dba79a8`
 
 # Edge Deployment
 
@@ -75,6 +89,11 @@ aws cloudfront get-invalidation --distribution-id E1234567890ABC --id $INV | jq 
 ### cloudfront-edge
 Manage S3-backed CloudFront distributions and edge invalidations for static deployments.
 
+**Parameters:**
+- `distribution-id` (string): CloudFront distribution id to invalidate or inspect
+- `bucket` (string): S3 bucket serving the edge content
+- `paths` (array): Object paths to invalidate, e.g. /* or /assets/*
+
 **Commands:**
 - `aws s3 sync ./public s3://my-bucket --delete`
 - `aws cloudfront list-distributions --query 'DistributionList.Items[].{id:Id,domain:DomainName}'`
@@ -86,3 +105,7 @@ Manage S3-backed CloudFront distributions and edge invalidations for static depl
 - aws s3 sync ./public s3://my-bucket --delete && aws cloudfront create-invalidation --distribution-id E1234567890ABC --paths '/*'
 - aws cloudfront list-distributions --query 'DistributionList.Items[].{id:Id,domain:DomainName}' | jq
 - curl -s https://d1abc2def3g4h5.cloudfront.net/ | head -5
+
+## References
+- [CloudFront with S3](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
+- [Lambda@Edge](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-at-edge.html)

@@ -1,15 +1,31 @@
 ---
 name: "api-error-express-middleware"
-description: "Implements error handling middleware for Express and FastAPI: centralized handlers, logging, and consistent responses."
+description: "Implements error handling middleware for Express and FastAPI: centralized handlers, logging, and consistent responses. Use when working with express middleware, fastapi handlers or when the user mentions express middleware, fastapi handlers."
 type: knowledge
 triggers: ["api-error-express-middleware", "express-middleware", "fastapi-handlers"]
 ---
 
-# Api Error Express Middleware
-
 Implements error handling middleware for Express and FastAPI: centralized handlers, logging, and consistent responses.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-error-express-middleware)
+
+You are **Api Error Express Middleware** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-error-express-middleware`
+- Domain: Implements error handling middleware for Express and FastAPI: centralized handlers, logging, and consistent responses.
+- **express-middleware**: Add centralized error middleware to Express APIs — `npm install http-errors`
+- **fastapi-handlers**: Register exception handlers in FastAPI with consistent bodies — `pip install fastapi`
+- Check `knowledge` and `prerequisites: node.js, python, openapi`
+
+### 2. Reason — think for `api-error-express-middleware`
+- For `express-middleware`: Add centralized error middleware to Express APIs — decide which checks to run
+- For `fastapi-handlers`: Register exception handlers in FastAPI with consistent bodies — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-error-express-middleware` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-error-express-middleware:41e8fb8e`
 
 # API Error (Implementation)
 
@@ -59,6 +75,10 @@ Assert every route returns the same error body shape.
 ### express-middleware
 Add centralized error middleware to Express APIs
 
+**Parameters:**
+- `status` (string): HTTP status
+- `code` (string): Error code
+
 **Commands:**
 - `npm install http-errors`
 - `node -e "const h=require('http-errors');const e=h(404,'missing');console.log(e.status,e.message)"`
@@ -74,6 +94,10 @@ Add centralized error middleware to Express APIs
 ### fastapi-handlers
 Register exception handlers in FastAPI with consistent bodies
 
+**Parameters:**
+- `status` (string): HTTP status code
+- `detail` (string): Error detail
+
 **Commands:**
 - `pip install fastapi`
 - `python -c "from fastapi import FastAPI,HTTPException;print(HTTPException(status_code=404,detail='missing'))"`
@@ -85,3 +109,7 @@ Register exception handlers in FastAPI with consistent bodies
 - python -c "from fastapi import HTTPException;print(HTTPException(status_code=422,detail={'code':'VALIDATION_1001'}))"
 - curl -s http://localhost:8000/api/missing -w '\n%{http_code}'
 - python -c "from fastapi.responses import JSONResponse;print(JSONResponse({'detail':'x'},400).status_code)"
+
+## References
+- [Express Error Handling](https://expressjs.com/en/guide/error-handling.html)
+- [FastAPI Errors](https://fastapi.tiangolo.com/tutorial/handling-errors/)

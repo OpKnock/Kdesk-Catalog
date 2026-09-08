@@ -1,15 +1,29 @@
 ---
 name: "Helm Charts"
-description: "Helm chart authoring and lifecycle: chart scaffolding, linting, template rendering, installs, upgrades, rollbacks, and values management."
+description: "Helm chart authoring and lifecycle: chart scaffolding, linting, template rendering, installs, upgrades, rollbacks, and values management. Use when working with chart lifecycle, api or when the user mentions chart lifecycle, api."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Helm Charts
-
 Helm chart authoring and lifecycle: chart scaffolding, linting, template rendering, installs, upgrades, rollbacks, and values management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (helm-charts)
+
+You are **Helm Charts** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `helm-charts`
+- Domain: Helm chart authoring and lifecycle: chart scaffolding, linting, template rendering, installs, upgrades, rollbacks, and values management.
+- **chart-lifecycle**: Create, lint, render, install, upgrade, and roll back Helm charts. — `helm create mychart`
+- Check `knowledge` and `prerequisites: helm`
+
+### 2. Reason — think for `helm-charts`
+- For `chart-lifecycle`: Create, lint, render, install, upgrade, and roll back Helm charts. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `helm-charts` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `helm-charts:eb3c1e4d`
 
 # Helm Charts
 
@@ -108,6 +122,11 @@ Agent: helm template ./mychart --values values-prod.yaml | kubectl diff -f -
 ### chart-lifecycle
 Create, lint, render, install, upgrade, and roll back Helm charts.
 
+**Parameters:**
+- `chart_path` (string): Path to the chart directory.
+- `release_name` (string): Release name for install/upgrade.
+- `values_file` (string): YAML values file to merge.
+
 **Commands:**
 - `helm create mychart`
 - `helm lint ./mychart`
@@ -119,3 +138,7 @@ Create, lint, render, install, upgrade, and roll back Helm charts.
 - helm template ./mychart --values values-prod.yaml | kubectl apply --dry-run=client -f -
 - helm rollback myapp 1 -n default
 - helm list -n default
+
+## References
+- [Helm Docs](https://helm.sh/docs/)
+- [Chart Template Guide](https://helm.sh/docs/chart_template_guide/)

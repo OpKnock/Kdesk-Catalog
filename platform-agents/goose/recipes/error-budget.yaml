@@ -2,8 +2,18 @@ title: Error Budget
 description: 'SLO and error budget management: compute error budgets from Prometheus metrics, track burn
   rates, and trigger alerts when budgets deplete.'
 version: 2.0.0
-instructions: "# Error Budget\n\nSLO and error budget management: compute error budgets from Prometheus\
-  \ metrics, track burn rates, and trigger alerts when budgets deplete.\n\n## Instructions\n\n# Error\
+instructions: "SLO and error budget management: compute error budgets from Prometheus metrics, track burn\
+  \ rates, and trigger alerts when budgets deplete.\n\n## Agentic Workflow: Read -> Reason -> Act (error-budget)\n\
+  \nYou are **Error Budget** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `error-budget`\n- Domain: SLO and error budget management: compute error\
+  \ budgets from Prometheus metrics, track burn rates, and trigger alerts when budgets deplete.\n- **budget-calculations**:\
+  \ Query availability and latency SLIs, compute burn, and alert on budget depletion. — `curl -s 'http://prometheus:9090/api/v1/query'\
+  \ --data-urlencode 'query=sum(rate(h`\n- Check `knowledge` and `prerequisites: promtool`\n\n### 2. Reason\
+  \ — think for `error-budget`\n- For `budget-calculations`: Query availability and latency SLIs, compute\
+  \ burn, and alert on budget depletion. — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `error-budget` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `error-budget:50118633`\n\n# Error\
   \ Budget\n\n## What this skill does\n\nAn error budget is the allowed failure over an SLO period: at\
   \ 99.9% availability over 30 days, 43 minutes of error is the budget. This skill computes SLIs from\
   \ Prometheus, tracks burn, and wires alerts.\n\n## When to use\n\n- Setting up SLOs for a new service\n\
@@ -23,7 +33,9 @@ instructions: "# Error Budget\n\nSLO and error budget management: compute error 
   - Alert on burn rate (budget depletion speed), not raw error count.\n- Use a 1h fast-burn and 6h slow-burn\
   \ alert pair.\n- Review budget consumption weekly in the on-call report.\n- Freeze risky releases when\
   \ burn crosses ~15% of the monthly budget.\n\n## Capabilities\n\n### budget-calculations\nQuery availability\
-  \ and latency SLIs, compute burn, and alert on budget depletion.\n\n**Commands:**\n- `curl -s 'http://prometheus:9090/api/v1/query'\
+  \ and latency SLIs, compute burn, and alert on budget depletion.\n\n**Parameters:**\n- `prometheus-url`\
+  \ (string): Prometheus API endpoint\n- `slo-target` (string): SLO target, e.g. 99.9% availability\n\
+  - `window` (string): Evaluation window like 5m or 30d\n\n**Commands:**\n- `curl -s 'http://prometheus:9090/api/v1/query'\
   \ --data-urlencode 'query=sum(rate(http_requests_total{job=\"api\"}[5m]))' | jq '.data.result[0].value'`\n\
   - `curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=(1 - sum(rate(http_requests_total{code=~\"\
   5..\"}[5m])) / sum(rate(http_requests_total[5m]))) * 100' | jq '.data.result[0].value[1]'`\n- `curl\
@@ -32,5 +44,6 @@ instructions: "# Error Budget\n\nSLO and error budget management: compute error 
   \n**Examples:**\n- curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=(1 - sum(rate(http_requests_total{code=~\"\
   5..\"}[5m])) / sum(rate(http_requests_total[5m]))) * 100' | jq '.data.result[0].value[1]'\n- curl -s\
   \ 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m]))\
-  \ by (le))' | jq\n- promtool check rules prometheus/rules.yml"
+  \ by (le))' | jq\n- promtool check rules prometheus/rules.yml\n\n## References\n- [Google SRE Workbook:\
+  \ Error Budgets](https://sre.google/workbook/error-budget/)\n- [Prometheus Query API](https://prometheus.io/docs/prometheus/latest/querying/api/)"
 prompt: Act as Error Budget and handle the task per the instructions.

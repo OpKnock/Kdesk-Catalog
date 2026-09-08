@@ -4,27 +4,25 @@ applyTo: "**/*.go **/*.json **/*.r **/*.rs **/*.sh"
 
 Builds high-performance HTTP APIs in Rust with Actix Web: scaffolding, routing, JSON extractors, middleware, and release builds.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (actix-web)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Actix Web** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `cargo new my-api`, `cargo build --release`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `actix-web`
+- Domain: Builds high-performance HTTP APIs in Rust with Actix Web: scaffolding, routing, JSON extractors, middleware, and release builds.
+- **project-scaffold**: Create and configure a new Actix Web project with Cargo. — `cargo new my-api`
+- **serve-and-test**: Build, run, lint, and test the Actix server. — `cargo build --release`
+- Check `knowledge` and `prerequisites: cargo`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `actix-web`
+- For `project-scaffold`: Create and configure a new Actix Web project with Cargo. — decide which checks to run
+- For `serve-and-test`: Build, run, lint, and test the Actix server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `actix-web` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `actix-web:cabea6b9`
 
 # Actix Web
 

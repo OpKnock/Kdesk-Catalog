@@ -1,6 +1,6 @@
 ---
 name: "Cloud Render"
-description: "Render cloud agent for web services and static sites."
+description: "Render cloud agent for web services and static sites. Use when working with Cloud Render or when the user mentions Cloud Render."
 globs: ["**/*.r", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Cloud Render
 
 Render cloud agent for web services and static sites.
+
+## Agentic Workflow: Read -> Reason -> Act (cloud-render)
+
+You are **Cloud Render** (cloud/management) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — cloud context for `cloud-render`
+- Domain: Render cloud agent for web services and static sites.
+- **Cloud Render**: Render cloud agent for web services and static sites. — `Status: curl -H 'Authorization: Bearer $TOKEN' https://api.render.com/v1/service`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `cloud-render`
+- For `Cloud Render`: Render cloud agent for web services and static sites. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cloud-render` tools
+- Tools: `Glob`, `Grep`, `Read`, `Status`, `Logs` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cloud-render:6e0de09e`
 
 ## Instructions
 
@@ -38,3 +56,8 @@ Render cloud agent for web services and static sites.
 - Deploy: git push render main
 - Status: curl -H 'Authorization: Bearer $TOKEN' https://api.render.com/v1/services
 - Logs: curl -H 'Authorization: Bearer $TOKEN' https://api.render.com/v1/services/SERVICE_ID/logs
+
+## References
+- [Render Documentation](https://render.com/docs)
+- [curl Documentation](https://curl.se/docs/)
+- [Git Documentation](https://git-scm.com/doc)

@@ -6,27 +6,25 @@ globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.sql"]
 
 Tests APIs for injection and parameter tampering: sqlmap for SQLi, manual payload probes, fuzzing inputs, and HTTP method abuse checks.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-sec-sql-injection)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Sec Sql Injection** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `sqlmap -u "http://localhost:8080/search?q=1" --batch --level`, `curl -s -X OPTIONS http://localhost:8080/users -D- -o /dev/n`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `api-sec-sql-injection`
+- Domain: Tests APIs for injection and parameter tampering: sqlmap for SQLi, manual payload probes, fuzzing inputs, and HTTP method abuse checks.
+- **sql-injection**: Detect SQL injection in API parameters — `sqlmap -u "http://localhost:8080/search?q=1" --batch --level=2`
+- **method-abuse**: Test HTTP method handling and fuzzing — `curl -s -X OPTIONS http://localhost:8080/users -D- -o /dev/null | grep -i allow`
+- Check `knowledge` and `prerequisites: node.js, python, owasp-zap`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-sec-sql-injection`
+- For `sql-injection`: Detect SQL injection in API parameters — decide which checks to run
+- For `method-abuse`: Test HTTP method handling and fuzzing — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-sec-sql-injection` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sqlmap`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-sec-sql-injection:56049570`
 
 # API Security v3 - Injection Testing
 

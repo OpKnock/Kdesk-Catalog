@@ -1,8 +1,24 @@
-# Lighttpd
-
 Configure and operate the lighttpd web server: config validation, foreground/daemon modes, module enablement, and simple virtual hosts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (lighttpd)
+
+You are **Lighttpd** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `lighttpd`
+- Domain: Configure and operate the lighttpd web server: config validation, foreground/daemon modes, module enablement, and simple virtual hosts.
+- **lighttpd-run**: Validate config and start lighttpd in various modes. — `lighttpd -f /etc/lighttpd/lighttpd.conf -t`
+- **lighttpd-modules**: Enable modules and configure virtual hosts. — `lighttpd-enable-mod fastcgi`
+- Check `knowledge` and `prerequisites: lighttpd, lighttpd-enable-mod, systemctl`
+
+### 2. Reason — think for `lighttpd`
+- For `lighttpd-run`: Validate config and start lighttpd in various modes. — decide which checks to run
+- For `lighttpd-modules`: Enable modules and configure virtual hosts. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `lighttpd` tools
+- Tools: `Glob`, `Grep`, `Read`, `Lighttpd`, `Systemctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `lighttpd:1e2d52f3`
 
 # lighttpd
 
@@ -80,6 +96,10 @@ lighttpd -f /etc/lighttpd/lighttpd.conf -t && echo "config OK"
 ### lighttpd-run
 Validate config and start lighttpd in various modes.
 
+**Parameters:**
+- `config` (string): lighttpd config file path.
+- `foreground` (boolean): -D runs in foreground for debugging.
+
 **Commands:**
 - `lighttpd -f /etc/lighttpd/lighttpd.conf -t`
 - `lighttpd -f /etc/lighttpd/lighttpd.conf -D`
@@ -95,6 +115,9 @@ Validate config and start lighttpd in various modes.
 ### lighttpd-modules
 Enable modules and configure virtual hosts.
 
+**Parameters:**
+- `module` (string): Module name to enable.
+
 **Commands:**
 - `lighttpd-enable-mod fastcgi`
 - `lighttpd-enable-mod mod_rewrite`
@@ -105,3 +128,7 @@ Enable modules and configure virtual hosts.
 - lighttpd-enable-mod fastcgi
 - lighttpd-enable-mod mod_compress
 - curl -sI http://localhost/ | head -5
+
+## References
+- [lighttpd Documentation](https://redmine.lighttpd.net/projects/lighttpd/wiki)
+- [lighttpd Configuration](https://redmine.lighttpd.net/projects/lighttpd/wiki/Docs_Configuration)

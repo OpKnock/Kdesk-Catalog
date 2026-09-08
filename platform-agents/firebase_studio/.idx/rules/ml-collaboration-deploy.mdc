@@ -1,5 +1,5 @@
 ---
-description: "Collaboration deployment agent for ML collaboration service deployment."
+description: "Collaboration deployment agent for ML collaboration service deployment. Use when working with Ml Collaboration Deploy or when the user mentions Ml Collaboration Deploy."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Ml Collaboration Deploy
 
 Collaboration deployment agent for ML collaboration service deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-collaboration-deploy)
+
+You are **Ml Collaboration Deploy** (ml/collaboration) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-collaboration-deploy`
+- Domain: Collaboration deployment agent for ML collaboration service deployment.
+- **Ml Collaboration Deploy**: Collaboration deployment agent for ML collaboration service deployment. — `Health: curl http://localhost:8080/health`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-collaboration-deploy`
+- For `Ml Collaboration Deploy`: Collaboration deployment agent for ML collaboration service deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-collaboration-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Health`, `Create` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-collaboration-deploy:75b0d049`
 
 ## Instructions
 
@@ -26,3 +44,8 @@ Collaboration deployment agent for ML collaboration service deployment.
 - Server: python -m ml_collab.server --port 8080
 - Create: python -m ml_collab.create --name team_workspace --members alice,bob
 - Health: curl http://localhost:8080/health
+
+## References
+- [Hugging Face Hub Documentation](https://huggingface.co/docs/hub/)
+- [curl Documentation](https://curl.se/docs/)
+- [Python Documentation](https://docs.python.org/3/)

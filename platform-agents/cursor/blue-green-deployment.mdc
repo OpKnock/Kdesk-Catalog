@@ -6,27 +6,27 @@ alwaysApply: false
 
 Implements blue-green deployments on Kubernetes: parallel deployments, service cutover, rollback, and verification.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (blue-green-deployment)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Blue Green Deployment** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `kubectl apply -f app-blue.yaml`, `kubectl patch service my-api -p '{"spec":{"selector":{"versi`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `blue-green-deployment`
+- Domain: Implements blue-green deployments on Kubernetes: parallel deployments, service cutover, rollback, and verification.
+- **deploy-flow**: Deploy blue/green versions and switch traffic. — `kubectl apply -f app-blue.yaml`
+- **traffic-switch**: Point the service selector at the active version. — `kubectl patch service my-api -p '{"spec":{"selector":{"version":"green"}}}'`
+- **rollback-verify**: Roll back to the previous color and verify. — `kubectl rollout status deployment/my-api-green`
+- Check `knowledge` and `prerequisites: kubectl`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `blue-green-deployment`
+- For `deploy-flow`: Deploy blue/green versions and switch traffic. — decide which checks to run
+- For `traffic-switch`: Point the service selector at the active version. — decide which checks to run
+- For `rollback-verify`: Roll back to the previous color and verify. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `blue-green-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `blue-green-deployment:7ec6c25d`
 
 # Blue-Green Deployment
 

@@ -4,27 +4,25 @@ applyTo: "**/*.r **/*.sh"
 
 Connects to remote hosts with ssh: config files, port forwarding, tunnels, keys, jump hosts, and verbose troubleshooting.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (ssh)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **ssh** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `ssh user@host`, `ssh -L 8080:localhost:80 user@host`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devtools context for `ssh`
+- Domain: Connects to remote hosts with ssh: config files, port forwarding, tunnels, keys, jump hosts, and verbose troubleshooting.
+- **connections**: Connect with keys, ports, and options. — `ssh user@host`
+- **tunnels-and-forwarding**: Forward ports, set up SOCKS proxies, and tunnel traffic. — `ssh -L 8080:localhost:80 user@host`
+- Check `knowledge` and `prerequisites: ssh`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `ssh`
+- For `connections`: Connect with keys, ports, and options. — decide which checks to run
+- For `tunnels-and-forwarding`: Forward ports, set up SOCKS proxies, and tunnel traffic. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `ssh` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ssh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ssh:319acc93`
 
 # SSH Connections
 

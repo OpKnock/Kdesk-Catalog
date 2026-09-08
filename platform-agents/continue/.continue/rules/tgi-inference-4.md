@@ -1,6 +1,6 @@
 ---
 name: "Tgi Inference 4"
-description: "TGI server agent. Manages TGI ML server."
+description: "TGI server agent. Manages TGI ML server. Use when working with Ml Tgi Server Agent, inference or when the user mentions Ml Tgi Server Agent, inference."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Tgi Inference 4
 
 TGI server agent. Manages TGI ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (tgi-inference-4)
+
+You are **Tgi Inference 4** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `tgi-inference-4`
+- Domain: TGI server agent. Manages TGI ML server.
+- **Ml Tgi Server Agent**: TGI server agent. Manages TGI ML server. — `python -m tgi.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `tgi-inference-4`
+- For `Ml Tgi Server Agent`: TGI server agent. Manages TGI ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tgi-inference-4` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tgi-inference-4:1d164271`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ TGI server agent. Manages TGI ML server.
 - curl http://localhost:8080/generate --data '{"inputs": "Hello"}'
 - text-generation-router --port 8080 --model-id meta-llama/Llama-2-7b-hf
 - docker run -p 8080:80 ghcr.io/huggingface/text-generation-inference:latest --model-id meta-llama/Llama-2-7b-hf
+
+## References
+- [Text Generation Inference](https://huggingface.co/docs/text-generation-inference/)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

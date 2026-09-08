@@ -1,26 +1,22 @@
 Expert role mapping skill covering Kubernetes RBAC bindings, kubectl auth checks, and AWS IAM role/policy inspection to trace who can do what.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (role-mapping)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Role Mapping** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `kubectl get rolebindings -A -o wide`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `role-mapping`
+- Domain: Expert role mapping skill covering Kubernetes RBAC bindings, kubectl auth checks, and AWS IAM role/policy inspection to trace who can do what.
+- **rbac-iam-mapping**: Map users to roles in Kubernetes RBAC and AWS IAM — `kubectl get rolebindings -A -o wide`
+- Check `knowledge` and `prerequisites: aws, kubectl`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `role-mapping`
+- For `rbac-iam-mapping`: Map users to roles in Kubernetes RBAC and AWS IAM — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `role-mapping` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `role-mapping:18c9c09e`
 
 # Role Mapping
 

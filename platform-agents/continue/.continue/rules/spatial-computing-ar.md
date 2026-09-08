@@ -1,6 +1,6 @@
 ---
 name: "Spatial-Computing Ar"
-description: "Spatial-Computing ar expertise and best practices."
+description: "Spatial-Computing ar expertise and best practices. Use when working with ar expertise, spatial computing, skill or when the user mentions ar expertise, spatial computing, skill."
 globs: ["**/*.r", "**/*.scala"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Spatial-Computing Ar
 
 Spatial-Computing ar expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (spatial-computing-ar)
+
+You are **Spatial-Computing Ar** (spatial-computing/ar) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — spatial-computing context for `spatial-computing-ar`
+- Domain: Spatial-Computing ar expertise and best practices.
+- **ar-expertise**: spatial-computing ar expertise — `ar-cli`
+- Check `knowledge` and `prerequisites: ar`
+
+### 2. Reason — think for `spatial-computing-ar`
+- For `ar-expertise`: spatial-computing ar expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `spatial-computing-ar` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ar-cli`, `Ar-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `spatial-computing-ar:7f925294`
 
 ## Instructions
 

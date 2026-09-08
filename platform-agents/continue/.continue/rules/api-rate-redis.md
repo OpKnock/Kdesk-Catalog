@@ -1,15 +1,31 @@
 ---
 name: "Api Rate Redis"
-description: "Builds distributed rate limiting with Redis: shared counters across instances, ioredis clients, and Dockerized Redis for multi-node consistency."
+description: "Builds distributed rate limiting with Redis: shared counters across instances, ioredis clients, and Dockerized Redis for multi-node consistency. Use when working with redis setup, node integration or when the user mentions redis setup, node integration."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Api Rate Redis
-
 Builds distributed rate limiting with Redis: shared counters across instances, ioredis clients, and Dockerized Redis for multi-node consistency.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-rate-redis)
+
+You are **Api Rate Redis** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `api-rate-redis`
+- Domain: Builds distributed rate limiting with Redis: shared counters across instances, ioredis clients, and Dockerized Redis for multi-node consistency.
+- **redis-setup**: Run and connect to Redis for shared limit state — `docker run -d -p 6379:6379 --name api-redis redis:7`
+- **node-integration**: Integrate Redis counting into a Node API — `redis-cli INCR rate:user:1 && redis-cli EXPIRE rate:user:1 60`
+- Check `knowledge` and `prerequisites: redis, node.js, python`
+
+### 2. Reason — think for `api-rate-redis`
+- For `redis-setup`: Run and connect to Redis for shared limit state — decide which checks to run
+- For `node-integration`: Integrate Redis counting into a Node API — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-rate-redis` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-rate-redis:1ef9c796`
 
 # API Rate v2 - Redis Distributed
 
@@ -61,6 +77,11 @@ async function consume(key, limit, windowSec) {
 ### redis-setup
 Run and connect to Redis for shared limit state
 
+**Parameters:**
+- `key` (string): Rate counter key name
+- `expiry-seconds` (integer): TTL for the counter window
+- `limit` (integer): Max requests per window
+
 **Commands:**
 - `docker run -d -p 6379:6379 --name api-redis redis:7`
 - `redis-cli ping`
@@ -84,3 +105,7 @@ Integrate Redis counting into a Node API
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Redis Commands](https://redis.io/docs/latest/commands/incr/)
+- [ioredis GitHub](https://github.com/redis/ioredis)

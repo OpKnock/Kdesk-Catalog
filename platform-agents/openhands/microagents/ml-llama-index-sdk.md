@@ -1,6 +1,6 @@
 ---
 name: "ml-llama-index-sdk"
-description: "LlamaIndex SDK agent for ML LlamaIndex Python and Node.js SDK usage."
+description: "LlamaIndex SDK agent for ML LlamaIndex Python and Node.js SDK usage. Use when working with Ml Llama Index Sdk, inference or when the user mentions Ml Llama Index Sdk, inference."
 type: knowledge
 triggers: ["ml-llama-index-sdk", "ml llama index sdk"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-llama-index-sdk", "ml llama index sdk"]
 # Ml Llama Index Sdk
 
 LlamaIndex SDK agent for ML LlamaIndex Python and Node.js SDK usage.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-llama-index-sdk)
+
+You are **Ml Llama Index Sdk** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-llama-index-sdk`
+- Domain: LlamaIndex SDK agent for ML LlamaIndex Python and Node.js SDK usage.
+- **Ml Llama Index Sdk**: LlamaIndex SDK agent for ML LlamaIndex Python and Node.js SDK usage. — `Node: node -e "const { VectorStoreIndex } = require('llamaindex'); const index =`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-llama-index-sdk`
+- For `Ml Llama Index Sdk`: LlamaIndex SDK agent for ML LlamaIndex Python and Node.js SDK usage. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-llama-index-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Node`, `Python` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-llama-index-sdk:4f0bd85e`
 
 ## Instructions
 
@@ -25,3 +43,8 @@ LlamaIndex SDK agent for ML LlamaIndex Python and Node.js SDK usage.
 **Examples:**
 - Python: python -c "from llama_index import VectorStoreIndex; index = VectorStoreIndex.from_documents(docs); print(index.query('What is AI?'))"
 - Node: node -e "const { VectorStoreIndex } = require('llamaindex'); const index = await VectorStoreIndex.fromDocuments(docs); console.log(await index.query('What is AI?'));"
+
+## References
+- [LlamaIndex Documentation](https://docs.llamaindex.ai/)
+- [LlamaIndex Documentation](https://docs.llamaindex.ai/)
+- [Python Documentation](https://docs.python.org/3/)

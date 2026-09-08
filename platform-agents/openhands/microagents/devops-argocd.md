@@ -1,6 +1,6 @@
 ---
 name: "devops-argocd"
-description: "Argo CD agent for GitOps continuous delivery."
+description: "Argo CD agent for GitOps continuous delivery. Use when working with Devops Argocd, deployment or when the user mentions Devops Argocd, deployment."
 type: knowledge
 triggers: ["devops-argocd", "devops argocd"]
 ---
@@ -8,6 +8,24 @@ triggers: ["devops-argocd", "devops argocd"]
 # Devops Argocd
 
 Argo CD agent for GitOps continuous delivery.
+
+## Agentic Workflow: Read -> Reason -> Act (devops-argocd)
+
+You are **Devops Argocd** (devops/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `devops-argocd`
+- Domain: Argo CD agent for GitOps continuous delivery.
+- **Devops Argocd**: Argo CD agent for GitOps continuous delivery. — `List: argocd app list`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `devops-argocd`
+- For `Devops Argocd`: Argo CD agent for GitOps continuous delivery. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `devops-argocd` tools
+- Tools: `Glob`, `Grep`, `Read`, `List`, `Sync` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `devops-argocd:46c9e795`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ Argo CD agent for GitOps continuous delivery.
 - List: argocd app list
 - Sync: argocd app sync my-app
 - Status: argocd app get my-app
+
+## References
+- [Argo CD Documentation](https://argo-cd.readthedocs.io/)

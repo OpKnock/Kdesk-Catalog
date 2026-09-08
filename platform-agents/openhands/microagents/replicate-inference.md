@@ -1,6 +1,6 @@
 ---
 name: "replicate-inference"
-description: "Replicate inference server agent. Manages Replicate ML inference server."
+description: "Replicate inference server agent. Manages Replicate ML inference server. Use when working with Ml Replicate Inference Server Agent or when the user mentions Ml Replicate Inference Server Agent."
 type: knowledge
 triggers: ["replicate-inference", "ml replicate inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["replicate-inference", "ml replicate inference server agent"]
 # Replicate Inference
 
 Replicate inference server agent. Manages Replicate ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (replicate-inference)
+
+You are **Replicate Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `replicate-inference`
+- Domain: Replicate inference server agent. Manages Replicate ML inference server.
+- **Ml Replicate Inference Server Agent**: Replicate inference server agent. Manages Replicate ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `replicate-inference`
+- For `Ml Replicate Inference Server Agent`: Replicate inference server agent. Manages Replicate ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `replicate-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Replicate` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `replicate-inference:bb6b6ecd`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Replicate inference server agent. Manages Replicate ML inference server.
 - replicate serve --model stability-ai/sdxl:latest
 - curl https://my-model.replicate.run/
 - replicate models list
+
+## References
+- [Replicate Documentation](https://replicate.com/docs/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

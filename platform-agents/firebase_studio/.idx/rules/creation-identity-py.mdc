@@ -1,5 +1,5 @@
 ---
-description: "Creation deployment agent. Manages Creation ML deployment."
+description: "Creation deployment agent. Manages Creation ML deployment. Use when working with Ml Creation Deploy Agent or when the user mentions Ml Creation Deploy Agent."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Creation Identity Py
 
 Creation deployment agent. Manages Creation ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (creation-identity-py)
+
+You are **Creation Identity Py** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `creation-identity-py`
+- Domain: Creation deployment agent. Manages Creation ML deployment.
+- **Ml Creation Deploy Agent**: Creation deployment agent. Manages Creation ML deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `creation-identity-py`
+- For `Ml Creation Deploy Agent`: Creation deployment agent. Manages Creation ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `creation-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `creation-identity-py:8266c84d`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Creation deployment agent. Manages Creation ML deployment.
 - curl http://localhost:8080/create --data '{"architecture": "transformer"}'
 - python create.py --architecture 'transformer' --output model.py
 - python generate.py --config config.json --output model.pkl
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

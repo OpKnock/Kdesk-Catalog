@@ -1,8 +1,22 @@
-# Deprecation
-
 Manages endpoint phase-out lifecycle: Sunset headers, spec linting for metadata, and usage auditing before removal.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (deprecation)
+
+You are **Deprecation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `deprecation`
+- Domain: Manages endpoint phase-out lifecycle: Sunset headers, spec linting for metadata, and usage auditing before removal.
+- **deprecation-audit**: Lint OpenAPI specs for missing metadata and probe live endpoints for sunset headers. — `spectral lint openapi.yaml -r .spectral/deprecation.rules.yml`
+- Check `knowledge` and `prerequisites: grep, npx, spectral`
+
+### 2. Reason — think for `deprecation`
+- For `deprecation-audit`: Lint OpenAPI specs for missing metadata and probe live endpoints for sunset headers. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `deprecation` tools
+- Tools: `Glob`, `Read`, `Spectral`, `Bash`, `Grep` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `deprecation:b1df3c35`
 
 # API Phase-Out
 
@@ -71,6 +85,11 @@ curl -sI https://httpbin.org/headers | grep -qi '^deprecation:'; echo $?
 ### deprecation-audit
 Lint OpenAPI specs for missing metadata and probe live endpoints for sunset headers.
 
+**Parameters:**
+- `spec-path` (string): Path to the OpenAPI spec to lint
+- `endpoint` (string): URL of the legacy endpoint to probe
+- `sunset-date` (string): ISO 8601 date when the endpoint will be removed, used in the Sunset header
+
 **Commands:**
 - `spectral lint openapi.yaml -r .spectral/deprecation.rules.yml`
 - `curl -sI https://httpbin.org/headers -H 'Authorization: Bearer $TOKEN' | grep -iE '^(deprecation|sunset|link):'`
@@ -82,3 +101,6 @@ Lint OpenAPI specs for missing metadata and probe live endpoints for sunset head
 - spectral lint openapi.yaml -r .spectral/deprecation.rules.yml
 - curl -sI https://httpbin.org/headers -H 'Authorization: Bearer $TOKEN' | grep -i 'sunset:'
 - grep -rn 'deprecated: true' specs/*.yaml
+
+## References
+- [Sunset Header RFC 8594](https://www.rfc-editor.org/rfc/rfc8594.html)

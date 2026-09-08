@@ -1,8 +1,26 @@
-# Aws Lambda
-
 Creates, updates, and invokes AWS Lambda functions with the AWS CLI, including packaging, configuration, and log inspection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (aws-lambda)
+
+You are **Aws Lambda** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `aws-lambda`
+- Domain: Creates, updates, and invokes AWS Lambda functions with the AWS CLI, including packaging, configuration, and log inspection.
+- **function-lifecycle**: Create, update, and manage Lambda functions. — `aws lambda create-function --function-name my-fn --runtime nodejs20.x --role arn`
+- **invoke-and-config**: Invoke functions and manage configuration. — `aws lambda invoke --function-name my-fn --payload '{"a":1}' out.json`
+- **logs-and-metrics**: Inspect function logs and metric alarms. — `aws logs tail /aws/lambda/my-fn --follow`
+- Check `knowledge` and `prerequisites: aws`
+
+### 2. Reason — think for `aws-lambda`
+- For `function-lifecycle`: Create, update, and manage Lambda functions. — decide which checks to run
+- For `invoke-and-config`: Invoke functions and manage configuration. — decide which checks to run
+- For `logs-and-metrics`: Inspect function logs and metric alarms. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `aws-lambda` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `aws-lambda:3a440b20`
 
 # AWS Lambda
 
@@ -54,6 +72,11 @@ aws logs tail /aws/lambda/my-fn --follow
 ### function-lifecycle
 Create, update, and manage Lambda functions.
 
+**Parameters:**
+- `runtime` (string): Runtime: nodejs20.x, python3.12, go1.x, etc.
+- `handler` (string): Handler entry point
+- `zip_file` (string): Path to deployment package
+
 **Commands:**
 - `aws lambda create-function --function-name my-fn --runtime nodejs20.x --role arn:aws:iam::111122223333:role/lambda-basic --handler index.handler --zip-file fileb://function.zip`
 - `aws lambda update-function-code --function-name my-fn --zip-file fileb://function.zip`
@@ -68,6 +91,11 @@ Create, update, and manage Lambda functions.
 
 ### invoke-and-config
 Invoke functions and manage configuration.
+
+**Parameters:**
+- `payload` (string): JSON event payload
+- `memory_size` (number): Memory in MB
+- `timeout` (number): Timeout in seconds
 
 **Commands:**
 - `aws lambda invoke --function-name my-fn --payload '{"a":1}' out.json`
@@ -84,6 +112,10 @@ Invoke functions and manage configuration.
 ### logs-and-metrics
 Inspect function logs and metric alarms.
 
+**Parameters:**
+- `function_name` (string): Lambda function name
+- `filter_pattern` (string): Log filter pattern
+
 **Commands:**
 - `aws logs tail /aws/lambda/my-fn --follow`
 - `aws logs filter-log-events --log-group-name /aws/lambda/my-fn --filter-pattern "ERROR"`
@@ -94,3 +126,7 @@ Inspect function logs and metric alarms.
 - aws logs tail /aws/lambda/my-fn --follow --format short
 - aws logs filter-log-events --log-group-name /aws/lambda/my-fn --filter-pattern "ERROR" | jq '.events[].message'
 - aws cloudwatch get-metric-statistics --namespace AWS/Lambda --metric-name Duration --dimensions Name=FunctionName,Value=my-fn --period 300 --statistics Average --start-time ... --end-time ...
+
+## References
+- [Lambda Developer Guide](https://docs.aws.amazon.com/lambda/latest/dg/)
+- [AWS CLI lambda Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/lambda/index.html)

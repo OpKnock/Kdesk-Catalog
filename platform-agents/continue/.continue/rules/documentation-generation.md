@@ -1,15 +1,29 @@
 ---
 name: "Documentation Generation"
-description: "Auto-generates API reference documentation from source code and specs: Typedoc for TypeScript, sphinx-apidoc for Python, Doxygen for C++, and OpenAPI generators."
+description: "Auto-generates API reference documentation from source code and specs: Typedoc for TypeScript, sphinx-apidoc for Python, Doxygen for C++, and OpenAPI generators. Use when working with code doc gen, api or when the user mentions code doc gen, api."
 globs: ["**/*.html", "**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{cpp,cc,h,hpp}", "**/*.{ts,tsx}", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Documentation Generation
-
 Auto-generates API reference documentation from source code and specs: Typedoc for TypeScript, sphinx-apidoc for Python, Doxygen for C++, and OpenAPI generators.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (documentation-generation)
+
+You are **Documentation Generation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `documentation-generation`
+- Domain: Auto-generates API reference documentation from source code and specs: Typedoc for TypeScript, sphinx-apidoc for Python, Doxygen for C++, and OpenAPI generators.
+- **code-doc-gen**: Generate API reference documentation from code and OpenAPI specs with the right tool per language. — `npx typedoc --out docs src/index.ts`
+- Check `knowledge` and `prerequisites: doxygen, jsdoc, npx, sphinx-apidoc`
+
+### 2. Reason — think for `documentation-generation`
+- For `code-doc-gen`: Generate API reference documentation from code and OpenAPI specs with the right tool per language. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `documentation-generation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Sphinx-apidoc` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `documentation-generation:c6318cd0`
 
 # Documentation Generation
 
@@ -76,6 +90,11 @@ sphinx-build -b html docs/source docs/build -W
 ### code-doc-gen
 Generate API reference documentation from code and OpenAPI specs with the right tool per language.
 
+**Parameters:**
+- `language` (string): Source language: typescript, python, cpp, javascript
+- `source-dir` (string): Directory containing the source files to document
+- `output-dir` (string): Directory for generated docs
+
 **Commands:**
 - `npx typedoc --out docs src/index.ts`
 - `sphinx-apidoc -o docs/source src/api && sphinx-build -b html docs/source docs/build`
@@ -87,3 +106,7 @@ Generate API reference documentation from code and OpenAPI specs with the right 
 - npx typedoc --out docs src/index.ts
 - sphinx-apidoc -o docs/source src/api && sphinx-build -b html docs/source docs/build
 - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g html2 -o docs
+
+## References
+- [Typedoc Docs](https://typedoc.org/guides/overview/)
+- [Sphinx autodoc](https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html)

@@ -1,5 +1,5 @@
 ---
-description: "Embedding SDK deployment agent for ML Embedding SDK deployment."
+description: "Embedding SDK deployment agent for ML Embedding SDK deployment. Use when working with Ml Embedding Deploy Sdk or when the user mentions Ml Embedding Deploy Sdk."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Embedding Docker
 
 Embedding SDK deployment agent for ML Embedding SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (embedding-docker)
+
+You are **Embedding Docker** (ml/embedding) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `embedding-docker`
+- Domain: Embedding SDK deployment agent for ML Embedding SDK deployment.
+- **Ml Embedding Deploy Sdk**: Embedding SDK deployment agent for ML Embedding SDK deployment. — `Docker: docker run -p 8080:8080 embedding-server --model sentence-transformers/a`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `embedding-docker`
+- For `Ml Embedding Deploy Sdk`: Embedding SDK deployment agent for ML Embedding SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `embedding-docker` tools
+- Tools: `Glob`, `Grep`, `Read`, `Docker`, `Server` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `embedding-docker:0b7957c0`
 
 ## Instructions
 
@@ -17,6 +35,9 @@ You are the Embedding SDK deployment expert. Call on this agent to deploy an emb
 ### Ml Embedding Deploy Sdk
 Embedding SDK deployment agent for ML Embedding SDK deployment.
 
+**Parameters:**
+- `model` (string): CLI flag --model observed in capability commands
+
 **Commands:**
 - `Docker: docker run -p 8080:8080 embedding-server --model sentence-transformers/all-MiniLM-L6-v2`
 - `Server: python -m embedding.server --model sentence-transformers/all-MiniLM-L6-v2`
@@ -24,3 +45,8 @@ Embedding SDK deployment agent for ML Embedding SDK deployment.
 **Examples:**
 - Server: python -m embedding.server --model sentence-transformers/all-MiniLM-L6-v2
 - Docker: docker run -p 8080:8080 embedding-server --model sentence-transformers/all-MiniLM-L6-v2
+
+## References
+- [OpenAI Embeddings Guide](https://platform.openai.com/docs/guides/embeddings)
+- [Docker Documentation](https://docs.docker.com/)
+- [Python Documentation](https://docs.python.org/3/)

@@ -1,8 +1,22 @@
-# Rocket
-
 Expert Rocket (Rust) reference covering routing with route attributes, state and guards, Rocket.toml config, and cargo build/run workflows suited to web APIs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rocket)
+
+You are **Rocket** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `rocket`
+- Domain: Expert Rocket (Rust) reference covering routing with route attributes, state and guards, Rocket.toml config, and cargo build/run workflows suited to web APIs.
+- **rocket-web**: Build Rust web APIs with Rocket: routes, state, config — `cargo new hello-rocket && cd hello-rocket && cargo add rocket`
+- Check `knowledge` and `prerequisites: cargo`
+
+### 2. Reason — think for `rocket`
+- For `rocket-web`: Build Rust web APIs with Rocket: routes, state, config — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rocket` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rocket:fc2ea4ef`
 
 # Rocket (Rust)
 
@@ -91,6 +105,11 @@ curl -s -o /dev/null -w '%{http_code}\n' -X POST http://localhost:8000/submit -d
 ### rocket-web
 Build Rust web APIs with Rocket: routes, state, config
 
+**Parameters:**
+- `route_path` (string): Path expression like /hello/<name>
+- `port` (integer): Port from Rocket.toml or ROCKET_PORT
+- `profile` (string): Rocket profile: default, release, debug
+
 **Commands:**
 - `cargo new hello-rocket && cd hello-rocket && cargo add rocket`
 - `cargo run`
@@ -102,3 +121,7 @@ Build Rust web APIs with Rocket: routes, state, config
 - cargo run
 - curl -s http://localhost:8000/hello/Ada
 - curl -s -X POST http://localhost:8000/submit -H 'Content-Type: application/json' -d '{"title":"hi"}'
+
+## References
+- [Rocket guide](https://rocket.rs/v0.5/guide/)
+- [Rocket API reference](https://api.rocket.rs/v0.5/rocket/)

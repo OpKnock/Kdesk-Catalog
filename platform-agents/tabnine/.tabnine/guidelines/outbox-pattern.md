@@ -1,8 +1,22 @@
-# Outbox Pattern
-
 Implements the transactional outbox approach with database outbox tables, poll-and-forward relay workers, and Debezium CDC connectors for reliable event publishing without dual-write problems.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (outbox-pattern)
+
+You are **Outbox Pattern** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `outbox-pattern`
+- Domain: Implements the transactional outbox approach with database outbox tables, poll-and-forward relay workers, and Debezium CDC connectors for reliable event publishing without dual-write problems.
+- **outbox-implementation**: Design outbox tables, poll-and-forward relay SQL, and Debezium outbox event router connectors. — `mysql -u app -p -e "SELECT * FROM outbox WHERE status='pending' ORDER BY id LIMI`
+- Check `knowledge` and `prerequisites: mysql`
+
+### 2. Reason — think for `outbox-pattern`
+- For `outbox-implementation`: Design outbox tables, poll-and-forward relay SQL, and Debezium outbox event router connectors. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `outbox-pattern` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mysql`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `outbox-pattern:c004db4a`
 
 # Outbox Pattern
 
@@ -57,6 +71,11 @@ CREATE TABLE outbox (
 ### outbox-implementation
 Design outbox tables, poll-and-forward relay SQL, and Debezium outbox event router connectors.
 
+**Parameters:**
+- `table` (string): Outbox table name
+- `status` (string): pending, sent or failed
+- `connector_name` (string): Debezium connector name
+
 **Commands:**
 - `mysql -u app -p -e "SELECT * FROM outbox WHERE status='pending' ORDER BY id LIMIT 100;"`
 - `mysql -u app -p -e "UPDATE outbox SET status='sent' WHERE id IN (...);"`
@@ -68,3 +87,7 @@ Design outbox tables, poll-and-forward relay SQL, and Debezium outbox event rout
 - curl -s http://localhost:8083/connectors/outbox-connector/status | jq .
 - mysql -u app -p -e "SELECT COUNT(*) FROM outbox WHERE status='pending';"
 - curl -X DELETE http://localhost:8083/connectors/outbox-connector
+
+## References
+- [Debezium Outbox Event Router](https://debezium.io/documentation/reference/stable/transformations/outbox-event-router.html)
+- [Microservices.io Outbox Pattern](https://microservices.io/patterns/data/transactional-outbox.html)

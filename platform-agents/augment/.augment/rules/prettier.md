@@ -5,27 +5,23 @@ description: "Format and verify files with it in write or check mode. for CI. Us
 
 Format and verify files with it in write or check mode. for CI.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (prettier)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **prettier** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx prettier --write .`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `prettier`
+- Domain: Format and verify files with it in write or check mode. for CI.
+- **prettier-formatting**: Format and verify files with Prettier in write or check mode — `npx prettier --write .`
+- Check `knowledge` and `prerequisites: npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `prettier`
+- For `prettier-formatting`: Format and verify files with Prettier in write or check mode — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `prettier` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `prettier:6f9f87ab`
 
 # Prettier
 

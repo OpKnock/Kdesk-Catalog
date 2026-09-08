@@ -1,15 +1,31 @@
 ---
 name: "Connectrpc Web"
-description: "Use ConnectRPC in browser and TypeScript clients: @connectrpc/connect-web with buf-generated stubs."
+description: "Use ConnectRPC in browser and TypeScript clients: @connectrpc/connect-web with buf-generated stubs. Use when working with web client, browser call, api or when the user mentions web client, browser call, api."
 globs: ["**/*.r", "**/*.sh", "**/*.{ts,tsx}", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Connectrpc Web
-
 Use ConnectRPC in browser and TypeScript clients: @connectrpc/connect-web with buf-generated stubs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (connectrpc-web)
+
+You are **Connectrpc Web** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `connectrpc-web`
+- Domain: Use ConnectRPC in browser and TypeScript clients: @connectrpc/connect-web with buf-generated stubs.
+- **web-client**: Create a TypeScript ConnectRPC web client and generate stubs with buf — `npm create vite@latest my-app -- --template react-ts`
+- **browser-call**: Invoke Connect services from the browser with CORS and unary streaming support — `npm run dev`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `connectrpc-web`
+- For `web-client`: Create a TypeScript ConnectRPC web client and generate stubs with buf — decide which checks to run
+- For `browser-call`: Invoke Connect services from the browser with CORS and unary streaming support — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `connectrpc-web` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `connectrpc-web:cf026064`
 
 # ConnectRPC Web
 
@@ -95,6 +111,10 @@ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:5173
 ### web-client
 Create a TypeScript ConnectRPC web client and generate stubs with buf
 
+**Parameters:**
+- `app_name` (string): Vite app name
+- `template` (string): Vite template such as react-ts, vue-ts
+
 **Commands:**
 - `npm create vite@latest my-app -- --template react-ts`
 - `npm install @connectrpc/connect-web @connectrpc/connect`
@@ -109,6 +129,9 @@ Create a TypeScript ConnectRPC web client and generate stubs with buf
 ### browser-call
 Invoke Connect services from the browser with CORS and unary streaming support
 
+**Parameters:**
+- `dev_port` (string): Vite dev server port, default 5173
+
 **Commands:**
 - `npm run dev`
 - `npm run build`
@@ -120,3 +143,7 @@ Invoke Connect services from the browser with CORS and unary streaming support
 - npm run dev
 - npm run build && npm run preview
 - npx tsc --noEmit
+
+## References
+- [ConnectRPC Web Getting Started](https://connectrpc.com/docs/web/getting-started)
+- [buf es plugin](https://buf.build/docs/ecosystem/es-plugins/)

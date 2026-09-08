@@ -1,14 +1,28 @@
 ---
-description: "TLS encryption in transit: test certificates with openssl s_client, inspect cipher suites and handshakes, and verify proper SNI and chain validation."
+description: "TLS encryption in transit: test certificates with openssl s_client, inspect cipher suites and handshakes, and verify proper SNI and chain validation. Use when working with tls verification, api or when the user mentions tls verification, api."
 globs: ["**/*.go", "**/*.r", "**/*.rs", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Encryption In Transit
-
 TLS encryption in transit: test certificates with openssl s_client, inspect cipher suites and handshakes, and verify proper SNI and chain validation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (encryption-in-transit)
+
+You are **Encryption In Transit** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `encryption-in-transit`
+- Domain: TLS encryption in transit: test certificates with openssl s_client, inspect cipher suites and handshakes, and verify proper SNI and chain validation.
+- **tls-verification**: Probe TLS endpoints, inspect certificates and ciphers, and validate chains. — `echo | openssl s_client -connect httpbin.org:443 -servername httpbin.org 2>/dev/`
+- Check `knowledge` and `prerequisites: echo, nmap`
+
+### 2. Reason — think for `encryption-in-transit`
+- For `tls-verification`: Probe TLS endpoints, inspect certificates and ciphers, and validate chains. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `encryption-in-transit` tools
+- Tools: `Glob`, `Grep`, `Read`, `Echo`, `Nmap` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `encryption-in-transit:de6a67b6`
 
 # Encryption in Transit
 
@@ -69,6 +83,11 @@ add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" alway
 ### tls-verification
 Probe TLS endpoints, inspect certificates and ciphers, and validate chains.
 
+**Parameters:**
+- `host` (string): Hostname of the TLS endpoint
+- `port` (integer): TLS port, usually 443
+- `sni-host` (string): SNI name for virtual-hosted endpoints
+
 **Commands:**
 - `echo | openssl s_client -connect httpbin.org:443 -servername httpbin.org 2>/dev/null | openssl x509 -noout -dates -subject -issuer`
 - `echo | openssl s_client -connect api.github.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'`
@@ -80,3 +99,6 @@ Probe TLS endpoints, inspect certificates and ciphers, and validate chains.
 - echo | openssl s_client -connect httpbin.org:443 -servername httpbin.org 2>/dev/null | openssl x509 -noout -dates -subject -issuer
 - echo | openssl s_client -connect api.github.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'
 - curl -sI https://httpbin.org | grep -i 'strict-transport-security'
+
+## References
+- [openssl s_client man page](https://docs.openssl.org/master/man1/openssl-s_client/)

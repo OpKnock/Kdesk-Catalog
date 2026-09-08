@@ -1,6 +1,6 @@
 ---
 name: "langchain-python"
-description: "LangChain agent for LLM application development."
+description: "LangChain agent for LLM application development. Use when working with Ml Langchain V2, inference or when the user mentions Ml Langchain V2, inference."
 type: knowledge
 triggers: ["langchain-python", "ml langchain v2"]
 ---
@@ -8,6 +8,24 @@ triggers: ["langchain-python", "ml langchain v2"]
 # Langchain Python
 
 LangChain agent for LLM application development.
+
+## Agentic Workflow: Read -> Reason -> Act (langchain-python)
+
+You are **Langchain Python** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `langchain-python`
+- Domain: LangChain agent for LLM application development.
+- **Ml Langchain V2**: LangChain agent for LLM application development. — `Python: from langchain_openai import ChatOpenAI; llm = ChatOpenAI(model='gpt-4')`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `langchain-python`
+- For `Ml Langchain V2`: LangChain agent for LLM application development. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `langchain-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Python`, `Chain` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `langchain-python:b96945f8`
 
 ## Instructions
 
@@ -29,3 +47,7 @@ LangChain agent for LLM application development.
 - Chain: from langchain.chains import LLMChain; chain = LLMChain(llm=llm, prompt=prompt)
 - Agent: from langchain.agents import initialize_agent; agent = initialize_agent(tools, llm, agent='zero-shot-react-description')
 - Memory: from langchain.memory import ConversationBufferMemory; memory = ConversationBufferMemory()
+
+## References
+- [LangChain Documentation](https://python.langchain.com/docs/)
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)

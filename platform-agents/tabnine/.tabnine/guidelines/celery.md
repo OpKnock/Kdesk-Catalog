@@ -1,8 +1,24 @@
-# celery
-
 Configures and operates Celery distributed task queues: workers, beat scheduler, result backends, routing, and monitoring.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (celery)
+
+You are **celery** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `celery`
+- Domain: Configures and operates Celery distributed task queues: workers, beat scheduler, result backends, routing, and monitoring.
+- **celery-workers**: Start and manage Celery worker processes. — `celery -A proj worker --loglevel=info`
+- **celery-beat**: Schedule periodic tasks with the beat scheduler. — `celery -A proj beat --loglevel=info`
+- Check `knowledge` and `prerequisites: celery`
+
+### 2. Reason — think for `celery`
+- For `celery-workers`: Start and manage Celery worker processes. — decide which checks to run
+- For `celery-beat`: Schedule periodic tasks with the beat scheduler. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `celery` tools
+- Tools: `Glob`, `Grep`, `Read`, `Celery` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `celery:4687ddee`
 
 # Celery
 
@@ -88,6 +104,11 @@ def send_email(self, to):
 ### celery-workers
 Start and manage Celery worker processes.
 
+**Parameters:**
+- `concurrency` (integer): Worker process count
+- `queues` (string): Queues to consume, comma-separated
+- `hostname` (string): Worker hostname template
+
 **Commands:**
 - `celery -A proj worker --loglevel=info`
 - `celery -A proj worker --concurrency=4 -Q high,default`
@@ -103,6 +124,10 @@ Start and manage Celery worker processes.
 ### celery-beat
 Schedule periodic tasks with the beat scheduler.
 
+**Parameters:**
+- `schedule` (string): Path to the persistent schedule db
+- `loglevel` (string): Logging level: info, debug, warning
+
 **Commands:**
 - `celery -A proj beat --loglevel=info`
 - `celery -A proj beat --schedule /var/lib/celerybeat-schedule`
@@ -112,3 +137,7 @@ Schedule periodic tasks with the beat scheduler.
 **Examples:**
 - celery -A proj beat --loglevel=info --pidfile=/tmp/beat.pid
 - celery -A proj call tasks.send_digest --kwargs="{\"user_id\": 7}"
+
+## References
+- [Celery Docs](https://docs.celeryq.dev/en/stable/)
+- [Celery Best Practices](https://docs.celeryq.dev/en/stable/userguide/tasks.html)

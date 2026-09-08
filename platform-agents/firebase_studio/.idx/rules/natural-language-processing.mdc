@@ -1,14 +1,30 @@
 ---
-description: "Builds NLP pipelines with spaCy and Hugging Face: model downloads, training configs, and transformers inference."
+description: "Builds NLP pipelines with spaCy and Hugging Face: model downloads, training configs, and transformers inference. Use when working with spacy, transformers or when the user mentions spacy, transformers."
 globs: ["**/*.go", "**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# natural-language-processing
-
 Builds NLP pipelines with spaCy and Hugging Face: model downloads, training configs, and transformers inference.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (natural-language-processing)
+
+You are **natural-language-processing** (ai) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ai context for `natural-language-processing`
+- Domain: Builds NLP pipelines with spaCy and Hugging Face: model downloads, training configs, and transformers inference.
+- **spacy**: Manage spaCy models and training pipelines. — `python -m spacy download en_core_web_sm`
+- **transformers**: Run inference and manage models with Hugging Face tooling. — `pip install transformers torch datasets`
+- Check `knowledge` and `prerequisites: python, transformers, spacy, nltk`
+
+### 2. Reason — think for `natural-language-processing`
+- For `spacy`: Manage spaCy models and training pipelines. — decide which checks to run
+- For `transformers`: Run inference and manage models with Hugging Face tooling. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `natural-language-processing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Huggingface-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `natural-language-processing:3141c7dc`
 
 # Natural Language Processing
 
@@ -75,6 +91,11 @@ Maintain a fixed eval set per release.
 ### spacy
 Manage spaCy models and training pipelines.
 
+**Parameters:**
+- `model` (string): spaCy model name
+- `config` (string): Training config.cfg path
+- `pipeline` (string): Components: ner, textcat, parser
+
 **Commands:**
 - `python -m spacy download en_core_web_sm`
 - `python -m spacy project run all`
@@ -90,6 +111,11 @@ Manage spaCy models and training pipelines.
 ### transformers
 Run inference and manage models with Hugging Face tooling.
 
+**Parameters:**
+- `model` (string): Hugging Face model id
+- `task` (string): Pipeline task: sentiment-analysis, ner, text-generation
+- `repo-type` (string): model, dataset, or space
+
 **Commands:**
 - `pip install transformers torch datasets`
 - `huggingface-cli login`
@@ -101,3 +127,8 @@ Run inference and manage models with Hugging Face tooling.
 - huggingface-cli download meta-llama/Llama-3.1-8B-Instruct --include '*.safetensors'
 - python -c "from transformers import pipeline; nlp = pipeline('ner'); print(nlp('Ada works at OpenAI in San Francisco'))"
 - huggingface-cli whoami
+
+## References
+- [spaCy CLI](https://spacy.io/api/cli)
+- [Hugging Face Hub CLI](https://huggingface.co/docs/huggingface_hub/guides/cli)
+- [Transformers](https://huggingface.co/docs/transformers/index)

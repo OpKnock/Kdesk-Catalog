@@ -1,8 +1,22 @@
-# Pytest Requests
-
 API testing with pytest and requests: fixtures, session reuse, assertions, and coverage-driven test suites.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (pytest-requests)
+
+You are **Pytest Requests** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `pytest-requests`
+- Domain: API testing with pytest and requests: fixtures, session reuse, assertions, and coverage-driven test suites.
+- **pytest-api-testing**: Write and run pytest suites for HTTP APIs using the requests library with fixtures and coverage. — `pip install pytest requests pytest-cov`
+- Check `knowledge` and `prerequisites: pip, pytest`
+
+### 2. Reason — think for `pytest-requests`
+- For `pytest-api-testing`: Write and run pytest suites for HTTP APIs using the requests library with fixtures and coverage. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pytest-requests` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Pytest` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pytest-requests:c965e10f`
 
 # pytest + requests
 
@@ -70,6 +84,11 @@ def client():
 ### pytest-api-testing
 Write and run pytest suites for HTTP APIs using the requests library with fixtures and coverage.
 
+**Parameters:**
+- `test_path` (string): Path to tests directory or file
+- `marker` (string): pytest -k expression or marker
+- `coverage` (boolean): Enable coverage reporting
+
 **Commands:**
 - `pip install pytest requests pytest-cov`
 - `pytest tests/ -v`
@@ -81,3 +100,7 @@ Write and run pytest suites for HTTP APIs using the requests library with fixtur
 - pytest tests/test_orders.py -v
 - pytest --cov=src --cov-report=term-missing tests/
 - pytest -k "auth and not slow"
+
+## References
+- [pytest Documentation](https://docs.pytest.org/en/stable/)
+- [requests Documentation](https://requests.readthedocs.io/)

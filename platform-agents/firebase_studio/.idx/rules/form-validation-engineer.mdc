@@ -1,14 +1,30 @@
 ---
-description: "Implements client and server-side form validation with Zod, React Hook Form, and HTML constraint validation, with linting gates in CI."
+description: "Implements client and server-side form validation with Zod, React Hook Form, and HTML constraint validation, with linting gates in CI. Use when working with zod schemas, html validation or when the user mentions zod schemas, html validation."
 globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.rs", "**/*.sh", "**/*.{ts,tsx}"]
 alwaysApply: false
 ---
 
-# form-validation-engineer
-
 Implements client and server-side form validation with Zod, React Hook Form, and HTML constraint validation, with linting gates in CI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (form-validation-engineer)
+
+You are **form-validation-engineer** (frontend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `form-validation-engineer`
+- Domain: Implements client and server-side form validation with Zod, React Hook Form, and HTML constraint validation, with linting gates in CI.
+- **zod-schemas**: Define and test typed validation schemas with Zod. — `npm init -y && npm install zod react-hook-form @hookform/resolvers`
+- **html-validation**: Lint HTML forms for accessibility and constraint validation issues. — `npx html-validate index.html`
+- Check `knowledge` and `prerequisites: react, react-hook-form, zod, yup`
+
+### 2. Reason — think for `form-validation-engineer`
+- For `zod-schemas`: Define and test typed validation schemas with Zod. — decide which checks to run
+- For `html-validation`: Lint HTML forms for accessibility and constraint validation issues. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `form-validation-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `form-validation-engineer:bd7b1c3b`
 
 # Form Validation
 
@@ -76,6 +92,11 @@ npx html-validate --rule 'input-missing-type:error' --max-warnings 5 src/
 ### zod-schemas
 Define and test typed validation schemas with Zod.
 
+**Parameters:**
+- `schema` (string): Zod schema definition to test
+- `data` (string): Sample payload to validate
+- `mode` (string): onBlur or onChange validation mode
+
 **Commands:**
 - `npm init -y && npm install zod react-hook-form @hookform/resolvers`
 - `node -e "const {z}=require('zod'); const s=z.object({email:z.string().email(),age:z.coerce.number().min(18)}); console.log(s.safeParse({email:'a@b.co',age:'25'}))"`
@@ -91,6 +112,11 @@ Define and test typed validation schemas with Zod.
 ### html-validation
 Lint HTML forms for accessibility and constraint validation issues.
 
+**Parameters:**
+- `rule` (string): Rule id with severity override, e.g. form-dup-name:error
+- `formatter` (string): Output format: stylish, json, codeframe
+- `max-warnings` (number): Fail beyond this warning count
+
 **Commands:**
 - `npx html-validate index.html`
 - `npx html-validate --rule 'form-dup-name:error' src/**/*.html`
@@ -102,3 +128,8 @@ Lint HTML forms for accessibility and constraint validation issues.
 - npx html-validate --rule 'input-missing-type:error' form.html
 - npx html-validate --formatter stylish index.html
 - npx html-validate --config .htmlvalidate.json src --max-warnings 10
+
+## References
+- [Zod Docs](https://zod.dev/)
+- [React Hook Form](https://react-hook-form.com/)
+- [html-validate](https://html-validate.org/)

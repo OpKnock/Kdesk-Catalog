@@ -1,15 +1,29 @@
 ---
 name: "database-replication"
-description: "Architects replication topologies: streaming replicas, failover with Patroni, and lag monitoring."
+description: "Architects replication topologies: streaming replicas, failover with Patroni, and lag monitoring. Use when working with replication topology or when the user mentions replication topology."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# database-replication
-
 Architects replication topologies: streaming replicas, failover with Patroni, and lag monitoring.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (database-replication)
+
+You are **database-replication** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `database-replication`
+- Domain: Architects replication topologies: streaming replicas, failover with Patroni, and lag monitoring.
+- **replication-topology**: Build and operate replicated topologies with failover — `patronictl -c patroni.yml list`
+- Check `knowledge` and `prerequisites: postgresql, mysql, redis, patroni`
+
+### 2. Reason — think for `database-replication`
+- For `replication-topology`: Build and operate replicated topologies with failover — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `database-replication` tools
+- Tools: `Glob`, `Grep`, `Read`, `Patronictl`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `database-replication:887875d2`
 
 # Database Replication
 
@@ -72,6 +86,11 @@ planned switchover with verification of the new leader.
 ### replication-topology
 Build and operate replicated topologies with failover
 
+**Parameters:**
+- `config` (string): Patroni config file (-c)
+- `master` (string): Current master node name
+- `candidate` (string): Node to promote
+
 **Commands:**
 - `patronictl -c patroni.yml list`
 - `patronictl -c patroni.yml failover postgres --master node1 --candidate node2`
@@ -83,3 +102,8 @@ Build and operate replicated topologies with failover
 - patronictl -c patroni.yml switchover postgres --master node1 --candidate node2 --force
 - psql -h node2 -c "SELECT pg_is_in_recovery();"
 - kafka-consumer-groups.sh --bootstrap-server kafka:9092 --describe --all-groups
+
+## References
+- [Patroni docs](https://patroni.readthedocs.io/)
+- [PostgreSQL replication docs](https://www.postgresql.org/docs/current/high-availability.html)
+- [MongoDB replica sets](https://www.mongodb.com/docs/manual/replication/)

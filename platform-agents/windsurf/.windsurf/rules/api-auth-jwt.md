@@ -6,27 +6,23 @@ globs: ["**/*.json", "**/*.r", "**/*.sh"]
 
 API auth with JWT-based authentication - issue tokens with jsonwebtoken, validate signatures and claims, and enforce expiry and audience. Use when issuing or validating JWTs for API access. Don't use for API-key auth (see api-auth-keys) or mutual-TLS auth (see api-auth-mtls).
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-auth-jwt)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Auth JWT** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npm install jsonwebtoken`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `api-auth-jwt`
+- Domain: API auth with JWT-based authentication - issue tokens with jsonwebtoken, validate signatures and claims, and enforce expiry and audience. Use when issuing or validating JWTs for API access. Don't use 
+- **jwt-auth**: Issue and validate JWT tokens for API access — `npm install jsonwebtoken`
+- Check `knowledge` and `prerequisites: node.js, python, jsonwebtoken`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-auth-jwt`
+- For `jwt-auth`: Issue and validate JWT tokens for API access — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-auth-jwt` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-auth-jwt:a5081012`
 
 # API Auth (JWT)
 

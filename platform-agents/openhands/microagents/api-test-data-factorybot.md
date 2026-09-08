@@ -1,15 +1,31 @@
 ---
 name: "api-test-data-factorybot"
-description: "Builds test data factories with FactoryBot: trait definitions, sequences, associations, and on-the-fly attribute overrides for Rails APIs."
+description: "Builds test data factories with FactoryBot: trait definitions, sequences, associations, and on-the-fly attribute overrides for Rails APIs. Use when working with factorybot, factory testing or when the user mentions factorybot, factory testing."
 type: knowledge
 triggers: ["api-test-data-factorybot", "factorybot", "factory-testing"]
 ---
 
-# Api Test Data Factorybot
-
 Builds test data factories with FactoryBot: trait definitions, sequences, associations, and on-the-fly attribute overrides for Rails APIs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-test-data-factorybot)
+
+You are **Api Test Data Factorybot** (testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `api-test-data-factorybot`
+- Domain: Builds test data factories with FactoryBot: trait definitions, sequences, associations, and on-the-fly attribute overrides for Rails APIs.
+- **factorybot**: Define and use model factories — `bundle add factory_bot_rails`
+- **factory-testing**: Lint and verify factories — `bundle exec rails runner "FactoryBot.lint"`
+- Check `knowledge` and `prerequisites: faker, node.js, python`
+
+### 2. Reason — think for `api-test-data-factorybot`
+- For `factorybot`: Define and use model factories — decide which checks to run
+- For `factory-testing`: Lint and verify factories — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-test-data-factorybot` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bundle` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-test-data-factorybot:72d25b91`
 
 # API Test Data v3 - Factories
 
@@ -63,6 +79,11 @@ end
 ### factorybot
 Define and use model factories
 
+**Parameters:**
+- `factory` (string): Factory name
+- `trait` (string): Trait to apply
+- `attributes` (object): Attribute overrides
+
 **Commands:**
 - `bundle add factory_bot_rails`
 - `bundle exec rails generate model User name:string email:string role:string`
@@ -87,3 +108,7 @@ Lint and verify factories
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [FactoryBot Docs](https://github.com/thoughtbot/factory_bot/blob/main/GETTING_STARTED.md)
+- [FactoryBot Rails](https://github.com/thoughtbot/factory_bot_rails)

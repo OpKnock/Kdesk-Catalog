@@ -4,27 +4,25 @@ applyTo: "**/*.json **/*.r **/*.sh"
 
 Build and deploy edge APIs with Cloudflare Workers using wrangler: init, dev, deploy, secrets, and tail.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (cloudflare-workers)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Cloudflare Workers** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx wrangler init my-worker`, `npx wrangler secret put API_KEY`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `cloudflare-workers`
+- Domain: Build and deploy edge APIs with Cloudflare Workers using wrangler: init, dev, deploy, secrets, and tail.
+- **wrangler-dev**: Scaffold Workers projects, run locally, and deploy to the edge — `npx wrangler init my-worker`
+- **runtime-tools**: Manage secrets, inspect live traffic, and check KV/Durable Object bindings — `npx wrangler secret put API_KEY`
+- Check `knowledge` and `prerequisites: npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `cloudflare-workers`
+- For `wrangler-dev`: Scaffold Workers projects, run locally, and deploy to the edge — decide which checks to run
+- For `runtime-tools`: Manage secrets, inspect live traffic, and check KV/Durable Object bindings — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `cloudflare-workers` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cloudflare-workers:5cab7a69`
 
 # Cloudflare Workers
 

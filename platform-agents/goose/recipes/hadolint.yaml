@@ -1,24 +1,38 @@
 title: hadolint
 description: 'Lints Dockerfiles with hadolint: best-practice rules, shellcheck integration, and CI enforcement.'
 version: 2.0.0
-instructions: "# hadolint\n\nLints Dockerfiles with hadolint: best-practice rules, shellcheck integration,\
-  \ and CI enforcement.\n\n## Instructions\n\n# Hadolint\n\nLint Dockerfiles for best practices.\n\n##\
-  \ When to Use\n\n- Enforcing minimal, safe images\n- Catching apt-pin/apk-add without cleanup (DL30xx)\n\
-  - CI gates on every Dockerfile change\n- Checking for pinned versions and non-root users\n\n## Commands\n\
-  \n```bash\n# Lint\nhadolint Dockerfile\n\n# Via docker (no local install)\ndocker run --rm -i hadolint/hadolint\
-  \ < Dockerfile\n\n# Ignore rules\nhadolint Dockerfile --ignore DL3007\n\n# Failure threshold\nhadolint\
-  \ Dockerfile --failure-threshold warning\n\n# Formats\nhadolint Dockerfile -f json\nhadolint Dockerfile\
-  \ -f sarif -o hadolint.sarif\n\n# Config file\nhadolint Dockerfile --config .hadolint.yaml\n```\n\n\
-  ## Config Example\n\n```yaml\n# .hadolint.yaml\nfailure-threshold: warning\nignored:\n  - DL3007\ntrustedRegistries:\n\
-  \  - docker.io\n```\n\n## Best Practices\n\n- Pin base image tags (DL3007 is untagged latest)\n- Add\
-  \ --no-install-recommends and cleanup for apt\n- Run as non-root (USER directive)\n- Multi-stage builds\
-  \ for smaller images\n- Run hadolint in CI with a JSON report\n- Review rules before ignoring them;\
-  \ keep the list short\n\n## Capabilities\n\n### hadolint-lint\nLint Dockerfiles from CLI or stdin.\n\
-  \n**Commands:**\n- `hadolint Dockerfile`\n- `hadolint Dockerfile --ignore DL3007`\n- `hadolint Dockerfile\
-  \ --failure-threshold warning`\n- `docker run --rm -i hadolint/hadolint < Dockerfile`\n- `hadolint Dockerfile\
-  \ -f json`\n\n**Examples:**\n- hadolint Dockerfile.prod\n- cat Dockerfile | hadolint -\n- hadolint Dockerfile\
-  \ --trusted-registry docker.io --ignore DL3002\n\n### hadolint-config\nManage rules and formats.\n\n\
+instructions: "Lints Dockerfiles with hadolint: best-practice rules, shellcheck integration, and CI enforcement.\n\
+  \n## Agentic Workflow: Read -> Reason -> Act (hadolint)\n\nYou are **hadolint** (code-quality/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — code-quality\
+  \ context for `hadolint`\n- Domain: Lints Dockerfiles with hadolint: best-practice rules, shellcheck\
+  \ integration, and CI enforcement.\n- **hadolint-lint**: Lint Dockerfiles from CLI or stdin. — `hadolint\
+  \ Dockerfile`\n- **hadolint-config**: Manage rules and formats. — `hadolint --version`\n- Check `knowledge`\
+  \ and `prerequisites: docker, hadolint`\n\n### 2. Reason — think for `hadolint`\n- For `hadolint-lint`:\
+  \ Lint Dockerfiles from CLI or stdin. — decide which checks to run\n- For `hadolint-config`: Manage\
+  \ rules and formats. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `hadolint` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Hadolint`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record\
+  \ evidence (paths, checksums)\n- Fingerprint: `hadolint:816d4709`\n\n# Hadolint\n\nLint Dockerfiles\
+  \ for best practices.\n\n## When to Use\n\n- Enforcing minimal, safe images\n- Catching apt-pin/apk-add\
+  \ without cleanup (DL30xx)\n- CI gates on every Dockerfile change\n- Checking for pinned versions and\
+  \ non-root users\n\n## Commands\n\n```bash\n# Lint\nhadolint Dockerfile\n\n# Via docker (no local install)\n\
+  docker run --rm -i hadolint/hadolint < Dockerfile\n\n# Ignore rules\nhadolint Dockerfile --ignore DL3007\n\
+  \n# Failure threshold\nhadolint Dockerfile --failure-threshold warning\n\n# Formats\nhadolint Dockerfile\
+  \ -f json\nhadolint Dockerfile -f sarif -o hadolint.sarif\n\n# Config file\nhadolint Dockerfile --config\
+  \ .hadolint.yaml\n```\n\n## Config Example\n\n```yaml\n# .hadolint.yaml\nfailure-threshold: warning\n\
+  ignored:\n  - DL3007\ntrustedRegistries:\n  - docker.io\n```\n\n## Best Practices\n\n- Pin base image\
+  \ tags (DL3007 is untagged latest)\n- Add --no-install-recommends and cleanup for apt\n- Run as non-root\
+  \ (USER directive)\n- Multi-stage builds for smaller images\n- Run hadolint in CI with a JSON report\n\
+  - Review rules before ignoring them; keep the list short\n\n## Capabilities\n\n### hadolint-lint\nLint\
+  \ Dockerfiles from CLI or stdin.\n\n**Parameters:**\n- `file` (string): Dockerfile path\n- `ignore`\
+  \ (string): Rules to ignore\n- `failure-threshold` (string): error, warning, info, style\n\n**Commands:**\n\
+  - `hadolint Dockerfile`\n- `hadolint Dockerfile --ignore DL3007`\n- `hadolint Dockerfile --failure-threshold\
+  \ warning`\n- `docker run --rm -i hadolint/hadolint < Dockerfile`\n- `hadolint Dockerfile -f json`\n\
+  \n**Examples:**\n- hadolint Dockerfile.prod\n- cat Dockerfile | hadolint -\n- hadolint Dockerfile --trusted-registry\
+  \ docker.io --ignore DL3002\n\n### hadolint-config\nManage rules and formats.\n\n**Parameters:**\n-\
+  \ `format` (string): tty, json, sarif, checkstyle\n- `output` (string): Report output file path\n\n\
   **Commands:**\n- `hadolint --version`\n- `hadolint Dockerfile --format sarif`\n- `hadolint Dockerfile\
   \ --no-color`\n- `hadolint Dockerfile --config .hadolint.yaml`\n\n**Examples:**\n- hadolint Dockerfile\
-  \ -f sarif -o hadolint.sarif\n- hadolint Dockerfile --verbose"
+  \ -f sarif -o hadolint.sarif\n- hadolint Dockerfile --verbose\n\n## References\n- [Hadolint Docs](https://github.com/hadolint/hadolint)\n\
+  - [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)"
 prompt: Act as hadolint and handle the task per the instructions.

@@ -5,27 +5,23 @@ description: "Runs linters only on staged files via lint-staged git hooks, keepi
 
 Runs linters only on staged files via lint-staged git hooks, keeping pre-commit checks fast in any JS project.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (lint-staged)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **lint-staged** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx lint-staged --allow-empty`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `lint-staged`
+- Domain: Runs linters only on staged files via lint-staged git hooks, keeping pre-commit checks fast in any JS project.
+- **lint-staged-hooks**: Configure and run lint-staged to execute linters and formatters on git-staged files — `npx lint-staged --allow-empty`
+- Check `knowledge` and `prerequisites: npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `lint-staged`
+- For `lint-staged-hooks`: Configure and run lint-staged to execute linters and formatters on git-staged files — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `lint-staged` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `lint-staged:2e24915b`
 
 # Lint-Staged
 

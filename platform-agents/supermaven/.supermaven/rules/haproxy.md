@@ -1,8 +1,24 @@
-# Haproxy
-
 Configures and operates HAProxy: config validation, hot reloads, and runtime inspection via the stats socket.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (haproxy)
+
+You are **Haproxy** (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `haproxy`
+- Domain: Configures and operates HAProxy: config validation, hot reloads, and runtime inspection via the stats socket.
+- **config**: Validate and reload HAProxy configuration. — `haproxy -c -f /etc/haproxy/haproxy.cfg`
+- **stats**: Inspect runtime state via the admin socket. — `echo 'show info' | socat /run/haproxy/admin.sock -`
+- Check `knowledge` and `prerequisites: echo, haproxy`
+
+### 2. Reason — think for `haproxy`
+- For `config`: Validate and reload HAProxy configuration. — decide which checks to run
+- For `stats`: Inspect runtime state via the admin socket. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `haproxy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Haproxy`, `Echo` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `haproxy:0557dfe1`
 
 # HAProxy
 
@@ -78,6 +94,11 @@ Simulate a server down and confirm the health check flips state.
 ### config
 Validate and reload HAProxy configuration.
 
+**Parameters:**
+- `c` (string): Check configuration only
+- `f` (string): Config file path (repeatable)
+- `sf` (string): Soft-stop old PIDs for reload
+
 **Commands:**
 - `haproxy -c -f /etc/haproxy/haproxy.cfg`
 - `haproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -sf $(cat /run/haproxy.pid)`
@@ -93,6 +114,11 @@ Validate and reload HAProxy configuration.
 ### stats
 Inspect runtime state via the admin socket.
 
+**Parameters:**
+- `command` (string): Socket command: show stat, show info, set server
+- `server` (string): backend/server pair, e.g. web/web-1
+- `state` (string): drain, maint, or ready state
+
 **Commands:**
 - `echo 'show info' | socat /run/haproxy/admin.sock -`
 - `echo 'show stat' | socat /run/haproxy/admin.sock -`
@@ -104,3 +130,8 @@ Inspect runtime state via the admin socket.
 - echo 'show stat' | socat /run/haproxy/admin.sock - | grep -E 'web,.*DOWN'
 - echo 'set server web/web-2 state ready' | socat /run/haproxy/admin.sock -
 - echo 'show info' | socat /run/haproxy/admin.sock - | grep -E 'CurrConns|Uptime'
+
+## References
+- [HAProxy Configuration Manual](https://www.haproxy.com/documentation/haproxy-configuration-manual/latest/)
+- [HAProxy Management](https://www.haproxy.org/download/2.9/doc/management.txt)
+- [HAProxy Stats Socket](https://docs.haproxy.org/2.9/management.html#9.3)

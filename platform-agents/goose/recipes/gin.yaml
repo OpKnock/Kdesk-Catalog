@@ -2,13 +2,22 @@ title: Gin
 description: 'Build Go HTTP APIs with the Gin framework: run the server, register middleware, and test
   handlers.'
 version: 2.0.0
-instructions: "# Gin\n\nBuild Go HTTP APIs with the Gin framework: run the server, register middleware,\
-  \ and test handlers.\n\n## Instructions\n\n# Gin\n\n## What this skill does\n\nGin is a popular Go web\
-  \ framework with a martini-like API, fast HTTP router, JSON binding/validation, and a middleware chain.\
-  \ This skill covers running, routing, and testing.\n\n## When to use\n\n- Building Go REST APIs quickly\n\
-  - Teams preferring express-like syntax in Go\n- JSON-heavy services with validation needs\n\n## Real\
-  \ commands\n\n```bash\n# Get and run\ngo get github.com/gin-gonic/gin\ngo run main.go\n\n# Build and\
-  \ test\ngo build -o server main.go\ngo test ./... -race -v\n\n# Smoke test\ncurl -s localhost:8080/api/orders\
+instructions: "Build Go HTTP APIs with the Gin framework: run the server, register middleware, and test\
+  \ handlers.\n\n## Agentic Workflow: Read -> Reason -> Act (gin)\n\nYou are **Gin** (api/general) — a\
+  \ sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context for\
+  \ `gin`\n- Domain: Build Go HTTP APIs with the Gin framework: run the server, register middleware, and\
+  \ test handlers.\n- **gin-development**: Run Gin apps, add middleware, and test handlers with Go testing.\
+  \ — `go get github.com/gin-gonic/gin`\n- Check `knowledge` references before acting\n\n### 2. Reason\
+  \ — think for `gin`\n- For `gin-development`: Run Gin apps, add middleware, and test handlers with Go\
+  \ testing. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `gin` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `gin:c720f994`\n\n# Gin\n\n## What this skill does\n\nGin is a popular\
+  \ Go web framework with a martini-like API, fast HTTP router, JSON binding/validation, and a middleware\
+  \ chain. This skill covers running, routing, and testing.\n\n## When to use\n\n- Building Go REST APIs\
+  \ quickly\n- Teams preferring express-like syntax in Go\n- JSON-heavy services with validation needs\n\
+  \n## Real commands\n\n```bash\n# Get and run\ngo get github.com/gin-gonic/gin\ngo run main.go\n\n# Build\
+  \ and test\ngo build -o server main.go\ngo test ./... -race -v\n\n# Smoke test\ncurl -s localhost:8080/api/orders\
   \ | jq\n```\n\n## Minimal app\n\n```go\npackage main\n\nimport (\n    \"github.com/gin-gonic/gin\"\n\
   )\n\nfunc main() {\n    r := gin.Default()\n\n    r.GET(\"/api/orders/:id\", func(c *gin.Context) {\n\
   \        id := c.Param(\"id\")\n        if id == \"\" {\n            c.JSON(400, gin.H{\"error\": \"\
@@ -22,8 +31,10 @@ instructions: "# Gin\n\nBuild Go HTTP APIs with the Gin framework: run the serve
   \ with explicit struct tags for validation.\n- Register recovery middleware; never let a panic escape.\n\
   - Test handlers with httptest against the router, not a live port.\n- Keep handlers thin; put logic\
   \ in services for testability.\n\n## Capabilities\n\n### gin-development\nRun Gin apps, add middleware,\
-  \ and test handlers with Go testing.\n\n**Commands:**\n- `go get github.com/gin-gonic/gin`\n- `go run\
-  \ main.go`\n- `go build -o server main.go`\n- `go test ./... -race -v`\n- `curl -s localhost:8080/api/orders\
-  \ | jq`\n\n**Examples:**\n- go get github.com/gin-gonic/gin && go run main.go\n- go test ./... -race\
-  \ -v\n- curl -s localhost:8080/api/orders | jq"
+  \ and test handlers with Go testing.\n\n**Parameters:**\n- `port` (integer): Gin listen port\n- `mode`\
+  \ (string): GIN_MODE debug/release\n- `middleware` (string): logger, recovery, cors, custom\n\n**Commands:**\n\
+  - `go get github.com/gin-gonic/gin`\n- `go run main.go`\n- `go build -o server main.go`\n- `go test\
+  \ ./... -race -v`\n- `curl -s localhost:8080/api/orders | jq`\n\n**Examples:**\n- go get github.com/gin-gonic/gin\
+  \ && go run main.go\n- go test ./... -race -v\n- curl -s localhost:8080/api/orders | jq\n\n## References\n\
+  - [Gin documentation](https://gin-gonic.com/docs/)\n- [Gin GitHub](https://github.com/gin-gonic/gin)"
 prompt: Act as Gin and handle the task per the instructions.

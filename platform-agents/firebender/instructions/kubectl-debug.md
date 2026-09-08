@@ -1,8 +1,24 @@
-# kubectl-debug
-
 Debugs failing Kubernetes workloads: pod inspection, log analysis, exec shells, ephemeral debug containers, port-forwarding, and node troubleshooting.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kubectl-debug)
+
+You are **kubectl-debug** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `kubectl-debug`
+- Domain: Debugs failing Kubernetes workloads: pod inspection, log analysis, exec shells, ephemeral debug containers, port-forwarding, and node troubleshooting.
+- **pod-diagnostics**: Inspect pod state, events, and logs to root-cause failures. — `kubectl describe pod demo-pod`
+- **interactive-debugging**: Exec into pods, run ephemeral debug containers, and forward ports. — `kubectl exec -it demo-pod -- sh`
+- Check `knowledge` and `prerequisites: kubectl`
+
+### 2. Reason — think for `kubectl-debug`
+- For `pod-diagnostics`: Inspect pod state, events, and logs to root-cause failures. — decide which checks to run
+- For `interactive-debugging`: Exec into pods, run ephemeral debug containers, and forward ports. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kubectl-debug` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kubectl-debug:9d7bf38b`
 
 # Kubernetes Debugging
 
@@ -63,6 +79,10 @@ kubectl cp web-7d9f8c9d4-xk2pq:/var/log/app.log ./app.log
 ### pod-diagnostics
 Inspect pod state, events, and logs to root-cause failures.
 
+**Parameters:**
+- `pod` (string): Pod name
+- `container` (string): Container name for logs
+
 **Commands:**
 - `kubectl describe pod demo-pod`
 - `kubectl get events --sort-by=.lastTimestamp`
@@ -79,6 +99,11 @@ Inspect pod state, events, and logs to root-cause failures.
 ### interactive-debugging
 Exec into pods, run ephemeral debug containers, and forward ports.
 
+**Parameters:**
+- `node` (string): Node name for node debugging
+- `image` (string): Debug image
+- `local-port` (string): Port mapping for port-forward
+
 **Commands:**
 - `kubectl exec -it demo-pod -- sh`
 - `kubectl run debug --rm -it --restart=Never --image=busybox -- /bin/sh`
@@ -91,3 +116,8 @@ Exec into pods, run ephemeral debug containers, and forward ports.
 - kubectl exec -it web-7d9f8c9d4-xk2pq -- sh
 - kubectl debug node/worker-1 -it --image=ubuntu
 - kubectl port-forward svc/web 8080:80
+
+## References
+- [Debugging Running Pods](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+- [kubectl debug](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_debug/)
+- [Debugging Nodes](https://kubernetes.io/docs/tasks/debug/debug-cluster/kubectl-node-debug/)

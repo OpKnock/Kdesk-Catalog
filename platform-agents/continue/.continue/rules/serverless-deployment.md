@@ -1,15 +1,29 @@
 ---
 name: "Serverless Deployment"
-description: "Deploys and operates serverless functions using Serverless Framework and AWS SAM. Scaffolds services, deploys to named stages, invokes functions with test payloads, streams logs for debugging, and supports local emulation via SAM."
+description: "Deploys and operates serverless functions using Serverless Framework and AWS SAM. Scaffolds services, deploys to named stages, invokes functions with test payloads, streams logs for debugging, and supports local emulation via SAM. Use when working with serverless framework, api or when the user mentions serverless framework, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Serverless Deployment
-
 Deploys and operates serverless functions using Serverless Framework and AWS SAM. Scaffolds services, deploys to named stages, invokes functions with test payloads, streams logs for debugging, and supports local emulation via SAM.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (serverless-deployment)
+
+You are **Serverless Deployment** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `serverless-deployment`
+- Domain: Deploys and operates serverless functions using Serverless Framework and AWS SAM. Scaffolds services, deploys to named stages, invokes functions with test payloads, streams logs for debugging, and sup
+- **serverless-framework**: Deploys and operates serverless functions using Serverless Framework and AWS SAM. Scaffolds services — `serverless create --template aws-nodejs --path my-service`
+- Check `knowledge` and `prerequisites: sam, serverless`
+
+### 2. Reason — think for `serverless-deployment`
+- For `serverless-framework`: Deploys and operates serverless functions using Serverless Framework and AWS SAM. Scaffolds services, deploys to named s — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `serverless-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Serverless`, `Sam` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `serverless-deployment:e2a73359`
 
 # Serverless Deployment
 
@@ -86,6 +100,11 @@ serverless logs -f hello --stage staging
 ### serverless-framework
 Deploys and operates serverless functions using Serverless Framework and AWS SAM. Scaffolds services, deploys to named stages, invokes functions with test payloads, streams logs for debugging, and supports local emulation via SAM.
 
+**Parameters:**
+- `stage` (string): Deployment stage (staging, prod)
+- `function_name` (string): Lambda function name to invoke
+- `payload` (string): JSON payload for function invocation
+
 **Commands:**
 - `serverless create --template aws-nodejs --path my-service`
 - `serverless deploy --stage staging`
@@ -103,3 +122,6 @@ Deploys and operates serverless functions using Serverless Framework and AWS SAM
 - sam build
 - sam local invoke HelloWorldFunction --event event.json
 - sam deploy --guided
+
+## References
+- [Serverless Framework docs](https://www.serverless.com/framework/docs/)

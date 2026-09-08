@@ -6,27 +6,23 @@ globs: ["**/*.go", "**/*.r", "**/*.sh"]
 
 gRPC servers and clients in Go: protoc-gen-go codegen, grpc.NewClient channels, interceptors, streaming RPCs, and vet-clean service wiring.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (grpc-go)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Grpc Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@lat`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `grpc-go`
+- Domain: gRPC servers and clients in Go: protoc-gen-go codegen, grpc.NewClient channels, interceptors, streaming RPCs, and vet-clean service wiring.
+- **go-grpc-server**: Build and run Go gRPC servers with registration, interceptors, and reflection. — `go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest`
+- Check `knowledge` and `prerequisites: protoc`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `grpc-go`
+- For `go-grpc-server`: Build and run Go gRPC servers with registration, interceptors, and reflection. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `grpc-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Protoc` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grpc-go:c3303210`
 
 # gRPC Go
 

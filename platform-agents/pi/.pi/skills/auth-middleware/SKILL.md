@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(curl:*) Bash(docker:*) Bash(node:*) Bash(npm
 
 Implements authentication middleware: JWT verification with jsonwebtoken, Passport strategies, oauth2-proxy for edge auth, and token lifecycle checks.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (auth-middleware)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Auth Middleware** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npm install jsonwebtoken express`, `npm install passport passport-jwt`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `auth-middleware`
+- Domain: Implements authentication middleware: JWT verification with jsonwebtoken, Passport strategies, oauth2-proxy for edge auth, and token lifecycle checks.
+- **jwt-middleware**: Verify JWTs in request middleware — `npm install jsonwebtoken express`
+- **passport-oauth**: Authenticate with Passport and oauth2-proxy — `npm install passport passport-jwt`
+- Check `knowledge` and `prerequisites: docker, node, npm`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `auth-middleware`
+- For `jwt-middleware`: Verify JWTs in request middleware — decide which checks to run
+- For `passport-oauth`: Authenticate with Passport and oauth2-proxy — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `auth-middleware` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `auth-middleware:c0f73d40`
 
 # Auth Middleware
 

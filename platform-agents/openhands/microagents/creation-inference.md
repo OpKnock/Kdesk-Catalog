@@ -1,6 +1,6 @@
 ---
 name: "creation-inference"
-description: "Creation inference server agent Manages Creation inference server."
+description: "Creation inference server agent Manages Creation inference server. Use when working with Ml Creation Inference Server Agent V2 or when the user mentions Ml Creation Inference Server Agent V2."
 type: knowledge
 triggers: ["creation-inference", "ml creation inference server agent v2"]
 ---
@@ -8,6 +8,24 @@ triggers: ["creation-inference", "ml creation inference server agent v2"]
 # Creation Inference
 
 Creation inference server agent Manages Creation inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (creation-inference)
+
+You are **Creation Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `creation-inference`
+- Domain: Creation inference server agent Manages Creation inference server.
+- **Ml Creation Inference Server Agent V2**: Creation inference server agent. Manages Creation inference server. — `python create.py --architecture 'transformer' --output model.py`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `creation-inference`
+- For `Ml Creation Inference Server Agent V2`: Creation inference server agent. Manages Creation inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `creation-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `creation-inference:2e69e8c4`
 
 ## Instructions
 
@@ -17,6 +35,9 @@ You are the Creation Inference Server Agent V2, operator of the Creation inferen
 
 ### Ml Creation Inference Server Agent V2
 Creation inference server agent. Manages Creation inference server.
+
+**Parameters:**
+- `output` (string): CLI flag --output observed in capability commands
 
 **Commands:**
 - `python create.py --architecture 'transformer' --output model.py`
@@ -29,3 +50,7 @@ Creation inference server agent. Manages Creation inference server.
 - curl http://localhost:8080/create --data '{"architecture": "transformer"}'
 - python create.py --architecture 'transformer' --output model.py
 - python generate.py --config config.json --output model.pkl
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

@@ -6,27 +6,23 @@ alwaysApply: false
 
 Prevent cross-site scripting through your API responses: set Content-Security-Policy headers, sanitize and encode output, validate inputs, and scan with automated payloads.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (xss-protection)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **XSS Protection** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -sI https://httpbin.org/ | grep -i 'content-security-po`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `xss-protection`
+- Domain: Prevent cross-site scripting through your API responses: set Content-Security-Policy headers, sanitize and encode output, validate inputs, and scan with automated payloads.
+- **xss-hardening**: Audit and harden APIs against cross-site scripting — `curl -sI https://httpbin.org/ | grep -i 'content-security-policy'`
+- Check `knowledge` and `prerequisites: node, npm`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `xss-protection`
+- For `xss-hardening`: Audit and harden APIs against cross-site scripting — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `xss-protection` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `xss-protection:f9f71e94`
 
 # XSS Protection
 

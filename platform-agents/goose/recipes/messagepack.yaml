@@ -2,14 +2,42 @@ title: Messagepack
 description: 'MessagePack binary serialization: encode/decode payloads, integrate MessagePack into APIs,
   and debug binary message dumps.'
 version: 2.0.0
-instructions: '# Messagepack
+instructions: 'MessagePack binary serialization: encode/decode payloads, integrate MessagePack into APIs,
+  and debug binary message dumps.
 
 
-  MessagePack binary serialization: encode/decode payloads, integrate MessagePack into APIs, and debug
-  binary message dumps.
+  ## Agentic Workflow: Read -> Reason -> Act (messagepack)
 
 
-  ## Instructions
+  You are **Messagepack** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — api context for `messagepack`
+
+  - Domain: MessagePack binary serialization: encode/decode payloads, integrate MessagePack into APIs,
+  and debug binary message dumps.
+
+  - **messagepack-encode-decode**: Encode JSON to MessagePack, decode MessagePack to JSON, and inspect
+  binary payloads using the msgpac — `cat user-data.json | json2msgpack > user-data.msgpack`
+
+  - Check `knowledge` and `prerequisites: json2msgpack, msgpack-cli, msgpack2json, python3`
+
+
+  ### 2. Reason — think for `messagepack`
+
+  - For `messagepack-encode-decode`: Encode JSON to MessagePack, decode MessagePack to JSON, and inspect
+  binary payloads using the msgpack-tools utilities. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `messagepack` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Cat`, `Python3` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `messagepack:6611968a`
 
 
   # MessagePack
@@ -134,6 +162,15 @@ instructions: '# Messagepack
   utilities.
 
 
+  **Parameters:**
+
+  - `input_file` (string): JSON file to encode into MessagePack (e.g., user-data.json)
+
+  - `pretty` (boolean): Pretty-print decoded JSON output
+
+  - `use_bin_type` (boolean): Use msgpack bin type for bytes instead of str
+
+
   **Commands:**
 
   - `cat user-data.json | json2msgpack > user-data.msgpack`
@@ -154,5 +191,12 @@ instructions: '# Messagepack
 
   - cat user-data.msgpack | msgpack2json -j
 
-  - python3 -c "import msgpack; print(msgpack.packb({''a'':1,''b'':[1,2,3]}, use_bin_type=True))"'
+  - python3 -c "import msgpack; print(msgpack.packb({''a'':1,''b'':[1,2,3]}, use_bin_type=True))"
+
+
+  ## References
+
+  - [MessagePack Official Site](https://msgpack.org/)
+
+  - [msgpack-tools GitHub](https://github.com/ludocode/msgpack-tools)'
 prompt: Act as Messagepack and handle the task per the instructions.

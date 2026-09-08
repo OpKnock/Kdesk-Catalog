@@ -2,8 +2,20 @@ title: Api Version Nginx Routing
 description: 'Routes multiple API versions at the gateway: nginx location-based version routing, Traefik
   rules, and Kong services per version.'
 version: 2.0.0
-instructions: "# Api Version Nginx Routing\n\nRoutes multiple API versions at the gateway: nginx location-based\
-  \ version routing, Traefik rules, and Kong services per version.\n\n## Instructions\n\n# API Version\
+instructions: "Routes multiple API versions at the gateway: nginx location-based version routing, Traefik\
+  \ rules, and Kong services per version.\n\n## Agentic Workflow: Read -> Reason -> Act (api-version-nginx-routing)\n\
+  \nYou are **Api Version Nginx Routing** (backend) — a sub-agent that **Reads, Reasons, and Acts** via\
+  \ `allowed-tools`.\n\n### 1. Read — backend context for `api-version-nginx-routing`\n- Domain: Routes\
+  \ multiple API versions at the gateway: nginx location-based version routing, Traefik rules, and Kong\
+  \ services per version.\n- **nginx-version-routing**: Route versioned paths with nginx — `nginx -t`\n\
+  - **kong-service-versions**: Register versioned services in Kong — `curl -s -X POST http://localhost:8001/services\
+  \ -d 'name=users-v1' -d 'url=http:/`\n- Check `knowledge` and `prerequisites: node.js, python, openapi`\n\
+  \n### 2. Reason — think for `api-version-nginx-routing`\n- For `nginx-version-routing`: Route versioned\
+  \ paths with nginx — decide which checks to run\n- For `kong-service-versions`: Register versioned services\
+  \ in Kong — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `api-version-nginx-routing` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Nginx`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write;\
+  \ record evidence (paths, checksums)\n- Fingerprint: `api-version-nginx-routing:123b21a6`\n\n# API Version\
   \ v5 - Gateway Routing\n\nGateway-level version routing.\n\n## What This Skill Does\n- Routes versioned\
   \ paths to versioned backends\n- Keeps versioning at the infrastructure layer\n- Allows version-specific\
   \ traffic control\n\n## When to Use\n- Multiple versioned backend deployments\n- Canarying versions\
@@ -14,14 +26,17 @@ instructions: "# Api Version Nginx Routing\n\nRoutes multiple API versions at th
   \ http://users-v2:8080/;\n}\n```\n\n## Testing\n- Verify each version hits the right upstream\n- Test\
   \ unknown versions return 404\n- Validate config before reload\n\n\n## Best Practices\n- Keep version\
   \ routes explicit\n- Add per-version rate limits\n- Log version usage for sunset planning\n\n## Capabilities\n\
-  \n### nginx-version-routing\nRoute versioned paths with nginx\n\n**Commands:**\n- `nginx -t`\n- `nginx\
-  \ -s reload`\n- `curl -s http://localhost:8080/v1/users -o /dev/null -w '%{http_code}\\n'`\n- `curl\
-  \ -s http://localhost:8080/v2/users -o /dev/null -w '%{http_code}\\n'`\n- `curl -s http://localhost:8080/v9/users\
-  \ -o /dev/null -w '%{http_code}\\n'`\n\n**Examples:**\n- location /v1/ proxies to the v1 upstream\n\
-  - location /v2/ proxies to the v2 upstream\n- nginx -s reload applies route changes\n\n### kong-service-versions\n\
-  Register versioned services in Kong\n\n**Commands:**\n- `curl -s -X POST http://localhost:8001/services\
-  \ -d 'name=users-v1' -d 'url=http://users-v1:8080'`\n- `curl -s -X POST http://localhost:8001/services\
-  \ -d 'name=users-v2' -d 'url=http://users-v2:8080'`\n- `curl -s -X POST http://localhost:8001/services/users-v1/routes\
-  \ -d 'paths[]=/v1/users'`\n- `curl -s http://localhost:8000/v1/users -o /dev/null -w '%{http_code}\\\
-  n'`\n- `deck gateway sync kong.yaml`\n\n**Examples:**\n- -cli --help\n- -api --help"
+  \n### nginx-version-routing\nRoute versioned paths with nginx\n\n**Parameters:**\n- `version` (string):\
+  \ Version path segment\n- `upstream` (string): Backend upstream name\n- `config` (string): nginx config\
+  \ path\n\n**Commands:**\n- `nginx -t`\n- `nginx -s reload`\n- `curl -s http://localhost:8080/v1/users\
+  \ -o /dev/null -w '%{http_code}\\n'`\n- `curl -s http://localhost:8080/v2/users -o /dev/null -w '%{http_code}\\\
+  n'`\n- `curl -s http://localhost:8080/v9/users -o /dev/null -w '%{http_code}\\n'`\n\n**Examples:**\n\
+  - location /v1/ proxies to the v1 upstream\n- location /v2/ proxies to the v2 upstream\n- nginx -s reload\
+  \ applies route changes\n\n### kong-service-versions\nRegister versioned services in Kong\n\n**Commands:**\n\
+  - `curl -s -X POST http://localhost:8001/services -d 'name=users-v1' -d 'url=http://users-v1:8080'`\n\
+  - `curl -s -X POST http://localhost:8001/services -d 'name=users-v2' -d 'url=http://users-v2:8080'`\n\
+  - `curl -s -X POST http://localhost:8001/services/users-v1/routes -d 'paths[]=/v1/users'`\n- `curl -s\
+  \ http://localhost:8000/v1/users -o /dev/null -w '%{http_code}\\n'`\n- `deck gateway sync kong.yaml`\n\
+  \n**Examples:**\n- -cli --help\n- -api --help\n\n## References\n- [nginx location Docs](https://nginx.org/en/docs/http/ngx_http_core_module.html#location)\n\
+  - [Kong Services and Routes](https://docs.konghq.com/gateway/latest/how-to/configure/services-and-routes/)"
 prompt: Act as Api Version Nginx Routing and handle the task per the instructions.

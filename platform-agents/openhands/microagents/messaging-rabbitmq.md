@@ -1,6 +1,6 @@
 ---
 name: "messaging-rabbitmq"
-description: "RabbitMQ messaging agent for queues, exchanges, bindings."
+description: "RabbitMQ messaging agent for queues, exchanges, bindings. Use when working with Messaging Rabbitmq, management or when the user mentions Messaging Rabbitmq, management."
 type: knowledge
 triggers: ["messaging-rabbitmq", "messaging rabbitmq"]
 ---
@@ -8,6 +8,24 @@ triggers: ["messaging-rabbitmq", "messaging rabbitmq"]
 # Messaging Rabbitmq
 
 RabbitMQ messaging agent for queues, exchanges, bindings.
+
+## Agentic Workflow: Read -> Reason -> Act (messaging-rabbitmq)
+
+You are **Messaging Rabbitmq** (messaging/management) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — messaging context for `messaging-rabbitmq`
+- Domain: RabbitMQ messaging agent for queues, exchanges, bindings.
+- **Messaging Rabbitmq**: RabbitMQ messaging agent for queues, exchanges, bindings. — `Exchanges: rabbitmqadmin list exchanges`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `messaging-rabbitmq`
+- For `Messaging Rabbitmq`: RabbitMQ messaging agent for queues, exchanges, bindings. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `messaging-rabbitmq` tools
+- Tools: `Glob`, `Grep`, `Read`, `Exchanges`, `Users` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `messaging-rabbitmq:ad864014`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ RabbitMQ messaging agent for queues, exchanges, bindings.
 - Exchanges: rabbitmqadmin list exchanges
 - Users: rabbitmqctl list_users
 - Status: rabbitmqctl status
+
+## References
+- [RabbitMQ Documentation](https://www.rabbitmq.com/docs)

@@ -1,6 +1,6 @@
 ---
 name: "ml-versioning-deploy"
-description: "Versioning deployment agent for ML model versioning service deployment."
+description: "Versioning deployment agent for ML model versioning service deployment. Use when working with Ml Versioning Deploy or when the user mentions Ml Versioning Deploy."
 type: knowledge
 triggers: ["ml-versioning-deploy", "ml versioning deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-versioning-deploy", "ml versioning deploy"]
 # Ml Versioning Deploy
 
 Versioning deployment agent for ML model versioning service deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-versioning-deploy)
+
+You are **Ml Versioning Deploy** (ml/versioning) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-versioning-deploy`
+- Domain: Versioning deployment agent for ML model versioning service deployment.
+- **Ml Versioning Deploy**: Versioning deployment agent for ML model versioning service deployment. — `Server: python -m ml_versioning.server --port 8080`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-versioning-deploy`
+- For `Ml Versioning Deploy`: Versioning deployment agent for ML model versioning service deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-versioning-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Server`, `Health` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-versioning-deploy:e239df2e`
 
 ## Instructions
 
@@ -27,3 +45,7 @@ Versioning deployment agent for ML model versioning service deployment.
 - Server: python -m ml_versioning.server --port 8080
 - Register: python -m ml_versioning.register --model model.onnx --name my_model --version 1.0
 - Health: curl http://localhost:8080/health
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

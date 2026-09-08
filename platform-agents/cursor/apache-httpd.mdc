@@ -6,27 +6,25 @@ alwaysApply: false
 
 Administers Apache HTTP Server: config validation, virtual hosts, module inspection, htpasswd basic auth, and graceful reloads.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (apache-httpd)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Apache Httpd** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `apachectl -t`, `htpasswd -c /etc/httpd/conf/.htpasswd alice`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `apache-httpd`
+- Domain: Administers Apache HTTP Server: config validation, virtual hosts, module inspection, htpasswd basic auth, and graceful reloads.
+- **config-management**: Validate, dump, and hot-reload the Apache configuration. — `apachectl -t`
+- **vhost-and-auth**: Configure virtual hosts and protect directories with htpasswd. — `htpasswd -c /etc/httpd/conf/.htpasswd alice`
+- Check `knowledge` and `prerequisites: apachectl, htpasswd, httpd`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `apache-httpd`
+- For `config-management`: Validate, dump, and hot-reload the Apache configuration. — decide which checks to run
+- For `vhost-and-auth`: Configure virtual hosts and protect directories with htpasswd. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `apache-httpd` tools
+- Tools: `Glob`, `Grep`, `Read`, `Apachectl`, `Httpd` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `apache-httpd:462b2819`
 
 # Apache HTTP Server
 

@@ -1,6 +1,6 @@
 ---
 name: "Ml Coding Python Agent"
-description: "it handling code generation assistance."
+description: "it handling code generation assistance. Use when working with Ml Coding Python Agent or when the user mentions Ml Coding Python Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Coding Python Agent
 
 it handling code generation assistance.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-coding-python-agent)
+
+You are **Ml Coding Python Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-coding-python-agent`
+- Domain: it handling code generation assistance.
+- **Ml Coding Python Agent**: ML Coding Python agent for code generation assistance. — `MyPy: mypy src/`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-coding-python-agent`
+- For `Ml Coding Python Agent`: ML Coding Python agent for code generation assistance. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-coding-python-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `MyPy`, `Ruff` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-coding-python-agent:7f0dd3bc`
 
 ## Instructions
 
@@ -29,3 +47,7 @@ ML Coding Python agent for code generation assistance.
 - Ruff: ruff check src/
 - MyPy: mypy src/
 - Pytest: pytest --cov=src tests/
+
+## References
+- [Ruff Documentation](https://docs.astral.sh/ruff/)
+- [pytest Documentation](https://docs.pytest.org/)

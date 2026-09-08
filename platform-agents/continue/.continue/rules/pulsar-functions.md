@@ -1,15 +1,29 @@
 ---
 name: "Pulsar Functions"
-description: "Pulsar Functions: create, deploy, trigger and manage lightweight stream processors."
+description: "Pulsar Functions: create, deploy, trigger and manage lightweight stream processors. Use when working with pulsar functions operations, api or when the user mentions pulsar functions operations, api."
 globs: ["**/*.java", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Pulsar Functions
-
 Pulsar Functions: create, deploy, trigger and manage lightweight stream processors.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (pulsar-functions)
+
+You are **Pulsar Functions** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `pulsar-functions`
+- Domain: Pulsar Functions: create, deploy, trigger and manage lightweight stream processors.
+- **pulsar-functions-operations**: Deploy and manage Pulsar Functions with pulsar-admin, and trigger them with test inputs. — `bin/pulsar-admin functions create --tenant public --namespace default --name dou`
+- Check `knowledge` and `prerequisites: bin/pulsar-admin`
+
+### 2. Reason — think for `pulsar-functions`
+- For `pulsar-functions-operations`: Deploy and manage Pulsar Functions with pulsar-admin, and trigger them with test inputs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pulsar-functions` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bin/pulsar-admin` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pulsar-functions:5a1d0d82`
 
 # Pulsar Functions
 
@@ -65,6 +79,11 @@ public class DoubleEcho implements Function<String, String> {
 ### pulsar-functions-operations
 Deploy and manage Pulsar Functions with pulsar-admin, and trigger them with test inputs.
 
+**Parameters:**
+- `name` (string): Function name
+- `jar` (string): Function package file
+- `inputs` (array): Input topics
+
 **Commands:**
 - `bin/pulsar-admin functions create --tenant public --namespace default --name double-echo --classname org.example.DoubleEcho --jar target/my-fn.jar --inputs my-topic`
 - `bin/pulsar-admin functions list --tenant public --namespace default`
@@ -76,3 +95,7 @@ Deploy and manage Pulsar Functions with pulsar-admin, and trigger them with test
 - bin/pulsar-admin functions create --name counter --classname org.example.Counter --jar counter.jar --inputs events --output counts
 - bin/pulsar-admin functions trigger --name counter --trigger-value '{"n":1}'
 - bin/pulsar-admin functions status --name counter | jq '.instances[0].status'
+
+## References
+- [Pulsar Functions Overview](https://pulsar.apache.org/docs/3.0.x/functions-overview/)
+- [pulsar-admin functions](https://pulsar.apache.org/docs/3.0.x/reference-pulsar-admin-functions/)

@@ -1,8 +1,24 @@
-# Api Perf Autocannon
-
 Analyzes API latency distribution and connection behavior with autocannon, artillery quick mode, and request-level timing to separate network from application cost.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-perf-autocannon)
+
+You are **Api Perf Autocannon** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-perf-autocannon`
+- Domain: Analyzes API latency distribution and connection behavior with autocannon, artillery quick mode, and request-level timing to separate network from application cost.
+- **autocannon**: Run pipelined HTTP benchmarks with full statistics — `npx autocannon -c 20 -d 30 -p 1 http://localhost:3000/`
+- **artillery-quick**: Use artillery quick for ad-hoc load scenarios — `npx artillery quick -d 30 -r 20 http://localhost:3000/api`
+- Check `knowledge` and `prerequisites: node.js, python, redis, k6`
+
+### 2. Reason — think for `api-perf-autocannon`
+- For `autocannon`: Run pipelined HTTP benchmarks with full statistics — decide which checks to run
+- For `artillery-quick`: Use artillery quick for ad-hoc load scenarios — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-perf-autocannon` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-perf-autocannon:318b82ef`
 
 # API Perf v4 - Latency Analysis
 
@@ -47,6 +63,11 @@ npx artillery quick -d 30 -r 20 http://localhost:3000/api
 ### autocannon
 Run pipelined HTTP benchmarks with full statistics
 
+**Parameters:**
+- `connections` (integer): Number of concurrent connections
+- `duration` (integer): Duration in seconds
+- `pipelining` (integer): Pipelined requests per connection
+
 **Commands:**
 - `npx autocannon -c 20 -d 30 -p 1 http://localhost:3000/`
 - `npx autocannon -c 10 -d 20 -m POST -b '{"a":1}' -H 'Content-Type=application/json' http://localhost:3000/api`
@@ -69,3 +90,7 @@ Use artillery quick for ad-hoc load scenarios
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [autocannon GitHub](https://github.com/mcollina/autocannon)
+- [Artillery Quick Docs](https://www.artillery.io/docs/guides/getting-started/overview)

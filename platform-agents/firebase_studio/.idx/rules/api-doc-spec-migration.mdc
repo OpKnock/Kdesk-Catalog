@@ -1,14 +1,30 @@
 ---
-description: "Migrates API documentation: Swagger 2.0 to OpenAPI 3, doc site restructuring, and versioned docs with changelogs."
+description: "Migrates API documentation: Swagger 2.0 to OpenAPI 3, doc site restructuring, and versioned docs with changelogs. Use when working with spec migration, doc versioning or when the user mentions spec migration, doc versioning."
 globs: ["**/*.html", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Api Doc Spec Migration
-
 Migrates API documentation: Swagger 2.0 to OpenAPI 3, doc site restructuring, and versioned docs with changelogs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-doc-spec-migration)
+
+You are **Api Doc Spec Migration** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-doc-spec-migration`
+- Domain: Migrates API documentation: Swagger 2.0 to OpenAPI 3, doc site restructuring, and versioned docs with changelogs.
+- **spec-migration**: Convert and upgrade OpenAPI specs between versions — `npx swagger2openapi swagger.yaml -o openapi3.yaml`
+- **doc-versioning**: Publish versioned documentation sites with changelogs — `mkdir -p docs/v1 docs/v2`
+- Check `knowledge` and `prerequisites: swagger-cli, redoc-cli, openapi-generator`
+
+### 2. Reason — think for `api-doc-spec-migration`
+- For `spec-migration`: Convert and upgrade OpenAPI specs between versions — decide which checks to run
+- For `doc-versioning`: Publish versioned documentation sites with changelogs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-doc-spec-migration` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Redocly` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-doc-spec-migration:69aa5225`
 
 # API Doc (Migration & Versioning)
 
@@ -55,6 +71,10 @@ Render both versions and walk every example link.
 ### spec-migration
 Convert and upgrade OpenAPI specs between versions
 
+**Parameters:**
+- `input` (string): Source spec file
+- `output` (string): Target spec file
+
 **Commands:**
 - `npx swagger2openapi swagger.yaml -o openapi3.yaml`
 - `npx swagger2openapi -y swagger.yaml > openapi3.yaml`
@@ -70,6 +90,10 @@ Convert and upgrade OpenAPI specs between versions
 ### doc-versioning
 Publish versioned documentation sites with changelogs
 
+**Parameters:**
+- `version` (string): API version
+- `spec` (string): Spec path per version
+
 **Commands:**
 - `mkdir -p docs/v1 docs/v2`
 - `redocly build-docs docs/v2/openapi.yaml -o public/v2/index.html`
@@ -81,3 +105,7 @@ Publish versioned documentation sites with changelogs
 - redocly build-docs docs/v2/openapi.yaml -o public/v2/index.html
 - node -e "const fs=require('fs');fs.writeFileSync('docs/CHANGELOG.md','# Changelog\n\n## v2.0.0\n- Breaking: renamed /items to /products\n')"
 - git tag v2.0.0 && git push origin v2.0.0
+
+## References
+- [swagger2openapi](https://github.com/Mermade/oas-kit)
+- [Redocly Build Docs](https://redocly.com/docs/cli/commands/build-docs/)

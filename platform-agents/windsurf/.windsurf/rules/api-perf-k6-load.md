@@ -6,27 +6,25 @@ globs: ["**/*.json", "**/*.r", "**/*.sh"]
 
 Runs k6 load tests against APIs: virtual users, stages, thresholds, checks, and CI-friendly summary exports for throughput and latency assertions.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-perf-k6-load)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Perf K6 Load** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `k6 run script.js`, `k6 run --threshold 'http_req_duration:p(95)<300' script.js`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `api-perf-k6-load`
+- Domain: Runs k6 load tests against APIs: virtual users, stages, thresholds, checks, and CI-friendly summary exports for throughput and latency assertions.
+- **k6-load-testing**: Execute scripted load tests with thresholds — `k6 run script.js`
+- **thresholds-checks**: Define pass/fail gates on latency and error rate — `k6 run --threshold 'http_req_duration:p(95)<300' script.js`
+- Check `knowledge` and `prerequisites: node.js, python, redis, k6`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-perf-k6-load`
+- For `k6-load-testing`: Execute scripted load tests with thresholds — decide which checks to run
+- For `thresholds-checks`: Define pass/fail gates on latency and error rate — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-perf-k6-load` tools
+- Tools: `Glob`, `Grep`, `Read`, `K6` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-perf-k6-load:ca5de6b7`
 
 # API Perf v2 - k6 Load Testing
 

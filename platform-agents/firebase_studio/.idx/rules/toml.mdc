@@ -1,14 +1,28 @@
 ---
-description: "Query, validate, and format TOML configuration files using tomlq, yq, Python's stdlib tomllib, and taplo. Reads Cargo.toml and pyproject.toml values, enforces consistent formatting in CI, and parses TOML safely without external dependencies."
+description: "Query, validate, and format TOML configuration files using tomlq, yq, Python's stdlib tomllib, and taplo. Reads Cargo.toml and pyproject.toml values, enforces consistent formatting in CI, and parses TOML safely without external dependencies. Use when working with toml tooling, api or when the user mentions toml tooling, api."
 globs: ["**/*.go", "**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Toml
-
 Query, validate, and format TOML configuration files using tomlq, yq, Python's stdlib tomllib, and taplo. Reads Cargo.toml and pyproject.toml values, enforces consistent formatting in CI, and parses TOML safely without external dependencies.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (toml)
+
+You are **Toml** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `toml`
+- Domain: Query, validate, and format TOML configuration files using tomlq, yq, Python's stdlib tomllib, and taplo. Reads Cargo.toml and pyproject.toml values, enforces consistent formatting in CI, and parses T
+- **toml-tooling**: Query, validate, and format TOML files — `tomlq -r '.package.name' Cargo.toml`
+- Check `knowledge` and `prerequisites: python, taplo, tomlq`
+
+### 2. Reason — think for `toml`
+- For `toml-tooling`: Query, validate, and format TOML files — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `toml` tools
+- Tools: `Glob`, `Grep`, `Read`, `Tomlq`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `toml:169e3cbf`
 
 # TOML
 
@@ -76,6 +90,11 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb')); print('val
 ### toml-tooling
 Query, validate, and format TOML files
 
+**Parameters:**
+- `file` (string): TOML file to query or format
+- `expression` (string): jq-style path like .package.name
+- `format` (boolean): taplo fmt or --check
+
 **Commands:**
 - `tomlq -r '.package.name' Cargo.toml`
 - `yq -p toml '.tool.pytest.ini_options' pyproject.toml`
@@ -87,3 +106,7 @@ Query, validate, and format TOML files
 - tomlq -r '.package.version' Cargo.toml
 - yq -p toml '.dependencies.rocket' Cargo.toml
 - python -c "import tomllib; d=tomllib.load(open('pyproject.toml','rb')); print(d['project']['dependencies'])"
+
+## References
+- [TOML spec v1.0](https://toml.io/en/v1.0.0)
+- [taplo CLI](https://taplo.tamasfe.dev/cli/introduction.html)

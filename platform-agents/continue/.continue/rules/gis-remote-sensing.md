@@ -1,6 +1,6 @@
 ---
 name: "Gis Remote Sensing"
-description: "Gis remote-sensing expertise and best practices."
+description: "Gis remote-sensing expertise and best practices. Use when working with remote sensing expertise, gis, remote sensing, skill or when the user mentions remote sensing expertise, gis, remote sensing, skill."
 globs: ["**/*.r", "**/*.scala"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Gis Remote Sensing
 
 Gis remote-sensing expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (gis-remote-sensing)
+
+You are **Gis Remote Sensing** (gis/remote-sensing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — gis context for `gis-remote-sensing`
+- Domain: Gis remote-sensing expertise and best practices.
+- **remote-sensing-expertise**: gis remote-sensing expertise — `remote-sensing-cli`
+- Check `knowledge` and `prerequisites: remote-sensing`
+
+### 2. Reason — think for `gis-remote-sensing`
+- For `remote-sensing-expertise`: gis remote-sensing expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gis-remote-sensing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Remote-sensing-cli`, `Remote-sensing-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gis-remote-sensing:d380671e`
 
 ## Instructions
 

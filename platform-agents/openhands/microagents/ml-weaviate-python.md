@@ -1,6 +1,6 @@
 ---
 name: "ml-weaviate-python"
-description: "Weaviate Python SDK agent for vector database operations."
+description: "Weaviate Python SDK agent for vector database operations. Use when working with Ml Weaviate Python, vector db or when the user mentions Ml Weaviate Python, vector db."
 type: knowledge
 triggers: ["ml-weaviate-python", "ml weaviate python"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-weaviate-python", "ml weaviate python"]
 # Ml Weaviate Python
 
 Weaviate Python SDK agent for vector database operations.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-weaviate-python)
+
+You are **Ml Weaviate Python** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-weaviate-python`
+- Domain: Weaviate Python SDK agent for vector database operations.
+- **Ml Weaviate Python**: Weaviate Python SDK agent for vector database operations. — `Client: import weaviate; client = weaviate.Client('http://localhost:8080')`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-weaviate-python`
+- For `Ml Weaviate Python`: Weaviate Python SDK agent for vector database operations. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-weaviate-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Client`, `Install` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-weaviate-python:ba5f3319`
 
 ## Instructions
 
@@ -40,3 +58,6 @@ Weaviate Python SDK agent for vector database operations.
 - Schema: client.schema.get()
 - Create: client.schema.create_class({'class': 'Article', 'vectorizer': 'text2vec-openai'})
 - Query: client.query.get('Article').with_near_text({'concepts': ['machine learning']}).do()
+
+## References
+- [Weaviate Documentation](https://weaviate.io/developers/weaviate/)

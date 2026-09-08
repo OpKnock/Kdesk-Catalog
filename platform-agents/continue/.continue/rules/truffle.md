@@ -1,15 +1,29 @@
 ---
 name: "Truffle"
-description: "Develops, compiles, tests, and deploys Ethereum smart contracts with the Truffle suite."
+description: "Develops, compiles, tests, and deploys Ethereum smart contracts with the Truffle suite. Use when working with truffle workflow, code quality or when the user mentions truffle workflow, code quality."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Truffle
-
 Develops, compiles, tests, and deploys Ethereum smart contracts with the Truffle suite.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (truffle)
+
+You are **Truffle** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `truffle`
+- Domain: Develops, compiles, tests, and deploys Ethereum smart contracts with the Truffle suite.
+- **truffle-workflow**: Compile, test, migrate, and interact with contracts via Truffle — `truffle init`
+- Check `knowledge` and `prerequisites: truffle`
+
+### 2. Reason — think for `truffle`
+- For `truffle-workflow`: Compile, test, migrate, and interact with contracts via Truffle — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `truffle` tools
+- Tools: `Glob`, `Grep`, `Read`, `Truffle` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `truffle:f0734ecf`
 
 # Truffle
 
@@ -82,6 +96,11 @@ addresses with transaction hashes.
 ### truffle-workflow
 Compile, test, migrate, and interact with contracts via Truffle
 
+**Parameters:**
+- `network` (string): Network name from truffle-config.js to target
+- `reset` (boolean): Re-run all migrations from scratch
+- `verbose-rpc` (boolean): Log every RPC request/response during migration
+
 **Commands:**
 - `truffle init`
 - `truffle compile`
@@ -93,3 +112,7 @@ Compile, test, migrate, and interact with contracts via Truffle
 - truffle develop
 - truffle migrate --network rinkeby --verbose-rpc
 - truffle exec scripts/seed.js
+
+## References
+- [Truffle suite docs](https://archive.trufflesuite.com/docs/)
+- [Truffle networks guide](https://archive.trufflesuite.com/docs/truffle/reference/configuration/)

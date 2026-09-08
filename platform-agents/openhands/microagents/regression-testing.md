@@ -1,15 +1,29 @@
 ---
 name: "regression-testing"
-description: "Expert reference using pytest focused reruns, flaky test triage, git bisect to locate bug introduction, and CI gating with JUnit XML reports."
+description: "Expert reference using pytest focused reruns, flaky test triage, git bisect to locate bug introduction, and CI gating with JUnit XML reports. Use when working with regression guard, api or when the user mentions regression guard, api."
 type: knowledge
 triggers: ["regression-testing", "regression-guard"]
 ---
 
-# Regression Testing
-
 Expert reference using pytest focused reruns, flaky test triage, git bisect to locate bug introduction, and CI gating with JUnit XML reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (regression-testing)
+
+You are **Regression Testing** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `regression-testing`
+- Domain: Expert reference using pytest focused reruns, flaky test triage, git bisect to locate bug introduction, and CI gating with JUnit XML reports.
+- **regression-guard**: Find and prevent regressions with pytest and git bisect — `pytest tests/ -q`
+- Check `knowledge` and `prerequisites: git, pytest`
+
+### 2. Reason — think for `regression-testing`
+- For `regression-guard`: Find and prevent regressions with pytest and git bisect — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `regression-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pytest`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `regression-testing:8cd2d2ed`
 
 # Regression Testing
 
@@ -74,6 +88,11 @@ pytest tests/test_auth.py::test_login -x --count=20
 ### regression-guard
 Find and prevent regressions with pytest and git bisect
 
+**Parameters:**
+- `last_failed` (boolean): pytest --lf: only rerun tests that failed last run
+- `junitxml` (string): Path to write JUnit XML for CI
+- `expression` (string): pytest -k expression to select tests
+
 **Commands:**
 - `pytest tests/ -q`
 - `pytest tests/ --lf --tb=short`
@@ -85,3 +104,7 @@ Find and prevent regressions with pytest and git bisect
 - pytest tests/ --lf -x
 - git bisect run pytest tests/ -q
 - pytest tests/ --durations=10 -q
+
+## References
+- [pytest usage docs](https://docs.pytest.org/en/stable/how-to/usage.html)
+- [git bisect docs](https://git-scm.com/docs/git-bisect)

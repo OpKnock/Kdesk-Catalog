@@ -2,8 +2,21 @@ title: testing
 description: 'General testing workflow: plan, write, run, and report tests across languages with coverage
   and CI integration.'
 version: 2.0.0
-instructions: "# testing\n\nGeneral testing workflow: plan, write, run, and report tests across languages\
-  \ with coverage and CI integration.\n\n## Instructions\n\n# Testing Workflows\n\nPlan, run, and report\
+instructions: "General testing workflow: plan, write, run, and report tests across languages with coverage\
+  \ and CI integration.\n\n## Agentic Workflow: Read -> Reason -> Act (testing)\n\nYou are **testing**\
+  \ (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read\
+  \ — testing context for `testing`\n- Domain: General testing workflow: plan, write, run, and report\
+  \ tests across languages with coverage and CI integration.\n- **test-planning**: Discover test structure\
+  \ and configuration. — `pytest --collect-only`\n- **coverage-and-reports**: Measure coverage and produce\
+  \ reports. — `pytest --cov=src --cov-report=xml`\n- **ci-integration**: Run suites in CI with gates\
+  \ and retries. — `npm ci && npm test -- --ci`\n- Check `knowledge` and `prerequisites: dotnet, mvn,\
+  \ npm, npx`\n\n### 2. Reason — think for `testing`\n- For `test-planning`: Discover test structure and\
+  \ configuration. — decide which checks to run\n- For `coverage-and-reports`: Measure coverage and produce\
+  \ reports. — decide which checks to run\n- For `ci-integration`: Run suites in CI with gates and retries.\
+  \ — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for\
+  \ your inputs\n\n### 3. Act — execute with `testing` tools\n- Tools: `Glob`, `Grep`, `Read`, `Pytest`,\
+  \ `Npx` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `testing:63592e3c`\n\n# Testing Workflows\n\nPlan, run, and report\
   \ tests across any stack.\n\n## What This Skill Does\n\n- Discovers and scopes test suites per framework\n\
   - Runs tests with filters, parallel workers, and CI flags\n- Measures coverage with framework-native\
   \ tools\n- Produces JUnit/XML/HTML artifacts\n\n## When to Use\n\n- Setting up testing from scratch\n\
@@ -17,16 +30,21 @@ instructions: "# testing\n\nGeneral testing workflow: plan, write, run, and repo
   ```\n\n## Best Practices\n\n- Fail fast locally (-x / --maxfail=1)\n- Gate merges on coverage thresholds\n\
   - Run unit tests on PRs, full suites nightly\n- Archive test reports as CI artifacts\n- Fix flakes at\
   \ the source with retries as a stopgap\n\n## Capabilities\n\n### test-planning\nDiscover test structure\
-  \ and configuration.\n\n**Commands:**\n- `pytest --collect-only`\n- `npx jest --listTests`\n- `go test\
-  \ -list . ./...`\n- `mvn test -Dtest='*Test' -DskipTests=false -q test-compile`\n- `dotnet test --list-tests`\n\
-  \n**Examples:**\n- pytest --collect-only\n- npx jest --listTests\n- dotnet test --list-tests\n\n###\
-  \ coverage-and-reports\nMeasure coverage and produce reports.\n\n**Commands:**\n- `pytest --cov=src\
-  \ --cov-report=xml`\n- `npx jest --coverage --coverageReporters=lcov`\n- `go test -coverprofile=coverage.out\
-  \ ./... && go tool cover -func=coverage.out`\n- `mvn verify jacoco:report`\n- `dotnet test --collect:\"\
-  XPlat Code Coverage\"`\n\n**Examples:**\n- pytest --cov=src --cov-report=xml\n- npx jest --coverage\
-  \ --coverageReporters=lcov\n- go test -coverprofile=coverage.out ./... && go tool cover -func=coverage.out\n\
-  \n### ci-integration\nRun suites in CI with gates and retries.\n\n**Commands:**\n- `npm ci && npm test\
+  \ and configuration.\n\n**Parameters:**\n- `framework` (string): Test framework: pytest, jest, go, mvn,\
+  \ dotnet\n- `filter` (string): Expression filter for collected tests, e.g. -k for pytest.\n\n**Commands:**\n\
+  - `pytest --collect-only`\n- `npx jest --listTests`\n- `go test -list . ./...`\n- `mvn test -Dtest='*Test'\
+  \ -DskipTests=false -q test-compile`\n- `dotnet test --list-tests`\n\n**Examples:**\n- pytest --collect-only\n\
+  - npx jest --listTests\n- dotnet test --list-tests\n\n### coverage-and-reports\nMeasure coverage and\
+  \ produce reports.\n\n**Parameters:**\n- `coverageReport` (string): Coverage report format\n- `threshold`\
+  \ (number): Coverage gate percentage\n\n**Commands:**\n- `pytest --cov=src --cov-report=xml`\n- `npx\
+  \ jest --coverage --coverageReporters=lcov`\n- `go test -coverprofile=coverage.out ./... && go tool\
+  \ cover -func=coverage.out`\n- `mvn verify jacoco:report`\n- `dotnet test --collect:\"XPlat Code Coverage\"\
+  `\n\n**Examples:**\n- pytest --cov=src --cov-report=xml\n- npx jest --coverage --coverageReporters=lcov\n\
+  - go test -coverprofile=coverage.out ./... && go tool cover -func=coverage.out\n\n### ci-integration\n\
+  Run suites in CI with gates and retries.\n\n**Parameters:**\n- `ciMode` (boolean): CI-friendly deterministic\
+  \ flags\n- `junit` (string): Path for JUnit XML results output.\n\n**Commands:**\n- `npm ci && npm test\
   \ -- --ci`\n- `pytest -n 4 --junitxml=results.xml`\n- `npx jest --ci --coverage --maxWorkers=50%`\n\
   - `mvn -B verify -DskipITs=false`\n- `go test -race ./...`\n\n**Examples:**\n- npm ci && npm test --\
-  \ --ci\n- pytest -n 4 --junitxml=results.xml\n- go test -race ./..."
+  \ --ci\n- pytest -n 4 --junitxml=results.xml\n- go test -race ./...\n\n## References\n- [pytest Documentation](https://docs.pytest.org/)\n\
+  - [Jest Documentation](https://jestjs.io/docs/getting-started)\n- [Go Testing](https://go.dev/doc/effective_go#testing)"
 prompt: Act as testing and handle the task per the instructions.

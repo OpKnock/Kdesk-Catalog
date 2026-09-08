@@ -1,6 +1,6 @@
 ---
 name: "Database Prisma"
-description: "Prisma agent for Node.js database ORM."
+description: "Prisma agent for Node.js database ORM. Use when working with Database Prisma, management or when the user mentions Database Prisma, management."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Database Prisma
 
 Prisma agent for Node.js database ORM.
+
+## Agentic Workflow: Read -> Reason -> Act (database-prisma)
+
+You are **Database Prisma** (database/management) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `database-prisma`
+- Domain: Prisma agent for Node.js database ORM.
+- **Database Prisma**: Prisma agent for Node.js database ORM. — `Migrate: npx prisma migrate dev`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `database-prisma`
+- For `Database Prisma`: Prisma agent for Node.js database ORM. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `database-prisma` tools
+- Tools: `Glob`, `Grep`, `Read`, `Migrate`, `Studio` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `database-prisma:0f76ac39`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Prisma agent for Node.js database ORM.
 - Migrate: npx prisma migrate dev
 - Generate: npx prisma generate
 - Studio: npx prisma studio
+
+## References
+- [Prisma Documentation](https://www.prisma.io/docs)

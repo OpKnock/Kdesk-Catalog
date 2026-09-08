@@ -1,6 +1,6 @@
 ---
 name: "Cloud Gcp Agent"
-description: "GCP agent for Google Cloud Platform management."
+description: "GCP agent for Google Cloud Platform management. Use when working with Cloud Gcp Agent or when the user mentions Cloud Gcp Agent."
 globs: ["**/*.go", "**/*.r", "**/*.sql"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Cloud Gcp Agent
 
 GCP agent for Google Cloud Platform management.
+
+## Agentic Workflow: Read -> Reason -> Act (cloud-gcp-agent)
+
+You are **Cloud Gcp Agent** (cloud/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — cloud context for `cloud-gcp-agent`
+- Domain: GCP agent for Google Cloud Platform management.
+- **Cloud Gcp Agent**: GCP agent for Google Cloud Platform management. — `gcloud functions list`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `cloud-gcp-agent`
+- For `Cloud Gcp Agent`: GCP agent for Google Cloud Platform management. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cloud-gcp-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gcloud` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cloud-gcp-agent:1c23aae3`
 
 ## Instructions
 
@@ -31,3 +49,6 @@ GCP agent for Google Cloud Platform management.
 - gcloud functions list
 - gcloud sql instances list
 - gcloud run services list
+
+## References
+- [Google Cloud Documentation](https://cloud.google.com/docs)

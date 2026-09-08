@@ -1,14 +1,30 @@
 ---
-description: "Audits dependency licenses across ecosystems with licensee, license-checker, and go-licenses, enforcing allowlists in CI."
+description: "Audits dependency licenses across ecosystems with licensee, license-checker, and go-licenses, enforcing allowlists in CI. Use when working with audit, enforce or when the user mentions audit, enforce."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# license-compliance
-
 Audits dependency licenses across ecosystems with licensee, license-checker, and go-licenses, enforcing allowlists in CI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (license-compliance)
+
+You are **license-compliance** (legal) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — legal context for `license-compliance`
+- Domain: Audits dependency licenses across ecosystems with licensee, license-checker, and go-licenses, enforcing allowlists in CI.
+- **audit**: Detect licenses for codebases and packages. — `licensee detect .`
+- **enforce**: Gate builds on license policy. — `license-checker --failOn 'GPL;LGPL' --summary`
+- Check `knowledge` and `prerequisites: fossa, license-finder, scancode, sbom`
+
+### 2. Reason — think for `license-compliance`
+- For `audit`: Detect licenses for codebases and packages. — decide which checks to run
+- For `enforce`: Gate builds on license policy. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `license-compliance` tools
+- Tools: `Glob`, `Grep`, `Read`, `Licensee`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `license-compliance:ed76d3b5`
 
 # License Compliance
 
@@ -78,6 +94,11 @@ Both should pass on main; fail on known-bad branches.
 ### audit
 Detect licenses for codebases and packages.
 
+**Parameters:**
+- `exclude` (string): Licenses to exclude from report
+- `production` (string): Only production dependencies
+- `allowed_licenses` (string): Comma-separated allowlist (go-licenses)
+
 **Commands:**
 - `licensee detect .`
 - `licensee detect --json`
@@ -93,6 +114,11 @@ Detect licenses for codebases and packages.
 ### enforce
 Gate builds on license policy.
 
+**Parameters:**
+- `failOn` (string): Licenses that fail the check
+- `onlyAllow` (string): Allowed license list
+- `unlicensed` (string): Report unlicensed code
+
 **Commands:**
 - `license-checker --failOn 'GPL;LGPL' --summary`
 - `licensee detect --unlicensed --no-remote`
@@ -104,3 +130,8 @@ Gate builds on license policy.
 - license-checker --failOn GPL --summary
 - npx license-checker --onlyAllow 'MIT;Apache-2.0;ISC;BSD-2-Clause;BSD-3-Clause'
 - go-licenses csv ./... | grep -i 'gpl'
+
+## References
+- [licensee](https://github.com/licensee/licensee)
+- [license-checker](https://github.com/davglass/license-checker)
+- [SPDX License List](https://spdx.org/licenses/)

@@ -1,6 +1,6 @@
 ---
 name: "performance-agent"
-description: "Performance SDK deployment agent for ML Performance SDK deployment."
+description: "Performance SDK deployment agent for ML Performance SDK deployment. Use when working with Ml Performance Deploy Sdk Agent or when the user mentions Ml Performance Deploy Sdk Agent."
 type: knowledge
 triggers: ["performance-agent", "ml performance deploy sdk agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["performance-agent", "ml performance deploy sdk agent"]
 # Performance Agent
 
 Performance SDK deployment agent for ML Performance SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (performance-agent)
+
+You are **Performance Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `performance-agent`
+- Domain: Performance SDK deployment agent for ML Performance SDK deployment.
+- **Ml Performance Deploy Sdk Agent**: Performance SDK deployment agent for ML Performance SDK deployment. — `docker build -t performance:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `performance-agent`
+- For `Ml Performance Deploy Sdk Agent`: Performance SDK deployment agent for ML Performance SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `performance-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Performance` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `performance-agent:e9f30ab7`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Performance SDK deployment agent for ML Performance SDK deployment.
 **Examples:**
 - Server: python -m performance.server --port 8080
 - Docker: docker run -p 8080:8080 performance-server
+
+## References
+- [AWS Performance Efficiency Pillar](https://docs.aws.amazon.com/wellarchitected/latest/performance-efficiency-pillar/welcome.html)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

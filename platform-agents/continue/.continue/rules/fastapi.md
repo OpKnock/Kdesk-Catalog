@@ -1,15 +1,29 @@
 ---
 name: "Fastapi"
-description: "Build async Python APIs with FastAPI: run uvicorn, generate OpenAPI schemas, create Pydantic models, and test endpoints with TestClient."
+description: "Build async Python APIs with FastAPI: run uvicorn, generate OpenAPI schemas, create Pydantic models, and test endpoints with TestClient. Use when working with fastapi server or when the user mentions fastapi server."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Fastapi
-
 Build async Python APIs with FastAPI: run uvicorn, generate OpenAPI schemas, create Pydantic models, and test endpoints with TestClient.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (fastapi)
+
+You are **Fastapi** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `fastapi`
+- Domain: Build async Python APIs with FastAPI: run uvicorn, generate OpenAPI schemas, create Pydantic models, and test endpoints with TestClient.
+- **fastapi-server**: Run, generate schema for, and test FastAPI applications. — `uvicorn main:app --reload --port 8000`
+- Check `knowledge` and `prerequisites: pip, python, uvicorn`
+
+### 2. Reason — think for `fastapi`
+- For `fastapi-server`: Run, generate schema for, and test FastAPI applications. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `fastapi` tools
+- Tools: `Glob`, `Grep`, `Read`, `Uvicorn`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fastapi:1414f2c8`
 
 # FastAPI
 
@@ -86,6 +100,11 @@ def test_get_missing_order():
 ### fastapi-server
 Run, generate schema for, and test FastAPI applications.
 
+**Parameters:**
+- `module` (string): ASGI module path like main:app
+- `port` (integer): Server port
+- `workers` (integer): Number of uvicorn workers
+
 **Commands:**
 - `uvicorn main:app --reload --port 8000`
 - `uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4`
@@ -97,3 +116,7 @@ Run, generate schema for, and test FastAPI applications.
 - uvicorn main:app --reload --port 8000
 - curl -s http://localhost:8000/openapi.json | jq '.paths | keys'
 - python -m pytest tests/ -v
+
+## References
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [Uvicorn docs](https://www.uvicorn.org/)

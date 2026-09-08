@@ -3,24 +3,38 @@ description: Deploys and manages Vercel edge functions using the Vercel CLI. Han
   development with vercel dev, environment variables per environment, preview and production deployments,
   and rollbacks.
 version: 2.0.0
-instructions: "# Vercel Edge\n\nDeploys and manages Vercel edge functions using the Vercel CLI. Handles\
-  \ authentication, local development with vercel dev, environment variables per environment, preview\
-  \ and production deployments, and rollbacks.\n\n## Instructions\n\n# Vercel Edge\n\n## What this skill\
-  \ does\n\nManage Vercel deployments for APIs and edge functions using the Vercel CLI. Covers authentication,\
-  \ local development with `vercel dev`, environment variables, preview vs production deploys, and rollbacks.\n\
-  \n## When to use\n\n- Deploying a Next.js API or standalone edge function\n- Managing per-environment\
-  \ secrets\n- Debugging preview vs production differences\n\n## Real commands\n\n```bash\n# Authenticate\
-  \ and link project\nvercel login\nvercel link\n\n# Local development with functions and env\nvercel\
-  \ dev\n\n# Preview deployment (default)\nvercel deploy\n\n# Production deployment\nvercel deploy --prod\n\
-  \n# Deploy without rebuild (CI scenario)\nvercel deploy --prebuilt --prod\n\n# Environment variables\n\
-  vercel env add DATABASE_URL production\nvercel env pull\n\n# List deployments and rollback\nvercel ls\n\
-  vercel rollback <deployment-url>\n```\n\n## Edge function example (api/hello.ts)\n\n```ts\nexport const\
-  \ config = { runtime: 'edge' };\nexport default function handler(req: Request) {\n  return new Response(JSON.stringify({\
-  \ hello: 'edge' }), {\n    headers: { 'content-type': 'application/json' },\n  });\n}\n```\n\n## Best\
-  \ practices\n\n- Always test with `vercel dev` before deploying\n- Scope env vars per environment (development/preview/production)\n\
+instructions: "Deploys and manages Vercel edge functions using the Vercel CLI. Handles authentication,\
+  \ local development with vercel dev, environment variables per environment, preview and production deployments,\
+  \ and rollbacks.\n\n## Agentic Workflow: Read -> Reason -> Act (vercel-edge)\n\nYou are **Vercel Edge**\
+  \ (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read\
+  \ — api context for `vercel-edge`\n- Domain: Deploys and manages Vercel edge functions using the Vercel\
+  \ CLI. Handles authentication, local development with vercel dev, environment variables per environment,\
+  \ preview and production deployments, an\n- **deploy-vercel**: Deploy projects and manage edge functions\
+  \ — `vercel login`\n- Check `knowledge` and `prerequisites: vercel`\n\n### 2. Reason — think for `vercel-edge`\n\
+  - For `deploy-vercel`: Deploy projects and manage edge functions — decide which checks to run\n- Evaluate\
+  \ trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with\
+  \ `vercel-edge` tools\n- Tools: `Glob`, `Grep`, `Read`, `Vercel` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `vercel-edge:f8ccef42`\n\
+  \n# Vercel Edge\n\n## What this skill does\n\nManage Vercel deployments for APIs and edge functions\
+  \ using the Vercel CLI. Covers authentication, local development with `vercel dev`, environment variables,\
+  \ preview vs production deploys, and rollbacks.\n\n## When to use\n\n- Deploying a Next.js API or standalone\
+  \ edge function\n- Managing per-environment secrets\n- Debugging preview vs production differences\n\
+  \n## Real commands\n\n```bash\n# Authenticate and link project\nvercel login\nvercel link\n\n# Local\
+  \ development with functions and env\nvercel dev\n\n# Preview deployment (default)\nvercel deploy\n\n\
+  # Production deployment\nvercel deploy --prod\n\n# Deploy without rebuild (CI scenario)\nvercel deploy\
+  \ --prebuilt --prod\n\n# Environment variables\nvercel env add DATABASE_URL production\nvercel env pull\n\
+  \n# List deployments and rollback\nvercel ls\nvercel rollback <deployment-url>\n```\n\n## Edge function\
+  \ example (api/hello.ts)\n\n```ts\nexport const config = { runtime: 'edge' };\nexport default function\
+  \ handler(req: Request) {\n  return new Response(JSON.stringify({ hello: 'edge' }), {\n    headers:\
+  \ { 'content-type': 'application/json' },\n  });\n}\n```\n\n## Best practices\n\n- Always test with\
+  \ `vercel dev` before deploying\n- Scope env vars per environment (development/preview/production)\n\
   - Use `--prebuilt` in CI to keep builds reproducible\n- Roll back immediately if production errors spike\
   \ after deploy\n\n## Testing\n\n```bash\nvercel dev &\ncurl http://localhost:3000/api/hello\n```\n\n\
-  ## Capabilities\n\n### deploy-vercel\nDeploy projects and manage edge functions\n\n**Commands:**\n-\
+  ## Capabilities\n\n### deploy-vercel\nDeploy projects and manage edge functions\n\n**Parameters:**\n\
+  - `prod` (boolean): Deploy to production instead of preview\n- `prebuilt` (boolean): Deploy prebuilt\
+  \ output, skipping the build step\n- `yes` (boolean): Skip confirmation prompts\n\n**Commands:**\n-\
   \ `vercel login`\n- `vercel dev`\n- `vercel deploy --prod`\n- `vercel env add DATABASE_URL production`\n\
-  - `vercel ls`\n\n**Examples:**\n- vercel deploy --prebuilt\n- vercel env pull\n- vercel rollback"
+  - `vercel ls`\n\n**Examples:**\n- vercel deploy --prebuilt\n- vercel env pull\n- vercel rollback\n\n\
+  ## References\n- [Vercel Docs](https://vercel.com/docs)\n- [Edge Functions Docs](https://vercel.com/docs/functions/edge-functions)\n\
+  - [Vercel CLI reference](https://vercel.com/docs/cli)"
 prompt: Act as Vercel Edge and handle the task per the instructions.

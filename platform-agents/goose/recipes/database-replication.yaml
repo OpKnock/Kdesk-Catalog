@@ -1,13 +1,40 @@
 title: database-replication
 description: 'Architects replication topologies: streaming replicas, failover with Patroni, and lag monitoring.'
 version: 2.0.0
-instructions: '# database-replication
+instructions: 'Architects replication topologies: streaming replicas, failover with Patroni, and lag monitoring.
 
 
-  Architects replication topologies: streaming replicas, failover with Patroni, and lag monitoring.
+  ## Agentic Workflow: Read -> Reason -> Act (database-replication)
 
 
-  ## Instructions
+  You are **database-replication** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — data context for `database-replication`
+
+  - Domain: Architects replication topologies: streaming replicas, failover with Patroni, and lag monitoring.
+
+  - **replication-topology**: Build and operate replicated topologies with failover — `patronictl -c patroni.yml
+  list`
+
+  - Check `knowledge` and `prerequisites: postgresql, mysql, redis, patroni`
+
+
+  ### 2. Reason — think for `database-replication`
+
+  - For `replication-topology`: Build and operate replicated topologies with failover — decide which checks
+  to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `database-replication` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Patronictl`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `database-replication:887875d2`
 
 
   # Database Replication
@@ -113,6 +140,15 @@ instructions: '# database-replication
   Build and operate replicated topologies with failover
 
 
+  **Parameters:**
+
+  - `config` (string): Patroni config file (-c)
+
+  - `master` (string): Current master node name
+
+  - `candidate` (string): Node to promote
+
+
   **Commands:**
 
   - `patronictl -c patroni.yml list`
@@ -132,5 +168,14 @@ instructions: '# database-replication
 
   - psql -h node2 -c "SELECT pg_is_in_recovery();"
 
-  - kafka-consumer-groups.sh --bootstrap-server kafka:9092 --describe --all-groups'
+  - kafka-consumer-groups.sh --bootstrap-server kafka:9092 --describe --all-groups
+
+
+  ## References
+
+  - [Patroni docs](https://patroni.readthedocs.io/)
+
+  - [PostgreSQL replication docs](https://www.postgresql.org/docs/current/high-availability.html)
+
+  - [MongoDB replica sets](https://www.mongodb.com/docs/manual/replication/)'
 prompt: Act as database-replication and handle the task per the instructions.

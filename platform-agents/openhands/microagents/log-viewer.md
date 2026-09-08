@@ -1,6 +1,6 @@
 ---
 name: "log-viewer"
-description: "Views, searches, and analyzes application logs across containers, Kubernetes, and system services with jq-powered structured analysis."
+description: "Views, searches, and analyzes application logs across containers, Kubernetes, and system services with jq-powered structured analysis. Use when working with realtime tail, structured search, context extraction, log rotation or when the user mentions realtime tail, structured search, context extraction, log rotation."
 type: knowledge
 triggers: ["log-viewer", "realtime-tail", "structured-search", "context-extraction", "log-rotation"]
 ---
@@ -8,6 +8,28 @@ triggers: ["log-viewer", "realtime-tail", "structured-search", "context-extracti
 # Log Analysis & Viewer
 
 Views, searches, and analyzes application logs across containers, Kubernetes, and system services with jq-powered structured analysis.
+
+## Agentic Workflow: Read -> Reason -> Act (log-viewer)
+
+You are **Log Analysis & Viewer** (devops/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `log-viewer`
+- Domain: Views, searches, and analyzes application logs across containers, Kubernetes, and system services with jq-powered structured analysis.
+- **realtime-tail**: Tail logs in real-time across docker, kubectl, journalctl, and files — `tail -f app.log`
+- **structured-search**: Search and filter logs with grep, ripgrep, and jq for JSON logs — `rg "ERROR|WARN" app.log --no-line-number`
+- **context-extraction**: Extract surrounding context around error occurrences — `grep -A 20 -B 5 "panic" app.log`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `log-viewer`
+- For `realtime-tail`: Tail logs in real-time across docker, kubectl, journalctl, and files — decide which checks to run
+- For `structured-search`: Search and filter logs with grep, ripgrep, and jq for JSON logs — decide which checks to run
+- For `context-extraction`: Extract surrounding context around error occurrences — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `log-viewer` tools
+- Tools: `Glob`, `Read`, `Tail`, `Bash`, `Journalctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `log-viewer:71136de7`
 
 ## Instructions
 
@@ -40,6 +62,10 @@ Anti-patterns to avoid:
 ### realtime-tail
 Tail logs in real-time across docker, kubectl, journalctl, and files
 
+**Parameters:**
+- `target` (string): Log target: file, container, pod, or service
+- `since` (string): Time window (e.g., 5m, 1h)
+
 **Commands:**
 - `tail -f app.log`
 - `docker logs --follow --tail 100 container-name`
@@ -54,6 +80,10 @@ Tail logs in real-time across docker, kubectl, journalctl, and files
 
 ### structured-search
 Search and filter logs with grep, ripgrep, and jq for JSON logs
+
+**Parameters:**
+- `pattern` (string): Regex or text pattern to search
+- `file` (string): Log file path
 
 **Commands:**
 - `rg "ERROR|WARN" app.log --no-line-number`
@@ -70,6 +100,9 @@ Search and filter logs with grep, ripgrep, and jq for JSON logs
 ### context-extraction
 Extract surrounding context around error occurrences
 
+**Parameters:**
+- `line_range` (string): Line range to view (start,end)
+
 **Commands:**
 - `grep -A 20 -B 5 "panic" app.log`
 - `sed -n '100,150p' app.log`
@@ -83,6 +116,9 @@ Extract surrounding context around error occurrences
 ### log-rotation
 Analyze and manage log files including rotation, compression, and size
 
+**Parameters:**
+- `log_dir` (string): Directory containing logs
+
 **Commands:**
 - `du -sh /var/log/app*`
 - `logrotate -d /etc/logrotate.d/app`
@@ -93,3 +129,15 @@ Analyze and manage log files including rotation, compression, and size
 - Check size: du -sh /var/log/app*
 - Dry-run rotate: logrotate -d /etc/logrotate.d/app
 - Find large logs: find /var/log -name '*.log' -size +100M -print
+
+## References
+- [jq Manual](https://jqlang.github.io/jq/manual/)
+- [Kubernetes Logging](https://kubernetes.io/docs/concepts/cluster-administration/logging/)
+- [Docker Logging Drivers](https://docs.docker.com/config/containers/logging/)
+
+## Progressive Disclosure
+This skill has many capabilities. For detailed reference:
+- `references/REFERENCE.md` — full capability docs and edge cases
+- `scripts/` — executable helpers (see `allowed-tools`)
+- `assets/` — templates and data files
+Load references on demand via relative paths, not at startup.

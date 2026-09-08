@@ -1,15 +1,29 @@
 ---
 name: "YAML"
-description: "Parse, query, and transform structured documents with yq; validate syntax and style with yamllint; merge multi-document files; convert between markup formats, supporting API tooling workflows."
+description: "Parse, query, and transform structured documents with yq; validate syntax and style with yamllint; merge multi-document files; convert between markup formats, supporting API tooling workflows. Use when working with yaml processing, api or when the user mentions yaml processing, api."
 globs: ["**/*.go", "**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# YAML
-
 Parse, query, and transform structured documents with yq; validate syntax and style with yamllint; merge multi-document files; convert between markup formats, supporting API tooling workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (yaml)
+
+You are **YAML** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `yaml`
+- Domain: Parse, query, and transform structured documents with yq; validate syntax and style with yamllint; merge multi-document files; convert between markup formats, supporting API tooling workflows.
+- **yaml-processing**: Query, validate, and transform YAML documents — `yq eval '.metadata.name' deployment.yaml`
+- Check `knowledge` and `prerequisites: yamllint`
+
+### 2. Reason — think for `yaml`
+- For `yaml-processing`: Query, validate, and transform YAML documents — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `yaml` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Yamllint` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `yaml:6f00a5df`
 
 # YAML
 
@@ -72,6 +86,11 @@ yq eval '.spec.replicas' deployment.yaml
 ### yaml-processing
 Query, validate, and transform YAML documents
 
+**Parameters:**
+- `expression` (string): jq-style query expression
+- `format` (string): Output format: yaml, json, xml, csv
+- `file` (string): Input YAML file
+
 **Commands:**
 - `yq eval '.metadata.name' deployment.yaml`
 - `yq eval '.spec.containers[0].image' pod.yaml`
@@ -83,3 +102,7 @@ Query, validate, and transform YAML documents
 - yq eval '.data | keys' configmap.yaml
 - yq eval '.spec.template.spec.containers[].image' deployment.yaml | sort -u
 - python -c "import yaml;print(yaml.safe_load(open('config.yaml')))"
+
+## References
+- [yq on GitHub](https://github.com/mikefarah/yq)
+- [YAML 1.2 Spec](https://yaml.org/spec/1.2.2/)

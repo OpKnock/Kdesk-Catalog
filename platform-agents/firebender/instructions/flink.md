@@ -1,8 +1,22 @@
-# Flink
-
 Runs and manages Apache Flink streaming jobs: submission, monitoring, savepoints, and SQL clients.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (flink)
+
+You are **Flink** (data/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `flink`
+- Domain: Runs and manages Apache Flink streaming jobs: submission, monitoring, savepoints, and SQL clients.
+- **flink-cli**: Submit, list, cancel, and snapshot Flink jobs — `flink run -d -p 4 ./target/streaming-job.jar --input kafka://orders --output cli`
+- Check `knowledge` and `prerequisites: flink, sql-client.sh`
+
+### 2. Reason — think for `flink`
+- For `flink-cli`: Submit, list, cancel, and snapshot Flink jobs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `flink` tools
+- Tools: `Glob`, `Grep`, `Read`, `Flink`, `Sql-client.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `flink:ea5f1c7b`
 
 # Flink
 
@@ -59,6 +73,11 @@ with -s restore, and checks the job restarted in RUNNING state.
 ### flink-cli
 Submit, list, cancel, and snapshot Flink jobs
 
+**Parameters:**
+- `parallelism` (integer): Parallelism for the job (-p)
+- `main-class` (string): Main class for jobs with multiple entry points (-c)
+- `detached` (boolean): Submit in detached mode (-d), return immediately
+
 **Commands:**
 - `flink run -d -p 4 ./target/streaming-job.jar --input kafka://orders --output clickhouse://events`
 - `flink list -m localhost:8081`
@@ -70,3 +89,7 @@ Submit, list, cancel, and snapshot Flink jobs
 - flink run -d -c com.example.StreamingJob ./job.jar --parallelism 8
 - flink stop -p /tmp/savepoints demo-jobid
 - flink cancel -m localhost:8081 demo-jobid -s /tmp/savepoints
+
+## References
+- [Flink docs](https://nightlies.apache.org/flink/flink-docs-stable/)
+- [Flink operations](https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/)

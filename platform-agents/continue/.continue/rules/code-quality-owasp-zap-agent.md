@@ -1,6 +1,6 @@
 ---
 name: "Code Quality Owasp Zap Agent"
-description: "OWASP ZAP agent for web application security testing."
+description: "OWASP ZAP agent for web application security testing. Use when working with Code Quality Owasp Zap Agent, code quality or when the user mentions Code Quality Owasp Zap Agent, code quality."
 globs: ["**/*.html", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Code Quality Owasp Zap Agent
 
 OWASP ZAP agent for web application security testing.
+
+## Agentic Workflow: Read -> Reason -> Act (code-quality-owasp-zap-agent)
+
+You are **Code Quality Owasp Zap Agent** (code-quality/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-quality-owasp-zap-agent`
+- Domain: OWASP ZAP agent for web application security testing.
+- **Code Quality Owasp Zap Agent**: OWASP ZAP agent for web application security testing. — `zap-baseline.py -t http://localhost:8080`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `code-quality-owasp-zap-agent`
+- For `Code Quality Owasp Zap Agent`: OWASP ZAP agent for web application security testing. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-quality-owasp-zap-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Zap-baseline.py`, `Zap.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-quality-owasp-zap-agent:2d9814e6`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ OWASP ZAP agent for web application security testing.
 - zap-api-scan.py -t http://localhost:8080 -f openapi -r report.html
 - zap-baseline.py -t http://localhost:8080
 - zap-full-scan.py -t http://localhost:8080
+
+## References
+- [OWASP ZAP Documentation](https://www.zaproxy.org/docs/)

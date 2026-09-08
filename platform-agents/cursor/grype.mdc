@@ -6,27 +6,25 @@ alwaysApply: false
 
 Scan images, directories, and binaries handling known CVEs. Update the vulnerability database and scan SBOMs directly. and filesystem scanning.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (grype)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **grype** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `grype alpine:latest`, `grype db update`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `grype`
+- Domain: Scan images, directories, and binaries handling known CVEs. Update the vulnerability database and scan SBOMs directly. and filesystem scanning.
+- **vulnerability-matching**: Scan images, directories, and binaries for known CVEs. — `grype alpine:latest`
+- **db-and-sbom**: Update the vulnerability database and scan SBOMs directly. — `grype db update`
+- Check `knowledge` and `prerequisites: grype, syft`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `grype`
+- For `vulnerability-matching`: Scan images, directories, and binaries for known CVEs. — decide which checks to run
+- For `db-and-sbom`: Update the vulnerability database and scan SBOMs directly. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `grype` tools
+- Tools: `Glob`, `Grep`, `Read`, `Grype`, `Syft` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grype:0d6847a3`
 
 # Grype
 

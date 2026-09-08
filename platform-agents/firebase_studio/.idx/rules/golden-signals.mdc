@@ -1,14 +1,28 @@
 ---
-description: "Query the four it from Prometheus and set up alerting. them from Prometheus metrics and wire dashboards and alerts.'"
+description: "Query the four it from Prometheus and set up alerting. them from Prometheus metrics and wire dashboards and alerts.'. Use when working with golden signals, api or when the user mentions golden signals, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Golden Signals
-
 Query the four it from Prometheus and set up alerting. them from Prometheus metrics and wire dashboards and alerts.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (golden-signals)
+
+You are **Golden Signals** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `golden-signals`
+- Domain: Query the four it from Prometheus and set up alerting. them from Prometheus metrics and wire dashboards and alerts.'
+- **golden-signals**: Query the four golden signals from Prometheus and set up alerting. — `curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_`
+- Check `knowledge` and `prerequisites: promtool`
+
+### 2. Reason — think for `golden-signals`
+- For `golden-signals`: Query the four golden signals from Prometheus and set up alerting. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `golden-signals` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `golden-signals:722af707`
 
 # Golden Signals
 
@@ -75,6 +89,11 @@ groups:
 ### golden-signals
 Query the four golden signals from Prometheus and set up alerting.
 
+**Parameters:**
+- `prometheus-url` (string): Prometheus API endpoint
+- `signal` (string): latency, traffic, errors, or saturation
+- `threshold` (string): Alert threshold for the signal
+
 **Commands:**
 - `curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))' | jq '.data.result[0].value[1]'`
 - `curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=sum(rate(http_requests_total[5m]))' | jq '.data.result[0].value[1]'`
@@ -86,3 +105,7 @@ Query the four golden signals from Prometheus and set up alerting.
 - curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))' | jq '.data.result[0].value[1]'
 - curl -s 'http://prometheus:9090/api/v1/query' --data-urlencode 'query=sum(rate(http_requests_total{code=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))' | jq '.data.result[0].value[1]'
 - promtool check rules golden-signals.rules.yml
+
+## References
+- [The Four Golden Signals (Google SRE)](https://sre.google/sre-book/monitoring-distributed-systems/)
+- [Prometheus querying](https://prometheus.io/docs/prometheus/latest/querying/basics/)

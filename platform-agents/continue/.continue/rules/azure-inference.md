@@ -1,6 +1,6 @@
 ---
 name: "Azure Inference"
-description: "Azure inference server agent. Manages Azure ML inference server."
+description: "Azure inference server agent. Manages Azure ML inference server. Use when working with Ml Azure Inference Server Agent or when the user mentions Ml Azure Inference Server Agent."
 globs: ["**/*.json", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Azure Inference
 
 Azure inference server agent. Manages Azure ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (azure-inference)
+
+You are **Azure Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `azure-inference`
+- Domain: Azure inference server agent. Manages Azure ML inference server.
+- **Ml Azure Inference Server Agent**: Azure inference server agent. Manages Azure ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `azure-inference`
+- For `Ml Azure Inference Server Agent`: Azure inference server agent. Manages Azure ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `azure-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Azure` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `azure-inference:847fcfe5`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Azure inference server agent. Manages Azure ML inference server.
 - az ml online-endpoint invoke --name <endpoint> --request-file request.json
 - az ml model list
 - az ml online-deployment list --endpoint-name <endpoint>
+
+## References
+- [Azure Documentation](https://learn.microsoft.com/azure/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

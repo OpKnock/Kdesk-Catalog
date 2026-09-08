@@ -1,6 +1,6 @@
 ---
 name: "Ml Mistral Python Agent"
-description: "Mistral AI Python SDK agent for Mistral model usage."
+description: "Mistral AI Python SDK agent for Mistral model usage. Use when working with Ml Mistral Python Agent, inference or when the user mentions Ml Mistral Python Agent, inference."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Mistral Python Agent
 
 Mistral AI Python SDK agent for Mistral model usage.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-mistral-python-agent)
+
+You are **Ml Mistral Python Agent** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-mistral-python-agent`
+- Domain: Mistral AI Python SDK agent for Mistral model usage.
+- **Ml Mistral Python Agent**: Mistral AI Python SDK agent for Mistral model usage. — `Chat: python -c 'from mistralai import Mistral; client = Mistral(api_key="...");`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-mistral-python-agent`
+- For `Ml Mistral Python Agent`: Mistral AI Python SDK agent for Mistral model usage. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-mistral-python-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Chat`, `Embed` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-mistral-python-agent:b12b6965`
 
 ## Instructions
 
@@ -25,3 +43,7 @@ Mistral AI Python SDK agent for Mistral model usage.
 **Examples:**
 - Chat: python -c 'from mistralai import Mistral; client = Mistral(api_key="..."); r = client.chat.complete(model="mistral-large-latest", messages=[{"role": "user", "content": "Hello"}]); print(r.choices[0].message.content)'
 - Embed: python -c 'from mistralai import Mistral; client = Mistral(api_key="..."); r = client.embeddings.create(model="mistral-embed", input="Hello"); print(r.data[0].embedding)'
+
+## References
+- [Mistral AI Documentation](https://docs.mistral.ai/)
+- [Python Documentation](https://docs.python.org/3/)

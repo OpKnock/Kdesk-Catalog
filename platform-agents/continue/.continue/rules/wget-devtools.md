@@ -1,15 +1,31 @@
 ---
 name: "wget-devtools"
-description: "Downloads web resources with wget: recursive site mirroring, resuming, URL lists, rate limiting, and authentication."
+description: "Downloads web resources with wget: recursive site mirroring, resuming, URL lists, rate limiting, and authentication. Use when working with download operations, mirroring and auth, devtools or when the user mentions download operations, mirroring and auth, devtools."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# wget-devtools
-
 Downloads web resources with wget: recursive site mirroring, resuming, URL lists, rate limiting, and authentication.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (wget-devtools)
+
+You are **wget-devtools** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `wget-devtools`
+- Domain: Downloads web resources with wget: recursive site mirroring, resuming, URL lists, rate limiting, and authentication.
+- **download-operations**: Download files with output control and resume. — `wget http://localhost:8080/file.zip`
+- **mirroring-and-auth**: Mirror sites recursively and authenticate downloads. — `wget -r -l 2 -np http://localhost:8080/docs/`
+- Check `knowledge` and `prerequisites: wget`
+
+### 2. Reason — think for `wget-devtools`
+- For `download-operations`: Download files with output control and resume. — decide which checks to run
+- For `mirroring-and-auth`: Mirror sites recursively and authenticate downloads. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `wget-devtools` tools
+- Tools: `Glob`, `Grep`, `Read`, `Wget` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `wget-devtools:10aefad7`
 
 # wget Downloads
 
@@ -66,6 +82,11 @@ wget --no-check-certificate https://selfsigned.local/file.zip
 ### download-operations
 Download files with output control and resume.
 
+**Parameters:**
+- `url` (string): Download URL
+- `output` (string): Output file name
+- `dir` (string): Output directory
+
 **Commands:**
 - `wget http://localhost:8080/file.zip`
 - `wget -O app.tar.gz http://localhost:8080/app.tar.gz`
@@ -82,6 +103,11 @@ Download files with output control and resume.
 ### mirroring-and-auth
 Mirror sites recursively and authenticate downloads.
 
+**Parameters:**
+- `level` (integer): Recursion depth (-l)
+- `accept` (string): Accepted extensions (-A)
+- `reject` (string): Rejected extensions (-R)
+
 **Commands:**
 - `wget -r -l 2 -np http://localhost:8080/docs/`
 - `wget --mirror -p --convert-links -P ./site http://localhost:8080`
@@ -94,3 +120,7 @@ Mirror sites recursively and authenticate downloads.
 - wget -r -l 2 -np http://localhost:8080/docs/
 - wget --mirror -p --convert-links -P ./site http://localhost:8080
 - wget -r -A pdf,epub http://localhost:8080/books/
+
+## References
+- [GNU wget Manual](https://www.gnu.org/software/wget/manual/wget.html)
+- [wget Linux Manual](https://man7.org/linux/man-pages/man1/wget.1.html)

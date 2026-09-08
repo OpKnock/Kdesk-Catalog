@@ -1,15 +1,31 @@
 ---
 name: "api-rest-generation"
-description: "Generates REST clients and documentation from OpenAPI with openapi-generator-cli and Redocly: multi-language client generation, config files, and docs deployment."
+description: "Generates REST clients and documentation from OpenAPI with openapi-generator-cli and Redocly: multi-language client generation, config files, and docs deployment. Use when working with client generation, docs deployment or when the user mentions client generation, docs deployment."
 type: knowledge
 triggers: ["api-rest-generation", "client-generation", "docs-deployment"]
 ---
 
-# Api Rest Generation
-
 Generates REST clients and documentation from OpenAPI with openapi-generator-cli and Redocly: multi-language client generation, config files, and docs deployment.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-rest-generation)
+
+You are **Api Rest Generation** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-rest-generation`
+- Domain: Generates REST clients and documentation from OpenAPI with openapi-generator-cli and Redocly: multi-language client generation, config files, and docs deployment.
+- **client-generation**: Generate typed API clients in multiple languages — `npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-f`
+- **docs-deployment**: Build and preview reference documentation — `npx @redocly/cli build-docs openapi.yaml -o dist/api.html`
+- Check `knowledge` and `prerequisites: node.js, python, express, fastapi`
+
+### 2. Reason — think for `api-rest-generation`
+- For `client-generation`: Generate typed API clients in multiple languages — decide which checks to run
+- For `docs-deployment`: Build and preview reference documentation — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-rest-generation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-rest-generation:160d6aa4`
 
 # API REST v5 - Clients & Docs
 
@@ -59,6 +75,11 @@ generators:
 ### client-generation
 Generate typed API clients in multiple languages
 
+**Parameters:**
+- `input-spec` (string): OpenAPI file path
+- `generator` (string): Target language generator
+- `output` (string): Output directory
+
 **Commands:**
 - `npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o ./client-ts`
 - `npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g python -o ./client-py`
@@ -83,3 +104,7 @@ Build and preview reference documentation
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [OpenAPI Generator CLI](https://openapi-generator.tech/docs/usage/)
+- [Redocly CLI](https://redocly.com/docs/cli/)

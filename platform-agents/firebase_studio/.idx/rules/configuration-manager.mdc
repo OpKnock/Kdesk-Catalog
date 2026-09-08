@@ -1,14 +1,30 @@
 ---
-description: "Manages distributed configuration with Consul and etcd, plus provisioning via Ansible playbooks."
+description: "Manages distributed configuration with Consul and etcd, plus provisioning via Ansible playbooks. Use when working with config store, provisioning or when the user mentions config store, provisioning."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# configuration-manager
-
 Manages distributed configuration with Consul and etcd, plus provisioning via Ansible playbooks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (configuration-manager)
+
+You are **configuration-manager** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `configuration-manager`
+- Domain: Manages distributed configuration with Consul and etcd, plus provisioning via Ansible playbooks.
+- **config-store**: Read and write configuration keys in Consul and etcd — `consul kv put config/app/port 8080`
+- **provisioning**: Apply configuration to servers with Ansible — `ansible-playbook -i inventory.yml playbooks/configure.yml`
+- Check `knowledge` and `prerequisites: node.js, python, vault, dotenv`
+
+### 2. Reason — think for `configuration-manager`
+- For `config-store`: Read and write configuration keys in Consul and etcd — decide which checks to run
+- For `provisioning`: Apply configuration to servers with Ansible — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `configuration-manager` tools
+- Tools: `Glob`, `Grep`, `Read`, `Consul`, `Etcdctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `configuration-manager:5871e47b`
 
 # Configuration Manager
 
@@ -75,6 +91,11 @@ Returns config read/write results, a diff of what an Ansible run would change
 ### config-store
 Read and write configuration keys in Consul and etcd
 
+**Parameters:**
+- `http-addr` (string): Consul server address
+- `prefix` (string): Key prefix for bulk get/watch operations
+- `endpoints` (string): etcd endpoints (comma-separated) via --endpoints
+
 **Commands:**
 - `consul kv put config/app/port 8080`
 - `consul kv get config/app/port`
@@ -90,6 +111,11 @@ Read and write configuration keys in Consul and etcd
 ### provisioning
 Apply configuration to servers with Ansible
 
+**Parameters:**
+- `check` (boolean): Dry run: report changes without applying
+- `limit` (string): Host pattern to restrict execution to
+- `syntax-check` (boolean): Validate playbook syntax only
+
 **Commands:**
 - `ansible-playbook -i inventory.yml playbooks/configure.yml`
 - `ansible all -i inventory.yml -m ping`
@@ -101,3 +127,8 @@ Apply configuration to servers with Ansible
 - ansible-playbook -i inventory.yml playbooks/deploy.yml -l web
 - ansible all -i inventory.yml -m setup -a 'filter=ansible_os_family'
 - ansible-playbook playbooks/update.yml --limit 'staging'
+
+## References
+- [Consul docs](https://developer.hashicorp.com/consul/docs)
+- [etcd docs](https://etcd.io/docs/)
+- [Ansible documentation](https://docs.ansible.com/)

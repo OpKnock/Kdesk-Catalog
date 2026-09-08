@@ -1,6 +1,6 @@
 ---
 name: "vertex-agent"
-description: "Vertex SDK deployment agent for ML Vertex SDK deployment."
+description: "Vertex SDK deployment agent for ML Vertex SDK deployment. Use when working with Ml Vertex Deploy Sdk Agent or when the user mentions Ml Vertex Deploy Sdk Agent."
 type: knowledge
 triggers: ["vertex-agent", "ml vertex deploy sdk agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["vertex-agent", "ml vertex deploy sdk agent"]
 # Vertex Agent
 
 Vertex SDK deployment agent for ML Vertex SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (vertex-agent)
+
+You are **Vertex Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `vertex-agent`
+- Domain: Vertex SDK deployment agent for ML Vertex SDK deployment.
+- **Ml Vertex Deploy Sdk Agent**: Vertex SDK deployment agent for ML Vertex SDK deployment. — `docker build -t vertex:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `vertex-agent`
+- For `Ml Vertex Deploy Sdk Agent`: Vertex SDK deployment agent for ML Vertex SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `vertex-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Vertex` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vertex-agent:d59dcf6b`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Vertex SDK deployment agent for ML Vertex SDK deployment.
 **Examples:**
 - Server: python -m vertex.server --port 8080
 - Docker: docker run -p 8080:8080 vertex-server
+
+## References
+- [Vertex AI Documentation](https://cloud.google.com/vertex-ai/docs)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

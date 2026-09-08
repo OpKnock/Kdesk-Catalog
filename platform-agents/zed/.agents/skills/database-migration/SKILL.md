@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(alembic:*) Bash(npx:*)"
 
 Manages schema evolution with Alembic, Prisma Migrate, and Flyway including autogeneration, review, rollbacks, and CI deploy.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (database-migration)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Database Migration** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `alembic init migrations`, `npx prisma migrate dev --name init`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `database-migration`
+- Domain: Manages schema evolution with Alembic, Prisma Migrate, and Flyway including autogeneration, review, rollbacks, and CI deploy.
+- **alembic-migrations**: Create and apply SQLAlchemy migrations. — `alembic init migrations`
+- **prisma-migrate**: Evolve the database schema from the Prisma schema. — `npx prisma migrate dev --name init`
+- Check `knowledge` and `prerequisites: alembic, npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `database-migration`
+- For `alembic-migrations`: Create and apply SQLAlchemy migrations. — decide which checks to run
+- For `prisma-migrate`: Evolve the database schema from the Prisma schema. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `database-migration` tools
+- Tools: `Glob`, `Grep`, `Read`, `Alembic`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `database-migration:74186ce7`
 
 # Database Migration
 

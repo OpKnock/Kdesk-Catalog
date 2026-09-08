@@ -1,8 +1,24 @@
-# Infracost
-
 Shows cloud cost estimates for Terraform, Pulumi, and OpenTofu infrastructure before you apply, and diffs cost changes in CI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (infracost)
+
+You are **Infracost** (finops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — finops context for `infracost`
+- Domain: Shows cloud cost estimates for Terraform, Pulumi, and OpenTofu infrastructure before you apply, and diffs cost changes in CI.
+- **breakdown**: Generate detailed infrastructure cost estimates. — `infracost breakdown --path .`
+- **diff**: Show cost change between plans in CI pull requests. — `infracost diff --path plan.json`
+- Check `knowledge` and `prerequisites: infracost`
+
+### 2. Reason — think for `infracost`
+- For `breakdown`: Generate detailed infrastructure cost estimates. — decide which checks to run
+- For `diff`: Show cost change between plans in CI pull requests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `infracost` tools
+- Tools: `Glob`, `Grep`, `Read`, `Infracost` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `infracost:8a713bf3`
 
 # Infracost
 
@@ -72,6 +88,11 @@ Keep `.infracost/base.json` refreshed weekly so diffs stay small.
 ### breakdown
 Generate detailed infrastructure cost estimates.
 
+**Parameters:**
+- `path` (string): Path to IaC directory or plan JSON
+- `format` (string): table, json, html, or markdown output
+- `usage-file` (string): YAML file with real usage estimates for accurate pricing
+
 **Commands:**
 - `infracost breakdown --path .`
 - `infracost breakdown --path . --format json`
@@ -87,6 +108,11 @@ Generate detailed infrastructure cost estimates.
 ### diff
 Show cost change between plans in CI pull requests.
 
+**Parameters:**
+- `compare-to` (string): Baseline breakdown JSON to diff against
+- `format` (string): Output format for comments: github-comment, slack-comment, html
+- `path` (string): Plan file or directory to evaluate
+
 **Commands:**
 - `infracost diff --path plan.json`
 - `infracost diff --path . --format json`
@@ -98,3 +124,8 @@ Show cost change between plans in CI pull requests.
 - infracost diff --path tfplan.json | tee /tmp/cost-diff.txt
 - infracost diff --path . --format json > diff.json
 - infracost output --path cost.json --format slack-comment
+
+## References
+- [Infracost Docs](https://www.infracost.io/docs/)
+- [Infracost CLI reference](https://www.infracost.io/docs/reference/cli/)
+- [Infracost CI/CD](https://www.infracost.io/docs/integrations/ci_cd/)

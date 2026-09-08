@@ -1,6 +1,6 @@
 ---
 name: "Data Dbt"
-description: "dbt agent for data transformation and modeling."
+description: "dbt agent for data transformation and modeling. Use when working with Data Dbt, processing or when the user mentions Data Dbt, processing."
 globs: ["**/*.r", "**/*.sql"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Data Dbt
 
 dbt agent for data transformation and modeling.
+
+## Agentic Workflow: Read -> Reason -> Act (data-dbt)
+
+You are **Data Dbt** (data/processing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `data-dbt`
+- Domain: dbt agent for data transformation and modeling.
+- **Data Dbt**: dbt agent for data transformation and modeling. — `Docs: dbt docs generate`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `data-dbt`
+- For `Data Dbt`: dbt agent for data transformation and modeling. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `data-dbt` tools
+- Tools: `Glob`, `Grep`, `Read`, `Docs`, `Build` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `data-dbt:28922879`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ dbt agent for data transformation and modeling.
 - Test: dbt test
 - Build: dbt build
 - Docs: dbt docs generate
+
+## References
+- [dbt Documentation](https://docs.getdbt.com/)

@@ -1,15 +1,29 @@
 ---
 name: "grafana-dashboards"
-description: "Grafana dashboard management: provision dashboards via API and files, create panels and alerts, and query data sources from the CLI."
+description: "Grafana dashboard management: provision dashboards via API and files, create panels and alerts, and query data sources from the CLI. Use when working with grafana provisioning, api or when the user mentions grafana provisioning, api."
 type: knowledge
 triggers: ["grafana-dashboards", "grafana-provisioning"]
 ---
 
-# Grafana Dashboards
-
 Grafana dashboard management: provision dashboards via API and files, create panels and alerts, and query data sources from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (grafana-dashboards)
+
+You are **Grafana Dashboards** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `grafana-dashboards`
+- Domain: Grafana dashboard management: provision dashboards via API and files, create panels and alerts, and query data sources from the CLI.
+- **grafana-provisioning**: Provision, export, and manage dashboards via the Grafana HTTP API. — `grafana-cli plugins list`
+- Check `knowledge` and `prerequisites: grafana-cli`
+
+### 2. Reason — think for `grafana-dashboards`
+- For `grafana-provisioning`: Provision, export, and manage dashboards via the Grafana HTTP API. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `grafana-dashboards` tools
+- Tools: `Glob`, `Grep`, `Read`, `Grafana-cli`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grafana-dashboards:702ea454`
 
 # Grafana Dashboards
 
@@ -82,6 +96,11 @@ curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' 'http://localhost:3000/api/ds/
 ### grafana-provisioning
 Provision, export, and manage dashboards via the Grafana HTTP API.
 
+**Parameters:**
+- `dashboard-uid` (string): Dashboard unique identifier
+- `datasource` (string): Data source like Prometheus or Loki
+- `promql-expr` (string): Panel query expression
+
 **Commands:**
 - `grafana-cli plugins list`
 - `curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/search?type=dash-db | jq '.[] | {uid, title}'`
@@ -94,3 +113,7 @@ Provision, export, and manage dashboards via the Grafana HTTP API.
 - curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/search?type=dash-db | jq '.[] | {uid, title}'
 - curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' http://localhost:3000/api/dashboards/db -d @dashboard.json | jq '.status'
 - curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/dashboards/uid/orders-overview | jq '.dashboard.panels[0].targets[0].expr'
+
+## References
+- [Grafana HTTP API](https://grafana.com/docs/grafana/latest/developers/http_api/dashboard/)
+- [Grafana provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/)

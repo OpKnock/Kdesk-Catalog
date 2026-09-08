@@ -1,26 +1,24 @@
 Verifies files comply with .editorconfig rules using editorconfig-checker in local and CI workflows.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (editorconfig-checker)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **editorconfig-checker** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `editorconfig-checker`, `editorconfig-checker -help`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `editorconfig-checker`
+- Domain: Verifies files comply with .editorconfig rules using editorconfig-checker in local and CI workflows.
+- **ecc-check**: Check files against .editorconfig. — `editorconfig-checker`
+- **ecc-config**: Manage .editorconfig and checker config. — `editorconfig-checker -help`
+- Check `knowledge` and `prerequisites: editorconfig-checker, npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `editorconfig-checker`
+- For `ecc-check`: Check files against .editorconfig. — decide which checks to run
+- For `ecc-config`: Manage .editorconfig and checker config. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `editorconfig-checker` tools
+- Tools: `Glob`, `Grep`, `Read`, `Editorconfig-checker`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `editorconfig-checker:e2e35e43`
 
 # editorconfig-checker
 

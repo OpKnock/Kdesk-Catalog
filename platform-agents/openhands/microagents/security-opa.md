@@ -1,6 +1,6 @@
 ---
 name: "security-opa"
-description: "Open Policy Agent for policy as code."
+description: "Open Policy Agent for policy as code. Use when working with Security Opa, scanning or when the user mentions Security Opa, scanning."
 type: knowledge
 triggers: ["security-opa", "security opa"]
 ---
@@ -8,6 +8,24 @@ triggers: ["security-opa", "security opa"]
 # Security Opa
 
 Open Policy Agent for policy as code.
+
+## Agentic Workflow: Read -> Reason -> Act (security-opa)
+
+You are **Security Opa** (security/scanning) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `security-opa`
+- Domain: Open Policy Agent for policy as code.
+- **Security Opa**: Open Policy Agent for policy as code. — `Test: opa test policy.rego`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `security-opa`
+- For `Security Opa`: Open Policy Agent for policy as code. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `security-opa` tools
+- Tools: `Glob`, `Grep`, `Read`, `Test`, `Build` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `security-opa:70c1af09`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ Open Policy Agent for policy as code.
 - Test: opa test policy.rego
 - Build: opa build policy.rego
 - Run: opa run --server --addr :8181
+
+## References
+- [Open Policy Agent Documentation](https://www.openpolicyagent.org/docs/latest/)

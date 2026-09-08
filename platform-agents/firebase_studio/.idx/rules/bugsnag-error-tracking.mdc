@@ -1,14 +1,32 @@
 ---
-description: "Tracks errors with Bugsnag: uploading source maps, notifying via API, and managing releases with the bugsnag CLI."
+description: "Tracks errors with Bugsnag: uploading source maps, notifying via API, and managing releases with the bugsnag CLI. Use when working with sourcemaps, notify api, releases or when the user mentions sourcemaps, notify api, releases."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Bugsnag Error Tracking
-
 Tracks errors with Bugsnag: uploading source maps, notifying via API, and managing releases with the bugsnag CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (bugsnag-error-tracking)
+
+You are **Bugsnag Error Tracking** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `bugsnag-error-tracking`
+- Domain: Tracks errors with Bugsnag: uploading source maps, notifying via API, and managing releases with the bugsnag CLI.
+- **sourcemaps**: Upload source maps so stack traces are readable. — `bugsnag-cli sourcemap upload --api-key $BUGSNAG_API_KEY --app-version 1.2.3 --so`
+- **notify-api**: Send errors to Bugsnag's notify API. — `curl -X POST https://notify.bugsnag.com/ -H "Content-Type: application/json" -d `
+- **releases**: Track releases so Bugsnag links errors to versions. — `bugsnag-cli release --api-key $BUGSNAG_API_KEY --app-version 1.2.3 --stage produ`
+- Check `knowledge` and `prerequisites: bugsnag-cli, npx`
+
+### 2. Reason — think for `bugsnag-error-tracking`
+- For `sourcemaps`: Upload source maps so stack traces are readable. — decide which checks to run
+- For `notify-api`: Send errors to Bugsnag's notify API. — decide which checks to run
+- For `releases`: Track releases so Bugsnag links errors to versions. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `bugsnag-error-tracking` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bugsnag-cli`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `bugsnag-error-tracking:4c578ae5`
 
 # Bugsnag Error Tracking
 
@@ -54,6 +72,11 @@ bugsnag-cli release --api-key $KEY --app-version 1.2.3 --stage production
 ### sourcemaps
 Upload source maps so stack traces are readable.
 
+**Parameters:**
+- `api_key` (string): Bugsnag project API key
+- `app_version` (string): Version the map belongs to
+- `source_map` (string): Path to .map file
+
 **Commands:**
 - `bugsnag-cli sourcemap upload --api-key $BUGSNAG_API_KEY --app-version 1.2.3 --source-map ./dist/app.js.map`
 - `npx bugsnag-sourcemaps upload --api-key $BUGSNAG_API_KEY --minified-file dist/bundle.js --source-map dist/bundle.js.map --app-version 1.2.3`
@@ -68,6 +91,11 @@ Upload source maps so stack traces are readable.
 ### notify-api
 Send errors to Bugsnag's notify API.
 
+**Parameters:**
+- `error_class` (string): Error class name
+- `message` (string): Error message
+- `severity` (string): error, warning, or info
+
 **Commands:**
 - `curl -X POST https://notify.bugsnag.com/ -H "Content-Type: application/json" -d '{"apiKey":"$BUGSNAG_API_KEY","events":[{"payloadVersion":4,"exceptions":[{"errorClass":"TestError","message":"manual notify"}],"severity":"warning"}]}'`
 - `curl -s -o /dev/null -w "%{http_code}\n" -X POST https://notify.bugsnag.com/ -H "Content-Type: application/json" -d '{"apiKey":"$BUGSNAG_API_KEY","events":[{"payloadVersion":4,"exceptions":[{"errorClass":"Probe","message":"healthcheck"}]}]}'`
@@ -81,6 +109,10 @@ Send errors to Bugsnag's notify API.
 ### releases
 Track releases so Bugsnag links errors to versions.
 
+**Parameters:**
+- `app_version` (string): Version being released
+- `stage` (string): Deployment stage
+
 **Commands:**
 - `bugsnag-cli release --api-key $BUGSNAG_API_KEY --app-version 1.2.3 --stage production`
 - `bugsnag-cli releases list --api-key $KEY --project-root .`
@@ -91,3 +123,8 @@ Track releases so Bugsnag links errors to versions.
 - bugsnag-cli release --api-key $KEY --app-version 1.2.3 --stage production
 - bugsnag-cli release --api-key $KEY --app-version 1.2.4 --stage staging --metadata "commit=$(git rev-parse HEAD)"
 - bugsnag-cli releases list --api-key $KEY
+
+## References
+- [Bugsnag Docs](https://docs.bugsnag.com/)
+- [Bugsnag Source Maps](https://docs.bugsnag.com/platforms/javascript/source-maps/)
+- [Error Tracking API](https://docs.bugsnag.com/api/error-tracking/)

@@ -1,15 +1,33 @@
 ---
 name: "sops-security"
-description: "Encrypts YAML/JSON/ENV files with age, PGP, KMS, or Vault keys using SOPS, with git integration for secrets management."
+description: "Encrypts YAML/JSON/ENV files with age, PGP, KMS, or Vault keys using SOPS, with git integration for secrets management. Use when working with file encryption, editing and kms, git integration, security or when the user mentions file encryption, editing and kms, git integration, security."
 type: knowledge
 triggers: ["sops-security", "file-encryption", "editing-and-kms", "git-integration"]
 ---
 
-# sops-security
-
 Encrypts YAML/JSON/ENV files with age, PGP, KMS, or Vault keys using SOPS, with git integration for secrets management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (sops-security)
+
+You are **sops-security** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `sops-security`
+- Domain: Encrypts YAML/JSON/ENV files with age, PGP, KMS, or Vault keys using SOPS, with git integration for secrets management.
+- **file-encryption**: Encrypt and decrypt config files with key providers. — `sops -e secrets.yaml > secrets.enc.yaml`
+- **editing-and-kms**: Edit encrypted values and use cloud KMS keys. — `sops secrets.enc.yaml`
+- **git-integration**: Use sops with git diff and merge tools. — `git config --global diff.sopsdiffer.textconv "sops -d"`
+- Check `knowledge` and `prerequisites: git, sops`
+
+### 2. Reason — think for `sops-security`
+- For `file-encryption`: Encrypt and decrypt config files with key providers. — decide which checks to run
+- For `editing-and-kms`: Edit encrypted values and use cloud KMS keys. — decide which checks to run
+- For `git-integration`: Use sops with git diff and merge tools. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `sops-security` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sops`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sops-security:a4c8b30f`
 
 # SOPS
 
@@ -76,6 +94,11 @@ creation_rules:
 ### file-encryption
 Encrypt and decrypt config files with key providers.
 
+**Parameters:**
+- `ageRecipients` (array): age1... recipient keys
+- `pgpFingerprints` (array): PGP key fingerprints
+- `inPlace` (boolean): Encrypt the file in place (-i)
+
 **Commands:**
 - `sops -e secrets.yaml > secrets.enc.yaml`
 - `sops -d secrets.enc.yaml`
@@ -90,6 +113,10 @@ Encrypt and decrypt config files with key providers.
 
 ### editing-and-kms
 Edit encrypted values and use cloud KMS keys.
+
+**Parameters:**
+- `kms` (array): KMS ARNs for encryption keys
+- `set` (object): Path-value pairs to set on the file
 
 **Commands:**
 - `sops secrets.enc.yaml`
@@ -106,6 +133,10 @@ Edit encrypted values and use cloud KMS keys.
 ### git-integration
 Use sops with git diff and merge tools.
 
+**Parameters:**
+- `config` (string): Path to .sops.yaml config file
+- `encryptionTarget` (string): File to encrypt with the configured sops keys.
+
 **Commands:**
 - `git config --global diff.sopsdiffer.textconv "sops -d"`
 - `git config --global merge.sopsmerge.driver "sops merge-file --output %A %O %A %B"`
@@ -116,3 +147,7 @@ Use sops with git diff and merge tools.
 - git config --global diff.sopsdiffer.textconv "sops -d"
 - sops updatekeys secrets.enc.yaml
 - sops --config .sops.yaml -e secrets.yaml
+
+## References
+- [SOPS GitHub](https://github.com/getsops/sops)
+- [SOPS Keys Documentation](https://getsops.io/docs/)

@@ -1,8 +1,24 @@
-# Chaos Engineering
-
 Run Kubernetes chaos experiments with Litmus: install the operator, create chaos engines, and inspect experiment results.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (chaos-engineering)
+
+You are **Chaos Engineering** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `chaos-engineering`
+- Domain: Run Kubernetes chaos experiments with Litmus: install the operator, create chaos engines, and inspect experiment results.
+- **litmus-install**: Install Litmus Chaos operator and connect agents via helm and litmusctl — `helm repo add litmuschaos https://charts.litmuschaos.io`
+- **chaos-experiments**: Apply chaos experiments and engines, then inspect fault injection results — `kubectl apply -f pod-delete.yaml`
+- Check `knowledge` and `prerequisites: helm, kubectl, litmusctl`
+
+### 2. Reason — think for `chaos-engineering`
+- For `litmus-install`: Install Litmus Chaos operator and connect agents via helm and litmusctl — decide which checks to run
+- For `chaos-experiments`: Apply chaos experiments and engines, then inspect fault injection results — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `chaos-engineering` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Litmusctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `chaos-engineering:b6a4c553`
 
 # Chaos Engineering (Litmus)
 
@@ -82,6 +98,9 @@ kubectl get chaosresult pod-delete-nginx -n myapp -o jsonpath='{.status.experime
 ### litmus-install
 Install Litmus Chaos operator and connect agents via helm and litmusctl
 
+**Parameters:**
+- `namespace` (string): Namespace to install Litmus into, default litmus
+
 **Commands:**
 - `helm repo add litmuschaos https://charts.litmuschaos.io`
 - `helm install chaos litmuschaos/litmus --namespace litmus --create-namespace`
@@ -96,6 +115,10 @@ Install Litmus Chaos operator and connect agents via helm and litmusctl
 ### chaos-experiments
 Apply chaos experiments and engines, then inspect fault injection results
 
+**Parameters:**
+- `engine_name` (string): ChaosEngine CR name
+- `result_name` (string): ChaosResult CR name
+
 **Commands:**
 - `kubectl apply -f pod-delete.yaml`
 - `kubectl get chaosengines -n myapp`
@@ -106,3 +129,7 @@ Apply chaos experiments and engines, then inspect fault injection results
 - kubectl apply -f pod-delete.yaml && kubectl get chaosengines -n myapp
 - kubectl describe chaosresult pod-delete-nginx -n myapp
 - kubectl logs -n litmus -l app.kubernetes.io/name=chaos-exporter
+
+## References
+- [Litmus Docs](https://litmuschaos.io/docs/)
+- [ChaosHub Experiments](https://hub.litmuschaos.io/)

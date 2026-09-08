@@ -1,8 +1,22 @@
-# Oauth2 Introspection
-
 Validates OAuth2 access and refresh tokens against RFC 7662 introspection endpoints. Checks token active status, scopes, and expiration with client credentials authentication.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (oauth2-introspection)
+
+You are **Oauth2 Introspection** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `oauth2-introspection`
+- Domain: Validates OAuth2 access and refresh tokens against RFC 7662 introspection endpoints. Checks token active status, scopes, and expiration with client credentials authentication.
+- **token-introspection**: Introspect access/refresh tokens against RFC 7662 endpoints to check validity and scopes. — `curl -X POST https://auth.your-app.test/introspect -d "token=eyJhbGciOi..." -u c`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `oauth2-introspection`
+- For `token-introspection`: Introspect access/refresh tokens against RFC 7662 endpoints to check validity and scopes. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `oauth2-introspection` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `oauth2-introspection:c794d232`
 
 # OAuth2 Token Introspection
 
@@ -56,6 +70,11 @@ curl -X POST https://auth.your-app.test/introspect \
 ### token-introspection
 Introspect access/refresh tokens against RFC 7662 endpoints to check validity and scopes.
 
+**Parameters:**
+- `endpoint` (string): Introspection endpoint URL
+- `token` (string): Token value to introspect
+- `client_auth` (string): client_id:client_secret for basic auth
+
 **Commands:**
 - `curl -X POST https://auth.your-app.test/introspect -d "token=eyJhbGciOi..." -u client-id:client-secret`
 - `curl -X POST https://auth.your-app.test/introspect -d "token=eyJhbGciOi..." -d "token_type_hint=access_token" -u client-id:client-secret`
@@ -66,3 +85,7 @@ Introspect access/refresh tokens against RFC 7662 endpoints to check validity an
 **Examples:**
 - curl -X POST https://auth.your-app.test/introspect -d "token=xyz" -d "token_type_hint=access_token" -u api-client:secret | jq .
 - curl -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token/introspect -d "token=xyz" -u svc:svcsecret | jq '.active,.scope'
+
+## References
+- [RFC 7662 Token Introspection](https://datatracker.ietf.org/doc/html/rfc7662)
+- [Keycloak Token Introspection](https://www.keycloak.org/docs/latest/securing_apps/)

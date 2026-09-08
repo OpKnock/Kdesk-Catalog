@@ -1,6 +1,6 @@
 ---
 name: "support-technical-support"
-description: "Support technical-support expertise and best practices."
+description: "Support technical-support expertise and best practices. Use when working with technical support expertise, technical support, skill or when the user mentions technical support expertise, technical support, skill."
 type: knowledge
 triggers: ["support-technical-support", "technical-support-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["support-technical-support", "technical-support-expertise"]
 # Support Technical Support
 
 Support technical-support expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (support-technical-support)
+
+You are **Support Technical Support** (support/technical-support) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — support context for `support-technical-support`
+- Domain: Support technical-support expertise and best practices.
+- **technical-support-expertise**: support technical-support expertise — `technical-support-cli`
+- Check `knowledge` and `prerequisites: technical-support`
+
+### 2. Reason — think for `support-technical-support`
+- For `technical-support-expertise`: support technical-support expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `support-technical-support` tools
+- Tools: `Glob`, `Grep`, `Read`, `Technical-support-cli`, `Technical-support-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `support-technical-support:173d07a7`
 
 ## Instructions
 

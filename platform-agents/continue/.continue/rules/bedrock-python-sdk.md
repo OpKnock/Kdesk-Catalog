@@ -1,6 +1,6 @@
 ---
 name: "Bedrock Python Sdk"
-description: "ML it agent handling AWS Bedrock integration."
+description: "ML it agent handling AWS Bedrock integration. Use when working with Ml Bedrock Python Sdk Agent or when the user mentions Ml Bedrock Python Sdk Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Bedrock Python Sdk
 
 ML it agent handling AWS Bedrock integration.
+
+## Agentic Workflow: Read -> Reason -> Act (bedrock-python-sdk)
+
+You are **Bedrock Python Sdk** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `bedrock-python-sdk`
+- Domain: ML it agent handling AWS Bedrock integration.
+- **Ml Bedrock Python Sdk Agent**: ML Bedrock Python SDK agent for AWS Bedrock integration. — `pip install bedrock-sdk --upgrade`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `bedrock-python-sdk`
+- For `Ml Bedrock Python Sdk Agent`: ML Bedrock Python SDK agent for AWS Bedrock integration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `bedrock-python-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `bedrock-python-sdk:c025000b`
 
 ## Instructions
 
@@ -33,3 +51,7 @@ ML Bedrock Python SDK agent for AWS Bedrock integration.
 **Examples:**
 - Invoke: python -c 'import boto3; b = boto3.client("bedrock-runtime"); r = b.invoke_model(modelId="anthropic.claude-v2", body="{\"prompt\": \"Hello\"}"); print(r["body"].read())'
 - Stream: python -c 'import boto3; b = boto3.client("bedrock-runtime"); r = b.invoke_model_with_response_stream(modelId="anthropic.claude-v2", body="{\"prompt\": \"Hello\"}"); [print(chunk["bytes"].decode()) for chunk in r["body"]]'
+
+## References
+- [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
+- [Python Documentation](https://docs.python.org/3/)

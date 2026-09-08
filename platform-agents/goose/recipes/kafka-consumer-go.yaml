@@ -2,8 +2,22 @@ title: Kafka Consumer Go
 description: 'Build Kafka consumers in Go with segmentio/kafka-go: consumer groups, manual commits, partitioning
   strategies, and lag verification against real brokers.'
 version: 2.0.0
-instructions: "# Kafka Consumer Go\n\nBuild Kafka consumers in Go with segmentio/kafka-go: consumer groups,\
-  \ manual commits, partitioning strategies, and lag verification against real brokers.\n\n## Instructions\n\
+instructions: "Build Kafka consumers in Go with segmentio/kafka-go: consumer groups, manual commits, partitioning\
+  \ strategies, and lag verification against real brokers.\n\n## Agentic Workflow: Read -> Reason -> Act\
+  \ (kafka-consumer-go)\n\nYou are **Kafka Consumer Go** (api/general) — a sub-agent that **Reads, Reasons,\
+  \ and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `kafka-consumer-go`\n- Domain: Build\
+  \ Kafka consumers in Go with segmentio/kafka-go: consumer groups, manual commits, partitioning strategies,\
+  \ and lag verification against real brokers.\n- **go-consumer-app**: Scaffold and run a Go consumer\
+  \ using kafka-go Reader/ConsumerGroup APIs. — `go get github.com/segmentio/kafka-go`\n- **group-ops**:\
+  \ Verify consumer group membership, lag, and offsets with the Kafka CLI. — `kafka-consumer-groups.sh\
+  \ --bootstrap-server localhost:9092 --describe --group pa`\n- Check `knowledge` and `prerequisites:\
+  \ kafka-console-consumer.sh, kafka-consumer-groups.sh`\n\n### 2. Reason — think for `kafka-consumer-go`\n\
+  - For `go-consumer-app`: Scaffold and run a Go consumer using kafka-go Reader/ConsumerGroup APIs. —\
+  \ decide which checks to run\n- For `group-ops`: Verify consumer group membership, lag, and offsets\
+  \ with the Kafka CLI. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `kafka-consumer-go` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `Bash`, `Kafka-consumer-groups.sh` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `kafka-consumer-go:8a50006d`\n\
   \n# Kafka Consumer (Go)\n\nWrite production Go consumers with segmentio/kafka-go.\n\n## What this skill\
   \ does\n\n- Builds consumers using kafka-go Reader and ConsumerGroup.\n- Handles explicit offset commits\
   \ and graceful shutdown.\n- Verifies group membership and lag against the broker CLI.\n\n## When to\
@@ -23,15 +37,18 @@ instructions: "# Kafka Consumer Go\n\nBuild Kafka consumers in Go with segmentio
   ```\n\n## Best practices\n\n- Always handle reader.Close() on shutdown to leave the group cleanly.\n\
   - Commit after processing, not after reading.\n- Set MinBytes/MaxBytes for throughput; use FetchMaxWait\
   \ to control batching.\n\n## Capabilities\n\n### go-consumer-app\nScaffold and run a Go consumer using\
-  \ kafka-go Reader/ConsumerGroup APIs.\n\n**Commands:**\n- `go get github.com/segmentio/kafka-go`\n-\
-  \ `go run ./cmd/consumer -group payments -topic orders -brokers localhost:9092`\n- `go build -o bin/consumer\
-  \ ./cmd/consumer`\n- `go test ./...`\n\n**Examples:**\n- go run ./cmd/consumer -group payments -topic\
-  \ orders -brokers localhost:9092\n- go build -o bin/consumer ./cmd/consumer && ./bin/consumer\n- go\
-  \ vet ./...\n\n### group-ops\nVerify consumer group membership, lag, and offsets with the Kafka CLI.\n\
-  \n**Commands:**\n- `kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments`\n\
-  - `kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group payments --members\
-  \ --verbose`\n- `kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --group\
-  \ debug --from-beginning --max-messages 5`\n\n**Examples:**\n- kafka-consumer-groups.sh --bootstrap-server\
-  \ localhost:9092 --describe --group payments\n- kafka-consumer-groups.sh --bootstrap-server localhost:9092\
-  \ --describe --group payments --members --verbose"
+  \ kafka-go Reader/ConsumerGroup APIs.\n\n**Parameters:**\n- `group` (string): Consumer group ID.\n-\
+  \ `topic` (string): Topic to consume.\n- `brokers` (string): Comma-separated bootstrap brokers.\n\n\
+  **Commands:**\n- `go get github.com/segmentio/kafka-go`\n- `go run ./cmd/consumer -group payments -topic\
+  \ orders -brokers localhost:9092`\n- `go build -o bin/consumer ./cmd/consumer`\n- `go test ./...`\n\n\
+  **Examples:**\n- go run ./cmd/consumer -group payments -topic orders -brokers localhost:9092\n- go build\
+  \ -o bin/consumer ./cmd/consumer && ./bin/consumer\n- go vet ./...\n\n### group-ops\nVerify consumer\
+  \ group membership, lag, and offsets with the Kafka CLI.\n\n**Parameters:**\n- `group` (string): Group\
+  \ ID to inspect.\n\n**Commands:**\n- `kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe\
+  \ --group payments`\n- `kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group\
+  \ payments --members --verbose`\n- `kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic\
+  \ orders --group debug --from-beginning --max-messages 5`\n\n**Examples:**\n- kafka-consumer-groups.sh\
+  \ --bootstrap-server localhost:9092 --describe --group payments\n- kafka-consumer-groups.sh --bootstrap-server\
+  \ localhost:9092 --describe --group payments --members --verbose\n\n## References\n- [segmentio/kafka-go](https://github.com/segmentio/kafka-go)\n\
+  - [kafka-go consumer docs](https://pkg.go.dev/github.com/segmentio/kafka-go)"
 prompt: Act as Kafka Consumer Go and handle the task per the instructions.

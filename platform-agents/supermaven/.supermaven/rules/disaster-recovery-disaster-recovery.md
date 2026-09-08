@@ -1,8 +1,24 @@
-# disaster-recovery-disaster-recovery
-
 Plans and executes disaster recovery for databases and files: RTO/RPO design, pg_dump/restic/rclone backups, and restore drills.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (disaster-recovery-disaster-recovery)
+
+You are **disaster-recovery-disaster-recovery** (devops) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `disaster-recovery-disaster-recovery`
+- Domain: Plans and executes disaster recovery for databases and files: RTO/RPO design, pg_dump/restic/rclone backups, and restore drills.
+- **database-backup**: Back up and restore PostgreSQL, MySQL, and MongoDB. — `pg_dump -Fc -d mydb -f mydb.dump`
+- **file-and-object-backup**: Encrypted incremental file backups and cloud object sync. — `restic init --repo s3:s3.amazonaws.com/bucket/restic`
+- Check `knowledge` and `prerequisites: aws, terraform, velero, postgresql`
+
+### 2. Reason — think for `disaster-recovery-disaster-recovery`
+- For `database-backup`: Back up and restore PostgreSQL, MySQL, and MongoDB. — decide which checks to run
+- For `file-and-object-backup`: Encrypted incremental file backups and cloud object sync. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `disaster-recovery-disaster-recovery` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pg_dump`, `Pg_restore` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `disaster-recovery-disaster-recovery:0f1b5bb1`
 
 # Disaster Recovery Planning
 
@@ -67,6 +83,10 @@ aws s3 sync /srv/data s3://bucket/backups --delete
 ### database-backup
 Back up and restore PostgreSQL, MySQL, and MongoDB.
 
+**Parameters:**
+- `database` (string): Database name
+- `out` (string): Backup output path
+
 **Commands:**
 - `pg_dump -Fc -d mydb -f mydb.dump`
 - `pg_restore -d newdb mydb.dump`
@@ -83,6 +103,10 @@ Back up and restore PostgreSQL, MySQL, and MongoDB.
 ### file-and-object-backup
 Encrypted incremental file backups and cloud object sync.
 
+**Parameters:**
+- `repo` (string): Restic repository reference
+- `path` (string): Path to back up
+
 **Commands:**
 - `restic init --repo s3:s3.amazonaws.com/bucket/restic`
 - `restic backup --repo r: /srv/data`
@@ -95,3 +119,9 @@ Encrypted incremental file backups and cloud object sync.
 - restic backup --repo r: /srv/data
 - restic snapshots --repo r:
 - aws s3 sync /srv/data s3://bucket/backups --delete
+
+## References
+- [PostgreSQL Backup Docs](https://www.postgresql.org/docs/current/backup.html)
+- [restic Documentation](https://restic.readthedocs.io/)
+- [rclone](https://rclone.org/docs/)
+- [AWS DR Whitepaper](https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/)

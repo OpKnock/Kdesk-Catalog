@@ -2,14 +2,42 @@ title: Metrics
 description: 'Instrument services with metrics: design metric names/labels, expose /metrics endpoints,
   and verify scrapes with promtool.'
 version: 2.0.0
-instructions: '# Metrics
+instructions: 'Instrument services with metrics: design metric names/labels, expose /metrics endpoints,
+  and verify scrapes with promtool.
 
 
-  Instrument services with metrics: design metric names/labels, expose /metrics endpoints, and verify
-  scrapes with promtool.
+  ## Agentic Workflow: Read -> Reason -> Act (metrics)
 
 
-  ## Instructions
+  You are **Metrics** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — api context for `metrics`
+
+  - Domain: Instrument services with metrics: design metric names/labels, expose /metrics endpoints, and
+  verify scrapes with promtool.
+
+  - **metrics-instrumentation**: Instrument applications with Prometheus metric types, expose an endpoint,
+  and validate the output. — `promtool check metrics --extended /dev/stdin`
+
+  - Check `knowledge` and `prerequisites: node_exporter, promtool`
+
+
+  ### 2. Reason — think for `metrics`
+
+  - For `metrics-instrumentation`: Instrument applications with Prometheus metric types, expose an endpoint,
+  and validate the output. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `metrics` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Bash`, `Node_exporter` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `metrics:2527a1a3`
 
 
   # Metrics
@@ -108,6 +136,15 @@ instructions: '# Metrics
   Instrument applications with Prometheus metric types, expose an endpoint, and validate the output.
 
 
+  **Parameters:**
+
+  - `port` (integer): Port the metrics endpoint listens on
+
+  - `namespace` (string): Metric namespace prefix, e.g. app_name
+
+  - `labels` (array): Consistent label set applied to every metric
+
+
   **Commands:**
 
   - `promtool check metrics --extended /dev/stdin`
@@ -127,5 +164,12 @@ instructions: '# Metrics
 
   - curl -s http://localhost:9090/api/v1/query?query=up
 
-  - promtool check metrics < my_metrics.txt'
+  - promtool check metrics < my_metrics.txt
+
+
+  ## References
+
+  - [Prometheus Metric Types](https://prometheus.io/docs/concepts/metric_types/)
+
+  - [Node Exporter](https://github.com/prometheus/node_exporter)'
 prompt: Act as Metrics and handle the task per the instructions.

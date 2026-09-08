@@ -1,15 +1,29 @@
 ---
 name: "graphql-security"
-description: "GraphQL API security: test for introspection abuse, injection, and excessive depth; apply protections like query cost limits and allowlists."
+description: "GraphQL API security: test for introspection abuse, injection, and excessive depth; apply protections like query cost limits and allowlists. Use when working with graphql security, api or when the user mentions graphql security, api."
 type: knowledge
 triggers: ["graphql-security"]
 ---
 
-# Graphql Security
-
 GraphQL API security: test for introspection abuse, injection, and excessive depth; apply protections like query cost limits and allowlists.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (graphql-security)
+
+You are **Graphql Security** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `graphql-security`
+- Domain: GraphQL API security: test for introspection abuse, injection, and excessive depth; apply protections like query cost limits and allowlists.
+- **graphql-security**: Probe GraphQL endpoints for common vulnerabilities and validate protections. — `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `graphql-security`
+- For `graphql-security`: Probe GraphQL endpoints for common vulnerabilities and validate protections. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `graphql-security` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `graphql-security:587ef6f2`
 
 # GraphQL Security
 
@@ -68,6 +82,11 @@ import { EnvelopArmorPlugin } from '@envelop/armor'
 ### graphql-security
 Probe GraphQL endpoints for common vulnerabilities and validate protections.
 
+**Parameters:**
+- `endpoint` (string): GraphQL endpoint URL
+- `query` (string): Probe query to send
+- `protection` (string): introspection, depth-limit, cost-limit, allowlist
+
 **Commands:**
 - `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ __schema { types { name } } }"}' | jq '.data.__schema.types | length'`
 - `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ __typename }"}' | jq '.errors'`
@@ -79,3 +98,7 @@ Probe GraphQL endpoints for common vulnerabilities and validate protections.
 - curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ __schema { types { name } } }"}' | jq '.data.__schema.types | length'
 - npx graphql-cop -t http://localhost:4000/graphql
 - curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ a: __typename b: __typename c: __typename }"}' | jq '.data | length'
+
+## References
+- [OWASP GraphQL Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/GraphQL_Cheat_Sheet.html)
+- [graphql-cop](https://github.com/dolevf/graphql-cop)

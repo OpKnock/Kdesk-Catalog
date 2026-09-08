@@ -1,15 +1,29 @@
 ---
 name: "Grafana Loki"
-description: "Log aggregation with Grafana Loki: query logs with logcli, filter with LogQL, and manage labels and retention."
+description: "Log aggregation with Grafana Loki: query logs with logcli, filter with LogQL, and manage labels and retention. Use when working with loki queries, api or when the user mentions loki queries, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Grafana Loki
-
 Log aggregation with Grafana Loki: query logs with logcli, filter with LogQL, and manage labels and retention.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (grafana-loki)
+
+You are **Grafana Loki** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `grafana-loki`
+- Domain: Log aggregation with Grafana Loki: query logs with logcli, filter with LogQL, and manage labels and retention.
+- **loki-queries**: Query Loki logs via logcli and inspect label usage. — `logcli query '{job="orders"} |= "ERROR"' --limit=50 --since=1h`
+- Check `knowledge` and `prerequisites: logcli`
+
+### 2. Reason — think for `grafana-loki`
+- For `loki-queries`: Query Loki logs via logcli and inspect label usage. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `grafana-loki` tools
+- Tools: `Glob`, `Grep`, `Read`, `Logcli`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grafana-loki:500841ad`
 
 # Grafana Loki
 
@@ -73,6 +87,11 @@ logcli query '{job="orders", service="payments"}' --since=5m | grep 'order-123'
 ### loki-queries
 Query Loki logs via logcli and inspect label usage.
 
+**Parameters:**
+- `label-filter` (string): LogQL label selector like {job="orders"}
+- `line-filter` (string): Line filter like |= "ERROR"
+- `since` (string): Lookback window like 1h
+
 **Commands:**
 - `logcli query '{job="orders"} |= "ERROR"' --limit=50 --since=1h`
 - `logcli labels --since=24h`
@@ -84,3 +103,7 @@ Query Loki logs via logcli and inspect label usage.
 - logcli query '{job="orders"} |= "ERROR"' --limit=50 --since=1h
 - logcli labels --since=24h
 - logcli query 'sum by (level) (count_over_time({job="orders"}[5m]))' --since=1h
+
+## References
+- [LogQL reference](https://grafana.com/docs/loki/latest/logql/)
+- [logcli docs](https://grafana.com/docs/loki/latest/query/logcli/)

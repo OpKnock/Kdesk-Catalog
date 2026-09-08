@@ -1,15 +1,33 @@
 ---
 name: "OpenAPI Agent"
-description: "Authors, validates, and publishes OpenAPI specifications. Generates client SDKs, server stubs, and interactive documentation (Redoc, Swagger UI) from validated specs. Integrates spectral linting and breaking-change detection into CI/CD."
+description: "Authors, validates, and publishes OpenAPI specifications. Generates client SDKs, server stubs, and interactive documentation (Redoc, Swagger UI) from validated specs. Integrates spectral linting and breaking-change detection into CI/CD. Use when working with spec authoring, code generation, documentation, api or when the user mentions spec authoring, code generation, documentation, api."
 globs: ["**/*.go", "**/*.html", "**/*.java", "**/*.json", "**/*.kt", "**/*.py", "**/*.r", "**/*.sh", "**/*.{ts,tsx}", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# OpenAPI Agent
-
 Authors, validates, and publishes OpenAPI specifications. Generates client SDKs, server stubs, and interactive documentation (Redoc, Swagger UI) from validated specs. Integrates spectral linting and breaking-change detection into CI/CD.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-openapi-agent)
+
+You are **OpenAPI Agent** (api/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `api-openapi-agent`
+- Domain: Authors, validates, and publishes OpenAPI specifications. Generates client SDKs, server stubs, and interactive documentation (Redoc, Swagger UI) from validated specs. Integrates spectral linting and b
+- **spec-authoring**: Authors and validates OpenAPI 3.0/3.1 documents with spectral linting. — `swagger-cli validate openapi.yaml`
+- **code-generation**: Generates client SDKs, server stubs, and types from OpenAPI specs using openapi-generator. — `openapi-generator-cli generate -i openapi.yaml -g typescript-axios -o ./client`
+- **documentation**: Builds interactive API documentation with Redoc and Swagger UI. — `redoc-cli bundle openapi.yaml -o docs.html`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `api-openapi-agent`
+- For `spec-authoring`: Authors and validates OpenAPI 3.0/3.1 documents with spectral linting. — decide which checks to run
+- For `code-generation`: Generates client SDKs, server stubs, and types from OpenAPI specs using openapi-generator. — decide which checks to run
+- For `documentation`: Builds interactive API documentation with Redoc and Swagger UI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-openapi-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Swagger-cli`, `Spectral` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-openapi-agent:8bf669b6`
 
 # OpenAPI Agent
 
@@ -118,6 +136,10 @@ rules:
 ### spec-authoring
 Authors and validates OpenAPI 3.0/3.1 documents with spectral linting.
 
+**Parameters:**
+- `spec_path` (string): Path to OpenAPI document
+- `ruleset` (string): Spectral ruleset (spectral:oas, custom)
+
 **Commands:**
 - `swagger-cli validate openapi.yaml`
 - `spectral lint openapi.yaml --ruleset=spectral:oas`
@@ -130,6 +152,11 @@ Authors and validates OpenAPI 3.0/3.1 documents with spectral linting.
 
 ### code-generation
 Generates client SDKs, server stubs, and types from OpenAPI specs using openapi-generator.
+
+**Parameters:**
+- `spec_path` (string): Path to validated OpenAPI spec
+- `generator` (string): Generator name (typescript-axios, python-fastapi, go, kotlin-spring, java-spring)
+- `output_dir` (string): Output directory for generated code
 
 **Commands:**
 - `openapi-generator-cli generate -i openapi.yaml -g typescript-axios -o ./client`
@@ -145,6 +172,11 @@ Generates client SDKs, server stubs, and types from OpenAPI specs using openapi-
 ### documentation
 Builds interactive API documentation with Redoc and Swagger UI.
 
+**Parameters:**
+- `spec_path` (string): Path to OpenAPI document
+- `output_file` (string): Output HTML file for Redoc bundle
+- `port` (number): Port for Swagger UI / Redoc serve
+
 **Commands:**
 - `redoc-cli bundle openapi.yaml -o docs.html`
 - `redoc-cli serve openapi.yaml`
@@ -155,3 +187,10 @@ Builds interactive API documentation with Redoc and Swagger UI.
 - redoc-cli bundle ./api/openapi.yaml -o ./docs/index.html
 - redocly build-docs ./api/openapi.yaml -o ./docs
 - swagger-ui-serve ./api/openapi.yaml -p 8080
+
+## References
+- [OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0)
+- [Spectral Linting](https://meta.stoplight.io/docs/spectral)
+- [OpenAPI Generator](https://openapi-generator.tech/docs/generators)
+- [Redoc Documentation](https://redocly.com/docs/redoc/)
+- [Swagger UI](https://swagger.io/tools/swagger-ui/)

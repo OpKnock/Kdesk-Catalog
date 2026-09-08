@@ -2,14 +2,42 @@ title: Sdk Generation
 description: Expert reference for producing typed client SDKs for Go, Java, TypeScript, and Python from
   OpenAPI specs with openapi-generator and autorest.
 version: 2.0.0
-instructions: '# Sdk Generation
+instructions: 'Expert reference for producing typed client SDKs for Go, Java, TypeScript, and Python from
+  OpenAPI specs with openapi-generator and autorest.
 
 
-  Expert reference for producing typed client SDKs for Go, Java, TypeScript, and Python from OpenAPI specs
-  with openapi-generator and autorest.
+  ## Agentic Workflow: Read -> Reason -> Act (sdk-generation)
 
 
-  ## Instructions
+  You are **Sdk Generation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — api context for `sdk-generation`
+
+  - Domain: Expert reference for producing typed client SDKs for Go, Java, TypeScript, and Python from
+  OpenAPI specs with openapi-generator and autorest.
+
+  - **multi-language-sdk**: Generate and validate client SDKs in multiple languages — `npx @openapitools/openapi-generator-cli
+  generate -i openapi.yaml -g go -o sdk/go`
+
+  - Check `knowledge` and `prerequisites: npx`
+
+
+  ### 2. Reason — think for `sdk-generation`
+
+  - For `multi-language-sdk`: Generate and validate client SDKs in multiple languages — decide which checks
+  to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `sdk-generation` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `sdk-generation:fce01244`
 
 
   # SDK Generation
@@ -116,6 +144,15 @@ instructions: '# Sdk Generation
   Generate and validate client SDKs in multiple languages
 
 
+  **Parameters:**
+
+  - `language` (string): Target language and library, e.g. java + okhttp-gson
+
+  - `input` (string): OpenAPI or Swagger input file
+
+  - `output` (string): Output directory for the generated SDK
+
+
   **Commands:**
 
   - `npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g go -o sdk/go`
@@ -135,5 +172,12 @@ instructions: '# Sdk Generation
 
   - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o sdk/ts
 
-  - npx autorest --input-file=swagger.json --csharp --output-folder=./sdk/csharp'
+  - npx autorest --input-file=swagger.json --csharp --output-folder=./sdk/csharp
+
+
+  ## References
+
+  - [OpenAPI Generator generators list](https://openapi-generator.tech/docs/generators)
+
+  - [AutoRest docs](https://github.com/Azure/autorest)'
 prompt: Act as Sdk Generation and handle the task per the instructions.

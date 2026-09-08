@@ -2,16 +2,29 @@ title: Kafka Producer Go
 description: 'Build Kafka producers in Go with segmentio/kafka-go and IBM/sarama: async writes, batching,
   acks tuning, and delivery verification.'
 version: 2.0.0
-instructions: "# Kafka Producer Go\n\nBuild Kafka producers in Go with segmentio/kafka-go and IBM/sarama:\
-  \ async writes, batching, acks tuning, and delivery verification.\n\n## Instructions\n\n# Kafka Producer\
-  \ (Go)\n\nWrite high-throughput Go producers with segmentio/kafka-go or sarama.\n\n## What this skill\
-  \ does\n\n- Builds batch writers with kafka-go and async producers with sarama.\n- Tunes acks, batching,\
-  \ and retries for throughput vs. durability.\n- Verifies deliveries against the broker.\n\n## When to\
-  \ use\n\n- Go services publishing domain events.\n- High-volume pipelines needing async, batched writes.\n\
-  - Migrating from kafka-console-producer to app-managed producers.\n\n## Real commands\n\n```bash\n#\
-  \ Dependencies\ngo get github.com/segmentio/kafka-go\ngo get github.com/IBM/sarama\n\n# Run producer\
-  \ (1000 messages)\ngo run ./cmd/producer -topic orders -count 1000 -brokers localhost:9092\n\n# Build\n\
-  go build -o bin/producer ./cmd/producer\n\n# Verify delivery\nkafka-console-consumer.sh --bootstrap-server\
+instructions: "Build Kafka producers in Go with segmentio/kafka-go and IBM/sarama: async writes, batching,\
+  \ acks tuning, and delivery verification.\n\n## Agentic Workflow: Read -> Reason -> Act (kafka-producer-go)\n\
+  \nYou are **Kafka Producer Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `kafka-producer-go`\n- Domain: Build Kafka producers in Go with segmentio/kafka-go\
+  \ and IBM/sarama: async writes, batching, acks tuning, and delivery verification.\n- **go-producer-app**:\
+  \ Scaffold and run Go producers using kafka-go Writer or sarama AsyncProducer. — `go get github.com/segmentio/kafka-go`\n\
+  - **delivery-verify**: Verify produced records landed correctly with consumers and offsets. — `kafka-console-consumer.sh\
+  \ --bootstrap-server localhost:9092 --topic orders --fro`\n- Check `knowledge` and `prerequisites: kafka-console-consumer.sh,\
+  \ kafka-consumer-groups.sh, kafka-run-class.sh`\n\n### 2. Reason — think for `kafka-producer-go`\n-\
+  \ For `go-producer-app`: Scaffold and run Go producers using kafka-go Writer or sarama AsyncProducer.\
+  \ — decide which checks to run\n- For `delivery-verify`: Verify produced records landed correctly with\
+  \ consumers and offsets. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `kafka-producer-go` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `Bash`, `Kafka-console-consumer.sh` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `kafka-producer-go:9d6f3758`\n\
+  \n# Kafka Producer (Go)\n\nWrite high-throughput Go producers with segmentio/kafka-go or sarama.\n\n\
+  ## What this skill does\n\n- Builds batch writers with kafka-go and async producers with sarama.\n-\
+  \ Tunes acks, batching, and retries for throughput vs. durability.\n- Verifies deliveries against the\
+  \ broker.\n\n## When to use\n\n- Go services publishing domain events.\n- High-volume pipelines needing\
+  \ async, batched writes.\n- Migrating from kafka-console-producer to app-managed producers.\n\n## Real\
+  \ commands\n\n```bash\n# Dependencies\ngo get github.com/segmentio/kafka-go\ngo get github.com/IBM/sarama\n\
+  \n# Run producer (1000 messages)\ngo run ./cmd/producer -topic orders -count 1000 -brokers localhost:9092\n\
+  \n# Build\ngo build -o bin/producer ./cmd/producer\n\n# Verify delivery\nkafka-console-consumer.sh --bootstrap-server\
   \ localhost:9092 \\\n  --topic orders --from-beginning --max-messages 5\nkafka-run-class.sh kafka.tools.GetOffsetShell\
   \ \\\n  --broker-list localhost:9092 --topic orders --time -1\n```\n\n## Producer example (kafka-go)\n\
   \n```go\nw := &kafka.Writer{\n  Addr:         kafka.TCP(\"localhost:9092\"),\n  Topic:        \"orders\"\
@@ -22,14 +35,17 @@ instructions: "# Kafka Producer Go\n\nBuild Kafka producers in Go with segmentio
   \ at high volume; sync for critical paths.\n- Set RequiredAcks to RequireAll with idempotent producers\
   \ in production.\n- Close the writer on shutdown so buffered messages flush.\n\n## Capabilities\n\n\
   ### go-producer-app\nScaffold and run Go producers using kafka-go Writer or sarama AsyncProducer.\n\n\
-  **Commands:**\n- `go get github.com/segmentio/kafka-go`\n- `go get github.com/IBM/sarama`\n- `go run\
-  \ ./cmd/producer -topic orders -count 1000 -brokers localhost:9092`\n- `go build -o bin/producer ./cmd/producer`\n\
-  - `go test ./...`\n\n**Examples:**\n- go run ./cmd/producer -topic orders -count 1000 -brokers localhost:9092\n\
-  - go build -o bin/producer ./cmd/producer && ./bin/producer\n- go vet ./...\n\n### delivery-verify\n\
-  Verify produced records landed correctly with consumers and offsets.\n\n**Commands:**\n- `kafka-console-consumer.sh\
+  **Parameters:**\n- `topic` (string): Topic to produce to.\n- `count` (integer): Number of messages to\
+  \ send.\n- `brokers` (string): Bootstrap brokers.\n\n**Commands:**\n- `go get github.com/segmentio/kafka-go`\n\
+  - `go get github.com/IBM/sarama`\n- `go run ./cmd/producer -topic orders -count 1000 -brokers localhost:9092`\n\
+  - `go build -o bin/producer ./cmd/producer`\n- `go test ./...`\n\n**Examples:**\n- go run ./cmd/producer\
+  \ -topic orders -count 1000 -brokers localhost:9092\n- go build -o bin/producer ./cmd/producer && ./bin/producer\n\
+  - go vet ./...\n\n### delivery-verify\nVerify produced records landed correctly with consumers and offsets.\n\
+  \n**Parameters:**\n- `topic` (string): Topic to verify.\n\n**Commands:**\n- `kafka-console-consumer.sh\
   \ --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages 5`\n- `kafka-consumer-groups.sh\
   \ --bootstrap-server localhost:9092 --describe --group verify`\n- `kafka-run-class.sh kafka.tools.GetOffsetShell\
   \ --broker-list localhost:9092 --topic orders --time -1`\n\n**Examples:**\n- kafka-console-consumer.sh\
   \ --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages 5\n- kafka-run-class.sh\
-  \ kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic orders --time -1"
+  \ kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic orders --time -1\n\n## References\n\
+  - [segmentio/kafka-go Writer](https://pkg.go.dev/github.com/segmentio/kafka-go)\n- [IBM/sarama](https://github.com/IBM/sarama)"
 prompt: Act as Kafka Producer Go and handle the task per the instructions.

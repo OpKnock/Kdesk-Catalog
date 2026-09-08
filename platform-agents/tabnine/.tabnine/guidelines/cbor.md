@@ -1,8 +1,26 @@
-# Cbor
-
 Encodes and decodes CBOR (RFC 8949) data with cbor2 (Python) and cbor (Node.js), including hex inspection and streaming.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cbor)
+
+You are **Cbor** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `cbor`
+- Domain: Encodes and decodes CBOR (RFC 8949) data with cbor2 (Python) and cbor (Node.js), including hex inspection and streaming.
+- **python-cbor2**: Encode/decode CBOR with the cbor2 library. — `pip install cbor2`
+- **node-cbor**: Encode/decode CBOR with the Node.js cbor package. — `npm install cbor`
+- **inspect**: Inspect raw CBOR bytes. — `xxd data.cbor | head -20`
+- Check `knowledge` and `prerequisites: file, node, npm, pip`
+
+### 2. Reason — think for `cbor`
+- For `python-cbor2`: Encode/decode CBOR with the cbor2 library. — decide which checks to run
+- For `node-cbor`: Encode/decode CBOR with the Node.js cbor package. — decide which checks to run
+- For `inspect`: Inspect raw CBOR bytes. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cbor` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Xxd` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cbor:456f4b66`
 
 # CBOR
 
@@ -50,6 +68,10 @@ file data.cbor
 ### python-cbor2
 Encode/decode CBOR with the cbor2 library.
 
+**Parameters:**
+- `value` (string): Value to encode
+- `hex` (string): Hex string to decode
+
 **Commands:**
 - `pip install cbor2`
 - `python -c "import cbor2; d=cbor2.dumps({'hello':'world'}); print(d.hex())"`
@@ -63,6 +85,10 @@ Encode/decode CBOR with the cbor2 library.
 
 ### node-cbor
 Encode/decode CBOR with the Node.js cbor package.
+
+**Parameters:**
+- `value` (string): JS value to encode
+- `hex` (string): Hex input to decode
 
 **Commands:**
 - `npm install cbor`
@@ -78,6 +104,9 @@ Encode/decode CBOR with the Node.js cbor package.
 ### inspect
 Inspect raw CBOR bytes.
 
+**Parameters:**
+- `file` (string): CBOR file path
+
 **Commands:**
 - `xxd data.cbor | head -20`
 - `xxd data.cbor | grep -A2 -B2 'a1'`
@@ -88,3 +117,8 @@ Inspect raw CBOR bytes.
 - xxd data.cbor | head -10
 - python -c "import cbor2; print(cbor2.loads(open('data.cbor','rb').read()))"
 - file data.cbor && xxd data.cbor | head -5
+
+## References
+- [RFC 8949 (CBOR)](https://www.rfc-editor.org/rfc/rfc8949)
+- [cbor2 (Python)](https://cbor2.readthedocs.io/)
+- [cbor.me Playground](https://cbor.me/)

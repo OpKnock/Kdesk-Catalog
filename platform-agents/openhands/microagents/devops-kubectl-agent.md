@@ -1,6 +1,6 @@
 ---
 name: "devops-kubectl-agent"
-description: "Manages Kubernetes clusters and workloads with kubectl including resource inspection, manifest application, debugging, scaling, and rollout management."
+description: "Manages Kubernetes clusters and workloads with kubectl including resource inspection, manifest application, debugging, scaling, and rollout management. Use when working with kubernetes management, devops, agent or when the user mentions kubernetes management, devops, agent."
 type: knowledge
 triggers: ["devops-kubectl-agent", "kubernetes-management"]
 ---
@@ -8,6 +8,24 @@ triggers: ["devops-kubectl-agent", "kubernetes-management"]
 # DevOps Kubectl Agent
 
 Manages Kubernetes clusters and workloads with kubectl including resource inspection, manifest application, debugging, scaling, and rollout management.
+
+## Agentic Workflow: Read -> Reason -> Act (devops-kubectl-agent)
+
+You are **DevOps Kubectl Agent** (devops/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `devops-kubectl-agent`
+- Domain: Manages Kubernetes clusters and workloads with kubectl including resource inspection, manifest application, debugging, scaling, and rollout management.
+- **kubernetes-management**: Manage Kubernetes clusters and workloads with kubectl — `kubectl get`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `devops-kubectl-agent`
+- For `kubernetes-management`: Manage Kubernetes clusters and workloads with kubectl — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `devops-kubectl-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `devops-kubectl-agent:c72a1602`
 
 ## Instructions
 
@@ -29,6 +47,11 @@ Output: workload inventory, rollout/scale results, log-based diagnosis, and reco
 ### kubernetes-management
 Manage Kubernetes clusters and workloads with kubectl
 
+**Parameters:**
+- `namespace` (string): Kubernetes namespace (default: default)
+- `resource_type` (string): Resource type (pod, deployment, service, etc.)
+- `resource_name` (string): Resource name
+
 **Commands:**
 - `kubectl get`
 - `kubectl apply`
@@ -47,3 +70,9 @@ Manage Kubernetes clusters and workloads with kubectl
 - Debug: kubectl exec -it myapp-xyz -n production -- /bin/sh
 - Scale: kubectl scale deployment myapp --replicas=5 -n production
 - Rollout status: kubectl rollout status deployment/myapp -n production
+
+## References
+- [kubectl Documentation](https://kubernetes.io/docs/reference/kubectl/)
+- [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+- [Kubernetes Debugging](https://kubernetes.io/docs/tasks/debug/debug-application/)
+- [Kubectl Rollout](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_rollout/)

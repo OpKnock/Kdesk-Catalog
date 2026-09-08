@@ -1,8 +1,24 @@
-# biome
-
 Formats and lints JavaScript/TypeScript with Biome, the fast Rust-based toolchain, including migrate from ESLint/Prettier.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (biome)
+
+You are **biome** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `biome`
+- Domain: Formats and lints JavaScript/TypeScript with Biome, the fast Rust-based toolchain, including migrate from ESLint/Prettier.
+- **biome-cli**: Lint, format, and check code with Biome. — `npx @biomejs/biome init`
+- **biome-migrate**: Migrate from ESLint and Prettier configs. — `npx @biomejs/biome migrate eslint`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `biome`
+- For `biome-cli`: Lint, format, and check code with Biome. — decide which checks to run
+- For `biome-migrate`: Migrate from ESLint and Prettier configs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `biome` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `biome:b47df873`
 
 # Biome
 
@@ -68,6 +84,11 @@ npx @biomejs/biome rage
 ### biome-cli
 Lint, format, and check code with Biome.
 
+**Parameters:**
+- `paths` (string): Files or dirs to check
+- `write` (boolean): Apply fixes
+- `staged` (boolean): Check staged files only
+
 **Commands:**
 - `npx @biomejs/biome init`
 - `npx @biomejs/biome check src/`
@@ -83,6 +104,10 @@ Lint, format, and check code with Biome.
 ### biome-migrate
 Migrate from ESLint and Prettier configs.
 
+**Parameters:**
+- `from` (string): eslint or prettier
+- `write` (boolean): Write the migrated config to disk
+
 **Commands:**
 - `npx @biomejs/biome migrate eslint`
 - `npx @biomejs/biome migrate prettier`
@@ -92,3 +117,7 @@ Migrate from ESLint and Prettier configs.
 **Examples:**
 - npx @biomejs/biome migrate eslint --write
 - npx @biomejs/biome rage --config
+
+## References
+- [Biome Docs](https://biomejs.dev)
+- [Biome Migrate](https://biomejs.dev/recipes/migrate-eslint-prettier/)

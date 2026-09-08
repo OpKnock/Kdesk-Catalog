@@ -2,14 +2,48 @@ title: Changelog Generation
 description: Generate conventional changelogs from git history using git-cliff and conventional-changelog,
   with semantic-release ready config.
 version: 2.0.0
-instructions: '# Changelog Generation
+instructions: 'Generate conventional changelogs from git history using git-cliff and conventional-changelog,
+  with semantic-release ready config.
 
 
-  Generate conventional changelogs from git history using git-cliff and conventional-changelog, with semantic-release
-  ready config.
+  ## Agentic Workflow: Read -> Reason -> Act (changelog-generation)
 
 
-  ## Instructions
+  You are **Changelog Generation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — api context for `changelog-generation`
+
+  - Domain: Generate conventional changelogs from git history using git-cliff and conventional-changelog,
+  with semantic-release ready config.
+
+  - **git-cliff**: Generate changelogs from git commits using git-cliff with configurable templates —
+  `git-cliff --init`
+
+  - **conventional-changelog**: Generate and update changelogs with the conventional-changelog CLI and
+  standard-version — `npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0`
+
+  - Check `knowledge` and `prerequisites: git-cliff, npx`
+
+
+  ### 2. Reason — think for `changelog-generation`
+
+  - For `git-cliff`: Generate changelogs from git commits using git-cliff with configurable templates
+  — decide which checks to run
+
+  - For `conventional-changelog`: Generate and update changelogs with the conventional-changelog CLI and
+  standard-version — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `changelog-generation` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Git-cliff`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `changelog-generation:c1045295`
 
 
   # Changelog Generation
@@ -131,6 +165,13 @@ instructions: '# Changelog Generation
   Generate changelogs from git commits using git-cliff with configurable templates
 
 
+  **Parameters:**
+
+  - `tag` (string): Version tag to release, e.g. v1.2.0
+
+  - `output` (string): Changelog output file, default CHANGELOG.md
+
+
   **Commands:**
 
   - `git-cliff --init`
@@ -156,6 +197,13 @@ instructions: '# Changelog Generation
   Generate and update changelogs with the conventional-changelog CLI and standard-version
 
 
+  **Parameters:**
+
+  - `preset` (string): Commit convention preset: angular, conventionalcommits, eslint
+
+  - `release_as` (string): Force version bump level: major, minor, patch, or explicit version
+
+
   **Commands:**
 
   - `npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0`
@@ -173,5 +221,12 @@ instructions: '# Changelog Generation
 
   - npx standard-version --dry-run
 
-  - npx standard-version --release-as major'
+  - npx standard-version --release-as major
+
+
+  ## References
+
+  - [git-cliff Documentation](https://git-cliff.org/docs/)
+
+  - [Conventional Commits](https://www.conventionalcommits.org/)'
 prompt: Act as Changelog Generation and handle the task per the instructions.

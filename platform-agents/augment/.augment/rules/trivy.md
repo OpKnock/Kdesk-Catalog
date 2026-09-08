@@ -5,27 +5,27 @@ description: "Scan images, directories, and repos handling vulnerabilities and s
 
 Scan images, directories, and repos handling vulnerabilities and secrets. Scan IaC configs and manage SBOMs. Scan Kubernetes clusters handling vulnerabilities and misconfigs. IaC misconfigs, and licenses with Trivy.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (trivy)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **trivy** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `trivy image nginx:latest`, `trivy config .`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `trivy`
+- Domain: Scan images, directories, and repos handling vulnerabilities and secrets. Scan IaC configs and manage SBOMs. Scan Kubernetes clusters handling vulnerabilities and misconfigs. IaC misconfigs, and licen
+- **image-and-fs-scan**: Scan images, directories, and repos for vulnerabilities and secrets. — `trivy image nginx:latest`
+- **config-and-sbom**: Scan IaC configs and manage SBOMs. — `trivy config .`
+- **cluster-scan**: Scan Kubernetes clusters for vulnerabilities and misconfigs. — `trivy kubernetes --report summary cluster`
+- Check `knowledge` and `prerequisites: trivy`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `trivy`
+- For `image-and-fs-scan`: Scan images, directories, and repos for vulnerabilities and secrets. — decide which checks to run
+- For `config-and-sbom`: Scan IaC configs and manage SBOMs. — decide which checks to run
+- For `cluster-scan`: Scan Kubernetes clusters for vulnerabilities and misconfigs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `trivy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Trivy` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `trivy:bf32a219`
 
 # Trivy
 

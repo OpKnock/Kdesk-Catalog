@@ -1,6 +1,6 @@
 ---
 name: "database-postgresql"
-description: "PostgreSQL database agent for advanced SQL features."
+description: "PostgreSQL database agent for advanced SQL features. Use when working with Database Postgresql, management or when the user mentions Database Postgresql, management."
 type: knowledge
 triggers: ["database-postgresql", "database postgresql"]
 ---
@@ -8,6 +8,24 @@ triggers: ["database-postgresql", "database postgresql"]
 # Database Postgresql
 
 PostgreSQL database agent for advanced SQL features.
+
+## Agentic Workflow: Read -> Reason -> Act (database-postgresql)
+
+You are **Database Postgresql** (database/management) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `database-postgresql`
+- Domain: PostgreSQL database agent for advanced SQL features.
+- **Database Postgresql**: PostgreSQL database agent for advanced SQL features. — `CLI: psql -U postgres`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `database-postgresql`
+- For `Database Postgresql`: PostgreSQL database agent for advanced SQL features. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `database-postgresql` tools
+- Tools: `Glob`, `Grep`, `Read`, `CLI`, `Status` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `database-postgresql:643d651d`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ PostgreSQL database agent for advanced SQL features.
 - Backup: pg_dump mydb > backup.sql
 - Restore: psql mydb < backup.sql
 - Status: pg_isready
+
+## References
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/)

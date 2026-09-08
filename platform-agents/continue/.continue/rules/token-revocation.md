@@ -1,15 +1,29 @@
 ---
 name: "Token Revocation"
-description: "Invalidate OAuth2 tokens on demand by calling the revocation endpoint and maintaining JWT jti blacklists in Redis. Revokes both access and refresh tokens, extracts jti claims from JWTs for immediate rejection, and verifies revoked tokens return 401 \u2014 essential for compromised sessions, global logout, and emergency freezes."
+description: "Invalidate OAuth2 tokens on demand by calling the revocation endpoint and maintaining JWT jti blacklists in Redis. Revokes both access and refresh tokens, extracts jti claims from JWTs for immediate rejection, and verifies revoked tokens return 401 \u2014 essential for compromised sessions, global logout, and emergency freezes. Use when working with token revoke, api or when the user mentions token revoke, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Token Revocation
-
 Invalidate OAuth2 tokens on demand by calling the revocation endpoint and maintaining JWT jti blacklists in Redis. Revokes both access and refresh tokens, extracts jti claims from JWTs for immediate rejection, and verifies revoked tokens return 401 — essential for compromised sessions, global logout, and emergency freezes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (token-revocation)
+
+You are **Token Revocation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `token-revocation`
+- Domain: Invalidate OAuth2 tokens on demand by calling the revocation endpoint and maintaining JWT jti blacklists in Redis. Revokes both access and refresh tokens, extracts jti claims from JWTs for immediate r
+- **token-revoke**: Revoke access and refresh tokens, and enforce blacklists — `curl -X POST https://auth.your-app.test/revoke -d "token=$ACCESS_TOKEN&token_typ`
+- Check `knowledge` and `prerequisites: redis-cli`
+
+### 2. Reason — think for `token-revocation`
+- For `token-revoke`: Revoke access and refresh tokens, and enforce blacklists — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `token-revocation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `token-revocation:a300ea6a`
 
 # Token Revocation
 
@@ -67,6 +81,11 @@ curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $ACCESS_TOKEN
 ### token-revoke
 Revoke access and refresh tokens, and enforce blacklists
 
+**Parameters:**
+- `token` (string): Token value to revoke
+- `token_type_hint` (string): access_token or refresh_token
+- `ttl_seconds` (integer): Blacklist entry lifetime
+
 **Commands:**
 - `curl -X POST https://auth.your-app.test/revoke -d "token=$ACCESS_TOKEN&token_type_hint=access_token&client_id=app1&client_secret=$CLIENT_SECRET" -o /dev/null -w '%{http_code}\n'`
 - `curl -X POST https://auth.your-app.test/revoke -d "token=$REFRESH_TOKEN&token_type_hint=refresh_token&client_id=app1" -o /dev/null -w '%{http_code}\n'`
@@ -77,3 +96,7 @@ Revoke access and refresh tokens, and enforce blacklists
 - curl -X POST https://auth.your-app.test/revoke -d "token=$ACCESS_TOKEN&token_type_hint=access_token&client_id=app1" -o /dev/null -w '%{http_code}\n'
 - redis-cli SET blacklist:$(echo -n $JWT | cut -d. -f2 | base64 -d 2>/dev/null | jq -r .jti) revoked EX 3600
 - curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer stale-token" http://localhost:8080/me
+
+## References
+- [RFC 7009 token revocation](https://www.rfc-editor.org/rfc/rfc7009)
+- [JWT claims (RFC 7519)](https://www.rfc-editor.org/rfc/rfc7519#section-4.1.7)

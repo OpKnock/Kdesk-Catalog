@@ -1,15 +1,29 @@
 ---
 name: "Identity Provider"
-description: "Identity provider operations with Keycloak: kcadm.sh realm and user administration, OIDC discovery, client registration, and token introspection."
+description: "Identity provider operations with Keycloak: kcadm.sh realm and user administration, OIDC discovery, client registration, and token introspection. Use when working with keycloak admin, api or when the user mentions keycloak admin, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Identity Provider
-
 Identity provider operations with Keycloak: kcadm.sh realm and user administration, OIDC discovery, client registration, and token introspection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (identity-provider)
+
+You are **Identity Provider** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `identity-provider`
+- Domain: Identity provider operations with Keycloak: kcadm.sh realm and user administration, OIDC discovery, client registration, and token introspection.
+- **keycloak-admin**: Administer Keycloak realms, users, and clients from the CLI. — `kcadm.sh config credentials --server http://localhost:8080 --realm master --user`
+- Check `knowledge` and `prerequisites: kcadm.sh`
+
+### 2. Reason — think for `identity-provider`
+- For `keycloak-admin`: Administer Keycloak realms, users, and clients from the CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `identity-provider` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kcadm.sh`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `identity-provider:84c34d3b`
 
 # Identity Provider
 
@@ -85,6 +99,11 @@ Agent: kcadm.sh config credentials ... ; kcadm.sh create realms -s realm=myrealm
 ### keycloak-admin
 Administer Keycloak realms, users, and clients from the CLI.
 
+**Parameters:**
+- `realm` (string): Keycloak realm name.
+- `server_url` (string): Keycloak base URL, e.g. http://localhost:8080.
+- `admin_user` (string): Admin username for token acquisition.
+
 **Commands:**
 - `kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin`
 - `kcadm.sh get realms`
@@ -96,3 +115,7 @@ Administer Keycloak realms, users, and clients from the CLI.
 - kcadm.sh create realms -s realm=myrealm -s enabled=true
 - kcadm.sh update users/6c1d -r myrealm -s 'email=alice@example.com'
 - kcadm.sh get users -r myrealm --query email=alice@example.com
+
+## References
+- [Keycloak Server Admin Guide](https://www.keycloak.org/docs/latest/server_admin/)
+- [OpenID Connect Core](https://openid.net/specs/openid-connect-core-1_0.html)

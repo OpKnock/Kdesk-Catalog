@@ -1,8 +1,22 @@
-# Pulsar Security
-
 Secure Pulsar: token authentication, namespace permissions, TLS encryption, and broker config.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (pulsar-security)
+
+You are **Pulsar Security** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `pulsar-security`
+- Domain: Secure Pulsar: token authentication, namespace permissions, TLS encryption, and broker config.
+- **pulsar-security-hardening**: Configure token auth, TLS, and role-based namespace permissions with pulsar-admin. — `bin/pulsar tokens create --secret-key my-secret.key --subject admin`
+- Check `knowledge` and `prerequisites: bin/pulsar, bin/pulsar-admin`
+
+### 2. Reason — think for `pulsar-security`
+- For `pulsar-security-hardening`: Configure token auth, TLS, and role-based namespace permissions with pulsar-admin. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pulsar-security` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bin/pulsar`, `Bin/pulsar-admin` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pulsar-security:70d273c5`
 
 # Pulsar Security
 
@@ -63,6 +77,11 @@ tlsKeyFilePath=/etc/pulsar/server.key
 ### pulsar-security-hardening
 Configure token auth, TLS, and role-based namespace permissions with pulsar-admin.
 
+**Parameters:**
+- `role` (string): Subject/role the token or permission is for
+- `actions` (string): produce, consume, or functions
+- `namespace` (string): Target namespace
+
 **Commands:**
 - `bin/pulsar tokens create --secret-key my-secret.key --subject admin`
 - `bin/pulsar-admin brokers update-dynamic-config --config authenticationEnabled --value true`
@@ -74,3 +93,7 @@ Configure token auth, TLS, and role-based namespace permissions with pulsar-admi
 - bin/pulsar tokens create --secret-key my-secret.key --subject svc-orders | tee svc-orders.token
 - bin/pulsar-admin namespaces grant-permission --role admin --actions produce,consume public/default
 - bin/pulsar-admin namespaces permissions public/default | jq .
+
+## References
+- [Pulsar Security Overview](https://pulsar.apache.org/docs/3.0.x/security-overview/)
+- [Token Auth](https://pulsar.apache.org/docs/3.0.x/security-token-auth/)

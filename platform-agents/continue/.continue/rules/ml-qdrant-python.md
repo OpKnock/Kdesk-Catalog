@@ -1,6 +1,6 @@
 ---
 name: "Ml Qdrant Python"
-description: "Qdrant Python SDK agent for vector search engine."
+description: "Qdrant Python SDK agent for vector search engine. Use when working with Ml Qdrant Python, vector db or when the user mentions Ml Qdrant Python, vector db."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Qdrant Python
 
 Qdrant Python SDK agent for vector search engine.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-qdrant-python)
+
+You are **Ml Qdrant Python** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-qdrant-python`
+- Domain: Qdrant Python SDK agent for vector search engine.
+- **Ml Qdrant Python**: Qdrant Python SDK agent for vector search engine. — `Install: pip install qdrant-client`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-qdrant-python`
+- For `Ml Qdrant Python`: Qdrant Python SDK agent for vector search engine. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-qdrant-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Install`, `Client` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-qdrant-python:c9191cda`
 
 ## Instructions
 
@@ -40,3 +58,6 @@ Qdrant Python SDK agent for vector search engine.
 - Collections: client.get_collections()
 - Create: client.create_collection(collection_name='my_collection', vectors_config={'size': 1536, 'distance': 'Cosine'})
 - Search: client.search(collection_name='my_collection', query_vector=[0.1, 0.2, 0.3], limit=10)
+
+## References
+- [Qdrant Documentation](https://qdrant.tech/documentation/)

@@ -2,23 +2,35 @@ title: Observer
 description: 'Implements the Observer pattern in Node.js: event-driven notifications with EventEmitter
   and node --test suites.'
 version: 2.0.0
-instructions: "# Observer\n\nImplements the Observer pattern in Node.js: event-driven notifications with\
-  \ EventEmitter and node --test suites.\n\n## Instructions\n\n# Observer Pattern\n\nNotify many subscribers\
-  \ when state changes.\n\n## When to Use\n\n- UI updates on data changes\n- Event-driven architectures\n\
-  - Decoupling producers from consumers\n\n## Example (Node.js)\n\n```js\nimport { EventEmitter } from\
-  \ 'node:events';\n\nclass StockTracker extends EventEmitter {\n  setPrice(symbol, price) {\n    this.emit('price',\
-  \ { symbol, price });\n  }\n}\n\nconst tracker = new StockTracker();\ntracker.on('price', ({ symbol,\
-  \ price }) => console.log(`${symbol}: $${price}`));\ntracker.setPrice('ACME', 42.5);\n```\n\n## Test\n\
-  \n```js\nimport { test } from 'node:test';\nimport assert from 'node:assert';\n\ntest('notifies subscribers\
-  \ on price change', () => {\n  const tracker = new StockTracker();\n  const seen = [];\n  tracker.on('price',\
-  \ (p) => seen.push(p));\n  tracker.setPrice('ACME', 42.5);\n  assert.deepEqual(seen, [{ symbol: 'ACME',\
-  \ price: 42.5 }]);\n});\n```\n\n```bash\nnode --test tests/\n```\n\n## Best practices\n\n- Emit events\
-  \ with payload objects, not positional args.\n- Use 'error' events for error propagation.\n- Clean up\
-  \ listeners to prevent leaks (`off()`).\n- Name events as past-tense facts: 'priceChanged'.\n\n## Testing\n\
-  \nVerify delivery order, payload shape, and listener cleanup.\n\n## Capabilities\n\n### node\nImplement\
-  \ and test observer examples.\n\n**Commands:**\n- `node --test tests/`\n- `node --test tests/observer.test.mjs`\n\
+instructions: "Implements the Observer pattern in Node.js: event-driven notifications with EventEmitter\
+  \ and node --test suites.\n\n## Agentic Workflow: Read -> Reason -> Act (observer)\n\nYou are **Observer**\
+  \ (patterns/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1.\
+  \ Read — patterns context for `observer`\n- Domain: Implements the Observer pattern in Node.js: event-driven\
+  \ notifications with EventEmitter and node --test suites.\n- **node**: Implement and test observer examples.\
+  \ — `node --test tests/`\n- Check `knowledge` and `prerequisites: node`\n\n### 2. Reason — think for\
+  \ `observer`\n- For `node`: Implement and test observer examples. — decide which checks to run\n- Evaluate\
+  \ trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with\
+  \ `observer` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `observer:785fe1f7`\n\
+  \n# Observer Pattern\n\nNotify many subscribers when state changes.\n\n## When to Use\n\n- UI updates\
+  \ on data changes\n- Event-driven architectures\n- Decoupling producers from consumers\n\n## Example\
+  \ (Node.js)\n\n```js\nimport { EventEmitter } from 'node:events';\n\nclass StockTracker extends EventEmitter\
+  \ {\n  setPrice(symbol, price) {\n    this.emit('price', { symbol, price });\n  }\n}\n\nconst tracker\
+  \ = new StockTracker();\ntracker.on('price', ({ symbol, price }) => console.log(`${symbol}: $${price}`));\n\
+  tracker.setPrice('ACME', 42.5);\n```\n\n## Test\n\n```js\nimport { test } from 'node:test';\nimport\
+  \ assert from 'node:assert';\n\ntest('notifies subscribers on price change', () => {\n  const tracker\
+  \ = new StockTracker();\n  const seen = [];\n  tracker.on('price', (p) => seen.push(p));\n  tracker.setPrice('ACME',\
+  \ 42.5);\n  assert.deepEqual(seen, [{ symbol: 'ACME', price: 42.5 }]);\n});\n```\n\n```bash\nnode --test\
+  \ tests/\n```\n\n## Best practices\n\n- Emit events with payload objects, not positional args.\n- Use\
+  \ 'error' events for error propagation.\n- Clean up listeners to prevent leaks (`off()`).\n- Name events\
+  \ as past-tense facts: 'priceChanged'.\n\n## Testing\n\nVerify delivery order, payload shape, and listener\
+  \ cleanup.\n\n## Capabilities\n\n### node\nImplement and test observer examples.\n\n**Parameters:**\n\
+  - `test-name-pattern` (string): Filter tests by name\n- `watch` (string): Watch mode\n- `file` (string):\
+  \ Test file path\n\n**Commands:**\n- `node --test tests/`\n- `node --test tests/observer.test.mjs`\n\
   - `node --test --test-name-pattern 'stock' tests/`\n- `node -e \"const {EventEmitter}=require('events');\
   \ const e=new EventEmitter(); e.on('x',()=>console.log('fired')); e.emit('x');\"`\n- `node --test --watch\
   \ tests/`\n\n**Examples:**\n- node --test tests/observer.test.mjs -v\n- node --test-name-pattern 'notify'\
-  \ tests/\n- node -e \"const {EventEmitter}=require('events'); const e=new EventEmitter(); console.log(e.listenerCount('x'))\""
+  \ tests/\n- node -e \"const {EventEmitter}=require('events'); const e=new EventEmitter(); console.log(e.listenerCount('x'))\"\
+  \n\n## References\n- [Refactoring Guru: Observer](https://refactoring.guru/design-patterns/observer)\n\
+  - [Node.js EventEmitter](https://nodejs.org/api/events.html)\n- [node --test runner](https://nodejs.org/api/test.html)"
 prompt: Act as Observer and handle the task per the instructions.

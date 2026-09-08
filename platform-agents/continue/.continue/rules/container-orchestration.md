@@ -1,15 +1,31 @@
 ---
 name: "Container Orchestration"
-description: "Operates container orchestration platforms (Kubernetes, Docker Swarm, Nomad): cluster bootstrap, scheduling, scaling, and health checks."
+description: "Operates container orchestration platforms (Kubernetes, Docker Swarm, Nomad): cluster bootstrap, scheduling, scaling, and health checks. Use when working with kubernetes cluster ops, swarm and nomad, devops or when the user mentions kubernetes cluster ops, swarm and nomad, devops."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Container Orchestration
-
 Operates container orchestration platforms (Kubernetes, Docker Swarm, Nomad): cluster bootstrap, scheduling, scaling, and health checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (container-orchestration)
+
+You are **Container Orchestration** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `container-orchestration`
+- Domain: Operates container orchestration platforms (Kubernetes, Docker Swarm, Nomad): cluster bootstrap, scheduling, scaling, and health checks.
+- **kubernetes-cluster-ops**: Bootstrap and inspect Kubernetes clusters with kubeadm and kubectl. — `kubeadm init --pod-network-cidr=10.244.0.0/16`
+- **swarm-and-nomad**: Manage Docker Swarm services and HashiCorp Nomad jobs as alternative orchestrators. — `docker swarm init --advertise-addr 10.0.0.5`
+- Check `knowledge` and `prerequisites: docker, kubeadm, kubectl, nomad`
+
+### 2. Reason — think for `container-orchestration`
+- For `kubernetes-cluster-ops`: Bootstrap and inspect Kubernetes clusters with kubeadm and kubectl. — decide which checks to run
+- For `swarm-and-nomad`: Manage Docker Swarm services and HashiCorp Nomad jobs as alternative orchestrators. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `container-orchestration` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kubeadm`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `container-orchestration:cf07c611`
 
 # Container Orchestration
 
@@ -87,6 +103,10 @@ job "web" {
 ### kubernetes-cluster-ops
 Bootstrap and inspect Kubernetes clusters with kubeadm and kubectl.
 
+**Parameters:**
+- `pod-network-cidr` (string): CIDR for pod network, must match CNI plugin
+- `node-name` (string): Node to inspect or drain
+
 **Commands:**
 - `kubeadm init --pod-network-cidr=10.244.0.0/16`
 - `kubeadm token create --print-join-command`
@@ -103,6 +123,11 @@ Bootstrap and inspect Kubernetes clusters with kubeadm and kubectl.
 ### swarm-and-nomad
 Manage Docker Swarm services and HashiCorp Nomad jobs as alternative orchestrators.
 
+**Parameters:**
+- `service-name` (string): Swarm service name
+- `replicas` (integer): Desired replica count
+- `job-file` (string): Nomad HCL job file path
+
 **Commands:**
 - `docker swarm init --advertise-addr 10.0.0.5`
 - `docker service create --name web --replicas 3 nginx`
@@ -115,3 +140,8 @@ Manage Docker Swarm services and HashiCorp Nomad jobs as alternative orchestrato
 - docker service create --name web --replicas 3 nginx
 - nomad job run web.nomad
 - nomad node status
+
+## References
+- [Kubernetes Concepts](https://kubernetes.io/docs/concepts/overview/)
+- [Docker Swarm Documentation](https://docs.docker.com/engine/swarm/)
+- [Nomad Documentation](https://developer.hashicorp.com/nomad/docs)

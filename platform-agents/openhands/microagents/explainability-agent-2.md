@@ -1,6 +1,6 @@
 ---
 name: "explainability-agent-2"
-description: "Explainability inference server agent. Manages Explainability ML inference server."
+description: "Explainability inference server agent. Manages Explainability ML inference server. Use when working with Ml Explainability Inference Server Agent or when the user mentions Ml Explainability Inference Server Agent."
 type: knowledge
 triggers: ["explainability-agent-2", "ml explainability inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["explainability-agent-2", "ml explainability inference server agent"]
 # Explainability Agent 2
 
 Explainability inference server agent. Manages Explainability ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (explainability-agent-2)
+
+You are **Explainability Agent 2** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `explainability-agent-2`
+- Domain: Explainability inference server agent. Manages Explainability ML inference server.
+- **Ml Explainability Inference Server Agent**: Explainability inference server agent. Manages Explainability ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `explainability-agent-2`
+- For `Ml Explainability Inference Server Agent`: Explainability inference server agent. Manages Explainability ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `explainability-agent-2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Explainability` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `explainability-agent-2:1026b0c5`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Explainability inference server agent. Manages Explainability ML inference serve
 - curl http://localhost:8080/explain --data '{"model": "model.pkl", "input": "sample.json"}'
 - python explain.py --model model.pkl --input sample.json --output explanation.json
 - python shap_explain.py --model model.pkl --data data.csv --output shap_values.json
+
+## References
+- [SHAP Documentation](https://shap.readthedocs.io/en/latest/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

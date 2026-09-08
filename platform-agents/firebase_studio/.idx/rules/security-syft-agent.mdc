@@ -1,5 +1,5 @@
 ---
-description: "Syft agent for SBOM generation."
+description: "Syft agent for SBOM generation. Use when working with Security Syft Agent or when the user mentions Security Syft Agent."
 globs: ["**/*.json", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Security Syft Agent
 
 Syft agent for SBOM generation.
+
+## Agentic Workflow: Read -> Reason -> Act (security-syft-agent)
+
+You are **Security Syft Agent** (security/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `security-syft-agent`
+- Domain: Syft agent for SBOM generation.
+- **Security Syft Agent**: Syft agent for SBOM generation. — `syft --version`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `security-syft-agent`
+- For `Security Syft Agent`: Syft agent for SBOM generation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `security-syft-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Syft` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `security-syft-agent:91a456f2`
 
 ## Instructions
 
@@ -28,3 +46,6 @@ Syft agent for SBOM generation.
 - syft dir:. -o spdx-json
 - syft packages demo-image:latest -o json
 - syft --version
+
+## References
+- [Syft Documentation](https://github.com/anchore/syft)

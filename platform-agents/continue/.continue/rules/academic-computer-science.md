@@ -1,6 +1,6 @@
 ---
 name: "Academic Computer Science"
-description: "Academic computer-science expertise and best practices."
+description: "Academic computer-science expertise and best practices. Use when working with computer science expertise, academic, computer science, skill or when the user mentions computer science expertise, academic, computer science, skill."
 globs: ["**/*.r", "**/*.scala"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Academic Computer Science
 
 Academic computer-science expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (academic-computer-science)
+
+You are **Academic Computer Science** (academic/computer-science) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — academic context for `academic-computer-science`
+- Domain: Academic computer-science expertise and best practices.
+- **computer-science-expertise**: academic computer-science expertise — `computer-science-cli`
+- Check `knowledge` and `prerequisites: computer-science`
+
+### 2. Reason — think for `academic-computer-science`
+- For `computer-science-expertise`: academic computer-science expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `academic-computer-science` tools
+- Tools: `Glob`, `Grep`, `Read`, `Computer-science-cli`, `Computer-science-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `academic-computer-science:c3884b30`
 
 ## Instructions
 

@@ -1,15 +1,31 @@
 ---
 name: "digital-transformation"
-description: "Drives digital transformation with real tooling: dbt analytics pipelines, workflow orchestration with Airflow, and data platform migrations."
+description: "Drives digital transformation with real tooling: dbt analytics pipelines, workflow orchestration with Airflow, and data platform migrations. Use when working with analytics engineering, workflow orchestration or when the user mentions analytics engineering, workflow orchestration."
 type: knowledge
 triggers: ["digital-transformation", "analytics-engineering", "workflow-orchestration"]
 ---
 
-# digital-transformation
-
 Drives digital transformation with real tooling: dbt analytics pipelines, workflow orchestration with Airflow, and data platform migrations.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (digital-transformation)
+
+You are **digital-transformation** (strategy) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — strategy context for `digital-transformation`
+- Domain: Drives digital transformation with real tooling: dbt analytics pipelines, workflow orchestration with Airflow, and data platform migrations.
+- **analytics-engineering**: Build and test analytics pipelines with dbt. — `dbt init analytics_project`
+- **workflow-orchestration**: Schedule and operate data workflows with Airflow and Dagster. — `airflow db migrate`
+- Check `knowledge` and `prerequisites: aws, terraform, kubernetes, github`
+
+### 2. Reason — think for `digital-transformation`
+- For `analytics-engineering`: Build and test analytics pipelines with dbt. — decide which checks to run
+- For `workflow-orchestration`: Schedule and operate data workflows with Airflow and Dagster. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `digital-transformation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Dbt`, `Airflow` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `digital-transformation:914bad42`
 
 # Digital Transformation Engineering
 
@@ -75,6 +91,10 @@ dagit
 ### analytics-engineering
 Build and test analytics pipelines with dbt.
 
+**Parameters:**
+- `select` (string): Node selection, e.g. staging, +marts
+- `project` (string): Project name for dbt init
+
 **Commands:**
 - `dbt init analytics_project`
 - `dbt run --select staging`
@@ -91,6 +111,10 @@ Build and test analytics pipelines with dbt.
 ### workflow-orchestration
 Schedule and operate data workflows with Airflow and Dagster.
 
+**Parameters:**
+- `dag-id` (string): Airflow DAG id
+- `task-id` (string): Task id to test
+
 **Commands:**
 - `airflow db migrate`
 - `airflow users create --username admin --firstname A --lastname U --role Admin --email a@b.c`
@@ -103,3 +127,8 @@ Schedule and operate data workflows with Airflow and Dagster.
 - airflow dags list
 - airflow dags trigger etl_pipeline
 - airflow tasks test etl_pipeline extract 2026-08-10
+
+## References
+- [dbt Documentation](https://docs.getdbt.com/)
+- [Apache Airflow Docs](https://airflow.apache.org/docs/)
+- [AWS Digital Transformation](https://aws.amazon.com/executive-insights/content/digital-transformation/)

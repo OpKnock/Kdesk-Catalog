@@ -2,9 +2,20 @@ title: Grpc Nodejs
 description: 'gRPC services and clients in Node.js with @grpc/grpc-js and @grpc/proto-loader: dynamic
   proto loading, streaming RPCs, and grpc_tools_node_protoc codegen.'
 version: 2.0.0
-instructions: "# Grpc Nodejs\n\ngRPC services and clients in Node.js with @grpc/grpc-js and @grpc/proto-loader:\
-  \ dynamic proto loading, streaming RPCs, and grpc_tools_node_protoc codegen.\n\n## Instructions\n\n\
-  # gRPC Node.js\n\ngRPC services and clients in Node with @grpc/grpc-js.\n\n## What this skill does\n\
+instructions: "gRPC services and clients in Node.js with @grpc/grpc-js and @grpc/proto-loader: dynamic\
+  \ proto loading, streaming RPCs, and grpc_tools_node_protoc codegen.\n\n## Agentic Workflow: Read ->\
+  \ Reason -> Act (grpc-nodejs)\n\nYou are **Grpc Nodejs** (api/general) — a sub-agent that **Reads, Reasons,\
+  \ and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `grpc-nodejs`\n- Domain: gRPC services\
+  \ and clients in Node.js with @grpc/grpc-js and @grpc/proto-loader: dynamic proto loading, streaming\
+  \ RPCs, and grpc_tools_node_protoc codegen.\n- **nodejs-grpc**: Load proto definitions dynamically and\
+  \ implement gRPC servers/clients in Node.js. — `npm install @grpc/grpc-js @grpc/proto-loader`\n- Check\
+  \ `knowledge` and `prerequisites: ./node_modules/.bin/grpc_tools_node_protoc, node, npm`\n\n### 2. Reason\
+  \ — think for `grpc-nodejs`\n- For `nodejs-grpc`: Load proto definitions dynamically and implement gRPC\
+  \ servers/clients in Node.js. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` +\
+  \ `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `grpc-nodejs` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `Bash`, `./node_modules/.bin/grpc_tools_node_protoc` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `grpc-nodejs:f08167e7`\n\
+  \n# gRPC Node.js\n\ngRPC services and clients in Node with @grpc/grpc-js.\n\n## What this skill does\n\
   \n- Loads .proto files at runtime with @grpc/proto-loader (no build step needed).\n- Implements unary\
   \ and streaming RPC handlers.\n- Generates static JS stubs with grpc_tools_node_protoc when preferred.\n\
   - Configures channels: deadlines, keepalive, and interceptors.\n\n## When to use\n\n- A Node microservice\
@@ -28,8 +39,11 @@ instructions: "# Grpc Nodejs\n\ngRPC services and clients in Node.js with @grpc/
   \n```\nUser: My Node client times out after the server restarts.\nAgent: Create a new channel on reconnect\
   \ and set a deadline per call:\n       client.sayHello(req, { deadline: Date.now() + 5000 }, cb)\n```\n\
   \n## Capabilities\n\n### nodejs-grpc\nLoad proto definitions dynamically and implement gRPC servers/clients\
-  \ in Node.js.\n\n**Commands:**\n- `npm install @grpc/grpc-js @grpc/proto-loader`\n- `npm install -D\
-  \ grpc-tools`\n- `./node_modules/.bin/grpc_tools_node_protoc -I ./proto --js_out=import_style=commonjs:./generated\
+  \ in Node.js.\n\n**Parameters:**\n- `proto_path` (string): Directory containing the .proto files.\n\
+  - `host` (string): Server host:port, e.g. localhost:50051.\n- `keepalive_ms` (integer): Keepalive ping\
+  \ interval in ms for long-lived channels.\n\n**Commands:**\n- `npm install @grpc/grpc-js @grpc/proto-loader`\n\
+  - `npm install -D grpc-tools`\n- `./node_modules/.bin/grpc_tools_node_protoc -I ./proto --js_out=import_style=commonjs:./generated\
   \ --grpc_out=./generated ./proto/greet.proto`\n- `node server.js`\n- `node client.js`\n\n**Examples:**\n\
-  - node server.js & node client.js\n- npm run proto:gen && node server.js\n- node --inspect server.js"
+  - node server.js & node client.js\n- npm run proto:gen && node server.js\n- node --inspect server.js\n\
+  \n## References\n- [gRPC Node.js Docs](https://grpc.io/docs/languages/node/)\n- [@grpc/grpc-js npm](https://www.npmjs.com/package/@grpc/grpc-js)"
 prompt: Act as Grpc Nodejs and handle the task per the instructions.

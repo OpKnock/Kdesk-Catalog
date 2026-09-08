@@ -1,6 +1,6 @@
 ---
 name: "ml-validation-python-agent"
-description: "it handling model validation."
+description: "it handling model validation. Use when working with Ml Validation Python Agent or when the user mentions Ml Validation Python Agent."
 type: knowledge
 triggers: ["ml-validation-python-agent", "ml validation python agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-validation-python-agent", "ml validation python agent"]
 # Ml Validation Python Agent
 
 it handling model validation.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-validation-python-agent)
+
+You are **Ml Validation Python Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-validation-python-agent`
+- Domain: it handling model validation.
+- **Ml Validation Python Agent**: ML Validation Python agent for model validation. — `Pandera: python -c 'import pandera as pa; schema = pa.DataFrameSchema({"name": p`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-validation-python-agent`
+- For `Ml Validation Python Agent`: ML Validation Python agent for model validation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-validation-python-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pandera`, `Great` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-validation-python-agent:fb41a71f`
 
 ## Instructions
 
@@ -27,3 +45,7 @@ ML Validation Python agent for model validation.
 - Great Expectations: python -c 'import great_expectations as ge; df = ge.from_pandas(pd.read_csv("data.csv")); df.expect_column_values_to_not_be_null("email")'
 - Pandera: python -c 'import pandera as pa; schema = pa.DataFrameSchema({"name": pa.Column(str), "age": pa.Column(int, pa.Check.ge(0))}); schema.validate(df)'
 - Cerberus: python -c 'from cerberus import Validator; v = Validator({"name": {"type": "string"}, "age": {"type": "integer"}}); print(v.validate({"name": "Alice", "age": 30}))'
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [age Encryption Tool](https://github.com/FiloSottile/age)

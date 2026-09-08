@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(istioctl:*) Bash(kubectl:*) Bash(linkerd:*)"
 
 Installs and operates Istio or Linkerd service meshes in Kubernetes. Verifies sidecar injection, analyzes configuration, routes traffic with VirtualServices, and enables mTLS between services without application changes.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (service-mesh)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Service Mesh** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `istioctl install --set profile=demo -y`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `service-mesh`
+- Domain: Installs and operates Istio or Linkerd service meshes in Kubernetes. Verifies sidecar injection, analyzes configuration, routes traffic with VirtualServices, and enables mTLS between services without 
+- **istio-linkerd-mesh**: Installs and operates Istio or Linkerd service meshes in Kubernetes. Verifies sidecar injection, ana — `istioctl install --set profile=demo -y`
+- Check `knowledge` and `prerequisites: istioctl, kubectl, linkerd`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `service-mesh`
+- For `istio-linkerd-mesh`: Installs and operates Istio or Linkerd service meshes in Kubernetes. Verifies sidecar injection, analyzes configuration, — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `service-mesh` tools
+- Tools: `Glob`, `Grep`, `Read`, `Istioctl`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `service-mesh:8169e2bf`
 
 # Service Mesh
 

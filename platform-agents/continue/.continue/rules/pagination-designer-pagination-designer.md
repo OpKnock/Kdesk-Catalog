@@ -1,15 +1,31 @@
 ---
 name: "pagination-designer-pagination-designer"
-description: "Designs pagination for APIs and databases: offset vs cursor keysets, EXPLAIN verification, and link-format pagination contracts."
+description: "Designs pagination for APIs and databases: offset vs cursor keysets, EXPLAIN verification, and link-format pagination contracts. Use when working with sql, api or when the user mentions sql, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# pagination-designer-pagination-designer
-
 Designs pagination for APIs and databases: offset vs cursor keysets, EXPLAIN verification, and link-format pagination contracts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (pagination-designer-pagination-designer)
+
+You are **pagination-designer-pagination-designer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `pagination-designer-pagination-designer`
+- Domain: Designs pagination for APIs and databases: offset vs cursor keysets, EXPLAIN verification, and link-format pagination contracts.
+- **sql**: Prototype and verify pagination queries in SQL. — `psql -c 'EXPLAIN ANALYZE SELECT * FROM items ORDER BY id LIMIT 50 OFFSET 50000;'`
+- **api**: Verify paginated API responses. — `curl -s 'http://localhost:8080/items?limit=100&page=3' | jq '.items | length'`
+- Check `knowledge` and `prerequisites: node.js, python, postgresql, redis`
+
+### 2. Reason — think for `pagination-designer-pagination-designer`
+- For `sql`: Prototype and verify pagination queries in SQL. — decide which checks to run
+- For `api`: Verify paginated API responses. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pagination-designer-pagination-designer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Mysql` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pagination-designer-pagination-designer:27b89e19`
 
 # Pagination Design
 
@@ -76,6 +92,11 @@ Verify page stability and input validation.
 ### sql
 Prototype and verify pagination queries in SQL.
 
+**Parameters:**
+- `db` (string): Database name
+- `limit` (number): Page size
+- `offset` (number): Offset value
+
 **Commands:**
 - `psql -c 'EXPLAIN ANALYZE SELECT * FROM items ORDER BY id LIMIT 50 OFFSET 50000;'`
 - `psql -c 'EXPLAIN ANALYZE SELECT * FROM items WHERE id > 50000 ORDER BY id LIMIT 50;'`
@@ -91,6 +112,11 @@ Prototype and verify pagination queries in SQL.
 ### api
 Verify paginated API responses.
 
+**Parameters:**
+- `limit` (number): Page size parameter
+- `cursor` (string): Opaque cursor token
+- `page` (number): Offset-based page number
+
 **Commands:**
 - `curl -s 'http://localhost:8080/items?limit=100&page=3' | jq '.items | length'`
 - `curl -s 'http://localhost:8080/items?limit=100&cursor=abc123' | jq '.next_page'`
@@ -102,3 +128,8 @@ Verify paginated API responses.
 - curl -s 'http://localhost:8080/items?limit=100&page=3' | jq '.links'
 - curl -s 'http://localhost:8080/items?limit=50&cursor=abc' | jq '.items | length'
 - curl -s 'http://localhost:8080/items?limit=-1' -o /dev/null -w '%{http_code}\n'
+
+## References
+- [PostgreSQL LIMIT/OFFSET](https://www.postgresql.org/docs/current/queries-limit.html)
+- [JSON:API pagination](https://jsonapi.org/format/#fetching-pagination)
+- [Use the Index, Luke](https://use-the-index-luke.com/sql/partial-results/fetch-next-page)

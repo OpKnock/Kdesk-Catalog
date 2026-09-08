@@ -2,39 +2,51 @@ title: graphql
 description: 'General GraphQL development: introspect schemas, send queries and mutations with curl, and
   navigate SDL types from the command line.'
 version: 2.0.0
-instructions: "# graphql\n\nGeneral GraphQL development: introspect schemas, send queries and mutations\
-  \ with curl, and navigate SDL types from the command line.\n\n## Instructions\n\n# GraphQL\n\n## What\
-  \ this skill does\n\nGraphQL lets clients ask for exactly what they need in one round trip. This skill\
-  \ covers driving any GraphQL endpoint from the CLI: introspection, queries with variables, and mutations.\n\
-  \n## When to use\n\n- Exploring an unfamiliar GraphQL API\n- Testing queries before writing client code\n\
-  - Scripting data operations against a graph\n\n## Real commands\n\n```bash\n# Root types\ncurl -s -X\
-  \ POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ __schema\
-  \ { queryType { name } } }\"}' | jq '.data'\n\n# Fields of a type\ncurl -s -X POST http://localhost:4000/graphql\
-  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ __type(name: \\\"Order\\\") { fields { name\
-  \ } } }\"}' | jq '.data.__type.fields[].name'\n\n# Query with variables\ncurl -s -X POST http://localhost:4000/graphql\
-  \ -H 'Content-Type: application/json' -d '{\"query\":\"query($id: ID!){ order(id: $id) { id status }\
-  \ }\",\"variables\":{\"id\":\"1\"}}' | jq\n\n# Mutation\ncurl -s -X POST http://localhost:4000/graphql\
-  \ -H 'Content-Type: application/json' -d '{\"query\":\"mutation{ placeOrder(input: {amount: 42}) { orderId\
-  \ } }\"}' | jq\n```\n\n## Response shape\n\n```json\n{\n  \"data\": {\"order\": {\"id\": \"1\", \"status\"\
-  : \"paid\"}},\n  \"errors\": []\n}\n```\n\n## Testing\n\n```bash\n# Confirm the endpoint is alive and\
-  \ the schema loads\ncurl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json'\
-  \ -d '{\"query\":\"{ __typename }\"}' | jq '.data.__typename'\n```\n\n## Best practices\n\n- Always\
-  \ use variables, never string-interpolate values into queries.\n- Request only the fields you use; no\
-  \ SELECT *.\n- Handle errors[] explicitly; data may be partial.\n- Use query names for tracing and logging.\n\
-  - Introspect in dev, disable it in prod for security.\n\n## Capabilities\n\n### graphql-client\nIntrospect\
-  \ endpoints and run queries/mutations with curl and jq.\n\n**Commands:**\n- `curl -s -X POST http://localhost:4000/graphql\
+instructions: "General GraphQL development: introspect schemas, send queries and mutations with curl,\
+  \ and navigate SDL types from the command line.\n\n## Agentic Workflow: Read -> Reason -> Act (graphql)\n\
+  \nYou are **graphql** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `graphql`\n- Domain: General GraphQL development: introspect schemas,\
+  \ send queries and mutations with curl, and navigate SDL types from the command line.\n- **graphql-client**:\
+  \ Introspect endpoints and run queries/mutations with curl and jq. — `curl -s -X POST http://localhost:4000/graphql\
+  \ -H 'Content-Type: application/json`\n- Check `knowledge` references before acting\n\n### 2. Reason\
+  \ — think for `graphql`\n- For `graphql-client`: Introspect endpoints and run queries/mutations with\
+  \ curl and jq. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `graphql` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `graphql:12a4d8bb`\n\n# GraphQL\n\n## What this skill does\n\n\
+  GraphQL lets clients ask for exactly what they need in one round trip. This skill covers driving any\
+  \ GraphQL endpoint from the CLI: introspection, queries with variables, and mutations.\n\n## When to\
+  \ use\n\n- Exploring an unfamiliar GraphQL API\n- Testing queries before writing client code\n- Scripting\
+  \ data operations against a graph\n\n## Real commands\n\n```bash\n# Root types\ncurl -s -X POST http://localhost:4000/graphql\
   \ -H 'Content-Type: application/json' -d '{\"query\":\"{ __schema { queryType { name } } }\"}' | jq\
-  \ '.data'`\n- `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d\
-  \ '{\"query\":\"{ __type(name: \\\"Order\\\") { fields { name type { kind ofType { name } } } } }\"\
-  }' | jq '.data.__type.fields[].name'`\n- `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type:\
-  \ application/json' -d '{\"query\":\"query($id: ID!){ order(id: $id) { id status } }\",\"variables\"\
-  :{\"id\":\"1\"}}' | jq`\n- `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json'\
-  \ -d '{\"query\":\"mutation{ placeOrder(input: {amount: 42}) { orderId } }\"}' | jq`\n- `curl -s -X\
-  \ POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ __schema\
-  \ { types { name } } }\"}' | jq '.data.__schema.types[].name' | head -20`\n\n**Examples:**\n- curl -s\
-  \ -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"query($id:\
-  \ ID!){ order(id: $id) { id status } }\",\"variables\":{\"id\":\"1\"}}' | jq\n- curl -s -X POST http://localhost:4000/graphql\
+  \ '.data'\n\n# Fields of a type\ncurl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json'\
+  \ -d '{\"query\":\"{ __type(name: \\\"Order\\\") { fields { name } } }\"}' | jq '.data.__type.fields[].name'\n\
+  \n# Query with variables\ncurl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json'\
+  \ -d '{\"query\":\"query($id: ID!){ order(id: $id) { id status } }\",\"variables\":{\"id\":\"1\"}}'\
+  \ | jq\n\n# Mutation\ncurl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json'\
+  \ -d '{\"query\":\"mutation{ placeOrder(input: {amount: 42}) { orderId } }\"}' | jq\n```\n\n## Response\
+  \ shape\n\n```json\n{\n  \"data\": {\"order\": {\"id\": \"1\", \"status\": \"paid\"}},\n  \"errors\"\
+  : []\n}\n```\n\n## Testing\n\n```bash\n# Confirm the endpoint is alive and the schema loads\ncurl -s\
+  \ -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ __typename\
+  \ }\"}' | jq '.data.__typename'\n```\n\n## Best practices\n\n- Always use variables, never string-interpolate\
+  \ values into queries.\n- Request only the fields you use; no SELECT *.\n- Handle errors[] explicitly;\
+  \ data may be partial.\n- Use query names for tracing and logging.\n- Introspect in dev, disable it\
+  \ in prod for security.\n\n## Capabilities\n\n### graphql-client\nIntrospect endpoints and run queries/mutations\
+  \ with curl and jq.\n\n**Parameters:**\n- `endpoint` (string): GraphQL HTTP endpoint\n- `query` (string):\
+  \ GraphQL query or mutation document\n- `variables` (object): Variables object for the query\n\n**Commands:**\n\
+  - `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\"\
+  :\"{ __schema { queryType { name } } }\"}' | jq '.data'`\n- `curl -s -X POST http://localhost:4000/graphql\
   \ -H 'Content-Type: application/json' -d '{\"query\":\"{ __type(name: \\\"Order\\\") { fields { name\
-  \ } } }\"}' | jq '.data.__type.fields[].name'\n- curl -s -X POST http://localhost:4000/graphql -H 'Content-Type:\
-  \ application/json' -d '{\"query\":\"mutation{ placeOrder(input: {amount: 42}) { orderId } }\"}' | jq"
+  \ type { kind ofType { name } } } } }\"}' | jq '.data.__type.fields[].name'`\n- `curl -s -X POST http://localhost:4000/graphql\
+  \ -H 'Content-Type: application/json' -d '{\"query\":\"query($id: ID!){ order(id: $id) { id status }\
+  \ }\",\"variables\":{\"id\":\"1\"}}' | jq`\n- `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type:\
+  \ application/json' -d '{\"query\":\"mutation{ placeOrder(input: {amount: 42}) { orderId } }\"}' | jq`\n\
+  - `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\"\
+  :\"{ __schema { types { name } } }\"}' | jq '.data.__schema.types[].name' | head -20`\n\n**Examples:**\n\
+  - curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"\
+  query($id: ID!){ order(id: $id) { id status } }\",\"variables\":{\"id\":\"1\"}}' | jq\n- curl -s -X\
+  \ POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ __type(name:\
+  \ \\\"Order\\\") { fields { name } } }\"}' | jq '.data.__type.fields[].name'\n- curl -s -X POST http://localhost:4000/graphql\
+  \ -H 'Content-Type: application/json' -d '{\"query\":\"mutation{ placeOrder(input: {amount: 42}) { orderId\
+  \ } }\"}' | jq\n\n## References\n- [GraphQL spec](https://spec.graphql.org/)\n- [Introspection guide](https://graphql.org/learn/introspection/)"
 prompt: Act as graphql and handle the task per the instructions.

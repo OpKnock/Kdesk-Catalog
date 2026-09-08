@@ -6,27 +6,25 @@ alwaysApply: false
 
 Validate and test it configuration and rules. Write recording and alerting rules with tests. production monitoring.'
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (prometheus)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **prometheus** (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `promtool check config prometheus.yml`, `curl -s http://localhost:9090/api/v1/rules | jq '.data.group`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — infrastructure context for `prometheus`
+- Domain: Validate and test it configuration and rules. Write recording and alerting rules with tests. production monitoring.'
+- **promtool**: Validate and test Prometheus configuration and rules. — `promtool check config prometheus.yml`
+- **rules**: Write recording and alerting rules with tests. — `curl -s http://localhost:9090/api/v1/rules | jq '.data.groups[] | {name, rules: `
+- Check `knowledge` and `prerequisites: promtool`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `prometheus`
+- For `promtool`: Validate and test Prometheus configuration and rules. — decide which checks to run
+- For `rules`: Write recording and alerting rules with tests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `prometheus` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `prometheus:be9b5929`
 
 # Prometheus
 

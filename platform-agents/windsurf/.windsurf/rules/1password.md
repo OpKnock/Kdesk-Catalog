@@ -6,27 +6,25 @@ globs: ["**/*.go", "**/*.r", "**/*.sh"]
 
 Manages secrets with the 1Password CLI (op): sign-in, item CRUD, op:// references, secret injection, and running processes with loaded secrets.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (1password)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **1Password** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `op signin --account my.1password.com`, `op read op://vault/MyLogin/password`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `1password`
+- Domain: Manages secrets with the 1Password CLI (op): sign-in, item CRUD, op:// references, secret injection, and running processes with loaded secrets.
+- **secret-management**: Create, read, and update 1Password items programmatically. — `op signin --account my.1password.com`
+- **secret-injection**: Reference secrets by URI and inject into files or process environments without printing them. — `op read op://vault/MyLogin/password`
+- Check `knowledge` and `prerequisites: op`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `1password`
+- For `secret-management`: Create, read, and update 1Password items programmatically. — decide which checks to run
+- For `secret-injection`: Reference secrets by URI and inject into files or process environments without printing them. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `1password` tools
+- Tools: `Glob`, `Grep`, `Read`, `Op` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `1password:0db33e7b`
 
 # 1Password
 

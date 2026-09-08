@@ -1,6 +1,6 @@
 ---
 name: "Ml Llama Cpp Node"
-description: "llama-cpp Node.js SDK agent for Node.js bindings to llama.cpp."
+description: "llama-cpp Node.js SDK agent for Node.js bindings to llama.cpp. Use when working with Ml Llama Cpp Node, inference or when the user mentions Ml Llama Cpp Node, inference."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Llama Cpp Node
 
 llama-cpp Node.js SDK agent for Node.js bindings to llama.cpp.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-llama-cpp-node)
+
+You are **Ml Llama Cpp Node** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-llama-cpp-node`
+- Domain: llama-cpp Node.js SDK agent for Node.js bindings to llama.cpp.
+- **Ml Llama Cpp Node**: llama-cpp Node.js SDK agent for Node.js bindings to llama.cpp. — `Generate: const response = await context.completion({prompt: 'Hello', nPredict: `
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-llama-cpp-node`
+- For `Ml Llama Cpp Node`: llama-cpp Node.js SDK agent for Node.js bindings to llama.cpp. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-llama-cpp-node` tools
+- Tools: `Glob`, `Grep`, `Read`, `Generate`, `Context` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-llama-cpp-node:90e1271c`
 
 ## Instructions
 
@@ -40,3 +58,7 @@ llama-cpp Node.js SDK agent for Node.js bindings to llama.cpp.
 - Context: const context = new LlamaContext({model})
 - Generate: const response = await context.completion({prompt: 'Hello', nPredict: 100})
 - Chat: const response = await context.chatCompletion({messages: [{role: 'user', content: 'Hello'}]})
+
+## References
+- [llama.cpp Documentation](https://github.com/ggerganov/llama.cpp)
+- [npm Documentation](https://docs.npmjs.com/)

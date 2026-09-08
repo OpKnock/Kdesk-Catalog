@@ -4,27 +4,27 @@ applyTo: "**/*.go **/*.json **/*.r **/*.sh **/*.{yaml,yml}"
 
 Implements canary releases on Kubernetes with Argo Rollouts: weighted traffic splitting, analysis, and promotion/rollback.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (canary-deployment)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Canary Deployment** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `kubectl argo rollouts get rollout my-api`, `kubectl apply -f rollout-canary.yaml`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `canary-deployment`
+- Domain: Implements canary releases on Kubernetes with Argo Rollouts: weighted traffic splitting, analysis, and promotion/rollback.
+- **argo-rollouts**: Manage canary Rollouts and traffic weights. — `kubectl argo rollouts get rollout my-api`
+- **weighted-traffic**: Configure weighted canary steps. — `kubectl apply -f rollout-canary.yaml`
+- **analysis**: Run metric analysis jobs that gate promotion. — `kubectl get analysisrun -n app`
+- Check `knowledge` and `prerequisites: kubectl`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `canary-deployment`
+- For `argo-rollouts`: Manage canary Rollouts and traffic weights. — decide which checks to run
+- For `weighted-traffic`: Configure weighted canary steps. — decide which checks to run
+- For `analysis`: Run metric analysis jobs that gate promotion. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `canary-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `canary-deployment:2cbdf4a8`
 
 # Canary Deployment
 

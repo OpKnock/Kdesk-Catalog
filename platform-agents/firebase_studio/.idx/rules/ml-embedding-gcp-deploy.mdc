@@ -1,5 +1,5 @@
 ---
-description: "GCP Embedding deployment agent for Google embedding services."
+description: "GCP Embedding deployment agent for Google embedding services. Use when working with Ml Embedding Gcp Deploy or when the user mentions Ml Embedding Gcp Deploy."
 globs: ["**/*.go", "**/*.json", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Ml Embedding Gcp Deploy
 
 GCP Embedding deployment agent for Google embedding services.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-embedding-gcp-deploy)
+
+You are **Ml Embedding Gcp Deploy** (ml/embedding) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-embedding-gcp-deploy`
+- Domain: GCP Embedding deployment agent for Google embedding services.
+- **Ml Embedding Gcp Deploy**: GCP Embedding deployment agent for Google embedding services. — `Deploy: gcloud ai models upload --display-name=embedding-model --artifact-uri=gs`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-embedding-gcp-deploy`
+- For `Ml Embedding Gcp Deploy`: GCP Embedding deployment agent for Google embedding services. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-embedding-gcp-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Deploy`, `Predict` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-embedding-gcp-deploy:fa732ea8`
 
 ## Instructions
 
@@ -24,3 +42,6 @@ GCP Embedding deployment agent for Google embedding services.
 **Examples:**
 - Predict: gcloud ai endpoints predict my-endpoint --json-request request.json --region us-central1
 - Deploy: gcloud ai models upload --display-name=embedding-model --artifact-uri=gs://bucket/embeddings --region=us-central1
+
+## References
+- [OpenAI Embeddings Guide](https://platform.openai.com/docs/guides/embeddings)

@@ -1,15 +1,29 @@
 ---
 name: "Documentation"
-description: "Authors and publishes project documentation sites with MkDocs: scaffolds, previews with hot reload, builds strictly, and deploys to GitHub Pages."
+description: "Authors and publishes project documentation sites with MkDocs: scaffolds, previews with hot reload, builds strictly, and deploys to GitHub Pages. Use when working with mkdocs publishing, api or when the user mentions mkdocs publishing, api."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Documentation
-
 Authors and publishes project documentation sites with MkDocs: scaffolds, previews with hot reload, builds strictly, and deploys to GitHub Pages.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (documentation)
+
+You are **Documentation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `documentation`
+- Domain: Authors and publishes project documentation sites with MkDocs: scaffolds, previews with hot reload, builds strictly, and deploys to GitHub Pages.
+- **mkdocs-publishing**: Scaffold, serve, build, and deploy MkDocs documentation projects. — `mkdocs new my-docs`
+- Check `knowledge` and `prerequisites: mkdocs`
+
+### 2. Reason — think for `documentation`
+- For `mkdocs-publishing`: Scaffold, serve, build, and deploy MkDocs documentation projects. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `documentation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mkdocs` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `documentation:a579bea2`
 
 # Documentation
 
@@ -88,6 +102,11 @@ markdown_extensions:
 ### mkdocs-publishing
 Scaffold, serve, build, and deploy MkDocs documentation projects.
 
+**Parameters:**
+- `project-dir` (string): Directory where the docs project lives
+- `dev-addr` (string): Host:port for the local preview server
+- `strict-mode` (boolean): Treat warnings as errors during build
+
 **Commands:**
 - `mkdocs new my-docs`
 - `mkdocs serve --dev-addr 127.0.0.1:8000`
@@ -100,3 +119,7 @@ Scaffold, serve, build, and deploy MkDocs documentation projects.
 - mkdocs new my-docs && cd my-docs && mkdocs serve
 - mkdocs build --strict
 - mkdocs gh-deploy --force
+
+## References
+- [MkDocs Documentation](https://www.mkdocs.org/)
+- [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)

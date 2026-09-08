@@ -1,8 +1,22 @@
-# Insomnia
-
 Design, test, and debug APIs with Insomnia: lint OpenAPI specs, run collections headlessly in CI, export design documents, and manage environments across stages.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (insomnia)
+
+You are **Insomnia** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `insomnia`
+- Domain: Design, test, and debug APIs with Insomnia: lint OpenAPI specs, run collections headlessly in CI, export design documents, and manage environments across stages.
+- **inso-cli**: Lint API specs and run Insomnia collections and tests from CI. — `inso lint spec openapi.yaml`
+- Check `knowledge` and `prerequisites: inso`
+
+### 2. Reason — think for `insomnia`
+- For `inso-cli`: Lint API specs and run Insomnia collections and tests from CI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `insomnia` tools
+- Tools: `Glob`, `Grep`, `Read`, `Inso` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `insomnia:9cf8f7d7`
 
 # Insomnia
 
@@ -66,6 +80,11 @@ Agent: inso run test "Checkout" --env staging --reporter json --output results.j
 ### inso-cli
 Lint API specs and run Insomnia collections and tests from CI.
 
+**Parameters:**
+- `spec_file` (string): OpenAPI spec path for lint/export.
+- `collection` (string): Collection name to run.
+- `env` (string): Environment (dev/staging/prod) for variables.
+
 **Commands:**
 - `inso lint spec openapi.yaml`
 - `inso run test "My Collection" --env prod`
@@ -77,3 +96,7 @@ Lint API specs and run Insomnia collections and tests from CI.
 - inso lint spec openapi.yaml --ci
 - inso run test "Checkout" -e staging --reporter json --output results.json
 - inso run collection "Smoke" --env dev -t false
+
+## References
+- [Insomnia Docs](https://docs.insomnia.rest/)
+- [Inso CLI Docs](https://docs.insomnia.rest/inso-cli/introduction)

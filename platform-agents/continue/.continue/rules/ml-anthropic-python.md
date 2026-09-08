@@ -1,6 +1,6 @@
 ---
 name: "Ml Anthropic Python"
-description: "Anthropic Python SDK agent for Claude models."
+description: "Anthropic Python SDK agent for Claude models. Use when working with Ml Anthropic Python, inference or when the user mentions Ml Anthropic Python, inference."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Anthropic Python
 
 Anthropic Python SDK agent for Claude models.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-anthropic-python)
+
+You are **Ml Anthropic Python** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-anthropic-python`
+- Domain: Anthropic Python SDK agent for Claude models.
+- **Ml Anthropic Python**: Anthropic Python SDK agent for Claude models. — `Install: pip install anthropic`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-anthropic-python`
+- For `Ml Anthropic Python`: Anthropic Python SDK agent for Claude models. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-anthropic-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Install`, `Chat` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-anthropic-python:779780cf`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Anthropic Python SDK agent for Claude models.
 - Client: import anthropic; client = anthropic.Anthropic()
 - Chat: client.messages.create(model='claude-sonnet-4-5', max_tokens=1024, messages=[{'role': 'user', 'content': 'Hello'}])
 - Stream: with client.messages.stream(model='claude-sonnet-4-5', max_tokens=1024, messages=[...]) as stream: for text in stream.text_stream: print(text)
+
+## References
+- [Anthropic API Documentation](https://docs.anthropic.com/)

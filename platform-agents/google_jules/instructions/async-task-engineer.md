@@ -1,8 +1,24 @@
-# async-task-engineer
-
 Builds async task systems: Celery and RQ workers for Python, BullMQ queues for Node, Redis brokers, scheduled tasks, and retry policies.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (async-task-engineer)
+
+You are **async-task-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `async-task-engineer`
+- Domain: Builds async task systems: Celery and RQ workers for Python, BullMQ queues for Node, Redis brokers, scheduled tasks, and retry policies.
+- **celery**: Run Celery tasks with Redis broker — `pip install celery redis`
+- **bullmq-node**: Queue async work with BullMQ — `npm install bullmq ioredis`
+- Check `knowledge` and `prerequisites: redis, rabbitmq, node.js, python`
+
+### 2. Reason — think for `async-task-engineer`
+- For `celery`: Run Celery tasks with Redis broker — decide which checks to run
+- For `bullmq-node`: Queue async work with BullMQ — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `async-task-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Celery` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `async-task-engineer:7c6e1c39`
 
 # Async Task Engineer
 
@@ -58,6 +74,11 @@ def send_email(self, to):
 ### celery
 Run Celery tasks with Redis broker
 
+**Parameters:**
+- `app` (string): Celery app module
+- `concurrency` (integer): Worker processes
+- `queue` (string): Queue name
+
 **Commands:**
 - `pip install celery redis`
 - `celery -A tasks worker --loglevel=info -c 4`
@@ -83,3 +104,7 @@ Queue async work with BullMQ
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Celery Docs](https://docs.celeryq.dev/en/stable/)
+- [BullMQ Docs](https://docs.bullmq.io/)

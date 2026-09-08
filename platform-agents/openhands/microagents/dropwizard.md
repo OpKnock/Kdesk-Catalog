@@ -1,15 +1,29 @@
 ---
 name: "dropwizard"
-description: "Operates Dropwizard services: validates config, runs DB migrations, and checks healthchecks and metrics on the admin port from the fat jar."
+description: "Operates Dropwizard services: validates config, runs DB migrations, and checks healthchecks and metrics on the admin port from the fat jar. Use when working with dropwizard server, api or when the user mentions dropwizard server, api."
 type: knowledge
 triggers: ["dropwizard", "dropwizard-server"]
 ---
 
-# Dropwizard
-
 Operates Dropwizard services: validates config, runs DB migrations, and checks healthchecks and metrics on the admin port from the fat jar.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (dropwizard)
+
+You are **Dropwizard** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `dropwizard`
+- Domain: Operates Dropwizard services: validates config, runs DB migrations, and checks healthchecks and metrics on the admin port from the fat jar.
+- **dropwizard-server**: Start, validate, migrate, and monitor a Dropwizard application from its fat jar. — `java -jar app.jar server config.yml`
+- Check `knowledge` and `prerequisites: java`
+
+### 2. Reason — think for `dropwizard`
+- For `dropwizard-server`: Start, validate, migrate, and monitor a Dropwizard application from its fat jar. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `dropwizard` tools
+- Tools: `Glob`, `Grep`, `Read`, `Java`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `dropwizard:7d5f2055`
 
 # Dropwizard
 
@@ -91,6 +105,11 @@ curl -sf localhost:8081/healthcheck | jq -e 'all(.; .healthy == true)'
 ### dropwizard-server
 Start, validate, migrate, and monitor a Dropwizard application from its fat jar.
 
+**Parameters:**
+- `jar-file` (string): Path to the Dropwizard fat jar
+- `config-file` (string): Path to the YAML config file
+- `command` (string): Dropwizard command: server, check, db migrate, db status
+
 **Commands:**
 - `java -jar app.jar server config.yml`
 - `java -jar app.jar check config.yml`
@@ -103,3 +122,6 @@ Start, validate, migrate, and monitor a Dropwizard application from its fat jar.
 - java -jar app.jar check config.yml && java -jar app.jar server config.yml
 - curl -s localhost:8081/healthcheck | jq '.deadlocks, .database'
 - java -jar app.jar db migrate config.yml --migrations migrations.xml
+
+## References
+- [Dropwizard Documentation](https://www.dropwizard.io/en/stable/)

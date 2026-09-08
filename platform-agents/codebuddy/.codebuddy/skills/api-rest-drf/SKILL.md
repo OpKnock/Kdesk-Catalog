@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(curl:*) Bash(django-admin:*) Bash(pip:*) Bas
 
 Builds REST APIs with Django REST Framework: models, serializers, viewsets, routers, permissions, and browsable API testing.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-rest-drf)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Rest Drf** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `pip install django djangorestframework`, `curl -s http://localhost:8000/api/users/ | jq 'length'`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `api-rest-drf`
+- Domain: Builds REST APIs with Django REST Framework: models, serializers, viewsets, routers, permissions, and browsable API testing.
+- **drf-setup**: Scaffold a Django project with DRF — `pip install django djangorestframework`
+- **viewsets**: Expose CRUD via viewsets and routers — `curl -s http://localhost:8000/api/users/ | jq 'length'`
+- Check `knowledge` and `prerequisites: node.js, python, express, fastapi`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-rest-drf`
+- For `drf-setup`: Scaffold a Django project with DRF — decide which checks to run
+- For `viewsets`: Expose CRUD via viewsets and routers — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-rest-drf` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Django-admin` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-rest-drf:737dd577`
 
 # API REST v4 - Django REST Framework
 

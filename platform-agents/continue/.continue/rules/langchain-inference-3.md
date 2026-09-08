@@ -1,6 +1,6 @@
 ---
 name: "Langchain Inference 3"
-description: "LangChain server agent. Manages LangChain ML server."
+description: "LangChain server agent. Manages LangChain ML server. Use when working with Ml Langchain Server Agent, inference or when the user mentions Ml Langchain Server Agent, inference."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Langchain Inference 3
 
 LangChain server agent. Manages LangChain ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (langchain-inference-3)
+
+You are **Langchain Inference 3** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `langchain-inference-3`
+- Domain: LangChain server agent. Manages LangChain ML server.
+- **Ml Langchain Server Agent**: LangChain server agent. Manages LangChain ML server. — `python -m langchain.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `langchain-inference-3`
+- For `Ml Langchain Server Agent`: LangChain server agent. Manages LangChain ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `langchain-inference-3` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `langchain-inference-3:e6648ce5`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ LangChain server agent. Manages LangChain ML server.
 - python run_chain.py --chain qa --query 'What is AI?'
 - python run_agent.py --agent search --query 'latest news'
 - python test_chain.py --chain qa
+
+## References
+- [LangChain Documentation](https://python.langchain.com/docs/)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

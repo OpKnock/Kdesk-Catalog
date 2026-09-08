@@ -4,27 +4,25 @@ applyTo: "**/*.html **/*.r **/*.sh **/*.{yaml,yml}"
 
 Designs documentation site architecture: structure, navigation, code samples, and OpenAPI-based generation pipelines.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-doc-site-architecture)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Doc Site Architecture** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `mkdir -p docs/guides docs/reference docs/tutorials docs/chan`, `npx @redocly/cli lint openapi.yaml`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `api-doc-site-architecture`
+- Domain: Designs documentation site architecture: structure, navigation, code samples, and OpenAPI-based generation pipelines.
+- **site-architecture**: Structure docs sites: guides, reference, tutorials, and changelog — `mkdir -p docs/guides docs/reference docs/tutorials docs/changelog`
+- **generation-pipeline**: Generate reference docs from OpenAPI with Redocly — `npx @redocly/cli lint openapi.yaml`
+- Check `knowledge` and `prerequisites: swagger-cli, redoc-cli, openapi-generator`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-doc-site-architecture`
+- For `site-architecture`: Structure docs sites: guides, reference, tutorials, and changelog — decide which checks to run
+- For `generation-pipeline`: Generate reference docs from OpenAPI with Redocly — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-doc-site-architecture` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mkdir`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-doc-site-architecture:e3906eb0`
 
 # API Doc (Site Design)
 

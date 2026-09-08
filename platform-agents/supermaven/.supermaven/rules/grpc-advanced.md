@@ -1,8 +1,22 @@
-# Grpc Advanced
-
 Advanced gRPC client workflows: interactive REPL with evans, rich output formats, large-message limits, deadlines, and request streaming from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (grpc-advanced)
+
+You are **Grpc Advanced** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `grpc-advanced`
+- Domain: Advanced gRPC client workflows: interactive REPL with evans, rich output formats, large-message limits, deadlines, and request streaming from the CLI.
+- **advanced-grpc-client**: Interactively explore and call gRPC services with evans, plus advanced grpcurl flags. — `go install github.com/ktr0731/evans@latest`
+- Check `knowledge` and `prerequisites: evans, grpcurl`
+
+### 2. Reason — think for `grpc-advanced`
+- For `advanced-grpc-client`: Interactively explore and call gRPC services with evans, plus advanced grpcurl flags. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `grpc-advanced` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Evans` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grpc-advanced:f9f08a27`
 
 # gRPC v2 (Advanced Client Workflows)
 
@@ -89,6 +103,11 @@ Agent: Raise the client and server limits:
 ### advanced-grpc-client
 Interactively explore and call gRPC services with evans, plus advanced grpcurl flags.
 
+**Parameters:**
+- `host` (string): gRPC host for evans/grpcurl, default localhost.
+- `port` (integer): gRPC port, default 50051.
+- `max_msg_size` (integer): Maximum message size in bytes (grpcurl -max-msg-sz).
+
 **Commands:**
 - `go install github.com/ktr0731/evans@latest`
 - `evans --host localhost --port 50051 -r`
@@ -100,3 +119,7 @@ Interactively explore and call gRPC services with evans, plus advanced grpcurl f
 - evans --tls --host localhost --port 50051 -r
 - echo '{"name":"John"}' | grpcurl -plaintext -d @ localhost:50051 mypackage.MyService/SayHello
 - evans --proto hello.proto --host localhost --port 50051
+
+## References
+- [evans GitHub](https://github.com/ktr0731/evans)
+- [gRPC Keepalive Guide](https://grpc.io/docs/guides/keepalive/)

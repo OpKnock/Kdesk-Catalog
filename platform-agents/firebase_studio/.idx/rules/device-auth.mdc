@@ -1,14 +1,28 @@
 ---
-description: "Implements OAuth 2.0 Device Authorization Grant (RFC 8628) on input-constrained devices: device code request, token polling, and slow-down error handling."
+description: "Implements OAuth 2.0 Device Authorization Grant (RFC 8628) on input-constrained devices: device code request, token polling, and slow-down error handling. Use when working with device flow, api or when the user mentions device flow, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Device Auth
-
 Implements OAuth 2.0 Device Authorization Grant (RFC 8628) on input-constrained devices: device code request, token polling, and slow-down error handling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (device-auth)
+
+You are **Device Auth** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `device-auth`
+- Domain: Implements OAuth 2.0 Device Authorization Grant (RFC 8628) on input-constrained devices: device code request, token polling, and slow-down error handling.
+- **device-flow**: Drive the full device code flow with curl: device authorization request, token polling, and error ha — `curl -X POST https://httpbin.org/anything/oauth/device_authorization -d 'client_`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `device-auth`
+- For `device-flow`: Drive the full device code flow with curl: device authorization request, token polling, and error handling. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `device-auth` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `device-auth:af56c5de`
 
 # Device Authorization
 
@@ -69,6 +83,11 @@ for i in $(seq 1 20); do sleep 5; curl -X POST https://httpbin.org/anything/oaut
 ### device-flow
 Drive the full device code flow with curl: device authorization request, token polling, and error handling.
 
+**Parameters:**
+- `client-id` (string): Public client identifier registered at the authorization server
+- `device-code` (string): Opaque code returned by the device_authorization endpoint, used for polling
+- `interval` (integer): Polling interval in seconds returned by the server; increase it on slow_down errors
+
 **Commands:**
 - `curl -X POST https://httpbin.org/anything/oauth/device_authorization -d 'client_id=MY_CLIENT&scope=openid%20profile' -H 'Content-Type: application/x-www-form-urlencoded'`
 - `curl -X POST https://httpbin.org/anything/oauth/token -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT'`
@@ -80,3 +99,6 @@ Drive the full device code flow with curl: device authorization request, token p
 - curl -s https://httpbin.org/anything/oauth/device_authorization -d 'client_id=MY_CLIENT' | jq '.device_code, .user_code, .verification_uri_complete'
 - curl -X POST https://httpbin.org/anything/oauth/token -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT' | jq
 - curl -X POST https://httpbin.org/anything/oauth/token -d 'grant_type=refresh_token&refresh_token=REFRESH&client_id=MY_CLIENT' | jq -r '.access_token'
+
+## References
+- [RFC 8628 Device Authorization Grant](https://www.rfc-editor.org/rfc/rfc8628.html)

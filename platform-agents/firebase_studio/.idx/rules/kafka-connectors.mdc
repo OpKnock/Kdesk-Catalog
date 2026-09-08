@@ -1,14 +1,30 @@
 ---
-description: "Deploy specific Kafka connectors: Debezium CDC sources, JDBC, and S3 sinks, including plugin installation with confluent-hub and change-data streaming."
+description: "Deploy specific Kafka connectors: Debezium CDC sources, JDBC, and S3 sinks, including plugin installation with confluent-hub and change-data streaming. Use when working with plugin install, cdc pipeline, api or when the user mentions plugin install, cdc pipeline, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# Kafka Connectors
-
 Deploy specific Kafka connectors: Debezium CDC sources, JDBC, and S3 sinks, including plugin installation with confluent-hub and change-data streaming.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kafka-connectors)
+
+You are **Kafka Connectors** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `kafka-connectors`
+- Domain: Deploy specific Kafka connectors: Debezium CDC sources, JDBC, and S3 sinks, including plugin installation with confluent-hub and change-data streaming.
+- **plugin-install**: Install connector plugins into the Connect worker with confluent-hub. — `confluent-hub install debezium/debezium-connector-mysql:2.5.0 --component-dir /o`
+- **cdc-pipeline**: Create and monitor a Debezium CDC connector capturing database changes. — `curl -s -X POST http://localhost:8083/connectors -H 'Content-Type: application/j`
+- Check `knowledge` and `prerequisites: confluent-hub, kafka-console-consumer.sh`
+
+### 2. Reason — think for `kafka-connectors`
+- For `plugin-install`: Install connector plugins into the Connect worker with confluent-hub. — decide which checks to run
+- For `cdc-pipeline`: Create and monitor a Debezium CDC connector capturing database changes. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kafka-connectors` tools
+- Tools: `Glob`, `Grep`, `Read`, `Confluent-hub`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-connectors:1e4eb64d`
 
 # Kafka Connectors (Specific)
 
@@ -96,6 +112,10 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic dbserver.myd
 ### plugin-install
 Install connector plugins into the Connect worker with confluent-hub.
 
+**Parameters:**
+- `plugin` (string): confluent-hub plugin coordinates, e.g. debezium/debezium-connector-mysql:2.5.0.
+- `component_dir` (string): Installation directory listed in plugin.path.
+
 **Commands:**
 - `confluent-hub install debezium/debezium-connector-mysql:2.5.0 --component-dir /opt/connect-plugins`
 - `confluent-hub install confluentinc/kafka-connect-jdbc:latest --no-prompt`
@@ -110,6 +130,10 @@ Install connector plugins into the Connect worker with confluent-hub.
 ### cdc-pipeline
 Create and monitor a Debezium CDC connector capturing database changes.
 
+**Parameters:**
+- `connector` (string): Connector name, e.g. debezium-mysql.
+- `topic` (string): CDC topic in format <server>.<db>.<table>.
+
 **Commands:**
 - `curl -s -X POST http://localhost:8083/connectors -H 'Content-Type: application/json' -d @debezium-mysql.json`
 - `curl -s http://localhost:8083/connectors/debezium-mysql/status | jq '.connector,.tasks'`
@@ -121,3 +145,7 @@ Create and monitor a Debezium CDC connector capturing database changes.
 - curl -s -X POST http://localhost:8083/connectors -H 'Content-Type: application/json' -d @debezium-mysql.json
 - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic dbserver.mydb.products --from-beginning
 - curl -s http://localhost:8083/connectors/debezium-mysql/status | jq '.tasks[0].state'
+
+## References
+- [Debezium Connectors](https://debezium.io/documentation/reference/stable/connectors/)
+- [confluent-hub](https://docs.confluent.io/platform/current/connect/managing/install.html)

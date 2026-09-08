@@ -1,15 +1,29 @@
 ---
 name: "Firebase Firestore"
-description: "Cloud Firestore database operations: manage data, indexes, and security rules; read and write documents from the CLI."
+description: "Cloud Firestore database operations: manage data, indexes, and security rules; read and write documents from the CLI. Use when working with firestore data, api or when the user mentions firestore data, api."
 globs: ["**/*.java", "**/*.json", "**/*.r", "**/*.sh", "**/*.sql", "**/*.{js,ts,jsx,tsx}"]
 alwaysApply: false
 ---
 
-# Firebase Firestore
-
 Cloud Firestore database operations: manage data, indexes, and security rules; read and write documents from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (firebase-firestore)
+
+You are **Firebase Firestore** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `firebase-firestore`
+- Domain: Cloud Firestore database operations: manage data, indexes, and security rules; read and write documents from the CLI.
+- **firestore-data**: Read, write, and administer Firestore data, indexes, and rules. — `firebase firestore:indexes`
+- Check `knowledge` and `prerequisites: firebase, node`
+
+### 2. Reason — think for `firebase-firestore`
+- For `firestore-data`: Read, write, and administer Firestore data, indexes, and rules. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `firebase-firestore` tools
+- Tools: `Glob`, `Grep`, `Read`, `Firebase`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `firebase-firestore:1ef53df9`
 
 # Firebase Firestore
 
@@ -92,6 +106,11 @@ firebase deploy --only firestore:rules --dry-run
 ### firestore-data
 Read, write, and administer Firestore data, indexes, and rules.
 
+**Parameters:**
+- `collection` (string): Collection to query or modify
+- `rules-file` (string): Path to firestore.rules
+- `indexes-file` (string): Path to firestore.indexes.json
+
 **Commands:**
 - `firebase firestore:indexes`
 - `firebase deploy --only firestore:rules`
@@ -103,3 +122,7 @@ Read, write, and administer Firestore data, indexes, and rules.
 - firebase deploy --only firestore:rules
 - firebase deploy --only firestore:indexes
 - node -e "const admin=require('firebase-admin');admin.initializeApp();admin.firestore().collection('orders').where('status','==','paid').limit(5).get().then(s=>console.log(s.size))"
+
+## References
+- [Firestore data model](https://firebase.google.com/docs/firestore/data-model)
+- [Firestore security rules](https://firebase.google.com/docs/firestore/security/get-started)

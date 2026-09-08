@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(curl:*) Bash(filebeat:*) Bash(logstash:*)"
 
 Centralized logging with the ELK stack: Elasticsearch index setup, Filebeat shipping, Logstash pipelines, and querying logs with curl.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (logging-elasticsearch-ops)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Logging Elasticsearch Ops** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -s -X PUT 'localhost:9200/app-logs?pretty' -H 'Content-`, `filebeat -e -c filebeat.yml`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `logging-elasticsearch-ops`
+- Domain: Centralized logging with the ELK stack: Elasticsearch index setup, Filebeat shipping, Logstash pipelines, and querying logs with curl.
+- **elasticsearch-ops**: Create indices and query log documents in Elasticsearch. — `curl -s -X PUT 'localhost:9200/app-logs?pretty' -H 'Content-Type: application/js`
+- **ship-process**: Ship logs with Filebeat and process with Logstash pipelines. — `filebeat -e -c filebeat.yml`
+- Check `knowledge` and `prerequisites: filebeat, logstash`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `logging-elasticsearch-ops`
+- For `elasticsearch-ops`: Create indices and query log documents in Elasticsearch. — decide which checks to run
+- For `ship-process`: Ship logs with Filebeat and process with Logstash pipelines. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `logging-elasticsearch-ops` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Filebeat` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `logging-elasticsearch-ops:886238dd`
 
 # Logging v2 (ELK Stack)
 

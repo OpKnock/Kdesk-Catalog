@@ -6,27 +6,25 @@ alwaysApply: false
 
 Sorts Python imports with isort: config profiles, black compatibility, section handling, and CI checks.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (isort)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **isort** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `isort src/`, `isort --version`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `isort`
+- Domain: Sorts Python imports with isort: config profiles, black compatibility, section handling, and CI checks.
+- **isort-sort**: Sort imports with control over profiles. — `isort src/`
+- **isort-config**: Configure import sections and settings. — `isort --version`
+- Check `knowledge` and `prerequisites: isort`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `isort`
+- For `isort-sort`: Sort imports with control over profiles. — decide which checks to run
+- For `isort-config`: Configure import sections and settings. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `isort` tools
+- Tools: `Glob`, `Grep`, `Read`, `Isort` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `isort:bcd4d0d5`
 
 # isort
 

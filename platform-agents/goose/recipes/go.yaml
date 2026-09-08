@@ -2,25 +2,39 @@ title: go
 description: 'Builds backend services in Go: module management, testing, benchmarking, profiling, and
   race detection.'
 version: 2.0.0
-instructions: "# go\n\nBuilds backend services in Go: module management, testing, benchmarking, profiling,\
-  \ and race detection.\n\n## Instructions\n\n# Go\n\nBackend development with the Go toolchain.\n\n##\
-  \ When to Use\n\n- High-concurrency services (HTTP, gRPC, workers)\n- CLIs and infrastructure tooling\n\
-  - Systems where memory and startup matter\n- Services that benefit from static binaries\n\n## Commands\n\
-  \n```bash\n# Module init\ngo mod init example.com/myapp\n\n# Build and vet\ngo build ./...\ngo vet ./...\n\
-  \n# Tests\ngo test ./...\ngo test -race ./...\ngo test -cover ./...\n\n# Benchmarks\ngo test -bench=.\
-  \ -benchmem ./internal/parse\n\n# Run and install\ngo run ./cmd/app\ngo install ./cmd/app\n```\n\n##\
-  \ HTTP Server\n\n```go\npackage main\n\nimport (\n\t\"log\"\n\t\"net/http\"\n)\n\nfunc main() {\n\t\
-  http.HandleFunc(\"/health\", func(w http.ResponseWriter, r *http.Request) {\n\t\tw.Write([]byte(\"ok\"\
-  ))\n\t})\n\tlog.Fatal(http.ListenAndServe(\":8080\", nil))\n}\n```\n\n## Best Practices\n\n- Always\
-  \ run go test -race in CI to catch data races\n- Keep the public API of packages small; export only\
-  \ what is needed\n- Use context for cancellation and timeouts in handlers and clients\n- Run gofmt/go\
-  \ vet before every commit\n- Prefer errgroup for running independent goroutines with error propagation\n\
-  - Pin dependencies in go.mod and update with go get -u then go mod tidy\n\n## Capabilities\n\n### go-build\n\
-  Create modules, build, vet, and install Go programs.\n\n**Commands:**\n- `go mod init localhost/myapp`\n\
-  - `go build ./...`\n- `go vet ./...`\n- `go install ./cmd/app`\n- `go run ./cmd/app`\n\n**Examples:**\n\
-  - go build -o bin/app ./cmd/app\n- go mod tidy\n- go vet -v ./...\n\n### go-testing\nRun tests, benchmarks,\
-  \ and race detection.\n\n**Commands:**\n- `go test ./...`\n- `go test -race ./...`\n- `go test -cover\
-  \ ./...`\n- `go test -bench=. -benchmem ./internal/parse`\n- `go test -run TestParse -v`\n\n**Examples:**\n\
-  - go test -race -count=1 ./...\n- go test -bench=BenchmarkParse -benchmem -run ^$ ./...\n- go test -coverprofile=coverage.out\
-  \ ./..."
+instructions: "Builds backend services in Go: module management, testing, benchmarking, profiling, and\
+  \ race detection.\n\n## Agentic Workflow: Read -> Reason -> Act (go)\n\nYou are **go** (backend/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — backend context\
+  \ for `go`\n- Domain: Builds backend services in Go: module management, testing, benchmarking, profiling,\
+  \ and race detection.\n- **go-build**: Create modules, build, vet, and install Go programs. — `go mod\
+  \ init localhost/myapp`\n- **go-testing**: Run tests, benchmarks, and race detection. — `go test ./...`\n\
+  - Check `knowledge` references before acting\n\n### 2. Reason — think for `go`\n- For `go-build`: Create\
+  \ modules, build, vet, and install Go programs. — decide which checks to run\n- For `go-testing`: Run\
+  \ tests, benchmarks, and race detection. — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `go` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any\
+  \ write; record evidence (paths, checksums)\n- Fingerprint: `go:6cd59d33`\n\n# Go\n\nBackend development\
+  \ with the Go toolchain.\n\n## When to Use\n\n- High-concurrency services (HTTP, gRPC, workers)\n- CLIs\
+  \ and infrastructure tooling\n- Systems where memory and startup matter\n- Services that benefit from\
+  \ static binaries\n\n## Commands\n\n```bash\n# Module init\ngo mod init example.com/myapp\n\n# Build\
+  \ and vet\ngo build ./...\ngo vet ./...\n\n# Tests\ngo test ./...\ngo test -race ./...\ngo test -cover\
+  \ ./...\n\n# Benchmarks\ngo test -bench=. -benchmem ./internal/parse\n\n# Run and install\ngo run ./cmd/app\n\
+  go install ./cmd/app\n```\n\n## HTTP Server\n\n```go\npackage main\n\nimport (\n\t\"log\"\n\t\"net/http\"\
+  \n)\n\nfunc main() {\n\thttp.HandleFunc(\"/health\", func(w http.ResponseWriter, r *http.Request) {\n\
+  \t\tw.Write([]byte(\"ok\"))\n\t})\n\tlog.Fatal(http.ListenAndServe(\":8080\", nil))\n}\n```\n\n## Best\
+  \ Practices\n\n- Always run go test -race in CI to catch data races\n- Keep the public API of packages\
+  \ small; export only what is needed\n- Use context for cancellation and timeouts in handlers and clients\n\
+  - Run gofmt/go vet before every commit\n- Prefer errgroup for running independent goroutines with error\
+  \ propagation\n- Pin dependencies in go.mod and update with go get -u then go mod tidy\n\n## Capabilities\n\
+  \n### go-build\nCreate modules, build, vet, and install Go programs.\n\n**Parameters:**\n- `package`\
+  \ (string): Package pattern to build\n- `output` (string): Binary output path\n\n**Commands:**\n- `go\
+  \ mod init localhost/myapp`\n- `go build ./...`\n- `go vet ./...`\n- `go install ./cmd/app`\n- `go run\
+  \ ./cmd/app`\n\n**Examples:**\n- go build -o bin/app ./cmd/app\n- go mod tidy\n- go vet -v ./...\n\n\
+  ### go-testing\nRun tests, benchmarks, and race detection.\n\n**Parameters:**\n- `run` (string): Regex\
+  \ matching test names\n- `bench` (string): Regex matching benchmarks\n- `cover` (boolean): Collect coverage\n\
+  \n**Commands:**\n- `go test ./...`\n- `go test -race ./...`\n- `go test -cover ./...`\n- `go test -bench=.\
+  \ -benchmem ./internal/parse`\n- `go test -run TestParse -v`\n\n**Examples:**\n- go test -race -count=1\
+  \ ./...\n- go test -bench=BenchmarkParse -benchmem -run ^$ ./...\n- go test -coverprofile=coverage.out\
+  \ ./...\n\n## References\n- [Go Docs](https://go.dev/doc/)\n- [Effective Go](https://go.dev/doc/effective_go)\n\
+  - [Go Testing Package](https://pkg.go.dev/testing)"
 prompt: Act as go and handle the task per the instructions.

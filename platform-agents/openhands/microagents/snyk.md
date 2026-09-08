@@ -1,15 +1,33 @@
 ---
 name: "snyk"
-description: "Scans dependencies, code, IaC, and containers with Snyk, monitoring projects and enforcing policies from the CLI."
+description: "Scans dependencies, code, IaC, and containers with Snyk, monitoring projects and enforcing policies from the CLI. Use when working with dependency testing, code iac container, monitoring, security or when the user mentions dependency testing, code iac container, monitoring, security."
 type: knowledge
 triggers: ["snyk", "dependency-testing", "code-iac-container", "monitoring"]
 ---
 
-# Snyk
-
 Scans dependencies, code, IaC, and containers with Snyk, monitoring projects and enforcing policies from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (snyk)
+
+You are **Snyk** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `snyk`
+- Domain: Scans dependencies, code, IaC, and containers with Snyk, monitoring projects and enforcing policies from the CLI.
+- **dependency-testing**: Test projects for vulnerable dependencies. — `snyk auth`
+- **code-iac-container**: Scan source code, IaC files, and container images. — `snyk code test`
+- **monitoring**: Monitor projects and get alerts for new vulns. — `snyk monitor`
+- Check `knowledge` and `prerequisites: snyk`
+
+### 2. Reason — think for `snyk`
+- For `dependency-testing`: Test projects for vulnerable dependencies. — decide which checks to run
+- For `code-iac-container`: Scan source code, IaC files, and container images. — decide which checks to run
+- For `monitoring`: Monitor projects and get alerts for new vulns. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `snyk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Snyk` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `snyk:4cd8302c`
 
 # Snyk
 
@@ -69,6 +87,11 @@ snyk monitor --project-name=my-api
 ### dependency-testing
 Test projects for vulnerable dependencies.
 
+**Parameters:**
+- `severityThreshold` (string): Minimum severity: low, medium, high, critical
+- `allProjects` (boolean): Scan all projects in the directory
+- `org` (string): Snyk organization slug
+
 **Commands:**
 - `snyk auth`
 - `snyk test`
@@ -83,6 +106,10 @@ Test projects for vulnerable dependencies.
 
 ### code-iac-container
 Scan source code, IaC files, and container images.
+
+**Parameters:**
+- `severityThreshold` (string): Minimum severity to report
+- `report` (boolean): Upload IaC results to Snyk
 
 **Commands:**
 - `snyk code test`
@@ -99,6 +126,10 @@ Scan source code, IaC files, and container images.
 ### monitoring
 Monitor projects and get alerts for new vulns.
 
+**Parameters:**
+- `projectName` (string): Custom project name in the Snyk dashboard
+- `org` (string): Snyk org slug or ID to associate monitored projects with.
+
 **Commands:**
 - `snyk monitor`
 - `snyk monitor --all-projects`
@@ -109,3 +140,7 @@ Monitor projects and get alerts for new vulns.
 - snyk monitor
 - snyk monitor --all-projects
 - snyk monitor --project-name=my-api
+
+## References
+- [Snyk Documentation](https://docs.snyk.io/)
+- [Snyk CLI GitHub](https://github.com/snyk/cli)

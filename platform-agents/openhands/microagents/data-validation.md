@@ -1,15 +1,31 @@
 ---
 name: "data-validation"
-description: "Implements schema validation across JSON Schema, Pydantic, and Joi to enforce request, config, and message contracts."
+description: "Implements schema validation across JSON Schema, Pydantic, and Joi to enforce request, config, and message contracts. Use when working with json schema validation, runtime validation, backend or when the user mentions json schema validation, runtime validation, backend."
 type: knowledge
 triggers: ["data-validation", "json-schema-validation", "runtime-validation"]
 ---
 
-# Data Validation
-
 Implements schema validation across JSON Schema, Pydantic, and Joi to enforce request, config, and message contracts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (data-validation)
+
+You are **Data Validation** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `data-validation`
+- Domain: Implements schema validation across JSON Schema, Pydantic, and Joi to enforce request, config, and message contracts.
+- **json-schema-validation**: Validate JSON documents against schemas from the CLI. — `ajv validate -s schema.json -d data.json`
+- **runtime-validation**: Generate and use runtime validators in Python and Node. — `python -m pip install pydantic`
+- Check `knowledge` and `prerequisites: ajv, npm, npx, python`
+
+### 2. Reason — think for `data-validation`
+- For `json-schema-validation`: Validate JSON documents against schemas from the CLI. — decide which checks to run
+- For `runtime-validation`: Generate and use runtime validators in Python and Node. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `data-validation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ajv`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `data-validation:6cac48dd`
 
 # Data Validation
 
@@ -79,6 +95,11 @@ class User(BaseModel):
 ### json-schema-validation
 Validate JSON documents against schemas from the CLI.
 
+**Parameters:**
+- `schema` (string): Path to JSON schema file
+- `data` (string): Path to JSON instance file or glob
+- `all-errors` (boolean): Report all errors instead of the first
+
 **Commands:**
 - `ajv validate -s schema.json -d data.json`
 - `ajv compile -s schema.json`
@@ -94,6 +115,10 @@ Validate JSON documents against schemas from the CLI.
 ### runtime-validation
 Generate and use runtime validators in Python and Node.
 
+**Parameters:**
+- `language` (string): Target stack: python or node
+- `framework` (string): Validation library: pydantic, joi, ajv
+
 **Commands:**
 - `python -m pip install pydantic`
 - `python -c "from pydantic import BaseModel; print(BaseModel.__module__)"`
@@ -103,3 +128,8 @@ Generate and use runtime validators in Python and Node.
 **Examples:**
 - python -c "from pydantic import TypeAdapter; print(TypeAdapter(int).validate_python(1))"
 - npx ajv-cli compile -s schema.json
+
+## References
+- [JSON Schema](https://json-schema.org/)
+- [Pydantic Docs](https://docs.pydantic.dev)
+- [Ajv Docs](https://ajv.js.org)

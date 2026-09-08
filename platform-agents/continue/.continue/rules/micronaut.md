@@ -1,15 +1,29 @@
 ---
 name: "Micronaut"
-description: "Create and operate Micronaut applications: project scaffolding, HTTP endpoints, config, and the mn CLI lifecycle."
+description: "Create and operate Micronaut applications: project scaffolding, HTTP endpoints, config, and the mn CLI lifecycle. Use when working with micronaut project, api or when the user mentions micronaut project, api."
 globs: ["**/*.java", "**/*.r", "**/*.sh", "**/*.sql", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Micronaut
-
 Create and operate Micronaut applications: project scaffolding, HTTP endpoints, config, and the mn CLI lifecycle.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (micronaut)
+
+You are **Micronaut** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `micronaut`
+- Domain: Create and operate Micronaut applications: project scaffolding, HTTP endpoints, config, and the mn CLI lifecycle.
+- **micronaut-project**: Scaffold, build, run and extend Micronaut projects using the mn CLI and build tools. — `mn create-app com.example.app --features data-jpa,mysql,kafka`
+- Check `knowledge` and `prerequisites: ./mvnw`
+
+### 2. Reason — think for `micronaut`
+- For `micronaut-project`: Scaffold, build, run and extend Micronaut projects using the mn CLI and build tools. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `micronaut` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mn`, `./mvnw` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `micronaut:3b42eb19`
 
 # Micronaut
 
@@ -77,6 +91,11 @@ public class BookController {
 ### micronaut-project
 Scaffold, build, run and extend Micronaut projects using the mn CLI and build tools.
 
+**Parameters:**
+- `features` (array): Comma-separated Micronaut features to enable
+- `package` (string): Base package for generated sources
+- `build` (string): maven or gradle
+
 **Commands:**
 - `mn create-app com.example.app --features data-jpa,mysql,kafka`
 - `mn create-graal-app com.example.native --features graalvm`
@@ -88,3 +107,7 @@ Scaffold, build, run and extend Micronaut projects using the mn CLI and build to
 - mn create-app com.example.books --features data-jpa,mysql
 - ./mvnw mn:run
 - curl -s http://localhost:8080/health
+
+## References
+- [Micronaut Documentation](https://docs.micronaut.io/latest/guide/)
+- [Micronaut Health Endpoints](https://micronaut-projects.github.io/micronaut-micrometer/latest/guide/)

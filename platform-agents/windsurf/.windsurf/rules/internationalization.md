@@ -6,27 +6,25 @@ globs: ["**/*.json", "**/*.r", "**/*.sh"]
 
 Localizes applications with gettext and i18next: extraction, translation catalogs, pluralization, and locale builds.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (internationalization)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **internationalization** (frontend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `xgettext -o locale/messages.pot src/**/*.js --keyword=_`, `npx i18next -c i18next-parser.config.js 'src/**/*.tsx'`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — frontend context for `internationalization`
+- Domain: Localizes applications with gettext and i18next: extraction, translation catalogs, pluralization, and locale builds.
+- **gettext**: Extract and compile translations with GNU gettext tools. — `xgettext -o locale/messages.pot src/**/*.js --keyword=_`
+- **i18next**: Manage JSON translation catalogs with i18next tooling. — `npx i18next -c i18next-parser.config.js 'src/**/*.tsx'`
+- Check `knowledge` and `prerequisites: node.js, react, i18next, formatjs`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `internationalization`
+- For `gettext`: Extract and compile translations with GNU gettext tools. — decide which checks to run
+- For `i18next`: Manage JSON translation catalogs with i18next tooling. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `internationalization` tools
+- Tools: `Glob`, `Grep`, `Read`, `Xgettext`, `Msginit` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `internationalization:299d5176`
 
 # Internationalization
 

@@ -1,8 +1,22 @@
-# Mqtt Paho Go
-
 Write MQTT clients in Go with eclipse/paho.mqtt.golang: connect options, pub/sub, tokens and TLS.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (mqtt-paho-go)
+
+You are **Mqtt Paho Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `mqtt-paho-go`
+- Domain: Write MQTT clients in Go with eclipse/paho.mqtt.golang: connect options, pub/sub, tokens and TLS.
+- **paho-go-client**: Add the Paho Go module, write connect/publish/subscribe code and run it against a broker. — `go get github.com/eclipse/paho.mqtt.golang`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `mqtt-paho-go`
+- For `paho-go-client`: Add the Paho Go module, write connect/publish/subscribe code and run it against a broker. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mqtt-paho-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mqtt-paho-go:69594b7b`
 
 # Paho MQTT Go
 
@@ -61,6 +75,11 @@ c.Subscribe("sensors/#", 0, func(_ mqtt.Client, m mqtt.Message) {
 ### paho-go-client
 Add the Paho Go module, write connect/publish/subscribe code and run it against a broker.
 
+**Parameters:**
+- `broker` (string): Broker URL, e.g. tcp://localhost:1883 or ssl://host:8883
+- `client_id` (string): Client identifier for the connection
+- `topic` (string): Topic filter used in the handler
+
 **Commands:**
 - `go get github.com/eclipse/paho.mqtt.golang`
 - `go mod tidy`
@@ -72,3 +91,7 @@ Add the Paho Go module, write connect/publish/subscribe code and run it against 
 - go get github.com/eclipse/paho.mqtt.golang@v1.5.0
 - go run main.go
 - go test -run TestPublish -v ./...
+
+## References
+- [Paho MQTT Go repo](https://github.com/eclipse/paho.mqtt.golang)
+- [pkg.go.dev paho.mqtt.golang](https://pkg.go.dev/github.com/eclipse/paho.mqtt.golang)

@@ -1,15 +1,31 @@
 ---
 name: "rag-pipeline"
-description: "Builds retrieval-augmented generation pipelines: chunking, embeddings, vector search, reranking, and grounded answer generation."
+description: "Builds retrieval-augmented generation pipelines: chunking, embeddings, vector search, reranking, and grounded answer generation. Use when working with vector indexing, rag querying, backend or when the user mentions vector indexing, rag querying, backend."
 type: knowledge
 triggers: ["rag-pipeline", "vector-indexing", "rag-querying"]
 ---
 
-# Rag Pipeline
-
 Builds retrieval-augmented generation pipelines: chunking, embeddings, vector search, reranking, and grounded answer generation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rag-pipeline)
+
+You are **Rag Pipeline** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `rag-pipeline`
+- Domain: Builds retrieval-augmented generation pipelines: chunking, embeddings, vector search, reranking, and grounded answer generation.
+- **vector-indexing**: Index documents into vector stores with embedding models. — `pip install chromadb sentence-transformers`
+- **rag-querying**: Retrieve context and generate grounded answers. — `python -c "import chromadb; c=chromadb.PersistentClient(path=\"./db\"); col=c.ge`
+- Check `knowledge` and `prerequisites: npx, ollama, pip, python`
+
+### 2. Reason — think for `rag-pipeline`
+- For `vector-indexing`: Index documents into vector stores with embedding models. — decide which checks to run
+- For `rag-querying`: Retrieve context and generate grounded answers. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rag-pipeline` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Ollama` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rag-pipeline:f9a45232`
 
 # RAG Pipeline
 
@@ -62,6 +78,10 @@ python -c "import chromadb; c=chromadb.PersistentClient(path='./db'); print(c.ge
 ### vector-indexing
 Index documents into vector stores with embedding models.
 
+**Parameters:**
+- `collection` (string): Vector collection name
+- `model` (string): Embedding model id
+
 **Commands:**
 - `pip install chromadb sentence-transformers`
 - `python -c "import chromadb; c=chromadb.PersistentClient(path=\"./db\"); c.create_collection(\"docs\"); print(\"ok\")"`
@@ -75,6 +95,10 @@ Index documents into vector stores with embedding models.
 ### rag-querying
 Retrieve context and generate grounded answers.
 
+**Parameters:**
+- `query` (string): Natural language query
+- `top-k` (integer): Number of results to retrieve
+
 **Commands:**
 - `python -c "import chromadb; c=chromadb.PersistentClient(path=\"./db\"); col=c.get_collection(\"docs\"); r=col.query(query_texts=[\"how to deploy\"], n_results=5); print(r)"`
 - `npx llamaindex-cli`
@@ -84,3 +108,8 @@ Retrieve context and generate grounded answers.
 **Examples:**
 - python -c "import chromadb; c=chromadb.PersistentClient(path=\"./db\"); print([m[\"metadatas\"] for m in [c.get_collection(\"docs\").query(query_texts=[\"pricing\"], n_results=3)]])"
 - curl -s http://localhost:8000/query -d "{\"q\":\"refund policy\"}"
+
+## References
+- [RAG Guide (OpenAI)](https://help.openai.com/en/articles/8868588-retrieval-augmented-generation-rag-and-semantic-search-for-gpts)
+- [LangChain Docs](https://python.langchain.com/docs/)
+- [ChromaDB Docs](https://docs.trychroma.com)

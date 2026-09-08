@@ -1,15 +1,31 @@
 ---
 name: "syft"
-description: "Generate SBOMs from images, directories, and binaries. Emit SBOMs in standardized formats. and syft formats."
+description: "Generate SBOMs from images, directories, and binaries. Emit SBOMs in standardized formats. and syft formats. Use when working with sbom generation, sbom output, security or when the user mentions sbom generation, sbom output, security."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# syft
-
 Generate SBOMs from images, directories, and binaries. Emit SBOMs in standardized formats. and syft formats.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (syft)
+
+You are **syft** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `syft`
+- Domain: Generate SBOMs from images, directories, and binaries. Emit SBOMs in standardized formats. and syft formats.
+- **sbom-generation**: Generate SBOMs from images, directories, and binaries. — `syft alpine:latest`
+- **sbom-output**: Emit SBOMs in standardized formats. — `syft alpine:latest -o spdx-json > sbom.spdx.json`
+- Check `knowledge` and `prerequisites: syft`
+
+### 2. Reason — think for `syft`
+- For `sbom-generation`: Generate SBOMs from images, directories, and binaries. — decide which checks to run
+- For `sbom-output`: Emit SBOMs in standardized formats. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `syft` tools
+- Tools: `Glob`, `Grep`, `Read`, `Syft` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `syft:b296be62`
 
 # Syft
 
@@ -63,6 +79,11 @@ syft attest --key cosign.key alpine:latest -o cyclonedx-json
 ### sbom-generation
 Generate SBOMs from images, directories, and binaries.
 
+**Parameters:**
+- `target` (string): Image, directory, archive, or binary to catalog
+- `scope` (string): Squashed or all-layers for images
+- `exclude` (array): Glob patterns to exclude
+
 **Commands:**
 - `syft alpine:latest`
 - `syft .`
@@ -78,6 +99,10 @@ Generate SBOMs from images, directories, and binaries.
 ### sbom-output
 Emit SBOMs in standardized formats.
 
+**Parameters:**
+- `format` (string): Output format: spdx-json, cyclonedx-json, syft-json, table
+- `output` (string): Output file path
+
 **Commands:**
 - `syft alpine:latest -o spdx-json > sbom.spdx.json`
 - `syft alpine:latest -o cyclonedx-json > sbom.cdx.json`
@@ -88,3 +113,8 @@ Emit SBOMs in standardized formats.
 - syft alpine:latest -o spdx-json > sbom.spdx.json
 - syft alpine:latest -o cyclonedx-json > sbom.cdx.json
 - syft attest --key cosign.key alpine:latest
+
+## References
+- [Syft GitHub](https://github.com/anchore/syft)
+- [SPDX Specification](https://spdx.dev/specifications/)
+- [CycloneDX Specification](https://cyclonedx.org/specification/overview/)

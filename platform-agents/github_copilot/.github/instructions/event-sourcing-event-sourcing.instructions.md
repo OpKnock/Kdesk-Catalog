@@ -4,27 +4,25 @@ applyTo: "**/*.json **/*.r **/*.sh"
 
 Implements event sourcing with EventStoreDB, Kafka, projections, and CQRS read models using real CLI tooling.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (event-sourcing-event-sourcing)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **event-sourcing-event-sourcing** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `docker run -d -p 2113:2113 -p 1113:1113 eventstore/eventstor`, `kafka-topics.sh --bootstrap-server localhost:9092 --create -`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `event-sourcing-event-sourcing`
+- Domain: Implements event sourcing with EventStoreDB, Kafka, projections, and CQRS read models using real CLI tooling.
+- **event-store-operations**: Run and interact with EventStoreDB streams. — `docker run -d -p 2113:2113 -p 1113:1113 eventstore/eventstore:latest --insecure`
+- **kafka-event-pipeline**: Produce, consume, and replay events through Kafka. — `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic account.event`
+- Check `knowledge` and `prerequisites: node.js, typescript, postgresql, redis`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `event-sourcing-event-sourcing`
+- For `event-store-operations`: Run and interact with EventStoreDB streams. — decide which checks to run
+- For `kafka-event-pipeline`: Produce, consume, and replay events through Kafka. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `event-sourcing-event-sourcing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Kafka-topics.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `event-sourcing-event-sourcing:6b9d1cdd`
 
 # Event Sourcing Implementation
 

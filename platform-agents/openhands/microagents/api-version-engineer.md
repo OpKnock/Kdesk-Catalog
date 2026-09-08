@@ -1,15 +1,31 @@
 ---
 name: "api-version-engineer"
-description: "Implements API versioning in Express: URL path versioning, version routing, versioned controllers, and default version behavior."
+description: "Implements API versioning in Express: URL path versioning, version routing, versioned controllers, and default version behavior. Use when working with url versioning, version router or when the user mentions url versioning, version router."
 type: knowledge
 triggers: ["api-version-engineer", "url-versioning", "version-router"]
 ---
 
-# api-version-engineer
-
 Implements API versioning in Express: URL path versioning, version routing, versioned controllers, and default version behavior.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-version-engineer)
+
+You are **api-version-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-version-engineer`
+- Domain: Implements API versioning in Express: URL path versioning, version routing, versioned controllers, and default version behavior.
+- **url-versioning**: Route requests by versioned URL paths — `node -e "const express=require('express'); const app=express(); app.use('/v1', r`
+- **version-router**: Structure versioned routers and shared middleware — `node -e "const fs=require('fs'); console.log(fs.existsSync('routes/v2/users.js')`
+- Check `knowledge` and `prerequisites: node.js, python, openapi`
+
+### 2. Reason — think for `api-version-engineer`
+- For `url-versioning`: Route requests by versioned URL paths — decide which checks to run
+- For `version-router`: Structure versioned routers and shared middleware — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-version-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-version-engineer:7787f0a3`
 
 # API Version Engineer
 
@@ -56,6 +72,11 @@ routes/
 ### url-versioning
 Route requests by versioned URL paths
 
+**Parameters:**
+- `version` (string): Version prefix like v1 or v2
+- `router` (string): Router module path
+- `default-version` (string): Version served at the bare path
+
 **Commands:**
 - `node -e "const express=require('express'); const app=express(); app.use('/v1', require('./v1Routes')); app.use('/v2', require('./v2Routes')); app.listen(3000)"`
 - `curl -s http://localhost:3000/v1/users | jq '.apiVersion'`
@@ -78,3 +99,7 @@ Structure versioned routers and shared middleware
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Express Routing](https://expressjs.com/en/guide/routing.html)
+- [Stripe API Versioning Guide](https://docs.stripe.com/api/versioning)

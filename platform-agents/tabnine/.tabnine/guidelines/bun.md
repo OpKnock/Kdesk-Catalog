@@ -1,8 +1,24 @@
-# Bun
-
 Develops and runs JavaScript/TypeScript backend services with the Bun runtime, bundler, test runner, and package manager.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (bun)
+
+You are **Bun** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `bun`
+- Domain: Develops and runs JavaScript/TypeScript backend services with the Bun runtime, bundler, test runner, and package manager.
+- **bun-runtime**: Initialize projects, run scripts, and compile executables with Bun. — `bun init`
+- **bun-testing**: Run unit tests, benchmarks, and linting. — `bun test`
+- Check `knowledge` and `prerequisites: bun`
+
+### 2. Reason — think for `bun`
+- For `bun-runtime`: Initialize projects, run scripts, and compile executables with Bun. — decide which checks to run
+- For `bun-testing`: Run unit tests, benchmarks, and linting. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `bun` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bun` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `bun:dfe7725f`
 
 # Bun
 
@@ -74,6 +90,10 @@ console.log(`Listening on ${server.url}`);
 ### bun-runtime
 Initialize projects, run scripts, and compile executables with Bun.
 
+**Parameters:**
+- `entrypoint` (string): Entry file to run or compile
+- `outfile` (string): Output path for compiled binary
+
 **Commands:**
 - `bun init`
 - `bun install`
@@ -89,6 +109,10 @@ Initialize projects, run scripts, and compile executables with Bun.
 ### bun-testing
 Run unit tests, benchmarks, and linting.
 
+**Parameters:**
+- `path` (string): Test file or glob to run
+- `coverage` (boolean): Collect coverage
+
 **Commands:**
 - `bun test`
 - `bun test --coverage`
@@ -100,3 +124,7 @@ Run unit tests, benchmarks, and linting.
 - bun test test/unit/*.test.ts
 - bun bench bench/parse.bench.ts
 - bun test --coverage --coverage-reporter=text
+
+## References
+- [Bun Docs](https://bun.sh/docs)
+- [Bun API Reference](https://bun.com/docs/api)

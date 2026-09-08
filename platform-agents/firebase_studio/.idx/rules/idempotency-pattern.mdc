@@ -1,14 +1,28 @@
 ---
-description: "Implement request deduplication using Idempotency-Key headers, atomic Redis SET NX EX operations, and database unique constraints to make retries safe for payment and order endpoints."
+description: "Implement request deduplication using Idempotency-Key headers, atomic Redis SET NX EX operations, and database unique constraints to make retries safe for payment and order endpoints. Use when working with dedup patterns, api or when the user mentions dedup patterns, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# Idempotency Pattern
-
 Implement request deduplication using Idempotency-Key headers, atomic Redis SET NX EX operations, and database unique constraints to make retries safe for payment and order endpoints.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (idempotency-pattern)
+
+You are **Idempotency Pattern** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `idempotency-pattern`
+- Domain: Implement request deduplication using Idempotency-Key headers, atomic Redis SET NX EX operations, and database unique constraints to make retries safe for payment and order endpoints.
+- **dedup-patterns**: Implement request deduplication with headers, Redis atomic ops, and DB constraints. — `curl -X POST -H "Idempotency-Key: 7d1a-4f2b" http://localhost:8080/payments`
+- Check `knowledge` and `prerequisites: redis-cli`
+
+### 2. Reason — think for `idempotency-pattern`
+- For `dedup-patterns`: Implement request deduplication with headers, Redis atomic ops, and DB constraints. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `idempotency-pattern` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `idempotency-pattern:4e0def98`
 
 # Idempotency Patterns
 
@@ -84,6 +98,11 @@ Agent: Add a server-side Idempotency-Key claim:
 ### dedup-patterns
 Implement request deduplication with headers, Redis atomic ops, and DB constraints.
 
+**Parameters:**
+- `key` (string): Client-supplied idempotency key.
+- `ttl` (integer): Dedup window in seconds.
+- `header_name` (string): Header carrying the key, default Idempotency-Key.
+
 **Commands:**
 - `curl -X POST -H "Idempotency-Key: 7d1a-4f2b" http://localhost:8080/payments`
 - `redis-cli SET idem:pay:7d1a created NX EX 3600`
@@ -95,3 +114,7 @@ Implement request deduplication with headers, Redis atomic ops, and DB constrain
 - redis-cli SET idem:pay:7d1a done EX 3600 NX && echo claimed
 - curl -s -X POST -H "Idempotency-Key: k-1" http://localhost:8080/payments -o r1.json && curl -s -X POST -H "Idempotency-Key: k-1" http://localhost:8080/payments -o r2.json && diff r1.json r2.json
 - mysql -e "ALTER TABLE payments ADD UNIQUE KEY uk_idem (idempotency_key);"
+
+## References
+- [IETF Idempotency-Key Draft](https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/)
+- [Redis SET command](https://redis.io/commands/set/)

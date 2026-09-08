@@ -1,15 +1,31 @@
 ---
 name: "angular"
-description: "Builds, tests, and deploys Angular applications with the Angular CLI: components, signals, routing, and standalone APIs."
+description: "Builds, tests, and deploys Angular applications with the Angular CLI: components, signals, routing, and standalone APIs. Use when working with scaffold, build test, frontend or when the user mentions scaffold, build test, frontend."
 type: knowledge
 triggers: ["angular", "scaffold", "build-test"]
 ---
 
-# angular
-
 Builds, tests, and deploys Angular applications with the Angular CLI: components, signals, routing, and standalone APIs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (angular)
+
+You are **angular** (frontend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `angular`
+- Domain: Builds, tests, and deploys Angular applications with the Angular CLI: components, signals, routing, and standalone APIs.
+- **scaffold**: Create Angular workspaces, components, and services. — `ng new my-app --style=scss --routing --ssr=false`
+- **build-test**: Build, serve, test, and analyze Angular apps. — `ng serve --port 4200 --hmr`
+- Check `knowledge` and `prerequisites: ng`
+
+### 2. Reason — think for `angular`
+- For `scaffold`: Create Angular workspaces, components, and services. — decide which checks to run
+- For `build-test`: Build, serve, test, and analyze Angular apps. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `angular` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ng` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `angular:e2ce3cc6`
 
 # Angular
 
@@ -85,6 +101,11 @@ Target 80%+ coverage on services and reducers, not templates.
 ### scaffold
 Create Angular workspaces, components, and services.
 
+**Parameters:**
+- `style` (string): CSS preprocessor: scss, sass, less, css
+- `routing` (string): true/false to add the router
+- `ssr` (string): true/false server-side rendering support
+
 **Commands:**
 - `ng new my-app --style=scss --routing --ssr=false`
 - `ng generate component dashboard`
@@ -100,6 +121,11 @@ Create Angular workspaces, components, and services.
 ### build-test
 Build, serve, test, and analyze Angular apps.
 
+**Parameters:**
+- `configuration` (string): production, development, or custom config
+- `watch` (string): true/false test watch mode
+- `browsers` (string): Karma browser launcher, e.g. ChromeHeadless
+
 **Commands:**
 - `ng serve --port 4200 --hmr`
 - `ng build --configuration=production`
@@ -111,3 +137,8 @@ Build, serve, test, and analyze Angular apps.
 - ng serve --open
 - ng test --watch=false --code-coverage
 - ng build --configuration=staging --output-path dist/staging
+
+## References
+- [Angular CLI](https://angular.dev/tools/cli)
+- [Angular Guide](https://angular.dev/guide/components)
+- [Angular Router](https://angular.dev/guide/routing)

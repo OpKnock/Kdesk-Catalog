@@ -1,15 +1,29 @@
 ---
 name: "Encryption At Rest"
-description: "Data-at-rest encryption: full-disk encryption with LUKS, file encryption with openssl, and key management with cloud KMS services."
+description: "Data-at-rest encryption: full-disk encryption with LUKS, file encryption with openssl, and key management with cloud KMS services. Use when working with disk encryption, api or when the user mentions disk encryption, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Encryption At Rest
-
 Data-at-rest encryption: full-disk encryption with LUKS, file encryption with openssl, and key management with cloud KMS services.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (encryption-at-rest)
+
+You are **Encryption At Rest** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `encryption-at-rest`
+- Domain: Data-at-rest encryption: full-disk encryption with LUKS, file encryption with openssl, and key management with cloud KMS services.
+- **disk-encryption**: Set up LUKS volumes, encrypt files with openssl, and manage keys via AWS KMS. — `sudo cryptsetup luksFormat /dev/sdb1`
+- Check `knowledge` and `prerequisites: aws, openssl, sudo`
+
+### 2. Reason — think for `encryption-at-rest`
+- For `disk-encryption`: Set up LUKS volumes, encrypt files with openssl, and manage keys via AWS KMS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `encryption-at-rest` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sudo`, `Openssl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `encryption-at-rest:72b2e354`
 
 # Encryption at Rest
 
@@ -69,6 +83,11 @@ sudo lsblk -o NAME,TYPE,MOUNTPOINT /dev/sdb1
 ### disk-encryption
 Set up LUKS volumes, encrypt files with openssl, and manage keys via AWS KMS.
 
+**Parameters:**
+- `device` (string): Block device to encrypt, e.g. /dev/sdb1
+- `cipher` (string): Cipher for openssl enc, e.g. aes-256-cbc
+- `kms-key-id` (string): KMS key id or alias for envelope encryption
+
 **Commands:**
 - `sudo cryptsetup luksFormat /dev/sdb1`
 - `sudo cryptsetup open /dev/sdb1 secretdata && sudo mkfs.ext4 /dev/mapper/secretdata`
@@ -80,3 +99,7 @@ Set up LUKS volumes, encrypt files with openssl, and manage keys via AWS KMS.
 - sudo cryptsetup luksFormat /dev/sdb1 && sudo cryptsetup open /dev/sdb1 secretdata
 - openssl enc -aes-256-cbc -pbkdf2 -iter 200000 -salt -in secrets.txt -out secrets.txt.enc
 - aws kms decrypt --ciphertext-blob fileb://payload.enc --output text --query Plaintext | base64 -d
+
+## References
+- [cryptsetup/LUKS](https://gitlab.com/cryptsetup/cryptsetup/-/wikis/home)
+- [AWS KMS Developer Guide](https://docs.aws.amazon.com/kms/latest/developerguide/overview.html)

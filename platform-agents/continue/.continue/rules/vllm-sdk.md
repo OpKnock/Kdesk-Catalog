@@ -1,6 +1,6 @@
 ---
 name: "Vllm Sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Vllm Deploy Sdk Agent V2, inference or when the user mentions Ml Vllm Deploy Sdk Agent V2, inference."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Vllm Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (vllm-sdk)
+
+You are **Vllm Sdk** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `vllm-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Vllm Deploy Sdk Agent V2**: vLLM SDK deployment agent for ML vLLM SDK deployment. — `docker build -t vllm:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `vllm-sdk`
+- For `Ml Vllm Deploy Sdk Agent V2`: vLLM SDK deployment agent for ML vLLM SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `vllm-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Vllm` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vllm-sdk:396e9ca5`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ vLLM SDK deployment agent for ML vLLM SDK deployment.
 **Examples:**
 - Server: python -m vllm.server --port 8080
 - Docker: docker run -p 8080:8080 vllm-server
+
+## References
+- [vLLM Documentation](https://docs.vllm.ai/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

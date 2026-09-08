@@ -6,27 +6,25 @@ globs: ["**/*.json", "**/*.r", "**/*.sh"]
 
 Implements GraphQL APIs: Apollo Server setup, resolver wiring, schema authoring, and playground-based testing.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-graphql-implementation)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Graphql Implementation** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npm init -y && npm install @apollo/server graphql`, `curl -s -X POST http://localhost:4000/graphql -H 'Content-Ty`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `api-graphql-implementation`
+- Domain: Implements GraphQL APIs: Apollo Server setup, resolver wiring, schema authoring, and playground-based testing.
+- **server-implementation**: Stand up Apollo Server with resolvers and schema — `npm init -y && npm install @apollo/server graphql`
+- **playground-testing**: Test queries and mutations via HTTP introspection — `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json`
+- Check `knowledge` and `prerequisites: apollo-server, graphql-codegen, dataloader`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-graphql-implementation`
+- For `server-implementation`: Stand up Apollo Server with resolvers and schema — decide which checks to run
+- For `playground-testing`: Test queries and mutations via HTTP introspection — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-graphql-implementation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-graphql-implementation:2c793017`
 
 # API GraphQL (Implementation)
 

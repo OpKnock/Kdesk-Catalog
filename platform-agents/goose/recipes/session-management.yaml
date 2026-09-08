@@ -3,138 +3,44 @@ description: Manages HTTP session lifecycles with Redis-backed storage. Creates 
   with TTL, drives cookie lifecycle through login and logout flows, and enforces immediate invalidation
   on logout by deleting the Redis record.
 version: 2.0.0
-instructions: '# Session Management
-
-
-  Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with
-  TTL, drives cookie lifecycle through login and logout flows, and enforces immediate invalidation on
-  logout by deleting the Redis record.
-
-
-  ## Instructions
-
-
-  # Session Management
-
-
-  Hand-crafted skill for HTTP session lifecycles with Redis storage.
-
-
-  ## What this skill does
-
-
-  - Stores session state server-side with TTLs
-
-  - Drives the cookie lifecycle with curl: login, use, logout
-
-  - Invalidates sessions on logout and enforces expiry
-
-
-  ## When to use
-
-
-  - Designing auth state for a new web app
-
-  - Debugging why sessions persist after logout
-
-  - Tuning session timeout policy
-
-
-  ## Real commands
-
-
-  ```bash
-
-  # Create a session record with 1h TTL
-
-  redis-cli SET session:7f3a ''{"uid":42,"role":"admin"}'' EX 3600
-
-  redis-cli TTL session:7f3a
-
-
-  # Login: server sets the cookie in cookies.txt
-
-  curl -i -c cookies.txt -X POST http://localhost:8080/login -d ''user=ada''
-
-
-  # Authenticated request with the cookie jar
-
-  curl -i -b cookies.txt http://localhost:8080/me
-
-
-  # Logout: server must delete the session record
-
-  curl -X POST -b cookies.txt http://localhost:8080/logout
-
-  redis-cli EXISTS session:7f3a   # should return 0
-
-  ```
-
-
-  ## Cookie attributes
-
-
-  - HttpOnly, Secure, SameSite=Lax
-
-  - Session ID: 128+ random bits from a CSPRNG
-
-
-  ## Testing
-
-
-  ```bash
-
-  curl -i -c cookies.txt -X POST http://localhost:8080/login -d ''user=ada''   # Set-Cookie present
-
-  redis-cli TTL session:7f3a
-
-  curl -i -b cookies.txt http://localhost:8080/me                            # 200
-
-  curl -X POST -b cookies.txt http://localhost:8080/logout
-
-  redis-cli EXISTS session:7f3a                                              # 0
-
-  ```
-
-
-  ## Best practices
-
-
-  - Store only the session ID in the cookie; state lives server-side
-
-  - Slide expiry on activity, hard-expire after N hours
-
-  - On logout, delete the Redis record immediately, not just the cookie
-
-
-  ## Capabilities
-
-
-  ### session-lifecycle
-
-  Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with
-  TTL, drives cookie lifecycle through login and logout flows, and enforces immediate invalidation on
-  logout by deleting the Redis record.
-
-
-  **Commands:**
-
-  - `redis-cli SET session:abc123 "{\"user_id\":42}" EX 3600`
-
-  - `redis-cli GET session:abc123`
-
-  - `redis-cli EXPIRE session:abc123 7200`
-
-  - `redis-cli DEL session:abc123`
-
-  - `curl -b "session_id=abc123" http://api.example.org/protected`
-
-
-  **Examples:**
-
-  - redis-cli SET session:abc123 "{\"user_id\":42}" EX 3600
-
-  - curl -b "session_id=abc123" http://api.example.org/protected
-
-  - redis-cli DEL session:abc123'
+instructions: "Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session\
+  \ records with TTL, drives cookie lifecycle through login and logout flows, and enforces immediate invalidation\
+  \ on logout by deleting the Redis record.\n\n## Agentic Workflow: Read -> Reason -> Act (session-management)\n\
+  \nYou are **Session Management** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `session-management`\n- Domain: Manages HTTP session lifecycles with\
+  \ Redis-backed storage. Creates server-side session records with TTL, drives cookie lifecycle through\
+  \ login and logout flows, and enforces immediate invalidation on \n- **session-lifecycle**: Manages\
+  \ HTTP session lifecycles with Redis-backed storage. Creates server-side session records with  — `redis-cli\
+  \ SET session:abc123 \"{\\\"user_id\\\":42}\" EX 3600`\n- Check `knowledge` and `prerequisites: redis-cli`\n\
+  \n### 2. Reason — think for `session-management`\n- For `session-lifecycle`: Manages HTTP session lifecycles\
+  \ with Redis-backed storage. Creates server-side session records with TTL, drives cookie l — decide\
+  \ which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\
+  \n### 3. Act — execute with `session-management` tools\n- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`,\
+  \ `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `session-management:441da535`\n\n# Session Management\n\nHand-crafted\
+  \ skill for HTTP session lifecycles with Redis storage.\n\n## What this skill does\n\n- Stores session\
+  \ state server-side with TTLs\n- Drives the cookie lifecycle with curl: login, use, logout\n- Invalidates\
+  \ sessions on logout and enforces expiry\n\n## When to use\n\n- Designing auth state for a new web app\n\
+  - Debugging why sessions persist after logout\n- Tuning session timeout policy\n\n## Real commands\n\
+  \n```bash\n# Create a session record with 1h TTL\nredis-cli SET session:7f3a '{\"uid\":42,\"role\":\"\
+  admin\"}' EX 3600\nredis-cli TTL session:7f3a\n\n# Login: server sets the cookie in cookies.txt\ncurl\
+  \ -i -c cookies.txt -X POST http://localhost:8080/login -d 'user=ada'\n\n# Authenticated request with\
+  \ the cookie jar\ncurl -i -b cookies.txt http://localhost:8080/me\n\n# Logout: server must delete the\
+  \ session record\ncurl -X POST -b cookies.txt http://localhost:8080/logout\nredis-cli EXISTS session:7f3a\
+  \   # should return 0\n```\n\n## Cookie attributes\n\n- HttpOnly, Secure, SameSite=Lax\n- Session ID:\
+  \ 128+ random bits from a CSPRNG\n\n## Testing\n\n```bash\ncurl -i -c cookies.txt -X POST http://localhost:8080/login\
+  \ -d 'user=ada'   # Set-Cookie present\nredis-cli TTL session:7f3a\ncurl -i -b cookies.txt http://localhost:8080/me\
+  \                            # 200\ncurl -X POST -b cookies.txt http://localhost:8080/logout\nredis-cli\
+  \ EXISTS session:7f3a                                              # 0\n```\n\n## Best practices\n\n\
+  - Store only the session ID in the cookie; state lives server-side\n- Slide expiry on activity, hard-expire\
+  \ after N hours\n- On logout, delete the Redis record immediately, not just the cookie\n\n## Capabilities\n\
+  \n### session-lifecycle\nManages HTTP session lifecycles with Redis-backed storage. Creates server-side\
+  \ session records with TTL, drives cookie lifecycle through login and logout flows, and enforces immediate\
+  \ invalidation on logout by deleting the Redis record.\n\n**Parameters:**\n- `session_ttl` (integer):\
+  \ Session time-to-live in seconds\n- `session_id` (string): Session identifier cookie value\n\n**Commands:**\n\
+  - `redis-cli SET session:abc123 \"{\\\"user_id\\\":42}\" EX 3600`\n- `redis-cli GET session:abc123`\n\
+  - `redis-cli EXPIRE session:abc123 7200`\n- `redis-cli DEL session:abc123`\n- `curl -b \"session_id=abc123\"\
+  \ http://api.example.org/protected`\n\n**Examples:**\n- redis-cli SET session:abc123 \"{\\\"user_id\\\
+  \":42}\" EX 3600\n- curl -b \"session_id=abc123\" http://api.example.org/protected\n- redis-cli DEL\
+  \ session:abc123\n\n## References\n- [OWASP Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)"
 prompt: Act as Session Management and handle the task per the instructions.

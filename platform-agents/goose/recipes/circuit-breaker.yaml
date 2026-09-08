@@ -2,11 +2,23 @@ title: Circuit Breaker
 description: Implement resilience patterns with Hystrix-style circuit breakers in Go (hystrix-go/gobreaker),
   with load-test verification.
 version: 2.0.0
-instructions: "# Circuit Breaker\n\nImplement resilience patterns with Hystrix-style circuit breakers\
-  \ in Go (hystrix-go/gobreaker), with load-test verification.\n\n## Instructions\n\n# Circuit Breaker\n\
-  \nProtect API consumers from slow or failing dependencies.\n\n## When to Use\n\n- Downstream services\
-  \ are flaky or slow\n- Preventing request pileups and cascading failures\n- Graceful degradation with\
-  \ fallbacks\n\n## hystrix-go\n\n```go\npackage main\n\nimport (\n  \"github.com/afex/hystrix-go/hystrix\"\
+instructions: "Implement resilience patterns with Hystrix-style circuit breakers in Go (hystrix-go/gobreaker),\
+  \ with load-test verification.\n\n## Agentic Workflow: Read -> Reason -> Act (circuit-breaker)\n\nYou\
+  \ are **Circuit Breaker** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `circuit-breaker`\n- Domain: Implement resilience patterns with Hystrix-style\
+  \ circuit breakers in Go (hystrix-go/gobreaker), with load-test verification.\n- **hystrix-go**: Add\
+  \ circuit breaking and fallbacks to Go APIs with hystrix-go — `go get github.com/afex/hystrix-go/hystrix`\n\
+  - **load-verify**: Load-test the service to trigger and observe breaker transitions — `hey -n 500 -c\
+  \ 50 http://localhost:8080/api/payments`\n- Check `knowledge` and `prerequisites: hey`\n\n### 2. Reason\
+  \ — think for `circuit-breaker`\n- For `hystrix-go`: Add circuit breaking and fallbacks to Go APIs with\
+  \ hystrix-go — decide which checks to run\n- For `load-verify`: Load-test the service to trigger and\
+  \ observe breaker transitions — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` +\
+  \ `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `circuit-breaker` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `Bash`, `Hey` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `circuit-breaker:06113d0e`\n\n#\
+  \ Circuit Breaker\n\nProtect API consumers from slow or failing dependencies.\n\n## When to Use\n\n\
+  - Downstream services are flaky or slow\n- Preventing request pileups and cascading failures\n- Graceful\
+  \ degradation with fallbacks\n\n## hystrix-go\n\n```go\npackage main\n\nimport (\n  \"github.com/afex/hystrix-go/hystrix\"\
   \n)\n\nfunc init() {\n  hystrix.ConfigureCommand(\"payments-api\", hystrix.CommandConfig{\n    Timeout:\
   \                2000,\n    MaxConcurrentRequests:  100,\n    ErrorPercentThreshold:  50,\n    RequestVolumeThreshold:\
   \ 10,\n    SleepWindow:            10000,\n  })\n}\n\nfunc charge(orderID string) (string, error) {\n\
@@ -21,13 +33,17 @@ instructions: "# Circuit Breaker\n\nImplement resilience patterns with Hystrix-s
   \ to avoid tripping on noise\n- Always provide a fallback function\n- Expose breaker state to monitoring\n\
   - SleepWindow should exceed downstream recovery time\n- Test open, half-open, and closed transitions\
   \ explicitly\n- Combine with timeouts and retries, not instead of them\n\n## Capabilities\n\n### hystrix-go\n\
-  Add circuit breaking and fallbacks to Go APIs with hystrix-go\n\n**Commands:**\n- `go get github.com/afex/hystrix-go/hystrix`\n\
-  - `go run ./cmd/server`\n- `go test ./...`\n- `go vet ./...`\n\n**Examples:**\n- go get github.com/afex/hystrix-go/hystrix\n\
-  - go test -v ./...\n- go run ./cmd/server\n\n### load-verify\nLoad-test the service to trigger and observe\
-  \ breaker transitions\n\n**Commands:**\n- `hey -n 500 -c 50 http://localhost:8080/api/payments`\n- `hey\
-  \ -n 500 -c 50 -m POST -H \"Content-Type: application/json\" -d '{}' http://localhost:8080/api/payments`\n\
+  Add circuit breaking and fallbacks to Go APIs with hystrix-go\n\n**Parameters:**\n- `command_name` (string):\
+  \ Hystrix command name, e.g. payments-api\n- `timeout_ms` (string): Command timeout in milliseconds\n\
+  \n**Commands:**\n- `go get github.com/afex/hystrix-go/hystrix`\n- `go run ./cmd/server`\n- `go test\
+  \ ./...`\n- `go vet ./...`\n\n**Examples:**\n- go get github.com/afex/hystrix-go/hystrix\n- go test\
+  \ -v ./...\n- go run ./cmd/server\n\n### load-verify\nLoad-test the service to trigger and observe breaker\
+  \ transitions\n\n**Parameters:**\n- `requests` (string): Total requests for the load test\n- `concurrency`\
+  \ (string): Concurrent workers\n\n**Commands:**\n- `hey -n 500 -c 50 http://localhost:8080/api/payments`\n\
+  - `hey -n 500 -c 50 -m POST -H \"Content-Type: application/json\" -d '{}' http://localhost:8080/api/payments`\n\
   - `curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:8080/api/payments`\n- `go test -run\
   \ TestCircuitBreaker -v ./...`\n\n**Examples:**\n- hey -n 500 -c 50 http://localhost:8080/api/payments\n\
   - curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:8080/api/payments\n- go test -run TestCircuitBreaker\
-  \ -v ./..."
+  \ -v ./...\n\n## References\n- [hystrix-go GitHub](https://github.com/afex/hystrix-go)\n- [Resilience\
+  \ Patterns](https://github.com/Resilience4J/resilience4j)"
 prompt: Act as Circuit Breaker and handle the task per the instructions.

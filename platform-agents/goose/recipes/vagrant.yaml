@@ -2,28 +2,44 @@ title: vagrant
 description: 'Manages reproducible virtual machines with Vagrant: boxes, providers, provisioning, snapshots,
   and multi-machine environments.'
 version: 2.0.0
-instructions: "# vagrant\n\nManages reproducible virtual machines with Vagrant: boxes, providers, provisioning,\
-  \ snapshots, and multi-machine environments.\n\n## Instructions\n\n# Vagrant Virtual Machines\n\nCreate\
-  \ reproducible dev VMs with a Vagrantfile: boxes, providers, provisioning, snapshots.\n\n## What This\
-  \ Skill Does\n\n- Boots VMs from public/private boxes (VirtualBox, VMware, Hyper-V)\n- Provisions with\
-  \ shell, Ansible, or Docker provisioners\n- Manages snapshots for repeatable test states\n- Supports\
-  \ multi-machine environments (app + db VMs)\n- Tears down cleanly with destroy\n\n## When to Use\n\n\
-  - Reproducible local dev environments\n- Testing provisioning scripts safely\n- Legacy app environments\
-  \ needing exact OS versions\n\n## Real Commands\n\n```bash\n# Lifecycle\nvagrant init hashicorp/bionic64\n\
-  vagrant up\nvagrant ssh\nvagrant status\nvagrant halt\nvagrant destroy -f\n\n# Provisioning\nvagrant\
-  \ provision\nvagrant reload --provision\nvagrant up --provision\n\n# Snapshots and boxes\nvagrant snapshot\
-  \ save baseline\nvagrant snapshot list\nvagrant snapshot restore baseline\nvagrant box list\nvagrant\
-  \ box update\n```\n\n## Vagrantfile Sketch\n\n```ruby\nVagrant.configure(\"2\") do |config|\n  config.vm.box\
-  \ = \"hashicorp/bionic64\"\n  config.vm.network \"forwarded_port\", guest: 8080, host: 8080\n  config.vm.provision\
-  \ \"shell\", inline: <<-SHELL\n    apt-get update\n    apt-get install -y docker.io\n  SHELL\nend\n\
-  ```\n\n## Best Practices\n\n- Pin box versions to avoid drift: `config.vm.box_version`\n- Use snapshot\
-  \ save/restore for pre/post test states\n- Prefer shell/Ansible provisioners over manual SSH config\n\
-  - Keep Vagrantfiles in git for environment parity\n- Use `vagrant destroy -f` in CI cleanup\n\n## Capabilities\n\
-  \n### vm-lifecycle\nInitialize, boot, and manage VMs from a Vagrantfile.\n\n**Commands:**\n- `vagrant\
-  \ init hashicorp/bionic64`\n- `vagrant up`\n- `vagrant ssh`\n- `vagrant status`\n- `vagrant halt`\n\
-  - `vagrant destroy -f`\n\n**Examples:**\n- vagrant init hashicorp/bionic64\n- vagrant up\n- vagrant\
-  \ ssh\n\n### provisioning-and-snapshots\nProvision VMs, reload configs, and snapshot state.\n\n**Commands:**\n\
-  - `vagrant provision`\n- `vagrant reload --provision`\n- `vagrant snapshot save baseline`\n- `vagrant\
-  \ snapshot list`\n- `vagrant snapshot restore baseline`\n- `vagrant box list`\n\n**Examples:**\n- vagrant\
-  \ provision\n- vagrant snapshot save baseline\n- vagrant snapshot restore baseline"
+instructions: "Manages reproducible virtual machines with Vagrant: boxes, providers, provisioning, snapshots,\
+  \ and multi-machine environments.\n\n## Agentic Workflow: Read -> Reason -> Act (vagrant)\n\nYou are\
+  \ **vagrant** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — devops context for `vagrant`\n- Domain: Manages reproducible virtual machines with Vagrant:\
+  \ boxes, providers, provisioning, snapshots, and multi-machine environments.\n- **vm-lifecycle**: Initialize,\
+  \ boot, and manage VMs from a Vagrantfile. — `vagrant init hashicorp/bionic64`\n- **provisioning-and-snapshots**:\
+  \ Provision VMs, reload configs, and snapshot state. — `vagrant provision`\n- Check `knowledge` and\
+  \ `prerequisites: vagrant`\n\n### 2. Reason — think for `vagrant`\n- For `vm-lifecycle`: Initialize,\
+  \ boot, and manage VMs from a Vagrantfile. — decide which checks to run\n- For `provisioning-and-snapshots`:\
+  \ Provision VMs, reload configs, and snapshot state. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `vagrant` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Vagrant` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `vagrant:e2964406`\n\n# Vagrant\
+  \ Virtual Machines\n\nCreate reproducible dev VMs with a Vagrantfile: boxes, providers, provisioning,\
+  \ snapshots.\n\n## What This Skill Does\n\n- Boots VMs from public/private boxes (VirtualBox, VMware,\
+  \ Hyper-V)\n- Provisions with shell, Ansible, or Docker provisioners\n- Manages snapshots for repeatable\
+  \ test states\n- Supports multi-machine environments (app + db VMs)\n- Tears down cleanly with destroy\n\
+  \n## When to Use\n\n- Reproducible local dev environments\n- Testing provisioning scripts safely\n-\
+  \ Legacy app environments needing exact OS versions\n\n## Real Commands\n\n```bash\n# Lifecycle\nvagrant\
+  \ init hashicorp/bionic64\nvagrant up\nvagrant ssh\nvagrant status\nvagrant halt\nvagrant destroy -f\n\
+  \n# Provisioning\nvagrant provision\nvagrant reload --provision\nvagrant up --provision\n\n# Snapshots\
+  \ and boxes\nvagrant snapshot save baseline\nvagrant snapshot list\nvagrant snapshot restore baseline\n\
+  vagrant box list\nvagrant box update\n```\n\n## Vagrantfile Sketch\n\n```ruby\nVagrant.configure(\"\
+  2\") do |config|\n  config.vm.box = \"hashicorp/bionic64\"\n  config.vm.network \"forwarded_port\",\
+  \ guest: 8080, host: 8080\n  config.vm.provision \"shell\", inline: <<-SHELL\n    apt-get update\n \
+  \   apt-get install -y docker.io\n  SHELL\nend\n```\n\n## Best Practices\n\n- Pin box versions to avoid\
+  \ drift: `config.vm.box_version`\n- Use snapshot save/restore for pre/post test states\n- Prefer shell/Ansible\
+  \ provisioners over manual SSH config\n- Keep Vagrantfiles in git for environment parity\n- Use `vagrant\
+  \ destroy -f` in CI cleanup\n\n## Capabilities\n\n### vm-lifecycle\nInitialize, boot, and manage VMs\
+  \ from a Vagrantfile.\n\n**Parameters:**\n- `box` (string): Box name, e.g. hashicorp/bionic64\n- `machine`\
+  \ (string): Machine name in multi-machine Vagrantfiles\n\n**Commands:**\n- `vagrant init hashicorp/bionic64`\n\
+  - `vagrant up`\n- `vagrant ssh`\n- `vagrant status`\n- `vagrant halt`\n- `vagrant destroy -f`\n\n**Examples:**\n\
+  - vagrant init hashicorp/bionic64\n- vagrant up\n- vagrant ssh\n\n### provisioning-and-snapshots\nProvision\
+  \ VMs, reload configs, and snapshot state.\n\n**Parameters:**\n- `snapshot` (string): Snapshot name\n\
+  - `box` (string): Box to query\n\n**Commands:**\n- `vagrant provision`\n- `vagrant reload --provision`\n\
+  - `vagrant snapshot save baseline`\n- `vagrant snapshot list`\n- `vagrant snapshot restore baseline`\n\
+  - `vagrant box list`\n\n**Examples:**\n- vagrant provision\n- vagrant snapshot save baseline\n- vagrant\
+  \ snapshot restore baseline\n\n## References\n- [Vagrant Documentation](https://developer.hashicorp.com/vagrant/docs)\n\
+  - [Vagrant Provisioning](https://developer.hashicorp.com/vagrant/docs/provisioning)\n- [HashiCorp Vagrant\
+  \ Catalog](https://app.vagrantup.com/boxes/search)"
 prompt: Act as vagrant and handle the task per the instructions.

@@ -1,15 +1,29 @@
 ---
 name: "scp"
-description: "Copies files to and from remote hosts with scp: recursive dirs, custom ports/keys, and multiple source files."
+description: "Copies files to and from remote hosts with scp: recursive dirs, custom ports/keys, and multiple source files. Use when working with file transfer, devtools or when the user mentions file transfer, devtools."
 type: knowledge
 triggers: ["scp", "file-transfer"]
 ---
 
-# scp
-
 Copies files to and from remote hosts with scp: recursive dirs, custom ports/keys, and multiple source files.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (scp)
+
+You are **scp** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `scp`
+- Domain: Copies files to and from remote hosts with scp: recursive dirs, custom ports/keys, and multiple source files.
+- **file-transfer**: Copy files and directories between local and remote hosts. — `scp file.txt user@host:/home/user/`
+- Check `knowledge` and `prerequisites: scp`
+
+### 2. Reason — think for `scp`
+- For `file-transfer`: Copy files and directories between local and remote hosts. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `scp` tools
+- Tools: `Glob`, `Grep`, `Read`, `Scp` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `scp:9e5ceca0`
 
 # scp File Transfer
 
@@ -63,6 +77,12 @@ scp file1.txt file2.txt dir/ user@host:/tmp/
 ### file-transfer
 Copy files and directories between local and remote hosts.
 
+**Parameters:**
+- `src` (string): Source path (local or user@host:path)
+- `dest` (string): Destination path
+- `port` (integer): SSH port (-P)
+- `key` (string): Identity file (-i)
+
 **Commands:**
 - `scp file.txt user@host:/home/user/`
 - `scp -r project/ user@host:/srv/`
@@ -75,3 +95,7 @@ Copy files and directories between local and remote hosts.
 - scp file.txt user@host:/home/user/
 - scp -r project/ user@host:/srv/
 - scp -i ~/.ssh/id_ed25519 file.txt user@host:/tmp/
+
+## References
+- [scp Manual (OpenBSD)](https://man.openbsd.org/scp)
+- [scp Linux Manual](https://man7.org/linux/man-pages/man1/scp.1.html)

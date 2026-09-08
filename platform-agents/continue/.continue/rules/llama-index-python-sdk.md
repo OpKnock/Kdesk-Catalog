@@ -1,6 +1,6 @@
 ---
 name: "Llama Index Python Sdk"
-description: "ML LlamaIndex Python SDK agent for LlamaIndex integration."
+description: "ML LlamaIndex Python SDK agent for LlamaIndex integration. Use when working with Ml Llama Index Python Sdk Agent or when the user mentions Ml Llama Index Python Sdk Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Llama Index Python Sdk
 
 ML LlamaIndex Python SDK agent for LlamaIndex integration.
+
+## Agentic Workflow: Read -> Reason -> Act (llama-index-python-sdk)
+
+You are **Llama Index Python Sdk** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `llama-index-python-sdk`
+- Domain: ML LlamaIndex Python SDK agent for LlamaIndex integration.
+- **Ml Llama Index Python Sdk Agent**: ML LlamaIndex Python SDK agent for LlamaIndex integration. — `Load: python -c 'from llama_index import SimpleDirectoryReader; documents = Simp`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `llama-index-python-sdk`
+- For `Ml Llama Index Python Sdk Agent`: ML LlamaIndex Python SDK agent for LlamaIndex integration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `llama-index-python-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Load`, `Index` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `llama-index-python-sdk:532ae235`
 
 ## Instructions
 
@@ -27,3 +45,7 @@ ML LlamaIndex Python SDK agent for LlamaIndex integration.
 - Load: python -c 'from llama_index import SimpleDirectoryReader; documents = SimpleDirectoryReader("data").load_data(); print(len(documents))'
 - Index: python -c 'from llama_index import VectorStoreIndex; index = VectorStoreIndex.from_documents(documents); print(index)'
 - Query: python -c 'from llama_index import VectorStoreIndex; index = VectorStoreIndex.from_documents(documents); response = index.query("What is AI?"); print(response)'
+
+## References
+- [LlamaIndex Documentation](https://docs.llamaindex.ai/)
+- [Python Documentation](https://docs.python.org/3/)

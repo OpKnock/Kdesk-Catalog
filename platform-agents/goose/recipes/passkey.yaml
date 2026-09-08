@@ -2,27 +2,41 @@ title: Passkey
 description: 'Passkeys and WebAuthn: registration/authentication flows, relying party setup, and the SimpleWebAuthn
   libraries.'
 version: 2.0.0
-instructions: "# Passkey\n\nPasskeys and WebAuthn: registration/authentication flows, relying party setup,\
-  \ and the SimpleWebAuthn libraries.\n\n## Instructions\n\n# Passkeys\n\nPasskeys replace passwords with\
-  \ device-bound WebAuthn credentials, protected by biometrics or PINs.\n\n## What this skill does\n\n\
-  - Implements registration (attestation) and login (assertion) endpoints\n- Uses SimpleWebAuthn for ceremony\
-  \ verification\n- Configures relying party settings\n\n## When to use\n\n- Passwordless login in web\
-  \ apps\n- Removing passwords from accounts\n\n## Real commands\n\n```bash\n# Dependencies\nnpm install\
-  \ @simplewebauthn/server @simplewebauthn/browser\n\n# RP endpoints (dev server)\ncurl -s -X POST http://localhost:3000/register/start\
-  \ -d '{\"email\":\"alice@example.com\"}' -H 'Content-Type: application/json' | jq .\ncurl -s -X POST\
-  \ http://localhost:3000/login/start | jq '.options.publicKey'\n```\n\n## Server flow (Node)\n\n```js\n\
-  const { generateRegistrationOptions, verifyRegistrationResponse } = require('@simplewebauthn/server');\n\
-  \nconst options = await generateRegistrationOptions({\n  rpName: 'MyApp',\n  rpID: 'example.com',\n\
-  \  userName: user.email,\n  timeout: 60000,\n});\n// send options to browser, then verify attestation\
-  \ response\nconst verification = await verifyRegistrationResponse({ response, expectedChallenge, expectedOrigin:\
-  \ 'https://example.com', expectedRPID: 'example.com' });\n```\n\n## Best practices\n\n- Store challenge\
-  \ + user session server-side\n- Verify expectedOrigin and expectedRPID strictly\n- Always test in a\
-  \ real browser; localhost uses special origins\n\n## Capabilities\n\n### passkey-integration\nIntegrate\
-  \ WebAuthn passkeys into web apps: registration, authentication, and verification with SimpleWebAuthn.\n\
-  \n**Commands:**\n- `npm install @simplewebauthn/server @simplewebauthn/browser`\n- `npm install @simplewebauthn/server\
-  \ --save`\n- `curl -s -X POST http://localhost:3000/register/start | jq .`\n- `curl -s -X POST http://localhost:3000/login/start\
-  \ | jq .options`\n- `curl -sI https://webauthn.io | grep -i 'permissions-policy'`\n\n**Examples:**\n\
-  - curl -s -X POST http://localhost:3000/register/start -d '{\"email\":\"alice@example.com\"}' -H 'Content-Type:\
-  \ application/json' | jq .\n- curl -s -X POST http://localhost:3000/login/start | jq '.options.publicKey'\n\
-  - npm install @simplewebauthn/server"
+instructions: "Passkeys and WebAuthn: registration/authentication flows, relying party setup, and the\
+  \ SimpleWebAuthn libraries.\n\n## Agentic Workflow: Read -> Reason -> Act (passkey)\n\nYou are **Passkey**\
+  \ (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read\
+  \ — api context for `passkey`\n- Domain: Passkeys and WebAuthn: registration/authentication flows, relying\
+  \ party setup, and the SimpleWebAuthn libraries.\n- **passkey-integration**: Integrate WebAuthn passkeys\
+  \ into web apps: registration, authentication, and verification with Simpl — `npm install @simplewebauthn/server\
+  \ @simplewebauthn/browser`\n- Check `knowledge` and `prerequisites: npm`\n\n### 2. Reason — think for\
+  \ `passkey`\n- For `passkey-integration`: Integrate WebAuthn passkeys into web apps: registration, authentication,\
+  \ and verification with SimpleWebAuthn. — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `passkey` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any\
+  \ write; record evidence (paths, checksums)\n- Fingerprint: `passkey:a3cf3430`\n\n# Passkeys\n\nPasskeys\
+  \ replace passwords with device-bound WebAuthn credentials, protected by biometrics or PINs.\n\n## What\
+  \ this skill does\n\n- Implements registration (attestation) and login (assertion) endpoints\n- Uses\
+  \ SimpleWebAuthn for ceremony verification\n- Configures relying party settings\n\n## When to use\n\n\
+  - Passwordless login in web apps\n- Removing passwords from accounts\n\n## Real commands\n\n```bash\n\
+  # Dependencies\nnpm install @simplewebauthn/server @simplewebauthn/browser\n\n# RP endpoints (dev server)\n\
+  curl -s -X POST http://localhost:3000/register/start -d '{\"email\":\"alice@example.com\"}' -H 'Content-Type:\
+  \ application/json' | jq .\ncurl -s -X POST http://localhost:3000/login/start | jq '.options.publicKey'\n\
+  ```\n\n## Server flow (Node)\n\n```js\nconst { generateRegistrationOptions, verifyRegistrationResponse\
+  \ } = require('@simplewebauthn/server');\n\nconst options = await generateRegistrationOptions({\n  rpName:\
+  \ 'MyApp',\n  rpID: 'example.com',\n  userName: user.email,\n  timeout: 60000,\n});\n// send options\
+  \ to browser, then verify attestation response\nconst verification = await verifyRegistrationResponse({\
+  \ response, expectedChallenge, expectedOrigin: 'https://example.com', expectedRPID: 'example.com' });\n\
+  ```\n\n## Best practices\n\n- Store challenge + user session server-side\n- Verify expectedOrigin and\
+  \ expectedRPID strictly\n- Always test in a real browser; localhost uses special origins\n\n## Capabilities\n\
+  \n### passkey-integration\nIntegrate WebAuthn passkeys into web apps: registration, authentication,\
+  \ and verification with SimpleWebAuthn.\n\n**Parameters:**\n- `rp_id` (string): Relying party ID (effective\
+  \ domain)\n- `rp_name` (string): Relying party display name\n- `origin` (string): Allowed origin(s)\
+  \ for attestation\n\n**Commands:**\n- `npm install @simplewebauthn/server @simplewebauthn/browser`\n\
+  - `npm install @simplewebauthn/server --save`\n- `curl -s -X POST http://localhost:3000/register/start\
+  \ | jq .`\n- `curl -s -X POST http://localhost:3000/login/start | jq .options`\n- `curl -sI https://webauthn.io\
+  \ | grep -i 'permissions-policy'`\n\n**Examples:**\n- curl -s -X POST http://localhost:3000/register/start\
+  \ -d '{\"email\":\"alice@example.com\"}' -H 'Content-Type: application/json' | jq .\n- curl -s -X POST\
+  \ http://localhost:3000/login/start | jq '.options.publicKey'\n- npm install @simplewebauthn/server\n\
+  \n## References\n- [Passkeys on Google](https://developers.google.com/identity/passkeys)\n- [SimpleWebAuthn\
+  \ Docs](https://simplewebauthn.dev/docs/)"
 prompt: Act as Passkey and handle the task per the instructions.

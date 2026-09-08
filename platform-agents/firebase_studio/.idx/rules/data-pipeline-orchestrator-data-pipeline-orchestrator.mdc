@@ -1,14 +1,28 @@
 ---
-description: "Orchestrates data pipelines with Dagster, Prefect, and Airflow: job definitions, schedules, and runs."
+description: "Orchestrates data pipelines with Dagster, Prefect, and Airflow: job definitions, schedules, and runs. Use when working with dagster orchestration or when the user mentions dagster orchestration."
 globs: ["**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# data-pipeline-orchestrator-data-pipeline-orchestrator
-
 Orchestrates data pipelines with Dagster, Prefect, and Airflow: job definitions, schedules, and runs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (data-pipeline-orchestrator-data-pipeline-orchestrator)
+
+You are **data-pipeline-orchestrator-data-pipeline-orchestrator** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `data-pipeline-orchestrator-data-pipeline-orchestrator`
+- Domain: Orchestrates data pipelines with Dagster, Prefect, and Airflow: job definitions, schedules, and runs.
+- **dagster-orchestration**: Develop and run Dagster assets and jobs — `dagster dev`
+- Check `knowledge` and `prerequisites: airflow, dagster, prefect, python`
+
+### 2. Reason — think for `data-pipeline-orchestrator-data-pipeline-orchestrator`
+- For `dagster-orchestration`: Develop and run Dagster assets and jobs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `data-pipeline-orchestrator-data-pipeline-orchestrator` tools
+- Tools: `Glob`, `Grep`, `Read`, `Dagster` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `data-pipeline-orchestrator-data-pipeline-orchestrator:99455c8c`
 
 # Data Pipeline Orchestrator
 
@@ -76,6 +90,11 @@ re-runs the step or backfills the failed window.
 ### dagster-orchestration
 Develop and run Dagster assets and jobs
 
+**Parameters:**
+- `module` (string): Python module with definitions (-m)
+- `select` (string): Asset selection, e.g. asset_name+ or tag:daily
+- `config` (string): Run config YAML file
+
 **Commands:**
 - `dagster dev`
 - `dagster asset list`
@@ -87,3 +106,8 @@ Develop and run Dagster assets and jobs
 - dagster materialize -m assets.py --select 'orders_asset+'
 - dagster job execute -j etl_job --config run.yaml
 - dagster run list --status success
+
+## References
+- [Dagster docs](https://docs.dagster.io/)
+- [Prefect docs](https://docs.prefect.io/)
+- [Airflow orchestration docs](https://airflow.apache.org/docs/apache-airflow/stable/)

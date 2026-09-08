@@ -1,14 +1,30 @@
 ---
-description: "Builds IoT backends: MQTT brokers with mosquitto/EMQX, device data ingestion, and AWS IoT Core integration."
+description: "Builds IoT backends: MQTT brokers with mosquitto/EMQX, device data ingestion, and AWS IoT Core integration. Use when working with mqtt, aws iot or when the user mentions mqtt, aws iot."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# iot-backend
-
 Builds IoT backends: MQTT brokers with mosquitto/EMQX, device data ingestion, and AWS IoT Core integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (iot-backend)
+
+You are **iot-backend** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `iot-backend`
+- Domain: Builds IoT backends: MQTT brokers with mosquitto/EMQX, device data ingestion, and AWS IoT Core integration.
+- **mqtt**: Publish and subscribe to MQTT topics for device traffic. — `mosquitto_sub -h localhost -t 'sensors/#' -v`
+- **aws-iot**: Manage AWS IoT Core endpoints and publish device data. — `aws iot describe-endpoint --endpoint-type iot:Data-ATS`
+- Check `knowledge` and `prerequisites: node.js, python, mosquitto, influxdb`
+
+### 2. Reason — think for `iot-backend`
+- For `mqtt`: Publish and subscribe to MQTT topics for device traffic. — decide which checks to run
+- For `aws-iot`: Manage AWS IoT Core endpoints and publish device data. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `iot-backend` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mosquitto_sub`, `Mosquitto_pub` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `iot-backend:29efa1bf`
 
 # IoT Backend
 
@@ -83,6 +99,11 @@ Verify delivery at each QoS level.
 ### mqtt
 Publish and subscribe to MQTT topics for device traffic.
 
+**Parameters:**
+- `topic` (string): MQTT topic with wildcards
+- `qos` (number): Quality of service 0, 1, or 2
+- `retain` (string): Retain the message with -r
+
 **Commands:**
 - `mosquitto_sub -h localhost -t 'sensors/#' -v`
 - `mosquitto_pub -h localhost -t sensors/temp -m '{"device":"d1","temp":22.4}'`
@@ -98,6 +119,11 @@ Publish and subscribe to MQTT topics for device traffic.
 ### aws-iot
 Manage AWS IoT Core endpoints and publish device data.
 
+**Parameters:**
+- `topic` (string): Device topic to publish to
+- `payload` (string): JSON payload
+- `thing-name` (string): IoT thing name
+
 **Commands:**
 - `aws iot describe-endpoint --endpoint-type iot:Data-ATS`
 - `aws iot-data publish --topic sensors/d1 --payload '{"temp":22.4}' --cli-binary-format raw-in-base64-out`
@@ -109,3 +135,8 @@ Manage AWS IoT Core endpoints and publish device data.
 - aws iot-data publish --topic devices/d1/telemetry --payload '{"temp":22.4,"hum":55}'
 - aws iot list-things --attribute-name firmware --attribute-value 2.1
 - aws iot describe-endpoint --endpoint-type iot:Data-ATS
+
+## References
+- [mosquitto man pages](https://mosquitto.org/man/)
+- [EMQX Docs](https://docs.emqx.com/)
+- [AWS IoT Core](https://docs.aws.amazon.com/iot/)

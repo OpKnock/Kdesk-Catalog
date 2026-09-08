@@ -1,8 +1,24 @@
-# Api Webhook Ngrok Tunnels
-
 Tests webhooks with local tooling: ngrok tunnels for public callbacks, webhook.site inspection, curl replays, and delivery simulation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-webhook-ngrok-tunnels)
+
+You are **Api Webhook Ngrok Tunnels** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-webhook-ngrok-tunnels`
+- Domain: Tests webhooks with local tooling: ngrok tunnels for public callbacks, webhook.site inspection, curl replays, and delivery simulation.
+- **ngrok-tunnels**: Expose local webhook receivers publicly — `ngrok http 3000`
+- **delivery-simulation**: Simulate webhook deliveries — `curl -s -X POST http://localhost:3000/webhook-test -H 'Content-Type: application`
+- Check `knowledge` and `prerequisites: node.js, python, ngrok, redis`
+
+### 2. Reason — think for `api-webhook-ngrok-tunnels`
+- For `ngrok-tunnels`: Expose local webhook receivers publicly — decide which checks to run
+- For `delivery-simulation`: Simulate webhook deliveries — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-webhook-ngrok-tunnels` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ngrok`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-webhook-ngrok-tunnels:c145774f`
 
 # API Webhook v2 - Testing
 
@@ -48,6 +64,11 @@ curl -s -X POST http://localhost:3000/webhook-test -H 'Content-Type: application
 ### ngrok-tunnels
 Expose local webhook receivers publicly
 
+**Parameters:**
+- `port` (integer): Local port to tunnel
+- `subdomain` (string): Fixed subdomain
+- `region` (string): Tunnel region
+
 **Commands:**
 - `ngrok http 3000`
 - `ngrok http --host-header=rewrite 3000`
@@ -70,3 +91,7 @@ Simulate webhook deliveries
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [ngrok Docs](https://ngrok.com/docs)
+- [webhook.site](https://webhook.site/)

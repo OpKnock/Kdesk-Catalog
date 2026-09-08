@@ -1,5 +1,5 @@
 ---
-description: "Streaming server agent. Manages streaming ML server."
+description: "Streaming server agent. Manages streaming ML server. Use when working with Ml Streaming Server Agent or when the user mentions Ml Streaming Server Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Streaming Agent
 
 Streaming server agent. Manages streaming ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (streaming-agent)
+
+You are **Streaming Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `streaming-agent`
+- Domain: Streaming server agent. Manages streaming ML server.
+- **Ml Streaming Server Agent**: Streaming server agent. Manages streaming ML server. — `python -m streaming.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `streaming-agent`
+- For `Ml Streaming Server Agent`: Streaming server agent. Manages streaming ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `streaming-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `streaming-agent:6b639c18`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Streaming server agent. Manages streaming ML server.
 - curl -N http://localhost:8080/v1/completions --data '{"prompt": "Hello", "stream": true}'
 - python test_stream_server.py --endpoint http://localhost:8080
 - python config_stream.py --model gpt-4 --max-tokens 100
+
+## References
+- [Apache Kafka Documentation](https://kafka.apache.org/documentation/)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

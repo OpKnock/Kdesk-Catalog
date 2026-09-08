@@ -1,8 +1,24 @@
-# Volta
-
 Manages Node.js toolchains with Volta: install and pin node/npm/yarn per project, automatic version switching, and speed.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (volta)
+
+You are **Volta** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `volta`
+- Domain: Manages Node.js toolchains with Volta: install and pin node/npm/yarn per project, automatic version switching, and speed.
+- **toolchain-install**: Install Node.js versions and package managers. — `volta install node`
+- **pinning-and-switching**: Pin tool versions per project and switch automatically. — `volta pin node@20`
+- Check `knowledge` and `prerequisites: volta`
+
+### 2. Reason — think for `volta`
+- For `toolchain-install`: Install Node.js versions and package managers. — decide which checks to run
+- For `pinning-and-switching`: Pin tool versions per project and switch automatically. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `volta` tools
+- Tools: `Glob`, `Grep`, `Read`, `Volta` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `volta:bc0df7db`
 
 # Volta Node Toolchain
 
@@ -73,6 +89,10 @@ volta uninstall node@16
 ### toolchain-install
 Install Node.js versions and package managers.
 
+**Parameters:**
+- `tool` (string): Tool: node, npm, yarn, pnpm
+- `version` (string): Version or channel: 20, lts, latest
+
 **Commands:**
 - `volta install node`
 - `volta install node@20`
@@ -89,6 +109,10 @@ Install Node.js versions and package managers.
 ### pinning-and-switching
 Pin tool versions per project and switch automatically.
 
+**Parameters:**
+- `version` (string): Version to pin
+- `tool` (string): Tool to manage
+
 **Commands:**
 - `volta pin node@20`
 - `volta pin node@20.11.0 yarn@1.22.22`
@@ -101,3 +125,7 @@ Pin tool versions per project and switch automatically.
 - volta pin node@20
 - volta pin node@20.11.0 yarn@1.22.22
 - volta which node
+
+## References
+- [Volta Documentation](https://docs.volta.sh/)
+- [Volta GitHub](https://github.com/volta-cli/volta)

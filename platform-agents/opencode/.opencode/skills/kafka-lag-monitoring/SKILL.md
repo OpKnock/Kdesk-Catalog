@@ -5,27 +5,25 @@ description: "Monitor Kafka consumer lag: describe groups per topic/partition, i
 
 Monitor Kafka consumer lag: describe groups per topic/partition, inspect member assignment, reset offsets safely, and compute end-to-end lag from the CLI.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (kafka-lag-monitoring)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Kafka Lag Monitoring** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `kafka-consumer-groups.sh --bootstrap-server localhost:9092 -`, `kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list `
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `kafka-lag-monitoring`
+- Domain: Monitor Kafka consumer lag: describe groups per topic/partition, inspect member assignment, reset offsets safely, and compute end-to-end lag from the CLI.
+- **lag-inspection**: Inspect consumer group lag per partition and per member. — `kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group pa`
+- **offset-ops**: Get raw offsets and reset group offsets for replay or repairs. — `kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --top`
+- Check `knowledge` and `prerequisites: kafka-consumer-groups.sh, kafka-run-class.sh`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `kafka-lag-monitoring`
+- For `lag-inspection`: Inspect consumer group lag per partition and per member. — decide which checks to run
+- For `offset-ops`: Get raw offsets and reset group offsets for replay or repairs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `kafka-lag-monitoring` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-consumer-groups.sh`, `Kafka-run-class.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-lag-monitoring:166cde89`
 
 # Kafka Lag Monitoring
 

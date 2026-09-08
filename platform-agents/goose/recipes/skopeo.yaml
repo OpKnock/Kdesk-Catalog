@@ -2,14 +2,48 @@ title: skopeo
 description: Inspects, copies, and signs container images with skopeo — registry operations without a
   daemon, including sync and list-tags.
 version: 2.0.0
-instructions: '# skopeo
+instructions: 'Inspects, copies, and signs container images with skopeo — registry operations without
+  a daemon, including sync and list-tags.
 
 
-  Inspects, copies, and signs container images with skopeo — registry operations without a daemon, including
-  sync and list-tags.
+  ## Agentic Workflow: Read -> Reason -> Act (skopeo)
 
 
-  ## Instructions
+  You are **skopeo** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — devops context for `skopeo`
+
+  - Domain: Inspects, copies, and signs container images with skopeo — registry operations without a daemon,
+  including sync and list-tags.
+
+  - **image-inspection**: Inspect images and registries without pulling layers locally. — `skopeo inspect
+  docker://nginx:latest`
+
+  - **copy-and-sync**: Copy images between transports/registries and sync repositories. — `skopeo copy
+  docker://nginx:latest docker://ghcr.io/nginx:latest`
+
+  - Check `knowledge` and `prerequisites: skopeo`
+
+
+  ### 2. Reason — think for `skopeo`
+
+  - For `image-inspection`: Inspect images and registries without pulling layers locally. — decide which
+  checks to run
+
+  - For `copy-and-sync`: Copy images between transports/registries and sync repositories. — decide which
+  checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `skopeo` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Skopeo` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `skopeo:adeae137`
 
 
   # skopeo Registry Operations
@@ -103,6 +137,13 @@ instructions: '# skopeo
   Inspect images and registries without pulling layers locally.
 
 
+  **Parameters:**
+
+  - `image` (string): Image reference
+
+  - `format` (string): Go template for output
+
+
   **Commands:**
 
   - `skopeo inspect docker://nginx:latest`
@@ -130,6 +171,13 @@ instructions: '# skopeo
   Copy images between transports/registries and sync repositories.
 
 
+  **Parameters:**
+
+  - `src` (string): Source image reference
+
+  - `dest` (string): Destination reference
+
+
   **Commands:**
 
   - `skopeo copy docker://nginx:latest docker://ghcr.io/nginx:latest`
@@ -149,5 +197,12 @@ instructions: '# skopeo
 
   - skopeo sync --src docker --dest dir nginx:latest /opt/images
 
-  - skopeo delete docker://ghcr.io/old-app:v0.9'
+  - skopeo delete docker://ghcr.io/old-app:v0.9
+
+
+  ## References
+
+  - [skopeo GitHub](https://github.com/containers/skopeo)
+
+  - [containers-common Transports](https://github.com/containers/image/blob/main/docs/containers-transports.5.md)'
 prompt: Act as skopeo and handle the task per the instructions.

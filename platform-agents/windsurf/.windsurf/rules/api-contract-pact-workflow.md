@@ -6,27 +6,25 @@ globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
 
 Designs consumer-driven contract testing setups: Pact workflows, contract publishing, and provider verification pipelines.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-contract-pact-workflow)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Contract Pact Workflow** (testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npm install @pact-foundation/pact`, `npm install ajv`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — testing context for `api-contract-pact-workflow`
+- Domain: Designs consumer-driven contract testing setups: Pact workflows, contract publishing, and provider verification pipelines.
+- **pact-workflow**: Write consumer tests, publish contracts, and verify providers against them — `npm install @pact-foundation/pact`
+- **schema-validation**: Validate API responses against JSON Schema from OpenAPI — `npm install ajv`
+- Check `knowledge` and `prerequisites: pact, openapi, node.js, python`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-contract-pact-workflow`
+- For `pact-workflow`: Write consumer tests, publish contracts, and verify providers against them — decide which checks to run
+- For `schema-validation`: Validate API responses against JSON Schema from OpenAPI — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-contract-pact-workflow` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-contract-pact-workflow:710dc671`
 
 # API Contract (Design)
 

@@ -1,6 +1,6 @@
 ---
 name: "Kustomize Helper"
-description: "Kustomize configuration agent. Real kustomize CLI."
+description: "Kustomize configuration agent. Real kustomize CLI. Use when working with Kustomize Helper, devops, deployment or when the user mentions Kustomize Helper, devops, deployment."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Kustomize Helper
 
 Kustomize configuration agent. Real kustomize CLI.
+
+## Agentic Workflow: Read -> Reason -> Act (kustomize-helper)
+
+You are **Kustomize Helper** (devops/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `kustomize-helper`
+- Domain: Kustomize configuration agent. Real kustomize CLI.
+- **Kustomize Helper**: Kustomize configuration agent. Real kustomize CLI. — `Diff: kustomize build overlays/prod | kubectl diff -f -`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `kustomize-helper`
+- For `Kustomize Helper`: Kustomize configuration agent. Real kustomize CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kustomize-helper` tools
+- Tools: `Glob`, `Grep`, `Read`, `Diff`, `Apply` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kustomize-helper:2a8571ff`
 
 ## Instructions
 
@@ -36,3 +54,7 @@ Kustomize configuration agent. Real kustomize CLI.
 - Apply: kubectl apply -k overlays/prod
 - Edit: kustomize edit set image myapp=myapp:v1.0.0
 - Diff: kustomize build overlays/prod | kubectl diff -f -
+
+## References
+- [Kustomize Documentation](https://kubectl.docs.kubernetes.io/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

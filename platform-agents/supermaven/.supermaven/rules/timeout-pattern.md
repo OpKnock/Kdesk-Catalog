@@ -1,8 +1,22 @@
-# Timeout Pattern
-
 Apply timeouts at every layer of the call stack: HTTP client connect/read deadlines with curl and requests, gRPC deadlines with grpcurl, and proxy timeouts in nginx. Establishes a timeout ladder (client < proxy < backend) so hung downstreams fail fast without burning worker pools.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (timeout-pattern)
+
+You are **Timeout Pattern** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `timeout-pattern`
+- Domain: Apply timeouts at every layer of the call stack: HTTP client connect/read deadlines with curl and requests, gRPC deadlines with grpcurl, and proxy timeouts in nginx. Establishes a timeout ladder (clie
+- **timeout-application**: Apply timeouts at client, proxy, and application layers — `curl --connect-timeout 5 --max-time 15 http://localhost:8080/slow`
+- Check `knowledge` and `prerequisites: grpcurl, python`
+
+### 2. Reason — think for `timeout-pattern`
+- For `timeout-application`: Apply timeouts at client, proxy, and application layers — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `timeout-pattern` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Grpcurl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `timeout-pattern:d8e41778`
 
 # Timeout Pattern
 
@@ -70,6 +84,11 @@ curl --connect-timeout 5 --max-time 15 https://api.example.com/slow
 ### timeout-application
 Apply timeouts at client, proxy, and application layers
 
+**Parameters:**
+- `connect_timeout` (integer): Seconds to establish the connection
+- `total_timeout` (integer): Seconds for the whole call
+- `layer` (string): client, proxy, or application
+
 **Commands:**
 - `curl --connect-timeout 5 --max-time 15 http://localhost:8080/slow`
 - `grpcurl -max-time 10 -d '{}' localhost:8080 svc.Health.Check`
@@ -80,3 +99,7 @@ Apply timeouts at client, proxy, and application layers
 - curl --connect-timeout 5 --max-time 15 http://localhost:8080/slow
 - grpcurl -max-time 10 -d '{}' localhost:8080 svc.Health.Check
 - python -c 'import requests; requests.get("http://localhost:8080", timeout=(3.05, 15))'
+
+## References
+- [nginx proxy module timeouts](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout)
+- [curl timeouts](https://curl.se/docs/manpage.html#--max-time)

@@ -1,6 +1,6 @@
 ---
 name: "Deploy Gcp"
-description: "GCP deployment agent for Cloud Run, GKE, Cloud Functions, and more."
+description: "GCP deployment agent for Cloud Run, GKE, Cloud Functions, and more. Use when working with Deploy Gcp, devops, deployment or when the user mentions Deploy Gcp, devops, deployment."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Deploy Gcp
 
 GCP deployment agent for Cloud Run, GKE, Cloud Functions, and more.
+
+## Agentic Workflow: Read -> Reason -> Act (deploy-gcp)
+
+You are **Deploy Gcp** (devops/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `deploy-gcp`
+- Domain: GCP deployment agent for Cloud Run, GKE, Cloud Functions, and more.
+- **Deploy Gcp**: GCP deployment agent for Cloud Run, GKE, Cloud Functions, and more. — `Functions: gcloud functions deploy myfunc --trigger-http`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `deploy-gcp`
+- For `Deploy Gcp`: GCP deployment agent for Cloud Run, GKE, Cloud Functions, and more. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `deploy-gcp` tools
+- Tools: `Glob`, `Grep`, `Read`, `Functions`, `Cloud` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `deploy-gcp:61a16995`
 
 ## Instructions
 
@@ -37,3 +55,6 @@ GCP deployment agent for Cloud Run, GKE, Cloud Functions, and more.
 - GKE: gcloud container clusters create
 - Cloud Build: gcloud builds submit --tag gcr.io/project/app
 - Functions: gcloud functions deploy myfunc --trigger-http
+
+## References
+- [Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)

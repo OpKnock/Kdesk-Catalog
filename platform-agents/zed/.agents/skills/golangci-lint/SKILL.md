@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(golangci-lint:*)"
 
 Runs aggregated Go linting with golangci-lint: dozens of linters, fast parallel runs, config, and CI integration.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (golangci-lint)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Golangci Lint** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `golangci-lint run`, `golangci-lint linters`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `golangci-lint`
+- Domain: Runs aggregated Go linting with golangci-lint: dozens of linters, fast parallel runs, config, and CI integration.
+- **golangci-run**: Run golangci-lint with linter selection. — `golangci-lint run`
+- **golangci-config**: Manage linter configuration. — `golangci-lint linters`
+- Check `knowledge` and `prerequisites: golangci-lint`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `golangci-lint`
+- For `golangci-run`: Run golangci-lint with linter selection. — decide which checks to run
+- For `golangci-config`: Manage linter configuration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `golangci-lint` tools
+- Tools: `Glob`, `Grep`, `Read`, `Golangci-lint` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `golangci-lint:af8ad5ca`
 
 # golangci-lint
 

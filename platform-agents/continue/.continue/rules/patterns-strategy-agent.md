@@ -1,6 +1,6 @@
 ---
 name: "Patterns Strategy Agent"
-description: "Strategy pattern agent for implementation."
+description: "Strategy pattern agent for implementation. Use when working with Patterns Strategy Agent or when the user mentions Patterns Strategy Agent."
 globs: ["**/*.go", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Patterns Strategy Agent
 
 Strategy pattern agent for implementation.
+
+## Agentic Workflow: Read -> Reason -> Act (patterns-strategy-agent)
+
+You are **Patterns Strategy Agent** (patterns/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — patterns context for `patterns-strategy-agent`
+- Domain: Strategy pattern agent for implementation.
+- **Patterns Strategy Agent**: Strategy pattern agent for implementation. — `interface Strategy { execute(a: number, b: number): number; } class AddStrategy `
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `patterns-strategy-agent`
+- For `Patterns Strategy Agent`: Strategy pattern agent for implementation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `patterns-strategy-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Interface` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `patterns-strategy-agent:024a624f`
 
 ## Instructions
 
@@ -23,3 +41,6 @@ Strategy pattern agent for implementation.
 
 **Examples:**
 - interface Strategy { execute(a: number, b: number): number; } class AddStrategy implements Strategy { execute(a: number, b: number): number { return a + b; } } class Context { private strategy: Strategy; setStrategy(strategy: Strategy) { this.strategy = strategy; } executeStrategy(a: number, b: number) { return this.strategy.execute(a, b); } }
+
+## References
+- [Strategy Design Pattern](https://refactoring.guru/design-patterns/strategy)

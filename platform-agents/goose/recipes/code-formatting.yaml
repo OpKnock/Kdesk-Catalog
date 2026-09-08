@@ -2,8 +2,19 @@ title: code-formatting
 description: Applies consistent code formatting across languages with prettier, black, gofmt, rustfmt,
   and formatter configurations.
 version: 2.0.0
-instructions: "# code-formatting\n\nApplies consistent code formatting across languages with prettier,\
-  \ black, gofmt, rustfmt, and formatter configurations.\n\n## Instructions\n\n# Code Formatting\n\nEnforce\
+instructions: "Applies consistent code formatting across languages with prettier, black, gofmt, rustfmt,\
+  \ and formatter configurations.\n\n## Agentic Workflow: Read -> Reason -> Act (code-formatting)\n\n\
+  You are **code-formatting** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via\
+  \ `allowed-tools`.\n\n### 1. Read — code-quality context for `code-formatting`\n- Domain: Applies consistent\
+  \ code formatting across languages with prettier, black, gofmt, rustfmt, and formatter configurations.\n\
+  - **prettier-format**: Format JS/TS/HTML/CSS/MD with Prettier. — `npx prettier --write src/`\n- **language-formatters**:\
+  \ Format Python, Go, and Rust. — `black src/`\n- Check `knowledge` and `prerequisites: black, cargo,\
+  \ gofmt, npx`\n\n### 2. Reason — think for `code-formatting`\n- For `prettier-format`: Format JS/TS/HTML/CSS/MD\
+  \ with Prettier. — decide which checks to run\n- For `language-formatters`: Format Python, Go, and Rust.\
+  \ — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for\
+  \ your inputs\n\n### 3. Act — execute with `code-formatting` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Npx`, `Black` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record\
+  \ evidence (paths, checksums)\n- Fingerprint: `code-formatting:672cc44f`\n\n# Code Formatting\n\nEnforce\
   \ one formatting style across the repo.\n\n## When to Use\n\n- Every codebase with more than one contributor\n\
   - Ending style arguments with config, not discussion\n- Pre-commit and CI formatting gates\n- Language-agnostic\
   \ consistency (configs, markdown, YAML)\n\n## Commands\n\n```bash\n# Prettier (JS/TS/CSS/HTML/MD/JSON)\n\
@@ -14,11 +25,15 @@ instructions: "# code-formatting\n\nApplies consistent code formatting across la
   \ Practices\n\n- Commit the formatter config at the repo root\n- Use --check in CI, --write in pre-commit\n\
   - Let formatters handle style; reviewers handle logic\n- Format generated files with ignore directives\n\
   - Keep formatter versions pinned to avoid churn\n- Run formatting before linting for stable error lines\n\
-  \n## Capabilities\n\n### prettier-format\nFormat JS/TS/HTML/CSS/MD with Prettier.\n\n**Commands:**\n\
-  - `npx prettier --write src/`\n- `npx prettier --check src/`\n- `npx prettier --write \"src/**/*.{ts,tsx}\"\
-  `\n- `npx prettier --config .prettierrc --write .`\n- `npx prettier --write --single-quote src/`\n\n\
-  **Examples:**\n- npx prettier --check .\n- npx prettier --write . --tab-width 2\n- npx prettier --write\
-  \ --prose-wrap always README.md\n\n### language-formatters\nFormat Python, Go, and Rust.\n\n**Commands:**\n\
-  - `black src/`\n- `gofmt -w ./`\n- `go fmt ./...`\n- `rustfmt --check src/`\n- `cargo fmt --all`\n\n\
-  **Examples:**\n- gofmt -l .\n- rustfmt --edition 2021 src/main.rs\n- cargo fmt --all -- --check"
+  \n## Capabilities\n\n### prettier-format\nFormat JS/TS/HTML/CSS/MD with Prettier.\n\n**Parameters:**\n\
+  - `paths` (string): Files or globs\n- `check` (boolean): Verify without writing\n- `tab-width` (integer):\
+  \ Indent width\n\n**Commands:**\n- `npx prettier --write src/`\n- `npx prettier --check src/`\n- `npx\
+  \ prettier --write \"src/**/*.{ts,tsx}\"`\n- `npx prettier --config .prettierrc --write .`\n- `npx prettier\
+  \ --write --single-quote src/`\n\n**Examples:**\n- npx prettier --check .\n- npx prettier --write .\
+  \ --tab-width 2\n- npx prettier --write --prose-wrap always README.md\n\n### language-formatters\nFormat\
+  \ Python, Go, and Rust.\n\n**Parameters:**\n- `language` (string): python, go, rust\n- `config` (string):\
+  \ Formatter config path\n\n**Commands:**\n- `black src/`\n- `gofmt -w ./`\n- `go fmt ./...`\n- `rustfmt\
+  \ --check src/`\n- `cargo fmt --all`\n\n**Examples:**\n- gofmt -l .\n- rustfmt --edition 2021 src/main.rs\n\
+  - cargo fmt --all -- --check\n\n## References\n- [Prettier Docs](https://prettier.io/docs/)\n- [gofmt\
+  \ Docs](https://pkg.go.dev/cmd/gofmt)\n- [Rustfmt Docs](https://rust-lang.github.io/rustfmt/)"
 prompt: Act as code-formatting and handle the task per the instructions.

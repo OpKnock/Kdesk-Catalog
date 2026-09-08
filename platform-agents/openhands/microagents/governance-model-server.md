@@ -1,6 +1,6 @@
 ---
 name: "governance-model-server"
-description: "Governance server agent. Manages Governance ML server."
+description: "Governance server agent. Manages Governance ML server. Use when working with Ml Governance Server Agent or when the user mentions Ml Governance Server Agent."
 type: knowledge
 triggers: ["governance-model-server", "ml governance server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["governance-model-server", "ml governance server agent"]
 # Governance Model Server
 
 Governance server agent. Manages Governance ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (governance-model-server)
+
+You are **Governance Model Server** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `governance-model-server`
+- Domain: Governance server agent. Manages Governance ML server.
+- **Ml Governance Server Agent**: Governance server agent. Manages Governance ML server. — `python -m model.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `governance-model-server`
+- For `Ml Governance Server Agent`: Governance server agent. Manages Governance ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `governance-model-server` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `governance-model-server:1d071918`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Governance server agent. Manages Governance ML server.
 - curl http://localhost:8080/governance --data '{"model": "model.pkl"}'
 - python audit.py --model model.pkl --data train.csv --output audit.json
 - python compliance_check.py --model model.pkl --rules rules.json
+
+## References
+- [MLflow Model Registry](https://mlflow.org/docs/latest/model-registry.html)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

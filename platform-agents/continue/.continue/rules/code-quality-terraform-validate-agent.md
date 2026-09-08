@@ -1,6 +1,6 @@
 ---
 name: "Code Quality Terraform Validate Agent"
-description: "Terraform validate agent for configuration validation."
+description: "Terraform validate agent for configuration validation. Use when working with Code Quality Terraform Validate Agent, code quality or when the user mentions Code Quality Terraform Validate Agent, code quality."
 globs: ["**/*.json", "**/*.r", "**/*.tf"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Code Quality Terraform Validate Agent
 
 Terraform validate agent for configuration validation.
+
+## Agentic Workflow: Read -> Reason -> Act (code-quality-terraform-validate-agent)
+
+You are **Code Quality Terraform Validate Agent** (code-quality/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-quality-terraform-validate-agent`
+- Domain: Terraform validate agent for configuration validation.
+- **Code Quality Terraform Validate Agent**: Terraform validate agent for configuration validation. — `terraform validate -json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `code-quality-terraform-validate-agent`
+- For `Code Quality Terraform Validate Agent`: Terraform validate agent for configuration validation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-quality-terraform-validate-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Terraform` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-quality-terraform-validate-agent:c686d17e`
 
 ## Instructions
 
@@ -27,3 +45,6 @@ Terraform validate agent for configuration validation.
 - terraform validate
 - terraform validate -json
 - terraform fmt -check -recursive
+
+## References
+- [Terraform Documentation](https://developer.hashicorp.com/terraform/docs)

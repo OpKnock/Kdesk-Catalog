@@ -3,15 +3,53 @@ description: 'Centralizes credentials and cryptographic material in a managed HS
   Azure CLI: provisions vault instances, performs secret CRUD with versioning and expiry, manages asymmetric
   keys, and configures access policies or RBAC for service identities.'
 version: 2.0.0
-instructions: '# Azure Key Vault
+instructions: 'Centralizes credentials and cryptographic material in a managed HSM-backed store using
+  the Azure CLI: provisions vault instances, performs secret CRUD with versioning and expiry, manages
+  asymmetric keys, and configures access policies or RBAC for service identities.
 
 
-  Centralizes credentials and cryptographic material in a managed HSM-backed store using the Azure CLI:
-  provisions vault instances, performs secret CRUD with versioning and expiry, manages asymmetric keys,
-  and configures access policies or RBAC for service identities.
+  ## Agentic Workflow: Read -> Reason -> Act (azure-key-vault)
 
 
-  ## Instructions
+  You are **Azure Key Vault** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — api context for `azure-key-vault`
+
+  - Domain: Centralizes credentials and cryptographic material in a managed HSM-backed store using the
+  Azure CLI: provisions vault instances, performs secret CRUD with versioning and expiry, manages asymmetric
+  ke
+
+  - **vault-lifecycle**: Create and manage Key Vault instances. — `az keyvault create --name mykv --resource-group
+  rg`
+
+  - **secrets**: Store and retrieve secrets. — `az keyvault secret set --vault-name mykv --name db-password
+  --value secret123`
+
+  - **keys-access**: Manage keys and access policies. — `az keyvault key create --vault-name mykv --name
+  rsa-key --protection software`
+
+  - Check `knowledge` references before acting
+
+
+  ### 2. Reason — think for `azure-key-vault`
+
+  - For `vault-lifecycle`: Create and manage Key Vault instances. — decide which checks to run
+
+  - For `secrets`: Store and retrieve secrets. — decide which checks to run
+
+  - For `keys-access`: Manage keys and access policies. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `azure-key-vault` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Az` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `azure-key-vault:8f07adad`
 
 
   # Azure Key Vault
@@ -98,6 +136,15 @@ instructions: '# Azure Key Vault
   Create and manage Key Vault instances.
 
 
+  **Parameters:**
+
+  - `vault_name` (string): Key Vault name
+
+  - `resource_group` (string): Resource group
+
+  - `location` (string): Azure region
+
+
   **Commands:**
 
   - `az keyvault create --name mykv --resource-group rg`
@@ -123,6 +170,15 @@ instructions: '# Azure Key Vault
   ### secrets
 
   Store and retrieve secrets.
+
+
+  **Parameters:**
+
+  - `secret_name` (string): Secret name
+
+  - `value` (string): Secret value
+
+  - `expires` (string): Expiry date ISO format
 
 
   **Commands:**
@@ -152,6 +208,15 @@ instructions: '# Azure Key Vault
   Manage keys and access policies.
 
 
+  **Parameters:**
+
+  - `key_name` (string): Key name
+
+  - `protection` (string): software or hsm
+
+  - `permissions` (string): Permission set (get, list, set, delete, wrapKey...)
+
+
   **Commands:**
 
   - `az keyvault key create --vault-name mykv --name rsa-key --protection software`
@@ -173,5 +238,12 @@ instructions: '# Azure Key Vault
   - az keyvault set-policy --vault-name mykv --object-id a1b2c3d4-e5f6-7890-abcd-ef1234567890 --key-permissions
   get unwrapKey wrapKey
 
-  - az keyvault key list --vault-name mykv --query ''[].{name:name,kid:key.kid}'' -o table'
+  - az keyvault key list --vault-name mykv --query ''[].{name:name,kid:key.kid}'' -o table
+
+
+  ## References
+
+  - [Key Vault Docs](https://learn.microsoft.com/en-us/azure/key-vault/)
+
+  - [Azure CLI keyvault Reference](https://learn.microsoft.com/en-us/cli/azure/keyvault)'
 prompt: Act as Azure Key Vault and handle the task per the instructions.

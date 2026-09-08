@@ -2,9 +2,20 @@ title: Api Schema Buf Project
 description: 'Manages protobuf schemas with buf: project setup, linting, formatting, code generation,
   and breaking-change detection for gRPC APIs.'
 version: 2.0.0
-instructions: "# Api Schema Buf Project\n\nManages protobuf schemas with buf: project setup, linting,\
-  \ formatting, code generation, and breaking-change detection for gRPC APIs.\n\n## Instructions\n\n#\
-  \ API Schema v3 - Protobuf/buf\n\nProtobuf schema management with buf.\n\n## What This Skill Does\n\
+instructions: "Manages protobuf schemas with buf: project setup, linting, formatting, code generation,\
+  \ and breaking-change detection for gRPC APIs.\n\n## Agentic Workflow: Read -> Reason -> Act (api-schema-buf-project)\n\
+  \nYou are **Api Schema Buf Project** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — data context for `api-schema-buf-project`\n- Domain: Manages protobuf schemas with buf:\
+  \ project setup, linting, formatting, code generation, and breaking-change detection for gRPC APIs.\n\
+  - **buf-project**: Set up and maintain buf protobuf projects — `go install github.com/bufbuild/buf/cmd/buf@latest`\n\
+  - **generation-breaking**: Generate code and detect breaking changes — `buf generate`\n- Check `knowledge`\
+  \ and `prerequisites: openapi, json-schema, node.js, python`\n\n### 2. Reason — think for `api-schema-buf-project`\n\
+  - For `buf-project`: Set up and maintain buf protobuf projects — decide which checks to run\n- For `generation-breaking`:\
+  \ Generate code and detect breaking changes — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `api-schema-buf-project`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Buf` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `api-schema-buf-project:05bfbdef`\n\
+  \n# API Schema v3 - Protobuf/buf\n\nProtobuf schema management with buf.\n\n## What This Skill Does\n\
   - Manages proto schemas as buf modules\n- Lints and formats proto files\n- Generates stubs and checks\
   \ compatibility\n\n## When to Use\n- gRPC API schema management\n- Multi-language stub generation\n\
   - Safe schema evolution\n\n## Real Commands\n\n```bash\ngo install github.com/bufbuild/buf/cmd/buf@latest\n\
@@ -13,11 +24,13 @@ instructions: "# Api Schema Buf Project\n\nManages protobuf schemas with buf: pr
   \ 1;\n  string email = 2;\n}\n```\n\n## Testing\n- Run buf lint and breaking checks in CI\n- Generate\
   \ stubs into a scratch dir\n- Test wire compatibility after changes\n\n## Best Practices\n- Never reuse\
   \ field numbers\n- Add fields at the end of messages\n- Commit generated code for release tags\n\n##\
-  \ Capabilities\n\n### buf-project\nSet up and maintain buf protobuf projects\n\n**Commands:**\n- `go\
-  \ install github.com/bufbuild/buf/cmd/buf@latest`\n- `buf --version`\n- `buf mod init`\n- `buf lint`\n\
-  - `buf format -w`\n\n**Examples:**\n- buf mod init creates buf.yaml\n- buf lint checks proto style rules\n\
-  - buf format -w normalizes formatting\n\n### generation-breaking\nGenerate code and detect breaking\
-  \ changes\n\n**Commands:**\n- `buf generate`\n- `buf generate --template buf.gen.yaml`\n- `buf breaking\
-  \ --against .git#branch=main`\n- `buf build -o schema.binpb`\n\n**Examples:**\n- -cli --help\n- -api\
-  \ --help"
+  \ Capabilities\n\n### buf-project\nSet up and maintain buf protobuf projects\n\n**Parameters:**\n- `module`\
+  \ (string): Buf module path\n- `input` (string): Input directory or file\n- `against` (string): Baseline\
+  \ for breaking checks\n\n**Commands:**\n- `go install github.com/bufbuild/buf/cmd/buf@latest`\n- `buf\
+  \ --version`\n- `buf mod init`\n- `buf lint`\n- `buf format -w`\n\n**Examples:**\n- buf mod init creates\
+  \ buf.yaml\n- buf lint checks proto style rules\n- buf format -w normalizes formatting\n\n### generation-breaking\n\
+  Generate code and detect breaking changes\n\n**Commands:**\n- `buf generate`\n- `buf generate --template\
+  \ buf.gen.yaml`\n- `buf breaking --against .git#branch=main`\n- `buf build -o schema.binpb`\n\n**Examples:**\n\
+  - -cli --help\n- -api --help\n\n## References\n- [buf Docs](https://buf.build/docs/)\n- [Protobuf Language\
+  \ Guide](https://protobuf.dev/programming-guides/proto3/)"
 prompt: Act as Api Schema Buf Project and handle the task per the instructions.

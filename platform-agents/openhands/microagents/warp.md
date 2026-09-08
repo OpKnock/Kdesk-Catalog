@@ -1,15 +1,29 @@
 ---
 name: "warp"
-description: "Creates HTTP APIs with the Warp web framework in Rust. Uses filter-based routing with combinators, adds warp and tokio dependencies via cargo, runs the server, and tests with cargo test and curl."
+description: "Creates HTTP APIs with the Warp web framework in Rust. Uses filter-based routing with combinators, adds warp and tokio dependencies via cargo, runs the server, and tests with cargo test and curl. Use when working with warp api, rust or when the user mentions warp api, rust."
 type: knowledge
 triggers: ["warp", "warp-api"]
 ---
 
-# Warp
-
 Creates HTTP APIs with the Warp web framework in Rust. Uses filter-based routing with combinators, adds warp and tokio dependencies via cargo, runs the server, and tests with cargo test and curl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (warp)
+
+You are **Warp** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `warp`
+- Domain: Creates HTTP APIs with the Warp web framework in Rust. Uses filter-based routing with combinators, adds warp and tokio dependencies via cargo, runs the server, and tests with cargo test and curl.
+- **warp-api**: Create and run Warp-based Rust HTTP services — `cargo new my-api`
+- Check `knowledge` and `prerequisites: cargo`
+
+### 2. Reason — think for `warp`
+- For `warp-api`: Create and run Warp-based Rust HTTP services — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `warp` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `warp:c7f1c0db`
 
 # Warp (Rust)
 
@@ -92,6 +106,10 @@ async fn test_health() {
 ### warp-api
 Create and run Warp-based Rust HTTP services
 
+**Parameters:**
+- `port` (integer): Bind port for the warp server (default 3030)
+- `features` (string): Cargo features for tokio, e.g. tokio/full
+
 **Commands:**
 - `cargo new my-api`
 - `cargo add warp tokio`
@@ -103,3 +121,8 @@ Create and run Warp-based Rust HTTP services
 - cargo add warp tokio --features tokio/full
 - cargo build --release
 - curl -s -X POST http://localhost:3030/items -H "Content-Type: application/json" -d "{\"name\":\"widget"}"
+
+## References
+- [warp docs.rs](https://docs.rs/warp)
+- [warp GitHub](https://github.com/seanmonstar/warp)
+- [Tokio docs](https://docs.rs/tokio)

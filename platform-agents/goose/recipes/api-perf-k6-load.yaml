@@ -2,8 +2,20 @@ title: Api Perf K6 Load
 description: 'Runs k6 load tests against APIs: virtual users, stages, thresholds, checks, and CI-friendly
   summary exports for throughput and latency assertions.'
 version: 2.0.0
-instructions: "# Api Perf K6 Load\n\nRuns k6 load tests against APIs: virtual users, stages, thresholds,\
-  \ checks, and CI-friendly summary exports for throughput and latency assertions.\n\n## Instructions\n\
+instructions: "Runs k6 load tests against APIs: virtual users, stages, thresholds, checks, and CI-friendly\
+  \ summary exports for throughput and latency assertions.\n\n## Agentic Workflow: Read -> Reason -> Act\
+  \ (api-perf-k6-load)\n\nYou are **Api Perf K6 Load** (backend) — a sub-agent that **Reads, Reasons,\
+  \ and Acts** via `allowed-tools`.\n\n### 1. Read — backend context for `api-perf-k6-load`\n- Domain:\
+  \ Runs k6 load tests against APIs: virtual users, stages, thresholds, checks, and CI-friendly summary\
+  \ exports for throughput and latency assertions.\n- **k6-load-testing**: Execute scripted load tests\
+  \ with thresholds — `k6 run script.js`\n- **thresholds-checks**: Define pass/fail gates on latency and\
+  \ error rate — `k6 run --threshold 'http_req_duration:p(95)<300' script.js`\n- Check `knowledge` and\
+  \ `prerequisites: node.js, python, redis, k6`\n\n### 2. Reason — think for `api-perf-k6-load`\n- For\
+  \ `k6-load-testing`: Execute scripted load tests with thresholds — decide which checks to run\n- For\
+  \ `thresholds-checks`: Define pass/fail gates on latency and error rate — decide which checks to run\n\
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute\
+  \ with `api-perf-k6-load` tools\n- Tools: `Glob`, `Grep`, `Read`, `K6` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `api-perf-k6-load:ca5de6b7`\n\
   \n# API Perf v2 - k6 Load Testing\n\nLoad testing with k6.\n\n## What This Skill Does\n- Simulates realistic\
   \ user load with virtual users\n- Ramps traffic in stages to find saturation\n- Fails CI when thresholds\
   \ are breached\n\n## When to Use\n- Before releases to catch regressions\n- Capacity planning for expected\
@@ -17,11 +29,14 @@ instructions: "# Api Perf K6 Load\n\nRuns k6 load tests against APIs: virtual us
   \ Use k6 inspect to validate options before full runs\n\n## Best Practices\n- Randomize test data to\
   \ avoid cache skewing results\n- Set thresholds on percentiles, not averages\n- Store summary.json outputs\
   \ for regression charts\n\n## Capabilities\n\n### k6-load-testing\nExecute scripted load tests with\
-  \ thresholds\n\n**Commands:**\n- `k6 run script.js`\n- `k6 run --vus 50 --duration 60s script.js`\n\
-  - `k6 run --stage '2s:10,30s:100,10s:0' ramping.js`\n- `k6 run --summary-export=summary.json script.js`\n\
-  - `k6 inspect script.js`\n\n**Examples:**\n- k6 run --vus 50 --duration 60s runs a steady 50-user load\n\
-  - --stage ramps users up and down over time\n- --summary-export writes JSON for CI comparison\n\n###\
-  \ thresholds-checks\nDefine pass/fail gates on latency and error rate\n\n**Commands:**\n- `k6 run --threshold\
-  \ 'http_req_duration:p(95)<300' script.js`\n- `k6 run --threshold 'http_req_failed:rate<0.01' script.js`\n\
-  - `k6 run --quiet script.js`\n\n**Examples:**\n- -cli --help\n- -api --help"
+  \ thresholds\n\n**Parameters:**\n- `vus` (integer): Number of virtual users\n- `duration` (string):\
+  \ Test duration e.g. 60s, 10m\n- `stages` (string): Ramp stages as comma-separated time:target pairs\n\
+  \n**Commands:**\n- `k6 run script.js`\n- `k6 run --vus 50 --duration 60s script.js`\n- `k6 run --stage\
+  \ '2s:10,30s:100,10s:0' ramping.js`\n- `k6 run --summary-export=summary.json script.js`\n- `k6 inspect\
+  \ script.js`\n\n**Examples:**\n- k6 run --vus 50 --duration 60s runs a steady 50-user load\n- --stage\
+  \ ramps users up and down over time\n- --summary-export writes JSON for CI comparison\n\n### thresholds-checks\n\
+  Define pass/fail gates on latency and error rate\n\n**Commands:**\n- `k6 run --threshold 'http_req_duration:p(95)<300'\
+  \ script.js`\n- `k6 run --threshold 'http_req_failed:rate<0.01' script.js`\n- `k6 run --quiet script.js`\n\
+  \n**Examples:**\n- -cli --help\n- -api --help\n\n## References\n- [k6 Docs - Running Tests](https://grafana.com/docs/k6/latest/get-started/running-k6/)\n\
+  - [k6 Thresholds](https://grafana.com/docs/k6/latest/using-k6/thresholds/)"
 prompt: Act as Api Perf K6 Load and handle the task per the instructions.

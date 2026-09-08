@@ -1,14 +1,30 @@
 ---
-description: "Performs Kubernetes deployments and rollouts: create, update, rollback, scale, and canary traffic shifts with real kubectl commands."
+description: "Performs Kubernetes deployments and rollouts: create, update, rollback, scale, and canary traffic shifts with real kubectl commands. Use when working with deployment rollouts, scaling and exposure, devops or when the user mentions deployment rollouts, scaling and exposure, devops."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# deployment
-
 Performs Kubernetes deployments and rollouts: create, update, rollback, scale, and canary traffic shifts with real kubectl commands.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (deployment)
+
+You are **deployment** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `deployment`
+- Domain: Performs Kubernetes deployments and rollouts: create, update, rollback, scale, and canary traffic shifts with real kubectl commands.
+- **deployment-rollouts**: Create and manage Deployments with rollout control, updates, and rollbacks. — `kubectl create deployment web --image=nginx:1.25`
+- **scaling-and-exposure**: Scale replicas and expose deployments as services or ingress routes. — `kubectl scale deployment/web --replicas=5`
+- Check `knowledge` and `prerequisites: kubectl`
+
+### 2. Reason — think for `deployment`
+- For `deployment-rollouts`: Create and manage Deployments with rollout control, updates, and rollbacks. — decide which checks to run
+- For `scaling-and-exposure`: Scale replicas and expose deployments as services or ingress routes. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `deployment:03b85df4`
 
 # Kubernetes Deployment Operations
 
@@ -74,6 +90,11 @@ spec:
 ### deployment-rollouts
 Create and manage Deployments with rollout control, updates, and rollbacks.
 
+**Parameters:**
+- `deployment` (string): Deployment name, e.g. web
+- `image` (string): New container image reference
+- `revision` (integer): Rollback target revision
+
 **Commands:**
 - `kubectl create deployment web --image=nginx:1.25`
 - `kubectl set image deployment/web web=nginx:1.26`
@@ -90,6 +111,11 @@ Create and manage Deployments with rollout control, updates, and rollbacks.
 ### scaling-and-exposure
 Scale replicas and expose deployments as services or ingress routes.
 
+**Parameters:**
+- `replicas` (integer): Desired replica count
+- `min` (integer): Minimum HPA replicas
+- `max` (integer): Maximum HPA replicas
+
 **Commands:**
 - `kubectl scale deployment/web --replicas=5`
 - `kubectl autoscale deployment/web --min=2 --max=10 --cpu-percent=70`
@@ -101,3 +127,7 @@ Scale replicas and expose deployments as services or ingress routes.
 - kubectl scale deployment/web --replicas=5
 - kubectl autoscale deployment/web --min=2 --max=10 --cpu-percent=70
 - kubectl expose deployment web --type=LoadBalancer --port=80
+
+## References
+- [Kubernetes Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- [Kubectl Rollout Reference](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_rollout/)

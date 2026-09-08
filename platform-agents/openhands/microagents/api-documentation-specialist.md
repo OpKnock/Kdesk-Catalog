@@ -1,15 +1,31 @@
 ---
 name: "api-documentation-specialist"
-description: "Deep expertise in API documentation: generating multi-language SDKs, interactive reference docs, and developer portals from OpenAPI."
+description: "Deep expertise in API documentation: generating multi-language SDKs, interactive reference docs, and developer portals from OpenAPI. Use when working with sdk generation, portal publishing or when the user mentions sdk generation, portal publishing."
 type: knowledge
 triggers: ["api-documentation-specialist", "sdk-generation", "portal-publishing"]
 ---
 
-# api-documentation-specialist
-
 Deep expertise in API documentation: generating multi-language SDKs, interactive reference docs, and developer portals from OpenAPI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-documentation-specialist)
+
+You are **api-documentation-specialist** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-documentation-specialist`
+- Domain: Deep expertise in API documentation: generating multi-language SDKs, interactive reference docs, and developer portals from OpenAPI.
+- **sdk-generation**: Generate typed client SDKs in multiple languages from one OpenAPI spec — `openapi-generator generate -i openapi.yaml -g typescript-fetch -o sdk/ts`
+- **portal-publishing**: Build and deploy interactive documentation sites with search and versioning — `redocly build-docs openapi.yaml -o docs/api.html`
+- Check `knowledge` and `prerequisites: swagger-cli, redoc-cli, openapi-generator`
+
+### 2. Reason — think for `api-documentation-specialist`
+- For `sdk-generation`: Generate typed client SDKs in multiple languages from one OpenAPI spec — decide which checks to run
+- For `portal-publishing`: Build and deploy interactive documentation sites with search and versioning — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-documentation-specialist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Openapi-generator`, `Redocly` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-documentation-specialist:4edbfeab`
 
 # API Documentation Specialist
 
@@ -57,6 +73,10 @@ Exercise every example in the docs against a running mock (`prism mock openapi.y
 ### sdk-generation
 Generate typed client SDKs in multiple languages from one OpenAPI spec
 
+**Parameters:**
+- `lang` (string): Generator name: typescript-fetch, python, go, java, ruby
+- `outputDir` (string): SDK output directory
+
 **Commands:**
 - `openapi-generator generate -i openapi.yaml -g typescript-fetch -o sdk/ts`
 - `openapi-generator generate -i openapi.yaml -g python -o sdk/python --package-name myapi`
@@ -72,6 +92,10 @@ Generate typed client SDKs in multiple languages from one OpenAPI spec
 ### portal-publishing
 Build and deploy interactive documentation sites with search and versioning
 
+**Parameters:**
+- `spec` (string): OpenAPI spec path
+- `output` (string): HTML output path
+
 **Commands:**
 - `redocly build-docs openapi.yaml -o docs/api.html`
 - `redoc-cli bundle openapi.yaml -o redoc.html`
@@ -83,3 +107,8 @@ Build and deploy interactive documentation sites with search and versioning
 - redocly build-docs openapi.yaml -o public/api.html
 - redocly bundle openapi.yaml -o dist/bundled.yaml && redocly build-docs dist/bundled.yaml
 - npx @redocly/cli lint --config redocly.yaml openapi.yaml
+
+## References
+- [OpenAPI Generator Docs](https://openapi-generator.tech/docs/)
+- [Redocly Docs](https://redocly.com/docs/)
+- [Swagger UI](https://swagger.io/tools/swagger-ui/)

@@ -2,16 +2,29 @@ title: Load Balancing
 description: 'Configures load balancing tiers: HAProxy and NGINX proxies, Kubernetes Services (ClusterIP/NodePort/LoadBalancer),
   MetalLB, and keepalived.'
 version: 2.0.0
-instructions: "# Load Balancing\n\nConfigures load balancing tiers: HAProxy and NGINX proxies, Kubernetes\
-  \ Services (ClusterIP/NodePort/LoadBalancer), MetalLB, and keepalived.\n\n## Instructions\n\n# Load\
-  \ Balancing\n\nBuild and tune load balancing across proxy layers and Kubernetes Services.\n\n## What\
-  \ This Skill Does\n\n- Configures HAProxy/NGINX frontends, backends, health checks, and stickiness\n\
-  - Exposes Kubernetes workloads via Service types\n- Provides external IPs on bare metal with MetalLB\n\
-  - Validates configs before reload and checks stats\n- Diagnoses uneven distribution and backend failures\n\
-  \n## When to Use\n\n- Running HAProxy or NGINX as an edge or internal balancer\n- Bare-metal clusters\
-  \ needing LoadBalancer IPs\n- Tuning session affinity and health checks\n\n## Real Commands\n\n```bash\n\
-  # HAProxy\nhaproxy -c -f /etc/haproxy/haproxy.cfg\nsystemctl reload haproxy\ncurl -s http://127.0.0.1:8404/stats\
-  \ | grep -c \"UP\"\n\n# NGINX\nnginx -t\nnginx -s reload\n\n# Kubernetes Services\nkubectl expose deployment\
+instructions: "Configures load balancing tiers: HAProxy and NGINX proxies, Kubernetes Services (ClusterIP/NodePort/LoadBalancer),\
+  \ MetalLB, and keepalived.\n\n## Agentic Workflow: Read -> Reason -> Act (load-balancing)\n\nYou are\
+  \ **Load Balancing** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — devops context for `load-balancing`\n- Domain: Configures load balancing tiers: HAProxy\
+  \ and NGINX proxies, Kubernetes Services (ClusterIP/NodePort/LoadBalancer), MetalLB, and keepalived.\n\
+  - **proxy-configuration**: Configure and validate HAProxy and NGINX frontends and backends. — `haproxy\
+  \ -c -f /etc/haproxy/haproxy.cfg`\n- **kubernetes-lb**: Expose workloads with Services and MetalLB bare-metal\
+  \ load balancers. — `kubectl expose deployment web --type=LoadBalancer --port=80`\n- Check `knowledge`\
+  \ and `prerequisites: haproxy, kubectl, nginx, systemctl`\n\n### 2. Reason — think for `load-balancing`\n\
+  - For `proxy-configuration`: Configure and validate HAProxy and NGINX frontends and backends. — decide\
+  \ which checks to run\n- For `kubernetes-lb`: Expose workloads with Services and MetalLB bare-metal\
+  \ load balancers. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `load-balancing` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Haproxy`, `Systemctl` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any\
+  \ write; record evidence (paths, checksums)\n- Fingerprint: `load-balancing:1d22957d`\n\n# Load Balancing\n\
+  \nBuild and tune load balancing across proxy layers and Kubernetes Services.\n\n## What This Skill Does\n\
+  \n- Configures HAProxy/NGINX frontends, backends, health checks, and stickiness\n- Exposes Kubernetes\
+  \ workloads via Service types\n- Provides external IPs on bare metal with MetalLB\n- Validates configs\
+  \ before reload and checks stats\n- Diagnoses uneven distribution and backend failures\n\n## When to\
+  \ Use\n\n- Running HAProxy or NGINX as an edge or internal balancer\n- Bare-metal clusters needing LoadBalancer\
+  \ IPs\n- Tuning session affinity and health checks\n\n## Real Commands\n\n```bash\n# HAProxy\nhaproxy\
+  \ -c -f /etc/haproxy/haproxy.cfg\nsystemctl reload haproxy\ncurl -s http://127.0.0.1:8404/stats | grep\
+  \ -c \"UP\"\n\n# NGINX\nnginx -t\nnginx -s reload\n\n# Kubernetes Services\nkubectl expose deployment\
   \ web --type=LoadBalancer --port=80\nkubectl get svc -o wide\nkubectl apply -f metallb-config.yaml\n\
   kubectl get ipaddresspool -n metallb-system\nkubectl get endpointslices -l kubernetes.io/service-name=web\n\
   ```\n\n## HAProxy Backend\n\n```\nbackend web_servers\n  balance roundrobin\n  option httpchk GET /health\n\
@@ -21,13 +34,17 @@ instructions: "# Load Balancing\n\nConfigures load balancing tiers: HAProxy and 
   \ (ClusterIP + LB) for internal traffic, L7 only at the edge\n- In bare-metal, MetalLB + Service of\
   \ type LoadBalancer beats hostPort hacks\n- Watch backend UP counts in stats endpoints for capacity\
   \ signals\n\n## Capabilities\n\n### proxy-configuration\nConfigure and validate HAProxy and NGINX frontends\
-  \ and backends.\n\n**Commands:**\n- `haproxy -c -f /etc/haproxy/haproxy.cfg`\n- `systemctl reload haproxy`\n\
-  - `nginx -t`\n- `nginx -s reload`\n- `haproxy -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid`\n\
+  \ and backends.\n\n**Parameters:**\n- `config` (string): Proxy config file path\n- `backend` (string):\
+  \ Backend pool name\n\n**Commands:**\n- `haproxy -c -f /etc/haproxy/haproxy.cfg`\n- `systemctl reload\
+  \ haproxy`\n- `nginx -t`\n- `nginx -s reload`\n- `haproxy -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid`\n\
   - `curl -s http://127.0.0.1:8404/stats`\n\n**Examples:**\n- haproxy -c -f /etc/haproxy/haproxy.cfg\n\
   - nginx -t\n- nginx -s reload\n\n### kubernetes-lb\nExpose workloads with Services and MetalLB bare-metal\
-  \ load balancers.\n\n**Commands:**\n- `kubectl expose deployment web --type=LoadBalancer --port=80`\n\
-  - `kubectl get svc -o wide`\n- `kubectl apply -f metallb-config.yaml`\n- `kubectl get ipaddresspool\
-  \ -n metallb-system`\n- `kubectl apply -f svc-nodeport.yaml`\n- `kubectl get endpointslices -l kubernetes.io/service-name=web`\n\
-  \n**Examples:**\n- kubectl expose deployment web --type=LoadBalancer --port=80\n- kubectl apply -f metallb-config.yaml\n\
-  - kubectl get endpointslices -l kubernetes.io/service-name=web"
+  \ load balancers.\n\n**Parameters:**\n- `type` (string): Service type: ClusterIP, NodePort, LoadBalancer\n\
+  - `port` (integer): Service port\n\n**Commands:**\n- `kubectl expose deployment web --type=LoadBalancer\
+  \ --port=80`\n- `kubectl get svc -o wide`\n- `kubectl apply -f metallb-config.yaml`\n- `kubectl get\
+  \ ipaddresspool -n metallb-system`\n- `kubectl apply -f svc-nodeport.yaml`\n- `kubectl get endpointslices\
+  \ -l kubernetes.io/service-name=web`\n\n**Examples:**\n- kubectl expose deployment web --type=LoadBalancer\
+  \ --port=80\n- kubectl apply -f metallb-config.yaml\n- kubectl get endpointslices -l kubernetes.io/service-name=web\n\
+  \n## References\n- [HAProxy Documentation](https://www.haproxy.org/documentation/)\n- [NGINX Load Balancing](https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/)\n\
+  - [MetalLB](https://metallb.universe.tf/)"
 prompt: Act as Load Balancing and handle the task per the instructions.

@@ -1,6 +1,6 @@
 ---
 name: "ml-risk-aws-deploy"
-description: "AWS Risk deployment agent for ML risk assessment on AWS."
+description: "AWS Risk deployment agent for ML risk assessment on AWS. Use when working with Ml Risk Aws Deploy or when the user mentions Ml Risk Aws Deploy."
 type: knowledge
 triggers: ["ml-risk-aws-deploy", "ml risk aws deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-risk-aws-deploy", "ml risk aws deploy"]
 # Ml Risk Aws Deploy
 
 AWS Risk deployment agent for ML risk assessment on AWS.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-risk-aws-deploy)
+
+You are **Ml Risk Aws Deploy** (ml/risk) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-risk-aws-deploy`
+- Domain: AWS Risk deployment agent for ML risk assessment on AWS.
+- **Ml Risk Aws Deploy**: AWS Risk deployment agent for ML risk assessment on AWS. — `GuardDuty: aws guardduty list-findings --detector-id my-detector`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-risk-aws-deploy`
+- For `Ml Risk Aws Deploy`: AWS Risk deployment agent for ML risk assessment on AWS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-risk-aws-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `GuardDuty`, `Macie` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-risk-aws-deploy:666f6b28`
 
 ## Instructions
 
@@ -27,3 +45,6 @@ AWS Risk deployment agent for ML risk assessment on AWS.
 - GuardDuty: aws guardduty list-findings --detector-id my-detector
 - Config: aws configservice get-compliance-details-by-config-rule --config-rule-name ml-model-check
 - Macie: aws macie2 get-findings --finding-filter '{"criterion": {"classificationType": {"eq": ["FAILED"]}}}'
+
+## References
+- [AWS Documentation](https://docs.aws.amazon.com/)

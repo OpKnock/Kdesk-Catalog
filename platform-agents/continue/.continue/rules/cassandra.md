@@ -1,15 +1,29 @@
 ---
 name: "Cassandra"
-description: "Operates Cassandra: cqlsh queries, schema management, and node health via nodetool."
+description: "Operates Cassandra: cqlsh queries, schema management, and node health via nodetool. Use when working with cassandra cli, database or when the user mentions cassandra cli, database."
 globs: ["**/*.r", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# Cassandra
-
 Operates Cassandra: cqlsh queries, schema management, and node health via nodetool.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cassandra)
+
+You are **Cassandra** (database/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `cassandra`
+- Domain: Operates Cassandra: cqlsh queries, schema management, and node health via nodetool.
+- **cassandra-cli**: Query and manage Cassandra with cqlsh and nodetool — `cqlsh -e "DESCRIBE KEYSPACES;"`
+- Check `knowledge` and `prerequisites: cqlsh, nodetool`
+
+### 2. Reason — think for `cassandra`
+- For `cassandra-cli`: Query and manage Cassandra with cqlsh and nodetool — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cassandra` tools
+- Tools: `Glob`, `Grep`, `Read`, `Cqlsh`, `Nodetool` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cassandra:df53567c`
 
 # Cassandra
 
@@ -79,6 +93,11 @@ recommends repairs, compactions, or query fixes.
 ### cassandra-cli
 Query and manage Cassandra with cqlsh and nodetool
 
+**Parameters:**
+- `keyspace` (string): Keyspace to use (-k)
+- `file` (string): CQL script file to execute (-f)
+- `parallel` (boolean): Run repair in parallel (-pr)
+
 **Commands:**
 - `cqlsh -e "DESCRIBE KEYSPACES;"`
 - `cqlsh -e "SELECT * FROM app.orders LIMIT 10;"`
@@ -90,3 +109,7 @@ Query and manage Cassandra with cqlsh and nodetool
 - cqlsh -k app -e "SELECT count(*) FROM orders;"
 - nodetool tpstats | head -20
 - nodetool compactionstats
+
+## References
+- [Cassandra docs](https://cassandra.apache.org/doc/latest/)
+- [nodetool reference](https://cassandra.apache.org/doc/latest/cassandra/operating/)

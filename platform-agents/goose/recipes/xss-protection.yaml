@@ -2,8 +2,18 @@ title: XSS Protection
 description: 'Prevent cross-site scripting through your API responses: set Content-Security-Policy headers,
   sanitize and encode output, validate inputs, and scan with automated payloads.'
 version: 2.0.0
-instructions: "# XSS Protection\n\nPrevent cross-site scripting through your API responses: set Content-Security-Policy\
-  \ headers, sanitize and encode output, validate inputs, and scan with automated payloads.\n\n## Instructions\n\
+instructions: "Prevent cross-site scripting through your API responses: set Content-Security-Policy headers,\
+  \ sanitize and encode output, validate inputs, and scan with automated payloads.\n\n## Agentic Workflow:\
+  \ Read -> Reason -> Act (xss-protection)\n\nYou are **XSS Protection** (api/general) — a sub-agent that\
+  \ **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `xss-protection`\n\
+  - Domain: Prevent cross-site scripting through your API responses: set Content-Security-Policy headers,\
+  \ sanitize and encode output, validate inputs, and scan with automated payloads.\n- **xss-hardening**:\
+  \ Audit and harden APIs against cross-site scripting — `curl -sI https://httpbin.org/ | grep -i 'content-security-policy'`\n\
+  - Check `knowledge` and `prerequisites: node, npm`\n\n### 2. Reason — think for `xss-protection`\n-\
+  \ For `xss-hardening`: Audit and harden APIs against cross-site scripting — decide which checks to run\n\
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute\
+  \ with `xss-protection` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `xss-protection:f9f71e94`\n\
   \n# XSS Protection\n\n## What this skill does\nPrevent cross-site scripting through your API responses:\
   \ set Content-Security-Policy headers, sanitize and encode output, validate inputs, and scan with automated\
   \ payloads.\n\n## When to use\n- APIs that render user content (HTML, markdown, chat)\n- Auditing reflected/stored\
@@ -24,12 +34,15 @@ instructions: "# XSS Protection\n\nPrevent cross-site scripting through your API
   \n## Testing\n```bash\ncurl -s -X POST http://localhost:8080/api/echo -d '{\"name\":\"<script>alert(1)</script>\"\
   }' | grep -c script\ncurl -sI http://localhost:8080/ | grep -iE 'content-security-policy|x-frame-options'\n\
   ```\n\n## Capabilities\n\n### xss-hardening\nAudit and harden APIs against cross-site scripting\n\n\
-  **Commands:**\n- `curl -sI https://httpbin.org/ | grep -i 'content-security-policy'`\n- `curl -s -X\
+  **Parameters:**\n- `policy` (string): Content-Security-Policy header value\n- `payload` (string): Test\
+  \ payload containing markup\n- `library` (string): Sanitizer: dompurify, owasp-html-sanitizer, bleach\n\
+  \n**Commands:**\n- `curl -sI https://httpbin.org/ | grep -i 'content-security-policy'`\n- `curl -s -X\
   \ POST http://localhost:8080/api/echo -H 'Content-Type: application/json' -d '{\"name\":\"javascript:alert(1)\"\
   }' | jq -r '.safeName'`\n- `node -e \"const s=require('html-escape'?);console.log(s)\" `\n- `npm install\
   \ dompurify isomorphic-dompurify`\n- `curl -s -X POST http://localhost:8080/api/echo -H 'Content-Type:\
   \ application/json' -d '{\"name\":\"javascript:alert(1)\"}' | jq -r '.safeName'`\n\n**Examples:**\n\
   - curl -sI http://localhost:8080/ | grep -iE 'x-frame-options|x-xss-protection'\n- node -e \"const DOMPurify=require('isomorphic-dompurify');console.log(DOMPurify.sanitize('<img\
   \ src=x onerror=alert(1)>'))\"\n- curl -s -X POST http://localhost:8080/api/echo -d '{\"name\":\"javascript:alert(1)\"\
-  }' | jq '.safeName'"
+  }' | jq '.safeName'\n\n## References\n- [OWASP XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)\n\
+  - [MDN Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)"
 prompt: Act as XSS Protection and handle the task per the instructions.

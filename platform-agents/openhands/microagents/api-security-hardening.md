@@ -1,15 +1,31 @@
 ---
 name: "api-security-hardening"
-description: "Hardens API deployments: container scanning with trivy, secret detection with gitleaks, dependency upgrades, and least-privilege configuration checks."
+description: "Hardens API deployments: container scanning with trivy, secret detection with gitleaks, dependency upgrades, and least-privilege configuration checks. Use when working with container scanning, secret detection or when the user mentions container scanning, secret detection."
 type: knowledge
 triggers: ["api-security-hardening", "container-scanning", "secret-detection"]
 ---
 
-# api-security-hardening
-
 Hardens API deployments: container scanning with trivy, secret detection with gitleaks, dependency upgrades, and least-privilege configuration checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-security-hardening)
+
+You are **api-security-hardening** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `api-security-hardening`
+- Domain: Hardens API deployments: container scanning with trivy, secret detection with gitleaks, dependency upgrades, and least-privilege configuration checks.
+- **container-scanning**: Scan container images and filesystems for vulnerabilities — `trivy image --severity HIGH,CRITICAL myapi:1.0.0`
+- **secret-detection**: Detect leaked secrets in repositories — `gitleaks detect -v`
+- Check `knowledge` and `prerequisites: node.js, python, owasp-zap, burp-suite`
+
+### 2. Reason — think for `api-security-hardening`
+- For `container-scanning`: Scan container images and filesystems for vulnerabilities — decide which checks to run
+- For `secret-detection`: Detect leaked secrets in repositories — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-security-hardening` tools
+- Tools: `Glob`, `Grep`, `Read`, `Trivy`, `Gitleaks` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-security-hardening:92d1d92e`
 
 # API Security Hardening
 
@@ -55,6 +71,11 @@ gitleaks protect -v
 ### container-scanning
 Scan container images and filesystems for vulnerabilities
 
+**Parameters:**
+- `target` (string): Image name or path
+- `severity` (string): Severity filter
+- `exit-code` (integer): Fail threshold
+
 **Commands:**
 - `trivy image --severity HIGH,CRITICAL myapi:1.0.0`
 - `trivy image --ignore-unfixed --exit-code 1 --severity CRITICAL myapi:1.0.0`
@@ -79,3 +100,7 @@ Detect leaked secrets in repositories
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Trivy Docs](https://aquasecurity.github.io/trivy/)
+- [Gitleaks](https://github.com/gitleaks/gitleaks)

@@ -6,27 +6,27 @@ globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 
 Defines and validates authentication mechanisms for event-driven APIs including API keys, OAuth2 flows, OpenID Connect, and mutual TLS across message brokers and generated client code.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (asyncapi-security)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Asyncapi Security** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx @asyncapi/cli validate asyncapi.yaml`, `curl -X POST https://auth.your-app.test/oauth2/token -d gran`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `asyncapi-security`
+- Domain: Defines and validates authentication mechanisms for event-driven APIs including API keys, OAuth2 flows, OpenID Connect, and mutual TLS across message brokers and generated client code.
+- **security-schemes**: Author AsyncAPI securitySchemes and validate documents. — `npx @asyncapi/cli validate asyncapi.yaml`
+- **oauth-broker**: Obtain OAuth2 tokens and connect to broker operations secured with OAuth2/OpenID Connect. — `curl -X POST https://auth.your-app.test/oauth2/token -d grant_type=client_creden`
+- **tls-mtls**: Validate and test TLS/mTLS security schemes for broker endpoints. — `echo | openssl s_client -connect kafka.your-app.test:9093 -showcerts 2>/dev/null`
+- Check `knowledge` and `prerequisites: kafka-topics, mosquitto_pub, npx, openssl`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `asyncapi-security`
+- For `security-schemes`: Author AsyncAPI securitySchemes and validate documents. — decide which checks to run
+- For `oauth-broker`: Obtain OAuth2 tokens and connect to broker operations secured with OAuth2/OpenID Connect. — decide which checks to run
+- For `tls-mtls`: Validate and test TLS/mTLS security schemes for broker endpoints. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `asyncapi-security` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `asyncapi-security:5cbba702`
 
 # AsyncAPI Security
 

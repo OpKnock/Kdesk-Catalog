@@ -1,15 +1,31 @@
 ---
 name: "magic-link"
-description: "Implement passwordless login with magic links: JWT signing, one-time token storage with Redis, email delivery, and verification endpoints."
+description: "Implement passwordless login with magic links: JWT signing, one-time token storage with Redis, email delivery, and verification endpoints. Use when working with token issuance, verify exchange, api or when the user mentions token issuance, verify exchange, api."
 type: knowledge
 triggers: ["magic-link", "token-issuance", "verify-exchange"]
 ---
 
-# Magic Link
-
 Implement passwordless login with magic links: JWT signing, one-time token storage with Redis, email delivery, and verification endpoints.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (magic-link)
+
+You are **Magic Link** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `magic-link`
+- Domain: Implement passwordless login with magic links: JWT signing, one-time token storage with Redis, email delivery, and verification endpoints.
+- **token-issuance**: Generate and sign short-lived magic link tokens. — `openssl rand -base64 32`
+- **verify-exchange**: Exercise the magic link flow: request, verify, and one-time use. — `curl -s -X POST http://localhost:8080/auth/magic-link -H 'Content-Type: applicat`
+- Check `knowledge` and `prerequisites: npx, openssl, python3, redis-cli`
+
+### 2. Reason — think for `magic-link`
+- For `token-issuance`: Generate and sign short-lived magic link tokens. — decide which checks to run
+- For `verify-exchange`: Exercise the magic link flow: request, verify, and one-time use. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `magic-link` tools
+- Tools: `Glob`, `Grep`, `Read`, `Openssl`, `Python3` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `magic-link:b1cbe02d`
 
 # Magic Link Authentication
 
@@ -79,6 +95,11 @@ curl -s http://localhost:8080/auth/verify?token=USED      # 401 (single use)
 ### token-issuance
 Generate and sign short-lived magic link tokens.
 
+**Parameters:**
+- `email` (string): User email for the token subject.
+- `ttl_minutes` (integer): Token validity in minutes.
+- `algorithm` (string): JWT algorithm: RS256 or HS256.
+
 **Commands:**
 - `openssl rand -base64 32`
 - `python3 -c "import jwt,datetime; print(jwt.encode({'sub':'alice@myapp.test','aud':'magic-link','exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)}, open('private.pem').read(), algorithm='RS256'))"`
@@ -93,6 +114,10 @@ Generate and sign short-lived magic link tokens.
 ### verify-exchange
 Exercise the magic link flow: request, verify, and one-time use.
 
+**Parameters:**
+- `email` (string): Email to send the link to.
+- `token` (string): Magic link token.
+
 **Commands:**
 - `curl -s -X POST http://localhost:8080/auth/magic-link -H 'Content-Type: application/json' -d '{"email":"alice@myapp.test"}'`
 - `curl -s http://localhost:8080/auth/verify?token=TOKEN`
@@ -104,3 +129,8 @@ Exercise the magic link flow: request, verify, and one-time use.
 - curl -s -X POST http://localhost:8080/auth/magic-link -H 'Content-Type: application/json' -d '{"email":"alice@myapp.test"}'
 - curl -s http://localhost:8080/auth/verify?token=TOKEN
 - redis-cli SETEX magic:alice@myapp.test 900 TOKEN
+
+## References
+- [JWT Best Practices](https://auth0.com/blog/implementing-magic-links/)
+- [PyJWT](https://pyjwt.readthedocs.io/en/stable/)
+- [redis SETEX](https://redis.io/docs/latest/commands/setex/)

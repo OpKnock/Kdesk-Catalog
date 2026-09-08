@@ -1,15 +1,33 @@
 ---
 name: "mockserver"
-description: "Mocks HTTP and HTTPS APIs with MockServer, creating expectations via REST admin API and proxying to real backends."
+description: "Mocks HTTP and HTTPS APIs with MockServer, creating expectations via REST admin API and proxying to real backends. Use when working with mockserver start, expectation management, request verification, testing or when the user mentions mockserver start, expectation management, request verification, testing."
 globs: ["**/*.java", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# mockserver
-
 Mocks HTTP and HTTPS APIs with MockServer, creating expectations via REST admin API and proxying to real backends.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (mockserver)
+
+You are **mockserver** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `mockserver`
+- Domain: Mocks HTTP and HTTPS APIs with MockServer, creating expectations via REST admin API and proxying to real backends.
+- **mockserver-start**: Start MockServer locally or in Docker. — `java -jar mockserver-netty-jar-with-dependencies.jar -serverPort 1080`
+- **expectation-management**: Create, inspect, and clear expectations via the admin API. — `curl -s -X PUT http://localhost:1080/mockserver/expectation -d '{"httpRequest":{`
+- **request-verification**: Inspect received requests and proxy behavior. — `curl -s http://localhost:1080/mockserver/requests -d '{"path":"/api/users"}'`
+- Check `knowledge` and `prerequisites: docker, java, node`
+
+### 2. Reason — think for `mockserver`
+- For `mockserver-start`: Start MockServer locally or in Docker. — decide which checks to run
+- For `expectation-management`: Create, inspect, and clear expectations via the admin API. — decide which checks to run
+- For `request-verification`: Inspect received requests and proxy behavior. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mockserver` tools
+- Tools: `Glob`, `Grep`, `Read`, `Java`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mockserver:281ac802`
 
 # MockServer
 
@@ -67,6 +85,10 @@ curl -s -X PUT http://localhost:1080/mockserver/reset
 ### mockserver-start
 Start MockServer locally or in Docker.
 
+**Parameters:**
+- `port` (number): Server port
+- `initFile` (string): Initialization JSON path
+
 **Commands:**
 - `java -jar mockserver-netty-jar-with-dependencies.jar -serverPort 1080`
 - `docker run -d -p 1080:1080 --name mockserver mockserver/mockserver`
@@ -80,6 +102,10 @@ Start MockServer locally or in Docker.
 
 ### expectation-management
 Create, inspect, and clear expectations via the admin API.
+
+**Parameters:**
+- `expectation` (object): Request/response expectation JSON
+- `path` (string): Request path to match
 
 **Commands:**
 - `curl -s -X PUT http://localhost:1080/mockserver/expectation -d '{"httpRequest":{"path":"/api/users","method":"GET"},"httpResponse":{"statusCode":200,"body":"{\"users\":[]}"}}'`
@@ -96,6 +122,10 @@ Create, inspect, and clear expectations via the admin API.
 ### request-verification
 Inspect received requests and proxy behavior.
 
+**Parameters:**
+- `path` (string): Path filter for requests
+- `method` (string): Method filter
+
 **Commands:**
 - `curl -s http://localhost:1080/mockserver/requests -d '{"path":"/api/users"}'`
 - `curl -s -X PUT http://localhost:1080/mockserver/expectation -d '{"httpRequest":{"path":"/api/*"},"httpForward":{"host":"real-api","port":8080}}'`
@@ -104,3 +134,7 @@ Inspect received requests and proxy behavior.
 **Examples:**
 - curl -s http://localhost:1080/mockserver/requests -d '{"path":"/api/users"}'
 - curl -s -X PUT http://localhost:1080/mockserver/verify -d '{"path":"/api/users","method":"POST"}'
+
+## References
+- [MockServer Documentation](https://www.mock-server.com/)
+- [MockServer Docker](https://www.mock-server.com/mock_server/running_with_docker.html)

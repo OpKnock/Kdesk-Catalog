@@ -1,8 +1,22 @@
-# Elasticsearch Cluster
-
 Elasticsearch cluster health and operations: check node status, shard allocation, pending tasks, and cluster settings from the REST API.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (elasticsearch-cluster)
+
+You are **Elasticsearch Cluster** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `elasticsearch-cluster`
+- Domain: Elasticsearch cluster health and operations: check node status, shard allocation, pending tasks, and cluster settings from the REST API.
+- **cluster-health**: Inspect cluster health, nodes, allocations, and settings; diagnose red/yellow cluster states. — `curl -s 'localhost:9200/_cluster/health?pretty' | jq`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `elasticsearch-cluster`
+- For `cluster-health`: Inspect cluster health, nodes, allocations, and settings; diagnose red/yellow cluster states. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `elasticsearch-cluster` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `elasticsearch-cluster:2308f5b8`
 
 # Elasticsearch Cluster
 
@@ -63,6 +77,11 @@ curl -s -X POST 'localhost:9200/_cluster/reroute?retry_failed=true' | jq
 ### cluster-health
 Inspect cluster health, nodes, allocations, and settings; diagnose red/yellow cluster states.
 
+**Parameters:**
+- `es-url` (string): Elasticsearch endpoint (default localhost:9200)
+- `timeout` (string): Wait-for-status timeout like 50s for health checks
+- `level` (string): Health detail level: cluster, indices, shards
+
 **Commands:**
 - `curl -s 'localhost:9200/_cluster/health?pretty' | jq`
 - `curl -s 'localhost:9200/_cat/nodes?v'`
@@ -74,3 +93,7 @@ Inspect cluster health, nodes, allocations, and settings; diagnose red/yellow cl
 - curl -s 'localhost:9200/_cluster/health?pretty' | jq '{status, unassigned_shards, number_of_nodes}'
 - curl -s 'localhost:9200/_cat/nodes?v&h=name,heap.percent,disk.used_percent,master'
 - curl -s 'localhost:9200/_cluster/reroute?explain' | jq
+
+## References
+- [Cluster Health API](https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html)
+- [Cluster Settings API](https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html)

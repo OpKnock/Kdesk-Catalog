@@ -1,6 +1,6 @@
 ---
 name: "Ml Llama Index Python"
-description: "LlamaIndex Python SDK agent for data framework for LLM applications."
+description: "LlamaIndex Python SDK agent for data framework for LLM applications. Use when working with Ml Llama Index Python, inference or when the user mentions Ml Llama Index Python, inference."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Llama Index Python
 
 LlamaIndex Python SDK agent for data framework for LLM applications.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-llama-index-python)
+
+You are **Ml Llama Index Python** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-llama-index-python`
+- Domain: LlamaIndex Python SDK agent for data framework for LLM applications.
+- **Ml Llama Index Python**: LlamaIndex Python SDK agent for data framework for LLM applications. — `Query: query_engine = index.as_query_engine(); response = query_engine.query('qu`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-llama-index-python`
+- For `Ml Llama Index Python`: LlamaIndex Python SDK agent for data framework for LLM applications. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-llama-index-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Query`, `Python` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-llama-index-python:1c6c2de9`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ LlamaIndex Python SDK agent for data framework for LLM applications.
 - Python: from llama_index.core import VectorStoreIndex; index = VectorStoreIndex.from_documents(documents)
 - Query: query_engine = index.as_query_engine(); response = query_engine.query('query')
 - Chat: chat_engine = index.as_chat_engine(); response = chat_engine.chat('hello')
+
+## References
+- [LlamaIndex Documentation](https://docs.llamaindex.ai/)

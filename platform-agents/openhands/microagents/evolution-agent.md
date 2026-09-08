@@ -1,6 +1,6 @@
 ---
 name: "evolution-agent"
-description: "Evolution inference server agent. Manages Evolution ML inference server."
+description: "Evolution inference server agent. Manages Evolution ML inference server. Use when working with Ml Evolution Inference Server Agent or when the user mentions Ml Evolution Inference Server Agent."
 type: knowledge
 triggers: ["evolution-agent", "ml evolution inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["evolution-agent", "ml evolution inference server agent"]
 # Evolution Agent
 
 Evolution inference server agent. Manages Evolution ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (evolution-agent)
+
+You are **Evolution Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `evolution-agent`
+- Domain: Evolution inference server agent. Manages Evolution ML inference server.
+- **Ml Evolution Inference Server Agent**: Evolution inference server agent. Manages Evolution ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `evolution-agent`
+- For `Ml Evolution Inference Server Agent`: Evolution inference server agent. Manages Evolution ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `evolution-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `evolution-agent:6c8168f8`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Evolution inference server agent. Manages Evolution ML inference server.
 - curl http://localhost:8080/evolve --data '{"model": "model.pkl"}'
 - python evolve.py --model model.pkl --data data.csv --generations 10
 - python genetic_algorithm.py --population-size 100 --generations 50
+
+## References
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)
+- [Python Documentation](https://docs.python.org/3/)

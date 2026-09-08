@@ -1,15 +1,31 @@
 ---
 name: "github-copilot"
-description: "Uses GitHub Copilot in the terminal: suggest and explain commands with gh copilot, manage auth, and configure Copilot extensions."
+description: "Uses GitHub Copilot in the terminal: suggest and explain commands with gh copilot, manage auth, and configure Copilot extensions. Use when working with copilot cli, auth and config, devtools or when the user mentions copilot cli, auth and config, devtools."
 type: knowledge
 triggers: ["github-copilot", "copilot-cli", "auth-and-config"]
 ---
 
-# Github Copilot
-
 Uses GitHub Copilot in the terminal: suggest and explain commands with gh copilot, manage auth, and configure Copilot extensions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (github-copilot)
+
+You are **Github Copilot** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `github-copilot`
+- Domain: Uses GitHub Copilot in the terminal: suggest and explain commands with gh copilot, manage auth, and configure Copilot extensions.
+- **copilot-cli**: Get command suggestions and explanations from the Copilot CLI. — `gh copilot suggest 'Deploy to production'`
+- **auth-and-config**: Authenticate and configure the Copilot CLI. — `gh auth login`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `github-copilot`
+- For `copilot-cli`: Get command suggestions and explanations from the Copilot CLI. — decide which checks to run
+- For `auth-and-config`: Authenticate and configure the Copilot CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `github-copilot` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `github-copilot:36ac3866`
 
 # GitHub Copilot CLI
 
@@ -67,6 +83,10 @@ gh copilot version
 ### copilot-cli
 Get command suggestions and explanations from the Copilot CLI.
 
+**Parameters:**
+- `target` (string): Command target: git, gh, shell
+- `prompt` (string): Natural language request
+
 **Commands:**
 - `gh copilot suggest 'Deploy to production'`
 - `gh copilot explain 'git reset --hard HEAD~2'`
@@ -82,6 +102,10 @@ Get command suggestions and explanations from the Copilot CLI.
 ### auth-and-config
 Authenticate and configure the Copilot CLI.
 
+**Parameters:**
+- `scopes` (string): OAuth scopes to refresh, e.g. read:copilot
+- `model` (string): Copilot model preference for gh copilot config
+
 **Commands:**
 - `gh auth login`
 - `gh auth status`
@@ -94,3 +118,7 @@ Authenticate and configure the Copilot CLI.
 - gh auth login
 - gh copilot config
 - gh auth refresh -s read:copilot
+
+## References
+- [GitHub Copilot CLI Docs](https://docs.github.com/en/copilot/using-github-copilot/using-github-copilot-cli)
+- [gh-copilot Extension](https://github.com/github/gh-copilot)

@@ -1,15 +1,29 @@
 ---
 name: "Hoppscotch"
-description: "Hoppscotch API workspace: running collections from the CLI, environment variables, and browser-based request testing with real-time responses."
+description: "Hoppscotch API workspace: running collections from the CLI, environment variables, and browser-based request testing with real-time responses. Use when working with hoppscotch cli, api or when the user mentions hoppscotch cli, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Hoppscotch
-
 Hoppscotch API workspace: running collections from the CLI, environment variables, and browser-based request testing with real-time responses.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (hoppscotch)
+
+You are **Hoppscotch** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `hoppscotch`
+- Domain: Hoppscotch API workspace: running collections from the CLI, environment variables, and browser-based request testing with real-time responses.
+- **hoppscotch-cli**: Run Hoppscotch collections and manage environments from the command line. — `npx @hoppscotch/cli run collection.json`
+- Check `knowledge` and `prerequisites: hoppscotch, npx`
+
+### 2. Reason — think for `hoppscotch`
+- For `hoppscotch-cli`: Run Hoppscotch collections and manage environments from the command line. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `hoppscotch` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Hoppscotch` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `hoppscotch:578e2de5`
 
 # Hoppscotch
 
@@ -85,6 +99,11 @@ Agent: hoppscotch run checkout-collection.json -e prod.env.json
 ### hoppscotch-cli
 Run Hoppscotch collections and manage environments from the command line.
 
+**Parameters:**
+- `collection` (string): Path to the Hoppscotch collection JSON (exported from the app).
+- `env` (string): Environment file or environment name for variable resolution.
+- `iteration` (integer): Number of times to repeat the collection run.
+
 **Commands:**
 - `npx @hoppscotch/cli run collection.json`
 - `hoppscotch run collection.json -e prod.env.json`
@@ -96,3 +115,7 @@ Run Hoppscotch collections and manage environments from the command line.
 - npx @hoppscotch/cli run api-collection.json --dotenv .env
 - hoppscotch run collection.json -e dev.env.json --verbose
 - hoppscotch run --iteration 5 collection.json
+
+## References
+- [Hoppscotch Docs](https://docs.hoppscotch.io/)
+- [Hoppscotch CLI Guide](https://docs.hoppscotch.io/documentation/features/hoppscotch-cli)

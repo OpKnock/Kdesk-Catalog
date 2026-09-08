@@ -1,8 +1,22 @@
-# Runbook Automation
-
 Expert reference for automating incident runbooks end to end with kubectl/journalctl checks, Slack webhook alerts, PagerDuty event API, and scripted remediation playbooks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (runbook-automation)
+
+You are **Runbook Automation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `runbook-automation`
+- Domain: Expert reference for automating incident runbooks end to end with kubectl/journalctl checks, Slack webhook alerts, PagerDuty event API, and scripted remediation playbooks.
+- **incident-runbook**: Automate incident response: diagnose, alert, remediate — `kubectl describe pod api-7d9f -n prod | tail -40`
+- Check `knowledge` and `prerequisites: ansible-playbook, journalctl, kubectl`
+
+### 2. Reason — think for `runbook-automation`
+- For `incident-runbook`: Automate incident response: diagnose, alert, remediate — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `runbook-automation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Journalctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `runbook-automation:24460c6c`
 
 # Runbook Automation
 
@@ -69,6 +83,11 @@ curl -X POST https://hooks.slack.com/services/T123456/B789012/XYZ789 -H 'Content
 ### incident-runbook
 Automate incident response: diagnose, alert, remediate
 
+**Parameters:**
+- `webhook_url` (string): Slack incoming webhook URL
+- `service` (string): systemd unit or k8s service name
+- `playbook` (string): Ansible playbook path
+
 **Commands:**
 - `kubectl describe pod api-7d9f -n prod | tail -40`
 - `journalctl -u api -n 100 --no-pager`
@@ -80,3 +99,7 @@ Automate incident response: diagnose, alert, remediate
 - journalctl -u api -n 100 --no-pager -f
 - curl -X POST https://hooks.slack.com/services/T123456/B789012/XYZ789 -H 'Content-Type: application/json' -d '{"text":"deploy finished"}'
 - kubectl get events -n prod --sort-by=.lastTimestamp | tail -20
+
+## References
+- [Slack incoming webhooks](https://api.slack.com/messaging/webhooks)
+- [PagerDuty Events API v2](https://developer.pagerduty.com/docs/events-api-v2/trigger-events/)

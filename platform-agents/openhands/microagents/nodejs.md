@@ -1,15 +1,31 @@
 ---
 name: "nodejs"
-description: "Develops Node.js backends: npm project setup, debugging, worker threads, dependency auditing, and production runtime management."
+description: "Develops Node.js backends: npm project setup, debugging, worker threads, dependency auditing, and production runtime management. Use when working with nodejs runtime, nodejs quality, backend or when the user mentions nodejs runtime, nodejs quality, backend."
 type: knowledge
 triggers: ["nodejs", "nodejs-runtime", "nodejs-quality"]
 ---
 
-# Nodejs
-
 Develops Node.js backends: npm project setup, debugging, worker threads, dependency auditing, and production runtime management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nodejs)
+
+You are **Nodejs** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `nodejs`
+- Domain: Develops Node.js backends: npm project setup, debugging, worker threads, dependency auditing, and production runtime management.
+- **nodejs-runtime**: Manage Node.js projects and run scripts. — `npm init -y`
+- **nodejs-quality**: Audit dependencies and run tests. — `npm audit`
+- Check `knowledge` and `prerequisites: node, npm`
+
+### 2. Reason — think for `nodejs`
+- For `nodejs-runtime`: Manage Node.js projects and run scripts. — decide which checks to run
+- For `nodejs-quality`: Audit dependencies and run tests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nodejs` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nodejs:b2b01d36`
 
 # Node.js
 
@@ -79,6 +95,10 @@ server.listen(3000);
 ### nodejs-runtime
 Manage Node.js projects and run scripts.
 
+**Parameters:**
+- `script` (string): Script to run
+- `flags` (string): Node runtime flags
+
 **Commands:**
 - `npm init -y`
 - `npm install express`
@@ -94,6 +114,10 @@ Manage Node.js projects and run scripts.
 ### nodejs-quality
 Audit dependencies and run tests.
 
+**Parameters:**
+- `audit-level` (string): low, moderate, high, critical
+- `fix` (boolean): Apply audit fixes
+
 **Commands:**
 - `npm audit`
 - `npm audit fix`
@@ -105,3 +129,7 @@ Audit dependencies and run tests.
 - npm audit --audit-level=high
 - npm run lint
 - node --test test/
+
+## References
+- [Node.js Docs](https://nodejs.org/api/)
+- [npm Docs](https://docs.npmjs.com)

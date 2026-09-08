@@ -4,27 +4,23 @@ applyTo: "**/*.html **/*.json **/*.r **/*.sh"
 
 Scans Maven projects for known vulnerable dependencies using the OWASP Dependency-Check Maven plugin.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (maven-dependency-scan)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Maven Dependency Scan** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `mvn org.owasp:dependency-check-maven:check`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `maven-dependency-scan`
+- Domain: Scans Maven projects for known vulnerable dependencies using the OWASP Dependency-Check Maven plugin.
+- **dependency-check**: Run OWASP Dependency-Check against Maven projects and fail builds on high-CVSS findings — `mvn org.owasp:dependency-check-maven:check`
+- Check `knowledge` and `prerequisites: mvn`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `maven-dependency-scan`
+- For `dependency-check`: Run OWASP Dependency-Check against Maven projects and fail builds on high-CVSS findings — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `maven-dependency-scan` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `maven-dependency-scan:42554880`
 
 # Maven Dependency Scan
 

@@ -1,6 +1,6 @@
 ---
 name: "scalability-agent"
-description: "Scalability SDK deployment agent for ML Scalability SDK deployment."
+description: "Scalability SDK deployment agent for ML Scalability SDK deployment. Use when working with Ml Scalability Deploy Sdk Agent or when the user mentions Ml Scalability Deploy Sdk Agent."
 type: knowledge
 triggers: ["scalability-agent", "ml scalability deploy sdk agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["scalability-agent", "ml scalability deploy sdk agent"]
 # Scalability Agent
 
 Scalability SDK deployment agent for ML Scalability SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (scalability-agent)
+
+You are **Scalability Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `scalability-agent`
+- Domain: Scalability SDK deployment agent for ML Scalability SDK deployment.
+- **Ml Scalability Deploy Sdk Agent**: Scalability SDK deployment agent for ML Scalability SDK deployment. — `docker build -t scalability:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `scalability-agent`
+- For `Ml Scalability Deploy Sdk Agent`: Scalability SDK deployment agent for ML Scalability SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `scalability-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Scalability` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `scalability-agent:70926ff6`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Scalability SDK deployment agent for ML Scalability SDK deployment.
 **Examples:**
 - Server: python -m scalability.server --port 8080
 - Docker: docker run -p 8080:8080 scalability-server
+
+## References
+- [Kubernetes Architecture](https://kubernetes.io/docs/concepts/architecture/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

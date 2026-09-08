@@ -1,15 +1,31 @@
 ---
 name: "websocket-mgmt"
-description: "Implements and operates WebSocket servers: connections, heartbeats, reconnects, broadcasting, and scaling with Redis pub/sub."
+description: "Implements and operates WebSocket servers: connections, heartbeats, reconnects, broadcasting, and scaling with Redis pub/sub. Use when working with ws servers, ws scaling, backend or when the user mentions ws servers, ws scaling, backend."
 type: knowledge
 triggers: ["websocket-mgmt", "ws-servers", "ws-scaling"]
 ---
 
-# Websocket Mgmt
-
 Implements and operates WebSocket servers: connections, heartbeats, reconnects, broadcasting, and scaling with Redis pub/sub.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (websocket-mgmt)
+
+You are **Websocket Mgmt** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `websocket-mgmt`
+- Domain: Implements and operates WebSocket servers: connections, heartbeats, reconnects, broadcasting, and scaling with Redis pub/sub.
+- **ws-servers**: Run WebSocket servers and inspect traffic. — `npx wscat -c ws://localhost:3000`
+- **ws-scaling**: Scale WebSocket apps across instances. — `redis-cli publish ws:channel "event"`
+- Check `knowledge` and `prerequisites: docker, node, npx, redis-cli`
+
+### 2. Reason — think for `websocket-mgmt`
+- For `ws-servers`: Run WebSocket servers and inspect traffic. — decide which checks to run
+- For `ws-scaling`: Scale WebSocket apps across instances. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `websocket-mgmt` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Websocat` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `websocket-mgmt:1ea24967`
 
 # WebSocket Management
 
@@ -81,6 +97,10 @@ setInterval(() => {
 ### ws-servers
 Run WebSocket servers and inspect traffic.
 
+**Parameters:**
+- `url` (string): WebSocket URL
+- `header` (string): Extra header
+
 **Commands:**
 - `npx wscat -c ws://localhost:3000`
 - `npx wscat -c wss://localhost/socket`
@@ -95,6 +115,10 @@ Run WebSocket servers and inspect traffic.
 ### ws-scaling
 Scale WebSocket apps across instances.
 
+**Parameters:**
+- `channel` (string): Pub/sub channel
+- `payload` (string): Message payload to publish
+
 **Commands:**
 - `redis-cli publish ws:channel "event"`
 - `redis-cli pubsub numsub ws:channel`
@@ -104,3 +128,7 @@ Scale WebSocket apps across instances.
 **Examples:**
 - redis-cli publish notifications "{\"userId\":1,\"msg\":\"hi\"}"
 - redis-cli psubscribe "ws:*"
+
+## References
+- [MDN WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
+- [Socket.IO Docs](https://socket.io/docs/)

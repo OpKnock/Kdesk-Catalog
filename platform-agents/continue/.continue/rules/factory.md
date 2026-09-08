@@ -1,15 +1,29 @@
 ---
 name: "Factory"
-description: "Implements the Factory Method and Abstract Factory patterns in Go: creating objects through interfaces with go test verification."
+description: "Implements the Factory Method and Abstract Factory patterns in Go: creating objects through interfaces with go test verification. Use when working with go, patterns or when the user mentions go, patterns."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Factory
-
 Implements the Factory Method and Abstract Factory patterns in Go: creating objects through interfaces with go test verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (factory)
+
+You are **Factory** (patterns/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — patterns context for `factory`
+- Domain: Implements the Factory Method and Abstract Factory patterns in Go: creating objects through interfaces with go test verification.
+- **go**: Implement and test factory patterns in Go. — `go mod init localhost/factory`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `factory`
+- For `go`: Implement and test factory patterns in Go. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `factory` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `factory:b92621bf`
 
 # Factory Pattern
 
@@ -85,6 +99,11 @@ Table-test all kinds, including unknown kind panics.
 ### go
 Implement and test factory patterns in Go.
 
+**Parameters:**
+- `run` (string): Test regex filter
+- `cover` (string): Coverage report
+- `module` (string): Go module path
+
 **Commands:**
 - `go mod init localhost/factory`
 - `go build ./...`
@@ -96,3 +115,7 @@ Implement and test factory patterns in Go.
 - go test ./... -cover
 - go run ./cmd/example
 - go test -run 'Test.*Card' -v ./...
+
+## References
+- [Refactoring Guru: Factory Method](https://refactoring.guru/design-patterns/factory-method)
+- [Go by Example](https://gobyexample.com/interfaces)

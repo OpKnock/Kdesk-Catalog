@@ -1,14 +1,30 @@
 ---
-description: "Implements authentication middleware: JWT verification with jsonwebtoken, Passport strategies, oauth2-proxy for edge auth, and token lifecycle checks."
+description: "Implements authentication middleware: JWT verification with jsonwebtoken, Passport strategies, oauth2-proxy for edge auth, and token lifecycle checks. Use when working with jwt middleware, passport oauth, backend or when the user mentions jwt middleware, passport oauth, backend."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Auth Middleware
-
 Implements authentication middleware: JWT verification with jsonwebtoken, Passport strategies, oauth2-proxy for edge auth, and token lifecycle checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (auth-middleware)
+
+You are **Auth Middleware** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `auth-middleware`
+- Domain: Implements authentication middleware: JWT verification with jsonwebtoken, Passport strategies, oauth2-proxy for edge auth, and token lifecycle checks.
+- **jwt-middleware**: Verify JWTs in request middleware — `npm install jsonwebtoken express`
+- **passport-oauth**: Authenticate with Passport and oauth2-proxy — `npm install passport passport-jwt`
+- Check `knowledge` and `prerequisites: docker, node, npm`
+
+### 2. Reason — think for `auth-middleware`
+- For `jwt-middleware`: Verify JWTs in request middleware — decide which checks to run
+- For `passport-oauth`: Authenticate with Passport and oauth2-proxy — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `auth-middleware` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `auth-middleware:c0f73d40`
 
 # Auth Middleware
 
@@ -63,6 +79,11 @@ function requireAuth(req, res, next) {
 ### jwt-middleware
 Verify JWTs in request middleware
 
+**Parameters:**
+- `secret` (string): JWT signing secret
+- `expiresIn` (string): Token lifetime
+- `claims` (object): Token claims
+
 **Commands:**
 - `npm install jsonwebtoken express`
 - `node -e "const jwt=require('jsonwebtoken'); const t=jwt.sign({sub:'user-1',role:'admin'},'s3cret',{expiresIn:'1h'}); console.log(t)"`
@@ -87,3 +108,7 @@ Authenticate with Passport and oauth2-proxy
 **Examples:**
 - general-cli --help
 - general-api --help
+
+## References
+- [Passport.js Docs](https://www.passportjs.org/docs/)
+- [oauth2-proxy Docs](https://oauth2-proxy.github.io/oauth2-proxy/)

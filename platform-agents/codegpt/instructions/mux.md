@@ -1,8 +1,22 @@
-# Mux
-
 HTTP routing in Go with gorilla/mux: path variables, method matching, middleware, and route testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (mux)
+
+You are **Mux** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `mux`
+- Domain: HTTP routing in Go with gorilla/mux: path variables, method matching, middleware, and route testing.
+- **gorilla-mux-routing**: Build REST routers with gorilla/mux: variables, method/host constraints, middleware chains and subro — `go get github.com/gorilla/mux`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `mux`
+- For `gorilla-mux-routing`: Build REST routers with gorilla/mux: variables, method/host constraints, middleware chains and subrouters. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mux` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mux:b0ffa758`
 
 # gorilla/mux
 
@@ -66,6 +80,11 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 ### gorilla-mux-routing
 Build REST routers with gorilla/mux: variables, method/host constraints, middleware chains and subrouters.
 
+**Parameters:**
+- `port` (integer): Port the router listens on
+- `path_pattern` (string): mux route pattern with {id} variables or regex
+- `methods` (array): Allowed HTTP methods for a route
+
 **Commands:**
 - `go get github.com/gorilla/mux`
 - `go mod tidy`
@@ -77,3 +96,7 @@ Build REST routers with gorilla/mux: variables, method/host constraints, middlew
 - go run main.go
 - curl -s http://localhost:8080/users/42
 - go test -run TestRouter -v ./...
+
+## References
+- [gorilla/mux GitHub](https://github.com/gorilla/mux)
+- [Go net/http docs](https://pkg.go.dev/net/http)

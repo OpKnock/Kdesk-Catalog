@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(kubectl:*) Bash(linkerd:*)"
 
 Deploys and operates the Linkerd service mesh: install/upgrade, mesh injection, golden-metric stats, tap traffic, and multicluster links.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (linkerd)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **linkerd** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `linkerd check --pre`, `linkerd viz install | kubectl apply -f -`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devops context for `linkerd`
+- Domain: Deploys and operates the Linkerd service mesh: install/upgrade, mesh injection, golden-metric stats, tap traffic, and multicluster links.
+- **install-and-mesh**: Install Linkerd, run preflight checks, and inject sidecars. — `linkerd check --pre`
+- **observability-and-traffic**: Inspect service metrics, top talkers, and live traffic with tap. — `linkerd viz install | kubectl apply -f -`
+- Check `knowledge` and `prerequisites: kubectl, linkerd`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `linkerd`
+- For `install-and-mesh`: Install Linkerd, run preflight checks, and inject sidecars. — decide which checks to run
+- For `observability-and-traffic`: Inspect service metrics, top talkers, and live traffic with tap. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `linkerd` tools
+- Tools: `Glob`, `Grep`, `Read`, `Linkerd`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `linkerd:1a6ff93d`
 
 # Linkerd Service Mesh
 

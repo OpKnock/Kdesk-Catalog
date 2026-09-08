@@ -2,14 +2,47 @@ title: httpie-devtools
 description: 'Makes human-friendly HTTP requests with httpie: intuitive syntax, pretty-printed JSON, sessions,
   and file uploads.'
 version: 2.0.0
-instructions: '# httpie-devtools
+instructions: 'Makes human-friendly HTTP requests with httpie: intuitive syntax, pretty-printed JSON,
+  sessions, and file uploads.
 
 
-  Makes human-friendly HTTP requests with httpie: intuitive syntax, pretty-printed JSON, sessions, and
-  file uploads.
+  ## Agentic Workflow: Read -> Reason -> Act (httpie-devtools)
 
 
-  ## Instructions
+  You are **httpie-devtools** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — devtools context for `httpie-devtools`
+
+  - Domain: Makes human-friendly HTTP requests with httpie: intuitive syntax, pretty-printed JSON, sessions,
+  and file uploads.
+
+  - **request-syntax**: Send requests with readable syntax and inspect responses. — `http GET http://localhost:8080/items`
+
+  - **sessions-and-output**: Reuse sessions, control output, and handle JSON/files. — `http --session
+  user-login POST http://localhost:8080/login email=a@b.c`
+
+  - Check `knowledge` and `prerequisites: http`
+
+
+  ### 2. Reason — think for `httpie-devtools`
+
+  - For `request-syntax`: Send requests with readable syntax and inspect responses. — decide which checks
+  to run
+
+  - For `sessions-and-output`: Reuse sessions, control output, and handle JSON/files. — decide which checks
+  to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `httpie-devtools` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Http` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `httpie-devtools:0185f240`
 
 
   # HTTPie Requests
@@ -112,6 +145,15 @@ instructions: '# httpie-devtools
   Send requests with readable syntax and inspect responses.
 
 
+  **Parameters:**
+
+  - `method` (string): HTTP method
+
+  - `url` (string): Request URL
+
+  - `auth` (string): user:pass basic auth via -a
+
+
   **Commands:**
 
   - `http GET http://localhost:8080/items`
@@ -141,6 +183,13 @@ instructions: '# httpie-devtools
   Reuse sessions, control output, and handle JSON/files.
 
 
+  **Parameters:**
+
+  - `session` (string): Session name
+
+  - `pretty` (string): Output style: all, colors, none
+
+
   **Commands:**
 
   - `http --session user-login POST http://localhost:8080/login email=a@b.c`
@@ -162,5 +211,12 @@ instructions: '# httpie-devtools
 
   - http -f POST http://localhost:8080/upload file@./report.pdf
 
-  - http --offline POST http://localhost:8080/items name=x'
+  - http --offline POST http://localhost:8080/items name=x
+
+
+  ## References
+
+  - [HTTPie CLI Docs](https://httpie.io/docs/cli)
+
+  - [HTTPie GitHub](https://github.com/httpie/cli)'
 prompt: Act as httpie-devtools and handle the task per the instructions.

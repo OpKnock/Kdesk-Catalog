@@ -1,15 +1,29 @@
 ---
 name: "redis-cli"
-description: "Redis CLI commands. Real redis-cli CLI."
+description: "Redis CLI commands. Real redis-cli CLI. Use when working with redis cli, database or when the user mentions redis cli, database."
 type: knowledge
 triggers: ["redis-cli"]
 ---
 
-# redis-cli
-
 Redis CLI commands. Real redis-cli CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (redis-cli)
+
+You are **redis-cli** (database/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `redis-cli`
+- Domain: Redis CLI commands. Real redis-cli CLI.
+- **redis-cli**: Redis CLI commands. Real redis-cli CLI. — `brew install redis`
+- Check `knowledge` and `prerequisites: brew, redis-cli`
+
+### 2. Reason — think for `redis-cli`
+- For `redis-cli`: Redis CLI commands. Real redis-cli CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `redis-cli` tools
+- Tools: `Glob`, `Grep`, `Read`, `Brew`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `redis-cli:6941df74`
 
 # Redis CLI
 
@@ -373,3 +387,6 @@ Redis CLI commands. Real redis-cli CLI.
 - brew install redis
 - redis-cli
 - redis-cli -h localhost -p 6379
+
+## References
+- [redis-cli Skill Documentation](skills/database/redis-cli.md)

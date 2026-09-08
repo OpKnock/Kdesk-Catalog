@@ -6,27 +6,23 @@ globs: ["**/*.json", "**/*.r", "**/*.sh"]
 
 Load testing with Fortio: run HTTP load tests, generate reports, and inspect latency percentiles and errors from the CLI.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (fortio)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Fortio** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `fortio load -c 50 -t 30s -qps 500 http://localhost:8080/api/`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `fortio`
+- Domain: Load testing with Fortio: run HTTP load tests, generate reports, and inspect latency percentiles and errors from the CLI.
+- **fortio-load**: Run HTTP load tests with configurable rate, connections, and duration. — `fortio load -c 50 -t 30s -qps 500 http://localhost:8080/api/orders`
+- Check `knowledge` and `prerequisites: fortio`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `fortio`
+- For `fortio-load`: Run HTTP load tests with configurable rate, connections, and duration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `fortio` tools
+- Tools: `Glob`, `Grep`, `Read`, `Fortio` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fortio:29716043`
 
 # Fortio
 

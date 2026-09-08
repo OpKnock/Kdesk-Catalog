@@ -1,15 +1,31 @@
 ---
 name: "Api Sdk Python Package"
-description: "Builds Python SDKs: pyproject.toml configuration, python -m build, editable installs, twine checks, and PyPI publishing."
+description: "Builds Python SDKs: pyproject.toml configuration, python -m build, editable installs, twine checks, and PyPI publishing. Use when working with python package, package metadata or when the user mentions python package, package metadata."
 globs: ["**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Api Sdk Python Package
-
 Builds Python SDKs: pyproject.toml configuration, python -m build, editable installs, twine checks, and PyPI publishing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-sdk-python-package)
+
+You are **Api Sdk Python Package** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-sdk-python-package`
+- Domain: Builds Python SDKs: pyproject.toml configuration, python -m build, editable installs, twine checks, and PyPI publishing.
+- **python-package**: Package a Python SDK with build and setuptools — `pip install build twine`
+- **package-metadata**: Configure pyproject.toml metadata — `python -c "import tomllib; d=tomllib.load(open('pyproject.toml','rb')); print(d[`
+- Check `knowledge` and `prerequisites: openapi-generator, node.js, python`
+
+### 2. Reason — think for `api-sdk-python-package`
+- For `python-package`: Package a Python SDK with build and setuptools — decide which checks to run
+- For `package-metadata`: Configure pyproject.toml metadata — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-sdk-python-package` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Twine` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-sdk-python-package:1b6ca7bd`
 
 # API SDK v3 - Python
 
@@ -63,6 +79,11 @@ description = "Client SDK for My API"
 ### python-package
 Package a Python SDK with build and setuptools
 
+**Parameters:**
+- `dist` (string): Distribution files glob
+- `repository` (string): PyPI repository URL
+- `token` (string): PyPI API token
+
 **Commands:**
 - `pip install build twine`
 - `python -m build`
@@ -86,3 +107,7 @@ Configure pyproject.toml metadata
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Packaging Python Projects](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
+- [Twine Docs](https://twine.readthedocs.io/en/stable/)

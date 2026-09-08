@@ -1,6 +1,6 @@
 ---
 name: "Ml Compliance Azure Deploy"
-description: "Azure Compliance deployment agent for ML compliance on Azure."
+description: "Azure Compliance deployment agent for ML compliance on Azure. Use when working with Ml Compliance Azure Deploy or when the user mentions Ml Compliance Azure Deploy."
 globs: ["**/*.go", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Compliance Azure Deploy
 
 Azure Compliance deployment agent for ML compliance on Azure.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-compliance-azure-deploy)
+
+You are **Ml Compliance Azure Deploy** (ml/compliance) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-compliance-azure-deploy`
+- Domain: Azure Compliance deployment agent for ML compliance on Azure.
+- **Ml Compliance Azure Deploy**: Azure Compliance deployment agent for ML compliance on Azure. — `Compliance: az policy compliance list --scope /subscriptions/...`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-compliance-azure-deploy`
+- For `Ml Compliance Azure Deploy`: Azure Compliance deployment agent for ML compliance on Azure. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-compliance-azure-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Compliance`, `Policy` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-compliance-azure-deploy:f8eebfe5`
 
 ## Instructions
 
@@ -27,3 +45,7 @@ Azure Compliance deployment agent for ML compliance on Azure.
 - Policy: az policy state list --query "[?contains(policyDefinitionName, 'allowedVMSize')]"
 - Compliance: az policy compliance list --scope /subscriptions/...
 - Advisor: az advisor recommendation list --category Security
+
+## References
+- [Azure Documentation](https://learn.microsoft.com/azure/)
+- [State Design Pattern](https://refactoring.guru/design-patterns/state)

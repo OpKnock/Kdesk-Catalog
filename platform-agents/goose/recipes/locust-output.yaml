@@ -2,9 +2,21 @@ title: Locust Output
 description: 'Load testing with Locust: HttpUser task files, headless runs, web UI, CSV collection, and
   distributed execution for large-scale tests.'
 version: 2.0.0
-instructions: "# Locust Output\n\nLoad testing with Locust: HttpUser task files, headless runs, web UI,\
-  \ CSV collection, and distributed execution for large-scale tests.\n\n## Instructions\n\n# Locust\n\n\
-  Load test with Python-defined user behavior.\n\n## What this skill does\n\n- Runs Locust with HttpUser\
+instructions: "Load testing with Locust: HttpUser task files, headless runs, web UI, CSV collection, and\
+  \ distributed execution for large-scale tests.\n\n## Agentic Workflow: Read -> Reason -> Act (locust-output)\n\
+  \nYou are **Locust Output** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `locust-output`\n- Domain: Load testing with Locust: HttpUser task files,\
+  \ headless runs, web UI, CSV collection, and distributed execution for large-scale tests.\n- **locust-run**:\
+  \ Run locust tests headless or with the web UI. — `locust -f locustfile.py --headless -u 1000 -r 100\
+  \ --host https://httpbin.org`\n- **locust-output**: Collect CSV results and run distributed tests. —\
+  \ `locust -f locustfile.py --headless -u 500 -r 50 --csv=results --csv-full-history`\n- Check `knowledge`\
+  \ and `prerequisites: locust`\n\n### 2. Reason — think for `locust-output`\n- For `locust-run`: Run\
+  \ locust tests headless or with the web UI. — decide which checks to run\n- For `locust-output`: Collect\
+  \ CSV results and run distributed tests. — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `locust-output` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Locust`, `Ls` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `locust-output:6de70834`\n\n# Locust\n\
+  \nLoad test with Python-defined user behavior.\n\n## What this skill does\n\n- Runs Locust with HttpUser\
   \ task classes.\n- Executes headless or interactive web UI runs.\n- Exports CSV stats and distributes\
   \ load with master/workers.\n\n## When to use\n\n- Simulating realistic user journeys (login, browse,\
   \ checkout).\n- Tests that need Python logic in the workload.\n- Distributed load generation from many\
@@ -20,14 +32,19 @@ instructions: "# Locust Output\n\nLoad testing with Locust: HttpUser task files,
   \n```bash\nlocust -f locustfile.py --headless -u 10 -r 2 -t 30s   # smoke run\n```\n\n## Best practices\n\
   \n- Weight tasks with @task(n) to model realistic ratios.\n- Use wait_time between requests; instant\
   \ requests aren't realistic.\n- In distributed mode, scale workers until the master's CPU stays under\
-  \ load.\n\n## Capabilities\n\n### locust-run\nRun locust tests headless or with the web UI.\n\n**Commands:**\n\
+  \ load.\n\n## Capabilities\n\n### locust-run\nRun locust tests headless or with the web UI.\n\n**Parameters:**\n\
+  - `file` (string): Locustfile path.\n- `users` (integer): Peak number of users (-u).\n- `spawn_rate`\
+  \ (integer): Users spawned per second (-r).\n- `time` (string): Stop time, e.g. 2m (-t).\n\n**Commands:**\n\
   - `locust -f locustfile.py --headless -u 1000 -r 100 --host https://httpbin.org`\n- `locust -f locustfile.py`\n\
   - `locust -f locustfile.py --web-port 8089`\n- `locust -f locustfile.py --headless -u 200 -r 20 -t 2m`\n\
   \n**Examples:**\n- locust -f locustfile.py --headless -u 1000 -r 100 --host https://httpbin.org\n- locust\
   \ -f locustfile.py\n- locust -f locustfile.py --headless -u 200 -r 20 -t 2m\n\n### locust-output\nCollect\
-  \ CSV results and run distributed tests.\n\n**Commands:**\n- `locust -f locustfile.py --headless -u\
-  \ 500 -r 50 --csv=results --csv-full-history -t 5m`\n- `locust -f locustfile.py --master --master-bind-port=5557\
-  \ --csv=dist-results`\n- `locust -f locustfile.py --worker --master-host=10.0.0.10`\n- `ls results_*.csv`\n\
-  \n**Examples:**\n- locust -f locustfile.py --headless -u 500 -r 50 --csv=results --csv-full-history\
-  \ -t 5m\n- locust -f locustfile.py --worker --master-host=10.0.0.10\n- ls results_*.csv"
+  \ CSV results and run distributed tests.\n\n**Parameters:**\n- `csv` (string): CSV output prefix.\n\
+  - `csv_full_history` (boolean): Log every stats sample, not just final.\n- `master_bind_port` (integer):\
+  \ Master port, default 5557.\n\n**Commands:**\n- `locust -f locustfile.py --headless -u 500 -r 50 --csv=results\
+  \ --csv-full-history -t 5m`\n- `locust -f locustfile.py --master --master-bind-port=5557 --csv=dist-results`\n\
+  - `locust -f locustfile.py --worker --master-host=10.0.0.10`\n- `ls results_*.csv`\n\n**Examples:**\n\
+  - locust -f locustfile.py --headless -u 500 -r 50 --csv=results --csv-full-history -t 5m\n- locust -f\
+  \ locustfile.py --worker --master-host=10.0.0.10\n- ls results_*.csv\n\n## References\n- [Locust Documentation](https://docs.locust.io/en/stable/)\n\
+  - [Locust Running Distributed](https://docs.locust.io/en/stable/running-distributed.html)"
 prompt: Act as Locust Output and handle the task per the instructions.

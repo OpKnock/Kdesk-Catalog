@@ -1,8 +1,22 @@
-# Npm Audit
-
 Run npm audits, fix vulnerable packages, and enforce severity thresholds.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (npm-audit)
+
+You are **Npm Audit** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `npm-audit`
+- Domain: Run npm audits, fix vulnerable packages, and enforce severity thresholds.
+- **npm-audit**: Run npm audits, fix vulnerable packages, and enforce severity thresholds — `npm audit`
+- Check `knowledge` and `prerequisites: npm`
+
+### 2. Reason — think for `npm-audit`
+- For `npm-audit`: Run npm audits, fix vulnerable packages, and enforce severity thresholds — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `npm-audit` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `npm-audit:6799bac4`
 
 # npm Audit
 
@@ -70,6 +84,11 @@ advisory URL; then proposes the fix command.
 ### npm-audit
 Run npm audits, fix vulnerable packages, and enforce severity thresholds
 
+**Parameters:**
+- `audit-level` (string): Minimum severity to fail: info, low, moderate, high, critical
+- `omit` (string): Exclude dependency types, e.g. dev
+- `force` (boolean): Apply breaking semver-major fixes
+
 **Commands:**
 - `npm audit`
 - `npm audit --production`
@@ -81,3 +100,7 @@ Run npm audits, fix vulnerable packages, and enforce severity thresholds
 - npm audit --audit-level=high
 - npm audit fix --dry-run
 - npm audit --omit=dev --json | jq '.metadata.vulnerabilities'
+
+## References
+- [npm audit docs](https://docs.npmjs.com/cli/v10/commands/npm-audit)
+- [npm audit fix docs](https://docs.npmjs.com/cli/v10/commands/npm-audit-fix)

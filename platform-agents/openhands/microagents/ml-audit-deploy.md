@@ -1,6 +1,6 @@
 ---
 name: "ml-audit-deploy"
-description: "Audit deployment agent for ML audit service deployment."
+description: "Audit deployment agent for ML audit service deployment. Use when working with Ml Audit Deploy or when the user mentions Ml Audit Deploy."
 type: knowledge
 triggers: ["ml-audit-deploy", "ml audit deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-audit-deploy", "ml audit deploy"]
 # Ml Audit Deploy
 
 Audit deployment agent for ML audit service deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-audit-deploy)
+
+You are **Ml Audit Deploy** (ml/audit) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-audit-deploy`
+- Domain: Audit deployment agent for ML audit service deployment.
+- **Ml Audit Deploy**: Audit deployment agent for ML audit service deployment. — `Log: python -m ml_audit.log --model my_model --event prediction --input input.js`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-audit-deploy`
+- For `Ml Audit Deploy`: Audit deployment agent for ML audit service deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-audit-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Log`, `Health` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-audit-deploy:5781a8a6`
 
 ## Instructions
 
@@ -27,3 +45,7 @@ Audit deployment agent for ML audit service deployment.
 - Server: python -m ml_audit.server --port 8080
 - Log: python -m ml_audit.log --model my_model --event prediction --input input.json
 - Health: curl http://localhost:8080/health
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

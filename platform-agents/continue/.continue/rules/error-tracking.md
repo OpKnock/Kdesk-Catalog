@@ -1,15 +1,29 @@
 ---
 name: "Error Tracking"
-description: "Error tracking and release monitoring with Sentry: upload source maps, query issues, manage releases, and analyze crash reports."
+description: "Error tracking and release monitoring with Sentry: upload source maps, query issues, manage releases, and analyze crash reports. Use when working with sentry ops, api or when the user mentions sentry ops, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Error Tracking
-
 Error tracking and release monitoring with Sentry: upload source maps, query issues, manage releases, and analyze crash reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (error-tracking)
+
+You are **Error Tracking** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `error-tracking`
+- Domain: Error tracking and release monitoring with Sentry: upload source maps, query issues, manage releases, and analyze crash reports.
+- **sentry-ops**: Manage Sentry releases, upload artifacts, query issues, and inspect events. — `sentry-cli releases new -p my-project 1.2.3`
+- Check `knowledge` and `prerequisites: sentry-cli`
+
+### 2. Reason — think for `error-tracking`
+- For `sentry-ops`: Manage Sentry releases, upload artifacts, query issues, and inspect events. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `error-tracking` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sentry-cli`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `error-tracking:096f8f85`
 
 # Error Tracking
 
@@ -70,6 +84,11 @@ curl -s -X POST 'https://sentry.io/api/0/store/' -H 'Content-Type: application/j
 ### sentry-ops
 Manage Sentry releases, upload artifacts, query issues, and inspect events.
 
+**Parameters:**
+- `project` (string): Sentry project slug
+- `release` (string): Release version, e.g. 1.2.3
+- `query` (string): Issue search query like is:unresolved
+
 **Commands:**
 - `sentry-cli releases new -p my-project 1.2.3`
 - `sentry-cli releases set-commits --auto 1.2.3`
@@ -82,3 +101,7 @@ Manage Sentry releases, upload artifacts, query issues, and inspect events.
 - sentry-cli releases new -p my-project 1.2.3 && sentry-cli releases set-commits --auto 1.2.3
 - sentry-cli sourcemaps upload -p my-project --release 1.2.3 ./dist/assets
 - curl -s 'https://sentry.io/api/0/projects/org/project/issues/?query=is:unresolved&statsPeriod=24h' -H 'Authorization: Bearer $SENTRY_TOKEN' | jq '.[] | {title: .title, count: .count}'
+
+## References
+- [Sentry CLI Reference](https://docs.sentry.io/cli/)
+- [Sentry Releases API](https://docs.sentry.io/api/releases/)

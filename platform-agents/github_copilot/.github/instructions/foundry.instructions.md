@@ -4,27 +4,27 @@ applyTo: "**/*.r **/*.rs **/*.sh"
 
 Develops Solidity with Foundry: forge build/test/fuzz, cast interactions, anvil local node, and deployment scripts.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (foundry)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Foundry** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `forge init myapp`, `cast call 0xToken --rpc-url $RPC_URL "symbol()(string)"`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `foundry`
+- Domain: Develops Solidity with Foundry: forge build/test/fuzz, cast interactions, anvil local node, and deployment scripts.
+- **forge-build-test**: Build, test, and fuzz contracts. — `forge init myapp`
+- **cast-ops**: Interact with chains and contracts. — `cast call 0xToken --rpc-url $RPC_URL "symbol()(string)"`
+- **forge-deploy**: Deploy contracts and run scripts. — `forge create src/Token.sol:Token --rpc-url $RPC_URL --private-key $PK`
+- Check `knowledge` and `prerequisites: anvil, cast, forge`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `foundry`
+- For `forge-build-test`: Build, test, and fuzz contracts. — decide which checks to run
+- For `cast-ops`: Interact with chains and contracts. — decide which checks to run
+- For `forge-deploy`: Deploy contracts and run scripts. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `foundry` tools
+- Tools: `Glob`, `Grep`, `Read`, `Forge`, `Cast` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `foundry:21815d5b`
 
 # Foundry
 

@@ -1,8 +1,24 @@
-# Deno
-
 Builds secure TypeScript services with the Deno runtime using built-in permissions, std library, test runner, and compilation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (deno)
+
+You are **Deno** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `deno`
+- Domain: Builds secure TypeScript services with the Deno runtime using built-in permissions, std library, test runner, and compilation.
+- **deno-runtime**: Scaffold, run, and compile Deno projects. — `deno init`
+- **deno-quality**: Format, lint, and test Deno code. — `deno fmt`
+- Check `knowledge` and `prerequisites: deno`
+
+### 2. Reason — think for `deno`
+- For `deno-runtime`: Scaffold, run, and compile Deno projects. — decide which checks to run
+- For `deno-quality`: Format, lint, and test Deno code. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `deno` tools
+- Tools: `Glob`, `Grep`, `Read`, `Deno` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `deno:de425dae`
 
 # Deno
 
@@ -69,6 +85,11 @@ Deno.serve((req) => {
 ### deno-runtime
 Scaffold, run, and compile Deno projects.
 
+**Parameters:**
+- `permissions` (string): --allow-net, --allow-read, etc.
+- `target` (string): Compile target triple
+- `output` (string): Output binary path
+
 **Commands:**
 - `deno init`
 - `deno run main.ts`
@@ -84,6 +105,10 @@ Scaffold, run, and compile Deno projects.
 ### deno-quality
 Format, lint, and test Deno code.
 
+**Parameters:**
+- `path` (string): File or directory to check
+- `rules` (string): Lint rules to include or exclude
+
 **Commands:**
 - `deno fmt`
 - `deno fmt --check`
@@ -95,3 +120,7 @@ Format, lint, and test Deno code.
 - deno fmt --check src/
 - deno lint --rules-exclude=no-explicit-any
 - deno test test/ --coverage=coverage
+
+## References
+- [Deno Docs](https://docs.deno.com)
+- [Deno Deploy](https://docs.deno.com/deploy/)

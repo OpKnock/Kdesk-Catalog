@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(dstat:*) Bash(free:*) Bash(k6:*) Bash(kubect
 
 Runs sustained load tests for 24+ hours using k6 while monitoring resource trends. Captures memory, CPU, and connection metrics from Kubernetes pods and host-level tools to detect leaks and drift that short tests miss.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (soak-testing)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Soak Testing** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `k6 run --vus 10 --duration 24h soak.js`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `soak-testing`
+- Domain: Runs sustained load tests for 24+ hours using k6 while monitoring resource trends. Captures memory, CPU, and connection metrics from Kubernetes pods and host-level tools to detect leaks and drift that
+- **soak-run**: Runs sustained load tests for 24+ hours using k6 while monitoring resource trends. Captures memory,  — `k6 run --vus 10 --duration 24h soak.js`
+- Check `knowledge` and `prerequisites: dstat, free, kubectl`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `soak-testing`
+- For `soak-run`: Runs sustained load tests for 24+ hours using k6 while monitoring resource trends. Captures memory, CPU, and connection  — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `soak-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `K6`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `soak-testing:b30da44e`
 
 # Soak Testing
 

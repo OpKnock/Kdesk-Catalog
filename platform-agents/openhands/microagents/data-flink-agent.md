@@ -1,6 +1,6 @@
 ---
 name: "data-flink-agent"
-description: "Apache Flink stream processing agent. Manages Flink jobs, state, and streaming operations."
+description: "Apache Flink stream processing agent. Manages Flink jobs, state, and streaming operations. Use when working with Data Flink Agent or when the user mentions Data Flink Agent."
 type: knowledge
 triggers: ["data-flink-agent", "data flink agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["data-flink-agent", "data flink agent"]
 # Data Flink Agent
 
 Apache Flink stream processing agent. Manages Flink jobs, state, and streaming operations.
+
+## Agentic Workflow: Read -> Reason -> Act (data-flink-agent)
+
+You are **Data Flink Agent** (data/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `data-flink-agent`
+- Domain: Apache Flink stream processing agent. Manages Flink jobs, state, and streaming operations.
+- **Data Flink Agent**: Apache Flink stream processing agent. Manages Flink jobs, state, and streaming operations. — `flink list`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `data-flink-agent`
+- For `Data Flink Agent`: Apache Flink stream processing agent. Manages Flink jobs, state, and streaming operations. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `data-flink-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Flink` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `data-flink-agent:89fbdef6`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ Apache Flink stream processing agent. Manages Flink jobs, state, and streaming o
 - flink list
 - flink cancel demo-job-id
 - flink savepoint demo-job-id demo-directory
+
+## References
+- [Apache Flink Documentation](https://nightlies.apache.org/flink/)

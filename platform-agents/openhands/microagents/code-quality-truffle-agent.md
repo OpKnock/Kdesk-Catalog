@@ -1,6 +1,6 @@
 ---
 name: "code-quality-truffle-agent"
-description: "Truffle agent for Ethereum development framework."
+description: "Truffle agent for Ethereum development framework. Use when working with Code Quality Truffle Agent, code quality or when the user mentions Code Quality Truffle Agent, code quality."
 type: knowledge
 triggers: ["code-quality-truffle-agent", "code quality truffle agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["code-quality-truffle-agent", "code quality truffle agent"]
 # Code Quality Truffle Agent
 
 Truffle agent for Ethereum development framework.
+
+## Agentic Workflow: Read -> Reason -> Act (code-quality-truffle-agent)
+
+You are **Code Quality Truffle Agent** (code-quality/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-quality-truffle-agent`
+- Domain: Truffle agent for Ethereum development framework.
+- **Code Quality Truffle Agent**: Truffle agent for Ethereum development framework. — `truffle test`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `code-quality-truffle-agent`
+- For `Code Quality Truffle Agent`: Truffle agent for Ethereum development framework. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-quality-truffle-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Truffle` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-quality-truffle-agent:5b8680ec`
 
 ## Instructions
 
@@ -31,3 +49,6 @@ Truffle agent for Ethereum development framework.
 - truffle migrate
 - truffle develop
 - truffle console --network development
+
+## References
+- [Truffle Documentation](https://trufflesuite.com/docs/)

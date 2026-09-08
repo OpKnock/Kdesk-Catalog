@@ -2,8 +2,19 @@ title: Echidna
 description: 'Fuzzes Ethereum smart contracts with Echidna: property-based invariant testing, corpus,
   and CI integration.'
 version: 2.0.0
-instructions: "# Echidna\n\nFuzzes Ethereum smart contracts with Echidna: property-based invariant testing,\
-  \ corpus, and CI integration.\n\n## Instructions\n\n# Echidna\n\nFuzz EVM smart contracts with property\
+instructions: "Fuzzes Ethereum smart contracts with Echidna: property-based invariant testing, corpus,\
+  \ and CI integration.\n\n## Agentic Workflow: Read -> Reason -> Act (echidna)\n\nYou are **Echidna**\
+  \ (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n###\
+  \ 1. Read — code-quality context for `echidna`\n- Domain: Fuzzes Ethereum smart contracts with Echidna:\
+  \ property-based invariant testing, corpus, and CI integration.\n- **echidna-fuzz**: Run property-based\
+  \ fuzzing campaigns. — `echidna test/Invariants.sol`\n- **echidna-analysis**: Analyze and shrink failing\
+  \ sequences. — `echidna test/Invariants.sol --test-mode property --test-limit 0`\n- Check `knowledge`\
+  \ and `prerequisites: echidna`\n\n### 2. Reason — think for `echidna`\n- For `echidna-fuzz`: Run property-based\
+  \ fuzzing campaigns. — decide which checks to run\n- For `echidna-analysis`: Analyze and shrink failing\
+  \ sequences. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `echidna` tools\n- Tools: `Glob`, `Grep`, `Read`, `Echidna`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `echidna:666ee85c`\n\n# Echidna\n\nFuzz EVM smart contracts with property\
   \ testing.\n\n## When to Use\n\n- Verifying invariants (balance sums, roles, limits)\n- Finding assertion\
   \ failures in complex contracts\n- Testing upgrade and reentrancy scenarios\n- Pre-audit and CI regression\
   \ checks\n\n## Invariant Example\n\n```solidity\n// test/Invariants.sol\nimport \"echidna/Test.sol\"\
@@ -19,13 +30,17 @@ instructions: "# Echidna\n\nFuzzes Ethereum smart contracts with Echidna: proper
   \ named echidna_* functions\n- Use --test-mode assertion for existing assert tests\n- Save corpora to\
   \ accelerate future runs\n- Run a long campaign (millions of calls) before audits\n- Shrink sequences\
   \ on failure to find minimal repro\n- Integrate into CI with a fixed fuzz budget\n\n## Capabilities\n\
-  \n### echidna-fuzz\nRun property-based fuzzing campaigns.\n\n**Commands:**\n- `echidna test/Invariants.sol`\n\
-  - `echidna test/Invariants.sol --test-mode assertion`\n- `echidna test/Invariants.sol --test-limit 100000`\n\
-  - `echidna test/Invariants.sol --config echidna.yaml`\n- `echidna test/Invariants.sol --corpus-dir corpus`\n\
-  \n**Examples:**\n- echidna test/Invariants.sol --test-mode assertion --test-limit 50000\n- echidna test/Invariants.sol\
-  \ --config echidna.yaml --corpus-dir corpus\n- echidna test/Invariants.sol --seq-len 100\n\n### echidna-analysis\n\
-  Analyze and shrink failing sequences.\n\n**Commands:**\n- `echidna test/Invariants.sol --test-mode property\
-  \ --test-limit 0`\n- `echidna test/Invariants.sol --format text`\n- `echidna test/Invariants.sol --list-tests`\n\
-  - `echidna test/Invariants.sol --deployer 0x30000`\n\n**Examples:**\n- echidna test/Invariants.sol --test-limit\
-  \ 0 --format text\n- echidna test/Invariants.sol --seq-len 100 --test-limit 5000"
+  \n### echidna-fuzz\nRun property-based fuzzing campaigns.\n\n**Parameters:**\n- `contract` (string):\
+  \ Solidity file\n- `test-limit` (integer): Max test calls\n- `config` (string): Config yaml path\n\n\
+  **Commands:**\n- `echidna test/Invariants.sol`\n- `echidna test/Invariants.sol --test-mode assertion`\n\
+  - `echidna test/Invariants.sol --test-limit 100000`\n- `echidna test/Invariants.sol --config echidna.yaml`\n\
+  - `echidna test/Invariants.sol --corpus-dir corpus`\n\n**Examples:**\n- echidna test/Invariants.sol\
+  \ --test-mode assertion --test-limit 50000\n- echidna test/Invariants.sol --config echidna.yaml --corpus-dir\
+  \ corpus\n- echidna test/Invariants.sol --seq-len 100\n\n### echidna-analysis\nAnalyze and shrink failing\
+  \ sequences.\n\n**Parameters:**\n- `deployer` (string): Deployer address\n- `format` (string): text\
+  \ or json\n\n**Commands:**\n- `echidna test/Invariants.sol --test-mode property --test-limit 0`\n- `echidna\
+  \ test/Invariants.sol --format text`\n- `echidna test/Invariants.sol --list-tests`\n- `echidna test/Invariants.sol\
+  \ --deployer 0x30000`\n\n**Examples:**\n- echidna test/Invariants.sol --test-limit 0 --format text\n\
+  - echidna test/Invariants.sol --seq-len 100 --test-limit 5000\n\n## References\n- [Echidna Docs](https://echidna.readthedocs.io)\n\
+  - [Echidna on GitHub](https://github.com/crytic/echidna)"
 prompt: Act as Echidna and handle the task per the instructions.

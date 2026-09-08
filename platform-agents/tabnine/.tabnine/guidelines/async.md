@@ -1,8 +1,24 @@
-# Async
-
 Writes correct async code in Node.js: promises, async/await, error handling, concurrency control with the async library, and streaming.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (async)
+
+You are **Async** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `async`
+- Domain: Writes correct async code in Node.js: promises, async/await, error handling, concurrency control with the async library, and streaming.
+- **node-async**: Control concurrency and build async flows with the async library. — `npm install async`
+- **promises-await**: Write and debug modern async/await flows with proper error handling. — `node -e "Promise.all([fetch('https://httpbin.org/get'), fetch('https://httpbin.o`
+- Check `knowledge` and `prerequisites: node, npm`
+
+### 2. Reason — think for `async`
+- For `node-async`: Control concurrency and build async flows with the async library. — decide which checks to run
+- For `promises-await`: Write and debug modern async/await flows with proper error handling. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `async` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `async:0596516c`
 
 # Async (Node.js)
 
@@ -60,6 +76,10 @@ q.push([1, 2, 3, 4, 5])
 ### node-async
 Control concurrency and build async flows with the async library.
 
+**Parameters:**
+- `concurrency` (number): Max parallel tasks
+- `collection` (string): Array or object to iterate
+
 **Commands:**
 - `npm install async`
 - `node -e "const async=require('async'); async.eachLimit([1,2,3,4], 2, (n,cb)=>setTimeout(()=>{console.log(n);cb()},100), ()=>console.log('done'))"`
@@ -74,6 +94,10 @@ Control concurrency and build async flows with the async library.
 ### promises-await
 Write and debug modern async/await flows with proper error handling.
 
+**Parameters:**
+- `timeout` (number): Race timeout in ms
+- `mode` (string): all, allSettled, race, or any semantics
+
 **Commands:**
 - `node -e "Promise.all([fetch('https://httpbin.org/get'), fetch('https://httpbin.org/get')]).then(console.log)"`
 - `node --unhandled-rejections=strict app.js`
@@ -84,3 +108,8 @@ Write and debug modern async/await flows with proper error handling.
 - node --unhandled-rejections=strict -e "Promise.reject(new Error('boom'))"
 - node -e "Promise.allSettled([Promise.resolve(1),Promise.reject(new Error('e'))]).then(console.log)"
 - node -e "(async()=>{const [a,b]=await Promise.all([Promise.resolve(1),Promise.resolve(2)]); console.log(a+b)})()"
+
+## References
+- [Node.js async_hooks](https://nodejs.org/api/async_hooks.html)
+- [async library](https://caolan.github.io/async/v3/)
+- [MDN Using Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)

@@ -2,10 +2,21 @@ title: Api Sdk Go Codegen
 description: 'Generates Go SDKs with oapi-codegen: typed clients from OpenAPI, server stubs, config generation,
   and go test verification.'
 version: 2.0.0
-instructions: "# Api Sdk Go Codegen\n\nGenerates Go SDKs with oapi-codegen: typed clients from OpenAPI,\
-  \ server stubs, config generation, and go test verification.\n\n## Instructions\n\n# API SDK v4 - Go\n\
-  \nGo SDK generation with oapi-codegen.\n\n## What This Skill Does\n- Generates typed Go clients and\
-  \ servers\n- Configures generation via YAML\n- Validates with go build and tests\n\n## When to Use\n\
+instructions: "Generates Go SDKs with oapi-codegen: typed clients from OpenAPI, server stubs, config generation,\
+  \ and go test verification.\n\n## Agentic Workflow: Read -> Reason -> Act (api-sdk-go-codegen)\n\nYou\
+  \ are **Api Sdk Go Codegen** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — backend context for `api-sdk-go-codegen`\n- Domain: Generates Go SDKs with oapi-codegen:\
+  \ typed clients from OpenAPI, server stubs, config generation, and go test verification.\n- **go-codegen**:\
+  \ Generate Go client code from OpenAPI — `go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest`\n\
+  - **go-testing**: Test the generated Go client — `go test ./...`\n- Check `knowledge` and `prerequisites:\
+  \ openapi-generator, node.js, python`\n\n### 2. Reason — think for `api-sdk-go-codegen`\n- For `go-codegen`:\
+  \ Generate Go client code from OpenAPI — decide which checks to run\n- For `go-testing`: Test the generated\
+  \ Go client — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `api-sdk-go-codegen` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Bash`, `Oapi-codegen` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any\
+  \ write; record evidence (paths, checksums)\n- Fingerprint: `api-sdk-go-codegen:067e1170`\n\n# API SDK\
+  \ v4 - Go\n\nGo SDK generation with oapi-codegen.\n\n## What This Skill Does\n- Generates typed Go clients\
+  \ and servers\n- Configures generation via YAML\n- Validates with go build and tests\n\n## When to Use\n\
   - Go services consuming the API\n- Generating server stubs for parity\n- Typed client SDKs\n\n## Real\
   \ Commands\n\n```bash\ngo install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest\n\
   oapi-codegen -package api -generate types,client -o client.gen.go openapi.yaml\ngo build ./...\ngo test\
@@ -13,11 +24,14 @@ instructions: "# Api Sdk Go Codegen\n\nGenerates Go SDKs with oapi-codegen: type
   \ true\n  models: true\n  chi-server: true\n```\n\n## Testing\n- Compile after regeneration\n- Test\
   \ client calls with httptest servers\n- Run go vet in CI\n\n## Best Practices\n- Commit generated files\
   \ with release tags\n- Keep generation config in the repo\n- Regenerate before each release\n\n## Capabilities\n\
-  \n### go-codegen\nGenerate Go client code from OpenAPI\n\n**Commands:**\n- `go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest`\n\
+  \n### go-codegen\nGenerate Go client code from OpenAPI\n\n**Parameters:**\n- `package` (string): Go\
+  \ package name\n- `generate` (string): Comma-separated generation targets\n- `output` (string): Output\
+  \ Go file\n\n**Commands:**\n- `go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest`\n\
   - `oapi-codegen -package api -generate types,client -o client.gen.go openapi.yaml`\n- `oapi-codegen\
   \ -package api -generate types,chi-server -o server.gen.go openapi.yaml`\n- `oapi-codegen -config oapi-codegen.yaml\
   \ openapi.yaml`\n- `go build ./...`\n\n**Examples:**\n- -generate types,client emits a typed Go client\n\
   - -generate chi-server emits a server stub\n- -config uses a YAML config file\n\n### go-testing\nTest\
   \ the generated Go client\n\n**Commands:**\n- `go test ./...`\n- `go vet ./...`\n- `go mod tidy`\n-\
-  \ `go test -race ./...`\n\n**Examples:**\n- -cli --help\n- -api --help"
+  \ `go test -race ./...`\n\n**Examples:**\n- -cli --help\n- -api --help\n\n## References\n- [oapi-codegen](https://github.com/oapi-codegen/oapi-codegen)\n\
+  - [Go Tooling](https://go.dev/doc/modules/)"
 prompt: Act as Api Sdk Go Codegen and handle the task per the instructions.

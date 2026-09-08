@@ -1,6 +1,6 @@
 ---
 name: "Testing Artillery Agent"
-description: "Artillery agent for load testing."
+description: "Artillery agent for load testing. Use when working with Testing Artillery Agent or when the user mentions Testing Artillery Agent."
 globs: ["**/*.json", "**/*.r", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Testing Artillery Agent
 
 Artillery agent for load testing.
+
+## Agentic Workflow: Read -> Reason -> Act (testing-artillery-agent)
+
+You are **Testing Artillery Agent** (testing/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `testing-artillery-agent`
+- Domain: Artillery agent for load testing.
+- **Testing Artillery Agent**: Artillery agent for load testing. — `artillery run script.yml`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `testing-artillery-agent`
+- For `Testing Artillery Agent`: Artillery agent for load testing. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `testing-artillery-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Artillery` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `testing-artillery-agent:d1311900`
 
 ## Instructions
 
@@ -27,3 +45,6 @@ Artillery agent for load testing.
 - artillery run script.yml
 - artillery quick --count 10 --num 100 http://localhost:8080
 - artillery report output.json
+
+## References
+- [Artillery Documentation](https://www.artillery.io/docs)

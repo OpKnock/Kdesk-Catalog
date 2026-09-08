@@ -1,15 +1,29 @@
 ---
 name: "nestjs-scaffolding"
-description: "Scaffolds NestJS projects and generates modules, controllers, services, guards, and interceptors using the Nest CLI. Structures applications with dependency injection and modular architecture."
+description: "Scaffolds NestJS projects and generates modules, controllers, services, guards, and interceptors using the Nest CLI. Structures applications with dependency injection and modular architecture. Use when working with nestjs scaffolding, api or when the user mentions nestjs scaffolding, api."
 type: knowledge
 triggers: ["nestjs-scaffolding"]
 ---
 
-# Nestjs Scaffolding
-
 Scaffolds NestJS projects and generates modules, controllers, services, guards, and interceptors using the Nest CLI. Structures applications with dependency injection and modular architecture.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nestjs-scaffolding)
+
+You are **Nestjs Scaffolding** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `nestjs-scaffolding`
+- Domain: Scaffolds NestJS projects and generates modules, controllers, services, guards, and interceptors using the Nest CLI. Structures applications with dependency injection and modular architecture.
+- **nestjs-scaffolding**: Scaffold NestJS projects and generate modules, controllers, services and guards with the Nest CLI. — `nest new my-app --package-manager npm`
+- Check `knowledge` and `prerequisites: nest, npm`
+
+### 2. Reason — think for `nestjs-scaffolding`
+- For `nestjs-scaffolding`: Scaffold NestJS projects and generate modules, controllers, services and guards with the Nest CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nestjs-scaffolding` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nest`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nestjs-scaffolding:afdef314`
 
 # NestJS
 
@@ -75,6 +89,11 @@ export class UsersModule {}
 ### nestjs-scaffolding
 Scaffold NestJS projects and generate modules, controllers, services and guards with the Nest CLI.
 
+**Parameters:**
+- `package_manager` (string): npm, yarn or pnpm
+- `name` (string): Component name for code generation
+- `flat` (boolean): Skip the subdirectory when generating
+
 **Commands:**
 - `nest new my-app --package-manager npm`
 - `nest g module auth`
@@ -86,3 +105,7 @@ Scaffold NestJS projects and generate modules, controllers, services and guards 
 - nest g guard roles --flat
 - nest g interceptor logging --flat
 - npm run lint
+
+## References
+- [NestJS Documentation](https://docs.nestjs.com/)
+- [Nest CLI Reference](https://docs.nestjs.com/cli/usages)

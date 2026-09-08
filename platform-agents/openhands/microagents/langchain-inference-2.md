@@ -1,6 +1,6 @@
 ---
 name: "langchain-inference-2"
-description: "LangChain inference server agent. Manages LangChain ML inference server."
+description: "LangChain inference server agent. Manages LangChain ML inference server. Use when working with Ml Langchain Inference Server Agent or when the user mentions Ml Langchain Inference Server Agent."
 type: knowledge
 triggers: ["langchain-inference-2", "ml langchain inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["langchain-inference-2", "ml langchain inference server agent"]
 # Langchain Inference 2
 
 LangChain inference server agent. Manages LangChain ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (langchain-inference-2)
+
+You are **Langchain Inference 2** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `langchain-inference-2`
+- Domain: LangChain inference server agent. Manages LangChain ML inference server.
+- **Ml Langchain Inference Server Agent**: LangChain inference server agent. Manages LangChain ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `langchain-inference-2`
+- For `Ml Langchain Inference Server Agent`: LangChain inference server agent. Manages LangChain ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `langchain-inference-2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `langchain-inference-2:5add61a1`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ LangChain inference server agent. Manages LangChain ML inference server.
 - python run_chain.py --chain qa --query 'What is AI?'
 - python run_agent.py --agent search --query 'latest news'
 - python test_chain.py --chain qa
+
+## References
+- [LangChain Documentation](https://python.langchain.com/docs/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

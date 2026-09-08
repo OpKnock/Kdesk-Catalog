@@ -1,15 +1,31 @@
 ---
 name: "ethical-ai"
-description: "Builds guardrails for AI systems: model vulnerability scanning with garak, supply-chain checks, PII detection, and bias assessment."
+description: "Builds guardrails for AI systems: model vulnerability scanning with garak, supply-chain checks, PII detection, and bias assessment. Use when working with llm security scanning, data and supply chain or when the user mentions llm security scanning, data and supply chain."
 type: knowledge
 triggers: ["ethical-ai", "llm-security-scanning", "data-and-supply-chain"]
 ---
 
-# ethical-ai
-
 Builds guardrails for AI systems: model vulnerability scanning with garak, supply-chain checks, PII detection, and bias assessment.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ethical-ai)
+
+You are **ethical-ai** (ai) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ai context for `ethical-ai`
+- Domain: Builds guardrails for AI systems: model vulnerability scanning with garak, supply-chain checks, PII detection, and bias assessment.
+- **llm-security-scanning**: Probe LLMs for prompt injection, jailbreaks, and harmful output with garak. — `garak --model_type openai-chat --model_name gpt-4o-mini`
+- **data-and-supply-chain**: Scan repos for secrets, PII, and supply-chain risks. — `gitleaks detect --source . --report-format json --report-path leak.json`
+- Check `knowledge` and `prerequisites: fairlearn, ai-fairness, shap, lime`
+
+### 2. Reason — think for `ethical-ai`
+- For `llm-security-scanning`: Probe LLMs for prompt injection, jailbreaks, and harmful output with garak. — decide which checks to run
+- For `data-and-supply-chain`: Scan repos for secrets, PII, and supply-chain risks. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ethical-ai` tools
+- Tools: `Glob`, `Grep`, `Read`, `Garak`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ethical-ai:8115805e`
 
 # Ethical AI Engineering
 
@@ -69,6 +85,11 @@ pip-audit -r requirements.txt
 ### llm-security-scanning
 Probe LLMs for prompt injection, jailbreaks, and harmful output with garak.
 
+**Parameters:**
+- `model_type` (string): Model interface: openai-chat, huggingface, claude
+- `model_name` (string): Model identifier
+- `probes` (string): Probe groups, e.g. dan, encoding
+
 **Commands:**
 - `garak --model_type openai-chat --model_name gpt-4o-mini`
 - `garak --model_type huggingface --model_name org/model --probes dan,encoding`
@@ -84,6 +105,10 @@ Probe LLMs for prompt injection, jailbreaks, and harmful output with garak.
 ### data-and-supply-chain
 Scan repos for secrets, PII, and supply-chain risks.
 
+**Parameters:**
+- `source` (string): Path or repo to scan
+- `report` (string): Report output path
+
 **Commands:**
 - `gitleaks detect --source . --report-format json --report-path leak.json`
 - `detect-secrets scan --baseline .secrets.baseline`
@@ -96,3 +121,9 @@ Scan repos for secrets, PII, and supply-chain risks.
 - gitleaks detect --source . --report-format json
 - scorecard --repo=github.com/org/app
 - presidio-analyzer --analyzer text 'Call me at 555-0100'
+
+## References
+- [garak LLM Vulnerability Scanner](https://docs.garak.ai/garak/)
+- [OpenSSF Scorecard](https://scorecard.dev/)
+- [Microsoft Presidio](https://microsoft.github.io/presidio/)
+- [NIST AI RMF](https://www.nist.gov/itl/ai-risk-management-framework)

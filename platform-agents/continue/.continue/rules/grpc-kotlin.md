@@ -1,15 +1,29 @@
 ---
 name: "Grpc Kotlin"
-description: "gRPC services and clients in Kotlin using grpc-kotlin coroutines stubs: suspend RPCs, Flow-based streaming, and Gradle codegen wiring."
+description: "gRPC services and clients in Kotlin using grpc-kotlin coroutines stubs: suspend RPCs, Flow-based streaming, and Gradle codegen wiring. Use when working with kotlin grpc, api or when the user mentions kotlin grpc, api."
 globs: ["**/*.go", "**/*.java", "**/*.kt", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Grpc Kotlin
-
 gRPC services and clients in Kotlin using grpc-kotlin coroutines stubs: suspend RPCs, Flow-based streaming, and Gradle codegen wiring.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (grpc-kotlin)
+
+You are **Grpc Kotlin** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `grpc-kotlin`
+- Domain: gRPC services and clients in Kotlin using grpc-kotlin coroutines stubs: suspend RPCs, Flow-based streaming, and Gradle codegen wiring.
+- **kotlin-grpc**: Generate Kotlin gRPC stubs with protoc-gen-grpc-kotlin and write coroutine-based RPC services. — `protoc --plugin=protoc-gen-grpckt=$(which protoc-gen-grpc-kotlin) --grpckt_out=b`
+- Check `knowledge` and `prerequisites: ./gradlew, grpcurl, protoc`
+
+### 2. Reason — think for `grpc-kotlin`
+- For `kotlin-grpc`: Generate Kotlin gRPC stubs with protoc-gen-grpc-kotlin and write coroutine-based RPC services. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `grpc-kotlin` tools
+- Tools: `Glob`, `Grep`, `Read`, `Protoc`, `./gradlew` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grpc-kotlin:97c73fe5`
 
 # gRPC Kotlin
 
@@ -99,6 +113,11 @@ Agent: Return a cold flow and emit as data arrives:
 ### kotlin-grpc
 Generate Kotlin gRPC stubs with protoc-gen-grpc-kotlin and write coroutine-based RPC services.
 
+**Parameters:**
+- `grpc_kotlin_version` (string): grpc-kotlin library version, e.g. 1.4.1.
+- `plugin_path` (string): Path to the protoc-gen-grpc-kotlin executable.
+- `proto_dir` (string): Directory containing .proto files.
+
 **Commands:**
 - `protoc --plugin=protoc-gen-grpckt=$(which protoc-gen-grpc-kotlin) --grpckt_out=build/generated --proto_path src/main/proto greet.proto`
 - `./gradlew generateProto`
@@ -110,3 +129,7 @@ Generate Kotlin gRPC stubs with protoc-gen-grpc-kotlin and write coroutine-based
 - protoc --plugin=protoc-gen-grpckt=$(which protoc-gen-grpc-kotlin) --grpckt_out=build/generated --proto_path src/main/proto greet.proto
 - ./gradlew test --tests '*GreeterTest'
 - grpcurl -plaintext -d '{"name":"Kotlin"}' localhost:50051 helloworld.Greeter/SayHello
+
+## References
+- [gRPC Kotlin Docs](https://grpc.io/docs/languages/kotlin/)
+- [grpc-kotlin GitHub](https://github.com/grpc/grpc-kotlin)

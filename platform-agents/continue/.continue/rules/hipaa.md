@@ -1,15 +1,29 @@
 ---
 name: "Hipaa"
-description: "Verify security controls required handling PHI systems. and BAAs.'"
+description: "Verify security controls required handling PHI systems. and BAAs.'. Use when working with hipaa controls, compliance or when the user mentions hipaa controls, compliance."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Hipaa
-
 Verify security controls required handling PHI systems. and BAAs.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (hipaa)
+
+You are **Hipaa** (compliance/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — compliance context for `hipaa`
+- Domain: Verify security controls required handling PHI systems. and BAAs.'
+- **hipaa-controls**: Verify security controls required for PHI systems — `openssl s_client -connect app.example.com:443 -tls1_2 -brief`
+- Check `knowledge` and `prerequisites: gitleaks, openssl, trufflehog`
+
+### 2. Reason — think for `hipaa`
+- For `hipaa-controls`: Verify security controls required for PHI systems — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `hipaa` tools
+- Tools: `Glob`, `Grep`, `Read`, `Openssl`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `hipaa:6b61f9a5`
 
 # HIPAA
 
@@ -69,6 +83,11 @@ from the commands run, flags gaps, and lists the exact remediation steps.
 ### hipaa-controls
 Verify security controls required for PHI systems
 
+**Parameters:**
+- `tls1_2` (boolean): Require TLS 1.2 or higher for the connection test
+- `no-update` (boolean): Run trufflehog without checking for updates
+- `verbose` (boolean): Show full secret-scan details
+
 **Commands:**
 - `openssl s_client -connect app.example.com:443 -tls1_2 -brief`
 - `curl -sI http://localhost:8080 | grep -i strict-transport-security`
@@ -80,3 +99,7 @@ Verify security controls required for PHI systems
 - rg -i "phi|medical|health|diagnosis" src/ | wc -l
 - curl -s -o /dev/null -w '%{http_code}' -u $SA_TOKEN http://localhost:8080/api/audit-logs
 - nmap -Pn -p443 --script ssl-enum-ciphers app.example.com
+
+## References
+- [HHS HIPAA official site](https://www.hhs.gov/hipaa/)
+- [HIPAA Security Rule](https://www.hhs.gov/hipaa/for-professionals/security/index.html)

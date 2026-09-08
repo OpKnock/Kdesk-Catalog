@@ -6,27 +6,23 @@ globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 
 Kafka CLI commands. Real kafka CLI.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (kafka-cli)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **kafka-cli** (database/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `brew install kafka`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — database context for `kafka-cli`
+- Domain: Kafka CLI commands. Real kafka CLI.
+- **kafka-cli**: Kafka CLI commands. Real kafka CLI. — `brew install kafka`
+- Check `knowledge` and `prerequisites: brew, kafka-console-consumer, kafka-console-producer, kafka-consumer-groups`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `kafka-cli`
+- For `kafka-cli`: Kafka CLI commands. Real kafka CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `kafka-cli` tools
+- Tools: `Glob`, `Grep`, `Read`, `Brew`, `Kafka-topics` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-cli:d2b58e2e`
 
 # Kafka CLI
 

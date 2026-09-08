@@ -3,15 +3,56 @@ description: Build, test, and debug WebSocket servers and clients using wscat, w
   for real-time messaging. Use when building or debugging real-time WebSocket channels. Don't use for
   webhook delivery (see webhook-reliability-engineer) or one-way event streams.
 version: 2.0.0
-instructions: '# websocket-engineer
+instructions: 'Build, test, and debug WebSocket servers and clients using wscat, websocat, and websocketd
+  for real-time messaging. Use when building or debugging real-time WebSocket channels. Don''t use for
+  webhook delivery (see webhook-reliability-engineer) or one-way event streams.
 
 
-  Build, test, and debug WebSocket servers and clients using wscat, websocat, and websocketd for real-time
-  messaging. Use when building or debugging real-time WebSocket channels. Don''t use for webhook delivery
-  (see webhook-reliability-engineer) or one-way event streams.
+  ## Agentic Workflow: Read -> Reason -> Act (websocket-engineer)
 
 
-  ## Instructions
+  You are **websocket-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — backend context for `websocket-engineer`
+
+  - Domain: Build, test, and debug WebSocket servers and clients using wscat, websocat, and websocketd
+  for real-time messaging. Use when building or debugging real-time WebSocket channels. Don''t use for
+  webhook d
+
+  - **Test WebSocket servers with wscat**: Connect interactively or non-interactively, send frames, and
+  verify server responses, headers, and p — `wscat -c ws://localhost:8080`
+
+  - **Relay and stream with websocat**: Tunnel WebSocket traffic, stream files into connections, and bridge
+  websocket endpoints for debuggin — `websocat ws://localhost:8080`
+
+  - **Run WebSocket servers with websocketd**: Turn any stdin/stdout program into a WebSocket server and
+  serve a static demo page. — `websocketd --port=8080 ./counter.sh`
+
+  - Check `knowledge` and `prerequisites: node.js, socket.io, ws, redis`
+
+
+  ### 2. Reason — think for `websocket-engineer`
+
+  - For `Test WebSocket servers with wscat`: Connect interactively or non-interactively, send frames,
+  and verify server responses, headers, and protocols. — decide which checks to run
+
+  - For `Relay and stream with websocat`: Tunnel WebSocket traffic, stream files into connections, and
+  bridge websocket endpoints for debugging. — decide which checks to run
+
+  - For `Run WebSocket servers with websocketd`: Turn any stdin/stdout program into a WebSocket server
+  and serve a static demo page. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `websocket-engineer` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Wscat`, `Websocat` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `websocket-engineer:0c7281b0`
 
 
   # WebSocket Engineering
@@ -114,6 +155,13 @@ instructions: '# websocket-engineer
   Connect interactively or non-interactively, send frames, and verify server responses, headers, and protocols.
 
 
+  **Parameters:**
+
+  - `headers` (string): Extra HTTP headers for the opening handshake, e.g. authorization tokens.
+
+  - `subprotocol` (string): Requested WebSocket subprotocol via -p.
+
+
   **Commands:**
 
   - `wscat -c ws://localhost:8080`
@@ -135,6 +183,13 @@ instructions: '# websocket-engineer
   ### Relay and stream with websocat
 
   Tunnel WebSocket traffic, stream files into connections, and bridge websocket endpoints for debugging.
+
+
+  **Parameters:**
+
+  - `bridge` (flag): -t bridges two endpoints, forwarding frames in both directions.
+
+  - `listen port` (integer): Port for -s server mode to accept incoming connections.
 
 
   **Commands:**
@@ -162,6 +217,13 @@ instructions: '# websocket-engineer
   Turn any stdin/stdout program into a WebSocket server and serve a static demo page.
 
 
+  **Parameters:**
+
+  - `port` (integer): Port the server listens on.
+
+  - `staticdir` (string): Directory of static files served alongside the WebSocket endpoint.
+
+
   **Commands:**
 
   - `websocketd --port=8080 ./counter.sh`
@@ -177,5 +239,16 @@ instructions: '# websocket-engineer
 
   - websocketd --port=8080 ./counter.sh
 
-  - websocketd --port=8080 --staticdir=./public ./echo.py'
+  - websocketd --port=8080 --staticdir=./public ./echo.py
+
+
+  ## References
+
+  - [](https://github.com/websockets/wscat)
+
+  - [](https://github.com/vi/websocat)
+
+  - [](https://github.com/joewalnes/websocketd)
+
+  - [](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)'
 prompt: Act as websocket-engineer and handle the task per the instructions.

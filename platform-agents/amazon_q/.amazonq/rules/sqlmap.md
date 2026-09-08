@@ -1,26 +1,22 @@
 Automated SQL injection testing with sqlmap: detection, database enumeration, and data extraction.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (sqlmap)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Sqlmap** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `sqlmap -u "http://localhost:8080/item?id=1" --batch`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `sqlmap`
+- Domain: Automated SQL injection testing with sqlmap: detection, database enumeration, and data extraction.
+- **sqlmap-injection**: Detect and exploit SQL injection, enumerate databases and tables, and dump data — `sqlmap -u "http://localhost:8080/item?id=1" --batch`
+- Check `knowledge` and `prerequisites: sqlmap`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `sqlmap`
+- For `sqlmap-injection`: Detect and exploit SQL injection, enumerate databases and tables, and dump data — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `sqlmap` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sqlmap` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sqlmap:0f6ce7dc`
 
 # sqlmap
 

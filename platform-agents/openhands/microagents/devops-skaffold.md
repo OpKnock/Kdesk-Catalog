@@ -1,6 +1,6 @@
 ---
 name: "devops-skaffold"
-description: "Skaffold agent for Kubernetes development workflow."
+description: "Skaffold agent for Kubernetes development workflow. Use when working with Devops Skaffold, deployment or when the user mentions Devops Skaffold, deployment."
 type: knowledge
 triggers: ["devops-skaffold", "devops skaffold"]
 ---
@@ -8,6 +8,24 @@ triggers: ["devops-skaffold", "devops skaffold"]
 # Devops Skaffold
 
 Skaffold agent for Kubernetes development workflow.
+
+## Agentic Workflow: Read -> Reason -> Act (devops-skaffold)
+
+You are **Devops Skaffold** (devops/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `devops-skaffold`
+- Domain: Skaffold agent for Kubernetes development workflow.
+- **Devops Skaffold**: Skaffold agent for Kubernetes development workflow. — `Dev: skaffold dev`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `devops-skaffold`
+- For `Devops Skaffold`: Skaffold agent for Kubernetes development workflow. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `devops-skaffold` tools
+- Tools: `Glob`, `Grep`, `Read`, `Dev`, `Diagnose` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `devops-skaffold:3360efff`
 
 ## Instructions
 
@@ -38,3 +56,7 @@ Skaffold agent for Kubernetes development workflow.
 - Build: skaffold build
 - Deploy: skaffold deploy
 - Diagnose: skaffold diagnose
+
+## References
+- [Skaffold Documentation](https://skaffold.dev/docs/)
+- [Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)

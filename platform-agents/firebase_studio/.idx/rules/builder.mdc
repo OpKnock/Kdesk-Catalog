@@ -1,14 +1,28 @@
 ---
-description: "Implements the Builder pattern in Python: constructing complex objects step-by-step with fluent APIs."
+description: "Implements the Builder pattern in Python: constructing complex objects step-by-step with fluent APIs. Use when working with python, builder or when the user mentions python, builder."
 globs: ["**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Builder
-
 Implements the Builder pattern in Python: constructing complex objects step-by-step with fluent APIs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (builder)
+
+You are **Builder** (patterns/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — patterns context for `builder`
+- Domain: Implements the Builder pattern in Python: constructing complex objects step-by-step with fluent APIs.
+- **python**: Implement and test Builder pattern examples. — `python -m venv .venv && .venv/Scripts/activate`
+- Check `knowledge` and `prerequisites: python`
+
+### 2. Reason — think for `builder`
+- For `python`: Implement and test Builder pattern examples. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `builder` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `builder:390b71a1`
 
 # Builder Pattern
 
@@ -87,6 +101,11 @@ Cover defaults, overrides, and validation errors.
 ### python
 Implement and test Builder pattern examples.
 
+**Parameters:**
+- `test-path` (string): pytest path filter
+- `k` (string): pytest -k expression
+- `maxfail` (number): Stop after N failures
+
 **Commands:**
 - `python -m venv .venv && .venv/Scripts/activate`
 - `python -m pip install pytest`
@@ -98,3 +117,7 @@ Implement and test Builder pattern examples.
 - python -m pytest tests/ -q
 - python -m pytest tests/test_builder.py --maxfail=1
 - python -c 'from builder import OrderBuilder; print(OrderBuilder().with_sku("A1").with_qty(2).build())'
+
+## References
+- [Refactoring Guru: Builder](https://refactoring.guru/design-patterns/builder)
+- [Python Typing](https://docs.python.org/3/library/typing.html)

@@ -1,6 +1,6 @@
 ---
 name: "security-falco-agent"
-description: "Falco agent for runtime security."
+description: "Falco agent for runtime security. Use when working with Security Falco Agent or when the user mentions Security Falco Agent."
 type: knowledge
 triggers: ["security-falco-agent", "security falco agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["security-falco-agent", "security falco agent"]
 # Security Falco Agent
 
 Falco agent for runtime security.
+
+## Agentic Workflow: Read -> Reason -> Act (security-falco-agent)
+
+You are **Security Falco Agent** (security/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `security-falco-agent`
+- Domain: Falco agent for runtime security.
+- **Security Falco Agent**: Falco agent for runtime security. — `falco-ctl artifact install`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `security-falco-agent`
+- For `Security Falco Agent`: Falco agent for runtime security. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `security-falco-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Falco-ctl`, `Falco` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `security-falco-agent:9f622e3d`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ Falco agent for runtime security.
 - falco --dry-run
 - falco-ctl artifact install
 - falco-ctl rules list
+
+## References
+- [Falco Documentation](https://falco.org/docs/)

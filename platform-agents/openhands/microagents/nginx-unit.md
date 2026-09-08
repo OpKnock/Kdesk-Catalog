@@ -1,15 +1,29 @@
 ---
 name: "nginx-unit"
-description: "Configures NGINX Unit via its JSON control API to manage listeners, routes, and application objects supporting PHP, Node.js, Python, and Go apps with zero-downtime reloads."
+description: "Configures NGINX Unit via its JSON control API to manage listeners, routes, and application objects supporting PHP, Node.js, Python, and Go apps with zero-downtime reloads. Use when working with nginx unit config, api or when the user mentions nginx unit config, api."
 type: knowledge
 triggers: ["nginx-unit", "nginx-unit-config"]
 ---
 
-# Nginx Unit
-
 Configures NGINX Unit via its JSON control API to manage listeners, routes, and application objects supporting PHP, Node.js, Python, and Go apps with zero-downtime reloads.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nginx-unit)
+
+You are **Nginx Unit** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `nginx-unit`
+- Domain: Configures NGINX Unit via its JSON control API to manage listeners, routes, and application objects supporting PHP, Node.js, Python, and Go apps with zero-downtime reloads.
+- **nginx-unit-config**: Control NGINX Unit through its JSON control API: configure listeners, routes and application objects — `unitd --no-daemon`
+- Check `knowledge` and `prerequisites: unitd`
+
+### 2. Reason — think for `nginx-unit`
+- For `nginx-unit-config`: Control NGINX Unit through its JSON control API: configure listeners, routes and application objects. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nginx-unit` tools
+- Tools: `Glob`, `Grep`, `Read`, `Unitd`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nginx-unit:b6b45943`
 
 # NGINX Unit
 
@@ -70,6 +84,11 @@ curl -s http://127.0.0.1:8080/status
 ### nginx-unit-config
 Control NGINX Unit through its JSON control API: configure listeners, routes and application objects.
 
+**Parameters:**
+- `listener` (string): Socket address the app listens on
+- `app_type` (string): php, python3, node, go or perl
+- `config_path` (string): Path to JSON config file
+
 **Commands:**
 - `unitd --no-daemon`
 - `curl -X PUT --data-binary @config.json http://127.0.0.1:8080/config`
@@ -81,3 +100,7 @@ Control NGINX Unit through its JSON control API: configure listeners, routes and
 - curl -X PUT --data-binary '{"type":"python3","processes":4,"path":"/srv/app","module":"app"}' http://127.0.0.1:8080/config/applications/web
 - curl -X PUT --data-binary '{"listeners":{"*:8300":{"pass":"applications/web"}}}' http://127.0.0.1:8080/config
 - curl -s http://127.0.0.1:8080/config
+
+## References
+- [NGINX Unit Docs](https://unit.nginx.org/)
+- [Unit control API](https://unit.nginx.org/controlapi/)

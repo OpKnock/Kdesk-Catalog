@@ -1,15 +1,31 @@
 ---
 name: "ar-vr-development"
-description: "Develops AR/VR experiences: Three.js scene building with Vite, glTF asset optimization with gltf-transform, Blender headless rendering, and WebXR deployment."
+description: "Develops AR/VR experiences: Three.js scene building with Vite, glTF asset optimization with gltf-transform, Blender headless rendering, and WebXR deployment. Use when working with threejs setup, asset pipeline or when the user mentions threejs setup, asset pipeline."
 type: knowledge
 triggers: ["ar-vr-development", "threejs-setup", "asset-pipeline"]
 ---
 
-# ar-vr-development
-
 Develops AR/VR experiences: Three.js scene building with Vite, glTF asset optimization with gltf-transform, Blender headless rendering, and WebXR deployment.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ar-vr-development)
+
+You are **ar-vr-development** (emerging) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — emerging context for `ar-vr-development`
+- Domain: Develops AR/VR experiences: Three.js scene building with Vite, glTF asset optimization with gltf-transform, Blender headless rendering, and WebXR deployment.
+- **threejs-setup**: Scaffold and build Three.js scenes — `npm create vite@latest my-scene -- --template vanilla`
+- **asset-pipeline**: Optimize 3D assets for the web — `npm install -g @gltf-transform/cli`
+- Check `knowledge` and `prerequisites: unity, unreal, blender, three-js`
+
+### 2. Reason — think for `ar-vr-development`
+- For `threejs-setup`: Scaffold and build Three.js scenes — decide which checks to run
+- For `asset-pipeline`: Optimize 3D assets for the web — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ar-vr-development` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ar-vr-development:b474403f`
 
 # AR/VR Development
 
@@ -62,6 +78,11 @@ document.body.appendChild(renderer.domElement);
 ### threejs-setup
 Scaffold and build Three.js scenes
 
+**Parameters:**
+- `template` (string): Vite template name
+- `asset` (string): 3D asset file to load
+- `output-dir` (string): Build output directory
+
 **Commands:**
 - `npm create vite@latest my-scene -- --template vanilla`
 - `npm install three @types/three`
@@ -77,6 +98,11 @@ Scaffold and build Three.js scenes
 ### asset-pipeline
 Optimize 3D assets for the web
 
+**Parameters:**
+- `input` (string): Input glTF file
+- `output` (string): Optimized output file
+- `compression` (string): draco, meshopt
+
 **Commands:**
 - `npm install -g @gltf-transform/cli`
 - `gltf-transform optimize model.glb -o model-optimized.glb`
@@ -88,3 +114,7 @@ Optimize 3D assets for the web
 - gltf-transform optimize reduces file size
 - gltf-transform draco compresses geometry
 - blender -b renders headlessly
+
+## References
+- [Three.js Docs](https://threejs.org/docs/)
+- [gltf-transform Docs](https://gltf-transform.dev/)

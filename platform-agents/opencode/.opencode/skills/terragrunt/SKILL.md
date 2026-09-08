@@ -5,27 +5,25 @@ description: "Wraps Terraform with Terragrunt: DRY configurations, remote state 
 
 Wraps Terraform with Terragrunt: DRY configurations, remote state management, dependencies, run-all, and input validation.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (terragrunt)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **terragrunt** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `terragrunt plan`, `terragrunt state list`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devops context for `terragrunt`
+- Domain: Wraps Terraform with Terragrunt: DRY configurations, remote state management, dependencies, run-all, and input validation.
+- **run-and-dependencies**: Plan/apply modules and manage cross-module dependencies. — `terragrunt plan`
+- **config-and-state**: Generate remote state configs and read outputs across modules. — `terragrunt state list`
+- Check `knowledge` and `prerequisites: terragrunt`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `terragrunt`
+- For `run-and-dependencies`: Plan/apply modules and manage cross-module dependencies. — decide which checks to run
+- For `config-and-state`: Generate remote state configs and read outputs across modules. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `terragrunt` tools
+- Tools: `Glob`, `Grep`, `Read`, `Terragrunt` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `terragrunt:4476f994`
 
 # Terragrunt
 

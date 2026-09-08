@@ -3,9 +3,20 @@ description: 'Infrastructure failover strategies: nginx upstream server groups w
   automatic failover, DNS round-robin and failover records for multi-region routing, and CDN origin switching
   so static content remains available during outages.'
 version: 2.0.0
-instructions: "# Fallback\n\nInfrastructure failover strategies: nginx upstream server groups with backup\
-  \ servers for automatic failover, DNS round-robin and failover records for multi-region routing, and\
-  \ CDN origin switching so static content remains available during outages.\n\n## Instructions\n\n# Fallback\n\
+instructions: "Infrastructure failover strategies: nginx upstream server groups with backup servers for\
+  \ automatic failover, DNS round-robin and failover records for multi-region routing, and CDN origin\
+  \ switching so static content remains available during outages.\n\n## Agentic Workflow: Read -> Reason\
+  \ -> Act (fallback)\n\nYou are **Fallback** (api/general) — a sub-agent that **Reads, Reasons, and Acts**\
+  \ via `allowed-tools`.\n\n### 1. Read — api context for `fallback`\n- Domain: Infrastructure failover\
+  \ strategies: nginx upstream server groups with backup servers for automatic failover, DNS round-robin\
+  \ and failover records for multi-region routing, and CDN origin switching so \n- **infra-failover**:\
+  \ Configure nginx upstream failover, test DNS fallback, and verify origin fallback behavior. — `nginx\
+  \ -t -c /etc/nginx/nginx.conf`\n- Check `knowledge` and `prerequisites: dig, nginx`\n\n### 2. Reason\
+  \ — think for `fallback`\n- For `infra-failover`: Configure nginx upstream failover, test DNS fallback,\
+  \ and verify origin fallback behavior. — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `fallback` tools\n-\
+  \ Tools: `Glob`, `Grep`, `Read`, `Nginx`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `fallback:2fb94743`\n\n# Fallback\n\
   \n## What this skill does\n\nInfrastructure-level failover routes traffic away from dead endpoints:\
   \ nginx upstream server groups with backup servers, DNS-based multi-region routing, and CDN origin switching\
   \ so content stays available during outages.\n\n## When to use\n\n- A single backend host fails and\
@@ -25,9 +36,12 @@ instructions: "# Fallback\n\nInfrastructure failover strategies: nginx upstream 
   - Set `proxy_next_upstream` to the exact conditions that justify failover.\n- Keep DNS TTL low (60-300s)\
   \ for fast failover, but not so low it thrashes.\n- Monitor 502/503 rates and upstream health checks,\
   \ not just DNS.\n\n## Capabilities\n\n### infra-failover\nConfigure nginx upstream failover, test DNS\
-  \ fallback, and verify origin fallback behavior.\n\n**Commands:**\n- `nginx -t -c /etc/nginx/nginx.conf`\n\
-  - `nginx -s reload`\n- `curl -sI https://httpbin.org | grep -iE 'HTTP|x-cache'`\n- `dig +short httpbin.org\
+  \ fallback, and verify origin fallback behavior.\n\n**Parameters:**\n- `primary-host` (string): Primary\
+  \ backend hostname\n- `fallback-host` (string): Backup backend for failover\n- `health-path` (string):\
+  \ Path used by nginx health checks\n\n**Commands:**\n- `nginx -t -c /etc/nginx/nginx.conf`\n- `nginx\
+  \ -s reload`\n- `curl -sI https://httpbin.org | grep -iE 'HTTP|x-cache'`\n- `dig +short httpbin.org\
   \ A`\n- `dig +short httpbin.org @8.8.8.8 | head -3`\n- `curl -s -o /dev/null -w '%{http_code} %{time_total}s\\\
   n' https://httpbin.org/get`\n\n**Examples:**\n- nginx -t -c /etc/nginx/nginx.conf && nginx -s reload\n\
-  - dig +short httpbin.org A\n- curl -sI https://httpbin.org | grep -iE 'HTTP|x-cache'"
+  - dig +short httpbin.org A\n- curl -sI https://httpbin.org | grep -iE 'HTTP|x-cache'\n\n## References\n\
+  - [nginx upstream module](https://nginx.org/en/docs/http/ngx_http_upstream_module.html)"
 prompt: Act as Fallback and handle the task per the instructions.

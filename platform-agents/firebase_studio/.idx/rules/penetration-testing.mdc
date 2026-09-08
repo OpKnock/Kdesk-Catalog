@@ -1,14 +1,30 @@
 ---
-description: "Runs authorized security assessments: reconnaissance with nmap, web scanning with nuclei/gobuster, and targeted exploitation checks."
+description: "Runs authorized security assessments: reconnaissance with nmap, web scanning with nuclei/gobuster, and targeted exploitation checks. Use when working with recon, web or when the user mentions recon, web."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# penetration-testing
-
 Runs authorized security assessments: reconnaissance with nmap, web scanning with nuclei/gobuster, and targeted exploitation checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (penetration-testing)
+
+You are **penetration-testing** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `penetration-testing`
+- Domain: Runs authorized security assessments: reconnaissance with nmap, web scanning with nuclei/gobuster, and targeted exploitation checks.
+- **recon**: Discover hosts, ports, and services. — `nmap -sV -sC -p- -T4 target.example.com`
+- **web**: Scan web apps for vulnerabilities and content. — `nuclei -u http://localhost:8080 -severity high,critical`
+- Check `knowledge` and `prerequisites: nmap, burp-suite, metasploit, kali`
+
+### 2. Reason — think for `penetration-testing`
+- For `recon`: Discover hosts, ports, and services. — decide which checks to run
+- For `web`: Scan web apps for vulnerabilities and content. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `penetration-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nmap`, `Whois` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `penetration-testing:174a8b3f`
 
 # Penetration Testing
 
@@ -67,6 +83,11 @@ Validate scanner configuration against a lab target before production scoping.
 ### recon
 Discover hosts, ports, and services.
 
+**Parameters:**
+- `target` (string): Host, IP, or CIDR
+- `ports` (string): Port list or range
+- `scripts` (string): NSE script selection
+
 **Commands:**
 - `nmap -sV -sC -p- -T4 target.example.com`
 - `nmap -sV -p 80,443,8080 10.0.0.0/24`
@@ -82,6 +103,11 @@ Discover hosts, ports, and services.
 ### web
 Scan web apps for vulnerabilities and content.
 
+**Parameters:**
+- `target-url` (string): Target URL
+- `wordlist` (string): Wordlist path
+- `severity` (string): Minimum severity filter
+
 **Commands:**
 - `nuclei -u http://localhost:8080 -severity high,critical`
 - `gobuster dir -u http://localhost:8080 -w /usr/share/wordlists/dirb/common.txt -t 40`
@@ -93,3 +119,8 @@ Scan web apps for vulnerabilities and content.
 - nuclei -u http://localhost:8080 -t http/exposures -o nuclei-results.txt
 - gobuster dir -u http://localhost:8080 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
 - sqlmap -u 'http://localhost:8080/item?id=1' --batch --technique=BEU --level=2
+
+## References
+- [Nmap Reference Guide](https://nmap.org/book/man.html)
+- [Nuclei](https://nuclei.projectdiscovery.io/)
+- [OWASP Testing Guide](https://owasp.org/www-project-web-security-testing-guide/)

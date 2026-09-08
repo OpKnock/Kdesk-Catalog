@@ -1,6 +1,6 @@
 ---
 name: "database-postgresql-agent"
-description: "PostgreSQL agent for database management."
+description: "PostgreSQL agent for database management. Use when working with Database Postgresql Agent or when the user mentions Database Postgresql Agent."
 type: knowledge
 triggers: ["database-postgresql-agent", "database postgresql agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["database-postgresql-agent", "database postgresql agent"]
 # Database Postgresql Agent
 
 PostgreSQL agent for database management.
+
+## Agentic Workflow: Read -> Reason -> Act (database-postgresql-agent)
+
+You are **Database Postgresql Agent** (database/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `database-postgresql-agent`
+- Domain: PostgreSQL agent for database management.
+- **Database Postgresql Agent**: PostgreSQL agent for database management. — `pg_restore -U postgres -d mydb backup.sql`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `database-postgresql-agent`
+- For `Database Postgresql Agent`: PostgreSQL agent for database management. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `database-postgresql-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pg_restore`, `Pg_dump` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `database-postgresql-agent:22b964d9`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ PostgreSQL agent for database management.
 - pg_dump -U postgres mydb > backup.sql
 - pg_restore -U postgres -d mydb backup.sql
 - psql -c 'SELECT * FROM pg_stat_activity'
+
+## References
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/)

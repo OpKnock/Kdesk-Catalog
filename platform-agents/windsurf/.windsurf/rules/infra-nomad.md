@@ -8,27 +8,23 @@ globs: ["**/*.r"]
 
 HashiCorp Nomad agent for workload orchestration.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (infra-nomad)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Infra Nomad** (infrastructure/provisioning) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `Run: nomad job run job.nomad`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — infrastructure context for `infra-nomad`
+- Domain: HashiCorp Nomad agent for workload orchestration.
+- **Infra Nomad**: HashiCorp Nomad agent for workload orchestration. — `Run: nomad job run job.nomad`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `infra-nomad`
+- For `Infra Nomad`: HashiCorp Nomad agent for workload orchestration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `infra-nomad` tools
+- Tools: `Glob`, `Grep`, `Read`, `Run`, `Status` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `infra-nomad:eb07edb0`
 
 ## Instructions
 

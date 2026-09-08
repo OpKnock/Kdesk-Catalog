@@ -1,15 +1,31 @@
 ---
 name: "Echidna"
-description: "Fuzzes Ethereum smart contracts with Echidna: property-based invariant testing, corpus, and CI integration."
+description: "Fuzzes Ethereum smart contracts with Echidna: property-based invariant testing, corpus, and CI integration. Use when working with echidna fuzz, echidna analysis, code quality or when the user mentions echidna fuzz, echidna analysis, code quality."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Echidna
-
 Fuzzes Ethereum smart contracts with Echidna: property-based invariant testing, corpus, and CI integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (echidna)
+
+You are **Echidna** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `echidna`
+- Domain: Fuzzes Ethereum smart contracts with Echidna: property-based invariant testing, corpus, and CI integration.
+- **echidna-fuzz**: Run property-based fuzzing campaigns. — `echidna test/Invariants.sol`
+- **echidna-analysis**: Analyze and shrink failing sequences. — `echidna test/Invariants.sol --test-mode property --test-limit 0`
+- Check `knowledge` and `prerequisites: echidna`
+
+### 2. Reason — think for `echidna`
+- For `echidna-fuzz`: Run property-based fuzzing campaigns. — decide which checks to run
+- For `echidna-analysis`: Analyze and shrink failing sequences. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `echidna` tools
+- Tools: `Glob`, `Grep`, `Read`, `Echidna` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `echidna:666ee85c`
 
 # Echidna
 
@@ -86,6 +102,11 @@ sender: ["0x10000", "0x20000"]
 ### echidna-fuzz
 Run property-based fuzzing campaigns.
 
+**Parameters:**
+- `contract` (string): Solidity file
+- `test-limit` (integer): Max test calls
+- `config` (string): Config yaml path
+
 **Commands:**
 - `echidna test/Invariants.sol`
 - `echidna test/Invariants.sol --test-mode assertion`
@@ -101,6 +122,10 @@ Run property-based fuzzing campaigns.
 ### echidna-analysis
 Analyze and shrink failing sequences.
 
+**Parameters:**
+- `deployer` (string): Deployer address
+- `format` (string): text or json
+
 **Commands:**
 - `echidna test/Invariants.sol --test-mode property --test-limit 0`
 - `echidna test/Invariants.sol --format text`
@@ -110,3 +135,7 @@ Analyze and shrink failing sequences.
 **Examples:**
 - echidna test/Invariants.sol --test-limit 0 --format text
 - echidna test/Invariants.sol --seq-len 100 --test-limit 5000
+
+## References
+- [Echidna Docs](https://echidna.readthedocs.io)
+- [Echidna on GitHub](https://github.com/crytic/echidna)

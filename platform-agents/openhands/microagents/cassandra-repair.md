@@ -1,15 +1,33 @@
 ---
 name: "cassandra-repair"
-description: "Runs and monitors Cassandra anti-entropy repairs: full/incremental repairs, repair state, and post-repair verification."
+description: "Runs and monitors Cassandra anti-entropy repairs: full/incremental repairs, repair state, and post-repair verification. Use when working with run repair, repair status, verification, api or when the user mentions run repair, repair status, verification, api."
 type: knowledge
 triggers: ["cassandra-repair", "run-repair", "repair-status", "verification"]
 ---
 
-# Cassandra Repair
-
 Runs and monitors Cassandra anti-entropy repairs: full/incremental repairs, repair state, and post-repair verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cassandra-repair)
+
+You are **Cassandra Repair** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `cassandra-repair`
+- Domain: Runs and monitors Cassandra anti-entropy repairs: full/incremental repairs, repair state, and post-repair verification.
+- **run-repair**: Execute and schedule repairs. — `nodetool repair -pr`
+- **repair-status**: Monitor repair state and consistency. — `nodetool repair -pr -st $(date -d '1 hour ago' +%s000) mykeyspace`
+- **verification**: Verify consistency after repair. — `cqlsh -e "CONSISTENCY QUORUM"`
+- Check `knowledge` and `prerequisites: cqlsh, nodetool`
+
+### 2. Reason — think for `cassandra-repair`
+- For `run-repair`: Execute and schedule repairs. — decide which checks to run
+- For `repair-status`: Monitor repair state and consistency. — decide which checks to run
+- For `verification`: Verify consistency after repair. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cassandra-repair` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nodetool`, `Cqlsh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cassandra-repair:cbabe052`
 
 # Cassandra Repair
 
@@ -64,6 +82,11 @@ nodetool status -r
 ### run-repair
 Execute and schedule repairs.
 
+**Parameters:**
+- `keyspace` (string): Keyspace to repair
+- `table` (string): Table to repair
+- `dc` (string): Datacenter filter
+
 **Commands:**
 - `nodetool repair -pr`
 - `nodetool repair -full mykeyspace`
@@ -78,6 +101,10 @@ Execute and schedule repairs.
 
 ### repair-status
 Monitor repair state and consistency.
+
+**Parameters:**
+- `start_time` (string): Repair range start (ms epoch)
+- `end_time` (string): Repair range end (ms epoch)
 
 **Commands:**
 - `nodetool repair -pr -st $(date -d '1 hour ago' +%s000) mykeyspace`
@@ -94,6 +121,10 @@ Monitor repair state and consistency.
 ### verification
 Verify consistency after repair.
 
+**Parameters:**
+- `consistency` (string): Consistency level for verification reads
+- `partition_key` (string): PK to check endpoints for
+
 **Commands:**
 - `cqlsh -e "CONSISTENCY QUORUM"`
 - `nodetool status -r`
@@ -105,3 +136,8 @@ Verify consistency after repair.
 - nodetool status -r
 - nodetool getendpoints mykeyspace users 42
 - cqlsh -e "CONSISTENCY QUORUM; SELECT COUNT(*) FROM mykeyspace.users"
+
+## References
+- [Cassandra Repair](https://cassandra.apache.org/doc/latest/cassandra/operating/repair.html)
+- [nodetool Reference](https://cassandra.apache.org/doc/latest/cassandra/operating/nodetool/)
+- [Repair Strategies](https://thelastpickle.com/blog/2017/09/18/repairs-in-cassandra.html)

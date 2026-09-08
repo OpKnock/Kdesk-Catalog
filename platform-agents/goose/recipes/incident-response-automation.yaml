@@ -2,9 +2,22 @@ title: incident-response-automation
 description: 'Automates incident response: webhook triggers, runbook dispatch via GitHub Actions, and
   remediation playbooks executed from alerts.'
 version: 2.0.0
-instructions: "# incident-response-automation\n\nAutomates incident response: webhook triggers, runbook\
-  \ dispatch via GitHub Actions, and remediation playbooks executed from alerts.\n\n## Instructions\n\n\
-  # Incident Response Automation\n\nAutomate the mechanical parts of incident response so humans handle\
+instructions: "Automates incident response: webhook triggers, runbook dispatch via GitHub Actions, and\
+  \ remediation playbooks executed from alerts.\n\n## Agentic Workflow: Read -> Reason -> Act (incident-response-automation)\n\
+  \nYou are **incident-response-automation** (sre) — a sub-agent that **Reads, Reasons, and Acts** via\
+  \ `allowed-tools`.\n\n### 1. Read — sre context for `incident-response-automation`\n- Domain: Automates\
+  \ incident response: webhook triggers, runbook dispatch via GitHub Actions, and remediation playbooks\
+  \ executed from alerts.\n- **runbook-dispatch**: Trigger and monitor automated runbooks in CI pipelines.\
+  \ — `gh workflow run runbook.yml -f severity=sev1 -f service=checkout`\n- **webhooks**: Wire alerts\
+  \ to chat and ticketing systems via webhooks. — `curl -X POST -H 'Content-Type: application/json' -d\
+  \ '{\"text\":\"SEV-1: checkout 50`\n- Check `knowledge` and `prerequisites: pagerduty-cli, opsgenie-cli,\
+  \ slack-cli, terraform`\n\n### 2. Reason — think for `incident-response-automation`\n- For `runbook-dispatch`:\
+  \ Trigger and monitor automated runbooks in CI pipelines. — decide which checks to run\n- For `webhooks`:\
+  \ Wire alerts to chat and ticketing systems via webhooks. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `incident-response-automation`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Gh`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n-\
+  \ Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `incident-response-automation:bfa9fa1f`\n\
+  \n# Incident Response Automation\n\nAutomate the mechanical parts of incident response so humans handle\
   \ judgment.\n\n## When to Use\n\n- Alert routing and runbook execution on page\n- Automated rollback/scaling\
   \ of known failure modes\n- Post-incident status updates across channels\n\n## Webhook fan-out\n\nAlert\
   \ -> webhook -> channels + ticketing + runbook:\n\n```bash\ncurl -X POST -H 'Content-Type: application/json'\
@@ -22,20 +35,24 @@ instructions: "# incident-response-automation\n\nAutomates incident response: we
   \ damage.\n- Keep a dead-man switch: abort automation if it exceeds a time budget.\n\n## Testing\n\n\
   Dry-run the full webhook chain in staging: simulate an alert and verify channel posts, ticket creation,\
   \ and runbook dispatch order.\n\n## Capabilities\n\n### runbook-dispatch\nTrigger and monitor automated\
-  \ runbooks in CI pipelines.\n\n**Commands:**\n- `gh workflow run runbook.yml -f severity=sev1 -f service=checkout`\n\
-  - `gh run watch $(gh run list --workflow=runbook.yml --limit 1 --json databaseId -q '.[0].databaseId')`\n\
-  - `gh workflow run mitigate.yml -f incident_id=P12345 -f action=rollback`\n- `gh run list --workflow=runbook.yml\
+  \ runbooks in CI pipelines.\n\n**Parameters:**\n- `severity` (string): sev1-sev4 classification\n- `service`\
+  \ (string): Affected service name\n- `action` (string): Remediation action: rollback, scale, failover\n\
+  \n**Commands:**\n- `gh workflow run runbook.yml -f severity=sev1 -f service=checkout`\n- `gh run watch\
+  \ $(gh run list --workflow=runbook.yml --limit 1 --json databaseId -q '.[0].databaseId')`\n- `gh workflow\
+  \ run mitigate.yml -f incident_id=P12345 -f action=rollback`\n- `gh run list --workflow=runbook.yml\
   \ --status=in_progress`\n- `gh api repos/{owner}/{repo}/actions/runs/{run_id} | jq '.status'`\n\n**Examples:**\n\
   - gh workflow run runbook.yml -f severity=sev1 -f service=checkout --ref main\n- gh run watch --exit-status\n\
   - gh workflow run mitigate.yml -f incident_id=P12345\n\n### webhooks\nWire alerts to chat and ticketing\
-  \ systems via webhooks.\n\n**Commands:**\n- `curl -X POST -H 'Content-Type: application/json' -d '{\"\
-  text\":\"SEV-1: checkout 500s\"}' $SLACK_WEBHOOK_URL`\n- `curl -X POST -H 'Content-Type: application/json'\
-  \ -d '{\"summary\":\"checkout down\",\"priority\":\"high\"}' $PAGERDUTY_V2_URL`\n- `curl -X POST -H\
-  \ 'Content-Type: application/json' -H 'Authorization: Bearer $LINEAR_TOKEN' -d '{\"teamId\":\"...\"\
-  ,\"title\":\"SEV-1 checkout\"}' https://api.linear.app/graphql`\n- `curl -s -X POST $WEBHOOK_RECEIVER\
-  \ -d '{\"event\":\"incident.created\",\"id\":\"P12345\"}'`\n- `curl -i -X POST -H 'Content-Type: application/json'\
-  \ -d '{\"incident\":\"P12345\",\"status\":\"mitigated\"}' $RUNBOOK_HOOK`\n\n**Examples:**\n- curl -X\
-  \ POST -H 'Content-Type: application/json' -d '{\"text\":\"Rollback complete for P12345\"}' $SLACK_WEBHOOK_URL\n\
-  - curl -X POST -d '{}' $PAGERDUTY_V2_URL\n- curl -s -X POST $RUNBOOK_HOOK -d '{\"severity\":\"sev2\"\
-  }'"
+  \ systems via webhooks.\n\n**Parameters:**\n- `webhook-url` (string): Slack/PD/ticketing webhook endpoint\n\
+  - `payload` (string): JSON alert payload\n- `incident-id` (string): Incident identifier for correlation\n\
+  \n**Commands:**\n- `curl -X POST -H 'Content-Type: application/json' -d '{\"text\":\"SEV-1: checkout\
+  \ 500s\"}' $SLACK_WEBHOOK_URL`\n- `curl -X POST -H 'Content-Type: application/json' -d '{\"summary\"\
+  :\"checkout down\",\"priority\":\"high\"}' $PAGERDUTY_V2_URL`\n- `curl -X POST -H 'Content-Type: application/json'\
+  \ -H 'Authorization: Bearer $LINEAR_TOKEN' -d '{\"teamId\":\"...\",\"title\":\"SEV-1 checkout\"}' https://api.linear.app/graphql`\n\
+  - `curl -s -X POST $WEBHOOK_RECEIVER -d '{\"event\":\"incident.created\",\"id\":\"P12345\"}'`\n- `curl\
+  \ -i -X POST -H 'Content-Type: application/json' -d '{\"incident\":\"P12345\",\"status\":\"mitigated\"\
+  }' $RUNBOOK_HOOK`\n\n**Examples:**\n- curl -X POST -H 'Content-Type: application/json' -d '{\"text\"\
+  :\"Rollback complete for P12345\"}' $SLACK_WEBHOOK_URL\n- curl -X POST -d '{}' $PAGERDUTY_V2_URL\n-\
+  \ curl -s -X POST $RUNBOOK_HOOK -d '{\"severity\":\"sev2\"}'\n\n## References\n- [GitHub Actions](https://docs.github.com/en/actions)\n\
+  - [Slack incoming webhooks](https://api.slack.com/messaging/webhooks)\n- [PagerDuty Events API v2](https://developer.pagerduty.com/docs/events-api-v2/)"
 prompt: Act as incident-response-automation and handle the task per the instructions.

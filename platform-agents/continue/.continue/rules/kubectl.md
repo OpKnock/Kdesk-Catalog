@@ -1,15 +1,33 @@
 ---
 name: "Kubectl"
-description: "Core kubectl operations: resource CRUD, labels/annotations, explain, apply vs create, JSON output, and kubeconfig management."
+description: "Core kubectl operations: resource CRUD, labels/annotations, explain, apply vs create, JSON output, and kubeconfig management. Use when working with resource operations, label and metadata, kubeconfig and context, devops or when the user mentions resource operations, label and metadata, kubeconfig and context, devops."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Kubectl
-
 Core kubectl operations: resource CRUD, labels/annotations, explain, apply vs create, JSON output, and kubeconfig management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kubectl)
+
+You are **Kubectl** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `kubectl`
+- Domain: Core kubectl operations: resource CRUD, labels/annotations, explain, apply vs create, JSON output, and kubeconfig management.
+- **resource-operations**: Create, get, describe, edit, and delete Kubernetes resources. — `kubectl get pods -A -o wide`
+- **label-and-metadata**: Manage labels, annotations, selectors, and explain resource schema. — `kubectl label pod web env=prod`
+- **kubeconfig-and-context**: Switch clusters, inspect contexts, and verify permissions. — `kubectl config get-contexts`
+- Check `knowledge` and `prerequisites: kubectl`
+
+### 2. Reason — think for `kubectl`
+- For `resource-operations`: Create, get, describe, edit, and delete Kubernetes resources. — decide which checks to run
+- For `label-and-metadata`: Manage labels, annotations, selectors, and explain resource schema. — decide which checks to run
+- For `kubeconfig-and-context`: Switch clusters, inspect contexts, and verify permissions. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kubectl` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kubectl:d94dd177`
 
 # kubectl Core Operations
 
@@ -71,6 +89,11 @@ kubectl auth can-i create deployments -n app
 ### resource-operations
 Create, get, describe, edit, and delete Kubernetes resources.
 
+**Parameters:**
+- `resource` (string): Resource type, e.g. pods, deployments
+- `namespace` (string): Namespace scope
+- `file` (string): Manifest file
+
 **Commands:**
 - `kubectl get pods -A -o wide`
 - `kubectl apply -f deployment.yaml`
@@ -87,6 +110,11 @@ Create, get, describe, edit, and delete Kubernetes resources.
 ### label-and-metadata
 Manage labels, annotations, selectors, and explain resource schema.
 
+**Parameters:**
+- `key` (string): Label key
+- `value` (string): Label value
+- `selector` (string): Label selector
+
 **Commands:**
 - `kubectl label pod web env=prod`
 - `kubectl annotate deploy/web kubernetes.io/change-cause="bump image"`
@@ -102,6 +130,10 @@ Manage labels, annotations, selectors, and explain resource schema.
 ### kubeconfig-and-context
 Switch clusters, inspect contexts, and verify permissions.
 
+**Parameters:**
+- `context` (string): Context name
+- `namespace` (string): Namespace for auth checks
+
 **Commands:**
 - `kubectl config get-contexts`
 - `kubectl config use-context prod-east`
@@ -113,3 +145,8 @@ Switch clusters, inspect contexts, and verify permissions.
 - kubectl config use-context prod-east
 - kubectl auth can-i create deployments
 - kubectl config get-contexts
+
+## References
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+- [JSONPath Support](https://kubernetes.io/docs/reference/kubectl/jsonpath/)

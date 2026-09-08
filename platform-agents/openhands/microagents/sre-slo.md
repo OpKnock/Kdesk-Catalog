@@ -1,6 +1,6 @@
 ---
 name: "sre-slo"
-description: "SLO management agent for defining and tracking service level objectives."
+description: "SLO management agent for defining and tracking service level objectives. Use when working with Sre Slo or when the user mentions Sre Slo."
 type: knowledge
 triggers: ["sre-slo", "sre slo"]
 ---
@@ -8,6 +8,24 @@ triggers: ["sre-slo", "sre slo"]
 # Sre Slo
 
 SLO management agent for defining and tracking service level objectives.
+
+## Agentic Workflow: Read -> Reason -> Act (sre-slo)
+
+You are **Sre Slo** (sre/operations) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — sre context for `sre-slo`
+- Domain: SLO management agent for defining and tracking service level objectives.
+- **Sre Slo**: SLO management agent for defining and tracking service level objectives. — `PromQL: rate(http_requests_total{status=~"5.."}[5m])`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `sre-slo`
+- For `Sre Slo`: SLO management agent for defining and tracking service level objectives. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `sre-slo` tools
+- Tools: `Glob`, `Grep`, `Read`, `PromQL`, `Error` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sre-slo:e36fc4a9`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ SLO management agent for defining and tracking service level objectives.
 - Error budget: 1 - (errors / total)
 - Burn rate: error_rate / (1 - slo_target)
 - Sloth: sloth generate -i service.yaml
+
+## References
+- [Google SRE Service Level Objectives](https://sre.google/sre-book/service-level-objectives/)

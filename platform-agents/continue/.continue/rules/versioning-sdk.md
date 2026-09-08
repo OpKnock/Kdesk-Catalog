@@ -1,6 +1,6 @@
 ---
 name: "Versioning Sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Versioning Deploy Sdk Agent or when the user mentions Ml Versioning Deploy Sdk Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Versioning Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (versioning-sdk)
+
+You are **Versioning Sdk** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `versioning-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Versioning Deploy Sdk Agent**: Versioning SDK deployment agent for ML versioning SDK deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `versioning-sdk`
+- For `Ml Versioning Deploy Sdk Agent`: Versioning SDK deployment agent for ML versioning SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `versioning-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `versioning-sdk:db855cf0`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Versioning SDK deployment agent for ML versioning SDK deployment.
 **Examples:**
 - Server: python -m versioning.server --port 8080
 - Docker: docker run -p 8080:8080 versioning-server
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

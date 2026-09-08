@@ -2,13 +2,26 @@ title: Kafka
 description: 'Core Kafka operations: run a local cluster, manage topics, produce and consume messages,
   and inspect consumer groups from the command line.'
 version: 2.0.0
-instructions: "# Kafka\n\nCore Kafka operations: run a local cluster, manage topics, produce and consume\
-  \ messages, and inspect consumer groups from the command line.\n\n## Instructions\n\n# Kafka (Core)\n\
-  \nCore Kafka operations for developers and operators.\n\n## What this skill does\n\n- Boots a local\
-  \ KRaft-based Kafka cluster.\n- Creates topics and streams messages with the console tools.\n- Inspects\
-  \ consumer groups and broker state.\n\n## When to use\n\n- Local development and demos.\n- First-time\
-  \ cluster bring-up and smoke tests.\n- Teaching the messaging model (topic, partition, offset).\n\n\
-  ## Real commands\n\n```bash\n# Format KRaft storage (one-time)\nkafka-storage.sh format -t $(kafka-storage.sh\
+instructions: "Core Kafka operations: run a local cluster, manage topics, produce and consume messages,\
+  \ and inspect consumer groups from the command line.\n\n## Agentic Workflow: Read -> Reason -> Act (kafka)\n\
+  \nYou are **Kafka** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `kafka`\n- Domain: Core Kafka operations: run a local cluster, manage\
+  \ topics, produce and consume messages, and inspect consumer groups from the command line.\n- **core-cluster**:\
+  \ Start and verify a Kafka broker (KRaft mode). — `kafka-server-start.sh config/kraft/server.properties`\n\
+  - **core-messaging**: Create topics, produce and consume messages, and inspect groups. — `kafka-topics.sh\
+  \ --bootstrap-server localhost:9092 --create --topic events --part`\n- Check `knowledge` and `prerequisites:\
+  \ kafka-broker-api-versions.sh, kafka-console-consumer.sh, kafka-console-producer.sh, kafka-consumer-groups.sh`\n\
+  \n### 2. Reason — think for `kafka`\n- For `core-cluster`: Start and verify a Kafka broker (KRaft mode).\
+  \ — decide which checks to run\n- For `core-messaging`: Create topics, produce and consume messages,\
+  \ and inspect groups. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `kafka` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Kafka-server-start.sh`, `Kafka-storage.sh` (see frontmatter `tools`/`allowed-tools`)\n- Use\
+  \ `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `kafka:e3793304`\n\n\
+  # Kafka (Core)\n\nCore Kafka operations for developers and operators.\n\n## What this skill does\n\n\
+  - Boots a local KRaft-based Kafka cluster.\n- Creates topics and streams messages with the console tools.\n\
+  - Inspects consumer groups and broker state.\n\n## When to use\n\n- Local development and demos.\n-\
+  \ First-time cluster bring-up and smoke tests.\n- Teaching the messaging model (topic, partition, offset).\n\
+  \n## Real commands\n\n```bash\n# Format KRaft storage (one-time)\nkafka-storage.sh format -t $(kafka-storage.sh\
   \ random-uuid) \\\n  -c config/kraft/server.properties\n\n# Start broker\nkafka-server-start.sh config/kraft/server.properties\n\
   \n# Verify broker is up\nkafka-broker-api-versions.sh --bootstrap-server localhost:9092\n\n# Create\
   \ a topic\nkafka-topics.sh --bootstrap-server localhost:9092 \\\n  --create --topic events --partitions\
@@ -23,12 +36,14 @@ instructions: "# Kafka\n\nCore Kafka operations: run a local cluster, manage top
   \ --max-messages 1\n```\n\n## Best practices\n\n- Use partitions >= consumers for parallel processing.\n\
   - Name topics <domain>.<event>; document keys and value schemas.\n- Stop brokers with kafka-server-stop.sh\
   \ to flush state cleanly.\n\n## Capabilities\n\n### core-cluster\nStart and verify a Kafka broker (KRaft\
-  \ mode).\n\n**Commands:**\n- `kafka-server-start.sh config/kraft/server.properties`\n- `kafka-storage.sh\
-  \ format -t $(kafka-storage.sh random-uuid) -c config/kraft/server.properties`\n- `kafka-server-start.sh\
-  \ config/server.properties`\n- `kafka-broker-api-versions.sh --bootstrap-server localhost:9092`\n\n\
-  **Examples:**\n- kafka-storage.sh format -t $(kafka-storage.sh random-uuid) -c config/kraft/server.properties\n\
-  - kafka-server-start.sh config/kraft/server.properties\n- kafka-broker-api-versions.sh --bootstrap-server\
-  \ localhost:9092\n\n### core-messaging\nCreate topics, produce and consume messages, and inspect groups.\n\
+  \ mode).\n\n**Parameters:**\n- `config` (string): Server properties file.\n\n**Commands:**\n- `kafka-server-start.sh\
+  \ config/kraft/server.properties`\n- `kafka-storage.sh format -t $(kafka-storage.sh random-uuid) -c\
+  \ config/kraft/server.properties`\n- `kafka-server-start.sh config/server.properties`\n- `kafka-broker-api-versions.sh\
+  \ --bootstrap-server localhost:9092`\n\n**Examples:**\n- kafka-storage.sh format -t $(kafka-storage.sh\
+  \ random-uuid) -c config/kraft/server.properties\n- kafka-server-start.sh config/kraft/server.properties\n\
+  - kafka-broker-api-versions.sh --bootstrap-server localhost:9092\n\n### core-messaging\nCreate topics,\
+  \ produce and consume messages, and inspect groups.\n\n**Parameters:**\n- `topic` (string): Topic name.\n\
+  - `partitions` (integer): Partition count.\n- `from_beginning` (boolean): Read all historical messages.\n\
   \n**Commands:**\n- `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions\
   \ 3 --replication-factor 1`\n- `kafka-console-producer.sh --bootstrap-server localhost:9092 --topic\
   \ events`\n- `kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning`\n\
@@ -36,5 +51,6 @@ instructions: "# Kafka\n\nCore Kafka operations: run a local cluster, manage top
   \ localhost:9092 --list`\n\n**Examples:**\n- kafka-topics.sh --bootstrap-server localhost:9092 --create\
   \ --topic events --partitions 3 --replication-factor 1\n- kafka-console-producer.sh --bootstrap-server\
   \ localhost:9092 --topic events\n- kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic\
-  \ events --from-beginning"
+  \ events --from-beginning\n\n## References\n- [Kafka Documentation](https://kafka.apache.org/documentation/)\n\
+  - [Kafka Quickstart](https://kafka.apache.org/quickstart)"
 prompt: Act as Kafka and handle the task per the instructions.

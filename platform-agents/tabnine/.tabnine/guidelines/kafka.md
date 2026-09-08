@@ -1,8 +1,24 @@
-# Kafka
-
 Core Kafka operations: run a local cluster, manage topics, produce and consume messages, and inspect consumer groups from the command line.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kafka)
+
+You are **Kafka** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `kafka`
+- Domain: Core Kafka operations: run a local cluster, manage topics, produce and consume messages, and inspect consumer groups from the command line.
+- **core-cluster**: Start and verify a Kafka broker (KRaft mode). — `kafka-server-start.sh config/kraft/server.properties`
+- **core-messaging**: Create topics, produce and consume messages, and inspect groups. — `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --part`
+- Check `knowledge` and `prerequisites: kafka-broker-api-versions.sh, kafka-console-consumer.sh, kafka-console-producer.sh, kafka-consumer-groups.sh`
+
+### 2. Reason — think for `kafka`
+- For `core-cluster`: Start and verify a Kafka broker (KRaft mode). — decide which checks to run
+- For `core-messaging`: Create topics, produce and consume messages, and inspect groups. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kafka` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-server-start.sh`, `Kafka-storage.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka:e3793304`
 
 # Kafka (Core)
 
@@ -75,6 +91,9 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --fro
 ### core-cluster
 Start and verify a Kafka broker (KRaft mode).
 
+**Parameters:**
+- `config` (string): Server properties file.
+
 **Commands:**
 - `kafka-server-start.sh config/kraft/server.properties`
 - `kafka-storage.sh format -t $(kafka-storage.sh random-uuid) -c config/kraft/server.properties`
@@ -89,6 +108,11 @@ Start and verify a Kafka broker (KRaft mode).
 ### core-messaging
 Create topics, produce and consume messages, and inspect groups.
 
+**Parameters:**
+- `topic` (string): Topic name.
+- `partitions` (integer): Partition count.
+- `from_beginning` (boolean): Read all historical messages.
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 3 --replication-factor 1`
 - `kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events`
@@ -100,3 +124,7 @@ Create topics, produce and consume messages, and inspect groups.
 - kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 3 --replication-factor 1
 - kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events
 - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning
+
+## References
+- [Kafka Documentation](https://kafka.apache.org/documentation/)
+- [Kafka Quickstart](https://kafka.apache.org/quickstart)

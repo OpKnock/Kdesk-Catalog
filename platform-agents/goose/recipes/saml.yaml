@@ -2,14 +2,42 @@ title: Saml
 description: Expert SAML 2.0 reference covering signing and verifying assertions with xmlsec1, base64-decoding
   SAMLResponses, exchanging metadata, and wiring SP-initiated login.
 version: 2.0.0
-instructions: '# Saml
+instructions: 'Expert SAML 2.0 reference covering signing and verifying assertions with xmlsec1, base64-decoding
+  SAMLResponses, exchanging metadata, and wiring SP-initiated login.
 
 
-  Expert SAML 2.0 reference covering signing and verifying assertions with xmlsec1, base64-decoding SAMLResponses,
-  exchanging metadata, and wiring SP-initiated login.
+  ## Agentic Workflow: Read -> Reason -> Act (saml)
 
 
-  ## Instructions
+  You are **Saml** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — api context for `saml`
+
+  - Domain: Expert SAML 2.0 reference covering signing and verifying assertions with xmlsec1, base64-decoding
+  SAMLResponses, exchanging metadata, and wiring SP-initiated login.
+
+  - **saml-assertion-tooling**: Sign, verify, and decode SAML assertions with xmlsec1 and openssl — `xmlsec1
+  --verify --pubkey-cert-pem sp-cert.pem saml-response.xml`
+
+  - Check `knowledge` and `prerequisites: openssl, python, xmlsec1`
+
+
+  ### 2. Reason — think for `saml`
+
+  - For `saml-assertion-tooling`: Sign, verify, and decode SAML assertions with xmlsec1 and openssl —
+  decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `saml` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Xmlsec1`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `saml:a3b50033`
 
 
   # SAML 2.0
@@ -110,6 +138,15 @@ instructions: '# Saml
   Sign, verify, and decode SAML assertions with xmlsec1 and openssl
 
 
+  **Parameters:**
+
+  - `cert_file` (string): PEM certificate used for verification
+
+  - `key_file` (string): Private key used for signing
+
+  - `acs_url` (string): Assertion Consumer Service endpoint
+
+
   **Commands:**
 
   - `xmlsec1 --verify --pubkey-cert-pem sp-cert.pem saml-response.xml`
@@ -129,5 +166,12 @@ instructions: '# Saml
 
   - xmlsec1 --verify --pubkey-cert-pem sp-cert.pem signed.xml
 
-  - curl -d "SAMLResponse=$(cat saml-response.b64)" https://app.your-app.test/acs'
+  - curl -d "SAMLResponse=$(cat saml-response.b64)" https://app.your-app.test/acs
+
+
+  ## References
+
+  - [xmlsec1 documentation](https://www.aleksey.com/xmlsec/api.html)
+
+  - [SAML V2.0 standard](https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf)'
 prompt: Act as Saml and handle the task per the instructions.

@@ -1,15 +1,31 @@
 ---
 name: "Rate Limiting"
-description: "Implements API rate limiting with Redis sliding windows, token buckets, and nginx/AWS strategies to protect services from abuse."
+description: "Implements API rate limiting with Redis sliding windows, token buckets, and nginx/AWS strategies to protect services from abuse. Use when working with redis rate limit, proxy limiting, backend or when the user mentions redis rate limit, proxy limiting, backend."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Rate Limiting
-
 Implements API rate limiting with Redis sliding windows, token buckets, and nginx/AWS strategies to protect services from abuse.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rate-limiting-backend)
+
+You are **Rate Limiting** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `rate-limiting-backend`
+- Domain: Implements API rate limiting with Redis sliding windows, token buckets, and nginx/AWS strategies to protect services from abuse.
+- **redis-rate-limit**: Enforce rate limits with Redis primitives. — `redis-cli incr ratelimit:user:42`
+- **proxy-limiting**: Configure limits at the reverse proxy layer. — `nginx -t`
+- Check `knowledge` and `prerequisites: nginx, redis-cli`
+
+### 2. Reason — think for `rate-limiting-backend`
+- For `redis-rate-limit`: Enforce rate limits with Redis primitives. — decide which checks to run
+- For `proxy-limiting`: Configure limits at the reverse proxy layer. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rate-limiting-backend` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`, `Nginx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rate-limiting-backend:1ba0906c`
 
 # Rate Limiting
 
@@ -73,6 +89,10 @@ wrk -t4 -c100 -d10s http://localhost:8000/api
 ### redis-rate-limit
 Enforce rate limits with Redis primitives.
 
+**Parameters:**
+- `key` (string): Rate limit key
+- `window` (integer): Window in seconds
+
 **Commands:**
 - `redis-cli incr ratelimit:user:42`
 - `redis-cli expire ratelimit:user:42 60`
@@ -87,6 +107,10 @@ Enforce rate limits with Redis primitives.
 ### proxy-limiting
 Configure limits at the reverse proxy layer.
 
+**Parameters:**
+- `rate` (string): Limit like 10r/s
+- `zone` (string): nginx limit_req zone name
+
 **Commands:**
 - `nginx -t`
 - `nginx -s reload`
@@ -96,3 +120,7 @@ Configure limits at the reverse proxy layer.
 **Examples:**
 - ab -n 5000 -c 100 http://localhost:8000/
 - wrk -t4 -c100 -d10s http://localhost:8000/api
+
+## References
+- [Redis Rate Limiting Patterns](https://redis.io/docs/latest/develop/use/rate-limiting/)
+- [Nginx Rate Limiting](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html)

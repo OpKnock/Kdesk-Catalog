@@ -1,15 +1,31 @@
 ---
 name: "kafka-messaging"
-description: "Operates Apache Kafka clusters: topic lifecycle, producer/consumer tools, consumer groups, and performance benchmarking."
+description: "Operates Apache Kafka clusters: topic lifecycle, producer/consumer tools, consumer groups, and performance benchmarking. Use when working with topics, console, messaging or when the user mentions topics, console, messaging."
 type: knowledge
 triggers: ["kafka-messaging", "topics", "console"]
 ---
 
-# Kafka
-
 Operates Apache Kafka clusters: topic lifecycle, producer/consumer tools, consumer groups, and performance benchmarking.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kafka-messaging)
+
+You are **Kafka** (messaging/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — messaging context for `kafka-messaging`
+- Domain: Operates Apache Kafka clusters: topic lifecycle, producer/consumer tools, consumer groups, and performance benchmarking.
+- **topics**: Create, describe, and alter Kafka topics. — `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --part`
+- **console**: Produce and consume messages from the CLI. — `kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events`
+- Check `knowledge` and `prerequisites: kafka-console-consumer.sh, kafka-console-producer.sh, kafka-consumer-groups.sh, kafka-topics.sh`
+
+### 2. Reason — think for `kafka-messaging`
+- For `topics`: Create, describe, and alter Kafka topics. — decide which checks to run
+- For `console`: Produce and consume messages from the CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kafka-messaging` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-topics.sh`, `Kafka-console-producer.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-messaging:8c679e03`
 
 # Kafka
 
@@ -75,6 +91,11 @@ Produce 10k keyed messages, consume with a group, and verify LAG reaches 0.
 ### topics
 Create, describe, and alter Kafka topics.
 
+**Parameters:**
+- `partitions` (number): Partition count
+- `replication-factor` (number): Replication factor
+- `config` (string): Topic config like retention.ms
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 12 --replication-factor 3`
 - `kafka-topics.sh --bootstrap-server localhost:9092 --list`
@@ -90,6 +111,11 @@ Create, describe, and alter Kafka topics.
 ### console
 Produce and consume messages from the CLI.
 
+**Parameters:**
+- `topic` (string): Topic to produce/consume
+- `group` (string): Consumer group id
+- `max-messages` (number): Consume N messages then exit
+
 **Commands:**
 - `kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events`
 - `kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning`
@@ -101,3 +127,8 @@ Produce and consume messages from the CLI.
 - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning --max-messages 5
 - echo 'key1:value1' | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events --property parse.key=true --property key.separator=:
 - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
+
+## References
+- [Kafka Quickstart](https://kafka.apache.org/quickstart)
+- [Kafka Operations](https://kafka.apache.org/documentation/#operations)
+- [Consumer Groups](https://kafka.apache.org/documentation/#intro_consumers)

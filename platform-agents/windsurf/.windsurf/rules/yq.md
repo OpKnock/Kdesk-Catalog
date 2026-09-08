@@ -6,27 +6,25 @@ globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 
 Processes YAML in the shell with yq (mikefarah): read/write values, patches, merges, JSON conversion, and multi-document handling.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (yq)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **yq** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `yq '.metadata.name' pod.yaml`, `yq -i '.spec.replicas = 5' deployment.yaml`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devtools context for `yq`
+- Domain: Processes YAML in the shell with yq (mikefarah): read/write values, patches, merges, JSON conversion, and multi-document handling.
+- **read-and-query**: Extract and filter values from YAML files. — `yq '.metadata.name' pod.yaml`
+- **write-and-transform**: Update YAML in place and transform documents. — `yq -i '.spec.replicas = 5' deployment.yaml`
+- Check `knowledge` and `prerequisites: yq`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `yq`
+- For `read-and-query`: Extract and filter values from YAML files. — decide which checks to run
+- For `write-and-transform`: Update YAML in place and transform documents. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `yq` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `yq:fc6b00ed`
 
 # yq YAML Processing
 

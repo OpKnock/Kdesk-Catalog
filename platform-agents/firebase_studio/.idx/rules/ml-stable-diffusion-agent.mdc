@@ -1,5 +1,5 @@
 ---
-description: "Stable Diffusion image generation agent. Manages image generation and model loading."
+description: "Stable Diffusion image generation agent. Manages image generation and model loading. Use when working with Ml Stable Diffusion Agent, inference or when the user mentions Ml Stable Diffusion Agent, inference."
 globs: ["**/*.go", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Ml Stable Diffusion Agent
 
 Stable Diffusion image generation agent. Manages image generation and model loading.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-stable-diffusion-agent)
+
+You are **Ml Stable Diffusion Agent** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-stable-diffusion-agent`
+- Domain: Stable Diffusion image generation agent. Manages image generation and model loading.
+- **Ml Stable Diffusion Agent**: Stable Diffusion image generation agent. Manages image generation and model loading. — `python status.py --model stable-diffusion --category inference`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-stable-diffusion-agent`
+- For `Ml Stable Diffusion Agent`: Stable Diffusion image generation agent. Manages image generation and model loading. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-stable-diffusion-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-stable-diffusion-agent:5245dab1`
 
 ## Instructions
 
@@ -16,6 +34,9 @@ You are the Stable Diffusion image generation expert. Call on this agent when a 
 
 ### Ml Stable Diffusion Agent
 Stable Diffusion image generation agent. Manages image generation and model loading.
+
+**Parameters:**
+- `model` (string): CLI flag --model observed in capability commands
 
 **Commands:**
 - `python status.py --model stable-diffusion --category inference`
@@ -28,3 +49,8 @@ Stable Diffusion image generation agent. Manages image generation and model load
 - python txt2img.py --prompt 'cat in space' --steps 50
 - python img2img.py --input input.png --prompt 'oil painting style' --output output.png
 - python serve.py --model stable-diffusion --port 8080
+
+## References
+- [Stable Diffusion Documentation](https://github.com/Stability-AI/stablediffusion)
+- [Python Documentation](https://docs.python.org/3/)
+- [TensorFlow Serving](https://www.tensorflow.org/serving)

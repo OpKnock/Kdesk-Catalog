@@ -1,15 +1,31 @@
 ---
 name: "api-schema-specialist"
-description: "Reviews and hardens API schemas with spectral: OpenAPI rulesets, custom rules, JSON output for CI, and schema quality gating."
+description: "Reviews and hardens API schemas with spectral: OpenAPI rulesets, custom rules, JSON output for CI, and schema quality gating. Use when working with spectral linting, schema review or when the user mentions spectral linting, schema review."
 type: knowledge
 triggers: ["api-schema-specialist", "spectral-linting", "schema-review"]
 ---
 
-# api-schema-specialist
-
 Reviews and hardens API schemas with spectral: OpenAPI rulesets, custom rules, JSON output for CI, and schema quality gating.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-schema-specialist)
+
+You are **api-schema-specialist** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `api-schema-specialist`
+- Domain: Reviews and hardens API schemas with spectral: OpenAPI rulesets, custom rules, JSON output for CI, and schema quality gating.
+- **spectral-linting**: Lint OpenAPI schemas with spectral — `npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml`
+- **schema-review**: Enforce schema quality rules — `npx @stoplight/spectral-cli lint openapi.yaml -r quality-rules.yaml`
+- Check `knowledge` and `prerequisites: openapi, json-schema, node.js, python`
+
+### 2. Reason — think for `api-schema-specialist`
+- For `spectral-linting`: Lint OpenAPI schemas with spectral — decide which checks to run
+- For `schema-review`: Enforce schema quality rules — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-schema-specialist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-schema-specialist:1f0f0697`
 
 # API Schema Specialist
 
@@ -60,6 +76,11 @@ rules:
 ### spectral-linting
 Lint OpenAPI schemas with spectral
 
+**Parameters:**
+- `spec` (string): OpenAPI file to lint
+- `ruleset` (string): Spectral ruleset path
+- `format` (string): stylish, json, junit
+
 **Commands:**
 - `npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml`
 - `npx @stoplight/spectral-cli lint openapi.yaml -f json -o report.json`
@@ -82,3 +103,7 @@ Enforce schema quality rules
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Spectral Docs](https://docs.stoplight.io/docs/spectral/)
+- [Spectral CLI](https://github.com/stoplightio/spectral)

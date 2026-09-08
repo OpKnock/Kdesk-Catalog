@@ -1,8 +1,24 @@
-# Api Sdk Changesets
-
 Manages SDK versioning and releases with changesets: change tracking, version bumps, changelogs, and semantic-release automation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-sdk-changesets)
+
+You are **Api Sdk Changesets** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-sdk-changesets`
+- Domain: Manages SDK versioning and releases with changesets: change tracking, version bumps, changelogs, and semantic-release automation.
+- **changesets**: Track SDK changes with changesets — `npx @changesets/cli init`
+- **semantic-release**: Automate releases from commit messages — `npx semantic-release --dry-run`
+- Check `knowledge` and `prerequisites: openapi-generator, node.js, python`
+
+### 2. Reason — think for `api-sdk-changesets`
+- For `changesets`: Track SDK changes with changesets — decide which checks to run
+- For `semantic-release`: Automate releases from commit messages — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-sdk-changesets` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-sdk-changesets:1327c3ef`
 
 # API SDK v5 - Releases
 
@@ -48,6 +64,11 @@ npx semantic-release --dry-run
 ### changesets
 Track SDK changes with changesets
 
+**Parameters:**
+- `semver` (string): major, minor, or patch bump
+- `package` (string): Package to release
+- `tag` (string): npm dist-tag
+
 **Commands:**
 - `npx @changesets/cli init`
 - `npx changeset`
@@ -72,3 +93,7 @@ Automate releases from commit messages
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Changesets](https://github.com/changesets/changesets)
+- [Semantic Release](https://semantic-release.gitbook.io/)

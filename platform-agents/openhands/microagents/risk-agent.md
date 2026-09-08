@@ -1,6 +1,6 @@
 ---
 name: "risk-agent"
-description: "Risk SDK deployment agent for ML Risk SDK deployment."
+description: "Risk SDK deployment agent for ML Risk SDK deployment. Use when working with Ml Risk Deploy Sdk Agent or when the user mentions Ml Risk Deploy Sdk Agent."
 type: knowledge
 triggers: ["risk-agent", "ml risk deploy sdk agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["risk-agent", "ml risk deploy sdk agent"]
 # Risk Agent
 
 Risk SDK deployment agent for ML Risk SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (risk-agent)
+
+You are **Risk Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `risk-agent`
+- Domain: Risk SDK deployment agent for ML Risk SDK deployment.
+- **Ml Risk Deploy Sdk Agent**: Risk SDK deployment agent for ML Risk SDK deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `risk-agent`
+- For `Ml Risk Deploy Sdk Agent`: Risk SDK deployment agent for ML Risk SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `risk-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `risk-agent:d1c748e9`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Risk SDK deployment agent for ML Risk SDK deployment.
 **Examples:**
 - Server: python -m risk.server --port 8080
 - Docker: docker run -p 8080:8080 risk-server
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

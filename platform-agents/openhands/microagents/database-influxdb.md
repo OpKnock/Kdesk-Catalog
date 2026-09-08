@@ -1,6 +1,6 @@
 ---
 name: "database-influxdb"
-description: "InfluxDB agent for time-series data, Telegraf, Grafana integration."
+description: "InfluxDB agent for time-series data, Telegraf, Grafana integration. Use when working with Database Influxdb, management or when the user mentions Database Influxdb, management."
 type: knowledge
 triggers: ["database-influxdb", "database influxdb"]
 ---
@@ -8,6 +8,24 @@ triggers: ["database-influxdb", "database influxdb"]
 # Database Influxdb
 
 InfluxDB agent for time-series data, Telegraf, Grafana integration.
+
+## Agentic Workflow: Read -> Reason -> Act (database-influxdb)
+
+You are **Database Influxdb** (database/management) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `database-influxdb`
+- Domain: InfluxDB agent for time-series data, Telegraf, Grafana integration.
+- **Database Influxdb**: InfluxDB agent for time-series data, Telegraf, Grafana integration. — `Backup: influx backup /path/to/backup`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `database-influxdb`
+- For `Database Influxdb`: InfluxDB agent for time-series data, Telegraf, Grafana integration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `database-influxdb` tools
+- Tools: `Glob`, `Grep`, `Read`, `Backup`, `Write` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `database-influxdb:ee3e6529`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ InfluxDB agent for time-series data, Telegraf, Grafana integration.
 - Write: influx write -o org -b bucket -p ns 'measurement,tag=value field=value timestamp'
 - Query: influx query 'from(bucket: "mydb") |> range(start: -1h)'
 - Backup: influx backup /path/to/backup
+
+## References
+- [InfluxDB Documentation](https://docs.influxdata.com/influxdb/)

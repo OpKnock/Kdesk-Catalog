@@ -4,27 +4,27 @@ applyTo: "**/*.r **/*.rs **/*.sh"
 
 Serves sites and reverse proxies with Caddy: Caddyfile authoring, automatic HTTPS, file servers, and reloads.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (caddy)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Caddy** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `caddy run`, `caddy validate --config Caddyfile`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `caddy`
+- Domain: Serves sites and reverse proxies with Caddy: Caddyfile authoring, automatic HTTPS, file servers, and reloads.
+- **serve**: Run Caddy as a file server or site server. — `caddy run`
+- **config**: Validate and adapt Caddyfile configs. — `caddy validate --config Caddyfile`
+- **tls**: Manage automatic HTTPS and certificates. — `caddy cert-manager list`
+- Check `knowledge` and `prerequisites: caddy`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `caddy`
+- For `serve`: Run Caddy as a file server or site server. — decide which checks to run
+- For `config`: Validate and adapt Caddyfile configs. — decide which checks to run
+- For `tls`: Manage automatic HTTPS and certificates. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `caddy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Caddy`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `caddy:aca2a9bd`
 
 # Caddy
 

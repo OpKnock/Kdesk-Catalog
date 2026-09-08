@@ -1,6 +1,6 @@
 ---
 name: "coding-inference"
-description: "Coding inference server agent Manages Coding inference server."
+description: "Coding inference server agent Manages Coding inference server. Use when working with Ml Coding Inference Server Agent V2 or when the user mentions Ml Coding Inference Server Agent V2."
 type: knowledge
 triggers: ["coding-inference", "ml coding inference server agent v2"]
 ---
@@ -8,6 +8,24 @@ triggers: ["coding-inference", "ml coding inference server agent v2"]
 # Coding Inference
 
 Coding inference server agent Manages Coding inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (coding-inference)
+
+You are **Coding Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `coding-inference`
+- Domain: Coding inference server agent Manages Coding inference server.
+- **Ml Coding Inference Server Agent V2**: Coding inference server agent. Manages Coding inference server. — `curl http://localhost:8080/code --data '{"model": "model.pkl"}'`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `coding-inference`
+- For `Ml Coding Inference Server Agent V2`: Coding inference server agent. Manages Coding inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `coding-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `coding-inference:b2a4ec9e`
 
 ## Instructions
 
@@ -17,6 +35,10 @@ You are the Ml Coding Inference Server Agent V2, the specialist for running a Co
 
 ### Ml Coding Inference Server Agent V2
 Coding inference server agent. Manages Coding inference server.
+
+**Parameters:**
+- `model` (string): CLI flag --model observed in capability commands
+- `output` (string): CLI flag --output observed in capability commands
 
 **Commands:**
 - `curl http://localhost:8080/code --data '{"model": "model.pkl"}'`
@@ -29,3 +51,7 @@ Coding inference server agent. Manages Coding inference server.
 - curl http://localhost:8080/code --data '{"model": "model.pkl"}'
 - python generate_code.py --model model.pkl --output model.py
 - python refactor.py --model model.pkl --output refactored_model.py
+
+## References
+- [curl Documentation](https://curl.se/docs/)
+- [Python Documentation](https://docs.python.org/3/)

@@ -1,6 +1,6 @@
 ---
 name: "Milvus Python Sdk"
-description: "ML it agent handling Milvus integration."
+description: "ML it agent handling Milvus integration. Use when working with Ml Milvus Python Sdk Agent, vector db or when the user mentions Ml Milvus Python Sdk Agent, vector db."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Milvus Python Sdk
 
 ML it agent handling Milvus integration.
+
+## Agentic Workflow: Read -> Reason -> Act (milvus-python-sdk)
+
+You are **Milvus Python Sdk** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `milvus-python-sdk`
+- Domain: ML it agent handling Milvus integration.
+- **Ml Milvus Python Sdk Agent**: ML Milvus Python SDK agent for Milvus integration. — `Search: python -c 'from pymilvus import Collection; col = Collection("my_collect`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `milvus-python-sdk`
+- For `Ml Milvus Python Sdk Agent`: ML Milvus Python SDK agent for Milvus integration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `milvus-python-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Search`, `Create` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `milvus-python-sdk:d7cfda7e`
 
 ## Instructions
 
@@ -27,3 +45,7 @@ ML Milvus Python SDK agent for Milvus integration.
 - Connect: python -c 'from pymilvus import connections; connections.connect(host="localhost", port="19530"); print("Connected")'
 - Create: python -c 'from pymilvus import CollectionSchema, FieldSchema, DataType; fields = [FieldSchema("id", DataType.INT64, is_primary=True), FieldSchema("embedding", DataType.FLOAT_VECTOR, dim=128)]; schema = CollectionSchema(fields); print(schema)'
 - Search: python -c 'from pymilvus import Collection; col = Collection("my_collection"); print(col.search([[1.0, 2.0]], "embedding", {}, limit=5))'
+
+## References
+- [Milvus Documentation](https://milvus.io/docs/)
+- [Python Documentation](https://docs.python.org/3/)

@@ -1,15 +1,29 @@
 ---
 name: "Pulsar Consumer Go"
-description: "Pulsar consumers in Go: consumer creation, subscription modes, message handling and retries with pulsar-client-go."
+description: "Pulsar consumers in Go: consumer creation, subscription modes, message handling and retries with pulsar-client-go. Use when working with pulsar go consumer, api or when the user mentions pulsar go consumer, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Pulsar Consumer Go
-
 Pulsar consumers in Go: consumer creation, subscription modes, message handling and retries with pulsar-client-go.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (pulsar-consumer-go)
+
+You are **Pulsar Consumer Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `pulsar-consumer-go`
+- Domain: Pulsar consumers in Go: consumer creation, subscription modes, message handling and retries with pulsar-client-go.
+- **pulsar-go-consumer**: Write Go Pulsar consumers: subscribe with ack modes, receive messages and handle redelivery. — `go get github.com/apache/pulsar-client-go/pulsar`
+- Check `knowledge` and `prerequisites: bin/pulsar-client`
+
+### 2. Reason — think for `pulsar-consumer-go`
+- For `pulsar-go-consumer`: Write Go Pulsar consumers: subscribe with ack modes, receive messages and handle redelivery. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pulsar-consumer-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Bin/pulsar-client` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pulsar-consumer-go:7208bc87`
 
 # Pulsar Consumer (Go)
 
@@ -73,6 +87,11 @@ for i := 0; i < 10; i++ {
 ### pulsar-go-consumer
 Write Go Pulsar consumers: subscribe with ack modes, receive messages and handle redelivery.
 
+**Parameters:**
+- `topic` (string): Topic to consume from
+- `subscription` (string): Subscription name
+- `sub_type` (string): Exclusive, Shared, Failover or Key_Shared
+
 **Commands:**
 - `go get github.com/apache/pulsar-client-go/pulsar`
 - `go mod tidy`
@@ -84,3 +103,7 @@ Write Go Pulsar consumers: subscribe with ack modes, receive messages and handle
 - go run consumer.go
 - bin/pulsar-client consume my-topic -s worker -n 10
 - go test -run TestConsumer -v ./...
+
+## References
+- [pulsar-client-go](https://github.com/apache/pulsar-client-go)
+- [Pulsar Go client docs](https://pulsar.apache.org/docs/3.0.x/client-libraries-go/)

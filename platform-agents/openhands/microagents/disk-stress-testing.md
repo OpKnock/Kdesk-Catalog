@@ -1,15 +1,29 @@
 ---
 name: "disk-stress-testing"
-description: "Benchmarks storage subsystems with fio, dd, hdparm, and iostat to measure IOPS, throughput, and latency under load."
+description: "Benchmarks storage subsystems with fio, dd, hdparm, and iostat to measure IOPS, throughput, and latency under load. Use when working with io benchmark, api or when the user mentions io benchmark, api."
 type: knowledge
 triggers: ["disk-stress-testing", "io-benchmark"]
 ---
 
-# Disk Stress Testing
-
 Benchmarks storage subsystems with fio, dd, hdparm, and iostat to measure IOPS, throughput, and latency under load.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (disk-stress-testing)
+
+You are **Disk Stress Testing** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `disk-stress-testing`
+- Domain: Benchmarks storage subsystems with fio, dd, hdparm, and iostat to measure IOPS, throughput, and latency under load.
+- **io-benchmark**: Run fio jobs, raw dd writes, and live IO statistics to characterize disk performance and detect degr — `fio --name=randwrite --ioengine=libaio --iodepth=16 --rw=randwrite --bs=4k --siz`
+- Check `knowledge` and `prerequisites: fio, hdparm, iostat`
+
+### 2. Reason — think for `disk-stress-testing`
+- For `io-benchmark`: Run fio jobs, raw dd writes, and live IO statistics to characterize disk performance and detect degradation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `disk-stress-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Fio`, `Dd` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `disk-stress-testing:a1fc8444`
 
 # Disk Stress Testing
 
@@ -68,6 +82,11 @@ fio --name=bw --ioengine=libaio --direct=1 --rw=read --bs=1M --size=4G --numjobs
 ### io-benchmark
 Run fio jobs, raw dd writes, and live IO statistics to characterize disk performance and detect degradation.
 
+**Parameters:**
+- `rw` (string): fio workload pattern: randwrite, randread, read, write, rw, or randrw
+- `blocksize` (string): IO block size such as 4k or 1M
+- `runtime` (integer): Benchmark duration in seconds
+
 **Commands:**
 - `fio --name=randwrite --ioengine=libaio --iodepth=16 --rw=randwrite --bs=4k --size=4G --numjobs=1 --runtime=60 --time_based --direct=1`
 - `fio --name=seqread --ioengine=libaio --iodepth=32 --rw=read --bs=1M --size=8G --runtime=60 --time_based --direct=1`
@@ -79,3 +98,6 @@ Run fio jobs, raw dd writes, and live IO statistics to characterize disk perform
 - fio --name=randread --ioengine=libaio --iodepth=16 --rw=randread --bs=4k --size=4G --runtime=60 --time_based --direct=1
 - dd if=/dev/zero of=/tmp/testfile bs=1M count=4096 oflag=direct conv=fdatasync && rm -f /tmp/testfile
 - iostat -x 2 5 | grep sda
+
+## References
+- [fio HOWTO](https://fio.readthedocs.io/en/latest/fio_doc.html)

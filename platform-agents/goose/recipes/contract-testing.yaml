@@ -2,9 +2,22 @@ title: Contract Testing
 description: 'Contract testing APIs with Pact: consumer expectations, provider verification, and mock
   services with pact-js.'
 version: 2.0.0
-instructions: "# Contract Testing\n\nContract testing APIs with Pact: consumer expectations, provider\
-  \ verification, and mock services with pact-js.\n\n## Instructions\n\n# Contract Testing (Pact)\n\n\
-  Test that consumers and providers agree on the API contract.\n\n## When to Use\n\n- Proving API compatibility\
+instructions: "Contract testing APIs with Pact: consumer expectations, provider verification, and mock\
+  \ services with pact-js.\n\n## Agentic Workflow: Read -> Reason -> Act (contract-testing)\n\nYou are\
+  \ **Contract Testing** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `contract-testing`\n- Domain: Contract testing APIs with Pact: consumer\
+  \ expectations, provider verification, and mock services with pact-js.\n- **pact-consumer**: Write consumer\
+  \ contract tests with pact-js against a mock provider — `npm install @pact-foundation/pact @pact-foundation/pact-node`\n\
+  - **pact-verify**: Run provider verification against published pacts and mock the provider for local\
+  \ checks — `npx @pact-foundation/pact-cli verify --provider-base-url http://localhost:8080 -`\n- Check\
+  \ `knowledge` and `prerequisites: npm, npx`\n\n### 2. Reason — think for `contract-testing`\n- For `pact-consumer`:\
+  \ Write consumer contract tests with pact-js against a mock provider — decide which checks to run\n\
+  - For `pact-verify`: Run provider verification against published pacts and mock the provider for local\
+  \ checks — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `contract-testing` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `contract-testing:923c2a88`\n\n# Contract Testing (Pact)\n\nTest\
+  \ that consumers and providers agree on the API contract.\n\n## When to Use\n\n- Proving API compatibility\
   \ without full integration tests\n- CI feedback on every consumer or provider change\n- Replacing brittle\
   \ end-to-end tests between teams\n\n## Consumer Test\n\n```bash\nnpm install @pact-foundation/pact @pact-foundation/pact-node\n\
   ```\n\n```js\nconst { PactV3 } = require('@pact-foundation/pact');\nconst provider = new PactV3({ consumer:\
@@ -24,15 +37,19 @@ instructions: "# Contract Testing\n\nContract testing APIs with Pact: consumer e
   \ suites\n- Publish pacts from CI with the commit SHA as version\n- Verify against latest pact of every\
   \ consumer\n- Gate deploys with can-i-deploy\n- Keep matchers loose enough for safe evolution\n\n##\
   \ Capabilities\n\n### pact-consumer\nWrite consumer contract tests with pact-js against a mock provider\n\
-  \n**Commands:**\n- `npm install @pact-foundation/pact @pact-foundation/pact-node`\n- `npx jest --config\
-  \ jest.config.js`\n- `npm test`\n- `npm run test:contract`\n\n**Examples:**\n- npm install @pact-foundation/pact\
-  \ && npx jest --config jest.config.js\n- npm test -- --runInBand\n- npx jest contracts/ -t 'a request\
-  \ for a user'\n\n### pact-verify\nRun provider verification against published pacts and mock the provider\
-  \ for local checks\n\n**Commands:**\n- `npx @pact-foundation/pact-cli verify --provider-base-url http://localhost:8080\
-  \ --pact-urls ./pacts/*.json`\n- `npx @pact-foundation/pact-cli publish ./pacts --broker-base-url http://localhost:9292\
-  \ --consumer-version 1.0.0`\n- `npx @pact-foundation/pact-cli can-i-deploy --pacticipant UserService\
-  \ --version 2.0.0 --to-environment production`\n- `npm run test:provider`\n\n**Examples:**\n- npx @pact-foundation/pact-cli\
-  \ verify --provider-base-url http://localhost:8080 --pact-urls ./pacts/*.json\n- npx @pact-foundation/pact-cli\
-  \ can-i-deploy --pacticipant WebApp --version 1.0.0 --to-environment production\n- npx @pact-foundation/pact-cli\
-  \ publish ./pacts --broker-base-url http://localhost:9292 --consumer-version 1.0.0"
+  \n**Parameters:**\n- `consumer_name` (string): Consumer application name\n- `provider_name` (string):\
+  \ Provider application name\n\n**Commands:**\n- `npm install @pact-foundation/pact @pact-foundation/pact-node`\n\
+  - `npx jest --config jest.config.js`\n- `npm test`\n- `npm run test:contract`\n\n**Examples:**\n- npm\
+  \ install @pact-foundation/pact && npx jest --config jest.config.js\n- npm test -- --runInBand\n- npx\
+  \ jest contracts/ -t 'a request for a user'\n\n### pact-verify\nRun provider verification against published\
+  \ pacts and mock the provider for local checks\n\n**Parameters:**\n- `pact_urls` (string): Glob or URL\
+  \ list of pact files\n- `provider_base_url` (string): Base URL of the running provider\n\n**Commands:**\n\
+  - `npx @pact-foundation/pact-cli verify --provider-base-url http://localhost:8080 --pact-urls ./pacts/*.json`\n\
+  - `npx @pact-foundation/pact-cli publish ./pacts --broker-base-url http://localhost:9292 --consumer-version\
+  \ 1.0.0`\n- `npx @pact-foundation/pact-cli can-i-deploy --pacticipant UserService --version 2.0.0 --to-environment\
+  \ production`\n- `npm run test:provider`\n\n**Examples:**\n- npx @pact-foundation/pact-cli verify --provider-base-url\
+  \ http://localhost:8080 --pact-urls ./pacts/*.json\n- npx @pact-foundation/pact-cli can-i-deploy --pacticipant\
+  \ WebApp --version 1.0.0 --to-environment production\n- npx @pact-foundation/pact-cli publish ./pacts\
+  \ --broker-base-url http://localhost:9292 --consumer-version 1.0.0\n\n## References\n- [Pact Docs](https://docs.pact.io/)\n\
+  - [Pact JS GitHub](https://github.com/pact-foundation/pact-js)"
 prompt: Act as Contract Testing and handle the task per the instructions.

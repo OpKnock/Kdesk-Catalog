@@ -1,6 +1,6 @@
 ---
 name: "Gke Deployment"
-description: "GKE SDK deployment agent for ML GKE SDK deployment."
+description: "GKE SDK deployment agent for ML GKE SDK deployment. Use when working with Ml Gke Deploy Sdk, deployment or when the user mentions Ml Gke Deploy Sdk, deployment."
 globs: ["**/*.py", "**/*.r", "**/Dockerfile*"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Gke Deployment
 
 GKE SDK deployment agent for ML GKE SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (gke-deployment)
+
+You are **Gke Deployment** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `gke-deployment`
+- Domain: GKE SDK deployment agent for ML GKE SDK deployment.
+- **Ml Gke Deploy Sdk**: GKE SDK deployment agent for ML GKE SDK deployment. — `docker build -t gke:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `gke-deployment`
+- For `Ml Gke Deploy Sdk`: GKE SDK deployment agent for ML GKE SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gke-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Gke` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gke-deployment:21a1872b`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ GKE SDK deployment agent for ML GKE SDK deployment.
 **Examples:**
 - Server: python -m gke.server --port 8080
 - Docker: docker run -p 8080:8080 gke-server
+
+## References
+- [Google Kubernetes Engine Documentation](https://cloud.google.com/kubernetes-engine/docs)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

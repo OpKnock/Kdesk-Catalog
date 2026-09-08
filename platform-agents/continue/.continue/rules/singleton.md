@@ -1,15 +1,29 @@
 ---
 name: "Singleton"
-description: "Implements the Singleton pattern in Java with javac: controlled single instance creation and its thread-safety trade-offs."
+description: "Implements the Singleton pattern in Java with javac: controlled single instance creation and its thread-safety trade-offs. Use when working with java, singleton or when the user mentions java, singleton."
 globs: ["**/*.java", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Singleton
-
 Implements the Singleton pattern in Java with javac: controlled single instance creation and its thread-safety trade-offs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (singleton)
+
+You are **Singleton** (patterns/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — patterns context for `singleton`
+- Domain: Implements the Singleton pattern in Java with javac: controlled single instance creation and its thread-safety trade-offs.
+- **java**: Implement and verify singleton examples. — `javac -d out Singleton.java Main.java`
+- Check `knowledge` and `prerequisites: java, javac`
+
+### 2. Reason — think for `singleton`
+- For `java`: Implement and verify singleton examples. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `singleton` tools
+- Tools: `Glob`, `Grep`, `Read`, `Javac`, `Java` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `singleton:63a4944b`
 
 # Singleton Pattern
 
@@ -75,6 +89,11 @@ Test that repeated getInstance returns identical references.
 ### java
 Implement and verify singleton examples.
 
+**Parameters:**
+- `cp` (string): Classpath directory
+- `Xlint` (string): Compiler warnings
+- `ea` (string): Enable assertions
+
 **Commands:**
 - `javac -d out Singleton.java Main.java`
 - `java -cp out Main`
@@ -86,3 +105,7 @@ Implement and verify singleton examples.
 - javac -d out Singleton.java && java -cp out com.example.Main
 - javac -Xlint:all -d out *.java
 - java -cp out com.example.Main | grep -c 'same instance'
+
+## References
+- [Refactoring Guru: Singleton](https://refactoring.guru/design-patterns/singleton)
+- [JLS Enum](https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html)

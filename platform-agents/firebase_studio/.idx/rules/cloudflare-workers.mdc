@@ -1,14 +1,30 @@
 ---
-description: "Build and deploy edge APIs with Cloudflare Workers using wrangler: init, dev, deploy, secrets, and tail."
+description: "Build and deploy edge APIs with Cloudflare Workers using wrangler: init, dev, deploy, secrets, and tail. Use when working with wrangler dev, runtime tools, api or when the user mentions wrangler dev, runtime tools, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Cloudflare Workers
-
 Build and deploy edge APIs with Cloudflare Workers using wrangler: init, dev, deploy, secrets, and tail.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cloudflare-workers)
+
+You are **Cloudflare Workers** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `cloudflare-workers`
+- Domain: Build and deploy edge APIs with Cloudflare Workers using wrangler: init, dev, deploy, secrets, and tail.
+- **wrangler-dev**: Scaffold Workers projects, run locally, and deploy to the edge — `npx wrangler init my-worker`
+- **runtime-tools**: Manage secrets, inspect live traffic, and check KV/Durable Object bindings — `npx wrangler secret put API_KEY`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `cloudflare-workers`
+- For `wrangler-dev`: Scaffold Workers projects, run locally, and deploy to the edge — decide which checks to run
+- For `runtime-tools`: Manage secrets, inspect live traffic, and check KV/Durable Object bindings — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cloudflare-workers` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cloudflare-workers:5cab7a69`
 
 # Cloudflare Workers
 
@@ -96,6 +112,10 @@ npx wrangler tail --format json
 ### wrangler-dev
 Scaffold Workers projects, run locally, and deploy to the edge
 
+**Parameters:**
+- `project_name` (string): Worker project name
+- `entrypoint` (string): Entry file such as src/index.ts
+
 **Commands:**
 - `npx wrangler init my-worker`
 - `npx wrangler dev`
@@ -110,6 +130,10 @@ Scaffold Workers projects, run locally, and deploy to the edge
 ### runtime-tools
 Manage secrets, inspect live traffic, and check KV/Durable Object bindings
 
+**Parameters:**
+- `secret_name` (string): Secret variable name
+- `binding` (string): KV binding name
+
 **Commands:**
 - `npx wrangler secret put API_KEY`
 - `npx wrangler tail`
@@ -120,3 +144,7 @@ Manage secrets, inspect live traffic, and check KV/Durable Object bindings
 - npx wrangler secret put API_KEY
 - npx wrangler tail --format json
 - npx wrangler kv key list --binding=MY_KV | jq '.keys[0].name'
+
+## References
+- [Cloudflare Workers Docs](https://developers.cloudflare.com/workers/)
+- [Wrangler CLI Reference](https://developers.cloudflare.com/workers/wrangler/commands/)

@@ -6,27 +6,23 @@ globs: ["**/*.json", "**/*.r", "**/*.sh"]
 
 Designs and tests REST API nested resource hierarchies with URI structures, depth limits, pagination, and RFC 8288 Link headers for client navigation.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (nested-resources)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Nested Resources** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -s https://api.your-app.test/v1/users/42/posts`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `nested-resources`
+- Domain: Designs and tests REST API nested resource hierarchies with URI structures, depth limits, pagination, and RFC 8288 Link headers for client navigation.
+- **nested-resource-design**: Design and test nested REST resources: URI structure, sub-resources, and linked navigation. — `curl -s https://api.your-app.test/v1/users/42/posts`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `nested-resources`
+- For `nested-resource-design`: Design and test nested REST resources: URI structure, sub-resources, and linked navigation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `nested-resources` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nested-resources:06030e4b`
 
 # Nested Resources
 

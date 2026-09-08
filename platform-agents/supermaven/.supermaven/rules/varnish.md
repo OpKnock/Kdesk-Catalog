@@ -1,8 +1,22 @@
-# Varnish
-
 Administers Varnish HTTP cache using VCL. Loads and reloads configurations, invalidates content with bans and purges, inspects hit rates via varnishstat, and debugs request routing with varnishlog.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (varnish)
+
+You are **Varnish** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `varnish`
+- Domain: Administers Varnish HTTP cache using VCL. Loads and reloads configurations, invalidates content with bans and purges, inspects hit rates via varnishstat, and debugs request routing with varnishlog.
+- **varnish-cache**: Manage VCL, purges, and cache stats — `varnishd -f /etc/varnish/default.vcl -s malloc,256m`
+- Check `knowledge` and `prerequisites: varnishd, varnishadm, varnishstat, varnishlog`
+
+### 2. Reason — think for `varnish`
+- For `varnish-cache`: Manage VCL, purges, and cache stats — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `varnish` tools
+- Tools: `Glob`, `Grep`, `Read`, `Varnishd`, `Varnish_reload_vcl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `varnish:8480258f`
 
 # Varnish
 
@@ -72,6 +86,11 @@ varnishadm ban "req.url ~ ^/products"    # clear products
 ### varnish-cache
 Manage VCL, purges, and cache stats
 
+**Parameters:**
+- `vcl_file` (string): Path to VCL config
+- `ban_expression` (string): Ban regex, e.g. req.url ~ ^/products
+- `cache_size` (string): malloc size, e.g. 256m
+
 **Commands:**
 - `varnishd -f /etc/varnish/default.vcl -s malloc,256m`
 - `varnish_reload_vcl`
@@ -84,3 +103,8 @@ Manage VCL, purges, and cache stats
 - varnishadm ban "req.url ~ ^/products"
 - varnishstat -1 | grep -E "MAIN.cache_hit|MAIN.cache_miss"
 - varnish_reload_vcl
+
+## References
+- [Varnish VCL reference](https://varnish-cache.org/docs/trunk/reference/vcl.html)
+- [Varnish CLI and stats](https://varnish-cache.org/docs/trunk/reference/varnishadm.html)
+- [Varnish book](https://varnish-cache.org/docs/trunk/users-guide/index.html)

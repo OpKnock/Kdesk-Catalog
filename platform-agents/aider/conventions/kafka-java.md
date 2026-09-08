@@ -1,8 +1,24 @@
-# Kafka Java
-
 Build Kafka clients in Java with the official kafka-clients library: Maven setup, producer/consumer apps, and end-to-end topic verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kafka-java)
+
+You are **Kafka Java** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `kafka-java`
+- Domain: Build Kafka clients in Java with the official kafka-clients library: Maven setup, producer/consumer apps, and end-to-end topic verification.
+- **java-client-app**: Scaffold and run Java Kafka producer/consumer applications with Maven. — `mvn archetype:generate -DgroupId=com.mycompany -DartifactId=orders-consumer -Dar`
+- **end-to-end**: Produce and consume test data alongside the Java app for verification. — `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --part`
+- Check `knowledge` and `prerequisites: java, kafka-console-consumer.sh, kafka-console-producer.sh, kafka-consumer-groups.sh`
+
+### 2. Reason — think for `kafka-java`
+- For `java-client-app`: Scaffold and run Java Kafka producer/consumer applications with Maven. — decide which checks to run
+- For `end-to-end`: Produce and consume test data alongside the Java app for verification. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kafka-java` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `Java` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-java:3237381a`
 
 # Kafka (Java)
 
@@ -81,6 +97,10 @@ mvn test
 ### java-client-app
 Scaffold and run Java Kafka producer/consumer applications with Maven.
 
+**Parameters:**
+- `groupId` (string): Maven group id.
+- `artifactId` (string): Maven artifact/project name.
+
 **Commands:**
 - `mvn archetype:generate -DgroupId=com.mycompany -DartifactId=orders-consumer -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false`
 - `mvn package`
@@ -95,6 +115,10 @@ Scaffold and run Java Kafka producer/consumer applications with Maven.
 ### end-to-end
 Produce and consume test data alongside the Java app for verification.
 
+**Parameters:**
+- `topic` (string): Topic to use for e2e verification.
+- `group` (string): Consumer group id.
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3 --replication-factor 1`
 - `kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders`
@@ -105,3 +129,7 @@ Produce and consume test data alongside the Java app for verification.
 - kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3 --replication-factor 1
 - kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders
 - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group orders-java
+
+## References
+- [Kafka Java Client API](https://kafka.apache.org/documentation/#api)
+- [kafka-clients on Maven](https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients)

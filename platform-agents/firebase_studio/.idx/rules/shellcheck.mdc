@@ -1,14 +1,28 @@
 ---
-description: "Finds bugs and portability issues in shell scripts with ShellCheck, including CI and JSON output."
+description: "Finds bugs and portability issues in shell scripts with ShellCheck, including CI and JSON output. Use when working with shellcheck, code quality or when the user mentions shellcheck, code quality."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# shellcheck
-
 Finds bugs and portability issues in shell scripts with ShellCheck, including CI and JSON output.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (shellcheck)
+
+You are **shellcheck** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `shellcheck`
+- Domain: Finds bugs and portability issues in shell scripts with ShellCheck, including CI and JSON output.
+- **shellcheck**: Analyze shell scripts with severity levels, excludes, and CI formats — `shellcheck script.sh`
+- Check `knowledge` and `prerequisites: shellcheck`
+
+### 2. Reason — think for `shellcheck`
+- For `shellcheck`: Analyze shell scripts with severity levels, excludes, and CI formats — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `shellcheck` tools
+- Tools: `Glob`, `Grep`, `Read`, `Shellcheck` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `shellcheck:99930a36`
 
 # ShellCheck
 
@@ -71,6 +85,11 @@ link, then the agent applies the suggested fix and re-runs until clean.
 ### shellcheck
 Analyze shell scripts with severity levels, excludes, and CI formats
 
+**Parameters:**
+- `severity` (string): Minimum severity: error, warning, info, style
+- `exclude` (string): Comma-separated SC codes to ignore
+- `shell` (string): Shell dialect: bash, sh, dash, ksh, zsh
+
 **Commands:**
 - `shellcheck script.sh`
 - `shellcheck -x scripts/*.sh`
@@ -82,3 +101,7 @@ Analyze shell scripts with severity levels, excludes, and CI formats
 - find . -name '*.sh' -exec shellcheck {} +
 - shellcheck --shell=bash --external-sources setup.sh
 - shellcheck --exclude=SC2317 --format=gcc ci.sh
+
+## References
+- [ShellCheck docs](https://www.shellcheck.net/)
+- [ShellCheck wiki](https://github.com/koalaman/shellcheck/wiki)

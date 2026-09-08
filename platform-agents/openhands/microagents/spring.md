@@ -1,15 +1,29 @@
 ---
 name: "spring"
-description: "Spring Boot Java development. Real mvn/gradle CLI."
+description: "Spring Boot Java development. Real mvn/gradle CLI. Use when working with spring, backend or when the user mentions spring, backend."
 type: knowledge
 triggers: ["spring"]
 ---
 
-# spring
-
 Spring Boot Java development. Real mvn/gradle CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (spring)
+
+You are **spring** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `spring`
+- Domain: Spring Boot Java development. Real mvn/gradle CLI.
+- **spring**: Spring Boot Java development. Real mvn/gradle CLI. — `mvn spring-boot:run`
+- Check `knowledge` and `prerequisites: ./gradlew, mvn`
+
+### 2. Reason — think for `spring`
+- For `spring`: Spring Boot Java development. Real mvn/gradle CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `spring` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `./gradlew` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `spring:c4f991a2`
 
 # Spring Boot
 
@@ -182,3 +196,6 @@ Spring Boot Java development. Real mvn/gradle CLI.
 - mvn spring-boot:run
 - ./gradlew bootRun
 - mvn clean package
+
+## References
+- [spring Skill Documentation](skills/backend/spring.md)

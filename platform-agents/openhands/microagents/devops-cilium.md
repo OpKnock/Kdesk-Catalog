@@ -1,6 +1,6 @@
 ---
 name: "devops-cilium"
-description: "Cilium agent for eBPF-based networking and security."
+description: "Cilium agent for eBPF-based networking and security. Use when working with Devops Cilium, deployment or when the user mentions Devops Cilium, deployment."
 type: knowledge
 triggers: ["devops-cilium", "devops cilium"]
 ---
@@ -8,6 +8,24 @@ triggers: ["devops-cilium", "devops cilium"]
 # Devops Cilium
 
 Cilium agent for eBPF-based networking and security.
+
+## Agentic Workflow: Read -> Reason -> Act (devops-cilium)
+
+You are **Devops Cilium** (devops/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `devops-cilium`
+- Domain: Cilium agent for eBPF-based networking and security.
+- **Devops Cilium**: Cilium agent for eBPF-based networking and security. — `Status: cilium status`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `devops-cilium`
+- For `Devops Cilium`: Cilium agent for eBPF-based networking and security. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `devops-cilium` tools
+- Tools: `Glob`, `Grep`, `Read`, `Status`, `Policies` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `devops-cilium:3b3ef3ea`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Cilium agent for eBPF-based networking and security.
 - Hubble: hubble observe
 - Policies: cilium policy list
 - Connectivity: cilium connectivity test
+
+## References
+- [Cilium Documentation](https://docs.cilium.io/)

@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(bin/pulsar-client:*) Bash(go:*)"
 
 Pulsar consumers in Go: consumer creation, subscription modes, message handling and retries with pulsar-client-go.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (pulsar-consumer-go)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Pulsar Consumer Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `go get github.com/apache/pulsar-client-go/pulsar`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `pulsar-consumer-go`
+- Domain: Pulsar consumers in Go: consumer creation, subscription modes, message handling and retries with pulsar-client-go.
+- **pulsar-go-consumer**: Write Go Pulsar consumers: subscribe with ack modes, receive messages and handle redelivery. — `go get github.com/apache/pulsar-client-go/pulsar`
+- Check `knowledge` and `prerequisites: bin/pulsar-client`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `pulsar-consumer-go`
+- For `pulsar-go-consumer`: Write Go Pulsar consumers: subscribe with ack modes, receive messages and handle redelivery. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `pulsar-consumer-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Bin/pulsar-client` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pulsar-consumer-go:7208bc87`
 
 # Pulsar Consumer (Go)
 

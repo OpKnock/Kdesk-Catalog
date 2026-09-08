@@ -1,5 +1,5 @@
 ---
-description: "Elasticsearch deployment agent. Manages Elasticsearch ML deployment."
+description: "Elasticsearch deployment agent. Manages Elasticsearch ML deployment. Use when working with Ml Elasticsearch Deploy Agent, vector db or when the user mentions Ml Elasticsearch Deploy Agent, vector db."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Elasticsearch Identity Py
 
 Elasticsearch deployment agent. Manages Elasticsearch ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (elasticsearch-identity-py)
+
+You are **Elasticsearch Identity Py** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `elasticsearch-identity-py`
+- Domain: Elasticsearch deployment agent. Manages Elasticsearch ML deployment.
+- **Ml Elasticsearch Deploy Agent**: Elasticsearch deployment agent. Manages Elasticsearch ML deployment. — `docker build -t elasticsearch:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `elasticsearch-identity-py`
+- For `Ml Elasticsearch Deploy Agent`: Elasticsearch deployment agent. Manages Elasticsearch ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `elasticsearch-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Elasticsearch` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `elasticsearch-identity-py:e41117ac`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Elasticsearch deployment agent. Manages Elasticsearch ML deployment.
 - python index_vectors.py --index my-index --vectors vectors.json
 - python search_vectors.py --index my-index --query query_vector --k 10
 - python delete_vectors.py --index my-index --ids ids.json
+
+## References
+- [Elasticsearch Guide](https://www.elastic.co/guide/en/elasticsearch/reference/current/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

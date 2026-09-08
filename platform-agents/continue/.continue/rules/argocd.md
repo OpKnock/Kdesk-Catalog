@@ -1,15 +1,33 @@
 ---
 name: "Argocd"
-description: "Operates Argo CD for GitOps deployments: app creation, sync policies, health checks, rollbacks, and CLI auth."
+description: "Operates Argo CD for GitOps deployments: app creation, sync policies, health checks, rollbacks, and CLI auth. Use when working with app lifecycle, sync policies, rollback and ops, api or when the user mentions app lifecycle, sync policies, rollback and ops, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Argocd
-
 Operates Argo CD for GitOps deployments: app creation, sync policies, health checks, rollbacks, and CLI auth.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (argocd)
+
+You are **Argocd** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `argocd`
+- Domain: Operates Argo CD for GitOps deployments: app creation, sync policies, health checks, rollbacks, and CLI auth.
+- **app-lifecycle**: Create, sync, and manage Argo CD applications. — `argocd app create my-api --repo https://github.com/org/my-api --path manifests -`
+- **sync-policies**: Configure automated sync, pruning, and self-heal behavior. — `argocd app set my-api --sync-policy automated`
+- **rollback-and-ops**: Roll back deployments and manage CLI sessions. — `argocd login argocd.staging.your-app.test --sso`
+- Check `knowledge` and `prerequisites: argocd`
+
+### 2. Reason — think for `argocd`
+- For `app-lifecycle`: Create, sync, and manage Argo CD applications. — decide which checks to run
+- For `sync-policies`: Configure automated sync, pruning, and self-heal behavior. — decide which checks to run
+- For `rollback-and-ops`: Roll back deployments and manage CLI sessions. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `argocd` tools
+- Tools: `Glob`, `Grep`, `Read`, `Argocd` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `argocd:f27ac27b`
 
 # Argo CD
 
@@ -76,6 +94,12 @@ spec:
 ### app-lifecycle
 Create, sync, and manage Argo CD applications.
 
+**Parameters:**
+- `repo` (string): Git repository URL
+- `path` (string): Manifest/helm path in the repo
+- `namespace` (string): Destination namespace
+- `prune` (boolean): Delete resources removed from git during sync
+
 **Commands:**
 - `argocd app create my-api --repo https://github.com/org/my-api --path manifests --dest-server https://kubernetes.default.svc --dest-namespace prod`
 - `argocd app list`
@@ -90,6 +114,10 @@ Create, sync, and manage Argo CD applications.
 
 ### sync-policies
 Configure automated sync, pruning, and self-heal behavior.
+
+**Parameters:**
+- `sync_policy` (string): manual or automated
+- `timeout` (number): Sync/wait timeout in seconds
 
 **Commands:**
 - `argocd app set my-api --sync-policy automated`
@@ -106,6 +134,10 @@ Configure automated sync, pruning, and self-heal behavior.
 ### rollback-and-ops
 Roll back deployments and manage CLI sessions.
 
+**Parameters:**
+- `revision` (number): History index to roll back to
+- `server` (string): Argo CD server URL for login
+
 **Commands:**
 - `argocd login argocd.staging.your-app.test --sso`
 - `argocd app rollback my-api 3`
@@ -117,3 +149,8 @@ Roll back deployments and manage CLI sessions.
 - argocd login argocd.staging.your-app.test --username admin --insecure
 - argocd app history my-api | head -5
 - argocd app rollback my-api 2 --prune
+
+## References
+- [Argo CD Docs](https://argo-cd.readthedocs.io/)
+- [Argo CD CLI](https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd/)
+- [Declarative GitOps](https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/)

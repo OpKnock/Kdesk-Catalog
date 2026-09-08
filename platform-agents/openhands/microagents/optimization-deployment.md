@@ -1,6 +1,6 @@
 ---
 name: "optimization-deployment"
-description: "Optimization SDK deployment agent for ML Optimization SDK deployment."
+description: "Optimization SDK deployment agent for ML Optimization SDK deployment. Use when working with Ml Optimization Deploy Sdk, deployment or when the user mentions Ml Optimization Deploy Sdk, deployment."
 type: knowledge
 triggers: ["optimization-deployment", "ml optimization deploy sdk"]
 ---
@@ -8,6 +8,24 @@ triggers: ["optimization-deployment", "ml optimization deploy sdk"]
 # Optimization Deployment
 
 Optimization SDK deployment agent for ML Optimization SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (optimization-deployment)
+
+You are **Optimization Deployment** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `optimization-deployment`
+- Domain: Optimization SDK deployment agent for ML Optimization SDK deployment.
+- **Ml Optimization Deploy Sdk**: Optimization SDK deployment agent for ML Optimization SDK deployment. — `docker build -t optimization:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `optimization-deployment`
+- For `Ml Optimization Deploy Sdk`: Optimization SDK deployment agent for ML Optimization SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `optimization-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Optimization` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `optimization-deployment:ad4a01a1`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Optimization SDK deployment agent for ML Optimization SDK deployment.
 **Examples:**
 - Server: python -m optimization.server --port 8080
 - Docker: docker run -p 8080:8080 optimization-server
+
+## References
+- [Optuna Documentation](https://optuna.org/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

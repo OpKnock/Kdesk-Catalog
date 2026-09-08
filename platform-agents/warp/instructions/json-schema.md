@@ -1,8 +1,24 @@
-# JSON Schema
-
 Validate JSON documents against JSON Schema drafts (2020-12, 2019-09) with check-jsonschema and ajv, plus compile schemas and generate instances from tooling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (json-schema)
+
+You are **JSON Schema** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `json-schema`
+- Domain: Validate JSON documents against JSON Schema drafts (2020-12, 2019-09) with check-jsonschema and ajv, plus compile schemas and generate instances from tooling.
+- **schema-validation**: Validate JSON data files against a schema using check-jsonschema, ajv, and the Python jsonschema CLI — `check-jsonschema --schemafile schema.json data.json`
+- **schema-compile**: Compile schemas with ajv for reuse and check schema syntax early in CI. — `npx ajv compile -s schema.json`
+- Check `knowledge` and `prerequisites: check-jsonschema, npx, python3`
+
+### 2. Reason — think for `json-schema`
+- For `schema-validation`: Validate JSON data files against a schema using check-jsonschema, ajv, and the Python jsonschema CLI. — decide which checks to run
+- For `schema-compile`: Compile schemas with ajv for reuse and check schema syntax early in CI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `json-schema` tools
+- Tools: `Glob`, `Grep`, `Read`, `Check-jsonschema`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `json-schema:3be77f2d`
 
 # JSON Schema
 
@@ -77,6 +93,11 @@ echo '{"id":"bad","amount":-5}' | check-jsonschema --schemafile schema.json --de
 ### schema-validation
 Validate JSON data files against a schema using check-jsonschema, ajv, and the Python jsonschema CLI.
 
+**Parameters:**
+- `schemafile` (string): Path to the JSON Schema file.
+- `datafile` (string): Path to the JSON instance/document to validate.
+- `filetype` (string): Input type: json, yaml, toml, or auto (default: json).
+
 **Commands:**
 - `check-jsonschema --schemafile schema.json data.json`
 - `check-jsonschema --schemafile schema.json --default-filetype json --verbose data.json`
@@ -92,6 +113,9 @@ Validate JSON data files against a schema using check-jsonschema, ajv, and the P
 ### schema-compile
 Compile schemas with ajv for reuse and check schema syntax early in CI.
 
+**Parameters:**
+- `strict` (boolean): Enable/disable strict mode for unknown keywords.
+
 **Commands:**
 - `npx ajv compile -s schema.json`
 - `npx ajv compile -s schema.json --strict=false -c ajv-formats`
@@ -100,3 +124,8 @@ Compile schemas with ajv for reuse and check schema syntax early in CI.
 **Examples:**
 - npx ajv compile -s schema.json
 - npx ajv compile -s openapi.json -c ajv-formats
+
+## References
+- [JSON Schema Specifications](https://json-schema.org/specification)
+- [check-jsonschema](https://github.com/python-jsonschema/check-jsonschema)
+- [Ajv CLI](https://ajv.js.org/packages/ajv-cli.html)

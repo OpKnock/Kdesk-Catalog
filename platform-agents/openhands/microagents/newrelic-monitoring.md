@@ -1,15 +1,29 @@
 ---
 name: "newrelic-monitoring"
-description: "Operates New Relic APM agents, runs NRQL queries against telemetry, searches entities, and manages dashboards and alert conditions via the New Relic CLI."
+description: "Operates New Relic APM agents, runs NRQL queries against telemetry, searches entities, and manages dashboards and alert conditions via the New Relic CLI. Use when working with newrelic apm operations, api or when the user mentions newrelic apm operations, api."
 type: knowledge
 triggers: ["newrelic-monitoring", "newrelic-apm-operations"]
 ---
 
-# Newrelic Monitoring
-
 Operates New Relic APM agents, runs NRQL queries against telemetry, searches entities, and manages dashboards and alert conditions via the New Relic CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (newrelic-monitoring)
+
+You are **Newrelic Monitoring** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `newrelic-monitoring`
+- Domain: Operates New Relic APM agents, runs NRQL queries against telemetry, searches entities, and manages dashboards and alert conditions via the New Relic CLI.
+- **newrelic-apm-operations**: Install APM agents, query telemetry with NRQL, and inspect entities via the New Relic CLI. — `newrelic entity search --name "my-app"`
+- Check `knowledge` and `prerequisites: newrelic`
+
+### 2. Reason — think for `newrelic-monitoring`
+- For `newrelic-apm-operations`: Install APM agents, query telemetry with NRQL, and inspect entities via the New Relic CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `newrelic-monitoring` tools
+- Tools: `Glob`, `Grep`, `Read`, `Newrelic`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `newrelic-monitoring:7d07b5ba`
 
 # New Relic Monitoring
 
@@ -68,6 +82,11 @@ require('newrelic');
 ### newrelic-apm-operations
 Install APM agents, query telemetry with NRQL, and inspect entities via the New Relic CLI.
 
+**Parameters:**
+- `nrql` (string): NRQL query string
+- `app_name` (string): APM application name
+- `api_key` (string): New Relic API key
+
 **Commands:**
 - `newrelic entity search --name "my-app"`
 - `newrelic nrql "SELECT count(*) FROM Transaction SINCE 1 hour ago"`
@@ -79,3 +98,7 @@ Install APM agents, query telemetry with NRQL, and inspect entities via the New 
 - newrelic nrql "SELECT average(duration) FROM Transaction WHERE appName = 'my-app' SINCE 1 day ago"
 - newrelic entity search --domain APM --type APPLICATION
 - newrelic diagnostics run
+
+## References
+- [New Relic Documentation](https://docs.newrelic.com/)
+- [New Relic CLI GitHub](https://github.com/newrelic/newrelic-cli)

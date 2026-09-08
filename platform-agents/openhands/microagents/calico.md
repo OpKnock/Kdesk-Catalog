@@ -1,15 +1,29 @@
 ---
 name: "calico"
-description: "Kubernetes networking and security with Calico: network policies, IPAM, and node status via calicoctl."
+description: "Kubernetes networking and security with Calico: network policies, IPAM, and node status via calicoctl. Use when working with calicoctl, devops or when the user mentions calicoctl, devops."
 type: knowledge
 triggers: ["calico", "calicoctl"]
 ---
 
-# calico
-
 Kubernetes networking and security with Calico: network policies, IPAM, and node status via calicoctl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (calico)
+
+You are **calico** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `calico`
+- Domain: Kubernetes networking and security with Calico: network policies, IPAM, and node status via calicoctl.
+- **calicoctl**: Manage Calico network policies, IP pools, and node health — `calicoctl node status`
+- Check `knowledge` and `prerequisites: calicoctl`
+
+### 2. Reason — think for `calico`
+- For `calicoctl`: Manage Calico network policies, IP pools, and node health — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `calico` tools
+- Tools: `Glob`, `Grep`, `Read`, `Calicoctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `calico:3cbb87ae`
 
 # Calico
 
@@ -80,6 +94,11 @@ applies the correct policy and verifies traffic.
 ### calicoctl
 Manage Calico network policies, IP pools, and node health
 
+**Parameters:**
+- `namespace` (string): Namespace scope for policies
+- `output` (string): Output format: yaml, json, wide
+- `filename` (string): Policy manifest file for apply/delete (-f)
+
 **Commands:**
 - `calicoctl node status`
 - `calicoctl get nodes`
@@ -91,3 +110,7 @@ Manage Calico network policies, IP pools, and node health
 - calicoctl get ippool -o wide
 - calicoctl delete networkpolicy deny-all --namespace=default
 - calicoctl get bgppeer -o yaml
+
+## References
+- [Calico docs](https://docs.tigera.io/calico/)
+- [Calico network policy guide](https://docs.tigera.io/calico/latest/network-policy/)

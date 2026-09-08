@@ -1,15 +1,29 @@
 ---
 name: "pre-commit"
-description: "Manages git hooks with pre-commit: installing hooks, running checks, and maintaining hook repos."
+description: "Manages git hooks with pre-commit: installing hooks, running checks, and maintaining hook repos. Use when working with pre commit hooks, code quality or when the user mentions pre commit hooks, code quality."
 type: knowledge
 triggers: ["pre-commit", "pre-commit-hooks"]
 ---
 
-# pre-commit
-
 Manages git hooks with pre-commit: installing hooks, running checks, and maintaining hook repos.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (pre-commit)
+
+You are **pre-commit** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `pre-commit`
+- Domain: Manages git hooks with pre-commit: installing hooks, running checks, and maintaining hook repos.
+- **pre-commit-hooks**: Install, run, and manage pre-commit framework git hooks — `pre-commit install`
+- Check `knowledge` and `prerequisites: pre-commit`
+
+### 2. Reason — think for `pre-commit`
+- For `pre-commit-hooks`: Install, run, and manage pre-commit framework git hooks — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pre-commit` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pre-commit` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pre-commit:f53c5120`
 
 # Pre-commit
 
@@ -91,6 +105,11 @@ tail of the diff so the user can re-stage and commit.
 ### pre-commit-hooks
 Install, run, and manage pre-commit framework git hooks
 
+**Parameters:**
+- `files` (string): Only run hooks against these files
+- `show-diff-on-failure` (boolean): Print the diff when a hook modifies files
+- `all-files` (boolean): Run against all files instead of staged ones
+
 **Commands:**
 - `pre-commit install`
 - `pre-commit run --all-files`
@@ -102,3 +121,7 @@ Install, run, and manage pre-commit framework git hooks
 - pre-commit run --all-files --show-diff-on-failure
 - pre-commit run trailing-whitespace --files README.md
 - pre-commit clean && pre-commit install-hooks
+
+## References
+- [pre-commit docs](https://pre-commit.com/)
+- [pre-commit supported hooks](https://pre-commit.com/hooks.html)

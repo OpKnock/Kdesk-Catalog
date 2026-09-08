@@ -1,14 +1,28 @@
 ---
-description: "Generic linting skill that sets up and runs ESLint across JS/TS projects, fixing problems and wiring checks into CI."
+description: "Generic linting skill that sets up and runs ESLint across JS/TS projects, fixing problems and wiring checks into CI. Use when working with eslint linting, code quality or when the user mentions eslint linting, code quality."
 globs: ["**/*.java", "**/*.json", "**/*.r", "**/*.sh", "**/*.{js,ts,jsx,tsx}", "**/*.{ts,tsx}", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# linting
-
 Generic linting skill that sets up and runs ESLint across JS/TS projects, fixing problems and wiring checks into CI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (linting)
+
+You are **linting** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `linting`
+- Domain: Generic linting skill that sets up and runs ESLint across JS/TS projects, fixing problems and wiring checks into CI.
+- **eslint-linting**: Configure ESLint, run checks, auto-fix, and integrate with CI for JavaScript and TypeScript — `npx eslint src/`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `linting`
+- For `eslint-linting`: Configure ESLint, run checks, auto-fix, and integrate with CI for JavaScript and TypeScript — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `linting` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `linting:66bd4274`
 
 # Linting
 
@@ -79,6 +93,11 @@ export default [
 ### eslint-linting
 Configure ESLint, run checks, auto-fix, and integrate with CI for JavaScript and TypeScript
 
+**Parameters:**
+- `ext` (string): File extensions to lint, e.g. .js,.jsx,.ts,.tsx
+- `max-warnings` (integer): Exit non-zero when warnings exceed this count; 0 means no warnings allowed
+- `quiet` (boolean): Report only errors, hiding warnings
+
 **Commands:**
 - `npx eslint src/`
 - `npx eslint --fix .`
@@ -90,3 +109,7 @@ Configure ESLint, run checks, auto-fix, and integrate with CI for JavaScript and
 - npx eslint src/ --rule 'no-console: error'
 - npx eslint . --fix --ext .ts --quiet
 - npx eslint --print-config src/index.ts | jq '.rules["no-console"]'
+
+## References
+- [ESLint user guide](https://eslint.org/docs/latest/user-guide/)
+- [typescript-eslint docs](https://typescript-eslint.io/)

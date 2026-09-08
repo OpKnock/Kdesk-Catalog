@@ -1,8 +1,24 @@
-# Api Version Git Cliff
-
 Maintains API changelogs and version history: git-cliff generation from commits, conventional commits, and changelog-driven release notes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-version-git-cliff)
+
+You are **Api Version Git Cliff** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-version-git-cliff`
+- Domain: Maintains API changelogs and version history: git-cliff generation from commits, conventional commits, and changelog-driven release notes.
+- **git-cliff**: Generate changelogs from git history — `npx git-cliff --init`
+- **conventional-commits**: Structure commits for changelog generation — `npx commitizen init cz-conventional-changelog --save-dev --save-exact`
+- Check `knowledge` and `prerequisites: node.js, python, openapi`
+
+### 2. Reason — think for `api-version-git-cliff`
+- For `git-cliff`: Generate changelogs from git history — decide which checks to run
+- For `conventional-commits`: Structure commits for changelog generation — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-version-git-cliff` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-version-git-cliff:b2b77f43`
 
 # API Version v4 - Changelogs
 
@@ -51,6 +67,11 @@ BREAKING CHANGE: remove v1 legacy fields
 ### git-cliff
 Generate changelogs from git history
 
+**Parameters:**
+- `tag` (string): Version tag to generate for
+- `output` (string): Changelog output file
+- `range` (string): Commit range
+
 **Commands:**
 - `npx git-cliff --init`
 - `npx git-cliff -o CHANGELOG.md`
@@ -75,3 +96,7 @@ Structure commits for changelog generation
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [git-cliff Docs](https://git-cliff.org/docs/)
+- [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)

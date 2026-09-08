@@ -1,6 +1,6 @@
 ---
 name: "Chroma Python"
-description: "Chroma SDK deployment agent for ML Chroma vector database SDK deployment."
+description: "Chroma SDK deployment agent for ML Chroma vector database SDK deployment. Use when working with Ml Chroma Deploy Sdk, vector db or when the user mentions Ml Chroma Deploy Sdk, vector db."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Chroma Python
 
 Chroma SDK deployment agent for ML Chroma vector database SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (chroma-python)
+
+You are **Chroma Python** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `chroma-python`
+- Domain: Chroma SDK deployment agent for ML Chroma vector database SDK deployment.
+- **Ml Chroma Deploy Sdk**: Chroma SDK deployment agent for ML Chroma vector database SDK deployment. — `Python: python -c "import chromadb; client = chromadb.Client(); collection = cli`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `chroma-python`
+- For `Ml Chroma Deploy Sdk`: Chroma SDK deployment agent for ML Chroma vector database SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `chroma-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Python`, `Node` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `chroma-python:0f617482`
 
 ## Instructions
 
@@ -25,3 +43,7 @@ Chroma SDK deployment agent for ML Chroma vector database SDK deployment.
 **Examples:**
 - Python: python -c "import chromadb; client = chromadb.Client(); collection = client.create_collection('my_collection'); print(collection.count())"
 - Node: node -e "const { ChromaClient } = require('chromadb'); const client = new ChromaClient(); client.createCollection('my_collection').then(c => console.log(c));"
+
+## References
+- [Chroma Documentation](https://docs.trychroma.com/)
+- [Python Documentation](https://docs.python.org/3/)

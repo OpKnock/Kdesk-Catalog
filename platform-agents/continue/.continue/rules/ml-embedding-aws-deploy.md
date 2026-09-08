@@ -1,6 +1,6 @@
 ---
 name: "Ml Embedding Aws Deploy"
-description: "AWS Embedding deployment agent for AWS embedding services."
+description: "AWS Embedding deployment agent for AWS embedding services. Use when working with Ml Embedding Aws Deploy or when the user mentions Ml Embedding Aws Deploy."
 globs: ["**/*.json", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Embedding Aws Deploy
 
 AWS Embedding deployment agent for AWS embedding services.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-embedding-aws-deploy)
+
+You are **Ml Embedding Aws Deploy** (ml/embedding) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-embedding-aws-deploy`
+- Domain: AWS Embedding deployment agent for AWS embedding services.
+- **Ml Embedding Aws Deploy**: AWS Embedding deployment agent for AWS embedding services. — `List: aws bedrock list-foundation-models --contains-providers amazon`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-embedding-aws-deploy`
+- For `Ml Embedding Aws Deploy`: AWS Embedding deployment agent for AWS embedding services. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-embedding-aws-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `List`, `Invoke` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-embedding-aws-deploy:019763e2`
 
 ## Instructions
 
@@ -25,3 +43,8 @@ AWS Embedding deployment agent for AWS embedding services.
 **Examples:**
 - Invoke: aws bedrock invoke-model --model-id amazon.titan-embed-text-v1 --body '{"inputText": "Hello"}' --content-type application/json output.json
 - List: aws bedrock list-foundation-models --contains-providers amazon
+
+## References
+- [OpenAI Embeddings Guide](https://platform.openai.com/docs/guides/embeddings)
+- [AWS Documentation](https://docs.aws.amazon.com/)
+- [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)

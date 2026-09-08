@@ -1,6 +1,6 @@
 ---
 name: "ml-tgi-inference-agent"
-description: "TGI inference agent. Manages LLM inference with Text Generation Inference."
+description: "TGI inference agent. Manages LLM inference with Text Generation Inference. Use when working with Ml Tgi Inference Agent or when the user mentions Ml Tgi Inference Agent."
 type: knowledge
 triggers: ["ml-tgi-inference-agent", "ml tgi inference agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-tgi-inference-agent", "ml tgi inference agent"]
 # Ml Tgi Inference Agent
 
 TGI inference agent. Manages LLM inference with Text Generation Inference.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-tgi-inference-agent)
+
+You are **Ml Tgi Inference Agent** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-tgi-inference-agent`
+- Domain: TGI inference agent. Manages LLM inference with Text Generation Inference.
+- **Ml Tgi Inference Agent**: TGI inference agent. Manages LLM inference with Text Generation Inference. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-tgi-inference-agent`
+- For `Ml Tgi Inference Agent`: TGI inference agent. Manages LLM inference with Text Generation Inference. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-tgi-inference-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Tgi` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-tgi-inference-agent:b7f5fc16`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ TGI inference agent. Manages LLM inference with Text Generation Inference.
 - curl http://localhost:8080/generate --data '{"inputs": "Hello"}'
 - text-generation-router --port 8080 --model-id meta-llama/Llama-2-7b-hf
 - docker run -p 8080:80 ghcr.io/huggingface/text-generation-inference:latest --model-id meta-llama/Llama-2-7b-hf
+
+## References
+- [Text Generation Inference](https://huggingface.co/docs/text-generation-inference/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

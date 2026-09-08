@@ -1,8 +1,22 @@
-# Grpc Java
-
 gRPC services and clients in Java with the Gradle protobuf plugin: proto codegen, ManagedChannel clients, and ServerBuilder-based servers.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (grpc-java)
+
+You are **Grpc Java** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `grpc-java`
+- Domain: gRPC services and clients in Java with the Gradle protobuf plugin: proto codegen, ManagedChannel clients, and ServerBuilder-based servers.
+- **java-grpc**: Configure Gradle protobuf codegen, implement Java gRPC servers, and run clients. — `./gradlew generateProto`
+- Check `knowledge` and `prerequisites: ./gradlew, grpcurl, java`
+
+### 2. Reason — think for `grpc-java`
+- For `java-grpc`: Configure Gradle protobuf codegen, implement Java gRPC servers, and run clients. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `grpc-java` tools
+- Tools: `Glob`, `Grep`, `Read`, `./gradlew`, `Java` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grpc-java:d0eb90c1`
 
 # gRPC Java
 
@@ -95,6 +109,11 @@ Agent: Add compileOnly 'org.apache.tomcat:annotations-api:6.0.53' to dependencie
 ### java-grpc
 Configure Gradle protobuf codegen, implement Java gRPC servers, and run clients.
 
+**Parameters:**
+- `main_class` (string): Java main class to run the server or client.
+- `grpc_version` (string): gRPC Java version, e.g. 1.64.0.
+- `port` (integer): Server listen port, default 50051.
+
 **Commands:**
 - `./gradlew generateProto`
 - `./gradlew build`
@@ -106,3 +125,7 @@ Configure Gradle protobuf codegen, implement Java gRPC servers, and run clients.
 - ./gradlew clean generateProto build
 - java -cp build/libs/app.jar com.example.GreeterClient
 - ./gradlew test --tests '*.GreeterServiceTest'
+
+## References
+- [gRPC Java Docs](https://grpc.io/docs/languages/java/)
+- [grpc-java GitHub](https://github.com/grpc/grpc-java)

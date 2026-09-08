@@ -1,14 +1,28 @@
 ---
-description: "Install plugins, lint Terraform modules recursively, and output in CI formats. deprecations.'"
+description: "Install plugins, lint Terraform modules recursively, and output in CI formats. deprecations.'. Use when working with tflint linting, code quality or when the user mentions tflint linting, code quality."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.tf"]
 alwaysApply: false
 ---
 
-# tflint
-
 Install plugins, lint Terraform modules recursively, and output in CI formats. deprecations.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (tflint)
+
+You are **tflint** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `tflint`
+- Domain: Install plugins, lint Terraform modules recursively, and output in CI formats. deprecations.'
+- **tflint-linting**: Install plugins, lint Terraform modules recursively, and output in CI formats — `tflint --init`
+- Check `knowledge` and `prerequisites: tflint`
+
+### 2. Reason — think for `tflint`
+- For `tflint-linting`: Install plugins, lint Terraform modules recursively, and output in CI formats — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tflint` tools
+- Tools: `Glob`, `Grep`, `Read`, `Tflint` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tflint:71fffaa9`
 
 # TFLint
 
@@ -78,6 +92,11 @@ applies the suggested attribute/configuration fixes.
 ### tflint-linting
 Install plugins, lint Terraform modules recursively, and output in CI formats
 
+**Parameters:**
+- `format` (string): Output format: default, json, checkstyle, sarif
+- `minimum-severity` (string): Only report findings at or above: error, warning, notice
+- `recursive` (boolean): Lint all .tf files in subdirectories too
+
 **Commands:**
 - `tflint --init`
 - `tflint`
@@ -89,3 +108,7 @@ Install plugins, lint Terraform modules recursively, and output in CI formats
 - tflint --init --chdir=modules/eks
 - tflint --call-module-type=all
 - tflint --force --format=checkstyle .
+
+## References
+- [tflint GitHub](https://github.com/terraform-linters/tflint)
+- [tflint plugin docs](https://github.com/terraform-linters/tflint/tree/master/docs)

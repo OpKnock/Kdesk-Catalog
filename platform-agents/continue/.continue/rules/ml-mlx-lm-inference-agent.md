@@ -1,6 +1,6 @@
 ---
 name: "Ml Mlx Lm Inference Agent"
-description: "MLX LM inference agent. Manages LLM inference with MLX LM on Apple Silicon."
+description: "MLX LM inference agent. Manages LLM inference with MLX LM on Apple Silicon. Use when working with Ml Mlx Lm Inference Agent or when the user mentions Ml Mlx Lm Inference Agent."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Mlx Lm Inference Agent
 
 MLX LM inference agent. Manages LLM inference with MLX LM on Apple Silicon.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-mlx-lm-inference-agent)
+
+You are **Ml Mlx Lm Inference Agent** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-mlx-lm-inference-agent`
+- Domain: MLX LM inference agent. Manages LLM inference with MLX LM on Apple Silicon.
+- **Ml Mlx Lm Inference Agent**: MLX LM inference agent. Manages LLM inference with MLX LM on Apple Silicon. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-mlx-lm-inference-agent`
+- For `Ml Mlx Lm Inference Agent`: MLX LM inference agent. Manages LLM inference with MLX LM on Apple Silicon. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-mlx-lm-inference-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Mlx-lm` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-mlx-lm-inference-agent:5ddcb954`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ MLX LM inference agent. Manages LLM inference with MLX LM on Apple Silicon.
 - python -m mlx_lm.server --model mlx-community/Llama-2-7b-hf --port 8080
 - python -m mlx_lm.convert --hf-model meta-llama/Llama-2-7b-hf --mlx-model models/llama-2-7b.mlx
 - python -m mlx_lm.lora --model mlx-community/Llama-2-7b-hf --data train.json
+
+## References
+- [MLX LM Documentation](https://github.com/ml-explore/mlx-examples/tree/main/llms)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

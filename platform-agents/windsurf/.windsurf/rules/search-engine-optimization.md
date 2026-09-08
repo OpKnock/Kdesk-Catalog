@@ -6,27 +6,25 @@ globs: ["**/*.go", "**/*.html", "**/*.json", "**/*.r", "**/*.sh"]
 
 Audits and improves site SEO with Lighthouse CI, crawler checks, sitemap generation, and Core Web Vitals measurement from the CLI.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (search-engine-optimization)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **search-engine-optimization** (frontend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx lighthouse http://localhost:8080 --only-categories=seo,p`, `curl -s http://localhost:8080/robots.txt`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — frontend context for `search-engine-optimization`
+- Domain: Audits and improves site SEO with Lighthouse CI, crawler checks, sitemap generation, and Core Web Vitals measurement from the CLI.
+- **lighthouse-audit**: Run Lighthouse audits for SEO, performance, and accessibility scores. — `npx lighthouse http://localhost:8080 --only-categories=seo,performance --output=`
+- **crawling-and-content**: Validate meta tags, robots.txt, sitemaps, and HTTP headers with curl and htmlhint. — `curl -s http://localhost:8080/robots.txt`
+- Check `knowledge` and `prerequisites: elasticsearch, meilisearch, typesense, node.js`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `search-engine-optimization`
+- For `lighthouse-audit`: Run Lighthouse audits for SEO, performance, and accessibility scores. — decide which checks to run
+- For `crawling-and-content`: Validate meta tags, robots.txt, sitemaps, and HTTP headers with curl and htmlhint. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `search-engine-optimization` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `search-engine-optimization:29643121`
 
 # Search Engine Optimization
 

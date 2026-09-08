@@ -2,26 +2,41 @@ title: api-test-specialist
 description: 'Builds API test suites with Postman and Newman: collections, environments, assertions, data-driven
   iterations, and CI execution with reporters.'
 version: 2.0.0
-instructions: "# api-test-specialist\n\nBuilds API test suites with Postman and Newman: collections, environments,\
-  \ assertions, data-driven iterations, and CI execution with reporters.\n\n## Instructions\n\n# API Test\
-  \ Specialist\n\nPostman/Newman API testing.\n\n## What This Skill Does\n- Organizes tests into collections\n\
-  - Runs them in CI with newman\n- Reports results as JSON/HTML\n\n## When to Use\n- Quick API smoke suites\n\
-  - Team testing without code\n- Data-driven endpoint checks\n\n## Real Commands\n\n```bash\nnpm install\
-  \ -g newman\nnewman run collection.json -e production.postman_environment.json -r cli,json --reporter-json-export\
-  \ results.json\nnewman run collection.json --folder \"auth\" --iteration-data data.csv\n```\n\n## Assertion\
-  \ Pattern\n\n```js\npm.test(\"status is 200\", () => {\n  pm.response.to.have.status(200);\n});\npm.test(\"\
-  has data\", () => {\n  const json = pm.response.json();\n  pm.expect(json.data).to.be.an(\"array\");\n\
-  });\n```\n\n## Testing\n- Run the full suite pre-merge\n- Use data files for parameterized cases\n-\
-  \ Publish JSON results to dashboards\n\n\n## Best Practices\n- Version collections in git\n- Store secrets\
-  \ in environments\n- Keep assertions granular\n\n## Capabilities\n\n### newman-execution\nRun Postman\
-  \ collections in CI\n\n**Commands:**\n- `npm install -g newman`\n- `newman run collection.json -e production.postman_environment.json\
-  \ -r cli,json --reporter-json-export results.json`\n- `newman run collection.json --folder \"auth\"\
-  \ --iteration-data data.csv --reporters cli`\n- `newman run collection.json -n 3 --delay-request 100`\n\
-  - `newman run collection.json --env-var baseUrl=http://localhost:3000`\n\n**Examples:**\n- newman -e\
-  \ production selects environment variables\n- --folder runs a subset of requests\n- --iteration-data\
-  \ drives data-driven tests\n\n### postman-assertions\nWrite response assertions in collections\n\n**Commands:**\n\
-  - `node -e \"const c=require('./collection.json'); const t=c.item[0].event[0].script.exec.join('\\n');\
-  \ console.log(t.includes('pm.test'))\"`\n- `curl -s https://postman-echo.com/get?q=1 -o /dev/null -w\
-  \ '%{http_code}\\n'`\n- `npx postman-to-openapi collection.json -o openapi.yaml`\n\n**Examples:**\n\
-  - -cli --help\n- -api --help"
+instructions: "Builds API test suites with Postman and Newman: collections, environments, assertions,\
+  \ data-driven iterations, and CI execution with reporters.\n\n## Agentic Workflow: Read -> Reason ->\
+  \ Act (api-test-specialist)\n\nYou are **api-test-specialist** (testing) — a sub-agent that **Reads,\
+  \ Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — testing context for `api-test-specialist`\n\
+  - Domain: Builds API test suites with Postman and Newman: collections, environments, assertions, data-driven\
+  \ iterations, and CI execution with reporters.\n- **newman-execution**: Run Postman collections in CI\
+  \ — `npm install -g newman`\n- **postman-assertions**: Write response assertions in collections — `node\
+  \ -e \"const c=require('./collection.json'); const t=c.item[0].event[0].script`\n- Check `knowledge`\
+  \ and `prerequisites: jest, pytest, postman`\n\n### 2. Reason — think for `api-test-specialist`\n- For\
+  \ `newman-execution`: Run Postman collections in CI — decide which checks to run\n- For `postman-assertions`:\
+  \ Write response assertions in collections — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `api-test-specialist`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Newman` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `api-test-specialist:58cde01e`\n\
+  \n# API Test Specialist\n\nPostman/Newman API testing.\n\n## What This Skill Does\n- Organizes tests\
+  \ into collections\n- Runs them in CI with newman\n- Reports results as JSON/HTML\n\n## When to Use\n\
+  - Quick API smoke suites\n- Team testing without code\n- Data-driven endpoint checks\n\n## Real Commands\n\
+  \n```bash\nnpm install -g newman\nnewman run collection.json -e production.postman_environment.json\
+  \ -r cli,json --reporter-json-export results.json\nnewman run collection.json --folder \"auth\" --iteration-data\
+  \ data.csv\n```\n\n## Assertion Pattern\n\n```js\npm.test(\"status is 200\", () => {\n  pm.response.to.have.status(200);\n\
+  });\npm.test(\"has data\", () => {\n  const json = pm.response.json();\n  pm.expect(json.data).to.be.an(\"\
+  array\");\n});\n```\n\n## Testing\n- Run the full suite pre-merge\n- Use data files for parameterized\
+  \ cases\n- Publish JSON results to dashboards\n\n\n## Best Practices\n- Version collections in git\n\
+  - Store secrets in environments\n- Keep assertions granular\n\n## Capabilities\n\n### newman-execution\n\
+  Run Postman collections in CI\n\n**Parameters:**\n- `collection` (string): Collection file path\n- `environment`\
+  \ (string): Environment JSON\n- `reporters` (string): cli, json, html, junit\n\n**Commands:**\n- `npm\
+  \ install -g newman`\n- `newman run collection.json -e production.postman_environment.json -r cli,json\
+  \ --reporter-json-export results.json`\n- `newman run collection.json --folder \"auth\" --iteration-data\
+  \ data.csv --reporters cli`\n- `newman run collection.json -n 3 --delay-request 100`\n- `newman run\
+  \ collection.json --env-var baseUrl=http://localhost:3000`\n\n**Examples:**\n- newman -e production\
+  \ selects environment variables\n- --folder runs a subset of requests\n- --iteration-data drives data-driven\
+  \ tests\n\n### postman-assertions\nWrite response assertions in collections\n\n**Commands:**\n- `node\
+  \ -e \"const c=require('./collection.json'); const t=c.item[0].event[0].script.exec.join('\\n'); console.log(t.includes('pm.test'))\"\
+  `\n- `curl -s https://postman-echo.com/get?q=1 -o /dev/null -w '%{http_code}\\n'`\n- `npx postman-to-openapi\
+  \ collection.json -o openapi.yaml`\n\n**Examples:**\n- -cli --help\n- -api --help\n\n## References\n\
+  - [Newman CLI](https://learning.postman.com/docs/collections/running-collections/using-newman-cli/)\n\
+  - [Postman Tests](https://learning.postman.com/docs/writing-scripts/test-scripts/)"
 prompt: Act as api-test-specialist and handle the task per the instructions.

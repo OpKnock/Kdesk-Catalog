@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(ab:*) Bash(curl:*) Bash(nginx:*) Bash(tail:*
 
 Engineers nginx as a reverse proxy and API gateway: location routing, headers, rate limiting, and caching layers.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (nginx-networking)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Nginx** (networking/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `nginx -t -c /etc/nginx/nginx.conf`, `ab -n 200 -c 20 http://127.0.0.1/api/v1/search | grep -E 'Fa`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — networking context for `nginx-networking`
+- Domain: Engineers nginx as a reverse proxy and API gateway: location routing, headers, rate limiting, and caching layers.
+- **proxy**: Route and transform traffic with nginx locations. — `nginx -t -c /etc/nginx/nginx.conf`
+- **gateway**: Apply rate limits, caching, and header policies. — `ab -n 200 -c 20 http://127.0.0.1/api/v1/search | grep -E 'Failed|Requests per se`
+- Check `knowledge` and `prerequisites: nginx, tail`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `nginx-networking`
+- For `proxy`: Route and transform traffic with nginx locations. — decide which checks to run
+- For `gateway`: Apply rate limits, caching, and header policies. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `nginx-networking` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nginx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nginx-networking:9dea52f2`
 
 # Nginx (Networking)
 

@@ -1,15 +1,31 @@
 ---
 name: "flask"
-description: "Builds Python web apps with Flask: routes, templates, blueprints, CLI commands, and testing with pytest."
+description: "Builds Python web apps with Flask: routes, templates, blueprints, CLI commands, and testing with pytest. Use when working with flask cli, flask extensions, backend or when the user mentions flask cli, flask extensions, backend."
 type: knowledge
 triggers: ["flask", "flask-cli", "flask-extensions"]
 ---
 
-# Flask
-
 Builds Python web apps with Flask: routes, templates, blueprints, CLI commands, and testing with pytest.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (flask)
+
+You are **Flask** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `flask`
+- Domain: Builds Python web apps with Flask: routes, templates, blueprints, CLI commands, and testing with pytest.
+- **flask-cli**: Run the Flask dev server and app CLI commands. — `flask --app app run --debug`
+- **flask-extensions**: Manage extensions like migrate, SQLAlchemy, and testing. — `pip install Flask-SQLAlchemy flask-migrate`
+- Check `knowledge` and `prerequisites: flask, pip, pytest`
+
+### 2. Reason — think for `flask`
+- For `flask-cli`: Run the Flask dev server and app CLI commands. — decide which checks to run
+- For `flask-extensions`: Manage extensions like migrate, SQLAlchemy, and testing. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `flask` tools
+- Tools: `Glob`, `Grep`, `Read`, `Flask`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `flask:5841902f`
 
 # Flask
 
@@ -77,6 +93,10 @@ def create_item():
 ### flask-cli
 Run the Flask dev server and app CLI commands.
 
+**Parameters:**
+- `import` (string): App import path
+- `debug` (boolean): Enable debugger and reloader
+
 **Commands:**
 - `flask --app app run --debug`
 - `flask --app app run --host 0.0.0.0 --port 5001`
@@ -92,6 +112,10 @@ Run the Flask dev server and app CLI commands.
 ### flask-extensions
 Manage extensions like migrate, SQLAlchemy, and testing.
 
+**Parameters:**
+- `message` (string): Migration message
+- `app-import` (string): Flask app import path for CLI commands
+
 **Commands:**
 - `pip install Flask-SQLAlchemy flask-migrate`
 - `flask --app app db init`
@@ -103,3 +127,7 @@ Manage extensions like migrate, SQLAlchemy, and testing.
 - flask --app app db downgrade -1
 - flask --app app db history
 - pytest -q tests/
+
+## References
+- [Flask Docs](https://flask.palletsprojects.com)
+- [Flask Migrate Docs](https://flask-migrate.readthedocs.io)

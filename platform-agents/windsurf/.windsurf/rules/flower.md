@@ -6,27 +6,25 @@ globs: ["**/*.r", "**/*.sh"]
 
 Start and configure the it monitoring server. Query task and worker state through the it HTTP API. with optional basic auth.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (flower)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **flower** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `pip install flower`, `curl http://localhost:5555/api/workers`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `flower`
+- Domain: Start and configure the it monitoring server. Query task and worker state through the it HTTP API. with optional basic auth.
+- **flower-server**: Start and configure the Flower monitoring server. — `pip install flower`
+- **flower-api**: Query task and worker state through the Flower HTTP API. — `curl http://localhost:5555/api/workers`
+- Check `knowledge` and `prerequisites: celery, pip`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `flower`
+- For `flower-server`: Start and configure the Flower monitoring server. — decide which checks to run
+- For `flower-api`: Query task and worker state through the Flower HTTP API. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `flower` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Celery` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `flower:5459f6b2`
 
 # Flower
 

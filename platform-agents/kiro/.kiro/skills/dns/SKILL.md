@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(delv:*) Bash(dig:*) Bash(host:*) Bash(nslook
 
 Diagnoses and manages DNS: dig lookups, zone transfers, MX/TXT checks, and propagation verification.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (dns)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Dns** (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `dig localhost A`, `dig @8.8.8.8 localhost A +short && dig @1.1.1.1 localhost A `
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — infrastructure context for `dns`
+- Domain: Diagnoses and manages DNS: dig lookups, zone transfers, MX/TXT checks, and propagation verification.
+- **dig**: Query DNS records with dig for full detail. — `dig localhost A`
+- **troubleshoot**: Cross-check records and test propagation across resolvers. — `dig @8.8.8.8 localhost A +short && dig @1.1.1.1 localhost A +short`
+- Check `knowledge` and `prerequisites: delv, dig, host, nslookup`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `dns`
+- For `dig`: Query DNS records with dig for full detail. — decide which checks to run
+- For `troubleshoot`: Cross-check records and test propagation across resolvers. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `dns` tools
+- Tools: `Glob`, `Grep`, `Read`, `Dig`, `Host` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `dns:98316b33`
 
 # DNS
 

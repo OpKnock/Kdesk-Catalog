@@ -1,15 +1,31 @@
 ---
 name: "ktlint"
-description: "Formats and lints Kotlin with ktlint: style enforcement, experimental rules, Gradle integration, and IDE setup."
+description: "Formats and lints Kotlin with ktlint: style enforcement, experimental rules, Gradle integration, and IDE setup. Use when working with ktlint run, ktlint gradle, code quality or when the user mentions ktlint run, ktlint gradle, code quality."
 type: knowledge
 triggers: ["ktlint", "ktlint-run", "ktlint-gradle"]
 ---
 
-# Ktlint
-
 Formats and lints Kotlin with ktlint: style enforcement, experimental rules, Gradle integration, and IDE setup.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ktlint)
+
+You are **Ktlint** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `ktlint`
+- Domain: Formats and lints Kotlin with ktlint: style enforcement, experimental rules, Gradle integration, and IDE setup.
+- **ktlint-run**: Lint and format Kotlin files. — `ktlint src/`
+- **ktlint-gradle**: Run ktlint through Gradle. — `gradle ktlintCheck`
+- Check `knowledge` and `prerequisites: gradle, ktlint`
+
+### 2. Reason — think for `ktlint`
+- For `ktlint-run`: Lint and format Kotlin files. — decide which checks to run
+- For `ktlint-gradle`: Run ktlint through Gradle. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ktlint` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ktlint`, `Gradle` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ktlint:5582652b`
 
 # ktlint
 
@@ -71,6 +87,11 @@ ktlint_experimental = enabled
 ### ktlint-run
 Lint and format Kotlin files.
 
+**Parameters:**
+- `paths` (string): Files or directories
+- `format` (boolean): Auto-format
+- `experimental` (boolean): Enable experimental rules
+
 **Commands:**
 - `ktlint src/`
 - `ktlint --format src/`
@@ -86,6 +107,10 @@ Lint and format Kotlin files.
 ### ktlint-gradle
 Run ktlint through Gradle.
 
+**Parameters:**
+- `baseline` (string): Baseline file path
+- `android` (boolean): Apply Android-specific conventions
+
 **Commands:**
 - `gradle ktlintCheck`
 - `gradle ktlintFormat`
@@ -95,3 +120,7 @@ Run ktlint through Gradle.
 **Examples:**
 - gradle ktlintCheck --continue
 - gradle ktlintFormat -PktlintExperimental=true
+
+## References
+- [ktlint Docs](https://pinterest.github.io/ktlint/)
+- [Kotlin Official Style Guide](https://kotlinlang.org/docs/coding-conventions.html)

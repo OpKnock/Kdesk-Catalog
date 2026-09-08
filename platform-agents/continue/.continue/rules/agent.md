@@ -1,6 +1,6 @@
 ---
 name: "Agent"
-description: "it SDK deployment it handling ML it SDK deployment."
+description: "it SDK deployment it handling ML it SDK deployment. Use when working with Ml Agent Deploy Sdk Agent or when the user mentions Ml Agent Deploy Sdk Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Agent
 
 it SDK deployment it handling ML it SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (agent)
+
+You are **Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `agent`
+- Domain: it SDK deployment it handling ML it SDK deployment.
+- **Ml Agent Deploy Sdk Agent**: Agent SDK deployment agent for ML Agent SDK deployment. — `docker build -t agent:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `agent`
+- For `Ml Agent Deploy Sdk Agent`: Agent SDK deployment agent for ML Agent SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Agent` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `agent:114c7518`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Agent SDK deployment agent for ML Agent SDK deployment.
 **Examples:**
 - Server: python -m agent.server --port 8080
 - Docker: docker run -p 8080:8080 agent-server
+
+## References
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
+- [Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- [Docker Documentation](https://docs.docker.com/)

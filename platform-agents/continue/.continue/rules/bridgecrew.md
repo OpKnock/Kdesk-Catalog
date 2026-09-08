@@ -1,15 +1,31 @@
 ---
 name: "bridgecrew"
-description: "Run it scans locally over directories and files with framework selection. Upload results to it SaaS handling dashboards, PR comments, and fix tracking. results for centralized fix tracking."
+description: "Run it scans locally over directories and files with framework selection. Upload results to it SaaS handling dashboards, PR comments, and fix tracking. results for centralized fix tracking. Use when working with bridgecrew scan, platform integration, security or when the user mentions bridgecrew scan, platform integration, security."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.tf", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# bridgecrew
-
 Run it scans locally over directories and files with framework selection. Upload results to it SaaS handling dashboards, PR comments, and fix tracking. results for centralized fix tracking.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (bridgecrew)
+
+You are **bridgecrew** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `bridgecrew`
+- Domain: Run it scans locally over directories and files with framework selection. Upload results to it SaaS handling dashboards, PR comments, and fix tracking. results for centralized fix tracking.
+- **bridgecrew-scan**: Run Bridgecrew scans locally over directories and files with framework selection. — `bridgecrew --directory .`
+- **platform-integration**: Upload results to Bridgecrew SaaS for dashboards, PR comments, and fix tracking. — `bridgecrew --bc-api-key $BRIDGECREW_API_KEY --repo-id myorg/infra`
+- Check `knowledge` and `prerequisites: bridgecrew, checkov`
+
+### 2. Reason — think for `bridgecrew`
+- For `bridgecrew-scan`: Run Bridgecrew scans locally over directories and files with framework selection. — decide which checks to run
+- For `platform-integration`: Upload results to Bridgecrew SaaS for dashboards, PR comments, and fix tracking. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `bridgecrew` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bridgecrew`, `Checkov` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `bridgecrew:48f336b0`
 
 # Bridgecrew IaC Security
 
@@ -63,6 +79,11 @@ checkov -d . --bc-api-key $BRIDGECREW_API_KEY --repo-id myorg/infra
 ### bridgecrew-scan
 Run Bridgecrew scans locally over directories and files with framework selection.
 
+**Parameters:**
+- `directory` (string): Directory to scan recursively
+- `framework` (string): IaC framework: terraform, cloudformation, serverless, arm
+- `output` (string): Report format: cli, json, junitxml, sarif
+
 **Commands:**
 - `bridgecrew --directory .`
 - `bridgecrew -d terraform/ --framework terraform`
@@ -78,6 +99,10 @@ Run Bridgecrew scans locally over directories and files with framework selection
 ### platform-integration
 Upload results to Bridgecrew SaaS for dashboards, PR comments, and fix tracking.
 
+**Parameters:**
+- `apiKey` (string): Bridgecrew API key (env: BRIDGECREW_API_KEY)
+- `repoId` (string): Repository identifier for result upload, e.g. org/repo
+
 **Commands:**
 - `bridgecrew --bc-api-key $BRIDGECREW_API_KEY --repo-id myorg/infra`
 - `checkov -d . --bc-api-key $BRIDGECREW_API_KEY --repo-id myorg/infra --repo-branch main`
@@ -86,3 +111,7 @@ Upload results to Bridgecrew SaaS for dashboards, PR comments, and fix tracking.
 **Examples:**
 - bridgecrew --bc-api-key $BRIDGECREW_API_KEY --repo-id acme/infra
 - checkov -d . --bc-api-key $BRIDGECREW_API_KEY --repo-id acme/infra --download-external-modules
+
+## References
+- [Bridgecrew Documentation](https://docs.bridgecrew.io/)
+- [Prisma Cloud IaC Docs](https://docs.prismacloud.io/en/enterprise-edition/content/iac)

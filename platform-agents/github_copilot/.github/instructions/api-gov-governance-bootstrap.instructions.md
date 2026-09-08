@@ -4,27 +4,25 @@ applyTo: "**/*.go **/*.py **/*.r **/*.sh **/*.{yaml,yml}"
 
 Implements API governance from scratch: baseline Spectral rulesets, style guide docs, and first CI lint gate.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-gov-governance-bootstrap)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Gov Governance Bootstrap** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npm install -g @stoplight/spectral-cli`, `mkdir -p docs/api-guide`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `api-gov-governance-bootstrap`
+- Domain: Implements API governance from scratch: baseline Spectral rulesets, style guide docs, and first CI lint gate.
+- **governance-bootstrap**: Stand up initial linting with recommended rules and a project ruleset — `npm install -g @stoplight/spectral-cli`
+- **style-guide-authoring**: Write and publish the API style guide that rules enforce — `mkdir -p docs/api-guide`
+- Check `knowledge` and `prerequisites: spectral, openapi`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-gov-governance-bootstrap`
+- For `governance-bootstrap`: Stand up initial linting with recommended rules and a project ruleset — decide which checks to run
+- For `style-guide-authoring`: Write and publish the API style guide that rules enforce — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-gov-governance-bootstrap` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-gov-governance-bootstrap:099170d9`
 
 # API Gov (Bootstrap)
 

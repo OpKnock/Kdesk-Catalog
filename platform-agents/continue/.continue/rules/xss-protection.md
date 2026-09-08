@@ -1,15 +1,29 @@
 ---
 name: "XSS Protection"
-description: "Prevent cross-site scripting through your API responses: set Content-Security-Policy headers, sanitize and encode output, validate inputs, and scan with automated payloads."
+description: "Prevent cross-site scripting through your API responses: set Content-Security-Policy headers, sanitize and encode output, validate inputs, and scan with automated payloads. Use when working with xss hardening, api or when the user mentions xss hardening, api."
 globs: ["**/*.html", "**/*.java", "**/*.json", "**/*.r", "**/*.rs", "**/*.sh", "**/*.{js,ts,jsx,tsx}"]
 alwaysApply: false
 ---
 
-# XSS Protection
-
 Prevent cross-site scripting through your API responses: set Content-Security-Policy headers, sanitize and encode output, validate inputs, and scan with automated payloads.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (xss-protection)
+
+You are **XSS Protection** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `xss-protection`
+- Domain: Prevent cross-site scripting through your API responses: set Content-Security-Policy headers, sanitize and encode output, validate inputs, and scan with automated payloads.
+- **xss-hardening**: Audit and harden APIs against cross-site scripting — `curl -sI https://httpbin.org/ | grep -i 'content-security-policy'`
+- Check `knowledge` and `prerequisites: node, npm`
+
+### 2. Reason — think for `xss-protection`
+- For `xss-hardening`: Audit and harden APIs against cross-site scripting — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `xss-protection` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `xss-protection:f9f71e94`
 
 # XSS Protection
 
@@ -71,6 +85,11 @@ curl -sI http://localhost:8080/ | grep -iE 'content-security-policy|x-frame-opti
 ### xss-hardening
 Audit and harden APIs against cross-site scripting
 
+**Parameters:**
+- `policy` (string): Content-Security-Policy header value
+- `payload` (string): Test payload containing markup
+- `library` (string): Sanitizer: dompurify, owasp-html-sanitizer, bleach
+
 **Commands:**
 - `curl -sI https://httpbin.org/ | grep -i 'content-security-policy'`
 - `curl -s -X POST http://localhost:8080/api/echo -H 'Content-Type: application/json' -d '{"name":"javascript:alert(1)"}' | jq -r '.safeName'`
@@ -82,3 +101,7 @@ Audit and harden APIs against cross-site scripting
 - curl -sI http://localhost:8080/ | grep -iE 'x-frame-options|x-xss-protection'
 - node -e "const DOMPurify=require('isomorphic-dompurify');console.log(DOMPurify.sanitize('<img src=x onerror=alert(1)>'))"
 - curl -s -X POST http://localhost:8080/api/echo -d '{"name":"javascript:alert(1)"}' | jq '.safeName'
+
+## References
+- [OWASP XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
+- [MDN Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)

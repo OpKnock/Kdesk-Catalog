@@ -1,8 +1,24 @@
-# tempo
-
 Query traces with the it CLI. Search and query traces via the it HTTP API. and trace correlation.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (tempo)
+
+You are **tempo** (monitoring/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — monitoring context for `tempo`
+- Domain: Query traces with the it CLI. Search and query traces via the it HTTP API. and trace correlation.'
+- **tempo-cli**: Query traces with the Tempo CLI. — `tempo-cli query trace 00000000000000000000000000000000 --host localhost:3200`
+- **http-api**: Search and query traces via the Tempo HTTP API. — `curl -G -s 'http://localhost:3200/api/search' --data-urlencode 'tags=service.nam`
+- Check `knowledge` and `prerequisites: tempo-cli`
+
+### 2. Reason — think for `tempo`
+- For `tempo-cli`: Query traces with the Tempo CLI. — decide which checks to run
+- For `http-api`: Search and query traces via the Tempo HTTP API. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tempo` tools
+- Tools: `Glob`, `Grep`, `Read`, `Tempo-cli`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tempo:9ee215a9`
 
 # Tempo
 
@@ -58,6 +74,11 @@ Verify blocks are flushed and queryable after load.
 ### tempo-cli
 Query traces with the Tempo CLI.
 
+**Parameters:**
+- `trace-id` (string): 16 or 32 hex char trace id
+- `host` (string): Tempo query-frontend address
+- `limit` (number): Max results
+
 **Commands:**
 - `tempo-cli query trace 00000000000000000000000000000000 --host localhost:3200`
 - `tempo-cli search --host localhost:3200 '{resource.service.name="checkout"}' --limit 10`
@@ -73,6 +94,11 @@ Query traces with the Tempo CLI.
 ### http-api
 Search and query traces via the Tempo HTTP API.
 
+**Parameters:**
+- `tags` (string): Tag filters like service.name=x
+- `minDuration` (string): Minimum span duration filter
+- `trace-id` (string): Trace id to fetch
+
 **Commands:**
 - `curl -G -s 'http://localhost:3200/api/search' --data-urlencode 'tags=service.name=checkout' --data-urlencode 'limit=10'`
 - `curl -s 'http://localhost:3200/api/traces/00000000000000000000000000000000' | jq '.traceID'`
@@ -84,3 +110,8 @@ Search and query traces via the Tempo HTTP API.
 - curl -G -s 'http://localhost:3200/api/search' --data-urlencode 'tags=service.name=api' | jq '.traces[0].traceID'
 - curl -s 'http://localhost:3200/api/traces/5f3a1c9e0000000000000001' | jq '.spans[0].name'
 - curl -s 'http://localhost:3200/ready'
+
+## References
+- [Tempo Docs](https://grafana.com/docs/tempo/latest/)
+- [tempo-cli](https://grafana.com/docs/tempo/latest/reference/tempo-cli/)
+- [Tempo API](https://grafana.com/docs/tempo/latest/api_docs/)

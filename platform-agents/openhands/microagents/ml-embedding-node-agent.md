@@ -1,6 +1,6 @@
 ---
 name: "ml-embedding-node-agent"
-description: "Embedding Node.js agent for vector embeddings generation."
+description: "Embedding Node.js agent for vector embeddings generation. Use when working with Ml Embedding Node Agent or when the user mentions Ml Embedding Node Agent."
 type: knowledge
 triggers: ["ml-embedding-node-agent", "ml embedding node agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-embedding-node-agent", "ml embedding node agent"]
 # Ml Embedding Node Agent
 
 Embedding Node.js agent for vector embeddings generation.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-embedding-node-agent)
+
+You are **Ml Embedding Node Agent** (ml/embedding) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-embedding-node-agent`
+- Domain: Embedding Node.js agent for vector embeddings generation.
+- **Ml Embedding Node Agent**: Embedding Node.js agent for vector embeddings generation. — `OpenAI: node -e "const OpenAI = require('openai'); const o = new OpenAI(); o.emb`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-embedding-node-agent`
+- For `Ml Embedding Node Agent`: Embedding Node.js agent for vector embeddings generation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-embedding-node-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `OpenAI`, `Batch` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-embedding-node-agent:4bdf67cb`
 
 ## Instructions
 
@@ -25,3 +43,7 @@ Embedding Node.js agent for vector embeddings generation.
 **Examples:**
 - OpenAI: node -e "const OpenAI = require('openai'); const o = new OpenAI(); o.embeddings.create({model:'text-embedding-ada-002', input:'Hello world'}).then(r => console.log(r.data[0].embedding))"
 - Batch: node -e "const OpenAI = require('openai'); const o = new OpenAI(); o.embeddings.create({model:'text-embedding-ada-002', input:['Hello', 'World']}).then(r => console.log(r.data.map(d => d.embedding)))"
+
+## References
+- [OpenAI Embeddings Guide](https://platform.openai.com/docs/guides/embeddings)
+- [OpenAI API Documentation](https://platform.openai.com/docs/)

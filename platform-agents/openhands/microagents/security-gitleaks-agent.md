@@ -1,6 +1,6 @@
 ---
 name: "security-gitleaks-agent"
-description: "Gitleaks agent for secret detection."
+description: "Gitleaks agent for secret detection. Use when working with Security Gitleaks Agent or when the user mentions Security Gitleaks Agent."
 type: knowledge
 triggers: ["security-gitleaks-agent", "security gitleaks agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["security-gitleaks-agent", "security gitleaks agent"]
 # Security Gitleaks Agent
 
 Gitleaks agent for secret detection.
+
+## Agentic Workflow: Read -> Reason -> Act (security-gitleaks-agent)
+
+You are **Security Gitleaks Agent** (security/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `security-gitleaks-agent`
+- Domain: Gitleaks agent for secret detection.
+- **Security Gitleaks Agent**: Gitleaks agent for secret detection. — `gitleaks detect`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `security-gitleaks-agent`
+- For `Security Gitleaks Agent`: Gitleaks agent for secret detection. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `security-gitleaks-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gitleaks` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `security-gitleaks-agent:dc259e20`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ Gitleaks agent for secret detection.
 - gitleaks protect
 - gitleaks detect --source .
 - gitleaks detect --report-format json
+
+## References
+- [Gitleaks Documentation](https://github.com/gitleaks/gitleaks)

@@ -1,15 +1,29 @@
 ---
 name: "nats-jetstream"
-description: "NATS JetStream core: create streams, message retention, storage engines, and durability configuration."
+description: "NATS JetStream core: create streams, message retention, storage engines, and durability configuration. Use when working with jetstream streams, api or when the user mentions jetstream streams, api."
 type: knowledge
 triggers: ["nats-jetstream", "jetstream-streams"]
 ---
 
-# Nats Jetstream
-
 NATS JetStream core: create streams, message retention, storage engines, and durability configuration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nats-jetstream)
+
+You are **Nats Jetstream** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `nats-jetstream`
+- Domain: NATS JetStream core: create streams, message retention, storage engines, and durability configuration.
+- **jetstream-streams**: Create and manage JetStream streams, configure retention/storage, and produce/consume messages. — `nats server check jetstream`
+- Check `knowledge` and `prerequisites: nats`
+
+### 2. Reason — think for `nats-jetstream`
+- For `jetstream-streams`: Create and manage JetStream streams, configure retention/storage, and produce/consume messages. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nats-jetstream` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nats` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nats-jetstream:3fc1699e`
 
 # NATS JetStream
 
@@ -70,6 +84,11 @@ nats stream view ORDERS
 ### jetstream-streams
 Create and manage JetStream streams, configure retention/storage, and produce/consume messages.
 
+**Parameters:**
+- `stream` (string): Stream name
+- `subjects` (array): Subject filters the stream captures
+- `retention` (string): limits, interest or workqueue
+
 **Commands:**
 - `nats server check jetstream`
 - `nats stream add ORDERS --subjects 'orders.*' --storage file`
@@ -81,3 +100,7 @@ Create and manage JetStream streams, configure retention/storage, and produce/co
 - nats stream add EVENTS --subjects 'events.>' --retention limits --max-age 24h --storage file
 - nats stream info ORDERS
 - nats stream purge ORDERS --force
+
+## References
+- [NATS JetStream Concepts](https://docs.nats.io/nats-concepts/jetstream)
+- [nats CLI reference](https://docs.nats.io/using-nats/command-line/)

@@ -1,8 +1,26 @@
-# Avro
-
 Works with Apache Avro data serialization: schema authoring, avro-tools conversion, Python avro library usage, and schema evolution.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (avro)
+
+You are **Avro** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `avro`
+- Domain: Works with Apache Avro data serialization: schema authoring, avro-tools conversion, Python avro library usage, and schema evolution.
+- **avro-tools**: Convert, inspect, and manipulate Avro data files. — `java -jar avro-tools.jar getmeta file.avro`
+- **python-avro**: Serialize and deserialize Avro with the Python library. — `pip install avro`
+- **schema-evolution**: Test schema resolution between writer and reader schemas. — `java -jar avro-tools.jar --version`
+- Check `knowledge` and `prerequisites: java, pip, python`
+
+### 2. Reason — think for `avro`
+- For `avro-tools`: Convert, inspect, and manipulate Avro data files. — decide which checks to run
+- For `python-avro`: Serialize and deserialize Avro with the Python library. — decide which checks to run
+- For `schema-evolution`: Test schema resolution between writer and reader schemas. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `avro` tools
+- Tools: `Glob`, `Grep`, `Read`, `Java`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `avro:091cb949`
 
 # Avro
 
@@ -71,6 +89,10 @@ python -c "import avro.schema; s=avro.schema.parse(open('user.avsc').read()); pr
 ### avro-tools
 Convert, inspect, and manipulate Avro data files.
 
+**Parameters:**
+- `schema_file` (string): Avro schema .avsc file
+- `count` (number): Number of records for random generation
+
 **Commands:**
 - `java -jar avro-tools.jar getmeta file.avro`
 - `java -jar avro-tools.jar tojson file.avro`
@@ -86,6 +108,10 @@ Convert, inspect, and manipulate Avro data files.
 ### python-avro
 Serialize and deserialize Avro with the Python library.
 
+**Parameters:**
+- `schema` (string): Avro schema JSON
+- `file` (string): .avro data file to read/write
+
 **Commands:**
 - `pip install avro`
 - `python -c "import avro; print(avro.__version__)"`
@@ -100,6 +126,10 @@ Serialize and deserialize Avro with the Python library.
 ### schema-evolution
 Test schema resolution between writer and reader schemas.
 
+**Parameters:**
+- `writer_schema` (string): Original schema used at write time
+- `reader_schema` (string): New schema for reading
+
 **Commands:**
 - `java -jar avro-tools.jar --version`
 - `java -jar avro-tools.jar tojson --schema-file reader.avsc writer.avro`
@@ -110,3 +140,8 @@ Test schema resolution between writer and reader schemas.
 - java -jar avro-tools.jar tojson --schema-file reader_v2.avsc writer_v1.avro | head -3
 - python -c "from avro.io import DatumReader; r=DatumReader(reader_schema, writer_schema); print('resolution ready')"
 - java -jar avro-tools.jar compile schema v2.avsc gen/
+
+## References
+- [Avro Specification](https://avro.apache.org/docs/current/specification/)
+- [Avro Getting Started](https://avro.apache.org/docs/current/getting-started-java/)
+- [Python avro library](https://avro.apache.org/docs/current/getting-started-python/)

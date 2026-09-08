@@ -1,6 +1,6 @@
 ---
 name: "weaviate-sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Weaviate Deploy Sdk Agent, vector db or when the user mentions Ml Weaviate Deploy Sdk Agent, vector db."
 type: knowledge
 triggers: ["weaviate-sdk", "ml weaviate deploy sdk agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["weaviate-sdk", "ml weaviate deploy sdk agent"]
 # Weaviate Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (weaviate-sdk)
+
+You are **Weaviate Sdk** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `weaviate-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Weaviate Deploy Sdk Agent**: Weaviate SDK deployment agent for ML Weaviate SDK deployment. — `Docker: docker run -p 8080:8080 weaviate-server`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `weaviate-sdk`
+- For `Ml Weaviate Deploy Sdk Agent`: Weaviate SDK deployment agent for ML Weaviate SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `weaviate-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Docker`, `Server` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `weaviate-sdk:cfcad089`
 
 ## Instructions
 
@@ -25,3 +43,8 @@ Weaviate SDK deployment agent for ML Weaviate SDK deployment.
 **Examples:**
 - Server: python -m weaviate.server --port 8080
 - Docker: docker run -p 8080:8080 weaviate-server
+
+## References
+- [Weaviate Documentation](https://weaviate.io/developers/weaviate/)
+- [Docker Documentation](https://docs.docker.com/)
+- [Python Documentation](https://docs.python.org/3/)

@@ -4,27 +4,25 @@ applyTo: "**/*.json **/*.r **/*.sh **/Dockerfile*"
 
 Builds, runs, and manages containers and images with the docker CLI: images, volumes, networks, and container lifecycle.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (docker)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **docker** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `docker run -d --name web -p 8080:80 nginx:1.26`, `docker build -t myapp:1.0 .`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devops context for `docker`
+- Domain: Builds, runs, and manages containers and images with the docker CLI: images, volumes, networks, and container lifecycle.
+- **container-lifecycle**: Run, stop, exec into, and remove containers with full flag control. — `docker run -d --name web -p 8080:80 nginx:1.26`
+- **images-and-storage**: Build images, manage image lifecycle, and work with volumes and networks. — `docker build -t myapp:1.0 .`
+- Check `knowledge` and `prerequisites: docker`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `docker`
+- For `container-lifecycle`: Run, stop, exec into, and remove containers with full flag control. — decide which checks to run
+- For `images-and-storage`: Build images, manage image lifecycle, and work with volumes and networks. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `docker` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `docker:cf223873`
 
 # Docker CLI Operations
 

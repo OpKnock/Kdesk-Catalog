@@ -6,27 +6,25 @@ globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.scala", "**/*.sh"]
 
 Run an accessibility scan of a single URL and capture violations in machine-readable format. Wire accessibility checks into CI pipelines with pa11y-ci and Lighthouse CI. producing WCAG 2.x violation reports and CI gates. Use when auditing a site or app against WCAG 2.x. Don't use for fixing individual accessibility defects or for manual keyboard-navigation testing.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (accessibility-audit)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **accessibility-audit** (frontend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx pa11y http://localhost:8080 --reporter=json`, `npm install --save-dev pa11y-ci`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — frontend context for `accessibility-audit`
+- Domain: Run an accessibility scan of a single URL and capture violations in machine-readable format. Wire accessibility checks into CI pipelines with pa11y-ci and Lighthouse CI. producing WCAG 2.x violation r
+- **audit-page**: Run an accessibility scan of a single URL and capture violations in machine-readable format. — `npx pa11y http://localhost:8080 --reporter=json`
+- **ci-integration**: Wire accessibility checks into CI pipelines with pa11y-ci and Lighthouse CI. — `npm install --save-dev pa11y-ci`
+- Check `knowledge` and `prerequisites: node.js, axe-core, lighthouse, jest-axe`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `accessibility-audit`
+- For `audit-page`: Run an accessibility scan of a single URL and capture violations in machine-readable format. — decide which checks to run
+- For `ci-integration`: Wire accessibility checks into CI pipelines with pa11y-ci and Lighthouse CI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `accessibility-audit` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Pa11y` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `accessibility-audit:58e8f454`
 
 # Accessibility Audit
 

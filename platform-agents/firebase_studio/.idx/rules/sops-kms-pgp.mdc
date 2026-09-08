@@ -1,14 +1,28 @@
 ---
-description: "Encrypts files with SOPS using AWS KMS keys and PGP recipients. Supports mixed recipient policies, edits encrypted files in place, patches single values, and scales to many files via .sops.yaml creation rules for team-based secret management."
+description: "Encrypts files with SOPS using AWS KMS keys and PGP recipients. Supports mixed recipient policies, edits encrypted files in place, patches single values, and scales to many files via .sops.yaml creation rules for team-based secret management. Use when working with sops kms pgp, api or when the user mentions sops kms pgp, api."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# SOPS KMS PGP
-
 Encrypts files with SOPS using AWS KMS keys and PGP recipients. Supports mixed recipient policies, edits encrypted files in place, patches single values, and scales to many files via .sops.yaml creation rules for team-based secret management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (sops-kms-pgp)
+
+You are **SOPS KMS PGP** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `sops-kms-pgp`
+- Domain: Encrypts files with SOPS using AWS KMS keys and PGP recipients. Supports mixed recipient policies, edits encrypted files in place, patches single values, and scales to many files via .sops.yaml creati
+- **sops-kms-pgp**: Encrypts files with SOPS using AWS KMS keys and PGP recipients. Supports mixed recipient policies, e — `sops --kms arn:aws:kms:us-east-1:123456789012:key/abc --encrypt config/prod.yaml`
+- Check `knowledge` and `prerequisites: sops`
+
+### 2. Reason — think for `sops-kms-pgp`
+- For `sops-kms-pgp`: Encrypts files with SOPS using AWS KMS keys and PGP recipients. Supports mixed recipient policies, edits encrypted files — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `sops-kms-pgp` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sops` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sops-kms-pgp:bbcd55d4`
 
 # SOPS (KMS / PGP)
 
@@ -76,6 +90,11 @@ sops --decrypt config/prod.enc.yaml > /dev/null && echo 'decrypt ok'
 ### sops-kms-pgp
 Encrypts files with SOPS using AWS KMS keys and PGP recipients. Supports mixed recipient policies, edits encrypted files in place, patches single values, and scales to many files via .sops.yaml creation rules for team-based secret management.
 
+**Parameters:**
+- `kms_arn` (string): AWS KMS key ARN for encryption
+- `pgp_fingerprint` (string): PGP key fingerprint for recipient
+- `file_path` (string): Path to file to encrypt/decrypt
+
 **Commands:**
 - `sops --kms arn:aws:kms:us-east-1:123456789012:key/abc --encrypt config/prod.yaml`
 - `sops --pgp 8D7B6F2D4A1C9E3F --encrypt config/prod.yaml`
@@ -90,3 +109,6 @@ Encrypts files with SOPS using AWS KMS keys and PGP recipients. Supports mixed r
 - sops --decrypt config/prod.enc.yaml
 - sops --edit config/prod.enc.yaml
 - sops --set '["database"]["host"] "db.internal"' config/prod.enc.yaml
+
+## References
+- [SOPS documentation](https://getsops.io/docs/)

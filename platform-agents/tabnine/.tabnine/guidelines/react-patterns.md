@@ -1,8 +1,24 @@
-# react-patterns
-
 Applies production React architecture patterns: composition, state management, Storybook, and code quality gates for component libraries.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (react-patterns)
+
+You are **react-patterns** (frontend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `react-patterns`
+- Domain: Applies production React architecture patterns: composition, state management, Storybook, and code quality gates for component libraries.
+- **storybook**: Build and maintain a component library with Storybook. — `npx storybook@latest init --type react-vite`
+- **code-quality**: Enforce React patterns with ESLint and dependency hygiene. — `npx eslint src --ext .ts,.tsx --max-warnings 0`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `react-patterns`
+- For `storybook`: Build and maintain a component library with Storybook. — decide which checks to run
+- For `code-quality`: Enforce React patterns with ESLint and dependency hygiene. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `react-patterns` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `react-patterns:f68c18e9`
 
 # React Patterns
 
@@ -76,6 +92,11 @@ Run unit + storybook interaction tests before visual review.
 ### storybook
 Build and maintain a component library with Storybook.
 
+**Parameters:**
+- `type` (string): react-vite, react-webpack5, or framework preset
+- `project-token` (string): Chromatic visual regression token
+- `addon` (string): Storybook addon package to install
+
 **Commands:**
 - `npx storybook@latest init --type react-vite`
 - `npx storybook@latest add @storybook/addon-a11y`
@@ -91,6 +112,11 @@ Build and maintain a component library with Storybook.
 ### code-quality
 Enforce React patterns with ESLint and dependency hygiene.
 
+**Parameters:**
+- `max-warnings` (number): CI gate on warnings
+- `rule` (string): Inline rule override
+- `ext` (string): File extensions to lint
+
 **Commands:**
 - `npx eslint src --ext .ts,.tsx --max-warnings 0`
 - `npx eslint src --fix`
@@ -102,3 +128,8 @@ Enforce React patterns with ESLint and dependency hygiene.
 - npx eslint src --max-warnings 0 --rule 'react-hooks/rules-of-hooks:error'
 - npx npm-check-updates -u && npm install
 - npx eslint src/components --fix
+
+## References
+- [React Docs](https://react.dev/learn)
+- [Storybook](https://storybook.js.org/docs)
+- [React Hooks rules](https://react.dev/reference/rules)

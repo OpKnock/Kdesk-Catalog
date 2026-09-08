@@ -1,8 +1,24 @@
-# ansible-infrastructure
-
 Automates server configuration with Ansible: inventory, playbooks, roles, and ad-hoc modules across fleets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ansible-infrastructure)
+
+You are **ansible-infrastructure** (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `ansible-infrastructure`
+- Domain: Automates server configuration with Ansible: inventory, playbooks, roles, and ad-hoc modules across fleets.
+- **playbooks**: Write and run Ansible playbooks against inventories. — `ansible-playbook -i inventory/prod.ini site.yml`
+- **ad-hoc**: Run one-off modules across hosts without a playbook. — `ansible all -m ping -i inventory/prod.ini`
+- Check `knowledge` and `prerequisites: ansible, ansible-playbook`
+
+### 2. Reason — think for `ansible-infrastructure`
+- For `playbooks`: Write and run Ansible playbooks against inventories. — decide which checks to run
+- For `ad-hoc`: Run one-off modules across hosts without a playbook. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ansible-infrastructure` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ansible-playbook`, `Ansible` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ansible-infrastructure:fc553120`
 
 # Ansible
 
@@ -94,6 +110,11 @@ Gate merges on both.
 ### playbooks
 Write and run Ansible playbooks against inventories.
 
+**Parameters:**
+- `inventory` (string): Inventory file or directory
+- `tags` (string): Comma-separated tags to run
+- `limit` (string): Host pattern subset to target
+
 **Commands:**
 - `ansible-playbook -i inventory/prod.ini site.yml`
 - `ansible-playbook site.yml --tags deploy`
@@ -109,6 +130,11 @@ Write and run Ansible playbooks against inventories.
 ### ad-hoc
 Run one-off modules across hosts without a playbook.
 
+**Parameters:**
+- `module` (string): Module like service, apt, ping, shell
+- `args` (string): Module arguments as key=value string
+- `become` (string): Elevate privileges with -b
+
 **Commands:**
 - `ansible all -m ping -i inventory/prod.ini`
 - `ansible web -m service -a 'name=nginx state=restarted' -b`
@@ -120,3 +146,8 @@ Run one-off modules across hosts without a playbook.
 - ansible web -m service -a 'name=nginx state=started' -b --become-user=root
 - ansible all -m ping --one-line
 - ansible db -m command -a 'free -m'
+
+## References
+- [Ansible Docs](https://docs.ansible.com/ansible/latest/index.html)
+- [Ansible CLI](https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html)
+- [Ansible Galaxy](https://galaxy.ansible.com/)

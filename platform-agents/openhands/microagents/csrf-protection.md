@@ -1,15 +1,31 @@
 ---
 name: "csrf-protection"
-description: "Prevents cross-site request forgery on state-changing endpoints via double-submit cookie patterns, SameSite cookies, and curl-based validation."
+description: "Prevents cross-site request forgery on state-changing endpoints via double-submit cookie patterns, SameSite cookies, and curl-based validation. Use when working with csrf tokens, csrf middleware, api or when the user mentions csrf tokens, csrf middleware, api."
 type: knowledge
 triggers: ["csrf-protection", "csrf-tokens", "csrf-middleware"]
 ---
 
-# Csrf Protection
-
 Prevents cross-site request forgery on state-changing endpoints via double-submit cookie patterns, SameSite cookies, and curl-based validation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (csrf-protection)
+
+You are **Csrf Protection** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `csrf-protection`
+- Domain: Prevents cross-site request forgery on state-changing endpoints via double-submit cookie patterns, SameSite cookies, and curl-based validation.
+- **csrf-tokens**: Issue CSRF tokens and verify double-submit cookie patterns with curl — `curl -c cookies.txt -X GET http://localhost:8080/csrf-token`
+- **csrf-middleware**: Configure CSRF protection middleware and SameSite cookies — `npm install csrf-csrf`
+- Check `knowledge` and `prerequisites: node, npm`
+
+### 2. Reason — think for `csrf-protection`
+- For `csrf-tokens`: Issue CSRF tokens and verify double-submit cookie patterns with curl — decide which checks to run
+- For `csrf-middleware`: Configure CSRF protection middleware and SameSite cookies — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `csrf-protection` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `csrf-protection:6eddb962`
 
 # CSRF Protection
 
@@ -91,6 +107,10 @@ curl -b cookies.txt -c cookies.txt -X POST -H "X-CSRF-Token: $TOKEN" http://loca
 ### csrf-tokens
 Issue CSRF tokens and verify double-submit cookie patterns with curl
 
+**Parameters:**
+- `cookie_file` (string): Netscape cookie jar file
+- `token_header` (string): CSRF token header name
+
 **Commands:**
 - `curl -c cookies.txt -X GET http://localhost:8080/csrf-token`
 - `curl -b cookies.txt -c cookies.txt -X POST -H "X-CSRF-Token: $TOKEN" http://localhost:8080/submit`
@@ -105,6 +125,10 @@ Issue CSRF tokens and verify double-submit cookie patterns with curl
 ### csrf-middleware
 Configure CSRF protection middleware and SameSite cookies
 
+**Parameters:**
+- `cookie_name` (string): CSRF cookie name
+- `same_site` (string): SameSite value: strict, lax, or none
+
 **Commands:**
 - `npm install csrf-csrf`
 - `node server.js`
@@ -115,3 +139,7 @@ Configure CSRF protection middleware and SameSite cookies
 - npm install csrf-csrf && node server.js
 - curl -s -D - -o /dev/null -X GET http://localhost:8080/health | grep -i set-cookie
 - curl -s -D - -o /dev/null -X GET http://localhost:8080/health | grep -i samesite
+
+## References
+- [OWASP CSRF Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
+- [csrf-csrf npm](https://www.npmjs.com/package/csrf-csrf)

@@ -1,8 +1,24 @@
-# Kafka Retention
-
 Control Kafka data retention: time/size-based retention configs, segment sizing, record deletion by offset, and log dir verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kafka-retention)
+
+You are **Kafka Retention** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `kafka-retention`
+- Domain: Control Kafka data retention: time/size-based retention configs, segment sizing, record deletion by offset, and log dir verification.
+- **retention-config**: Set time- and size-based retention per topic with kafka-configs.sh. — `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity`
+- **record-deletion**: Delete records below an offset and verify log sizes shrink. — `kafka-delete-records.sh --bootstrap-server localhost:9092 --offset-json-file off`
+- Check `knowledge` and `prerequisites: kafka-configs.sh, kafka-delete-records.sh, kafka-log-dirs.sh, kafka-run-class.sh`
+
+### 2. Reason — think for `kafka-retention`
+- For `retention-config`: Set time- and size-based retention per topic with kafka-configs.sh. — decide which checks to run
+- For `record-deletion`: Delete records below an offset and verify log sizes shrink. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kafka-retention` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-configs.sh`, `Kafka-delete-records.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-retention:eb63be7e`
 
 # Kafka Retention
 
@@ -71,6 +87,11 @@ kafka-run-class.sh kafka.tools.GetOffsetShell \
 ### retention-config
 Set time- and size-based retention per topic with kafka-configs.sh.
 
+**Parameters:**
+- `topic` (string): Topic name.
+- `retention_ms` (integer): Retention time in milliseconds (30 days = 2592000000).
+- `retention_bytes` (integer): Retention size per partition in bytes.
+
 **Commands:**
 - `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name audit --alter --add-config retention.ms=2592000000`
 - `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name audit --alter --add-config "retention.bytes=1073741824"`
@@ -85,6 +106,9 @@ Set time- and size-based retention per topic with kafka-configs.sh.
 ### record-deletion
 Delete records below an offset and verify log sizes shrink.
 
+**Parameters:**
+- `offsets_file` (string): JSON file with partition->offset pairs to delete below.
+
 **Commands:**
 - `kafka-delete-records.sh --bootstrap-server localhost:9092 --offset-json-file offsets.json`
 - `kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list audit`
@@ -93,3 +117,7 @@ Delete records below an offset and verify log sizes shrink.
 **Examples:**
 - kafka-delete-records.sh --bootstrap-server localhost:9092 --offset-json-file offsets.json
 - kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list audit
+
+## References
+- [Kafka Log Retention](https://kafka.apache.org/documentation/#retention)
+- [kafka-delete-records](https://kafka.apache.org/documentation/#basic_ops_delete_records)

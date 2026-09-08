@@ -1,6 +1,6 @@
 ---
 name: "marketing-email"
-description: "Marketing email expertise and best practices."
+description: "Marketing email expertise and best practices. Use when working with email expertise, marketing, skill or when the user mentions email expertise, marketing, skill."
 type: knowledge
 triggers: ["marketing-email", "email-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["marketing-email", "email-expertise"]
 # Marketing Email
 
 Marketing email expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (marketing-email)
+
+You are **Marketing Email** (marketing/email) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — marketing context for `marketing-email`
+- Domain: Marketing email expertise and best practices.
+- **email-expertise**: marketing email expertise — `email-cli`
+- Check `knowledge` and `prerequisites: email`
+
+### 2. Reason — think for `marketing-email`
+- For `email-expertise`: marketing email expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `marketing-email` tools
+- Tools: `Glob`, `Grep`, `Read`, `Email-cli`, `Email-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `marketing-email:3bd87f06`
 
 ## Instructions
 

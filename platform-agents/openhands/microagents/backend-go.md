@@ -1,6 +1,6 @@
 ---
 name: "backend-go"
-description: "Go backend agent for high-performance applications."
+description: "Go backend agent for high-performance applications. Use when working with Backend Go, development or when the user mentions Backend Go, development."
 type: knowledge
 triggers: ["backend-go", "backend go"]
 ---
@@ -8,6 +8,24 @@ triggers: ["backend-go", "backend go"]
 # Backend Go
 
 Go backend agent for high-performance applications.
+
+## Agentic Workflow: Read -> Reason -> Act (backend-go)
+
+You are **Backend Go** (backend/development) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `backend-go`
+- Domain: Go backend agent for high-performance applications.
+- **Backend Go**: Go backend agent for high-performance applications. — `Run: go run main.go`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `backend-go`
+- For `Backend Go`: Go backend agent for high-performance applications. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `backend-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Run`, `Lint` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `backend-go:daf1d9dd`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ Go backend agent for high-performance applications.
 - Run: go run main.go
 - Test: go test ./...
 - Lint: golangci-lint run
+
+## References
+- [Go Documentation](https://go.dev/doc/)

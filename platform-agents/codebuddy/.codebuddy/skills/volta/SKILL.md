@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(volta:*)"
 
 Manages Node.js toolchains with Volta: install and pin node/npm/yarn per project, automatic version switching, and speed.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (volta)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Volta** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `volta install node`, `volta pin node@20`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devtools context for `volta`
+- Domain: Manages Node.js toolchains with Volta: install and pin node/npm/yarn per project, automatic version switching, and speed.
+- **toolchain-install**: Install Node.js versions and package managers. — `volta install node`
+- **pinning-and-switching**: Pin tool versions per project and switch automatically. — `volta pin node@20`
+- Check `knowledge` and `prerequisites: volta`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `volta`
+- For `toolchain-install`: Install Node.js versions and package managers. — decide which checks to run
+- For `pinning-and-switching`: Pin tool versions per project and switch automatically. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `volta` tools
+- Tools: `Glob`, `Grep`, `Read`, `Volta` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `volta:bc0df7db`
 
 # Volta Node Toolchain
 

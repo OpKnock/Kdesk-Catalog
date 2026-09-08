@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(cargo:*)"
 
 Audits Rust dependencies for known vulnerabilities with cargo-audit: advisories, fix suggestions, and CI gating.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (cargo-audit)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Cargo Audit** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `cargo install cargo-audit`, `cargo update -p vulnerable-crate`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `cargo-audit`
+- Domain: Audits Rust dependencies for known vulnerabilities with cargo-audit: advisories, fix suggestions, and CI gating.
+- **cargo-audit-scan**: Scan dependency trees for vulnerabilities. — `cargo install cargo-audit`
+- **cargo-fix**: Update vulnerable dependencies. — `cargo update -p vulnerable-crate`
+- Check `knowledge` and `prerequisites: cargo`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `cargo-audit`
+- For `cargo-audit-scan`: Scan dependency trees for vulnerabilities. — decide which checks to run
+- For `cargo-fix`: Update vulnerable dependencies. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `cargo-audit` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cargo-audit:ef198c43`
 
 # cargo-audit
 

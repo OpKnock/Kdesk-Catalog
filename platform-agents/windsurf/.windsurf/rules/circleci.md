@@ -6,27 +6,25 @@ globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 
 Build, validate, and debug CircleCI pipelines with the circleci CLI, including orbs and local execution.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (circleci)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Circleci** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `circleci config validate`, `circleci orb publish orb.yml myorg/myorb@0.0.1`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `circleci`
+- Domain: Build, validate, and debug CircleCI pipelines with the circleci CLI, including orbs and local execution.
+- **pipeline-validate**: Validate, process, and inspect CircleCI config files — `circleci config validate`
+- **orbs-and-runs**: Manage orbs and run jobs locally with the CircleCI CLI — `circleci orb publish orb.yml myorg/myorb@0.0.1`
+- Check `knowledge` and `prerequisites: circleci`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `circleci`
+- For `pipeline-validate`: Validate, process, and inspect CircleCI config files — decide which checks to run
+- For `orbs-and-runs`: Manage orbs and run jobs locally with the CircleCI CLI — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `circleci` tools
+- Tools: `Glob`, `Grep`, `Read`, `Circleci` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `circleci:6d8dcaca`
 
 # CircleCI
 

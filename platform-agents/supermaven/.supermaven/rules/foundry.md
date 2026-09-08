@@ -1,8 +1,26 @@
-# Foundry
-
 Develops Solidity with Foundry: forge build/test/fuzz, cast interactions, anvil local node, and deployment scripts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (foundry)
+
+You are **Foundry** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `foundry`
+- Domain: Develops Solidity with Foundry: forge build/test/fuzz, cast interactions, anvil local node, and deployment scripts.
+- **forge-build-test**: Build, test, and fuzz contracts. — `forge init myapp`
+- **cast-ops**: Interact with chains and contracts. — `cast call 0xToken --rpc-url $RPC_URL "symbol()(string)"`
+- **forge-deploy**: Deploy contracts and run scripts. — `forge create src/Token.sol:Token --rpc-url $RPC_URL --private-key $PK`
+- Check `knowledge` and `prerequisites: anvil, cast, forge`
+
+### 2. Reason — think for `foundry`
+- For `forge-build-test`: Build, test, and fuzz contracts. — decide which checks to run
+- For `cast-ops`: Interact with chains and contracts. — decide which checks to run
+- For `forge-deploy`: Deploy contracts and run scripts. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `foundry` tools
+- Tools: `Glob`, `Grep`, `Read`, `Forge`, `Cast` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `foundry:21815d5b`
 
 # Foundry
 
@@ -69,6 +87,10 @@ function testMintOnlyOwner() public {
 ### forge-build-test
 Build, test, and fuzz contracts.
 
+**Parameters:**
+- `match-test` (string): Test name filter
+- `fuzz-runs` (integer): Fuzz iterations
+
 **Commands:**
 - `forge init myapp`
 - `forge build`
@@ -83,6 +105,11 @@ Build, test, and fuzz contracts.
 
 ### cast-ops
 Interact with chains and contracts.
+
+**Parameters:**
+- `address` (string): Contract address
+- `signature` (string): Function signature
+- `rpc-url` (string): RPC endpoint
 
 **Commands:**
 - `cast call 0xToken --rpc-url $RPC_URL "symbol()(string)"`
@@ -99,6 +126,10 @@ Interact with chains and contracts.
 ### forge-deploy
 Deploy contracts and run scripts.
 
+**Parameters:**
+- `contract` (string): Contract path:Name
+- `broadcast` (boolean): Broadcast the transaction
+
 **Commands:**
 - `forge create src/Token.sol:Token --rpc-url $RPC_URL --private-key $PK`
 - `forge script script/Deploy.s.sol:Deploy --rpc-url $RPC_URL --broadcast`
@@ -109,3 +140,7 @@ Deploy contracts and run scripts.
 - forge script script/Deploy.s.sol --rpc-url $RPC_URL --broadcast --slow
 - anvil --fork-url $RPC_URL
 - forge create src/Token.sol:Token --constructor-args "MyToken" "MTK" 18
+
+## References
+- [Foundry Book](https://book.getfoundry.sh)
+- [Forge Test Reference](https://book.getfoundry.sh/forge/test-examples)

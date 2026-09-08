@@ -1,15 +1,33 @@
 ---
 name: "api-rate-limiter"
-description: "Implements application-level rate limiting with Redis-backed sliding windows, token buckets, and fixed windows. Configures Express/Fastify middleware, nginx limits, and validates enforcement with load tests and header assertions."
+description: "Implements application-level rate limiting with Redis-backed sliding windows, token buckets, and fixed windows. Configures Express/Fastify middleware, nginx limits, and validates enforcement with load tests and header assertions. Use when working with redis sliding window, express middleware, fastify middleware, nginx limits or when the user mentions redis sliding window, express middleware, fastify middleware, nginx limits."
 type: knowledge
 triggers: ["api-rate-limiter", "redis-sliding-window", "express-middleware", "fastify-middleware", "nginx-limits"]
 ---
 
-# API Rate Limiter
-
 Implements application-level rate limiting with Redis-backed sliding windows, token buckets, and fixed windows. Configures Express/Fastify middleware, nginx limits, and validates enforcement with load tests and header assertions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-rate-limiter)
+
+You are **API Rate Limiter** (api/security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `api-rate-limiter`
+- Domain: Implements application-level rate limiting with Redis-backed sliding windows, token buckets, and fixed windows. Configures Express/Fastify middleware, nginx limits, and validates enforcement with load
+- **redis-sliding-window**: Implements Redis-backed sliding window rate limiting with Lua scripts for atomicity. — `redis-cli --eval sliding_window.lua rate:user:123 1 100 60`
+- **express-middleware**: Configures express-rate-limit middleware with custom key generators and handlers. — `npm install express-rate-limit`
+- **fastify-middleware**: Configures @fastify/rate-limit plugin with Redis store. — `npm install @fastify/rate-limit @fastify/redis`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `api-rate-limiter`
+- For `redis-sliding-window`: Implements Redis-backed sliding window rate limiting with Lua scripts for atomicity. — decide which checks to run
+- For `express-middleware`: Configures express-rate-limit middleware with custom key generators and handlers. — decide which checks to run
+- For `fastify-middleware`: Configures @fastify/rate-limit plugin with Redis store. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-rate-limiter` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-rate-limiter:6c7d0450`
 
 # API Rate Limiter
 
@@ -117,6 +135,11 @@ server {
 ### redis-sliding-window
 Implements Redis-backed sliding window rate limiting with Lua scripts for atomicity.
 
+**Parameters:**
+- `key` (string): Redis key pattern (e.g., rate:user:{id})
+- `limit` (number): Max requests per window
+- `window_seconds` (number): Window size in seconds
+
 **Commands:**
 - `redis-cli --eval sliding_window.lua rate:user:123 1 100 60`
 - `redis-cli --eval token_bucket.lua rate:user:123 10 100`
@@ -131,6 +154,11 @@ Implements Redis-backed sliding window rate limiting with Lua scripts for atomic
 ### express-middleware
 Configures express-rate-limit middleware with custom key generators and handlers.
 
+**Parameters:**
+- `window_ms` (number): Window size in milliseconds
+- `max_requests` (number): Maximum requests per window
+- `key_generator` (string): Function to extract rate limit key (ip, user, apikey)
+
 **Commands:**
 - `npm install express-rate-limit`
 - `printf "const rateLimit = require(\"express-rate-limit\");\nmodule.exports = rateLimit({\n  windowMs: 60 * 1000,\n  max: 100,\n  keyGenerator: (req) => req.ip,\n  handler: (req, res) => res.status(429).json({error: \"Too Many Requests\"}),\n  standardHeaders: true,\n  legacyHeaders: false\n});" > rate-limiter.js`
@@ -141,6 +169,11 @@ Configures express-rate-limit middleware with custom key generators and handlers
 
 ### fastify-middleware
 Configures @fastify/rate-limit plugin with Redis store.
+
+**Parameters:**
+- `max` (number): Maximum requests per window
+- `time_window` (string): Window duration (e.g., "1 minute", "1 hour")
+- `redis` (string): Redis client instance
 
 **Commands:**
 - `npm install @fastify/rate-limit @fastify/redis`
@@ -153,6 +186,11 @@ Configures @fastify/rate-limit plugin with Redis store.
 ### nginx-limits
 Configures nginx limit_req_zone and limit_req for edge rate limiting.
 
+**Parameters:**
+- `zone_name` (string): Shared memory zone name
+- `rate` (string): Rate limit (e.g., 10r/s, 100r/m)
+- `burst` (number): Burst allowance
+
 **Commands:**
 - `nginx -t`
 - `nginx -s reload`
@@ -163,3 +201,17 @@ Configures nginx limit_req_zone and limit_req for edge rate limiting.
 **Examples:**
 - printf "limit_req_zone \$binary_remote_addr zone=api:10m rate=10r/s;\nserver {\n  location /api/ {\n    limit_req zone=api burst=20 nodelay;\n    limit_req_status 429;\n    proxy_pass http://backend;\n  }\n}" > /etc/nginx/conf.d/ratelimit.conf
 - nginx -t && nginx -s reload
+
+## References
+- [express-rate-limit](https://github.com/express-rate-limit/express-rate-limit)
+- [fastify-rate-limit](https://github.com/fastify/fastify-rate-limit)
+- [nginx limit_req Module](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html)
+- [Redis Rate Limiting Patterns](https://redis.io/docs/latest/develop/use-cases/rate-limiting/)
+- [Rate Limiting Headers](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-ratelimit-headers)
+
+## Progressive Disclosure
+This skill has many capabilities. For detailed reference:
+- `references/REFERENCE.md` — full capability docs and edge cases
+- `scripts/` — executable helpers (see `allowed-tools`)
+- `assets/` — templates and data files
+Load references on demand via relative paths, not at startup.

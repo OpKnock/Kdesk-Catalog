@@ -1,15 +1,31 @@
 ---
 name: "Load Balancing"
-description: "Configures load balancing tiers: HAProxy and NGINX proxies, Kubernetes Services (ClusterIP/NodePort/LoadBalancer), MetalLB, and keepalived."
+description: "Configures load balancing tiers: HAProxy and NGINX proxies, Kubernetes Services (ClusterIP/NodePort/LoadBalancer), MetalLB, and keepalived. Use when working with proxy configuration, kubernetes lb, devops or when the user mentions proxy configuration, kubernetes lb, devops."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Load Balancing
-
 Configures load balancing tiers: HAProxy and NGINX proxies, Kubernetes Services (ClusterIP/NodePort/LoadBalancer), MetalLB, and keepalived.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (load-balancing)
+
+You are **Load Balancing** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `load-balancing`
+- Domain: Configures load balancing tiers: HAProxy and NGINX proxies, Kubernetes Services (ClusterIP/NodePort/LoadBalancer), MetalLB, and keepalived.
+- **proxy-configuration**: Configure and validate HAProxy and NGINX frontends and backends. — `haproxy -c -f /etc/haproxy/haproxy.cfg`
+- **kubernetes-lb**: Expose workloads with Services and MetalLB bare-metal load balancers. — `kubectl expose deployment web --type=LoadBalancer --port=80`
+- Check `knowledge` and `prerequisites: haproxy, kubectl, nginx, systemctl`
+
+### 2. Reason — think for `load-balancing`
+- For `proxy-configuration`: Configure and validate HAProxy and NGINX frontends and backends. — decide which checks to run
+- For `kubernetes-lb`: Expose workloads with Services and MetalLB bare-metal load balancers. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `load-balancing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Haproxy`, `Systemctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `load-balancing:1d22957d`
 
 # Load Balancing
 
@@ -72,6 +88,10 @@ backend web_servers
 ### proxy-configuration
 Configure and validate HAProxy and NGINX frontends and backends.
 
+**Parameters:**
+- `config` (string): Proxy config file path
+- `backend` (string): Backend pool name
+
 **Commands:**
 - `haproxy -c -f /etc/haproxy/haproxy.cfg`
 - `systemctl reload haproxy`
@@ -88,6 +108,10 @@ Configure and validate HAProxy and NGINX frontends and backends.
 ### kubernetes-lb
 Expose workloads with Services and MetalLB bare-metal load balancers.
 
+**Parameters:**
+- `type` (string): Service type: ClusterIP, NodePort, LoadBalancer
+- `port` (integer): Service port
+
 **Commands:**
 - `kubectl expose deployment web --type=LoadBalancer --port=80`
 - `kubectl get svc -o wide`
@@ -100,3 +124,8 @@ Expose workloads with Services and MetalLB bare-metal load balancers.
 - kubectl expose deployment web --type=LoadBalancer --port=80
 - kubectl apply -f metallb-config.yaml
 - kubectl get endpointslices -l kubernetes.io/service-name=web
+
+## References
+- [HAProxy Documentation](https://www.haproxy.org/documentation/)
+- [NGINX Load Balancing](https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/)
+- [MetalLB](https://metallb.universe.tf/)

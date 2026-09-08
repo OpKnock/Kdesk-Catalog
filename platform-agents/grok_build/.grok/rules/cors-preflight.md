@@ -1,26 +1,24 @@
 Handle and debug CORS preflight OPTIONS requests: correct status codes, Access-Control-Allow headers, and caching.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (cors-preflight)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Cors Preflight** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -i -X OPTIONS http://localhost:8080/api -H "Origin: htt`, `npm install cors`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `cors-preflight`
+- Domain: Handle and debug CORS preflight OPTIONS requests: correct status codes, Access-Control-Allow headers, and caching.
+- **preflight-debug**: Send preflight OPTIONS requests with curl and inspect the Access-Control response headers — `curl -i -X OPTIONS http://localhost:8080/api -H "Origin: http://localhost:3000" `
+- **preflight-config**: Configure preflight handling with middleware and caching headers — `npm install cors`
+- Check `knowledge` and `prerequisites: node, npm`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `cors-preflight`
+- For `preflight-debug`: Send preflight OPTIONS requests with curl and inspect the Access-Control response headers — decide which checks to run
+- For `preflight-config`: Configure preflight handling with middleware and caching headers — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `cors-preflight` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cors-preflight:b3826d40`
 
 # CORS Preflight
 

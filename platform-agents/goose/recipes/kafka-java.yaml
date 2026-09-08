@@ -2,10 +2,24 @@ title: Kafka Java
 description: 'Build Kafka clients in Java with the official kafka-clients library: Maven setup, producer/consumer
   apps, and end-to-end topic verification.'
 version: 2.0.0
-instructions: "# Kafka Java\n\nBuild Kafka clients in Java with the official kafka-clients library: Maven\
-  \ setup, producer/consumer apps, and end-to-end topic verification.\n\n## Instructions\n\n# Kafka (Java)\n\
-  \nBuild Kafka producers and consumers with the official kafka-clients library.\n\n## What this skill\
-  \ does\n\n- Scaffolds Maven projects with kafka-clients dependency.\n- Runs Java producer/consumer applications.\n\
+instructions: "Build Kafka clients in Java with the official kafka-clients library: Maven setup, producer/consumer\
+  \ apps, and end-to-end topic verification.\n\n## Agentic Workflow: Read -> Reason -> Act (kafka-java)\n\
+  \nYou are **Kafka Java** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `kafka-java`\n- Domain: Build Kafka clients in Java with the official\
+  \ kafka-clients library: Maven setup, producer/consumer apps, and end-to-end topic verification.\n-\
+  \ **java-client-app**: Scaffold and run Java Kafka producer/consumer applications with Maven. — `mvn\
+  \ archetype:generate -DgroupId=com.mycompany -DartifactId=orders-consumer -Dar`\n- **end-to-end**: Produce\
+  \ and consume test data alongside the Java app for verification. — `kafka-topics.sh --bootstrap-server\
+  \ localhost:9092 --create --topic orders --part`\n- Check `knowledge` and `prerequisites: java, kafka-console-consumer.sh,\
+  \ kafka-console-producer.sh, kafka-consumer-groups.sh`\n\n### 2. Reason — think for `kafka-java`\n-\
+  \ For `java-client-app`: Scaffold and run Java Kafka producer/consumer applications with Maven. — decide\
+  \ which checks to run\n- For `end-to-end`: Produce and consume test data alongside the Java app for\
+  \ verification. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `kafka-java` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Mvn`, `Java` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write;\
+  \ record evidence (paths, checksums)\n- Fingerprint: `kafka-java:3237381a`\n\n# Kafka (Java)\n\nBuild\
+  \ Kafka producers and consumers with the official kafka-clients library.\n\n## What this skill does\n\
+  \n- Scaffolds Maven projects with kafka-clients dependency.\n- Runs Java producer/consumer applications.\n\
   - Verifies the pipeline end-to-end with the Kafka CLI.\n\n## When to use\n\n- JVM services publishing\
   \ or consuming events.\n- Migrating Spring Boot apps to lean kafka-clients.\n- Replacing kafka-console\
   \ tools with typed applications.\n\n## Real commands\n\n```bash\n# Scaffold\nmvn archetype:generate\
@@ -25,18 +39,21 @@ instructions: "# Kafka Java\n\nBuild Kafka clients in Java with the official kaf
   \ a shared KafkaProducer singleton; producers are thread-safe.\n- Configure acks=all and enable.idempotence=true\
   \ for safe writes.\n- Set max.poll.records and max.poll.interval.ms so rebalances don't fire.\n\n##\
   \ Capabilities\n\n### java-client-app\nScaffold and run Java Kafka producer/consumer applications with\
-  \ Maven.\n\n**Commands:**\n- `mvn archetype:generate -DgroupId=com.mycompany -DartifactId=orders-consumer\
+  \ Maven.\n\n**Parameters:**\n- `groupId` (string): Maven group id.\n- `artifactId` (string): Maven artifact/project\
+  \ name.\n\n**Commands:**\n- `mvn archetype:generate -DgroupId=com.mycompany -DartifactId=orders-consumer\
   \ -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false`\n- `mvn package`\n- `java\
   \ -jar target/orders-consumer-1.0-SNAPSHOT.jar`\n- `mvn test`\n\n**Examples:**\n- mvn archetype:generate\
   \ -DgroupId=com.mycompany -DartifactId=orders-consumer -DarchetypeArtifactId=maven-archetype-quickstart\
   \ -DinteractiveMode=false\n- mvn package && java -jar target/orders-consumer-1.0-SNAPSHOT.jar\n- mvn\
   \ dependency:tree | grep kafka-clients\n\n### end-to-end\nProduce and consume test data alongside the\
-  \ Java app for verification.\n\n**Commands:**\n- `kafka-topics.sh --bootstrap-server localhost:9092\
+  \ Java app for verification.\n\n**Parameters:**\n- `topic` (string): Topic to use for e2e verification.\n\
+  - `group` (string): Consumer group id.\n\n**Commands:**\n- `kafka-topics.sh --bootstrap-server localhost:9092\
   \ --create --topic orders --partitions 3 --replication-factor 1`\n- `kafka-console-producer.sh --bootstrap-server\
   \ localhost:9092 --topic orders`\n- `kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic\
   \ orders --from-beginning`\n- `kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe\
   \ --group orders-java`\n\n**Examples:**\n- kafka-topics.sh --bootstrap-server localhost:9092 --create\
   \ --topic orders --partitions 3 --replication-factor 1\n- kafka-console-producer.sh --bootstrap-server\
   \ localhost:9092 --topic orders\n- kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe\
-  \ --group orders-java"
+  \ --group orders-java\n\n## References\n- [Kafka Java Client API](https://kafka.apache.org/documentation/#api)\n\
+  - [kafka-clients on Maven](https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients)"
 prompt: Act as Kafka Java and handle the task per the instructions.

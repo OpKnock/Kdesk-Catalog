@@ -1,15 +1,31 @@
 ---
 name: "Agent Orchestration"
-description: "Orchestrates backend agent and workflow pipelines with Temporal and Apache Airflow: workflow registration, task queues, scheduling, and DAG management."
+description: "Orchestrates backend agent and workflow pipelines with Temporal and Apache Airflow: workflow registration, task queues, scheduling, and DAG management. Use when working with temporal, airflow, backend or when the user mentions temporal, airflow, backend."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Agent Orchestration
-
 Orchestrates backend agent and workflow pipelines with Temporal and Apache Airflow: workflow registration, task queues, scheduling, and DAG management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (agent-orchestration)
+
+You are **Agent Orchestration** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `agent-orchestration`
+- Domain: Orchestrates backend agent and workflow pipelines with Temporal and Apache Airflow: workflow registration, task queues, scheduling, and DAG management.
+- **temporal**: Run and manage Temporal workflows — `temporal server start-dev`
+- **airflow**: Author and schedule Airflow DAGs — `pip install apache-airflow`
+- Check `knowledge` and `prerequisites: airflow, pip, temporal`
+
+### 2. Reason — think for `agent-orchestration`
+- For `temporal`: Run and manage Temporal workflows — decide which checks to run
+- For `airflow`: Author and schedule Airflow DAGs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `agent-orchestration` tools
+- Tools: `Glob`, `Grep`, `Read`, `Temporal`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `agent-orchestration:1da1b9ea`
 
 # Agent Orchestration
 
@@ -57,6 +73,11 @@ airflow scheduler
 ### temporal
 Run and manage Temporal workflows
 
+**Parameters:**
+- `task-queue` (string): Task queue name
+- `workflow-type` (string): Registered workflow type
+- `input` (string): JSON workflow input
+
 **Commands:**
 - `temporal server start-dev`
 - `temporal workflow start --task-queue my-queue --type OrderWorkflow --input '{"orderId":"o-1"}'`
@@ -82,3 +103,7 @@ Author and schedule Airflow DAGs
 **Examples:**
 - general-cli --help
 - general-api --help
+
+## References
+- [Temporal Docs](https://docs.temporal.io/)
+- [Airflow Docs](https://airflow.apache.org/docs/)

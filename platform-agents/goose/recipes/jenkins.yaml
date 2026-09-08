@@ -2,40 +2,56 @@ title: jenkins
 description: 'Administers Jenkins: pipeline-as-code with Jenkinsfile, job management via CLI, plugin installs,
   and credential handling.'
 version: 2.0.0
-instructions: "# jenkins\n\nAdministers Jenkins: pipeline-as-code with Jenkinsfile, job management via\
-  \ CLI, plugin installs, and credential handling.\n\n## Instructions\n\n# Jenkins Administration\n\n\
-  Operate Jenkins: pipeline-as-code, jobs, plugins, and credentials.\n\n## What This Skill Does\n\n- Writes\
-  \ declarative Jenkinsfile pipelines (stages, steps, post)\n- Runs, monitors, and reads console output\
-  \ of builds via CLI\n- Installs plugins and manages credentials\n- Reloads configuration and restarts\
-  \ safely\n- Boots a local Jenkins for testing (java -jar jenkins.war)\n\n## When to Use\n\n- Migrating\
-  \ jobs to Jenkinsfile pipeline-as-code\n- Debugging a failing build from CLI without UI access\n- Admin\
-  \ tasks: plugins, credentials, reloads\n\n## Real Commands\n\n```bash\n# Local dev instance\njava -jar\
-  \ jenkins.war --httpPort=8080 --enable-fresh-install\n\n# CLI operations (auth via token)\njava -jar\
-  \ jenkins-cli.jar -s http://localhost:8080/ -auth admin:$(cat ~/.jenkins_token) list-jobs\njava -jar\
-  \ jenkins-cli.jar -s http://localhost:8080/ -auth admin:$(cat ~/.jenkins_token) build ci-deploy -p BRANCH=main\n\
-  java -jar jenkins-cli.jar -s http://localhost:8080/ console ci-deploy 12\njava -jar jenkins-cli.jar\
-  \ -s http://localhost:8080/ create-job newjob < config.xml\n\n# Admin\njava -jar jenkins-cli.jar -s\
-  \ http://localhost:8080/ install-plugin kubernetes git -restart\njava -jar jenkins-cli.jar -s http://localhost:8080/\
-  \ reload-configuration\njava -jar jenkins-cli.jar -s http://localhost:8080/ get-credentials-as-xml system::system::jenkins\
-  \ mycred\n```\n\n## Declarative Pipeline\n\n```groovy\npipeline {\n  agent any\n  stages {\n    stage('Build')\
-  \ { steps { sh 'npm ci && npm run build' } }\n    stage('Test')  { steps { sh 'npm test' } }\n  }\n\
-  \  post {\n    failure { slackSend color: 'danger', message: \"Build failed ${env.BUILD_URL}\" }\n \
-  \ }\n}\n```\n\n## Best Practices\n\n- Store everything as Jenkinsfile in the repo (pipeline-as-code)\n\
-  - Use credential IDs referenced by name, never secrets inline\n- Add `options { timeout(time: 30, unit:\
-  \ 'MINUTES') }` to every pipeline\n- Prefer agent pod templates (kubernetes plugin) over static slaves\n\
-  - Back up $JENKINS_HOME and pin plugin versions\n\n## Capabilities\n\n### pipeline-as-code\nWrite and\
-  \ run declarative Jenkinsfile pipelines.\n\n**Commands:**\n- `jenkins-jobs update --job 'ci-deploy'\
-  \ jenkins_jobs.ini`\n- `java -jar jenkins-cli.jar -s http://localhost:8080/ build ci-deploy`\n- `java\
-  \ -jar jenkins-cli.jar -s http://localhost:8080/ console ci-deploy 12`\n- `java -jar jenkins-cli.jar\
-  \ -s http://localhost:8080/ list-jobs`\n- `java -jar jenkins-cli.jar -s http://localhost:8080/ create-job\
-  \ test < config.xml`\n\n**Examples:**\n- java -jar jenkins-cli.jar -s http://localhost:8080/ build ci-deploy\
-  \ -p BRANCH=main\n- java -jar jenkins-cli.jar -s http://localhost:8080/ list-jobs\n- java -jar jenkins-cli.jar\
-  \ -s http://localhost:8080/ console ci-deploy 12\n\n### system-administration\nManage plugins, credentials,\
-  \ and reload configuration.\n\n**Commands:**\n- `java -jar jenkins-cli.jar -s http://localhost:8080/\
-  \ install-plugin kubernetes git -restart`\n- `java -jar jenkins-cli.jar -s http://localhost:8080/ reload-configuration`\n\
-  - `java -jar jenkins-cli.jar -s http://localhost:8080/ get-credentials-as-xml system::system::jenkins\
-  \ mycred`\n- `java -jar jenkins-cli.jar -s http://localhost:8080/ restart`\n- `java -jar jenkins.war\
-  \ --httpPort=8080`\n\n**Examples:**\n- java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin\
-  \ kubernetes -restart\n- java -jar jenkins-cli.jar -s http://localhost:8080/ reload-configuration\n\
-  - java -jar jenkins.war --httpPort=8080"
+instructions: "Administers Jenkins: pipeline-as-code with Jenkinsfile, job management via CLI, plugin\
+  \ installs, and credential handling.\n\n## Agentic Workflow: Read -> Reason -> Act (jenkins)\n\nYou\
+  \ are **jenkins** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — devops context for `jenkins`\n- Domain: Administers Jenkins: pipeline-as-code with Jenkinsfile,\
+  \ job management via CLI, plugin installs, and credential handling.\n- **pipeline-as-code**: Write and\
+  \ run declarative Jenkinsfile pipelines. — `jenkins-jobs update --job 'ci-deploy' jenkins_jobs.ini`\n\
+  - **system-administration**: Manage plugins, credentials, and reload configuration. — `java -jar jenkins-cli.jar\
+  \ -s http://localhost:8080/ install-plugin kubernetes gi`\n- Check `knowledge` and `prerequisites: java,\
+  \ jenkins-jobs`\n\n### 2. Reason — think for `jenkins`\n- For `pipeline-as-code`: Write and run declarative\
+  \ Jenkinsfile pipelines. — decide which checks to run\n- For `system-administration`: Manage plugins,\
+  \ credentials, and reload configuration. — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `jenkins` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `Jenkins-jobs`, `Java` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `jenkins:342f1a4b`\n\n# Jenkins\
+  \ Administration\n\nOperate Jenkins: pipeline-as-code, jobs, plugins, and credentials.\n\n## What This\
+  \ Skill Does\n\n- Writes declarative Jenkinsfile pipelines (stages, steps, post)\n- Runs, monitors,\
+  \ and reads console output of builds via CLI\n- Installs plugins and manages credentials\n- Reloads\
+  \ configuration and restarts safely\n- Boots a local Jenkins for testing (java -jar jenkins.war)\n\n\
+  ## When to Use\n\n- Migrating jobs to Jenkinsfile pipeline-as-code\n- Debugging a failing build from\
+  \ CLI without UI access\n- Admin tasks: plugins, credentials, reloads\n\n## Real Commands\n\n```bash\n\
+  # Local dev instance\njava -jar jenkins.war --httpPort=8080 --enable-fresh-install\n\n# CLI operations\
+  \ (auth via token)\njava -jar jenkins-cli.jar -s http://localhost:8080/ -auth admin:$(cat ~/.jenkins_token)\
+  \ list-jobs\njava -jar jenkins-cli.jar -s http://localhost:8080/ -auth admin:$(cat ~/.jenkins_token)\
+  \ build ci-deploy -p BRANCH=main\njava -jar jenkins-cli.jar -s http://localhost:8080/ console ci-deploy\
+  \ 12\njava -jar jenkins-cli.jar -s http://localhost:8080/ create-job newjob < config.xml\n\n# Admin\n\
+  java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin kubernetes git -restart\njava -jar\
+  \ jenkins-cli.jar -s http://localhost:8080/ reload-configuration\njava -jar jenkins-cli.jar -s http://localhost:8080/\
+  \ get-credentials-as-xml system::system::jenkins mycred\n```\n\n## Declarative Pipeline\n\n```groovy\n\
+  pipeline {\n  agent any\n  stages {\n    stage('Build') { steps { sh 'npm ci && npm run build' } }\n\
+  \    stage('Test')  { steps { sh 'npm test' } }\n  }\n  post {\n    failure { slackSend color: 'danger',\
+  \ message: \"Build failed ${env.BUILD_URL}\" }\n  }\n}\n```\n\n## Best Practices\n\n- Store everything\
+  \ as Jenkinsfile in the repo (pipeline-as-code)\n- Use credential IDs referenced by name, never secrets\
+  \ inline\n- Add `options { timeout(time: 30, unit: 'MINUTES') }` to every pipeline\n- Prefer agent pod\
+  \ templates (kubernetes plugin) over static slaves\n- Back up $JENKINS_HOME and pin plugin versions\n\
+  \n## Capabilities\n\n### pipeline-as-code\nWrite and run declarative Jenkinsfile pipelines.\n\n**Parameters:**\n\
+  - `url` (string): Jenkins base URL\n- `job` (string): Job name\n- `build-number` (integer): Build number\
+  \ for console\n\n**Commands:**\n- `jenkins-jobs update --job 'ci-deploy' jenkins_jobs.ini`\n- `java\
+  \ -jar jenkins-cli.jar -s http://localhost:8080/ build ci-deploy`\n- `java -jar jenkins-cli.jar -s http://localhost:8080/\
+  \ console ci-deploy 12`\n- `java -jar jenkins-cli.jar -s http://localhost:8080/ list-jobs`\n- `java\
+  \ -jar jenkins-cli.jar -s http://localhost:8080/ create-job test < config.xml`\n\n**Examples:**\n- java\
+  \ -jar jenkins-cli.jar -s http://localhost:8080/ build ci-deploy -p BRANCH=main\n- java -jar jenkins-cli.jar\
+  \ -s http://localhost:8080/ list-jobs\n- java -jar jenkins-cli.jar -s http://localhost:8080/ console\
+  \ ci-deploy 12\n\n### system-administration\nManage plugins, credentials, and reload configuration.\n\
+  \n**Parameters:**\n- `plugin` (string): Plugin name to install\n- `credential-id` (string): Credential\
+  \ ID\n\n**Commands:**\n- `java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin kubernetes\
+  \ git -restart`\n- `java -jar jenkins-cli.jar -s http://localhost:8080/ reload-configuration`\n- `java\
+  \ -jar jenkins-cli.jar -s http://localhost:8080/ get-credentials-as-xml system::system::jenkins mycred`\n\
+  - `java -jar jenkins-cli.jar -s http://localhost:8080/ restart`\n- `java -jar jenkins.war --httpPort=8080`\n\
+  \n**Examples:**\n- java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin kubernetes -restart\n\
+  - java -jar jenkins-cli.jar -s http://localhost:8080/ reload-configuration\n- java -jar jenkins.war\
+  \ --httpPort=8080\n\n## References\n- [Jenkins User Handbook](https://www.jenkins.io/doc/)\n- [Pipeline\
+  \ Syntax Reference](https://www.jenkins.io/doc/book/pipeline/syntax/)\n- [Jenkins CLI](https://www.jenkins.io/doc/book/managing/cli/)"
 prompt: Act as jenkins and handle the task per the instructions.

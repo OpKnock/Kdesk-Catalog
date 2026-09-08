@@ -1,15 +1,31 @@
 ---
 name: "internationalization"
-description: "Localizes applications with gettext and i18next: extraction, translation catalogs, pluralization, and locale builds."
+description: "Localizes applications with gettext and i18next: extraction, translation catalogs, pluralization, and locale builds. Use when working with gettext, i18next or when the user mentions gettext, i18next."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# internationalization
-
 Localizes applications with gettext and i18next: extraction, translation catalogs, pluralization, and locale builds.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (internationalization)
+
+You are **internationalization** (frontend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `internationalization`
+- Domain: Localizes applications with gettext and i18next: extraction, translation catalogs, pluralization, and locale builds.
+- **gettext**: Extract and compile translations with GNU gettext tools. — `xgettext -o locale/messages.pot src/**/*.js --keyword=_`
+- **i18next**: Manage JSON translation catalogs with i18next tooling. — `npx i18next -c i18next-parser.config.js 'src/**/*.tsx'`
+- Check `knowledge` and `prerequisites: node.js, react, i18next, formatjs`
+
+### 2. Reason — think for `internationalization`
+- For `gettext`: Extract and compile translations with GNU gettext tools. — decide which checks to run
+- For `i18next`: Manage JSON translation catalogs with i18next tooling. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `internationalization` tools
+- Tools: `Glob`, `Grep`, `Read`, `Xgettext`, `Msginit` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `internationalization:299d5176`
 
 # Internationalization
 
@@ -81,6 +97,11 @@ A missing key must fail the build.
 ### gettext
 Extract and compile translations with GNU gettext tools.
 
+**Parameters:**
+- `keyword` (string): Translation function to extract
+- `language` (string): Source language: Python, C, JavaScript
+- `locale` (string): Target locale, e.g. de, fr_FR
+
 **Commands:**
 - `xgettext -o locale/messages.pot src/**/*.js --keyword=_`
 - `msginit -i locale/messages.pot -o locale/de/LC_MESSAGES/messages.po -l de`
@@ -96,6 +117,11 @@ Extract and compile translations with GNU gettext tools.
 ### i18next
 Manage JSON translation catalogs with i18next tooling.
 
+**Parameters:**
+- `locales` (string): Locale list to extract catalogs for
+- `namespace` (string): i18next namespace name
+- `config` (string): Parser config file
+
 **Commands:**
 - `npx i18next -c i18next-parser.config.js 'src/**/*.tsx'`
 - `npx i18next 'src/**/*.tsx' --locales en,de,fr --defaultLocale en`
@@ -107,3 +133,8 @@ Manage JSON translation catalogs with i18next tooling.
 - npx i18next 'src/**/*.tsx' --locales en,de --output public/locales
 - npx lingui extract --clean
 - npx i18next --namespace translation --locales en,ja
+
+## References
+- [GNU gettext manual](https://www.gnu.org/software/gettext/manual/)
+- [i18next](https://www.i18next.com/)
+- [Lingui](https://lingui.dev/)

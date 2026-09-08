@@ -1,15 +1,29 @@
 ---
 name: "redis"
-description: "Operates Redis: key management, expiry, transactions, Lua scripting, and benchmarking."
+description: "Operates Redis: key management, expiry, transactions, Lua scripting, and benchmarking. Use when working with redis cli, database or when the user mentions redis cli, database."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# redis
-
 Operates Redis: key management, expiry, transactions, Lua scripting, and benchmarking.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (redis)
+
+You are **redis** (database/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `redis`
+- Domain: Operates Redis: key management, expiry, transactions, Lua scripting, and benchmarking.
+- **redis-cli**: Manage keys, data structures, TTLs, and run scripts with redis-cli — `redis-cli SET user:42 '{"name": "jane"}' EX 3600`
+- Check `knowledge` and `prerequisites: redis-cli`
+
+### 2. Reason — think for `redis`
+- For `redis-cli`: Manage keys, data structures, TTLs, and run scripts with redis-cli — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `redis` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `redis:753bc8ce`
 
 # Redis
 
@@ -72,6 +86,11 @@ confirm performance targets.
 ### redis-cli
 Manage keys, data structures, TTLs, and run scripts with redis-cli
 
+**Parameters:**
+- `ex` (integer): Expire the key after N seconds (EX)
+- `ttl` (string): Key TTL: seconds, millis, or timestamp options
+- `benchmark` (boolean): Run redis-benchmark load testing
+
 **Commands:**
 - `redis-cli SET user:42 '{"name": "jane"}' EX 3600`
 - `redis-cli GET user:42`
@@ -83,3 +102,7 @@ Manage keys, data structures, TTLs, and run scripts with redis-cli
 - redis-cli SADD online_users u1 u2 u3
 - redis-cli EVAL "return redis.call('incr', KEYS[1])" 1 counter
 - redis-cli --benchmark -n 100000 -c 50 -q
+
+## References
+- [Redis commands reference](https://redis.io/docs/latest/commands/)
+- [redis-cli docs](https://redis.io/docs/latest/develop/tools/cli/)

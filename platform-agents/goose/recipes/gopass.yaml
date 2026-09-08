@@ -2,9 +2,19 @@ title: Gopass
 description: Initialize stores, insert/read secrets, manage recipients, and generate passwords. secrets
   and recipients, and use templates for structured entries.'
 version: 2.0.0
-instructions: "# Gopass\n\nInitialize stores, insert/read secrets, manage recipients, and generate passwords.\
-  \ secrets and recipients, and use templates for structured entries.'\n\n## Instructions\n\n# gopass\n\
-  \n## What this skill does\n\ngopass is a password manager for teams, storing secrets in git-encrypted\
+instructions: "Initialize stores, insert/read secrets, manage recipients, and generate passwords. secrets\
+  \ and recipients, and use templates for structured entries.'\n\n## Agentic Workflow: Read -> Reason\
+  \ -> Act (gopass)\n\nYou are **Gopass** (api/general) — a sub-agent that **Reads, Reasons, and Acts**\
+  \ via `allowed-tools`.\n\n### 1. Read — api context for `gopass`\n- Domain: Initialize stores, insert/read\
+  \ secrets, manage recipients, and generate passwords. secrets and recipients, and use templates for\
+  \ structured entries.'\n- **gopass-store**: Initialize stores, insert/read secrets, manage recipients,\
+  \ and generate passwords. — `gopass init --store=team`\n- Check `knowledge` and `prerequisites: gopass`\n\
+  \n### 2. Reason — think for `gopass`\n- For `gopass-store`: Initialize stores, insert/read secrets,\
+  \ manage recipients, and generate passwords. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `gopass` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Gopass` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `gopass:923adac5`\n\n# gopass\n\n\
+  ## What this skill does\n\ngopass is a password manager for teams, storing secrets in git-encrypted\
   \ stores with GPG. It supports multiple stores, recipients, templates, and structured entries with JSON/yaml\
   \ values.\n\n## When to use\n\n- Sharing service credentials across a team\n- Keeping secrets in git\
   \ (encrypted) with a full history\n- Managing machine accounts, API keys, and DB passwords\n\n## Real\
@@ -21,9 +31,12 @@ instructions: "# Gopass\n\nInitialize stores, insert/read secrets, manage recipi
   \ structured fields.\n- Use `gopass sync` in CI to keep shared stores converged.\n- Rotate secrets by\
   \ generating new values, never editing in place blindly.\n- Back up the store git remote; encryption\
   \ keys are the real risk.\n\n## Capabilities\n\n### gopass-store\nInitialize stores, insert/read secrets,\
-  \ manage recipients, and generate passwords.\n\n**Commands:**\n- `gopass init --store=team`\n- `gopass\
-  \ insert team/db/postgres`\n- `gopass generate team/aws/access-key 24`\n- `gopass show team/db/postgres`\n\
-  - `gopass recipients add alice@localhost --store=team`\n- `gopass list team/db`\n- `gopass sync --store=team`\n\
-  \n**Examples:**\n- gopass generate team/aws/access-key 24\n- gopass show team/db/postgres\n- gopass\
-  \ recipients add alice@localhost --store=team && gopass sync --store=team"
+  \ manage recipients, and generate passwords.\n\n**Parameters:**\n- `store` (string): Store name (root\
+  \ or named store)\n- `path` (string): Secret path like team/db/postgres\n- `length` (integer): Generated\
+  \ password length\n\n**Commands:**\n- `gopass init --store=team`\n- `gopass insert team/db/postgres`\n\
+  - `gopass generate team/aws/access-key 24`\n- `gopass show team/db/postgres`\n- `gopass recipients add\
+  \ alice@localhost --store=team`\n- `gopass list team/db`\n- `gopass sync --store=team`\n\n**Examples:**\n\
+  - gopass generate team/aws/access-key 24\n- gopass show team/db/postgres\n- gopass recipients add alice@localhost\
+  \ --store=team && gopass sync --store=team\n\n## References\n- [gopass documentation](https://www.gopass.pw/docs/)\n\
+  - [gopass usage guide](https://www.gopass.pw/docs/features/)"
 prompt: Act as Gopass and handle the task per the instructions.

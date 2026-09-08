@@ -1,15 +1,29 @@
 ---
 name: "Postmortem"
-description: "Incident postmortems: evidence gathering from logs/metrics/git, blameless writeups, and follow-up action tracking."
+description: "Incident postmortems: evidence gathering from logs/metrics/git, blameless writeups, and follow-up action tracking. Use when working with postmortem evidence, api or when the user mentions postmortem evidence, api."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Postmortem
-
 Incident postmortems: evidence gathering from logs/metrics/git, blameless writeups, and follow-up action tracking.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (postmortem)
+
+You are **Postmortem** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `postmortem`
+- Domain: Incident postmortems: evidence gathering from logs/metrics/git, blameless writeups, and follow-up action tracking.
+- **postmortem-evidence**: Collect incident evidence from git, logs and Kubernetes events, then draft a blameless postmortem. — `git log --oneline --since="2026-08-08 12:00" --until="2026-08-08 13:00"`
+- Check `knowledge` and `prerequisites: git, journalctl, kubectl`
+
+### 2. Reason — think for `postmortem`
+- For `postmortem-evidence`: Collect incident evidence from git, logs and Kubernetes events, then draft a blameless postmortem. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `postmortem` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Journalctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `postmortem:408b8bb0`
 
 # Postmortem
 
@@ -65,6 +79,11 @@ A postmortem turns an incident into durable learning: timeline, root cause, acti
 ### postmortem-evidence
 Collect incident evidence from git, logs and Kubernetes events, then draft a blameless postmortem.
 
+**Parameters:**
+- `service` (string): Affected service name
+- `start_time` (string): Incident start timestamp
+- `window` (string): Time window for log collection
+
 **Commands:**
 - `git log --oneline --since="2026-08-08 12:00" --until="2026-08-08 13:00"`
 - `journalctl -u orders-api --since "2026-08-08 12:30" --until "2026-08-08 12:45" -p err`
@@ -76,3 +95,7 @@ Collect incident evidence from git, logs and Kubernetes events, then draft a bla
 - journalctl -u orders-api --since "2 hours ago" | grep -i "timeout"
 - kubectl get events --sort-by=.lastTimestamp -n prod | grep -i crashloop
 - git log --oneline v2.3.0..v2.3.1
+
+## References
+- [Google SRE Postmortem Culture](https://sre.google/sre-book/postmortem-culture.html)
+- [Postmortem template (Atlassian)](https://www.atlassian.com/incident-management/postmortem/templates)

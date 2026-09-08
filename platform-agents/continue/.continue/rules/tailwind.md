@@ -1,15 +1,31 @@
 ---
 name: "Tailwind"
-description: "Configures and builds utility-first CSS with Tailwind: content scanning, custom themes, and production optimization."
+description: "Configures and builds utility-first CSS with Tailwind: content scanning, custom themes, and production optimization. Use when working with setup, build, frontend or when the user mentions setup, build, frontend."
 globs: ["**/*.css", "**/*.html", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Tailwind
-
 Configures and builds utility-first CSS with Tailwind: content scanning, custom themes, and production optimization.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (tailwind)
+
+You are **Tailwind** (frontend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `tailwind`
+- Domain: Configures and builds utility-first CSS with Tailwind: content scanning, custom themes, and production optimization.
+- **setup**: Install and configure Tailwind CSS. — `npm install -D tailwindcss @tailwindcss/cli`
+- **build**: Compile Tailwind CSS for development and production. — `npx @tailwindcss/cli -i src/input.css -o dist/output.css`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `tailwind`
+- For `setup`: Install and configure Tailwind CSS. — decide which checks to run
+- For `build`: Compile Tailwind CSS for development and production. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tailwind` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tailwind:ab77d91d`
 
 # Tailwind CSS
 
@@ -88,6 +104,11 @@ Watch for unexpected bloat after adding libraries.
 ### setup
 Install and configure Tailwind CSS.
 
+**Parameters:**
+- `init` (string): Generate config with -p for postcss
+- `ts` (string): Generate TypeScript config
+- `content` (string): Glob patterns of files to scan for classes
+
 **Commands:**
 - `npm install -D tailwindcss @tailwindcss/cli`
 - `npx @tailwindcss/cli init -p`
@@ -103,6 +124,11 @@ Install and configure Tailwind CSS.
 ### build
 Compile Tailwind CSS for development and production.
 
+**Parameters:**
+- `input` (string): Input CSS file with @import tailwindcss
+- `output` (string): Output CSS file path
+- `minify` (string): Minify output for production
+
 **Commands:**
 - `npx @tailwindcss/cli -i src/input.css -o dist/output.css`
 - `npx @tailwindcss/cli -i src/input.css -o dist/output.css --minify`
@@ -114,3 +140,8 @@ Compile Tailwind CSS for development and production.
 - npx @tailwindcss/cli -i src/input.css -o dist/output.css --minify
 - npx @tailwindcss/cli -i src/input.css -o dist/output.css --watch
 - npx tailwindcss -c tailwind.config.js -i src/input.css -o dist/output.css --minify
+
+## References
+- [Tailwind CSS Docs](https://tailwindcss.com/docs)
+- [Tailwind CLI](https://tailwindcss.com/docs/cli)
+- [Tailwind with Vite](https://tailwindcss.com/docs/installation/using-vite)

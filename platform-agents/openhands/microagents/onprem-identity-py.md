@@ -1,6 +1,6 @@
 ---
 name: "onprem-identity-py"
-description: "On-Prem SDK deployment agent for ML On-Prem SDK deployment."
+description: "On-Prem SDK deployment agent for ML On-Prem SDK deployment. Use when working with Ml Onprem Deploy Sdk, deployment or when the user mentions Ml Onprem Deploy Sdk, deployment."
 type: knowledge
 triggers: ["onprem-identity-py", "ml onprem deploy sdk"]
 ---
@@ -8,6 +8,24 @@ triggers: ["onprem-identity-py", "ml onprem deploy sdk"]
 # Onprem Identity Py
 
 On-Prem SDK deployment agent for ML On-Prem SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (onprem-identity-py)
+
+You are **Onprem Identity Py** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `onprem-identity-py`
+- Domain: On-Prem SDK deployment agent for ML On-Prem SDK deployment.
+- **Ml Onprem Deploy Sdk**: On-Prem SDK deployment agent for ML On-Prem SDK deployment. — `docker build -t onprem:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `onprem-identity-py`
+- For `Ml Onprem Deploy Sdk`: On-Prem SDK deployment agent for ML On-Prem SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `onprem-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Onprem` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `onprem-identity-py:96734572`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ On-Prem SDK deployment agent for ML On-Prem SDK deployment.
 **Examples:**
 - Server: python -m onprem.server --port 8080
 - Docker: docker run -p 8080:8080 onprem-server
+
+## References
+- [kubeadm Setup](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

@@ -1,12 +1,21 @@
 title: Phpstan
 description: Run it analysis with level control, baselines, and CI output. legacy code.
 version: 2.0.0
-instructions: "# Phpstan\n\nRun it analysis with level control, baselines, and CI output. legacy code.\n\
-  \n## Instructions\n\n# PHPStan\n\nFinds bugs in PHP without running it: undefined variables, wrong types,\
-  \ and unsafe\ncalls, controlled by strictness levels 0-9.\n\n## When to Use\n\n- Catching type errors\
-  \ before deployment\n- Raising analysis level incrementally on a mature codebase\n- CI gate for PHP\
-  \ quality\n\n## Real Commands\n\n```bash\n# Install\ncomposer require --dev phpstan/phpstan\n\n# Analyse\
-  \ with the configured level\nvendor/bin/phpstan analyse src/\n\n# Explicit level\nvendor/bin/phpstan\
+instructions: "Run it analysis with level control, baselines, and CI output. legacy code.\n\n## Agentic\
+  \ Workflow: Read -> Reason -> Act (phpstan)\n\nYou are **Phpstan** (code-quality/general) — a sub-agent\
+  \ that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — code-quality context for `phpstan`\n\
+  - Domain: Run it analysis with level control, baselines, and CI output. legacy code.\n- **phpstan-analysis**:\
+  \ Run PHPStan analysis with level control, baselines, and CI output — `vendor/bin/phpstan analyse src/`\n\
+  - Check `knowledge` and `prerequisites: vendor/bin/phpstan`\n\n### 2. Reason — think for `phpstan`\n\
+  - For `phpstan-analysis`: Run PHPStan analysis with level control, baselines, and CI output — decide\
+  \ which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\
+  \n### 3. Act — execute with `phpstan` tools\n- Tools: `Glob`, `Grep`, `Read`, `Vendor/bin/phpstan` (see\
+  \ frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths, checksums)\n\
+  - Fingerprint: `phpstan:f8a8a3f5`\n\n# PHPStan\n\nFinds bugs in PHP without running it: undefined variables,\
+  \ wrong types, and unsafe\ncalls, controlled by strictness levels 0-9.\n\n## When to Use\n\n- Catching\
+  \ type errors before deployment\n- Raising analysis level incrementally on a mature codebase\n- CI gate\
+  \ for PHP quality\n\n## Real Commands\n\n```bash\n# Install\ncomposer require --dev phpstan/phpstan\n\
+  \n# Analyse with the configured level\nvendor/bin/phpstan analyse src/\n\n# Explicit level\nvendor/bin/phpstan\
   \ analyse -l 8 src/\n\n# Legacy code: baseline current errors\nvendor/bin/phpstan analyse --generate-baseline\n\
   \n# Then continue analysing with baseline loaded\nvendor/bin/phpstan analyse src/\n\n# CI-friendly output\n\
   vendor/bin/phpstan analyse --error-format=github src/\n\n# Clear stale result cache after config changes\n\
@@ -17,9 +26,12 @@ instructions: "# Phpstan\n\nRun it analysis with level control, baselines, and C
   \ to `composer.json` scripts: `\"analyse\": \"phpstan analyse src/\"`\n\n## Example Response\n\nLists\
   \ errors as `file:line` with rule names (e.g. 'Property is never read'), groups by\nclass, and suggests\
   \ the config change or code fix.\n\n## Capabilities\n\n### phpstan-analysis\nRun PHPStan analysis with\
-  \ level control, baselines, and CI output\n\n**Commands:**\n- `vendor/bin/phpstan analyse src/`\n- `vendor/bin/phpstan\
-  \ analyse -l 8 src/`\n- `vendor/bin/phpstan analyse --memory-limit=1G src tests`\n- `vendor/bin/phpstan\
-  \ analyse --generate-baseline`\n- `vendor/bin/phpstan clear-result-cache`\n\n**Examples:**\n- vendor/bin/phpstan\
-  \ analyse --level=max src/\n- vendor/bin/phpstan analyse -c phpstan.neon --no-progress\n- vendor/bin/phpstan\
-  \ analyse --error-format=github src/"
+  \ level control, baselines, and CI output\n\n**Parameters:**\n- `level` (integer): Analysis strictness\
+  \ level 0-9 (or max)\n- `error-format` (string): Output format: table, raw, json, github, checkstyle\n\
+  - `generate-baseline` (boolean): Write current errors to phpstan-baseline.neon\n\n**Commands:**\n- `vendor/bin/phpstan\
+  \ analyse src/`\n- `vendor/bin/phpstan analyse -l 8 src/`\n- `vendor/bin/phpstan analyse --memory-limit=1G\
+  \ src tests`\n- `vendor/bin/phpstan analyse --generate-baseline`\n- `vendor/bin/phpstan clear-result-cache`\n\
+  \n**Examples:**\n- vendor/bin/phpstan analyse --level=max src/\n- vendor/bin/phpstan analyse -c phpstan.neon\
+  \ --no-progress\n- vendor/bin/phpstan analyse --error-format=github src/\n\n## References\n- [PHPStan\
+  \ docs](https://phpstan.org/)\n- [PHPStan config reference](https://phpstan.org/config-reference)"
 prompt: Act as Phpstan and handle the task per the instructions.

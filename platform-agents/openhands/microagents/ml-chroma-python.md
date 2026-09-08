@@ -1,6 +1,6 @@
 ---
 name: "ml-chroma-python"
-description: "Chroma Python SDK agent for AI-native embedding database."
+description: "Chroma Python SDK agent for AI-native embedding database. Use when working with Ml Chroma Python, vector db or when the user mentions Ml Chroma Python, vector db."
 type: knowledge
 triggers: ["ml-chroma-python", "ml chroma python"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-chroma-python", "ml chroma python"]
 # Ml Chroma Python
 
 Chroma Python SDK agent for AI-native embedding database.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-chroma-python)
+
+You are **Ml Chroma Python** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-chroma-python`
+- Domain: Chroma Python SDK agent for AI-native embedding database.
+- **Ml Chroma Python**: Chroma Python SDK agent for AI-native embedding database. — `Query: collection.query(query_texts=['Hello'], n_results=10)`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-chroma-python`
+- For `Ml Chroma Python`: Chroma Python SDK agent for AI-native embedding database. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-chroma-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Query`, `Client` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-chroma-python:612afba6`
 
 ## Instructions
 
@@ -40,3 +58,6 @@ Chroma Python SDK agent for AI-native embedding database.
 - Collection: client.create_collection('my_collection')
 - Add: collection.add(documents=['Hello'], metadatas=[{'source': 'web'}])
 - Query: collection.query(query_texts=['Hello'], n_results=10)
+
+## References
+- [Chroma Documentation](https://docs.trychroma.com/)

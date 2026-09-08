@@ -6,27 +6,23 @@ globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 
 gRPC-Web for browser clients: protoc-gen-grpc-web codegen, grpc-web npm client, and Envoy proxy configuration to bridge HTTP/1.1 browsers to HTTP/2 gRPC.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (grpc-web)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Grpc Web** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -L -o protoc-gen-grpc-web https://github.com/grpc/grpc-`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `grpc-web`
+- Domain: gRPC-Web for browser clients: protoc-gen-grpc-web codegen, grpc-web npm client, and Envoy proxy configuration to bridge HTTP/1.1 browsers to HTTP/2 gRPC.
+- **grpc-web-bridge**: Generate grpc-web JS stubs and proxy browser traffic to gRPC backends with Envoy. — `curl -L -o protoc-gen-grpc-web https://github.com/grpc/grpc-web/releases/downloa`
+- Check `knowledge` and `prerequisites: chmod, envoy, npm, protoc`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `grpc-web`
+- For `grpc-web-bridge`: Generate grpc-web JS stubs and proxy browser traffic to gRPC backends with Envoy. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `grpc-web` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Chmod` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grpc-web:ce543973`
 
 # gRPC-Web
 

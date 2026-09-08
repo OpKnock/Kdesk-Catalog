@@ -1,15 +1,31 @@
 ---
 name: "sla-slo-sli"
-description: "Defines and measures service-level objectives with Prometheus SLIs, error-budget policies, and promtool rule validation."
+description: "Defines and measures service-level objectives with Prometheus SLIs, error-budget policies, and promtool rule validation. Use when working with slo rule authoring, slo inspection or when the user mentions slo rule authoring, slo inspection."
 type: knowledge
 triggers: ["sla-slo-sli", "slo-rule-authoring", "slo-inspection"]
 ---
 
-# sla-slo-sli
-
 Defines and measures service-level objectives with Prometheus SLIs, error-budget policies, and promtool rule validation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (sla-slo-sli)
+
+You are **sla-slo-sli** (sre) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — sre context for `sla-slo-sli`
+- Domain: Defines and measures service-level objectives with Prometheus SLIs, error-budget policies, and promtool rule validation.
+- **slo-rule-authoring**: Author and validate Prometheus SLO rules and alerts. — `promtool check rules slo-rules.yml`
+- **slo-inspection**: Query SLO state and error budgets from running Prometheus. — `curl -s 'http://localhost:9090/api/v1/query?query=slo:availability_ratio:ratio_r`
+- Check `knowledge` and `prerequisites: prometheus, grafana, datadog, slo-lib`
+
+### 2. Reason — think for `sla-slo-sli`
+- For `slo-rule-authoring`: Author and validate Prometheus SLO rules and alerts. — decide which checks to run
+- For `slo-inspection`: Query SLO state and error budgets from running Prometheus. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `sla-slo-sli` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sla-slo-sli:a2f3f88a`
 
 # SLA / SLO / SLI
 
@@ -74,6 +90,10 @@ groups:
 ### slo-rule-authoring
 Author and validate Prometheus SLO rules and alerts.
 
+**Parameters:**
+- `ruleFile` (string): Prometheus rules file with SLO recording rules
+- `query` (string): PromQL query to evaluate
+
 **Commands:**
 - `promtool check rules slo-rules.yml`
 - `promtool test rules slo-tests.yml`
@@ -88,6 +108,10 @@ Author and validate Prometheus SLO rules and alerts.
 ### slo-inspection
 Query SLO state and error budgets from running Prometheus.
 
+**Parameters:**
+- `endpoint` (string): Prometheus API endpoint
+- `metric` (string): SLO metric name to query
+
 **Commands:**
 - `curl -s 'http://localhost:9090/api/v1/query?query=slo:availability_ratio:ratio_rate1h' | jq .`
 - `curl -s 'http://localhost:9090/api/v1/query?query=error_budget_burn' | jq .`
@@ -97,3 +121,8 @@ Query SLO state and error budgets from running Prometheus.
 **Examples:**
 - curl -s 'http://localhost:9090/api/v1/query?query=slo:availability_ratio:ratio_rate1h' | jq -r '.data.result[0].value[1]'
 - curl -s 'http://localhost:9090/api/v1/query?query=error_budget_burn' | jq .
+
+## References
+- [Google SRE Workbook SLOs](https://sre.google/workbook/implementing-slos/)
+- [Prometheus Recording Rules](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/)
+- [promtool Reference](https://prometheus.io/docs/prometheus/latest/command-line/promtool/)

@@ -1,15 +1,31 @@
 ---
 name: "Graphql"
-description: "Authors GraphQL clients and tooling: queries, mutations, fragments, variables, and codegen with GraphQL Code Generator."
+description: "Authors GraphQL clients and tooling: queries, mutations, fragments, variables, and codegen with GraphQL Code Generator. Use when working with graphql client, graphql codegen, backend or when the user mentions graphql client, graphql codegen, backend."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{ts,tsx}", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Graphql
-
 Authors GraphQL clients and tooling: queries, mutations, fragments, variables, and codegen with GraphQL Code Generator.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (graphql-backend)
+
+You are **Graphql** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `graphql-backend`
+- Domain: Authors GraphQL clients and tooling: queries, mutations, fragments, variables, and codegen with GraphQL Code Generator.
+- **graphql-client**: Write and execute queries, mutations, and fragments. — `npx graphql-codegen`
+- **graphql-codegen**: Generate TypeScript types and hooks from the schema. — `npx @graphql-codegen/cli init`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `graphql-backend`
+- For `graphql-client`: Write and execute queries, mutations, and fragments. — decide which checks to run
+- For `graphql-codegen`: Generate TypeScript types and hooks from the schema. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `graphql-backend` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `graphql-backend:65babc8a`
 
 # GraphQL (Client)
 
@@ -79,6 +95,10 @@ generates:
 ### graphql-client
 Write and execute queries, mutations, and fragments.
 
+**Parameters:**
+- `variables` (object): Query variables JSON
+- `query` (string): Query string
+
 **Commands:**
 - `npx graphql-codegen`
 - `npx graphql-query-complexity`
@@ -92,6 +112,10 @@ Write and execute queries, mutations, and fragments.
 ### graphql-codegen
 Generate TypeScript types and hooks from the schema.
 
+**Parameters:**
+- `config` (string): Codegen config path
+- `watch` (boolean): Regenerate on file changes
+
 **Commands:**
 - `npx @graphql-codegen/cli init`
 - `npx graphql-codegen --config codegen.yml`
@@ -101,3 +125,7 @@ Generate TypeScript types and hooks from the schema.
 **Examples:**
 - npx graphql-codegen --config codegen.ts
 - npx graphql-codegen --dry-run
+
+## References
+- [GraphQL Learn](https://graphql.org/learn/)
+- [GraphQL Code Generator](https://the-guild.dev/graphql/codegen)

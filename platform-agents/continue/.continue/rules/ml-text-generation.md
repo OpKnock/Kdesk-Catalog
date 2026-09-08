@@ -1,6 +1,6 @@
 ---
 name: "Ml Text Generation"
-description: "Text generation agent for LLM-based text production."
+description: "Text generation agent for LLM-based text production. Use when working with Ml Text Generation, inference or when the user mentions Ml Text Generation, inference."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Text Generation
 
 Text generation agent for LLM-based text production.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-text-generation)
+
+You are **Ml Text Generation** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-text-generation`
+- Domain: Text generation agent for LLM-based text production.
+- **Ml Text Generation**: Text generation agent for LLM-based text production. — `CLI: openai api chat_completions.create`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-text-generation`
+- For `Ml Text Generation`: Text generation agent for LLM-based text production. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-text-generation` tools
+- Tools: `Glob`, `Grep`, `Read`, `CLI`, `Transformers` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-text-generation:f14c6ac9`
 
 ## Instructions
 
@@ -38,3 +56,7 @@ Text generation agent for LLM-based text production.
 - CLI: openai api chat_completions.create
 - Curl: curl https://api.openai.com/v1/chat/completions
 - Transformers: from transformers import pipeline; generator = pipeline('text-generation')
+
+## References
+- [OpenAI API Documentation](https://platform.openai.com/docs/)
+- [curl Documentation](https://curl.se/docs/)

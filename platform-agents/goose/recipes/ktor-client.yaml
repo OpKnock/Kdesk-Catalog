@@ -2,17 +2,29 @@ title: Ktor Client
 description: 'Make HTTP calls from Ktor applications with ktor-client: engine selection, serialization
   plugins, and timeouts for API integration.'
 version: 2.0.0
-instructions: "# Ktor Client\n\nMake HTTP calls from Ktor applications with ktor-client: engine selection,\
-  \ serialization plugins, and timeouts for API integration.\n\n## Instructions\n\n# Ktor Client\n\nMake\
-  \ typed HTTP calls from Ktor applications.\n\n## What this skill does\n\n- Configures HttpClient with\
-  \ an engine and content negotiation.\n- Uses Json plugin for typed request/response bodies.\n- Handles\
-  \ timeouts and non-2xx responses.\n\n## When to use\n\n- Kotlin services calling other APIs (REST or\
-  \ gRPC-json).\n- Building BFF routes that proxy upstream services.\n- Testing API clients with Ktor\
-  \ test infrastructure.\n\n## Real commands\n\n```bash\n# Verify dependencies resolved\ngradle dependencies\
-  \ --configuration runtimeClasspath | grep ktor-client\n\n# Run the app that makes outbound calls\n./gradlew\
-  \ run\n\n# Exercise the proxy route\ncurl -s http://localhost:8080/proxy | jq .\n\n# Error mapping:\
-  \ upstream 404 -> 502\ncurl -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/proxy-404\n\n\
-  # Timeout behavior\ncurl -s http://localhost:8080/proxy-timeout\n```\n\n## Client example\n\n```kotlin\n\
+instructions: "Make HTTP calls from Ktor applications with ktor-client: engine selection, serialization\
+  \ plugins, and timeouts for API integration.\n\n## Agentic Workflow: Read -> Reason -> Act (ktor-client)\n\
+  \nYou are **Ktor Client** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `ktor-client`\n- Domain: Make HTTP calls from Ktor applications with\
+  \ ktor-client: engine selection, serialization plugins, and timeouts for API integration.\n- **client-setup**:\
+  \ Add ktor-client dependencies and configure an engine with plugins. — `gradle dependencies --configuration\
+  \ runtimeClasspath | grep ktor-client`\n- **call-verify**: Verify outbound calls: status, JSON body,\
+  \ and error mapping. — `curl -s http://localhost:8080/proxy | jq .`\n- Check `knowledge` and `prerequisites:\
+  \ ./gradlew, gradle`\n\n### 2. Reason — think for `ktor-client`\n- For `client-setup`: Add ktor-client\
+  \ dependencies and configure an engine with plugins. — decide which checks to run\n- For `call-verify`:\
+  \ Verify outbound calls: status, JSON body, and error mapping. — decide which checks to run\n- Evaluate\
+  \ trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with\
+  \ `ktor-client` tools\n- Tools: `Glob`, `Grep`, `Read`, `Gradle`, `./gradlew` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `ktor-client:b1f97148`\n\
+  \n# Ktor Client\n\nMake typed HTTP calls from Ktor applications.\n\n## What this skill does\n\n- Configures\
+  \ HttpClient with an engine and content negotiation.\n- Uses Json plugin for typed request/response\
+  \ bodies.\n- Handles timeouts and non-2xx responses.\n\n## When to use\n\n- Kotlin services calling\
+  \ other APIs (REST or gRPC-json).\n- Building BFF routes that proxy upstream services.\n- Testing API\
+  \ clients with Ktor test infrastructure.\n\n## Real commands\n\n```bash\n# Verify dependencies resolved\n\
+  gradle dependencies --configuration runtimeClasspath | grep ktor-client\n\n# Run the app that makes\
+  \ outbound calls\n./gradlew run\n\n# Exercise the proxy route\ncurl -s http://localhost:8080/proxy |\
+  \ jq .\n\n# Error mapping: upstream 404 -> 502\ncurl -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/proxy-404\n\
+  \n# Timeout behavior\ncurl -s http://localhost:8080/proxy-timeout\n```\n\n## Client example\n\n```kotlin\n\
   val client = HttpClient(CIO) {\n    install(ContentNegotiation) {\n        json(Json { ignoreUnknownKeys\
   \ = true })\n    }\n    install(HttpTimeout) {\n        requestTimeoutMillis = 5_000\n        connectTimeoutMillis\
   \ = 2_000\n    }\n    defaultRequest {\n        contentType(ContentType.Application.Json)\n    }\n}\n\
@@ -20,12 +32,16 @@ instructions: "# Ktor Client\n\nMake HTTP calls from Ktor applications with ktor
   ).body()\n```\n\n## Testing\n\n```bash\n./gradlew test\n```\n\n## Best practices\n\n- Install HttpTimeout;\
   \ clients without timeouts hang requests.\n- Use expectSuccess = true and catch ClientRequestException/ServerResponseException.\n\
   - Reuse one HttpClient per application; don't create per request.\n\n## Capabilities\n\n### client-setup\n\
-  Add ktor-client dependencies and configure an engine with plugins.\n\n**Commands:**\n- `gradle dependencies\
-  \ --configuration runtimeClasspath | grep ktor-client`\n- `./gradlew run`\n- `curl -s http://localhost:8080/proxy`\n\
-  - `./gradlew build`\n\n**Examples:**\n- gradle dependencies --configuration runtimeClasspath | grep\
-  \ ktor-client\n- ./gradlew run\n- curl -s http://localhost:8080/proxy\n\n### call-verify\nVerify outbound\
-  \ calls: status, JSON body, and error mapping.\n\n**Commands:**\n- `curl -s http://localhost:8080/proxy\
-  \ | jq .`\n- `curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/proxy-404`\n- `curl -s\
-  \ http://localhost:8080/proxy-timeout`\n- `./gradlew test`\n\n**Examples:**\n- curl -s http://localhost:8080/proxy\
-  \ | jq .\n- curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/proxy-404\n- ./gradlew test"
+  Add ktor-client dependencies and configure an engine with plugins.\n\n**Parameters:**\n- `engine` (string):\
+  \ Client engine: CIO, OkHttp, Apache, Java.\n- `endpoint` (string): Proxy endpoint that exercises the\
+  \ client.\n\n**Commands:**\n- `gradle dependencies --configuration runtimeClasspath | grep ktor-client`\n\
+  - `./gradlew run`\n- `curl -s http://localhost:8080/proxy`\n- `./gradlew build`\n\n**Examples:**\n-\
+  \ gradle dependencies --configuration runtimeClasspath | grep ktor-client\n- ./gradlew run\n- curl -s\
+  \ http://localhost:8080/proxy\n\n### call-verify\nVerify outbound calls: status, JSON body, and error\
+  \ mapping.\n\n**Parameters:**\n- `path` (string): App route that triggers an outbound client call.\n\
+  \n**Commands:**\n- `curl -s http://localhost:8080/proxy | jq .`\n- `curl -s -o /dev/null -w '%{http_code}\\\
+  n' http://localhost:8080/proxy-404`\n- `curl -s http://localhost:8080/proxy-timeout`\n- `./gradlew test`\n\
+  \n**Examples:**\n- curl -s http://localhost:8080/proxy | jq .\n- curl -s -o /dev/null -w '%{http_code}\\\
+  n' http://localhost:8080/proxy-404\n- ./gradlew test\n\n## References\n- [Ktor Client](https://ktor.io/docs/client-create-new-application.html)\n\
+  - [Ktor Client Serialization](https://ktor.io/docs/client-serialization.html)"
 prompt: Act as Ktor Client and handle the task per the instructions.

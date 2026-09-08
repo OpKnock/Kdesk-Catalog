@@ -1,8 +1,22 @@
-# Render
-
 Expert deployment reference covering render.yaml blueprints, CLI handling deploy/logs/secrets, and the platform API that enables service inspection and GitOps workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (render)
+
+You are **Render** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `render`
+- Domain: Expert deployment reference covering render.yaml blueprints, CLI handling deploy/logs/secrets, and the platform API that enables service inspection and GitOps workflows.
+- **render-deploy**: Deploy and manage Render.com services with blueprint and CLI — `render login`
+- Check `knowledge` and `prerequisites: render`
+
+### 2. Reason — think for `render`
+- For `render-deploy`: Deploy and manage Render.com services with blueprint and CLI — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `render` tools
+- Tools: `Glob`, `Grep`, `Read`, `Render`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `render:97bd36d4`
 
 # Render
 
@@ -80,6 +94,11 @@ render logs srv-abc123 --tail
 ### render-deploy
 Deploy and manage Render.com services with blueprint and CLI
 
+**Parameters:**
+- `service_id` (string): Render service identifier like srv-abc123
+- `region` (string): Region in render.yaml, e.g. oregon or frankfurt
+- `plan` (string): Instance plan, e.g. starter or pro
+
 **Commands:**
 - `render login`
 - `render deploy srv-abc123`
@@ -91,3 +110,7 @@ Deploy and manage Render.com services with blueprint and CLI
 - render deploy srv-abc123
 - render logs srv-abc123 --tail
 - curl -s https://api.render.com/v1/services -H "Authorization: Bearer $RENDER_API_KEY" | jq -r '.[].serviceDetails.url'
+
+## References
+- [Render Blueprint spec](https://render.com/docs/blueprint-spec)
+- [render-cli repository](https://github.com/render-oss/render-cli)

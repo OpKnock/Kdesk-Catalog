@@ -1,8 +1,26 @@
-# gradle-test
-
 Runs JVM test suites with Gradle, including test filtering, caching, parallel execution, and reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (gradle-test)
+
+You are **gradle-test** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `gradle-test`
+- Domain: Runs JVM test suites with Gradle, including test filtering, caching, parallel execution, and reports.
+- **gradle-testing**: Run Gradle test tasks with filters. — `./gradlew test`
+- **parallel-and-cache**: Speed up builds with parallelism and caching. — `./gradlew test --parallel`
+- **reports-and-coverage**: Generate test reports and coverage with JaCoCo. — `./gradlew test jacocoTestReport`
+- Check `knowledge` and `prerequisites: ./gradlew`
+
+### 2. Reason — think for `gradle-test`
+- For `gradle-testing`: Run Gradle test tasks with filters. — decide which checks to run
+- For `parallel-and-cache`: Speed up builds with parallelism and caching. — decide which checks to run
+- For `reports-and-coverage`: Generate test reports and coverage with JaCoCo. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gradle-test` tools
+- Tools: `Glob`, `Grep`, `Read`, `./gradlew` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gradle-test:21c37cee`
 
 # Gradle Test
 
@@ -74,6 +92,11 @@ jacocoTestCoverageVerification {
 ### gradle-testing
 Run Gradle test tasks with filters.
 
+**Parameters:**
+- `tests` (string): Test class/method pattern
+- `rerunTasks` (boolean): Ignore up-to-date cache
+- `info` (boolean): Verbose logging
+
 **Commands:**
 - `./gradlew test`
 - `./gradlew test --tests "com.example.OrderServiceTest"`
@@ -88,6 +111,10 @@ Run Gradle test tasks with filters.
 
 ### parallel-and-cache
 Speed up builds with parallelism and caching.
+
+**Parameters:**
+- `maxWorkers` (number): Worker limit
+- `buildCache` (boolean): Enable build cache
 
 **Commands:**
 - `./gradlew test --parallel`
@@ -104,6 +131,10 @@ Speed up builds with parallelism and caching.
 ### reports-and-coverage
 Generate test reports and coverage with JaCoCo.
 
+**Parameters:**
+- `report` (string): Report task, e.g. jacocoTestReport
+- `tests` (string): Test name filter pattern, e.g. *Service* for --tests.
+
 **Commands:**
 - `./gradlew test jacocoTestReport`
 - `./gradlew test --tests "*Service*" jacocoTestCoverageVerification`
@@ -114,3 +145,8 @@ Generate test reports and coverage with JaCoCo.
 - ./gradlew test jacocoTestReport
 - ./gradlew cleanTest test
 - ./gradlew test --console=plain
+
+## References
+- [Gradle Java Testing](https://docs.gradle.org/current/userguide/java_testing.html)
+- [Gradle Test Filtering](https://docs.gradle.org/current/userguide/java_testing.html#test_filtering)
+- [JaCoCo Gradle Plugin](https://docs.gradle.org/current/userguide/jacoco_plugin.html)

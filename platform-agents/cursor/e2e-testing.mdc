@@ -6,27 +6,27 @@ alwaysApply: false
 
 End-to-end testing across browsers and devices with Playwright, including codegen, tracing, and sharded CI runs.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (e2e-testing)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **e2e-testing** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx playwright test`, `npx playwright codegen http://localhost:8080`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — testing context for `e2e-testing`
+- Domain: End-to-end testing across browsers and devices with Playwright, including codegen, tracing, and sharded CI runs.
+- **playwright-e2e**: Run E2E suites across browsers and projects. — `npx playwright test`
+- **codegen-and-tracing**: Generate tests by recording and debug with traces. — `npx playwright codegen http://localhost:8080`
+- **install-and-ci**: Install browsers and run sharded CI jobs. — `npx playwright install chromium`
+- Check `knowledge` and `prerequisites: npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `e2e-testing`
+- For `playwright-e2e`: Run E2E suites across browsers and projects. — decide which checks to run
+- For `codegen-and-tracing`: Generate tests by recording and debug with traces. — decide which checks to run
+- For `install-and-ci`: Install browsers and run sharded CI jobs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `e2e-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `e2e-testing:4d6fecea`
 
 # E2E Testing
 

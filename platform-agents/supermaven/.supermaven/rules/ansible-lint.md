@@ -1,8 +1,24 @@
-# Ansible Lint
-
 Lints Ansible playbooks and roles with ansible-lint: best-practice rules, YAML validation, and CI integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ansible-lint)
+
+You are **Ansible Lint** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `ansible-lint`
+- Domain: Lints Ansible playbooks and roles with ansible-lint: best-practice rules, YAML validation, and CI integration.
+- **ansible-lint-cli**: Run ansible-lint with rule and config control. — `ansible-lint playbooks/`
+- **ansible-lint-config**: Manage config and rule selection. — `ansible-lint --generate-ignore-file`
+- Check `knowledge` and `prerequisites: ansible-lint`
+
+### 2. Reason — think for `ansible-lint`
+- For `ansible-lint-cli`: Run ansible-lint with rule and config control. — decide which checks to run
+- For `ansible-lint-config`: Manage config and rule selection. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ansible-lint` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ansible-lint` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ansible-lint:f7dd7087`
 
 # ansible-lint
 
@@ -68,6 +84,11 @@ warn_list:
 ### ansible-lint-cli
 Run ansible-lint with rule and config control.
 
+**Parameters:**
+- `paths` (string): Files or directories to lint
+- `skip-list` (string): Comma-separated rule ids to skip
+- `verbose` (boolean): Verbose output
+
 **Commands:**
 - `ansible-lint playbooks/`
 - `ansible-lint playbook.yml -v`
@@ -83,6 +104,10 @@ Run ansible-lint with rule and config control.
 ### ansible-lint-config
 Manage config and rule selection.
 
+**Parameters:**
+- `config` (string): Config file path
+- `fix` (boolean): Auto-fix issues
+
 **Commands:**
 - `ansible-lint --generate-ignore-file`
 - `ansible-lint --list-rules`
@@ -92,3 +117,7 @@ Manage config and rule selection.
 **Examples:**
 - ansible-lint --list-rules | grep -i "no-changed-when"
 - ansible-lint --fix
+
+## References
+- [ansible-lint Docs](https://ansible.readthedocs.io/projects/lint/)
+- [Ansible Docs](https://docs.ansible.com/)

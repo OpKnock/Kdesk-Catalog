@@ -5,27 +5,23 @@ description: "End-to-end monitoring stack operations: Prometheus targets, Grafan
 
 End-to-end monitoring stack operations: Prometheus targets, Grafana datasources and dashboards, alerting rules, and uptime checks.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (monitoring)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Monitoring** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `docker run -d --name grafana -p 3000:3000 grafana/grafana`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `monitoring`
+- Domain: End-to-end monitoring stack operations: Prometheus targets, Grafana datasources and dashboards, alerting rules, and uptime checks.
+- **monitoring-stack**: Operate a Prometheus + Grafana stack: provision datasources, manage dashboards and validate alert ru — `docker run -d --name grafana -p 3000:3000 grafana/grafana`
+- Check `knowledge` and `prerequisites: docker, promtool`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `monitoring`
+- For `monitoring-stack`: Operate a Prometheus + Grafana stack: provision datasources, manage dashboards and validate alert rules. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `monitoring` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `monitoring:74b085dc`
 
 # Monitoring
 

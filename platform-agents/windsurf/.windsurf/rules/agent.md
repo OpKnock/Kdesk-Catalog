@@ -8,27 +8,23 @@ globs: ["**/*.py", "**/*.r"]
 
 it SDK deployment it handling ML it SDK deployment.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (agent)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `docker build -t agent:latest .`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — ml context for `agent`
+- Domain: it SDK deployment it handling ML it SDK deployment.
+- **Ml Agent Deploy Sdk Agent**: Agent SDK deployment agent for ML Agent SDK deployment. — `docker build -t agent:latest .`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `agent`
+- For `Ml Agent Deploy Sdk Agent`: Agent SDK deployment agent for ML Agent SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Agent` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `agent:114c7518`
 
 ## Instructions
 

@@ -1,6 +1,6 @@
 ---
 name: "cloud-netlify-agent"
-description: "Netlify agent for deployment platform."
+description: "Netlify agent for deployment platform. Use when working with Cloud Netlify Agent or when the user mentions Cloud Netlify Agent."
 type: knowledge
 triggers: ["cloud-netlify-agent", "cloud netlify agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["cloud-netlify-agent", "cloud netlify agent"]
 # Cloud Netlify Agent
 
 Netlify agent for deployment platform.
+
+## Agentic Workflow: Read -> Reason -> Act (cloud-netlify-agent)
+
+You are **Cloud Netlify Agent** (cloud/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — cloud context for `cloud-netlify-agent`
+- Domain: Netlify agent for deployment platform.
+- **Cloud Netlify Agent**: Netlify agent for deployment platform. — `netlify deploy --prod`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `cloud-netlify-agent`
+- For `Cloud Netlify Agent`: Netlify agent for deployment platform. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cloud-netlify-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Netlify` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cloud-netlify-agent:50c46304`
 
 ## Instructions
 
@@ -31,3 +49,7 @@ Netlify agent for deployment platform.
 - netlify sites:list
 - netlify functions:list
 - netlify env:set
+
+## References
+- [Netlify Documentation](https://docs.netlify.com/)
+- [Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)

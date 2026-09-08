@@ -1,15 +1,33 @@
 ---
 name: "aws"
-description: "Operates AWS services with the AWS CLI: EC2, S3, IAM, Lambda, EKS, and CloudWatch across accounts and regions."
+description: "Operates AWS services with the AWS CLI: EC2, S3, IAM, Lambda, EKS, and CloudWatch across accounts and regions. Use when working with aws core, aws serverless, aws kubernetes, cloud or when the user mentions aws core, aws serverless, aws kubernetes, cloud."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# aws
-
 Operates AWS services with the AWS CLI: EC2, S3, IAM, Lambda, EKS, and CloudWatch across accounts and regions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (aws)
+
+You are **aws** (cloud/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — cloud context for `aws`
+- Domain: Operates AWS services with the AWS CLI: EC2, S3, IAM, Lambda, EKS, and CloudWatch across accounts and regions.
+- **aws-core**: Manage core AWS resources from the CLI. — `aws s3 ls`
+- **aws-serverless**: Deploy and manage Lambda functions. — `aws lambda list-functions --region us-east-1`
+- **aws-kubernetes**: Manage EKS clusters and kubeconfigs. — `aws eks update-kubeconfig --name my-cluster --region us-east-1`
+- Check `knowledge` and `prerequisites: aws, kubectl`
+
+### 2. Reason — think for `aws`
+- For `aws-core`: Manage core AWS resources from the CLI. — decide which checks to run
+- For `aws-serverless`: Deploy and manage Lambda functions. — decide which checks to run
+- For `aws-kubernetes`: Manage EKS clusters and kubeconfigs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `aws` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `aws:b17e3dab`
 
 # AWS
 
@@ -69,6 +87,11 @@ kubectl get nodes
 ### aws-core
 Manage core AWS resources from the CLI.
 
+**Parameters:**
+- `region` (string): AWS region
+- `profile` (string): Named profile
+- `query` (string): JMESPath query
+
 **Commands:**
 - `aws s3 ls`
 - `aws s3 cp file.txt s3://my-bucket/`
@@ -83,6 +106,10 @@ Manage core AWS resources from the CLI.
 
 ### aws-serverless
 Deploy and manage Lambda functions.
+
+**Parameters:**
+- `function` (string): Lambda function name
+- `region` (string): AWS region
 
 **Commands:**
 - `aws lambda list-functions --region us-east-1`
@@ -99,6 +126,10 @@ Deploy and manage Lambda functions.
 ### aws-kubernetes
 Manage EKS clusters and kubeconfigs.
 
+**Parameters:**
+- `cluster` (string): EKS cluster name
+- `region` (string): AWS region
+
 **Commands:**
 - `aws eks update-kubeconfig --name my-cluster --region us-east-1`
 - `aws eks list-clusters`
@@ -108,3 +139,7 @@ Manage EKS clusters and kubeconfigs.
 **Examples:**
 - aws eks update-kubeconfig --name my-cluster --alias prod
 - aws eks list-nodegroups --cluster-name my-cluster
+
+## References
+- [AWS CLI Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/index.html)
+- [AWS SDK and Tools](https://docs.aws.amazon.com/cli/latest/userguide/)

@@ -1,6 +1,6 @@
 ---
 name: "ml-performance-aws-deploy"
-description: "AWS Performance deployment agent for ML performance on AWS."
+description: "AWS Performance deployment agent for ML performance on AWS. Use when working with Ml Performance Aws Deploy, inference or when the user mentions Ml Performance Aws Deploy, inference."
 type: knowledge
 triggers: ["ml-performance-aws-deploy", "ml performance aws deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-performance-aws-deploy", "ml performance aws deploy"]
 # Ml Performance Aws Deploy
 
 AWS Performance deployment agent for ML performance on AWS.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-performance-aws-deploy)
+
+You are **Ml Performance Aws Deploy** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-performance-aws-deploy`
+- Domain: AWS Performance deployment agent for ML performance on AWS.
+- **Ml Performance Aws Deploy**: AWS Performance deployment agent for ML performance on AWS. — `X-Ray: aws xray get-trace-summaries --start-time 2024-01-01T00:00:00Z --end-time`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-performance-aws-deploy`
+- For `Ml Performance Aws Deploy`: AWS Performance deployment agent for ML performance on AWS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-performance-aws-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `X-Ray`, `CloudWatch` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-performance-aws-deploy:37d4324c`
 
 ## Instructions
 
@@ -25,3 +43,8 @@ AWS Performance deployment agent for ML performance on AWS.
 **Examples:**
 - CloudWatch: aws cloudwatch get-metric-statistics --namespace AWS/SageMaker --metric-name ModelLatency --dimensions Name=EndpointName,Value=my-endpoint --start-time 2024-01-01T00:00:00Z --end-time 2024-01-01T01:00:00Z --period 60 --statistics Average
 - X-Ray: aws xray get-trace-summaries --start-time 2024-01-01T00:00:00Z --end-time 2024-01-01T01:00:00Z
+
+## References
+- [AWS Performance Efficiency Pillar](https://docs.aws.amazon.com/wellarchitected/latest/performance-efficiency-pillar/welcome.html)
+- [AWS Documentation](https://docs.aws.amazon.com/)
+- [Amazon SageMaker Documentation](https://docs.aws.amazon.com/sagemaker/)

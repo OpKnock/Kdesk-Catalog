@@ -1,15 +1,29 @@
 ---
 name: "elysia"
-description: "Build TypeScript APIs with the Elysia framework (Bun): scaffold endpoints, run the dev server, and test routes."
+description: "Build TypeScript APIs with the Elysia framework (Bun): scaffold endpoints, run the dev server, and test routes. Use when working with elysia development, api or when the user mentions elysia development, api."
 type: knowledge
 triggers: ["elysia", "elysia-development"]
 ---
 
-# Elysia
-
 Build TypeScript APIs with the Elysia framework (Bun): scaffold endpoints, run the dev server, and test routes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (elysia)
+
+You are **Elysia** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `elysia`
+- Domain: Build TypeScript APIs with the Elysia framework (Bun): scaffold endpoints, run the dev server, and test routes.
+- **elysia-development**: Scaffold, run, and test Elysia Bun apps with the bun runtime. — `bun create elysia app`
+- Check `knowledge` and `prerequisites: bun`
+
+### 2. Reason — think for `elysia`
+- For `elysia-development`: Scaffold, run, and test Elysia Bun apps with the bun runtime. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `elysia` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bun` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `elysia:986b7a6a`
 
 # Elysia
 
@@ -78,6 +92,11 @@ curl -s localhost:3000/hello/world | jq
 ### elysia-development
 Scaffold, run, and test Elysia Bun apps with the bun runtime.
 
+**Parameters:**
+- `port` (integer): Port Elysia listens on (default 3000)
+- `watch` (boolean): Run the dev server with hot reload
+- `target` (string): Build target for bun build
+
 **Commands:**
 - `bun create elysia app`
 - `bun add elysia`
@@ -89,3 +108,6 @@ Scaffold, run, and test Elysia Bun apps with the bun runtime.
 - bun create elysia app && cd app && bun run --watch src/index.ts
 - bun add elysia @elysiajs/cors @elysiajs/jwt
 - curl -s localhost:3000/hello/name | jq
+
+## References
+- [Elysia Documentation](https://elysiajs.com/)

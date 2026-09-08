@@ -1,6 +1,6 @@
 ---
 name: "ml-together-inference-agent"
-description: "Together inference agent. Manages ML inference on Together AI."
+description: "Together inference agent. Manages ML inference on Together AI. Use when working with Ml Together Inference Agent or when the user mentions Ml Together Inference Agent."
 type: knowledge
 triggers: ["ml-together-inference-agent", "ml together inference agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-together-inference-agent", "ml together inference agent"]
 # Ml Together Inference Agent
 
 Together inference agent. Manages ML inference on Together AI.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-together-inference-agent)
+
+You are **Ml Together Inference Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-together-inference-agent`
+- Domain: Together inference agent. Manages ML inference on Together AI.
+- **Ml Together Inference Agent**: Together inference agent. Manages ML inference on Together AI. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-together-inference-agent`
+- For `Ml Together Inference Agent`: Together inference agent. Manages ML inference on Together AI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-together-inference-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Together` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-together-inference-agent:937cf7a2`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Together inference agent. Manages ML inference on Together AI.
 - together run meta-llama/Llama-2-70b-chat-hf --input '{"prompt": "Hello"}'
 - together models list
 - together predictions list
+
+## References
+- [Together AI Documentation](https://docs.together.ai/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

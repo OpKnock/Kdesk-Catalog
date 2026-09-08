@@ -1,14 +1,28 @@
 ---
-description: "Registers, inspects, and troubleshoots Kafka Connect connectors that stream row-level changes from MySQL, PostgreSQL, and MongoDB via Debezium CDC."
+description: "Registers, inspects, and troubleshoots Kafka Connect connectors that stream row-level changes from MySQL, PostgreSQL, and MongoDB via Debezium CDC. Use when working with connector management, api or when the user mentions connector management, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# Debezium
-
 Registers, inspects, and troubleshoots Kafka Connect connectors that stream row-level changes from MySQL, PostgreSQL, and MongoDB via Debezium CDC.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (debezium)
+
+You are **Debezium** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `debezium`
+- Domain: Registers, inspects, and troubleshoots Kafka Connect connectors that stream row-level changes from MySQL, PostgreSQL, and MongoDB via Debezium CDC.
+- **connector-management**: Register, list, inspect status, and restart Debezium Kafka Connect connectors via the Connect REST A — `curl -X POST http://localhost:8083/connectors -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `debezium`
+- For `connector-management`: Register, list, inspect status, and restart Debezium Kafka Connect connectors via the Connect REST API. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `debezium` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `debezium:7f230314`
 
 # Debezium
 
@@ -81,6 +95,11 @@ curl -X POST http://localhost:8083/connectors/mysql-source/stop
 ### connector-management
 Register, list, inspect status, and restart Debezium Kafka Connect connectors via the Connect REST API.
 
+**Parameters:**
+- `connector-name` (string): Name of the connector to inspect or restart (e.g. mysql-source)
+- `connect-url` (string): Kafka Connect REST endpoint, default http://localhost:8083
+- `task-id` (integer): Zero-based index of the failing task to restart
+
 **Commands:**
 - `curl -X POST http://localhost:8083/connectors -H 'Content-Type: application/json' -d @mysql-source.json`
 - `curl -s http://localhost:8083/connectors | jq`
@@ -92,3 +111,6 @@ Register, list, inspect status, and restart Debezium Kafka Connect connectors vi
 - curl -X POST http://localhost:8083/connectors -H 'Content-Type: application/json' -d @mysql-source.json
 - curl -s http://localhost:8083/connectors/mysql-source/status | jq '.connector.state, .tasks'
 - curl -s http://localhost:8083/connectors/mysql-source/config | jq
+
+## References
+- [Debezium Documentation](https://debezium.io/documentation/reference/stable/index.html)

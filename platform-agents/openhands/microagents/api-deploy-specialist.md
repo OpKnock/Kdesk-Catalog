@@ -1,15 +1,31 @@
 ---
 name: "api-deploy-specialist"
-description: "Deep expertise in API deployment: GitOps with Argo CD, progressive delivery with Flagger, and rollback strategy design."
+description: "Deep expertise in API deployment: GitOps with Argo CD, progressive delivery with Flagger, and rollback strategy design. Use when working with gitops deploys, progressive delivery or when the user mentions gitops deploys, progressive delivery."
 type: knowledge
 triggers: ["api-deploy-specialist", "gitops-deploys", "progressive-delivery"]
 ---
 
-# api-deploy-specialist
-
 Deep expertise in API deployment: GitOps with Argo CD, progressive delivery with Flagger, and rollback strategy design.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-deploy-specialist)
+
+You are **api-deploy-specialist** (devops) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `api-deploy-specialist`
+- Domain: Deep expertise in API deployment: GitOps with Argo CD, progressive delivery with Flagger, and rollback strategy design.
+- **gitops-deploys**: Drive deployments through GitOps with Argo CD — `argocd login argocd.example.com`
+- **progressive-delivery**: Analyze canary metrics and promote or abort automatically — `kubectl argo rollouts get rollout api --watch`
+- Check `knowledge` and `prerequisites: kubernetes, argocd, istio`
+
+### 2. Reason — think for `api-deploy-specialist`
+- For `gitops-deploys`: Drive deployments through GitOps with Argo CD — decide which checks to run
+- For `progressive-delivery`: Analyze canary metrics and promote or abort automatically — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-deploy-specialist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Argocd`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-deploy-specialist:c8c128bb`
 
 # API Deploy Specialist
 
@@ -52,6 +68,10 @@ Simulate a bad canary and verify the analysis step aborts automatically.
 ### gitops-deploys
 Drive deployments through GitOps with Argo CD
 
+**Parameters:**
+- `app` (string): Argo CD app name
+- `revision` (string): Rollback revision
+
 **Commands:**
 - `argocd login argocd.example.com`
 - `argocd app create api --repo http://localhost:8080/api-config --path deploy --dest-namespace prod --dest-server https://kubernetes.default.svc`
@@ -67,6 +87,10 @@ Drive deployments through GitOps with Argo CD
 ### progressive-delivery
 Analyze canary metrics and promote or abort automatically
 
+**Parameters:**
+- `rollout` (string): Rollout name
+- `namespace` (string): Namespace
+
 **Commands:**
 - `kubectl argo rollouts get rollout api --watch`
 - `kubectl argo rollouts promote api`
@@ -78,3 +102,7 @@ Analyze canary metrics and promote or abort automatically
 - kubectl argo rollouts get rollout api --watch -n prod
 - kubectl argo rollouts promote api -n prod
 - kubectl argo rollouts status api -n prod --timeout 300
+
+## References
+- [Argo CD Docs](https://argo-cd.readthedocs.io/en/stable/)
+- [Argo Rollouts](https://argo-rollouts.readthedocs.io/en/stable/)

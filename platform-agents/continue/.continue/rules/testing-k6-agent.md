@@ -1,6 +1,6 @@
 ---
 name: "Testing K6 Agent"
-description: "k6 agent for load testing."
+description: "k6 agent for load testing. Use when working with Testing K6 Agent or when the user mentions Testing K6 Agent."
 globs: ["**/*.java", "**/*.r", "**/*.{js,ts,jsx,tsx}"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Testing K6 Agent
 
 k6 agent for load testing.
+
+## Agentic Workflow: Read -> Reason -> Act (testing-k6-agent)
+
+You are **Testing K6 Agent** (testing/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `testing-k6-agent`
+- Domain: k6 agent for load testing.
+- **Testing K6 Agent**: k6 agent for load testing. — `k6 run --vus 10 --duration 30s script.js`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `testing-k6-agent`
+- For `Testing K6 Agent`: k6 agent for load testing. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `testing-k6-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `K6` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `testing-k6-agent:137746bb`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ k6 agent for load testing.
 - k6 run --vus 10 --duration 30s script.js
 - k6 cloud script.js
 - k6 archive script.js
+
+## References
+- [Grafana k6 Documentation](https://grafana.com/docs/k6/latest/)

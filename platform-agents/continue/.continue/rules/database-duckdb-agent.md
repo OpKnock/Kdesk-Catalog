@@ -1,6 +1,6 @@
 ---
 name: "Database Duckdb Agent"
-description: "DuckDB agent for analytical database management."
+description: "DuckDB agent for analytical database management. Use when working with Database Duckdb Agent or when the user mentions Database Duckdb Agent."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Database Duckdb Agent
 
 DuckDB agent for analytical database management.
+
+## Agentic Workflow: Read -> Reason -> Act (database-duckdb-agent)
+
+You are **Database Duckdb Agent** (database/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `database-duckdb-agent`
+- Domain: DuckDB agent for analytical database management.
+- **Database Duckdb Agent**: DuckDB agent for analytical database management. — `duckdb -c 'COPY (SELECT * FROM table) TO 'output.parquet' (FORMAT PARQUET)'`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `database-duckdb-agent`
+- For `Database Duckdb Agent`: DuckDB agent for analytical database management. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `database-duckdb-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Duckdb` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `database-duckdb-agent:f3d08018`
 
 ## Instructions
 
@@ -27,3 +45,6 @@ DuckDB agent for analytical database management.
 - duckdb mydb.db
 - duckdb -c 'SELECT * FROM read_parquet' 
 - duckdb -c 'COPY (SELECT * FROM table) TO 'output.parquet' (FORMAT PARQUET)'
+
+## References
+- [DuckDB Documentation](https://duckdb.org/docs/)

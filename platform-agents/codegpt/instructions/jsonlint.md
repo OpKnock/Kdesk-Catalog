@@ -1,8 +1,24 @@
-# jsonlint
-
 Validate JSON syntax from files or stdin. Query, format, and transform JSON with jq.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (jsonlint)
+
+You are **jsonlint** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `jsonlint`
+- Domain: Validate JSON syntax from files or stdin. Query, format, and transform JSON with jq.
+- **json-validation**: Validate JSON syntax from files or stdin. — `jsonlint config.json`
+- **json-processing**: Query, format, and transform JSON with jq. — `jq . config.json`
+- Check `knowledge` and `prerequisites: echo, jsonlint, python`
+
+### 2. Reason — think for `jsonlint`
+- For `json-validation`: Validate JSON syntax from files or stdin. — decide which checks to run
+- For `json-processing`: Query, format, and transform JSON with jq. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `jsonlint` tools
+- Tools: `Glob`, `Grep`, `Read`, `Jsonlint`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `jsonlint:fd9bb9f2`
 
 # JSON Lint
 
@@ -58,6 +74,10 @@ jq empty ./*.json && echo "all valid"
 ### json-validation
 Validate JSON syntax from files or stdin.
 
+**Parameters:**
+- `file` (string): JSON file path
+- `quiet` (boolean): Silent on success
+
 **Commands:**
 - `jsonlint config.json`
 - `jsonlint -q config.json`
@@ -73,6 +93,10 @@ Validate JSON syntax from files or stdin.
 ### json-processing
 Query, format, and transform JSON with jq.
 
+**Parameters:**
+- `filter` (string): jq filter expression
+- `output` (string): Output file path
+
 **Commands:**
 - `jq . config.json`
 - `jq -r ".name" package.json`
@@ -84,3 +108,7 @@ Query, format, and transform JSON with jq.
 - jq -r ".users[].email" users.json
 - jq "group_by(.type) | map({type: .[0].type, count: length})" data.json
 - jq --arg k "key" ".[$k]" data.json
+
+## References
+- [jq Manual](https://jqlang.github.io/jq/manual/)
+- [JSON Spec](https://www.json.org/json-en.html)

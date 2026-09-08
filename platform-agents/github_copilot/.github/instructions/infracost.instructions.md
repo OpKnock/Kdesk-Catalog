@@ -4,27 +4,25 @@ applyTo: "**/*.html **/*.json **/*.r **/*.sh **/*.tf **/*.{yaml,yml}"
 
 Shows cloud cost estimates for Terraform, Pulumi, and OpenTofu infrastructure before you apply, and diffs cost changes in CI.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (infracost)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Infracost** (finops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `infracost breakdown --path .`, `infracost diff --path plan.json`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — finops context for `infracost`
+- Domain: Shows cloud cost estimates for Terraform, Pulumi, and OpenTofu infrastructure before you apply, and diffs cost changes in CI.
+- **breakdown**: Generate detailed infrastructure cost estimates. — `infracost breakdown --path .`
+- **diff**: Show cost change between plans in CI pull requests. — `infracost diff --path plan.json`
+- Check `knowledge` and `prerequisites: infracost`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `infracost`
+- For `breakdown`: Generate detailed infrastructure cost estimates. — decide which checks to run
+- For `diff`: Show cost change between plans in CI pull requests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `infracost` tools
+- Tools: `Glob`, `Grep`, `Read`, `Infracost` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `infracost:8a713bf3`
 
 # Infracost
 

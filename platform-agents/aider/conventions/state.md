@@ -1,8 +1,22 @@
-# State
-
 Implements the State pattern in TypeScript with Vitest: state machines that swap behavior as state changes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (state)
+
+You are **State** (patterns/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — patterns context for `state`
+- Domain: Implements the State pattern in TypeScript with Vitest: state machines that swap behavior as state changes.
+- **ts-vitest**: Implement and test state machine examples. — `npm init -y && npm install -D typescript vitest`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `state`
+- For `ts-vitest`: Implement and test state machine examples. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `state` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `state:6324a440`
 
 # State Pattern
 
@@ -81,6 +95,11 @@ Cover all legal transitions plus each invalid one.
 ### ts-vitest
 Implement and test state machine examples.
 
+**Parameters:**
+- `t` (string): Test name filter
+- `coverage` (string): Coverage collection
+- `strict` (string): Strict TypeScript check
+
 **Commands:**
 - `npm init -y && npm install -D typescript vitest`
 - `npx tsc --noEmit --strict state.ts`
@@ -92,3 +111,7 @@ Implement and test state machine examples.
 - npx vitest run tests/state.test.ts
 - npx tsc --noEmit --strict state.ts machine.ts
 - npx vitest run -t 'publish'
+
+## References
+- [Refactoring Guru: State](https://refactoring.guru/design-patterns/state)
+- [Vitest](https://vitest.dev/guide/)

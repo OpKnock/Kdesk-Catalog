@@ -1,6 +1,6 @@
 ---
 name: "ml-groq-python-agent"
-description: "Groq Python SDK agent for fast LLM inference."
+description: "Groq Python SDK agent for fast LLM inference. Use when working with Ml Groq Python Agent, inference or when the user mentions Ml Groq Python Agent, inference."
 type: knowledge
 triggers: ["ml-groq-python-agent", "ml groq python agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-groq-python-agent", "ml groq python agent"]
 # Ml Groq Python Agent
 
 Groq Python SDK agent for fast LLM inference.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-groq-python-agent)
+
+You are **Ml Groq Python Agent** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-groq-python-agent`
+- Domain: Groq Python SDK agent for fast LLM inference.
+- **Ml Groq Python Agent**: Groq Python SDK agent for fast LLM inference. — `List: python -c 'from groq import Groq; client = Groq(); print([m.id for m in cl`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-groq-python-agent`
+- For `Ml Groq Python Agent`: Groq Python SDK agent for fast LLM inference. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-groq-python-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `List`, `Chat` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-groq-python-agent:eeb5b111`
 
 ## Instructions
 
@@ -25,3 +43,7 @@ Groq Python SDK agent for fast LLM inference.
 **Examples:**
 - Chat: python -c 'from groq import Groq; client = Groq(); r = client.chat.completions.create(model="llama-3.3-70b-versatile", messages=[{"role": "user", "content": "Hello"}]); print(r.choices[0].message.content)'
 - List: python -c 'from groq import Groq; client = Groq(); print([m.id for m in client.models.list().data])'
+
+## References
+- [Groq Documentation](https://console.groq.com/docs/)
+- [Python Documentation](https://docs.python.org/3/)

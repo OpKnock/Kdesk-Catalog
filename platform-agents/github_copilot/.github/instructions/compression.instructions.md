@@ -4,27 +4,25 @@ applyTo: "**/*.json **/*.r **/*.sh"
 
 Compress API responses to cut bandwidth and latency using gzip, Brotli, and zstd, with curl verification and server configuration.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (compression)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Compression** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -s -H "Accept-Encoding: gzip" -D - -o /dev/null https:/`, `gzip -9 -k response.json`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `compression`
+- Domain: Compress API responses to cut bandwidth and latency using gzip, Brotli, and zstd, with curl verification and server configuration.
+- **compression-verify**: Verify compression headers and response size on API endpoints — `curl -s -H "Accept-Encoding: gzip" -D - -o /dev/null https://httpbin.org/get | g`
+- **cli-tools**: Compress and decompress payloads with gzip, brotli, and zstd — `gzip -9 -k response.json`
+- Check `knowledge` and `prerequisites: brotli, gunzip, gzip, zstd`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `compression`
+- For `compression-verify`: Verify compression headers and response size on API endpoints — decide which checks to run
+- For `cli-tools`: Compress and decompress payloads with gzip, brotli, and zstd — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `compression` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Gzip` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `compression:3dd985eb`
 
 # Compression
 

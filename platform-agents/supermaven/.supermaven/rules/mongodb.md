@@ -1,8 +1,22 @@
-# mongodb
-
 Operates MongoDB: mongosh queries, indexes, backups with mongodump/restore, and exports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (mongodb)
+
+You are **mongodb** (database/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `mongodb`
+- Domain: Operates MongoDB: mongosh queries, indexes, backups with mongodump/restore, and exports.
+- **mongodb-shell**: Query, manage, and diagnose MongoDB via mongosh — `mongosh mongodb://localhost:27017/app`
+- Check `knowledge` and `prerequisites: mongosh`
+
+### 2. Reason — think for `mongodb`
+- For `mongodb-shell`: Query, manage, and diagnose MongoDB via mongosh — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mongodb` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mongosh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mongodb:d9e570b4`
 
 # MongoDB
 
@@ -59,6 +73,11 @@ missing index, verifying with a re-run.
 ### mongodb-shell
 Query, manage, and diagnose MongoDB via mongosh
 
+**Parameters:**
+- `eval` (string): JavaScript expression to evaluate
+- `quiet` (boolean): Suppress banner and shell output
+- `authenticationDatabase` (string): Database that holds user credentials
+
 **Commands:**
 - `mongosh mongodb://localhost:27017/app`
 - `mongosh app --eval "db.users.find({age: {$gt: 21}}).limit(5).toArray()"`
@@ -70,3 +89,7 @@ Query, manage, and diagnose MongoDB via mongosh
 - mongosh app --eval "db.orders.aggregate([{$group: {_id: null, total: {$sum: '$amount'}}}]).toArray()"
 - mongosh app --quiet --eval "db.users.countDocuments({})"
 - mongosh --host localhost --port 27017 -u admin -p --authenticationDatabase admin
+
+## References
+- [MongoDB Shell docs](https://www.mongodb.com/docs/mongodb-shell/)
+- [MongoDB Database Tools](https://www.mongodb.com/docs/database-tools/)

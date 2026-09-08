@@ -1,15 +1,29 @@
 ---
 name: "nested-resources"
-description: "Designs and tests REST API nested resource hierarchies with URI structures, depth limits, pagination, and RFC 8288 Link headers for client navigation."
+description: "Designs and tests REST API nested resource hierarchies with URI structures, depth limits, pagination, and RFC 8288 Link headers for client navigation. Use when working with nested resource design, api or when the user mentions nested resource design, api."
 type: knowledge
 triggers: ["nested-resources", "nested-resource-design"]
 ---
 
-# Nested Resources
-
 Designs and tests REST API nested resource hierarchies with URI structures, depth limits, pagination, and RFC 8288 Link headers for client navigation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nested-resources)
+
+You are **Nested Resources** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `nested-resources`
+- Domain: Designs and tests REST API nested resource hierarchies with URI structures, depth limits, pagination, and RFC 8288 Link headers for client navigation.
+- **nested-resource-design**: Design and test nested REST resources: URI structure, sub-resources, and linked navigation. — `curl -s https://api.your-app.test/v1/users/42/posts`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `nested-resources`
+- For `nested-resource-design`: Design and test nested REST resources: URI structure, sub-resources, and linked navigation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nested-resources` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nested-resources:06030e4b`
 
 # Nested Resources
 
@@ -70,6 +84,11 @@ POST /posts { "user_id": 42 }
 ### nested-resource-design
 Design and test nested REST resources: URI structure, sub-resources, and linked navigation.
 
+**Parameters:**
+- `base_url` (string): API base URL
+- `parent_resource` (string): Parent resource path segment
+- `depth` (integer): Maximum nesting depth allowed
+
 **Commands:**
 - `curl -s https://api.your-app.test/v1/users/42/posts`
 - `curl -s https://api.your-app.test/v1/users/42/posts/7/comments`
@@ -81,3 +100,7 @@ Design and test nested REST resources: URI structure, sub-resources, and linked 
 - curl -s https://api.your-app.test/v1/teams/3/members/5 | jq .
 - curl -s 'https://api.your-app.test/v1/users/42/posts?sort=created_at.desc' | jq '.data'
 - curl -sI -X POST -H 'Content-Type: application/json' -d '{"title":"t"}' https://api.your-app.test/v1/users/42/posts | grep -i location
+
+## References
+- [Microsoft REST API design](https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design)
+- [RESTful API Design (Fowler)](https://restfulapi.net/resource-naming/)

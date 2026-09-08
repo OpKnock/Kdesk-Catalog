@@ -1,6 +1,6 @@
 ---
 name: "Milvus Node"
-description: "Milvus SDK deployment agent for ML Milvus vector database SDK deployment."
+description: "Milvus SDK deployment agent for ML Milvus vector database SDK deployment. Use when working with Ml Milvus Deploy Sdk, vector db or when the user mentions Ml Milvus Deploy Sdk, vector db."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Milvus Node
 
 Milvus SDK deployment agent for ML Milvus vector database SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (milvus-node)
+
+You are **Milvus Node** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `milvus-node`
+- Domain: Milvus SDK deployment agent for ML Milvus vector database SDK deployment.
+- **Ml Milvus Deploy Sdk**: Milvus SDK deployment agent for ML Milvus vector database SDK deployment. — `Node: node -e "const { MilvusClient } = require('@zilliz/milvus2-sdk-node'); con`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `milvus-node`
+- For `Ml Milvus Deploy Sdk`: Milvus SDK deployment agent for ML Milvus vector database SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `milvus-node` tools
+- Tools: `Glob`, `Grep`, `Read`, `Node`, `Python` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `milvus-node:8baadc2d`
 
 ## Instructions
 
@@ -25,3 +43,7 @@ Milvus SDK deployment agent for ML Milvus vector database SDK deployment.
 **Examples:**
 - Python: python -c "from pymilvus import connections; connections.connect(host='localhost', port='19530'); print('Connected')"
 - Node: node -e "const { MilvusClient } = require('@zilliz/milvus2-sdk-node'); const client = new MilvusClient('localhost:19530'); client.listCollections().then(c => console.log(c));"
+
+## References
+- [Milvus Documentation](https://milvus.io/docs/)
+- [Python Documentation](https://docs.python.org/3/)

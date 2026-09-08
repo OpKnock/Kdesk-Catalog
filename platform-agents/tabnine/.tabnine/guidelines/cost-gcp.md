@@ -1,8 +1,24 @@
-# Cost Gcp
-
 Manages GCP billing accounts, budgets, and BigQuery billing exports using gcloud and bq to control cloud spend.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cost-gcp)
+
+You are **Cost Gcp** (finops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — finops context for `cost-gcp`
+- Domain: Manages GCP billing accounts, budgets, and BigQuery billing exports using gcloud and bq to control cloud spend.
+- **billing**: Manage GCP billing accounts and project linkage with gcloud billing. — `gcloud billing accounts list`
+- **budgets**: Create and monitor GCP budget thresholds. — `gcloud billing budgets create --billing-account=$BILLING_ACCOUNT_ID --display-na`
+- Check `knowledge` and `prerequisites: gcloud`
+
+### 2. Reason — think for `cost-gcp`
+- For `billing`: Manage GCP billing accounts and project linkage with gcloud billing. — decide which checks to run
+- For `budgets`: Create and monitor GCP budget thresholds. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cost-gcp` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gcloud` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cost-gcp:422945af`
 
 # GCP Cost Optimization
 
@@ -66,6 +82,11 @@ Confirm budget state after each create/update.
 ### billing
 Manage GCP billing accounts and project linkage with gcloud billing.
 
+**Parameters:**
+- `billing-account` (string): Billing account id in XXXXXX-XXXXXX-XXXXXX format
+- `project` (string): GCP project id to link or query
+- `format` (string): gcloud output format: table, json, csv
+
 **Commands:**
 - `gcloud billing accounts list`
 - `gcloud billing projects describe $PROJECT_ID`
@@ -81,6 +102,11 @@ Manage GCP billing accounts and project linkage with gcloud billing.
 ### budgets
 Create and monitor GCP budget thresholds.
 
+**Parameters:**
+- `budget-amount` (number): Budget amount in USD
+- `threshold-rule` (string): percent=N or absolute amount alerts, repeatable
+- `display-name` (string): Human-readable budget name
+
 **Commands:**
 - `gcloud billing budgets create --billing-account=$BILLING_ACCOUNT_ID --display-name=eng-monthly --budget-amount=15000 --threshold-rule=percent=80 --threshold-rule=percent=100`
 - `gcloud billing budgets list --billing-account=$BILLING_ACCOUNT_ID`
@@ -92,3 +118,8 @@ Create and monitor GCP budget thresholds.
 - gcloud billing budgets create --billing-account=012345-67890A-BCDEFG --display-name=eng --budget-amount=15000 --threshold-rule=percent=80
 - gcloud billing budgets list --billing-account=012345-67890A-BCDEFG --format='table(displayName,budgetFilter.creditTypesTreatment,amount)'
 - gcloud billing budgets describe eng --billing-account=012345-67890A-BCDEFG
+
+## References
+- [GCP Billing Docs](https://cloud.google.com/billing/docs)
+- [gcloud billing reference](https://cloud.google.com/sdk/gcloud/reference/billing)
+- [Billing export to BigQuery](https://cloud.google.com/billing/docs/how-to/export-data-bigquery)

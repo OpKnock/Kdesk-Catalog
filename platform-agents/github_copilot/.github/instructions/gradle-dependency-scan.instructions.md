@@ -4,27 +4,25 @@ applyTo: "**/*.r **/*.sh"
 
 Scans Gradle dependencies for vulnerabilities and licenses with OWASP dependency-check and Gradle plugins.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (gradle-dependency-scan)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Gradle Dependency Scan** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `gradle dependencyCheckAnalyze`, `gradle dependencyInsight --dependency log4j-core`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `gradle-dependency-scan`
+- Domain: Scans Gradle dependencies for vulnerabilities and licenses with OWASP dependency-check and Gradle plugins.
+- **gradle-scan**: Run vulnerability scans on Gradle projects. — `gradle dependencyCheckAnalyze`
+- **dependency-analysis**: Inspect dependency trees and updates. — `gradle dependencyInsight --dependency log4j-core`
+- Check `knowledge` and `prerequisites: gradle`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `gradle-dependency-scan`
+- For `gradle-scan`: Run vulnerability scans on Gradle projects. — decide which checks to run
+- For `dependency-analysis`: Inspect dependency trees and updates. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `gradle-dependency-scan` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gradle` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gradle-dependency-scan:2dc73d10`
 
 # Gradle Dependency Scan
 

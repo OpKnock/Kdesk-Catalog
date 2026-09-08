@@ -1,6 +1,6 @@
 ---
 name: "security-network-security"
-description: "Security network-security expertise and best practices."
+description: "Security network-security expertise and best practices. Use when working with network security expertise, network security, skill or when the user mentions network security expertise, network security, skill."
 type: knowledge
 triggers: ["security-network-security", "network-security-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["security-network-security", "network-security-expertise"]
 # Security Network Security
 
 Security network-security expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (security-network-security)
+
+You are **Security Network Security** (security/network-security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `security-network-security`
+- Domain: Security network-security expertise and best practices.
+- **network-security-expertise**: security network-security expertise — `network-security-cli`
+- Check `knowledge` and `prerequisites: network-security`
+
+### 2. Reason — think for `security-network-security`
+- For `network-security-expertise`: security network-security expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `security-network-security` tools
+- Tools: `Glob`, `Grep`, `Read`, `Network-security-cli`, `Network-security-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `security-network-security:b36e10f7`
 
 ## Instructions
 

@@ -1,8 +1,24 @@
-# Checkov
-
 Scan infrastructure files handling policy violations. Generate machine-readable reports. Checkov policy-as-code.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (checkov)
+
+You are **Checkov** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `checkov`
+- Domain: Scan infrastructure files handling policy violations. Generate machine-readable reports. Checkov policy-as-code.
+- **checkov-scan**: Scan infrastructure files for policy violations. — `checkov -d .`
+- **checkov-output**: Generate machine-readable reports. — `checkov -d . --output sarif --output-file-path ./reports`
+- Check `knowledge` and `prerequisites: checkov`
+
+### 2. Reason — think for `checkov`
+- For `checkov-scan`: Scan infrastructure files for policy violations. — decide which checks to run
+- For `checkov-output`: Generate machine-readable reports. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `checkov` tools
+- Tools: `Glob`, `Grep`, `Read`, `Checkov` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `checkov:5dc3666b`
 
 # Checkov
 
@@ -56,6 +72,11 @@ checkov -d . --baseline .checkov.baseline
 ### checkov-scan
 Scan infrastructure files for policy violations.
 
+**Parameters:**
+- `directory` (string): Directory to scan
+- `framework` (string): Comma-separated frameworks
+- `skip-check` (string): Check ids to skip
+
 **Commands:**
 - `checkov -d .`
 - `checkov -f main.tf`
@@ -71,6 +92,10 @@ Scan infrastructure files for policy violations.
 ### checkov-output
 Generate machine-readable reports.
 
+**Parameters:**
+- `output` (string): sarif, junitxml, json, cli
+- `output-file-path` (string): Report directory
+
 **Commands:**
 - `checkov -d . --output sarif --output-file-path ./reports`
 - `checkov -d . --output junitxml --output-file-path ./reports`
@@ -80,3 +105,7 @@ Generate machine-readable reports.
 **Examples:**
 - checkov -d . --output sarif --output-file-path ./reports --quiet
 - checkov -d . --create-baseline
+
+## References
+- [Checkov Docs](https://www.checkov.io)
+- [Checkov on GitHub](https://github.com/bridgecrewio/checkov)

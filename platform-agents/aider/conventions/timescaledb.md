@@ -1,8 +1,22 @@
-# Timescaledb
-
 Time-series data with TimescaleDB: hypertables, continuous aggregates, retention policies, and time_bucket queries.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (timescaledb)
+
+You are **Timescaledb** (database/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `timescaledb`
+- Domain: Time-series data with TimescaleDB: hypertables, continuous aggregates, retention policies, and time_bucket queries.
+- **timescaledb**: Create hypertables, aggregates, and retention policies with psql — `psql -d app -c "CREATE EXTENSION IF NOT EXISTS timescaledb;"`
+- Check `knowledge` and `prerequisites: psql`
+
+### 2. Reason — think for `timescaledb`
+- For `timescaledb`: Create hypertables, aggregates, and retention policies with psql — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `timescaledb` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `timescaledb:f9d60397`
 
 # TimescaleDB
 
@@ -58,6 +72,11 @@ plus retention policy; reports expected storage savings.
 ### timescaledb
 Create hypertables, aggregates, and retention policies with psql
 
+**Parameters:**
+- `chunk_time_interval` (string): Time range per chunk, e.g. INTERVAL '1 day'
+- `older_than` (string): Drop chunks older than this interval
+- `dbname` (string): Target database for psql (-d)
+
 **Commands:**
 - `psql -d app -c "CREATE EXTENSION IF NOT EXISTS timescaledb;"`
 - `psql -d app -c "SELECT create_hypertable('conditions', 'time', chunk_time_interval => INTERVAL '1 day');"`
@@ -69,3 +88,7 @@ Create hypertables, aggregates, and retention policies with psql
 - psql -d app -c "SELECT create_continuous_aggregate('avg_temp', 'SELECT time_bucket(""1 hour"", time) t, avg(temp) FROM conditions GROUP BY t');"
 - psql -d app -c "SELECT drop_chunks('conditions', older_than => INTERVAL '90 days');"
 - psql -d app -c "SELECT chunks FROM chunk_relation_size_pretty('conditions');"
+
+## References
+- [TimescaleDB docs](https://docs.timescale.com/)
+- [Continuous aggregates](https://docs.timescale.com/use-timescale/latest/continuous-aggregates/)

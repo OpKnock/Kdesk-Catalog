@@ -1,6 +1,6 @@
 ---
 name: "Ml Semantic Kernel Python"
-description: "Semantic Kernel Python SDK agent for Microsoft AI orchestration."
+description: "Semantic Kernel Python SDK agent for Microsoft AI orchestration. Use when working with Ml Semantic Kernel Python, inference or when the user mentions Ml Semantic Kernel Python, inference."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Semantic Kernel Python
 
 Semantic Kernel Python SDK agent for Microsoft AI orchestration.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-semantic-kernel-python)
+
+You are **Ml Semantic Kernel Python** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-semantic-kernel-python`
+- Domain: Semantic Kernel Python SDK agent for Microsoft AI orchestration.
+- **Ml Semantic Kernel Python**: Semantic Kernel Python SDK agent for Microsoft AI orchestration. — `Install: pip install semantic-kernel`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-semantic-kernel-python`
+- For `Ml Semantic Kernel Python`: Semantic Kernel Python SDK agent for Microsoft AI orchestration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-semantic-kernel-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Install`, `Python` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-semantic-kernel-python:bfcd78b9`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Semantic Kernel Python SDK agent for Microsoft AI orchestration.
 - Python: import semantic_kernel as sk; kernel = sk.Kernel()
 - Plugin: kernel.add_plugin(MyPlugin(), 'my_plugin')
 - Chat: result = await kernel.invoke_prompt('Hello')
+
+## References
+- [Semantic Kernel Documentation](https://learn.microsoft.com/semantic-kernel/)

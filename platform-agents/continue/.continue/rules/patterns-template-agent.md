@@ -1,6 +1,6 @@
 ---
 name: "Patterns Template Agent"
-description: "Template Method pattern agent for implementation."
+description: "Template Method pattern agent for implementation. Use when working with Patterns Template Agent or when the user mentions Patterns Template Agent."
 globs: ["**/*.go", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Patterns Template Agent
 
 Template Method pattern agent for implementation.
+
+## Agentic Workflow: Read -> Reason -> Act (patterns-template-agent)
+
+You are **Patterns Template Agent** (patterns/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — patterns context for `patterns-template-agent`
+- Domain: Template Method pattern agent for implementation.
+- **Patterns Template Agent**: Template Method pattern agent for implementation. — `abstract class AbstractClass { templateMethod(): void { this.step1(); this.step2`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `patterns-template-agent`
+- For `Patterns Template Agent`: Template Method pattern agent for implementation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `patterns-template-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Abstract` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `patterns-template-agent:0e889322`
 
 ## Instructions
 
@@ -23,3 +41,6 @@ Template Method pattern agent for implementation.
 
 **Examples:**
 - abstract class AbstractClass { templateMethod(): void { this.step1(); this.step2(); this.step3(); } abstract step1(): void; abstract step2(): void; step3(): void { console.log('Default step 3'); } } class ConcreteClass extends AbstractClass { step1(): void { console.log('Step 1'); } step2(): void { console.log('Step 2'); } }
+
+## References
+- [Template Method Design Pattern](https://refactoring.guru/design-patterns/template-method)

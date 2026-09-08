@@ -1,6 +1,6 @@
 ---
 name: "spatial-computing-spatial-audio"
-description: "Spatial-Computing spatial-audio expertise and best practices."
+description: "Spatial-Computing spatial-audio expertise and best practices. Use when working with spatial audio expertise, spatial computing, spatial audio, skill or when the user mentions spatial audio expertise, spatial computing, spatial audio, skill."
 type: knowledge
 triggers: ["spatial-computing-spatial-audio", "spatial-audio-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["spatial-computing-spatial-audio", "spatial-audio-expertise"]
 # Spatial-Computing Spatial Audio
 
 Spatial-Computing spatial-audio expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (spatial-computing-spatial-audio)
+
+You are **Spatial-Computing Spatial Audio** (spatial-computing/spatial-audio) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — spatial-computing context for `spatial-computing-spatial-audio`
+- Domain: Spatial-Computing spatial-audio expertise and best practices.
+- **spatial-audio-expertise**: spatial-computing spatial-audio expertise — `spatial-audio-cli`
+- Check `knowledge` and `prerequisites: spatial-audio`
+
+### 2. Reason — think for `spatial-computing-spatial-audio`
+- For `spatial-audio-expertise`: spatial-computing spatial-audio expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `spatial-computing-spatial-audio` tools
+- Tools: `Glob`, `Grep`, `Read`, `Spatial-audio-cli`, `Spatial-audio-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `spatial-computing-spatial-audio:d8bf29be`
 
 ## Instructions
 

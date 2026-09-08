@@ -1,14 +1,28 @@
 ---
-description: "Capture and analyze packets with it filters."
+description: "Capture and analyze packets with it filters. Use when working with tcpdump capture, api or when the user mentions tcpdump capture, api."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Tcpdump
-
 Capture and analyze packets with it filters.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (tcpdump)
+
+You are **Tcpdump** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `tcpdump`
+- Domain: Capture and analyze packets with it filters.
+- **tcpdump-capture**: Capture and analyze packets with tcpdump filters — `tcpdump -i eth0 -nn port 443`
+- Check `knowledge` and `prerequisites: tcpdump`
+
+### 2. Reason — think for `tcpdump`
+- For `tcpdump-capture`: Capture and analyze packets with tcpdump filters — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tcpdump` tools
+- Tools: `Glob`, `Grep`, `Read`, `Tcpdump` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tcpdump:48f10225`
 
 # tcpdump
 
@@ -79,6 +93,11 @@ kill %1
 ### tcpdump-capture
 Capture and analyze packets with tcpdump filters
 
+**Parameters:**
+- `interface` (string): Capture interface, e.g. eth0 or any
+- `filter` (string): BPF filter expression
+- `pcap_file` (string): Capture or read file name
+
 **Commands:**
 - `tcpdump -i eth0 -nn port 443`
 - `tcpdump -i any -nnv -c 100`
@@ -91,3 +110,7 @@ Capture and analyze packets with tcpdump filters
 - tcpdump -i eth0 -nn host 10.0.0.5 and port 5432
 - tcpdump -r capture.pcap -nn 'tcp[13] & 2 != 0'
 - tcpdump -i any -nn -c 50 port 53
+
+## References
+- [tcpdump man page](https://www.tcpdump.org/manpages/tcpdump.1.html)
+- [pcap-filter man page](https://www.tcpdump.org/manpages/pcap-filter.7.html)

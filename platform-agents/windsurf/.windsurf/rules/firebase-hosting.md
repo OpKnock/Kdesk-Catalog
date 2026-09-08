@@ -6,27 +6,23 @@ globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.sh"]
 
 Firebase Hosting: deploy sites, configure rewrites and headers, preview builds locally, and manage multiple sites per project.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (firebase-hosting)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Firebase Hosting** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `firebase init hosting`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `firebase-hosting`
+- Domain: Firebase Hosting: deploy sites, configure rewrites and headers, preview builds locally, and manage multiple sites per project.
+- **hosting-deploy**: Deploy, preview, and configure Firebase Hosting sites. — `firebase init hosting`
+- Check `knowledge` and `prerequisites: firebase`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `firebase-hosting`
+- For `hosting-deploy`: Deploy, preview, and configure Firebase Hosting sites. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `firebase-hosting` tools
+- Tools: `Glob`, `Grep`, `Read`, `Firebase` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `firebase-hosting:19096767`
 
 # Firebase Hosting
 

@@ -1,15 +1,29 @@
 ---
 name: "api-auth-keys"
-description: "API auth with API key management - generate secure keys, hash at rest, scope and rate-limit them, and rotate keys without downtime."
+description: "API auth with API key management - generate secure keys, hash at rest, scope and rate-limit them, and rotate keys without downtime. Use when working with api key mgmt or when the user mentions api key mgmt."
 type: knowledge
 triggers: ["api-auth-keys", "api-key-mgmt"]
 ---
 
-# Api Auth Keys
-
 API auth with API key management - generate secure keys, hash at rest, scope and rate-limit them, and rotate keys without downtime.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-auth-keys)
+
+You are **Api Auth Keys** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `api-auth-keys`
+- Domain: API auth with API key management - generate secure keys, hash at rest, scope and rate-limit them, and rotate keys without downtime.
+- **api-key-mgmt**: Generate, hash, scope, and rotate API keys — `openssl rand -hex 32`
+- Check `knowledge` and `prerequisites: node.js, python, jsonwebtoken`
+
+### 2. Reason — think for `api-auth-keys`
+- For `api-key-mgmt`: Generate, hash, scope, and rotate API keys — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-auth-keys` tools
+- Tools: `Glob`, `Grep`, `Read`, `Openssl`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-auth-keys:b2c2e48e`
 
 # API Auth (API Keys)
 
@@ -69,6 +83,11 @@ curl -s http://localhost:8080/api/keys/$ID/rotate -X POST -H 'X-Admin-Key: $ADMI
 ### api-key-mgmt
 Generate, hash, scope, and rotate API keys
 
+**Parameters:**
+- `name` (string): Human-readable key name
+- `scopes` (array): Permissions granted to the key
+- `expires_at` (string): Expiry timestamp for the key
+
 **Commands:**
 - `openssl rand -hex 32`
 - `node -e "const c=require('crypto');console.log(c.randomBytes(32).toString('hex'))"`
@@ -80,3 +99,7 @@ Generate, hash, scope, and rotate API keys
 - curl -s -X DELETE http://localhost:8080/api/keys/$ID -H 'X-Admin-Key: $ADMIN' | jq '.revoked'
 - curl -s http://localhost:8080/api/keys/$ID/rotate -X POST -H 'X-Admin-Key: $ADMIN' | jq '{new_key, old_expires}'
 - curl -s http://localhost:8080/api/orders -H 'X-API-Key: $KEY' -o /dev/null -w '%{http_code}'
+
+## References
+- [Stripe API Key Best Practices](https://docs.stripe.com/keys)
+- [API Key in OpenAPI](https://swagger.io/docs/specification/authentication/api-keys/)

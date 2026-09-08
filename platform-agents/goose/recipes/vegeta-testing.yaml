@@ -1,13 +1,47 @@
 title: vegeta-testing
 description: Load-tests HTTP endpoints with Vegeta attack/plot/report pipelines and encoded result files.
 version: 2.0.0
-instructions: '# vegeta-testing
+instructions: 'Load-tests HTTP endpoints with Vegeta attack/plot/report pipelines and encoded result files.
 
 
-  Load-tests HTTP endpoints with Vegeta attack/plot/report pipelines and encoded result files.
+  ## Agentic Workflow: Read -> Reason -> Act (vegeta-testing)
 
 
-  ## Instructions
+  You are **vegeta-testing** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — testing context for `vegeta-testing`
+
+  - Domain: Load-tests HTTP endpoints with Vegeta attack/plot/report pipelines and encoded result files.
+
+  - **vegeta-attacks**: Generate load with targets and rate controls. — `echo ''GET http://localhost:8080''
+  | vegeta attack -duration=30s -rate=100 > resul`
+
+  - **vegeta-reports**: Report metrics and histograms from results. — `vegeta report results.bin`
+
+  - **vegeta-plots**: Generate latency plots and encode results. — `vegeta plot results.bin > plot.html`
+
+  - Check `knowledge` and `prerequisites: echo, vegeta`
+
+
+  ### 2. Reason — think for `vegeta-testing`
+
+  - For `vegeta-attacks`: Generate load with targets and rate controls. — decide which checks to run
+
+  - For `vegeta-reports`: Report metrics and histograms from results. — decide which checks to run
+
+  - For `vegeta-plots`: Generate latency plots and encode results. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `vegeta-testing` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Echo`, `Vegeta` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `vegeta-testing:fb778498`
 
 
   # Vegeta
@@ -107,6 +141,15 @@ instructions: '# vegeta-testing
   Generate load with targets and rate controls.
 
 
+  **Parameters:**
+
+  - `rate` (number): Requests per second
+
+  - `duration` (string): Attack duration
+
+  - `targets` (string): Targets file path
+
+
   **Commands:**
 
   - `echo ''GET http://localhost:8080'' | vegeta attack -duration=30s -rate=100 > results.bin`
@@ -134,6 +177,13 @@ instructions: '# vegeta-testing
   Report metrics and histograms from results.
 
 
+  **Parameters:**
+
+  - `type` (string): Report type: text, json, hist
+
+  - `every` (string): Periodic report interval
+
+
   **Commands:**
 
   - `vegeta report results.bin`
@@ -159,6 +209,13 @@ instructions: '# vegeta-testing
   Generate latency plots and encode results.
 
 
+  **Parameters:**
+
+  - `format` (string): Encode format: json, gob, csv
+
+  - `title` (string): Plot title
+
+
   **Commands:**
 
   - `vegeta plot results.bin > plot.html`
@@ -176,5 +233,12 @@ instructions: '# vegeta-testing
 
   - vegeta encode -format=json < results.bin | jq .
 
-  - vegeta plot -title="Release 1.2" results.bin > release.html'
+  - vegeta plot -title="Release 1.2" results.bin > release.html
+
+
+  ## References
+
+  - [Vegeta GitHub](https://github.com/tsenart/vegeta)
+
+  - [Vegeta Docs](https://github.com/tsenart/vegeta/tree/master/docs)'
 prompt: Act as vegeta-testing and handle the task per the instructions.

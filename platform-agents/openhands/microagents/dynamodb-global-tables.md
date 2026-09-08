@@ -1,15 +1,29 @@
 ---
 name: "dynamodb-global-tables"
-description: "Manages multi-region DynamoDB replication with Global Tables: creates replication groups, adds regions, and verifies replica status and latency."
+description: "Manages multi-region DynamoDB replication with Global Tables: creates replication groups, adds regions, and verifies replica status and latency. Use when working with global tables, api or when the user mentions global tables, api."
 type: knowledge
 triggers: ["dynamodb-global-tables", "global-tables"]
 ---
 
-# Dynamodb Global Tables
-
 Manages multi-region DynamoDB replication with Global Tables: creates replication groups, adds regions, and verifies replica status and latency.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (dynamodb-global-tables)
+
+You are **Dynamodb Global Tables** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `dynamodb-global-tables`
+- Domain: Manages multi-region DynamoDB replication with Global Tables: creates replication groups, adds regions, and verifies replica status and latency.
+- **global-tables**: Create and manage DynamoDB global tables and their replication regions. — `aws dynamodb create-global-table --global-table-name Orders --replication-group `
+- Check `knowledge` and `prerequisites: aws`
+
+### 2. Reason — think for `dynamodb-global-tables`
+- For `global-tables`: Create and manage DynamoDB global tables and their replication regions. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `dynamodb-global-tables` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `dynamodb-global-tables:ebf2c1b0`
 
 # DynamoDB Global Tables
 
@@ -73,6 +87,11 @@ aws dynamodb get-item --table-name Orders --key '{"orderId":{"S":"o-1"}}' --regi
 ### global-tables
 Create and manage DynamoDB global tables and their replication regions.
 
+**Parameters:**
+- `table-name` (string): Name of the DynamoDB table to replicate globally
+- `regions` (array): List of AWS regions for the replication group
+- `region` (string): Region to run describe/update commands against
+
 **Commands:**
 - `aws dynamodb create-global-table --global-table-name Orders --replication-group 'RegionNames=us-east-1,eu-west-1'`
 - `aws dynamodb update-global-table --global-table-name Orders --replication-group-updates '[{"Create":{"RegionName":"ap-southeast-1"}}]'`
@@ -84,3 +103,6 @@ Create and manage DynamoDB global tables and their replication regions.
 - aws dynamodb create-global-table --global-table-name Orders --replication-group 'RegionNames=us-east-1,eu-west-1'
 - aws dynamodb describe-global-table --global-table-name Orders | jq '.GlobalTableDescription.ReplicationGroup'
 - aws dynamodb update-global-table --global-table-name Orders --replication-group-updates '[{"Create":{"RegionName":"ap-southeast-1"}}]'
+
+## References
+- [DynamoDB Global Tables Docs](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GlobalTables.html)

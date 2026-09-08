@@ -1,15 +1,29 @@
 ---
 name: "data-migration"
-description: "Plans and executes data migrations between databases: dumps, restores, validation, and cutover."
+description: "Plans and executes data migrations between databases: dumps, restores, validation, and cutover. Use when working with db dump restore or when the user mentions db dump restore."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# data-migration
-
 Plans and executes data migrations between databases: dumps, restores, validation, and cutover.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (data-migration)
+
+You are **data-migration** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `data-migration`
+- Domain: Plans and executes data migrations between databases: dumps, restores, validation, and cutover.
+- **db-dump-restore**: Backup, transfer, and restore data between PostgreSQL, MySQL, and MongoDB — `pg_dump -h oldhost -U app -Fc appdb > appdb.dump`
+- Check `knowledge` and `prerequisites: node.js, python, knex, alembic`
+
+### 2. Reason — think for `data-migration`
+- For `db-dump-restore`: Backup, transfer, and restore data between PostgreSQL, MySQL, and MongoDB — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `data-migration` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pg_dump`, `Pg_restore` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `data-migration:e0099575`
 
 # Data Migration
 
@@ -68,6 +82,11 @@ validates counts, and reports the cutover steps with rollback plan.
 ### db-dump-restore
 Backup, transfer, and restore data between PostgreSQL, MySQL, and MongoDB
 
+**Parameters:**
+- `format` (string): Dump format: -Fc custom, -Fp plain, -Ft tar
+- `jobs` (integer): Parallel restore worker count (-j)
+- `no-owner` (boolean): Skip ownership clauses on restore
+
 **Commands:**
 - `pg_dump -h oldhost -U app -Fc appdb > appdb.dump`
 - `pg_restore -h newhost -U app -d appdb -j4 --no-owner appdb.dump`
@@ -79,3 +98,8 @@ Backup, transfer, and restore data between PostgreSQL, MySQL, and MongoDB
 - pg_dump -h oldhost -U app -Fc --table=orders appdb > orders.dump
 - mongoimport --host newhost --db app --collection users users.json
 - pg_dumpall -h oldhost -U postgres > all-dbs.sql
+
+## References
+- [PostgreSQL pg_dump docs](https://www.postgresql.org/docs/current/app-pgdump.html)
+- [MySQL mysqldump docs](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html)
+- [MongoDB backup docs](https://www.mongodb.com/docs/database-tools/mongodump-mongorestore/)

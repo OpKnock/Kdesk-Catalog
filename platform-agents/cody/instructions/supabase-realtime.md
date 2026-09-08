@@ -1,8 +1,22 @@
-# Supabase Realtime
-
 Subscribe to it channels and postgres changes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (supabase-realtime)
+
+You are **Supabase Realtime** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `supabase-realtime`
+- Domain: Subscribe to it channels and postgres changes.
+- **supabase-realtime**: Subscribe to Supabase Realtime channels and postgres changes — `wscat -c "wss://your-project.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_`
+- Check `knowledge` and `prerequisites: supabase, wscat`
+
+### 2. Reason — think for `supabase-realtime`
+- For `supabase-realtime`: Subscribe to Supabase Realtime channels and postgres changes — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `supabase-realtime` tools
+- Tools: `Glob`, `Grep`, `Read`, `Wscat`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `supabase-realtime:f4c18284`
 
 # Supabase Realtime
 
@@ -69,6 +83,11 @@ curl -X POST 'https://your-project.supabase.co/rest/v1/orders' -H "apikey: $KEY"
 ### supabase-realtime
 Subscribe to Supabase Realtime channels and postgres changes
 
+**Parameters:**
+- `channel` (string): Realtime channel name, e.g. postgres_changes
+- `table` (string): Table to subscribe to, e.g. orders
+- `event` (string): INSERT, UPDATE, DELETE, or *
+
 **Commands:**
 - `wscat -c "wss://your-project.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_ANON_KEY&vsn=1.0.0"`
 - `curl -X POST 'https://your-project.supabase.co/rest/v1/orders' -H "apikey: $SUPABASE_ANON_KEY" -H "Authorization: Bearer $SUPABASE_ANON_KEY" -H 'Content-Type: application/json' -H 'Prefer: return=representation' -d '{"qty":2}'`
@@ -79,3 +98,7 @@ Subscribe to Supabase Realtime channels and postgres changes
 - wscat -c "wss://your-project.supabase.co/realtime/v1/websocket?apikey=$SUPABASE_ANON_KEY&vsn=1.0.0"
 - curl -X POST 'https://your-project.supabase.co/rest/v1/orders' -H "apikey: $KEY" -H 'Prefer: return=representation' -d '{"qty":2}'
 - supabase db push
+
+## References
+- [Supabase Realtime docs](https://supabase.com/docs/guides/realtime)
+- [Realtime protocol](https://supabase.com/docs/guides/realtime/protocol)

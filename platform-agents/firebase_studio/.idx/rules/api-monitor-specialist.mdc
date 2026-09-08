@@ -1,14 +1,30 @@
 ---
-description: "Builds scheduled API monitoring with Postman collections and Newman: environment-driven runs, HTML/JSON reporters, iteration data, and CI-friendly exit codes."
+description: "Builds scheduled API monitoring with Postman collections and Newman: environment-driven runs, HTML/JSON reporters, iteration data, and CI-friendly exit codes. Use when working with newman runs, collection export or when the user mentions newman runs, collection export."
 globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# api-monitor-specialist
-
 Builds scheduled API monitoring with Postman collections and Newman: environment-driven runs, HTML/JSON reporters, iteration data, and CI-friendly exit codes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-monitor-specialist)
+
+You are **api-monitor-specialist** (sre) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — sre context for `api-monitor-specialist`
+- Domain: Builds scheduled API monitoring with Postman collections and Newman: environment-driven runs, HTML/JSON reporters, iteration data, and CI-friendly exit codes.
+- **newman-runs**: Run Postman collections as monitoring checks — `npm install -g newman newman-reporter-htmlextra`
+- **collection-export**: Convert collections to OpenAPI for contract drift checks — `npx postman-to-openapi postman_collection.json -o openapi.yaml`
+- Check `knowledge` and `prerequisites: prometheus, grafana`
+
+### 2. Reason — think for `api-monitor-specialist`
+- For `newman-runs`: Run Postman collections as monitoring checks — decide which checks to run
+- For `collection-export`: Convert collections to OpenAPI for contract drift checks — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-monitor-specialist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Newman` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-monitor-specialist:103b76b4`
 
 # API Monitor Specialist
 
@@ -53,6 +69,11 @@ newman run collection.json -n 5 --timeout-request 10000
 ### newman-runs
 Run Postman collections as monitoring checks
 
+**Parameters:**
+- `environment` (string): JSON environment file with variables
+- `iterations` (integer): Number of times to run the collection
+- `timeout-request` (integer): Per-request timeout in ms
+
 **Commands:**
 - `npm install -g newman newman-reporter-htmlextra`
 - `newman run postman_collection.json -e production.postman_environment.json -r cli,json --reporter-json-export results.json`
@@ -76,3 +97,7 @@ Convert collections to OpenAPI for contract drift checks
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Newman CLI Docs](https://learning.postman.com/docs/collections/running-collections/using-newman-cli/)
+- [newman-reporter-htmlextra](https://github.com/DannyDainton/newman-reporter-htmlextra)

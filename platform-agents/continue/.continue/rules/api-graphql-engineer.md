@@ -5,11 +5,27 @@ globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# api-graphql-engineer
-
 Implements GraphQL APIs in production: Apollo Server, resolvers with DataLoader, subscriptions, and auth integration. Use when building GraphQL servers with Apollo Server. Don't use for schema design or governance (see api-graphql-specialist) or REST-to-GraphQL migration (see api-graphql-rest).
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-graphql-engineer)
+
+You are **api-graphql-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-graphql-engineer`
+- Domain: Implements GraphQL APIs in production: Apollo Server, resolvers with DataLoader, subscriptions, and auth integration. Use when building GraphQL servers with Apollo Server. Don't use for schema design 
+- **resolver-implementation**: Implement field resolvers with batching and error handling — `npm install dataloader`
+- **auth-integration**: Protect GraphQL fields with JWT validation and directives — `npm install express-jwt`
+- Check `knowledge` and `prerequisites: apollo-server, graphql-codegen, node.js, python`
+
+### 2. Reason — think for `api-graphql-engineer`
+- For `resolver-implementation`: Implement field resolvers with batching and error handling — decide which checks to run
+- For `auth-integration`: Protect GraphQL fields with JWT validation and directives — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-graphql-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-graphql-engineer:796cc66e`
 
 # API GraphQL Engineer
 
@@ -53,6 +69,10 @@ Benchmark a nested query before and after DataLoader to prove N+1 is gone.
 ### resolver-implementation
 Implement field resolvers with batching and error handling
 
+**Parameters:**
+- `batchFn` (string): Batch loading function
+- `field` (string): Resolver field name
+
 **Commands:**
 - `npm install dataloader`
 - `node -e "const D=require('dataloader');const l=new D(ids=>Promise.all(ids.map(id=>id*2)));l.load(3).then(console.log)"`
@@ -68,6 +88,10 @@ Implement field resolvers with batching and error handling
 ### auth-integration
 Protect GraphQL fields with JWT validation and directives
 
+**Parameters:**
+- `secret` (string): JWT secret
+- `algorithm` (string): Signing algorithm
+
 **Commands:**
 - `npm install express-jwt`
 - `node -e "const {expressjwt}=require('express-jwt');const m=expressjwt({secret:'s',algorithms:['HS256']});console.log(typeof m)"`
@@ -79,3 +103,8 @@ Protect GraphQL fields with JWT validation and directives
 - node -e "const {expressjwt}=require('express-jwt');const m=expressjwt({secret:'s',algorithms:['HS256']});console.log(typeof m)"
 - curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -H 'Authorization: Bearer bad' -d '{"query":"{ me { id } }"}'
 - npm install graphql-directive-auth && npm install express-jwt
+
+## References
+- [DataLoader](https://github.com/graphql/dataloader)
+- [GraphQL Subscriptions](https://the-guild.dev/graphql/subscriptions)
+- [Apollo Server Auth](https://www.apollographql.com/docs/apollo-server/security/authentication/)

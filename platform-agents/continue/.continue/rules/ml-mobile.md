@@ -1,6 +1,6 @@
 ---
 name: "Ml Mobile"
-description: "it agent handling deploying models on mobile devices."
+description: "it agent handling deploying models on mobile devices. Use when working with Ml Mobile, inference or when the user mentions Ml Mobile, inference."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Mobile
 
 it agent handling deploying models on mobile devices.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-mobile)
+
+You are **Ml Mobile** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-mobile`
+- Domain: it agent handling deploying models on mobile devices.
+- **Ml Mobile**: ML mobile agent for deploying models on mobile devices. — `Android: ./gradlew assembleRelease`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-mobile`
+- For `Ml Mobile`: ML mobile agent for deploying models on mobile devices. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-mobile` tools
+- Tools: `Glob`, `Grep`, `Read`, `Android`, `iOS` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-mobile:31dea01d`
 
 ## Instructions
 
@@ -27,6 +45,9 @@ Always use real mobile tools. Never suggest fictional tools.
 ### Ml Mobile
 ML mobile agent for deploying models on mobile devices.
 
+**Parameters:**
+- `model` (string): CLI flag --model observed in capability commands
+
 **Commands:**
 - `Android: ./gradlew assembleRelease`
 - `iOS: xcodebuild -scheme MyApp build`
@@ -38,3 +59,6 @@ ML mobile agent for deploying models on mobile devices.
 - Android: ./gradlew assembleRelease
 - TFLite: python -m mobile.tflite --model model.tflite
 - Core ML: python -m mobile.coreml --model model.mlmodel
+
+## References
+- [Python Documentation](https://docs.python.org/3/)

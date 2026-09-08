@@ -1,15 +1,31 @@
 ---
 name: "linkerd"
-description: "Deploys and operates the Linkerd service mesh: install/upgrade, mesh injection, golden-metric stats, tap traffic, and multicluster links."
+description: "Deploys and operates the Linkerd service mesh: install/upgrade, mesh injection, golden-metric stats, tap traffic, and multicluster links. Use when working with install and mesh, observability and traffic, devops or when the user mentions install and mesh, observability and traffic, devops."
 globs: ["**/*.go", "**/*.r", "**/*.rs", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# linkerd
-
 Deploys and operates the Linkerd service mesh: install/upgrade, mesh injection, golden-metric stats, tap traffic, and multicluster links.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (linkerd)
+
+You are **linkerd** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `linkerd`
+- Domain: Deploys and operates the Linkerd service mesh: install/upgrade, mesh injection, golden-metric stats, tap traffic, and multicluster links.
+- **install-and-mesh**: Install Linkerd, run preflight checks, and inject sidecars. — `linkerd check --pre`
+- **observability-and-traffic**: Inspect service metrics, top talkers, and live traffic with tap. — `linkerd viz install | kubectl apply -f -`
+- Check `knowledge` and `prerequisites: kubectl, linkerd`
+
+### 2. Reason — think for `linkerd`
+- For `install-and-mesh`: Install Linkerd, run preflight checks, and inject sidecars. — decide which checks to run
+- For `observability-and-traffic`: Inspect service metrics, top talkers, and live traffic with tap. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `linkerd` tools
+- Tools: `Glob`, `Grep`, `Read`, `Linkerd`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `linkerd:1a6ff93d`
 
 # Linkerd Service Mesh
 
@@ -72,6 +88,10 @@ linkerd multicluster gateways
 ### install-and-mesh
 Install Linkerd, run preflight checks, and inject sidecars.
 
+**Parameters:**
+- `manifest` (string): Manifest to inject sidecars into
+- `namespace` (string): Namespace to mesh/inject
+
 **Commands:**
 - `linkerd check --pre`
 - `linkerd install | kubectl apply -f -`
@@ -88,6 +108,10 @@ Install Linkerd, run preflight checks, and inject sidecars.
 ### observability-and-traffic
 Inspect service metrics, top talkers, and live traffic with tap.
 
+**Parameters:**
+- `namespace` (string): Namespace to observe
+- `resource` (string): Resource for stats, e.g. deploy/web
+
 **Commands:**
 - `linkerd viz install | kubectl apply -f -`
 - `linkerd stat deploy -n app`
@@ -100,3 +124,8 @@ Inspect service metrics, top talkers, and live traffic with tap.
 - linkerd stat deploy -n app
 - linkerd tap deploy/web -n app
 - linkerd viz dashboard
+
+## References
+- [Linkerd Documentation](https://linkerd.io/2.15/overview/)
+- [Linkerd CLI](https://linkerd.io/2.15/reference/cli/)
+- [Linkerd Multicluster](https://linkerd.io/2.15/features/multicluster/)

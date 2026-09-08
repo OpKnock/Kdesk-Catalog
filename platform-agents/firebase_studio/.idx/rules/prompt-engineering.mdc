@@ -1,14 +1,30 @@
 ---
-description: "Crafts effective LLM prompts: system/user context design, few-shot examples, structured outputs, and iteration with evals."
+description: "Crafts effective LLM prompts: system/user context design, few-shot examples, structured outputs, and iteration with evals. Use when working with prompt design, prompt eval, backend or when the user mentions prompt design, prompt eval, backend."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Prompt Engineering
-
 Crafts effective LLM prompts: system/user context design, few-shot examples, structured outputs, and iteration with evals.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (prompt-engineering)
+
+You are **Prompt Engineering** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `prompt-engineering`
+- Domain: Crafts effective LLM prompts: system/user context design, few-shot examples, structured outputs, and iteration with evals.
+- **prompt-design**: Structure system prompts and few-shot examples. — `npx promptfoo eval -c promptfooconfig.yaml`
+- **prompt-eval**: Evaluate prompt variants with automated test cases. — `npx promptfoo eval`
+- Check `knowledge` and `prerequisites: npx, python`
+
+### 2. Reason — think for `prompt-engineering`
+- For `prompt-design`: Structure system prompts and few-shot examples. — decide which checks to run
+- For `prompt-eval`: Evaluate prompt variants with automated test cases. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `prompt-engineering` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `prompt-engineering:fc3a0a09`
 
 # Prompt Engineering
 
@@ -66,6 +82,10 @@ Assistant: {"number":"1042","date":"2026-01-15","total":129.99,"vendor":"Acme Co
 ### prompt-design
 Structure system prompts and few-shot examples.
 
+**Parameters:**
+- `temperature` (number): Sampling temperature
+- `format` (string): json_object or json_schema output
+
 **Commands:**
 - `npx promptfoo eval -c promptfooconfig.yaml`
 - `npx promptfoo run -c promptfooconfig.yaml`
@@ -79,6 +99,10 @@ Structure system prompts and few-shot examples.
 ### prompt-eval
 Evaluate prompt variants with automated test cases.
 
+**Parameters:**
+- `config` (string): Eval config path
+- `port` (integer): Viewer port
+
 **Commands:**
 - `npx promptfoo eval`
 - `npx promptfoo view`
@@ -88,3 +112,8 @@ Evaluate prompt variants with automated test cases.
 **Examples:**
 - npx promptfoo eval -c eval.yaml --max-concurrency 8
 - npx promptfoo view --port 3000
+
+## References
+- [OpenAI Prompt Guide](https://platform.openai.com/docs/guides/prompt-engineering)
+- [Anthropic Prompt Engineering](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)
+- [Promptfoo Docs](https://www.promptfoo.dev/docs/)

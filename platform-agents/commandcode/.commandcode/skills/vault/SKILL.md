@@ -9,27 +9,27 @@ allowed-tools: "Glob Grep Read Bash(vault:*)"
 
 Manages secrets, policies, tokens, and dynamic credentials with HashiCorp Vault CLI and KV/transit secret engines.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (vault)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **vault** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `vault kv put secret/myapp db_password="hunter2" db_user="app`, `vault policy write app-readonly - <<'EOF'`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `vault`
+- Domain: Manages secrets, policies, tokens, and dynamic credentials with HashiCorp Vault CLI and KV/transit secret engines.
+- **kv-secrets**: Store, read, and delete secrets in KV engines. — `vault kv put secret/myapp db_password="hunter2" db_user="app"`
+- **policies-and-tokens**: Author policies and create scoped tokens. — `vault policy write app-readonly - <<'EOF'`
+- **dynamic-secrets**: Generate dynamic credentials for databases. — `vault secrets enable database`
+- Check `knowledge` and `prerequisites: vault`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `vault`
+- For `kv-secrets`: Store, read, and delete secrets in KV engines. — decide which checks to run
+- For `policies-and-tokens`: Author policies and create scoped tokens. — decide which checks to run
+- For `dynamic-secrets`: Generate dynamic credentials for databases. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `vault` tools
+- Tools: `Glob`, `Grep`, `Read`, `Vault` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vault:5a64aa0b`
 
 # Vault
 

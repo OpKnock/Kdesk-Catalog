@@ -1,15 +1,29 @@
 ---
 name: "Mqtt Mosquitto"
-description: "Run and manage the Mosquitto MQTT broker: config, pub/sub clients, password files, and TLS listeners."
+description: "Run and manage the Mosquitto MQTT broker: config, pub/sub clients, password files, and TLS listeners. Use when working with mosquitto operations, api or when the user mentions mosquitto operations, api."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Mqtt Mosquitto
-
 Run and manage the Mosquitto MQTT broker: config, pub/sub clients, password files, and TLS listeners.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (mqtt-mosquitto)
+
+You are **Mqtt Mosquitto** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `mqtt-mosquitto`
+- Domain: Run and manage the Mosquitto MQTT broker: config, pub/sub clients, password files, and TLS listeners.
+- **mosquitto-operations**: Run the mosquitto broker and use mosquitto_pub/mosquitto_sub clients with QoS, retained messages and — `mosquitto -c /etc/mosquitto/mosquitto.conf`
+- Check `knowledge` and `prerequisites: mosquitto, mosquitto_passwd, mosquitto_pub, mosquitto_sub`
+
+### 2. Reason — think for `mqtt-mosquitto`
+- For `mosquitto-operations`: Run the mosquitto broker and use mosquitto_pub/mosquitto_sub clients with QoS, retained messages and TLS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mqtt-mosquitto` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mosquitto`, `Mosquitto_pub` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mqtt-mosquitto:293856b3`
 
 # Mosquitto
 
@@ -69,6 +83,11 @@ keyfile /etc/mosquitto/certs/server.key
 ### mosquitto-operations
 Run the mosquitto broker and use mosquitto_pub/mosquitto_sub clients with QoS, retained messages and TLS.
 
+**Parameters:**
+- `host` (string): Broker hostname or IP
+- `port` (integer): Broker port (1883 plain, 8883 TLS)
+- `topic` (string): Topic or topic filter with wildcards
+
 **Commands:**
 - `mosquitto -c /etc/mosquitto/mosquitto.conf`
 - `mosquitto_pub -h localhost -t sensors/temp -m "21.5"`
@@ -80,3 +99,7 @@ Run the mosquitto broker and use mosquitto_pub/mosquitto_sub clients with QoS, r
 - mosquitto_sub -t '$SYS/#' -v
 - mosquitto_pub -h broker.example.com -p 8883 --cafile ca.crt -t secure/topic -m hi
 - mosquitto_sub -q 2 -t 'orders/+' -v
+
+## References
+- [Mosquitto Man Pages](https://mosquitto.org/man/)
+- [mosquitto.conf man page](https://mosquitto.org/man/mosquitto-conf-5.html)

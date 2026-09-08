@@ -1,15 +1,29 @@
 ---
 name: "Nats Client Go"
-description: "NATS clients in Go with nats.go: connect options, publish/subscribe, request-reply, and connection events."
+description: "NATS clients in Go with nats.go: connect options, publish/subscribe, request-reply, and connection events. Use when working with nats go client, api or when the user mentions nats go client, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Nats Client Go
-
 NATS clients in Go with nats.go: connect options, publish/subscribe, request-reply, and connection events.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nats-client-go)
+
+You are **Nats Client Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `nats-client-go`
+- Domain: NATS clients in Go with nats.go: connect options, publish/subscribe, request-reply, and connection events.
+- **nats-go-client**: Write Go NATS clients: connect, pub/sub, request/reply with the nats.go library. — `go get github.com/nats-io/nats.go`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `nats-client-go`
+- For `nats-go-client`: Write Go NATS clients: connect, pub/sub, request/reply with the nats.go library. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nats-client-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nats-client-go:943311d3`
 
 # NATS Go Client
 
@@ -74,6 +88,11 @@ nc.QueueSubscribe("tasks", "workers", handler)
 ### nats-go-client
 Write Go NATS clients: connect, pub/sub, request/reply with the nats.go library.
 
+**Parameters:**
+- `url` (string): NATS server URL, e.g. nats://localhost:4222
+- `subject` (string): Subject or wildcard subscription
+- `queue` (string): Queue group name for load balancing
+
 **Commands:**
 - `go get github.com/nats-io/nats.go`
 - `go mod tidy`
@@ -85,3 +104,7 @@ Write Go NATS clients: connect, pub/sub, request/reply with the nats.go library.
 - go run main.go
 - go test -run TestRequestReply -v ./...
 - go get github.com/nats-io/nats.go@latest
+
+## References
+- [nats.go GitHub](https://github.com/nats-io/nats.go)
+- [nats.go pkg docs](https://pkg.go.dev/github.com/nats-io/nats.go)

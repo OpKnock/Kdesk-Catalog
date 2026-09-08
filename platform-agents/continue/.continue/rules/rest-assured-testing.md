@@ -1,15 +1,29 @@
 ---
 name: "rest-assured-testing"
-description: "REST Assured Java API testing. Real REST Assured CLI."
+description: "REST Assured Java API testing. Real REST Assured CLI. Use when working with rest assured, testing or when the user mentions rest assured, testing."
 globs: ["**/*.java", "**/*.json", "**/*.kt", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# rest-assured-testing
-
 REST Assured Java API testing. Real REST Assured CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rest-assured-testing)
+
+You are **rest-assured-testing** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `rest-assured-testing`
+- Domain: REST Assured Java API testing. Real REST Assured CLI.
+- **rest-assured**: REST Assured Java API testing. Real REST Assured CLI. — `mvn test -Dtest=UsersApiTest`
+- Check `knowledge` and `prerequisites: ./gradlew, mvn`
+
+### 2. Reason — think for `rest-assured-testing`
+- For `rest-assured`: REST Assured Java API testing. Real REST Assured CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rest-assured-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `./gradlew` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rest-assured-testing:7dd5d5f3`
 
 # REST Assured
 
@@ -149,6 +163,9 @@ rest-assured:
 ### rest-assured
 REST Assured Java API testing. Real REST Assured CLI.
 
+**Parameters:**
+- `tests` (string): CLI flag --tests observed in capability commands
+
 **Commands:**
 - `mvn test -Dtest=UsersApiTest`
 - `./gradlew test --tests "com.example.UsersApiTest"`
@@ -159,3 +176,6 @@ REST Assured Java API testing. Real REST Assured CLI.
 - mvn test -Dtest=UsersApiTest
 - ./gradlew test --tests "com.example.UsersApiTest"
 - mvn test -Dtest=UsersApiTest
+
+## References
+- [rest-assured Skill Documentation](skills/testing/rest-assured.md)

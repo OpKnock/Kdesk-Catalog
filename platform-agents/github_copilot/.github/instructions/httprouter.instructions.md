@@ -4,27 +4,23 @@ applyTo: "**/*.go **/*.r **/*.sh"
 
 Go httprouter: radix-tree routing with typed path params, method handlers, middleware wrapping, and benchmark-grade request dispatch.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (httprouter)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **httprouter** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `go get github.com/julienschmidt/httprouter@latest`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `httprouter`
+- Domain: Go httprouter: radix-tree routing with typed path params, method handlers, middleware wrapping, and benchmark-grade request dispatch.
+- **httprouter-routing**: Build typed HTTP routes with httprouter and wrap handlers with middleware. — `go get github.com/julienschmidt/httprouter@latest`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `httprouter`
+- For `httprouter-routing`: Build typed HTTP routes with httprouter and wrap handlers with middleware. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `httprouter` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `httprouter:12535fc3`
 
 # httprouter
 

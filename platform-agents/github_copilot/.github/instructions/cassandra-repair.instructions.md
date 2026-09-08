@@ -4,27 +4,27 @@ applyTo: "**/*.go **/*.r **/*.sh"
 
 Runs and monitors Cassandra anti-entropy repairs: full/incremental repairs, repair state, and post-repair verification.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (cassandra-repair)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Cassandra Repair** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `nodetool repair -pr`, `nodetool repair -pr -st $(date -d '1 hour ago' +%s000) mykey`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `cassandra-repair`
+- Domain: Runs and monitors Cassandra anti-entropy repairs: full/incremental repairs, repair state, and post-repair verification.
+- **run-repair**: Execute and schedule repairs. — `nodetool repair -pr`
+- **repair-status**: Monitor repair state and consistency. — `nodetool repair -pr -st $(date -d '1 hour ago' +%s000) mykeyspace`
+- **verification**: Verify consistency after repair. — `cqlsh -e "CONSISTENCY QUORUM"`
+- Check `knowledge` and `prerequisites: cqlsh, nodetool`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `cassandra-repair`
+- For `run-repair`: Execute and schedule repairs. — decide which checks to run
+- For `repair-status`: Monitor repair state and consistency. — decide which checks to run
+- For `verification`: Verify consistency after repair. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `cassandra-repair` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nodetool`, `Cqlsh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cassandra-repair:cbabe052`
 
 # Cassandra Repair
 

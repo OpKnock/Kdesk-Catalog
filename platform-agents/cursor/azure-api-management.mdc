@@ -6,27 +6,27 @@ alwaysApply: false
 
 Operates Azure API Management gateways end-to-end: provisioning service tiers, importing OpenAPI definitions, applying policies (rate limit, CORS, transformation), managing subscription keys, and validating gateway routing with live curl calls.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (azure-api-management)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Azure Api Management** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `az apim create --name my-apim --resource-group api-rg --publ`, `az apim api import --service-name my-apim -g api-rg --api-id`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `azure-api-management`
+- Domain: Operates Azure API Management gateways end-to-end: provisioning service tiers, importing OpenAPI definitions, applying policies (rate limit, CORS, transformation), managing subscription keys, and vali
+- **apim-service**: Create and manage API Management instances. — `az apim create --name my-apim --resource-group api-rg --publisher-email admin@co`
+- **api-import**: Import and manage APIs in APIM. — `az apim api import --service-name my-apim -g api-rg --api-id petstore --path pet`
+- **subscriptions**: Manage subscriptions and keys. — `az apim subscription list --service-name my-apim -g api-rg`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `azure-api-management`
+- For `apim-service`: Create and manage API Management instances. — decide which checks to run
+- For `api-import`: Import and manage APIs in APIM. — decide which checks to run
+- For `subscriptions`: Manage subscriptions and keys. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `azure-api-management` tools
+- Tools: `Glob`, `Grep`, `Read`, `Az`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `azure-api-management:8df12e4b`
 
 # Azure API Management
 

@@ -1,15 +1,33 @@
 ---
 name: "falco"
-description: "Detects abnormal container and host behavior at runtime with Falco rule engines, event generators, and falcoctl artifact management."
+description: "Detects abnormal container and host behavior at runtime with Falco rule engines, event generators, and falcoctl artifact management. Use when working with falco runtime, falcoctl artifacts, event generation, security or when the user mentions falco runtime, falcoctl artifacts, event generation, security."
 type: knowledge
 triggers: ["falco", "falco-runtime", "falcoctl-artifacts", "event-generation"]
 ---
 
-# falco
-
 Detects abnormal container and host behavior at runtime with Falco rule engines, event generators, and falcoctl artifact management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (falco)
+
+You are **falco** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `falco`
+- Domain: Detects abnormal container and host behavior at runtime with Falco rule engines, event generators, and falcoctl artifact management.
+- **falco-runtime**: Run Falco, configure rules, and view detected events. — `falco`
+- **falcoctl-artifacts**: Manage rules artifacts and drivers with falcoctl. — `falcoctl driver install`
+- **event-generation**: Generate test events to validate rule coverage. — `falco-event-generator run`
+- Check `knowledge` and `prerequisites: falco, falco-event-generator, falcoctl, kubectl`
+
+### 2. Reason — think for `falco`
+- For `falco-runtime`: Run Falco, configure rules, and view detected events. — decide which checks to run
+- For `falcoctl-artifacts`: Manage rules artifacts and drivers with falcoctl. — decide which checks to run
+- For `event-generation`: Generate test events to validate rule coverage. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `falco` tools
+- Tools: `Glob`, `Grep`, `Read`, `Falco`, `Falcoctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `falco:7fec008f`
 
 # Falco
 
@@ -75,6 +93,10 @@ falco-event-generator run network
 ### falco-runtime
 Run Falco, configure rules, and view detected events.
 
+**Parameters:**
+- `rulesFile` (string): Additional rules file to load
+- `set` (object): Config overrides, e.g. output.format or rules_files
+
 **Commands:**
 - `falco`
 - `falco --version`
@@ -89,6 +111,10 @@ Run Falco, configure rules, and view detected events.
 
 ### falcoctl-artifacts
 Manage rules artifacts and drivers with falcoctl.
+
+**Parameters:**
+- `artifact` (string): Artifact name, e.g. falcosecurity/falco-rules
+- `version` (string): Artifact version constraint
 
 **Commands:**
 - `falcoctl driver install`
@@ -105,6 +131,10 @@ Manage rules artifacts and drivers with falcoctl.
 ### event-generation
 Generate test events to validate rule coverage.
 
+**Parameters:**
+- `action` (string): Event action: run, list, or a specific action name
+- `namespace` (string): Namespace to deploy the event-generator workload in.
+
 **Commands:**
 - `falco-event-generator run`
 - `falco-event-generator run syscall`
@@ -115,3 +145,8 @@ Generate test events to validate rule coverage.
 - falco-event-generator run syscall
 - falco-event-generator list
 - falco-event-generator run network
+
+## References
+- [Falco Documentation](https://falco.org/docs/)
+- [falcoctl Guide](https://falco.org/docs/falcoctl/)
+- [Falco Rules Reference](https://falco.org/docs/reference/rules/)

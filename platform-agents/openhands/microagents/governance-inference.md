@@ -1,6 +1,6 @@
 ---
 name: "governance-inference"
-description: "Governance inference server agent Manages Governance inference server."
+description: "Governance inference server agent Manages Governance inference server. Use when working with Ml Governance Inference Server Agent V2 or when the user mentions Ml Governance Inference Server Agent V2."
 type: knowledge
 triggers: ["governance-inference", "ml governance inference server agent v2"]
 ---
@@ -8,6 +8,24 @@ triggers: ["governance-inference", "ml governance inference server agent v2"]
 # Governance Inference
 
 Governance inference server agent Manages Governance inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (governance-inference)
+
+You are **Governance Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `governance-inference`
+- Domain: Governance inference server agent Manages Governance inference server.
+- **Ml Governance Inference Server Agent V2**: Governance inference server agent. Manages Governance inference server. — `curl http://localhost:8080/governance --data '{"model": "model.pkl"}'`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `governance-inference`
+- For `Ml Governance Inference Server Agent V2`: Governance inference server agent. Manages Governance inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `governance-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `governance-inference:d79270e6`
 
 ## Instructions
 
@@ -17,6 +35,10 @@ Governance inference server operator (v2). Call on this agent to run the Governa
 
 ### Ml Governance Inference Server Agent V2
 Governance inference server agent. Manages Governance inference server.
+
+**Parameters:**
+- `data` (string): CLI flag --data observed in capability commands
+- `model` (string): CLI flag --model observed in capability commands
 
 **Commands:**
 - `curl http://localhost:8080/governance --data '{"model": "model.pkl"}'`
@@ -29,3 +51,8 @@ Governance inference server agent. Manages Governance inference server.
 - curl http://localhost:8080/governance --data '{"model": "model.pkl"}'
 - python audit.py --model model.pkl --data train.csv --output audit.json
 - python compliance_check.py --model model.pkl --rules rules.json
+
+## References
+- [MLflow Model Registry](https://mlflow.org/docs/latest/model-registry.html)
+- [curl Documentation](https://curl.se/docs/)
+- [Python Documentation](https://docs.python.org/3/)

@@ -1,8 +1,22 @@
-# Traefik
-
 Run it and configure routers/services/middlewares.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (traefik)
+
+You are **Traefik** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `traefik`
+- Domain: Run it and configure routers/services/middlewares.
+- **traefik-routing**: Run Traefik and configure routers/services/middlewares — `docker run -d -p 80:80 -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock`
+- Check `knowledge` and `prerequisites: docker`
+
+### 2. Reason — think for `traefik`
+- For `traefik-routing`: Run Traefik and configure routers/services/middlewares — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `traefik` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `traefik:31c0f502`
 
 # Traefik
 
@@ -71,6 +85,11 @@ curl -sk https://localhost -H 'Host: app.local' -o /dev/null -w '%{http_code}'
 ### traefik-routing
 Run Traefik and configure routers/services/middlewares
 
+**Parameters:**
+- `rule` (string): Host/Path matcher, e.g. Host(`app.local`)
+- `provider` (string): docker, file, or kubernetescrd
+- `entrypoint` (string): web or websecure
+
 **Commands:**
 - `docker run -d -p 80:80 -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock traefik:v3.0 --api.insecure=true`
 - `curl -s localhost:8080/api/http/routers | jq`
@@ -82,3 +101,7 @@ Run Traefik and configure routers/services/middlewares
 - curl -s localhost:8080/api/http/routers | jq '.[] | {name, rule, service}'
 - docker run -d -p 80:80 -v /var/run/docker.sock:/var/run/docker.sock traefik:v3.0 --providers.docker=true
 - curl -sk https://localhost -H 'Host: app.local' -o /dev/null -w '%{http_code}'
+
+## References
+- [Traefik Docker provider](https://doc.traefik.io/traefik/providers/docker/)
+- [Traefik API](https://doc.traefik.io/traefik/operations/api/)

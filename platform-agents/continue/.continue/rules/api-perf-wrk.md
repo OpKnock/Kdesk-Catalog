@@ -1,15 +1,31 @@
 ---
 name: "Api Perf Wrk"
-description: "Benchmarks APIs with wrk, hey, and ApacheBench: throughput, latency percentiles, connection concurrency, and POST payload testing."
+description: "Benchmarks APIs with wrk, hey, and ApacheBench: throughput, latency percentiles, connection concurrency, and POST payload testing. Use when working with wrk, hey ab or when the user mentions wrk, hey ab."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Api Perf Wrk
-
 Benchmarks APIs with wrk, hey, and ApacheBench: throughput, latency percentiles, connection concurrency, and POST payload testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-perf-wrk)
+
+You are **Api Perf Wrk** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-perf-wrk`
+- Domain: Benchmarks APIs with wrk, hey, and ApacheBench: throughput, latency percentiles, connection concurrency, and POST payload testing.
+- **wrk**: Run thread-based HTTP benchmarks with latency histograms — `wrk -t4 -c100 -d30s http://localhost:3000/api`
+- **hey-ab**: Compare with hey and ApacheBench for POST and header testing — `hey -n 10000 -c 100 -m POST -H 'Content-Type: application/json' -d '{"q":"test"}`
+- Check `knowledge` and `prerequisites: node.js, python, redis, k6`
+
+### 2. Reason — think for `api-perf-wrk`
+- For `wrk`: Run thread-based HTTP benchmarks with latency histograms — decide which checks to run
+- For `hey-ab`: Compare with hey and ApacheBench for POST and header testing — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-perf-wrk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Wrk`, `Hey` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-perf-wrk:519bb419`
 
 # API Perf v3 - Benchmarking
 
@@ -53,6 +69,11 @@ ab -n 5000 -c 50 -p post.json -T application/json http://localhost:3000/api
 ### wrk
 Run thread-based HTTP benchmarks with latency histograms
 
+**Parameters:**
+- `threads` (integer): Number of threads (-t)
+- `connections` (integer): Open connections (-c)
+- `duration` (string): Benchmark duration like 30s
+
 **Commands:**
 - `wrk -t4 -c100 -d30s http://localhost:3000/api`
 - `wrk -t2 -c50 -d20s --latency http://localhost:3000/api`
@@ -75,3 +96,7 @@ Compare with hey and ApacheBench for POST and header testing
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [wrk GitHub](https://github.com/wg/wrk)
+- [ApacheBench Docs](https://httpd.apache.org/docs/2.4/programs/ab.html)

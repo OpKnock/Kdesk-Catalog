@@ -1,14 +1,30 @@
 ---
-description: "Baseline host monitoring on Linux: CPU, memory, disk, and network telemetry with top, vmstat, iostat, and sar."
+description: "Baseline host monitoring on Linux: CPU, memory, disk, and network telemetry with top, vmstat, iostat, and sar. Use when working with host metrics, history, infrastructure or when the user mentions host metrics, history, infrastructure."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# monitoring-infrastructure
-
 Baseline host monitoring on Linux: CPU, memory, disk, and network telemetry with top, vmstat, iostat, and sar.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (monitoring-infrastructure)
+
+You are **monitoring-infrastructure** (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `monitoring-infrastructure`
+- Domain: Baseline host monitoring on Linux: CPU, memory, disk, and network telemetry with top, vmstat, iostat, and sar.
+- **host-metrics**: Collect instant host utilization snapshots. — `uptime`
+- **history**: Review historical utilization with sysstat sar. — `sar -u 1 3`
+- Check `knowledge` and `prerequisites: free, iostat, sar, top`
+
+### 2. Reason — think for `monitoring-infrastructure`
+- For `host-metrics`: Collect instant host utilization snapshots. — decide which checks to run
+- For `history`: Review historical utilization with sysstat sar. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `monitoring-infrastructure` tools
+- Tools: `Glob`, `Grep`, `Read`, `Uptime`, `Vmstat` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `monitoring-infrastructure:490ef6b9`
 
 # Host Monitoring
 
@@ -90,6 +106,11 @@ Generate load and confirm metrics move - otherwise the collector is broken.
 ### host-metrics
 Collect instant host utilization snapshots.
 
+**Parameters:**
+- `interval` (number): Sample interval in seconds
+- `count` (number): Number of samples
+- `extended` (string): -x extended statistics for iostat
+
 **Commands:**
 - `uptime`
 - `vmstat 1 5`
@@ -105,6 +126,11 @@ Collect instant host utilization snapshots.
 ### history
 Review historical utilization with sysstat sar.
 
+**Parameters:**
+- `report` (string): Report type: -u CPU, -r memory, -d disk, -n network, -q load
+- `interval` (number): Sample interval
+- `file` (string): Historical sa file with -f
+
 **Commands:**
 - `sar -u 1 3`
 - `sar -r 1 3`
@@ -116,3 +142,8 @@ Review historical utilization with sysstat sar.
 - sar -u -f /var/log/sysstat/sa10
 - sar -n TCP 1 5
 - sar -q 1 5
+
+## References
+- [sysstat (sar/iostat)](https://github.com/sysstat/sysstat)
+- [vmstat man page](https://man7.org/linux/man-pages/man8/vmstat.8.html)
+- [Linux Performance](https://www.brendangregg.com/linuxperf.html)

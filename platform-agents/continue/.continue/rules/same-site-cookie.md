@@ -1,15 +1,29 @@
 ---
 name: "Same Site Cookie"
-description: "Expert reference covering Strict/Lax/None semantics, curl header inspection, server-side Set-Cookie configuration, and CSRF impact analysis."
+description: "Expert reference covering Strict/Lax/None semantics, curl header inspection, server-side Set-Cookie configuration, and CSRF impact analysis. Use when working with samesite config, api or when the user mentions samesite config, api."
 globs: ["**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Same Site Cookie
-
 Expert reference covering Strict/Lax/None semantics, curl header inspection, server-side Set-Cookie configuration, and CSRF impact analysis.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (same-site-cookie)
+
+You are **Same Site Cookie** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `same-site-cookie`
+- Domain: Expert reference covering Strict/Lax/None semantics, curl header inspection, server-side Set-Cookie configuration, and CSRF impact analysis.
+- **samesite-config**: Configure and verify SameSite cookie attributes on requests — `curl -i -H 'Cookie: session=abc123' https://app.your-app.test/me | grep -i 'set-`
+- Check `knowledge` and `prerequisites: python`
+
+### 2. Reason — think for `same-site-cookie`
+- For `samesite-config`: Configure and verify SameSite cookie attributes on requests — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `same-site-cookie` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `same-site-cookie:d3712e25`
 
 # SameSite Cookies
 
@@ -76,6 +90,11 @@ curl -i https://app.your-app.test/me | grep -i set-cookie   # expect samesite=la
 ### samesite-config
 Configure and verify SameSite cookie attributes on requests
 
+**Parameters:**
+- `samesite_value` (string): Strict, Lax, or None
+- `secure` (boolean): Require HTTPS before sending the cookie
+- `cookie_name` (string): Name of the session cookie
+
 **Commands:**
 - `curl -i -H 'Cookie: session=abc123' https://app.your-app.test/me | grep -i 'set-cookie'`
 - `curl -i https://app.your-app.test/login -X POST -d 'user=ada&pass=secret' | grep -i set-cookie`
@@ -86,3 +105,7 @@ Configure and verify SameSite cookie attributes on requests
 - curl -i https://app.your-app.test/me | grep -i set-cookie
 - curl -s -o /dev/null -w '%{http_code}\n' https://app.your-app.test/me -b 'session=abc123; SameSite=Strict'
 - python -c 'from http.cookies import SimpleCookie; c=SimpleCookie(); c["s"]="1"; c["s"]["samesite"]="None"; print(c.output())'
+
+## References
+- [MDN SameSite cookies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite)
+- [OWASP session cheat sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)

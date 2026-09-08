@@ -1,15 +1,29 @@
 ---
 name: "HTTPie"
-description: "HTTPie CLI: expressive HTTP requests with intuitive syntax, JSON bodies, auth flags, file downloads, and streaming responses."
+description: "HTTPie CLI: expressive HTTP requests with intuitive syntax, JSON bodies, auth flags, file downloads, and streaming responses. Use when working with httpie requests, api or when the user mentions httpie requests, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# HTTPie
-
 HTTPie CLI: expressive HTTP requests with intuitive syntax, JSON bodies, auth flags, file downloads, and streaming responses.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (httpie)
+
+You are **HTTPie** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `httpie`
+- Domain: HTTPie CLI: expressive HTTP requests with intuitive syntax, JSON bodies, auth flags, file downloads, and streaming responses.
+- **httpie-requests**: Compose and send HTTP requests with HTTPie's shorthand syntax. — `http http://localhost:8000/api/users`
+- Check `knowledge` and `prerequisites: http`
+
+### 2. Reason — think for `httpie`
+- For `httpie-requests`: Compose and send HTTP requests with HTTPie's shorthand syntax. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `httpie` tools
+- Tools: `Glob`, `Grep`, `Read`, `Http` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `httpie:6b211ae6`
 
 # HTTPie
 
@@ -88,6 +102,11 @@ Agent: http POST http://localhost:8000/api/users name=John age:=30
 ### httpie-requests
 Compose and send HTTP requests with HTTPie's shorthand syntax.
 
+**Parameters:**
+- `method` (string): HTTP method, defaults to GET.
+- `url` (string): Target URL.
+- `headers` (string): Header shorthand, e.g. Accept:application/json.
+
 **Commands:**
 - `http http://localhost:8000/api/users`
 - `http POST http://localhost:8000/api/users name=John age:=30`
@@ -99,3 +118,7 @@ Compose and send HTTP requests with HTTPie's shorthand syntax.
 - http GET http://localhost:8000/api/users/42 Accept:application/json
 - http PUT http://localhost:8000/api/users/42 name=Jane
 - http -f POST http://localhost:8000/upload file@photo.png
+
+## References
+- [HTTPie Docs](https://httpie.io/docs)
+- [HTTPie CLI GitHub](https://github.com/httpie/cli)

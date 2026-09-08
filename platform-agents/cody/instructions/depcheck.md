@@ -1,8 +1,24 @@
-# depcheck
-
 Finds unused and missing dependencies with depcheck: unused imports, missing deps, and configuration analysis.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (depcheck)
+
+You are **depcheck** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `depcheck`
+- Domain: Finds unused and missing dependencies with depcheck: unused imports, missing deps, and configuration analysis.
+- **depcheck-scan**: Scan projects for unused dependencies. — `npx depcheck`
+- **depcheck-cleanup**: Remove unused dependencies safely. — `npm uninstall unused-package`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `depcheck`
+- For `depcheck-scan`: Scan projects for unused dependencies. — decide which checks to run
+- For `depcheck-cleanup`: Remove unused dependencies safely. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `depcheck` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `depcheck:e07ece1d`
 
 # depcheck
 
@@ -55,6 +71,11 @@ npm prune
 ### depcheck-scan
 Scan projects for unused dependencies.
 
+**Parameters:**
+- `ignores` (string): Packages to ignore
+- `json` (boolean): JSON output
+- `specials` (string): Special parsers: eslint, webpack
+
 **Commands:**
 - `npx depcheck`
 - `npx depcheck --json`
@@ -70,6 +91,10 @@ Scan projects for unused dependencies.
 ### depcheck-cleanup
 Remove unused dependencies safely.
 
+**Parameters:**
+- `package` (string): Package name
+- `save` (boolean): Update package.json on removal
+
 **Commands:**
 - `npm uninstall unused-package`
 - `npm prune`
@@ -79,3 +104,7 @@ Remove unused dependencies safely.
 **Examples:**
 - npm ls --depth=0 | grep -v "deduped"
 - npm uninstall lodash --save
+
+## References
+- [depcheck on GitHub](https://github.com/depcheck/depcheck)
+- [npm Docs](https://docs.npmjs.com/cli/v10/commands/npm-uninstall)

@@ -2,8 +2,19 @@ title: tfsec
 description: Scans Terraform configurations with tfsec's focused security checks, severity gating, and
   SARIF/JUnit output.
 version: 2.0.0
-instructions: "# tfsec\n\nScans Terraform configurations with tfsec's focused security checks, severity\
-  \ gating, and SARIF/JUnit output.\n\n## Instructions\n\n# tfsec\n\nTerraform-focused static security\
+instructions: "Scans Terraform configurations with tfsec's focused security checks, severity gating, and\
+  \ SARIF/JUnit output.\n\n## Agentic Workflow: Read -> Reason -> Act (tfsec)\n\nYou are **tfsec** (security/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — security context\
+  \ for `tfsec`\n- Domain: Scans Terraform configurations with tfsec's focused security checks, severity\
+  \ gating, and SARIF/JUnit output.\n- **tfsec-scan**: Scan directories and files with severity and check\
+  \ filters. — `tfsec .`\n- **reporting-and-config**: Emit CI reports and manage custom configuration.\
+  \ — `tfsec . --format sarif --out scan.sarif`\n- Check `knowledge` and `prerequisites: tfsec`\n\n###\
+  \ 2. Reason — think for `tfsec`\n- For `tfsec-scan`: Scan directories and files with severity and check\
+  \ filters. — decide which checks to run\n- For `reporting-and-config`: Emit CI reports and manage custom\
+  \ configuration. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `tfsec` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Tfsec` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `tfsec:a52ea3cd`\n\n# tfsec\n\nTerraform-focused static security\
   \ scanning.\n\n## What This Skill Does\n\n- Scans Terraform and Terragrunt for known bad patterns\n\
   - Filters by severity and excludes noisy checks\n- Emits SARIF, JUnit, JSON, CSV, and HTML reports\n\
   - Supports custom config for team policies\n\n## When to Use\n\n- Terraform module CI gates\n- Pre-apply\
@@ -16,11 +27,16 @@ instructions: "# tfsec\n\nScans Terraform configurations with tfsec's focused se
   \ HIGH+; keep CRITICAL as hard fail\n- Exclude checks per path, not globally\n- Pair with plan-time\
   \ tools for context-dependent findings\n- Use SARIF for GitHub code scanning annotations\n- Keep tfsec.yml\
   \ in the repo for team consistency\n\n## Capabilities\n\n### tfsec-scan\nScan directories and files\
-  \ with severity and check filters.\n\n**Commands:**\n- `tfsec .`\n- `tfsec ./modules`\n- `tfsec main.tf`\n\
-  - `tfsec . --minimum-severity CRITICAL`\n- `tfsec . --exclude-check AWS089`\n\n**Examples:**\n- tfsec\
-  \ .\n- tfsec ./modules --minimum-severity HIGH\n- tfsec . --exclude-check AWS089,AWS096\n\n### reporting-and-config\n\
-  Emit CI reports and manage custom configuration.\n\n**Commands:**\n- `tfsec . --format sarif --out scan.sarif`\n\
+  \ with severity and check filters.\n\n**Parameters:**\n- `path` (string): Directory or file to scan\n\
+  - `minimumSeverity` (string): Minimum severity: LOW, MEDIUM, HIGH, CRITICAL\n- `excludeCheck` (string):\
+  \ Comma-separated check IDs to exclude\n\n**Commands:**\n- `tfsec .`\n- `tfsec ./modules`\n- `tfsec\
+  \ main.tf`\n- `tfsec . --minimum-severity CRITICAL`\n- `tfsec . --exclude-check AWS089`\n\n**Examples:**\n\
+  - tfsec .\n- tfsec ./modules --minimum-severity HIGH\n- tfsec . --exclude-check AWS089,AWS096\n\n###\
+  \ reporting-and-config\nEmit CI reports and manage custom configuration.\n\n**Parameters:**\n- `format`\
+  \ (string): Output: standard, json, sarif, junit, csv, html\n- `out` (string): Report output file\n\
+  - `configFile` (string): tfsec config YAML path\n\n**Commands:**\n- `tfsec . --format sarif --out scan.sarif`\n\
   - `tfsec . --format json --out results.json`\n- `tfsec . --config-file tfsec.yml`\n- `tfsec . --concise-output`\n\
   - `tfsec . --no-colour --format junit --out junit.xml`\n\n**Examples:**\n- tfsec . --format sarif --out\
-  \ scan.sarif\n- tfsec . --config-file tfsec.yml\n- tfsec . --no-colour --format junit --out junit.xml"
+  \ scan.sarif\n- tfsec . --config-file tfsec.yml\n- tfsec . --no-colour --format junit --out junit.xml\n\
+  \n## References\n- [tfsec GitHub](https://github.com/aquasecurity/tfsec)\n- [tfsec Documentation](https://aquasecurity.github.io/tfsec/)"
 prompt: Act as tfsec and handle the task per the instructions.

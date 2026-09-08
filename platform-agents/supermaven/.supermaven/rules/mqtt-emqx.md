@@ -1,8 +1,22 @@
-# Mqtt Emqx
-
 Operate EMQX MQTT brokers: start/stop, cluster status, publish/subscribe via emqx ctl, and dashboard access.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (mqtt-emqx)
+
+You are **Mqtt Emqx** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `mqtt-emqx`
+- Domain: Operate EMQX MQTT brokers: start/stop, cluster status, publish/subscribe via emqx ctl, and dashboard access.
+- **emqx-broker-operations**: Control the EMQX broker daemon and inspect clusters, subscriptions and message traffic with emqx ctl — `emqx start`
+- Check `knowledge` and `prerequisites: emqx`
+
+### 2. Reason — think for `mqtt-emqx`
+- For `emqx-broker-operations`: Control the EMQX broker daemon and inspect clusters, subscriptions and message traffic with emqx ctl. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mqtt-emqx` tools
+- Tools: `Glob`, `Grep`, `Read`, `Emqx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mqtt-emqx:dc949424`
 
 # EMQX
 
@@ -59,6 +73,11 @@ emqx ctl listener list
 ### emqx-broker-operations
 Control the EMQX broker daemon and inspect clusters, subscriptions and message traffic with emqx ctl.
 
+**Parameters:**
+- `topic` (string): MQTT topic to publish or subscribe to
+- `qos` (integer): Quality of service level 0, 1 or 2
+- `payload` (string): Message payload to publish
+
 **Commands:**
 - `emqx start`
 - `emqx ctl status`
@@ -70,3 +89,7 @@ Control the EMQX broker daemon and inspect clusters, subscriptions and message t
 - emqx ctl broker pub demo/temp "21.5" --qos 1
 - emqx ctl broker sub demo/temp --qos 1
 - emqx ctl listener list
+
+## References
+- [EMQX Documentation](https://docs.emqx.com/en/emqx/latest/)
+- [EMQX Dashboard](https://docs.emqx.com/en/emqx/latest/admin/observability/dashboard.html)

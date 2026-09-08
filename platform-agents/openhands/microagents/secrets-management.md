@@ -1,15 +1,29 @@
 ---
 name: "secrets-management"
-description: "Manages the complete secret lifecycle across Kubernetes, SOPS-encrypted files, HashiCorp Vault, and AWS Secrets Manager. Handles creation, rotation, and access patterns for production credentials without exposing plaintext in repositories or container images."
+description: "Manages the complete secret lifecycle across Kubernetes, SOPS-encrypted files, HashiCorp Vault, and AWS Secrets Manager. Handles creation, rotation, and access patterns for production credentials without exposing plaintext in repositories or container images. Use when working with secrets lifecycle, api, kubernetes, vault or when the user mentions secrets lifecycle, api, kubernetes, vault."
 type: knowledge
 triggers: ["secrets-management", "secrets-lifecycle"]
 ---
 
-# Secrets Management
-
 Manages the complete secret lifecycle across Kubernetes, SOPS-encrypted files, HashiCorp Vault, and AWS Secrets Manager. Handles creation, rotation, and access patterns for production credentials without exposing plaintext in repositories or container images.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (secrets-management)
+
+You are **Secrets Management** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `secrets-management`
+- Domain: Manages the complete secret lifecycle across Kubernetes, SOPS-encrypted files, HashiCorp Vault, and AWS Secrets Manager. Handles creation, rotation, and access patterns for production credentials with
+- **secrets-lifecycle**: Create, read, encrypt, and rotate secrets across stores — `kubectl create secret generic api --from-file=config.json --from-literal=API_KEY`
+- Check `knowledge` and `prerequisites: aws, kubectl, sops, vault`
+
+### 2. Reason — think for `secrets-management`
+- For `secrets-lifecycle`: Create, read, encrypt, and rotate secrets across stores — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `secrets-management` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Sops` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `secrets-management:21ca08b9`
 
 # Secrets Management
 
@@ -169,6 +183,11 @@ vault kv get secret/payments
 ### secrets-lifecycle
 Create, read, encrypt, and rotate secrets across stores
 
+**Parameters:**
+- `store` (string): k8s, sops, vault, or aws-secretsmanager
+- `secret_name` (string): Secret identifier in the chosen store
+- `file` (string): Config file path for SOPS encryption
+
 **Commands:**
 - `kubectl create secret generic api --from-file=config.json --from-literal=API_KEY=xxx`
 - `kubectl get secret api -o jsonpath='{.data.API_KEY}' | base64 -d`
@@ -180,3 +199,9 @@ Create, read, encrypt, and rotate secrets across stores
 - kubectl create secret generic api --from-literal=API_KEY=xxx
 - vault kv get secret/payments
 - sops --decrypt secrets/application.yaml
+
+## References
+- [Kubernetes Secrets Documentation](https://kubernetes.io/docs/concepts/configuration/secret/)
+- [SOPS Documentation](https://getsops.io/docs/)
+- [Vault KV Secrets Engine v2](https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v2)
+- [AWS Secrets Manager User Guide](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html)

@@ -2,12 +2,24 @@ title: Api Webhook Bullmq Queues
 description: 'Builds reliable webhook delivery with queues: BullMQ workers, Redis persistence, dead-letter
   handling, and delivery monitoring.'
 version: 2.0.0
-instructions: "# Api Webhook Bullmq Queues\n\nBuilds reliable webhook delivery with queues: BullMQ workers,\
-  \ Redis persistence, dead-letter handling, and delivery monitoring.\n\n## Instructions\n\n# API Webhook\
-  \ v4 - Reliability\n\nQueue-backed webhook delivery.\n\n## What This Skill Does\n- Enqueues deliveries\
-  \ as durable jobs\n- Retries with backoff in workers\n- Dead-letters persistent failures\n\n## When\
-  \ to Use\n- High-volume webhook workloads\n- At-least-once delivery needs\n- Surviving worker crashes\n\
-  \n## Real Commands\n\n```bash\nnpm install bullmq ioredis\nnode -e \"const {Queue}=require('bullmq');\
+instructions: "Builds reliable webhook delivery with queues: BullMQ workers, Redis persistence, dead-letter\
+  \ handling, and delivery monitoring.\n\n## Agentic Workflow: Read -> Reason -> Act (api-webhook-bullmq-queues)\n\
+  \nYou are **Api Webhook Bullmq Queues** (backend) — a sub-agent that **Reads, Reasons, and Acts** via\
+  \ `allowed-tools`.\n\n### 1. Read — backend context for `api-webhook-bullmq-queues`\n- Domain: Builds\
+  \ reliable webhook delivery with queues: BullMQ workers, Redis persistence, dead-letter handling, and\
+  \ delivery monitoring.\n- **bullmq-queues**: Queue webhook deliveries with BullMQ — `npm install bullmq\
+  \ ioredis`\n- **delivery-monitoring**: Monitor retries and dead letters — `node -e \"const {Queue}=require('bullmq');\
+  \ const q=new Queue('webhook-delivery');`\n- Check `knowledge` and `prerequisites: node.js, python,\
+  \ ngrok, redis`\n\n### 2. Reason — think for `api-webhook-bullmq-queues`\n- For `bullmq-queues`: Queue\
+  \ webhook deliveries with BullMQ — decide which checks to run\n- For `delivery-monitoring`: Monitor\
+  \ retries and dead letters — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `api-webhook-bullmq-queues` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Bash`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)\n- Use\
+  \ `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `api-webhook-bullmq-queues:512bae15`\n\
+  \n# API Webhook v4 - Reliability\n\nQueue-backed webhook delivery.\n\n## What This Skill Does\n- Enqueues\
+  \ deliveries as durable jobs\n- Retries with backoff in workers\n- Dead-letters persistent failures\n\
+  \n## When to Use\n- High-volume webhook workloads\n- At-least-once delivery needs\n- Surviving worker\
+  \ crashes\n\n## Real Commands\n\n```bash\nnpm install bullmq ioredis\nnode -e \"const {Queue}=require('bullmq');\
   \ const q=new Queue('webhook-delivery'); q.add('order.created',{id:1}).then(j=>console.log('job',j.id))\"\
   \nredis-cli LLEN bull:webhook-delivery:wait\n```\n\n## Worker Example\n\n```js\nconst { Worker } = require('bullmq');\n\
   new Worker('webhook-delivery', async (job) => {\n  await fetch(job.data.url, { method: 'POST', body:\
@@ -15,7 +27,8 @@ instructions: "# Api Webhook Bullmq Queues\n\nBuilds reliable webhook delivery w
   \ and verify recovery\n- Simulate endpoint failures into dead letters\n- Monitor queue depth during\
   \ bursts\n\n\n## Best Practices\n- Set job TTLs and max attempts\n- Keep payloads small; reference data\n\
   - Alert on dead-letter growth\n\n## Capabilities\n\n### bullmq-queues\nQueue webhook deliveries with\
-  \ BullMQ\n\n**Commands:**\n- `npm install bullmq ioredis`\n- `node -e \"const {Queue}=require('bullmq');\
+  \ BullMQ\n\n**Parameters:**\n- `queue-name` (string): Queue name\n- `job` (string): Job type\n- `payload`\
+  \ (object): Job data\n\n**Commands:**\n- `npm install bullmq ioredis`\n- `node -e \"const {Queue}=require('bullmq');\
   \ const q=new Queue('webhook-delivery'); q.add('order.created',{id:1}).then(j=>console.log('job',j.id))\"\
   `\n- `node -e \"const {Queue}=require('bullmq'); const q=new Queue('webhook-delivery'); q.getJobCounts().then(console.log)\"\
   `\n- `node worker.js`\n- `redis-cli LLEN bull:webhook-delivery:wait`\n\n**Examples:**\n- Queue.add enqueues\
@@ -24,5 +37,5 @@ instructions: "# Api Webhook Bullmq Queues\n\nBuilds reliable webhook delivery w
   \ const q=new Queue('webhook-delivery'); q.getFailed().then(jobs=>console.log('failed',jobs.length))\"\
   `\n- `redis-cli ZCARD bull:webhook-delivery:failed`\n- `npx bull-board`\n- `node -e \"const {Queue}=require('bullmq');\
   \ const q=new Queue('webhook-delivery'); q.obliterate().then(()=>console.log('cleared'))\"`\n\n**Examples:**\n\
-  - -cli --help\n- -api --help"
+  - -cli --help\n- -api --help\n\n## References\n- [BullMQ Docs](https://docs.bullmq.io/)\n- [Redis Docs](https://redis.io/docs/latest/)"
 prompt: Act as Api Webhook Bullmq Queues and handle the task per the instructions.

@@ -1,6 +1,6 @@
 ---
 name: "Spatial-Computing Vr"
-description: "Spatial-Computing vr expertise and best practices."
+description: "Spatial-Computing vr expertise and best practices. Use when working with vr expertise, spatial computing, skill or when the user mentions vr expertise, spatial computing, skill."
 globs: ["**/*.r", "**/*.scala"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Spatial-Computing Vr
 
 Spatial-Computing vr expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (spatial-computing-vr)
+
+You are **Spatial-Computing Vr** (spatial-computing/vr) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — spatial-computing context for `spatial-computing-vr`
+- Domain: Spatial-Computing vr expertise and best practices.
+- **vr-expertise**: spatial-computing vr expertise — `vr-cli`
+- Check `knowledge` and `prerequisites: vr`
+
+### 2. Reason — think for `spatial-computing-vr`
+- For `vr-expertise`: spatial-computing vr expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `spatial-computing-vr` tools
+- Tools: `Glob`, `Grep`, `Read`, `Vr-cli`, `Vr-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `spatial-computing-vr:348bf071`
 
 ## Instructions
 

@@ -1,6 +1,6 @@
 ---
 name: "fireworks-inference"
-description: "Fireworks inference server agent. Manages Fireworks ML inference server."
+description: "Fireworks inference server agent. Manages Fireworks ML inference server. Use when working with Ml Fireworks Inference Server Agent or when the user mentions Ml Fireworks Inference Server Agent."
 type: knowledge
 triggers: ["fireworks-inference", "ml fireworks inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["fireworks-inference", "ml fireworks inference server agent"]
 # Fireworks Inference
 
 Fireworks inference server agent. Manages Fireworks ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (fireworks-inference)
+
+You are **Fireworks Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `fireworks-inference`
+- Domain: Fireworks inference server agent. Manages Fireworks ML inference server.
+- **Ml Fireworks Inference Server Agent**: Fireworks inference server agent. Manages Fireworks ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `fireworks-inference`
+- For `Ml Fireworks Inference Server Agent`: Fireworks inference server agent. Manages Fireworks ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `fireworks-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Fireworks` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fireworks-inference:abe8ba99`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Fireworks inference server agent. Manages Fireworks ML inference server.
 - fireworks serve --model accounts/fireworks/models/llama-v2-70b-chat
 - curl https://my-model.fireworks.ai/
 - fireworks models list
+
+## References
+- [Fireworks AI Documentation](https://docs.fireworks.ai/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

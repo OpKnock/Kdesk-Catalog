@@ -1,8 +1,22 @@
-# Twirp Gateway
-
 Exposes Twirp RPC services as plain HTTP/JSON endpoints. Generates Go handlers from protobuf definitions, serves methods at /twirp/<Service>/<Method> with JSON marshaling, and validates gateway behavior including error responses via curl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (twirp-gateway)
+
+You are **Twirp Gateway** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `twirp-gateway`
+- Domain: Exposes Twirp RPC services as plain HTTP/JSON endpoints. Generates Go handlers from protobuf definitions, serves methods at /twirp/<Service>/<Method> with JSON marshaling, and validates gateway behavi
+- **http-gateway**: Serve Twirp RPCs over plain HTTP with JSON — `twirp --service=Haberdasher --output=generated types.proto`
+- Check `knowledge` and `prerequisites: protoc, twirp, go`
+
+### 2. Reason — think for `twirp-gateway`
+- For `http-gateway`: Serve Twirp RPCs over plain HTTP with JSON — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `twirp-gateway` tools
+- Tools: `Glob`, `Grep`, `Read`, `Twirp`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `twirp-gateway:2838df62`
 
 # Twirp Gateway
 
@@ -61,6 +75,11 @@ curl -s http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H "Conten
 ### http-gateway
 Serve Twirp RPCs over plain HTTP with JSON
 
+**Parameters:**
+- `service` (string): Service name for codegen
+- `path` (string): RPC path, e.g. /twirp/.../MakeHat
+- `body` (string): JSON request body
+
 **Commands:**
 - `twirp --service=Haberdasher --output=generated types.proto`
 - `go build -o server ./cmd/server`
@@ -72,3 +91,8 @@ Serve Twirp RPCs over plain HTTP with JSON
 - curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H "Content-Type: application/json" -d "{\"inches\": 12}"
 - protoc --twirp_out=. --go_out=. types.proto
 - curl -s http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H "Content-Type: application/json" -d "{}"
+
+## References
+- [Twirp docs](https://twitchtv.github.io/twirp/docs/)
+- [twirp Go repo](https://github.com/twitchtv/twirp)
+- [Twirp errors spec](https://twitchtv.github.io/twirp/docs/errors.html)

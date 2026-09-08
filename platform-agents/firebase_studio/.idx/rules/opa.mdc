@@ -1,14 +1,32 @@
 ---
-description: "Evaluate Rego queries against data and inputs. Run Rego unit tests, format code, and build bundles. Serve policies over HTTP handling live decisions. workflows.'"
+description: "Evaluate Rego queries against data and inputs. Run Rego unit tests, format code, and build bundles. Serve policies over HTTP handling live decisions. workflows.'. Use when working with policy evaluation, testing and linting, server mode, security or when the user mentions policy evaluation, testing and linting, server mode, security."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# opa
-
 Evaluate Rego queries against data and inputs. Run Rego unit tests, format code, and build bundles. Serve policies over HTTP handling live decisions. workflows.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (opa)
+
+You are **opa** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `opa`
+- Domain: Evaluate Rego queries against data and inputs. Run Rego unit tests, format code, and build bundles. Serve policies over HTTP handling live decisions. workflows.'
+- **policy-evaluation**: Evaluate Rego queries against data and inputs. — `opa eval 'data.policies.allow'`
+- **testing-and-linting**: Run Rego unit tests, format code, and build bundles. — `opa test policy_test.rego policy.rego`
+- **server-mode**: Serve policies over HTTP for live decisions. — `opa run --server`
+- Check `knowledge` and `prerequisites: opa`
+
+### 2. Reason — think for `opa`
+- For `policy-evaluation`: Evaluate Rego queries against data and inputs. — decide which checks to run
+- For `testing-and-linting`: Run Rego unit tests, format code, and build bundles. — decide which checks to run
+- For `server-mode`: Serve policies over HTTP for live decisions. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `opa` tools
+- Tools: `Glob`, `Grep`, `Read`, `Opa`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `opa:f9df0931`
 
 # OPA
 
@@ -79,6 +97,11 @@ allow if {
 ### policy-evaluation
 Evaluate Rego queries against data and inputs.
 
+**Parameters:**
+- `input` (string): Path to input JSON file
+- `data` (string): Path to Rego file or data JSON (can repeat)
+- `format` (string): Output format: pretty, raw, json
+
 **Commands:**
 - `opa eval 'data.policies.allow'`
 - `opa eval -i input.json -d policies.rego 'data.example.allow'`
@@ -92,6 +115,10 @@ Evaluate Rego queries against data and inputs.
 
 ### testing-and-linting
 Run Rego unit tests, format code, and build bundles.
+
+**Parameters:**
+- `files` (array): Rego and data files to test
+- `output` (string): Bundle output path
 
 **Commands:**
 - `opa test policy_test.rego policy.rego`
@@ -109,6 +136,10 @@ Run Rego unit tests, format code, and build bundles.
 ### server-mode
 Serve policies over HTTP for live decisions.
 
+**Parameters:**
+- `watch` (boolean): Reload policies on file changes (-w)
+- `addr` (string): Bind address for the server
+
 **Commands:**
 - `opa run --server`
 - `opa run -s -w -b bundle.tar.gz`
@@ -119,3 +150,7 @@ Serve policies over HTTP for live decisions.
 - opa run -s -w -b bundle.tar.gz
 - curl -s -X POST http://localhost:8181/v1/data/example/allow -d '{"input":{}}'
 - opa run --server --addr 127.0.0.1:9191
+
+## References
+- [OPA Documentation](https://www.openpolicyagent.org/docs/latest/)
+- [Rego Playground](https://play.openpolicyagent.org/)

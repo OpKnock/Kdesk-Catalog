@@ -6,27 +6,27 @@ globs: ["**/*.r", "**/*.sh", "**/*.tf"]
 
 Builds reusable, tested Terraform modules with scaffolding, validation, docs generation, and tflint compliance.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (terraform-module-builder)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **terraform-module-builder** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `terraform init`, `terraform plan -var-file=tests/fixtures/dev.tfvars`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — infrastructure context for `terraform-module-builder`
+- Domain: Builds reusable, tested Terraform modules with scaffolding, validation, docs generation, and tflint compliance.
+- **module-scaffolding**: Initialize and structure a Terraform module. — `terraform init`
+- **module-testing**: Plan, apply, and destroy test fixtures. — `terraform plan -var-file=tests/fixtures/dev.tfvars`
+- **linting-and-quality**: Enforce style and best practices with tflint and docs. — `tflint --init`
+- Check `knowledge` and `prerequisites: terraform, terragrunt, tflint, checkov`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `terraform-module-builder`
+- For `module-scaffolding`: Initialize and structure a Terraform module. — decide which checks to run
+- For `module-testing`: Plan, apply, and destroy test fixtures. — decide which checks to run
+- For `linting-and-quality`: Enforce style and best practices with tflint and docs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `terraform-module-builder` tools
+- Tools: `Glob`, `Grep`, `Read`, `Terraform`, `Terraform-docs` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `terraform-module-builder:1e1bb239`
 
 # Terraform Module Builder
 

@@ -1,15 +1,31 @@
 ---
 name: "desktop-application"
-description: "Builds cross-platform desktop apps with Electron and Tauri: scaffolding, dev loops, and packaging."
+description: "Builds cross-platform desktop apps with Electron and Tauri: scaffolding, dev loops, and packaging. Use when working with electron app, tauri app or when the user mentions electron app, tauri app."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# desktop-application
-
 Builds cross-platform desktop apps with Electron and Tauri: scaffolding, dev loops, and packaging.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (desktop-application)
+
+You are **desktop-application** (desktop) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — desktop context for `desktop-application`
+- Domain: Builds cross-platform desktop apps with Electron and Tauri: scaffolding, dev loops, and packaging.
+- **electron-app**: Scaffold, run, and package Electron desktop applications — `npm create electron-vite@latest my-app -- --template react`
+- **tauri-app**: Develop and build Tauri apps with a small footprint — `npm create tauri-app@latest`
+- Check `knowledge` and `prerequisites: electron, tauri, node.js, rust`
+
+### 2. Reason — think for `desktop-application`
+- For `electron-app`: Scaffold, run, and package Electron desktop applications — decide which checks to run
+- For `tauri-app`: Develop and build Tauri apps with a small footprint — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `desktop-application` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `desktop-application:5976f78e`
 
 # Desktop Application
 
@@ -76,6 +92,11 @@ platform, reporting artifact paths and sizes.
 ### electron-app
 Scaffold, run, and package Electron desktop applications
 
+**Parameters:**
+- `template` (string): Scaffold template: react, vue, svelte, vanilla
+- `config` (string): electron-builder config file
+- `platform` (string): Target: --win, --mac, --linux
+
 **Commands:**
 - `npm create electron-vite@latest my-app -- --template react`
 - `npm run dev`
@@ -91,6 +112,11 @@ Scaffold, run, and package Electron desktop applications
 ### tauri-app
 Develop and build Tauri apps with a small footprint
 
+**Parameters:**
+- `bundles` (string): Installer bundles: msi, nsis, appimage, deb, dmg
+- `debug` (boolean): Build debug or release mode
+- `runner` (string): Custom runner script for tauri
+
 **Commands:**
 - `npm create tauri-app@latest`
 - `npm run tauri dev`
@@ -102,3 +128,8 @@ Develop and build Tauri apps with a small footprint
 - npm run tauri dev -- --port 1420
 - npm run tauri build -- --bundles nsis
 - npx tauri icon app-icon.png
+
+## References
+- [Electron docs](https://www.electronjs.org/docs/latest/)
+- [Tauri docs](https://tauri.app/)
+- [electron-builder docs](https://www.electron.build/)

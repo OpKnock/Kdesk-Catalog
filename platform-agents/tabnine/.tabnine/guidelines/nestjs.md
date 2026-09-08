@@ -1,8 +1,24 @@
-# nestjs
-
 Builds structured Node.js services with NestJS: modules, controllers, providers, CLI scaffolding, and testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nestjs)
+
+You are **nestjs** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `nestjs`
+- Domain: Builds structured Node.js services with NestJS: modules, controllers, providers, CLI scaffolding, and testing.
+- **nestjs-cli**: Scaffold modules, controllers, and services. — `npx @nestjs/cli new myapp`
+- **nestjs-testing**: Run unit and e2e tests. — `npm test`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `nestjs`
+- For `nestjs-cli`: Scaffold modules, controllers, and services. — decide which checks to run
+- For `nestjs-testing`: Run unit and e2e tests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nestjs` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nestjs:38c6b4c9`
 
 # NestJS
 
@@ -75,6 +91,10 @@ export class OrdersController {
 ### nestjs-cli
 Scaffold modules, controllers, and services.
 
+**Parameters:**
+- `name` (string): Element name
+- `type` (string): module, controller, service, pipe, guard
+
 **Commands:**
 - `npx @nestjs/cli new myapp`
 - `npx nest generate module orders`
@@ -90,6 +110,10 @@ Scaffold modules, controllers, and services.
 ### nestjs-testing
 Run unit and e2e tests.
 
+**Parameters:**
+- `testPathPattern` (string): Test name pattern
+- `e2e` (boolean): Run the end-to-end suite
+
 **Commands:**
 - `npm test`
 - `npm run test:e2e`
@@ -99,3 +123,7 @@ Run unit and e2e tests.
 **Examples:**
 - npm run test:e2e -- --runInBand
 - npm run test -- --watch
+
+## References
+- [NestJS Docs](https://docs.nestjs.com)
+- [NestJS CLI Reference](https://docs.nestjs.com/cli/overview)

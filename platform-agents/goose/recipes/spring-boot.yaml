@@ -3,30 +3,45 @@ description: Manages the Spring Boot application lifecycle with Maven. Generates
   runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs
   filtered test suites.
 version: 2.0.0
-instructions: "# Spring Boot\n\nManages the Spring Boot application lifecycle with Maven. Generates projects\
-  \ from start.spring.io, runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable\
-  \ JARs, and runs filtered test suites.\n\n## Instructions\n\n# Spring Boot\n\nHand-crafted skill for\
-  \ the Spring Boot application lifecycle with Maven.\n\n## What this skill does\n\n- Generates Maven\
-  \ projects from start.spring.io with selected starters\n- Runs the app in dev mode and probes actuator\
-  \ endpoints\n- Packages an executable jar and runs the test suite\n\n## When to use\n\n- Starting or\
-  \ onboarding a Spring Boot service\n- Local development loop: run, hit actuator, iterate\n- Building\
-  \ a release artifact for deployment\n\n## Real commands\n\n```bash\n# Scaffold a Maven project with\
-  \ web + actuator on Java 21\ncurl -s https://start.spring.io/starter.zip -d type=maven-project -d dependencies=web,actuator\
-  \ -d javaVersion=21 -o demo.zip && unzip -q demo.zip -d demo\n\n# Dev run\n./mvnw spring-boot:run\n\n\
-  # Actuator health\ncurl -s localhost:8080/actuator/health\n\n# Tests\n./mvnw test\n./mvnw test -Dtest=HelloControllerTest\n\
-  \n# Package and run the jar\n./mvnw package -DskipTests && java -jar target/demo-0.0.1-SNAPSHOT.jar\n\
-  ```\n\n## application.yaml\n\n```yaml\nserver:\n  port: 8080\nspring:\n  application:\n    name: demo\n\
-  management:\n  endpoints:\n    web:\n      exposure:\n        include: health,info,metrics\n```\n\n\
-  ## Testing\n\n```bash\n./mvnw spring-boot:run &\ncurl -s localhost:8080/actuator/health | jq .status\n\
-  ./mvnw test\n```\n\n## Best practices\n\n- Use the mvnw wrapper so builds are reproducible\n- Expose\
-  \ only safe actuator endpoints in production\n- Prefer the packaged jar over spring-boot:run in prod\n\
-  \n## Capabilities\n\n### spring-boot-lifecycle\nManages the Spring Boot application lifecycle with Maven.\
-  \ Generates projects from start.spring.io, runs in dev mode with spring-boot:run, probes actuator endpoints,\
-  \ packages executable JARs, and runs filtered test suites.\n\n**Commands:**\n- `curl -s https://start.spring.io/starter.zip\
+instructions: "Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io,\
+  \ runs in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs\
+  \ filtered test suites.\n\n## Agentic Workflow: Read -> Reason -> Act (spring-boot)\n\nYou are **Spring\
+  \ Boot** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1.\
+  \ Read — api context for `spring-boot`\n- Domain: Manages the Spring Boot application lifecycle with\
+  \ Maven. Generates projects from start.spring.io, runs in dev mode with spring-boot:run, probes actuator\
+  \ endpoints, packages executable JARs, and runs \n- **spring-boot-lifecycle**: Manages the Spring Boot\
+  \ application lifecycle with Maven. Generates projects from start.spring.io, r — `curl -s https://start.spring.io/starter.zip\
+  \ -d type=maven-project -d dependencie`\n- Check `knowledge` and `prerequisites: ./mvnw`\n\n### 2. Reason\
+  \ — think for `spring-boot`\n- For `spring-boot-lifecycle`: Manages the Spring Boot application lifecycle\
+  \ with Maven. Generates projects from start.spring.io, runs in dev mode with — decide which checks to\
+  \ run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act\
+  \ — execute with `spring-boot` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash`, `./mvnw` (see frontmatter\
+  \ `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint:\
+  \ `spring-boot:610a31e2`\n\n# Spring Boot\n\nHand-crafted skill for the Spring Boot application lifecycle\
+  \ with Maven.\n\n## What this skill does\n\n- Generates Maven projects from start.spring.io with selected\
+  \ starters\n- Runs the app in dev mode and probes actuator endpoints\n- Packages an executable jar and\
+  \ runs the test suite\n\n## When to use\n\n- Starting or onboarding a Spring Boot service\n- Local development\
+  \ loop: run, hit actuator, iterate\n- Building a release artifact for deployment\n\n## Real commands\n\
+  \n```bash\n# Scaffold a Maven project with web + actuator on Java 21\ncurl -s https://start.spring.io/starter.zip\
+  \ -d type=maven-project -d dependencies=web,actuator -d javaVersion=21 -o demo.zip && unzip -q demo.zip\
+  \ -d demo\n\n# Dev run\n./mvnw spring-boot:run\n\n# Actuator health\ncurl -s localhost:8080/actuator/health\n\
+  \n# Tests\n./mvnw test\n./mvnw test -Dtest=HelloControllerTest\n\n# Package and run the jar\n./mvnw\
+  \ package -DskipTests && java -jar target/demo-0.0.1-SNAPSHOT.jar\n```\n\n## application.yaml\n\n```yaml\n\
+  server:\n  port: 8080\nspring:\n  application:\n    name: demo\nmanagement:\n  endpoints:\n    web:\n\
+  \      exposure:\n        include: health,info,metrics\n```\n\n## Testing\n\n```bash\n./mvnw spring-boot:run\
+  \ &\ncurl -s localhost:8080/actuator/health | jq .status\n./mvnw test\n```\n\n## Best practices\n\n\
+  - Use the mvnw wrapper so builds are reproducible\n- Expose only safe actuator endpoints in production\n\
+  - Prefer the packaged jar over spring-boot:run in prod\n\n## Capabilities\n\n### spring-boot-lifecycle\n\
+  Manages the Spring Boot application lifecycle with Maven. Generates projects from start.spring.io, runs\
+  \ in dev mode with spring-boot:run, probes actuator endpoints, packages executable JARs, and runs filtered\
+  \ test suites.\n\n**Parameters:**\n- `java_version` (integer): Java version for the project (e.g., 17,\
+  \ 21)\n- `dependencies` (string): Comma-separated Spring Boot starters (e.g., web,actuator,data-jpa)\n\
+  - `test_class` (string): Specific test class to run\n\n**Commands:**\n- `curl -s https://start.spring.io/starter.zip\
   \ -d type=maven-project -d dependencies=web,actuator -d javaVersion=21 -o demo.zip`\n- `./mvnw spring-boot:run`\n\
   - `curl -s localhost:8080/actuator/health`\n- `./mvnw test`\n- `./mvnw test -Dtest=HelloControllerTest`\n\
   - `./mvnw package -DskipTests`\n- `java -jar target/demo-0.0.1-SNAPSHOT.jar`\n\n**Examples:**\n- curl\
   \ -s https://start.spring.io/starter.zip -d type=maven-project -d dependencies=web,actuator -d javaVersion=21\
   \ -o demo.zip\n- ./mvnw spring-boot:run\n- curl -s localhost:8080/actuator/health\n- ./mvnw test\n-\
-  \ ./mvnw package -DskipTests && java -jar target/demo-0.0.1-SNAPSHOT.jar"
+  \ ./mvnw package -DskipTests && java -jar target/demo-0.0.1-SNAPSHOT.jar\n\n## References\n- [Spring\
+  \ Boot reference](https://docs.spring.io/spring-boot/index.html)"
 prompt: Act as Spring Boot and handle the task per the instructions.

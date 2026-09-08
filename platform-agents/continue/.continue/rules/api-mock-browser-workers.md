@@ -1,15 +1,31 @@
 ---
 name: "Api Mock Browser Workers"
-description: "Implements browser and Node mock layers with MSW combined with Playwright for E2E mocking: persistent session state, resolver utilities, and test isolation."
+description: "Implements browser and Node mock layers with MSW combined with Playwright for E2E mocking: persistent session state, resolver utilities, and test isolation. Use when working with browser workers, e2e integration or when the user mentions browser workers, e2e integration."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Api Mock Browser Workers
-
 Implements browser and Node mock layers with MSW combined with Playwright for E2E mocking: persistent session state, resolver utilities, and test isolation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-mock-browser-workers)
+
+You are **Api Mock Browser Workers** (testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `api-mock-browser-workers`
+- Domain: Implements browser and Node mock layers with MSW combined with Playwright for E2E mocking: persistent session state, resolver utilities, and test isolation.
+- **browser-workers**: Configure MSW service workers in a Vite/Next.js application — `npm install msw --save-dev`
+- **e2e-integration**: Reuse MSW handlers inside Playwright E2E tests — `npm install @playwright/test msw`
+- Check `knowledge` and `prerequisites: prism, wiremock, msw`
+
+### 2. Reason — think for `api-mock-browser-workers`
+- For `browser-workers`: Configure MSW service workers in a Vite/Next.js application — decide which checks to run
+- For `e2e-integration`: Reuse MSW handlers inside Playwright E2E tests — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-mock-browser-workers` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-mock-browser-workers:883a8e2a`
 
 # API Mock v4 - MSW + Playwright
 
@@ -57,6 +73,11 @@ export const test = base.extend({
 ### browser-workers
 Configure MSW service workers in a Vite/Next.js application
 
+**Parameters:**
+- `worker-dir` (string): Directory that serves the service worker script
+- `onUnhandledRequest` (string): warn | error | bypass for unmatched requests
+- `quiet` (boolean): Suppress worker console output
+
 **Commands:**
 - `npm install msw --save-dev`
 - `npx msw init public/`
@@ -81,3 +102,7 @@ Reuse MSW handlers inside Playwright E2E tests
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [MSW Browser Docs](https://mswjs.io/docs/basics/mocking/browser)
+- [Playwright Test Docs](https://playwright.dev/docs/test-intro)

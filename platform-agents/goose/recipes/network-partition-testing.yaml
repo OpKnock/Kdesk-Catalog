@@ -2,25 +2,39 @@ title: Network Partition Testing
 description: Injects network faults with tc netem for latency and packet loss, drops traffic via iptables,
   and captures packets with tcpdump to validate service resilience under partitions.
 version: 2.0.0
-instructions: "# Network Partition Testing\n\nInjects network faults with tc netem for latency and packet\
+instructions: "Injects network faults with tc netem for latency and packet loss, drops traffic via iptables,\
+  \ and captures packets with tcpdump to validate service resilience under partitions.\n\n## Agentic Workflow:\
+  \ Read -> Reason -> Act (network-partition-testing)\n\nYou are **Network Partition Testing** (api/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context\
+  \ for `network-partition-testing`\n- Domain: Injects network faults with tc netem for latency and packet\
   \ loss, drops traffic via iptables, and captures packets with tcpdump to validate service resilience\
-  \ under partitions.\n\n## Instructions\n\n# Network Partition Testing\n\nVerify that services survive\
-  \ partitions, latency and packet loss before they happen in production.\n\n## What this skill does\n\
-  \n- Emulates packet loss/latency with tc netem\n- Drops traffic selectively with iptables\n- Captures\
-  \ traffic to confirm behavior\n\n## When to use\n\n- Chaos engineering for distributed systems\n- Validating\
-  \ retries, timeouts and circuit breakers\n\n## Real commands\n\n```bash\n# Full partition: drop all\
-  \ packets on the link\n tc qdisc add dev eth0 root netem loss 100%\n\n# Partial failure: 10% loss +\
-  \ 200ms latency\n tc qdisc change dev eth0 root netem loss 10% latency 200ms\n\n# Restore\n tc qdisc\
-  \ del dev eth0 root\n\n# Drop all traffic from one host (test cluster isolation)\n iptables -A INPUT\
-  \ -s 10.0.0.2 -j DROP\n iptables -D INPUT -s 10.0.0.2 -j DROP   # undo\n\n# Capture for verification\n\
-  \ tcpdump -i eth0 -c 20 host 10.0.0.2 -w capture.pcap\n```\n\n## Verify impact\n\n```bash\nping -c 5\
-  \ 10.0.0.2\ncurl -s -o /dev/null -w \"%{time_total}\\n\" http://10.0.0.2:8080/health\n```\n\n## Best\
-  \ practices\n\n- Start with small loss percentages, then escalate\n- Always schedule automatic revert\
-  \ (tc qdisc del)\n- Run against staging, never production without care\n\n## Capabilities\n\n### network-fault-injection\n\
-  Inject link loss/latency with tc netem, drop traffic with iptables, and capture traffic with tcpdump.\n\
-  \n**Commands:**\n- `tc qdisc add dev eth0 root netem loss 100%`\n- `tc qdisc change dev eth0 root netem\
-  \ loss 10% latency 200ms`\n- `tc qdisc del dev eth0 root`\n- `iptables -A INPUT -s 10.0.0.2 -j DROP`\n\
-  - `tcpdump -i eth0 -c 20 host 10.0.0.2 -w capture.pcap`\n\n**Examples:**\n- tc qdisc add dev eth0 root\
-  \ netem delay 500ms 100ms distribution normal\n- iptables -D INPUT -s 10.0.0.2 -j DROP\n- tc qdisc show\
-  \ dev eth0"
+  \ under partitions.\n- **network-fault-injection**: Inject link loss/latency with tc netem, drop traffic\
+  \ with iptables, and capture traffic with tcpdump — `tc qdisc add dev eth0 root netem loss 100%`\n-\
+  \ Check `knowledge` and `prerequisites: iptables, tcpdump`\n\n### 2. Reason — think for `network-partition-testing`\n\
+  - For `network-fault-injection`: Inject link loss/latency with tc netem, drop traffic with iptables,\
+  \ and capture traffic with tcpdump. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust`\
+  \ + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `network-partition-testing`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Tc`, `Iptables` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `network-partition-testing:f400127e`\n\
+  \n# Network Partition Testing\n\nVerify that services survive partitions, latency and packet loss before\
+  \ they happen in production.\n\n## What this skill does\n\n- Emulates packet loss/latency with tc netem\n\
+  - Drops traffic selectively with iptables\n- Captures traffic to confirm behavior\n\n## When to use\n\
+  \n- Chaos engineering for distributed systems\n- Validating retries, timeouts and circuit breakers\n\
+  \n## Real commands\n\n```bash\n# Full partition: drop all packets on the link\n tc qdisc add dev eth0\
+  \ root netem loss 100%\n\n# Partial failure: 10% loss + 200ms latency\n tc qdisc change dev eth0 root\
+  \ netem loss 10% latency 200ms\n\n# Restore\n tc qdisc del dev eth0 root\n\n# Drop all traffic from\
+  \ one host (test cluster isolation)\n iptables -A INPUT -s 10.0.0.2 -j DROP\n iptables -D INPUT -s 10.0.0.2\
+  \ -j DROP   # undo\n\n# Capture for verification\n tcpdump -i eth0 -c 20 host 10.0.0.2 -w capture.pcap\n\
+  ```\n\n## Verify impact\n\n```bash\nping -c 5 10.0.0.2\ncurl -s -o /dev/null -w \"%{time_total}\\n\"\
+  \ http://10.0.0.2:8080/health\n```\n\n## Best practices\n\n- Start with small loss percentages, then\
+  \ escalate\n- Always schedule automatic revert (tc qdisc del)\n- Run against staging, never production\
+  \ without care\n\n## Capabilities\n\n### network-fault-injection\nInject link loss/latency with tc netem,\
+  \ drop traffic with iptables, and capture traffic with tcpdump.\n\n**Parameters:**\n- `interface` (string):\
+  \ Network interface to modify\n- `loss_percent` (integer): Packet loss percentage\n- `target_host` (string):\
+  \ Host IP for iptables/tcpdump rules\n\n**Commands:**\n- `tc qdisc add dev eth0 root netem loss 100%`\n\
+  - `tc qdisc change dev eth0 root netem loss 10% latency 200ms`\n- `tc qdisc del dev eth0 root`\n- `iptables\
+  \ -A INPUT -s 10.0.0.2 -j DROP`\n- `tcpdump -i eth0 -c 20 host 10.0.0.2 -w capture.pcap`\n\n**Examples:**\n\
+  - tc qdisc add dev eth0 root netem delay 500ms 100ms distribution normal\n- iptables -D INPUT -s 10.0.0.2\
+  \ -j DROP\n- tc qdisc show dev eth0\n\n## References\n- [tc-netem man page](https://man7.org/linux/man-pages/man8/tc-netem.8.html)\n\
+  - [tcpdump man page](https://man7.org/linux/man-pages/man8/tcpdump.8.html)"
 prompt: Act as Network Partition Testing and handle the task per the instructions.

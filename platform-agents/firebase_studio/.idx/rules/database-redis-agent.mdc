@@ -1,5 +1,5 @@
 ---
-description: "Redis agent for in-memory data store."
+description: "Redis agent for in-memory data store. Use when working with Database Redis Agent or when the user mentions Database Redis Agent."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Database Redis Agent
 
 Redis agent for in-memory data store.
+
+## Agentic Workflow: Read -> Reason -> Act (database-redis-agent)
+
+You are **Database Redis Agent** (database/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `database-redis-agent`
+- Domain: Redis agent for in-memory data store.
+- **Database Redis Agent**: Redis agent for in-memory data store. — `redis-cli KEYS *`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `database-redis-agent`
+- For `Database Redis Agent`: Redis agent for in-memory data store. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `database-redis-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `database-redis-agent:8cd10bf6`
 
 ## Instructions
 
@@ -30,3 +48,7 @@ Redis agent for in-memory data store.
 - redis-cli MONITOR
 - redis-cli KEYS *
 - redis-cli FLUSHDB
+
+## References
+- [Redis Documentation](https://redis.io/docs/latest/)
+- [Prometheus Documentation](https://prometheus.io/docs/introduction/overview/)

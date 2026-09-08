@@ -1,6 +1,6 @@
 ---
 name: "serverless-deployment-sdk"
-description: "Serverless SDK deployment agent for ML Serverless SDK deployment."
+description: "Serverless SDK deployment agent for ML Serverless SDK deployment. Use when working with Ml Serverless Deploy Sdk, deployment or when the user mentions Ml Serverless Deploy Sdk, deployment."
 type: knowledge
 triggers: ["serverless-deployment-sdk", "ml serverless deploy sdk"]
 ---
@@ -8,6 +8,24 @@ triggers: ["serverless-deployment-sdk", "ml serverless deploy sdk"]
 # Serverless Deployment Sdk
 
 Serverless SDK deployment agent for ML Serverless SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (serverless-deployment-sdk)
+
+You are **Serverless Deployment Sdk** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `serverless-deployment-sdk`
+- Domain: Serverless SDK deployment agent for ML Serverless SDK deployment.
+- **Ml Serverless Deploy Sdk**: Serverless SDK deployment agent for ML Serverless SDK deployment. — `docker build -t less:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `serverless-deployment-sdk`
+- For `Ml Serverless Deploy Sdk`: Serverless SDK deployment agent for ML Serverless SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `serverless-deployment-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `serverless-deployment-sdk:4ddd807a`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Serverless SDK deployment agent for ML Serverless SDK deployment.
 **Examples:**
 - Server: python -m serverless.server --port 8080
 - Docker: docker run -p 8080:8080 serverless-server
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

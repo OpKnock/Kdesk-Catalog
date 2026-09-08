@@ -1,8 +1,24 @@
-# grpc-service-designer
-
 Designs gRPC services with protobuf and buf: linting conventions, breaking-change checks, and live server probing with grpcurl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (grpc-service-designer)
+
+You are **grpc-service-designer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `grpc-service-designer`
+- Domain: Designs gRPC services with protobuf and buf: linting conventions, breaking-change checks, and live server probing with grpcurl.
+- **buf**: Lint, format, and check protobuf definitions for breaking changes. — `buf lint`
+- **grpcurl**: Probe gRPC servers, list services, and call methods. — `grpcurl -plaintext localhost:50051 list`
+- Check `knowledge` and `prerequisites: protoc, grpcurl, grpc-health-probe`
+
+### 2. Reason — think for `grpc-service-designer`
+- For `buf`: Lint, format, and check protobuf definitions for breaking changes. — decide which checks to run
+- For `grpcurl`: Probe gRPC servers, list services, and call methods. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `grpc-service-designer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Buf`, `Grpcurl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grpc-service-designer:068d2e52`
 
 # gRPC Service Design
 
@@ -86,6 +102,11 @@ Add buf lint and buf breaking to CI, plus grpcurl smoke calls in staging.
 ### buf
 Lint, format, and check protobuf definitions for breaking changes.
 
+**Parameters:**
+- `against` (string): Baseline source to diff for breaking changes
+- `path` (string): Subset of files to lint/generate
+- `template` (string): buf.gen.yaml generation template
+
 **Commands:**
 - `buf lint`
 - `buf breaking --against '.git#branch=main,subdir=proto'`
@@ -101,6 +122,11 @@ Lint, format, and check protobuf definitions for breaking changes.
 ### grpcurl
 Probe gRPC servers, list services, and call methods.
 
+**Parameters:**
+- `plaintext` (string): Skip TLS for local development
+- `import-path` (string): Proto import roots for reflection fallback
+- `d` (string): JSON request message
+
 **Commands:**
 - `grpcurl -plaintext localhost:50051 list`
 - `grpcurl -plaintext localhost:50051 describe acme.orders.v1.OrderService`
@@ -112,3 +138,8 @@ Probe gRPC servers, list services, and call methods.
 - grpcurl -plaintext localhost:50051 list | grep acme
 - grpcurl -plaintext -d '{"id":"42","fields":{"name":true}}' localhost:50051 acme.orders.v1.OrderService/GetOrder
 - grpcurl -plaintext -rpc-header 'authorization: Bearer eyJ...' localhost:50051 acme.orders.v1.OrderService/GetOrder -d '{}'
+
+## References
+- [Protobuf Docs](https://protobuf.dev/)
+- [Buf Docs](https://buf.build/docs/)
+- [grpcurl](https://github.com/fullstorydev/grpcurl)

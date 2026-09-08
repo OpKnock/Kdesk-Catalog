@@ -4,27 +4,25 @@ applyTo: "**/*.go **/*.json **/*.py **/*.r **/*.sh"
 
 Implement passwordless login with magic links: JWT signing, one-time token storage with Redis, email delivery, and verification endpoints.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (magic-link)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Magic Link** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `openssl rand -base64 32`, `curl -s -X POST http://localhost:8080/auth/magic-link -H 'Co`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `magic-link`
+- Domain: Implement passwordless login with magic links: JWT signing, one-time token storage with Redis, email delivery, and verification endpoints.
+- **token-issuance**: Generate and sign short-lived magic link tokens. — `openssl rand -base64 32`
+- **verify-exchange**: Exercise the magic link flow: request, verify, and one-time use. — `curl -s -X POST http://localhost:8080/auth/magic-link -H 'Content-Type: applicat`
+- Check `knowledge` and `prerequisites: npx, openssl, python3, redis-cli`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `magic-link`
+- For `token-issuance`: Generate and sign short-lived magic link tokens. — decide which checks to run
+- For `verify-exchange`: Exercise the magic link flow: request, verify, and one-time use. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `magic-link` tools
+- Tools: `Glob`, `Grep`, `Read`, `Openssl`, `Python3` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `magic-link:b1cbe02d`
 
 # Magic Link Authentication
 

@@ -1,8 +1,22 @@
-# Quarkus Kotlin
-
 Quarkus with Kotlin: quarkus CLI scaffolding, Kotlin endpoints, coroutines and native builds.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (quarkus-kotlin)
+
+You are **Quarkus Kotlin** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `quarkus-kotlin`
+- Domain: Quarkus with Kotlin: quarkus CLI scaffolding, Kotlin endpoints, coroutines and native builds.
+- **quarkus-kotlin-build**: Create Kotlin Quarkus apps, add extensions and run the dev loop with the quarkus CLI. — `quarkus create app my-app --lang kotlin`
+- Check `knowledge` and `prerequisites: ./mvnw, quarkus`
+
+### 2. Reason — think for `quarkus-kotlin`
+- For `quarkus-kotlin-build`: Create Kotlin Quarkus apps, add extensions and run the dev loop with the quarkus CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `quarkus-kotlin` tools
+- Tools: `Glob`, `Grep`, `Read`, `Quarkus`, `./mvnw` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `quarkus-kotlin:2d6d5604`
 
 # Quarkus Kotlin
 
@@ -65,6 +79,11 @@ quarkus build --native
 ### quarkus-kotlin-build
 Create Kotlin Quarkus apps, add extensions and run the dev loop with the quarkus CLI.
 
+**Parameters:**
+- `lang` (string): kotlin or java
+- `extensions` (array): Quarkus extensions to add
+- `package_type` (string): uber-jar, fast-jar or native
+
 **Commands:**
 - `quarkus create app my-app --lang kotlin`
 - `quarkus dev`
@@ -76,3 +95,7 @@ Create Kotlin Quarkus apps, add extensions and run the dev loop with the quarkus
 - quarkus create app orders --lang kotlin -P io.quarkus.platform:quarkus-bom:3.10.0
 - quarkus dev
 - quarkus build -Dquarkus.package.type=uber-jar
+
+## References
+- [Quarkus Kotlin Guide](https://quarkus.io/guides/kotlin)
+- [Quarkus CLI Reference](https://quarkus.io/guides/cli-tooling)

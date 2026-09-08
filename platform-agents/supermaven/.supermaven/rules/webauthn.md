@@ -1,8 +1,22 @@
-# Webauthn
-
 Implements passwordless authentication using WebAuthn/FIDO2. Generates registration options, verifies attestation responses, asserts logins with @simplewebauthn, and inspects authenticator certificates with openssl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (webauthn)
+
+You are **Webauthn** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `webauthn`
+- Domain: Implements passwordless authentication using WebAuthn/FIDO2. Generates registration options, verifies attestation responses, asserts logins with @simplewebauthn, and inspects authenticator certificate
+- **webauthn-flow**: Implement and test WebAuthn registration and login — `npm install @simplewebauthn/server @simplewebauthn/browser`
+- Check `knowledge` and `prerequisites: node, npm, openssl`
+
+### 2. Reason — think for `webauthn`
+- For `webauthn-flow`: Implement and test WebAuthn registration and login — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `webauthn` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Openssl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `webauthn:7413d4d8`
 
 # WebAuthn
 
@@ -64,6 +78,11 @@ curl -s -X POST http://localhost:8080/auth/register/options -d "{\"username\":\"
 ### webauthn-flow
 Implement and test WebAuthn registration and login
 
+**Parameters:**
+- `rpID` (string): Relying Party ID, e.g. auth.example.com
+- `origin` (string): Allowed origin for the WebAuthn ceremony
+- `userVerification` (string): required, preferred, or discouraged
+
 **Commands:**
 - `npm install @simplewebauthn/server @simplewebauthn/browser`
 - `openssl x509 -in attestation.der -inform DER -text -noout`
@@ -75,3 +94,8 @@ Implement and test WebAuthn registration and login
 - curl -s -X POST http://localhost:8080/auth/login/options -d "{\"username\":\"alice\"}" | jq ".publicKey.allowCredentials[0].id"
 - node scripts/verify-assertion.mjs assertion.json challenge.json
 - openssl x509 -in attestation.der -inform DER -noout -subject -issuer
+
+## References
+- [WebAuthn Guide](https://webauthn.guide/)
+- [@simplewebauthn Docs](https://simplewebauthn.dev/docs/)
+- [W3C WebAuthn spec](https://www.w3.org/TR/webauthn-2/)

@@ -1,8 +1,24 @@
-# go
-
 Builds backend services in Go: module management, testing, benchmarking, profiling, and race detection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (go)
+
+You are **go** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `go`
+- Domain: Builds backend services in Go: module management, testing, benchmarking, profiling, and race detection.
+- **go-build**: Create modules, build, vet, and install Go programs. — `go mod init localhost/myapp`
+- **go-testing**: Run tests, benchmarks, and race detection. — `go test ./...`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `go`
+- For `go-build`: Create modules, build, vet, and install Go programs. — decide which checks to run
+- For `go-testing`: Run tests, benchmarks, and race detection. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `go:6cd59d33`
 
 # Go
 
@@ -70,6 +86,10 @@ func main() {
 ### go-build
 Create modules, build, vet, and install Go programs.
 
+**Parameters:**
+- `package` (string): Package pattern to build
+- `output` (string): Binary output path
+
 **Commands:**
 - `go mod init localhost/myapp`
 - `go build ./...`
@@ -85,6 +105,11 @@ Create modules, build, vet, and install Go programs.
 ### go-testing
 Run tests, benchmarks, and race detection.
 
+**Parameters:**
+- `run` (string): Regex matching test names
+- `bench` (string): Regex matching benchmarks
+- `cover` (boolean): Collect coverage
+
 **Commands:**
 - `go test ./...`
 - `go test -race ./...`
@@ -96,3 +121,8 @@ Run tests, benchmarks, and race detection.
 - go test -race -count=1 ./...
 - go test -bench=BenchmarkParse -benchmem -run ^$ ./...
 - go test -coverprofile=coverage.out ./...
+
+## References
+- [Go Docs](https://go.dev/doc/)
+- [Effective Go](https://go.dev/doc/effective_go)
+- [Go Testing Package](https://pkg.go.dev/testing)

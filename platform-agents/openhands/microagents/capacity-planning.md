@@ -1,15 +1,31 @@
 ---
 name: "capacity-planning"
-description: "Plans infrastructure capacity: load testing, headroom analysis, autoscaling rules, and cost-aware sizing for services."
+description: "Plans infrastructure capacity: load testing, headroom analysis, autoscaling rules, and cost-aware sizing for services. Use when working with load testing, sizing analysis or when the user mentions load testing, sizing analysis."
 type: knowledge
 triggers: ["capacity-planning", "load-testing", "sizing-analysis"]
 ---
 
-# capacity-planning
-
 Plans infrastructure capacity: load testing, headroom analysis, autoscaling rules, and cost-aware sizing for services.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (capacity-planning)
+
+You are **capacity-planning** (sre) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — sre context for `capacity-planning`
+- Domain: Plans infrastructure capacity: load testing, headroom analysis, autoscaling rules, and cost-aware sizing for services.
+- **load-testing**: Generate load and measure service capacity. — `ab -n 10000 -c 100 http://localhost:8000/api`
+- **sizing-analysis**: Analyze headroom and set scaling rules. — `kubectl top pod -l app=myapp`
+- Check `knowledge` and `prerequisites: prometheus, grafana, aws, terraform`
+
+### 2. Reason — think for `capacity-planning`
+- For `load-testing`: Generate load and measure service capacity. — decide which checks to run
+- For `sizing-analysis`: Analyze headroom and set scaling rules. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `capacity-planning` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ab`, `Wrk` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `capacity-planning:772938e2`
 
 # Capacity Planning
 
@@ -78,6 +94,11 @@ spec:
 ### load-testing
 Generate load and measure service capacity.
 
+**Parameters:**
+- `concurrency` (integer): Concurrent connections
+- `requests` (integer): Total requests
+- `duration` (string): Test duration
+
 **Commands:**
 - `ab -n 10000 -c 100 http://localhost:8000/api`
 - `wrk -t4 -c200 -d30s http://localhost:8000/api`
@@ -92,6 +113,10 @@ Generate load and measure service capacity.
 ### sizing-analysis
 Analyze headroom and set scaling rules.
 
+**Parameters:**
+- `target-utilization` (integer): HPA target %
+- `metric` (string): cpu, memory, or latency
+
 **Commands:**
 - `kubectl top pod -l app=myapp`
 - `kubectl top node`
@@ -103,3 +128,7 @@ Analyze headroom and set scaling rules.
 - kubectl top pod -l app=myapp --containers
 - kubectl get hpa myapp -o yaml | grep -A5 spec
 - docker stats $(docker ps -q) --no-stream
+
+## References
+- [k6 Docs](https://grafana.com/docs/k6/latest/)
+- [HPA Docs](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)

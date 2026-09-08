@@ -3,27 +3,41 @@ description: Builds Twirp services in Go using protoc code generation. Produces 
   and client stubs from protobuf definitions, runs the HTTP/JSON gateway, and verifies end-to-end with
   go test and curl.
 version: 2.0.0
-instructions: "# Twirp Go\n\nBuilds Twirp services in Go using protoc code generation. Produces typed\
-  \ server skeletons and client stubs from protobuf definitions, runs the HTTP/JSON gateway, and verifies\
-  \ end-to-end with go test and curl.\n\n## Instructions\n\n# Twirp Go\n\nHand-crafted skill for building\
-  \ Twirp services in Go.\n\n## What this skill does\n\n- Generates Go + Twirp bindings from protos\n\
-  - Produces a server skeleton and typed clients\n- Runs the server and tests locally\n\n## When to use\n\
-  \n- Go services with protobuf contracts\n- RPC clients that must stay dependency-light\n- Migrating\
-  \ from net/rpc or raw JSON to protobuf\n\n## Real commands\n\n```bash\n# Generate Go and Twirp code\n\
-  protoc --go_out=. --twirp_out=. --go_opt=paths=source_relative types.proto\n\n# Fetch the runtime\n\
-  go get github.com/twitchtv/twirp\n\n# Generate via go:generate if annotated\ngo generate ./...\n\n#\
-  \ Build, run, test\ngo run ./cmd/server\ngo test ./...\n```\n\n## Server skeleton\n\n```go\ntype server\
-  \ struct{}\n\nfunc (s *server) MakeHat(ctx context.Context, size *twirp.example.Size) (*twirp.example.Hat,\
-  \ error) {\n  if size.Inches <= 0 {\n    return nil, twirp.InvalidArgumentError(\"inches\", \"must be\
-  \ positive\")\n  }\n  return &twirp.example.Hat{Inches: size.Inches}, nil\n}\n\nfunc main() {\n  handler\
-  \ := twirp.example.NewHaberdasherServer(&server{})\n  http.ListenAndServe(\":8080\", handler)\n}\n```\n\
-  \n## Client\n\n```go\nclient := twirp.example.NewHaberdasherClient(\"http://localhost:8080\", http.DefaultClient)\n\
-  hat, err := client.MakeHat(ctx, &twirp.example.Size{Inches: 12})\n```\n\n## Testing\n\n```bash\ngo run\
-  \ ./cmd/server &\ncurl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H 'Content-Type:\
-  \ application/json' -d '{\"inches\": 12}'\ngo test ./...\n```\n\n## Best practices\n\n- Keep proto-generated\
-  \ files out of manual editing\n- Return typed twirp errors from handlers\n- Test client and server together\
-  \ in integration tests\n\n## Capabilities\n\n### go-codegen\nGenerate Twirp Go code and call the service\n\
-  \n**Commands:**\n- `protoc --go_out=. --twirp_out=. --go_opt=paths=source_relative types.proto`\n- `go\
-  \ get github.com/twitchtv/twirp`\n- `go generate ./...`\n- `go run ./cmd/server`\n- `go test ./...`\n\
-  \n**Examples:**\n- protoc --go_out=. --twirp_out=. types.proto\n- go run ./cmd/server\n- go test ./..."
+instructions: "Builds Twirp services in Go using protoc code generation. Produces typed server skeletons\
+  \ and client stubs from protobuf definitions, runs the HTTP/JSON gateway, and verifies end-to-end with\
+  \ go test and curl.\n\n## Agentic Workflow: Read -> Reason -> Act (twirp-go)\n\nYou are **Twirp Go**\
+  \ (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read\
+  \ — api context for `twirp-go`\n- Domain: Builds Twirp services in Go using protoc code generation.\
+  \ Produces typed server skeletons and client stubs from protobuf definitions, runs the HTTP/JSON gateway,\
+  \ and verifies end-to-end with go test a\n- **go-codegen**: Generate Twirp Go code and call the service\
+  \ — `protoc --go_out=. --twirp_out=. --go_opt=paths=source_relative types.proto`\n- Check `knowledge`\
+  \ and `prerequisites: protoc, go`\n\n### 2. Reason — think for `twirp-go`\n- For `go-codegen`: Generate\
+  \ Twirp Go code and call the service — decide which checks to run\n- Evaluate trust/policy: `kdesk trust`\
+  \ + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `twirp-go` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `Protoc`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `twirp-go:c0483e64`\n\n# Twirp Go\n\
+  \nHand-crafted skill for building Twirp services in Go.\n\n## What this skill does\n\n- Generates Go\
+  \ + Twirp bindings from protos\n- Produces a server skeleton and typed clients\n- Runs the server and\
+  \ tests locally\n\n## When to use\n\n- Go services with protobuf contracts\n- RPC clients that must\
+  \ stay dependency-light\n- Migrating from net/rpc or raw JSON to protobuf\n\n## Real commands\n\n```bash\n\
+  # Generate Go and Twirp code\nprotoc --go_out=. --twirp_out=. --go_opt=paths=source_relative types.proto\n\
+  \n# Fetch the runtime\ngo get github.com/twitchtv/twirp\n\n# Generate via go:generate if annotated\n\
+  go generate ./...\n\n# Build, run, test\ngo run ./cmd/server\ngo test ./...\n```\n\n## Server skeleton\n\
+  \n```go\ntype server struct{}\n\nfunc (s *server) MakeHat(ctx context.Context, size *twirp.example.Size)\
+  \ (*twirp.example.Hat, error) {\n  if size.Inches <= 0 {\n    return nil, twirp.InvalidArgumentError(\"\
+  inches\", \"must be positive\")\n  }\n  return &twirp.example.Hat{Inches: size.Inches}, nil\n}\n\nfunc\
+  \ main() {\n  handler := twirp.example.NewHaberdasherServer(&server{})\n  http.ListenAndServe(\":8080\"\
+  , handler)\n}\n```\n\n## Client\n\n```go\nclient := twirp.example.NewHaberdasherClient(\"http://localhost:8080\"\
+  , http.DefaultClient)\nhat, err := client.MakeHat(ctx, &twirp.example.Size{Inches: 12})\n```\n\n## Testing\n\
+  \n```bash\ngo run ./cmd/server &\ncurl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat\
+  \ -H 'Content-Type: application/json' -d '{\"inches\": 12}'\ngo test ./...\n```\n\n## Best practices\n\
+  \n- Keep proto-generated files out of manual editing\n- Return typed twirp errors from handlers\n- Test\
+  \ client and server together in integration tests\n\n## Capabilities\n\n### go-codegen\nGenerate Twirp\
+  \ Go code and call the service\n\n**Parameters:**\n- `proto` (string): Input .proto file\n- `package`\
+  \ (string): Go package path for output\n- `service` (string): Service name from the proto\n\n**Commands:**\n\
+  - `protoc --go_out=. --twirp_out=. --go_opt=paths=source_relative types.proto`\n- `go get github.com/twitchtv/twirp`\n\
+  - `go generate ./...`\n- `go run ./cmd/server`\n- `go test ./...`\n\n**Examples:**\n- protoc --go_out=.\
+  \ --twirp_out=. types.proto\n- go run ./cmd/server\n- go test ./...\n\n## References\n- [Twirp Go quickstart](https://github.com/twitchtv/twirp/tree/main/example)\n\
+  - [protoc-gen-twirp plugin](https://github.com/twitchtv/twirp/tree/main/protoc-gen-twirp)\n- [Twirp\
+  \ error handling](https://twitchtv.github.io/twirp/docs/errors.html)"
 prompt: Act as Twirp Go and handle the task per the instructions.

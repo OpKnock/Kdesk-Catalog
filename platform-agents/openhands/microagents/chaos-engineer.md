@@ -1,6 +1,6 @@
 ---
 name: "chaos-engineer"
-description: "Inject faults and test resilience."
+description: "Inject faults and test resilience. Use when working with chaos engineering, chaos engineering, litmus, chaos mesh or when the user mentions chaos engineering, chaos engineering, litmus, chaos mesh."
 type: knowledge
 triggers: ["chaos-engineer", "chaos-engineering"]
 ---
@@ -8,6 +8,24 @@ triggers: ["chaos-engineer", "chaos-engineering"]
 # Chaos Engineer
 
 Inject faults and test resilience.
+
+## Agentic Workflow: Read -> Reason -> Act (chaos-engineer)
+
+You are **Chaos Engineer** (infra/resilience) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infra context for `chaos-engineer`
+- Domain: Inject faults and test resilience.
+- **chaos-engineering**: Inject faults and test resilience — `litmus`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `chaos-engineer`
+- For `chaos-engineering`: Inject faults and test resilience — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `chaos-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Litmus`, `Chaos-mesh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `chaos-engineer:4f051ab2`
 
 ## Instructions
 
@@ -25,6 +43,10 @@ Always start small and in non-production.
 ### chaos-engineering
 Inject faults and test resilience
 
+**Parameters:**
+- `chaos_type` (string): Type: pod-delete, network-delay, cpu-stress, io-stress
+- `scope` (string): Scope: pod, namespace, cluster
+
 **Commands:**
 - `litmus`
 - `chaos-mesh`
@@ -34,3 +56,7 @@ Inject faults and test resilience
 - Litmus: litmusctl experiment run pod-delete --chaos-center-ns litmus
 - Chaos Mesh: kubectl apply -f network-delay.yaml
 - Status: kubectl get chaosengine -n litmus
+
+## References
+- [](https://litmuschaos.io/docs/)
+- [](https://chaos-mesh.org/docs/)

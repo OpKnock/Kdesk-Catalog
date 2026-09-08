@@ -2,14 +2,45 @@ title: Rest Api Design
 description: 'Designs consistent REST APIs: resource modeling, status codes, versioning, pagination, filtering,
   and OpenAPI documentation.'
 version: 2.0.0
-instructions: '# Rest Api Design
+instructions: 'Designs consistent REST APIs: resource modeling, status codes, versioning, pagination,
+  filtering, and OpenAPI documentation.
 
 
-  Designs consistent REST APIs: resource modeling, status codes, versioning, pagination, filtering, and
-  OpenAPI documentation.
+  ## Agentic Workflow: Read -> Reason -> Act (rest-api-design)
 
 
-  ## Instructions
+  You are **Rest Api Design** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — backend context for `rest-api-design`
+
+  - Domain: Designs consistent REST APIs: resource modeling, status codes, versioning, pagination, filtering,
+  and OpenAPI documentation.
+
+  - **rest-openapi**: Validate and serve OpenAPI specifications. — `npx @redocly/cli lint openapi.yaml`
+
+  - **rest-testing**: Exercise endpoints and verify API behavior. — `curl -s -X POST http://localhost:8000/api/users
+  -H "Content-Type: application/js`
+
+  - Check `knowledge` and `prerequisites: npx, python`
+
+
+  ### 2. Reason — think for `rest-api-design`
+
+  - For `rest-openapi`: Validate and serve OpenAPI specifications. — decide which checks to run
+
+  - For `rest-testing`: Exercise endpoints and verify API behavior. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `rest-api-design` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `rest-api-design:4291f7e2`
 
 
   # REST API Design
@@ -109,6 +140,13 @@ instructions: '# Rest Api Design
   Validate and serve OpenAPI specifications.
 
 
+  **Parameters:**
+
+  - `spec` (string): OpenAPI file path
+
+  - `format` (string): Spec format: yaml or json
+
+
   **Commands:**
 
   - `npx @redocly/cli lint openapi.yaml`
@@ -134,6 +172,13 @@ instructions: '# Rest Api Design
   Exercise endpoints and verify API behavior.
 
 
+  **Parameters:**
+
+  - `endpoint` (string): API endpoint URL
+
+  - `method` (string): HTTP method
+
+
   **Commands:**
 
   - `curl -s -X POST http://localhost:8000/api/users -H "Content-Type: application/json" -d "{\"name\":\"ann\"}"`
@@ -151,5 +196,14 @@ instructions: '# Rest Api Design
 
   - curl -s "http://localhost:8000/api/users?sort=-created_at&status=active"
 
-  - curl -s http://localhost:8000/api/users/1 | python -m json.tool'
+  - curl -s http://localhost:8000/api/users/1 | python -m json.tool
+
+
+  ## References
+
+  - [REST API Tutorial](https://restfulapi.net)
+
+  - [OpenAPI Spec](https://spec.openapis.org/oas/v3.1.0)
+
+  - [Redocly CLI](https://redocly.com/docs/cli/)'
 prompt: Act as Rest Api Design and handle the task per the instructions.

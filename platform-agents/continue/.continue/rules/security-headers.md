@@ -1,15 +1,29 @@
 ---
 name: "Security Headers"
-description: "Hardens HTTP responses by configuring and verifying security headers including CSP, HSTS, X-Frame-Options, Referrer-Policy, and X-Content-Type-Options. Validates implementations with curl and scores compliance using Mozilla Observatory."
+description: "Hardens HTTP responses by configuring and verifying security headers including CSP, HSTS, X-Frame-Options, Referrer-Policy, and X-Content-Type-Options. Validates implementations with curl and scores compliance using Mozilla Observatory. Use when working with http header hardening, api, http headers, csp or when the user mentions http header hardening, api, http headers, csp."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Security Headers
-
 Hardens HTTP responses by configuring and verifying security headers including CSP, HSTS, X-Frame-Options, Referrer-Policy, and X-Content-Type-Options. Validates implementations with curl and scores compliance using Mozilla Observatory.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (security-headers)
+
+You are **Security Headers** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `security-headers`
+- Domain: Hardens HTTP responses by configuring and verifying security headers including CSP, HSTS, X-Frame-Options, Referrer-Policy, and X-Content-Type-Options. Validates implementations with curl and scores c
+- **http-header-hardening**: Configure and verify HTTP security headers — `curl -sI https://httpbin.org/headers | grep -iE 'strict-transport-security|conte`
+- Check `knowledge` and `prerequisites: curl, npx`
+
+### 2. Reason — think for `security-headers`
+- For `http-header-hardening`: Configure and verify HTTP security headers — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `security-headers` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `security-headers:c21221e7`
 
 # Security Headers
 
@@ -73,6 +87,11 @@ curl -sI https://httpbin.org/headers | grep -i content-security-policy
 ### http-header-hardening
 Configure and verify HTTP security headers
 
+**Parameters:**
+- `host` (string): Target hostname for header checks
+- `csp_directive` (string): CSP directive set, e.g. default-src 'self'
+- `hsts_max_age` (integer): HSTS max-age in seconds
+
 **Commands:**
 - `curl -sI https://httpbin.org/headers | grep -iE 'strict-transport-security|content-security-policy|x-frame-options|referrer-policy|x-content-type-options'`
 - `curl -sI -H 'Origin: https://example.invalid' https://httpbin.org/headers | grep -i 'access-control-allow-origin'`
@@ -83,3 +102,8 @@ Configure and verify HTTP security headers
 - curl -sI https://httpbin.org/headers | grep -i x-frame-options
 - curl -sI https://httpbin.org/headers | grep -i content-security-policy
 - npx @mozilla/observatory-cli --host httpbin.org
+
+## References
+- [OWASP Secure Headers Project](https://owasp.org/www-project-secure-headers/)
+- [Mozilla Observatory CLI](https://github.com/mozilla/observatory-cli)
+- [MDN HTTP Headers Reference](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers)

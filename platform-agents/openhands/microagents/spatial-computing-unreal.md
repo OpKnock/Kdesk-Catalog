@@ -1,6 +1,6 @@
 ---
 name: "spatial-computing-unreal"
-description: "Spatial-Computing unreal expertise and best practices."
+description: "Spatial-Computing unreal expertise and best practices. Use when working with unreal expertise, spatial computing, skill or when the user mentions unreal expertise, spatial computing, skill."
 type: knowledge
 triggers: ["spatial-computing-unreal", "unreal-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["spatial-computing-unreal", "unreal-expertise"]
 # Spatial-Computing Unreal
 
 Spatial-Computing unreal expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (spatial-computing-unreal)
+
+You are **Spatial-Computing Unreal** (spatial-computing/unreal) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — spatial-computing context for `spatial-computing-unreal`
+- Domain: Spatial-Computing unreal expertise and best practices.
+- **unreal-expertise**: spatial-computing unreal expertise — `unreal-cli`
+- Check `knowledge` and `prerequisites: unreal`
+
+### 2. Reason — think for `spatial-computing-unreal`
+- For `unreal-expertise`: spatial-computing unreal expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `spatial-computing-unreal` tools
+- Tools: `Glob`, `Grep`, `Read`, `Unreal-cli`, `Unreal-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `spatial-computing-unreal:1db8c998`
 
 ## Instructions
 

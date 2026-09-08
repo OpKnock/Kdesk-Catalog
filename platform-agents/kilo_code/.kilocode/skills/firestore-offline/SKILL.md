@@ -9,27 +9,23 @@ allowed-tools: "Glob Read Bash(curl:*) Bash(firebase:*) Grep Bash(node:*)"
 
 Firestore offline persistence: enable local caching, debug cache reads, and design apps that work when connectivity drops.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (firestore-offline)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Firestore Offline** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `node -e "const db=require('firebase/firestore');firebase.fir`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `firestore-offline`
+- Domain: Firestore offline persistence: enable local caching, debug cache reads, and design apps that work when connectivity drops.
+- **offline-persistence**: Enable and debug offline persistence, and verify cache behavior in client SDKs. — `node -e "const db=require('firebase/firestore');firebase.firestore().settings({p`
+- Check `knowledge` and `prerequisites: firebase, grep, node`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `firestore-offline`
+- For `offline-persistence`: Enable and debug offline persistence, and verify cache behavior in client SDKs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `firestore-offline` tools
+- Tools: `Glob`, `Read`, `Bash`, `Firebase`, `Grep` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `firestore-offline:4c7d9499`
 
 # Firestore Offline
 

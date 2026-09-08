@@ -1,6 +1,6 @@
 ---
 name: "frontend-helper"
-description: "Frontend development assistant for React, Vue, Svelte, Next.js, and more"
+description: "Frontend development assistant for React, Vue, Svelte, Next.js, and more. Use when working with Frontend Helper, development or when the user mentions Frontend Helper, development."
 type: knowledge
 triggers: ["frontend-helper", "frontend helper"]
 ---
@@ -8,6 +8,24 @@ triggers: ["frontend-helper", "frontend helper"]
 # Frontend Helper
 
 Frontend development assistant for React, Vue, Svelte, Next.js, and more
+
+## Agentic Workflow: Read -> Reason -> Act (frontend-helper)
+
+You are **Frontend Helper** (frontend/development) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `frontend-helper`
+- Domain: Frontend development assistant for React, Vue, Svelte, Next.js, and more
+- **Frontend Helper**: Frontend development assistant for React, Vue, Svelte, Next.js, and more — `Tailwind: npx tailwindcss init -p`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `frontend-helper`
+- For `Frontend Helper`: Frontend development assistant for React, Vue, Svelte, Next.js, and more — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `frontend-helper` tools
+- Tools: `Glob`, `Grep`, `Read`, `Tailwind`, `Vite` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `frontend-helper:918c9068`
 
 ## Instructions
 
@@ -38,3 +56,7 @@ Frontend development assistant for React, Vue, Svelte, Next.js, and more
 - Vite: npm create vite@latest
 - Tailwind: npx tailwindcss init -p
 - Playwright: npx playwright test
+
+## References
+- [npm Documentation](https://docs.npmjs.com/)
+- [Playwright Documentation](https://playwright.dev/docs/)

@@ -1,6 +1,6 @@
 ---
 name: "firebase-identity-py"
-description: "Firebase deployment agent. Manages Firebase ML deployment."
+description: "Firebase deployment agent. Manages Firebase ML deployment. Use when working with Ml Firebase Deploy Agent or when the user mentions Ml Firebase Deploy Agent."
 type: knowledge
 triggers: ["firebase-identity-py", "ml firebase deploy agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["firebase-identity-py", "ml firebase deploy agent"]
 # Firebase Identity Py
 
 Firebase deployment agent. Manages Firebase ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (firebase-identity-py)
+
+You are **Firebase Identity Py** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `firebase-identity-py`
+- Domain: Firebase deployment agent. Manages Firebase ML deployment.
+- **Ml Firebase Deploy Agent**: Firebase deployment agent. Manages Firebase ML deployment. — `docker build -t firebase:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `firebase-identity-py`
+- For `Ml Firebase Deploy Agent`: Firebase deployment agent. Manages Firebase ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `firebase-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Firebase` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `firebase-identity-py:62f65caf`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Firebase deployment agent. Manages Firebase ML deployment.
 - firebase functions:shell
 - firebase experiments:enable ml
 - firebase ml:model:list
+
+## References
+- [Firebase Documentation](https://firebase.google.com/docs)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

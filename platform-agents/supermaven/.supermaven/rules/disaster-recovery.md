@@ -1,8 +1,24 @@
-# Disaster Recovery
-
 Implements Kubernetes disaster recovery with Velero: schedule backups, perform restores, migrate clusters, and verify RTO/RPO.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (disaster-recovery)
+
+You are **Disaster Recovery** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `disaster-recovery`
+- Domain: Implements Kubernetes disaster recovery with Velero: schedule backups, perform restores, migrate clusters, and verify RTO/RPO.
+- **velero-backups**: Create on-demand and scheduled backups of cluster resources and persistent volumes. — `velero install --provider aws --bucket velero-backups --secret-file ./credential`
+- **velero-restores**: Restore clusters from backups and migrate between clusters. — `velero restore create --from-backup full-2026-08-10`
+- Check `knowledge` and `prerequisites: velero`
+
+### 2. Reason — think for `disaster-recovery`
+- For `velero-backups`: Create on-demand and scheduled backups of cluster resources and persistent volumes. — decide which checks to run
+- For `velero-restores`: Restore clusters from backups and migrate between clusters. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `disaster-recovery` tools
+- Tools: `Glob`, `Grep`, `Read`, `Velero` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `disaster-recovery:cb63b8fc`
 
 # Kubernetes Disaster Recovery
 
@@ -65,6 +81,10 @@ velero restore create --from-backup full-2026-08-10   --namespace-mappings 'old-
 ### velero-backups
 Create on-demand and scheduled backups of cluster resources and persistent volumes.
 
+**Parameters:**
+- `schedule` (string): Cron expression for scheduled backups
+- `include-namespaces` (string): Comma-separated namespaces to back up
+
 **Commands:**
 - `velero install --provider aws --bucket velero-backups --secret-file ./credentials-velero`
 - `velero backup create full-$(date +%F) --include-namespaces app,db`
@@ -81,6 +101,10 @@ Create on-demand and scheduled backups of cluster resources and persistent volum
 ### velero-restores
 Restore clusters from backups and migrate between clusters.
 
+**Parameters:**
+- `from-backup` (string): Source backup name
+- `namespace-mappings` (object): Map old namespace to new namespace
+
 **Commands:**
 - `velero restore create --from-backup full-2026-08-10`
 - `velero restore get`
@@ -92,3 +116,7 @@ Restore clusters from backups and migrate between clusters.
 - velero restore create --from-backup full-2026-08-10
 - velero restore describe restore-20260810120000
 - velero restore logs restore-20260810120000
+
+## References
+- [Velero Documentation](https://velero.io/docs/)
+- [Velero Plugins](https://velero.io/plugins/)

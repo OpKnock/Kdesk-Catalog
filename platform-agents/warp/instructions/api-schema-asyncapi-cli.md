@@ -1,8 +1,24 @@
-# Api Schema Asyncapi Cli
-
 Authors event API schemas with AsyncAPI and Apache Avro: AsyncAPI document validation and generation, Avro schema tooling, and Kafka payload contracts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-schema-asyncapi-cli)
+
+You are **Api Schema Asyncapi Cli** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `api-schema-asyncapi-cli`
+- Domain: Authors event API schemas with AsyncAPI and Apache Avro: AsyncAPI document validation and generation, Avro schema tooling, and Kafka payload contracts.
+- **asyncapi-cli**: Validate and generate AsyncAPI documents — `npm install -g @asyncapi/cli`
+- **avro-tools**: Compile and inspect Avro schemas — `java -jar avro-tools-1.11.3.jar compile schema user.avsc .`
+- Check `knowledge` and `prerequisites: openapi, json-schema, node.js, python`
+
+### 2. Reason — think for `api-schema-asyncapi-cli`
+- For `asyncapi-cli`: Validate and generate AsyncAPI documents — decide which checks to run
+- For `avro-tools`: Compile and inspect Avro schemas — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-schema-asyncapi-cli` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Asyncapi` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-schema-asyncapi-cli:d4f2d824`
 
 # API Schema v4 - AsyncAPI/Avro
 
@@ -55,6 +71,11 @@ java -jar avro-tools-1.11.3.jar compile schema user.avsc .
 ### asyncapi-cli
 Validate and generate AsyncAPI documents
 
+**Parameters:**
+- `spec` (string): AsyncAPI document path
+- `template` (string): Generator template
+- `output` (string): Output directory
+
 **Commands:**
 - `npm install -g @asyncapi/cli`
 - `asyncapi validate asyncapi.yaml`
@@ -79,3 +100,7 @@ Compile and inspect Avro schemas
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [AsyncAPI CLI](https://www.asyncapi.com/docs/tools/cli)
+- [Avro Spec](https://avro.apache.org/docs/current/specification/)

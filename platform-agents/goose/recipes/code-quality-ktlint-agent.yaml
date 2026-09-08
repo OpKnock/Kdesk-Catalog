@@ -8,6 +8,39 @@ instructions: '# Code Quality Ktlint Agent
   Formats and lints Kotlin code. Auto-formats, enforces Android style, produces plain-text reports.
 
 
+  ## Agentic Workflow: Read -> Reason -> Act (code-quality-ktlint-agent)
+
+
+  You are **Code Quality Ktlint Agent** (code-quality/agent) — a sub-agent that **Reads, Reasons, and
+  Acts** via `allowed-tools`.
+
+
+  ### 1. Read — code-quality context for `code-quality-ktlint-agent`
+
+  - Domain: Formats and lints Kotlin code. Auto-formats, enforces Android style, produces plain-text reports.
+
+  - **lint-format-kotlin**: Format and lint Kotlin code with ktlint — `ktlint`
+
+  - Check `knowledge` and `prerequisites: ktlint (install via `sdk install ktlint` or Gradle plugin),
+  kotlin`
+
+
+  ### 2. Reason — think for `code-quality-ktlint-agent`
+
+  - For `lint-format-kotlin`: Format and lint Kotlin code with ktlint — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `code-quality-ktlint-agent` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Ktlint` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `code-quality-ktlint-agent:1ca6c011`
+
+
   ## Instructions
 
 
@@ -60,6 +93,17 @@ instructions: '# Code Quality Ktlint Agent
   Format and lint Kotlin code with ktlint
 
 
+  **Parameters:**
+
+  - `format` (boolean): Auto-format violations
+
+  - `reporter` (string): Output reporter (plain, json, checkstyle)
+
+  - `android` (boolean): Enforce Android Kotlin style guide
+
+  - `config` (string): Path to .editorconfig or ktlint config
+
+
   **Commands:**
 
   - `ktlint`
@@ -79,5 +123,18 @@ instructions: '# Code Quality Ktlint Agent
 
   - ktlint --reporter=plain
 
-  - ktlint --android'
+  - ktlint --android
+
+
+  ## References
+
+  - [Ktlint Documentation](https://ktlint.github.io/)
+
+  - [Ktlint Rules](https://ktlint.github.io/rules/)
+
+  - [EditorConfig Integration](https://ktlint.github.io/config/)
+
+  - [Gradle Plugin](https://github.com/JLLeitschuh/ktlint-gradle)
+
+  - [CI Integration](https://ktlint.github.io/ci/)'
 prompt: Act as Code Quality Ktlint Agent and handle the task per the instructions.

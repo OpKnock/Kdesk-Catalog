@@ -1,15 +1,33 @@
 ---
 name: "chaos"
-description: "Designs and runs chaos experiments with ChaosMesh, ChaosBlade, and Litmus to validate failure tolerance in Kubernetes."
+description: "Designs and runs chaos experiments with ChaosMesh, ChaosBlade, and Litmus to validate failure tolerance in Kubernetes. Use when working with chaosmesh experiments, chaosblade injection, litmus experiments or when the user mentions chaosmesh experiments, chaosblade injection, litmus experiments."
 type: knowledge
 triggers: ["chaos", "chaosmesh-experiments", "chaosblade-injection", "litmus-experiments"]
 ---
 
-# Chaos
-
 Designs and runs chaos experiments with ChaosMesh, ChaosBlade, and Litmus to validate failure tolerance in Kubernetes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (chaos)
+
+You are **Chaos** (sre/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — sre context for `chaos`
+- Domain: Designs and runs chaos experiments with ChaosMesh, ChaosBlade, and Litmus to validate failure tolerance in Kubernetes.
+- **chaosmesh-experiments**: Inject pod, network, and disk chaos with ChaosMesh. — `helm repo add chaos-mesh https://charts.chaos-mesh.org`
+- **chaosblade-injection**: Inject CPU, memory, and network faults with ChaosBlade. — `blade create cpu fullload --timeout 30`
+- **litmus-experiments**: Run Litmus chaos experiments via CLI and CRs. — `litmusctl get agents`
+- Check `knowledge` and `prerequisites: blade, helm, kubectl, litmusctl`
+
+### 2. Reason — think for `chaos`
+- For `chaosmesh-experiments`: Inject pod, network, and disk chaos with ChaosMesh. — decide which checks to run
+- For `chaosblade-injection`: Inject CPU, memory, and network faults with ChaosBlade. — decide which checks to run
+- For `litmus-experiments`: Run Litmus chaos experiments via CLI and CRs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `chaos` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Blade` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `chaos:b14ff34d`
 
 # Chaos Engineering
 
@@ -79,6 +97,10 @@ spec:
 ### chaosmesh-experiments
 Inject pod, network, and disk chaos with ChaosMesh.
 
+**Parameters:**
+- `manifest` (string): Chaos experiment manifest path
+- `namespace` (string): Namespace for experiments
+
 **Commands:**
 - `helm repo add chaos-mesh https://charts.chaos-mesh.org`
 - `helm install chaos-mesh chaos-mesh/chaos-mesh -n chaos-mesh --create-namespace`
@@ -93,6 +115,11 @@ Inject pod, network, and disk chaos with ChaosMesh.
 
 ### chaosblade-injection
 Inject CPU, memory, and network faults with ChaosBlade.
+
+**Parameters:**
+- `action` (string): Chaos action: fullload, loss, delay, fill
+- `timeout` (number): Experiment duration in seconds
+- `uid` (string): Experiment UID to destroy
 
 **Commands:**
 - `blade create cpu fullload --timeout 30`
@@ -109,6 +136,10 @@ Inject CPU, memory, and network faults with ChaosBlade.
 ### litmus-experiments
 Run Litmus chaos experiments via CLI and CRs.
 
+**Parameters:**
+- `engine` (string): ChaosEngine manifest path
+- `namespace` (string): Namespace where chaos engines and experiments are applied.
+
 **Commands:**
 - `litmusctl get agents`
 - `litmusctl connect agent --name=cluster-1`
@@ -120,3 +151,8 @@ Run Litmus chaos experiments via CLI and CRs.
 - litmusctl get agents
 - kubectl apply -f chaos-engine.yaml
 - kubectl get chaosengines -n litmus
+
+## References
+- [Chaos Mesh Documentation](https://chaos-mesh.org/docs/)
+- [ChaosBlade GitHub](https://github.com/chaosblade-io/chaosblade)
+- [Litmus Documentation](https://docs.litmuschaos.io/)

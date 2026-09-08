@@ -1,26 +1,26 @@
 Tracks errors with Bugsnag: uploading source maps, notifying via API, and managing releases with the bugsnag CLI.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (bugsnag-error-tracking)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Bugsnag Error Tracking** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `bugsnag-cli sourcemap upload --api-key $BUGSNAG_API_KEY --ap`, `curl -X POST https://notify.bugsnag.com/ -H "Content-Type: a`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `bugsnag-error-tracking`
+- Domain: Tracks errors with Bugsnag: uploading source maps, notifying via API, and managing releases with the bugsnag CLI.
+- **sourcemaps**: Upload source maps so stack traces are readable. — `bugsnag-cli sourcemap upload --api-key $BUGSNAG_API_KEY --app-version 1.2.3 --so`
+- **notify-api**: Send errors to Bugsnag's notify API. — `curl -X POST https://notify.bugsnag.com/ -H "Content-Type: application/json" -d `
+- **releases**: Track releases so Bugsnag links errors to versions. — `bugsnag-cli release --api-key $BUGSNAG_API_KEY --app-version 1.2.3 --stage produ`
+- Check `knowledge` and `prerequisites: bugsnag-cli, npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `bugsnag-error-tracking`
+- For `sourcemaps`: Upload source maps so stack traces are readable. — decide which checks to run
+- For `notify-api`: Send errors to Bugsnag's notify API. — decide which checks to run
+- For `releases`: Track releases so Bugsnag links errors to versions. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `bugsnag-error-tracking` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bugsnag-cli`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `bugsnag-error-tracking:4c578ae5`
 
 # Bugsnag Error Tracking
 

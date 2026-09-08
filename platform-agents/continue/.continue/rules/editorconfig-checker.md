@@ -1,15 +1,31 @@
 ---
 name: "editorconfig-checker"
-description: "Verifies files comply with .editorconfig rules using editorconfig-checker in local and CI workflows."
+description: "Verifies files comply with .editorconfig rules using editorconfig-checker in local and CI workflows. Use when working with ecc check, ecc config, code quality or when the user mentions ecc check, ecc config, code quality."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# editorconfig-checker
-
 Verifies files comply with .editorconfig rules using editorconfig-checker in local and CI workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (editorconfig-checker)
+
+You are **editorconfig-checker** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `editorconfig-checker`
+- Domain: Verifies files comply with .editorconfig rules using editorconfig-checker in local and CI workflows.
+- **ecc-check**: Check files against .editorconfig. — `editorconfig-checker`
+- **ecc-config**: Manage .editorconfig and checker config. — `editorconfig-checker -help`
+- Check `knowledge` and `prerequisites: editorconfig-checker, npx`
+
+### 2. Reason — think for `editorconfig-checker`
+- For `ecc-check`: Check files against .editorconfig. — decide which checks to run
+- For `ecc-config`: Manage .editorconfig and checker config. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `editorconfig-checker` tools
+- Tools: `Glob`, `Grep`, `Read`, `Editorconfig-checker`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `editorconfig-checker:e2e35e43`
 
 # editorconfig-checker
 
@@ -74,6 +90,11 @@ editorconfig-checker -debug
 ### ecc-check
 Check files against .editorconfig.
 
+**Parameters:**
+- `exclude` (string): Glob patterns to exclude
+- `config` (string): Config file path
+- `verbose` (boolean): Verbose output
+
 **Commands:**
 - `editorconfig-checker`
 - `editorconfig-checker -exclude "**/vendor/**"`
@@ -89,6 +110,10 @@ Check files against .editorconfig.
 ### ecc-config
 Manage .editorconfig and checker config.
 
+**Parameters:**
+- `disable` (string): Checks to disable
+- `debug` (boolean): Show debug output
+
 **Commands:**
 - `editorconfig-checker -help`
 - `editorconfig-checker -debug`
@@ -98,3 +123,7 @@ Manage .editorconfig and checker config.
 **Examples:**
 - npx editorconfig-checker -exclude "**/node_modules/**"
 - editorconfig-checker -disable-max-line-length
+
+## References
+- [editorconfig-checker on GitHub](https://github.com/editorconfig-checker/editorconfig-checker)
+- [EditorConfig Spec](https://editorconfig.org)

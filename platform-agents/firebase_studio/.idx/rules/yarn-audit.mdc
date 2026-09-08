@@ -1,14 +1,28 @@
 ---
-description: "Audit Yarn v1 and Berry dependency trees with severity gates."
+description: "Audit Yarn v1 and Berry dependency trees with severity gates. Use when working with yarn audit, code quality or when the user mentions yarn audit, code quality."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Yarn Audit
-
 Audit Yarn v1 and Berry dependency trees with severity gates.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (yarn-audit)
+
+You are **Yarn Audit** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `yarn-audit`
+- Domain: Audit Yarn v1 and Berry dependency trees with severity gates.
+- **yarn-audit**: Audit Yarn v1 and Berry dependency trees with severity gates — `yarn audit`
+- Check `knowledge` and `prerequisites: yarn`
+
+### 2. Reason — think for `yarn-audit`
+- For `yarn-audit`: Audit Yarn v1 and Berry dependency trees with severity gates — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `yarn-audit` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `yarn-audit:35c81055`
 
 # Yarn Audit
 
@@ -78,6 +92,11 @@ the exact `yarn upgrade` command per vulnerable package.
 ### yarn-audit
 Audit Yarn v1 and Berry dependency trees with severity gates
 
+**Parameters:**
+- `level` (string): Minimum severity to report: info, low, moderate, high, critical (v1)
+- `environment` (string): Berry: production or development
+- `json` (boolean): Machine-readable JSON output
+
 **Commands:**
 - `yarn audit`
 - `yarn audit --level high`
@@ -89,3 +108,7 @@ Audit Yarn v1 and Berry dependency trees with severity gates
 - yarn audit --groups dependencies
 - yarn audit --json > audit.json
 - yarn npm audit --severity high
+
+## References
+- [yarn audit docs (v1)](https://classic.yarnpkg.com/lang/en/docs/cli/audit/)
+- [yarn npm audit docs (Berry)](https://yarnpkg.com/cli/npm/audit)

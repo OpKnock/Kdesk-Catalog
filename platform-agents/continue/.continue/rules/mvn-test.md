@@ -1,15 +1,33 @@
 ---
 name: "mvn-test"
-description: "Runs Java test suites with Maven Surefire and Failsafe, including test filters, parallel execution, and reports."
+description: "Runs Java test suites with Maven Surefire and Failsafe, including test filters, parallel execution, and reports. Use when working with surefire tests, failsafe integration, parallel and reports, testing or when the user mentions surefire tests, failsafe integration, parallel and reports, testing."
 globs: ["**/*.java", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# mvn-test
-
 Runs Java test suites with Maven Surefire and Failsafe, including test filters, parallel execution, and reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (mvn-test)
+
+You are **mvn-test** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `mvn-test`
+- Domain: Runs Java test suites with Maven Surefire and Failsafe, including test filters, parallel execution, and reports.
+- **surefire-tests**: Run unit tests with Maven Surefire. — `mvn test`
+- **failsafe-integration**: Run integration tests with Maven Failsafe. — `mvn verify`
+- **parallel-and-reports**: Parallel tests, coverage, and reports. — `mvn test -Dparallel=classes -DthreadCount=4`
+- Check `knowledge` and `prerequisites: mvn`
+
+### 2. Reason — think for `mvn-test`
+- For `surefire-tests`: Run unit tests with Maven Surefire. — decide which checks to run
+- For `failsafe-integration`: Run integration tests with Maven Failsafe. — decide which checks to run
+- For `parallel-and-reports`: Parallel tests, coverage, and reports. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mvn-test` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mvn-test:ef165a48`
 
 # Maven Test
 
@@ -75,6 +93,11 @@ mvn clean test
 ### surefire-tests
 Run unit tests with Maven Surefire.
 
+**Parameters:**
+- `test` (string): Test class or method pattern
+- `quiet` (boolean): Quiet output (-q)
+- `failIfNoSpecifiedTests` (boolean): Fail when -Dtest matches nothing
+
 **Commands:**
 - `mvn test`
 - `mvn test -Dtest=OrderServiceTest`
@@ -89,6 +112,10 @@ Run unit tests with Maven Surefire.
 
 ### failsafe-integration
 Run integration tests with Maven Failsafe.
+
+**Parameters:**
+- `itTest` (string): Integration test pattern
+- `skipITs` (boolean): Skip integration tests
 
 **Commands:**
 - `mvn verify`
@@ -105,6 +132,10 @@ Run integration tests with Maven Failsafe.
 ### parallel-and-reports
 Parallel tests, coverage, and reports.
 
+**Parameters:**
+- `parallel` (string): Parallel mode: classes, methods
+- `threadCount` (number): Threads for parallel execution
+
 **Commands:**
 - `mvn test -Dparallel=classes -DthreadCount=4`
 - `mvn test -Djacoco=true verify jacoco:report`
@@ -116,3 +147,8 @@ Parallel tests, coverage, and reports.
 - mvn test -Dparallel=classes -DthreadCount=4
 - mvn surefire-report:report
 - mvn clean test
+
+## References
+- [Maven Surefire Plugin](https://maven.apache.org/surefire/maven-surefire-plugin/)
+- [Maven Failsafe Plugin](https://maven.apache.org/surefire/maven-failsafe-plugin/)
+- [Maven CLI Reference](https://maven.apache.org/ref/3.9.0/mvn/index.html)

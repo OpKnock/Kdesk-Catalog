@@ -1,14 +1,30 @@
 ---
-description: "Full Kafka topic lifecycle: create with configs, list, describe layout, alter configurations, and delete topics safely with the Kafka CLI."
+description: "Full Kafka topic lifecycle: create with configs, list, describe layout, alter configurations, and delete topics safely with the Kafka CLI. Use when working with topic lifecycle, topic config, api or when the user mentions topic lifecycle, topic config, api."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Kafka Topics
-
 Full Kafka topic lifecycle: create with configs, list, describe layout, alter configurations, and delete topics safely with the Kafka CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kafka-topics)
+
+You are **Kafka Topics** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `kafka-topics`
+- Domain: Full Kafka topic lifecycle: create with configs, list, describe layout, alter configurations, and delete topics safely with the Kafka CLI.
+- **topic-lifecycle**: Create, list, and delete topics. — `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --part`
+- **topic-config**: Describe topic layout and alter topic configurations. — `kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders`
+- Check `knowledge` and `prerequisites: kafka-topics.sh`
+
+### 2. Reason — think for `kafka-topics`
+- For `topic-lifecycle`: Create, list, and delete topics. — decide which checks to run
+- For `topic-config`: Describe topic layout and alter topic configurations. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kafka-topics` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-topics.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-topics:1383380e`
 
 # Kafka Topics
 
@@ -76,6 +92,11 @@ kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders | gr
 ### topic-lifecycle
 Create, list, and delete topics.
 
+**Parameters:**
+- `topic` (string): Topic name.
+- `partitions` (integer): Partition count.
+- `replication_factor` (integer): Replication factor.
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 6 --replication-factor 3 --config retention.ms=604800000 --config max.message.bytes=1048576`
 - `kafka-topics.sh --bootstrap-server localhost:9092 --list`
@@ -90,6 +111,10 @@ Create, list, and delete topics.
 ### topic-config
 Describe topic layout and alter topic configurations.
 
+**Parameters:**
+- `topic` (string): Topic name.
+- `config` (string): Config key=value to set or remove.
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders`
 - `kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders --show-configs`
@@ -100,3 +125,7 @@ Describe topic layout and alter topic configurations.
 - kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders
 - kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders --config max.message.bytes=2097152
 - kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders --show-configs
+
+## References
+- [kafka-topics.sh](https://kafka.apache.org/documentation/#basic_ops_add_topic)
+- [Topic Configs](https://kafka.apache.org/documentation/#topicconfigs)

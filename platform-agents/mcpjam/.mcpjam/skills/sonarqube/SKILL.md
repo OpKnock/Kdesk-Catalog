@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(curl:*) Bash(mvn:*) Bash(sonar-scanner:*)"
 
 Runs SonarQube analysis via sonar-scanner CLI and manages quality gates, measures, and projects.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (sonarqube)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Sonarqube** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `sonar-scanner -Dsonar.projectKey=myapp -Dsonar.host.url=http`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `sonarqube`
+- Domain: Runs SonarQube analysis via sonar-scanner CLI and manages quality gates, measures, and projects.
+- **sonar-scanner**: Run analysis, wait on quality gates, and query SonarQube API — `sonar-scanner -Dsonar.projectKey=myapp -Dsonar.host.url=http://localhost:9000 -D`
+- Check `knowledge` and `prerequisites: mvn, sonar-scanner`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `sonarqube`
+- For `sonar-scanner`: Run analysis, wait on quality gates, and query SonarQube API — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `sonarqube` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sonar-scanner`, `Mvn` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sonarqube:6cbac882`
 
 # SonarQube
 

@@ -1,14 +1,28 @@
 ---
-description: "Implement API authentication: OAuth2 flows with Keycloak, token exchange, client registration, and end-to-end token verification."
+description: "Implement API authentication: OAuth2 flows with Keycloak, token exchange, client registration, and end-to-end token verification. Use when working with oauth2 implementation or when the user mentions oauth2 implementation."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# api-auth-engineer
-
 Implement API authentication: OAuth2 flows with Keycloak, token exchange, client registration, and end-to-end token verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-auth-engineer)
+
+You are **api-auth-engineer** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `api-auth-engineer`
+- Domain: Implement API authentication: OAuth2 flows with Keycloak, token exchange, client registration, and end-to-end token verification.
+- **oauth2-implementation**: Set up and verify OAuth2 flows against Keycloak — `docker run -d -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=ad`
+- Check `knowledge` and `prerequisites: node.js, python, jsonwebtoken, passport`
+
+### 2. Reason — think for `api-auth-engineer`
+- For `oauth2-implementation`: Set up and verify OAuth2 flows against Keycloak — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-auth-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-auth-engineer:16b30556`
 
 # API Auth Engineer
 
@@ -73,6 +87,11 @@ curl -s http://localhost:8080/api/verify -H "Authorization: Bearer $TOKEN" | jq
 ### oauth2-implementation
 Set up and verify OAuth2 flows against Keycloak
 
+**Parameters:**
+- `realm` (string): Keycloak realm name
+- `client_id` (string): OAuth2 client ID
+- `grant_type` (string): password, client_credentials, authorization_code, or refresh_token
+
 **Commands:**
 - `docker run -d -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:latest start-dev`
 - `curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' -H 'Content-Type: application/x-www-form-urlencoded' -d 'grant_type=password&client_id=api&username=alice&password=secret' | jq -r '.access_token'`
@@ -84,3 +103,7 @@ Set up and verify OAuth2 flows against Keycloak
 - curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' -d 'grant_type=client_credentials&client_id=orders-api&client_secret=abc123' | jq -r '.access_token'
 - curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/revoke' -d 'token=$REFRESH&client_id=api&client_secret=abc123'
 - curl -s -H 'Authorization: Bearer $TOKEN' http://localhost:8080/api/protected | jq '.role'
+
+## References
+- [OAuth 2.0 Framework (RFC 6749)](https://datatracker.ietf.org/doc/html/rfc6749)
+- [Keycloak Docs](https://www.keycloak.org/documentation)

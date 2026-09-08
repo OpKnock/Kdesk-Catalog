@@ -1,8 +1,24 @@
-# eslint-config
-
 Designs and maintains ESLint flat configs and shareable config packages with rulesets, overrides, and presets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (eslint-config)
+
+You are **eslint-config** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `eslint-config`
+- Domain: Designs and maintains ESLint flat configs and shareable config packages with rulesets, overrides, and presets.
+- **eslint-config-authoring**: Author flat config and legacy config files. — `npm install --save-dev eslint @eslint/js typescript-eslint`
+- **config-testing**: Validate configs and lint output. — `npx eslint --rule "semi: [error, never]" src/`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `eslint-config`
+- For `eslint-config-authoring`: Author flat config and legacy config files. — decide which checks to run
+- For `config-testing`: Validate configs and lint output. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `eslint-config` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `eslint-config:6c8c2c18`
 
 # ESLint Config
 
@@ -65,6 +81,10 @@ npx eslint --rule "semi: [error, never]" src/
 ### eslint-config-authoring
 Author flat config and legacy config files.
 
+**Parameters:**
+- `config` (string): Config file path
+- `target` (string): File to resolve config for
+
 **Commands:**
 - `npm install --save-dev eslint @eslint/js typescript-eslint`
 - `npx eslint --init`
@@ -80,6 +100,10 @@ Author flat config and legacy config files.
 ### config-testing
 Validate configs and lint output.
 
+**Parameters:**
+- `rule` (string): Inline rule override
+- `ext` (string): File extensions to lint
+
 **Commands:**
 - `npx eslint --rule "semi: [error, never]" src/`
 - `npx eslint --rulesdir ./custom-rules src/`
@@ -89,3 +113,7 @@ Validate configs and lint output.
 **Examples:**
 - npx eslint --rule "quotes: [error, single]" src/
 - npx eslint --no-eslintrc --config base.js src/
+
+## References
+- [ESLint Config Guide](https://eslint.org/docs/latest/use/configure/)
+- [typescript-eslint Docs](https://typescript-eslint.io)

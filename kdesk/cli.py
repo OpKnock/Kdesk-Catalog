@@ -41,7 +41,7 @@ from kdesk.cli_commands.runtime_cmds import (
     _cmd_inspect, _cmd_approve,
     _cmd_skill, _cmd_skill_publish, _cmd_skill_install, _cmd_skill_search,
     _cmd_skill_list, _cmd_delegate, _cmd_version_resolve, _cmd_telemetry,
-    _cmd_serve, _cmd_trust,
+    _cmd_serve, _cmd_trust, _cmd_agent,
 )
 
 
@@ -238,6 +238,22 @@ def build_parser() -> argparse.ArgumentParser:
     tr.add_argument("--platform", default=None, help="target platform")
     tr.add_argument("--json", action="store_true", help="output as JSON")
 
+    ag = sub.add_parser("agent", parents=[root_parent],
+                        help="run catalog definitions as live AI agents")
+    ag_sub = ag.add_subparsers(dest="agent_command")
+
+    ag_run = ag_sub.add_parser("run", help="run an agent or skill on a task")
+    ag_run.add_argument("name", help="agent or skill name")
+    ag_run.add_argument("task", help="task to execute")
+    ag_run.add_argument("--execute", action="store_true",
+                        help="actually call the model (default is dry-run plan)")
+    ag_run.add_argument("--allow-shell", action="store_true",
+                        help="let the agent run its declared commands")
+    ag_run.add_argument("--json", action="store_true", help="output as JSON")
+
+    ag_check = ag_sub.add_parser("check", help="check live-agent runtime status")
+    ag_check.add_argument("--json", action="store_true", help="output as JSON")
+
     sv = sub.add_parser("serve", parents=[root_parent],
                         help="launch the local web dashboard")
     sv.add_argument("--host", default="127.0.0.1")
@@ -293,6 +309,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         "resolve-version": _cmd_version_resolve,
         "telemetry": _cmd_telemetry,
         "trust": _cmd_trust,
+        "agent": _cmd_agent,
         "serve": _cmd_serve,
     }
     handler = handlers.get(args.command)

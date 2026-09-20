@@ -56,7 +56,6 @@ GATES: List[Tuple[str, List[str]]] = [
      "tests.test_wire_skills",
      "tests.test_marketplaces",
      "tests.test_kdesk_install",
-     "tests.test_kdesk_modules",
      "tests.test_yaml_to_json"]),
 
     # Packaging

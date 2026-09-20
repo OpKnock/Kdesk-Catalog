@@ -13,11 +13,6 @@
 
 > **A complete AI agent & skill registry at your fingertips** — From ML engineers to Reddit community ninjas, from whimsy injectors to reality checkers. Each definition is a specialized expert with personality, processes, and proven deliverables.
 
-[![Platforms](https://img.shields.io/badge/platforms-45%2B-blue)](https://github.com/OpKnock/Kdesk-Catalog)
-[![Agents](https://img.shields.io/badge/agents-1,858-green)](https://github.com/OpKnock/Kdesk-Catalog/tree/main/universal-agents)
-[![Skills](https://img.shields.io/badge/skills-1,235-green)](https://github.com/OpKnock/Kdesk-Catalog/tree/main/universal-agents)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-
 ---
 
 ## 🚀 What Is This?
@@ -27,11 +22,6 @@
 > **Source of truth:** `universal-agents/` — every agent and skill is a single YAML file with real commands, official documentation links, and expert instructions.
 
 **Output:** `platform-agents/` — auto-generated platform-specific formats (gitignored, regenerated on demand).
-
-[![Platforms](https://img.shields.io/badge/platforms-45%2B-blue)](https://github.com/OpKnock/Kdesk-Catalog)
-[![Agents](https://img.shields.io/badge/agents-1,858-green)](https://github.com/OpKnock/Kdesk-Catalog/tree/main/universal-agents)
-[![Skills](https://img.shields.io/badge/skills-1,235-green)](https://github.com/OpKnock/Kdesk-Catalog/tree/main/universal-agents)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ---
 

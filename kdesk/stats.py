@@ -33,12 +33,6 @@ def _file_count(path: Path) -> int:
     return sum(1 for p in path.rglob("*") if p.is_file())
 
 
-def _dir_count(path: Path) -> int:
-    if not path.is_dir():
-        return 0
-    return sum(1 for p in path.iterdir() if p.is_dir())
-
-
 _CHECKSUM_CACHE: Dict[str, Dict[str, str]] = {}
 _PLATFORM_COUNT_CACHE: Dict[str, int] = {}
 
@@ -125,7 +119,11 @@ def compute(root: Optional[Path] = None, fast: bool = False,
     workflow_files = sorted(workflows_dir.rglob("*.workflow.json")) if workflows_dir.is_dir() else []
 
     platform_dir = root / "platform-agents"
-    platform_dirs = _dir_count(platform_dir)
+    # Supported platforms per the canonical registry (45, incl. deprecated
+    # ones kept for reference) — NOT the output-dir count, which lags when
+    # a platform has no generated dir yet.
+    from kdesk.platforms import get_registry
+    platform_dirs = len(get_registry().all())
     if fast:
         report = root / "reports" / "catalog-stats.json"
         if report.is_file():

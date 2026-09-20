@@ -28,6 +28,27 @@ class AppState:
                     self._catalog = Catalog.from_repo(self.root)
         return self._catalog
 
+    @property
+    def catalog_loaded(self) -> bool:
+        return self._catalog is not None
+
+    def ensure_catalog(self):
+        """Load the catalog unless another thread already is.
+
+        Returns (loaded: bool, warming: bool). Never blocks on another
+        loader — callers seeing warming=True should retry shortly.
+        """
+        if self._catalog is not None:
+            return True, False
+        if not self._lock.acquire(blocking=False):
+            return False, True
+        try:
+            if self._catalog is None:
+                self._catalog = Catalog.from_repo(self.root)
+            return True, False
+        finally:
+            self._lock.release()
+
     def refresh(self) -> Catalog:
         with self._lock:
             self._catalog = Catalog.from_repo(self.root)

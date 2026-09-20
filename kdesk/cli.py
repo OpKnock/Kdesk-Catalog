@@ -236,6 +236,8 @@ def build_parser() -> argparse.ArgumentParser:
                         help="launch the local web dashboard")
     sv.add_argument("--host", default="127.0.0.1")
     sv.add_argument("--port", type=int, default=8000)
+    sv.add_argument("--no-browser", action="store_true",
+                    help="do not auto-open the browser")
 
     return p
 

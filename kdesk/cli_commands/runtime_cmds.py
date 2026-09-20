@@ -252,5 +252,6 @@ def _cmd_serve(args) -> int:
               file=sys.stderr)
         return 1
     root = Path(args.root) if args.root else default_repo_root()
-    run_server(root, host=args.host, port=args.port)
+    run_server(root, host=args.host, port=args.port,
+               open_browser=not args.no_browser)
     return 0

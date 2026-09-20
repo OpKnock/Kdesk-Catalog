@@ -7,7 +7,7 @@ description: 'Build ConnectRPC services in Go: protobuf codegen with buf, connec
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - buf
@@ -15,19 +15,19 @@ capabilities:
 - name: go-scaffold
   description: Scaffold a Go ConnectRPC project, generate code from proto, and run the server
   commands:
-  - go mod init example.com/connectrpc-service
+  - go mod init github.com/acme/connectrpc-service
   - go get connectrpc.com/connect@latest
   - go get google.golang.org/protobuf@latest
   - buf generate
   - go run ./cmd/server
   examples:
-  - go mod init example.com/connectrpc-service && go get connectrpc.com/connect@latest
+  - go mod init github.com/acme/connectrpc-service && go get connectrpc.com/connect@latest
   - buf generate && go run ./cmd/server
   - go build ./... && go vet ./...
   parameters:
   - name: module
     type: string
-    description: Go module path such as example.com/connectrpc-service
+    description: Go module path such as github.com/acme/connectrpc-service
 - name: handlers-testing
   description: Implement Connect handlers and test with curl and go test
   commands:
@@ -56,12 +56,12 @@ knowledge:
 instructions: "# ConnectRPC Go\n\nBuild modern RPC services in Go with ConnectRPC.\n\n## When to Use\n\
   \n- New gRPC-compatible services with simpler protocol handling\n- Services consumed by web, mobile,\
   \ and gRPC clients\n- Replacing hand-written REST handlers with generated code\n\n## Scaffold\n\n```bash\n\
-  go mod init example.com/connectrpc-service\ngo get connectrpc.com/connect@latest\ngo get google.golang.org/protobuf@latest\n\
+  go mod init github.com/acme/connectrpc-service\ngo get connectrpc.com/connect@latest\ngo get google.golang.org/protobuf@latest\n\
   ```\n\n## Proto\n\n```proto\nsyntax = \"proto3\";\npackage example.connectrpc.v1;\n\nmessage GreetRequest\
   \ { string name = 1; }\nmessage GreetResponse { string greeting = 1; }\n\nservice GreetService {\n \
   \ rpc Greet(GreetRequest) returns (GreetResponse);\n}\n```\n\n## Generate and Serve\n\n```bash\nbuf\
   \ generate\n```\n\n```go\npackage main\n\nimport (\n  \"net/http\"\n  \"connectrpc.com/connect\"\n \
-  \ greetv1 \"example.com/connectrpc-service/gen/greet/v1\"\n  \"example.com/connectrpc-service/gen/greet/v1/greetv1connect\"\
+  \ greetv1 \"github.com/acme/connectrpc-service/gen/greet/v1\"\n  \"github.com/acme/connectrpc-service/gen/greet/v1/greetv1connect\"\
   \n)\n\ntype GreetServer struct{}\n\nfunc (s *GreetServer) Greet(ctx context.Context, req *connect.Request[greetv1.GreetRequest])\
   \ (*connect.Response[greetv1.GreetResponse], error) {\n  msg := \"Hello, \" + req.Msg.Name\n  return\
   \ connect.NewResponse(&greetv1.GreetResponse{Greeting: msg}), nil\n}\n\nfunc main() {\n  mux := http.NewServeMux()\n\
@@ -104,12 +104,12 @@ platforms:
   generic:
     system_prompt: 'This is your domain: Connectrpc Go. You do it through go-scaffold: Scaffold a Go ConnectRPC
       project, generate code from proto, and run the server. The commands are real, e.g. `go mod init
-      example.com/connectrpc-service`. You answer with exact commands, not abstractions, and flag anything
+      github.com/acme/connectrpc-service`. You answer with exact commands, not abstractions, and flag anything
       you have not verified yourself.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

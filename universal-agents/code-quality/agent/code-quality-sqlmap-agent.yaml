@@ -7,30 +7,34 @@ version: 1.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Code Quality Sqlmap Agent
   description: SQLMap agent for SQL injection testing.
   commands:
-  - sqlmap -u 'http://example.com/page?id=1' --tables -D dbname
-  - sqlmap -u 'http://example.com/page?id=1' --batch
-  - sqlmap -u 'http://example.com/page?id=1' --dump -D dbname -T users
-  - sqlmap -u 'http://example.com/page?id=1' --dbs
+  - sqlmap -u 'http://localhost:8080/page?id=1' --tables -D dbname
+  - sqlmap -u 'http://localhost:8080/page?id=1' --batch
+  - sqlmap -u 'http://localhost:8080/page?id=1' --dump -D dbname -T users
+  - sqlmap -u 'http://localhost:8080/page?id=1' --dbs
   examples:
-  - sqlmap -u 'http://example.com/page?id=1' --batch
-  - sqlmap -u 'http://example.com/page?id=1' --dbs
-  - sqlmap -u 'http://example.com/page?id=1' --tables -D dbname
-  - sqlmap -u 'http://example.com/page?id=1' --dump -D dbname -T users
+  - sqlmap -u 'http://localhost:8080/page?id=1' --batch
+  - sqlmap -u 'http://localhost:8080/page?id=1' --dbs
+  - sqlmap -u 'http://localhost:8080/page?id=1' --tables -D dbname
+  - sqlmap -u 'http://localhost:8080/page?id=1' --dump -D dbname -T users
   parameters:
   - name: u
     type: string
     description: CLI flag --u observed in capability commands
 knowledge:
-- title: code-quality-sqlmap-agent Documentation
+- title: sqlmap Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-sqlmap-agent
+  source: https://sqlmap.org/
+  description: Official documentation for sqlmap.
+- title: Google Cloud Batch
+  type: reference
+  source: https://cloud.google.com/batch/docs
+  description: Official documentation for batch.
 instructions: 'You are the SQLMap agent for SQL injection testing. Call on this agent to detect and exploit
   SQL injection on authorized targets. Core workflow: enumerate databases with `sqlmap -u ''http://example.com/page?id=1''
   --dbs`; list tables with `--tables -D dbname`; extract data with `--dump -D dbname -T users`; and run
@@ -39,10 +43,10 @@ instructions: 'You are the SQLMap agent for SQL injection testing. Call on this 
   requested. Report detected injection type, databases/tables found, and data exposure risk with remediation
   (parameterized queries).'
 examples:
-- sqlmap -u 'http://example.com/page?id=1' --batch
-- sqlmap -u 'http://example.com/page?id=1' --dbs
-- sqlmap -u 'http://example.com/page?id=1' --tables -D dbname
-- sqlmap -u 'http://example.com/page?id=1' --dump -D dbname -T users
+- sqlmap -u 'http://localhost:8080/page?id=1' --batch
+- sqlmap -u 'http://localhost:8080/page?id=1' --dbs
+- sqlmap -u 'http://localhost:8080/page?id=1' --tables -D dbname
+- sqlmap -u 'http://localhost:8080/page?id=1' --dump -D dbname -T users
 platforms:
   claude_code:
     tools:
@@ -77,5 +81,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-11-21T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

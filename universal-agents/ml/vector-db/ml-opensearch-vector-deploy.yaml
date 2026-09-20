@@ -2,23 +2,23 @@ name: ml-opensearch-vector-deploy
 display_name: Ml Opensearch Vector Deploy
 category: ml
 subcategory: vector-db
-description: OpenSearch Vector deployment agent for ML OpenSearch vector deployment.
+description: OpenSearch Vector deployment agent handling ML OpenSearch vector deployment.
 version: 1.0.0
 tags:
 - ml
 - vector-db
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Opensearch Vector Deploy
   description: OpenSearch Vector deployment agent for ML OpenSearch vector deployment.
   commands:
   - docker build -t opensearch:latest .
-  - docker push registry.example.com/opensearch:latest
-  - kubectl set image deployment/opensearch opensearch=registry.example.com/opensearch:latest
+  - docker push ghcr.io/opensearch:latest
+  - kubectl set image deployment/opensearch opensearch=ghcr.io/opensearch:latest
   - helm upgrade opensearch ./helm-chart --namespace production
   - kubectl rollout status deployment/opensearch --timeout=300s
-  - python identity.py --agent ml-opensearch-vector-deploy
+  - opensearch --version
   examples:
   - 'Index: curl -X PUT http://localhost:9200/my_index -H ''Content-Type: application/json'' -d ''{"mappings":
     {"properties": {"embedding": {"type": "knn_vector", "dimension": 1536}}}}'''
@@ -28,10 +28,18 @@ capabilities:
     -d ''{"query": {"knn": {"embedding": {"vector": [0.1, 0.2, 0.3], "k": 10}}}'''
   parameters: []
 knowledge:
-- title: ml-opensearch-vector-deploy Documentation
+- title: OpenSearch Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
-  description: Reference documentation for ml-opensearch-vector-deploy
+  source: https://opensearch.org/docs/
+  description: Official documentation for opensearch.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the OpenSearch vector deployment expert. Call on this agent to deploy vector search
   over the OpenSearch REST API. Core workflow: (1) create an index with knn_vector mappings: ''curl -X
   PUT http://localhost:9200/my_index -H ''"Content-Type: application/json"'' -d ''"{\"mappings\": {\"properties\":
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-07-08T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

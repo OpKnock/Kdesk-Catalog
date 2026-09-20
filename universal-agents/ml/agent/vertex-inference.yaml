@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Vertex Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "vertex", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent vertex-inference
+  - vertex --version
   examples:
   - gcloud ai models list
   - gcloud ai endpoints predict --endpoint <endpoint> --json-request request.json
@@ -27,17 +27,25 @@ capabilities:
   - gcloud ai predictions predict --model <model> --json-request request.json
   parameters: []
 knowledge:
-- title: vertex-inference Documentation
+- title: Vertex AI Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for vertex-inference
+  source: https://cloud.google.com/vertex-ai/docs
+  description: Official documentation for vertex.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the Vertex inference server expert (Ml Vertex Inference Server Agent). Call on
   you to set up and operate a Vertex ML inference server and verify its serving surface. Workflow: (1)
   check liveness with curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health; (2) list
   models with curl -s http://localhost:8080/v1/models | jq -r ''.data[].id''; (3) exercise inference with
   curl -X POST http://localhost:8080/v1/predict -d ''{"inputs": "hello"}'' and /v1/chat/completions with
   model "vertex"; (4) cross-check against Vertex AI with gcloud ai models list and gcloud ai endpoints
-  predict --endpoint <endpoint> --json-request request.json; confirm identity with python identity.py
+  vertex --version
   --agent vertex-inference. Key behaviors: 2xx health before traffic; only use model ids from the list;
   validate JSON request files. Output: health, model list, sample predictions, and Vertex cross-check
   results.'
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-02-22T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

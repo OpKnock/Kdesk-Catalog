@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Aks Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "aks", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent aks-inference
+  - aks --version
   examples:
   - kubectl apply -f deployment.yaml
   - kubectl get pods
@@ -28,14 +28,22 @@ capabilities:
   - az aks list
   parameters: []
 knowledge:
-- title: aks-inference Documentation
+- title: Azure Kubernetes Service Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for aks-inference
+  source: https://learn.microsoft.com/azure/aks/
+  description: Official documentation for aks.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: You are the Ml Aks Inference Server Agent, responsible for the AKS ML inference server.
   Check liveness with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`, list loaded
   models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and test prediction and
-  chat via POST to `/v1/predict` and `/v1/chat/completions`. Confirm identity with `python identity.py
+  aks --version
   --agent aks-inference`. When requests fail, inspect `kubectl get pods`, `kubectl get services`, and
   `kubectl logs -f <pod>`, with `az aks list` for cluster state. Report health status, model IDs, responses,
   and root-cause fixes for serving failures.
@@ -79,5 +87,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-09-28T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -2,12 +2,11 @@ name: notification-channels
 display_name: Notification Channels
 category: api
 subcategory: general
-description: 'Send alerts and notifications across channels: Slack webhooks, email, SMS via Twilio, and
-  ntfy self-hosted pushes.'
+description: 'Delivers alerts to Slack via webhooks, email via mailx, SMS via Twilio, and push notifications via ntfy. Supports channel selection by severity and includes rate-limiting guidance.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - echo
@@ -17,7 +16,7 @@ capabilities:
   description: Deliver messages to Slack, email, Twilio SMS and ntfy topics using curl and CLI tools.
   commands:
   - 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Deploy complete"}'' https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX'
-  - echo "Body text" | mailx -s "Subject" -r alerts@example.com oncall@example.com
+  - echo "Body text" | mailx -s "Subject" -r alerts@your-app.test oncall@your-app.test
   - 'curl -X POST https://api.twilio.com/2010-04-01/Accounts/$TWILIO_SID/Messages.json --data-urlencode
     "To=+15551234567" --data-urlencode "From=+15559876543" --data-urlencode "Body=Alert: high latency"
     -u "$TWILIO_SID:$TWILIO_TOKEN"'
@@ -56,7 +55,7 @@ instructions: "# Notification Channels\n\nRoute alerts to the right channel per 
   \ alerts to humans\n- Choosing a channel for a given severity\n\n## Real commands\n\n```bash\n# Slack\
   \ webhook\ncurl -X POST -H 'Content-type: application/json' \\\n  --data '{\"text\":\"Deploy complete\"\
   }' \\\n  https://hooks.slack.com/services/T000/B000/XXX\n\n# Email\nprintf 'Body\\n' | mailx -s \"Subject\"\
-  \ -r alerts@example.com oncall@example.com\n\n# Twilio SMS\ncurl -X POST https://api.twilio.com/2010-04-01/Accounts/$TWILIO_SID/Messages.json\
+  \ -r alerts@your-app.test oncall@your-app.test\n\n# Twilio SMS\ncurl -X POST https://api.twilio.com/2010-04-01/Accounts/$TWILIO_SID/Messages.json\
   \ \\\n  --data-urlencode \"To=+15551234567\" \\\n  --data-urlencode \"From=+15559876543\" \\\n  --data-urlencode\
   \ \"Body=Alert: high latency\" \\\n  -u \"$TWILIO_SID:$TWILIO_TOKEN\"\n\n# ntfy push\nntfy publish mytopic\
   \ \"Server down!\"\ncurl -d \"pipeline failed\" ntfy.sh/mytopic\n```\n\n## Channel guidance\n\n- Pager/critical:\
@@ -100,5 +99,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

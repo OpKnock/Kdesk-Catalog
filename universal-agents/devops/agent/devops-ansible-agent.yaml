@@ -1,49 +1,75 @@
 name: devops-ansible-agent
-display_name: Devops Ansible Agent
+display_name: DevOps Ansible Agent
 category: devops
 subcategory: agent
-description: Ansible agent for automation and configuration management.
-version: 1.0.0
+description: Manages infrastructure automation and configuration with Ansible playbooks, roles, and inventories. Validates connectivity, lints playbooks, executes deployments, and manages secrets with Ansible Vault.
+version: 2.0.0
 tags:
 - devops
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
-- name: Devops Ansible Agent
-  description: Ansible agent for automation and configuration management.
+- name: infrastructure-automation
+  description: Automate infrastructure with Ansible playbooks, roles, and collections
   commands:
-  - ansible-lint site.yml
-  - ansible all -m ping
-  - ansible-galaxy install <role>
-  - ansible-playbook site.yml
-  - ansible-playbook -i inventory site.yml
+  - ansible-playbook
+  - ansible-galaxy
+  - ansible-vault
+  - ansible-lint
+  - ansible-inventory
+  - ansible-doc
   examples:
-  - ansible-playbook site.yml
-  - ansible-playbook -i inventory site.yml
-  - ansible all -m ping
-  - ansible-galaxy install <role>
-  - ansible-lint site.yml
-  parameters: []
+  - "Validate connectivity: ansible all -m ping -i inventory.ini"
+  - "Run playbook: ansible-playbook -i inventory.ini site.yml --check"
+  - "Encrypt secrets: ansible-vault encrypt secrets.yml"
+  - "Install role: ansible-galaxy install geerlingguy.docker"
+  - "List inventory: ansible-inventory -i inventory.ini --list"
+  parameters:
+  - name: inventory
+    type: string
+    description: "Inventory file or dynamic inventory script"
+  - name: become_method
+    type: string
+    description: "Privilege escalation method: sudo, su, pbrun"
+  - name: check_mode
+    type: boolean
+    description: "Run in check mode (dry-run) without making changes"
 knowledge:
-- title: devops-ansible-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/devops/agent
-  description: Reference documentation for devops-ansible-agent
-instructions: 'You are an Ansible expert. Call on you to automate infrastructure and manage configuration
-  with playbooks, roles, and inventories. Core workflow: 1) Validate connectivity with `ansible all -m
-  ping`; 2) Install reusable roles with `ansible-galaxy install <role>`; 3) Lint before running with `ansible-lint
-  site.yml`; 4) Execute with `ansible-playbook site.yml` or against a specific inventory with `ansible-playbook
-  -i inventory site.yml`. Key behaviors: always lint and do a dry-run/check-mode review before applying;
-  inspect playbook outputs for failed tasks and handlers; confirm inventory host patterns match intent;
-  never store plaintext secrets in playbooks. Output: connectivity results, lint findings, playbook execution
-  summary with per-host task results, and fixes for failed tasks.'
+- title: Ansible Documentation
+  type: documentation
+  source: https://docs.ansible.com/
+  description: Complete Ansible documentation and module reference
+- title: Ansible Best Practices
+  type: tutorial
+  source: https://docs.ansible.com/ansible/latest/tips_tricks/ansible_tips_tricks.html
+  description: Tips for writing efficient playbooks
+- title: Ansible Vault Guide
+  type: documentation
+  source: https://docs.ansible.com/ansible/latest/user_guide/vault.html
+  description: Encrypting secrets with Ansible Vault
+- title: Ansible Lint
+  type: documentation
+  source: https://ansible-lint.readthedocs.io/
+  description: Ansible linting rules and configuration
+instructions: |
+  You are an Ansible expert. Automate infrastructure and manage configuration with playbooks, roles, and inventories.
+
+  Core workflow:
+  1. Validate connectivity with `ansible all -m ping -i inventory.ini`
+  2. Install reusable roles with `ansible-galaxy install geerlingguy.docker`
+  3. Lint before running with `ansible-lint site.yml`
+  4. Execute with `ansible-playbook -i inventory.ini site.yml` or check mode with `--check`
+
+  Key behaviors: always lint and do a dry-run/check-mode review before applying; inspect playbook outputs for failed tasks and handlers; confirm inventory host patterns match intent; never store plaintext secrets in playbooks — use Ansible Vault.
+
+  Output: connectivity results, lint findings, playbook execution summary with per-host task results, and fixes for failed tasks.
+
 examples:
-- ansible-playbook site.yml
-- ansible-playbook -i inventory site.yml
-- ansible all -m ping
-- ansible-galaxy install <role>
-- ansible-lint site.yml
+- input: Run playbook against inventory
+  output: Execute `ansible-playbook -i inventory.ini site.yml` with validated syntax and proper task execution...
+- input: Encrypt secrets for production
+  output: Use `ansible-vault encrypt secrets.yml` to encrypt sensitive variables before committing...
 platforms:
   claude_code:
     tools:
@@ -70,7 +96,7 @@ platforms:
   opencode:
     plugin: opencode-devops-ansible-agent
   generic:
-    system_prompt: You are devops-ansible-agent. Ansible agent for automation and configuration management.
+    system_prompt: "You are an Ansible expert. Help users automate infrastructure with Ansible playbooks, roles, and inventories."
     available_tools:
     - bash
     - read
@@ -78,5 +104,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -7,35 +7,43 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Microservices Deploy Sdk
   description: Microservices SDK deployment agent for ML Microservices SDK deployment.
   commands:
   - docker build -t microservices:latest .
-  - docker push registry.example.com/microservices:latest
-  - kubectl set image deployment/microservices microservices=registry.example.com/microservices:latest
+  - docker push ghcr.io/microservices:latest
+  - kubectl set image deployment/microservices microservices=ghcr.io/microservices:latest
   - helm upgrade microservices ./helm-chart --namespace production
   - kubectl rollout status deployment/microservices --timeout=300s
-  - python identity.py --agent microservices-deployment
+  - docker --version
   examples:
   - 'Server: python -m microservices.server --port 8080'
   - 'Docker: docker run -p 8080:8080 microservices-server'
   parameters: []
 knowledge:
-- title: microservices-deployment Documentation
+- title: Docker Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for microservices-deployment
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
+- title: Helm Documentation
+  type: reference
+  source: https://helm.sh/docs/
+  description: Official documentation for helm.
 instructions: 'You are a microservices SDK deployment expert (you help users deploy Microservices applications).
   A user calls on you to build, ship, and roll out a microservices as a containerized Kubernetes service.
-  Work step by step: build with docker build -t microservices:latest ., publish with docker push registry.example.com/microservices:latest,
-  then roll out with kubectl set image deployment/microservices microservices=registry.example.com/microservices:latest
+  Work step by step: build with docker build -t microservices:latest ., publish with docker push ghcr.io/microservices:latest,
+  then roll out with kubectl set image deployment/microservices microservices=ghcr.io/microservices:latest
   and confirm via kubectl rollout status deployment/microservices --timeout=300s; apply config changes
   with helm upgrade microservices ./helm-chart --namespace production. Verify locally first with python
   -m microservices.server --port 8080 and docker run -p 8080:8080 microservices-server, and identify with
-  python identity.py --agent microservices-deployment. Confirm the cluster context and namespace before
+  docker --version
   acting. If build, push, or rollout fails, stop and surface the exact error (registry auth, missing Dockerfile,
   tag mismatch) rather than proceeding, and report the image tag, rollout status, and verification performed.'
 examples:
@@ -74,5 +82,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-09-14T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

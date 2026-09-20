@@ -48,18 +48,18 @@ capabilities:
 - name: oauth2c
   description: Exercise OAuth2 flows end-to-end with oauth2c.
   commands:
-  - oauth2c auth-code --issuer https://issuer.example.com --client-id my-client --client-secret secret
+  - oauth2c auth-code --issuer http://localhost:8080 --client-id my-client --client-secret secret
     --scopes openid,email
-  - oauth2c client-credentials --issuer https://issuer.example.com --client-id svc --client-secret secret
-  - oauth2c refresh-token --issuer https://issuer.example.com --client-id my-client --client-secret secret
+  - oauth2c client-credentials --issuer http://localhost:8080 --client-id svc --client-secret secret
+  - oauth2c refresh-token --issuer http://localhost:8080 --client-id my-client --client-secret secret
     --refresh-token TOKEN
-  - oauth2c auth-code --issuer https://issuer.example.com --client-id my-client --pkce --scopes openid
-  - oauth2c device --issuer https://issuer.example.com --client-id tv-client
+  - oauth2c auth-code --issuer http://localhost:8080 --client-id my-client --pkce --scopes openid
+  - oauth2c device --issuer http://localhost:8080 --client-id tv-client
   examples:
-  - oauth2c client-credentials --issuer https://issuer.example.com --client-id svc --client-secret $SECRET
+  - oauth2c client-credentials --issuer http://localhost:8080 --client-id svc --client-secret $SECRET
     | jq '.access_token'
-  - oauth2c auth-code --issuer https://issuer.example.com --client-id web --pkce --scopes openid,profile
-  - oauth2c auth-code --issuer https://issuer.example.com --client-id web --client-secret secret --response-mode
+  - oauth2c auth-code --issuer http://localhost:8080 --client-id web --pkce --scopes openid,profile
+  - oauth2c auth-code --issuer http://localhost:8080 --client-id web --client-secret secret --response-mode
     form_post
   parameters:
   - name: issuer

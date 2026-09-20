@@ -46,14 +46,14 @@ capabilities:
 - name: lighthouse-audit
   description: Run Lighthouse audits for SEO, performance, and accessibility scores.
   commands:
-  - npx lighthouse https://example.com --only-categories=seo,performance --output=json --output-path=lh.json
+  - npx lighthouse http://localhost:8080 --only-categories=seo,performance --output=json --output-path=lh.json
   - npx lhci autorun
-  - npx lighthouse https://example.com --chrome-flags="--headless"
-  - npx lhci collect --url=https://example.com --numberOfRuns=3
+  - npx lighthouse http://localhost:8080 --chrome-flags="--headless"
+  - npx lhci collect --url=http://localhost:8080 --numberOfRuns=3
   examples:
-  - npx lighthouse https://example.com --only-categories=seo --output=json --output-path=seo.json
+  - npx lighthouse http://localhost:8080 --only-categories=seo --output=json --output-path=seo.json
   - npx lhci autorun
-  - npx lighthouse https://example.com/checkout --budget-path=budget.json
+  - npx lighthouse http://localhost:8080/checkout --budget-path=budget.json
   parameters:
   - name: url
     type: string
@@ -67,14 +67,14 @@ capabilities:
 - name: crawling-and-content
   description: Validate meta tags, robots.txt, sitemaps, and HTTP headers with curl and htmlhint.
   commands:
-  - curl -s https://example.com/robots.txt
-  - curl -s https://example.com/sitemap.xml | head -20
-  - curl -sI https://example.com | grep -i '^HTTP\|^content-type\|^cache-control'
+  - curl -s http://localhost:8080/robots.txt
+  - curl -s http://localhost:8080/sitemap.xml | head -20
+  - curl -sI http://localhost:8080 | grep -i '^HTTP\|^content-type\|^cache-control'
   - npx htmlhint index.html
-  - curl -s https://example.com | grep -o '<title>[^<]*</title>'
+  - curl -s http://localhost:8080 | grep -o 'demo-title[^<]*demo-title'
   examples:
-  - curl -sI https://example.com | grep -i '^content-encoding'
-  - curl -s https://example.com/sitemap.xml | grep -c '<url>'
+  - curl -sI http://localhost:8080 | grep -i '^content-encoding'
+  - curl -s http://localhost:8080/sitemap.xml | grep -c 'http://localhost:8080'
   - npx htmlhint public/index.html
   parameters:
   - name: path

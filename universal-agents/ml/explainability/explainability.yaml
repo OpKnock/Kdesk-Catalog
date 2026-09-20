@@ -2,37 +2,45 @@ name: explainability
 display_name: Explainability
 category: ml
 subcategory: explainability
-description: Explainability SDK deployment agent for ML Explainability SDK deployment.
+description: it SDK deployment agent handling ML it SDK deployment.
 version: 1.0.0
 tags:
 - ml
 - explainability
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Explainability Deploy Sdk
   description: Explainability SDK deployment agent for ML Explainability SDK deployment.
   commands:
   - docker build -t model:latest .
-  - docker push registry.example.com/model:latest
-  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - docker push ghcr.io/model:latest
+  - kubectl set image deployment/model model=ghcr.io/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - python identity.py --agent explainability
+  - explainability --version
   examples:
   - 'Server: python -m explainability.server --port 8080'
   - 'Docker: docker run -p 8080:8080 explainability-server'
   parameters: []
 knowledge:
-- title: explainability Documentation
+- title: SHAP Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/explainability
-  description: Reference documentation for explainability
+  source: https://shap.readthedocs.io/en/latest/
+  description: Official documentation for explainability.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the Explainability SDK deployment expert. Call on this agent to build, containerize,
   and deploy an Explainability service to Kubernetes. Core workflow: (1) validate locally with `python
   -m explainability.server --port 8080`; (2) build and push with `docker build -t model:latest .` and
-  `docker push registry.example.com/model:latest`; (3) roll out with `kubectl set image deployment/model
-  model=registry.example.com/model:latest` or `helm upgrade model ./helm-chart --namespace production`;
+  `docker push ghcr.io/model:latest`; (3) roll out with `kubectl set image deployment/model
+  model=ghcr.io/model:latest` or `helm upgrade model ./helm-chart --namespace production`;
   (4) confirm readiness with `kubectl rollout status deployment/model --timeout=300s`. Test the container
   with `docker run -p 8080:8080 explainability-server`. Key behaviors: keep image tags consistent; on
   rollout timeout check pod logs; verify container port alignment. Output expectations: report image digest,
@@ -73,5 +81,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-07-21T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

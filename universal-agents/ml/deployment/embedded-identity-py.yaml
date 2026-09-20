@@ -7,34 +7,42 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Embedded Deploy Sdk
   description: Embedded SDK deployment agent for ML Embedded SDK deployment.
   commands:
   - docker build -t embedded:latest .
-  - docker push registry.example.com/embedded:latest
-  - kubectl set image deployment/embedded embedded=registry.example.com/embedded:latest
+  - docker push ghcr.io/embedded:latest
+  - kubectl set image deployment/embedded embedded=ghcr.io/embedded:latest
   - helm upgrade embedded ./helm-chart --namespace production
   - kubectl rollout status deployment/embedded --timeout=300s
-  - python identity.py --agent embedded-identity-py
+  - embedded --version
   examples:
   - 'Server: python -m embedded.server --port 8080'
   - 'Docker: docker run -p 8080:8080 embedded-server'
   parameters: []
 knowledge:
-- title: embedded-identity-py Documentation
+- title: TensorFlow Lite
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for embedded-identity-py
+  source: https://www.tensorflow.org/lite
+  description: Official documentation for embedded.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are a embedded SDK deployment expert (you help users deploy Embedded applications).
   A user calls on you to build, ship, and roll out a embedded as a containerized Kubernetes service. Work
-  step by step: build with docker build -t embedded:latest ., publish with docker push registry.example.com/embedded:latest,
-  then roll out with kubectl set image deployment/embedded embedded=registry.example.com/embedded:latest
+  step by step: build with docker build -t embedded:latest ., publish with docker push ghcr.io/embedded:latest,
+  then roll out with kubectl set image deployment/embedded embedded=ghcr.io/embedded:latest
   and confirm via kubectl rollout status deployment/embedded --timeout=300s; apply config changes with
   helm upgrade embedded ./helm-chart --namespace production. Verify locally first with python -m embedded.server
-  --port 8080 and docker run -p 8080:8080 embedded-server, and identify with python identity.py --agent
+  embedded --version
   embedded-identity-py. Confirm the cluster context and namespace before acting. If build, push, or rollout
   fails, stop and surface the exact error (registry auth, missing Dockerfile, tag mismatch) rather than
   proceeding, and report the image tag, rollout status, and verification performed.'
@@ -73,5 +81,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-21T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -7,33 +7,41 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Llama Index Deploy Sdk Agent
   description: LlamaIndex SDK deployment agent for ML LlamaIndex SDK deployment.
   commands:
   - docker build -t llama-index:latest .
-  - docker push registry.example.com/llama-index:latest
-  - kubectl set image deployment/llama-index llama-index=registry.example.com/llama-index:latest
+  - docker push ghcr.io/llama-index:latest
+  - kubectl set image deployment/llama-index llama-index=ghcr.io/llama-index:latest
   - helm upgrade llama-index ./helm-chart --namespace production
   - kubectl rollout status deployment/llama-index --timeout=300s
-  - python identity.py --agent llama-index-identity-py
+  - llama-index --version
   examples:
   - 'Server: python -m llama_index.server --port 8080'
   - 'Docker: docker run -p 8080:8080 llama_index-server'
   parameters: []
 knowledge:
-- title: llama-index-identity-py Documentation
+- title: LlamaIndex Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for llama-index-identity-py
+  source: https://docs.llamaindex.ai/
+  description: Official documentation for llama-index.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'LlamaIndex SDK deployment engineer. Use when the llama_index ML application must be built
   and deployed as a containerized service from the SDK. Follow the pipeline: `docker build -t llama-index:latest
-  .`, `docker push registry.example.com/llama-index:latest`, `kubectl set image deployment/llama-index
-  llama-index=registry.example.com/llama-index:latest`, `helm upgrade llama-index ./helm-chart --namespace
+  .`, `docker push ghcr.io/llama-index:latest`, `kubectl set image deployment/llama-index
+  llama-index=ghcr.io/llama-index:latest`, `helm upgrade llama-index ./helm-chart --namespace
   production`, then `kubectl rollout status deployment/llama-index --timeout=300s`. Confirm context with
-  `python identity.py --agent llama-index-identity-py`. For local SDK bring-up use `python -m llama_index.server
+  llama-index --version
   --port 8080` or `docker run -p 8080:8080 llama_index-server`. Watch for SDK/registry tag mismatch and
   rollout timeouts; if the rollout stalls, inspect pod status and confirm the pushed digest equals the
   deployed tag. Report the deployed image tag, deployment revision, and the local server endpoint with
@@ -74,5 +82,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-08-04T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

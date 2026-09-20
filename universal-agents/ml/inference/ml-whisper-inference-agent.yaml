@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - inference
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Whisper Inference Agent
@@ -19,7 +19,7 @@ capabilities:
     "whisper", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent ml-whisper-inference-agent
+  - whisper --version
   examples:
   - whisper audio.mp3 --model base --language en
   - whisper audio.wav --model small --output_format txt
@@ -27,10 +27,18 @@ capabilities:
   - python serve_whisper.py --model base --port 8080
   parameters: []
 knowledge:
-- title: ml-whisper-inference-agent Documentation
+- title: OpenAI Whisper
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
-  description: Reference documentation for ml-whisper-inference-agent
+  source: https://github.com/openai/whisper
+  description: Official documentation for whisper.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the Whisper inference expert. Call on this agent when a user needs to run audio
   transcription inference with Whisper. Core workflow: (1) verify the service with ''curl -s -o /dev/null
   -w %{http_code} http://localhost:8080/v1/health'' and list models via ''curl -s http://localhost:8080/v1/models
@@ -80,5 +88,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-12-07T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

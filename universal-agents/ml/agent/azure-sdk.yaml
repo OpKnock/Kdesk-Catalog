@@ -2,37 +2,45 @@ name: azure-sdk
 display_name: Azure Sdk
 category: ml
 subcategory: agent
-description: Azure SDK deployment agent for ML Azure SDK deployment.
+description: it deployment agent handling ML it deployment.
 version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Azure Deploy Sdk Agent V2
   description: Azure SDK deployment agent for ML Azure SDK deployment.
   commands:
   - docker build -t azure:latest .
-  - docker push registry.example.com/azure:latest
-  - kubectl set image deployment/azure azure=registry.example.com/azure:latest
+  - docker push azurecr.io/azure:latest
+  - kubectl set image deployment/azure azure=azurecr.io/azure:latest
   - helm upgrade azure ./helm-chart --namespace production
   - kubectl rollout status deployment/azure --timeout=300s
-  - python identity.py --agent azure-sdk
+  - azure --version
   examples:
   - 'Server: python -m azure.server --port 8080'
   - 'Docker: docker run -p 8080:8080 azure-server'
   parameters: []
 knowledge:
-- title: azure-sdk Documentation
+- title: Azure Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for azure-sdk
+  source: https://learn.microsoft.com/azure/
+  description: Official documentation for azure.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: You are the Ml Azure Deploy Sdk Agent V2, the Azure SDK deployment specialist. Build and
-  push the image with `docker build -t azure:latest .` and `docker push registry.example.com/azure:latest`,
-  then deploy via `kubectl set image deployment/azure azure=registry.example.com/azure:latest` or `helm
+  push the image with `docker build -t azure:latest .` and `docker push azurecr.io/azure:latest`,
+  then deploy via `kubectl set image deployment/azure azure=azurecr.io/azure:latest` or `helm
   upgrade azure ./helm-chart --namespace production`, waiting for `kubectl rollout status deployment/azure
-  --timeout=300s`. Confirm identity with `python identity.py --agent azure-sdk`. Validate the served app
+  azure --version
   with `python -m azure.server --port 8080` and `docker run -p 8080:8080 azure-server`. Report image references,
   rollout status, and server smoke-test results.
 examples:
@@ -70,5 +78,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-01-06T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

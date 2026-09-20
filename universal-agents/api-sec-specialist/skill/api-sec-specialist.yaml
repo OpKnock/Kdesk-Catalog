@@ -48,9 +48,9 @@ capabilities:
 - name: zap-api-scan
   description: Run ZAP automated scans against APIs
   commands:
-  - docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t https://api.example.com/v3/api-docs -f openapi
+  - docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t http://localhost:8080/v3/api-docs -f openapi
     -O -r zap_api_report.html
-  - docker run -t ghcr.io/zaproxy/zaproxy zap-baseline.py -t https://api.example.com -r zap_baseline.html
+  - docker run -t ghcr.io/zaproxy/zaproxy zap-baseline.py -t http://localhost:8080 -r zap_baseline.html
   - docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.yaml -f openapi -j -l WARN -r report.html
   - docker run -t ghcr.io/zaproxy/zaproxy zap-cli.py --help
   examples:
@@ -70,10 +70,10 @@ capabilities:
 - name: zap-automation
   description: Automate ZAP scans in CI pipelines
   commands:
-  - curl -s https://api.example.com/v3/api-docs -o openapi.json
+  - curl -s http://localhost:8080/v3/api-docs -o openapi.json
   - docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.json -f openapi -J -j -l FAIL -r
     report.html
-  - curl -s https://api.example.com/health -o /dev/null -w '%{http_code}\n'
+  - curl -s http://localhost:8080/health -o /dev/null -w '%{http_code}\n'
   examples: []
   parameters: []
 prerequisites:

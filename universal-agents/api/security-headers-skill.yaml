@@ -1,28 +1,34 @@
 name: security-headers
 display_name: Security Headers
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Hand-crafted security headers skill: CSP, HSTS, X-Frame-Options and friends — verify with
-  curl, configure in nginx, and score with Mozilla Observatory.'
-version: 2.0.0
+description: "Hardens HTTP responses by configuring and verifying security headers including CSP, HSTS, X-Frame-Options, Referrer-Policy, and X-Content-Type-Options. Validates implementations with curl and scores compliance using Mozilla Observatory."
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
+  - api
+  - http-headers
+  - csp
+  - hsts
+  - security-hardening
 prerequisites:
-- npx
+  - curl
+  - npx
 capabilities:
 - name: http-header-hardening
   description: Configure and verify HTTP security headers
   commands:
-  - curl -sI https://app.example.com/ | grep -iE 'strict-transport-security|content-security-policy|x-frame-options|referrer-policy|x-content-type-options'
-  - 'curl -sI -H ''Origin: https://evil.example.com'' https://app.example.com/ | grep -i ''access-control-allow-origin'''
-  - npx @mozilla/observatory-cli --host app.example.com --rescan
-  - curl -s -o /dev/null -w '%{ssl_protocol}\n' https://app.example.com/
+  - curl -sI https://httpbin.org/headers | grep -iE 'strict-transport-security|content-security-policy|x-frame-options|referrer-policy|x-content-type-options'
+  - 'curl -sI -H ''Origin: https://example.invalid'' https://httpbin.org/headers | grep -i ''access-control-allow-origin'''
+  - npx @mozilla/observatory-cli --host httpbin.org --rescan
+  - curl -s -o /dev/null -w '%{ssl_protocol}\n' https://httpbin.org/
   examples:
-  - curl -sI https://app.example.com/ | grep -i x-frame-options
-  - curl -sI https://app.example.com/ | grep -i content-security-policy
-  - npx @mozilla/observatory-cli --host app.example.com
+  - curl -sI https://httpbin.org/headers | grep -i x-frame-options
+  - curl -sI https://httpbin.org/headers | grep -i content-security-policy
+  - npx @mozilla/observatory-cli --host httpbin.org
   parameters:
   - name: host
     type: string
@@ -34,121 +40,87 @@ capabilities:
     type: integer
     description: HSTS max-age in seconds
 knowledge:
-- title: OWASP Secure Headers Project
-  type: documentation
-  source: https://owasp.org/www-project-secure-headers/
-  description: Header inventory and recommended values
-- title: Mozilla Observatory CLI
-  type: documentation
-  source: https://github.com/mozilla/observatory-cli
-  description: Automated header and TLS scoring
-instructions: '# Security Headers
+  - title: OWASP Secure Headers Project
+    type: documentation
+    source: https://owasp.org/www-project-secure-headers/
+    description: Header inventory, recommended values, and browser support matrix
+  - title: Mozilla Observatory CLI
+    type: documentation
+    source: https://github.com/mozilla/observatory-cli
+    description: Automated header and TLS scoring with detailed remediation guidance
+  - title: MDN HTTP Headers Reference
+    type: documentation
+    source: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+    description: Complete reference for each security header syntax and directives
+instructions: |
+  # Security Headers
 
-
-  Hand-crafted skill for hardening HTTP responses with security headers.
-
+  Hardens HTTP responses by configuring and verifying security headers.
 
   ## What this skill does
 
-
-  - Verifies which security headers a site sends with curl
-
-  - Configures headers in nginx and application layers
-
-  - Scores the site with Mozilla Observatory to track progress
-
+  - Verifies which security headers a site sends using curl
+  - Configures headers in nginx, application middleware, and CDN edge
+  - Scores the site with Mozilla Observatory to track compliance progress
 
   ## When to use
 
-
-  - Adding headers after a pentest finding
-
-  - Pre-launch checklist for a public site
-
-  - Proving header coverage to compliance
-
+  - Adding headers after a penetration test finding
+  - Pre-launch checklist for a public-facing site or API
+  - Proving header coverage to compliance auditors
+  - Debugging CSP violations in browser console
 
   ## Real commands
 
-
   ```bash
-
   # What headers does the site send?
-
-  curl -sI https://app.example.com/ | grep -iE ''strict-transport-security|content-security-policy|x-frame-options|referrer-policy|x-content-type-options''
-
+  curl -sI https://httpbin.org/headers | grep -iE 'strict-transport-security|content-security-policy|x-frame-options|referrer-policy|x-content-type-options'
 
   # CORS on a cross-origin request
+  curl -sI -H 'Origin: https://malicious.example.com' https://httpbin.org/headers | grep -i 'access-control-allow-origin'
 
-  curl -sI -H ''Origin: https://evil.example.com'' https://app.example.com/ | grep -i ''access-control-allow-origin''
-
-
-  # Automated score
-
-  npx @mozilla/observatory-cli --host app.example.com --rescan
-
+  # Automated score with Mozilla Observatory
+  npx @mozilla/observatory-cli --host httpbin.org --rescan
 
   # TLS version in use
-
-  curl -s -o /dev/null -w ''%{ssl_protocol}\n'' https://app.example.com/
-
+  curl -s -o /dev/null -w '%{ssl_protocol}\n' https://httpbin.org/
   ```
 
-
-  ## nginx config
-
+  ## nginx configuration
 
   ```nginx
-
   add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
-
-  add_header Content-Security-Policy "default-src ''self''; img-src ''self'' data:" always;
-
+  add_header Content-Security-Policy "default-src 'self'; img-src 'self' data: https:;" always;
   add_header X-Frame-Options "SAMEORIGIN" always;
-
   add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-
   add_header X-Content-Type-Options "nosniff" always;
-
   ```
-
 
   ## Testing
 
-
   ```bash
-
-  curl -sI https://app.example.com/ | grep -i x-frame-options
-
-  curl -sI https://app.example.com/ | grep -i content-security-policy
-
+  curl -sI https://httpbin.org/headers | grep -i x-frame-options
+  curl -sI https://httpbin.org/headers | grep -i content-security-policy
   ```
-
 
   ## Best practices
 
-
-  - Deploy HSTS only after HTTPS is stable; it is sticky
-
-  - Use the always keyword in nginx so error pages get headers too
-
+  - Deploy HSTS only after HTTPS is stable; it is sticky and hard to undo
+  - Use the `always` keyword in nginx so error pages get headers too
   - Re-run the Observatory scan after each header change
-
-  '
+  - Start CSP in report-only mode: `Content-Security-Policy-Report-Only`
 examples:
-- input: Is my site sending security headers?
-  output: curl -sI https://app.example.com/ | grep -iE 'strict-transport-security|content-security-policy|x-frame-options'
-    and compare with the OWASP list.
-- input: Get a baseline security score
-  output: npx @mozilla/observatory-cli --host app.example.com --rescan returns letter grades plus the
-    missing headers to add.
+  - input: Is my site sending security headers?
+    output: curl -sI https://httpbin.org/headers | grep -iE 'strict-transport-security|content-security-policy|x-frame-options' and compare with the OWASP list.
+  - input: Get a baseline security score
+    output: npx @mozilla/observatory-cli --host httpbin.org --rescan returns letter grades plus the missing headers to add.
 platforms:
   claude_code:
     tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+      - Bash
+      - Read
+      - Write
+      - Edit
     model: inherit
   cursor:
     rule_type: auto
@@ -158,20 +130,16 @@ platforms:
   windsurf:
     model: inherit
     tools:
-    - bash
-    - read
-    - write
-    - edit
+      - bash
+      - read
+      - write
+      - edit
   opencode:
     plugin: opencode-security-headers
   generic:
-    system_prompt: 'You take the Security Headers seat. You do it through http-header-hardening: Configure
-      and verify HTTP security headers. The commands are real, e.g. `curl -sI https://app.example.com/
-      | grep -iE...`. You run and verify the real CLI commands before you claim anything.'
+    system_prompt: "You take the Security Headers seat. You do it through http-header-hardening: Configure and verify HTTP security headers. The commands are real, e.g. `curl -sI https://httpbin.org/headers | grep -iE...`. You run and verify the real CLI commands before you claim anything."
     available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+      - bash
+      - read
+      - write
+      - edit

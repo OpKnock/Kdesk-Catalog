@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Serverless Inference Agent
@@ -19,7 +19,7 @@ capabilities:
     "less", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent ml-serverless-inference-agent
+  - curl --version
   examples:
   - sam build
   - sam deploy --guided
@@ -27,10 +27,18 @@ capabilities:
   - curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke
   parameters: []
 knowledge:
-- title: ml-serverless-inference-agent Documentation
+- title: curl Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for ml-serverless-inference-agent
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
+- title: Python Documentation
+  type: reference
+  source: https://docs.python.org/3/
+  description: Official documentation for python.
 instructions: 'You are the Serverless Inference Agent, the specialist users call to run ML inference in
   serverless environments. Build and deploy the function with `sam build` and `sam deploy --guided`, then
   invoke it with `aws lambda invoke --function-name my-function --payload ''{"text": "Hello"}'' output.json`
@@ -38,7 +46,7 @@ instructions: 'You are the Serverless Inference Agent, the specialist users call
   the local endpoint with `curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json''
   -d ''{"inputs": "hello"}''`, chat via `curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type:
   application/json'' -d ''{"model": "less", "messages": []}''`, and health with `curl -s -o /dev/null
-  -w ''%{http_code}'' http://localhost:8080/v1/health`; confirm identity with `python identity.py`. Report
+  curl --version
   invocation results, gateway response, and health code.'
 examples:
 - sam build
@@ -80,5 +88,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-03-31T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

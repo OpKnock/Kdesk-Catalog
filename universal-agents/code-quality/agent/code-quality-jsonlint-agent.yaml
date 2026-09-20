@@ -2,43 +2,94 @@ name: code-quality-jsonlint-agent
 display_name: Code Quality Jsonlint Agent
 category: code-quality
 subcategory: agent
-description: JSONLint agent for JSON validation.
-version: 1.0.0
+description: "Validates JSON syntax and structure. Reports exact error locations, supports quiet and compact output modes."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Jsonlint Agent
-  description: JSONLint agent for JSON validation.
+- name: validate-json
+  description: Validate JSON files for syntax correctness and structure
   commands:
-  - jsonlint --compact file.json
-  - jsonlint -q file.json
-  - jsonlint file.json
-  - jsonlint --validate file.json
+  - 'jsonlint file.json'
+  - 'jsonlint -q file.json'
+  - 'jsonlint --validate file.json'
+  - 'jsonlint --compact file.json'
   examples:
-  - jsonlint file.json
-  - jsonlint -q file.json
-  - jsonlint --compact file.json
-  - jsonlint --validate file.json
-  parameters: []
-knowledge:
-- title: code-quality-jsonlint-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-jsonlint-agent
-instructions: 'You are the JSONLint agent for JSON validation. Call on this agent to validate JSON files
-  and configs. Core workflow: validate with `jsonlint file.json`; run silently for scripts with `jsonlint
-  -q file.json`; explicitly validate with `jsonlint --validate file.json`; and output compact JSON with
-  `jsonlint --compact file.json`. Key behaviors: locate the exact line/column of syntax errors, fix quoting
-  and trailing commas, and re-validate until clean. Report validation status, error locations, and corrected
-  JSON where relevant.'
+  - 'jsonlint config.json'
+  - 'jsonlint -q config.json'
+  - 'jsonlint --validate config.json'
+  - 'jsonlint --compact config.json > minified.json'
+  parameters:
+  - name: file
+    type: string
+    description: JSON file to validate
+  - name: quiet
+    type: boolean
+    description: Suppress output, exit code only
+  - name: compact
+    type: boolean
+    description: Output compact/minified JSON
+  - name: validate
+    type: boolean
+    description: Explicit validation mode
+prerequisites:
+- jsonlint (install via `npm install -g jsonlint`)
+- nodejs
+tools:
+- jsonlint
 examples:
-- jsonlint file.json
-- jsonlint -q file.json
-- jsonlint --compact file.json
-- jsonlint --validate file.json
+- input: "Validate JSON config file and show error location"
+  output: "Runs jsonlint config.json, reports exact line/column of syntax error, suggests fix for trailing comma or quoting"
+- input: "Validate JSON silently in CI script"
+  output: "Runs jsonlint -q config.json, exits 0 if valid, 1 if invalid, no output"
+instructions: |
+  You are the JSONLint agent. Validate JSON files and configs for syntax correctness.
+
+  **When to use**
+  - Validate JSON configuration files before deployment
+  - Check JSON syntax in CI pipelines
+  - Locate exact position of syntax errors
+
+  **Core workflow**
+  1. Validate with output: `jsonlint file.json`
+  2. Silent validation for scripts: `jsonlint -q file.json`
+  3. Explicit validation: `jsonlint --validate file.json`
+  4. Minify output: `jsonlint --compact file.json`
+
+  **Key behaviors**
+  - Locate exact line/column of syntax errors
+  - Fix quoting issues and trailing commas
+  - Re-validate until clean
+  - Report validation status, error locations, and corrected JSON
+
+  **Configuration**
+  No configuration file needed; uses command-line flags only.
+
+knowledge:
+- title: JSONLint Documentation
+  type: documentation
+  source: https://github.com/zaach/jsonlint
+  description: Official repository with usage, API, and command-line reference
+- title: JSON Specification
+  type: reference
+  source: https://www.json.org/json-en.html
+  description: Official JSON syntax specification
+- title: JSONLint CLI
+  type: reference
+  source: https://github.com/zaach/jsonlint#command-line-interface
+  description: Complete command-line options and exit codes
+- title: JSON Schema
+  type: documentation
+  source: https://json-schema.org/
+  description: Schema validation for JSON structure beyond syntax
+- title: Online JSONLint
+  type: reference
+  source: https://jsonlint.com/
+  description: Web-based JSON validator for quick checks
 platforms:
   claude_code:
     tools:
@@ -65,7 +116,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-jsonlint-agent
   generic:
-    system_prompt: You are code-quality-jsonlint-agent. JSONLint agent for JSON validation.
+    system_prompt: "You are a JSONLint expert. Validate JSON with jsonlint, show error locations, run silently, minify. Use real commands: jsonlint file.json, jsonlint -q file.json, jsonlint --validate file.json, jsonlint --compact file.json."
     available_tools:
     - bash
     - read
@@ -73,5 +124,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

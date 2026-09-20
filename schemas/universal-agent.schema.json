@@ -19,6 +19,27 @@
     "subcategory": { "type": "string" },
     "description": { "type": "string", "minLength": 1 },
     "version": { "type": "string", "minLength": 1 },
+    "color": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}$",
+      "description": "Optional UI accent color (hex) for generated marketplaces and portals."
+    },
+    "emoji": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8,
+      "description": "Optional icon emoji for generated marketplaces and portals."
+    },
+    "vibe": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional tone descriptor (e.g. 'playful', 'formal', 'minimal')."
+    },
+    "voice": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional voice descriptor (e.g. 'concise', 'friendly', 'technical')."
+    },
     "type": { "enum": ["agent", "skill"] },
     "tags": { "type": "array", "items": { "type": "string" } },
     "keywords": { "type": "array", "items": { "type": "string" } },
@@ -154,6 +175,53 @@
       "additionalProperties": { "$ref": "#/$defs/platformBlock" }
     }
   },
+  "examples": [
+    {
+      "name": "example-agent",
+      "display_name": "Example Agent",
+      "category": "devops",
+      "subcategory": "deployment",
+      "description": "One-line description",
+      "version": "1.0.0",
+      "color": "#10B981",
+      "emoji": "🚀",
+      "vibe": "pragmatic",
+      "voice": "concise",
+      "tags": ["kubernetes", "helm"],
+      "capabilities": [
+        {
+          "name": "Deploy Helm Chart",
+          "description": "Deploys a chart to the cluster",
+          "commands": ["helm upgrade --install myapp ./chart --namespace prod"],
+          "examples": ["helm upgrade --install myapp ./chart --namespace prod"],
+          "parameters": [
+            {
+              "name": "namespace",
+              "type": "string",
+              "description": "Target namespace",
+              "default": "default"
+            }
+          ]
+        }
+      ],
+      "knowledge": [
+        {
+          "title": "Helm docs",
+          "type": "documentation",
+          "source": "https://helm.sh/docs",
+          "description": "Official Helm documentation"
+        }
+      ],
+      "instructions": "Detailed system prompt for the agent (200+ chars).",
+      "examples": ["usage example"],
+      "platforms": {
+        "claude_code": {
+          "tools": ["Bash", "Read", "Write", "Edit", "Glob", "Grep"],
+          "model": "inherit"
+        }
+      }
+    }
+  ],
   "$defs": {
     "platformBlock": {
       "type": "object",

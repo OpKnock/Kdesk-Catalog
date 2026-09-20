@@ -58,6 +58,15 @@ Rules:
 - **Naming:** lowercase with hyphens (`python-reviewer.yaml`). No `-v2`/`-v3` suffixes — content-derived names only.
 - **No code comments** unless asked.
 
+Optional personality fields (used by generated marketplaces):
+
+```yaml
+color: "#10B981"    # hex accent
+emoji: "🚀"          # icon emoji
+vibe: pragmatic      # tone descriptor
+voice: concise       # voice descriptor
+```
+
 ## 3. Authoring a skill
 
 Same schema as agents. Skills are placed at `universal-agents/<family>/skill/<name>.yaml` (nested) or as `<name>-skill.yaml` next to agents (flat legacy layout — both are supported).
@@ -66,6 +75,20 @@ Skill-specific rules:
 
 - Declare `tools:` or `prerequisites:` with the real binaries the skill invokes — this is what makes the skill wireable to agents (`extract-skill-tools.py` can derive them from commands, but explicit declarations are stronger evidence).
 - Skills without any commands (conceptual skills) stay unwired by design — they teach conventions via universal primitives.
+
+### 3.1 Routing descriptions (use when / don't use for)
+
+Every skill description should end with routing guidance so agents pick the right skill and know its neighbors:
+
+```yaml
+description: Audits dependencies for known vulnerabilities. Use when scanning a
+  dependency tree for CVEs. Don't use for container-image scanning (see
+  container-security) or IaC misconfiguration checks (see checkov).
+```
+
+- Start with `Use when ...` — the concrete trigger.
+- Follow with `Don't use for ... (see <sibling-skill>)` — name a real sibling skill by its `name` field so the pointer resolves.
+- Omit the sibling reference only when no sibling exists; a generic exclusion is still better than none.
 
 ## 4. Wiring (agent → skill links)
 

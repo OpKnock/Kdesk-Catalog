@@ -48,6 +48,57 @@ def _dest_specs(install_target: str) -> List[str]:
     return [part.strip() for part in install_target.split("+") if part.strip()]
 
 
+_DEF_INDEX_CACHE: Dict[str, Dict[str, set]] = {}
+_DEF_CATEGORY_CACHE: Dict[str, Dict[str, set]] = {}
+
+
+def _def_index(root: Path) -> Dict[str, set]:
+    """def id (file stem) -> set of capability tool names.
+
+    Built from agents/json and skills/json; used by the ``tool`` filter.
+    """
+    key = str(Path(root))
+    cached = _DEF_INDEX_CACHE.get(key)
+    if cached is not None:
+        return cached
+    index: Dict[str, set] = {}
+    for base in (Path(root) / "agents" / "json", Path(root) / "skills" / "json"):
+        if not base.is_dir():
+            continue
+        for path in base.rglob("*.json"):
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            tools = data.get("tools")
+            if isinstance(tools, list):
+                index[path.stem] = set(tools)
+    _DEF_INDEX_CACHE[key] = index
+    return index
+
+
+def _def_categories(root: Path) -> Dict[str, set]:
+    """def id (file stem) -> set of category names (first path component).
+
+    JSON definitions live at ``<base>/<category>/<kind>/<name>.json`` (agents)
+    or ``<base>/<name>/...`` (skills); the category is the first component.
+    """
+    key = str(Path(root))
+    cached = _DEF_CATEGORY_CACHE.get(key)
+    if cached is not None:
+        return cached
+    index: Dict[str, set] = {}
+    for base in (Path(root) / "agents" / "json", Path(root) / "skills" / "json"):
+        if not base.is_dir():
+            continue
+        for path in base.rglob("*.json"):
+            rel = path.relative_to(base).parts
+            if rel:
+                index.setdefault(path.stem, set()).add(rel[0])
+    _DEF_CATEGORY_CACHE[key] = index
+    return index
+
+
 def _source_files(source: Path, spec: str) -> List[Tuple[Path, str]]:
     """(src, rel) pairs for a spec.
 
@@ -171,27 +222,76 @@ class Installer:
             raise
         return "OK", backup_rel
 
+    def _link_one(self, base: Path, platform: str, src: Path, dst: Path,
+                  key: str) -> str:
+        """Symlink src -> dst; fall back to a copy when the OS refuses."""
+        try:
+            if dst.is_symlink() or dst.is_file():
+                if dst.resolve() == src.resolve():
+                    return "unchanged"
+        except OSError:
+            pass
+        try:
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            dst.symlink_to(src)
+            return "LINK"
+        except OSError:
+            return self._copy_one(base, platform, src, dst, key)[0]
+
     # -------------------------------------------------------------- install
     def install(self, platform: str, target: str = "project",
-                base: Optional[Path] = None) -> Dict[str, Any]:
+                base: Optional[Path] = None, scope: Optional[str] = None,
+                tool: Optional[str] = None,
+                agents: Optional[set] = None,
+                category: Optional[set] = None,
+                link: bool = False) -> Dict[str, Any]:
         adapter = self._adapter(platform)
         source = adapter.output_dir
         if not source.is_dir():
             raise InstallError(f"{platform} has not been generated "
                                "(missing platform-agents/{platform})")
+        if scope is not None and scope not in ("agents", "skills"):
+            raise InstallError(f"unknown scope: {scope}")
+        tool_ids: Optional[set] = None
+        if tool is not None:
+            index = _def_index(self.registry.root)
+            tool_ids = {tid for tid, tools in index.items() if tool in tools}
+            if not tool_ids:
+                raise InstallError(f"unknown tool: {tool} "
+                                   "(no definitions invoke it)")
+        cat_index: Optional[Dict[str, set]] = None
+        if category is not None:
+            cat_index = _def_categories(self.registry.root)
         base = Path(base) if base else self.base
         manifest = InstallManifest(base / MANIFEST_REL)
         results = []
         specs = _dest_specs(adapter.install_target)
+        total_matched = 0
         for spec in specs:
             dest_root = self._dest_root(spec, target, base)
             mapping = _source_files(source, spec)
+            if scope is not None or tool is not None or agents is not None \
+                    or category is not None:
+                mapping = [
+                    (src, rel) for src, rel in mapping
+                    if (scope is None
+                        or scope in Path(self._key(spec, rel)).parts)
+                    and (tool is None or Path(rel).stem in tool_ids)
+                    and (agents is None or Path(rel).stem in agents)
+                    and (category is None
+                         or (Path(rel).stem in cat_index
+                             and cat_index[Path(rel).stem] & category))
+                ]
+            total_matched += len(mapping)
             copied = 0
             for src, rel in mapping:
                 key = self._key(spec, rel)
                 dst = dest_root / rel
-                status, _ = self._copy_one(base, platform, src, dst, key)
-                if status in ("OK", "DRY-RUN"):
+                if link and not self.dry_run:
+                    status = self._link_one(base, platform, src, dst, key)
+                else:
+                    status, _ = self._copy_one(base, platform, src, dst, key)
+                if status in ("OK", "DRY-RUN", "LINK"):
                     copied += 1
             results.append({
                 "platform": platform,
@@ -201,6 +301,13 @@ class Installer:
                 "copied": copied,
                 "files": len(mapping),
             })
+        if total_matched == 0:
+            detail = f"scope={scope}" if scope is not None else (
+                f"tool={tool}" if tool is not None else (
+                    f"agents={agents}" if agents is not None
+                    else f"category={category}"))
+            raise InstallError(f"filter ({detail}) matched no files "
+                               f"for {platform}")
         if not self.dry_run:
             targets = {}
             for spec in specs:

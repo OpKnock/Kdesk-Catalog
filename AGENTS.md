@@ -27,6 +27,12 @@ python scripts/schema-check.py
 # Regenerate JSON definitions (agents/, skills/, workflows/) from YAML
 python scripts/yaml-to-json.py
 
+# Regenerate per-platform marketplace manifests + report
+python scripts/generate-marketplaces.py
+
+# Validate marketplaces are in sync with the definitions
+python scripts/generate-marketplaces.py --validate
+
 # Full test suite (platform-spec, converter CLI, yaml-to-json, wire-skills)
 python -m unittest discover tests -v
 ```
@@ -40,6 +46,10 @@ python -m unittest discover tests -v
   `python scripts/fix-stale-model-ids.py --dry-run` to verify.
 - **No orphan outputs.** `universal-converter.py` prunes files in
   `platform-agents/` that no longer map to a source YAML; keep it that way.
+- **Marketplaces mirror the definitions.** `marketplaces/*.marketplace.json`
+  list the full catalog (every definition converts to every platform);
+  `generate-marketplaces.py` output is deterministic and validated with
+  `--validate`. Workflows are platform-neutral and not listed.
 - **Agent format**: YAML with `name`, `display_name`, `description`, `platforms`
   map. Skills live under `universal-agents/<category>/skill/<name>.yaml`.
 - **Frontmatter contracts** (enforced by `tests/test_platform_spec.py`):
@@ -57,10 +67,13 @@ python -m unittest discover tests -v
 ## Testing
 
 - `tests/test_platform_spec.py` — per-platform output format contract + orphan
-  and stale-model sweeps. Slow (~2 min); do not add full-catalog scans.
+  and stale-model sweeps. Slow (~2 min); the full-catalog sweeps skip unless
+  `KDESK_FULL=1` is set; do not add full-catalog scans.
 - `tests/test_converter_cli.py` — platform parsing.
 - `tests/test_yaml_to_json.py` — definition generation.
 - `tests/test_wire_skills.py` — skill wiring.
+- `tests/test_marketplaces.py` — marketplace manifests (fast structural checks).
+- `tests/test_divisions.py` — divisions manifest + check-catalog gate.
 
 ## Editing emitters
 

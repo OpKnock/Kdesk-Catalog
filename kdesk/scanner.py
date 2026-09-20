@@ -100,12 +100,6 @@ PLATFORM_CONFIG_PATTERNS: Dict[str, List[str]] = {
     "openhands": [
         ".openhands/microagents/**/*.md",
     ],
-    "cursor": [
-        ".cursor/rules/**/*.mdc",
-    ],
-    "windsurf": [
-        ".windsurf/rules/**/*.md",
-    ],
     "google_jules": [
         "AGENTS.md",
     ],
@@ -142,15 +136,6 @@ PLATFORM_CONFIG_PATTERNS: Dict[str, List[str]] = {
     ],
     "firebase_studio": [
         ".idx/rules/**/*.mdc",
-    ],
-    "continue": [
-        ".continue/rules/**/*.md",
-    ],
-    "tabnine": [
-        ".tabnine/guidelines/**/*.md",
-    ],
-    "supermaven": [
-        ".supermaven/rules/**/*.md",
     ],
 }
 

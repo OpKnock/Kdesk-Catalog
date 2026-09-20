@@ -800,7 +800,7 @@ RENDER.doctor = async () => {
   const opts = plats.map((p) => `<option value="${p.id}"${p.id === "claude_code" ? " selected" : ""}>${esc(p.id)}</option>`).join("");
   return `
   <div class="ph-kicker">03 — Diagnose</div><h1 class="ph-title">Proof, <em>not promises.</em></h1>
-  <p class="lede">Three steps: pick a platform, pick an action, run.</p>
+  <p class="lede">Three steps: pick a platform, pick an action, run. Tip: this repo scores low on purpose — it is the factory, not a project. Upload your own files below for a true reading.</p>
   <div class="panel"><div class="step-h"><span class="n">i.</span><h3>Target platform</h3></div>
     <div class="chips" id="dplats">${plats.length ? plats.map((p) =>
       `<button class="chip${p.id === "claude_code" ? " on" : ""}" data-plat="${esc(p.id)}" title="${esc(p.name || p.id)}">${esc(p.id)}</button>`).join("")

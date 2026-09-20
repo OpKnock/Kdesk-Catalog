@@ -52,6 +52,6 @@ Workflows are platform-neutral and are not listed in marketplaces.
 | zencoder | Zencoder (Zenflow) | 1766 | 1143 | 2909 |
 | **Total** | **44 platforms** | **77704** | **50292** | **127996** |
 
-Distinct divisions covered: 386.
+Distinct divisions covered: 300.
 
 Validate with: `python scripts/generate-marketplaces.py --validate`.

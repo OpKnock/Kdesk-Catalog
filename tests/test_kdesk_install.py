@@ -95,7 +95,9 @@ class InstallToolFilterTests(unittest.TestCase):
         self.assertTrue(installed)
         for path in installed:
             self.assertIn(path.stem, matching)
-        self.assertLess(len(installed), 1766)
+        with open(ROOT / "reports" / "catalog-stats.json", "r", encoding="utf-8") as f:
+            total_agents = json.load(f)["agents"]
+        self.assertLess(len(installed), total_agents)
 
     def test_unknown_tool_rejected(self):
         installer = Installer(self.registry)

@@ -28,7 +28,7 @@ def test_adapter_registry_45_platforms(tmp_path):
 
 def test_adapter_support_levels(tmp_path):
     reg = AdapterRegistry(tmp_path)
-    assert reg.get("claude_code").support_level == SupportLevel.SUPPORTED
+    assert reg.get("claude_code").support_level == SupportLevel.FULLY_SUPPORTED
     assert reg.get("codegpt").support_level == SupportLevel.PARTIALLY_SUPPORTED
 
 

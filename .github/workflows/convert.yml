@@ -1,0 +1,47 @@
+name: Convert
+
+on:
+  pull_request:
+    paths:
+      - "universal-agents/**/*.yaml"
+
+permissions:
+  contents: write
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pyyaml jsonschema
+
+      - name: Validate schema (0 violations required)
+        run: python scripts/schema-check.py
+
+      - name: Regenerate JSON + workflows
+        run: python scripts/yaml-to-json.py
+
+      - name: Regenerate platform outputs
+        run: python scripts/universal-converter.py --platforms all --quiet
+
+      - name: Commit regenerated output
+        run: |
+          git config user.name "kdesk-bot"
+          git config user.email "kdesk-bot@users.noreply.github.com"
+          git add agents/ skills/ workflows/ platform-agents/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: regenerate catalog from universal-agents [skip ci]"
+            git push
+          fi

@@ -49,6 +49,7 @@ class PlatformSpec:
     slug_from: str                 # "filename" | "dirname"
     deprecation_reason: str = ""
     replacement: str = ""
+    tier: str = "C"                # A = Verified, B = Contract, C = Experimental
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -56,6 +57,7 @@ class PlatformSpec:
             "display_name": self.display_name,
             "family": self.family,
             "support_level": self.support_level.value,
+            "tier": self.tier,
             "agent_format": self.agent_format,
             "skill_format": self.skill_format,
             "project_paths": self.project_paths,
@@ -88,7 +90,9 @@ def _p(
     max_size: int = 100000,
     install_kind: str = "roster",
     slug_from: str = "filename",
-    **kw,
+    tier: str = "C",
+    deprecation_reason: str = "",
+    replacement: str = "",
 ) -> PlatformSpec:
     return PlatformSpec(
         id=id,
@@ -106,7 +110,9 @@ def _p(
         max_file_size=max_size,
         install_kind=install_kind,
         slug_from=slug_from,
-        **kw,
+        deprecation_reason=deprecation_reason,
+        replacement=replacement,
+        tier=tier,
     )
 
 
@@ -120,6 +126,7 @@ def _reg(spec: PlatformSpec):
 # ─── legacy core (6) ─────────────────────────────────────────────────────────
 
 _reg(_p("claude_code", "Claude Code", "legacy-core",
+    level=SupportLevel.FULL, tier="A",
     agent_fmt=".md", skill_fmt="SKILL.md",
     project=[".claude/agents/", ".claude/skills/"],
     global_=["~/.claude/agents/", "~/.claude/skills/"],
@@ -129,6 +136,7 @@ _reg(_p("claude_code", "Claude Code", "legacy-core",
 ))
 
 _reg(_p("cursor", "Cursor", "rules",
+    level=SupportLevel.FULL, tier="A",
     agent_fmt=".mdc",
     project=[".cursor/rules/"],
     global_=["~/.cursor/rules/"],
@@ -140,6 +148,7 @@ _reg(_p("cursor", "Cursor", "rules",
 ))
 
 _reg(_p("github_copilot", "GitHub Copilot", "rules",
+    level=SupportLevel.FULL, tier="A",
     agent_fmt=".instructions.md",
     project=[".github/instructions/"],
     detect=[".github/instructions"],
@@ -149,6 +158,7 @@ _reg(_p("github_copilot", "GitHub Copilot", "rules",
 ))
 
 _reg(_p("windsurf", "Windsurf", "rules",
+    level=SupportLevel.FULL, tier="A",
     agent_fmt=".md",
     project=[".windsurf/rules/"],
     global_=["~/.windsurf/rules/"],
@@ -160,6 +170,7 @@ _reg(_p("windsurf", "Windsurf", "rules",
 ))
 
 _reg(_p("opencode", "OpenCode", "legacy-core",
+    level=SupportLevel.FULL, tier="A",
     agent_fmt=".md", skill_fmt="SKILL.md",
     project=[".opencode/agents/", ".opencode/skills/"],
     detect=[".opencode/agents", ".opencode/skills"],
@@ -168,6 +179,7 @@ _reg(_p("opencode", "OpenCode", "legacy-core",
 ))
 
 _reg(_p("generic", "Generic", "legacy-core",
+    level=SupportLevel.FULL, tier="C",
     agent_fmt=".json",
     install_kind="per-agent",
     supported=["*"],
@@ -176,35 +188,35 @@ _reg(_p("generic", "Generic", "legacy-core",
 # ─── Agent Skills / SKILL.md (23) ────────────────────────────────────────────
 
 _SKILL_PLATFORMS = [
-    ("codex_cli", "OpenAI Codex CLI"),
-    ("gemini_cli", "Gemini CLI (Google)"),
-    ("antigravity", "Antigravity (Google)", ".agent/skills/"),
-    ("devin", "Devin (Cognition)", ".devin/skills/"),
-    ("zed", "Zed", ".agents/skills/"),
-    ("cline", "Cline", ".clinerules/skills/"),
-    ("roo_code", "Roo Code", ".roo/skills/"),
-    ("kilo_code", "Kilo Code", ".kilocode/skills/"),
-    ("trae", "Trae (ByteDance)", ".trae/skills/"),
-    ("qwen_code", "Qwen Code (Alibaba)", ".qwen/skills/"),
-    ("kiro", "Kiro (Sublime)", ".kiro/skills/"),
-    ("junie", "JetBrains Junie", ".junie/skills/"),
-    ("zencoder", "Zencoder", ".agents/skills/"),
-    ("amp", "Amp (Sourcegraph)", ".agents/skills/"),
-    ("factory_droid", "Factory Droid", ".factory/skills/"),
-    ("crush", "Crush (Charm)", ".crush/skills/"),
-    ("mcpjam", "MCPJam", ".mcpjam/skills/"),
-    ("mux", "Mux", ".mux/skills/"),
-    ("pi", "Pi", ".pi/skills/"),
-    ("qoder", "Qoder", ".qoder/skills/"),
-    ("codebuddy", "Tencent CodeBuddy", ".codebuddy/skills/"),
-    ("commandcode", "Command Code", ".commandcode/skills/"),
-    ("neovate", "Neovate", ".neovate/skills/"),
+    ("codex_cli", "OpenAI Codex CLI", "B", ".agents/skills/"),
+    ("gemini_cli", "Gemini CLI (Google)", "B", ".gemini/skills/"),
+    ("antigravity", "Antigravity (Google)", "C", ".agent/skills/"),
+    ("devin", "Devin (Cognition)", "B", ".devin/skills/"),
+    ("zed", "Zed", "B", ".agents/skills/"),
+    ("cline", "Cline", "C", ".clinerules/skills/"),
+    ("roo_code", "Roo Code", "C", ".roo/skills/"),
+    ("kilo_code", "Kilo Code", "C", ".kilocode/skills/"),
+    ("trae", "Trae (ByteDance)", "C", ".trae/skills/"),
+    ("qwen_code", "Qwen Code (Alibaba)", "C", ".qwen/skills/"),
+    ("kiro", "Kiro (Sublime)", "C", ".kiro/skills/"),
+    ("junie", "JetBrains Junie", "B", ".junie/skills/"),
+    ("zencoder", "Zencoder", "B", ".agents/skills/"),
+    ("amp", "Amp (Sourcegraph)", "B", ".agents/skills/"),
+    ("factory_droid", "Factory Droid", "C", ".factory/skills/"),
+    ("crush", "Crush (Charm)", "C", ".crush/skills/"),
+    ("mcpjam", "MCPJam", "C", ".mcpjam/skills/"),
+    ("mux", "Mux", "C", ".mux/skills/"),
+    ("pi", "Pi", "C", ".pi/skills/"),
+    ("qoder", "Qoder", "C", ".qoder/skills/"),
+    ("codebuddy", "Tencent CodeBuddy", "C", ".codebuddy/skills/"),
+    ("commandcode", "Command Code", "C", ".commandcode/skills/"),
+    ("neovate", "Neovate", "C", ".neovate/skills/"),
 ]
 
 for entry in _SKILL_PLATFORMS:
-    pid, display = entry[0], entry[1]
-    proj_dir = entry[2] if len(entry) > 2 else f".{pid}/skills/"
+    pid, display, tier, proj_dir = entry[0], entry[1], entry[2], entry[3]
     _reg(_p(pid, display, "skill-md",
+        tier=tier,
         skill_fmt="SKILL.md",
         project=[proj_dir],
         detect=[proj_dir.rstrip("/")],
@@ -214,37 +226,37 @@ for entry in _SKILL_PLATFORMS:
 
 # ─── Rules-based (7) ────────────────────────────────────────────────────────
 
-_reg(_p("grok_build", "Grok Build (xAI)", "rules",
+_reg(_p("grok_build", "Grok Build (xAI)", "rules", tier="B",
     agent_fmt=".md",
     project=[".grok/rules/"], global_=["~/.grok/rules/"],
     detect=[".grok/rules"],
 ))
-_reg(_p("amazon_q", "Amazon Q Developer CLI (AWS)", "rules",
+_reg(_p("amazon_q", "Amazon Q Developer CLI (AWS)", "rules", tier="B",
     agent_fmt=".md",
     project=[".amazonq/rules/"],
     detect=[".amazonq/rules"],
 ))
-_reg(_p("augment", "Augment Code", "rules",
+_reg(_p("augment", "Augment Code", "rules", tier="B",
     agent_fmt=".md",
     project=[".augment/rules/"],
     detect=[".augment/rules"],
 ))
-_reg(_p("firebase_studio", "Firebase Studio (Google)", "rules",
+_reg(_p("firebase_studio", "Firebase Studio (Google)", "rules", tier="B",
     agent_fmt=".mdc",
     project=[".idx/rules/"],
     detect=[".idx/rules"],
 ))
-_reg(_p("continue", "Continue", "rules",
+_reg(_p("continue", "Continue", "rules", tier="B",
     agent_fmt=".md",
     project=[".continue/rules/"], global_=["~/.continue/rules/"],
     detect=[".continue/rules"],
 ))
-_reg(_p("tabnine", "Tabnine", "rules",
+_reg(_p("tabnine", "Tabnine", "rules", tier="C",
     agent_fmt=".md",
     project=[".tabnine/guidelines/"], global_=["~/.tabnine/guidelines/"],
     detect=[".tabnine/guidelines"],
 ))
-_reg(_p("supermaven", "Supermaven", "rules",
+_reg(_p("supermaven", "Supermaven", "rules", tier="C",
     agent_fmt=".md",
     project=[".supermaven/rules/"], global_=["~/.supermaven/rules/"],
     detect=[".supermaven/rules"],
@@ -252,17 +264,17 @@ _reg(_p("supermaven", "Supermaven", "rules",
 
 # ─── Special (3) ────────────────────────────────────────────────────────────
 
-_reg(_p("goose", "Goose (Block)", "special",
+_reg(_p("goose", "Goose (Block)", "special", tier="B",
     agent_fmt=".yaml",
     project=[".goose/recipes/"], global_=["~/.config/goose/recipes/"],
     detect=[".goose/recipes", "recipes"],
 ))
-_reg(_p("aider", "Aider", "special",
+_reg(_p("aider", "Aider", "special", tier="C",
     agent_fmt=".md",
     project=["conventions/"],
     detect=["conventions"],
 ))
-_reg(_p("openhands", "OpenHands", "special",
+_reg(_p("openhands", "OpenHands", "special", tier="B",
     agent_fmt=".md",
     project=[".openhands/microagents/"],
     detect=[".openhands/microagents"],
@@ -273,20 +285,21 @@ _reg(_p("openhands", "OpenHands", "special",
 for pid, display in [("google_jules", "Google Jules"), ("warp", "Warp AI"), ("codegpt", "CodeGPT")]:
     fname = "WARP.md" if pid == "warp" else "AGENTS.md"
     level = SupportLevel.PARTIAL if pid == "codegpt" else SupportLevel.FULL
+    tier = "C" if pid == "codegpt" else "B"
     _reg(_p(pid, display, "single-file",
-        level=level,
+        level=level, tier=tier,
         agent_fmt=".md",
         project=[fname],
         install_kind="per-agent",
     ))
 
-_reg(_p("cody", "Sourcegraph Cody", "single-file",
+_reg(_p("cody", "Sourcegraph Cody", "single-file", tier="B",
     level=SupportLevel.PARTIAL,
     agent_fmt=".json",
     project=[".vscode/cody.json"],
     install_kind="per-agent",
 ))
-_reg(_p("firebender", "Firebender", "single-file",
+_reg(_p("firebender", "Firebender", "single-file", tier="C",
     level=SupportLevel.PARTIAL,
     agent_fmt=".json",
     project=[".firebender/"],
@@ -296,7 +309,7 @@ _reg(_p("firebender", "Firebender", "single-file",
 # ─── Deprecated (1) ──────────────────────────────────────────────────────────
 
 _reg(_p("void", "Void (deprecated)", "deprecated",
-    level=SupportLevel.DEPRECATED,
+    level=SupportLevel.DEPRECATED, tier="C",
     deprecation_reason="Platform discontinued",
 ))
 
@@ -355,13 +368,16 @@ class PlatformRegistry:
     def summary(self) -> Dict[str, Any]:
         families = {}
         levels = {}
+        tiers = {}
         for p in self._platforms.values():
             families[p.family] = families.get(p.family, 0) + 1
             levels[p.support_level.value] = levels.get(p.support_level.value, 0) + 1
+            tiers[p.tier] = tiers.get(p.tier, 0) + 1
         return {
             "total_platforms": len(self._platforms),
             "families": families,
             "support_levels": levels,
+            "tiers": tiers,
         }
 
     def to_json(self, path: Path) -> None:

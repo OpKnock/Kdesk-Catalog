@@ -136,6 +136,20 @@ def _cmd_approve(args) -> int:
     return 0
 
 
+def _cmd_skill(args) -> int:
+    if args.skill_command == "publish":
+        return _cmd_skill_publish(args)
+    elif args.skill_command == "install":
+        return _cmd_skill_install(args)
+    elif args.skill_command == "search":
+        return _cmd_skill_search(args)
+    elif args.skill_command == "list":
+        return _cmd_skill_list(args)
+    else:
+        print("Usage: kdesk skill {publish|install|search|list} ...")
+        return 2
+
+
 def _cmd_skill_publish(args) -> int:
     root = Path(args.root) if args.root else default_repo_root()
     catalog = Catalog.from_repo(root)
@@ -227,7 +241,6 @@ def _cmd_version_resolve(args) -> int:
     if result is None:
         print(f"NO MATCH: {args.spec}", file=sys.stderr)
         return 1
-    # Check for breaking change if we have a current version
     spec_parts = result.split("@")
     if len(spec_parts) == 2:
         check = resolver.check_breaking_change("1.0.0", spec_parts[1])
@@ -254,4 +267,21 @@ def _cmd_serve(args) -> int:
     root = Path(args.root) if args.root else default_repo_root()
     run_server(root, host=args.host, port=args.port,
                open_browser=not args.no_browser)
+    return 0
+
+
+def _cmd_trust(args) -> int:
+    from kdesk.trust import calculate_trust_score
+    result = calculate_trust_score(args.name, args.platform)
+    if args.json:
+        print(json.dumps(result, indent=2))
+    else:
+        b = result["breakdown"]
+        print(f"Trust Score: {b['overall']}/100")
+        print(f"  Compatibility: {b['compatibility']}")
+        print(f"  Security:      {b['security']}")
+        print(f"  Policy:        {b['policy']}")
+        print(f"  Dependencies:  {b['dependencies']}")
+        print(f"  Provenance:    {b['provenance']}")
+        print(f"  Test Coverage: {b['test_coverage']}")
     return 0

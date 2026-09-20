@@ -41,7 +41,7 @@ from kdesk.cli_commands.runtime_cmds import (
     _cmd_inspect, _cmd_approve,
     _cmd_skill, _cmd_skill_publish, _cmd_skill_install, _cmd_skill_search,
     _cmd_skill_list, _cmd_delegate, _cmd_version_resolve, _cmd_telemetry,
-    _cmd_serve,
+    _cmd_serve, _cmd_trust,
 )
 
 
@@ -232,6 +232,12 @@ def build_parser() -> argparse.ArgumentParser:
     tl = sub.add_parser("telemetry", parents=[root_parent],
                         help="show anonymous usage stats")
 
+    tr = sub.add_parser("trust", parents=[root_parent],
+                        help="calculate trust score for a definition")
+    tr.add_argument("name", help="definition name")
+    tr.add_argument("--platform", default=None, help="target platform")
+    tr.add_argument("--json", action="store_true", help="output as JSON")
+
     sv = sub.add_parser("serve", parents=[root_parent],
                         help="launch the local web dashboard")
     sv.add_argument("--host", default="127.0.0.1")
@@ -286,6 +292,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         "delegate": _cmd_delegate,
         "resolve-version": _cmd_version_resolve,
         "telemetry": _cmd_telemetry,
+        "trust": _cmd_trust,
         "serve": _cmd_serve,
     }
     handler = handlers.get(args.command)

@@ -1,13 +1,31 @@
 ---
 name: "api-sec-sql-injection"
-description: "Tests APIs for injection and parameter tampering: sqlmap for SQLi, manual payload probes, fuzzing inputs, and HTTP method abuse checks."
+description: "Tests APIs for injection and parameter tampering: sqlmap for SQLi, manual payload probes, fuzzing inputs, and HTTP method abuse checks. Use when working with sql injection, method abuse or when the user mentions sql injection, method abuse."
 ---
-
-# Api Sec Sql Injection
 
 Tests APIs for injection and parameter tampering: sqlmap for SQLi, manual payload probes, fuzzing inputs, and HTTP method abuse checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `sqlmap -u "http://localhost:8080/search?q=1" --batch --level`, `curl -s -X OPTIONS http://localhost:8080/users -D- -o /dev/n`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Security v3 - Injection Testing
 
@@ -52,6 +70,11 @@ curl -s -X OPTIONS https://api.example.com/users -D- -o /dev/null | grep -i allo
 ### sql-injection
 Detect SQL injection in API parameters
 
+**Parameters:**
+- `url` (string): Target URL with parameters
+- `level` (integer): sqlmap test level 1-5
+- `data` (string): POST body for parameter testing
+
 **Commands:**
 - `sqlmap -u "http://localhost:8080/search?q=1" --batch --level=2`
 - `sqlmap -u "http://localhost:8080/login" --data "email=a&pass=b" --batch`
@@ -75,3 +98,7 @@ Test HTTP method handling and fuzzing
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [sqlmap Docs](https://sqlmap.org/usage.html)
+- [OWASP Injection Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html)

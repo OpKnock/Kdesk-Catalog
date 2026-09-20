@@ -1,13 +1,31 @@
 ---
 name: "cert-manager-infrastructure"
-description: "Manages TLS certificates in Kubernetes with cert-manager and cmctl: issuance, renewal, approval, and cluster status."
+description: "Manages TLS certificates in Kubernetes with cert-manager and cmctl: issuance, renewal, approval, and cluster status. Use when working with cmctl, issuers, infrastructure or when the user mentions cmctl, issuers, infrastructure."
 ---
-
-# Cert Manager
 
 Manages TLS certificates in Kubernetes with cert-manager and cmctl: issuance, renewal, approval, and cluster status.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `cmctl check api`, `kubectl apply -f clusterissuer.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # cert-manager
 
@@ -89,6 +107,11 @@ Verify certs are 30+ days from expiry after renewal runs.
 ### cmctl
 Inspect and operate cert-manager resources with cmctl.
 
+**Parameters:**
+- `name` (string): Certificate or CertificateRequest name
+- `namespace` (string): Namespace of the resource
+- `wait` (string): Wait duration for API readiness
+
 **Commands:**
 - `cmctl check api`
 - `cmctl status certificate my-tls-cert`
@@ -104,6 +127,11 @@ Inspect and operate cert-manager resources with cmctl.
 ### issuers
 Manage ClusterIssuers and certificates via kubectl.
 
+**Parameters:**
+- `resource` (string): certificate, certificaterequest, clusterissuer, challenge
+- `all-namespaces` (string): Query across namespaces with -A
+- `output` (string): Output format: wide, yaml, json
+
 **Commands:**
 - `kubectl apply -f clusterissuer.yaml`
 - `kubectl get certificates -A`
@@ -115,3 +143,8 @@ Manage ClusterIssuers and certificates via kubectl.
 - kubectl get certificates -A | grep -v READY
 - kubectl describe clusterissuer letsencrypt-prod
 - kubectl get challenges -A -o wide
+
+## References
+- [cert-manager Docs](https://cert-manager.io/docs/)
+- [cmctl](https://cert-manager.io/docs/usage/cmctl/)
+- [Let's Encrypt with cert-manager](https://cert-manager.io/docs/configuration/acme/)

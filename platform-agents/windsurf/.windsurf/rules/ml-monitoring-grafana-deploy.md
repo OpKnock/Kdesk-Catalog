@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "Grafana Monitoring deployment agent for ML monitoring with Grafana."
+description: "Grafana Monitoring deployment agent for ML monitoring with Grafana. Use when working with Ml Monitoring Grafana Deploy or when the user mentions Ml Monitoring Grafana Deploy."
 globs: ["**/*.json", "**/*.r"]
 ---
 
 # Ml Monitoring Grafana Deploy
 
 Grafana Monitoring deployment agent for ML monitoring with Grafana.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Dashboard: curl -X POST http://localhost:3000/api/dashboards`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -26,3 +48,7 @@ Grafana Monitoring deployment agent for ML monitoring with Grafana.
 - Server: grafana-server --homepath=/usr/share/grafana
 - Dashboard: curl -X POST http://localhost:3000/api/dashboards/db -H 'Content-Type: application/json' -d '{"dashboard": {"title": "ML Metrics"}, "overwrite": true}'
 - Datasource: curl -X POST http://localhost:3000/api/datasources -H 'Content-Type: application/json' -d '{"name": "Prometheus", "type": "prometheus", "url": "http://localhost:9090"}'
+
+## References
+- [Grafana Documentation](https://grafana.com/docs/)
+- [curl Documentation](https://curl.se/docs/)

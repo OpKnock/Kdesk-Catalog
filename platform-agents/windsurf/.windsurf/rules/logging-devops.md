@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Manages local and system logging: journald, syslog, log rotation, logrotate policies, and real-time tailing on Linux hosts."
+description: "Manages local and system logging: journald, syslog, log rotation, logrotate policies, and real-time tailing on Linux hosts. Use when working with journald management, syslog and rotation, devops or when the user mentions journald management, syslog and rotation, devops."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 ---
 
-# logging-devops
-
 Manages local and system logging: journald, syslog, log rotation, logrotate policies, and real-time tailing on Linux hosts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `journalctl -u nginx --since '2 hours ago'`, `tail -f /var/log/syslog`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Local Logging Operations
 
@@ -84,6 +102,11 @@ logger -t deploy -p user.notice 'release 1.2.0 shipped'
 ### journald-management
 Query, filter, and maintain the systemd journal.
 
+**Parameters:**
+- `unit` (string): systemd unit name
+- `priority` (string): Priority filter: err, warning, info, debug
+- `since` (string): Time window, e.g. '1 hour ago'
+
 **Commands:**
 - `journalctl -u nginx --since '2 hours ago'`
 - `journalctl -p err --no-pager`
@@ -100,6 +123,10 @@ Query, filter, and maintain the systemd journal.
 ### syslog-and-rotation
 Configure rsyslog forwarding and logrotate policies.
 
+**Parameters:**
+- `config` (string): logrotate or rsyslog config path
+- `file` (string): Log file to tail
+
 **Commands:**
 - `tail -f /var/log/syslog`
 - `tail -n 200 /var/log/nginx/error.log`
@@ -112,3 +139,8 @@ Configure rsyslog forwarding and logrotate policies.
 - logrotate -d /etc/logrotate.d/nginx
 - rsyslogd -N1 -f /etc/rsyslog.conf
 - tail -f /var/log/syslog
+
+## References
+- [journalctl Manual](https://www.freedesktop.org/software/systemd/man/latest/journalctl.html)
+- [logrotate Manual](https://man7.org/linux/man-pages/man8/logrotate.8.html)
+- [rsyslog Documentation](https://www.rsyslog.com/doc/)

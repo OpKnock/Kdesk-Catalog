@@ -2,11 +2,29 @@
 applyTo: "**/*.py **/*.r **/*.sh"
 ---
 
-# computer-vision
-
 Builds computer vision pipelines: image preprocessing with OpenCV, detection with YOLO, and video analysis with ffmpeg.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `python -c "import cv2; print(cv2.__version__)"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Computer Vision
 
@@ -72,6 +90,11 @@ class counts, confidence stats, and per-image annotated outputs.
 ### image-processing
 Preprocess images and video with OpenCV and ffmpeg
 
+**Parameters:**
+- `source` (string): Image, video, directory, or stream URL to process
+- `save-txt` (boolean): Write detection results as YOLO-format txt files
+- `weights` (string): Path to trained model weights, e.g. best.pt
+
 **Commands:**
 - `python -c "import cv2; print(cv2.__version__)"`
 - `python -m pip install opencv-python pillow`
@@ -83,3 +106,8 @@ Preprocess images and video with OpenCV and ffmpeg
 - ffmpeg -i video.mp4 -vf "crop=640:640:0:0" -frames:v 100 crop/%05d.jpg
 - python augment.py --folder train/ --flip --rotate 10
 - python detect.py --source rtsp://cam:554/stream --save-txt
+
+## References
+- [OpenCV docs](https://docs.opencv.org/)
+- [Ultralytics YOLO docs](https://docs.ultralytics.com/)
+- [ffmpeg documentation](https://ffmpeg.org/documentation.html)

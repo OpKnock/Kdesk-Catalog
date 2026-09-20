@@ -1,13 +1,31 @@
 ---
 name: "1password"
-description: "Manages secrets with the 1Password CLI (op): sign-in, item CRUD, op:// references, secret injection, and running processes with loaded secrets."
+description: "Manages secrets with the 1Password CLI (op): sign-in, item CRUD, op:// references, secret injection, and running processes with loaded secrets. Use when working with secret management, secret injection, api or when the user mentions secret management, secret injection, api."
 ---
-
-# 1Password
 
 Manages secrets with the 1Password CLI (op): sign-in, item CRUD, op:// references, secret injection, and running processes with loaded secrets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `op signin --account my.1password.com`, `op read op://vault/MyLogin/password`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # 1Password
 
@@ -64,6 +82,11 @@ API_KEY=op://Infra/stripe/live-key
 ### secret-management
 Create, read, and update 1Password items programmatically.
 
+**Parameters:**
+- `vault` (string): Vault to search or write into
+- `fields` (string): Comma-separated field names to return
+- `reveal` (boolean): Print hidden fields in plaintext
+
 **Commands:**
 - `op signin --account my.1password.com`
 - `op item create --category=login --title=MyLogin username=me password=secret`
@@ -79,6 +102,11 @@ Create, read, and update 1Password items programmatically.
 ### secret-injection
 Reference secrets by URI and inject into files or process environments without printing them.
 
+**Parameters:**
+- `input` (string): Template file containing op:// references
+- `output` (string): Destination file for injected output
+- `account` (string): 1Password account shorthand, e.g. my.1password.com
+
 **Commands:**
 - `op read op://vault/MyLogin/password`
 - `op inject -i template.env -o .env`
@@ -90,3 +118,8 @@ Reference secrets by URI and inject into files or process environments without p
 - op read op://Prod/db-credentials/password
 - op inject -i deploy.tpl -o deploy.env
 - op run -- npm run start:prod
+
+## References
+- [1Password CLI Reference](https://developer.1password.com/docs/cli/reference)
+- [Secret References](https://developer.1password.com/docs/cli/secret-references)
+- [Shell Plugins](https://developer.1password.com/docs/cli/shell-plugins)

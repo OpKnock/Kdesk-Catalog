@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "Decorator pattern agent for implementation."
+description: "Decorator pattern agent for implementation. Use when working with Patterns Decorator Agent or when the user mentions Patterns Decorator Agent."
 globs: ["**/*.r"]
 ---
 
 # Patterns Decorator Agent
 
 Decorator pattern agent for implementation.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `interface Component { operation(): string; } class ConcreteC`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -22,3 +44,6 @@ Decorator pattern agent for implementation.
 
 **Examples:**
 - interface Component { operation(): string; } class ConcreteComponent implements Component { operation(): string { return 'ConcreteComponent'; } } abstract class Decorator implements Component { protected component: Component; constructor(component: Component) { this.component = component; } operation(): string { return this.component.operation(); } }
+
+## References
+- [Decorator Design Pattern](https://refactoring.guru/design-patterns/decorator)

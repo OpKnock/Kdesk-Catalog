@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Version-controlled database schema changes with Flyway and Liquibase: migrate, validate, and rollback."
+description: "Version-controlled database schema changes with Flyway and Liquibase: migrate, validate, and rollback. Use when working with flyway migrations, liquibase migrations, database or when the user mentions flyway migrations, liquibase migrations, database."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.sql"]
 ---
 
-# database-migration-database-2
-
 Version-controlled database schema changes with Flyway and Liquibase: migrate, validate, and rollback.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `flyway migrate`, `liquibase update --changelog-file=db/changelog.yml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Database Migration
 
@@ -66,6 +84,11 @@ repair or a compensating migration, and re-runs to target.
 ### flyway-migrations
 Apply, validate, and manage Flyway schema migrations
 
+**Parameters:**
+- `target` (string): Migration version to migrate to
+- `configFiles` (string): Comma-separated config files
+- `outputType` (string): info output: json, csv, sarif
+
 **Commands:**
 - `flyway migrate`
 - `flyway info`
@@ -81,6 +104,11 @@ Apply, validate, and manage Flyway schema migrations
 ### liquibase-migrations
 Apply and rollback Liquibase changesets
 
+**Parameters:**
+- `changelog-file` (string): Path to the changelog file
+- `tag` (string): Tag to roll back to
+- `url` (string): JDBC URL of the target database
+
 **Commands:**
 - `liquibase update --changelog-file=db/changelog.yml`
 - `liquibase status --verbose --changelog-file=db/changelog.yml`
@@ -92,3 +120,7 @@ Apply and rollback Liquibase changesets
 - liquibase update --url=jdbc:postgresql://localhost/app --username app --password pass
 - liquibase history --changelog-file=db/changelog.yml
 - liquibase changelog-sync --changelog-file=db/changelog.yml
+
+## References
+- [Flyway docs](https://documentation.red-gate.com/flyway/)
+- [Liquibase docs](https://docs.liquibase.com/)

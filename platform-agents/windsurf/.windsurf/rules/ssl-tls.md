@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Inspects, validates, and troubleshoots TLS certificates and handshakes with openssl, sslscan, and certbot."
+description: "Inspects, validates, and troubleshoots TLS certificates and handshakes with openssl, sslscan, and certbot. Use when working with certificate inspection, certificate generation, protocol scanning, security or when the user mentions certificate inspection, certificate generation, protocol scanning, security."
 globs: ["**/*.r", "**/*.sh"]
 ---
 
-# ssl-tls
-
 Inspects, validates, and troubleshoots TLS certificates and handshakes with openssl, sslscan, and certbot.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `openssl s_client -connect localhost:443 -servername localhos`, `openssl req -new -newkey rsa:2048 -nodes -keyout key.pem -ou`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # SSL/TLS
 
@@ -64,6 +82,11 @@ certbot renew --dry-run
 ### certificate-inspection
 Inspect certificates, chains, and server handshakes.
 
+**Parameters:**
+- `host` (string): Hostname to connect to
+- `port` (number): Port, default 443
+- `certFile` (string): Path to a certificate file
+
 **Commands:**
 - `openssl s_client -connect localhost:443 -servername localhost -showcerts`
 - `openssl x509 -in cert.pem -text -noout`
@@ -78,6 +101,10 @@ Inspect certificates, chains, and server handshakes.
 
 ### certificate-generation
 Generate CSRs, self-signed certs, and renew with certbot.
+
+**Parameters:**
+- `keySize` (number): RSA key size, e.g. 2048 or 4096
+- `days` (number): Validity in days
 
 **Commands:**
 - `openssl req -new -newkey rsa:2048 -nodes -keyout key.pem -out csr.pem`
@@ -94,6 +121,10 @@ Generate CSRs, self-signed certs, and renew with certbot.
 ### protocol-scanning
 Check TLS protocol and cipher support.
 
+**Parameters:**
+- `tlsVersion` (string): TLS version to test: tls1_2, tls1_3
+- `port` (integer): TCP port to scan for TLS.
+
 **Commands:**
 - `sslscan localhost`
 - `sslscan --tls-min-version 1.2 localhost`
@@ -104,3 +135,8 @@ Check TLS protocol and cipher support.
 - sslscan localhost
 - nmap --script ssl-enum-ciphers -p 443 localhost
 - openssl s_client -connect localhost:443 -tls1_3 -servername localhost
+
+## References
+- [OpenSSL Documentation](https://www.openssl.org/docs/)
+- [Let's Encrypt Certbot Docs](https://certbot.eff.org/docs/)
+- [sslscan GitHub](https://github.com/rbsec/sslscan)

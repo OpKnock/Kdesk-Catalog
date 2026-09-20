@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Implements REST APIs in Node.js with Express: resource routing, status-code semantics, JSON error handling, and curl-based endpoint verification."
+description: "Implements REST APIs in Node.js with Express: resource routing, status-code semantics, JSON error handling, and curl-based endpoint verification. Use when working with express routing, status semantics or when the user mentions express routing, status semantics."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# api-rest-engineer
-
 Implements REST APIs in Node.js with Express: resource routing, status-code semantics, JSON error handling, and curl-based endpoint verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm init -y && npm install express`, `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:30`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API REST Engineer
 
@@ -53,6 +71,11 @@ curl -s -X POST http://localhost:3000/api/users -H 'Content-Type: application/js
 ### express-routing
 Build REST resource routes with Express
 
+**Parameters:**
+- `resource` (string): Resource name in the route path
+- `id` (integer): Resource identifier
+- `body` (object): JSON payload for mutations
+
 **Commands:**
 - `npm init -y && npm install express`
 - `node app.js`
@@ -77,3 +100,7 @@ Apply correct HTTP status codes per operation
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Express Routing Guide](https://expressjs.com/en/guide/routing.html)
+- [MDN HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)

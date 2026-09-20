@@ -1,13 +1,31 @@
 ---
 name: "backward-compatibility"
-description: "Enforces API evolution safety with semantic versioning discipline, additive-only schema changes, media-type and URL-path versioning, and automated breaking-change detection between OpenAPI specifications."
+description: "Enforces API evolution safety with semantic versioning discipline, additive-only schema changes, media-type and URL-path versioning, and automated breaking-change detection between OpenAPI specifications. Use when working with semver, api versioning, compat checks or when the user mentions semver, api versioning, compat checks."
 ---
-
-# Backward Compatibility
 
 Enforces API evolution safety with semantic versioning discipline, additive-only schema changes, media-type and URL-path versioning, and automated breaking-change detection between OpenAPI specifications.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm version minor`, `curl -s -H "Accept: application/vnd.myapi.v2+json" https://a`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Backward Compatibility
 
@@ -60,6 +78,10 @@ npx @redocly/cli lint new.yaml
 ### semver
 Apply semantic versioning rules to releases.
 
+**Parameters:**
+- `version_bump` (string): major, minor, or patch
+- `range` (string): Semver range expression
+
 **Commands:**
 - `npm version minor`
 - `npm version major`
@@ -74,6 +96,10 @@ Apply semantic versioning rules to releases.
 
 ### api-versioning
 Version APIs via media types or URL prefixes.
+
+**Parameters:**
+- `accept_header` (string): Media type version header
+- `base_url` (string): API base URL
 
 **Commands:**
 - `curl -s -H "Accept: application/vnd.myapi.v2+json" https://api.your-app.test/users`
@@ -90,6 +116,10 @@ Version APIs via media types or URL prefixes.
 ### compat-checks
 Detect breaking changes between specs.
 
+**Parameters:**
+- `old_spec` (string): Baseline OpenAPI spec
+- `new_spec` (string): Candidate OpenAPI spec
+
 **Commands:**
 - `npx openapi-diff old.yaml new.yaml`
 - `npx @redocly/cli lint new.yaml`
@@ -101,3 +131,9 @@ Detect breaking changes between specs.
 - npx openapi-diff old.yaml new.yaml | grep -i breaking
 - npx @redocly/cli lint --extends minimal new.yaml
 - npx openapi-changes compare old.yaml new.yaml --json
+
+## References
+- [Semantic Versioning](https://semver.org/)
+- [openapi-diff](https://github.com/OpenAPITools/openapi-diff)
+- [Redocly CLI](https://redocly.com/docs/cli/)
+- [RFC 9110 Content Negotiation](https://www.rfc-editor.org/rfc/rfc9110#name-content-negotiation)

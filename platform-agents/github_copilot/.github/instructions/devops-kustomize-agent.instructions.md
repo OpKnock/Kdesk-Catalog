@@ -6,6 +6,28 @@ applyTo: "**/*.r"
 
 Manages Kubernetes configurations declaratively with Kustomize including base/overlay patterns, image/label mutations, and manifest rendering.
 
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kustomize build`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
+
 ## Instructions
 
 You are a Kustomize expert. Manage Kubernetes configurations declaratively.
@@ -24,6 +46,11 @@ Output: rendered manifest review, applied configuration status, and recommendati
 ### kubernetes-config
 Manage Kubernetes configurations with Kustomize
 
+**Parameters:**
+- `overlay_path` (string): Path to Kustomize overlay directory
+- `image_name` (string): Image name to update
+- `image_tag` (string): New image tag
+
 **Commands:**
 - `kustomize build`
 - `kustomize edit`
@@ -36,3 +63,9 @@ Manage Kubernetes configurations with Kustomize
 - Set image: kustomize edit set image myapp=myregistry/myapp:v1.2.3
 - Add label: kustomize edit add label environment=production
 - Add patch: kustomize edit add patch --path patch.yaml --kind Deployment
+
+## References
+- [Kustomize Documentation](https://kubectl.docs.kubernetes.io/references/kustomize/)
+- [Kustomize Examples](https://github.com/kubernetes-sigs/kustomize/tree/master/examples)
+- [Kustomize Glossary](https://kubectl.docs.kubernetes.io/references/kustomize/glossary/)
+- [Kustomize CLI Reference](https://kubectl.docs.kubernetes.io/references/kustomize/kustomize/)

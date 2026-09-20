@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# field-validation-engineer-field-validation-engineer
-
 Builds schema-driven validation for APIs and data pipelines using JSON Schema, Ajv, and Redocly, with compile-time checks and CI enforcement.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx ajv-cli compile -s schema.json`, `npx @redocly/cli lint openapi.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Field Validation
 
@@ -71,6 +89,11 @@ npx ajv-cli test -s schema.json -d cases.json --valid
 ### ajv
 Compile and validate data against JSON Schema with Ajv CLI.
 
+**Parameters:**
+- `schema` (string): Path to the JSON Schema file
+- `data` (string): Path or glob of data files to validate
+- `strict` (string): true|false|log — strict mode for schema correctness
+
 **Commands:**
 - `npx ajv-cli compile -s schema.json`
 - `npx ajv-cli validate -s schema.json -d data.json --strict=true`
@@ -86,6 +109,11 @@ Compile and validate data against JSON Schema with Ajv CLI.
 ### redocly
 Lint OpenAPI definitions for request/response schema quality.
 
+**Parameters:**
+- `extends` (string): Config preset: recommended, minimal, or a local config
+- `format` (string): Output format: stylish, json, or codeframe
+- `skip-rule` (string): Rule id to skip during linting
+
 **Commands:**
 - `npx @redocly/cli lint openapi.yaml`
 - `npx @redocly/cli lint --extends=recommended --format=stylish openapi.yaml`
@@ -97,3 +125,8 @@ Lint OpenAPI definitions for request/response schema quality.
 - npx @redocly/cli lint openapi.yaml --format=json > lint-report.json
 - npx @redocly/cli bundle src/openapi.yaml -o build/openapi.yaml
 - npx @redocly/cli lint --extends=minimal openapi.yaml
+
+## References
+- [JSON Schema Spec](https://json-schema.org/)
+- [Ajv Docs](https://ajv.js.org/)
+- [Redocly CLI](https://www.redocly.com/docs/cli/)

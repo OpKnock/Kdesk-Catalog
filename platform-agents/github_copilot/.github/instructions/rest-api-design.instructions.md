@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.py **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# Rest Api Design
-
 Designs consistent REST APIs: resource modeling, status codes, versioning, pagination, filtering, and OpenAPI documentation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx @redocly/cli lint openapi.yaml`, `curl -s -X POST http://localhost:8000/api/users -H "Content-`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # REST API Design
 
@@ -65,6 +83,10 @@ curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/api/users/999
 ### rest-openapi
 Validate and serve OpenAPI specifications.
 
+**Parameters:**
+- `spec` (string): OpenAPI file path
+- `format` (string): Spec format: yaml or json
+
 **Commands:**
 - `npx @redocly/cli lint openapi.yaml`
 - `npx @redocly/cli bundle openapi.yaml -o bundled.yaml`
@@ -79,6 +101,10 @@ Validate and serve OpenAPI specifications.
 ### rest-testing
 Exercise endpoints and verify API behavior.
 
+**Parameters:**
+- `endpoint` (string): API endpoint URL
+- `method` (string): HTTP method
+
 **Commands:**
 - `curl -s -X POST http://localhost:8000/api/users -H "Content-Type: application/json" -d "{\"name\":\"ann\"}"`
 - `curl -s http://localhost:8000/api/users?page=2&limit=20`
@@ -89,3 +115,8 @@ Exercise endpoints and verify API behavior.
 - curl -s -X DELETE -o /dev/null -w "%{http_code}" http://localhost:8000/api/users/1
 - curl -s "http://localhost:8000/api/users?sort=-created_at&status=active"
 - curl -s http://localhost:8000/api/users/1 | python -m json.tool
+
+## References
+- [REST API Tutorial](https://restfulapi.net)
+- [OpenAPI Spec](https://spec.openapis.org/oas/v3.1.0)
+- [Redocly CLI](https://redocly.com/docs/cli/)

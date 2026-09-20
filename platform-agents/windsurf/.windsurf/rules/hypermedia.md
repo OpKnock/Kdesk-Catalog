@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Hypermedia APIs (HAL, JSON:API, HATEOAS): discovering links with curl, following affordances, and designing self-describing responses."
+description: "Hypermedia APIs (HAL, JSON:API, HATEOAS): discovering links with curl, following affordances, and designing self-describing responses. Use when working with hypermedia consumption, api or when the user mentions hypermedia consumption, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# Hypermedia
-
 Hypermedia APIs (HAL, JSON:API, HATEOAS): discovering links with curl, following affordances, and designing self-describing responses.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -H "Accept: application/hal+json" http://localhost:8080`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Hypermedia
 
@@ -93,6 +111,11 @@ Agent: Expose the affordance64:    in _links and let the client follow it:
 ### hypermedia-consumption
 Explore and follow hypermedia-driven APIs using HAL and JSON:API conventions.
 
+**Parameters:**
+- `accept` (string): Media type, e.g. application/hal+json or application/vnd.api+json.
+- `resource_url` (string): URL of the resource to fetch.
+- `relation` (string): Link relation to extract, e.g. self, next, related.
+
 **Commands:**
 - `curl -H "Accept: application/hal+json" http://localhost:8080/orders/1`
 - `curl -H "Accept: application/vnd.api+json" http://localhost:8080/api/articles`
@@ -104,3 +127,7 @@ Explore and follow hypermedia-driven APIs using HAL and JSON:API conventions.
 - curl -s -H "Accept: application/hal+json" http://localhost:8080/orders/1 | jq '._links.self.href'
 - curl -s -H "Accept: application/vnd.api+json" http://localhost:8080/api/articles | jq '.links.next'
 - curl -s http://localhost:8080/api | jq .
+
+## References
+- [HAL Specification](https://stateless.co/hal_specification.html)
+- [JSON:API Spec](https://jsonapi.org/format/)

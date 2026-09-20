@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Expert reference for producing typed client SDKs for Go, Java, TypeScript, and Python from OpenAPI specs with openapi-generator and autorest."
+description: "Expert reference for producing typed client SDKs for Go, Java, TypeScript, and Python from OpenAPI specs with openapi-generator and autorest. Use when working with multi language sdk, api or when the user mentions multi language sdk, api."
 globs: ["**/*.cs", "**/*.go", "**/*.java", "**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{ts,tsx}", "**/*.{yaml,yml}"]
 ---
 
-# Sdk Generation
-
 Expert reference for producing typed client SDKs for Go, Java, TypeScript, and Python from OpenAPI specs with openapi-generator and autorest.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx @openapitools/openapi-generator-cli generate -i openapi.`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # SDK Generation
 
@@ -72,6 +90,11 @@ cd sdk/ts && npm i && npx tsc --noEmit
 ### multi-language-sdk
 Generate and validate client SDKs in multiple languages
 
+**Parameters:**
+- `language` (string): Target language and library, e.g. java + okhttp-gson
+- `input` (string): OpenAPI or Swagger input file
+- `output` (string): Output directory for the generated SDK
+
 **Commands:**
 - `npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g go -o sdk/go`
 - `npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g java -o sdk/java --library=okhttp-gson`
@@ -83,3 +106,7 @@ Generate and validate client SDKs in multiple languages
 - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g java -o sdk/java --library=okhttp-gson
 - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o sdk/ts
 - npx autorest --input-file=swagger.json --csharp --output-folder=./sdk/csharp
+
+## References
+- [OpenAPI Generator generators list](https://openapi-generator.tech/docs/generators)
+- [AutoRest docs](https://github.com/Azure/autorest)

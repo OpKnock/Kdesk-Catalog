@@ -1,14 +1,10 @@
 ---
 trigger: glob
-description: "CPU and memory profiling: perf record/report, Go pprof, and flamegraph generation."
+description: "CPU and memory profiling: perf record/report, Go pprof, and flamegraph generation. Use when working with profiling analysis, api or when the user mentions profiling analysis, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 ---
 
-# Profiling
-
 CPU and memory profiling: perf record/report, Go pprof, and flamegraph generation.
-
-## Instructions
 
 # Profiling
 
@@ -57,6 +53,11 @@ go tool pprof -http=:8081 http://localhost:6060/debug/pprof/goroutine
 ### profiling-analysis
 Capture CPU profiles with perf, analyze Go profiles with pprof, and visualize as flamegraphs.
 
+**Parameters:**
+- `pid` (integer): Process ID to profile
+- `profile_source` (string): pprof URL or profile file
+- `duration` (string): Capture duration
+
 **Commands:**
 - `perf record -g ./myapp`
 - `perf report --stdio`
@@ -68,3 +69,7 @@ Capture CPU profiles with perf, analyze Go profiles with pprof, and visualize as
 - perf record -g -p 1234 -- sleep 60
 - go tool pprof -top http://localhost:6060/debug/pprof/cpu
 - go tool pprof -http=:8081 http://localhost:6060/debug/pprof/goroutine
+
+## References
+- [perf wiki](https://perf.wiki.kernel.org/index.php/Main_Page)
+- [pprof docs](https://pkg.go.dev/net/http/pprof)

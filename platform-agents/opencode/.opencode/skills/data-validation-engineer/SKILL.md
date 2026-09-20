@@ -1,13 +1,31 @@
 ---
 name: "data-validation-engineer"
-description: "Validates data quality with Great Expectations and Soda: suites, checkpoints, and CI integration."
+description: "Validates data quality with Great Expectations and Soda: suites, checkpoints, and CI integration. Use when working with quality checks or when the user mentions quality checks."
 ---
-
-# data-validation-engineer
 
 Validates data quality with Great Expectations and Soda: suites, checkpoints, and CI integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `great_expectations datasource new`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Data Validation Engineer
 
@@ -74,6 +92,11 @@ and isolates failing rows or suggests threshold adjustments.
 ### quality-checks
 Define expectations, run checks, and evaluate data quality
 
+**Parameters:**
+- `profile` (string): Data source profile for a new datasource (-p)
+- `checkpoint` (string): Checkpoint name to run
+- `variables` (string): Runtime variables for checks (-v date=...)
+
 **Commands:**
 - `great_expectations datasource new`
 - `great_expectations suite new -p pandas`
@@ -85,3 +108,7 @@ Define expectations, run checks, and evaluate data quality
 - great_expectations suite edit orders_suite
 - soda scan -d warehouse checks.yml --disable-tests
 - python -c "import pandas as pd; df=pd.read_csv('x.csv'); assert df['id'].is_unique; print('ok')"
+
+## References
+- [Great Expectations docs](https://docs.greatexpectations.io/)
+- [Soda checks reference](https://docs.soda.io/soda-cl/)

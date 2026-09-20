@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Implements authentication middleware: JWT verification with jsonwebtoken, Passport strategies, oauth2-proxy for edge auth, and token lifecycle checks."
+description: "Implements authentication middleware: JWT verification with jsonwebtoken, Passport strategies, oauth2-proxy for edge auth, and token lifecycle checks. Use when working with jwt middleware, passport oauth, backend or when the user mentions jwt middleware, passport oauth, backend."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# Auth Middleware
-
 Implements authentication middleware: JWT verification with jsonwebtoken, Passport strategies, oauth2-proxy for edge auth, and token lifecycle checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install jsonwebtoken express`, `npm install passport passport-jwt`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Auth Middleware
 
@@ -63,6 +81,11 @@ function requireAuth(req, res, next) {
 ### jwt-middleware
 Verify JWTs in request middleware
 
+**Parameters:**
+- `secret` (string): JWT signing secret
+- `expiresIn` (string): Token lifetime
+- `claims` (object): Token claims
+
 **Commands:**
 - `npm install jsonwebtoken express`
 - `node -e "const jwt=require('jsonwebtoken'); const t=jwt.sign({sub:'user-1',role:'admin'},'s3cret',{expiresIn:'1h'}); console.log(t)"`
@@ -87,3 +110,7 @@ Authenticate with Passport and oauth2-proxy
 **Examples:**
 - general-cli --help
 - general-api --help
+
+## References
+- [Passport.js Docs](https://www.passportjs.org/docs/)
+- [oauth2-proxy Docs](https://oauth2-proxy.github.io/oauth2-proxy/)

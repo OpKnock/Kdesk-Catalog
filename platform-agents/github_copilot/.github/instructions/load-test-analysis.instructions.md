@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# Load Test Analysis
-
 Analyze load test results: extract percentiles from k6/hey/ab outputs, compute error rates, and summarize performance regressions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `k6 run --summary-export=summary.json load.js`, `ab -n 10000 -c 200 -k http://localhost:8080/ | grep -E 'Requ`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Load Test Analysis
 
@@ -79,6 +97,10 @@ jq -e '.metrics.http_req_duration.values["p(95)"] < 300' summary.json && echo PA
 ### percentile-analysis
 Extract latency percentiles from k6 JSON exports and CLI summaries.
 
+**Parameters:**
+- `summary_file` (string): k6 --summary-export JSON file.
+- `percentile` (string): Percentile to extract, e.g. p(95), p(99).
+
 **Commands:**
 - `k6 run --summary-export=summary.json load.js`
 - `jq '.metrics.http_req_duration.values["p(95)"]' summary.json`
@@ -93,6 +115,10 @@ Extract latency percentiles from k6 JSON exports and CLI summaries.
 ### compare-runs
 Compare baseline vs. after runs and summarize throughput/errors.
 
+**Parameters:**
+- `baseline` (string): Baseline results file.
+- `after` (string): After-change results file.
+
 **Commands:**
 - `ab -n 10000 -c 200 -k http://localhost:8080/ | grep -E 'Requests per second|Failed requests'`
 - `jq '.metrics.http_reqs.values.count / .metrics.http_req_duration.values.avg' summary.json`
@@ -103,3 +129,7 @@ Compare baseline vs. after runs and summarize throughput/errors.
 - ab -n 10000 -c 200 -k http://localhost:8080/ | grep -E 'Requests per second|Failed requests'
 - awk '/^Requests per second/{print $4}' ab-before.txt ab-after.txt
 - jq '.metrics.http_reqs.values.count / .metrics.http_req_duration.values.avg' summary.json
+
+## References
+- [k6 Summary Export](https://grafana.com/docs/k6/latest/results-output/end-of-test/)
+- [jq manual](https://jqlang.github.io/jq/manual/)

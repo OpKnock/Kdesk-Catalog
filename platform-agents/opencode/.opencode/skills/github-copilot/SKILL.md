@@ -1,13 +1,31 @@
 ---
 name: "github-copilot"
-description: "Uses GitHub Copilot in the terminal: suggest and explain commands with gh copilot, manage auth, and configure Copilot extensions."
+description: "Uses GitHub Copilot in the terminal: suggest and explain commands with gh copilot, manage auth, and configure Copilot extensions. Use when working with copilot cli, auth and config, devtools or when the user mentions copilot cli, auth and config, devtools."
 ---
-
-# Github Copilot
 
 Uses GitHub Copilot in the terminal: suggest and explain commands with gh copilot, manage auth, and configure Copilot extensions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gh copilot suggest 'Deploy to production'`, `gh auth login`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GitHub Copilot CLI
 
@@ -65,6 +83,10 @@ gh copilot version
 ### copilot-cli
 Get command suggestions and explanations from the Copilot CLI.
 
+**Parameters:**
+- `target` (string): Command target: git, gh, shell
+- `prompt` (string): Natural language request
+
 **Commands:**
 - `gh copilot suggest 'Deploy to production'`
 - `gh copilot explain 'git reset --hard HEAD~2'`
@@ -80,6 +102,10 @@ Get command suggestions and explanations from the Copilot CLI.
 ### auth-and-config
 Authenticate and configure the Copilot CLI.
 
+**Parameters:**
+- `scopes` (string): OAuth scopes to refresh, e.g. read:copilot
+- `model` (string): Copilot model preference for gh copilot config
+
 **Commands:**
 - `gh auth login`
 - `gh auth status`
@@ -92,3 +118,7 @@ Authenticate and configure the Copilot CLI.
 - gh auth login
 - gh copilot config
 - gh auth refresh -s read:copilot
+
+## References
+- [GitHub Copilot CLI Docs](https://docs.github.com/en/copilot/using-github-copilot/using-github-copilot-cli)
+- [gh-copilot Extension](https://github.com/github/gh-copilot)

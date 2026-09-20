@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Propagates and validates W3C traceparent headers across services using OpenTelemetry Collector, with curl injection and Jaeger query verification."
+description: "Propagates and validates W3C traceparent headers across services using OpenTelemetry Collector, with curl injection and Jaeger query verification. Use when working with otel propagation, api or when the user mentions otel propagation, api."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# Distributed Tracing Context
-
 Propagates and validates W3C traceparent headers across services using OpenTelemetry Collector, with curl injection and Jaeger query verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `otelcol-contrib --config config.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Distributed Tracing Context
 
@@ -81,6 +99,11 @@ curl -s 'http://localhost:16686/api/traces?service=orders-service&traceID=4bf92f
 ### otel-propagation
 Run the OpenTelemetry Collector, test trace-context propagation with curl, and export/query traces.
 
+**Parameters:**
+- `traceparent` (string): W3C traceparent header value: version-traceid-parentid-flags
+- `collector-config` (string): Path to the OpenTelemetry Collector YAML config
+- `service-name` (string): OTel resource attribute identifying the service in traces
+
 **Commands:**
 - `otelcol-contrib --config config.yaml`
 - `docker run -p 4317:4317 -p 4318:4318 otel/opentelemetry-collector-contrib --config /etc/otelcol-contrib/config.yaml`
@@ -92,3 +115,7 @@ Run the OpenTelemetry Collector, test trace-context propagation with curl, and e
 - curl -i -H 'traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01' http://localhost:8080/api/orders
 - docker run -p 4317:4317 -p 4318:4318 otel/opentelemetry-collector-contrib --config /etc/otelcol-contrib/config.yaml
 - otelcol-contrib --validate --config config.yaml
+
+## References
+- [W3C Trace Context](https://www.w3.org/TR/trace-context/)
+- [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)

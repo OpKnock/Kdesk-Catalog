@@ -1,13 +1,31 @@
 ---
 name: "api-webhook-ngrok-tunnels"
-description: "Tests webhooks with local tooling: ngrok tunnels for public callbacks, webhook.site inspection, curl replays, and delivery simulation."
+description: "Tests webhooks with local tooling: ngrok tunnels for public callbacks, webhook.site inspection, curl replays, and delivery simulation. Use when working with ngrok tunnels, delivery simulation or when the user mentions ngrok tunnels, delivery simulation."
 ---
-
-# Api Webhook Ngrok Tunnels
 
 Tests webhooks with local tooling: ngrok tunnels for public callbacks, webhook.site inspection, curl replays, and delivery simulation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ngrok http 3000`, `curl -s -X POST http://localhost:3000/webhook-test -H 'Conte`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Webhook v2 - Testing
 
@@ -53,6 +71,11 @@ curl -s -X POST http://localhost:3000/webhook-test -H 'Content-Type: application
 ### ngrok-tunnels
 Expose local webhook receivers publicly
 
+**Parameters:**
+- `port` (integer): Local port to tunnel
+- `subdomain` (string): Fixed subdomain
+- `region` (string): Tunnel region
+
 **Commands:**
 - `ngrok http 3000`
 - `ngrok http --host-header=rewrite 3000`
@@ -75,3 +98,7 @@ Simulate webhook deliveries
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [ngrok Docs](https://ngrok.com/docs)
+- [webhook.site](https://webhook.site/)

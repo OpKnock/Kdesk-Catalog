@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Sets up and monitors database replication: PostgreSQL streaming, MySQL binlog, Redis replicas, and failover checks."
+description: "Sets up and monitors database replication: PostgreSQL streaming, MySQL binlog, Redis replicas, and failover checks. Use when working with replication setup, database or when the user mentions replication setup, database."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.sql"]
 ---
 
-# Replication
-
 Sets up and monitors database replication: PostgreSQL streaming, MySQL binlog, Redis replicas, and failover checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `psql -h primary -U replicator -c "SELECT * FROM pg_stat_repl`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Replication
 
@@ -70,6 +88,11 @@ states, then executes the promotion or re-sync steps needed.
 ### replication-setup
 Configure, monitor, and promote replication across database engines
 
+**Parameters:**
+- `host` (string): Primary or replica host to connect to
+- `user` (string): Replication user for basebackup/queries
+- `method` (string): Basebackup method: -R creates standby.signal and config
+
 **Commands:**
 - `psql -h primary -U replicator -c "SELECT * FROM pg_stat_replication;"`
 - `pg_basebackup -h primary -D /var/lib/postgresql/replica -R -U replicator`
@@ -81,3 +104,8 @@ Configure, monitor, and promote replication across database engines
 - psql -h replica -U app -c "SELECT pg_is_in_recovery();"
 - mysql -e "START SLAVE;"
 - redis-cli -p 6380 SLAVEOF 10.0.0.5 6379
+
+## References
+- [PostgreSQL streaming replication](https://www.postgresql.org/docs/current/warm-standby.html)
+- [MySQL replication docs](https://dev.mysql.com/doc/refman/8.0/en/replication.html)
+- [Redis replication docs](https://redis.io/docs/latest/operate/oss_and_stack/management/replication/)

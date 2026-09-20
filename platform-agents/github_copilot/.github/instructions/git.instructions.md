@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# Git
-
 Covers everyday git: repository creation, staging, commits, branching, merging, remotes, and history inspection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `git init -b main`, `git branch feature/checkout`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Everyday Git
 
@@ -76,6 +94,10 @@ fix(api): return 404 for unknown ids
 ### basic-repository-ops
 Initialize, clone, stage, and commit with clean workflows.
 
+**Parameters:**
+- `message` (string): Commit message
+- `url` (string): Remote repository URL
+
 **Commands:**
 - `git init -b main`
 - `git clone https://github.com/org/repo.git`
@@ -91,6 +113,10 @@ Initialize, clone, stage, and commit with clean workflows.
 
 ### branch-and-merge
 Create branches, merge changes, and resolve conflicts.
+
+**Parameters:**
+- `branch` (string): Branch name
+- `target` (string): Branch to merge into
 
 **Commands:**
 - `git branch feature/checkout`
@@ -108,6 +134,10 @@ Create branches, merge changes, and resolve conflicts.
 ### remotes-and-sharing
 Sync with remote repositories: fetch, pull, push, and remote management.
 
+**Parameters:**
+- `remote` (string): Remote name, e.g. origin
+- `branch` (string): Branch to push/pull
+
 **Commands:**
 - `git remote -v`
 - `git remote add origin https://github.com/org/repo.git`
@@ -120,3 +150,8 @@ Sync with remote repositories: fetch, pull, push, and remote management.
 - git push -u origin main
 - git pull --ff-only
 - git fetch --all --prune
+
+## References
+- [git Reference Manual](https://git-scm.com/docs)
+- [Pro Git Book](https://git-scm.com/book/en/v2)
+- [GitHub Docs](https://docs.github.com/en/get-started)

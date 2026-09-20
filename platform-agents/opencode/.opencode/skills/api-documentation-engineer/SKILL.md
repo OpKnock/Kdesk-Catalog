@@ -1,13 +1,31 @@
 ---
 name: "api-documentation-engineer"
-description: "Implements docs-as-code for APIs: OpenAPI authoring, Redoc builds, mock servers, and SDK generation from specs."
+description: "Implements docs-as-code for APIs: OpenAPI authoring, Redoc builds, mock servers, and SDK generation from specs. Use when working with docs as code, mock and sdk or when the user mentions docs as code, mock and sdk."
 ---
-
-# api-documentation-engineer
 
 Implements docs-as-code for APIs: OpenAPI authoring, Redoc builds, mock servers, and SDK generation from specs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install -g redoc-cli`, `npm install -g @stoplight/prism-cli`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Documentation Engineer
 
@@ -56,6 +74,10 @@ Walk through the mock endpoints matching each documented example.
 ### docs-as-code
 Author specs in Git, validate, bundle, and build interactive docs
 
+**Parameters:**
+- `spec` (string): OpenAPI spec path
+- `output` (string): HTML output path
+
 **Commands:**
 - `npm install -g redoc-cli`
 - `redoc-cli build openapi.yaml -o public/index.html`
@@ -71,6 +93,10 @@ Author specs in Git, validate, bundle, and build interactive docs
 ### mock-and-sdk
 Stand up mock servers and generate SDKs from the spec
 
+**Parameters:**
+- `port` (string): Mock server port
+- `generator` (string): SDK generator name
+
 **Commands:**
 - `npm install -g @stoplight/prism-cli`
 - `prism mock openapi.yaml -p 4010`
@@ -82,3 +108,7 @@ Stand up mock servers and generate SDKs from the spec
 - prism mock openapi.yaml -p 4010 & curl -s http://localhost:4010/api/products | python -m json.tool
 - openapi-generator generate -i openapi.yaml -g typescript-fetch -o sdk/ts
 - openapi-generator generate -i openapi.yaml -g python --package-name store_api -o sdk/python
+
+## References
+- [redoc-cli](https://github.com/Redocly/redoc/blob/master/cli/README.md)
+- [Prism CLI](https://meta.stoplight.io/docs/prism)

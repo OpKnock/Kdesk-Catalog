@@ -1,13 +1,31 @@
 ---
 name: "kompose"
-description: "Converts docker-compose files to Kubernetes manifests with kompose: conversion, direct deployment, and reverse tooling."
+description: "Converts docker-compose files to Kubernetes manifests with kompose: conversion, direct deployment, and reverse tooling. Use when working with compose to kubernetes, deploy and rollback, devops or when the user mentions compose to kubernetes, deploy and rollback, devops."
 ---
-
-# kompose
 
 Converts docker-compose files to Kubernetes manifests with kompose: conversion, direct deployment, and reverse tooling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kompose convert -f docker-compose.yml`, `kompose up -f docker-compose.yml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kompose Conversion
 
@@ -67,6 +85,11 @@ kompose convert --env-file .env
 ### compose-to-kubernetes
 Translate compose services into Deployment/Service manifests with options for volumes and networks.
 
+**Parameters:**
+- `file` (string): Compose file path
+- `volumes` (string): Volume strategy: hostPath, persistentVolumeClaim, emptyDir
+- `out` (string): Output directory
+
 **Commands:**
 - `kompose convert -f docker-compose.yml`
 - `kompose convert -f docker-compose.yml -c`
@@ -83,6 +106,10 @@ Translate compose services into Deployment/Service manifests with options for vo
 ### deploy-and-rollback
 Deploy compose stacks directly to Kubernetes and tear them down.
 
+**Parameters:**
+- `controller` (string): Workload type: deployment, daemonset, statefulset
+- `env-file` (string): Environment file
+
 **Commands:**
 - `kompose up -f docker-compose.yml`
 - `kompose down -f docker-compose.yml`
@@ -94,3 +121,7 @@ Deploy compose stacks directly to Kubernetes and tear them down.
 - kompose up -f docker-compose.yml
 - kompose down -f docker-compose.yml
 - kompose convert --controller deployment
+
+## References
+- [Kompose User Guide](https://kubernetes.io/docs/tasks/configure-pod-container/translate-compose-kubernetes/)
+- [Kompose GitHub](https://github.com/kubernetes/kompose)

@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Validate and test it configuration and rules. Write recording and alerting rules with tests. production monitoring.'"
+description: "Validate and test it configuration and rules. Write recording and alerting rules with tests. production monitoring.'. Use when working with promtool, rules, infrastructure or when the user mentions promtool, rules, infrastructure."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# prometheus
-
 Validate and test it configuration and rules. Write recording and alerting rules with tests. production monitoring.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `promtool check config prometheus.yml`, `curl -s http://localhost:9090/api/v1/rules | jq '.data.group`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Prometheus
 
@@ -103,6 +121,11 @@ Both run in CI on every config change.
 ### promtool
 Validate and test Prometheus configuration and rules.
 
+**Parameters:**
+- `config` (string): prometheus.yml to validate
+- `rules` (string): Rules file(s) to validate
+- `test` (string): Rules test file with scenarios
+
 **Commands:**
 - `promtool check config prometheus.yml`
 - `promtool check rules rules.yml`
@@ -118,6 +141,11 @@ Validate and test Prometheus configuration and rules.
 ### rules
 Write recording and alerting rules with tests.
 
+**Parameters:**
+- `query` (string): PromQL expression
+- `tsdb-path` (string): Local TSDB directory
+- `rules-file` (string): Rules yaml path
+
 **Commands:**
 - `curl -s http://localhost:9090/api/v1/rules | jq '.data.groups[] | {name, rules: [.rules[].name]}'`
 - `curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=up'`
@@ -129,3 +157,8 @@ Write recording and alerting rules with tests.
 - curl -s http://localhost:9090/api/v1/rules | jq '.data.groups | length'
 - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=rate(http_requests_total[5m])'
 - promtool tsdb list /var/lib/prometheus | head
+
+## References
+- [Prometheus Docs](https://prometheus.io/docs/prometheus/latest/getting_started/)
+- [promtool](https://prometheus.io/docs/prometheus/latest/command-line/promtool/)
+- [Recording rules](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/)

@@ -2,11 +2,29 @@
 applyTo: "**/*.html **/*.json **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# api-test-specialist
-
 Builds API test suites with Postman and Newman: collections, environments, assertions, data-driven iterations, and CI execution with reporters.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install -g newman`, `node -e "const c=require('./collection.json'); const t=c.ite`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Test Specialist
 
@@ -58,6 +76,11 @@ pm.test("has data", () => {
 ### newman-execution
 Run Postman collections in CI
 
+**Parameters:**
+- `collection` (string): Collection file path
+- `environment` (string): Environment JSON
+- `reporters` (string): cli, json, html, junit
+
 **Commands:**
 - `npm install -g newman`
 - `newman run collection.json -e production.postman_environment.json -r cli,json --reporter-json-export results.json`
@@ -81,3 +104,7 @@ Write response assertions in collections
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Newman CLI](https://learning.postman.com/docs/collections/running-collections/using-newman-cli/)
+- [Postman Tests](https://learning.postman.com/docs/writing-scripts/test-scripts/)

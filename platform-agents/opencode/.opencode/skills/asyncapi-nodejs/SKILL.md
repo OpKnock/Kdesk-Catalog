@@ -1,13 +1,31 @@
 ---
 name: "asyncapi-nodejs"
-description: "Generates Node.js applications from AsyncAPI documents with the nodejs-template, then installs, runs, and tests the generated subscriber."
+description: "Generates Node.js applications from AsyncAPI documents with the nodejs-template, then installs, runs, and tests the generated subscriber. Use when working with node generation, ts models, api or when the user mentions node generation, ts models, api."
 ---
-
-# Asyncapi Nodejs
 
 Generates Node.js applications from AsyncAPI documents with the nodejs-template, then installs, runs, and tests the generated subscriber.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-templ`, `npx @asyncapi/modelina generate --input asyncapi.yaml --outp`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # AsyncAPI Node.js
 
@@ -61,6 +79,10 @@ The template creates handler stubs per channel operation (e.g. handleOrderCreate
 ### node-generation
 Generate a Node.js async API app from the spec.
 
+**Parameters:**
+- `output` (string): Output directory
+- `param` (string): Template params like server=production
+
 **Commands:**
 - `npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-template -o ./generated --force-write`
 - `npm install --prefix ./generated`
@@ -76,6 +98,10 @@ Generate a Node.js async API app from the spec.
 ### ts-models
 Generate TypeScript models from the schema with Modelina.
 
+**Parameters:**
+- `model_type` (string): class or interface for TypeScript models
+- `output` (string): Models output directory
+
 **Commands:**
 - `npx @asyncapi/modelina generate --input asyncapi.yaml --output ./generated/src/models --language TypeScript`
 - `npm run build --prefix ./generated`
@@ -86,3 +112,8 @@ Generate TypeScript models from the schema with Modelina.
 - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./src/models --language TypeScript --model-type interface
 - npm run build --prefix ./generated
 - npx tsc --noEmit --project ./generated
+
+## References
+- [Node.js Template](https://github.com/asyncapi/nodejs-template)
+- [Modelina TypeScript](https://www.asyncapi.com/docs/tools/modelina/languages/TypeScript)
+- [AsyncAPI Tutorials](https://www.asyncapi.com/docs/tutorials/getting-started/event-driven-architectures)

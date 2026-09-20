@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Scan images, directories, and repos handling vulnerabilities and secrets. Scan IaC configs and manage SBOMs. Scan Kubernetes clusters handling vulnerabilities and misconfigs. IaC misconfigs, and licenses with Trivy."
+description: "Scan images, directories, and repos handling vulnerabilities and secrets. Scan IaC configs and manage SBOMs. Scan Kubernetes clusters handling vulnerabilities and misconfigs. IaC misconfigs, and licenses with Trivy. Use when working with image and fs scan, config and sbom, cluster scan, security or when the user mentions image and fs scan, config and sbom, cluster scan, security."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.tf", "**/*.{yaml,yml}"]
 ---
 
-# trivy
-
 Scan images, directories, and repos handling vulnerabilities and secrets. Scan IaC configs and manage SBOMs. Scan Kubernetes clusters handling vulnerabilities and misconfigs. IaC misconfigs, and licenses with Trivy.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `trivy image nginx:latest`, `trivy config .`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Trivy
 
@@ -72,6 +90,11 @@ trivy kubernetes cluster --severity HIGH,CRITICAL
 ### image-and-fs-scan
 Scan images, directories, and repos for vulnerabilities and secrets.
 
+**Parameters:**
+- `target` (string): Image, directory, or repo URL to scan
+- `scanners` (array): Scan types: vuln, secret, config, license
+- `severity` (string): Minimum severity: LOW, MEDIUM, HIGH, CRITICAL
+
 **Commands:**
 - `trivy image nginx:latest`
 - `trivy image --severity HIGH,CRITICAL --ignore-unfixed nginx:latest`
@@ -86,6 +109,10 @@ Scan images, directories, and repos for vulnerabilities and secrets.
 
 ### config-and-sbom
 Scan IaC configs and manage SBOMs.
+
+**Parameters:**
+- `sbomFormat` (string): SBOM format: cyclonedx, spdx
+- `output` (string): Output file path
 
 **Commands:**
 - `trivy config .`
@@ -102,6 +129,10 @@ Scan IaC configs and manage SBOMs.
 ### cluster-scan
 Scan Kubernetes clusters for vulnerabilities and misconfigs.
 
+**Parameters:**
+- `report` (string): Report scope: summary, all
+- `skipImages` (boolean): Skip image scanning in cluster scans
+
 **Commands:**
 - `trivy kubernetes --report summary cluster`
 - `trivy kubernetes cluster --severity HIGH,CRITICAL`
@@ -112,3 +143,7 @@ Scan Kubernetes clusters for vulnerabilities and misconfigs.
 - trivy kubernetes --report summary cluster
 - trivy kubernetes cluster --severity HIGH,CRITICAL
 - trivy k8s --skip-images deployment/myapp
+
+## References
+- [Trivy Documentation](https://trivy.dev/)
+- [Trivy GitHub](https://github.com/aquasecurity/trivy)

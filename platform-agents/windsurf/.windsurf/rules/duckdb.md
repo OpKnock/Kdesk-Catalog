@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "In-process analytical SQL with DuckDB: querying CSV/Parquet directly, extensions, and CLI use."
+description: "In-process analytical SQL with DuckDB: querying CSV/Parquet directly, extensions, and CLI use. Use when working with duckdb cli, database or when the user mentions duckdb cli, database."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.sql"]
 ---
 
-# Duckdb
-
 In-process analytical SQL with DuckDB: querying CSV/Parquet directly, extensions, and CLI use.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `duckdb mydb.duckdb`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # DuckDB
 
@@ -69,6 +87,11 @@ the source data into Parquet for faster future queries.
 ### duckdb-cli
 Query files and databases with DuckDB's CLI and in-process SQL
 
+**Parameters:**
+- `command` (string): SQL to execute in one-shot mode (-c)
+- `json` (boolean): Output results as JSON
+- `readonly` (boolean): Open the database read-only
+
 **Commands:**
 - `duckdb mydb.duckdb`
 - `duckdb -c "SELECT count(*) FROM read_csv_auto('data.csv')"`
@@ -80,3 +103,7 @@ Query files and databases with DuckDB's CLI and in-process SQL
 - duckdb -c "SELECT * FROM 'orders.csv' WHERE amount > 100 LIMIT 5"
 - python -c "import duckdb; print(duckdb.sql('SELECT 42').fetchall())"
 - duckdb -c "ATTACH 's3://bucket/db.duckdb' AS remote; SHOW ALL TABLES"
+
+## References
+- [DuckDB docs](https://duckdb.org/docs/)
+- [DuckDB data ingestion](https://duckdb.org/docs/data/overview)

@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# log-aggregation-architect
-
 Architects log pipelines with Loki, logcli, and Elasticsearch: collection, querying, retention, and cost-effective storage.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `logcli query '{app="api"}' --since 1h`, `curl -s 'http://localhost:9200/_cat/indices?v' | head -20`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Log Aggregation
 
@@ -71,6 +89,11 @@ Verify pipelines after every deploy.
 ### loki
 Query and operate Grafana Loki with logcli.
 
+**Parameters:**
+- `since` (string): Time window like 1h, 24h
+- `limit` (number): Max lines returned
+- `selector` (string): Log stream selector in braces
+
 **Commands:**
 - `logcli query '{app="api"}' --since 1h`
 - `logcli query '{app="api"} |= "error"' --since 24h --limit 500`
@@ -86,6 +109,11 @@ Query and operate Grafana Loki with logcli.
 ### elasticsearch
 Search and manage Elasticsearch indices.
 
+**Parameters:**
+- `index` (string): Index or wildcard pattern
+- `query` (string): Elasticsearch query DSL JSON
+- `size` (number): Result limit
+
 **Commands:**
 - `curl -s 'http://localhost:9200/_cat/indices?v' | head -20`
 - `curl -s -X POST 'http://localhost:9200/logs-2026.08.10/_search' -H 'Content-Type: application/json' -d '{"query":{"match":{"level":"ERROR"}},"size":10}'`
@@ -97,3 +125,8 @@ Search and manage Elasticsearch indices.
 - curl -s 'http://localhost:9200/_cat/indices?v&h=index,docs.count' | grep logs-
 - curl -s -X POST 'http://localhost:9200/logs-*/_search' -H 'Content-Type: application/json' -d '{"query":{"match_phrase":{"message":"out of memory"}},"size":20}'
 - curl -s 'http://localhost:9200/_cluster/health' | jq
+
+## References
+- [Loki Docs](https://grafana.com/docs/loki/latest/)
+- [logcli](https://grafana.com/docs/loki/latest/reference/cli/logcli/)
+- [Elasticsearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)

@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Processes JSON in the shell with jq: filtering, transformations, aggregation, and scripting against APIs and log streams."
+description: "Processes JSON in the shell with jq: filtering, transformations, aggregation, and scripting against APIs and log streams. Use when working with query and filter, transform and aggregate, devtools or when the user mentions query and filter, transform and aggregate, devtools."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.sql"]
 ---
 
-# jq
-
 Processes JSON in the shell with jq: filtering, transformations, aggregation, and scripting against APIs and log streams.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `cat data.json | jq '.users[].name'`, `jq '{count: (.items | length), names: [.items[].name]}' data`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # jq JSON Processing
 
@@ -62,6 +80,10 @@ curl -s https://api.example.com/data | jq '.result'
 ### query-and-filter
 Extract and filter values from JSON documents.
 
+**Parameters:**
+- `filter` (string): jq filter expression
+- `file` (string): JSON file path
+
 **Commands:**
 - `cat data.json | jq '.users[].name'`
 - `jq '.items[] | select(.status == "open")' data.json`
@@ -78,6 +100,10 @@ Extract and filter values from JSON documents.
 ### transform-and-aggregate
 Build new JSON, group, count, and reshape data.
 
+**Parameters:**
+- `raw` (boolean): Output raw strings without quotes (-r)
+- `compact` (boolean): Compact single-line output (-c)
+
 **Commands:**
 - `jq '{count: (.items | length), names: [.items[].name]}' data.json`
 - `jq 'group_by(.kind) | map({kind: .[0].kind, count: length})' data.json`
@@ -90,3 +116,7 @@ Build new JSON, group, count, and reshape data.
 - jq 'group_by(.kind) | map({kind: .[0].kind, count: length})' data.json
 - jq -r '.items[] | "\(.name)\t\(.id)"' data.json
 - jq 'map(.price) | add / length' data.json
+
+## References
+- [jq Manual](https://jqlang.github.io/jq/manual/)
+- [jq Playground](https://jqplay.org/)

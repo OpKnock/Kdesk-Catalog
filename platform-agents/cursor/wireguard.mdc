@@ -1,14 +1,32 @@
 ---
-description: "Deploys WireGuard VPNs: key generation, peer configuration, and interface management with wg and wg-quick."
+description: "Deploys WireGuard VPNs: key generation, peer configuration, and interface management with wg and wg-quick. Use when working with keys, interfaces, networking or when the user mentions keys, interfaces, networking."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Wireguard
-
 Deploys WireGuard VPNs: key generation, peer configuration, and interface management with wg and wg-quick.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `umask 077 && wg genkey | tee privatekey | wg pubkey > public`, `wg-quick up wg0`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # WireGuard
 
@@ -91,6 +109,11 @@ Confirm handshake and ping before wiring services.
 ### keys
 Generate WireGuard key pairs securely.
 
+**Parameters:**
+- `umask` (string): Secure file permissions, e.g. 077
+- `output` (string): Key output file
+- `preshared` (string): Generate a preshared key
+
 **Commands:**
 - `umask 077 && wg genkey | tee privatekey | wg pubkey > publickey`
 - `wg genkey`
@@ -106,6 +129,11 @@ Generate WireGuard key pairs securely.
 ### interfaces
 Bring up, tear down, and inspect WireGuard interfaces.
 
+**Parameters:**
+- `interface` (string): wg0, wg1, or config path
+- `allowed-ips` (string): Show peer allowed IPs
+- `transfer` (string): Show transfer counters
+
 **Commands:**
 - `wg-quick up wg0`
 - `wg-quick down wg0`
@@ -117,3 +145,8 @@ Bring up, tear down, and inspect WireGuard interfaces.
 - wg-quick up /etc/wireguard/wg0.conf
 - wg show wg0 transfer
 - wg show wg0 peers | wc -l
+
+## References
+- [WireGuard Quickstart](https://www.wireguard.com/quickstart/)
+- [wg man page](https://man7.org/linux/man-pages/man8/wg.8.html)
+- [wg-quick man page](https://man7.org/linux/man-pages/man8/wg-quick.8.html)

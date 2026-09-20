@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Implements API caching end to end: HTTP caching headers, Express/FastAPI middleware, and Redis cache-aside."
+description: "Implements API caching end to end: HTTP caching headers, Express/FastAPI middleware, and Redis cache-aside. Use when working with middleware implementation, redis cache aside or when the user mentions middleware implementation, redis cache aside."
 globs: ["**/*.py", "**/*.r", "**/*.sh"]
 ---
 
-# Api Cache Middleware Implementation
-
 Implements API caching end to end: HTTP caching headers, Express/FastAPI middleware, and Redis cache-aside.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install apicache`, `redis-cli SET api:products:42 '{"id":42}' EX 300`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Cache (Implementation)
 
@@ -53,6 +71,10 @@ Hit the endpoint twice and confirm the second read skips the DB (check query log
 ### middleware-implementation
 Add caching middleware to Node and Python APIs
 
+**Parameters:**
+- `ttl` (string): Cache TTL string
+- `store` (string): Backing store: memory or redis
+
 **Commands:**
 - `npm install apicache`
 - `npm install express-cache-middleware`
@@ -68,6 +90,10 @@ Add caching middleware to Node and Python APIs
 ### redis-cache-aside
 Implement cache-aside with TTL and explicit invalidation on writes
 
+**Parameters:**
+- `key` (string): Cache key
+- `ttlSeconds` (string): TTL in seconds
+
 **Commands:**
 - `redis-cli SET api:products:42 '{"id":42}' EX 300`
 - `redis-cli GET api:products:42`
@@ -79,3 +105,8 @@ Implement cache-aside with TTL and explicit invalidation on writes
 - redis-cli SET api:products:42 '{"id":42}' EX 300 && redis-cli TTL api:products:42
 - redis-cli GET api:products:42 || curl -s http://localhost:3000/api/products/42
 - redis-cli DEL api:products:42 && redis-cli EXISTS api:products:42
+
+## References
+- [apicache](https://github.com/kwhitley/apicache)
+- [fastapi-cache2](https://github.com/long2ice/fastapi-cache)
+- [Redis Commands](https://redis.io/docs/latest/commands/)

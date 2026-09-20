@@ -1,13 +1,31 @@
 ---
 name: "social-login"
-description: "Implements OAuth2 social sign-in with GitHub and Google. Completes authorization code exchanges, fetches profile data from userinfo endpoints, maps provider identities to local accounts by stable provider ID, and verifies state parameters to prevent CSRF."
+description: "Implements OAuth2 social sign-in with GitHub and Google. Completes authorization code exchanges, fetches profile data from userinfo endpoints, maps provider identities to local accounts by stable provider ID, and verifies state parameters to prevent CSRF. Use when working with oauth social login, api or when the user mentions oauth social login, api."
 ---
-
-# Social Login
 
 Implements OAuth2 social sign-in with GitHub and Google. Completes authorization code exchanges, fetches profile data from userinfo endpoints, maps provider identities to local accounts by stable provider ID, and verifies state parameters to prevent CSRF.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -X POST https://github.com/login/oauth/access_token -H `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Social Login
 
@@ -66,6 +84,13 @@ curl -X POST https://github.com/login/oauth/access_token -H "Accept: application
 ### oauth-social-login
 Implements OAuth2 social sign-in with GitHub and Google. Completes authorization code exchanges, fetches profile data from userinfo endpoints, maps provider identities to local accounts by stable provider ID, and verifies state parameters to prevent CSRF.
 
+**Parameters:**
+- `github_client_id` (string): GitHub OAuth application client ID
+- `github_client_secret` (string): GitHub OAuth application client secret
+- `google_client_id` (string): Google OAuth client ID
+- `google_client_secret` (string): Google OAuth client secret
+- `redirect_uri` (string): Registered redirect URI for OAuth callback
+
 **Commands:**
 - `curl -X POST https://github.com/login/oauth/access_token -H "Accept: application/json" -d "client_id=$GITHUB_CLIENT_ID&client_secret=$GITHUB_CLIENT_SECRET&code=$AUTH_CODE"`
 - `curl -H "Authorization: Bearer $ACCESS_TOKEN" https://api.github.com/user`
@@ -77,3 +102,6 @@ Implements OAuth2 social sign-in with GitHub and Google. Completes authorization
 - curl -H "Authorization: Bearer $ACCESS_TOKEN" https://api.github.com/user
 - curl -X POST https://oauth2.googleapis.com/token -H "Content-Type: application/x-www-form-urlencoded" -d "client_id=$GOOGLE_CLIENT_ID&client_secret=$GOOGLE_CLIENT_SECRET&code=$AUTH_CODE&grant_type=authorization_code&redirect_uri=$REDIRECT_URI"
 - curl -H "Authorization: Bearer $ACCESS_TOKEN" https://www.googleapis.com/oauth2/v2/userinfo
+
+## References
+- [GitHub OAuth apps](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)

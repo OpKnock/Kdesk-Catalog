@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh **/*.sql"
 ---
 
-# firebase
-
 Develops Firebase projects with the Firebase CLI: hosting, functions, Firestore, emulators, and deployment.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install -g firebase-tools`, `firebase deploy`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Firebase
 
@@ -72,6 +90,10 @@ service cloud.firestore {
 ### firebase-init
 Initialize and configure Firebase projects.
 
+**Parameters:**
+- `project` (string): Firebase project id
+- `features` (string): hosting, functions, firestore, emulators
+
 **Commands:**
 - `npm install -g firebase-tools`
 - `firebase login`
@@ -86,6 +108,10 @@ Initialize and configure Firebase projects.
 
 ### firebase-deploy
 Deploy hosting and functions.
+
+**Parameters:**
+- `only` (string): Targets: hosting, functions:name
+- `config` (string): firebase.json config path
 
 **Commands:**
 - `firebase deploy`
@@ -102,6 +128,10 @@ Deploy hosting and functions.
 ### firestore-ops
 Manage Firestore data and rules.
 
+**Parameters:**
+- `collection` (string): Collection to delete
+- `rules` (string): Firestore rules file path
+
 **Commands:**
 - `firebase firestore:delete --all-collections -y`
 - `firebase deploy --only firestore:rules`
@@ -111,3 +141,7 @@ Manage Firestore data and rules.
 **Examples:**
 - firebase firestore:delete users -y
 - firebase emulators:start --import ./seed
+
+## References
+- [Firebase Docs](https://firebase.google.com/docs)
+- [Firebase CLI Reference](https://firebase.google.com/docs/cli)

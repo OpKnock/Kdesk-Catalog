@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Consumes and produces Server-Sent Events streams from the terminal. Streams events incrementally with curl -N, filters data lines, replays missed events via Last-Event-ID header, captures to files, and provides Python sseclient-py consumers."
+description: "Consumes and produces Server-Sent Events streams from the terminal. Streams events incrementally with curl -N, filters data lines, replays missed events via Last-Event-ID header, captures to files, and provides Python sseclient-py consumers. Use when working with sse consumption, api or when the user mentions sse consumption, api."
 globs: ["**/*.go", "**/*.py", "**/*.r", "**/*.sh"]
 ---
 
-# SSE
-
 Consumes and produces Server-Sent Events streams from the terminal. Streams events incrementally with curl -N, filters data lines, replays missed events via Last-Event-ID header, captures to files, and provides Python sseclient-py consumers.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -N http://localhost:8080/events`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Server-Sent Events (SSE)
 
@@ -83,6 +101,11 @@ curl -N --no-buffer http://localhost:8080/stream > events.log && wc -l events.lo
 ### sse-consumption
 Consumes and produces Server-Sent Events streams from the terminal. Streams events incrementally with curl -N, filters data lines, replays missed events via Last-Event-ID header, captures to files, and provides Python sseclient-py consumers.
 
+**Parameters:**
+- `url` (string): SSE endpoint URL
+- `last_event_id` (string): Last-Event-ID header value for replay
+- `accept_header` (string): Accept header (text/event-stream)
+
 **Commands:**
 - `curl -N http://localhost:8080/events`
 - `curl -N -H "Accept: text/event-stream" http://localhost:8080/updates | grep -E "^data:"`
@@ -96,3 +119,6 @@ Consumes and produces Server-Sent Events streams from the terminal. Streams even
 - curl -N -H "Last-Event-ID: 14" http://localhost:8080/events
 - curl -N --no-buffer http://localhost:8080/stream
 - pip install sseclient-py
+
+## References
+- [MDN Using Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)

@@ -2,11 +2,29 @@
 applyTo: "**/*.css **/*.json **/*.r **/*.sh"
 ---
 
-# Nginx Tuning
-
 Optimizes nginx for production with worker process sizing, keepalive tuning, kernel parameter adjustments, gzip compression, and load testing validation with ab.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `nginx -t`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # nginx Tuning
 
@@ -76,6 +94,11 @@ http {
 ### nginx-performance-tuning
 Optimize nginx core settings and kernel parameters, then benchmark with ab.
 
+**Parameters:**
+- `workers` (integer): worker_processes value
+- `connections` (integer): worker_connections value
+- `url` (string): URL for load testing
+
 **Commands:**
 - `nginx -t`
 - `nginx -s reload`
@@ -87,3 +110,7 @@ Optimize nginx core settings and kernel parameters, then benchmark with ab.
 - nginx -T | grep -E 'worker_processes|worker_connections'
 - sysctl -w net.ipv4.tcp_fin_timeout=30
 - ab -n 5000 -c 50 -k http://localhost/api
+
+## References
+- [nginx Core Module](https://nginx.org/en/docs/http/ngx_http_core_module.html)
+- [nginx Tuning Guide](https://www.nginx.com/blog/tuning-nginx/)

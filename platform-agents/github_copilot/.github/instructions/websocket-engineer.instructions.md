@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.r **/*.sh"
 ---
 
-# websocket-engineer
-
 Build, test, and debug WebSocket servers and clients using wscat, websocat, and websocketd for real-time messaging. Use when building or debugging real-time WebSocket channels. Don't use for webhook delivery (see webhook-reliability-engineer) or one-way event streams.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `wscat -c ws://localhost:8080`, `websocat ws://localhost:8080`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # WebSocket Engineering
 
@@ -66,6 +84,10 @@ Design and debug real-time, bidirectional, persistent connections for chat, stre
 ### Test WebSocket servers with wscat
 Connect interactively or non-interactively, send frames, and verify server responses, headers, and protocols.
 
+**Parameters:**
+- `headers` (string): Extra HTTP headers for the opening handshake, e.g. authorization tokens.
+- `subprotocol` (string): Requested WebSocket subprotocol via -p.
+
 **Commands:**
 - `wscat -c ws://localhost:8080`
 - `wscat -c wss://api.example.com/socket -H 'Authorization: Bearer demo-token'`
@@ -78,6 +100,10 @@ Connect interactively or non-interactively, send frames, and verify server respo
 
 ### Relay and stream with websocat
 Tunnel WebSocket traffic, stream files into connections, and bridge websocket endpoints for debugging.
+
+**Parameters:**
+- `bridge` (flag): -t bridges two endpoints, forwarding frames in both directions.
+- `listen port` (integer): Port for -s server mode to accept incoming connections.
 
 **Commands:**
 - `websocat ws://localhost:8080`
@@ -93,6 +119,10 @@ Tunnel WebSocket traffic, stream files into connections, and bridge websocket en
 ### Run WebSocket servers with websocketd
 Turn any stdin/stdout program into a WebSocket server and serve a static demo page.
 
+**Parameters:**
+- `port` (integer): Port the server listens on.
+- `staticdir` (string): Directory of static files served alongside the WebSocket endpoint.
+
 **Commands:**
 - `websocketd --port=8080 ./counter.sh`
 - `websocketd --port=8080 --staticdir=./public ./echo.py`
@@ -102,3 +132,9 @@ Turn any stdin/stdout program into a WebSocket server and serve a static demo pa
 **Examples:**
 - websocketd --port=8080 ./counter.sh
 - websocketd --port=8080 --staticdir=./public ./echo.py
+
+## References
+- [](https://github.com/websockets/wscat)
+- [](https://github.com/vi/websocat)
+- [](https://github.com/joewalnes/websocketd)
+- [](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)

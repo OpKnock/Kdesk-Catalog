@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.r **/*.sh"
 ---
 
-# error-handling-architect-error-handling-architect
-
 Designs robust error handling: structured errors, observability with Sentry, static analysis, and graceful degradation patterns.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `sentry-cli login`, `golangci-lint run --enable=errcheck,staticcheck ./...`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Error Handling Architecture
 
@@ -67,6 +85,10 @@ pytest --tb=short --maxfail=1 tests/
 ### error-observability
 Instrument and monitor errors with sentry-cli.
 
+**Parameters:**
+- `release` (string): Release version
+- `project` (string): Sentry project slug
+
 **Commands:**
 - `sentry-cli login`
 - `sentry-cli releases new -p app app@1.2.0`
@@ -83,6 +105,10 @@ Instrument and monitor errors with sentry-cli.
 ### static-analysis-gates
 Catch error-handling bugs before runtime with linters.
 
+**Parameters:**
+- `path` (string): Path to analyze
+- `rules` (string): Rule set to enable
+
 **Commands:**
 - `golangci-lint run --enable=errcheck,staticcheck ./...`
 - `mypy --strict --warn-unreachable src/`
@@ -95,3 +121,8 @@ Catch error-handling bugs before runtime with linters.
 - golangci-lint run --enable=errcheck,staticcheck ./...
 - cargo clippy -- -D warnings
 - ruff check src/ --select E,F,B
+
+## References
+- [Sentry CLI](https://docs.sentry.io/cli/)
+- [errcheck](https://github.com/kisielk/errcheck)
+- [golangci-lint](https://golangci-lint.run/)

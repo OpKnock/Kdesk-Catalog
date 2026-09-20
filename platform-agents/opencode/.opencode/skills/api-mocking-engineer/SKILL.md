@@ -1,13 +1,31 @@
 ---
 name: "api-mocking-engineer"
-description: "Evaluates and operates advanced mock server tools: Mountebank imposter protocol, Hoverfly simulation, and service virtualization for microservice test environments."
+description: "Evaluates and operates advanced mock server tools: Mountebank imposter protocol, Hoverfly simulation, and service virtualization for microservice test environments. Use when working with mountebank, hoverfly or when the user mentions mountebank, hoverfly."
 ---
-
-# api-mocking-engineer
 
 Evaluates and operates advanced mock server tools: Mountebank imposter protocol, Hoverfly simulation, and service virtualization for microservice test environments.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install -g mountebank`, `docker run --name hoverfly -p 8888:8888 -p 8500:8500 spectol`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Mocking Engineer
 
@@ -52,6 +70,11 @@ curl -s http://localhost:4545/anything
 ### mountebank
 Create protocol-level mock services (imposters) with Mountebank
 
+**Parameters:**
+- `protocol` (string): http, https, tcp, or smtp imposter protocol
+- `port` (integer): Port for the mock service
+- `stubs` (array): Predicates and responses defining mock behavior
+
 **Commands:**
 - `npm install -g mountebank`
 - `mb start --port 2525`
@@ -76,3 +99,7 @@ Simulate and record APIs with Hoverfly in capture mode
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Mountebank API Docs](http://www.mbtest.org/docs/api/overview)
+- [Hoverfly Docs](https://docs.hoverfly.io/en/latest/)

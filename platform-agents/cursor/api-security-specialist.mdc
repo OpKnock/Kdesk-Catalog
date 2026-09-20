@@ -1,14 +1,32 @@
 ---
-description: "Manages API secrets and identity: HashiCorp Vault secret storage and rotation, AWS Secrets Manager CLI, and secrets hygiene for API keys."
+description: "Manages API secrets and identity: HashiCorp Vault secret storage and rotation, AWS Secrets Manager CLI, and secrets hygiene for API keys. Use when working with vault secrets, aws secrets or when the user mentions vault secrets, aws secrets."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# api-security-specialist
-
 Manages API secrets and identity: HashiCorp Vault secret storage and rotation, AWS Secrets Manager CLI, and secrets hygiene for API keys.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `vault server -dev`, `aws secretsmanager create-secret --name prod/api-key --secre`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Security Specialist
 
@@ -55,6 +73,11 @@ aws secretsmanager create-secret --name prod/api-key --secret-string "{\"key\":\
 ### vault-secrets
 Store and retrieve API secrets in Vault
 
+**Parameters:**
+- `path` (string): Secret path in the KV store
+- `format` (string): Output format: table, json, yaml
+- `fields` (object): Key-value secret fields
+
 **Commands:**
 - `vault server -dev`
 - `vault kv put secret/api DB_PASSWORD="s3cr3t" API_KEY="key-123"`
@@ -79,3 +102,7 @@ Manage secrets with AWS Secrets Manager
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Vault KV Secrets](https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v2)
+- [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/)

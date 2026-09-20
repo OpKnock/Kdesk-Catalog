@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# Nats Server
-
 Operates the NATS server binary powering core messaging, JetStream, and clustering. Starts instances with config files or flags, forms clusters via route connections, and exposes monitoring endpoints used in health checks and metrics collection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `nats-server -c server.conf`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # NATS Server
 
@@ -73,6 +91,11 @@ jetstream { store_dir: /var/lib/nats }
 ### nats-server-operations
 Start nats-server with configs, form clusters via routes, and enable JetStream and monitoring.
 
+**Parameters:**
+- `config` (string): Path to the server config file
+- `port` (integer): Client listen port (default 4222)
+- `cluster_port` (integer): Cluster route listen port (default 6222)
+
 **Commands:**
 - `nats-server -c server.conf`
 - `nats-server -js -p 4222`
@@ -84,3 +107,7 @@ Start nats-server with configs, form clusters via routes, and enable JetStream a
 - nats-server --tls --tlscert server.crt --tlskey server.key -p 4222
 - nats-server -c cluster.conf
 - curl -s http://localhost:8222/varz
+
+## References
+- [NATS Server Configuration](https://docs.nats.io/running-a-nats-service/configuration)
+- [NATS Monitoring Endpoints](https://docs.nats.io/running-a-nats-service/nats_admin/monitoring)

@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Analyzes API latency distribution and connection behavior with autocannon, artillery quick mode, and request-level timing to separate network from application cost."
+description: "Analyzes API latency distribution and connection behavior with autocannon, artillery quick mode, and request-level timing to separate network from application cost. Use when working with autocannon, artillery quick or when the user mentions autocannon, artillery quick."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# Api Perf Autocannon
-
 Analyzes API latency distribution and connection behavior with autocannon, artillery quick mode, and request-level timing to separate network from application cost.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx autocannon -c 20 -d 30 -p 1 http://localhost:3000/`, `npx artillery quick -d 30 -r 20 http://localhost:3000/api`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Perf v4 - Latency Analysis
 
@@ -53,6 +71,11 @@ npx artillery quick -d 30 -r 20 http://localhost:3000/api
 ### autocannon
 Run pipelined HTTP benchmarks with full statistics
 
+**Parameters:**
+- `connections` (integer): Number of concurrent connections
+- `duration` (integer): Duration in seconds
+- `pipelining` (integer): Pipelined requests per connection
+
 **Commands:**
 - `npx autocannon -c 20 -d 30 -p 1 http://localhost:3000/`
 - `npx autocannon -c 10 -d 20 -m POST -b '{"a":1}' -H 'Content-Type=application/json' http://localhost:3000/api`
@@ -75,3 +98,7 @@ Use artillery quick for ad-hoc load scenarios
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [autocannon GitHub](https://github.com/mcollina/autocannon)
+- [Artillery Quick Docs](https://www.artillery.io/docs/guides/getting-started/overview)

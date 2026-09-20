@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# api-pagination-specialist
-
 Implements RFC 8288 Link headers for pagination: rel=next/prev/first/last, parsing with standard libraries, and REST hypermedia navigation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -sI 'http://localhost:8080/users?page=2&limit=10'`, `node -e "const h='demo-http-localhost-8080-users-page; rel=\`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Pagination Specialist
 
@@ -54,6 +72,11 @@ Link: <https://api.example.com/users?page=1>; rel="first",
 ### link-headers
 Expose pagination metadata in HTTP Link headers
 
+**Parameters:**
+- `rel` (string): Link relation: next, prev, first, last
+- `page` (integer): Current page number for URL construction
+- `limit` (integer): Items per page reflected in link URLs
+
 **Commands:**
 - `curl -sI 'http://localhost:8080/users?page=2&limit=10'`
 - `curl -s -D- 'http://localhost:8080/users?page=2' | grep -i '^link:'`
@@ -76,3 +99,7 @@ Validate Link header output against RFC 8288
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [RFC 8288 - Web Linking](https://www.rfc-editor.org/rfc/rfc8288)
+- [parse-link-header](https://github.com/remy/parse-link-header)

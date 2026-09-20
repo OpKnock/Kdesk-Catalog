@@ -1,14 +1,32 @@
 ---
-description: "Designs and implements error handling: RFC 9457 formats, error catalogs, middleware, and OpenAPI documentation for REST and GraphQL."
+description: "Designs and implements error handling: RFC 9457 formats, error catalogs, middleware, and OpenAPI documentation for REST and GraphQL. Use when working with error format impl, graphql errors or when the user mentions error format impl, graphql errors."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# api-error-handling-engineer
-
 Designs and implements error handling: RFC 9457 formats, error catalogs, middleware, and OpenAPI documentation for REST and GraphQL.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install http-errors`, `node -e "const {GraphQLError}=require('graphql');const e=new`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Error Handling Engineer
 
@@ -50,6 +68,10 @@ Test both valid and invalid inputs and assert shapes.
 ### error-format-impl
 Implement RFC 9457 problem details in REST services
 
+**Parameters:**
+- `status` (string): HTTP status
+- `code` (string): Error code
+
 **Commands:**
 - `npm install http-errors`
 - `node -e "const h=require('http-errors');const e=h(400,'Bad Request');e.code='VALIDATION_1001';console.log(e.status,e.code)"`
@@ -65,6 +87,10 @@ Implement RFC 9457 problem details in REST services
 ### graphql-errors
 Design GraphQL error policies: extensions, codes, and partial results
 
+**Parameters:**
+- `code` (string): GraphQL error code
+- `message` (string): Error message
+
 **Commands:**
 - `node -e "const {GraphQLError}=require('graphql');const e=new GraphQLError('Not authorized',{extensions:{code:'UNAUTHENTICATED'}});console.log(e.extensions)"`
 - `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ me { id } }"}'`
@@ -76,3 +102,7 @@ Design GraphQL error policies: extensions, codes, and partial results
 - node -e "const {GraphQLError}=require('graphql');const e=new GraphQLError('Not authorized',{extensions:{code:'UNAUTHENTICATED'}});console.log(e.extensions)"
 - curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ broken }"}' | python -m json.tool
 - curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ me { id } }"}'
+
+## References
+- [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)
+- [GraphQL Error Spec](https://spec.graphql.org/draft/#sec-Errors)

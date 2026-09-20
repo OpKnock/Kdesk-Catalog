@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh **/*.{ts,tsx}"
 ---
 
-# Graphql Yoga
-
 GraphQL server with GraphQL Yoga: scaffold a server, add plugins and subscriptions, and test with the interactive playground.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm create @graphql-yoga/init`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GraphQL Yoga
 
@@ -85,6 +103,11 @@ curl -s http://localhost:4000/graphql | grep -q graphiql && echo 'GraphiQL avail
 ### yoga-server
 Create Yoga servers, run them, add plugins, and test endpoints.
 
+**Parameters:**
+- `endpoint` (string): GraphQL endpoint path
+- `port` (integer): Yoga listen port
+- `plugin` (string): Yoga plugin like useGraphiQL
+
 **Commands:**
 - `npm create @graphql-yoga/init`
 - `npm install graphql-yoga graphql`
@@ -96,3 +119,7 @@ Create Yoga servers, run them, add plugins, and test endpoints.
 - npm create @graphql-yoga/init && npm run dev
 - curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ hello }"}' | jq
 - curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -H 'Accept: text/event-stream' -d '{"query":"subscription { countdown }"}' | head -5
+
+## References
+- [GraphQL Yoga docs](https://the-guild.dev/graphql/yoga-server/docs)
+- [Yoga features](https://the-guild.dev/graphql/yoga-server/docs/features)

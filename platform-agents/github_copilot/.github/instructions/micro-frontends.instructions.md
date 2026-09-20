@@ -2,11 +2,29 @@
 applyTo: "**/*.css **/*.r **/*.sh"
 ---
 
-# micro-frontends
-
 Architects micro-frontend platforms with single-spa, Module Federation, and Nx workspaces: composition, sharing, and independent deploys.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx create-single-spa --moduleType root-config`, `npx nx graph`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Micro-Frontends
 
@@ -77,6 +95,11 @@ Run integration smoke tests across the composed shell weekly.
 ### single-spa
 Build and register micro-frontend applications.
 
+**Parameters:**
+- `moduleType` (string): root-config, app-parcel, or utility-module
+- `framework` (string): react, vue, angular, svelte for the parcel
+- `port` (number): Serve port for the app
+
 **Commands:**
 - `npx create-single-spa --moduleType root-config`
 - `npx create-single-spa --moduleType app-parcel`
@@ -92,6 +115,11 @@ Build and register micro-frontend applications.
 ### nx
 Manage monorepo builds and dependencies with Nx.
 
+**Parameters:**
+- `target` (string): build, test, lint target
+- `base` (string): Git base for affected computation
+- `project` (string): Project name like shell or orders
+
 **Commands:**
 - `npx nx graph`
 - `npx nx run shell:build --configuration=production`
@@ -103,3 +131,8 @@ Manage monorepo builds and dependencies with Nx.
 - npx nx affected:test --base=origin/main
 - npx nx build shell --with-deps
 - npx nx run-many --target=lint --parallel=3
+
+## References
+- [single-spa Docs](https://single-spa.js.org/docs/getting-started-overview)
+- [Module Federation](https://webpack.js.org/concepts/module-federation/)
+- [Nx Docs](https://nx.dev/)

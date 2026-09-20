@@ -1,13 +1,31 @@
 ---
 name: "logging-structured"
-description: "Work with structured (JSON) logs: validate lines, filter by level/service with jq, and aggregate counts for dashboards."
+description: "Work with structured (JSON) logs: validate lines, filter by level/service with jq, and aggregate counts for dashboards. Use when working with jq filter, validate produce, api or when the user mentions jq filter, validate produce, api."
 ---
-
-# Logging Structured
 
 Work with structured (JSON) logs: validate lines, filter by level/service with jq, and aggregate counts for dashboards.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `jq -r 'select(.level=="error") | .ts + " " + .msg' checkout-`, `grep '"level":"error"' checkout-service.log | jq -r '.msg'`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Structured Logging
 
@@ -76,6 +94,10 @@ echo '{"level":"info","msg":"boot"}' | jq -e '.level=="info"' && echo valid
 ### jq-filter
 Filter and project structured log fields with jq.
 
+**Parameters:**
+- `file` (string): JSON log file (e.g., checkout-service.log).
+- `filter` (string): jq filter expression.
+
 **Commands:**
 - `jq -r 'select(.level=="error") | .ts + " " + .msg' checkout-service.log`
 - `jq '. | {service, level, duration_ms}' checkout-service.log | head -20`
@@ -90,6 +112,9 @@ Filter and project structured log fields with jq.
 ### validate-produce
 Validate log lines parse and produce well-formed JSON logs.
 
+**Parameters:**
+- `pattern` (string): Regex to pre-filter lines.
+
 **Commands:**
 - `grep '"level":"error"' checkout-service.log | jq -r '.msg'`
 - `tail -1 checkout-service.log | python3 -m json.tool`
@@ -100,3 +125,7 @@ Validate log lines parse and produce well-formed JSON logs.
 - grep '"level":"error"' checkout-service.log | jq -r '.msg'
 - tail -1 checkout-service.log | python3 -m json.tool
 - tail -f checkout-service.log | jq -r '[.ts, .level, .msg] | @tsv'
+
+## References
+- [jq manual](https://jqlang.github.io/jq/manual/)
+- [Structured Logging Best Practices](https://pkg.go.dev/log/slog#hdr-Levels)

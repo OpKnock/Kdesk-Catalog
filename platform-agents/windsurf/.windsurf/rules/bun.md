@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Develops and runs JavaScript/TypeScript backend services with the Bun runtime, bundler, test runner, and package manager."
+description: "Develops and runs JavaScript/TypeScript backend services with the Bun runtime, bundler, test runner, and package manager. Use when working with bun runtime, bun testing, backend or when the user mentions bun runtime, bun testing, backend."
 globs: ["**/*.java", "**/*.json", "**/*.r", "**/*.sh", "**/*.{js,ts,jsx,tsx}", "**/*.{ts,tsx}"]
 ---
 
-# Bun
-
 Develops and runs JavaScript/TypeScript backend services with the Bun runtime, bundler, test runner, and package manager.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `bun init`, `bun test`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Bun
 
@@ -80,6 +98,10 @@ console.log(`Listening on ${server.url}`);
 ### bun-runtime
 Initialize projects, run scripts, and compile executables with Bun.
 
+**Parameters:**
+- `entrypoint` (string): Entry file to run or compile
+- `outfile` (string): Output path for compiled binary
+
 **Commands:**
 - `bun init`
 - `bun install`
@@ -95,6 +117,10 @@ Initialize projects, run scripts, and compile executables with Bun.
 ### bun-testing
 Run unit tests, benchmarks, and linting.
 
+**Parameters:**
+- `path` (string): Test file or glob to run
+- `coverage` (boolean): Collect coverage
+
 **Commands:**
 - `bun test`
 - `bun test --coverage`
@@ -106,3 +132,7 @@ Run unit tests, benchmarks, and linting.
 - bun test test/unit/*.test.ts
 - bun bench bench/parse.bench.ts
 - bun test --coverage --coverage-reporter=text
+
+## References
+- [Bun Docs](https://bun.sh/docs)
+- [Bun API Reference](https://bun.com/docs/api)

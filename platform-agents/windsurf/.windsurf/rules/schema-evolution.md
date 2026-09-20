@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Expert reference covering Avro compatibility modes, protoc descriptor generation, and backward/forward compatibility checks for streaming contracts."
+description: "Expert reference covering Avro compatibility modes, protoc descriptor generation, and backward/forward compatibility checks for streaming contracts. Use when working with schema compat, api or when the user mentions schema compat, api."
 globs: ["**/*.java", "**/*.py", "**/*.r", "**/*.sh"]
 ---
 
-# Schema Evolution
-
 Expert reference covering Avro compatibility modes, protoc descriptor generation, and backward/forward compatibility checks for streaming contracts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `java -jar avro-tools-1.11.3.jar getschema user.avsc`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Schema Evolution
 
@@ -74,6 +92,11 @@ protoc --descriptor_set_out=user.pb --include_imports user.proto && grpcurl -pro
 ### schema-compat
 Evolve Avro/Protobuf schemas and check compatibility
 
+**Parameters:**
+- `schema_file` (string): Path to .avsc or .proto file
+- `compatibility` (string): BACKWARD, FORWARD, FULL, NONE for Avro
+- `proto_file` (string): Protobuf source file
+
 **Commands:**
 - `java -jar avro-tools-1.11.3.jar getschema user.avsc`
 - `java -jar avro-tools-1.11.3.jar compile schema user.avsc .`
@@ -85,3 +108,7 @@ Evolve Avro/Protobuf schemas and check compatibility
 - java -jar avro-tools-1.11.3.jar compile schema user.avsc out/
 - protoc --descriptor_set_out=user.pb --include_imports user.proto
 - java -jar avro-tools-1.11.3.jar getmeta user.avsc
+
+## References
+- [Avro specification](https://avro.apache.org/docs/current/specification/)
+- [Protobuf language guide](https://protobuf.dev/programming-guides/proto3/)

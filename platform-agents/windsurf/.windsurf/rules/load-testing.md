@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "General HTTP load testing with ab, wrk, hey, vegeta, and jmeter: quick benchmarks, target files, and baseline reports."
+description: "General HTTP load testing with ab, wrk, hey, vegeta, and jmeter: quick benchmarks, target files, and baseline reports. Use when working with quick bench, vegeta jmeter, api or when the user mentions quick bench, vegeta jmeter, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# Load Testing
-
 General HTTP load testing with ab, wrk, hey, vegeta, and jmeter: quick benchmarks, target files, and baseline reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ab -n 1000 -c 50 http://localhost:8080/`, `vegeta attack -duration=30s -rate=100 -targets=api-targets.t`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Load Testing (General)
 
@@ -81,6 +99,12 @@ hey -n 100 -c 10 http://localhost:8080/healthz   # smoke before the real run
 ### quick-bench
 Run quick benchmarks with ab, wrk, and hey.
 
+**Parameters:**
+- `url` (string): Target URL.
+- `requests` (integer): Total requests (ab/hey).
+- `concurrency` (integer): Concurrent connections.
+- `duration` (string): Duration for wrk, e.g. 30s.
+
 **Commands:**
 - `ab -n 1000 -c 50 http://localhost:8080/`
 - `wrk -t8 -c200 -d30s http://localhost:8080/`
@@ -95,6 +119,11 @@ Run quick benchmarks with ab, wrk, and hey.
 ### vegeta-jmeter
 Run scripted attacks with vegeta and JMeter plans.
 
+**Parameters:**
+- `rate` (integer): Requests per second (vegeta).
+- `targets` (string): Vegeta targets file (e.g., api-targets.txt).
+- `jmx` (string): JMeter plan file (e.g., test-plan.jmx).
+
 **Commands:**
 - `vegeta attack -duration=30s -rate=100 -targets=api-targets.txt | vegeta report`
 - `vegeta attack -targets=api-targets.txt -duration=1m | vegeta report -type=json > report.json`
@@ -105,3 +134,8 @@ Run scripted attacks with vegeta and JMeter plans.
 - vegeta attack -duration=30s -rate=100 -targets=api-targets.txt | vegeta report
 - jmeter -n -t test-plan.jmx -l results.jtl -Jthreads=50
 - cat results.bin | vegeta report -type=hist[0,100ms,200ms,500ms]
+
+## References
+- [Vegeta](https://github.com/tsenart/vegeta)
+- [Apache Bench](https://httpd.apache.org/docs/2.4/programs/ab.html)
+- [wrk](https://github.com/wg/wrk)

@@ -1,13 +1,31 @@
 ---
 name: "remix"
-description: "Builds full-stack React apps with Remix: loaders, actions, server rendering, and deployment to Node/Cloudflare."
+description: "Builds full-stack React apps with Remix: loaders, actions, server rendering, and deployment to Node/Cloudflare. Use when working with scaffold, build deploy, frontend or when the user mentions scaffold, build deploy, frontend."
 ---
-
-# Remix
 
 Builds full-stack React apps with Remix: loaders, actions, server rendering, and deployment to Node/Cloudflare.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx create-remix@latest my-app --template remix-run/remix/te`, `npx remix build`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Remix
 
@@ -79,6 +97,11 @@ Run both in CI; a failed typecheck with a passing build indicates stale types.
 ### scaffold
 Create and configure Remix applications.
 
+**Parameters:**
+- `template` (string): Deployment template: express, cloudflare, netlify, vercel
+- `json` (string): Print route tree as JSON
+- `show` (string): Preview revealed files without writing
+
 **Commands:**
 - `npx create-remix@latest my-app --template remix-run/remix/templates/express`
 - `npm run dev`
@@ -94,6 +117,11 @@ Create and configure Remix applications.
 ### build-deploy
 Build and run Remix apps for production.
 
+**Parameters:**
+- `sourcemap` (string): Emit sourcemaps for the build
+- `port` (number): Production server port
+- `build` (string): Build mode: development or production
+
 **Commands:**
 - `npx remix build`
 - `npx remix-serve build/server/index.js`
@@ -105,3 +133,8 @@ Build and run Remix apps for production.
 - npx remix build --sourcemap
 - npx remix-serve build/server/index.js --port 3001
 - npm run typecheck && npx remix build
+
+## References
+- [Remix Docs](https://remix.run/docs)
+- [Remix CLI](https://remix.run/docs/en/main/other-api/cli)
+- [Remix Deployment](https://remix.run/docs/en/main/guides/deployment)

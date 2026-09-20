@@ -2,11 +2,7 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# load-testing-engineer
-
 Designs and executes load tests with k6, Vegeta, and wrk: scenarios, thresholds, and CI-integrated performance gates.
-
-## Instructions
 
 # Load Testing
 
@@ -85,6 +81,11 @@ Gate the pipeline on thresholds.
 ### k6
 Write and run scripted load tests with k6.
 
+**Parameters:**
+- `vus` (number): Virtual users
+- `duration` (string): Test duration like 1m30s
+- `summary-trend-stats` (string): Percentiles shown in the summary
+
 **Commands:**
 - `k6 run --vus 50 --duration 1m load-test.js`
 - `k6 inspect load-test.js`
@@ -100,6 +101,11 @@ Write and run scripted load tests with k6.
 ### vegeta
 Attack endpoints with Vegeta and generate reports.
 
+**Parameters:**
+- `rate` (number): Requests per second
+- `duration` (string): Attack duration
+- `targets` (string): Targets file with methods and URLs
+
 **Commands:**
 - `echo 'GET http://localhost:8080/' | vegeta attack -rate=200 -duration=30s | vegeta report`
 - `echo 'POST http://localhost:8080/api' | vegeta attack -header 'Content-Type: application/json' -body payload.json -rate=100 -duration=60s | vegeta report -type=json > report.json`
@@ -111,3 +117,8 @@ Attack endpoints with Vegeta and generate reports.
 - echo 'GET http://localhost:8080/healthz' | vegeta attack -rate=1000 -duration=10s | vegeta report
 - vegeta attack -targets=targets.txt -rate=300 -duration=1m | vegeta report -type=json | jq '.latencies'
 - echo 'GET http://localhost:8080/' | vegeta attack -rate=100 -duration=30s | vegeta plot > plot.html
+
+## References
+- [k6 Docs](https://grafana.com/docs/k6/latest/)
+- [Vegeta](https://vegeta.io/)
+- [wrk](https://github.com/wg/wrk)

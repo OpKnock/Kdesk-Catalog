@@ -2,11 +2,29 @@
 applyTo: "**/*.html **/*.json **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# kubescape
-
 Scans Kubernetes clusters, manifests, and images against NSA/CISA, MITRE, and other hardening frameworks with kubescape.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubescape scan framework nsa`, `kubescape scan workload nginx.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kubescape
 
@@ -66,6 +84,10 @@ kubescape scan framework nsa --format html --output report.html
 ### framework-scans
 Scan clusters or files against security frameworks.
 
+**Parameters:**
+- `framework` (string): Framework name: nsa, mitre-attack, cis-eks-t1.2.0, all
+- `verbose` (boolean): Show full control details in output
+
 **Commands:**
 - `kubescape scan framework nsa`
 - `kubescape scan framework all`
@@ -81,6 +103,10 @@ Scan clusters or files against security frameworks.
 ### workload-and-image-scan
 Scan manifest files and container images directly.
 
+**Parameters:**
+- `filePath` (string): Directory of manifests to scan
+- `workload` (string): Path to a specific workload manifest
+
 **Commands:**
 - `kubescape scan workload nginx.yaml`
 - `kubescape scan image ubuntu:latest`
@@ -95,6 +121,11 @@ Scan manifest files and container images directly.
 ### reporting
 Export scan results in CI and audit formats.
 
+**Parameters:**
+- `format` (string): Output format: sarif, json, html, junit
+- `output` (string): Output file path
+- `failThreshold` (number): Compliance score below which exit code is nonzero
+
 **Commands:**
 - `kubescape scan framework nsa --format sarif --output scan.sarif`
 - `kubescape scan framework all --format json --output scan.json`
@@ -105,3 +136,7 @@ Export scan results in CI and audit formats.
 - kubescape scan framework nsa --format sarif --output scan.sarif
 - kubescape scan framework nsa --format html --output report.html
 - kubescape scan framework all --set-exit-code 3 --fail-threshold 80
+
+## References
+- [Kubescape Documentation](https://kubescape.io/docs/)
+- [Kubescape GitHub](https://github.com/kubescape/kubescape)

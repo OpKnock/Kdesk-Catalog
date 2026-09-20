@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.py **/*.r **/*.sh"
 ---
 
-# Api Analytics Anomaly Detection
-
 Anomaly detection for API traffic with machine learning - detect traffic anomalies using time-series models (Prophet), evaluate, and alert.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install prophet scikit-learn`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Analytics (Anomaly Detection)
 
@@ -65,6 +83,11 @@ curl -s 'http://localhost:8080/api/analytics/anomalies?window=24h' | jq '.[-1]'
 ### anomaly-detection
 Detect API traffic anomalies with time-series ML
 
+**Parameters:**
+- `model` (string): Trained model file
+- `threshold` (number): Z-score / anomaly threshold
+- `window` (string): Lookback window for detection
+
 **Commands:**
 - `pip install prophet scikit-learn`
 - `python -c "from prophet import Prophet; print('ok')"`
@@ -76,3 +99,7 @@ Detect API traffic anomalies with time-series ML
 - python forecast.py --history metrics.csv --periods 48 | jq '.forecast[-1]'
 - curl -s http://localhost:8080/api/analytics/anomalies?metric=latency_p95&window=24h | jq '.[-1]'
 - python detect.py --model traffic.model --threshold 2.5 --input live.json | jq '.flagged | length'
+
+## References
+- [Prophet Docs](https://facebook.github.io/prophet/docs/quick_start.html)
+- [scikit-learn IsolationForest](https://scikit-learn.org/stable/modules/outlier_detection.html)

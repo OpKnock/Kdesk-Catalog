@@ -1,13 +1,31 @@
 ---
 name: "nginx-networking"
-description: "Engineers nginx as a reverse proxy and API gateway: location routing, headers, rate limiting, and caching layers."
+description: "Engineers nginx as a reverse proxy and API gateway: location routing, headers, rate limiting, and caching layers. Use when working with proxy, gateway, networking or when the user mentions proxy, gateway, networking."
 ---
-
-# Nginx
 
 Engineers nginx as a reverse proxy and API gateway: location routing, headers, rate limiting, and caching layers.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `nginx -t -c /etc/nginx/nginx.conf`, `ab -n 200 -c 20 http://127.0.0.1/api/v1/search | grep -E 'Fa`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Nginx (Networking)
 
@@ -84,6 +102,11 @@ Run ab/hey against limited endpoints and confirm 429s beyond the burst.
 ### proxy
 Route and transform traffic with nginx locations.
 
+**Parameters:**
+- `config` (string): nginx config path
+- `host` (string): Host header for vhost routing
+- `url` (string): URL to probe
+
 **Commands:**
 - `nginx -t -c /etc/nginx/nginx.conf`
 - `nginx -s reload`
@@ -99,6 +122,11 @@ Route and transform traffic with nginx locations.
 ### gateway
 Apply rate limits, caching, and header policies.
 
+**Parameters:**
+- `requests` (number): Load test request count
+- `concurrency` (number): Load test concurrency
+- `header` (string): Header to inspect in response
+
 **Commands:**
 - `ab -n 200 -c 20 http://127.0.0.1/api/v1/search | grep -E 'Failed|Requests per second'`
 - `curl -s -o /dev/null -w '%{size_download}' -H 'Cache-Control: max-age=60' http://127.0.0.1/static/app.js`
@@ -110,3 +138,8 @@ Apply rate limits, caching, and header policies.
 - ab -n 500 -c 50 http://127.0.0.1/api/ | grep 'Non-2xx responses'
 - curl -sI -H 'Host: api.example.com' http://127.0.0.1/api/v1/healthz | grep -i x-rate
 - tail -n 200 /var/log/nginx/access.log | grep ' 429 ' | wc -l
+
+## References
+- [ngx_http_proxy_module](https://nginx.org/en/docs/http/ngx_http_proxy_module.html)
+- [ngx_http_limit_req_module](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html)
+- [ngx_http_headers_module](https://nginx.org/en/docs/http/ngx_http_headers_module.html)

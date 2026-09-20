@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Sync secrets from external providers (AWS Secrets Manager, Vault, GCP) into Kubernetes with External Secrets Operator: define ExternalSecrets and verify injected values."
+description: "Sync secrets from external providers (AWS Secrets Manager, Vault, GCP) into Kubernetes with External Secrets Operator: define ExternalSecrets and verify injected values. Use when working with external secrets, api or when the user mentions external secrets, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# External Secrets
-
 Sync secrets from external providers (AWS Secrets Manager, Vault, GCP) into Kubernetes with External Secrets Operator: define ExternalSecrets and verify injected values.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `helm repo add external-secrets https://charts.external-secre`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # External Secrets
 
@@ -94,6 +112,11 @@ kubectl annotate externalsecret db-credentials force-sync=$(date +%s)
 ### external-secrets
 Deploy ESO, create SecretStores and ExternalSecrets, and verify secrets land in the cluster.
 
+**Parameters:**
+- `namespace` (string): Namespace for the ExternalSecret
+- `secret-name` (string): Name of the Kubernetes Secret to sync into
+- `provider` (string): aws, vault, gcp, azure provider for the SecretStore
+
 **Commands:**
 - `helm repo add external-secrets https://charts.external-secrets.io && helm install external-secrets external-secrets/external-secrets -n external-secrets --create-namespace`
 - `kubectl apply -f secret-store.yaml`
@@ -106,3 +129,7 @@ Deploy ESO, create SecretStores and ExternalSecrets, and verify secrets land in 
 - kubectl apply -f secret-store.yaml && kubectl apply -f external-secret.yaml
 - kubectl get externalsecret db-credentials -n app -o jsonpath='{.status.conditions[0].message}'
 - kubectl get secret my-secret -n app -o jsonpath='{.data.DATABASE_URL}' | base64 -d
+
+## References
+- [External Secrets Operator Docs](https://external-secrets.io/latest/introduction/overview/)
+- [ESO AWS provider](https://external-secrets.io/latest/provider/aws-secrets-manager/)

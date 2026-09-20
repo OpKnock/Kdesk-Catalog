@@ -1,14 +1,10 @@
 ---
 trigger: glob
-description: "Benchmarks APIs with wrk, hey, and ApacheBench: throughput, latency percentiles, connection concurrency, and POST payload testing."
+description: "Benchmarks APIs with wrk, hey, and ApacheBench: throughput, latency percentiles, connection concurrency, and POST payload testing. Use when working with wrk, hey ab or when the user mentions wrk, hey ab."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# Api Perf Wrk
-
 Benchmarks APIs with wrk, hey, and ApacheBench: throughput, latency percentiles, connection concurrency, and POST payload testing.
-
-## Instructions
 
 # API Perf v3 - Benchmarking
 
@@ -52,6 +48,11 @@ ab -n 5000 -c 50 -p post.json -T application/json http://localhost:3000/api
 ### wrk
 Run thread-based HTTP benchmarks with latency histograms
 
+**Parameters:**
+- `threads` (integer): Number of threads (-t)
+- `connections` (integer): Open connections (-c)
+- `duration` (string): Benchmark duration like 30s
+
 **Commands:**
 - `wrk -t4 -c100 -d30s http://localhost:3000/api`
 - `wrk -t2 -c50 -d20s --latency http://localhost:3000/api`
@@ -74,3 +75,7 @@ Compare with hey and ApacheBench for POST and header testing
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [wrk GitHub](https://github.com/wg/wrk)
+- [ApacheBench Docs](https://httpd.apache.org/docs/2.4/programs/ab.html)

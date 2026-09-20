@@ -1,13 +1,31 @@
 ---
 name: "api-mock-json"
-description: "Builds zero-code REST mock servers with JSON Server: watch mode, custom routes, filtering, pagination, and CRUD persistence for rapid prototyping."
+description: "Builds zero-code REST mock servers with JSON Server: watch mode, custom routes, filtering, pagination, and CRUD persistence for rapid prototyping. Use when working with json server, route customization or when the user mentions json server, route customization."
 ---
-
-# Api Mock Json
 
 Builds zero-code REST mock servers with JSON Server: watch mode, custom routes, filtering, pagination, and CRUD persistence for rapid prototyping.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install -g json-server`, `curl -s http://localhost:3001/users/1 | jq .`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Mock v2 - JSON Server
 
@@ -59,6 +77,11 @@ Endpoints: GET/POST /users, GET/PUT/PATCH/DELETE /users/:id.
 ### json-server
 Serve a mock REST API from a JSON database file
 
+**Parameters:**
+- `port` (integer): Port for the mock server, default 3000
+- `db-file` (string): JSON file containing collections to serve
+- `routes-file` (string): Custom route mapping file (routes.json)
+
 **Commands:**
 - `npm install -g json-server`
 - `json-server --watch db.json --port 3001`
@@ -82,3 +105,7 @@ Map custom URLs and add middleware to the mock server
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [json-server GitHub](https://github.com/typicode/json-server)
+- [jq Manual](https://jqlang.github.io/jq/manual/)

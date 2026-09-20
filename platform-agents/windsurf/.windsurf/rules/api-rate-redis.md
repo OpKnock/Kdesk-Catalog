@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Builds distributed rate limiting with Redis: shared counters across instances, ioredis clients, and Dockerized Redis for multi-node consistency."
+description: "Builds distributed rate limiting with Redis: shared counters across instances, ioredis clients, and Dockerized Redis for multi-node consistency. Use when working with redis setup, node integration or when the user mentions redis setup, node integration."
 globs: ["**/*.r", "**/*.sh"]
 ---
 
-# Api Rate Redis
-
 Builds distributed rate limiting with Redis: shared counters across instances, ioredis clients, and Dockerized Redis for multi-node consistency.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `docker run -d -p 6379:6379 --name api-redis redis:7`, `redis-cli INCR rate:user:1 && redis-cli EXPIRE rate:user:1 6`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Rate v2 - Redis Distributed
 
@@ -60,6 +78,11 @@ async function consume(key, limit, windowSec) {
 ### redis-setup
 Run and connect to Redis for shared limit state
 
+**Parameters:**
+- `key` (string): Rate counter key name
+- `expiry-seconds` (integer): TTL for the counter window
+- `limit` (integer): Max requests per window
+
 **Commands:**
 - `docker run -d -p 6379:6379 --name api-redis redis:7`
 - `redis-cli ping`
@@ -83,3 +106,7 @@ Integrate Redis counting into a Node API
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Redis Commands](https://redis.io/docs/latest/commands/incr/)
+- [ioredis GitHub](https://github.com/redis/ioredis)

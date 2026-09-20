@@ -1,13 +1,31 @@
 ---
 name: "runtime-protection"
-description: "Detects and responds to threats at runtime with Falco, Tracee, auditd, and strace: suspicious syscalls, containers, and process behavior."
+description: "Detects and responds to threats at runtime with Falco, Tracee, auditd, and strace: suspicious syscalls, containers, and process behavior. Use when working with falco, syscall or when the user mentions falco, syscall."
 ---
-
-# runtime-protection
 
 Detects and responds to threats at runtime with Falco, Tracee, auditd, and strace: suspicious syscalls, containers, and process behavior.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `falco --version`, `strace -f -e trace=execve,openat -o trace.log ./app`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Runtime Protection
 
@@ -76,6 +94,11 @@ Simulate a known-bad action (shell in container) and verify the rule fires withi
 ### falco
 Run Falco threat detection and manage rules.
 
+**Parameters:**
+- `rules` (string): Rules file path
+- `json` (string): JSON output mode
+- `output` (string): Output template
+
 **Commands:**
 - `falco --version`
 - `falcoctl install falco`
@@ -91,6 +114,11 @@ Run Falco threat detection and manage rules.
 ### syscall
 Trace and audit syscall activity.
 
+**Parameters:**
+- `syscall` (string): Syscalls to trace
+- `key` (string): Audit rule key
+- `pid` (number): Process id to attach
+
 **Commands:**
 - `strace -f -e trace=execve,openat -o trace.log ./app`
 - `strace -p 1234 -f -e trace=network`
@@ -102,3 +130,8 @@ Trace and audit syscall activity.
 - strace -f -e trace=openat ./app 2>&1 | grep ENOENT | head
 - auditctl -a always,exit -F arch=b64 -S socket -k net-conn
 - ausearch -k net-conn -i | head -20
+
+## References
+- [Falco Docs](https://falco.org/docs/)
+- [Tracee](https://github.com/aquasecurity/tracee)
+- [auditd](https://man7.org/linux/man-pages/man8/auditctl.8.html)

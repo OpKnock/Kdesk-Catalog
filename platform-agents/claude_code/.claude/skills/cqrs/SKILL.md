@@ -1,13 +1,13 @@
 ---
 name: "cqrs"
-description: "Implement Command Query Responsibility Segregation with EventStoreDB: append events, project read models, and query them."
+description: "Implement Command Query Responsibility Segregation with EventStoreDB: append events, project read models, and query them. Use when working with eventstore, read models, api or when the user mentions eventstore, read models, api."
+license: "MIT"
+compatibility: "Requires docker. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(docker:*)"
 ---
 
-# Cqrs
-
 Implement Command Query Responsibility Segregation with EventStoreDB: append events, project read models, and query them.
-
-## Instructions
 
 # CQRS
 
@@ -81,6 +81,10 @@ curl -s http://localhost:2113/streams/order-1 -H "Accept: application/json" | jq
 ### eventstore
 Run EventStoreDB and append/read events via its HTTP API
 
+**Parameters:**
+- `stream` (string): Event stream name such as order-1
+- `event_type` (string): Event type such as OrderPlaced
+
 **Commands:**
 - `docker run -d --name eventstore -p 2113:2113 eventstore/eventstore:latest --insecure`
 - `curl -X POST http://localhost:2113/streams/order-1 -H "Content-Type: application/json" -H "ES-EventType: OrderPlaced" -H "ES-EventId: $(uuidgen)" -d '{"data":{"amount":100}}'`
@@ -95,6 +99,9 @@ Run EventStoreDB and append/read events via its HTTP API
 ### read-models
 Project events into queryable read models and consume streams
 
+**Parameters:**
+- `projection_name` (string): Continuous projection name
+
 **Commands:**
 - `curl http://localhost:2113/streams/order-1 -H "Accept: application/json" | jq '.entries[].data'`
 - `curl -X POST http://localhost:2113/projections/continuous -H "Content-Type: application/json" -H "ES-ExpectedVersion: -1" -d @projection.json`
@@ -105,3 +112,7 @@ Project events into queryable read models and consume streams
 - curl http://localhost:2113/projection/order-totals/state -H "Accept: application/json" | jq '.total'
 - curl http://localhost:2113/streams/order-1 -H "Accept: application/json" | jq '.entries[].data'
 - curl -s -o /dev/null -w "%{http_code}" http://localhost:2113/streams/order-1
+
+## References
+- [EventStoreDB Docs](https://www.eventstore.com/docs)
+- [CQRS Pattern](https://martinfowler.com/bliki/CQRS.html)

@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Develops cross-platform mobile apps with Flutter and React Native/Expo: scaffolding, builds, and device deployments."
+description: "Develops cross-platform mobile apps with Flutter and React Native/Expo: scaffolding, builds, and device deployments. Use when working with flutter, react native or when the user mentions flutter, react native."
 globs: ["**/*.r", "**/*.sh", "**/*.{ts,tsx}"]
 ---
 
-# mobile-app-development
-
 Develops cross-platform mobile apps with Flutter and React Native/Expo: scaffolding, builds, and device deployments.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `flutter create my_app --org com.example`, `npx create-expo-app@latest my-app --template blank-typescrip`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Mobile App Development
 
@@ -79,6 +97,11 @@ Both must pass on every merge.
 ### flutter
 Create, build, and test Flutter applications.
 
+**Parameters:**
+- `platforms` (string): Target platforms android,ios,web,linux...
+- `fatal-infos` (string): Fail analyze on info-level issues
+- `build-mode` (string): debug, profile, or release
+
 **Commands:**
 - `flutter create my_app --org com.example`
 - `flutter pub get`
@@ -94,6 +117,11 @@ Create, build, and test Flutter applications.
 ### react-native
 Scaffold and run React Native apps with Expo.
 
+**Parameters:**
+- `template` (string): Expo template name
+- `tunnel` (string): Expo dev over the internet
+- `profile` (string): EAS build profile: preview, development, production
+
 **Commands:**
 - `npx create-expo-app@latest my-app --template blank-typescript`
 - `npx expo start`
@@ -105,3 +133,8 @@ Scaffold and run React Native apps with Expo.
 - npx create-expo-app@latest my-app --template tabs
 - npx expo start --tunnel
 - eas build --platform ios --profile production
+
+## References
+- [Flutter Docs](https://docs.flutter.dev/)
+- [Expo Docs](https://docs.expo.dev/)
+- [React Native](https://reactnative.dev/docs/getting-started)

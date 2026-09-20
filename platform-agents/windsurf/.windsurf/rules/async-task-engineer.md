@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Builds async task systems: Celery and RQ workers for Python, BullMQ queues for Node, Redis brokers, scheduled tasks, and retry policies."
+description: "Builds async task systems: Celery and RQ workers for Python, BullMQ queues for Node, Redis brokers, scheduled tasks, and retry policies. Use when working with celery, bullmq node or when the user mentions celery, bullmq node."
 globs: ["**/*.py", "**/*.r", "**/*.sh"]
 ---
 
-# async-task-engineer
-
 Builds async task systems: Celery and RQ workers for Python, BullMQ queues for Node, Redis brokers, scheduled tasks, and retry policies.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install celery redis`, `npm install bullmq ioredis`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Async Task Engineer
 
@@ -64,6 +82,11 @@ def send_email(self, to):
 ### celery
 Run Celery tasks with Redis broker
 
+**Parameters:**
+- `app` (string): Celery app module
+- `concurrency` (integer): Worker processes
+- `queue` (string): Queue name
+
 **Commands:**
 - `pip install celery redis`
 - `celery -A tasks worker --loglevel=info -c 4`
@@ -89,3 +112,7 @@ Queue async work with BullMQ
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Celery Docs](https://docs.celeryq.dev/en/stable/)
+- [BullMQ Docs](https://docs.bullmq.io/)

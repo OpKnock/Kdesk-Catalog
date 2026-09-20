@@ -1,14 +1,32 @@
 ---
-description: "Deep expertise in API governance programs: enterprise rulesets, standards publication, and measuring compliance adoption."
+description: "Deep expertise in API governance programs: enterprise rulesets, standards publication, and measuring compliance adoption. Use when working with enterprise rulesets, adoption metrics or when the user mentions enterprise rulesets, adoption metrics."
 globs: ["**/*.go", "**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# api-governance-specialist
-
 Deep expertise in API governance programs: enterprise rulesets, standards publication, and measuring compliance adoption.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx @stoplight/spectral-cli lint -r .spectral.yaml --format `, `npx @stoplight/spectral-cli lint -r .spectral.yaml --format `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Governance Specialist
 
@@ -49,6 +67,10 @@ Track violations-per-spec quarterly and publish the trend.
 ### enterprise-rulesets
 Maintain layered rulesets with severity tiers and exception flows
 
+**Parameters:**
+- `ruleset` (string): Layered ruleset file
+- `spec` (string): Spec to evaluate
+
 **Commands:**
 - `npx @stoplight/spectral-cli lint -r .spectral.yaml --format json openapi.yaml > report.json`
 - `npx @stoplight/spectral-cli lint -r .spectral.yaml --ignore-unknown-formats openapi.yaml`
@@ -64,6 +86,10 @@ Maintain layered rulesets with severity tiers and exception flows
 ### adoption-metrics
 Measure governance adoption across specs and report trends
 
+**Parameters:**
+- `specsDir` (string): Directory of specs to measure
+- `output` (string): Aggregate report file
+
 **Commands:**
 - `npx @stoplight/spectral-cli lint -r .spectral.yaml --format json specs/**/*.yaml > all.json`
 - `python -c "import json,glob;r=[];[r.extend(json.load(open(f))) for f in glob.glob('specs/*/*.json')]" 2>/dev/null || echo 'aggregate manually'`
@@ -75,3 +101,7 @@ Measure governance adoption across specs and report trends
 - npx @stoplight/spectral-cli lint -r .spectral.yaml --format json specs/**/*.yaml > all.json
 - node -e "const fs=require('fs');const files=fs.readdirSync('specs').filter(f=>f.endsWith('.yaml'));console.log(files.length+' specs')"
 - python -c "import json;r=json.load(open('all.json'));print('violations:',len(r))"
+
+## References
+- [Spectral Rulesets](https://docs.stoplight.io/docs/spectral/reference/rules)
+- [API Guidelines Databases](https://github.com/apisyouwonthate/style-guides)

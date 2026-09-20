@@ -1,13 +1,31 @@
 ---
 name: "license-checker"
-description: "Audits npm dependency licenses with license-checker, detecting incompatible, missing, or unknown licenses before release."
+description: "Audits npm dependency licenses with license-checker, detecting incompatible, missing, or unknown licenses before release. Use when working with audit licenses, code quality or when the user mentions audit licenses, code quality."
 ---
-
-# License Checker
 
 Audits npm dependency licenses with license-checker, detecting incompatible, missing, or unknown licenses before release.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx license-checker --summary`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # License Checker
 
@@ -80,6 +98,11 @@ package name and version to remove or replace.
 ### audit-licenses
 Generate license inventories and enforce allowed-license policies for npm projects
 
+**Parameters:**
+- `onlyAllow` (string): Semicolon-separated list of SPDX licenses allowed; exits non-zero on any other license
+- `failOn` (string): License ID that fails the audit if found (e.g. GPL, AGPL)
+- `out` (string): File path to write the license report
+
 **Commands:**
 - `npx license-checker --summary`
 - `license-checker --csv --out /tmp/licenses.csv`
@@ -91,3 +114,7 @@ Generate license inventories and enforce allowed-license policies for npm projec
 - npx license-checker --onlyAllow 'MIT;Apache-2.0'
 - license-checker --start --production --csv > licenses.csv
 - license-checker --summary | head -40
+
+## References
+- [license-checker npm package](https://www.npmjs.com/package/license-checker)
+- [SPDX License List](https://spdx.org/licenses/)

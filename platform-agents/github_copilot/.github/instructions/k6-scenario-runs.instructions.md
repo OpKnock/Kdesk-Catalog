@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# K6 Scenario Runs
-
 Advanced load testing with Grafana k6: scenario-based scripts, threshold gates, ramping VUs, and structured result export for CI analysis.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `k6 run script.js`, `k6 run --summary-export=summary.json script.js`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # k6 (Advanced)
 
@@ -94,6 +112,12 @@ k6 run --vus 10 --iterations 20 script.js   # smoke check before the real run
 ### scenario-runs
 Run k6 scripts with scenarios, ramping profiles, and environment overrides.
 
+**Parameters:**
+- `vus` (integer): Number of virtual users.
+- `duration` (string): Test duration, e.g. 30s, 5m.
+- `scenario` (string): Named scenario in options.scenarios to run.
+- `e` (string): Environment variable override, e.g. -e BASE_URL=... .
+
 **Commands:**
 - `k6 run script.js`
 - `k6 run --vus 50 --duration 1m script.js`
@@ -109,6 +133,9 @@ Run k6 scripts with scenarios, ramping profiles, and environment overrides.
 ### export-archive
 Export JSON summaries and archives for CI dashboards and later replay.
 
+**Parameters:**
+- `out` (string): Metrics output: json=file, influxdb=..., prometheus-remote=... .
+
 **Commands:**
 - `k6 run --summary-export=summary.json script.js`
 - `k6 archive script.js`
@@ -119,3 +146,7 @@ Export JSON summaries and archives for CI dashboards and later replay.
 - k6 run --summary-export=summary.json script.js
 - k6 archive script.js && k6 run archive.tar
 - k6 run --out json=results.json script.js
+
+## References
+- [k6 Documentation](https://grafana.com/docs/k6/)
+- [k6 Scenarios](https://grafana.com/docs/k6/using-k6/scenarios/)

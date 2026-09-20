@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# Fluent Bit
-
 Lightweight log and metric forwarding with Fluent Bit: configure inputs, parsers, and outputs, and validate configs before running.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `fluent-bit --dry-run -c fluent-bit.conf`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Fluent Bit
 
@@ -84,6 +102,11 @@ echo '{"log_level":"ERROR","msg":"boom"}' >> /tmp/demo.log
 ### fluentbit-config
 Validate configs, run Fluent Bit with tail/forward inputs, and test outputs.
 
+**Parameters:**
+- `config-file` (string): Path to fluent-bit.conf
+- `input-plugin` (string): tail, forward, syslog, dummy
+- `output-plugin` (string): stdout, es, loki, s3
+
 **Commands:**
 - `fluent-bit --dry-run -c fluent-bit.conf`
 - `fluent-bit -c fluent-bit.conf`
@@ -95,3 +118,7 @@ Validate configs, run Fluent Bit with tail/forward inputs, and test outputs.
 - fluent-bit --dry-run -c fluent-bit.conf
 - fluent-bit -i tail -p path=/var/log/app.log -o stdout -f 1
 - fluent-bit -R parsers.conf -i dummy -o stdout
+
+## References
+- [Fluent Bit docs](https://docs.fluentbit.io/manual/)
+- [Fluent Bit service config](https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/)

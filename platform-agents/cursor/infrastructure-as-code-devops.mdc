@@ -1,14 +1,32 @@
 ---
-description: "Reviews and secures Infrastructure-as-Code (Terraform/OpenTofu, Ansible, CloudFormation) with static analysis, linting, and drift detection."
+description: "Reviews and secures Infrastructure-as-Code (Terraform/OpenTofu, Ansible, CloudFormation) with static analysis, linting, and drift detection. Use when working with terraform review, iac scanning, devops or when the user mentions terraform review, iac scanning, devops."
 globs: ["**/*.r", "**/*.sh", "**/*.tf"]
 alwaysApply: false
 ---
 
-# Infrastructure As Code
-
 Reviews and secures Infrastructure-as-Code (Terraform/OpenTofu, Ansible, CloudFormation) with static analysis, linting, and drift detection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `terraform fmt -recursive -check`, `checkov -d . --framework terraform,ansible`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Infrastructure-as-Code Quality
 
@@ -71,6 +89,10 @@ ansible-playbook playbooks/deploy.yml --check --diff
 ### terraform-review
 Validate, format, and plan Terraform or OpenTofu configurations.
 
+**Parameters:**
+- `dir` (string): Module directory
+- `plan-file` (string): Plan output path
+
 **Commands:**
 - `terraform fmt -recursive -check`
 - `terraform validate`
@@ -86,6 +108,10 @@ Validate, format, and plan Terraform or OpenTofu configurations.
 ### iac-scanning
 Scan IaC for misconfigurations with checkov, tfsec, and terrascan.
 
+**Parameters:**
+- `path` (string): Directory to scan
+- `severity` (string): Minimum severity to report
+
 **Commands:**
 - `checkov -d . --framework terraform,ansible`
 - `checkov -d . --skip-check CKV_AWS_123`
@@ -98,3 +124,9 @@ Scan IaC for misconfigurations with checkov, tfsec, and terrascan.
 - checkov -d .
 - tfsec . --severity CRITICAL,HIGH
 - ansible-lint playbooks/
+
+## References
+- [Terraform Docs](https://developer.hashicorp.com/terraform/docs)
+- [Checkov](https://www.checkov.io/)
+- [tfsec](https://github.com/aquasecurity/tfsec)
+- [Ansible Lint](https://ansible.readthedocs.io/projects/lint/)

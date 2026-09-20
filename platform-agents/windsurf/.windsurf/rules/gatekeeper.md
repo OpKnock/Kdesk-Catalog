@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Enforces OPA-based admission policies in Kubernetes with Gatekeeper ConstraintTemplates and Constraints."
+description: "Enforces OPA-based admission policies in Kubernetes with Gatekeeper ConstraintTemplates and Constraints. Use when working with gatekeeper install, constraint management, security or when the user mentions gatekeeper install, constraint management, security."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# gatekeeper
-
 Enforces OPA-based admission policies in Kubernetes with Gatekeeper ConstraintTemplates and Constraints.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl apply -f https://raw.githubusercontent.com/open-poli`, `kubectl get constrainttemplates`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Gatekeeper
 
@@ -87,6 +105,10 @@ spec:
 ### gatekeeper-install
 Install Gatekeeper and check its operational status.
 
+**Parameters:**
+- `namespace` (string): Namespace to inspect, default gatekeeper-system
+- `channel` (string): Gatekeeper release channel: stable, beta, or latest manifest.
+
 **Commands:**
 - `kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/deploy/gatekeeper.yaml`
 - `kubectl get pods -n gatekeeper-system`
@@ -101,6 +123,10 @@ Install Gatekeeper and check its operational status.
 ### constraint-management
 Create, list, and debug ConstraintTemplates and Constraints.
 
+**Parameters:**
+- `template` (string): ConstraintTemplate manifest path
+- `constraint` (string): Constraint instance manifest path
+
 **Commands:**
 - `kubectl get constrainttemplates`
 - `kubectl get constraints`
@@ -112,3 +138,7 @@ Create, list, and debug ConstraintTemplates and Constraints.
 - kubectl get constrainttemplates
 - kubectl get k8srequiredlabels
 - kubectl describe k8srequiredlabels
+
+## References
+- [Gatekeeper Documentation](https://open-policy-agent.github.io/gatekeeper/website/docs/)
+- [OPA Policy Reference](https://www.openpolicyagent.org/docs/latest/policy-language/)

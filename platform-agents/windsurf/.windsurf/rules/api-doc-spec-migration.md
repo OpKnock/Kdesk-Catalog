@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Migrates API documentation: Swagger 2.0 to OpenAPI 3, doc site restructuring, and versioned docs with changelogs."
+description: "Migrates API documentation: Swagger 2.0 to OpenAPI 3, doc site restructuring, and versioned docs with changelogs. Use when working with spec migration, doc versioning or when the user mentions spec migration, doc versioning."
 globs: ["**/*.html", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# Api Doc Spec Migration
-
 Migrates API documentation: Swagger 2.0 to OpenAPI 3, doc site restructuring, and versioned docs with changelogs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx swagger2openapi swagger.yaml -o openapi3.yaml`, `mkdir -p docs/v1 docs/v2`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Doc (Migration & Versioning)
 
@@ -55,6 +73,10 @@ Render both versions and walk every example link.
 ### spec-migration
 Convert and upgrade OpenAPI specs between versions
 
+**Parameters:**
+- `input` (string): Source spec file
+- `output` (string): Target spec file
+
 **Commands:**
 - `npx swagger2openapi swagger.yaml -o openapi3.yaml`
 - `npx swagger2openapi -y swagger.yaml > openapi3.yaml`
@@ -70,6 +92,10 @@ Convert and upgrade OpenAPI specs between versions
 ### doc-versioning
 Publish versioned documentation sites with changelogs
 
+**Parameters:**
+- `version` (string): API version
+- `spec` (string): Spec path per version
+
 **Commands:**
 - `mkdir -p docs/v1 docs/v2`
 - `redocly build-docs docs/v2/openapi.yaml -o public/v2/index.html`
@@ -81,3 +107,7 @@ Publish versioned documentation sites with changelogs
 - redocly build-docs docs/v2/openapi.yaml -o public/v2/index.html
 - node -e "const fs=require('fs');fs.writeFileSync('docs/CHANGELOG.md','# Changelog\n\n## v2.0.0\n- Breaking: renamed /items to /products\n')"
 - git tag v2.0.0 && git push origin v2.0.0
+
+## References
+- [swagger2openapi](https://github.com/Mermade/oas-kit)
+- [Redocly Build Docs](https://redocly.com/docs/cli/commands/build-docs/)

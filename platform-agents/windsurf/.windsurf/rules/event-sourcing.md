@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Event-sourcing architectures: append events to event stores (Kafka, EventStoreDB), rebuild projections, and replay events for audit and recovery."
+description: "Event-sourcing architectures: append events to event stores (Kafka, EventStoreDB), rebuild projections, and replay events for audit and recovery. Use when working with event store ops, api or when the user mentions event store ops, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# Event Sourcing
-
 Event-sourcing architectures: append events to event stores (Kafka, EventStoreDB), rebuild projections, and replay events for audit and recovery.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -X POST http://localhost:2113/streams/orders-1 -H 'C`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Event Sourcing
 
@@ -71,6 +89,11 @@ kafka-consumer-groups --bootstrap-server localhost:9092 --group projections --re
 ### event-store-ops
 Append and read events in EventStoreDB and Kafka, and manage projections.
 
+**Parameters:**
+- `topic` (string): Kafka topic or EventStoreDB stream name
+- `event-type` (string): Event type like OrderPlaced
+- `stream-id` (string): Aggregate stream identifier
+
 **Commands:**
 - `curl -s -X POST http://localhost:2113/streams/orders-1 -H 'Content-Type: application/vnd.eventstore.events+json' -d '["{\"eventId\":\"$(uuidgen)\",\"eventType\":\"OrderPlaced\",\"data\":{\"amount\":42}}"]'`
 - `curl -s http://localhost:2113/streams/orders-1/0/forward/20 | jq '.entries[].eventType'`
@@ -82,3 +105,7 @@ Append and read events in EventStoreDB and Kafka, and manage projections.
 - kafka-console-producer --bootstrap-server localhost:9092 --topic orders.events
 - curl -s http://localhost:2113/streams/orders-1/0/forward/20 | jq '.entries[].eventType'
 - kafka-consumer-groups --bootstrap-server localhost:9092 --group projections --describe
+
+## References
+- [EventStoreDB HTTP API](https://developers.eventstore.com/server/v24.2/http-api/)
+- [Kafka Consumers Guide](https://kafka.apache.org/documentation/)

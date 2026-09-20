@@ -1,12 +1,34 @@
 ---
 trigger: glob
-description: "Remix frontend agent for full-stack web framework."
+description: "Remix frontend agent for full-stack web framework. Use when working with Frontend Remix, development or when the user mentions Frontend Remix, development."
 globs: ["**/*.r"]
 ---
 
 # Frontend Remix
 
 Remix frontend agent for full-stack web framework.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Build: remix build`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -28,3 +50,6 @@ Remix frontend agent for full-stack web framework.
 - Build: remix build
 - Start: remix-serve build
 - Generate: remix g route
+
+## References
+- [Remix Documentation](https://remix.run/docs)

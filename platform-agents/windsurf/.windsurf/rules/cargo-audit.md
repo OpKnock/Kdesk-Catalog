@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Audits Rust dependencies for known vulnerabilities with cargo-audit: advisories, fix suggestions, and CI gating."
+description: "Audits Rust dependencies for known vulnerabilities with cargo-audit: advisories, fix suggestions, and CI gating. Use when working with cargo audit scan, cargo fix, code quality or when the user mentions cargo audit scan, cargo fix, code quality."
 globs: ["**/*.go", "**/*.r", "**/*.rs", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# Cargo Audit
-
 Audits Rust dependencies for known vulnerabilities with cargo-audit: advisories, fix suggestions, and CI gating.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `cargo install cargo-audit`, `cargo update -p vulnerable-crate`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # cargo-audit
 
@@ -67,6 +85,10 @@ cargo outdated
 ### cargo-audit-scan
 Scan dependency trees for vulnerabilities.
 
+**Parameters:**
+- `ignore` (string): Comma-separated RUSTSEC ids to ignore
+- `file` (string): Lockfile path
+
 **Commands:**
 - `cargo install cargo-audit`
 - `cargo audit`
@@ -82,6 +104,10 @@ Scan dependency trees for vulnerabilities.
 ### cargo-fix
 Update vulnerable dependencies.
 
+**Parameters:**
+- `crate` (string): Crate name
+- `precise` (string): Exact version
+
 **Commands:**
 - `cargo update -p vulnerable-crate`
 - `cargo update --precise 1.2.3`
@@ -92,3 +118,7 @@ Update vulnerable dependencies.
 - cargo tree -i openssl
 - cargo update -p openssl --precise 0.10.66
 - cargo audit && echo "clean"
+
+## References
+- [cargo-audit on GitHub](https://github.com/rustsec/rustsec)
+- [RustSec Advisory DB](https://rustsec.org/advisories/)

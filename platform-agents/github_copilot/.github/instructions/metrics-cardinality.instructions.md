@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# Metrics Cardinality
-
 Diagnose and fix high-cardinality metric problems in Prometheus: find exploding label values, top series, and identify offending scrape targets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `promtool tsdb analyze --help`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Metrics Cardinality
 
@@ -65,6 +83,11 @@ metric_relabel_configs:
 ### cardinality-diagnosis
 Analyze a Prometheus TSDB to find high-cardinality series, top label combinations, and memory-heavy metrics.
 
+**Parameters:**
+- `db_path` (string): Path to the Prometheus TSDB directory
+- `match` (string): Label matcher used to filter series
+- `topk` (integer): Number of highest-cardinality metrics to return
+
 **Commands:**
 - `promtool tsdb analyze --help`
 - `promtool tsdb analyze /var/lib/prometheus/metrics2/`
@@ -76,3 +99,7 @@ Analyze a Prometheus TSDB to find high-cardinality series, top label combination
 - promtool tsdb analyze /var/lib/prometheus/metrics2/
 - curl -g 'http://localhost:9090/api/v1/query?query=topk(10,count%20by%20(__name__)({__name__=~".+"}))'
 - promtool tsdb series --match 'http_requests_total{status=~".*"}' /var/lib/prometheus/metrics2/
+
+## References
+- [Prometheus Cardinality Best Practices](https://prometheus.io/docs/practices/instrumentation/)
+- [promtool TSDB docs](https://prometheus.io/docs/prometheus/latest/command-line/promtool/)

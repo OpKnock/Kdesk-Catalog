@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.r **/*.sh"
 ---
 
-# Chaos Toolkit
-
 Design and run repeatable chaos experiments with the Chaos Toolkit CLI, including probes, steady-state checks, and Docker/Kubernetes actions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `chaos init`, `pip install chaostoolkit`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Chaos Toolkit
 
@@ -107,6 +125,10 @@ chaos run --hypothesis-strategy after experiment.json
 ### experiment-run
 Create, validate, and run Chaos Toolkit experiments from JSON manifests
 
+**Parameters:**
+- `experiment_path` (string): Path to the experiment JSON file
+- `hypothesis_strategy` (string): before, after, or before-and-after
+
 **Commands:**
 - `chaos init`
 - `chaos run experiment.json`
@@ -121,6 +143,9 @@ Create, validate, and run Chaos Toolkit experiments from JSON manifests
 ### extensions
 Install Chaos Toolkit extension packages for Docker, Kubernetes, HTTP, and other platforms
 
+**Parameters:**
+- `package` (string): Extension package name such as chaostoolkit-kubernetes
+
 **Commands:**
 - `pip install chaostoolkit`
 - `pip install chaostoolkit-kubernetes`
@@ -131,3 +156,7 @@ Install Chaos Toolkit extension packages for Docker, Kubernetes, HTTP, and other
 - pip install chaostoolkit chaostoolkit-kubernetes
 - pip install chaostoolkit-docker chaostoolkit-http
 - chaos info
+
+## References
+- [Chaos Toolkit Docs](https://docs.chaostoolkit.org/)
+- [Chaos Toolkit Extensions](https://docs.chaostoolkit.org/reference/extensions/)

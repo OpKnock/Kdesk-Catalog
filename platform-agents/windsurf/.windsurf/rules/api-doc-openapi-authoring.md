@@ -4,11 +4,29 @@ description: "Implements API documentation basics: OpenAPI authoring, Swagger UI
 globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# Api Doc Openapi Authoring
-
 Implements API documentation basics: OpenAPI authoring, Swagger UI/Redoc serving, and first docs build. Use when authoring or serving OpenAPI specs. Don't use for docs-site architecture (see api-doc-site-architecture) or generated SDK docs (see api-documentation-generator).
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install -g swagger-cli`, `npm install -g redoc-cli`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Doc (Implementation)
 
@@ -62,6 +80,10 @@ Validate after every spec edit; keep bundled.yaml committed.
 ### openapi-authoring
 Author and validate OpenAPI specs by hand or from code
 
+**Parameters:**
+- `spec` (string): OpenAPI spec path
+- `output` (string): Bundled output path
+
 **Commands:**
 - `npm install -g swagger-cli`
 - `swagger-cli validate openapi.yaml`
@@ -77,6 +99,10 @@ Author and validate OpenAPI specs by hand or from code
 ### ui-serving
 Serve Swagger UI and Redoc locally and in production
 
+**Parameters:**
+- `port` (string): Serve port
+- `spec` (string): Spec path
+
 **Commands:**
 - `npm install -g redoc-cli`
 - `redoc-cli serve openapi.yaml`
@@ -88,3 +114,7 @@ Serve Swagger UI and Redoc locally and in production
 - redoc-cli serve openapi.yaml -p 8090
 - redoc-cli build openapi.yaml -o index.html
 - node -e "const d=require('swagger-ui-dist');console.log(d.getAbsoluteFSPath())"
+
+## References
+- [swagger-cli](https://github.com/APIDevTools/swagger-cli)
+- [Redoc CLI](https://github.com/Redocly/redoc/blob/master/cli/README.md)

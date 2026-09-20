@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Protocol Buffers: proto authoring, protoc code generation, buf lint/breaking checks, and gRPC schema workflows."
+description: "Protocol Buffers: proto authoring, protoc code generation, buf lint/breaking checks, and gRPC schema workflows. Use when working with protobuf generation, api or when the user mentions protobuf generation, api."
 globs: ["**/*.go", "**/*.java", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# Protobuf
-
 Protocol Buffers: proto authoring, protoc code generation, buf lint/breaking checks, and gRPC schema workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `protoc --version`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Protocol Buffers
 
@@ -71,6 +89,11 @@ message User {
 ### protobuf-generation
 Compile .proto files to Go/Java/Python, lint with buf, and check breaking changes.
 
+**Parameters:**
+- `proto_file` (string): Path to the .proto file
+- `language` (string): go, java, python, cpp, etc.
+- `out_dir` (string): Output directory for generated code
+
 **Commands:**
 - `protoc --version`
 - `protoc --go_out=. --go_opt=paths=source_relative user.proto`
@@ -82,3 +105,7 @@ Compile .proto files to Go/Java/Python, lint with buf, and check breaking change
 - protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. user.proto
 - buf generate
 - buf breaking --against .git#branch=main
+
+## References
+- [Protobuf.dev](https://protobuf.dev/)
+- [Buf Docs](https://buf.build/docs/)

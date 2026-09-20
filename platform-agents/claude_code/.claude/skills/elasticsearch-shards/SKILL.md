@@ -1,13 +1,34 @@
 ---
 name: "elasticsearch-shards"
-description: "Elasticsearch shard management: inspect shard distribution and sizes, diagnose unassigned shards, and reroute shards between nodes."
+description: "Elasticsearch shard management: inspect shard distribution and sizes, diagnose unassigned shards, and reroute shards between nodes. Use when working with shard management, api or when the user mentions shard management, api."
+license: "MIT"
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---
-
-# Elasticsearch Shards
 
 Elasticsearch shard management: inspect shard distribution and sizes, diagnose unassigned shards, and reroute shards between nodes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s 'localhost:9200/_cat/shards?v&s=index'`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Elasticsearch Shards
 
@@ -62,6 +83,11 @@ curl -s 'localhost:9200/_cluster/allocation/explain?pretty' -H 'Content-Type: ap
 ### shard-management
 List shard state and sizes, explain unassigned shards, and manually reroute shards.
 
+**Parameters:**
+- `index` (string): Index the shard belongs to
+- `shard` (integer): Shard number
+- `primary` (boolean): Whether the shard is a primary or replica
+
 **Commands:**
 - `curl -s 'localhost:9200/_cat/shards?v&s=index'`
 - `curl -s 'localhost:9200/_cat/shards?v&h=index,shard,prirep,state,docs,store,node&s=store:desc'`
@@ -73,3 +99,7 @@ List shard state and sizes, explain unassigned shards, and manually reroute shar
 - curl -s 'localhost:9200/_cat/shards?v&h=index,shard,prirep,state,store,node' | grep UNASSIGNED
 - curl -s 'localhost:9200/_cluster/allocation/explain?pretty' -H 'Content-Type: application/json' -d '{"index":"logs-2024.01","shard":2,"primary":false}' | jq '.allocate_explanation'
 - curl -s 'localhost:9200/_cat/shards?v&s=store:desc' | head -15
+
+## References
+- [Shards API](https://www.elastic.co/guide/en/elasticsearch/reference/current/cat-shards.html)
+- [Cluster Allocation Explain](https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-allocation-explain.html)

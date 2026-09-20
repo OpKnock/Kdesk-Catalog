@@ -30,6 +30,9 @@ class PlatformAdapter:
     install_target: str = ""
     support_level: SupportLevel = SupportLevel.FULLY_SUPPORTED
     family: str = ""
+    version: str = "1.0.0"
+    capabilities_version: str = "1.0"
+    supported_capabilities: dict = {}
 
     def __init__(self, root: Optional[Path] = None):
         self.root = Path(root) if root else default_repo_root()
@@ -79,12 +82,38 @@ class PlatformAdapter:
         return {
             "platform": self.name,
             "support_level": self.support_level.value,
+            "version": getattr(self, "version", "1.0.0"),
+            "capabilities_version": getattr(self, "capabilities_version", "1.0"),
             "exists": self.exists(),
             "files": count,
             "items": items,
             "status": "OK" if ok else ("MISSING" if not self.exists() else "EMPTY"),
             "scanned_files": count,
         }
+
+    def capability_version(self, capability: str) -> str:
+        """Return version for a specific capability, or adapter version."""
+        return self.supported_capabilities.get(capability, self.capabilities_version)
+
+    def supports_capability(self, capability: str, required_version: str = "1.0") -> bool:
+        """Version-aware capability check."""
+        if capability not in self.supported_capabilities and capability != "*":
+            # If no explicit map, assume all capabilities at adapter's cap_version
+            cap_ver = self.capabilities_version
+        else:
+            cap_ver = self.supported_capabilities.get(capability, self.capabilities_version)
+        # Simple semver compare: major.minor
+        try:
+            req_parts = [int(x) for x in required_version.split(".")]
+            cap_parts = [int(x) for x in cap_ver.split(".")]
+            for r, c in zip(req_parts, cap_parts):
+                if c > r:
+                    return True
+                if c < r:
+                    return False
+            return len(cap_parts) >= len(req_parts)
+        except ValueError:
+            return cap_ver == required_version
 
 
 # ---------------------------------------------------------------------------
@@ -98,7 +127,7 @@ _RULES_MD = "rules .md"
 _LEGACY = "legacy native"
 
 
-def _mk(name: str, display: str, fmt: str, target: str, family: str, level: SupportLevel = SupportLevel.FULLY_SUPPORTED) -> type:
+def _mk(name: str, display: str, fmt: str, target: str, family: str, level: SupportLevel = SupportLevel.FULLY_SUPPORTED, version: str = "1.0.0", cap_version: str = "1.0") -> type:
     return type(
         f"Adapter_{name}",
         (PlatformAdapter,),
@@ -109,6 +138,8 @@ def _mk(name: str, display: str, fmt: str, target: str, family: str, level: Supp
             "install_target": target,
             "family": family,
             "support_level": level,
+            "version": version,
+            "capabilities_version": cap_version,
         },
     )
 
@@ -206,6 +237,8 @@ class AdapterRegistry:
                     "format": a.format,
                     "family": a.family,
                     "support_level": a.support_level.value,
+                    "version": getattr(a, "version", "1.0.0"),
+                    "capabilities_version": getattr(a, "capabilities_version", "1.0"),
                     "exists": v["exists"],
                     "items": v["items"],
                     "files": v["files"],

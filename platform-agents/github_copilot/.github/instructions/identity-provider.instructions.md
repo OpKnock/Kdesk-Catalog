@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.r **/*.sh"
 ---
 
-# Identity Provider
-
 Identity provider operations with Keycloak: kcadm.sh realm and user administration, OIDC discovery, client registration, and token introspection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kcadm.sh config credentials --server http://localhost:8080 -`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Identity Provider
 
@@ -82,6 +100,11 @@ Agent: kcadm.sh config credentials ... ; kcadm.sh create realms -s realm=myrealm
 ### keycloak-admin
 Administer Keycloak realms, users, and clients from the CLI.
 
+**Parameters:**
+- `realm` (string): Keycloak realm name.
+- `server_url` (string): Keycloak base URL, e.g. http://localhost:8080.
+- `admin_user` (string): Admin username for token acquisition.
+
 **Commands:**
 - `kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin`
 - `kcadm.sh get realms`
@@ -93,3 +116,7 @@ Administer Keycloak realms, users, and clients from the CLI.
 - kcadm.sh create realms -s realm=myrealm -s enabled=true
 - kcadm.sh update users/6c1d -r myrealm -s 'email=alice@example.com'
 - kcadm.sh get users -r myrealm --query email=alice@example.com
+
+## References
+- [Keycloak Server Admin Guide](https://www.keycloak.org/docs/latest/server_admin/)
+- [OpenID Connect Core](https://openid.net/specs/openid-connect-core-1_0.html)

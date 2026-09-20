@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Manage Kubernetes ConfigMaps: create from literals/files, mount into pods, update without redeploying, and verify environment consumption."
+description: "Manage Kubernetes ConfigMaps: create from literals/files, mount into pods, update without redeploying, and verify environment consumption. Use when working with configmap create, configmap ops, api or when the user mentions configmap create, configmap ops, api."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 ---
 
-# Kubernetes Configmap
-
 Manage Kubernetes ConfigMaps: create from literals/files, mount into pods, update without redeploying, and verify environment consumption.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl create configmap app-config --from-literal=APP_ENV=p`, `kubectl get configmaps`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kubernetes ConfigMaps
 
@@ -94,6 +112,11 @@ kubectl exec deploy/app -- cat /etc/app/app.properties
 ### configmap-create
 Create ConfigMaps from literals, files, or env files.
 
+**Parameters:**
+- `name` (string): ConfigMap name.
+- `from_literal` (string): key=value pairs.
+- `from_file` (string): File(s) to embed.
+
 **Commands:**
 - `kubectl create configmap app-config --from-literal=APP_ENV=prod --from-literal=LOG_LEVEL=info`
 - `kubectl create configmap app-config-file --from-file=app.properties`
@@ -108,6 +131,10 @@ Create ConfigMaps from literals, files, or env files.
 ### configmap-ops
 Inspect, update, and delete ConfigMaps.
 
+**Parameters:**
+- `name` (string): ConfigMap name.
+- `namespace` (string): Namespace (default: current context).
+
 **Commands:**
 - `kubectl get configmaps`
 - `kubectl describe configmap app-config`
@@ -119,3 +146,7 @@ Inspect, update, and delete ConfigMaps.
 - kubectl get configmaps
 - kubectl describe configmap app-config
 - kubectl get cm app-config -o yaml
+
+## References
+- [Kubernetes ConfigMaps](https://kubernetes.io/docs/concepts/configuration/configmap/)
+- [kubectl create configmap](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create_configmap/)

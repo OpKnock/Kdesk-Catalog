@@ -1,13 +1,31 @@
 ---
 name: "huey"
-description: "Runs lightweight task queues with Huey: in-process or Redis-backed workers, cron scheduling, retries, and lock management."
+description: "Runs lightweight task queues with Huey: in-process or Redis-backed workers, cron scheduling, retries, and lock management. Use when working with huey workers, huey scheduling, backend or when the user mentions huey workers, huey scheduling, backend."
 ---
-
-# huey
 
 Runs lightweight task queues with Huey: in-process or Redis-backed workers, cron scheduling, retries, and lock management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `huey_consumer tasks.huey`, `redis-cli llen huey:queue`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Huey
 
@@ -84,6 +102,11 @@ send_email("user@example.com", "Hello")
 ### huey-workers
 Run Huey consumers for Redis or in-memory brokers.
 
+**Parameters:**
+- `workers` (integer): Worker process count
+- `threads` (integer): Threads per process
+- `queues` (string): Queue names to consume
+
 **Commands:**
 - `huey_consumer tasks.huey`
 - `huey_consumer tasks.huey -w 4`
@@ -99,6 +122,10 @@ Run Huey consumers for Redis or in-memory brokers.
 ### huey-scheduling
 Schedule periodic tasks and manage task state.
 
+**Parameters:**
+- `queue` (string): Queue name
+- `pattern` (string): Redis key pattern to scan
+
 **Commands:**
 - `redis-cli llen huey:queue`
 - `redis-cli hgetall huey:results:123`
@@ -108,3 +135,7 @@ Schedule periodic tasks and manage task state.
 **Examples:**
 - redis-cli llen huey:queue
 - redis-cli zrange huey:scheduled 0 -1
+
+## References
+- [Huey Docs](https://huey.readthedocs.io)
+- [Huey on GitHub](https://github.com/coleifer/huey)

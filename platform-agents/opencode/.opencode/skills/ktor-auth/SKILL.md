@@ -1,13 +1,31 @@
 ---
 name: "ktor-auth"
-description: "Secure Ktor applications: JWT bearer validation, Basic auth, session auth, and protected-route testing with curl."
+description: "Secure Ktor applications: JWT bearer validation, Basic auth, session auth, and protected-route testing with curl. Use when working with jwt auth, basic auth, api or when the user mentions jwt auth, basic auth, api."
 ---
-
-# Ktor Auth
 
 Secure Ktor applications: JWT bearer validation, Basic auth, session auth, and protected-route testing with curl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `./gradlew run`, `curl -s -u alice:password http://localhost:8080/basic`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Ktor Auth
 
@@ -85,6 +103,10 @@ routing {
 ### jwt-auth
 Configure and test JWT authentication in Ktor.
 
+**Parameters:**
+- `token` (string): JWT bearer token.
+- `endpoint` (string): Protected path.
+
 **Commands:**
 - `./gradlew run`
 - `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/me`
@@ -99,6 +121,10 @@ Configure and test JWT authentication in Ktor.
 ### basic-auth
 Configure Basic auth and test credentials via curl.
 
+**Parameters:**
+- `username` (string): Basic auth user.
+- `password` (string): Basic auth password.
+
 **Commands:**
 - `curl -s -u alice:password http://localhost:8080/basic`
 - `curl -s -o /dev/null -w '%{http_code}\n' -u alice:wrong http://localhost:8080/basic`
@@ -109,3 +135,7 @@ Configure Basic auth and test credentials via curl.
 - curl -s -u alice:password http://localhost:8080/basic
 - curl -s -o /dev/null -w '%{http_code}\n' -u alice:wrong http://localhost:8080/basic
 - ./gradlew test
+
+## References
+- [Ktor Authentication](https://ktor.io/docs/server-authentication.html)
+- [Ktor JWT](https://ktor.io/docs/server-jwt.html)

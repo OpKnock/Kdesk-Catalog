@@ -2,11 +2,29 @@
 applyTo: "**/*.py **/*.r **/*.sh"
 ---
 
-# Timeout
-
 Bound shell commands with GNU it and related tools.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `timeout 30s sleep 60`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GNU timeout
 
@@ -78,6 +96,11 @@ timeout 5s curl -sf https://example.com && echo ok
 ### timeout-guard
 Bound shell commands with GNU timeout and related tools
 
+**Parameters:**
+- `duration` (string): Timeout like 30s, 5m, 1h
+- `kill_after` (string): Grace period before SIGKILL with -k
+- `signal` (string): Signal to send on timeout, e.g. -s HUP
+
 **Commands:**
 - `timeout 30s sleep 60`
 - `timeout -k 5 30s docker pull busybox`
@@ -89,3 +112,7 @@ Bound shell commands with GNU timeout and related tools
 - timeout 30s sleep 60; echo $?
 - timeout -k 5 30s docker pull busybox
 - timeout 10s ping -c 20 8.8.8.8
+
+## References
+- [GNU timeout manual](https://www.gnu.org/software/coreutils/manual/html_node/timeout-invocation.html)
+- [curl --max-time](https://curl.se/docs/manpage.html#--max-time)

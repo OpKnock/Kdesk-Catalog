@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Makes HTTP requests with curl: headers, methods, auth, redirects, timeouts, retries, and output formatting for API debugging."
+description: "Makes HTTP requests with curl: headers, methods, auth, redirects, timeouts, retries, and output formatting for API debugging. Use when working with http requests, downloads and metrics, devtools or when the user mentions http requests, downloads and metrics, devtools."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 ---
 
-# curl-devtools
-
 Makes HTTP requests with curl: headers, methods, auth, redirects, timeouts, retries, and output formatting for API debugging.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -I http://localhost:8080`, `curl -o file.zip http://localhost:8080/file.zip`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # curl HTTP Client
 
@@ -62,6 +80,11 @@ curl -s https://api.example.com/data | jq .
 ### http-requests
 Send GET/POST/PUT requests with headers, bodies, and auth.
 
+**Parameters:**
+- `method` (string): HTTP method via -X
+- `data` (string): Request body via -d
+- `header` (string): Request header via -H
+
 **Commands:**
 - `curl -I http://localhost:8080`
 - `curl -X POST http://localhost:8080/items -H 'Content-Type: application/json' -d '{"name":"x"}'`
@@ -78,6 +101,11 @@ Send GET/POST/PUT requests with headers, bodies, and auth.
 ### downloads-and-metrics
 Download files and measure request timing and status.
 
+**Parameters:**
+- `output` (string): Output file via -o
+- `retry` (integer): Retry count
+- `max-time` (integer): Timeout in seconds
+
 **Commands:**
 - `curl -o file.zip http://localhost:8080/file.zip`
 - `curl -O http://localhost:8080/file.zip`
@@ -90,3 +118,7 @@ Download files and measure request timing and status.
 - curl -w '%{http_code} %{time_total}\n' -o /dev/null http://localhost:8080
 - curl --retry 5 --retry-delay 2 http://localhost:8080/flaky
 - curl -s http://localhost:8080/api | jq .
+
+## References
+- [curl Manual](https://curl.se/docs/manpage.html)
+- [curl Everything Guide](https://everything.curl.dev/)

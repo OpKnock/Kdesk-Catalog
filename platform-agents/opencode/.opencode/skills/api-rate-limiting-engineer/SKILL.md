@@ -1,13 +1,31 @@
 ---
 name: "api-rate-limiting-engineer"
-description: "Implements rate limiting at the gateway with Kong's rate-limiting plugin and OpenResty: plugin config, consumer-level limits, and declarative policies via decK."
+description: "Implements rate limiting at the gateway with Kong's rate-limiting plugin and OpenResty: plugin config, consumer-level limits, and declarative policies via decK. Use when working with kong rate limit, kong consumers or when the user mentions kong rate limit, kong consumers."
 ---
-
-# api-rate-limiting-engineer
 
 Implements rate limiting at the gateway with Kong's rate-limiting plugin and OpenResty: plugin config, consumer-level limits, and declarative policies via decK.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -X POST http://localhost:8001/plugins -d 'name=rate-`, `curl -s -X POST http://localhost:8001/consumers -d 'username`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Rate Limiting Engineer
 
@@ -59,6 +77,11 @@ plugins:
 ### kong-rate-limit
 Enable and tune Kong rate-limiting plugins
 
+**Parameters:**
+- `limit-by` (string): consumer, ip, credential, or header scope
+- `window` (object): minute/hour/day/second limits
+- `policy` (string): local, cluster, or redis backing store
+
 **Commands:**
 - `curl -s -X POST http://localhost:8001/plugins -d 'name=rate-limiting' -d 'config.minute=60' -d 'config.limit_by=consumer'`
 - `curl -s http://localhost:8001/plugins | jq '.data[0].config'`
@@ -82,3 +105,7 @@ Create consumers and credentials for limit scoping
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Kong Rate Limiting Plugin](https://docs.konghq.com/hub/kong-inc/rate-limiting/)
+- [Kong Consumers](https://docs.konghq.com/gateway/latest/admin-api/#consumer-object)

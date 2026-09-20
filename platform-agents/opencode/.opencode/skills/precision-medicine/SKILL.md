@@ -1,13 +1,31 @@
 ---
 name: "precision-medicine"
-description: "Analyzes genomic and clinical data with bioinformatics tooling: alignment QC with samtools, variant filtering with bcftools, and BLAST searches."
+description: "Analyzes genomic and clinical data with bioinformatics tooling: alignment QC with samtools, variant filtering with bcftools, and BLAST searches. Use when working with alignment, variants or when the user mentions alignment, variants."
 ---
-
-# precision-medicine
 
 Analyzes genomic and clinical data with bioinformatics tooling: alignment QC with samtools, variant filtering with bcftools, and BLAST searches.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `samtools flagstat sample.bam`, `bcftools stats variants.vcf.gz > stats.txt`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Precision Medicine
 
@@ -64,6 +82,11 @@ Run flagstat/stats on a control sample and compare against the reference baselin
 ### alignment
 Inspect and QC aligned sequencing data.
 
+**Parameters:**
+- `bam` (string): Alignment file
+- `region` (string): chr:start-end region
+- `filter` (string): SAM flag filter like -F 4
+
 **Commands:**
 - `samtools flagstat sample.bam`
 - `samtools view -h sample.bam | head -30`
@@ -79,6 +102,11 @@ Inspect and QC aligned sequencing data.
 ### variants
 Filter and summarize variant calls.
 
+**Parameters:**
+- `vcf` (string): Variant call file
+- `expression` (string): bcftools filter expression
+- `format` (string): bcftools query output format
+
 **Commands:**
 - `bcftools stats variants.vcf.gz > stats.txt`
 - `bcftools view -f PASS variants.vcf.gz`
@@ -90,3 +118,8 @@ Filter and summarize variant calls.
 - bcftools view -i 'INFO/AF>0.1' variants.vcf.gz | bcftools stats - | head -40
 - bcftools query -f '%CHROM:%POS %REF>%ALT %QUAL\n' variants.vcf.gz | head
 - bcftools view -v snps variants.vcf.gz | bcftools stats - > snps.stats
+
+## References
+- [samtools](https://www.htslib.org/doc/samtools.html)
+- [bcftools](https://samtools.github.io/bcftools/)
+- [NCBI BLAST](https://www.ncbi.nlm.nih.gov/books/NBK279690/)

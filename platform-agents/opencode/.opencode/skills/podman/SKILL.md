@@ -1,13 +1,31 @@
 ---
 name: "podman"
-description: "Runs daemonless containers with Podman: build, run, pods, quadlets, compose, and Kubernetes YAML generation without root."
+description: "Runs daemonless containers with Podman: build, run, pods, quadlets, compose, and Kubernetes YAML generation without root. Use when working with container lifecycle, pods and kubernetes, devops or when the user mentions container lifecycle, pods and kubernetes, devops."
 ---
-
-# podman
 
 Runs daemonless containers with Podman: build, run, pods, quadlets, compose, and Kubernetes YAML generation without root.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `podman pull nginx:alpine`, `podman pod create --name webpod -p 8080:80`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Podman Containers
 
@@ -68,6 +86,11 @@ podman machine start
 ### container-lifecycle
 Run and manage rootless containers with podman.
 
+**Parameters:**
+- `name` (string): Container name
+- `image` (string): Image reference
+- `ports` (string): Port mapping
+
 **Commands:**
 - `podman pull nginx:alpine`
 - `podman run -d --name web -p 8080:80 nginx:alpine`
@@ -84,6 +107,10 @@ Run and manage rootless containers with podman.
 ### pods-and-kubernetes
 Create pods, run compose stacks, and generate Kubernetes YAML.
 
+**Parameters:**
+- `pod` (string): Pod name
+- `yaml` (string): Kubernetes YAML file
+
 **Commands:**
 - `podman pod create --name webpod -p 8080:80`
 - `podman run -d --pod webpod nginx`
@@ -96,3 +123,8 @@ Create pods, run compose stacks, and generate Kubernetes YAML.
 - podman pod create --name webpod -p 8080:80
 - podman generate kube webpod > webpod.yaml
 - podman play kube webpod.yaml
+
+## References
+- [Podman Documentation](https://docs.podman.io/)
+- [Podman Machine](https://docs.podman.io/en/latest/markdown/podman-machine.1.html)
+- [Podman Compose](https://github.com/containers/podman-compose)

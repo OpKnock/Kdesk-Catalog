@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "HTTP routing in Go with gorilla/mux: path variables, method matching, middleware, and route testing."
+description: "HTTP routing in Go with gorilla/mux: path variables, method matching, middleware, and route testing. Use when working with gorilla mux routing, api or when the user mentions gorilla mux routing, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 ---
 
-# Mux
-
 HTTP routing in Go with gorilla/mux: path variables, method matching, middleware, and route testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `go get github.com/gorilla/mux`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gorilla/mux
 
@@ -72,6 +90,11 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 ### gorilla-mux-routing
 Build REST routers with gorilla/mux: variables, method/host constraints, middleware chains and subrouters.
 
+**Parameters:**
+- `port` (integer): Port the router listens on
+- `path_pattern` (string): mux route pattern with {id} variables or regex
+- `methods` (array): Allowed HTTP methods for a route
+
 **Commands:**
 - `go get github.com/gorilla/mux`
 - `go mod tidy`
@@ -83,3 +106,7 @@ Build REST routers with gorilla/mux: variables, method/host constraints, middlew
 - go run main.go
 - curl -s http://localhost:8080/users/42
 - go test -run TestRouter -v ./...
+
+## References
+- [gorilla/mux GitHub](https://github.com/gorilla/mux)
+- [Go net/http docs](https://pkg.go.dev/net/http)

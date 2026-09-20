@@ -2,11 +2,29 @@
 applyTo: "**/*.go **/*.r **/*.sh **/*.{yaml,yml}"
 ---
 
-# Regression Testing
-
 Expert reference using pytest focused reruns, flaky test triage, git bisect to locate bug introduction, and CI gating with JUnit XML reports.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pytest tests/ -q`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Regression Testing
 
@@ -71,6 +89,11 @@ pytest tests/test_auth.py::test_login -x --count=20
 ### regression-guard
 Find and prevent regressions with pytest and git bisect
 
+**Parameters:**
+- `last_failed` (boolean): pytest --lf: only rerun tests that failed last run
+- `junitxml` (string): Path to write JUnit XML for CI
+- `expression` (string): pytest -k expression to select tests
+
 **Commands:**
 - `pytest tests/ -q`
 - `pytest tests/ --lf --tb=short`
@@ -82,3 +105,7 @@ Find and prevent regressions with pytest and git bisect
 - pytest tests/ --lf -x
 - git bisect run pytest tests/ -q
 - pytest tests/ --durations=10 -q
+
+## References
+- [pytest usage docs](https://docs.pytest.org/en/stable/how-to/usage.html)
+- [git bisect docs](https://git-scm.com/docs/git-bisect)

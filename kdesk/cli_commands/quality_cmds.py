@@ -325,7 +325,10 @@ def _cmd_policy(args) -> int:
 
 def _cmd_verify(args) -> int:
     root = Path(args.root) if args.root else default_repo_root()
-    summary = run_verify(root, fast=args.fast, skip=args.skip)
+    skip = args.skip
+    if isinstance(skip, str):
+        skip = [s.strip() for s in skip.split(",") if s.strip()]
+    summary = run_verify(root, fast=args.fast, skip=skip)
     counts = summary.get("checks", {})
     if args.json:
         print(json.dumps(summary, indent=2, default=str))

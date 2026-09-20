@@ -2,11 +2,29 @@
 applyTo: "**/*.json **/*.py **/*.r **/*.sh"
 ---
 
-# Api Rest Fastapi Routes
-
 Implements REST APIs with FastAPI and Pydantic: typed routes, automatic OpenAPI docs, dependency injection, and TestClient-based testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install fastapi uvicorn`, `curl -s -o /dev/null -w '%{http_code}\n' -H 'Authorization: `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API REST Engineer v2 - FastAPI
 
@@ -61,6 +79,11 @@ def create_item(item: Item):
 ### fastapi-routes
 Define typed FastAPI routes with automatic validation
 
+**Parameters:**
+- `model` (object): Pydantic request model
+- `status-code` (integer): Route response status
+- `response-model` (object): Pydantic response model
+
 **Commands:**
 - `pip install fastapi uvicorn`
 - `uvicorn main:app --reload`
@@ -84,3 +107,7 @@ Share auth and DB logic via FastAPI dependencies
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [FastAPI First Steps](https://fastapi.tiangolo.com/tutorial/first-steps/)
+- [FastAPI Dependencies](https://fastapi.tiangolo.com/tutorial/dependencies/)

@@ -1,14 +1,32 @@
 ---
 trigger: glob
-description: "Builds Python SDKs: pyproject.toml configuration, python -m build, editable installs, twine checks, and PyPI publishing."
+description: "Builds Python SDKs: pyproject.toml configuration, python -m build, editable installs, twine checks, and PyPI publishing. Use when working with python package, package metadata or when the user mentions python package, package metadata."
 globs: ["**/*.py", "**/*.r", "**/*.sh"]
 ---
 
-# Api Sdk Python Package
-
 Builds Python SDKs: pyproject.toml configuration, python -m build, editable installs, twine checks, and PyPI publishing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install build twine`, `python -c "import tomllib; d=tomllib.load(open('pyproject.to`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API SDK v3 - Python
 
@@ -62,6 +80,11 @@ description = "Client SDK for My API"
 ### python-package
 Package a Python SDK with build and setuptools
 
+**Parameters:**
+- `dist` (string): Distribution files glob
+- `repository` (string): PyPI repository URL
+- `token` (string): PyPI API token
+
 **Commands:**
 - `pip install build twine`
 - `python -m build`
@@ -85,3 +108,7 @@ Configure pyproject.toml metadata
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Packaging Python Projects](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
+- [Twine Docs](https://twine.readthedocs.io/en/stable/)

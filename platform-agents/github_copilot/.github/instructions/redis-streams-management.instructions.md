@@ -2,11 +2,29 @@
 applyTo: "**/*.r **/*.sh"
 ---
 
-# Redis Streams Management
-
 Administer Redis Streams in production: inspect with XINFO, manage consumer group lifecycle, enforce retention with XTRIM, and remove stale entries.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-cli XINFO STREAM orders`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Redis Streams Management
 
@@ -79,6 +97,11 @@ redis-cli XLEN orders
 ### stream-administration
 Administer streams: info, groups, trim, delete entries, set IDs
 
+**Parameters:**
+- `maxlen` (integer): Approximate max entries kept after XTRIM
+- `minid` (string): Trim strategy: drop entries older than this ID
+- `group` (string): Consumer group name to create or destroy
+
 **Commands:**
 - `redis-cli XINFO STREAM orders`
 - `redis-cli XINFO GROUPS orders`
@@ -91,3 +114,7 @@ Administer streams: info, groups, trim, delete entries, set IDs
 - redis-cli XINFO STREAM orders
 - redis-cli XTRIM orders MINID 1699999999999-0
 - redis-cli XGROUP DESTROY orders workers
+
+## References
+- [XINFO command](https://redis.io/docs/latest/commands/xinfo/)
+- [XTRIM command](https://redis.io/docs/latest/commands/xtrim/)

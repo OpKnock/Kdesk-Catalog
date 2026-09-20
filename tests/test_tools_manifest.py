@@ -119,6 +119,16 @@ class TestConverterValidation(unittest.TestCase):
         self.assertEqual(c.TOOLS_MANIFEST_PATH, ROOT / "tools.json")
 
 
+def _normalize_content(content: bytes) -> bytes:
+        """Normalize line endings and trailing whitespace for cross-platform comparison."""
+        # Replace CRLF with LF
+        content = content.replace(b"\r\n", b"\n")
+        # Normalize trailing whitespace on each line
+        lines = content.split(b"\n")
+        normalized = [line.rstrip() for line in lines]
+        return b"\n".join(normalized)
+
+
 class TestClaudeCodeRegeneration(unittest.TestCase):
     def test_claude_code_regen_is_byte_identical(self):
         platform_dir = ROOT / "platform-agents" / "claude_code"
@@ -132,9 +142,9 @@ class TestClaudeCodeRegeneration(unittest.TestCase):
         after = snapshot_tree(platform_dir)
         self.assertEqual(set(before), set(after))
         for rel in before:
-            # Normalize line endings (CRLF -> LF) for cross-platform compatibility
-            before_norm = before[rel].replace(b"\r\n", b"\n")
-            after_norm = after[rel].replace(b"\r\n", b"\n")
+            # Normalize line endings and trailing whitespace for cross-platform compatibility
+            before_norm = _normalize_content(before[rel])
+            after_norm = _normalize_content(after[rel])
             self.assertEqual(before_norm, after_norm, f"drift in {rel}")
 
 

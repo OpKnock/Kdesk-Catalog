@@ -7,7 +7,7 @@ Checks, for the Claude Code (main AI) target:
   4. Every workflow references an existing agent
   5. Wiring manifest links agents to skills
   6. No stale model IDs in any artifact
-  7. Counts reconcile to 2909 (1766 agents + 1143 skills)
+  7. Counts reconcile to the committed catalog-stats.json (agents + skills)
 """
 import json
 import re
@@ -23,6 +23,12 @@ AGENTS = CC / "agents"
 SKILLS = CC / "skills"
 WF_DIR = ROOT / "workflows"
 WIRING = ROOT / "skills" / "wiring.json"
+
+with open(ROOT / "reports" / "catalog-stats.json", "r", encoding="utf-8") as f:
+    STATS = json.load(f)
+TOTAL_AGENTS = STATS["agents"]
+TOTAL_SKILLS = STATS["skills"]
+TARGET_TOTAL = TOTAL_AGENTS + TOTAL_SKILLS
 
 FRONT = re.compile(r"^---\n(.*?)\n---", re.DOTALL)
 STALE = ("claude-3-5-sonnet-20241022", "claude-3.5-sonnet")
@@ -91,11 +97,11 @@ def main():
 
     # 7. counts
     total = len(md) + len(skill_dirs)
-    report.append(f"\n[7] TOTAL: {len(md)} agents + {len(skill_dirs)} skills = {total} (target 2909)")
+    report.append(f"\n[7] TOTAL: {len(md)} agents + {len(skill_dirs)} skills = {total} (target {TARGET_TOTAL})")
 
     ok = (not bad_fm and not bad_skill and not no_wf and not wf_no_agent
-          and not empty and stale_hits == 0 and total == 2909)
-    report.append(f"\nRESULT: {'PASS - all 2909 agents and skills verified' if ok else 'FAIL'}")
+          and not empty and stale_hits == 0 and total == TARGET_TOTAL)
+    report.append(f"\nRESULT: {'PASS - all {TARGET_TOTAL} agents and skills verified' if ok else 'FAIL'}")
 
     # 8. install check into ~/.claude (main AI global dirs)
     claude_agents = Path.home() / ".claude" / "agents"
@@ -103,8 +109,8 @@ def main():
     installed_agents = len(list(claude_agents.glob("*.md"))) if claude_agents.is_dir() else 0
     installed_skills = len([d for d in claude_skills.iterdir() if d.is_dir()]) if claude_skills.is_dir() else 0
     report.append(f"\n[8] INSTALLED into ~/.claude: {installed_agents} subagents, "
-                  f"{installed_skills} skill dirs (target 1766 agents / 1143 skills)")
-    install_ok = installed_agents == 1766 and installed_skills >= 1143
+                  f"{installed_skills} skill dirs (target {TOTAL_AGENTS} agents / {TOTAL_SKILLS} skills)")
+    install_ok = installed_agents == TOTAL_AGENTS and installed_skills >= TOTAL_SKILLS
     report.append(f"    {'PASS - usable as subagents of the main AI' if install_ok else 'NOT INSTALLED'}")
 
     out = "\n".join(report)

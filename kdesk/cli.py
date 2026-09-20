@@ -233,14 +233,129 @@ def _cmd_rollback(args) -> int:
 
 
 def _cmd_doctor(args) -> int:
-    adapters = AdapterRegistry(Path(args.root) if args.root else default_repo_root())
-    doctor = Doctor(adapters, base=Path(args.base) if args.base else None)
+    """Doctor command with multiple modes."""
+    registry = Path(args.root).resolve() if args.root else default_repo_root()
+    adapters = AdapterRegistry(registry)
+    base = Path(args.base).resolve() if args.base else Path.cwd()
+    doctor = Doctor(adapters, base=base, registry_root=registry)
+
+    # Route to appropriate mode
+    if args.mode == "check":
+        return _cmd_doctor_check(args, doctor)
+    elif args.mode == "diagnose":
+        return _cmd_doctor_diagnose(args, doctor)
+    elif args.mode == "fix":
+        return _cmd_doctor_fix(args, doctor)
+    elif args.mode == "scan":
+        return _cmd_doctor_scan(args, doctor)
+    else:
+        # Default to check for backwards compatibility
+        return _cmd_doctor_check(args, doctor)
+
+
+def _cmd_doctor_check(args, doctor=None) -> int:
+    """Original install verification."""
+    if doctor is None:
+        registry = Path(args.root).resolve() if args.root else default_repo_root()
+        adapters = AdapterRegistry(registry)
+        doctor = Doctor(adapters, base=Path(args.base).resolve() if args.base else Path.cwd())
     if args.platform:
         check = doctor.check(args.platform)
-        print(json.dumps(check, indent=2, default=str))
+        _out(check, args.format)
         return 0
     summary = doctor.summary()
     _out(summary, args.format)
+    return 0
+
+
+def _cmd_doctor_diagnose(args, doctor=None) -> int:
+    """Run full diagnostic pipeline."""
+    if doctor is None:
+        registry = Path(args.root).resolve() if args.root else default_repo_root()
+        adapters = AdapterRegistry(registry)
+        doctor = Doctor(adapters, base=Path(args.base).resolve() if args.base else Path.cwd(), registry_root=Path(args.root).resolve() if args.root else default_repo_root())
+
+    result = doctor.diagnose(
+        platform=args.platform,
+        project_root=Path(args.project_root).resolve() if args.project_root else None,
+        fix=args.fix,
+        dry_run=args.dry_run,
+    )
+
+    report = result["report"]
+    fix_report = result["fix_report"]
+
+    if args.json:
+        output = {"report": report.to_dict()}
+        if fix_report:
+            output["fix_report"] = fix_report.to_dict()
+        print(json.dumps(output, indent=2, default=str))
+    else:
+        print(doctor.format_report(report, verbose=args.verbose))
+
+    if fix_report:
+        print("")
+        print(doctor.format_fix_report(fix_report))
+
+    # Exit code based on errors
+    if report.error_count > 0:
+        return 3
+    return 0
+
+
+def _cmd_doctor_fix(args, doctor=None) -> int:
+    """Apply fixes for a previously diagnosed project."""
+    if doctor is None:
+        base = Path(args.project_root).resolve() if args.project_root else Path.cwd()
+        registry = Path(args.root).resolve() if args.root else default_repo_root()
+
+        adapters = AdapterRegistry(registry)
+        doctor = Doctor(adapters, base=Path(args.base).resolve() if args.base else Path.cwd(), registry_root=registry)
+
+    # First diagnose
+    project_root = Path(args.project_root).resolve() if args.project_root else Path.cwd()
+    scan_result = doctor.scan_project(project_root)
+    issues = doctor.analyze_compatibility(scan_result, args.platform)
+
+    # Apply fixes
+    fix_report = doctor.apply_fixes(issues, args.platform, dry_run=args.dry_run, project_root=project_root)
+
+    if args.json:
+        print(json.dumps(fix_report.to_dict(), indent=2, default=str))
+    else:
+        print(doctor.format_fix_report(fix_report))
+
+    if fix_report.failed > 0:
+        return 1
+    return 0
+
+
+def _cmd_doctor_scan(args, doctor=None) -> int:
+    """Scan a project for AI configuration."""
+    if doctor is None:
+        registry = Path(args.root).resolve() if args.root else default_repo_root()
+        adapters = AdapterRegistry(registry)
+        doctor = Doctor(adapters, base=Path(args.base).resolve() if args.base else Path.cwd(), registry_root=Path(args.root).resolve() if args.root else default_repo_root())
+
+    project_root = Path(args.project_root).resolve() if args.project_root else Path.cwd()
+    scan_result = doctor.scan_project(project_root)
+
+    if args.json:
+        print(json.dumps(scan_result.to_dict(), indent=2, default=str))
+    else:
+        print(f"Project: {scan_result.project_root}")
+        print(f"Detected Platform: {scan_result.platform or 'unknown'}")
+        print(f"Agents: {len(scan_result.agents)}")
+        print(f"Skills: {len(scan_result.skills)}")
+        print(f"Commands: {len(scan_result.commands)}")
+        print(f"Workflows: {len(scan_result.workflows)}")
+        print(f"Config Files: {len(scan_result.configuration)}")
+        if scan_result.errors:
+            print(f"Errors: {len(scan_result.errors)}")
+        if scan_result.warnings:
+            print(f"Warnings: {len(scan_result.warnings)}")
+        print(f"Metadata: {scan_result.metadata}")
+
     return 0
 
 
@@ -523,10 +638,17 @@ def build_parser() -> argparse.ArgumentParser:
     rb.add_argument("--base", default=None, help="install base dir")
     rb.add_argument("--dry-run", action="store_true")
 
-    d = sub.add_parser("doctor", parents=[root_parent], help="verify installations")
-    d.add_argument("--platform", default=None)
-    d.add_argument("--base", default=None)
+    d = sub.add_parser("doctor", parents=[root_parent], help="verify installations + project diagnostics")
+    d.add_argument("--platform", default=None, help="target platform (e.g., claude_code, opencode, codex_cli)")
+    d.add_argument("--base", default=None, help="base directory for install check")
     d.add_argument("--format", choices=["json", "table"], default="json")
+    d.add_argument("--mode", choices=["check", "diagnose", "fix", "scan"], default="check",
+                   help="doctor mode: check (install verification), diagnose (full pipeline), fix (apply fixes), scan (scan project)")
+    d.add_argument("--project-root", default=None, help="project directory to scan")
+    d.add_argument("--fix", action="store_true", help="automatically fix fixable issues (diagnose mode)")
+    d.add_argument("--dry-run", action="store_true", help="preview fixes without applying")
+    d.add_argument("--json", action="store_true", help="output JSON")
+    d.add_argument("--verbose", action="store_true", help="show detailed issue explanations")
 
     s = sub.add_parser("security", parents=[root_parent], help="secret scan")
     s.add_argument("--json", action="store_true")

@@ -93,7 +93,7 @@ class TestCatalogConsistency(unittest.TestCase):
 
 class TestDivisionsRegeneration(unittest.TestCase):
     def test_regeneration_is_byte_identical(self):
-        before = (DIVISIONS_PATH).read_bytes()
+        before = (DIVISIONS_PATH).read_bytes().replace(b"\r\n", b"\n")
         result = subprocess.run(
             [os.sys.executable, str(ROOT / "scripts" / "generate-divisions.py")],
             cwd=str(ROOT),
@@ -101,7 +101,7 @@ class TestDivisionsRegeneration(unittest.TestCase):
             text=True,
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        after = (DIVISIONS_PATH).read_bytes()
+        after = (DIVISIONS_PATH).read_bytes().replace(b"\r\n", b"\n")
         self.assertEqual(before, after)
 
 

@@ -362,6 +362,9 @@ def _cmd_wiring(args) -> int:
     else:
         for issue in result.get("problems", []):
             print(f"PROBLEM: {issue}")
-        print(f"wiring: {len(result.get('verified', []))} verified, "
+        verified = result.get("verified", [])
+        n_verified = len(verified) if isinstance(verified, list) else (
+            "all" if verified else 0)
+        print(f"wiring: {n_verified} verified, "
               f"{len(result.get('problems', []))} problems")
     return 3 if result.get("problems") else 0

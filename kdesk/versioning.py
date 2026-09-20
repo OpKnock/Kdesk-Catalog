@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
 
 SEMVER_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)$")
-CONSTRAINT_RE = re.compile(r"^([\^~>=<!]+)?\s*(\d+)\.(\d+)\.(\d+)$")
+CONSTRAINT_RE = re.compile(r"^([\^~>=<!]+)?\s*(\d+)(?:\.(\d+))?(?:\.(\d+))?$")
 
 
 def parse_semver(version: str) -> Optional[Tuple[int, int, int]]:
@@ -51,13 +51,17 @@ class Constraint:
 
 
 def parse_constraint(spec: str) -> Constraint:
-    """Parse a semver constraint string like '^2.0.0', '~1.2', '=1.0.0', '>1.0'."""
+    """Parse a semver constraint string like '^2.0.0', '~1.2', '=1.0.0', '>1.0'.
+
+    Partial versions are allowed: missing minor/patch default to 0
+    ('^2' == '^2.0.0', '~1.2' == '~1.2.0').
+    """
     spec = spec.strip()
     m = CONSTRAINT_RE.match(spec)
     if not m:
         return Constraint(raw=spec, op="", base=(0, 0, 0))
     op = m.group(1) or ""
-    base = (int(m.group(2)), int(m.group(3)), int(m.group(4)))
+    base = (int(m.group(2)), int(m.group(3) or 0), int(m.group(4) or 0))
     return Constraint(raw=spec, op=op, base=base)
 
 

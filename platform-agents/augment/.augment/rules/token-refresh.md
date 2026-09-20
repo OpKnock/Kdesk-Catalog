@@ -1,0 +1,80 @@
+---
+type: agent_requested
+description: "Keep OAuth2 access tokens fresh by exchanging refresh tokens at the token endpoint. Handles token rotation where the server issues a new refresh token per exchange, detects reuse rejection with invalid_grant errors, and automates refresh loops for CLIs and background services with configurable TTL thresholds."
+---
+
+# Token Refresh
+
+Keep OAuth2 access tokens fresh by exchanging refresh tokens at the token endpoint. Handles token rotation where the server issues a new refresh token per exchange, detects reuse rejection with invalid_grant errors, and automates refresh loops for CLIs and background services with configurable TTL thresholds.
+
+## Instructions
+
+# Token Refresh
+
+Hand-crafted skill for keeping OAuth2 access tokens fresh.
+
+## What this skill does
+
+- Exchanges refresh tokens for new access tokens
+- Detects rotation and reuse-rejection behavior
+- Automates refreshes for CLIs and background services
+
+## When to use
+
+- Access tokens expire in minutes; refresh tokens last longer
+- A service needs to stay authenticated without user interaction
+- Debugging invalid_grant errors from stale refresh tokens
+
+## Real commands
+
+```bash
+# Exchange the refresh token for a new access token
+curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET" | jq -r .access_token
+
+# With rotation, the response also contains a new refresh_token:
+#   curl ... | jq -r .refresh_token   (store it)
+
+# Reuse detection: second use of a rotated token should 400
+curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1" -o /dev/null -w '%{http_code}\n'
+
+# Convenience CLI (Google APIs)
+oauth2l header cloud-platform
+
+# Use the fresh token
+curl -s -H "Authorization: Bearer $NEW_ACCESS_TOKEN" https://api.example.com/me
+```
+
+## Refresh loop
+
+- Store the latest refresh_token after every exchange
+- Refresh when access token has <10% TTL left
+- On invalid_grant: force a full re-login
+
+## Testing
+
+```bash
+TOKEN=$(curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$RT&client_id=app1&client_secret=$S" | jq -r .access_token)
+curl -s -H "Authorization: Bearer $TOKEN" https://api.example.com/me
+```
+
+## Best practices
+
+- Treat refresh tokens as sensitive: store encrypted, rotate on use
+- Persist the newest refresh token atomically with the exchange
+- Never put refresh tokens in URLs or logs
+
+## Capabilities
+
+### oauth-refresh
+Refresh access tokens with the OAuth2 refresh grant
+
+**Commands:**
+- `curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET" | jq -r .access_token`
+- `curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET" -o /dev/null -w '%{http_code}\n'`
+- `oauth2l header cloud-platform`
+- `curl -s -H "Authorization: Bearer $NEW_ACCESS_TOKEN" http://localhost:8080/me`
+
+**Examples:**
+- curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET" | jq -r .access_token
+- curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1" -o /dev/null -w '%{http_code}\n'
+- oauth2l header cloud-platform

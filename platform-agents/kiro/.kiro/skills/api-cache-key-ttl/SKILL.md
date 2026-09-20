@@ -1,0 +1,80 @@
+---
+name: "api-cache-key-ttl"
+description: "Designs cache architecture: TTL sizing, cache-key design, invalidation patterns, and multi-layer caching decisions."
+---
+
+# Api Cache Key Ttl
+
+Designs cache architecture: TTL sizing, cache-key design, invalidation patterns, and multi-layer caching decisions.
+
+## Instructions
+
+# API Cache (Design)
+
+Designs cache architecture before writing cache code.
+
+## When to Use
+- Planning caching for a new service
+- Fixing stale-data incidents
+- Deciding invalidation strategy
+
+## Real Commands
+
+```bash
+# Key design
+node -e "const key=['api','products','v2','42'].join(':');console.log(key)"
+
+# TTL tiers
+node -e "const tiers={hot:{ttl:60},warm:{ttl:300},cold:{ttl:3600}};console.log(JSON.stringify(tiers,null,2))"
+
+# Version invalidation
+redis-cli SET api:products:v2:42 '{}' EX 60 NX
+redis-cli --scan --pattern 'api:products:v2:*' | xargs -r redis-cli DEL
+
+# Event invalidation
+redis-cli PUBLISH cache.invalidate '{"pattern":"api:products:*"}'
+```
+
+## Strategy Selection
+- Volatile data: short TTL + events
+- Stable data: long TTL, version keys
+- Writes heavy: write-through
+
+## Testing
+Simulate an update and verify all affected keys are invalidated.
+
+## Best Practices
+- Version keys on schema changes
+- Design invalidation before TTLs
+
+## Capabilities
+
+### key-and-ttl-design
+Design cache keys and TTLs that match data volatility
+
+**Commands:**
+- `node -e "const key=['api','products','v2','42'].join(':');console.log(key)"`
+- `node -e "const tiers={hot:{ttl:60},warm:{ttl:300},cold:{ttl:3600}};console.log(JSON.stringify(tiers,null,2))"`
+- `redis-cli SET api:products:v2:42 '{}' EX 60`
+- `redis-cli --scan --pattern 'api:products:*'`
+- `node -e "console.log('key parts: resource:version:id')"`
+
+**Examples:**
+- node -e "const key=['api','products','v2','42'].join(':');console.log(key)"
+- node -e "const tiers={hot:{ttl:60},warm:{ttl:300},cold:{ttl:3600}};console.log(JSON.stringify(tiers,null,2))"
+- redis-cli SET api:products:v2:42 '{}' EX 60
+
+### invalidation-design
+Choose invalidation strategies: TTL, write-through, versioning, events
+
+**Commands:**
+- `redis-cli DEL api:products:v2:42`
+- `redis-cli --scan --pattern 'api:products:v2:*' | xargs -r redis-cli DEL`
+- `redis-cli SET api:products:v2:42 '{}' EX 60 NX`
+- `redis-cli PUBLISH cache.invalidate '{"pattern":"api:products:*"}'`
+- `node -e "console.log('strategies: ttl | write-through | version | event')"`
+
+**Examples:**
+- redis-cli --scan --pattern 'api:products:v2:*' | xargs -r redis-cli DEL
+- redis-cli SET api:products:v2:42 '{}' EX 60 NX
+- redis-cli PUBLISH cache.invalidate '{"pattern":"api:products:*"}'

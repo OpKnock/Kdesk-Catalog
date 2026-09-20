@@ -1,0 +1,32 @@
+title: Grpc Csharp
+description: gRPC services and clients in C# with Grpc.Net.Client, Grpc.Tools proto codegen, and dotnet
+  CLI project scaffolding.
+version: 2.0.0
+instructions: "# Grpc Csharp\n\ngRPC services and clients in C# with Grpc.Net.Client, Grpc.Tools proto\
+  \ codegen, and dotnet CLI project scaffolding.\n\n## Instructions\n\n# gRPC C#\n\nBuild gRPC services\
+  \ and clients in .NET with Grpc.Net.Client and Grpc.Tools.\n\n## What this skill does\n\n- Scaffolds\
+  \ gRPC service and client projects with the dotnet CLI.\n- Generates C# code from proto files at build\
+  \ time via Grpc.Tools.\n- Calls unary, streaming, and server-streaming RPCs from client apps.\n- Configures\
+  \ channels, deadlines, and interceptors.\n\n## When to use\n\n- A .NET backend needs internal RPC communication.\n\
+  - Porting an existing proto contract into a C# microservice.\n- Adding gRPC health checks to an ASP.NET\
+  \ Core service.\n\n## Real commands\n\n```bash\n# Scaffold a service\ndotnet new grpc -o GrpcGreeter\n\
+  cd GrpcGreeter\n\n# Client-side packages\ndotnet add package Grpc.Net.Client\ndotnet add package Google.Protobuf\n\
+  dotnet add package Grpc.Tools\n\n# Build and run\ndotnet build\ndotnet run\n```\n\n## csproj proto codegen\n\
+  \n```xml\n<ItemGroup>\n  <Protobuf Include=\"Protos\\greet.proto\" GrpcServices=\"Server\" />\n  <Protobuf\
+  \ Include=\"Protos\\greet.proto\" GrpcServices=\"Client\" />\n</ItemGroup>\n```\n\n## Client call\n\n\
+  ```csharp\nusing var channel = GrpcChannel.ForAddress(\"https://localhost:5001\");\nvar client = new\
+  \ Greeter.GreeterClient(channel);\nvar reply = await client.SayHelloAsync(new HelloRequest { Name =\
+  \ \"Ada\" });\nConsole.WriteLine(reply.Message);\n```\n\n## Testing\n\n```bash\ndotnet test\ndotnet\
+  \ run --project GrpcGreeter &\ncurl -s http://localhost:5001/greet/ada  # if grpc-gateway endpoint exposed\n\
+  ```\n\n## Best practices\n\n- Use one shared GrpcChannel per service, not one per call.\n- Set deadlines:\
+  \ `client.SayHelloAsync(req, deadline: DateTime.UtcNow.AddSeconds(5))`.\n- Enable HTTP/2 cleartext on\
+  \ dev: `AppContext.SetSwitch(\"System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport\", true)`.\n\
+  - Keep protos in a shared class library so client and server reference the same contract.\n\n## Example\
+  \ exchange\n\n```\nUser: The client can't reach the local gRPC server over plain HTTP.\nAgent: Enable\
+  \ unencrypted HTTP/2 support in the client, or run the server over HTTPS.\n```\n\n## Capabilities\n\n\
+  ### csharp-grpc\nScaffold .NET gRPC projects, generate code from proto files, and call services with\
+  \ Grpc.Net.Client.\n\n**Commands:**\n- `dotnet new grpc -o GrpcGreeter`\n- `dotnet add package Grpc.Net.Client`\n\
+  - `dotnet add package Google.Protobuf`\n- `dotnet add package Grpc.Tools`\n- `dotnet run --project GrpcGreeter`\n\
+  \n**Examples:**\n- dotnet build GrpcGreeter && dotnet run --project GrpcGreeter\n- dotnet add package\
+  \ Grpc.AspNetCore\n- dotnet add GrpcGreeterClient reference GrpcGreeter"
+prompt: Act as Grpc Csharp and handle the task per the instructions.

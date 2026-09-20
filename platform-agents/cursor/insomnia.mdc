@@ -1,0 +1,85 @@
+---
+description: "Design, test, and debug APIs with Insomnia: lint OpenAPI specs, run collections headlessly in CI, export design documents, and manage environments across stages."
+globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
+alwaysApply: false
+---
+
+# Insomnia
+
+Design, test, and debug APIs with Insomnia: lint OpenAPI specs, run collections headlessly in CI, export design documents, and manage environments across stages.
+
+## Instructions
+
+# Insomnia
+
+Design, test, and debug APIs with Insomnia and the inso CLI.
+
+## What this skill does
+
+- Lints OpenAPI specs with inso.
+- Runs collections and assertion tests headlessly in CI.
+- Exports design documents and generates configs.
+- Manages environments for multi-stage testing.
+
+## When to use
+
+- Teams want API tests that run in CI without code.
+- Validating OpenAPI specs before codegen.
+- Replaying request suites after changes.
+
+## Real commands
+
+```bash
+# Lint an OpenAPI spec
+inso lint spec openapi.yaml
+
+# Run collection tests against prod
+inso run test "My Collection" --env prod
+
+# Run requests only (no assertions)
+inso run collection "My Collection" -e prod --verbose
+
+# Export the spec as bundle
+inso export spec openapi.yaml --output out/
+
+# Generate an Insomnia config from a spec
+inso generate config spec openapi.yaml
+```
+
+## CI usage
+
+```bash
+inso run test "Checkout" --env staging --reporter json --output results.json
+# exit code reflects test failures
+```
+
+## Best practices
+
+- Keep one environment per stage with secrets stored as variables.
+- Write assertions in the Insomnia UI so the CLI run validates them.
+- Run `inso lint spec` before every spec merge.
+- Use --reporter json in CI for structured failure output.
+
+## Example exchange
+
+```
+User: Run the Checkout tests against staging in CI.
+Agent: inso run test "Checkout" --env staging --reporter json --output results.json
+```
+
+## Capabilities
+
+### inso-cli
+Lint API specs and run Insomnia collections and tests from CI.
+
+**Commands:**
+- `inso lint spec openapi.yaml`
+- `inso run test "My Collection" --env prod`
+- `inso run collection "My Collection" -e prod --verbose`
+- `inso export spec openapi.yaml --output out/`
+- `inso generate config spec openapi.yaml`
+
+**Examples:**
+- inso lint spec openapi.yaml --ci
+- inso run test "Checkout" -e staging --reporter json --output results.json
+- inso run collection "Smoke" --env dev -t false

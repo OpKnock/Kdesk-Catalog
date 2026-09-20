@@ -1,0 +1,81 @@
+{
+  "name": "api-gateway-patterns",
+  "description": "Implements gateway architecture patterns: BFF composition, protocol translation, routing, and centralized security across clients.",
+  "system_prompt": "You are api-gateway-patterns.\n\nImplements gateway architecture patterns: BFF composition, protocol translation, routing, and centralized security across clients.\n\n## Capabilities\n- **bff-composition**: Build a Backend-for-Frontend that composes multiple services into client-shaped responses\n- **protocol-translation**: Translate between REST, GraphQL, and gRPC at the edge\n\n## Available Tools\nbash, read, write, edit, glob, grep\n\n## Guidelines\n# API Gateway Patterns\n\nApplies gateway architectural patterns: BFF, composition, translation, and edge security.\n\n## When to Use\n- Multiple clients need different shapes\n- Services speak different protocols\n- Centralizing cross-cutting concerns\n\n## Real Commands\n\n```bash\n# BFF stub\nnode -e \"const express=require('express');const app=express();app.get('/api/home',(req,res)=>res.json({users:[],orders:[]}));app.listen(3000)\"\ncurl -s http://localhost:3000/api/home | python -m json.tool\n\n# Compose upstreams\nnode -e \"const fetch=require('node-fetch');Promise.all([fetch('http://localhost:3100/users'),fetch('http://localhost:3200/orders')]).then(rs=>Promise.all(rs.map(r=>r.json()))).then(console.log)\"\n\n# GraphQL translation check\nnode -e \"const {buildSchema,graphql}=require('graphql');const s=buildSchema('type Query{hello:String}');graphql(s,'{hello}').then(r=>console.log(r))\"\n```\n\n## Pattern Selection\n- One client type: plain gateway routing\n- Many client types: BFF per client\n- Mixed protocols: translation layer\n\n## Testing\nLoad test the composed route and confirm p95 stays within budget.\n\n## Best Practices\n- Keep BFFs thin; business logic stays in services\n- Cache composed responses aggressively\n\n## Examples\n- node -e \"const express=require('express');const app=express();app.get('/api/home',(req,res)=>res.json({users:[],orders:[]}));app.listen(3000)\"\n- curl -s http://localhost:3000/api/home | python -m json.tool\n- curl -s -o /dev/null -w '%{http_code} %{time_total}s\\n' http://localhost:3000/api/home\n- node -e \"const {buildSchema,graphql}=require('graphql');const s=buildSchema('type Query{hello:String}');graphql(s,'{hello}').then(r=>console.log(r))\"\n- curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ hello }\"}'\n- npm install @graphql-tools/executor-http\n",
+  "available_tools": [
+    "bash",
+    "read",
+    "write",
+    "edit",
+    "glob",
+    "grep"
+  ],
+  "capabilities": [
+    {
+      "name": "bff-composition",
+      "description": "Build a Backend-for-Frontend that composes multiple services into client-shaped responses",
+      "commands": [
+        "npm init -y && npm install express node-fetch",
+        "node -e \"const express=require('express');const app=express();app.get('/api/home',(req,res)=>res.json({users:[],orders:[]}));app.listen(3000,()=>console.log('bff on 3000'))\"",
+        "curl -s http://localhost:3000/api/home | python -m json.tool",
+        "node -e \"const fetch=require('node-fetch');Promise.all([fetch('http://localhost:3100/users'),fetch('http://localhost:3200/orders')]).then(rs=>Promise.all(rs.map(r=>r.json()))).then(console.log)\"",
+        "curl -s -o /dev/null -w '%{http_code} %{time_total}s\\n' http://localhost:3000/api/home"
+      ],
+      "examples": [
+        "node -e \"const express=require('express');const app=express();app.get('/api/home',(req,res)=>res.json({users:[],orders:[]}));app.listen(3000)\"",
+        "curl -s http://localhost:3000/api/home | python -m json.tool",
+        "curl -s -o /dev/null -w '%{http_code} %{time_total}s\\n' http://localhost:3000/api/home"
+      ],
+      "parameters": [
+        {
+          "name": "route",
+          "type": "string",
+          "description": "Composed route path"
+        },
+        {
+          "name": "services",
+          "type": "string",
+          "description": "Comma-separated upstream services"
+        }
+      ]
+    },
+    {
+      "name": "protocol-translation",
+      "description": "Translate between REST, GraphQL, and gRPC at the edge",
+      "commands": [
+        "npm install @graphql-tools/executor-http",
+        "node -e \"console.log('grpc_health_probe -addr=localhost:50051')\"",
+        "curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ hello }\"}'",
+        "node -e \"const {buildSchema,graphql}=require('graphql');const s=buildSchema('type Query{hello:String}');graphql(s,'{hello}').then(r=>console.log(r))\"",
+        "curl -s http://localhost:3000/api/legacy -o /dev/null -w '%{http_code}'"
+      ],
+      "examples": [
+        "node -e \"const {buildSchema,graphql}=require('graphql');const s=buildSchema('type Query{hello:String}');graphql(s,'{hello}').then(r=>console.log(r))\"",
+        "curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ hello }\"}'",
+        "npm install @graphql-tools/executor-http"
+      ],
+      "parameters": [
+        {
+          "name": "from",
+          "type": "string",
+          "description": "Source protocol"
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "description": "Target protocol"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "input": "Set up a gateway with BFF for the mobile app",
+      "output": "Builds a thin BFF that composes users and orders into one mobile-shaped response"
+    },
+    {
+      "input": "Translate a legacy REST endpoint to GraphQL",
+      "output": "Adds a translation layer exposing legacy REST data through the GraphQL edge"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+title: Echidna
+description: 'Fuzzes Ethereum smart contracts with Echidna: property-based invariant testing, corpus,
+  and CI integration.'
+version: 2.0.0
+instructions: "# Echidna\n\nFuzzes Ethereum smart contracts with Echidna: property-based invariant testing,\
+  \ corpus, and CI integration.\n\n## Instructions\n\n# Echidna\n\nFuzz EVM smart contracts with property\
+  \ testing.\n\n## When to Use\n\n- Verifying invariants (balance sums, roles, limits)\n- Finding assertion\
+  \ failures in complex contracts\n- Testing upgrade and reentrancy scenarios\n- Pre-audit and CI regression\
+  \ checks\n\n## Invariant Example\n\n```solidity\n// test/Invariants.sol\nimport \"echidna/Test.sol\"\
+  ;\n\ncontract Invariants is Test {\n    Vault vault;\n\n    function setUp() public {\n        vault\
+  \ = new Vault();\n    }\n\n    // total supply must equal sum of balances\n    function echidna_total_never_changes()\
+  \ public view returns (bool) {\n        return vault.total() == vault.balanceOf(address(this));\n  \
+  \  }\n}\n```\n\n## Commands\n\n```bash\n# Property fuzzing\nechidna test/Invariants.sol\n\n# Assertion\
+  \ mode (fail on assert failures)\nechidna test/Invariants.sol --test-mode assertion\n\n# Limit the campaign\n\
+  echidna test/Invariants.sol --test-limit 100000\n\n# Config driven\nechidna test/Invariants.sol --config\
+  \ echidna.yaml\n\n# Corpus for reuse\nechidna test/Invariants.sol --corpus-dir corpus\n```\n\n## Config\
+  \ Example\n\n```yaml\n# echidna.yaml\ntestMode: assertion\ntestLimit: 50000\nseqLen: 100\ndeployer:\
+  \ \"0x30000\"\nsender: [\"0x10000\", \"0x20000\"]\n```\n\n## Best Practices\n\n- Write invariants as\
+  \ named echidna_* functions\n- Use --test-mode assertion for existing assert tests\n- Save corpora to\
+  \ accelerate future runs\n- Run a long campaign (millions of calls) before audits\n- Shrink sequences\
+  \ on failure to find minimal repro\n- Integrate into CI with a fixed fuzz budget\n\n## Capabilities\n\
+  \n### echidna-fuzz\nRun property-based fuzzing campaigns.\n\n**Commands:**\n- `echidna test/Invariants.sol`\n\
+  - `echidna test/Invariants.sol --test-mode assertion`\n- `echidna test/Invariants.sol --test-limit 100000`\n\
+  - `echidna test/Invariants.sol --config echidna.yaml`\n- `echidna test/Invariants.sol --corpus-dir corpus`\n\
+  \n**Examples:**\n- echidna test/Invariants.sol --test-mode assertion --test-limit 50000\n- echidna test/Invariants.sol\
+  \ --config echidna.yaml --corpus-dir corpus\n- echidna test/Invariants.sol --seq-len 100\n\n### echidna-analysis\n\
+  Analyze and shrink failing sequences.\n\n**Commands:**\n- `echidna test/Invariants.sol --test-mode property\
+  \ --test-limit 0`\n- `echidna test/Invariants.sol --format text`\n- `echidna test/Invariants.sol --list-tests`\n\
+  - `echidna test/Invariants.sol --deployer 0x30000`\n\n**Examples:**\n- echidna test/Invariants.sol --test-limit\
+  \ 0 --format text\n- echidna test/Invariants.sol --seq-len 100 --test-limit 5000"
+prompt: Act as Echidna and handle the task per the instructions.

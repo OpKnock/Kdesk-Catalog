@@ -1,0 +1,30 @@
+title: Fluentd
+description: 'Log collection with Fluentd: run the agent, configure input/output plugins, test configs,
+  and manage buffers.'
+version: 2.0.0
+instructions: "# Fluentd\n\nLog collection with Fluentd: run the agent, configure input/output plugins,\
+  \ test configs, and manage buffers.\n\n## Instructions\n\n# Fluentd\n\n## What this skill does\n\nFluentd\
+  \ is a Ruby-based log collector with a rich plugin ecosystem (in_tail, out_elasticsearch, out_s3). Events\
+  \ route via match patterns and buffer to smooth bursts. It exposes a monitoring agent on port 24220.\n\
+  \n## When to use\n\n- Centralized logging with heavy plugin needs\n- Multi-format log ingestion (tail,\
+  \ forward, http)\n- Routing logs to multiple destinations\n\n## Real commands\n\n```bash\n# Validate\
+  \ config\nfluentd --dry-run -c fluent.conf\n\n# Run with custom plugins\nfluentd -c fluent.conf -p /etc/fluent/plugin\n\
+  \n# Plugin management\nfluent-gem list | grep fluent-plugin\nfluent-gem install fluent-plugin-elasticsearch\n\
+  \n# Monitoring agent\ncurl -s http://localhost:24220/api/plugins.json | jq '.plugins[] | {plugin_id,\
+  \ type, emit_records}'\n```\n\n## fluent.conf example\n\n```conf\n<source>\n  @type tail\n  tag app.*\n\
+  \  path /var/log/app/*.log\n  <parse>\n    @type json\n  </parse>\n</source>\n\n<filter app.**>\n  @type\
+  \ record_transformer\n  <record>\n    host ${hostname}\n  </record>\n</filter>\n\n<match app.**>\n \
+  \ @type elasticsearch\n  host elasticsearch\n  port 9200\n  index_name app-logs\n  <buffer>\n    @type\
+  \ file\n    path /var/log/fluentd/buffer\n    flush_interval 5s\n  </buffer>\n</match>\n```\n\n## Testing\n\
+  \n```bash\n# Dry-run then watch metrics while producing logs\necho '{\"msg\":\"hello\"}' >> /var/log/app/test.log\n\
+  curl -s http://localhost:24220/api/plugins.json | jq '.plugins[] | select(.type | contains(\"elasticsearch\"\
+  )) | .emit_records'\n```\n\n## Best practices\n\n- Validate with --dry-run in CI for every config change.\n\
+  - Use file buffers so crashes don't lose events.\n- Watch the monitor agent's emit_records to detect\
+  \ stuck buffers.\n- Match with the most specific tag pattern possible.\n- Pin plugin versions in the\
+  \ Docker image.\n\n## Capabilities\n\n### fluentd-agent\nValidate, run, and monitor Fluentd configurations\
+  \ and plugins.\n\n**Commands:**\n- `fluentd --dry-run -c fluent.conf`\n- `fluentd -c fluent.conf -p\
+  \ /etc/fluent/plugin`\n- `fluent-gem list | grep fluent-plugin`\n- `fluent-gem install fluent-plugin-elasticsearch`\n\
+  - `curl -s http://localhost:24220/api/plugins.json | jq '.plugins[] | {plugin_id, type, emit_records}'`\n\
+  \n**Examples:**\n- fluentd --dry-run -c fluent.conf\n- curl -s http://localhost:24220/api/plugins.json\
+  \ | jq '.plugins[] | {plugin_id, type, emit_records}'\n- fluent-gem install fluent-plugin-elasticsearch"
+prompt: Act as Fluentd and handle the task per the instructions.

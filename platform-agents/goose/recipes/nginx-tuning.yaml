@@ -1,0 +1,24 @@
+title: Nginx Tuning
+description: Optimizes nginx for production with worker process sizing, keepalive tuning, kernel parameter
+  adjustments, gzip compression, and load testing validation with ab.
+version: 2.0.0
+instructions: "# Nginx Tuning\n\nOptimizes nginx for production with worker process sizing, keepalive\
+  \ tuning, kernel parameter adjustments, gzip compression, and load testing validation with ab.\n\n##\
+  \ Instructions\n\n# nginx Tuning\n\nTune nginx and the OS so a single box handles maximum concurrent\
+  \ connections and throughput.\n\n## What this skill does\n\n- Sizes workers and connection pools\n-\
+  \ Tunes kernel networking parameters\n- Benchmarks before/after with ab\n\n## When to use\n\n- Capacity\
+  \ planning for high-traffic sites\n- 499/502 errors under load\n\n## Real commands\n\n```bash\n# Validate\
+  \ and inspect current config\nnginx -t\nnginx -T\nnginx -s reload\n\n# OS-level tuning\nsysctl -w net.core.somaxconn=65535\n\
+  sysctl -w net.ipv4.tcp_fin_timeout=30\n\n# Benchmark\nab -n 10000 -c 100 http://localhost/\nab -n 5000\
+  \ -c 50 -k http://localhost/api\n```\n\n## Recommended config\n\n```nginx\nworker_processes auto;\n\
+  worker_rlimit_nofile 65535;\nevents {\n    worker_connections 4096;\n    use epoll;\n    multi_accept\
+  \ on;\n}\nhttp {\n    keepalive_timeout 65;\n    sendfile on;\n    tcp_nopush on;\n    tcp_nodelay on;\n\
+  \    gzip on;\n    gzip_types text/css application/json;\n}\n```\n\n## Benchmark interpretation\n\n\
+  - Requests/sec and time per request from ab\n- Re-run after each change to measure impact\n\n## Best\
+  \ practices\n\n- Match worker_processes to CPU cores\n- Raise `ulimit -n` and file descriptor limits\n\
+  - Test one variable at a time\n\n## Capabilities\n\n### nginx-performance-tuning\nOptimize nginx core\
+  \ settings and kernel parameters, then benchmark with ab.\n\n**Commands:**\n- `nginx -t`\n- `nginx -s\
+  \ reload`\n- `nginx -T`\n- `sysctl -w net.core.somaxconn=65535`\n- `ab -n 10000 -c 100 http://localhost/`\n\
+  \n**Examples:**\n- nginx -T | grep -E 'worker_processes|worker_connections'\n- sysctl -w net.ipv4.tcp_fin_timeout=30\n\
+  - ab -n 5000 -c 50 -k http://localhost/api"
+prompt: Act as Nginx Tuning and handle the task per the instructions.

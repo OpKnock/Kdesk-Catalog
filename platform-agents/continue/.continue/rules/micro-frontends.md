@@ -1,0 +1,108 @@
+---
+name: "micro-frontends"
+description: "Architects micro-frontend platforms with single-spa, Module Federation, and Nx workspaces: composition, sharing, and independent deploys."
+globs: ["**/*.css", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# micro-frontends
+
+Architects micro-frontend platforms with single-spa, Module Federation, and Nx workspaces: composition, sharing, and independent deploys.
+
+## Instructions
+
+# Micro-Frontends
+
+Compose independent frontend apps into one product.
+
+## When to Use
+
+- Multiple teams shipping one web product independently
+- Migrating a monolith UI in slices
+- Sharing a shell, auth, and navigation
+
+## single-spa composition
+
+```bash
+npx create-single-spa --moduleType root-config
+npx create-single-spa --moduleType app-parcel --framework react
+```
+
+Root config registers apps with lifecycle functions (bootstrap/mount/unmount).
+
+## Module Federation sharing
+
+```js
+// webpack config of shell
+new ModuleFederationPlugin({
+  name: 'shell',
+  remotes: { orders: 'orders@http://localhost:9001/remoteEntry.js' },
+  shared: { react: { singleton: true } }
+});
+```
+
+Singletons prevent duplicate React instances - version them carefully.
+
+## Nx monorepo management
+
+```bash
+npx nx graph
+npx nx run-many --target=test --all
+npx nx affected:build --base=main
+```
+
+Only rebuild what changed using `affected`.
+
+## Contracts between apps
+
+- Shared props: user, locale, navigation state.
+- Routing: each app owns its routes; the shell owns top-level segments.
+- Styling: design tokens via shared packages, not global CSS.
+- Events: pub/sub on window or a shared bus, versioned payloads.
+
+## Best practices
+
+- Version and document the integration contract.
+- Every app deploys independently; no release trains.
+- Shared UI in a versioned package, not duplicated code.
+- E2E the shell + key apps in a single smoke suite.
+
+## Testing
+
+```bash
+npx nx affected:test --base=origin/main
+```
+
+Run integration smoke tests across the composed shell weekly.
+
+## Capabilities
+
+### single-spa
+Build and register micro-frontend applications.
+
+**Commands:**
+- `npx create-single-spa --moduleType root-config`
+- `npx create-single-spa --moduleType app-parcel`
+- `npm run build -- --watch`
+- `npx serve -s dist -l 9000`
+- `npm run importmap`
+
+**Examples:**
+- npx create-single-spa --moduleType app-parcel --framework react
+- npx create-single-spa --moduleType root-config --dir root
+- npm run build && npx serve -s dist -l 8080
+
+### nx
+Manage monorepo builds and dependencies with Nx.
+
+**Commands:**
+- `npx nx graph`
+- `npx nx run shell:build --configuration=production`
+- `npx nx affected:build --base=main`
+- `npx nx run-many --target=test --all`
+- `npx nx migrate latest`
+
+**Examples:**
+- npx nx affected:test --base=origin/main
+- npx nx build shell --with-deps
+- npx nx run-many --target=lint --parallel=3

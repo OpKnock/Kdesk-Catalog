@@ -1,0 +1,32 @@
+title: Field Selection
+description: 'API field selection: allow clients to request only the fields they need (sparse fieldsets),
+  reduce payload size, and validate selections with jq and GraphQL-style patterns.'
+version: 2.0.0
+instructions: "# Field Selection\n\nAPI field selection: allow clients to request only the fields they\
+  \ need (sparse fieldsets), reduce payload size, and validate selections with jq and GraphQL-style patterns.\n\
+  \n## Instructions\n\n# Field Selection\n\n## What this skill does\n\nField selection lets clients fetch\
+  \ only the fields they use, shrinking payloads and server work. The JSON:API convention uses `?fields=type=field1,field2`;\
+  \ simpler APIs use `?fields=a,b,c`. This skill implements and validates that pattern.\n\n## When to\
+  \ use\n\n- Mobile clients that need small payloads\n- APIs whose default responses are bloated\n- Enforcing\
+  \ an allowlist so clients can't request arbitrary fields\n\n## Real commands\n\n```bash\n# Request only\
+  \ the fields you need\ncurl -s 'http://localhost:8080/api/orders/1?fields=id,status,total' | jq 'keys'\n\
+  \n# Measure payload savings\ncurl -s 'http://localhost:8080/api/orders/1' | jq '. | length'        \
+  \  # full\ncurl -s 'http://localhost:8080/api/orders/1?fields=id,status' | jq '. | length'  # sparse\n\
+  \n# Find existing selection handling\n grep -rn 'req.query.fields' src/ | head -10\n```\n\n## Implementation\
+  \ example (Express)\n\n```javascript\nconst SELECTABLE = new Set(['id', 'status', 'total', 'createdAt'])\n\
+  \napp.get('/api/orders/:id', (req, res) => {\n  const wanted = (req.query.fields || '').split(',').filter(f\
+  \ => SELECTABLE.has(f))\n  const order = db.get(req.params.id)\n  res.json(pick(order, wanted.length\
+  \ ? wanted : Object.keys(SELECTABLE)))\n})\n```\n\n## Validation\n\n```bash\n# Unknown fields must be\
+  \ rejected or ignored, never echoed\ncurl -s 'http://localhost:8080/api/orders/1?fields=id,__proto__,total'\
+  \ | jq 'keys'\n```\n\n## Best practices\n\n- Always apply an allowlist; never build objects from raw\
+  \ input keys.\n- Default to a sane subset when `fields` is absent.\n- Document every selectable field\
+  \ in the OpenAPI spec.\n- For deeply nested resources, consider GraphQL or JSON:API includes syntax.\n\
+  - Measure payload size before/after and set budgets per endpoint.\n\n## Capabilities\n\n### sparse-fieldsets\n\
+  Implement and test field selection parameters like ?fields= and verify payload savings.\n\n**Commands:**\n\
+  - `curl -s 'http://localhost:8080/api/orders/1?fields=id,status,total' | jq 'keys'`\n- `curl -s 'http://localhost:8080/api/orders/1?fields=id,status,total'\
+  \ | jq 'length'`\n- `curl -s 'http://localhost:8080/api/orders/1' | jq '. | length'`\n- `grep -rn 'req.query.fields'\
+  \ src/ | head -10`\n- `curl -s 'http://localhost:8080/api/orders?fields=id&page=1&limit=5' | jq '.data[0]'`\n\
+  \n**Examples:**\n- curl -s 'http://localhost:8080/api/orders/1?fields=id,status,total' | jq 'keys'\n\
+  - curl -s 'http://localhost:8080/api/orders/1?fields=id,status,total' | jq 'length'\n- grep -rn 'req.query.fields'\
+  \ src/ | head -10"
+prompt: Act as Field Selection and handle the task per the instructions.

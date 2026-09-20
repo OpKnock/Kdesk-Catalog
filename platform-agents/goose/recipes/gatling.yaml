@@ -1,0 +1,30 @@
+title: Gatling
+description: 'Load and performance testing with Gatling: write Scala simulations, run scenarios with the
+  CLI, and parse HTML/JSON reports.'
+version: 2.0.0
+instructions: "# Gatling\n\nLoad and performance testing with Gatling: write Scala simulations, run scenarios\
+  \ with the CLI, and parse HTML/JSON reports.\n\n## Instructions\n\n# Gatling\n\n## What this skill does\n\
+  \nGatling is a Scala-based load testing tool with a code-first DSL. Simulations describe scenarios (users\
+  \ ramping, injecting, asserting); the CLI runs them and renders HTML and JSON reports.\n\n## When to\
+  \ use\n\n- Scripted load tests with assertions in CI\n- Ramp/steady-state soak testing\n- Comparing\
+  \ build-to-build performance\n\n## Real commands\n\n```bash\n# List available simulations\ngatling.sh\
+  \ --list\n\n# Run one\n gatling.sh --simulation orders.Simulation --results-folder ./results\n\n# Annotate\
+  \ the run\ngatling.sh --run-description 'smoke v1.2.3' --simulation orders.Simulation\n\n# Rebuild a\
+  \ report from a previous run\n gatling.sh --results-folder results --reports-only results/orderapi-20240101\n\
+  ```\n\n## Simulation example\n\n```scala\nimport io.gatling.core.Predef._\nimport io.gatling.http.Predef._\n\
+  \nclass OrdersSimulation extends Simulation {\n  val httpConf = http.baseUrl(\"http://localhost:8080\"\
+  )\n  val scn = scenario(\"Get orders\")\n    .exec(http(\"list orders\").get(\"/api/orders\").check(status.is(200)))\n\
+  \  setUp(scn.inject(rampUsers(50).during(30.seconds)))\n    .assertions(global.responseTime.percentile3.lt(300))\n\
+  \    .protocols(httpConf)\n}\n```\n\n## Inspecting results\n\n```bash\n# Tail the simulation log for\
+  \ request stats\n tail -20 results/orderapi-20240101/simulation.log | grep -E 'request|assert'\n# Global\
+  \ stats JSON\njq '.stats' results/orderapi-20240101/js/global_stats.json\n```\n\n## Best practices\n\
+  \n- Run with assertions so CI fails on regressions.\n- Reuse the same base URL via protocol config;\
+  \ vary per environment.\n- Use `--run-description` to tag builds for report comparison.\n- Keep simulations\
+  \ short in smoke runs; soak separately.\n- Store simulation.log and global_stats.json for trend dashboards.\n\
+  \n## Capabilities\n\n### gatling-simulations\nAuthor and run Gatling simulations, and inspect results.\n\
+  \n**Commands:**\n- `gatling.sh --simulation orders.Simulation --results-folder ./results`\n- `gatling.sh\
+  \ --list`\n- `gatling.sh --run-description 'smoke v1.2.3' --simulation orders.Simulation`\n- `gatling.sh\
+  \ --results-folder results --reports-only results/orderapi-20240101`\n- `tail -20 results/orderapi-20240101/simulation.log\
+  \ | grep -E 'request|assert'`\n\n**Examples:**\n- gatling.sh --simulation orders.Simulation --results-folder\
+  \ ./results\n- gatling.sh --list\n- gatling.sh --results-folder results --reports-only results/orderapi-20240101"
+prompt: Act as Gatling and handle the task per the instructions.

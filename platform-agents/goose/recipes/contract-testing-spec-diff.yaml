@@ -1,0 +1,35 @@
+title: Contract Testing Spec Diff
+description: 'Schema-based contract testing: diff OpenAPI specs across versions and lint schemas with
+  spectral and openapi-diff.'
+version: 2.0.0
+instructions: "# Contract Testing Spec Diff\n\nSchema-based contract testing: diff OpenAPI specs across\
+  \ versions and lint schemas with spectral and openapi-diff.\n\n## Instructions\n\n# Contract Testing\
+  \ v2 (Schema Based)\n\nVerify API contracts by diffing and linting OpenAPI specifications.\n\n## When\
+  \ to Use\n\n- Catching breaking changes before release\n- Enforcing API design rules in CI\n- Contract\
+  \ testing without running services\n\n## Validate the Spec\n\n```bash\nnpx @apidevtools/swagger-cli\
+  \ validate openapi.yaml\nnpx @apidevtools/swagger-parser-cli validate openapi.yaml\n```\n\n## Detect\
+  \ Breaking Changes\n\n```bash\nnpx openapi-diff openapi-v1.yaml openapi-v2.yaml\nnpx openapi-diff --summary-only\
+  \ openapi-v1.yaml openapi-v2.yaml\n```\n\nBreaking changes include removed paths, removed required properties,\
+  \ changed types, and removed enum values.\n\n## Spectral Ruleset\n\n```yaml\nextends: [\"spectral:oas\"\
+  ]\nrules:\n  api-version-header:\n    description: Responses must include version header\n    given:\
+  \ \"$.paths[*][*].responses[*]\"\n    severity: error\n    then:\n      field: headers\n      function:\
+  \ defined\n  no-delete-remove:\n    description: Never remove an operation without a new version\n \
+  \   given: \"$.paths[*]\"\n    severity: warn\n    then:\n      function: truthy\n```\n\n```bash\nnpx\
+  \ @stoplight/spectral-cli lint openapi.yaml -r .spectral.yaml\n```\n\n## CI Integration\n\n```bash\n\
+  npx @stoplight/spectral-cli lint openapi.yaml -f junit > spectral-junit.xml\nnpx openapi-diff openapi-v1.yaml\
+  \ openapi-v2.yaml > diff.txt\n```\n\n## Best Practices\n\n- Fail CI on breaking differences in stable\
+  \ API versions\n- Version specs explicitly (openapi-v1.yaml, openapi-v2.yaml)\n- Enforce the ruleset\
+  \ in pull requests\n- Keep schemas strict: required fields, defined enums, explicit types\n- Combine\
+  \ with consumer-driven Pact for runtime checks\n\n## Capabilities\n\n### spec-diff\nDetect breaking\
+  \ changes between OpenAPI spec versions with openapi-diff and swagger-cli\n\n**Commands:**\n- `npx openapi-diff\
+  \ openapi-v1.yaml openapi-v2.yaml`\n- `npx @apidevtools/swagger-cli validate openapi.yaml`\n- `npx @apidevtools/swagger-parser-cli\
+  \ validate openapi.yaml`\n- `npx openapi-diff --summary-only openapi-v1.yaml openapi-v2.yaml`\n\n**Examples:**\n\
+  - npx @apidevtools/swagger-cli validate openapi.yaml\n- npx openapi-diff openapi-v1.yaml openapi-v2.yaml\n\
+  - npx openapi-diff --summary-only api-2024.yaml api-2025.yaml | jq '.breakingDifferences'\n\n### spectral-lint\n\
+  Lint OpenAPI specs with custom Spectral rulesets to enforce contract rules\n\n**Commands:**\n- `npx\
+  \ @stoplight/spectral-cli lint openapi.yaml`\n- `npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yaml`\n\
+  - `npx @stoplight/spectral-cli lint openapi.yaml --format json`\n- `npx @stoplight/spectral-cli lint\
+  \ openapi.yaml -r .spectral.yaml -f junit`\n\n**Examples:**\n- npx @stoplight/spectral-cli lint openapi.yaml\
+  \ -r .spectral.yaml\n- npx @stoplight/spectral-cli lint openapi.yaml -f json > lint.json\n- npx @stoplight/spectral-cli\
+  \ lint openapi.yaml --ruleset-json"
+prompt: Act as Contract Testing Spec Diff and handle the task per the instructions.

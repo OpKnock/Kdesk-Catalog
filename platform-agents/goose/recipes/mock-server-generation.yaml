@@ -1,0 +1,29 @@
+title: Mock Server Generation
+description: 'Generate mock servers from OpenAPI specs: Prism, WireMock stubs, and OpenAPI Generator server
+  skeletons.'
+version: 2.0.0
+instructions: "# Mock Server Generation\n\nGenerate mock servers from OpenAPI specs: Prism, WireMock stubs,\
+  \ and OpenAPI Generator server skeletons.\n\n## Instructions\n\n# Mock Server Generation\n\nTurn an\
+  \ OpenAPI spec into a running mock server in seconds so frontend and tests never block on backend availability.\n\
+  \n## What this skill does\n\n- Runs Prism mock servers straight from the spec\n- Creates and manages\
+  \ WireMock stub mappings over the admin API\n- Generates full server skeletons with openapi-generator\n\
+  \n## When to use\n\n- Frontend development before the backend exists\n- Contract-based integration tests\n\
+  - Demonstrations and demo environments\n\n## Real commands\n\n```bash\n# Dynamic mock from spec (synthetic\
+  \ example data)\nnpx @stoplight/prism-cli mock openapi.yaml\nnpx @stoplight/prism-cli mock -p 4010 openapi.yaml\n\
+  \n# WireMock standalone\njava -jar wiremock-standalone.jar --port 8080 --verbose\n\n# Register a stub\
+  \ mapping\ncurl -X POST http://localhost:8080/__admin/mappings -d @stub.json\n\n# List registered mappings\n\
+  curl http://localhost:8080/__admin/mappings\n\n# Generate a Node express skeleton server\nopenapi-generator-cli\
+  \ generate -g nodejs-express-server -i openapi.yaml -o mock-server/\n```\n\n## stub.json example\n\n\
+  ```json\n{\n  \"request\": { \"method\": \"GET\", \"url\": \"/api/users/1\" },\n  \"response\": { \"\
+  status\": 200, \"jsonBody\": { \"id\": 1, \"name\": \"Alice\" } }\n}\n```\n\n## Best practices\n\n-\
+  \ Validate the spec first (`openapi-generator-cli validate -i openapi.yaml`)\n- Use Prism for dynamic\
+  \ mocks, WireMock for deterministic stubs\n- Keep generated skeletons out of version control or regenerate\
+  \ on spec change\n\n## Capabilities\n\n### mock-server-generate\nGenerate and run mock servers from\
+  \ an OpenAPI/Swagger specification, and manage WireMock stubs.\n\n**Commands:**\n- `npx @stoplight/prism-cli\
+  \ mock openapi.yaml`\n- `npx @stoplight/prism-cli mock -p 4010 openapi.yaml`\n- `java -jar wiremock-standalone.jar\
+  \ --port 8080 --verbose`\n- `curl -X POST http://localhost:8080/__admin/mappings -d @stub.json`\n- `openapi-generator-cli\
+  \ generate -g nodejs-express-server -i openapi.yaml -o mock-server/`\n\n**Examples:**\n- npx @stoplight/prism-cli\
+  \ mock -p 4010 petstore.yaml\n- curl -X POST http://localhost:8080/__admin/mappings -d '{\"request\"\
+  :{\"method\":\"GET\",\"url\":\"/api/users\"},\"response\":{\"status\":200,\"jsonBody\":[{\"id\":1}]}}'\n\
+  - openapi-generator-cli generate -g go-server -i openapi.yaml -o out/"
+prompt: Act as Mock Server Generation and handle the task per the instructions.

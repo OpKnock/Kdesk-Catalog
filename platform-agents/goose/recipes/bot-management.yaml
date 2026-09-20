@@ -1,0 +1,27 @@
+title: bot-management
+description: Builds and operates chat bots (Telegram, Slack, Discord, IRC) with webhooks, message routing,
+  rate limiting, and observability.
+version: 2.0.0
+instructions: "# bot-management\n\nBuilds and operates chat bots (Telegram, Slack, Discord, IRC) with\
+  \ webhooks, message routing, rate limiting, and observability.\n\n## Instructions\n\n# Bot Management\n\
+  \nBuild and operate chat platform bots.\n\n## When to Use\n\n- Customer support triage on chat channels\n\
+  - Notifications and alerting into team chats\n- Automation commands (slash commands)\n- Community moderation\n\
+  \n## Commands\n\n```bash\n# Setup\npip install python-telegram-bot\nnpm install slack-bolt\nnpm install\
+  \ discord.js\n\n# Verify a Telegram bot token\ncurl -s https://api.telegram.org/bot$TOKEN/getMe\n\n\
+  # Check webhook registration\ncurl -s https://api.telegram.org/bot$TOKEN/getWebhookInfo\n\n# Run and\
+  \ manage\npython bot.py\nnode bot.js\npm2 start bot.js --name telegram-bot\npm2 logs telegram-bot\n\
+  pm2 restart telegram-bot\n```\n\n## Telegram Example\n\n```python\nfrom telegram.ext import Application,\
+  \ CommandHandler\n\nasync def start(update, context):\n    await update.message.reply_text(\"Hello!\"\
+  )\n\napp = Application.builder().token(TOKEN).build()\napp.add_handler(CommandHandler(\"start\", start))\n\
+  app.run_polling()\n```\n\n## Best Practices\n\n- Store tokens in env vars or secret managers, never\
+  \ in code\n- Use webhooks over polling in production where possible\n- Rate limit outgoing messages\
+  \ to avoid platform bans\n- Log all incoming messages and errors with correlation IDs\n- Pin a message\
+  \ rate and handle platform-specific limits\n- Set up monitoring so a dead bot is detected quickly\n\n\
+  ## Capabilities\n\n### bot-frameworks\nScaffold bots for major chat platforms.\n\n**Commands:**\n- `pip\
+  \ install python-telegram-bot`\n- `npm install slack-bolt`\n- `npm install discord.js`\n- `npm install\
+  \ grammY`\n- `python -m venv .venv`\n\n**Examples:**\n- npm install @slack/bolt\n- pip install aiogram\n\
+  - npm install whatsapp-web.js\n\n### bot-runtime\nRun and monitor bot processes.\n\n**Commands:**\n\
+  - `node bot.js`\n- `python bot.py`\n- `pm2 start bot.js --name telegram-bot`\n- `pm2 logs telegram-bot`\n\
+  - `curl -s https://api.telegram.org/bot$TOKEN/getMe`\n\n**Examples:**\n- pm2 restart telegram-bot\n\
+  - curl -s https://api.telegram.org/bot$TOKEN/getWebhookInfo\n- pm2 save"
+prompt: Act as bot-management and handle the task per the instructions.

@@ -1,0 +1,47 @@
+title: Asyncapi Security
+description: Defines and validates authentication mechanisms for event-driven APIs including API keys,
+  OAuth2 flows, OpenID Connect, and mutual TLS across message brokers and generated client code.
+version: 2.0.0
+instructions: "# Asyncapi Security\n\nDefines and validates authentication mechanisms for event-driven\
+  \ APIs including API keys, OAuth2 flows, OpenID Connect, and mutual TLS across message brokers and generated\
+  \ client code.\n\n## Instructions\n\n# AsyncAPI Security\n\n## What this skill does\n\nModels and enforces\
+  \ AsyncAPI security schemes (apiKey, OAuth2, OpenID Connect, mutual TLS) in documents, generated clients,\
+  \ and broker connections.\n\n## When to use\n\n- A spec must declare how channels are authenticated\n\
+  - Connecting generated clients to OAuth2-secured brokers\n- Validating mTLS handshakes to Kafka/MQTT\
+  \ endpoints\n\n## Real commands\n\n```bash\n# Validate the security schemes in a document\nnpx @asyncapi/cli\
+  \ validate asyncapi.yaml\n\n# Get a client-credentials token\ncurl -X POST https://auth.your-app.test/oauth2/token\
+  \ -d grant_type=client_credentials -d client_id=api-consumer -d client_secret=secret -d scope=kafka:read\n\
+  \n# Introspect the token\ncurl -X POST https://auth.your-app.test/oauth2/introspect -d token=$TOKEN\
+  \ | jq '.active'\n\n# mTLS check to the broker\nopenssl s_client -connect kafka.your-app.test:9093 -cert\
+  \ client.crt -key client.key -CAfile ca.crt < /dev/null 2>&1 | grep 'Verify return code'\n```\n\n##\
+  \ Spec example\n\n```yaml\ncomponents:\n  securitySchemes:\n    oauth:\n      type: oauth2\n      flows:\n\
+  \        clientCredentials:\n          tokenUrl: https://auth.your-app.test/oauth2/token\n         \
+  \ scopes:\n            kafka:read: Read access\n    mtls:\n      type: mutualTLS\nchannels:\n  orders:\n\
+  \    address: orders\n    security:\n      - oauth: [kafka:read]\n```\n\n## Testing\n\n- Validate documents\
+  \ in CI with the AsyncAPI CLI\n- Test broker auth with kafka-topics --command-config\n\n## Best practices\n\
+  \n- Apply security at both the document and broker level\n- Rotate client credentials; never embed secrets\
+  \ in specs\n- Use scope-based authorization, not shared topics\n\n## Capabilities\n\n### security-schemes\n\
+  Author AsyncAPI securitySchemes and validate documents.\n\n**Commands:**\n- `npx @asyncapi/cli validate\
+  \ asyncapi.yaml`\n- `npx @asyncapi/cli lint asyncapi.yaml`\n- `npx @asyncapi/cli validate https://raw.githubusercontent.com/asyncapi/spec/master/examples/streetlights.yml`\n\
+  - `npx @asyncapi/cli --version`\n\n**Examples:**\n- npx @asyncapi/cli validate asyncapi.yaml\n- npx\
+  \ @asyncapi/cli lint --ruleset security-rules.json asyncapi.yaml\n- npx @asyncapi/cli validate asyncapi.yaml\
+  \ && echo valid\n\n### oauth-broker\nObtain OAuth2 tokens and connect to broker operations secured with\
+  \ OAuth2/OpenID Connect.\n\n**Commands:**\n- `curl -X POST https://auth.your-app.test/oauth2/token -d\
+  \ grant_type=client_credentials -d client_id=api-consumer -d client_secret=secret -d scope=kafka:read`\n\
+  - `curl -X POST https://auth.your-app.test/oauth2/introspect -d token=$TOKEN`\n- `kafka-topics --bootstrap-server\
+  \ kafka.your-app.test:9093 --command-config client-oauth.properties --list`\n- `mosquitto_pub -h mqtt.your-app.test\
+  \ -p 8883 -u client --pw $TOKEN -t orders/created -m '{\"id\":1}' --cafile ca.crt`\n\n**Examples:**\n\
+  - TOKEN=$(curl -s -X POST https://auth.your-app.test/oauth2/token -d grant_type=client_credentials -d\
+  \ client_id=api-consumer -d client_secret=secret -d scope=kafka:read | jq -r .access_token) && echo\
+  \ $TOKEN\n- curl -s -X POST https://auth.your-app.test/oauth2/introspect -d token=$TOKEN | jq '.active'\n\
+  - mosquitto_pub -h mqtt.your-app.test -p 8883 -u client --pw $TOKEN -t orders/created -m hello\n\n###\
+  \ tls-mtls\nValidate and test TLS/mTLS security schemes for broker endpoints.\n\n**Commands:**\n- `echo\
+  \ | openssl s_client -connect kafka.your-app.test:9093 -showcerts 2>/dev/null | openssl x509 -noout\
+  \ -subject -issuer`\n- `echo | openssl s_client -connect kafka.your-app.test:9093 -cert client.crt -key\
+  \ client.key -CAfile ca.crt 2>&1 | grep -E 'Verify|Protocol'`\n- `kafka-topics --bootstrap-server kafka.your-app.test:9093\
+  \ --command-config client-mtls.properties --list`\n- `openssl verify -CAfile ca.crt client.crt`\n\n\
+  **Examples:**\n- openssl s_client -connect kafka.your-app.test:9093 -showcerts < /dev/null | openssl\
+  \ x509 -noout -dates\n- openssl s_client -connect kafka.your-app.test:9093 -cert client.crt -key client.key\
+  \ -CAfile ca.crt < /dev/null 2>&1 | grep 'Verify return code'\n- kafka-topics --bootstrap-server kafka.your-app.test:9093\
+  \ --command-config client-mtls.properties --describe --topic orders"
+prompt: Act as Asyncapi Security and handle the task per the instructions.

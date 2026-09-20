@@ -1,0 +1,34 @@
+title: Curl
+description: 'Tests and debugs REST APIs from the terminal with curl: methods, headers, JSON bodies, auth,
+  TLS options, timing, and output formatting.'
+version: 2.0.0
+instructions: "# Curl\n\nTests and debugs REST APIs from the terminal with curl: methods, headers, JSON\
+  \ bodies, auth, TLS options, timing, and output formatting.\n\n## Instructions\n\n# curl\n\nTest and\
+  \ debug APIs from the terminal with curl.\n\n## When to Use\n\n- Quick API smoke tests and debugging\n\
+  - Reproducing reported issues with exact requests\n- Verifying headers, auth, and TLS behavior\n\n##\
+  \ Basic Requests\n\n```bash\ncurl -i https://httpbin.org/get\ncurl -X POST -H \"Content-Type: application/json\"\
+  \ \\\n  -d '{\"name\":\"alice\"}' https://httpbin.org/post\ncurl -u alice:secret https://httpbin.org/basic-auth/alice/secret\n\
+  curl -H \"Authorization: Bearer $TOKEN\" https://httpbin.org/bearer\n```\n\n## Inspecting Responses\n\
+  \n```bash\ncurl -s -D headers.txt -o response.json https://httpbin.org/get\ncurl -w \"status:%{http_code}\
+  \ time:%{time_total}s size:%{size_download}\\n\" \\\n  -o /dev/null https://httpbin.org/get\ncurl -v\
+  \ https://httpbin.org/get\n```\n\n## TLS and Debugging\n\n```bash\ncurl -k https://httpbin.org/get\n\
+  curl -k -v https://httpbin.org/get\ncurl --cacert ca.pem https://httpbin.org/get\n```\n\n## Data Files\n\
+  \n```bash\ncurl -X POST -H \"Content-Type: application/json\" --data-binary @payload.json \\\n  https://httpbin.org/post\n\
+  curl -F \"file=@report.pdf\" https://httpbin.org/post\n```\n\n## Testing\n\n```bash\ncurl -o /dev/null\
+  \ -w \"%{http_code}\\n\" https://httpbin.org/get\ncurl -s https://httpbin.org/get | jq '.origin'\n```\n\
+  \n## Best Practices\n\n- Always set Content-Type for bodies\n- Use -w for status codes and timing in\
+  \ scripts\n- Never put credentials on the command line history; use env vars\n- Use --data-binary for\
+  \ exact JSON payloads\n- Add -f to fail fast on HTTP errors in scripts\n- Read responses with jq for\
+  \ readability\n\n## Capabilities\n\n### requests\nSend HTTP requests with curl covering methods, headers,\
+  \ bodies, and auth\n\n**Commands:**\n- `curl -i https://httpbin.org/get`\n- `curl -X POST -H \"Content-Type:\
+  \ application/json\" -d '{\"name\":\"alice\"}' https://httpbin.org/post`\n- `curl -u alice:secret https://httpbin.org/basic-auth/alice/secret`\n\
+  - `curl -H \"Authorization: Bearer $TOKEN\" https://httpbin.org/bearer`\n\n**Examples:**\n- curl -X\
+  \ PUT -H \"Content-Type: application/json\" -d '{\"name\":\"bob\"}' https://httpbin.org/put\n- curl\
+  \ -X DELETE -o /dev/null -w \"%{http_code}\\n\" https://httpbin.org/delete\n- curl -H \"Accept: application/vnd.api+json\"\
+  \ https://httpbin.org/get\n\n### debugging\nInspect responses, headers, TLS, timing, and write output\
+  \ to files\n\n**Commands:**\n- `curl -s -D headers.txt -o response.json https://httpbin.org/get`\n-\
+  \ `curl -k https://httpbin.org/get`\n- `curl -w \"status:%{http_code} time:%{time_total}s size:%{size_download}\\\
+  n\" -o /dev/null https://httpbin.org/get`\n- `curl -v https://httpbin.org/get`\n\n**Examples:**\n- curl\
+  \ -w \"%{time_connect} %{time_starttransfer} %{time_total}\\n\" -o /dev/null https://httpbin.org/get\n\
+  - curl -k -v https://httpbin.org/get\n- curl -s https://httpbin.org/get | jq '.origin'"
+prompt: Act as Curl and handle the task per the instructions.

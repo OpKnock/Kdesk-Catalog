@@ -1,0 +1,31 @@
+title: polaris
+description: Audits Kubernetes workloads against best-practice checks and runs an in-cluster dashboard
+  with Fairwinds Polaris.
+version: 2.0.0
+instructions: "# polaris\n\nAudits Kubernetes workloads against best-practice checks and runs an in-cluster\
+  \ dashboard with Fairwinds Polaris.\n\n## Instructions\n\n# Polaris\n\nAudit Kubernetes workloads against\
+  \ security and best-practice checks.\n\n## What This Skill Does\n\n- Audits manifests or live clusters\
+  \ against built-in checks\n- Returns scores per workload and category\n- Gates CI with --set-exit-code-below-score\n\
+  - Runs a visual dashboard for remediation tracking\n\n## When to Use\n\n- Workload hardening before\
+  \ rollout\n- Enforcing minimum scores on manifests in CI\n- Reviewing cluster-wide workload hygiene\n\
+  \n## Real Commands\n\n```bash\n# Audit manifests\npolaris audit --audit-path .\n\n# Score gate in CI\n\
+  polaris audit --audit-path . --set-exit-code-below-score 80\n\n# Custom config\npolaris audit --audit-path\
+  \ . --config polaris.yaml\n\n# Targeted checks\npolaris audit --audit-path . --only-checks resources,healthchecks\n\
+  \n# Reports\npolaris audit --audit-path . --output report.html\npolaris audit --audit-path . --output\
+  \ sarif\n\n# Dashboard\npolaris dashboard --port 8080\n```\n\n## Sample Config\n\n```yaml\nchecks:\n\
+  \  resources:\n    cpuRequestsMissing:\n      successMessage: CPU requests set\n      severity: warning\n\
+  \  security:\n    runAsRootAllowed:\n      severity: error\n```\n\n## Best Practices\n\n- Start with\
+  \ audit-only, then enforce score gates\n- Customize severities in config; don't delete checks silently\n\
+  - Run per-chart manifests to catch Helm template output issues\n- Pair with resource limit admission\
+  \ policies for hard enforcement\n- Track scores over time in CI artifacts\n\n## Capabilities\n\n###\
+  \ polaris-audit\nAudit manifests or live clusters with exit-code gating.\n\n**Commands:**\n- `polaris\
+  \ audit --audit-path .`\n- `polaris audit --audit-path manifests/ --set-exit-code-below-score 80`\n\
+  - `polaris audit --audit-path . --config polaris.yaml`\n- `polaris audit --audit-path . --only-checks\
+  \ resources`\n- `polaris audit --audit-path . --output sarif`\n\n**Examples:**\n- polaris audit --audit-path\
+  \ . --set-exit-code-below-score 75\n- polaris audit --audit-path . --only-checks healthchecks\n- polaris\
+  \ audit --audit-path manifests/ --output report.html\n\n### dashboard\nRun the Polaris web dashboard\
+  \ in-cluster.\n\n**Commands:**\n- `polaris dashboard --port 8080`\n- `kubectl port-forward svc/polaris-dashboard\
+  \ 8080:80 -n polaris`\n- `helm install polaris fairwinds-stable/polaris`\n- `polaris dashboard --audit-path\
+  \ . --port 8080`\n\n**Examples:**\n- polaris dashboard --port 8080\n- helm install polaris fairwinds-stable/polaris\n\
+  - kubectl port-forward svc/polaris 8080:80 -n polaris"
+prompt: Act as polaris and handle the task per the instructions.

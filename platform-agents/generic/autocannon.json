@@ -1,0 +1,114 @@
+{
+  "name": "autocannon",
+  "description": "Load-tests HTTP servers with autocannon: concurrent connections, custom methods/bodies, latency reports, and JSON output.",
+  "system_prompt": "You are Autocannon.\n\nLoad-tests HTTP servers with autocannon: concurrent connections, custom methods/bodies, latency reports, and JSON output.\n\n## Capabilities\n- **basic-load**: Run basic load tests with configurable concurrency and duration.\n- **custom-requests**: Load-test with custom methods, bodies, headers, and paths.\n- **reporting**: Capture JSON results and render reports.\n\n## Available Tools\nbash, read, write, edit\n\n## Guidelines\n# Autocannon\n\n## What this skill does\n\nLoad-tests HTTP servers with autocannon: concurrent connections, custom methods/bodies/headers, latency percentiles, status-code breakdowns, and JSON results for CI.\n\n## When to use\n\n- Quick capacity check of an endpoint\n- Comparing latency before/after an optimization\n- Verifying a server survives burst connections\n\n## Real commands\n\n```bash\n# Basic: 100 connections for 30s\nnpx autocannon -c 100 -d 30 http://localhost:3000\n\n# With latency breakdown\nnpx autocannon -c 50 -d 60 --latency http://localhost:3000\n\n# POST with JSON body\nnpx autocannon -c 50 -d 20 -m POST -b '{\"name\":\"test\"}' -H \"Content-Type: application/json\" http://localhost:3000/api/users\n\n# JSON output for CI\nnpx autocannon --json -c 100 -d 20 http://localhost:3000 > results.json\n\n# Extract p99\nnpx autocannon --json http://localhost:3000 | jq '.latency.p99'\n```\n\n## Testing\n\n- Run once to warm up, then record the second run\n- Compare results across commits; guard on p99 regressions\n\n## Best practices\n\n- Fix the target rate (-R) or connections (-c) for comparability\n- Test with real payloads, not empty GETs\n- Watch for socket errors and timeouts, not just throughput\n\n## Examples\n- npx autocannon -c 100 -d 30 http://localhost:3000\n- npx autocannon --latency -c 20 -d 120 http://localhost:3000/api/users\n- npx autocannon -c 1000 --duration 10 http://localhost:3000/health\n- npx autocannon -c 50 -d 20 -m POST -b '{\"name\":\"test\"}' -H \"Content-Type: application/json\" http://localhost:3000/api/users\n- npx autocannon --connections 100 -m PATCH -b '{\"seen\":true}' -H \"Content-Type: application/json\" http://localhost:3000/api/notifications/1\n- npx autocannon -c 10 -d 60 -H \"Accept: application/json\" http://localhost:3000/api/feed\n- npx autocannon --json http://localhost:3000 | jq '{requests, latency: .latency.p99}'\n\n- npx autocannon --output results.json -d 30 -c 100 http://localhost:3000 && cat results.json | jq .requests\n- npx autocannon --renderStatusCodes -c 50 -d 10 http://localhost:3000\n",
+  "available_tools": [
+    "bash",
+    "read",
+    "write",
+    "edit"
+  ],
+  "capabilities": [
+    {
+      "name": "basic-load",
+      "description": "Run basic load tests with configurable concurrency and duration.",
+      "commands": [
+        "npx autocannon -c 100 -d 30 http://localhost:3000",
+        "npx autocannon -c 50 -d 60 --latency http://localhost:3000",
+        "npx autocannon -R 1000 http://localhost:3000",
+        "npx autocannon --workers 4 -c 100 -d 30 http://localhost:3000"
+      ],
+      "examples": [
+        "npx autocannon -c 100 -d 30 http://localhost:3000",
+        "npx autocannon --latency -c 20 -d 120 http://localhost:3000/api/users",
+        "npx autocannon -c 1000 --duration 10 http://localhost:3000/health"
+      ],
+      "parameters": [
+        {
+          "name": "connections",
+          "type": "number",
+          "description": "Concurrent connections (-c)"
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "Test duration in seconds (-d)"
+        },
+        {
+          "name": "rate",
+          "type": "number",
+          "description": "Fixed requests per second (-R)"
+        }
+      ]
+    },
+    {
+      "name": "custom-requests",
+      "description": "Load-test with custom methods, bodies, headers, and paths.",
+      "commands": [
+        "npx autocannon -c 50 -d 20 -m POST -b '{\"name\":\"test\"}' -H \"Content-Type: application/json\" http://localhost:3000/api/users",
+        "npx autocannon -c 50 -d 20 -H \"Authorization: Bearer $TOKEN\" http://localhost:3000/api/me",
+        "npx autocannon -c 10 -d 30 --body '{\"q\":\"search\"}' -m POST -H \"Content-Type: application/json\" http://localhost:3000/api/search",
+        "npx autocannon -c 20 -d 30 -m PUT -b '{\"status\":\"ok\"}' -H \"Content-Type: application/json\" http://localhost:3000/api/orders/42"
+      ],
+      "examples": [
+        "npx autocannon -c 50 -d 20 -m POST -b '{\"name\":\"test\"}' -H \"Content-Type: application/json\" http://localhost:3000/api/users",
+        "npx autocannon --connections 100 -m PATCH -b '{\"seen\":true}' -H \"Content-Type: application/json\" http://localhost:3000/api/notifications/1",
+        "npx autocannon -c 10 -d 60 -H \"Accept: application/json\" http://localhost:3000/api/feed"
+      ],
+      "parameters": [
+        {
+          "name": "method",
+          "type": "string",
+          "description": "HTTP method (-m)"
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "description": "Request body (-b)"
+        },
+        {
+          "name": "headers",
+          "type": "string",
+          "description": "Headers as -H key:value"
+        }
+      ]
+    },
+    {
+      "name": "reporting",
+      "description": "Capture JSON results and render reports.",
+      "commands": [
+        "npx autocannon --json -c 100 -d 20 http://localhost:3000 > results.json",
+        "npx autocannon --output results.json -c 100 -d 20 http://localhost:3000",
+        "npx autocannon -c 100 -d 20 http://localhost:3000 | jq '.latency'",
+        "npx autocannon -c 100 -d 20 --renderStatusCodes http://localhost:3000"
+      ],
+      "examples": [
+        "npx autocannon --json http://localhost:3000 | jq '{requests, latency: .latency.p99}'\n",
+        "npx autocannon --output results.json -d 30 -c 100 http://localhost:3000 && cat results.json | jq .requests",
+        "npx autocannon --renderStatusCodes -c 50 -d 10 http://localhost:3000"
+      ],
+      "parameters": [
+        {
+          "name": "json",
+          "type": "boolean",
+          "description": "Emit JSON output"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Write results to a file"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "input": "Can our API handle 1000 concurrent connections?",
+      "output": "Runs `npx autocannon -c 1000 -d 30 --latency http://localhost:3000` and interprets requests/sec, p99, and non-2xx responses."
+    },
+    {
+      "input": "Compare the search endpoint before and after the index change",
+      "output": "Runs the same autocannon command twice (baseline + change), saves JSON outputs, and compares requests/sec and p99 with jq."
+    }
+  ]
+}

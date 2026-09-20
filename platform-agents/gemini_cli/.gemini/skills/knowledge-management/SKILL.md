@@ -1,0 +1,107 @@
+---
+name: "knowledge-management"
+description: "Builds team documentation and knowledge bases with MkDocs and Docusaurus: authoring, serving, and publishing."
+---
+
+# knowledge-management
+
+Builds team documentation and knowledge bases with MkDocs and Docusaurus: authoring, serving, and publishing.
+
+## Instructions
+
+# Knowledge Management
+
+Turn team knowledge into a maintainable documentation site.
+
+## When to Use
+
+- Onboarding and runbook documentation
+- API and product docs that need versioning
+- Centralizing tribal knowledge from Slack/meetings
+
+## MkDocs for lightweight docs
+
+```yaml
+site_name: Platform Docs
+nav:
+  - Home: index.md
+  - Runbooks: runbooks.md
+  - Architecture: architecture.md
+theme: material
+```
+
+```bash
+mkdocs new docs
+mkdocs serve -a localhost:8000
+mkdocs build --strict
+```
+
+`--strict` turns warnings into errors - great CI gate.
+
+## Publish to GitHub Pages
+
+```bash
+mkdocs gh-deploy
+```
+
+## Docusaurus for feature-rich docs
+
+```bash
+npx create-docusaurus@latest my-docs classic --typescript
+npm run start
+npm run build
+```
+
+## Documentation hygiene
+
+- Every runbook starts with impact + owner + recovery steps.
+- Link docs from code comments and alert pages.
+- Mark stale docs with expiry dates; delete rather than rot.
+- Keep a docs review task in the team's sprint.
+
+## Best practices
+
+- Single source of truth: link, don't duplicate.
+- Use mermaid diagrams for architecture flows.
+- Version docs with product versions.
+- CI: build --strict on every PR touching docs/
+
+## Testing
+
+```bash
+mkdocs build --strict
+```
+
+Verify all internal links resolve before merge.
+
+## Capabilities
+
+### mkdocs
+Author and publish documentation sites with MkDocs.
+
+**Commands:**
+- `mkdocs new docs`
+- `mkdocs serve -a localhost:8000`
+- `mkdocs build --strict`
+- `mkdocs gh-deploy`
+- `mkdocs build --clean`
+
+**Examples:**
+- mkdocs serve -a 0.0.0.0:8000 --livereload
+- mkdocs build --strict --site-dir dist
+- mkdocs gh-deploy --force
+
+### docusaurus
+Build React-powered knowledge bases with Docusaurus.
+
+**Commands:**
+- `npx create-docusaurus@latest my-docs classic --typescript`
+- `npm run start`
+- `npm run build`
+- `npm run swizzle @docusaurus/theme-classic SidebarItem -- --typescript`
+- `npx docusaurus serve`
+
+**Examples:**
+- npx create-docusaurus@latest my-docs classic --typescript --skip-install
+- npm run build && npx docusaurus serve --port 3001
+- npm run write-translations -- --locale de

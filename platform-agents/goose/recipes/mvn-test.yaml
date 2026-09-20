@@ -1,0 +1,30 @@
+title: mvn-test
+description: Runs Java test suites with Maven Surefire and Failsafe, including test filters, parallel
+  execution, and reports.
+version: 2.0.0
+instructions: "# mvn-test\n\nRuns Java test suites with Maven Surefire and Failsafe, including test filters,\
+  \ parallel execution, and reports.\n\n## Instructions\n\n# Maven Test\n\nRun Java tests with Surefire\
+  \ and Failsafe.\n\n## What This Skill Does\n\n- Runs unit tests with class/method filters\n- Runs integration\
+  \ tests in the verify phase\n- Parallelizes test execution\n- Generates reports and coverage\n\n## When\
+  \ to Use\n\n- Running the suite in CI\n- Debugging a specific failing test\n- Enforcing quality gates\n\
+  \n## Real Commands\n\n```bash\n# Unit tests\nmvn test\nmvn test -Dtest=OrderServiceTest\nmvn test -Dtest=OrderServiceTest#testTotal\n\
+  mvn test -Dtest=*ServiceTest -Dsurefire.failIfNoSpecifiedTests=false\n\n# Integration tests\nmvn verify\n\
+  mvn verify -Dit.test=OrderIT\nmvn failsafe:integration-test failsafe:verify\n\n# Parallel and reports\n\
+  mvn test -Dparallel=classes -DthreadCount=4\nmvn surefire-report:report\nmvn clean test\n```\n\n## Pom\
+  \ Configuration\n\n```xml\n<plugin>\n  <groupId>org.apache.maven.plugins</groupId>\n  <artifactId>maven-surefire-plugin</artifactId>\n\
+  \  <version>3.2.5</version>\n  <configuration>\n    <parallel>classes</parallel>\n    <threadCount>4</threadCount>\n\
+  \  </configuration>\n</plugin>\n```\n\n## Best Practices\n\n- Name integration tests *IT for Failsafe\n\
+  - Use -Dtest for fast targeted loops\n- Run mvn verify in CI to include integration tests\n- Set failIfNoSpecifiedTests=false\
+  \ to avoid false failures\n- Publish surefire reports as CI artifacts\n\n## Capabilities\n\n### surefire-tests\n\
+  Run unit tests with Maven Surefire.\n\n**Commands:**\n- `mvn test`\n- `mvn test -Dtest=OrderServiceTest`\n\
+  - `mvn test -Dtest=OrderServiceTest#testTotal`\n- `mvn -q test`\n- `mvn test -Dtest=*ServiceTest -Dsurefire.failIfNoSpecifiedTests=false`\n\
+  \n**Examples:**\n- mvn test\n- mvn test -Dtest=OrderServiceTest\n- mvn test -Dtest=*ServiceTest -Dsurefire.failIfNoSpecifiedTests=false\n\
+  \n### failsafe-integration\nRun integration tests with Maven Failsafe.\n\n**Commands:**\n- `mvn verify`\n\
+  - `mvn verify -Dit.test=OrderIT`\n- `mvn verify -DskipITs=false`\n- `mvn verify -Dit.test=*IT -Dfailsafe.failIfNoSpecifiedTests=false`\n\
+  - `mvn failsafe:integration-test failsafe:verify`\n\n**Examples:**\n- mvn verify\n- mvn verify -Dit.test=OrderIT\n\
+  - mvn failsafe:integration-test failsafe:verify\n\n### parallel-and-reports\nParallel tests, coverage,\
+  \ and reports.\n\n**Commands:**\n- `mvn test -Dparallel=classes -DthreadCount=4`\n- `mvn test -Djacoco=true\
+  \ verify jacoco:report`\n- `mvn surefire-report:report`\n- `mvn test -DskipTests=false -Dsurefire.printSummary=true`\n\
+  - `mvn clean test`\n\n**Examples:**\n- mvn test -Dparallel=classes -DthreadCount=4\n- mvn surefire-report:report\n\
+  - mvn clean test"
+prompt: Act as mvn-test and handle the task per the instructions.

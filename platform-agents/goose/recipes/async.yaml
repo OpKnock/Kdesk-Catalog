@@ -1,0 +1,36 @@
+title: Async
+description: 'Writes correct async code in Node.js: promises, async/await, error handling, concurrency
+  control with the async library, and streaming.'
+version: 2.0.0
+instructions: "# Async\n\nWrites correct async code in Node.js: promises, async/await, error handling,\
+  \ concurrency control with the async library, and streaming.\n\n## Instructions\n\n# Async (Node.js)\n\
+  \n## What this skill does\n\nApplies async patterns in Node.js: promise composition, async/await error\
+  \ handling, concurrency control with the async library, unhandled-rejection discipline, and streaming.\n\
+  \n## When to use\n\n- Async code has race conditions or unhandled rejections\n- Bounding concurrent\
+  \ API calls to avoid rate limits\n- Sequentializing dependent async steps\n\n## Real commands\n\n```bash\n\
+  npm install async\n\n# Limit concurrency to 2\nnode -e \"const async=require('async'); async.eachLimit([1,2,3,4],\
+  \ 2, (n,cb)=>setTimeout(()=>{console.log(n);cb()},100), ()=>console.log('done'))\"\n\n# Parallel fan-out\n\
+  node -e \"const async=require('async'); async.parallel([cb=>cb(null,1),cb=>cb(null,2)], (e,r)=>console.log(r))\"\
+  \n\n# Sequential steps\nnode -e \"const async=require('async'); async.waterfall([cb=>cb(null,'a'),(x,cb)=>cb(null,x+'b')],(e,r)=>console.log(r))\"\
+  \n\n# Strict unhandled rejection behavior\nnode --unhandled-rejections=strict app.js\n```\n\n## Concurrency\
+  \ pattern\n\n```js\nconst { queue } = require('async')\nconst q = queue(async id => {\n  await fetch(`/api/items/${id}`)\n\
+  }, 3)  // max 3 concurrent\nq.push([1, 2, 3, 4, 5])\n```\n\n## Testing\n\n- Use Promise.allSettled in\
+  \ tests to assert per-item outcomes\n- Run with --unhandled-rejections=strict to surface gaps\n\n##\
+  \ Best practices\n\n- Never mix .then() and await in one flow\n- Always attach a catch to top-level\
+  \ async entry points\n- Bound concurrency when calling rate-limited APIs\n\n## Capabilities\n\n### node-async\n\
+  Control concurrency and build async flows with the async library.\n\n**Commands:**\n- `npm install async`\n\
+  - `node -e \"const async=require('async'); async.eachLimit([1,2,3,4], 2, (n,cb)=>setTimeout(()=>{console.log(n);cb()},100),\
+  \ ()=>console.log('done'))\"`\n- `node -e \"const async=require('async'); async.parallel([cb=>cb(null,1),cb=>cb(null,2)],\
+  \ (e,r)=>console.log(r))\"`\n- `node -e \"const async=require('async'); async.waterfall([cb=>cb(null,'a'),(x,cb)=>cb(null,x+'b')],(e,r)=>console.log(r))\"\
+  `\n\n**Examples:**\n- node -e \"const async=require('async'); async.eachOfLimit({a:1,b:2,c:3},1,(v,k,cb)=>cb(),console.log)\"\
+  \n- node -e \"const async=require('async'); async.mapLimit([1,2,3,4,5],2,n=>Promise.resolve(n*2),console.log)\"\
+  \n- node -e \"const async=require('async'); async.queue(w=>new Promise(r=>setTimeout(r,50)),3).push([1,2,3,4,5,6])\"\
+  \n\n### promises-await\nWrite and debug modern async/await flows with proper error handling.\n\n**Commands:**\n\
+  - `node -e \"Promise.all([fetch('https://httpbin.org/get'), fetch('https://httpbin.org/get')]).then(console.log)\"\
+  `\n- `node --unhandled-rejections=strict app.js`\n- `node -e \"Promise.allSettled([Promise.resolve(1),Promise.reject(new\
+  \ Error('x'))]).then(r=>console.log(r.map(x=>x.status)))\"`\n- `node -e \"Promise.race([Promise.resolve(1),\
+  \ Promise.reject(new Error('late'))]).catch(e=>console.log('raced', e.message))\"`\n\n**Examples:**\n\
+  - node --unhandled-rejections=strict -e \"Promise.reject(new Error('boom'))\"\n- node -e \"Promise.allSettled([Promise.resolve(1),Promise.reject(new\
+  \ Error('e'))]).then(console.log)\"\n- node -e \"(async()=>{const [a,b]=await Promise.all([Promise.resolve(1),Promise.resolve(2)]);\
+  \ console.log(a+b)})()\""
+prompt: Act as Async and handle the task per the instructions.

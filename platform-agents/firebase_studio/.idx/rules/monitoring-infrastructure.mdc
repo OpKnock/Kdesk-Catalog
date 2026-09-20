@@ -1,0 +1,118 @@
+---
+description: "Baseline host monitoring on Linux: CPU, memory, disk, and network telemetry with top, vmstat, iostat, and sar."
+globs: ["**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# monitoring-infrastructure
+
+Baseline host monitoring on Linux: CPU, memory, disk, and network telemetry with top, vmstat, iostat, and sar.
+
+## Instructions
+
+# Host Monitoring
+
+Measure host health with the standard Linux toolbox.
+
+## When to Use
+
+- Investigating a slow host or application
+- Checking whether a problem is CPU, memory, disk, or network
+- Baseline capacity for autoscaling decisions
+
+## Quick triage
+
+```bash
+uptime
+free -h
+vmstat 1 5
+```
+
+`uptime` load averages vs CPU count tells you if the box is oversubscribed.
+
+## CPU
+
+```bash
+vmstat 1 5   # us, sy, id, wa columns
+sar -u 1 3
+```
+
+High `wa` = disk-bound; high `sy` = system call overhead.
+
+## Memory
+
+```bash
+free -h
+sar -r 1 3
+```
+
+Watch `available`, not just `free` - caches reclaim gracefully.
+
+## Disk
+
+```bash
+iostat -x 1 3
+df -h | grep -v tmpfs
+```
+
+`%util` near 100% with long `await` means the disk is saturated.
+
+## Network
+
+```bash
+sar -n DEV 1 3
+```
+
+## Saturation signals
+
+- CPU: run queue length > cores for sustained periods
+- Memory: sustained swapping in `si`/`so`
+- Disk: `%util` saturation or high `await`
+- Network: dropped packets in `/proc/net/dev`
+
+## Best practices
+
+- Keep sysstat enabled so you can answer "what changed at 02:00?"
+- Correlate metrics with deploys; most incidents follow releases.
+- Feed these into Prometheus exporters for alerting.
+- Record a baseline after each major release.
+
+## Testing
+
+```bash
+sar -u 1 5 && vmstat 1 3
+```
+
+Generate load and confirm metrics move - otherwise the collector is broken.
+
+## Capabilities
+
+### host-metrics
+Collect instant host utilization snapshots.
+
+**Commands:**
+- `uptime`
+- `vmstat 1 5`
+- `free -h`
+- `iostat -x 1 3`
+- `top -b -n 1 | head -25`
+
+**Examples:**
+- vmstat 2 10
+- iostat -x -d 1 3 | grep -E 'Device|sda'
+- free -h && df -h | grep -v tmpfs
+
+### history
+Review historical utilization with sysstat sar.
+
+**Commands:**
+- `sar -u 1 3`
+- `sar -r 1 3`
+- `sar -d 1 3`
+- `sar -n DEV 1 3`
+- `sar -q 1 3`
+
+**Examples:**
+- sar -u -f /var/log/sysstat/sa10
+- sar -n TCP 1 5
+- sar -q 1 5

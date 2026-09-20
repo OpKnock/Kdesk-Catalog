@@ -1,0 +1,43 @@
+title: mockserver
+description: Mocks HTTP and HTTPS APIs with MockServer, creating expectations via REST admin API and proxying
+  to real backends.
+version: 2.0.0
+instructions: "# mockserver\n\nMocks HTTP and HTTPS APIs with MockServer, creating expectations via REST\
+  \ admin API and proxying to real backends.\n\n## Instructions\n\n# MockServer\n\nMock HTTP/HTTPS APIs\
+  \ for development and testing.\n\n## What This Skill Does\n\n- Starts MockServer locally or via Docker\n\
+  - Creates expectations for paths, methods, and bodies\n- Proxies unmatched requests to real backends\n\
+  - Verifies which requests were received\n\n## When to Use\n\n- Frontend development without a backend\n\
+  - Testing failure and edge-case responses\n- Contract-ish testing against stubbed APIs\n\n## Real Commands\n\
+  \n```bash\n# Start\njava -jar mockserver-netty-jar-with-dependencies.jar -serverPort 1080\ndocker run\
+  \ -d -p 1080:1080 --name mockserver mockserver/mockserver\n\n# Create expectation\ncurl -s -X PUT http://localhost:1080/mockserver/expectation\
+  \ -d '{\n  \"httpRequest\": {\"path\": \"/api/users\", \"method\": \"GET\"},\n  \"httpResponse\": {\"\
+  statusCode\": 200, \"body\": \"{\\\"users\\\":[]}\"}\n}'\n\n# Proxy everything else\ncurl -s -X PUT\
+  \ http://localhost:1080/mockserver/expectation -d '{\n  \"httpRequest\": {\"path\": \"/api/*\"},\n \
+  \ \"httpForward\": {\"host\": \"real-api\", \"port\": 8080}\n}'\n\n# Verify calls\ncurl -s http://localhost:1080/mockserver/requests\
+  \ -d '{\"path\":\"/api/users\"}'\n\n# Reset\ncurl -s -X PUT http://localhost:1080/mockserver/reset\n\
+  ```\n\n## Best Practices\n\n- Load initial expectations from JSON for reproducible setups\n- Use proxying\
+  \ to mix mocked and real endpoints\n- Reset state between test suites\n- Verify request counts for call-order\
+  \ assertions\n- Keep mock bodies consistent with the real contract\n\n## Capabilities\n\n### mockserver-start\n\
+  Start MockServer locally or in Docker.\n\n**Commands:**\n- `java -jar mockserver-netty-jar-with-dependencies.jar\
+  \ -serverPort 1080`\n- `docker run -d -p 1080:1080 --name mockserver mockserver/mockserver`\n- `node\
+  \ mockserver-cli.js -serverPort 1080`\n- `docker run -d -p 1080:1080 -e MOCKSERVER_INITIALIZATION_JSON_PATH=/config/init.json\
+  \ -v ./init.json:/config/init.json mockserver/mockserver`\n\n**Examples:**\n- docker run -d -p 1080:1080\
+  \ --name mockserver mockserver/mockserver\n- java -jar mockserver-netty-jar-with-dependencies.jar -serverPort\
+  \ 1080\n- docker run -d -p 1080:1080 -e MOCKSERVER_INITIALIZATION_JSON_PATH=/config/init.json -v ./init.json:/config/init.json\
+  \ mockserver/mockserver\n\n### expectation-management\nCreate, inspect, and clear expectations via the\
+  \ admin API.\n\n**Commands:**\n- `curl -s -X PUT http://localhost:1080/mockserver/expectation -d '{\"\
+  httpRequest\":{\"path\":\"/api/users\",\"method\":\"GET\"},\"httpResponse\":{\"statusCode\":200,\"body\"\
+  :\"{\\\"users\\\":[]}\"}}'`\n- `curl -s -X PUT http://localhost:1080/mockserver/expectation -d '{\"\
+  httpRequest\":{\"path\":\"/api/users/1\"},\"httpResponse\":{\"statusCode\":404}}'`\n- `curl -s http://localhost:1080/mockserver/expectation`\n\
+  - `curl -s -X PUT http://localhost:1080/mockserver/reset`\n- `curl -s -X PUT http://localhost:1080/mockserver/clear\
+  \ -d '{\"path\":\"/api/orders\"}'`\n\n**Examples:**\n- curl -s -X PUT http://localhost:1080/mockserver/expectation\
+  \ -d '{\"httpRequest\":{\"path\":\"/api/users\",\"method\":\"GET\"},\"httpResponse\":{\"statusCode\"\
+  :200,\"body\":\"{\\\"users\\\":[]}\"}}'\n- curl -s http://localhost:1080/mockserver/expectation\n- curl\
+  \ -s -X PUT http://localhost:1080/mockserver/reset\n\n### request-verification\nInspect received requests\
+  \ and proxy behavior.\n\n**Commands:**\n- `curl -s http://localhost:1080/mockserver/requests -d '{\"\
+  path\":\"/api/users\"}'`\n- `curl -s -X PUT http://localhost:1080/mockserver/expectation -d '{\"httpRequest\"\
+  :{\"path\":\"/api/*\"},\"httpForward\":{\"host\":\"real-api\",\"port\":8080}}'`\n- `curl -s -X PUT http://localhost:1080/mockserver/verify\
+  \ -d '{\"path\":\"/api/users\",\"method\":\"POST\",\"times\":{\"atLeast\":1}}'`\n\n**Examples:**\n-\
+  \ curl -s http://localhost:1080/mockserver/requests -d '{\"path\":\"/api/users\"}'\n- curl -s -X PUT\
+  \ http://localhost:1080/mockserver/verify -d '{\"path\":\"/api/users\",\"method\":\"POST\"}'"
+prompt: Act as mockserver and handle the task per the instructions.

@@ -1,0 +1,28 @@
+title: python
+description: 'Develops Python backends: virtual environments, packaging, dependency management, debugging,
+  and testing with pytest.'
+version: 2.0.0
+instructions: "# python\n\nDevelops Python backends: virtual environments, packaging, dependency management,\
+  \ debugging, and testing with pytest.\n\n## Instructions\n\n# Python\n\nBackend development with Python.\n\
+  \n## When to Use\n\n- APIs, data pipelines, automation, and ML services\n- Rapid iteration with rich\
+  \ stdlib and ecosystem\n- Teams working in data-heavy domains\n\n## Commands\n\n```bash\n# Environment\n\
+  python -m venv .venv\n# Windows: .venv\\Scripts\\activate | Unix: source .venv/bin/activate\npip install\
+  \ -r requirements.txt\npip freeze > requirements.txt\n\n# Debug\npython -m pdb app.py\npython -m pdb\
+  \ -c continue app.py\n\n# Tests\npytest -q\npytest --cov=src tests/\npytest tests/test_api.py -k \"\
+  login\" -v\n\n# Compile check\npython -m compileall src/\n```\n\n## Example\n\n```python\n# app.py\n\
+  from http.server import HTTPServer, BaseHTTPRequestHandler\n\nclass H(BaseHTTPRequestHandler):\n   \
+  \ def do_GET(self):\n        self.send_response(200)\n        self.send_header(\"Content-Type\", \"\
+  application/json\")\n        self.end_headers()\n        self.wfile.write(b'{\"status\":\"ok\"}')\n\n\
+  HTTPServer((\"\", 8000), H).serve_forever()\n```\n\n## Best Practices\n\n- Always work inside a virtualenv;\
+  \ never pip install globally\n- Pin versions with pip freeze or a lockfile in CI\n- Add type hints and\
+  \ run mypy where practical\n- Run pytest with coverage in CI and enforce a threshold\n- Use python -m\
+  \ pdb for quick diagnosis before adding logging\n- Keep requirements and pyproject metadata in sync\n\
+  \n## Capabilities\n\n### python-env\nManage virtual environments and dependencies.\n\n**Commands:**\n\
+  - `python -m venv .venv`\n- `.venv\\\\Scripts\\\\activate`\n- `pip install -r requirements.txt`\n- `pip\
+  \ freeze > requirements.txt`\n- `pip install -e .`\n\n**Examples:**\n- python -m venv --upgrade-deps\
+  \ .venv\n- pip install --upgrade pip setuptools wheel\n- python -m pip cache info\n\n### python-dev\n\
+  Run, debug, and test Python code.\n\n**Commands:**\n- `python -m pdb app.py`\n- `python -c \"import\
+  \ urllib.request; print(urllib.request.urlopen(\\\"http://localhost:8000/health\\\").status)\"`\n- `pytest\
+  \ -q`\n- `pytest --cov=src tests/`\n- `python -m compileall src/`\n\n**Examples:**\n- python -m pdb\
+  \ -c continue app.py\n- pytest tests/test_api.py -k \"login\" -v\n- python -m trace --count app.py"
+prompt: Act as python and handle the task per the instructions.

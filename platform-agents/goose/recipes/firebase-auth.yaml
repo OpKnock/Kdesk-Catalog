@@ -1,0 +1,30 @@
+title: Firebase Auth
+description: 'Firebase Authentication operations: manage users and ID tokens, test sign-in flows with
+  the CLI, and verify token validation.'
+version: 2.0.0
+instructions: "# Firebase Auth\n\nFirebase Authentication operations: manage users and ID tokens, test\
+  \ sign-in flows with the CLI, and verify token validation.\n\n## Instructions\n\n# Firebase Auth\n\n\
+  ## What this skill does\n\nFirebase Auth handles email/password, social, and phone sign-ins, and issues\
+  \ ID tokens. The CLI and Admin SDK manage users, imports, custom tokens, and token verification.\n\n\
+  ## When to use\n\n- Managing user accounts from the command line\n- Migrating users between projects\
+  \ via import/export\n- Verifying ID tokens server-side\n\n## Real commands\n\n```bash\n# List and manage\
+  \ users\nfirebase auth:list\nfirebase auth:create user@example.com\nfirebase auth:delete user@example.com\n\
+  \n# Import users (hash config required for passwords)\nfirebase auth:import users.json\n\n# Mint an\
+  \ ID token for a Google OAuth token\nfirebase auth:token google-oauth-token\n\n# Verify an ID token\
+  \ with the Admin SDK\nnode -e \"const admin=require('firebase-admin');admin.initializeApp();admin.auth().verifyIdToken('ID_TOKEN').then(d=>console.log(d.uid,d.email)).catch(console.error)\"\
+  \n```\n\n## users.json import example\n\n```json\n{\n  \"users\": [\n    {\n      \"localId\": \"user-1\"\
+  ,\n      \"email\": \"a@example.com\",\n      \"emailVerified\": true,\n      \"passwordHash\": \"base64-encoded-hash\"\
+  ,\n      \"salt\": \"base64-salt\"\n    }\n  ]\n}\n```\n\n## Custom claims\n\n```javascript\nawait admin.auth().setCustomUserClaims(uid,\
+  \ { role: 'admin' })\n```\n\n## Testing\n\n```bash\n# Round trip: create -> sign in via REST -> verify\n\
+  curl -s -X POST 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$API_KEY'\
+  \ -H 'Content-Type: application/json' -d '{\"email\":\"user@example.com\",\"password\":\"pw\",\"returnSecureToken\"\
+  :true}' | jq '.idToken | length > 0'\n```\n\n## Best practices\n\n- Always verify ID tokens server-side\
+  \ with the Admin SDK; never trust client claims.\n- Check `exp` and `auth_time` claims in token verification.\n\
+  - Use custom claims for roles, not for frequent-changing data.\n- Set a session revocation policy for\
+  \ sensitive apps (verifyIdToken with checkRevoked).\n\n## Capabilities\n\n### auth-admin\nAdminister\
+  \ Firebase Auth users, issue custom tokens, and verify ID tokens.\n\n**Commands:**\n- `firebase auth:list`\n\
+  - `firebase auth:import users.json`\n- `firebase auth:create user@localhost`\n- `firebase auth:token\
+  \ google-oauth-token`\n- `node -e \"const admin=require('firebase-admin');admin.initializeApp();admin.auth().verifyIdToken('ID_TOKEN').then(d=>console.log(d.uid,d.email)).catch(console.error)\"\
+  `\n- `firebase auth:delete user@localhost`\n\n**Examples:**\n- firebase auth:list\n- firebase auth:import\
+  \ users.json\n- node -e \"const admin=require('firebase-admin');admin.initializeApp();admin.auth().verifyIdToken('ID_TOKEN').then(d=>console.log(d.uid,d.email)).catch(console.error)\""
+prompt: Act as Firebase Auth and handle the task per the instructions.

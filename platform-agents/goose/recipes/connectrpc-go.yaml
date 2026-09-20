@@ -1,0 +1,36 @@
+title: Connectrpc Go
+description: 'Build ConnectRPC services in Go: protobuf codegen with buf, connect handlers, and HTTP/JSON
+  serving.'
+version: 2.0.0
+instructions: "# Connectrpc Go\n\nBuild ConnectRPC services in Go: protobuf codegen with buf, connect\
+  \ handlers, and HTTP/JSON serving.\n\n## Instructions\n\n# ConnectRPC Go\n\nBuild modern RPC services\
+  \ in Go with ConnectRPC.\n\n## When to Use\n\n- New gRPC-compatible services with simpler protocol handling\n\
+  - Services consumed by web, mobile, and gRPC clients\n- Replacing hand-written REST handlers with generated\
+  \ code\n\n## Scaffold\n\n```bash\ngo mod init github.com/acme/connectrpc-service\ngo get connectrpc.com/connect@latest\n\
+  go get google.golang.org/protobuf@latest\n```\n\n## Proto\n\n```proto\nsyntax = \"proto3\";\npackage\
+  \ example.connectrpc.v1;\n\nmessage GreetRequest { string name = 1; }\nmessage GreetResponse { string\
+  \ greeting = 1; }\n\nservice GreetService {\n  rpc Greet(GreetRequest) returns (GreetResponse);\n}\n\
+  ```\n\n## Generate and Serve\n\n```bash\nbuf generate\n```\n\n```go\npackage main\n\nimport (\n  \"\
+  net/http\"\n  \"connectrpc.com/connect\"\n  greetv1 \"github.com/acme/connectrpc-service/gen/greet/v1\"\
+  \n  \"github.com/acme/connectrpc-service/gen/greet/v1/greetv1connect\"\n)\n\ntype GreetServer struct{}\n\
+  \nfunc (s *GreetServer) Greet(ctx context.Context, req *connect.Request[greetv1.GreetRequest]) (*connect.Response[greetv1.GreetResponse],\
+  \ error) {\n  msg := \"Hello, \" + req.Msg.Name\n  return connect.NewResponse(&greetv1.GreetResponse{Greeting:\
+  \ msg}), nil\n}\n\nfunc main() {\n  mux := http.NewServeMux()\n  mux.Handle(greetv1connect.NewGreetServiceHandler(&GreetServer{}))\n\
+  \  http.ListenAndServe(\"localhost:8080\", mux)\n}\n```\n\n```bash\ngo run ./cmd/server &\ncurl -H \"\
+  Content-Type: application/json\" -d '{\"name\":\"alice\"}' \\\n  http://localhost:8080/example.connectrpc.v1.GreetService/Greet\n\
+  ```\n\n## Testing\n\n```bash\ngo test ./...\ngo build ./...\ngo vet ./...\n```\n\n## Best Practices\n\
+  \n- Use buf lint and buf breaking in CI\n- Keep handlers thin; put logic in services\n- Use connect\
+  \ options for interceptors such as logging and auth\n- Set Content-Type application/json for JSON calls\n\
+  - Always pass context through the stack\n\n## Capabilities\n\n### go-scaffold\nScaffold a Go ConnectRPC\
+  \ project, generate code from proto, and run the server\n\n**Commands:**\n- `go mod init github.com/acme/connectrpc-service`\n\
+  - `go get connectrpc.com/connect@latest`\n- `go get google.golang.org/protobuf@latest`\n- `buf generate`\n\
+  - `go run ./cmd/server`\n\n**Examples:**\n- go mod init github.com/acme/connectrpc-service && go get\
+  \ connectrpc.com/connect@latest\n- buf generate && go run ./cmd/server\n- go build ./... && go vet ./...\n\
+  \n### handlers-testing\nImplement Connect handlers and test with curl and go test\n\n**Commands:**\n\
+  - `curl -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}' http://localhost:8080/example.connectrpc.v1.GreetService/Greet`\n\
+  - `curl -s -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}' http://localhost:8080/example.connectrpc.v1.GreetService/Greet\
+  \ | jq '.greeting'`\n- `go test ./...`\n- `curl -s -o /dev/null -w \"%{http_code}\" -H \"Content-Type:\
+  \ application/json\" -d '{}' http://localhost:8080/example.connectrpc.v1.GreetService/Greet`\n\n**Examples:**\n\
+  - curl -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}' http://localhost:8080/example.connectrpc.v1.GreetService/Greet\n\
+  - go test -v ./...\n- curl -s -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}' http://localhost:8080/example.connectrpc.v1.GreetService/Greet"
+prompt: Act as Connectrpc Go and handle the task per the instructions.

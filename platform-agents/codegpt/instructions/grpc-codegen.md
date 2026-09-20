@@ -1,0 +1,96 @@
+# Grpc Codegen
+
+Generate gRPC service stubs and clients from .proto definitions using protoc, protoc-gen-* plugins, and buf for linting and breaking-change detection.
+
+## Instructions
+
+# gRPC Code Generation
+
+Turn .proto contracts into real client/server code with protoc and buf.
+
+## What this skill does
+
+- Compiles proto files into Go, Java, Python, JS, or C++ gRPC stubs.
+- Lints proto schemas against style rules.
+- Detects breaking API changes before they ship.
+- Formats proto files consistently.
+
+## When to use
+
+- Adding a new RPC service and need generated stubs.
+- Changing an existing proto and want to check backwards compatibility.
+- Standardizing proto style in a monorepo.
+
+## Real commands
+
+```bash
+# Go codegen (protoc-gen-go + protoc-gen-go-grpc)
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+export PATH="$PATH:$(go env GOPATH)/bin"
+
+protoc -I . --go_out=paths=source_relative:. --go-grpc_out=paths=source_relative:. helloworld.proto
+
+# Python codegen
+python -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. helloworld.proto
+
+# buf managed workflow
+cat > buf.yaml <<EOF
+version: v2
+modules:
+  - path: proto
+EOF
+
+cat > buf.gen.yaml <<EOF
+version: v2
+plugins:
+  - local: protoc-gen-go
+    out: gen
+    opt: paths=source_relative
+  - local: protoc-gen-go-grpc
+    out: gen
+    opt: paths=source_relative
+EOF
+
+buf generate
+buf lint
+buf breaking --against .git#branch=main
+buf format -w
+```
+
+## Best practices
+
+- Keep generated files out of git or commit them at a tagged version; pick one and stay consistent.
+- Run `buf breaking` in CI before merging any proto change.
+- Use source_relative paths for Go so imports match your module layout.
+- Name files with underscores (user_service.proto), messages with PascalCase.
+
+## Testing
+
+```bash
+buf lint && buf generate && go build ./...
+```
+
+## Example exchange
+
+```
+User: Regenerate the Go stubs after I added a field to Order.
+Agent: buf generate && go build ./...  # stubs regenerated, build green
+```
+
+## Capabilities
+
+### proto-codegen
+Compile proto files to language stubs, lint schemas, and detect breaking API changes with buf.
+
+**Commands:**
+- `protoc -I . --go_out=paths=source_relative:. --go-grpc_out=paths=source_relative:. helloworld.proto`
+- `buf generate`
+- `buf lint`
+- `buf breaking --against .git#branch=main`
+- `buf format -w`
+
+**Examples:**
+- buf generate --template buf.gen.yaml
+- buf lint --error-format=json
+- buf breaking --against buf.build/acme/apis:latest

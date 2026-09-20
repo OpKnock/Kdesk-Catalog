@@ -1,0 +1,91 @@
+---
+name: "Rollbar Error Tracking"
+description: "Expert Rollbar skill for Python SDK reporting, deploy tracking, item and deploy REST API calls, and querying recent errors for triage."
+globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# Rollbar Error Tracking
+
+Expert Rollbar skill for Python SDK reporting, deploy tracking, item and deploy REST API calls, and querying recent errors for triage.
+
+## Instructions
+
+# Rollbar Error Tracking
+
+Expert skill for error monitoring with Rollbar.
+
+## What this skill does
+
+- Initializes the Python SDK and reports messages and exceptions
+- Posts items and deploys directly through the REST API
+- Queries items for triage and release correlation
+
+## When to use
+
+- Wiring a new service into error monitoring
+- Marking a release so errors can be attributed to it
+- Checking whether an incident has fresh errors
+
+## Real commands
+
+```bash
+# SDK
+pip install rollbar
+
+# Report a message
+python -c 'import rollbar; rollbar.init("POST_SERVER_ITEM_ACCESS_TOKEN", "prod"); rollbar.report_message("booted", "info")'
+
+# Report the current exception in a handler
+python -c 'import rollbar; rollbar.report_exc_info()'
+
+# POST an item directly
+curl -X POST https://api.rollbar.com/api/1/item/ -H 'Content-Type: application/json' -d '{"access_token":"POST_SERVER_ITEM_ACCESS_TOKEN","data":{"environment":"prod","body":{"message":{"body":"test"}}}}'
+
+# Track a deploy
+curl -X POST https://api.rollbar.com/api/1/deploy/ -H 'Content-Type: application/json' -d '{"access_token":"POST_SERVER_ITEM_ACCESS_TOKEN","environment":"prod","revision":"abc123"}'
+
+# Query recent items
+curl -s 'https://api.rollbar.com/api/1/items/?access_token=READ_TOKEN&environment=prod' | jq -r '.result.items[0].title'
+```
+
+## SDK config
+
+```python
+import rollbar
+rollbar.init("POST_SERVER_ITEM_ACCESS_TOKEN", "prod")
+try:
+    risky_call()
+except Exception:
+    rollbar.report_exc_info()
+    raise
+```
+
+## Testing
+
+```bash
+curl -X POST https://api.rollbar.com/api/1/item/ -H 'Content-Type: application/json' -d '{"access_token":"POST_SERVER_ITEM_ACCESS_TOKEN","data":{"environment":"test","body":{"message":{"body":"smoke"}}}}'
+```
+
+## Best practices
+
+- Call rollbar.init once at startup with the environment name
+- Send deploys after every release for blame attribution
+- Use read tokens for dashboards, never for writes
+
+## Capabilities
+
+### rollbar-reporting
+Report errors and deploys to Rollbar and query items
+
+**Commands:**
+- `pip install rollbar`
+- `python -c 'import rollbar; rollbar.init("POST_SERVER_ITEM_ACCESS_TOKEN", "prod"); rollbar.report_message("booted", "info")'`
+- `curl -X POST https://api.rollbar.com/api/1/item/ -H 'Content-Type: application/json' -d '{"access_token":"POST_SERVER_ITEM_ACCESS_TOKEN","data":{"environment":"prod","body":{"message":{"body":"test"}}}}'`
+- `curl -X POST https://api.rollbar.com/api/1/deploy/ -H 'Content-Type: application/json' -d '{"access_token":"POST_SERVER_ITEM_ACCESS_TOKEN","environment":"prod","revision":"abc123"}'`
+- `curl -s 'https://api.rollbar.com/api/1/items/?access_token=READ_TOKEN&environment=prod' | jq -r '.result.items[0].title'`
+
+**Examples:**
+- curl -s 'https://api.rollbar.com/api/1/items/?access_token=READ_TOKEN&environment=prod&level=error' | jq '.result.items | length'
+- python -c 'import rollbar; rollbar.report_exc_info()'
+- curl -X POST https://api.rollbar.com/api/1/deploy/ -H 'Content-Type: application/json' -d '{"access_token":"POST_SERVER_ITEM_ACCESS_TOKEN","environment":"prod","revision":"abc123"}'

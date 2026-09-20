@@ -1,0 +1,33 @@
+title: Circuit Breaker Pattern
+description: Implement the circuit breaker pattern in Java with Resilience4j and in Go with gobreaker,
+  including thresholds and fallbacks.
+version: 2.0.0
+instructions: "# Circuit Breaker Pattern\n\nImplement the circuit breaker pattern in Java with Resilience4j\
+  \ and in Go with gobreaker, including thresholds and fallbacks.\n\n## Instructions\n\n# Circuit Breaker\
+  \ Pattern\n\nProtect APIs from cascading failures with circuit breakers.\n\n## When to Use\n\n- A downstream\
+  \ dependency is failing or slow\n- Preventing timeouts from piling up on a flaky service\n- Fast-failing\
+  \ with fallbacks instead of hanging\n\n## States\n\nClosed -> (failure ratio exceeded) -> Open -> (timeout)\
+  \ -> Half-open -> (success) -> Closed\n\n## Java with Resilience4j\n\n```xml\n<dependency>\n  <groupId>io.github.resilience4j</groupId>\n\
+  \  <artifactId>resilience4j-circuitbreaker</artifactId>\n  <version>2.2.0</version>\n</dependency>\n\
+  ```\n\n```java\nCircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .failureRateThreshold(60)\n\
+  \    .waitDurationInOpenState(Duration.ofSeconds(10))\n    .slidingWindowSize(20)\n    .build();\nCircuitBreaker\
+  \ cb = CircuitBreaker.of(\"payments\", config);\nString result = cb.executeSupplier(() -> paymentsClient.charge(order));\n\
+  ```\n\n## Go with gobreaker\n\n```go\nst := gobreaker.Settings{\n  Name: \"payments\",\n  MaxRequests:\
+  \ 5,\n  Interval: 60 * time.Second,\n  Timeout: 10 * time.Second,\n  ReadyToTrip: func(counts gobreaker.Counts)\
+  \ bool {\n    return counts.ConsecutiveFailures > 5\n  },\n}\ncb := gobreaker.NewCircuitBreaker(st)\n\
+  resp, err := cb.Execute(func() (interface{}, error) {\n  return charge(order)\n})\n```\n\n## Testing\n\
+  \n```bash\n# Open the circuit by failing repeatedly, then confirm fast-fail\ncurl -s -o /dev/null -w\
+  \ \"%{http_code}\\n\" http://localhost:8080/api/payments\n# Load to trigger thresholds\nhey -n 200 -c\
+  \ 20 http://localhost:8080/api/payments\n```\n\n## Best Practices\n\n- Tune thresholds from observed\
+  \ p99 and error budgets\n- Provide fallbacks for degraded mode\n- Expose breaker state as metrics\n\
+  - Set a probe timeout to recover automatically\n- Do not place breakers between a client and its own\
+  \ gateway\n- Test the open, half-open, and closed transitions explicitly\n\n## Capabilities\n\n### resilience4j\n\
+  Add circuit breakers to Java apps with Resilience4j and configure thresholds\n\n**Commands:**\n- `mvn\
+  \ dependency:get -Dartifact=io.github.resilience4j:resilience4j-circuitbreaker:2.2.0`\n- `mvn dependency:get\
+  \ -Dartifact=io.github.resilience4j:resilience4j-spring-boot3:2.2.0`\n- `mvn test`\n- `mvn spring-boot:run`\n\
+  \n**Examples:**\n- mvn dependency:get -Dartifact=io.github.resilience4j:resilience4j-circuitbreaker:2.2.0\n\
+  - mvn test -Dtest=CircuitBreakerTest\n- mvn spring-boot:run\n\n### gobreaker\nUse sony/gobreaker circuit\
+  \ breaker in Go services with custom thresholds and fallbacks\n\n**Commands:**\n- `go get github.com/sony/gobreaker`\n\
+  - `go run ./cmd/server`\n- `go test ./...`\n- `go vet ./...`\n\n**Examples:**\n- go get github.com/sony/gobreaker\n\
+  - go test -run TestBreaker -v ./...\n- go run ./cmd/server"
+prompt: Act as Circuit Breaker Pattern and handle the task per the instructions.

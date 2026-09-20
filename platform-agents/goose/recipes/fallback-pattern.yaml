@@ -1,0 +1,38 @@
+title: Fallback Pattern
+description: 'Resilience patterns for API durability: circuit breakers that halt calls to failing dependencies,
+  retries with exponential backoff and jitter for transient errors, timeout bounds on outbound requests,
+  and cached fallback responses so degraded answers still succeed.'
+version: 2.0.0
+instructions: "# Fallback Pattern\n\nResilience patterns for API durability: circuit breakers that halt\
+  \ calls to failing dependencies, retries with exponential backoff and jitter for transient errors, timeout\
+  \ bounds on outbound requests, and cached fallback responses so degraded answers still succeed.\n\n\
+  ## Instructions\n\n# Fallback Pattern\n\n## What this skill does\n\nFallback patterns keep the API alive\
+  \ when dependencies fail: circuit breakers stop calls to a dead service, retries with backoff absorb\
+  \ transient errors, timeouts bound slow calls, and fallback values serve degraded responses.\n\n## When\
+  \ to use\n\n- A downstream service is down and requests pile up\n- Designing for partial outages instead\
+  \ of total failure\n- Adding resilience to third-party API calls\n\n## Real commands\n\n```bash\n# Observe\
+  \ current behavior\ncurl -s http://localhost:8080/api/orders | jq '.source'\n\n# Health shows the circuit\
+  \ state\ncurl -s http://localhost:8080/actuator/health | jq '.components.ordersCircuit'\n\n# Node fallback\
+  \ demo\nnode -e \"const f=require('p-retry');f(async()=>{const r=await fetch('http://db:5432');if(!r.ok)throw\
+  \ new Error('down')},{retries:3,minTimeout:500}).catch(e=>console.log('fallback: cached data'))\"\n\
+  ```\n\n## Circuit breaker config (Resilience4j)\n\n```yaml\nresilience4j.circuitbreaker:\n  instances:\n\
+  \    orders:\n      failureRateThreshold: 50\n      waitDurationInOpenState: 10s\n      slidingWindowSize:\
+  \ 20\n      recordExceptions:\n        - java.io.IOException\n```\n\n## Fallback handler example (Java)\n\
+  \n```java\n@CircuitBreaker(name = \"orders\", fallbackMethod = \"ordersFallback\")\npublic List<Order>\
+  \ getOrders() {\n    return ordersClient.fetch();\n}\n\npublic List<Order> ordersFallback(Throwable\
+  \ t) {\n    return cache.read(\"orders\"); // degraded response\n}\n```\n\n## Testing\n\n```bash\n#\
+  \ Kill the dependency, then verify the circuit opens\nsystemctl stop orders-db\nsleep 5\ncurl -s http://localhost:8080/actuator/health\
+  \ | jq '.components.ordersCircuit'\n```\n\n## Best practices\n\n- Always provide a fallback; never let\
+  \ a dependency failure bubble to 5xx when a degraded answer exists.\n- Retry only on transient errors,\
+  \ with jittered exponential backoff.\n- Timeouts must be shorter than the circuit breaker's wait window.\n\
+  - Cache last-known-good data for fallback reads.\n- Monitor open/closed state and fallback invocation\
+  \ rate.\n\n## Capabilities\n\n### resilience-patterns\nConfigure and test circuit breakers and fallbacks\
+  \ in Java (Resilience4j) and verify behavior.\n\n**Commands:**\n- `curl -s -o /dev/null -w '%{http_code}'\
+  \ http://localhost:8080/api/orders`\n- `curl -s http://localhost:8080/api/orders | jq '.source'`\n-\
+  \ `node -e \"const f=require('p-retry');f(async()=>{const r=await fetch('http://db:5432');if(!r.ok)throw\
+  \ new Error('down')},{retries:3,minTimeout:500}).catch(e=>console.log('fallback: cached data'))\"`\n\
+  - `grep -rn 'CircuitBreaker' src/ | head -10`\n- `curl -s http://localhost:8080/actuator/health | jq\
+  \ '.components.ordersCircuit'`\n\n**Examples:**\n- curl -s http://localhost:8080/api/orders | jq '.source'\n\
+  - curl -s http://localhost:8080/actuator/health | jq '.components.ordersCircuit'\n- grep -rn 'CircuitBreaker'\
+  \ src/ | head -10"
+prompt: Act as Fallback Pattern and handle the task per the instructions.

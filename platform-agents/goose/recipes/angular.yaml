@@ -1,0 +1,32 @@
+title: angular
+description: 'Builds, tests, and deploys Angular applications with the Angular CLI: components, signals,
+  routing, and standalone APIs.'
+version: 2.0.0
+instructions: "# angular\n\nBuilds, tests, and deploys Angular applications with the Angular CLI: components,\
+  \ signals, routing, and standalone APIs.\n\n## Instructions\n\n# Angular\n\nDevelop Angular apps with\
+  \ the Angular CLI and modern standalone APIs.\n\n## When to Use\n\n- Enterprise SPAs needing strong\
+  \ structure and DI\n- Teams standardized on TypeScript and RxJS/signals\n- Apps with complex forms and\
+  \ routing\n\n## Create a workspace\n\n```bash\nng new my-app --style=scss --routing --ssr=false\n```\n\
+  \nPrefer standalone components (default) - modules are only needed for legacy code.\n\n## Generate code\n\
+  \n```bash\nng generate component dashboard --standalone --inline-template --inline-style\nng generate\
+  \ service api/orders\nng generate guard auth/requires-login\nng add @angular/material\n```\n\n## Development\
+  \ loop\n\n```bash\nng serve --port 4200 --hmr\nng test --watch=false --browsers=ChromeHeadless\nng lint\
+  \ --fix\nng build --configuration=production\n```\n\n## Signals instead of observables where possible\n\
+  \n```typescript\nexport class CartComponent {\n  items = signal<Item[]>([]);\n  total = computed(()\
+  \ => this.items().reduce((s, i) => s + i.price, 0));\n}\n```\n\n## Routing with lazy loading\n\n```typescript\n\
+  export const routes: Routes = [\n  { path: 'checkout', loadComponent: () => import('./checkout/checkout.component').then(m\
+  \ => m.CheckoutComponent) },\n  { path: '', loadChildren: () => import('./home/routes').then(m => m.routes)\
+  \ }\n];\n```\n\n## Best practices\n\n- Use OnPush change detection with signals.\n- Keep components\
+  \ small; extract presentational vs. container roles.\n- Run `ng build` with a strict TypeScript config\
+  \ in CI.\n- Use `inject()` instead of constructor injection for readability.\n\n## Testing\n\n```bash\n\
+  ng test --watch=false --code-coverage\n```\n\nTarget 80%+ coverage on services and reducers, not templates.\n\
+  \n## Capabilities\n\n### scaffold\nCreate Angular workspaces, components, and services.\n\n**Commands:**\n\
+  - `ng new my-app --style=scss --routing --ssr=false`\n- `ng generate component dashboard`\n- `ng generate\
+  \ service api/orders`\n- `ng add @angular/material`\n- `ng generate component dashboard --standalone\
+  \ --inline-template --inline-style`\n\n**Examples:**\n- ng new store --style=scss --routing --ssr=false\n\
+  - ng generate component checkout/payment --standalone\n- ng generate service auth/token\n\n### build-test\n\
+  Build, serve, test, and analyze Angular apps.\n\n**Commands:**\n- `ng serve --port 4200 --hmr`\n- `ng\
+  \ build --configuration=production`\n- `ng test --watch=false --browsers=ChromeHeadless`\n- `ng lint\
+  \ --fix`\n- `ng build --configuration=production --stats-json`\n\n**Examples:**\n- ng serve --open\n\
+  - ng test --watch=false --code-coverage\n- ng build --configuration=staging --output-path dist/staging"
+prompt: Act as angular and handle the task per the instructions.

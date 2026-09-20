@@ -1,0 +1,103 @@
+---
+trigger: glob
+description: "HTTP load testing with Vegeta: attack targets at fixed or ramp rates, analyze latency histograms, error rates, and generate HTML plots."
+globs: ["**/*.go", "**/*.html", "**/*.json", "**/*.r", "**/*.sh"]
+---
+
+# Vegeta
+
+HTTP load testing with Vegeta: attack targets at fixed or ramp rates, analyze latency histograms, error rates, and generate HTML plots.
+
+## Instructions
+
+# Vegeta
+
+## What this skill does
+
+Vegeta is a Go-based HTTP load testing tool. It attacks targets from a targets file at a given rate
+for a given duration, streaming binary results that you can summarize as text, JSON, histograms, or
+plots.
+
+## When to use
+
+- Benchmark endpoint latency and throughput
+- Run soak tests over long durations
+- Assert p95/p99 latency budgets in CI
+- Generate HTML plots for performance reviews
+
+## Targets file format
+
+```
+GET https://api.example.com/v1/users
+
+X-API-Key: secret123
+
+
+POST https://api.example.com/v1/orders
+
+Content-Type: application/json
+
+{"customer": "alice"}
+```
+
+## Real commands
+
+```bash
+# Basic attack + text report
+vegeta attack -targets=targets.txt -rate=100 -duration=30s | vegeta report
+
+# Save binary results, report later
+vegeta attack -rate=500 -duration=5m -targets=urls.txt > results.bin
+vegeta report results.bin
+
+# Latency histogram buckets
+vegeta report -type=hist[0,50ms,100ms,250ms,500ms] results.bin
+
+# JSON report for CI ingestion
+vegeta attack -targets=targets.txt -rate=100 -duration=30s | vegeta report -type=json | jq ".latencies"
+
+# HTML plot for sharing
+vegeta plot results.bin > plot.html
+
+# Unlimited-rate attack (burst)
+vegeta attack -rate=0 -max-workers=200 -duration=0 -targets=urls.txt -timeout=30s
+
+# Convert binary results to JSON for storage
+vegeta encode --to=json < results.bin > results.json
+```
+
+## CI integration
+
+```bash
+vegeta attack -targets=targets.txt -rate=100 -duration=30s | vegeta report -type=json | jq -e ".latencies.p95 < 200"
+```
+
+## Best practices
+
+- Use distinct targets for GET vs POST since rates apply per-target
+- Always warm up before timed runs
+- Check the status-codes breakdown, not just latency
+- Keep targets in versioned files, never inline
+
+## Testing
+
+```bash
+vegeta attack -targets=targets.txt -rate=10 -duration=5s | vegeta report
+```
+
+## Capabilities
+
+### load-testing
+Run HTTP attacks against API targets and produce reports
+
+**Commands:**
+- `vegeta attack -targets=targets.txt -rate=100 -duration=30s | vegeta report`
+- `vegeta attack -rate=50 -duration=10s -targets=urls.txt | vegeta plot > plot.html`
+- `vegeta attack -rate=100 -duration=1m -targets=urls.txt | vegeta encode --to=json > results.json`
+- `vegeta attack -rate=0 -max-workers=100 -duration=0 -targets=urls.txt`
+- `vegeta report -type=hist[0,100ms,200ms,300ms] results.bin`
+
+**Examples:**
+- vegeta attack -targets=targets.txt -rate=200 -duration=2m | vegeta report -type=json > report.json
+- vegeta encode --to=gob < results.bin > results.gob
+- vegeta attack -name=soak-test -rate=25 -duration=1h -targets=urls.txt | vegeta report

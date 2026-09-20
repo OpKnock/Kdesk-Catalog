@@ -1,0 +1,30 @@
+title: terraform-infrastructure
+description: 'Manages infrastructure as code with Terraform: init, plan, apply, state, and modules across
+  environments.'
+version: 2.0.0
+instructions: "# terraform-infrastructure\n\nManages infrastructure as code with Terraform: init, plan,\
+  \ apply, state, and modules across environments.\n\n## Instructions\n\n# Terraform\n\nProvision infrastructure\
+  \ as code with the standard workflow.\n\n## When to Use\n\n- All cloud resources defined in code\n-\
+  \ Multi-environment parity (dev/staging/prod)\n- Auditability: every change is a reviewed plan\n\n##\
+  \ Core workflow\n\n```bash\nterraform init\nterraform plan -out=tfplan\nterraform apply tfplan\n```\n\
+  \nNever `apply -auto-approve` in production without a reviewed plan.\n\n## Structure\n\n```\n.\n├─ main.tf\n\
+  ├─ variables.tf\n├─ outputs.tf\n├─ envs/\n│   ├─ prod.tfvars\n│   ├─ staging.tfvars\n└─ modules/\n \
+  \   └─ vpc/\n```\n\n```bash\nterraform plan -var-file=envs/prod.tfvars -out=tfplan\n```\n\n## State\
+  \ management\n\n```bash\nterraform state list\nterraform state show aws_instance.web[0]\nterraform import\
+  \ aws_instance.web i-0abc123\nterraform state rm aws_instance.legacy\n```\n\nStore state in a remote\
+  \ backend with locking:\n\n```hcl\nterraform {\n  backend \"s3\" {\n    bucket         = \"tf-state\"\
+  \n    key            = \"prod/terraform.tfstate\"\n    region         = \"us-east-1\"\n    dynamodb_table\
+  \ = \"tf-locks\"\n    encrypt        = true\n  }\n}\n```\n\n## Formatting and validation\n\n```bash\n\
+  terraform fmt -recursive\nterraform validate\n```\n\n## Best practices\n\n- Use modules for vpc, ec2,\
+  \ rds; keep root config thin.\n- Pin provider versions; plan upgrades separately.\n- Never store secrets\
+  \ in state - use variable references to a vault.\n- Run plan in CI with comment bot on every PR.\n\n\
+  ## Testing\n\n```bash\nterraform validate\nterraform plan -detailed-exitcode\n```\n\nAdd Terratest or\
+  \ tofu test suites for module behavior.\n\n## Capabilities\n\n### core\nRun the core Terraform workflow.\n\
+  \n**Commands:**\n- `terraform init`\n- `terraform plan -out=tfplan`\n- `terraform apply tfplan`\n- `terraform\
+  \ destroy -auto-approve`\n- `terraform fmt -recursive`\n\n**Examples:**\n- terraform init -upgrade\n\
+  - terraform plan -var-file=envs/prod.tfvars -out=tfplan\n- terraform apply -auto-approve -target=module.vpc\n\
+  \n### state\nInspect and repair Terraform state.\n\n**Commands:**\n- `terraform state list`\n- `terraform\
+  \ state show aws_instance.web[0]`\n- `terraform import aws_instance.web i-0abc123`\n- `terraform state\
+  \ rm aws_instance.legacy`\n- `terraform refresh`\n\n**Examples:**\n- terraform state list | grep module.vpc\n\
+  - terraform state show aws_s3_bucket.logs\n- terraform import aws_iam_user.ci ci-bot"
+prompt: Act as terraform-infrastructure and handle the task per the instructions.

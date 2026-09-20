@@ -1,0 +1,127 @@
+title: Api Sec JWT Auditing
+description: 'Hardens API authentication security: JWT inspection and validation, token lifecycle, algorithm
+  confusion tests, and auth header verification with jwt-cli.'
+version: 2.0.0
+instructions: '# Api Sec JWT Auditing
+
+
+  Hardens API authentication security: JWT inspection and validation, token lifecycle, algorithm confusion
+  tests, and auth header verification with jwt-cli.
+
+
+  ## Instructions
+
+
+  # API Security v2 - Auth Tokens
+
+
+  JWT security hardening.
+
+
+  ## What This Skill Does
+
+  - Inspects tokens for weak signatures
+
+  - Tests algorithm confusion vectors
+
+  - Verifies endpoint enforcement
+
+
+  ## When to Use
+
+  - Auditing authentication implementation
+
+  - Testing token expiry handling
+
+  - Investigating auth bypasses
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  npm install -g jwt-cli
+
+  jwt decode $TOKEN
+
+  jwt encode --secret "s3cret" --alg HS256 ''{"sub":"1234567890"}''
+
+  curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer $TOKEN" https://api.example.com/me
+
+  ```
+
+
+  ## Checks to Run
+
+  - alg none: does the server accept unsigned tokens?
+
+  - Expired tokens: are they rejected with 401?
+
+  - Tampered payloads: does signature validation catch them?
+
+  - Weak secrets: crackable HS256 keys
+
+
+  ## Testing
+
+  - Confirm 401 without a token
+
+  - Confirm 401 with an expired token
+
+  - Verify the server pins the expected algorithm
+
+
+  ## Best Practices
+
+  - Reject alg:none explicitly
+
+  - Use RS256/ES256 for issuance
+
+  - Rotate signing keys on rotation schedules
+
+
+  ## Capabilities
+
+
+  ### jwt-auditing
+
+  Inspect and validate JWTs
+
+
+  **Commands:**
+
+  - `npm install -g jwt-cli`
+
+  - `jwt decode $TOKEN`
+
+  - `jwt encode --secret "s3cret" --alg HS256 ''{"sub":"1234567890","name":"alice"}''`
+
+  - `jwt encode --secret "s3cret" --alg none ''{"sub":"admin"}''`
+
+  - `curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer $TOKEN" http://localhost:8080/me`
+
+
+  **Examples:**
+
+  - jwt decode $TOKEN prints header and payload
+
+  - jwt encode with alg none probes algorithm confusion
+
+  - curl with the token checks endpoint enforcement
+
+
+  ### auth-header-checks
+
+  Verify bearer and basic auth enforcement
+
+
+  **Commands:**
+
+  - `curl -s -o /dev/null -w ''%{http_code}\n'' http://localhost:8080/me`
+
+  - `curl -s -o /dev/null -w ''%{http_code}\n'' -H ''Authorization: Bearer expired-token'' http://localhost:8080/me`
+
+  - `node -e "const jwt=require(''jsonwebtoken''); const t=jwt.sign({sub:''1''},''secret'',{expiresIn:''1h''});
+  console.log(t.split(''.'')[0]); console.log(jwt.verify(t,''secret'').sub)"`'
+prompt: Act as Api Sec JWT Auditing and handle the task per the instructions.

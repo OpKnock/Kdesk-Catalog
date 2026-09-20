@@ -1,0 +1,27 @@
+title: Api Pagination Spring Data
+description: 'Implements offset/limit pagination with Spring Data JPA and Spring Data REST: Pageable,
+  HAL links, page metadata, and sort parameters.'
+version: 2.0.0
+instructions: "# Api Pagination Spring Data\n\nImplements offset/limit pagination with Spring Data JPA\
+  \ and Spring Data REST: Pageable, HAL links, page metadata, and sort parameters.\n\n## Instructions\n\
+  \n# API Pagination v2 - Spring Data\n\nOffset pagination with Spring Data.\n\n## What This Skill Does\n\
+  - Maps Pageable parameters to JPA queries\n- Returns HAL links and page metadata\n- Enforces page size\
+  \ limits and sort whitelisting\n\n## When to Use\n- Spring Boot APIs needing standard page/size paging\n\
+  - HATEOAS-style clients that follow HAL links\n- Admin tables with simple data volumes\n\n## Real Commands\n\
+  \n```bash\ncurl -s 'http://localhost:8080/api/users?page=0&size=20' | jq '.page.totalElements, .page.totalPages'\n\
+  curl -s -H 'Accept: application/hal+json' 'http://localhost:8080/api/users' | jq '._links.next.href'\n\
+  ```\n\n## Repository Method\n\n```java\n@Repository\npublic interface UserRepository extends JpaRepository<User,\
+  \ Long> {\n    Page<User> findByActiveTrue(Pageable pageable);\n}\n```\n\n## Testing\n- Verify totalPages\
+  \ math on boundary sizes\n- Confirm size=0 and negative pages are rejected\n- Test sort injection attempts\
+  \ do not cause SQL errors\n\n## Best Practices\n- Configure spring.data.rest.max-page-size globally\n\
+  - Whitelist sortable properties to avoid expensive sorts\n- Use Page<DTO> projections to avoid N+1 lazy\
+  \ loading\n\n## Capabilities\n\n### spring-data-paging\nUse Spring Data Pageable with HAL response metadata\n\
+  \n**Commands:**\n- `curl -s 'http://localhost:8080/api/users?page=0&size=20' | jq '.page.totalElements,\
+  \ .page.totalPages'`\n- `curl -s -H 'Accept: application/hal+json' 'http://localhost:8080/api/users'\
+  \ | jq '._links.next.href'`\n- `curl -s 'http://localhost:8080/api/users?sort=name,desc' | jq '._embedded.users[0].name'`\n\
+  - `./mvnw clean test`\n\n**Examples:**\n- page=0&size=20 selects page one with 20 items\n- Accept: application/hal+json\
+  \ returns _links with next/prev\n- sort=name,desc orders results before paging\n\n### pageable-repositories\n\
+  Define paging repository methods and custom Pageable defaults\n\n**Commands:**\n- `curl -s 'http://localhost:8080/api/users?size=0'\
+  \ -o /dev/null -w '%{http_code}\\n'`\n- `curl -s 'http://localhost:8080/api/users?page=-1' -o /dev/null\
+  \ -w '%{http_code}\\n'`\n- `./mvnw spring-boot:run -Dspring-boot.run.arguments=--spring.data.rest.default-page-size=50`"
+prompt: Act as Api Pagination Spring Data and handle the task per the instructions.

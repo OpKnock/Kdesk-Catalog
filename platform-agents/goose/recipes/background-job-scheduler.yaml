@@ -1,0 +1,29 @@
+title: background-job-scheduler
+description: 'Architects background job schedulers: cron systems, retry policies, dead-letter handling,
+  and idempotency across frameworks.'
+version: 2.0.0
+instructions: "# background-job-scheduler\n\nArchitects background job schedulers: cron systems, retry\
+  \ policies, dead-letter handling, and idempotency across frameworks.\n\n## Instructions\n\n# Background\
+  \ Job Scheduler\n\nDesign reliable scheduling for background work.\n\n## When to Use\n\n- Recurring\
+  \ maintenance (cleanup, digests, reports)\n- Off-peak batch processing\n- Work that must survive process\
+  \ restarts\n\n## Options by Stack\n\n- System: cron / systemd timers for host-level jobs\n- Celery:\
+  \ beat scheduler for Python distributed jobs\n- RQ: --with-scheduler for Redis-backed periodic jobs\n\
+  - BullMQ: repeatable jobs with cron expressions\n- Sidekiq: sidekiq-cron for Ruby\n\n## Commands\n\n\
+  ```bash\n# Host cron\ncrontab -e\ncrontab -l\n\n# systemd timers\nsystemctl list-timers\nsystemctl status\
+  \ backup.timer\n\n# Celery beat\ncelery -A proj beat --loglevel=info\n\n# RQ scheduler\nrq worker --with-scheduler\n\
+  \n# Inspect failed/dead-letter state\nredis-cli llen failed-jobs\nredis-cli zrange delayed:jobs 0 -1\n\
+  ```\n\n## Retry Policy\n\n```python\n# Exponential backoff with cap\n@shared_task(bind=True, max_retries=5,\
+  \ default_retry_delay=30)\ndef cleanup(self):\n    try:\n        run_cleanup()\n    except Exception\
+  \ as exc:\n        self.retry(exc=exc, countdown=30 * (2 ** self.request.retries))\n```\n\n## Best Practices\n\
+  \n- Make every job idempotent; scheduler replays happen\n- Add jitter to scheduled times to avoid thundering\
+  \ herd\n- Centralize retry/backoff config per job class\n- Route poison jobs to a dead-letter queue,\
+  \ never silent drop\n- Alert when the scheduler itself has not run (watchdog)\n- Keep cron at the host\
+  \ level minimal; prefer app-level scheduling\n\n## Capabilities\n\n### scheduler-systems\nConfigure\
+  \ cron, systemd timers, and application schedulers.\n\n**Commands:**\n- `crontab -e`\n- `crontab -l`\n\
+  - `systemctl list-timers`\n- `celery -A proj beat --loglevel=info`\n- `rq worker --with-scheduler`\n\
+  \n**Examples:**\n- crontab -l | grep backup\n- systemctl status backup.timer\n- celery -A proj beat\
+  \ --schedule /tmp/beat-schedule.db\n\n### scheduler-resilience\nDesign retries, idempotency, and dead-letter\
+  \ policies.\n\n**Commands:**\n- `python -c \"from celery import Celery; app=Celery(); print(app.conf.task_default_queue)\"\
+  `\n- `redis-cli llen failed-jobs`\n- `redis-cli zrange delayed:jobs 0 -1`\n- `redis-cli get job:result:123`\n\
+  \n**Examples:**\n- redis-cli llen failed-jobs\n- redis-cli lrange failed-jobs 0 20"
+prompt: Act as background-job-scheduler and handle the task per the instructions.

@@ -1,0 +1,29 @@
+title: Rolling Deployment
+description: Expert Kubernetes rolling deployment skill covering set image, rollout status/history, undo,
+  pause/resume, and canary verification with kubectl.
+version: 2.0.0
+instructions: "# Rolling Deployment\n\nExpert Kubernetes rolling deployment skill covering set image,\
+  \ rollout status/history, undo, pause/resume, and canary verification with kubectl.\n\n## Instructions\n\
+  \n# Rolling Deployment\n\nExpert skill for safe Kubernetes rolling deployments.\n\n## What this skill\
+  \ does\n\n- Swaps container images on a Deployment with zero downtime\n- Watches rollout progress and\
+  \ knows when it is complete or failed\n- Rolls back instantly to a known-good revision\n\n## When to\
+  \ use\n\n- Shipping a new API version without downtime\n- Recovering from a bad release quickly\n- Validating\
+  \ progressive rollouts with pause/resume\n\n## Real commands\n\n```bash\n# Update the image (triggers\
+  \ a new ReplicaSet)\nkubectl set image deployment/api api=ghcr.io/your-org/api:v2.1\n\n# Wait until\
+  \ the rollout completes or times out\nkubectl rollout status deployment/api --timeout=180s\n\n# Review\
+  \ revision history with images\nkubectl rollout history deployment/api\nkubectl rollout history deployment/api\
+  \ --revision=3\n\n# Roll back (latest by default, or pick a revision)\nkubectl rollout undo deployment/api\n\
+  kubectl rollout undo deployment/api --to-revision=3\n\n# Canary-style: pause, verify, resume\nkubectl\
+  \ rollout pause deployment/api\nkubectl get pods -l app=api -w\nkubectl rollout resume deployment/api\n\
+  ```\n\n## Deployment strategy\n\n```yaml\nstrategy:\n  type: RollingUpdate\n  rollingUpdate:\n    maxSurge:\
+  \ 1\n    maxUnavailable: 0\n```\n\n## Testing\n\n```bash\nkubectl rollout status deployment/api --timeout=180s\n\
+  kubectl get replicasets -l app=api\nkubectl get pods -l app=api -w\n```\n\n## Best practices\n\n- Set\
+  \ maxUnavailable: 0 to keep capacity during the swap\n- Verify readinessProbes before the new pods take\
+  \ traffic\n- Have a rollback runbook: one kubectl rollout undo away\n\n## Capabilities\n\n### k8s-rolling-deploy\n\
+  Roll out and roll back Kubernetes Deployments safely\n\n**Commands:**\n- `kubectl set image deployment/api\
+  \ api=ghcr.io/your-org/api:v2.1`\n- `kubectl rollout status deployment/api --timeout=180s`\n- `kubectl\
+  \ rollout history deployment/api`\n- `kubectl rollout undo deployment/api`\n- `kubectl rollout pause\
+  \ deployment/api`\n- `kubectl rollout resume deployment/api`\n\n**Examples:**\n- kubectl rollout status\
+  \ deployment/api --timeout=180s\n- kubectl rollout undo deployment/api --to-revision=3\n- kubectl get\
+  \ pods -l app=api -w"
+prompt: Act as Rolling Deployment and handle the task per the instructions.

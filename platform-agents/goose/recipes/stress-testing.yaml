@@ -1,0 +1,31 @@
+title: Stress Testing
+description: Push APIs to their limits with ab, wrk, hey, siege, and k6. Generates sustained load, reports
+  throughput and latency percentiles, and identifies breaking points before users encounter them. Use
+  for capacity planning, autoscaling verification, and reproducing concurrency issues.
+version: 2.0.0
+instructions: "# Stress Testing\n\nPush APIs to their limits with ab, wrk, hey, siege, and k6. Generates\
+  \ sustained load, reports throughput and latency percentiles, and identifies breaking points before\
+  \ users encounter them. Use for capacity planning, autoscaling verification, and reproducing concurrency\
+  \ issues.\n\n## Instructions\n\n# Stress Testing\n\nHand-crafted skill for pushing APIs to their limits.\n\
+  \n## What this skill does\n\n- Generates sustained load with ab, wrk, hey, siege, and k6\n- Reports\
+  \ throughput, latency percentiles, and failure counts\n- Finds the breaking point before users do\n\n\
+  ## When to use\n\n- Capacity planning before a launch\n- Verifying autoscaling kicks in\n- Reproducing\
+  \ latency issues under concurrency\n\n## Real commands\n\n```bash\n# ApacheBench: 10k requests, 100\
+  \ concurrent, keep-alive\nab -n 10000 -c 100 -k http://localhost:8080/api/v1/users\n\n# wrk: 4 threads,\
+  \ 100 connections, 30s\nwrk -t4 -c100 -d30s http://localhost:8080/api/v1/users\n\n# hey: 60s with 200\
+  \ concurrent\nhey -z 60s -c 200 http://localhost:8080/api/v1/users\n\n# k6 with thresholds\nk6 run --vus\
+  \ 50 --duration 2m stress.js\n\n# siege: 100 concurrent for 60s\nsiege -c 100 -t 60s http://localhost:8080/api/v1/users\n\
+  ```\n\n## Reading results\n\n- Requests per second vs concurrency: find the knee\n- Failed requests\
+  \ and socket timeouts indicate the ceiling\n- Watch server CPU/mem during the run: kubectl top or top\n\
+  \n## k6 thresholds\n\n```javascript\nexport const options = {\n  vus: 50,\n  duration: \"2m\",\n  thresholds:\
+  \ {\n    http_req_failed: [\"rate<0.01\"],\n    http_req_duration: [\"p(95)<800\"],\n  },\n};\n```\n\
+  \n## Testing\n\n```bash\nab -n 5000 -c 50 -k http://localhost:8080/health\nhey -z 30s -c 100 http://localhost:8080/api/v1/users\n\
+  ```\n\n## Best practices\n\n- Warm up before measuring; cold caches skew results\n- Ramp concurrency\
+  \ in steps and record each plateau\n- Never stress production: use staging with identical sizing\n\n\
+  ## Capabilities\n\n### load-generation\nStress APIs with ab, wrk, hey, siege, and k6\n\n**Commands:**\n\
+  - `ab -n 10000 -c 100 -k http://localhost:8080/api/v1/users`\n- `wrk -t4 -c100 -d30s http://localhost:8080/api/v1/users`\n\
+  - `hey -z 60s -c 200 http://localhost:8080/api/v1/users`\n- `k6 run --vus 50 --duration 2m stress.js`\n\
+  - `siege -c 100 -t 60s http://localhost:8080/api/v1/users`\n\n**Examples:**\n- ab -n 10000 -c 100 -k\
+  \ http://localhost:8080/api/v1/users\n- wrk -t4 -c100 -d30s http://localhost:8080/api/v1/users\n- k6\
+  \ run --vus 50 --duration 2m stress.js"
+prompt: Act as Stress Testing and handle the task per the instructions.

@@ -1,0 +1,27 @@
+title: Monitoring
+description: 'End-to-end monitoring stack operations: Prometheus targets, Grafana datasources and dashboards,
+  alerting rules, and uptime checks.'
+version: 2.0.0
+instructions: "# Monitoring\n\nEnd-to-end monitoring stack operations: Prometheus targets, Grafana datasources\
+  \ and dashboards, alerting rules, and uptime checks.\n\n## Instructions\n\n# Monitoring\n\nA monitoring\
+  \ stack turns raw metrics into alerting and dashboards.\n\n## What this skill does\n\n- Boots Grafana\
+  \ and connects it to Prometheus\n- Validates alert rules with promtool and hot-reloads config\n- Covers\
+  \ synthetic uptime and availability checks\n\n## When to use\n\n- Standing up observability for a new\
+  \ environment\n- Fixing a broken scrape target or dashboard\n- Adding alert rules that must not fire\
+  \ falsely\n\n## Real commands\n\n```bash\n# Start Grafana\n docker run -d --name grafana -p 3000:3000\
+  \ grafana/grafana\n\n# Provision Prometheus datasource via API\ncurl -u admin:admin -X POST http://localhost:3000/api/datasources\
+  \ \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"name\":\"Prometheus\",\"type\":\"prometheus\"\
+  ,\"url\":\"http://prometheus:9090\"}'\n\n# Validate alert rules and reload\npromtool check rules /etc/prometheus/rules.yml\n\
+  curl -X POST http://localhost:9090/-/reload\n\n# Inspect active rules\ncurl -s http://localhost:9090/api/v1/rules\n\
+  ```\n\n## Rule example\n\n```yaml\ngroups:\n- name: availability\n  rules:\n  - alert: InstanceDown\n\
+  \    expr: up == 0\n    for: 2m\n    labels: { severity: critical }\n```\n\n## Best practices\n\n- Check\
+  \ rules with promtool before reloading\n- Add `for:` durations to suppress transient blips\n- Monitor\
+  \ the monitor: alert on `up == 0` for prometheus itself\n\n## Capabilities\n\n### monitoring-stack\n\
+  Operate a Prometheus + Grafana stack: provision datasources, manage dashboards and validate alert rules.\n\
+  \n**Commands:**\n- `docker run -d --name grafana -p 3000:3000 grafana/grafana`\n- `curl -u admin:admin\
+  \ -X POST http://localhost:3000/api/datasources -H \"Content-Type: application/json\" -d '{\"name\"\
+  :\"Prometheus\",\"type\":\"prometheus\",\"url\":\"http://prometheus:9090\"}'`\n- `promtool check rules\
+  \ /etc/prometheus/rules.yml`\n- `curl -X POST http://localhost:9090/-/reload`\n- `curl -s http://localhost:9090/api/v1/alertmanagers`\n\
+  \n**Examples:**\n- curl -u admin:admin -X POST http://localhost:3000/api/datasources -d @datasource.json\n\
+  - promtool check rules /etc/prometheus/rules.yml\n- curl -s http://localhost:9090/api/v1/rules"
+prompt: Act as Monitoring and handle the task per the instructions.

@@ -1,0 +1,33 @@
+title: Jaeger Tracing
+description: 'Jaeger distributed tracing: running all-in-one, generating sample traces with tracegen,
+  and querying the Jaeger API for services and traces.'
+version: 2.0.0
+instructions: "# Jaeger Tracing\n\nJaeger distributed tracing: running all-in-one, generating sample traces\
+  \ with tracegen, and querying the Jaeger API for services and traces.\n\n## Instructions\n\n# Jaeger\
+  \ Tracing\n\nRun Jaeger and investigate distributed traces.\n\n## What this skill does\n\n- Starts the\
+  \ all-in-one Jaeger stack (collector + query UI).\n- Generates sample traces with tracegen.\n- Queries\
+  \ services and traces via the JSON API.\n- Inspects span counts and durations from the CLI.\n\n## When\
+  \ to use\n\n- Verifying trace instrumentation is emitting data.\n- Drilling into one slow request's\
+  \ span waterfall.\n- Load-testing the trace pipeline itself.\n\n## Real commands\n\n```bash\n# Run all-in-one\
+  \ (UI :16686, OTLP :4317/:4318)\ndocker run -d --name jaeger -p 16686:16686 -p 4317:4317 -p 4318:4318\
+  \ \\\n  jaegertracing/all-in-one:1.57\n\n# Generate sample traces\ngo install github.com/jaegertracing/jaeger/cmd/tracegen@latest\n\
+  tracegen -service myservice -traces 50 -duration 2s\n\n# List known services\ncurl 'http://localhost:16686/api/services'\
+  \ | jq '.data'\n\n# Recent traces for a service\ncurl 'http://localhost:16686/api/traces?service=myservice&limit=10'\
+  \ | jq '.data[].traceID'\n\n# Span count in the newest trace\ncurl 'http://localhost:16686/api/traces?service=myservice&limit=1'\
+  \ | jq '.data[0].spans | length'\n```\n\n## OTLP wiring for apps\n\n```bash\nexport OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318\n\
+  export OTEL_SERVICE_NAME=myservice\n```\n\n## Testing\n\n```bash\ntracegen -service myservice -traces\
+  \ 10 && \\\n  curl -s 'http://localhost:16686/api/traces?service=myservice&limit=1' | jq -e '.data[0]'\
+  \ > /dev/null && echo \"traces flowing\"\n```\n\n## Best practices\n\n- Check sampling config before\
+  \ blaming missing traces (default head sampling).\n- Use lookback windows matching the investigation\
+  \ window.\n- Query by operation and tags: /api/traces?service=X&operation=Y&tags=...\n- Match OTLP port\
+  \ choices (4317 gRPC, 4318 HTTP) to your exporter.\n\n## Example exchange\n\n```\nUser: Are traces arriving\
+  \ for the checkout service?\nAgent: curl -s 'http://localhost:16686/api/traces?service=checkout&lookback=1h'\
+  \ | jq '.data | length'\n```\n\n## Capabilities\n\n### jaeger-ops\nRun Jaeger locally and query traces\
+  \ through the API and UI.\n\n**Commands:**\n- `docker run -d --name jaeger -p 16686:16686 -p 4317:4317\
+  \ -p 4318:4318 jaegertracing/all-in-one:1.57`\n- `curl 'http://localhost:16686/api/traces?service=myservice&limit=10'\
+  \ | jq '.data[0].traceID'`\n- `curl 'http://localhost:16686/api/services' | jq '.data'`\n- `go install\
+  \ github.com/jaegertracing/jaeger/cmd/tracegen@latest && tracegen -service myservice -traces 50`\n-\
+  \ `curl -s 'http://localhost:16686/api/traces?service=myservice&lookback=1h' | jq '.data | length'`\n\
+  \n**Examples:**\n- tracegen -service myservice -traces 100 -duration 2s\n- curl 'http://localhost:16686/api/traces?service=myservice&limit=1'\
+  \ | jq '.data[0].spans | length'\n- docker logs jaeger | tail -20"
+prompt: Act as Jaeger Tracing and handle the task per the instructions.

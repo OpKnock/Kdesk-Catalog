@@ -1,0 +1,34 @@
+title: Deprecation
+description: 'Manages endpoint phase-out lifecycle: Sunset headers, spec linting for metadata, and usage
+  auditing before removal.'
+version: 2.0.0
+instructions: "# Deprecation\n\nManages endpoint phase-out lifecycle: Sunset headers, spec linting for\
+  \ metadata, and usage auditing before removal.\n\n## Instructions\n\n# API Phase-Out\n\n## What this\
+  \ skill does\n\nEndpoint phase-out management is the discipline of announcing, phasing, and removing\
+  \ API features without breaking consumers. This skill covers the Sunset headers, spec linting for metadata,\
+  \ and migration auditing.\n\n## When to use\n\n- Planning the retirement of a v1 endpoint in favor of\
+  \ v2\n- Enforcing that all retired operations carry metadata in the OpenAPI spec\n- Auditing which consumers\
+  \ still call an endpoint before removal\n\n## Real commands\n\n```bash\n# Lint the spec so every removed-in-future\
+  \ operation is marked\nspectral lint openapi.yaml -r .spectral/deprecation.rules.yml\n\n# Probe a live\
+  \ endpoint for sunset headers\ncurl -sI https://httpbin.org/headers -H 'Authorization: Bearer $TOKEN'\
+  \ | grep -iE '^(deprecation|sunset|link):'\n\n# Count retired operations in the spec\nnpx @redocly/cli\
+  \ lint openapi.yaml --skip-rule operation-4xx-response\n\n# Find who still uses the endpoint in server\
+  \ logs\nzgrep -h 'GET /v1/legacy' /var/log/nginx/access.log*.gz | awk '{print $1}' | sort | uniq -c\
+  \ | sort -rn\n```\n\n## Header example\n\n```http\nHTTP/1.1 200 OK\nDeprecation: true\nSunset: Sat,\
+  \ 31 Dec 2026 23:59:59 GMT\nLink: <https://api.example.com/v2/users>; rel=\"successor-version\"\n```\n\
+  \n## OpenAPI metadata example\n\n```yaml\npaths:\n  /v1/legacy:\n    get:\n      deprecated: true\n\
+  \      description: Use GET /v2/users instead.\n```\n\n## Best practices\n\n- Always ship a successor:\
+  \ a retired endpoint with no replacement is a trap.\n- Give at least 6-12 months between announcement\
+  \ and the Sunset date.\n- Include the `sunset` date in the header so clients can schedule migration\
+  \ automatically.\n- Log warnings server-side and report usage metrics before removal.\n- Remove the\
+  \ endpoint only when traffic falls below the agreed threshold.\n\n## Testing\n\n```bash\n# Verify the\
+  \ header is present on every version of the endpoint\ncurl -sI https://httpbin.org/headers | grep -qi\
+  \ '^deprecation:'; echo $?\n```\n\n## Capabilities\n\n### deprecation-audit\nLint OpenAPI specs for\
+  \ missing metadata and probe live endpoints for sunset headers.\n\n**Commands:**\n- `spectral lint openapi.yaml\
+  \ -r .spectral/deprecation.rules.yml`\n- `curl -sI https://httpbin.org/headers -H 'Authorization: Bearer\
+  \ $TOKEN' | grep -iE '^(deprecation|sunset|link):'`\n- `grep -n 'deprecated: true' openapi.yaml | wc\
+  \ -l`\n- `npx @redocly/cli lint openapi.yaml --skip-rule operation-4xx-response`\n- `curl -s https://httpbin.org/get\
+  \ | jq '.meta.deprecation'`\n\n**Examples:**\n- spectral lint openapi.yaml -r .spectral/deprecation.rules.yml\n\
+  - curl -sI https://httpbin.org/headers -H 'Authorization: Bearer $TOKEN' | grep -i 'sunset:'\n- grep\
+  \ -rn 'deprecated: true' specs/*.yaml"
+prompt: Act as Deprecation and handle the task per the instructions.

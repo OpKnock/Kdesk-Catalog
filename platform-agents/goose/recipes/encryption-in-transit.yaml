@@ -1,0 +1,34 @@
+title: Encryption In Transit
+description: 'TLS encryption in transit: test certificates with openssl s_client, inspect cipher suites
+  and handshakes, and verify proper SNI and chain validation.'
+version: 2.0.0
+instructions: "# Encryption In Transit\n\nTLS encryption in transit: test certificates with openssl s_client,\
+  \ inspect cipher suites and handshakes, and verify proper SNI and chain validation.\n\n## Instructions\n\
+  \n# Encryption in Transit\n\n## What this skill does\n\nEncryption in transit means every byte between\
+  \ client and server is protected by TLS. This skill focuses on verifying that protection: certificate\
+  \ validity, protocol versions, cipher suites, chain trust, and HSTS.\n\n## When to use\n\n- Diagnosing\
+  \ certificate expiry or chain errors\n- Auditing cipher and TLS version support\n- Verifying SNI serves\
+  \ the right certificate\n\n## Real commands\n\n```bash\n# Certificate dates, subject, issuer\n echo\
+  \ | openssl s_client -connect httpbin.org:443 -servername httpbin.org 2>/dev/null | openssl x509 -noout\
+  \ -dates -subject -issuer\n\n# TLS version and negotiated cipher\n echo | openssl s_client -connect\
+  \ api.github.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'\n\n# Strict chain validation\n\
+  \ echo | openssl s_client -connect httpbin.org:443 -verify_return_error 2>&1 | grep -iE 'verify|error'\n\
+  \n# Enumerate supported ciphers\n nmap --script ssl-enum-ciphers -p 443 httpbin.org\n\n# HSTS presence\n\
+  \ curl -sI https://httpbin.org | grep -i 'strict-transport-security'\n```\n\n## Chain debugging\n\n\
+  ```bash\n# Print the full chain presented by the server\n echo | openssl s_client -connect httpbin.org:443\
+  \ -showcerts 2>/dev/null | grep -E '^\\s+i:|^s:' | head -20\n```\n\n## Hardening config example (nginx)\n\
+  \n```nginx\nssl_protocols TLSv1.2 TLSv1.3;\nssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256;\n\
+  ssl_prefer_server_ciphers off;\nadd_header Strict-Transport-Security \"max-age=31536000; includeSubDomains\"\
+  \ always;\n```\n\n## Best practices\n\n- Disable TLS 1.0/1.1; require 1.2 minimum.\n- Set HSTS before\
+  \ deploying HTTPS so browsers never downgrade.\n- Automate certificate renewal monitoring (e.g. expiry\
+  \ alerts 30 days out).\n- Always pass `-servername` when testing virtual-hosted endpoints.\n\n## Capabilities\n\
+  \n### tls-verification\nProbe TLS endpoints, inspect certificates and ciphers, and validate chains.\n\
+  \n**Commands:**\n- `echo | openssl s_client -connect httpbin.org:443 -servername httpbin.org 2>/dev/null\
+  \ | openssl x509 -noout -dates -subject -issuer`\n- `echo | openssl s_client -connect api.github.com:443\
+  \ -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'`\n- `echo | openssl s_client -connect httpbin.org:443\
+  \ -verify_return_error 2>&1 | grep -iE 'verify|error'`\n- `nmap --script ssl-enum-ciphers -p 443 httpbin.org`\n\
+  - `curl -sI https://httpbin.org | grep -i 'strict-transport-security'`\n\n**Examples:**\n- echo | openssl\
+  \ s_client -connect httpbin.org:443 -servername httpbin.org 2>/dev/null | openssl x509 -noout -dates\
+  \ -subject -issuer\n- echo | openssl s_client -connect api.github.com:443 -tls1_3 2>/dev/null | grep\
+  \ -E 'Protocol|Cipher'\n- curl -sI https://httpbin.org | grep -i 'strict-transport-security'"
+prompt: Act as Encryption In Transit and handle the task per the instructions.

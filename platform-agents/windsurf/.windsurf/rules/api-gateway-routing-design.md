@@ -1,0 +1,78 @@
+---
+trigger: glob
+description: "Designs gateway routing and policies: route matching, rate limit tiers, JWT validation, and failover before implementation."
+globs: ["**/*.json", "**/*.r", "**/*.sh"]
+---
+
+# Api Gateway Routing Design
+
+Designs gateway routing and policies: route matching, rate limit tiers, JWT validation, and failover before implementation.
+
+## Instructions
+
+# API Gateway (Design)
+
+Designs gateway routes and policies before wiring them up.
+
+## When to Use
+- Planning gateway rollout
+- Defining rate-limit tiers
+- Deciding route ownership
+
+## Real Commands
+
+```bash
+# Route model
+node -e "const r={paths:['/api/v1/orders'],hosts:['api.example.com'],methods:['GET','POST']};console.log(JSON.stringify(r,null,2))"
+
+# Tiers
+node -e "const tiers={free:{minute:10},pro:{minute:120},enterprise:{minute:1000}};console.log(JSON.stringify(tiers,null,2))"
+
+# Consumers
+curl -s -X POST http://localhost:8001/consumers -H 'Content-Type: application/json' -d '{"username":"acme"}'
+curl -s -X POST http://localhost:8001/consumers/acme/plugins -H 'Content-Type: application/json' -d '{"name":"rate-limiting","config":{"minute":120}}'
+```
+
+## Design Checklist
+- Versioned path prefixes
+- Internal vs public route split
+- Per-tier quotas and burst allowances
+
+## Testing
+Probe each tier's limit and verify 429 responses carry retry headers.
+
+## Best Practices
+- Design routes before plugins
+- Key limits by consumer, not IP
+
+## Capabilities
+
+### routing-design
+Design route matching rules: paths, hosts, headers, and methods
+
+**Commands:**
+- `node -e "const r={paths:['/api/v1/orders'],hosts:['api.example.com'],methods:['GET','POST']};console.log(JSON.stringify(r,null,2))"`
+- `node -e "console.log('priority: method > header > path > host')"`
+- `curl -s -H 'Host: api.example.com' http://localhost:8000/api/v1/orders -o /dev/null -w '%{http_code}'`
+- `node -e "const routes=['/api/v1/*','/internal/*','/healthz'];console.log(routes.join('\n'))"`
+- `curl -s http://localhost:8000/healthz -o /dev/null -w '%{http_code}'`
+
+**Examples:**
+- node -e "const r={paths:['/api/v1/orders'],hosts:['api.example.com'],methods:['GET','POST']};console.log(JSON.stringify(r,null,2))"
+- curl -s -H 'Host: api.example.com' http://localhost:8000/api/v1/orders -o /dev/null -w '%{http_code}'
+- curl -s http://localhost:8000/healthz -o /dev/null -w '%{http_code}'
+
+### policy-design
+Design rate limit tiers, quotas, and auth policies
+
+**Commands:**
+- `node -e "const tiers={free:{minute:10},pro:{minute:120},enterprise:{minute:1000}};console.log(JSON.stringify(tiers,null,2))"`
+- `node -e "console.log('burst: 2x rate, keyed by consumer id')"`
+- `curl -s -X POST http://localhost:8001/consumers -H 'Content-Type: application/json' -d '{"username":"acme"}'`
+- `curl -s -X POST http://localhost:8001/consumers/acme/plugins -H 'Content-Type: application/json' -d '{"name":"rate-limiting","config":{"minute":120}}'`
+- `curl -s -X POST http://localhost:8001/consumers/acme/key-auth -H 'Content-Type: application/json' -d '{}'`
+
+**Examples:**
+- node -e "const tiers={free:{minute:10},pro:{minute:120},enterprise:{minute:1000}};console.log(JSON.stringify(tiers,null,2))"
+- curl -s -X POST http://localhost:8001/consumers/acme/plugins -H 'Content-Type: application/json' -d '{"name":"rate-limiting","config":{"minute":120}}'
+- curl -s -X POST http://localhost:8001/consumers/acme/key-auth -H 'Content-Type: application/json' -d '{}'

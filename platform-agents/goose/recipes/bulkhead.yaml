@@ -1,0 +1,41 @@
+title: Bulkhead
+description: 'Implements bulkhead isolation with opossum (Node.js) and Resilience4j (Java): semaphores,
+  per-dependency pools, and testing.'
+version: 2.0.0
+instructions: "# Bulkhead\n\nImplements bulkhead isolation with opossum (Node.js) and Resilience4j (Java):\
+  \ semaphores, per-dependency pools, and testing.\n\n## Instructions\n\n# Bulkhead\n\n## What this skill\
+  \ does\n\nImplements bulkhead isolation in code: opossum bulkheads for Node.js, Resilience4j bulkheads\
+  \ for Java, and load-test verification that rejected calls fail fast.\n\n## When to use\n\n- Limiting\
+  \ concurrent calls to a dependency in application code\n- Protecting a service from slow downstreams\n\
+  - Adding queueing with bounded size\n\n## Real commands\n\n```bash\n# Node.js (opossum)\nnpm install\
+  \ opossum\nnode -e \"const opossum=require('opossum'); const b=opossum.bulkhead(async()=>42, {maxConcurrent:2});\
+  \ b.call().then(console.log)\"\n\n# Rejection beyond the limit\nnode -e \"const opossum=require('opossum');\
+  \ const b=opossum.bulkhead(async()=>{await new Promise(r=>setTimeout(r,1000)); return 1},{maxConcurrent:1});\
+  \ b.call().then(console.log).catch(e=>console.log('rejected', e.message))\"\n\n# Java (Resilience4j)\
+  \ metrics\ncurl -s http://localhost:8080/actuator/metrics/resilience4j.bulkhead.available.concurrent.calls\n\
+  \n# Verify with load\nab -n 1000 -c 100 http://localhost:8080/api/calls\n```\n\n## Config (resilience4j)\n\
+  \n```yaml\nresilience4j.bulkhead:\n  instances:\n    db:\n      maxConcurrentCalls: 10\n      maxWaitDuration:\
+  \ 100ms\n```\n\n## Testing\n\n- Load until rejection rate matches (concurrency - maxConcurrent)\n- Assert\
+  \ rejected calls return quickly, not hang\n\n## Best practices\n\n- Size bulkhead = dependency concurrency\
+  \ limit\n- Expose rejected.calls metrics and alert on them\n- Combine with timeouts so queued calls\
+  \ do not pile up\n\n## Capabilities\n\n### opossum-node\nAdd bulkhead limits to Node.js calls with opossum.\n\
+  \n**Commands:**\n- `npm install opossum`\n- `node -e \"const opossum=require('opossum'); const b=opossum.bulkhead(async()=>42,\
+  \ {maxConcurrent:2}); b.call().then(console.log)\"`\n- `node -e \"const opossum=require('opossum');\
+  \ const b=opossum.bulkhead(async()=>{await new Promise(r=>setTimeout(r,1000)); return 1},{maxConcurrent:1});\
+  \ b.call().then(console.log).catch(e=>console.log('rejected', e.message))\"`\n- `npm run test`\n\n**Examples:**\n\
+  - node -e \"const opossum=require('opossum'); const b=opossum.bulkhead(async()=>42,{maxConcurrent:2});\
+  \ Promise.all([b.call(),b.call(),b.call()]).catch(e=>console.log('blocked'))\"\n- node -e \"const opossum=require('opossum');\
+  \ const b=opossum.bulkhead(async()=>1,{maxConcurrent:1, queue:3, maxQueue:3}); console.log(b.status)\"\
+  \n- node -e \"const opossum=require('opossum'); const b=opossum.bulkhead(async()=>1,{maxConcurrent:1});\
+  \ b.call().then(()=>console.log(b.status.stats.active))\"\n\n### resilience4j-java\nConfigure Resilience4j\
+  \ bulkheads in Java apps.\n\n**Commands:**\n- `mvn dependency:tree | grep resilience4j-bulkhead`\n-\
+  \ `mvn test`\n- `curl -s http://localhost:8080/actuator/health`\n- `curl -s http://localhost:8080/actuator/metrics/resilience4j.bulkhead.available.concurrent.calls`\n\
+  \n**Examples:**\n- curl -s http://localhost:8080/actuator/metrics/resilience4j.bulkhead.available.concurrent.calls\
+  \ | jq '.measurements'\n- mvn test -Dtest=BulkheadTest\n- curl -s http://localhost:8080/actuator/health\
+  \ | jq '.components.resilience4jBulkhead'\n\n### verify\nLoad-test bulkhead behavior.\n\n**Commands:**\n\
+  - `ab -n 1000 -c 100 http://localhost:8080/api/calls`\n- `curl -s -o /dev/null -w \"%{http_code}\\n\"\
+  \ http://localhost:8080/api/calls`\n- `curl -s http://localhost:8080/actuator/metrics/resilience4j.bulkhead.max.allowed.concurrent.calls`\n\
+  - `kubectl get hpa`\n\n**Examples:**\n- ab -n 1000 -c 100 http://localhost:8080/api/calls | grep -E\
+  \ 'Non-2xx|Failed'\n- curl -s http://localhost:8080/actuator/metrics/resilience4j.bulkhead.rejected.calls\
+  \ | jq '.measurements'\n- watch -n1 'curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:8080/api/calls'"
+prompt: Act as Bulkhead and handle the task per the instructions.

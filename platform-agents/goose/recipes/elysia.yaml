@@ -1,0 +1,27 @@
+title: Elysia
+description: 'Build TypeScript APIs with the Elysia framework (Bun): scaffold endpoints, run the dev server,
+  and test routes.'
+version: 2.0.0
+instructions: "# Elysia\n\nBuild TypeScript APIs with the Elysia framework (Bun): scaffold endpoints,\
+  \ run the dev server, and test routes.\n\n## Instructions\n\n# Elysia\n\n## What this skill does\n\n\
+  Elysia is a TypeScript-first web framework built for Bun, with end-to-end type safety inferred from\
+  \ route handlers. It has a built-in dev server, Bun-native runtime, and a large plugin ecosystem.\n\n\
+  ## When to use\n\n- Starting a new TypeScript API with Bun as the runtime\n- Migrating Express/Fastify\
+  \ services to Bun for speed\n- Prototyping a typed API quickly\n\n## Real commands\n\n```bash\n# Scaffold\n\
+  bun create elysia app\ncd app\n\n# Dev server with watch\nbun run --watch src/index.ts\n\n# Install\
+  \ plugins\nbun add @elysiajs/cors @elysiajs/jwt\n\n# Tests and build\nbun test\nbun build src/index.ts\
+  \ --target=bun --outdir dist\n```\n\n## Minimal app example\n\n```typescript\nimport { Elysia, t } from\
+  \ 'elysia'\n\nconst app = new Elysia()\n  .get('/', () => 'Hello Elysia')\n  .get('/hello/:name', ({\
+  \ params }) => `Hello ${params.name}`)\n  .post('/orders', ({ body }) => ({ created: body.id }), {\n\
+  \    body: t.Object({ id: t.String() })\n  })\n  .listen(3000)\n\nconsole.log(`Running at ${app.server?.hostname}:${app.server?.port}`)\n\
+  ```\n\n## Testing\n\n```bash\n# Inline tests with bun:test\nbun test src/app.test.ts\n# Manual check\n\
+  curl -s localhost:3000/hello/world | jq\n```\n\n## Best practices\n\n- Let Elysia infer types; don't\
+  \ hand-write duplicate interfaces.\n- Use the `t` schema validator for request bodies to get validation\
+  \ + types for free.\n- Keep plugins in `@elysiajs/*` scope where possible.\n- For production, build\
+  \ with `bun build --target=bun` and run the compiled file.\n\n## Capabilities\n\n### elysia-development\n\
+  Scaffold, run, and test Elysia Bun apps with the bun runtime.\n\n**Commands:**\n- `bun create elysia\
+  \ app`\n- `bun add elysia`\n- `bun run --watch src/index.ts`\n- `bun test`\n- `bun build src/index.ts\
+  \ --target=bun --outdir dist`\n\n**Examples:**\n- bun create elysia app && cd app && bun run --watch\
+  \ src/index.ts\n- bun add elysia @elysiajs/cors @elysiajs/jwt\n- curl -s localhost:3000/hello/name |\
+  \ jq"
+prompt: Act as Elysia and handle the task per the instructions.

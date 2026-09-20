@@ -1,0 +1,29 @@
+title: Rest Assured
+description: Expert Java REST API testing reference with Given/When/Then flows, JSONPath assertions, response
+  validation, and Maven/Gradle integration.
+version: 2.0.0
+instructions: "# Rest Assured\n\nExpert Java REST API testing reference with Given/When/Then flows, JSONPath\
+  \ assertions, response validation, and Maven/Gradle integration.\n\n## Instructions\n\n# Rest Assured\n\
+  \nExpert skill for REST API testing in Java with Rest Assured.\n\n## What this skill does\n\n- Builds\
+  \ BDD-style tests: given() setup, when() request, then() assertions\n- Asserts status codes, headers,\
+  \ and JSONPath expressions\n- Runs individual tests via Maven or Gradle filters\n\n## When to use\n\n\
+  - Contract tests against Spring Boot or other Java APIs\n- Smoke tests that should run in CI after deploy\n\
+  - Local verification of endpoints during development\n\n## Real commands\n\n```bash\n# Fetch the dependency\
+  \ explicitly\nmvn dependency:get -Dartifact=io.rest-assured:rest-assured:5.4.0\n\n# Run a whole test\
+  \ class\nmvn test -Dtest=OrderApiTest\n\n# Run a single method\nmvn test -q -Dtest=OrderApiTest#shouldReturn201\n\
+  \n# Gradle equivalent with verbose output\n./gradlew test --tests '*ApiTest' --info\n```\n\n## Test\
+  \ example\n\n```java\nimport static io.restassured.RestAssured.*;\n\ngiven()\n    .contentType(\"application/json\"\
+  )\n    .body(\"{\\\"customer\\\":7,\\\"total\\\":199}\")\n.when()\n    .post(\"/v1/orders\")\n.then()\n\
+  \    .statusCode(201)\n\n    .body(\"id\", greaterThan(0))\n    .header(\"Location\", not(emptyString()));\n\
+  \n// JSONPath extraction\n\nint id = when().get(\"/v1/orders\").then().statusCode(200)\n    .extract().path(\"\
+  data[0].id\");\n```\n\n## Config example\n\n```java\nRestAssured.baseURI = \"http://localhost:8080\"\
+  ;\nRestAssured.port = 8080;\n```\n\n## Testing\n\n```bash\nmvn test -Dtest=OrderApiTest\n./gradlew test\
+  \ --tests '*ApiTest'\n```\n\n## Best practices\n\n- Keep test data creation in @BeforeAll so tests stay\
+  \ independent\n- Prefer JSONPath assertions over raw string contains checks\n- Put integration tests\
+  \ behind a Maven profile so unit builds stay fast\n\n## Capabilities\n\n### rest-assured-bdd\nWrite\
+  \ and run BDD-style REST tests in Java with Rest Assured\n\n**Commands:**\n- `mvn dependency:get -Dartifact=io.rest-assured:rest-assured:5.4.0`\n\
+  - `mvn test -Dtest=OrderApiTest`\n- `mvn test -q -Dtest=OrderApiTest#shouldReturn201`\n- `./gradlew\
+  \ test --tests '*ApiTest' --info`\n- `mvn verify -Dskip.integration.tests=false`\n\n**Examples:**\n\
+  - mvn test -Dtest=OrderApiTest\n- mvn test -q -Dtest=OrderApiTest#shouldReturn201\n- ./gradlew test\
+  \ --tests '*ApiTest' --info"
+prompt: Act as Rest Assured and handle the task per the instructions.

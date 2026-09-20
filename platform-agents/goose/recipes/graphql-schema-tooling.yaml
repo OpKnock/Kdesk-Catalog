@@ -1,0 +1,33 @@
+title: Graphql Schema Tooling
+description: 'GraphQL schema quality tooling: lint SDL with graphql-schema-linter, detect breaking changes
+  with graphql-inspector, and validate operations against schemas.'
+version: 2.0.0
+instructions: "# Graphql Schema Tooling\n\nGraphQL schema quality tooling: lint SDL with graphql-schema-linter,\
+  \ detect breaking changes with graphql-inspector, and validate operations against schemas.\n\n## Instructions\n\
+  \n# GraphQL v2\n\n## What this skill does\n\nSchema quality tooling keeps GraphQL APIs maintainable:\
+  \ linters enforce naming/description rules, inspectors diff schemas for breaking changes, and validators\
+  \ check client operations against the schema.\n\n## When to use\n\n- Enforcing schema conventions in\
+  \ CI\n- Reviewing a PR that changes the schema\n- Catching operations that would break before deploy\n\
+  \n## Real commands\n\n```bash\n# Lint with rule selection\nnpx graphql-schema-linter schema.graphql\
+  \ --rules=fields-have-descriptions,types-have-descriptions\n\n# Machine-readable lint output\nnpx graphql-schema-linter\
+  \ --format json schema.graphql > lint.json\n\n# Breaking change diff\nnpx graphql-inspector diff schema-old.graphql\
+  \ schema-new.graphql | jq\n\n# Validate client operations\nnpx graphql-inspector validate schema.graphql\
+  \ 'src/**/*.graphql'\n\n# Capture the live schema\nnpx graphql-inspector introspect http://localhost:4000/graphql\
+  \ --write schema.graphql\n```\n\n## .graphql-schema-linter.yml example\n\n```yaml\nrules:\n  - fields-have-descriptions\n\
+  \  - types-have-descriptions\n  - no-hashtag-description\n  - relay-page-info-spec\n```\n\n## CI gate\
+  \ example\n\n```bash\nnpx graphql-schema-linter schema.graphql && \\\n  npx graphql-inspector diff schema-main.graphql\
+  \ schema-pr.graphql --rule breaking | grep -q . && exit 1 || echo 'no breaking changes'\n```\n\n## Testing\n\
+  \n```bash\n# Confirm lint config catches a planted violation\necho 'type Bad{field:String}' > /tmp/bad.graphql\
+  \ && npx graphql-schema-linter /tmp/bad.graphql --rules=types-have-descriptions; echo \"exit=$?\"\n\
+  ```\n\n## Best practices\n\n- Run the linter on every schema commit.\n- Gate merges on breaking change\
+  \ diffs; use @deprecated instead of removals.\n- Validate all client documents in CI against the prod\
+  \ schema.\n- Commit the schema SDL and diff it against live introspection.\n- Keep descriptions on public\
+  \ types; they become the docs.\n\n## Capabilities\n\n### schema-tooling\nLint schemas, diff versions\
+  \ for breaking changes, and validate operations.\n\n**Commands:**\n- `npx graphql-schema-linter schema.graphql\
+  \ --rules=fields-have-descriptions,types-have-descriptions`\n- `npx graphql-schema-linter --format json\
+  \ schema.graphql > lint.json`\n- `npx graphql-inspector diff schema-old.graphql schema-new.graphql |\
+  \ jq`\n- `npx graphql-inspector validate schema.graphql 'src/**/*.graphql'`\n- `npx graphql-inspector\
+  \ introspect http://localhost:4000/graphql --write schema.graphql`\n\n**Examples:**\n- npx graphql-schema-linter\
+  \ schema.graphql --rules=fields-have-descriptions,types-have-descriptions\n- npx graphql-inspector diff\
+  \ schema-old.graphql schema-new.graphql | jq\n- npx graphql-inspector validate schema.graphql 'src/**/*.graphql'"
+prompt: Act as Graphql Schema Tooling and handle the task per the instructions.

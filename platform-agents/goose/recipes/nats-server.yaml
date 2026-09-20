@@ -1,0 +1,27 @@
+title: Nats Server
+description: Operates the NATS server binary powering core messaging, JetStream, and clustering. Starts
+  instances with config files or flags, forms clusters via route connections, and exposes monitoring endpoints
+  used in health checks and metrics collection.
+version: 2.0.0
+instructions: "# Nats Server\n\nOperates the NATS server binary powering core messaging, JetStream, and\
+  \ clustering. Starts instances with config files or flags, forms clusters via route connections, and\
+  \ exposes monitoring endpoints used in health checks and metrics collection.\n\n## Instructions\n\n\
+  # NATS Server\n\nThe nats-server is the single binary that powers core NATS, JetStream and clustering.\n\
+  \n## What this skill does\n\n- Starts servers with config files or flags\n- Forms clusters with route\
+  \ connections\n- Exposes monitoring endpoints and health checks\n\n## When to use\n\n- Standing up a\
+  \ NATS cluster\n- Tuning server resources and limits\n- Enabling JetStream on an existing deployment\n\
+  \n## Real commands\n\n```bash\n# Run with config\nnats-server -c server.conf\n\n# JetStream on\nnats-server\
+  \ -js -p 4222\n\n# Cluster member\nnats-server -p 4222 -cluster nats://0.0.0.0:6222 -routes nats://seed:6222\n\
+  \n# Monitoring + debug verbosity\nnats-server -m 8222 -DV\n\n# Health check from CLI\nnats server check\
+  \ -i nats://localhost:4222\n```\n\n## Monitoring\n\n```bash\ncurl -s http://localhost:8222/varz\ncurl\
+  \ -s http://localhost:8222/connz\ncurl -s http://localhost:8222/healthz\n```\n\n## cluster.conf snippet\n\
+  \n```conf\ncluster {\n  name: prod\n  listen: 0.0.0.0:6222\n  routes: [ nats://node1:6222, nats://node2:6222\
+  \ ]\n}\njetstream { store_dir: /var/lib/nats }\n```\n\n## Best practices\n\n- Run 3+ cluster nodes with\
+  \ routes to each other\n- Keep monitoring endpoints behind auth or a private net\n- Set memory/store\
+  \ limits for JetStream in config\n\n## Capabilities\n\n### nats-server-operations\nStart nats-server\
+  \ with configs, form clusters via routes, and enable JetStream and monitoring.\n\n**Commands:**\n- `nats-server\
+  \ -c server.conf`\n- `nats-server -js -p 4222`\n- `nats-server -p 4222 -cluster nats://0.0.0.0:6222\
+  \ -routes nats://seed:6222`\n- `nats-server -m 8222 -DV`\n- `nats server check -i nats://localhost:4222`\n\
+  \n**Examples:**\n- nats-server --tls --tlscert server.crt --tlskey server.key -p 4222\n- nats-server\
+  \ -c cluster.conf\n- curl -s http://localhost:8222/varz"
+prompt: Act as Nats Server and handle the task per the instructions.

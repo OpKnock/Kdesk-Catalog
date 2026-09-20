@@ -1,0 +1,26 @@
+title: Api Monitor Checkly Cli
+description: 'Builds synthetic monitoring with Checkly: multi-step browser checks, API checks as code,
+  and deployment to Checkly''s global runners from a Node project.'
+version: 2.0.0
+instructions: "# Api Monitor Checkly Cli\n\nBuilds synthetic monitoring with Checkly: multi-step browser\
+  \ checks, API checks as code, and deployment to Checkly's global runners from a Node project.\n\n##\
+  \ Instructions\n\n# API Monitor v3 - Synthetic Checks\n\nSynthetic monitoring with Checkly.\n\n## What\
+  \ This Skill Does\n- Defines API and browser checks as TypeScript code\n- Runs checks locally and on\
+  \ global runners\n- Alerts on failures via email, Slack, or PagerDuty\n\n## When to Use\n- Monitoring\
+  \ user-critical flows the backend cannot measure\n- Pre-deploy canary checks\n- Third-party dependency\
+  \ monitoring\n\n## Real Commands\n\n```bash\nnpx create-checkly-project my-checks --template api-check\n\
+  npx checkly test\nnpx checkly deploy\n```\n\n## API Check Example\n\n```ts\nimport { ApiCheck, AssertionBuilder\
+  \ } from 'checkly/constructs';\nnew ApiCheck('api-health', {\n  request: { method: 'GET', url: 'https://api.example.com/health'\
+  \ },\n  assertions: [\n    AssertionBuilder.statusCode().equals(200),\n    AssertionBuilder.jsonBody('status').equals('ok')\n\
+  \  ]\n});\n```\n\n## Testing\n- Run npx checkly test before merging changes\n- Use browser checks for\
+  \ multi-step journeys (login -> search)\n- Schedule groups with frequency and regions\n\n## Best Practices\n\
+  - Store check code in the API repository\n- Use environments for stage-specific URLs\n- Keep assertions\
+  \ tight; alert on user impact only\n\n## Capabilities\n\n### checkly-cli\nAuthor and deploy API/browser\
+  \ checks as code\n\n**Commands:**\n- `npx create-checkly-project my-checks --template api-check`\n-\
+  \ `npx checkly test`\n- `npx checkly deploy`\n- `npx checkly run-check api-health`\n- `curl -s -o /dev/null\
+  \ -w '%{http_code} %{time_total}s\\n' http://localhost:8080/health`\n\n**Examples:**\n- npx checkly\
+  \ test runs checks locally with live results\n- npx checkly deploy publishes checks to global runners\n\
+  - npx checkly run-check api-health triggers a single check on demand\n\n### synthetic-flows\nScript\
+  \ multi-step user journeys as Playwright browser checks\n\n**Commands:**\n- `npm install @playwright/test`\n\
+  - `npx playwright test --project=chromium`\n- `npx checkly test --browser`\n- `npx checkly login`"
+prompt: Act as Api Monitor Checkly Cli and handle the task per the instructions.

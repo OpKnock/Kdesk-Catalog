@@ -1,0 +1,34 @@
+title: checkov-security
+description: Scans Terraform, CloudFormation, Kubernetes, Dockerfile, and other IaC for misconfigurations
+  with 1000+ built-in policies and SARIF/JUnit output.
+version: 2.0.0
+instructions: "# checkov-security\n\nScans Terraform, CloudFormation, Kubernetes, Dockerfile, and other\
+  \ IaC for misconfigurations with 1000+ built-in policies and SARIF/JUnit output.\n\n## Instructions\n\
+  \n# Checkov\n\nStatic analysis for infrastructure-as-code with a broad policy library.\n\n## What This\
+  \ Skill Does\n\n- Scans Terraform, CloudFormation, Kubernetes, Helm, Dockerfile, Bicep, ARM, and secrets\n\
+  - Fails CI on HIGH/CRITICAL misconfigurations\n- Outputs SARIF for GitHub code scanning and JUnit XML\
+  \ for CI dashboards\n- Supports custom policies written in Python or YAML\n- Skips noisy checks while\
+  \ tracking baseline suppressions\n\n## When to Use\n\n- Pre-merge IaC review for cloud misconfigurations\n\
+  - Container image and Dockerfile security scanning\n- Compliance evidence for CIS and cloud best-practice\
+  \ baselines\n\n## Real Commands\n\n```bash\n# Full recursive scan\ncheckov -d .\n\n# Framework-scoped,\
+  \ quiet, compact\ncheckov -d terraform/ --framework terraform --quiet --compact\n\n# Single file\ncheckov\
+  \ -f main.tf\n\n# SARIF for GitHub code scanning\ncheckov -d . -o sarif --output-file-path results/\n\
+  \n# JUnit XML for CI\ncheckov -d . -o junitxml --output-file-path test-results/\n\n# Skip a known-false-positive\n\
+  checkov -d . --skip-check CKV_AWS_123\n\n# Only high severity and soft-fail in dev\ncheckov -d . --skip-check\
+  \ CKV_AWS_* --soft-fail --quiet\n```\n\n## Custom Policy (YAML)\n\n```yaml\nmetadata:\n  id: CKV2_CUSTOM_001\n\
+  \  name: No public S3 buckets\ncategory: S3\ncheck:\n  - resource_types:\n      - aws_s3_bucket\n  \
+  \  conditions:\n      - cond_type: attribute\n        resource_types: [aws_s3_bucket]\n        attribute:\
+  \ acl\n        operator: not_equals\n        value: public-read\n```\n\n## Best Practices\n\n- Scan\
+  \ at PR time, not just nightly, to catch drift early\n- Use --compact and --quiet to keep logs actionable\n\
+  - Route SARIF output to GitHub code scanning for inline annotations\n- Exclude the .terraform directory\
+  \ unless reviewing modules\n- Track suppressions in checkov's baseline file to make them reviewable\n\
+  \n## Capabilities\n\n### iac-scanning\nScan directories, files, and frameworks for policy violations.\n\
+  \n**Commands:**\n- `checkov -d .`\n- `checkov -f main.tf`\n- `checkov -d . --framework terraform`\n\
+  - `checkov -d . --skip-check CKV_AWS_123`\n- `checkov -d . --check CKV_AWS_* --compact`\n\n**Examples:**\n\
+  - checkov -d terraform/ --framework terraform\n- checkov -f kubernetes/deployment.yaml --framework kubernetes\n\
+  - checkov -d . --check CKV_AWS_126\n\n### reporting\nEmit reports in CI-friendly formats and enforce\
+  \ severity gates.\n\n**Commands:**\n- `checkov -d . -o sarif --output-file-path scan.sarif`\n- `checkov\
+  \ -d . -o junitxml --output-file-path reports/`\n- `checkov -d . --soft-fail --skip-framework secrets`\n\
+  - `checkov -d . --quiet`\n\n**Examples:**\n- checkov -d . -o sarif --output-file-path results/scan.sarif\n\
+  - checkov -d . -o junitxml --output-file-path test-results/\n- checkov -d . --soft-fail"
+prompt: Act as checkov-security and handle the task per the instructions.

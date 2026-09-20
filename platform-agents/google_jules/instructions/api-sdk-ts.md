@@ -1,0 +1,77 @@
+# Api Sdk Ts
+
+Builds TypeScript SDKs: tsup bundling with ESM/CJS and d.ts, tsc type checking, typedoc API docs, and npm publishing flow.
+
+## Instructions
+
+# API SDK v2 - TypeScript
+
+TypeScript SDK building.
+
+## What This Skill Does
+- Bundles ESM/CJS with d.ts output
+- Type-checks and generates docs
+- Publishes clean npm packages
+
+## When to Use
+- Building TS SDKs for distribution
+- Maintaining type-safe clients
+- Publishing to npm
+
+## Real Commands
+
+```bash
+npm install -D tsup typescript typedoc
+npx tsup src/index.ts --format cjs,esm --dts
+npx tsc --noEmit
+npx typedoc src/index.ts --out docs
+```
+
+## tsup Config
+
+```ts
+import { defineConfig } from 'tsup';
+export default defineConfig({
+  entry: ['src/index.ts'],
+  format: ['cjs', 'esm'],
+  dts: true,
+  clean: true,
+  sourcemap: true
+});
+```
+
+## Testing
+- Run tsc --noEmit before release
+- Verify dual-format require/import both work
+- Check npm pack contents
+
+## Best Practices
+- Export types from index
+- Set files in package.json
+- Add exports map for ESM/CJS resolution
+
+## Capabilities
+
+### ts-build
+Bundle a TypeScript SDK with tsup
+
+**Commands:**
+- `npm install -D tsup typescript typedoc`
+- `npx tsup src/index.ts --format cjs,esm --dts`
+- `npx tsc --noEmit`
+- `npx tsup src/index.ts --format cjs,esm --dts --clean`
+- `npm run build`
+
+**Examples:**
+- tsup --format cjs,esm emits dual-format bundles
+- --dts generates type declarations
+- tsc --noEmit type-checks the source
+
+### ts-docs
+Generate API documentation with typedoc
+
+**Commands:**
+- `npx typedoc src/index.ts --out docs`
+- `npx typedoc --entryPointStrategy expand src --out docs`
+- `npm pack --dry-run`
+- `npm publish`

@@ -1,0 +1,30 @@
+title: React
+description: 'Develops React applications with Vite: scaffolding, JSX, hooks, and production builds with
+  strict TypeScript.'
+version: 2.0.0
+instructions: "# React\n\nDevelops React applications with Vite: scaffolding, JSX, hooks, and production\
+  \ builds with strict TypeScript.\n\n## Instructions\n\n# React\n\nBuild React applications on Vite with\
+  \ typed components and fast iteration.\n\n## When to Use\n\n- New SPAs where you own the full toolchain\n\
+  - Migrating from legacy CRA tooling\n- Component-heavy interactive UIs\n\n## Scaffold\n\n```bash\nnpm\
+  \ create vite@latest my-app -- --template react-ts\nnpm install\nnpm run dev\n```\n\n## Component basics\n\
+  \n```tsx\ntype UserCardProps = { name: string; role: string; onSelect: (id: string) => void };\n\nexport\
+  \ function UserCard({ name, role, onSelect }: UserCardProps) {\n  return (\n    <button onClick={()\
+  \ => onSelect(name)}>\n      <strong>{name}</strong> <span>{role}</span>\n    </button>\n  );\n}\n```\n\
+  \n## Hooks discipline\n\n- `useState` for local state, `useReducer` for complex transitions\n- `useEffect`\
+  \ for subscriptions and sync with external systems only\n- `useMemo`/`useCallback` only when profiling\
+  \ proves the need\n\n```tsx\nexport function useDebounced<T>(value: T, delay = 300): T {\n  const [debounced,\
+  \ setDebounced] = useState(value);\n  useEffect(() => {\n    const t = setTimeout(() => setDebounced(value),\
+  \ delay);\n    return () => clearTimeout(t);\n  }, [value, delay]);\n  return debounced;\n}\n```\n\n\
+  ## Type checking and build\n\n```bash\nnpx tsc --noEmit\nnpm run build\nnpm run preview\n```\n\n## Best\
+  \ practices\n\n- Type all props and state; avoid `any` at module boundaries.\n- Colocate tests next\
+  \ to components: `UserCard.test.tsx`.\n- Split code by feature folders with a `components/` shared dir.\n\
+  - Use `import.meta.env` typed env variables, never string lookups.\n\n## Testing\n\n```bash\nnpx vitest\
+  \ run --coverage\n```\n\nVerify coverage before every release.\n\n## Capabilities\n\n### vite\nScaffold\
+  \ and run React apps on the Vite toolchain.\n\n**Commands:**\n- `npm create vite@latest my-app -- --template\
+  \ react-ts`\n- `npm install`\n- `npm run dev`\n- `npm run build`\n- `npm run preview`\n\n**Examples:**\n\
+  - npm create vite@latest admin -- --template react-ts --no-interactive\n- npm run dev -- --port 5173\
+  \ --open\n- npm run build && npm run preview -- --port 4173\n\n### typescript-check\nType-check and\
+  \ optimize React code.\n\n**Commands:**\n- `npx tsc --noEmit`\n- `npm run build && npx tsc --noEmit`\n\
+  - `npx vite build --mode production`\n- `npm run preview`\n- `npx eslint . --ext ts,tsx`\n\n**Examples:**\n\
+  - npx tsc --noEmit --strict\n- npx vite build --minify esbuild\n- npx tsc --noEmit && npm run build"
+prompt: Act as React and handle the task per the instructions.

@@ -1,0 +1,83 @@
+---
+applyTo: "**/*.r **/*.sh **/*.{yaml,yml}"
+---
+
+# Nats Streams
+
+Administers JetStream streams with subject coverage, retention limits, replication, backups, and views. Creates replicated streams, verifies subject matching, and manages stream storage lifecycle.
+
+## Instructions
+
+# NATS Streams
+
+Streams are the durable storage layer of JetStream, capturing subject traffic with configurable retention.
+
+## What this skill does
+
+- Creates streams with subject coverage and limits
+- Verifies subject coverage and message retention
+- Backs up and restores stream data
+
+## When to use
+
+- Event sourcing and replay workloads
+- Scaling streams across a cluster
+
+## Real commands
+
+```bash
+# Create replicated stream
+nats stream add ORDERS --subjects 'orders.*' --replicas 3 --max-age 72h
+
+# Verify coverage
+nats stream check coverage ORDERS 'orders.>'
+
+# View messages
+nats stream view ORDERS --reverse
+nats stream view ORDERS 10
+
+# Storage report
+nats stream report
+
+# Backup
+nats stream backup ORDERS /backup/orders
+```
+
+## Config file for streams
+
+```yaml
+name: ORDERS
+subjects: [orders.*]
+retention: limits
+storage: file
+max_age: 72h
+replicas: 3
+```
+
+## Limits to set
+
+- `--max-msgs`, `--max-bytes`, `--max-age` bound the store
+- `--discard new` drops new messages when full (instead of oldest)
+
+## Best practices
+
+- Run `nats stream check coverage` when adding subjects
+- Replicas 3 for durable critical streams
+- Schedule backups for disaster recovery
+
+## Capabilities
+
+### jetstream-stream-admin
+Administer JetStream streams: coverage checks, limits, views, backups and replication.
+
+**Commands:**
+- `nats stream add ORDERS --subjects 'orders.*' --replicas 3`
+- `nats stream check coverage ORDERS 'orders.>'`
+- `nats stream view ORDERS --reverse`
+- `nats stream report`
+- `nats stream backup ORDERS /backup/orders`
+
+**Examples:**
+- nats stream check coverage ORDERS 'orders.*' --detail
+- nats stream view ORDERS 10
+- nats stream report

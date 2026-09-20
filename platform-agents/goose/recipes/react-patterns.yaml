@@ -1,0 +1,32 @@
+title: react-patterns
+description: 'Applies production React architecture patterns: composition, state management, Storybook,
+  and code quality gates for component libraries.'
+version: 2.0.0
+instructions: "# react-patterns\n\nApplies production React architecture patterns: composition, state\
+  \ management, Storybook, and code quality gates for component libraries.\n\n## Instructions\n\n# React\
+  \ Patterns\n\nArchitect maintainable React codebases with proven patterns and gates.\n\n## When to Use\n\
+  \n- Growing component libraries used by multiple teams\n- Refactors of tangled prop drilling and effects\n\
+  - Introducing testing and visual review into a React codebase\n\n## Composition over props drilling\n\
+  \n```tsx\ntype CardProps = { title: string; children: React.ReactNode };\n\nexport function Card({ title,\
+  \ children }: CardProps) {\n  return <section className=\"card\">{title && <h2>{title}</h2>}{children}</section>;\n\
+  }\n```\n\n## State management tiers\n\n- Local UI state: `useState`/`useReducer`\n- Server state: TanStack\
+  \ Query\n- Cross-cutting global state: Zustand or Context + reducer\n\n```bash\nnpm install @tanstack/react-query\
+  \ zustand\n```\n\n## Storybook as the component contract\n\n```bash\nnpx storybook@latest init --type\
+  \ react-vite\nnpm run build-storybook\n```\n\nAdd a11y addon and Chromatic for visual regression on\
+  \ every PR.\n\n## Code quality gates\n\n```bash\nnpx eslint src --ext .ts,.tsx --max-warnings 0\n```\n\
+  \n```json\n{\n  \"extends\": [\"eslint:recommended\", \"plugin:react-hooks/recommended\"],\n  \"rules\"\
+  : { \"react-hooks/rules-of-hooks\": \"error\" }\n}\n```\n\n## Best practices\n\n- Keep effects minimal;\
+  \ derive state during render where possible.\n- Export memoized callbacks only when profiling shows\
+  \ a need.\n- Every shared component gets a Storybook story and a unit test.\n- Review dependency upgrades\
+  \ quarterly with npm outdated.\n\n## Testing\n\n```bash\nnpx vitest run --coverage\n```\n\nRun unit\
+  \ + storybook interaction tests before visual review.\n\n## Capabilities\n\n### storybook\nBuild and\
+  \ maintain a component library with Storybook.\n\n**Commands:**\n- `npx storybook@latest init --type\
+  \ react-vite`\n- `npx storybook@latest add @storybook/addon-a11y`\n- `npm run storybook`\n- `npm run\
+  \ build-storybook`\n- `npx chromatic --project-token $CHROMATIC_TOKEN --auto-accept-changes`\n\n**Examples:**\n\
+  - npx storybook@latest init --type react-vite --no-dev\n- npm run build-storybook -- --quiet\n- npx\
+  \ chromatic --exit-zero-on-changes\n\n### code-quality\nEnforce React patterns with ESLint and dependency\
+  \ hygiene.\n\n**Commands:**\n- `npx eslint src --ext .ts,.tsx --max-warnings 0`\n- `npx eslint src --fix`\n\
+  - `npm install -D eslint-plugin-react-hooks eslint-plugin-react-refresh`\n- `npx npm-check-updates -u`\n\
+  - `npm outdated`\n\n**Examples:**\n- npx eslint src --max-warnings 0 --rule 'react-hooks/rules-of-hooks:error'\n\
+  - npx npm-check-updates -u && npm install\n- npx eslint src/components --fix"
+prompt: Act as react-patterns and handle the task per the instructions.

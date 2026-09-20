@@ -1,0 +1,39 @@
+title: game-development
+description: 'Builds games with Godot and Unity headless pipelines: project export, automated builds,
+  and CI artifact generation.'
+version: 2.0.0
+instructions: "# game-development\n\nBuilds games with Godot and Unity headless pipelines: project export,\
+  \ automated builds, and CI artifact generation.\n\n## Instructions\n\n# Game Development\n\nAutomate\
+  \ Godot and Unity game builds with headless CLI pipelines.\n\n## When to Use\n\n- Setting up CI builds\
+  \ for game projects\n- Running automated tests without an editor session\n- Producing release artifacts\
+  \ for multiple platforms\n\n## Godot headless\n\nFirst, import assets so the export cache is warm:\n\
+  \n```bash\ngodot --headless --path project/ --import\n```\n\nRun GDScript tests:\n\n```bash\ngodot --headless\
+  \ --path project/ --script res://tests/run_tests.gd\n```\n\nExport for platforms:\n\n```bash\ngodot\
+  \ --headless --path project/ --export-release 'Windows Desktop' build/game.exe\ngodot --headless --path\
+  \ project/ --export-release 'Web' dist/index.html\n```\n\n## Unity batch mode\n\n```bash\nunity-editor\
+  \ -batchmode -quit -projectPath . -executeMethod BuildScript.PerformBuild -logFile build.log\nunity-editor\
+  \ -batchmode -quit -runTests -testPlatform PlayMode -testResults results.xml\n```\n\nSample BuildScript:\n\
+  \n```csharp\npublic static class BuildScript\n{\n    public static void PerformBuild()\n    {\n    \
+  \    BuildPipeline.BuildPlayer(new[] { \"Assets/Scenes/Main.unity\" },\n            \"build/game.exe\"\
+  , BuildTarget.StandaloneWindows64, BuildOptions.None);\n    }\n}\n```\n\n## CI considerations\n\n- Use\
+  \ a license-free batch mode on Linux agents with the nographics flag.\n- Cache Godot import files and\
+  \ Unity Library/ folders between runs.\n- Store signed keystores in CI secrets, never in the repo.\n\
+  \n## Best practices\n\n- Version export presets in the repo.\n- Test on the platform you ship: mobile\
+  \ builds need device smoke tests.\n- Keep scene asset import deterministic by running --import first.\n\
+  \n## Testing\n\nRun unit (GDScript / EditMode) and PlayMode suites in CI and gate merges on results.\n\
+  \n## Capabilities\n\n### godot\nRun Godot headless for imports, tests, and exports.\n\n**Commands:**\n\
+  - `godot --headless --path project/ --import`\n- `godot --headless --path project/ --script res://tests/run_tests.gd`\n\
+  - `godot --headless --path project/ --export-release 'Windows Desktop' build/game.exe`\n- `godot --headless\
+  \ --path project/ --export-pack 'Linux' build/game.pck`\n- `godot --headless --path project/ --quit-after\
+  \ 5`\n\n**Examples:**\n- godot --headless --path ./game --import && godot --headless --path ./game --export-release\
+  \ 'Web' dist/index.html\n- godot --headless --path ./game --script res://tests/run_tests.gd --verbose\n\
+  - godot --headless --path ./game --export-debug 'Linux' build/game.x86_64\n\n### unity\nDrive Unity\
+  \ builds and test runs from the command line.\n\n**Commands:**\n- `unity-editor -batchmode -quit -projectPath\
+  \ . -executeMethod BuildScript.PerformBuild`\n- `unity-editor -batchmode -quit -runTests -testPlatform\
+  \ PlayMode -testResults results.xml`\n- `unity-editor -batchmode -quit -projectPath . -buildTarget Android\
+  \ -outputPath build/app.apk`\n- `unity-editor -batchmode -quit -logFile build.log -executeMethod BuildScript.AndroidBuild`\n\
+  - `unity-editor -batchmode -quit -projectPath . -deleteLibrary`\n\n**Examples:**\n- unity-editor -batchmode\
+  \ -quit -projectPath . -buildTarget WebGL -outputPath build/web\n- unity-editor -batchmode -quit -runTests\
+  \ -testPlatform EditMode -testResults edit.xml\n- unity-editor -batchmode -quit -projectPath . -executeMethod\
+  \ BuildScript.PerformBuild -nographics"
+prompt: Act as game-development and handle the task per the instructions.

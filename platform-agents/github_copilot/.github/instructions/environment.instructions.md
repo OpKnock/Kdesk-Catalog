@@ -1,0 +1,100 @@
+---
+applyTo: "**/*.go **/*.r **/*.sh"
+---
+
+# environment
+
+Manages development environments: dotfiles, asdf/mise version managers, direnv environment switching, and shell init configs.
+
+## Instructions
+
+# Environment Engineering
+
+Set up and standardize development environments across machines.
+
+## What This Skill Does
+
+- Installs and manages runtime versions (asdf/mise)
+- Loads project-specific env vars with direnv
+- Writes .tool-versions/.mise.toml for repo pinning
+- Bootstraps shell configs (bash/zsh/fish)
+- Debugs PATH and environment variable issues
+
+## When to Use
+
+- Onboarding a new machine or teammate
+- Multiple projects needing different runtime versions
+- Environment variable chaos between projects
+
+## Real Commands
+
+```bash
+# asdf
+asdf plugin add nodejs
+asdf install nodejs 20.11.0
+asdf global nodejs 20.11.0
+asdf local nodejs 20.11.0   # writes .tool-versions
+asdf current
+
+# mise
+mise use node@22
+mise use --global node@lts
+mise install
+mise ls
+
+# direnv
+direnv allow .
+direnv edit .          # edit .envrc
+direnv status
+direnv reload
+```
+
+## .envrc Example
+
+```bash
+export API_URL=http://localhost:8080
+export NODE_ENV=development
+use asdf
+```
+
+## Best Practices
+
+- Commit .tool-versions or .mise.toml to pin runtimes per repo
+- Keep dotfiles in a git repo with a bootstrap script
+- Use direnv to scope secrets to directories, not shells
+- Document the golden PATH in the repo README
+- Test environment bootstrap in CI with a clean container
+
+## Capabilities
+
+### runtime-version-managers
+Install and switch tool versions with asdf/mise.
+
+**Commands:**
+- `asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git`
+- `asdf install nodejs 20.11.0`
+- `asdf global nodejs 20.11.0`
+- `asdf current`
+- `mise use node@22`
+- `mise install`
+
+**Examples:**
+- asdf install nodejs 20.11.0
+- asdf global nodejs 20.11.0
+- mise use node@22
+
+### directory-env-and-shell
+Load environment variables per directory with direnv and manage shell init.
+
+**Commands:**
+- `direnv allow .`
+- `direnv edit .`
+- `direnv status`
+- `direnv reload`
+- `env | grep -i api`
+- `source .env`
+
+**Examples:**
+- direnv allow .
+- direnv edit .
+- direnv status

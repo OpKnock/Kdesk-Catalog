@@ -1,0 +1,83 @@
+---
+description: "Migrates API documentation: Swagger 2.0 to OpenAPI 3, doc site restructuring, and versioned docs with changelogs."
+globs: ["**/*.html", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
+alwaysApply: false
+---
+
+# Api Doc Spec Migration
+
+Migrates API documentation: Swagger 2.0 to OpenAPI 3, doc site restructuring, and versioned docs with changelogs.
+
+## Instructions
+
+# API Doc (Migration & Versioning)
+
+Upgrades and restructures API documentation across spec versions.
+
+## When to Use
+- Swagger 2.0 to OpenAPI 3.0 migration
+- Docs out of sync with multiple versions
+- Reorganizing a docs site
+
+## Real Commands
+
+```bash
+# Convert spec
+npx swagger2openapi -y swagger.yaml > openapi3.yaml
+swagger-cli validate openapi3.yaml
+
+# Lint migrated spec
+npx @stoplight/spectral-cli lint --extends spectral:oas openapi3.yaml
+
+# Versioned docs
+mkdir -p docs/v1 docs/v2
+redocly build-docs docs/v2/openapi.yaml -o public/v2/index.html
+
+# Changelog discipline
+git tag v2.0.0 && git push origin v2.0.0
+```
+
+## Migration Checklist
+1. Convert with swagger2openapi
+2. Fix `$ref` and discriminator changes
+3. Validate and lint
+4. Diff old vs new rendered docs
+
+## Testing
+Render both versions and walk every example link.
+
+## Best Practices
+- Never edit docs by hand; regenerate from spec
+- Keep one changelog entry per breaking change
+
+## Capabilities
+
+### spec-migration
+Convert and upgrade OpenAPI specs between versions
+
+**Commands:**
+- `npx swagger2openapi swagger.yaml -o openapi3.yaml`
+- `npx swagger2openapi -y swagger.yaml > openapi3.yaml`
+- `redocly bundle openapi3.yaml -o bundled.yaml`
+- `swagger-cli validate openapi3.yaml`
+- `npx @stoplight/spectral-cli lint --extends spectral:oas openapi3.yaml`
+
+**Examples:**
+- npx swagger2openapi -y swagger.yaml > openapi3.yaml && swagger-cli validate openapi3.yaml
+- redocly bundle openapi3.yaml -o bundled.yaml
+- npx @stoplight/spectral-cli lint --extends spectral:oas openapi3.yaml
+
+### doc-versioning
+Publish versioned documentation sites with changelogs
+
+**Commands:**
+- `mkdir -p docs/v1 docs/v2`
+- `redocly build-docs docs/v2/openapi.yaml -o public/v2/index.html`
+- `node -e "const fs=require('fs');fs.writeFileSync('docs/CHANGELOG.md','# Changelog\n\n## v2.0.0\n- Breaking: renamed /items to /products\n')"`
+- `git tag v2.0.0 && git push origin v2.0.0`
+- `node -e "console.log(new Date().toISOString())"`
+
+**Examples:**
+- redocly build-docs docs/v2/openapi.yaml -o public/v2/index.html
+- node -e "const fs=require('fs');fs.writeFileSync('docs/CHANGELOG.md','# Changelog\n\n## v2.0.0\n- Breaking: renamed /items to /products\n')"
+- git tag v2.0.0 && git push origin v2.0.0

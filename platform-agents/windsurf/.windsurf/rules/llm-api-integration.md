@@ -1,0 +1,103 @@
+---
+trigger: glob
+description: "Integrates LLM APIs (OpenAI, Anthropic, local models) into applications: streaming, tool calling, retries, cost control, and evaluation."
+globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
+---
+
+# Llm Api Integration
+
+Integrates LLM APIs (OpenAI, Anthropic, local models) into applications: streaming, tool calling, retries, cost control, and evaluation.
+
+## Instructions
+
+# LLM API Integration
+
+Connect applications to LLM providers reliably.
+
+## When to Use
+
+- Chat, summarization, extraction, and classification features
+- Tool/function calling to ground models in your systems
+- Local models via Ollama for privacy or offline needs
+- Evaluation-driven prompt development
+
+## Commands
+
+```bash
+# OpenAI
+curl https://api.openai.com/v1/chat/completions \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"gpt-4o-mini","messages":[{"role":"user","content":"Hello"}]}'
+
+# Anthropic
+curl https://api.anthropic.com/v1/messages \
+  -H "x-api-key: $ANTHROPIC_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -d '{"model":"claude-3-5-haiku","max_tokens":100,"messages":[{"role":"user","content":"hi"}]}'
+
+# Local with Ollama
+ollama pull llama3.2
+ollama run llama3.2 "summarize this"
+
+# Evals
+npx promptfoo eval -c promptfooconfig.yaml
+npx promptfoo view
+```
+
+## Python Example
+
+```python
+from openai import OpenAI
+
+client = OpenAI()
+
+stream = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": "Hi"}],
+    stream=True,
+)
+for chunk in stream:
+    print(chunk.choices[0].delta.content or "", end="")
+```
+
+## Best Practices
+
+- Always set timeouts and retry on 429/5xx with exponential backoff
+- Stream responses instead of waiting for full completion
+- Validate and cap max_tokens to control cost
+- Store keys in environment variables, never in code or repos
+- Evaluate prompts with promptfoo before promoting them
+- Log prompt and response pairs for debugging, with PII scrubbed
+
+## Capabilities
+
+### llm-clients
+Call LLM providers with the official CLIs and SDKs.
+
+**Commands:**
+- `curl https://api.openai.com/v1/chat/completions -H "Authorization: Bearer $OPENAI_API_KEY" -H "Content-Type: application/json" -d "{\"model\":\"gpt-4o-mini\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}"`
+- `pip install openai anthropic`
+- `npm install openai @anthropic-ai/sdk`
+- `ollama run llama3.2`
+- `ollama list`
+
+**Examples:**
+- ollama run qwen2.5:7b "summarize this"
+- curl -s https://api.anthropic.com/v1/messages -H "x-api-key: $ANTHROPIC_API_KEY" -H "anthropic-version: 2023-06-01" -d "{\"model\":\"claude-3-5-haiku\",\"max_tokens\":100,\"messages\":[{\"role\":\"user\",\"content\":\"hi\"}]}"
+- python -m venv .venv
+
+### llm-ops
+Manage prompts, evals, and cost guardrails.
+
+**Commands:**
+- `pip install promptfoo`
+- `npx promptfoo eval`
+- `npx promptfoo eval -c promptfooconfig.yaml --share`
+- `openai api keys`
+- `python -c "from openai import OpenAI; print(len(OpenAI().models.list().data))"`
+
+**Examples:**
+- npx promptfoo init
+- npx promptfoo eval -c promptfooconfig.yaml
+- ollama pull mistral

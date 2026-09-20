@@ -1,0 +1,36 @@
+title: crossplane
+description: 'Builds control planes with Crossplane: install providers, create composite resources (XRs),
+  manage resource claims, and trace reconciliation.'
+version: 2.0.0
+instructions: "# crossplane\n\nBuilds control planes with Crossplane: install providers, create composite\
+  \ resources (XRs), manage resource claims, and trace reconciliation.\n\n## Instructions\n\n# Crossplane\
+  \ Control Planes\n\nProvision cloud infrastructure through Kubernetes APIs using Crossplane providers\
+  \ and compositions.\n\n## What This Skill Does\n\n- Installs Crossplane and cloud providers via Helm\
+  \ and provider packages\n- Stores cloud credentials in ProviderConfig secrets\n- Defines CompositeResourceDefinitions\
+  \ (XRDs) and Compositions\n- Exposes platform APIs to teams through Claims\n- Traces reconciliation\
+  \ failures with the crossplane CLI\n\n## When to Use\n\n- Platform teams that want infrastructure provisioned\
+  \ like Kubernetes objects\n- Standardizing multi-cloud resource templates\n- Self-service infrastructure\
+  \ for app teams\n\n## Real Commands\n\n```bash\n# Install control plane\nhelm install crossplane crossplane-stable/crossplane\
+  \ -n crossplane-system --create-namespace\nkubectl apply -f provider-aws.yaml\nkubectl get providers\n\
+  \n# Configure credentials\nkubectl apply -f providerconfig-aws.yaml\nkubectl get providerconfigs\n\n\
+  # Define and apply compositions\nkubectl apply -f xrd.yaml\nkubectl apply -f composition.yaml\nkubectl\
+  \ apply -f claim.yaml\n\n# Observe and debug\nkubectl get composite\nkubectl get claims\ncrossplane\
+  \ alpha trace vpc my-vpc\nkubectl get events --sort-by=.lastTimestamp | tail -30\n```\n\n## XRD + Composition\
+  \ Sketch\n\n```yaml\napiVersion: apiextensions.crossplane.io/v1\nkind: CompositeResourceDefinition\n\
+  metadata:\n  name: vpcs.example.org\nspec:\n  group: example.org\n  names:\n    kind: VPC\n    plural:\
+  \ vpcs\n  claimNames:\n    kind: VPCClaim\n    plural: vpcclaims\n```\n\n## Best Practices\n\n- Version\
+  \ XRDs (`apiVersion: v1beta1`) before exposing to teams\n- Keep credentials in crossplane-system secrets\
+  \ referenced by ProviderConfig\n- Use `crossplane alpha trace` as the first debugging step\n- Enforce\
+  \ `compositions` immutability with review; test on a sandbox account first\n- Monitor provider health:\
+  \ `kubectl get providers -o jsonpath='{.items[*].status.conditions}'`\n\n## Capabilities\n\n### provider-and-config\n\
+  Install providers and configure cloud credentials for Crossplane.\n\n**Commands:**\n- `helm install\
+  \ crossplane crossplane-stable/crossplane -n crossplane-system --create-namespace`\n- `kubectl apply\
+  \ -f provider-aws.yaml`\n- `kubectl get providers`\n- `kubectl apply -f providerconfig-aws.yaml`\n-\
+  \ `kubectl get providerconfigs`\n\n**Examples:**\n- helm install crossplane crossplane-stable/crossplane\
+  \ -n crossplane-system --create-namespace\n- kubectl apply -f provider-aws.yaml\n- kubectl get providers\n\
+  \n### composites-and-claims\nAuthor and manage CompositeResourceDefinitions, Compositions, and Claims.\n\
+  \n**Commands:**\n- `kubectl apply -f xrd.yaml`\n- `kubectl apply -f composition.yaml`\n- `kubectl apply\
+  \ -f claim.yaml`\n- `kubectl get composite`\n- `kubectl get claims`\n- `crossplane alpha trace vpcclaim\
+  \ my-vpc`\n\n**Examples:**\n- kubectl apply -f xrd.yaml && kubectl apply -f composition.yaml\n- kubectl\
+  \ get claims\n- crossplane alpha trace vpc my-vpc"
+prompt: Act as crossplane and handle the task per the instructions.

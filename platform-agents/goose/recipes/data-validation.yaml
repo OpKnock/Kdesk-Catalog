@@ -1,0 +1,32 @@
+title: Data Validation
+description: Implements schema validation across JSON Schema, Pydantic, and Joi to enforce request, config,
+  and message contracts.
+version: 2.0.0
+instructions: "# Data Validation\n\nImplements schema validation across JSON Schema, Pydantic, and Joi\
+  \ to enforce request, config, and message contracts.\n\n## Instructions\n\n# Data Validation\n\nEnforce\
+  \ data contracts at API boundaries, config load, and message ingestion.\n\n## When to Use\n\n- Validating\
+  \ HTTP request bodies and query params\n- Parsing environment variables and config files\n- Validating\
+  \ messages consumed from queues\n- Catching malformed data before it reaches business logic\n\n## Commands\n\
+  \n```bash\n# Validate one file with Ajv\najv validate -s schema.json -d data.json\n\n# Show all errors\n\
+  ajv validate -s schema.json -d data.json --all-errors\n\n# Compile a schema to check it is valid\najv\
+  \ compile -s schema.json\n\n# Python jsonschema CLI\npython -m jsonschema -i instance.json schema.json\n\
+  \n# Generate a schema from TypeScript types\nnpx ts-json-schema-generator --path src/types.ts --type\
+  \ User\n```\n\n## Schema Example\n\n```json\n{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\"\
+  ,\n  \"type\": \"object\",\n  \"required\": [\"email\", \"age\"],\n  \"properties\": {\n    \"email\"\
+  : { \"type\": \"string\", \"format\": \"email\" },\n    \"age\": { \"type\": \"integer\", \"minimum\"\
+  : 0 }\n  },\n  \"additionalProperties\": false\n}\n```\n\n## Pydantic Example\n\n```python\nfrom pydantic\
+  \ import BaseModel, EmailStr, Field\n\nclass User(BaseModel):\n    email: EmailStr\n    age: int = Field(ge=0,\
+  \ le=120)\n```\n\n## Best Practices\n\n- Validate at the boundary only; keep internal code assumption-free\n\
+  - Use additionalProperties: false to catch typos in payloads\n- Reject unknown enum values instead of\
+  \ defaulting silently\n- Add format validators for email, uri, and date-time\n- Test schemas with representative\
+  \ invalid samples in CI\n\n## Capabilities\n\n### json-schema-validation\nValidate JSON documents against\
+  \ schemas from the CLI.\n\n**Commands:**\n- `ajv validate -s schema.json -d data.json`\n- `ajv compile\
+  \ -s schema.json`\n- `python -m jsonschema -i instance.json schema.json`\n- `npx ts-json-schema-generator\
+  \ --path src/types.ts --type User`\n- `ajv validate -s schema.json -d \"data/*.json\"`\n\n**Examples:**\n\
+  - ajv validate -s schema.json -d data.json --all-errors\n- python -m jsonschema -i data.json schema.json\n\
+  - ajv compile -s schema.json --strict=false\n\n### runtime-validation\nGenerate and use runtime validators\
+  \ in Python and Node.\n\n**Commands:**\n- `python -m pip install pydantic`\n- `python -c \"from pydantic\
+  \ import BaseModel; print(BaseModel.__module__)\"`\n- `npm install joi`\n- `npx ajv-cli validate -s\
+  \ schema.json -d data.json`\n\n**Examples:**\n- python -c \"from pydantic import TypeAdapter; print(TypeAdapter(int).validate_python(1))\"\
+  \n- npx ajv-cli compile -s schema.json"
+prompt: Act as Data Validation and handle the task per the instructions.

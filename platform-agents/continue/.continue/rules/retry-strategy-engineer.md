@@ -1,0 +1,95 @@
+---
+name: "retry-strategy-engineer"
+description: "Engineers retry policies: curl retry flags, exponential backoff, jitter, and network fault injection with tc-netem."
+globs: ["**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# retry-strategy-engineer
+
+Engineers retry policies: curl retry flags, exponential backoff, jitter, and network fault injection with tc-netem.
+
+## Instructions
+
+# Retry Strategy
+
+Retry correctly: enough to survive blips, not so much you amplify failures.
+
+## When to Use
+
+- Service calls with transient failures
+- CI flakiness reduction
+- Testing resilience under packet loss
+
+## curl retries
+
+```bash
+curl --retry 5 --retry-delay 2 --retry-all-errors -fsS https://api.example.com/healthz
+```
+
+- `--retry` = max attempts after the first.
+- `--retry-all-errors` retries 4xx/5xx too - use selectively.
+- `--retry-max-time` bounds total retry duration.
+
+## Backoff + jitter
+
+- Exponential: 1s, 2s, 4s, 8s...
+- Add jitter to break synchronized retry storms.
+- Cap the maximum backoff (e.g. 30s).
+
+## Fault injection
+
+```bash
+tc qdisc add dev eth0 root netem loss 10% delay 100ms
+tc qdisc change dev eth0 root netem loss 30%
+tc qdisc del dev eth0 root
+```
+
+## Anti-patterns
+
+- Infinite retries on non-idempotent writes.
+- Same fixed delay for every client (thundering herd).
+- Retrying without checking for duplicate effects.
+
+## Best practices
+
+- Retry only idempotent or dedupable operations.
+- Set a circuit breaker: stop retrying after consecutive failures.
+- Log retry counts; high retry rate is a signal.
+- Test with netem in staging before incidents hit prod.
+
+## Testing
+
+Inject 10-30% loss, verify recovery within the retry budget, then remove the qdisc.
+
+## Capabilities
+
+### curl-retry
+Test and apply curl-level retry policies.
+
+**Commands:**
+- `curl --retry 5 --retry-delay 2 --retry-all-errors -fsS http://localhost:8080/healthz`
+- `curl --retry 3 --retry-connrefused --retry-delay 1 http://service:8080/`
+- `curl --retry 5 --retry-delay 3 --retry-max-time 60 http://localhost:8080/data`
+- `curl -w '%{http_code} %{num_retries}\n' --retry 3 --retry-all-errors -o /dev/null http://service:8080/`
+- `curl --retry 2 --retry-all-errors --max-time 5 http://localhost:8080/`
+
+**Examples:**
+- curl --retry 5 --retry-delay 2 --retry-all-errors -fsS http://localhost:8080/healthz
+- curl --retry 3 --retry-connrefused -s -o /dev/null -w '%{http_code} %{num_retries}\n' http://service:8080/
+- curl --retry-max-time 30 --retry 4 --retry-delay 1 http://localhost:8080/upload
+
+### netem
+Inject network faults to test resilience.
+
+**Commands:**
+- `tc qdisc add dev eth0 root netem loss 10%`
+- `tc qdisc add dev eth0 root netem delay 100ms 20ms distribution normal`
+- `tc qdisc change dev eth0 root netem loss 30% delay 200ms`
+- `tc qdisc del dev eth0 root`
+- `tc qdisc show dev eth0`
+
+**Examples:**
+- tc qdisc add dev eth0 root netem loss 10% delay 100ms
+- tc qdisc change dev eth0 root netem loss 50%
+- tc qdisc del dev eth0 root && tc qdisc show dev eth0

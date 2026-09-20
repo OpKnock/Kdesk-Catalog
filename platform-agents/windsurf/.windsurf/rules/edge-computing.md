@@ -1,0 +1,99 @@
+---
+trigger: glob
+description: "Deploys edge computing environments with K3s, k3d, and KubeEdge: lightweight clusters, offline agents, and edge device management."
+globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
+---
+
+# edge-computing
+
+Deploys edge computing environments with K3s, k3d, and KubeEdge: lightweight clusters, offline agents, and edge device management.
+
+## Instructions
+
+# Edge Computing Operations
+
+Run Kubernetes and workloads at the edge: lightweight clusters and device fleets.
+
+## What This Skill Does
+
+- Installs K3s single-node and multi-node edge clusters
+- Creates k3d clusters for edge development
+- Joins edge agents to a K3s server
+- Manages device fleets with balena
+- Bridges cloud-edge with KubeEdge
+
+## When to Use
+
+- On-prem/shop-floor/field deployments with limited resources
+- Developing against edge-shaped clusters
+- Fleet management of many small devices
+
+## Real Commands
+
+```bash
+# K3s single node
+curl -sfL https://get.k3s.io | sh -
+k3s kubectl get nodes
+k3s ctr images ls
+sudo k3s kubectl get pods -A
+
+# K3s agent join
+curl -sfL https://get.k3s.io |   K3S_URL=https://edge-master:6443 K3S_TOKEN=secret sh -
+
+# k3d dev clusters
+k3d cluster create edge --servers 1 --agents 2
+k3d cluster list
+k3d node list
+
+# Balena fleet
+balena login
+balena push myfleet
+balena logs myfleet --tail 100
+balena ssh 27a3f1
+
+# KubeEdge
+keadm join --cloudcore-ipport=10.0.0.5:10000
+kubeedge edgecore --config edgecore.yaml
+```
+
+## Best Practices
+
+- Use K3s for constrained nodes; set ResourceQuota per edge device
+- Keep K3s storage (local-path) tuned for SD cards (write frequency)
+- Use k3d for CI-safe edge development
+- Use balena for long-lived fleet updates and rollbacks
+- For KubeEdge, pair cloudcore HA with edgecore retries
+
+## Capabilities
+
+### lightweight-clusters
+Stand up K3s servers/agents and k3d dev clusters.
+
+**Commands:**
+- `curl -sfL https://get.k3s.io | sh -`
+- `curl -sfL https://get.k3s.io | K3S_URL=https://edge-master:6443 K3S_TOKEN=secret sh -`
+- `k3s kubectl get nodes`
+- `k3d cluster create edge --servers 1 --agents 2`
+- `k3d cluster list`
+- `k3s ctr images ls`
+
+**Examples:**
+- curl -sfL https://get.k3s.io | sh -
+- k3d cluster create edge --servers 1 --agents 2
+- k3s kubectl get nodes
+
+### edge-devices
+Manage edge devices with balena and KubeEdge.
+
+**Commands:**
+- `balena login`
+- `balena push myfleet`
+- `balena logs myfleet --tail 100`
+- `balena ssh 27a3f1`
+- `kubeedge edgecore --config edgecore.yaml`
+- `keadm join --cloudcore-ipport=10.0.0.5:10000`
+
+**Examples:**
+- balena push myfleet
+- balena logs myfleet --tail 100
+- keadm join --cloudcore-ipport=10.0.0.5:10000

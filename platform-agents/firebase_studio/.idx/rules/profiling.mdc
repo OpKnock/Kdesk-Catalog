@@ -1,0 +1,70 @@
+---
+description: "CPU and memory profiling: perf record/report, Go pprof, and flamegraph generation."
+globs: ["**/*.go", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# Profiling
+
+CPU and memory profiling: perf record/report, Go pprof, and flamegraph generation.
+
+## Instructions
+
+# Profiling
+
+Find where CPU time and memory actually go with sampling profilers.
+
+## What this skill does
+
+- Records CPU profiles with perf
+- Reads Go pprof endpoints
+- Visualizes results
+
+## When to use
+
+- High CPU usage or latency mysteries
+- Memory growth investigations
+
+## Real commands
+
+```bash
+# perf
+perf record -g ./myapp
+perf record -g -p 1234 -- sleep 60
+perf report --stdio
+perf top
+
+# Go pprof (app must import net/http/pprof)
+go tool pprof -top http://localhost:6060/debug/pprof/heap
+go tool pprof -top http://localhost:6060/debug/pprof/cpu
+go tool pprof -http=:8081 http://localhost:6060/debug/pprof/profile
+go tool pprof -http=:8081 http://localhost:6060/debug/pprof/goroutine
+```
+
+## Reading results
+
+- Flat: time in this function; Cum: including callees
+- Look for hot call chains, not just hot functions
+
+## Best practices
+
+- Profile under production-like load
+- Capture 30-60s windows
+- Compare profiles before/after optimizations
+
+## Capabilities
+
+### profiling-analysis
+Capture CPU profiles with perf, analyze Go profiles with pprof, and visualize as flamegraphs.
+
+**Commands:**
+- `perf record -g ./myapp`
+- `perf report --stdio`
+- `perf top`
+- `go tool pprof -top http://localhost:6060/debug/pprof/heap`
+- `go tool pprof -http=:8081 http://localhost:6060/debug/pprof/profile`
+
+**Examples:**
+- perf record -g -p 1234 -- sleep 60
+- go tool pprof -top http://localhost:6060/debug/pprof/cpu
+- go tool pprof -http=:8081 http://localhost:6060/debug/pprof/goroutine

@@ -1,0 +1,29 @@
+title: Graphql Sangria
+description: 'GraphQL in Scala with Sangria: define schemas programmatically, run async resolvers, and
+  test queries with the execution API.'
+version: 2.0.0
+instructions: "# Graphql Sangria\n\nGraphQL in Scala with Sangria: define schemas programmatically, run\
+  \ async resolvers, and test queries with the execution API.\n\n## Instructions\n\n# GraphQL Sangria\n\
+  \n## What this skill does\n\nSangria is a Scala GraphQL library with a powerful programmatic schema\
+  \ DSL. Resolvers return Futures for async sources; `Executor.execute` runs queries and `SchemaRenderer`\
+  \ exports SDL.\n\n## When to use\n\n- Scala/Akka services adding GraphQL\n- Teams that prefer explicit\
+  \ schema DSLs over macros\n- Type-safe async resolvers with Future/Task\n\n## Real commands\n\n```bash\n\
+  # Build and test with sbt\nsbt compile\nsbt test\n\n# Run the server\nsbt run\n\n# Query it\ncurl -s\
+  \ -X POST http://localhost:8080/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ characters\
+  \ { name } }\"}' | jq\n\n# Export SDL\nsbt 'runMain example.SchemaExport'\n```\n\n## Schema example\n\
+  \n```scala\nimport sangria.schema._\nimport sangria.execution.Executor\n\nval Character = ObjectType(\n\
+  \  \"Character\",\n  \"A character in the story\",\n  fields[MyCtx, Character](Field(\"name\", StringType,\
+  \ resolve = _.value.name))\n)\n\nval Query = ObjectType(\"Query\", fields[MyCtx, Unit](\n  Field(\"\
+  characters\", ListType(Character), resolve = ctx => repo.all(ctx.ctx))\n))\n\nval schema = Schema(Query)\n\
+  ```\n\n## Executing a query\n\n```scala\nimport scala.concurrent.Await\nimport scala.concurrent.duration._\n\
+  \nval result = Await.result(Executor.execute(schema, query), 10.seconds)\nprintln(result)\n```\n\n##\
+  \ Best practices\n\n- Use `FieldTags` and middleware for auth, not resolver checks.\n- Keep the context\
+  \ (MyCtx) for DI of repos and caches.\n- Export SDL from CI to catch breaking changes.\n- Use deferred\
+  \ resolution (Deferred/Projector) for N+1 batching.\n- Keep schema construction lazy or cached; it is\
+  \ expensive.\n\n## Capabilities\n\n### sangria-schema\nDefine Sangria schemas, execute queries, and\
+  \ export SDL.\n\n**Commands:**\n- `sbt run`\n- `sbt compile`\n- `sbt test`\n- `curl -s -X POST http://localhost:8080/graphql\
+  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ characters { name } }\"}' | jq`\n- `sbt 'runMain\
+  \ example.SchemaExport'`\n\n**Examples:**\n- sbt compile && sbt test\n- curl -s -X POST http://localhost:8080/graphql\
+  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ characters { name } }\"}' | jq\n- sbt 'runMain\
+  \ example.SchemaExport'"
+prompt: Act as Graphql Sangria and handle the task per the instructions.

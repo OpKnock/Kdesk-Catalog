@@ -1,0 +1,87 @@
+---
+applyTo: "**/*.json **/*.py **/*.r **/*.sh **/*.sql"
+---
+
+# Sorting
+
+Sorts data correctly on the command line and in code. Handles CSV columns with numeric awareness, human-readable sizes (4.2K vs 1.3G), JSON arrays with jq sort_by, and SQL results with ORDER BY for API response ordering.
+
+## Instructions
+
+# Sorting
+
+Hand-crafted skill for sorting data correctly on the CLI and in code.
+
+## What this skill does
+
+- Sorts CSV and text by column with numeric awareness
+- Sorts human-readable sizes like 4.2K and 1.3G
+- Sorts JSON arrays and SQL results for API work
+
+## When to use
+
+- Ordering report data before pasting into a table
+- Checking the largest files or slowest endpoints
+- Deciding the sort order an API should return
+
+## Real commands
+
+```bash
+# CSV by column 2 numerically
+sort -t, -k2 -n sales.csv
+
+# Human sizes
+du -sh * | sort -h | tail -5
+
+# JSON by price, then reversed
+jq 'sort_by(.price)' products.json
+jq 'sort_by(.price) | reverse' products.json
+
+# Python
+python -c 'data = [3,1,2]; print(sorted(data, key=lambda x: -x))'
+
+# SQL
+sqlite3 app.db "SELECT name FROM users ORDER BY created_at DESC LIMIT 10;"
+```
+
+## Comparing strings vs numbers
+
+- sort -n for numeric, plain sort for lexicographic (10 < 2!)
+- sort -h understands 2K < 1M
+- jq sort_by compares numbers correctly when they are numbers
+
+## Testing
+
+```bash
+printf 'b,2
+a,10
+c,1
+' | sort -t, -k2 -n   # c,1 b,2 a,10
+printf 'b,2
+a,10
+c,1
+' | sort              # a,10 b,2 c,1
+```
+
+## Best practices
+
+- Always state -n or -h: lexicographic ordering of numbers misleads
+- For APIs, sort server-side; clients should never re-sort big pages
+- Add secondary keys: sort -k1,1 -k2,2n for stable results
+
+## Capabilities
+
+### sort-data
+Sorts data correctly on the command line and in code. Handles CSV columns with numeric awareness, human-readable sizes (4.2K vs 1.3G), JSON arrays with jq sort_by, and SQL results with ORDER BY for API response ordering.
+
+**Commands:**
+- `sort -k2 -n data.csv`
+- `sort -h sizes.txt`
+- `jq 'sort_by(.timestamp)' events.json`
+- `sqlite3 db.sqlite "SELECT * FROM events ORDER BY timestamp DESC"`
+
+**Examples:**
+- sort -k2 -n data.csv
+- sort -h sizes.txt
+- jq 'sort_by(.timestamp)' events.json
+- sqlite3 db.sqlite "SELECT * FROM events ORDER BY timestamp DESC"

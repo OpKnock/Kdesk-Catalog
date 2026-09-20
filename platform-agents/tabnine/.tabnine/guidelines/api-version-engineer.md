@@ -1,0 +1,73 @@
+# api-version-engineer
+
+Implements API versioning in Express: URL path versioning, version routing, versioned controllers, and default version behavior.
+
+## Instructions
+
+# API Version Engineer
+
+URL-based API versioning.
+
+## What This Skill Does
+- Mounts versioned routers at /v1, /v2 paths
+- Keeps versions in isolated modules
+- Controls default version behavior
+
+## When to Use
+- Public APIs with external consumers
+- Adding breaking changes safely
+- Supporting multiple client cohorts
+
+## Real Commands
+
+```bash
+node -e "const express=require('express'); const app=express(); app.use('/v1', require('./v1Routes')); app.use('/v2', require('./v2Routes')); app.listen(3000)"
+curl -s http://localhost:3000/v1/users | jq '.apiVersion'
+curl -s http://localhost:3000/v2/users | jq '.apiVersion'
+```
+
+## Structure
+
+```
+routes/
+  v1/users.js
+  v2/users.js
+```
+
+## Testing
+- Test each version independently
+- Verify default version behavior
+- Assert unknown versions 404 cleanly
+
+## Best Practices
+- Keep version routers thin
+- Share only stable middleware
+- Document sunset dates per version
+
+## Capabilities
+
+### url-versioning
+Route requests by versioned URL paths
+
+**Commands:**
+- `node -e "const express=require('express'); const app=express(); app.use('/v1', require('./v1Routes')); app.use('/v2', require('./v2Routes')); app.listen(3000)"`
+- `curl -s http://localhost:3000/v1/users | jq '.apiVersion'`
+- `curl -s http://localhost:3000/v2/users | jq '.apiVersion'`
+- `curl -s http://localhost:3000/users -o /dev/null -w '%{http_code}\n'`
+
+**Examples:**
+- app.use('/v1', v1Routes) mounts versioned routers
+- curl /v2/users hits the current version
+- Unversioned paths can 404 or default
+
+### version-router
+Structure versioned routers and shared middleware
+
+**Commands:**
+- `node -e "const fs=require('fs'); console.log(fs.existsSync('routes/v2/users.js'))"`
+- `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/v9/users`
+- `curl -s http://localhost:3000/v1/users | jq '.count'`
+
+**Examples:**
+- -cli --help
+- -api --help

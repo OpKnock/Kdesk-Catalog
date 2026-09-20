@@ -1,0 +1,28 @@
+title: Api Monitor Logcli
+description: 'Monitors API logs with Loki and LogCLI: label-based querying, logQL pipelines, error-rate
+  derivation, and alerting on log patterns.'
+version: 2.0.0
+instructions: "# Api Monitor Logcli\n\nMonitors API logs with Loki and LogCLI: label-based querying, logQL\
+  \ pipelines, error-rate derivation, and alerting on log patterns.\n\n## Instructions\n\n# API Monitor\
+  \ v4 - Loki/LogCLI\n\nLog-based API monitoring with Loki.\n\n## What This Skill Does\n- Queries structured\
+  \ API logs by labels\n- Derives error rates with LogQL aggregation\n- Alerts on log patterns that indicate\
+  \ failures\n\n## When to Use\n- Debugging API failures from log evidence\n- Correlating errors across\
+  \ services by trace_id label\n- Cost-effective alternative to full metric instrumentation\n\n## Real\
+  \ Commands\n\n```bash\nlogcli query '{app=\"api\"}' --from=2h\nlogcli query 'rate({app=\"api\"} |= \"\
+  ERROR\" [5m])'\nlogcli query '{app=\"api\"} | json | status_code >= 500'\n```\n\n## LogQL Pipeline\n\
+  - | json  parses structured fields\n- | label_format adds derived labels\n- | line_format re-renders\
+  \ output lines\n- | unwrap latency_ms extracts numeric fields for aggregation\n\n## Alerting\n```yaml\n\
+  groups:\n  - name: api-errors\n    rules:\n      - alert: APIErrorRateHigh\n        expr: sum(rate({app=\"\
+  api\"} | json | status_code=500 [5m])) > 0.05\n```\n\n## Best Practices\n- Emit structured JSON logs\
+  \ with stable labels\n- Use |= filters before parsing for cheaper queries\n- Set retention to match\
+  \ compliance needs\n\n## Capabilities\n\n### logcli\nQuery and tail API logs stored in Loki\n\n**Commands:**\n\
+  - `logcli query '{app=\"api-gateway\"}' --from=2h`\n- `logcli query 'rate({app=\"api\"} |= \"ERROR\"\
+  \ [5m])'`\n- `logcli query '{app=\"api\"} | json | status_code >= 500 | line_format \"{{.message}}\"\
+  '`\n- `logcli labels`\n- `curl -s -G 'http://localhost:3100/loki/api/v1/query_range' --data-urlencode\
+  \ 'query={app=\"api\"}' --data-urlencode 'limit=10' | jq '.data.result[0].values[0]'`\n\n**Examples:**\n\
+  - logcli query '{app=\"api\"} | json | status_code=500' finds 5xx lines\n- logcli labels lists available\
+  \ label names\n- rate(... |= \"ERROR\" [5m]) computes error rate over the last 5 minutes\n\n### logql-pipelines\n\
+  Parse and filter structured API logs with LogQL\n\n**Commands:**\n- `logcli query '{app=\"api\"} | json\
+  \ | latency_ms > 1000 | drop timestamp'`\n- `curl -s -G 'http://localhost:3100/loki/api/v1/labels' |\
+  \ jq '.data.values'`\n- `logcli series '{app=~\"api.+\"}'`"
+prompt: Act as Api Monitor Logcli and handle the task per the instructions.

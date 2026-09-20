@@ -1,0 +1,35 @@
+title: dotnet-test
+description: Runs .NET test suites with dotnet test, xUnit/NUnit/MSTest filters, code coverage, and CI
+  output.
+version: 2.0.0
+instructions: "# dotnet-test\n\nRuns .NET test suites with dotnet test, xUnit/NUnit/MSTest filters, code\
+  \ coverage, and CI output.\n\n## Instructions\n\n# dotnet test\n\nTest .NET applications with xUnit,\
+  \ NUnit, or MSTest.\n\n## What This Skill Does\n\n- Builds and runs test projects with filters\n- Collects\
+  \ code coverage cross-platform\n- Emits TRX logs for CI dashboards\n- Scaffolds new test projects\n\n\
+  ## When to Use\n\n- Running the test suite in CI\n- Debugging one failing test class\n- Enforcing coverage\
+  \ thresholds\n\n## Real Commands\n\n```bash\n# Run all tests\n dotnet test\n\n# Filtered runs\ndotnet\
+  \ test --filter \"FullyQualifiedName~OrderService\"\ndotnet test --filter \"Category=Unit\"\n\n# Fast\
+  \ iteration\n dotnet test --no-build\n\n# Coverage\ndotnet test --collect:\"XPlat Code Coverage\"\n\
+  dotnet-coverage collect -f cobertura -o coverage.xml \"dotnet test\"\n\n# TRX logger\ndotnet test --logger\
+  \ \"trx;LogFileName=results.trx\"\n\n# Scaffold\ndotnet new xunit -o tests/MyApp.Tests\n```\n\n## Sample\
+  \ Test (xUnit)\n\n```csharp\npublic class OrderTests\n{\n    [Fact]\n    public void Total_AddsLines()\n\
+  \    {\n        var order = new Order();\n        order.AddLine(10, 2);\n        Assert.Equal(20, order.Total);\n\
+  \    }\n\n    [Theory]\n    [InlineData(2, 3, 6)]\n    [InlineData(-1, 5, -5)]\n    public void Multiply_Works(int\
+  \ a, int b, int expected)\n    {\n        Assert.Equal(expected, a * b);\n    }\n}\n```\n\n## Best Practices\n\
+  \n- Keep unit tests free of IO; use mocks\n- Use Theory for data-driven cases\n- Collect coverage with\
+  \ Cobertura format for CI\n- Set --no-build in rerun loops\n- Fail CI on coverage below threshold\n\n\
+  ## Capabilities\n\n### dotnet-testing\nBuild and run .NET test projects with filters.\n\n**Commands:**\n\
+  - `dotnet test`\n- `dotnet test --filter \"FullyQualifiedName~OrderService\"`\n- `dotnet test --filter\
+  \ \"Category=Unit\"`\n- `dotnet test --no-build`\n- `dotnet test --verbosity detailed`\n\n**Examples:**\n\
+  - dotnet test\n- dotnet test --filter \"FullyQualifiedName~OrderService\"\n- dotnet test --no-build\
+  \ --verbosity minimal\n\n### coverage-and-reporting\nCollect coverage and generate test reports.\n\n\
+  **Commands:**\n- `dotnet test --collect:\"XPlat Code Coverage\"`\n- `dotnet test --collect:\"XPlat Code\
+  \ Coverage\" --results-directory ./coverage`\n- `dotnet-coverage collect -f cobertura -o coverage.xml\
+  \ \"dotnet test\"`\n- `dotnet test --logger \"trx;LogFileName=results.trx\"`\n\n**Examples:**\n- dotnet\
+  \ test --collect:\"XPlat Code Coverage\"\n- dotnet-coverage collect -f cobertura -o coverage.xml \"\
+  dotnet test\"\n- dotnet test --logger \"trx;LogFileName=results.trx\"\n\n### test-suite-scaffolding\n\
+  Create new test projects for frameworks.\n\n**Commands:**\n- `dotnet new xunit -o tests/MyApp.Tests`\n\
+  - `dotnet new nunit -o tests/MyApp.Tests`\n- `dotnet new mstest -o tests/MyApp.Tests`\n- `dotnet add\
+  \ tests/MyApp.Tests reference src/MyApp/MyApp.csproj`\n\n**Examples:**\n- dotnet new xunit -o tests/MyApp.Tests\n\
+  - dotnet add tests/MyApp.Tests reference src/MyApp/MyApp.csproj\n- dotnet new nunit -o tests/MyApp.Tests"
+prompt: Act as dotnet-test and handle the task per the instructions.

@@ -1,0 +1,40 @@
+title: grafana
+description: 'Operates Grafana: plugin management, admin tasks, dashboard provisioning, and API-driven
+  configuration.'
+version: 2.0.0
+instructions: "# grafana\n\nOperates Grafana: plugin management, admin tasks, dashboard provisioning,\
+  \ and API-driven configuration.\n\n## Instructions\n\n# Grafana\n\nRun Grafana reliably: plugins, admin\
+  \ recovery, and automation.\n\n## When to Use\n\n- Installing and updating Grafana plugins\n- Recovering\
+  \ admin access\n- Managing dashboards and datasources programmatically\n\n## Plugin management\n\n```bash\n\
+  grafana-cli plugins install grafana-clock-panel\ngrafana-cli plugins update-all\ngrafana-cli plugins\
+  \ list\n```\n\n## Admin recovery\n\n```bash\ngrafana-cli --homepath /usr/share/grafana admin reset-admin-password\
+  \ 'new-secret-pass'\n```\n\nReset passwords only via the CLI on the server; never share the admin account.\n\
+  \n## Provisioning (recommended)\n\n```yaml\n# /etc/grafana/provisioning/datasources/prometheus.yaml\n\
+  apiVersion: 1\ndatasources:\n  - name: Prometheus\n    type: prometheus\n    access: proxy\n    url:\
+  \ http://prometheus:9090\n    isDefault: true\n```\n\nDashboards and datasources in provisioning folders\
+  \ are versioned and reloaded automatically.\n\n## API automation\n\n```bash\ncurl -s -H 'Authorization:\
+  \ Bearer $GRAFANA_API_KEY' http://localhost:3000/api/datasources\ncurl -s -X POST -H 'Authorization:\
+  \ Bearer $GRAFANA_API_KEY' -H 'Content-Type: application/json' http://localhost:3000/api/dashboards/db\
+  \ -d @dashboard.json\n```\n\nCreate service accounts with scoped tokens instead of admin API keys.\n\
+  \n## Annotations for deploys\n\n```bash\ncurl -s -X POST -H 'Authorization: Bearer $KEY' -H 'Content-Type:\
+  \ application/json' -d '{\"text\":\"deploy v2.14.3\"}' http://localhost:3000/api/annotations\n```\n\n\
+  ## Best practices\n\n- Provision everything as code; manual UI changes drift.\n- Keep plugin versions\
+  \ pinned in the image.\n- Alert on datasource health via blackbox probes.\n\n## Testing\n\n```bash\n\
+  curl -s -H 'Authorization: Bearer $KEY' http://localhost:3000/api/search?type=dash-db | jq length\n\
+  ```\n\nVerify dashboards count after provisioning.\n\n## Capabilities\n\n### grafana-cli\nManage plugins\
+  \ and admin access from the command line.\n\n**Commands:**\n- `grafana-cli plugins install grafana-clock-panel`\n\
+  - `grafana-cli plugins update-all`\n- `grafana-cli plugins list`\n- `grafana-cli admin reset-admin-password\
+  \ new-secret-pass`\n- `grafana-cli --homepath /usr/share/grafana admin reset-admin-password`\n\n**Examples:**\n\
+  - grafana-cli plugins install grafana-piechart-panel --pluginsDir /var/lib/grafana/plugins\n- grafana-cli\
+  \ plugins list --config /etc/grafana/grafana.ini\n- grafana-cli admin reset-admin-password admin\n\n\
+  ### api\nDrive Grafana configuration via the HTTP API.\n\n**Commands:**\n- `curl -s -H 'Authorization:\
+  \ Bearer $GRAFANA_API_KEY' http://localhost:3000/api/org`\n- `curl -s -H 'Authorization: Bearer $GRAFANA_API_KEY'\
+  \ http://localhost:3000/api/search?type=dash-db | jq '.[].title'`\n- `curl -s -X POST -H 'Authorization:\
+  \ Bearer $GRAFANA_API_KEY' -H 'Content-Type: application/json' http://localhost:3000/api/dashboards/db\
+  \ -d @dashboard.json`\n- `curl -s -H 'Authorization: Bearer $GRAFANA_API_KEY' http://localhost:3000/api/datasources`\n\
+  - `curl -s -X POST -H 'Authorization: Bearer $GRAFANA_API_KEY' -H 'Content-Type: application/json' -d\
+  \ '{\"text\":\"deploy v2.14.3\"}' http://localhost:3000/api/annotations`\n\n**Examples:**\n- curl -s\
+  \ -H 'Authorization: Bearer $KEY' http://localhost:3000/api/dashboards/uid/cQx8-abc | jq '.dashboard.title'\n\
+  - curl -s -H 'Authorization: Bearer $KEY' 'http://localhost:3000/api/datasources' | jq '.[] | {name,\
+  \ type}'\n- curl -s -X DELETE -H 'Authorization: Bearer $KEY' http://localhost:3000/api/datasources/uid/$DS_UID"
+prompt: Act as grafana and handle the task per the instructions.

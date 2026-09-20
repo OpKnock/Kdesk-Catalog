@@ -1,0 +1,36 @@
+title: alertmanager
+description: Query alerts and manage silences from the CLI. Validate it configuration and routing.
+version: 2.0.0
+instructions: "# alertmanager\n\nQuery alerts and manage silences from the CLI. Validate it configuration\
+  \ and routing.\n\n## Instructions\n\n# Alertmanager\n\nManage alerts, silences, and routing without\
+  \ the UI.\n\n## When to Use\n\n- On-call triage of firing alerts\n- Planned-maintenance silences\n-\
+  \ Validating routing before deploy\n\n## Query alerts\n\n```bash\namtool alert query --alertmanager.url=http://localhost:9093\
+  \ --state=active\n```\n\n## Silences with policy\n\n```bash\namtool silence add --alertmanager.url=http://localhost:9093\
+  \ 'severity=~critical' --duration=2h --comment='scheduled maintenance'\n```\n\nEvery silence needs a\
+  \ comment and an expiry - review active silences weekly.\n\n## Config validation\n\n```bash\namtool\
+  \ check-config /etc/alertmanager/alertmanager.yml\n```\n\n## Routing design\n\n```yaml\nroute:\n  group_by:\
+  \ [alertname]\n  group_wait: 30s\n  group_interval: 5m\n  repeat_interval: 4h\n  routes:\n    - matchers:\
+  \ [severity=\"critical\"]\n      receiver: pagerduty-critical\n    - matchers: [severity=~\"warning|info\"\
+  ]\n      receiver: slack\n```\n\nGroup similar alerts to prevent notification storms; set repeat_interval\
+  \ to avoid alert fatigue.\n\n## Test alert delivery\n\n```bash\ncurl -s -X POST -H 'Content-Type: application/json'\
+  \ -d '{\"status\":\"firing\",\"labels\":{\"alertname\":\"ApiDown\",\"severity\":\"critical\"}}' http://localhost:9093/api/v2/alerts\n\
+  ```\n\n## Best practices\n\n- Route by severity + team, not per alert.\n- Use matchers with regex sparingly\
+  \ - they're hard to audit.\n- Export alert state to dashboards for review.\n- Never silence for longer\
+  \ than the maintenance window.\n\n## Testing\n\n```bash\namtool check-config alertmanager.yml\ncurl\
+  \ -s http://localhost:9093/api/v2/alerts | jq length\n```\n\nPost a test firing alert and verify the\
+  \ route/receiver chain.\n\n## Capabilities\n\n### amtool\nQuery alerts and manage silences from the\
+  \ CLI.\n\n**Commands:**\n- `amtool alert query --alertmanager.url=http://localhost:9093`\n- `amtool\
+  \ alert query --alertmanager.url=http://localhost:9093 --state=active`\n- `amtool silence add --alertmanager.url=http://localhost:9093\
+  \ 'severity=~critical' --duration=2h --comment='scheduled maintenance'`\n- `amtool silence expire --alertmanager.url=http://localhost:9093\
+  \ SILENCE_ID`\n- `amtool silence query --alertmanager.url=http://localhost:9093 --pending`\n\n**Examples:**\n\
+  - amtool alert query --alertmanager.url=http://localhost:9093 -q\n- amtool silence add --alertmanager.url=http://localhost:9093\
+  \ 'job=\"api\"' --duration=1h --author=alice --comment='incident triage'\n- amtool silence query --alertmanager.url=http://localhost:9093\
+  \ --state=active --output=json\n\n### config\nValidate Alertmanager configuration and routing.\n\n**Commands:**\n\
+  - `amtool check-config alertmanager.yml`\n- `amtool config routes --alertmanager.url=http://localhost:9093`\n\
+  - `amtool config show --alertmanager.url=http://localhost:9093`\n- `curl -s -X POST -H 'Content-Type:\
+  \ application/json' -d '{\"status\":\"firing\",\"labels\":{\"alertname\":\"ApiDown\",\"severity\":\"\
+  critical\"}}' http://localhost:9093/api/v2/alerts`\n- `curl -s http://localhost:9093/api/v2/alerts |\
+  \ jq '.[] | {name: .labels.alertname, status: .status.state}'`\n\n**Examples:**\n- amtool check-config\
+  \ /etc/alertmanager/alertmanager.yml\n- amtool config routes --alertmanager.url=http://localhost:9093\n\
+  - curl -s http://localhost:9093/api/v2/alerts | jq length"
+prompt: Act as alertmanager and handle the task per the instructions.

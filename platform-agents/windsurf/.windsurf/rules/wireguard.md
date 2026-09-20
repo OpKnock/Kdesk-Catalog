@@ -1,0 +1,119 @@
+---
+trigger: glob
+description: "Deploys WireGuard VPNs: key generation, peer configuration, and interface management with wg and wg-quick."
+globs: ["**/*.r", "**/*.sh"]
+---
+
+# Wireguard
+
+Deploys WireGuard VPNs: key generation, peer configuration, and interface management with wg and wg-quick.
+
+## Instructions
+
+# WireGuard
+
+Deploy fast, modern VPN tunnels.
+
+## When to Use
+
+- Site-to-site tunnels and road-warrior VPNs
+- Kubernetes cluster networking (Cilium)
+- Replacing IPSec/OpenVPN with simpler crypto
+
+## Key generation
+
+```bash
+umask 077 && wg genkey | tee privatekey | wg pubkey > publickey
+```
+
+Private keys stay on the host; only public keys are shared.
+
+## Server config
+
+```ini
+[Interface]
+Address = 10.0.0.1/24
+ListenPort = 51820
+PrivateKey = <server-private>
+
+[Peer]
+PublicKey = <peer1-public>
+AllowedIPs = 10.0.0.2/32
+```
+
+## Client config
+
+```ini
+[Interface]
+Address = 10.0.0.2/24
+PrivateKey = <peer1-private>
+
+[Peer]
+PublicKey = <server-public>
+Endpoint = vpn.example.com:51820
+AllowedIPs = 10.0.0.0/24
+PersistentKeepalive = 25
+```
+
+## Up and inspect
+
+```bash
+wg-quick up wg0
+wg show
+wg show wg0 transfer
+wg-quick down wg0
+```
+
+## Peering rules
+
+- AllowedIPs defines routing, not auth - set it precisely.
+- Add PersistentKeepalive behind NAT.
+- Preshared keys add post-quantum resilience - use wg genpsk.
+
+## Best practices
+
+- Never commit private keys; generate per host.
+- Use 10.x or 100.64.0.0/10 ranges to avoid LAN clashes.
+- Route only needed subnets (AllowedIPs); no full-tunnel by default.
+- Monitor handshake age: `wg show wg0` recent-handshake column.
+
+## Testing
+
+```bash
+wg show wg0
+timeout 2 ping -c 1 10.0.0.2
+```
+
+Confirm handshake and ping before wiring services.
+
+## Capabilities
+
+### keys
+Generate WireGuard key pairs securely.
+
+**Commands:**
+- `umask 077 && wg genkey | tee privatekey | wg pubkey > publickey`
+- `wg genkey`
+- `wg pubkey < privatekey`
+- `wg genpsk`
+- `cat privatekey publickey`
+
+**Examples:**
+- umask 077 && wg genkey | tee server_private.key | wg pubkey > server_public.key
+- wg genpsk > preshared.key
+- umask 077 && wg genkey > peer1_private.key
+
+### interfaces
+Bring up, tear down, and inspect WireGuard interfaces.
+
+**Commands:**
+- `wg-quick up wg0`
+- `wg-quick down wg0`
+- `wg show`
+- `wg show wg0 allowed-ips`
+- `wg showconf wg0`
+
+**Examples:**
+- wg-quick up /etc/wireguard/wg0.conf
+- wg show wg0 transfer
+- wg show wg0 peers | wc -l

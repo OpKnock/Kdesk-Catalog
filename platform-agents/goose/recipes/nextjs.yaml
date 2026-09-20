@@ -1,0 +1,33 @@
+title: nextjs
+description: 'Builds full-stack React apps with Next.js App Router: server components, route handlers,
+  middleware, and Vercel/Docker deploys.'
+version: 2.0.0
+instructions: "# nextjs\n\nBuilds full-stack React apps with Next.js App Router: server components, route\
+  \ handlers, middleware, and Vercel/Docker deploys.\n\n## Instructions\n\n# Next.js\n\nBuild full-stack\
+  \ React applications with Next.js App Router and real CLI.\n\n## When to Use\n\n- React apps needing\
+  \ SSR/SSG and API routes\n- Marketing + app hybrids with incremental static regeneration\n- Teams standardizing\
+  \ on one full-stack React framework\n\n## Scaffold\n\n```bash\nnpx create-next-app@latest my-app --typescript\
+  \ --tailwind --eslint --app --src-dir\nnpm run dev\n```\n\n## Server Components and data fetching\n\n\
+  ```tsx\n// app/products/page.tsx\nexport default async function Products() {\n  const res = await fetch('https://api.example.com/products',\
+  \ { next: { revalidate: 300 } });\n  const products = await res.json();\n  return <ul>{products.map(p\
+  \ => <li key={p.id}>{p.name}</li>)}</ul>;\n}\n```\n\nUse `revalidate` for ISR, `cache: 'no-store'` for\
+  \ dynamic data.\n\n## Route handlers\n\n```typescript\n// app/api/orders/route.ts\nimport { NextResponse\
+  \ } from 'next/server';\n\nexport async function POST(request: Request) {\n  const body = await request.json();\n\
+  \  return NextResponse.json({ ok: true, id: body.id }, { status: 201 });\n}\n```\n\n## Middleware\n\n\
+  ```typescript\n// middleware.ts\nexport function middleware(request: NextRequest) {\n  const token =\
+  \ request.cookies.get('token');\n  if (!token && request.nextUrl.pathname.startsWith('/dashboard'))\
+  \ {\n    return NextResponse.redirect(new URL('/login', request.url));\n  }\n  return NextResponse.next();\n\
+  }\n```\n\n## Build and deploy\n\n```bash\nnpm run build\nnpx next build --debug\n\n# Vercel\nvercel\
+  \ --prod\n\n# Docker\ndocker build -t myapp .\ndocker run -p 3000:3000 myapp\n```\n\n## Best practices\n\
+  \n- Move client interactivity to `use client` boundaries; keep the rest server components.\n- Set `next/font`\
+  \ to self-host fonts and avoid layout shift.\n- Gate merges on `npm run lint` and `npm run build`.\n\
+  - Use `next info` when diagnosing version/env issues.\n\n## Testing\n\n```bash\nnpm run build\nnpm run\
+  \ lint\n```\n\nRun both in CI before deploying to any environment.\n\n## Capabilities\n\n### scaffold-dev\n\
+  Create, run, and lint Next.js projects.\n\n**Commands:**\n- `npx create-next-app@latest my-app --typescript\
+  \ --tailwind --eslint --app --src-dir`\n- `npm run dev`\n- `npm run build`\n- `npm run lint`\n- `npm\
+  \ run start`\n\n**Examples:**\n- npx create-next-app@latest store --typescript --app --no-tailwind\n\
+  - npm run dev -- --port 3100\n- npm run build && npm run start\n\n### diagnose\nInspect Next.js setup\
+  \ and build output.\n\n**Commands:**\n- `npx next info`\n- `npx next lint --dir src`\n- `npx next build\
+  \ --debug`\n- `npx next dev --turbo`\n- `npx next telemetry disable`\n\n**Examples:**\n- npx next info\
+  \ | grep -i versions\n- npx next lint --file src/app/page.tsx --fix\n- npx next dev --turbo --port 3000"
+prompt: Act as nextjs and handle the task per the instructions.

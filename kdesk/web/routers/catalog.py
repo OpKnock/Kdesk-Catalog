@@ -11,8 +11,7 @@ from fastapi.responses import JSONResponse
 from kdesk.adapters import AdapterRegistry
 from kdesk.capabilities import CapabilityIndex
 from kdesk.graph import CatalogGraph
-from kdesk.registry import default_repo_root
-from kdesk.stats import StatsError, compute as compute_stats
+from kdesk.stats import StatsError
 
 router = APIRouter(prefix="/api", tags=["catalog"])
 
@@ -25,9 +24,8 @@ def _json(data: Any) -> JSONResponse:
 def stats(fast: bool = True) -> JSONResponse:
     from kdesk.web.app import get_state
 
-    state = get_state()
     try:
-        return _json(compute_stats(state.root, fast=fast))
+        return _json(get_state().stats(fast=fast))
     except StatsError as exc:
         return JSONResponse({"error": str(exc)}, status_code=500)
 

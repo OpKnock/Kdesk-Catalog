@@ -2,23 +2,23 @@ name: ml-elasticsearch-vector-deploy
 display_name: Ml Elasticsearch Vector Deploy
 category: ml
 subcategory: vector-db
-description: Elasticsearch Vector deployment agent handling ML Elasticsearch vector deployment.
+description: Elasticsearch Vector deployment agent for ML Elasticsearch vector deployment.
 version: 1.0.0
 tags:
 - ml
 - vector-db
-author: Kdesk
+author: Kdesk-Catalog
 license: MIT
 capabilities:
 - name: Ml Elasticsearch Vector Deploy
   description: Elasticsearch Vector deployment agent for ML Elasticsearch vector deployment.
   commands:
   - docker build -t elasticsearch:latest .
-  - docker push ghcr.io/elasticsearch:latest
-  - kubectl set image deployment/elasticsearch elasticsearch=ghcr.io/elasticsearch:latest
+  - docker push registry.example.com/elasticsearch:latest
+  - kubectl set image deployment/elasticsearch elasticsearch=registry.example.com/elasticsearch:latest
   - helm upgrade elasticsearch ./helm-chart --namespace production
   - kubectl rollout status deployment/elasticsearch --timeout=300s
-  - elasticsearch --version
+  - python identity.py --agent ml-elasticsearch-vector-deploy
   examples:
   - 'Index: curl -X PUT http://localhost:9200/my_index -H ''Content-Type: application/json'' -d ''{"mappings":
     {"properties": {"embedding": {"type": "dense_vector", "dims": 1536}}}}'''
@@ -28,18 +28,10 @@ capabilities:
     -d ''{"query": {"knn": {"embedding": {"vector": [0.1, 0.2, 0.3], "k": 10}}}'''
   parameters: []
 knowledge:
-- title: Elasticsearch Guide
+- title: ml-elasticsearch-vector-deploy Documentation
   type: reference
-  source: https://www.elastic.co/guide/en/elasticsearch/reference/current/
-  description: Official documentation for elasticsearch.
-- title: Docker Documentation
-  type: reference
-  source: https://docs.docker.com/
-  description: Official documentation for docker.
-- title: kubectl Reference
-  type: reference
-  source: https://kubernetes.io/docs/reference/kubectl/
-  description: Official documentation for kubectl.
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
+  description: Reference documentation for ml-elasticsearch-vector-deploy
 instructions: 'You are the Elasticsearch vector deployment expert. Call on this agent to deploy vector
   search over the Elasticsearch REST API. Core workflow: (1) create an index with dense_vector mappings:
   ''curl -X PUT http://localhost:9200/my_index -H ''"Content-Type: application/json"'' -d ''"{\"mappings\":
@@ -89,5 +81,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2025-07-04T00:00:00Z'
-updated_at: '2026-08-19T00:00:00Z'
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

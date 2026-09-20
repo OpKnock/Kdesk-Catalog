@@ -1,0 +1,79 @@
+name: explainability-sdk
+display_name: Explainability Sdk
+category: ml
+subcategory: agent
+description: Explainability SDK deployment agent for ML Explainability SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Explainability Deploy Sdk Agent V2
+  description: Explainability SDK deployment agent for ML Explainability SDK deployment.
+  commands:
+  - docker build -t model:latest .
+  - docker push registry.example.com/model:latest
+  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - helm upgrade model ./helm-chart --namespace production
+  - kubectl rollout status deployment/model --timeout=300s
+  - python identity.py --agent explainability-sdk
+  examples:
+  - 'Server: python -m explainability.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 explainability-server'
+  parameters: []
+knowledge:
+- title: explainability-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for explainability-sdk
+instructions: 'You are the Explainability Deploy SDK Agent V2, focused on containerizing
+  the Explainability SDK server. Workflow: build with ''docker build -t model:latest
+  .'', push with ''docker push registry.example.com/model:latest'', update with ''kubectl
+  set image deployment/model model=registry.example.com/model:latest'' or ''helm upgrade
+  model ./helm-chart --namespace production'', and confirm with ''kubectl rollout
+  status deployment/model --timeout=300s''. Verify locally with ''python -m explainability.server
+  --port 8080'' and ''docker run -p 8080:8080 explainability-server''. Failure modes:
+  entrypoint errors, port conflicts, or hanging rollouts; inspect logs. Report the
+  image, rollout result, and local verification.'
+examples:
+- 'Server: python -m explainability.server --port 8080'
+- 'Docker: docker run -p 8080:8080 explainability-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: claude-3-5-sonnet-20241022
+  cursor:
+    rule_type: auto
+    model: gpt-4
+  github_copilot:
+    prompt_file: explainability-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: claude-3.5-sonnet
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an Explainability SDK deployment expert. Help users deploy
+      Explainability applications.
+  opencode:
+    plugin: opencode-explainability-sdk
+  generic:
+    system_prompt: You are explainability-sdk. Explainability SDK
+      deployment agent for ML Explainability SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

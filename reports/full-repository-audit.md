@@ -2,8 +2,6 @@
 
 **Generated:** 2026-08-13 · **Method:** manual forensic audit (PowerShell inventory + source inspection)
 
-> **Note:** This is a historical audit report from the initial pipeline setup. Metrics (e.g., "608 agents wired", "4,237 links") reflect the state at that time and may not match the current catalog. For current metrics, see `reports/catalog-stats.json` and `README.md`.
-
 ## 1. Repository State
 
 - **Git:** branch `main`, **0 commits**, **0 tracked files** — everything is untracked. `platform-agents/`, `agents/`, `skills/*`, `workflows/` are gitignored (regenerable artifacts).
@@ -72,7 +70,7 @@ Remaining: none.
 
 ## 9. Portability Issues (fixed)
 
-- All hard-coded `<repo-root>\...` paths removed from `scripts/` (grep = 0 matches); root is derived from `__file__`/`Path(__file__).resolve().parents[1]`.
+- All hard-coded `C:\Users\wagde\...` paths removed from `scripts/` (grep = 0 matches); root is derived from `__file__`/`Path(__file__).resolve().parents[1]`.
 - `verify-install.py` dead placeholder logic removed.
 - Report generators guard zero-file false-success (`guard_zero` in `scripts/generate-reports.py`).
 

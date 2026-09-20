@@ -202,10 +202,8 @@ class ToolExecutor:
         subcommands = [str(a) for a in (args.get("args") or [])]
         if not subcommands:
             return self._result(False, error="missing git subcommand")
-        # Only genuinely read-only git subcommands (never mutate state)
-        read_only = {"status", "log", "diff", "show", "rev-parse",
-                     "ls-files", "describe"}
-        # These look read-only but can create/delete/modify: branch, tag, remote, config
+        read_only = {"status", "log", "diff", "show", "branch", "rev-parse",
+                     "ls-files", "describe", "tag", "remote", "config"}
         if subcommands[0] not in read_only:
             return self._result(False, error=f"git subcommand '{subcommands[0]}' is not read-only")
         return self._subprocess(["git"] + subcommands, timeout=float(args.get("timeout_s", 20)))

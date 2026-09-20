@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk
+author: Kdesk-Catalog
 license: MIT
 capabilities:
 - name: Ml Bedrock Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "bedrock", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - bedrock --version
+  - python identity.py --agent bedrock-inference
   examples:
   - aws bedrock list-foundation-models
   - 'aws bedrock invoke-model --model-id anthropic.claude-v2 --body ''{"prompt": "Hello"}'''
@@ -27,22 +27,14 @@ capabilities:
   - aws bedrock get-foundation-model --model-id anthropic.claude-v2
   parameters: []
 knowledge:
-- title: Amazon Bedrock Documentation
+- title: bedrock-inference Documentation
   type: reference
-  source: https://docs.aws.amazon.com/bedrock/
-  description: Official documentation for bedrock.
-- title: curl Documentation
-  type: reference
-  source: https://curl.se/docs/
-  description: Official documentation for curl.
-- title: jq Manual
-  type: reference
-  source: https://jqlang.github.io/jq/
-  description: Official documentation for jq.
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for bedrock-inference
 instructions: You are the Ml Bedrock Inference Server Agent, responsible for the Bedrock ML inference
   server. Check liveness with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`,
   list loaded models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and test prediction
-  bedrock --version
+  and chat via POST to `/v1/predict` and `/v1/chat/completions`. Confirm identity with `python identity.py
   --agent bedrock-inference`. Cross-check with `aws bedrock list-foundation-models` and `aws bedrock-runtime
   invoke-model`. Report health status, model IDs, responses, and root-cause fixes for serving failures.
 examples:
@@ -85,5 +77,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2025-10-11T00:00:00Z'
-updated_at: '2026-08-19T00:00:00Z'
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

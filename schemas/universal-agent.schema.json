@@ -9,68 +9,6 @@
     "platforms", "capabilities", "examples", "instructions", "knowledge"
   ],
   "properties": {
-    "schema_version": {
-      "type": "string",
-      "enum": ["1.0"],
-      "default": "1.0",
-      "description": "Schema version for forward compatibility."
-    },
-    "permissions": {
-      "type": "object",
-      "description": "Explicit permission declarations for runtime enforcement.",
-      "properties": {
-        "filesystem": {
-          "type": "object",
-          "properties": {
-            "read": { "type": "boolean", "default": true },
-            "write": { "type": "boolean", "default": false },
-            "delete": { "type": "boolean", "default": false }
-          }
-        },
-        "network": {
-          "type": "object",
-          "properties": {
-            "enabled": { "type": "boolean", "default": false },
-            "domains": { "type": "array", "items": { "type": "string" } }
-          }
-        },
-        "process": {
-          "type": "object",
-          "properties": {
-            "execute": { "type": "boolean", "default": true },
-            "shell": { "type": "boolean", "default": false }
-          }
-        },
-        "git": {
-          "type": "object",
-          "properties": {
-            "read": { "type": "boolean", "default": true },
-            "write": { "type": "boolean", "default": false }
-          }
-        },
-        "secrets": {
-          "type": "boolean",
-          "default": false,
-          "description": "Whether this agent needs access to secrets/env vars."
-        }
-      }
-    },
-    "risk": {
-      "type": "object",
-      "description": "Declared risk level with explainable reasons.",
-      "properties": {
-        "level": {
-          "type": "string",
-          "enum": ["safe", "low", "moderate", "high", "critical"],
-          "default": "safe"
-        },
-        "reasons": {
-          "type": "array",
-          "items": { "type": "string" },
-          "description": "Why this risk level was assigned."
-        }
-      }
-    },
     "name": {
       "type": "string",
       "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
@@ -81,27 +19,6 @@
     "subcategory": { "type": "string" },
     "description": { "type": "string", "minLength": 1 },
     "version": { "type": "string", "minLength": 1 },
-    "color": {
-      "type": "string",
-      "pattern": "^#[0-9A-Fa-f]{6}$",
-      "description": "Optional UI accent color (hex) for generated marketplaces and portals."
-    },
-    "emoji": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 8,
-      "description": "Optional icon emoji for generated marketplaces and portals."
-    },
-    "vibe": {
-      "type": "string",
-      "minLength": 1,
-      "description": "Optional tone descriptor (e.g. 'playful', 'formal', 'minimal')."
-    },
-    "voice": {
-      "type": "string",
-      "minLength": 1,
-      "description": "Optional voice descriptor (e.g. 'concise', 'friendly', 'technical')."
-    },
     "type": { "enum": ["agent", "skill"] },
     "tags": { "type": "array", "items": { "type": "string" } },
     "keywords": { "type": "array", "items": { "type": "string" } },
@@ -123,16 +40,6 @@
       "type": "array",
       "items": { "type": "string" },
       "description": "Explicit agent->skill references (source of truth when present)."
-    },
-    "sub_agents": {
-      "type": "array",
-      "items": { "type": "string" },
-      "description": "Sub-agents this agent delegates to for specialized tasks."
-    },
-    "delegation_pattern": {
-      "type": "string",
-      "enum": ["sequential", "parallel", "conditional"],
-      "description": "How sub-agents are invoked: sequential (one after another), parallel (all at once), or conditional (based on context)."
     },
     "capabilities": {
       "type": "array",
@@ -247,53 +154,6 @@
       "additionalProperties": { "$ref": "#/$defs/platformBlock" }
     }
   },
-  "examples": [
-    {
-      "name": "example-agent",
-      "display_name": "Example Agent",
-      "category": "devops",
-      "subcategory": "deployment",
-      "description": "One-line description",
-      "version": "1.0.0",
-      "color": "#10B981",
-      "emoji": "🚀",
-      "vibe": "pragmatic",
-      "voice": "concise",
-      "tags": ["kubernetes", "helm"],
-      "capabilities": [
-        {
-          "name": "Deploy Helm Chart",
-          "description": "Deploys a chart to the cluster",
-          "commands": ["helm upgrade --install myapp ./chart --namespace prod"],
-          "examples": ["helm upgrade --install myapp ./chart --namespace prod"],
-          "parameters": [
-            {
-              "name": "namespace",
-              "type": "string",
-              "description": "Target namespace",
-              "default": "default"
-            }
-          ]
-        }
-      ],
-      "knowledge": [
-        {
-          "title": "Helm docs",
-          "type": "documentation",
-          "source": "https://helm.sh/docs",
-          "description": "Official Helm documentation"
-        }
-      ],
-      "instructions": "Detailed system prompt for the agent (200+ chars).",
-      "examples": ["usage example"],
-      "platforms": {
-        "claude_code": {
-          "tools": ["Bash", "Read", "Write", "Edit", "Glob", "Grep"],
-          "model": "inherit"
-        }
-      }
-    }
-  ],
   "$defs": {
     "platformBlock": {
       "type": "object",

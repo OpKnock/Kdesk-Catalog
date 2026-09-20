@@ -1,17 +1,21 @@
 # Kdesk-Catalog
 
-**Universal AI Agents & Skills Registry** — 2,909 definitions that convert once to 45+ platforms (Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, Codex CLI, Gemini CLI, Zed, Cline, Goose, and 35 more).
+**Universal AI Agents & Skills Registry** — 2,909 production-ready definitions that convert once to 45+ platforms.
 
-| Type | Count | Status |
-|------|-------|--------|
-| **Agents** | 1,766 | Persona, specialist, automation |
-| **Skills** | 1,143 | Tool workflows, patterns, integrations |
-| **Total** | **2,909** | **2,833 curated / 76 template / 0 unknown** |
-| **Platforms** | **45+** | Auto-generated from single YAML source |
+[![Platforms](https://img.shields.io/badge/platforms-45%2B-blue)](https://github.com/OpKnock/Kdesk-Catalog)
+[![Agents](https://img.shields.io/badge/agents-1,766-green)](https://github.com/OpKnock/Kdesk-Catalog/tree/main/universal-agents)
+[![Skills](https://img.shields.io/badge/skills-1,143-green)](https://github.com/OpKnock/Kdesk-Catalog/tree/main/universal-agents)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-**Source of truth:** `universal-agents/` (YAML)  
-**Output:** `platform-agents/` (130k+ files, auto-generated, gitignored)  
-**Trust layer:** `reports/curation-status.json` (per-file tier)
+---
+
+## Overview
+
+Kdesk-Catalog is a hand-curated registry of AI agents and skills. Each definition is written once in YAML and automatically converts to work across **45+ platforms** — including Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, Codex CLI, Gemini CLI, Zed, Cline, Goose, and more.
+
+**Source of truth:** `universal-agents/` — every agent and skill is a single YAML file with real commands, official documentation links, and expert instructions.
+
+**Output:** `platform-agents/` — auto-generated platform-specific formats (gitignored, regenerated on demand).
 
 ---
 
@@ -45,22 +49,22 @@ python scripts/universal-converter.py --platforms windsurf --quiet
 | **Cline** | `cp -r platform-agents/cline/.clinerules .` |
 | **Goose** | `cp -r platform-agents/goose/recipes/* ~/.config/goose/recipes/` |
 
-> Each platform folder has its own `README.md` with exact instructions.
+> Each platform folder in `platform-agents/` has its own `README.md` with exact instructions.
 
 ---
 
-## Browse Agents & Skills
+## Catalog Contents
 
-### By Category (Agents + Skills)
+### By Domain
 
-| Domain | Agents | Skills | What You Get |
-|--------|--------|--------|--------------|
+| Domain | Agents | Skills | Description |
+|--------|--------|--------|-------------|
 | **ML & AI** | 501 | 543 | Training, inference, MLOps, LLMs, RAG, vector DBs, pipelines |
 | **API** | 14 | 494 | REST, GraphQL, gRPC, WebSockets, AsyncAPI, contracts, auth, caching, rate-limiting, versioning |
 | **DevOps** | 38 | 142 | Git, Docker, K8s, Terraform, Helm, ArgoCD, CI/CD, pipelines |
 | **Backend** | 51 | 67 | Python, Node.js, Go, Rust, Java, .NET, FastAPI, Django, Flask, Express |
 | **Security** | 31 | 66 | Trivy, Gitleaks, Semgrep, Snyk, Vault, Kubescape, Falco, Cosign, mTLS |
-| **Code Quality** | 46 | 73 | ESLint, Prettier, Ruff, Black, MyPy, Clippy, SonarQube, Hadolint, linting |
+| **Code Quality** | 46 | 73 | ESLint, Prettier, Ruff, Black, MyPy, Clippy, SonarQube, Hadolint |
 | **Cloud** | 27 | 22 | AWS, GCP, Azure, Firebase, Vercel, Netlify, Fly.io, Railway, Render |
 | **Database** | 28 | 44 | PostgreSQL, MySQL, MongoDB, Redis, Elasticsearch, Cassandra, migrations, replication |
 | **Frontend** | 31 | 27 | React, Vue, Svelte, Angular, Next.js, Remix, Astro, Tailwind |
@@ -76,36 +80,28 @@ python scripts/universal-converter.py --platforms windsurf --quiet
 | **DevTools** | 12 | 30 | Git, Docker, nvm, Volta, Homebrew, Copilot, Windsurf, OpenCode |
 | **Specialized** | 16 | 67 | AR/VR, blockchain, computer vision, climate, quantum, robotics, speech, web3 |
 
+**Total: 1,766 agents + 1,143 skills = 2,909 universal definitions**
+
 ---
 
-## Classification Breakdown
+## Agent & Skill Types
 
 ### Agent Types
 
-| Type | Count | Description | Examples |
-|------|-------|-------------|----------|
-| **Persona** | ~200 | Role-based experts with full workflows | `ml-engineer`, `api-architect`, `sre-engineer`, `devops-engineer` |
-| **Specialist** | ~1,200 | Deep domain tool operators | `terraform-module-builder`, `kubernetes-deployment-specialist`, `api-security-engineer` |
-| **Automation** | ~366 | Pipeline/workflow executors | `ci-pipeline-optimizer`, `deployment-strategy-engineer`, `background-job-scheduler` |
+| Type | Description | Examples |
+|------|-------------|----------|
+| **Persona Agents** | Role-based experts with full end-to-end workflows | `ml-engineer`, `api-architect`, `sre-engineer`, `devops-engineer` |
+| **Specialist Agents** | Deep domain tool operators | `terraform-module-builder`, `kubernetes-deployment-specialist`, `api-security-engineer` |
+| **Automation Agents** | Pipeline/workflow executors | `ci-pipeline-optimizer`, `deployment-strategy-engineer`, `background-job-scheduler` |
 
 ### Skill Types
 
-| Type | Count | Description | Examples |
-|------|-------|-------------|----------|
-| **Tool Workflow** | ~600 | End-to-end CLI tool operations | `terraform-infrastructure`, `docker-deployment`, `kubernetes-deployment` |
-| **Pattern/Architecture** | ~200 | Design patterns & system architectures | `circuit-breaker-pattern`, `sidecar-pattern`, `adapter-pattern` |
-| **Integration** | ~200 | Third-party API connections | `stripe-payments`, `github-webhooks`, `slack-bot` |
-| **Security/Compliance** | ~143 | Hardening, scanning, audit | `trivy-security-scanner`, `semgrep-security`, `soc2-compliance` |
-
-### Curation Tiers
-
-| Tier | Count | Trust Level | How to Verify |
-|------|-------|-------------|---------------|
-| **Curated** | 2,833 | ✅ Hand-curated: real commands, official docs, unique instructions | `reports/curation-status.json` → `"tier": "curated"` |
-| **Template** | 76 | ⚠️ Generated: conceptual/architectural (no CLI) | `reports/curation-status.json` → `"tier": "template"` |
-| **Unknown** | 0 | ❌ Unparseable | None (all fixed) |
-
-> **Tip:** Every `universal-agents/**/*.yaml` starts as untrusted. A definition is trustworthy when it appears as `curated` in `reports/curation-status.json` OR you've read and verified its commands.
+| Type | Description | Examples |
+|------|-------------|----------|
+| **Tool Workflow Skills** | End-to-end CLI tool operations | `terraform-infrastructure`, `docker-deployment`, `kubernetes-deployment` |
+| **Pattern & Architecture Skills** | Design patterns & system architectures | `circuit-breaker-pattern`, `sidecar-pattern`, `adapter-pattern` |
+| **Integration Skills** | Third-party API connections | `stripe-payments`, `github-webhooks`, `slack-bot` |
+| **Security & Compliance Skills** | Hardening, scanning, audit | `trivy-security-scanner`, `semgrep-security`, `soc2-compliance` |
 
 ---
 
@@ -114,10 +110,7 @@ python scripts/universal-converter.py --platforms windsurf --quiet
 ### Find a Kubernetes Deployment Specialist
 
 ```bash
-# Search by category
-find universal-agents -name "*kubernetes*deployment*" -type f
-
-# Or by capability
+# Search by capability
 grep -r "kubernetes-deployment" universal-agents/ --include="*.yaml" | head -5
 ```
 
@@ -126,7 +119,7 @@ grep -r "kubernetes-deployment" universal-agents/ --include="*.yaml" | head -5
 ### Install to Claude Code
 
 ```bash
-# After generating
+# After generating platform files
 cp platform-agents/claude_code/.claude/agents/devops/deployment/kubernetes-deployment.yaml ~/.claude/agents/
 cp platform-agents/claude_code/.claude/skills/devops/kubernetes/* ~/.claude/skills/
 ```
@@ -151,7 +144,7 @@ find universal-agents -path "*/terraform*" -name "*.yaml" | grep -v test
 
 **Result:** `universal-agents/terraform/terraform-infrastructure.yaml`
 
-### What's Inside (Skill Structure)
+### Skill Structure (What's Inside)
 
 ```yaml
 name: terraform-infrastructure
@@ -275,9 +268,6 @@ python scripts/universal-converter.py --platforms all --quiet
 # Validate all YAMLs (0 violations required)
 python scripts/schema-check.py
 
-# Classify every definition into curated/template tiers
-python scripts/curate-tier.py --quiet
-
 # Regenerate JSON definitions from YAML
 python scripts/yaml-to-json.py --inplace --wiring skills/wiring.json
 
@@ -322,8 +312,8 @@ Kdesk-Catalog/
 │   ├── personas/              # ADD YOUR PERSONAS HERE
 │   ├── gcp/skill/             # ADD YOUR SKILL PACKS HERE
 │   └── ... (40+ more categories)
-├── scripts/                   # Automation (converter, validators, curate-tier)
-├── reports/                   # Curation status (trust layer)
+├── scripts/                   # Automation (converter, validators)
+├── reports/                   # Status reports
 ├── platform-agents/           # AUTO-GENERATED (gitignored)
 ├── schemas/universal-agent.schema.json
 ├── tests/
@@ -334,10 +324,9 @@ Kdesk-Catalog/
 
 ## Verification Status
 
-- ✅ `schema-check.py` — 0 violations across 2,909 files
-- ✅ `yaml-to-json.py` — deterministic JSON regeneration with skill wiring
-- ✅ `curate-tier.py` — 2,833 curated / 76 template / 0 unknown
-- ✅ Tests: `test_wire_skills.py`, `test_yaml_to_json.py`, `test_marketplaces.py` — pass
+- ✅ **Schema validation** — 0 violations across 2,909 files
+- ✅ **JSON regeneration** — deterministic with skill wiring
+- ✅ **Tests** — `test_wire_skills.py`, `test_yaml_to_json.py`, `test_marketplaces.py` pass
 
 ---
 

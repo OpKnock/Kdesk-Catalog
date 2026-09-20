@@ -13,9 +13,16 @@ from typing import List, Tuple
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# Pre-computed platform output count (from catalog-stats.json) to avoid slow rglob on Windows
-# This is validated by the report freshness check
-PLATFORM_OUTPUT_FILES_CACHED = 130954
+
+def _get_platform_output_count() -> int:
+    """Read platform output count from the authoritative report."""
+    report_path = ROOT / "reports" / "catalog-stats.json"
+    if not report_path.exists():
+        raise RuntimeError("catalog-stats.json not found - run generate-reports.py first")
+    with open(report_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data.get("platform_output_files", 0)
+
 
 GATES: List[Tuple[str, List[str]]] = [
     # Catalog integrity (fast)

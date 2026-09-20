@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 """
-Smoke test for clean installation.
-Tests that the package installs and CLI can locate catalog data from repo root.
+Smoke test for clean installation of Kdesk.
+
+Kdesk is a repository-backed tool - it requires a catalog repository (with
+universal-agents/) to operate. The package provides the CLI/runtime, while the
+catalog data lives in a separate repository.
+
+This test verifies:
+1. The package builds and installs correctly in a clean environment
+2. The installed CLI can be invoked and loads a catalog repository correctly
+3. The installed package is used (not the source tree)
+4. The CLI fails appropriately when no catalog repository is provided
 """
 import subprocess
 import sys
@@ -10,9 +19,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-def run(cmd: list, cwd: Path = ROOT, timeout: int = 120) -> subprocess.CompletedProcess:
+
+def run(cmd: list, cwd: Path = None, timeout: int = 120) -> subprocess.CompletedProcess:
+    cwd = cwd or Path(__file__).resolve().parent.parent
     print(f"  Running: {cmd} (cwd={cwd}, timeout={timeout})")
-    # Use capture_output=True but ensure arguments are passed as a list
     result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout)
     print(f"  Return code: {result.returncode}")
     if result.stdout:
@@ -20,6 +30,7 @@ def run(cmd: list, cwd: Path = ROOT, timeout: int = 120) -> subprocess.Completed
     if result.stderr:
         print(f"  STDERR: {result.stderr[:500]}")
     return result
+
 
 def main() -> int:
     print("Building package...")
@@ -46,7 +57,7 @@ def main() -> int:
             return 1
 
         pip = venv_dir / "Scripts" / "pip.exe"
-        python = venv_dir / "Scripts" / "python.exe"
+        python_exe = venv_dir / "Scripts" / "python.exe"
 
         print("Installing package in clean venv...")
         result = run([str(pip), "install", str(wheel)])
@@ -54,15 +65,26 @@ def main() -> int:
             print(f"Install failed: {result.stderr}")
             return 1
 
-        # Test CLI with repo root
-        print("Testing CLI with --root pointing to repo...")
-        # Use python -m kdesk.cli instead of kdesk.exe to avoid Windows argument passing issues
-        python_exe = venv_dir / "Scripts" / "python.exe"
-        print(f"  ROOT: {ROOT}")
-        print(f"  python: {python_exe}")
+        # Verify the installed package location
+        print("Verifying installed package location...")
+        # Run from temp directory to avoid importing from source tree
+        test_cwd = Path(tmpdir)
+        result = run([str(python_exe), "-c", "import kdesk; print(kdesk.__file__)"], cwd=test_cwd)
+        if result.returncode != 0:
+            print(f"Failed to import installed kdesk: {result.stderr}")
+            return 1
+        installed_path = result.stdout.strip()
+        print(f"  Installed kdesk at: {installed_path}")
+        if "site-packages" not in installed_path:
+            print(f"ERROR: kdesk imported from source tree, not installed package!")
+            return 1
+        print("  OK: kdesk imported from installed package")
+
+        # Test 1: CLI with --root pointing to repo (repository-backed mode)
+        print("\nTest 1: CLI with --root pointing to catalog repository...")
         cmd = [str(python_exe), "-m", "kdesk.cli", "stats", "--root", str(ROOT), "--format", "json", "--fast"]
         print(f"  cmd: {cmd}")
-        result = run(cmd, timeout=120)
+        result = run(cmd, timeout=120, cwd=test_cwd)
         if result.returncode != 0:
             print(f"CLI smoke test failed: {result.stderr}")
             return 1
@@ -73,11 +95,23 @@ def main() -> int:
             print(f"Stats mismatch: {stats}")
             return 1
 
-        print("CLI smoke test passed!")
+        print("  Test 1 passed!")
         print(f"  Agents: {stats['agents']}")
         print(f"  Skills: {stats['skills']}")
         print(f"  Total: {stats['definitions_total']}")
 
+        # Test 2: CLI without --root should fail (no catalog packaged)
+        print("\nTest 2: CLI without --root should fail (no catalog packaged)...")
+        result = run([str(python_exe), "-m", "kdesk.cli", "stats", "--format", "json", "--fast"], cwd=test_cwd)
+        if result.returncode == 0:
+            print(f"ERROR: CLI should fail without catalog repository")
+            return 1
+        if "universal-agents directory not found" not in result.stderr:
+            print(f"ERROR: Expected 'universal-agents directory not found' error, got: {result.stderr}")
+            return 1
+        print("  Test 2 passed! CLI correctly fails without catalog repository.")
+
+    print("\n=== ALL SMOKE TESTS PASSED ===")
     return 0
 
 

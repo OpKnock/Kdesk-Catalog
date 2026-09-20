@@ -2,12 +2,12 @@ name: spark-streaming
 display_name: Spark Streaming
 category: api
 subcategory: general
-description: 'Hand-crafted Spark Structured Streaming skill: spark-submit with Kafka integration, streaming
-  queries in spark-shell, and cluster-mode deployment.'
+description: "Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally or in cluster mode on Kubernetes, explores streaming APIs interactively in spark-shell, and tunes aggregation parallelism with shuffle partitions."
 version: 2.0.0
+type: skill
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - kafka-console-producer
@@ -15,13 +15,12 @@ prerequisites:
 - spark-submit
 capabilities:
 - name: structured-streaming
-  description: Run Spark Structured Streaming jobs with Kafka sources
+  description: "Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally or in cluster mode on Kubernetes, explores streaming APIs interactively in spark-shell, and tunes aggregation parallelism with shuffle partitions."
   commands:
   - spark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 streaming.py
   - spark-submit --deploy-mode cluster --master k8s://https://cluster:6443 --class com.app.StreamJob app.jar
   - spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1
-  - spark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 --conf
-    spark.sql.shuffle.partitions=200 streaming.py
+  - spark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 --conf spark.sql.shuffle.partitions=200 streaming.py
   - kafka-console-producer --broker-list localhost:9092 --topic events
   examples:
   - spark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 streaming.py
@@ -30,22 +29,18 @@ capabilities:
   parameters:
   - name: master
     type: string
-    description: 'Spark master URL: local[4], yarn, k8s://'
+    description: Spark master URL (e.g., local[4], k8s://https://cluster:6443)
   - name: packages
     type: string
-    description: Maven coordinates for kafka connector
+    description: Maven coordinates for Kafka connector
   - name: shuffle_partitions
     type: integer
-    description: Parallelism for stateful aggregations
+    description: Number of shuffle partitions for aggregation
 knowledge:
 - title: Spark Kafka integration guide
   type: documentation
   source: https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html
-  description: Kafka source/sink options and offsets
-- title: Spark Structured Streaming guide
-  type: documentation
-  source: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html
-  description: Streaming queries, output modes, watermarking
+  description: "Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally or in cluster mode on Kubernetes, explores streaming APIs interactively in spark-shell, and tunes aggregation parallelism with shuffle partitions."
 instructions: "# Spark Structured Streaming\n\nHand-crafted skill for streaming data pipelines with Spark\
   \ Structured Streaming.\n\n## What this skill does\n\n- Runs streaming jobs with spark-submit against\
   \ Kafka topics\n- Explores streaming APIs interactively in spark-shell\n- Deploys in cluster mode to\
@@ -106,5 +101,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

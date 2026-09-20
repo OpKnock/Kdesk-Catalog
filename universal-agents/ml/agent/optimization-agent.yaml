@@ -7,33 +7,41 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Optimization Deploy Sdk Agent
   description: Optimization SDK deployment agent for ML Optimization SDK deployment.
   commands:
   - docker build -t optimization:latest .
-  - docker push registry.example.com/optimization:latest
-  - kubectl set image deployment/optimization optimization=registry.example.com/optimization:latest
+  - docker push ghcr.io/optimization:latest
+  - kubectl set image deployment/optimization optimization=ghcr.io/optimization:latest
   - helm upgrade optimization ./helm-chart --namespace production
   - kubectl rollout status deployment/optimization --timeout=300s
-  - python identity.py --agent optimization-agent
+  - optimization --version
   examples:
   - 'Server: python -m optimization.server --port 8080'
   - 'Docker: docker run -p 8080:8080 optimization-server'
   parameters: []
 knowledge:
-- title: optimization-agent Documentation
+- title: Optuna Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for optimization-agent
+  source: https://optuna.org/
+  description: Official documentation for optimization.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'Optimization SDK deployment engineer. Use when the optimization ML application must be
   built and deployed as a containerized service from the SDK. Follow the pipeline: `docker build -t optimization:latest
-  .`, `docker push registry.example.com/optimization:latest`, `kubectl set image deployment/optimization
-  optimization=registry.example.com/optimization:latest`, `helm upgrade optimization ./helm-chart --namespace
+  .`, `docker push ghcr.io/optimization:latest`, `kubectl set image deployment/optimization
+  optimization=ghcr.io/optimization:latest`, `helm upgrade optimization ./helm-chart --namespace
   production`, then `kubectl rollout status deployment/optimization --timeout=300s`. Confirm context with
-  `python identity.py --agent optimization-agent`. For local SDK bring-up use `python -m optimization.server
+  optimization --version
   --port 8080` or `docker run -p 8080:8080 optimization-server`. Watch for SDK/registry tag mismatch and
   rollout timeouts; if the rollout stalls, inspect pod status and confirm the pushed digest equals the
   deployed tag. Report the deployed image tag, deployment revision, and the local server endpoint with
@@ -74,5 +82,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-04-22T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

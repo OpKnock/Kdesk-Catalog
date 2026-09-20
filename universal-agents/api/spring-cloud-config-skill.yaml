@@ -1,23 +1,28 @@
 name: spring-cloud-config
 display_name: Spring Cloud Config
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Hand-crafted Spring Cloud Config skill: fetch config from the Config Server API, encrypt/decrypt
-  secrets, and trigger runtime refresh with actuator.'
-version: 2.0.0
+description: "Manages externalized configuration for Spring microservices through Config Server: retrieves merged properties per environment, encrypts secrets at rest, and signals clients to refresh without restart."
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
+  - api
+  - spring-cloud
+  - config-server
+  - microservices
+  - configuration
 capabilities:
 - name: config-server-client
-  description: Query, encrypt, and refresh configuration served by Spring Cloud Config
+  description: Fetches environment-specific properties, manages ciphertext via encrypt/decrypt endpoints, and broadcasts refresh events to clients
   commands:
   - curl -s localhost:8888/apps-service/dev | jq -r '.propertySources[0].source'
-  - curl -s localhost:8888/apps-service/dev/master
-  - 'curl -X POST http://localhost:8888/actuator/refresh -H ''Content-Type: application/json'' -d ''{}'''
-  - 'curl -s -X POST http://localhost:8888/encrypt -d ''secretvalue'' -H ''Content-Type: text/plain'''
-  - curl -s -X POST http://localhost:8888/decrypt -d 'AgB...encrypted...'
+  - curl -s localhost:8888/apps-service/dev/master | jq '.name'
+  - 'curl -X POST http://localhost:8888/actuator/refresh -H "Content-Type: application/json" -d "{}"'
+  - 'curl -s -X POST http://localhost:8888/encrypt -d "secretvalue" -H "Content-Type: text/plain"'
+  - 'curl -s -X POST http://localhost:8888/decrypt -d "AgB...encrypted..."'
   examples:
   - curl -s localhost:8888/apps-service/dev | jq -r '.propertySources[0].source.db'
   - curl -s localhost:8888/apps-service/dev/master | jq '.name'
@@ -33,45 +38,85 @@ capabilities:
     type: string
     description: Git label/branch, e.g. master
 knowledge:
-- title: Spring Cloud Config docs
-  type: documentation
-  source: https://docs.spring.io/spring-cloud-config/reference/
-  description: Server, clients, encryption, and refresh
-- title: Config Server REST API
-  type: documentation
-  source: https://docs.spring.io/spring-cloud-config/reference/server/backend.html
-  description: Environment endpoint URL patterns
-instructions: "# Spring Cloud Config\n\nHand-crafted skill for serving and consuming config with Spring\
-  \ Cloud Config.\n\n## What this skill does\n\n- Fetches resolved config for any app/profile/label from\
-  \ the server\n- Encrypts and decrypts secrets through the /encrypt and /decrypt endpoints\n- Triggers\
-  \ runtime refresh on clients via /actuator/refresh\n\n## When to use\n\n- Centralizing config for a\
-  \ microservice fleet\n- Rotating encrypted passwords without redeploys\n- Debugging why a client sees\
-  \ stale properties\n\n## Real commands\n\n```bash\n# Resolved config for app, profile, label\ncurl -s\
-  \ localhost:8888/apps-service/dev | jq -r '.propertySources[0].source'\ncurl -s localhost:8888/apps-service/dev/master\
-  \ | jq '.name'\n\n# Encrypt a secret with the server's key\ncurl -s -X POST http://localhost:8888/encrypt\
-  \ -d 'secretvalue' -H 'Content-Type: text/plain'\n\n# Decrypt back\ncurl -s -X POST http://localhost:8888/decrypt\
-  \ -d 'AgB...encrypted...'\n\n# Client picks up new values\ncurl -X POST http://localhost:8888/actuator/refresh\
-  \ -H 'Content-Type: application/json' -d '{}'\n```\n\n## Config in git\n\n```yaml\n# apps-service-dev.yml\n\
-  db:\n  password: '{cipher}AgB...'\n```\n\n## Testing\n\n```bash\ncurl -s localhost:8888/apps-service/dev\
-  \ | jq -r '.propertySources[0].source[\"db.password\"]'\ncurl -s -X POST http://localhost:8888/encrypt\
-  \ -d 'test' | tee enc.txt\ncurl -s -X POST http://localhost:8888/decrypt -d \"$(cat enc.txt)\"\n```\n\
-  \n## Best practices\n\n- Store ciphertext with the {cipher} prefix in config files\n- Scope encryption\
-  \ to the Config Server only; never share the key\n- Version config files with the same tag as the services\
-  \ that use them\n"
+  - title: Spring Cloud Config Reference
+    type: documentation
+    source: https://docs.spring.io/spring-cloud-config/reference/
+    description: Server provisioning, client bootstrap, encryption, and refresh mechanics
+  - title: Config Server REST API
+    type: documentation
+    source: https://docs.spring.io/spring-cloud-config/reference/server/backend.html
+    description: Environment endpoint patterns, label resolution, and property source precedence
+  - title: Spring Boot Actuator Endpoints
+    type: documentation
+    source: https://docs.spring.io/spring-boot/docs/current/actuator-api/htmlsingle/
+    description: Refresh endpoint semantics, health indicators, and metrics exposure
+instructions: |
+  # Spring Cloud Config
+
+  Consumes centralized configuration from Spring Cloud Config Server.
+
+  ## What this skill does
+
+  - Fetches resolved config for any app/profile/label from the server
+  - Encrypts and decrypts secrets through the /encrypt and /decrypt endpoints
+  - Triggers runtime refresh on clients via /actuator/refresh
+
+  ## When to use
+
+  - Centralizing config for a microservice fleet
+  - Rotating encrypted passwords without redeploys
+  - Debugging why a client sees stale properties
+
+  ## Real commands
+
+  ```bash
+  # Resolved config for app, profile, label
+  curl -s localhost:8888/apps-service/dev | jq -r '.propertySources[0].source'
+  curl -s localhost:8888/apps-service/dev/master | jq '.name'
+
+  # Encrypt a secret with the server's key
+  curl -s -X POST http://localhost:8888/encrypt -d 'secretvalue' -H 'Content-Type: text/plain'
+
+  # Decrypt back
+  curl -s -X POST http://localhost:8888/decrypt -d 'AgB...encrypted...'
+
+  # Client picks up new values
+  curl -X POST http://localhost:8888/actuator/refresh -H 'Content-Type: application/json' -d '{}'
+  ```
+
+  ## Config in git
+
+  ```yaml
+  # apps-service-dev.yml
+  db:
+    password: '{cipher}AgB...'
+  ```
+
+  ## Testing
+
+  ```bash
+  curl -s localhost:8888/apps-service/dev | jq -r '.propertySources[0].source["db.password"]'
+  curl -s -X POST http://localhost:8888/encrypt -d 'test' | tee enc.txt
+  curl -s -X POST http://localhost:8888/decrypt -d "$(cat enc.txt)"
+  ```
+
+  ## Best practices
+
+  - Store ciphertext with the {cipher} prefix in config files
+  - Scope encryption to the Config Server only; never share the key
+  - Version config files with the same tag as the services that use them
 examples:
-- input: What config does apps-service use in dev?
-  output: curl -s localhost:8888/apps-service/dev | jq -r '.propertySources[0].source' returns the merged
-    key-value map.
-- input: Rotate a database password at runtime
-  output: Commit the new {cipher} value to the config repo, then POST /actuator/refresh to the running
-    clients.
+  - input: What config does apps-service use in dev?
+    output: curl -s localhost:8888/apps-service/dev | jq -r '.propertySources[0].source' returns the merged key-value map.
+  - input: Rotate a database password at runtime
+    output: Commit the new {cipher} value to the config repo, then POST /actuator/refresh to the running clients.
 platforms:
   claude_code:
     tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+      - Bash
+      - Read
+      - Write
+      - Edit
     model: inherit
   cursor:
     rule_type: auto
@@ -81,21 +126,16 @@ platforms:
   windsurf:
     model: inherit
     tools:
-    - bash
-    - read
-    - write
-    - edit
+      - bash
+      - read
+      - write
+      - edit
   opencode:
     plugin: opencode-spring-cloud-config
   generic:
-    system_prompt: 'You own Spring Cloud Config end to end. You do it through config-server-client: Query,
-      encrypt, and refresh configuration served by Spring Cloud Config. The commands are real, e.g. `curl
-      -s localhost:8888/apps-service/dev | jq -r .propertySources[0].source`. You prefer the shortest
-      safe path, and you reproduce failures before diagnosing them.'
+    system_prompt: "You own Spring Cloud Config end to end. You do it through config-server-client: Query, encrypt, and refresh configuration served by Spring Cloud Config. The commands are real, e.g. `curl -s localhost:8888/apps-service/dev | jq -r .propertySources[0].source`. You prefer the shortest safe path, and you reproduce failures before diagnosing them."
     available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+      - bash
+      - read
+      - write
+      - edit

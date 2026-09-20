@@ -2,12 +2,12 @@ name: hono
 display_name: Hono
 category: api
 subcategory: general
-description: 'Hono web framework for edge runtimes: scaffolding apps, middleware chains, routing, and
-  running dev servers on Node.js, Bun, or Cloudflare Workers.'
+description: 'Scaffold and run Hono web applications targeting edge runtimes: compose middleware chains, define
+  routes, and launch dev servers on Node.js, Bun, Deno, or Cloudflare Workers.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - bun
@@ -45,24 +45,24 @@ knowledge:
   source: https://hono.dev/api/hono
   description: 'Hono app API: routing, middleware, and context.'
 instructions: "# Hono\n\nBuild web applications for edge runtimes with Hono.\n\n## What this skill does\n\
-  \n- Scaffolds Hono apps for Node, Bun, Deno, and Workers.\n- Structures routing and middleware chains.\n\
-  - Runs local dev servers with hot reload.\n- Deploys to edge platforms.\n\n## When to use\n\n- A small,\
-  \ fast API that must run on edge runtimes.\n- Prototyping API endpoints quickly.\n- Adding middleware\
-  \ (auth, logging, validation) in a typed framework.\n\n## Real commands\n\n```bash\n# Scaffold\nnpm\
-  \ create hono@latest my-app\ncd my-app\nnpm install\n\n# Pick a template explicitly\nnpm create hono@latest\
-  \ my-app -- --template cloudflare-workers\n\n# Dev server\nnpm run dev\n\n# Deploy (template-dependent:\
-  \ workers, vercel, netlify...)\nnpm run deploy\n\n# Bun runtime\nbun run src/index.ts\n```\n\n## Basic\
-  \ app\n\n```ts\nimport { Hono } from 'hono'\n\nconst app = new Hono()\n\napp.get('/', (c) => c.text('Hello\
-  \ Hono!'))\napp.get('/users/:id', (c) => c.json({ id: c.req.param('id') }))\napp.post('/items', async\
-  \ (c) => {\n  const body = await c.req.json()\n  return c.json({ created: body }, 201)\n})\n\nexport\
-  \ default app\n```\n\n## Middleware\n\n```ts\nimport { logger } from 'hono/logger'\nimport { bearerAuth\
-  \ } from 'hono/bearer-auth'\n\napp.use('*', logger())\napp.use('/admin/*', bearerAuth({ token: 'secret'\
-  \ }))\n```\n\n## Testing\n\n```bash\ncurl -s http://localhost:3000/ | grep -q \"Hello Hono!\" && echo\
-  \ OK\n```\n\n## Best practices\n\n- Use the built-in logger and bearer auth middleware instead of hand-rolled\
-  \ code.\n- Keep handlers small; compose with app.use chains.\n- Validate request bodies with a schema\
-  \ library before use.\n- Match the runtime (node vs workers) when choosing adapters.\n\n## Example exchange\n\
-  \n```\nUser: Create a Hono app with a /health route.\nAgent: npm create hono@latest my-app && cd my-app\
-  \ && add\n       app.get('/health', (c) => c.json({ status: 'ok' }))\n```"
+48:   \n- Scaffolds Hono apps for Node, Bun, Deno, and Workers.\n- Structures routing and middleware chains.\n\
+49:   - Runs local dev servers with hot reload.\n- Deploys to edge platforms.\n\n## When to use\n\n- A small,\
+50:   \ fast API that must run on edge runtimes.\n- Prototyping API endpoints quickly.\n- Adding middleware\
+51:   \ (auth, logging, validation) in a typed framework.\n\n## Real commands\n\n```bash\n# Scaffold\nnpm\
+52:   \ create hono@latest my-app\ncd my-app\nnpm install\n\n# Pick a template explicitly\nnpm create hono@latest\
+53:   \ my-app -- --template cloudflare-workers\n\n# Dev server\nnpm run dev\n\n# Deploy (template-dependent:\
+54:   \ workers, vercel, netlify...)\nnpm run deploy\n\n# Bun runtime\nbun run src/index.ts\n```\n\n## Basic\
+55:   \ app\n\n```ts\nimport { Hono } from 'hono'\n\nconst app = new Hono()\n\napp.get('/', (c) => c.text('Hello\
+56:   \ Hono!'))\napp.get('/users/:id', (c) => c.json({ id: c.req.param('id') }))\napp.post('/items', async\
+57:   \ (c) => {\n  const body = await c.req.json()\n  return c.json({ created: body }, 201)\n})\n\nexport\
+58:   \ default app\n```\n\n## Middleware\n\n```ts\nimport { logger } from 'hono/logger'\nimport { bearerAuth\
+59:   \ } from 'hono/bearer-auth'\n\napp.use('*', logger())\napp.use('/admin/*', bearerAuth({ token: 'secret'\
+60:   \ }))\n```\n\n## Testing\n\n```bash\ncurl -s http://localhost:3000/ | grep -q \"Hello Hono!\" && echo\
+61:   \ OK\n```\n\n## Best practices\n\n- Use the built-in logger and bearer auth middleware instead of hand-rolled\
+62:   \ code.\n- Keep handlers small; compose with app.use chains.\n- Validate request bodies with a schema\
+63:   \ library before use.\n- Match the runtime (node vs workers) when choosing adapters.\n\n## Example exchange\n\
+64:   \n```\nUser: Create a Hono app with a /health route.\nAgent: npm create hono@latest my-app && cd my-app\
+65:   \ && add\n       app.get('/health', (c) => c.json({ status: 'ok' }))\n```"
 examples:
 - input: Scaffold a Hono app for Cloudflare Workers
   output: npm create hono@latest my-app -- --template cloudflare-workers && cd my-app && npm install
@@ -100,5 +100,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

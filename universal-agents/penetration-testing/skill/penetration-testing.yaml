@@ -51,7 +51,7 @@ capabilities:
   - nmap -sV -sC -p- -T4 target.example.com
   - nmap -sV -p 80,443,8080 10.0.0.0/24
   - nmap --script vulners -p 443 target.example.com
-  - whois example.com && dig example.com A +short
+  - whois localhost && dig localhost A +short
   - nmap -sn 10.0.0.0/24
   examples:
   - nmap -sV -sC 10.0.1.5 -oN scan.txt
@@ -70,15 +70,15 @@ capabilities:
 - name: web
   description: Scan web apps for vulnerabilities and content.
   commands:
-  - nuclei -u https://target.example.com -severity high,critical
-  - gobuster dir -u http://target.example.com -w /usr/share/wordlists/dirb/common.txt -t 40
-  - sqlmap -u 'http://target.example.com/item?id=1' --batch --dbs
-  - nikto -h http://target.example.com -p 80
-  - ffuf -u http://target.example.com/FUZZ -w /usr/share/wordlists/dirb/common.txt -mc 200,301
+  - nuclei -u http://localhost:8080 -severity high,critical
+  - gobuster dir -u http://localhost:8080 -w /usr/share/wordlists/dirb/common.txt -t 40
+  - sqlmap -u 'http://localhost:8080/item?id=1' --batch --dbs
+  - nikto -h http://localhost:8080 -p 80
+  - ffuf -u http://localhost:8080/FUZZ -w /usr/share/wordlists/dirb/common.txt -mc 200,301
   examples:
-  - nuclei -u https://target.example.com -t http/exposures -o nuclei-results.txt
-  - gobuster dir -u http://target.example.com -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-  - sqlmap -u 'http://target.example.com/item?id=1' --batch --technique=BEU --level=2
+  - nuclei -u http://localhost:8080 -t http/exposures -o nuclei-results.txt
+  - gobuster dir -u http://localhost:8080 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+  - sqlmap -u 'http://localhost:8080/item?id=1' --batch --technique=BEU --level=2
   parameters:
   - name: target-url
     type: string

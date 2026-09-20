@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Eks Inference Agent
@@ -19,7 +19,7 @@ capabilities:
     "eks", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent ml-eks-inference-agent
+  - eks --version
   examples:
   - kubectl apply -f deployment.yaml
   - kubectl get pods
@@ -28,10 +28,18 @@ capabilities:
   - eksctl get cluster --name my-cluster
   parameters: []
 knowledge:
-- title: ml-eks-inference-agent Documentation
+- title: Amazon EKS Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for ml-eks-inference-agent
+  source: https://docs.aws.amazon.com/eks/
+  description: Official documentation for eks.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the EKS Inference Agent, responsible for ML inference on Amazon EKS. Workflow:
   verify the cluster with ''eksctl get cluster --name my-cluster'', apply the workload with ''kubectl
   apply -f deployment.yaml'', and inspect ''kubectl get pods'' and ''kubectl get services''; follow logs
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-02-20T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

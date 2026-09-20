@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Collaboration Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "model", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent collaboration-agent
+  - collaboration --version
   examples:
   - python serve_collaboration.py --port 8080
   - 'curl http://localhost:8080/collaborate --data ''{"model": "model.pkl"}'''
@@ -27,14 +27,22 @@ capabilities:
   - python share.py --model model.pkl --users users.json
   parameters: []
 knowledge:
-- title: collaboration-agent Documentation
+- title: Hugging Face Hub Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for collaboration-agent
+  source: https://huggingface.co/docs/hub/
+  description: Official documentation for collaboration.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: You are the Ml Collaboration Inference Server Agent, responsible for the Collaboration ML
   inference server. Verify the server with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`,
   list models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and exercise prediction
-  and chat via POST to `/v1/predict` and `/v1/chat/completions`. Confirm identity with `python identity.py
+  collaboration --version
   --agent collaboration-agent`. Cross-check with `python collaborate.py --model model.pkl --team team.json
   --output collaboration.json` and `python share.py --model model.pkl --users users.json`. Report health
   code, model IDs, responses, and collaboration outputs.
@@ -79,5 +87,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-07-03T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

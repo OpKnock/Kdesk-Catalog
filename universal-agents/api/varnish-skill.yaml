@@ -1,81 +1,20 @@
 name: varnish
 display_name: Varnish
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Hand-crafted Varnish skill: VCL routing and caching rules, cache invalidation with purge/bans,
-  and hit-rate inspection via varnishstat and varnishlog.'
-version: 2.0.0
+description: "Administers Varnish HTTP cache using VCL. Loads and reloads configurations, invalidates content with bans and purges, inspects hit rates via varnishstat, and debugs request routing with varnishlog."
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
-prerequisites:
-- varnish_reload_vcl
-- varnishadm
-- varnishd
-- varnishlog
-- varnishstat
-capabilities:
-- name: varnish-cache
-  description: Manage VCL, purges, and cache stats
-  commands:
-  - varnishd -f /etc/varnish/default.vcl -s malloc,256m
-  - varnish_reload_vcl
-  - varnishadm ban 'req.url ~ ^/products'
-  - varnishadm ban 'obj.http.x-cache-type ~ html'
-  - varnishstat -1 | grep -E 'MAIN.cache_hit|MAIN.cache_miss|MAIN.hitmiss'
-  - varnishlog -g request -q 'ReqURL ~ "/products"'
-  examples:
-  - varnishadm ban 'req.url ~ ^/products'
-  - varnishstat -1 | grep -E 'MAIN.cache_hit|MAIN.cache_miss'
-  - varnish_reload_vcl
-  parameters:
-  - name: vcl_file
-    type: string
-    description: Path to VCL config
-  - name: ban_expression
-    type: string
-    description: Ban regex, e.g. req.url ~ ^/products
-  - name: cache_size
-    type: string
-    description: malloc size, e.g. 256m
-knowledge:
-- title: Varnish VCL reference
-  type: documentation
-  source: https://varnish-cache.org/docs/trunk/reference/vcl.html
-  description: vcl_recv, vcl_backend_response
-- title: Varnish CLI and stats
-  type: documentation
-  source: https://varnish-cache.org/docs/trunk/reference/varnishadm.html
-  description: ban, vcl.load, stats counters
-instructions: "# Varnish\n\nHand-crafted skill for Varnish cache administration.\n\n## What this skill\
-  \ does\n\n- Loads and reloads VCL configs\n- Invalidates cached content with bans and purges\n- Reads\
-  \ hit rates and request logs\n\n## When to use\n\n- Tuning cache hit rate for an API or site\n- Removing\
-  \ stale content after a release\n- Debugging why a URL will not cache\n\n## Real commands\n\n```bash\n\
-  # Start with a VCL and 256MB cache\nvarnishd -f /etc/varnish/default.vcl -s malloc,256m\n\n# Reload\
-  \ VCL without dropping traffic\nvarnish_reload_vcl\n\n# Ban (invalidate) matching objects\nvarnishadm\
-  \ ban 'req.url ~ ^/products'\nvarnishadm ban 'obj.http.x-cache-type ~ html'\n\n# Stats\nvarnishstat\
-  \ -1 | grep -E 'MAIN.cache_hit|MAIN.cache_miss|MAIN.hitmiss'\n\n# Request log for one URL pattern\n\
-  varnishlog -g request -q 'ReqURL ~ \"/products\"'\n```\n\n## Minimal VCL\n\n```vcl\nvcl 4.0;\nbackend\
-  \ default { .host = \"127.0.0.1\"; .port = \"8080\"; }\n\nsub vcl_backend_response {\n  if (beresp.ttl\
-  \ <= 0s && bereq.method == \"GET\") {\n    set beresp.ttl = 120s;\n  }\n  unset beresp.http.Set-Cookie;\n\
-  }\n```\n\n## Testing\n\n```bash\nvarnishstat -1 | grep 'MAIN.cache_hit'   # hit count\nvarnishadm ban\
-  \ 'req.url ~ ^/products'    # clear products\n```\n\n## Best practices\n\n- Ban with narrow expressions;\
-  \ broad bans purge everything\n- Never cache responses that carry Set-Cookie\n- Watch hitmiss: it means\
-  \ miss then hit, a sign of warmup churn\n"
-examples:
-- input: Why is this URL missing?
-  output: varnishlog -g request -q 'ReqURL ~ "/products"' shows pass/miss decisions; check Set-Cookie
-    removal in vcl_backend_response.
-- input: Invalidate all /products pages
-  output: varnishadm ban 'req.url ~ ^/products' removes those objects from cache immediately.
+  - api
+  - cache
+  - http
 platforms:
   claude_code:
-    tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+    tools: [Bash, Read, Write, Edit]
     model: inherit
   cursor:
     rule_type: auto
@@ -84,21 +23,120 @@ platforms:
     extension: github.copilot
   windsurf:
     model: inherit
-    tools:
-    - bash
-    - read
-    - write
-    - edit
+    tools: [bash, read, write, edit]
   opencode:
     plugin: opencode-varnish
   generic:
-    system_prompt: 'You own Varnish end to end. You do it through varnish-cache: Manage VCL, purges, and
-      cache stats. The commands are real, e.g. `varnishd -f /etc/varnish/default.vcl -s malloc,256m`.
-      You run and verify the real CLI commands before you claim anything.'
-    available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+    system_prompt: "You own Varnish end to end. You do it through varnish-cache: Manage VCL, purges, and cache stats. The commands are real, e.g. `varnishd -f /etc/varnish/default.vcl -s malloc,256m`. You run and verify the real CLI commands before you claim anything."
+    available_tools: [bash, read, write, edit]
+capabilities:
+  - name: varnish-cache
+    description: Manage VCL, purges, and cache stats
+    commands:
+      - 'varnishd -f /etc/varnish/default.vcl -s malloc,256m'
+      - 'varnish_reload_vcl'
+      - 'varnishadm ban "req.url ~ ^/products"'
+      - 'varnishadm ban "obj.http.x-cache-type ~ html"'
+      - 'varnishstat -1 | grep -E "MAIN.cache_hit|MAIN.cache_miss|MAIN.hitmiss"'
+      - 'varnishlog -g request -q "ReqURL ~ /products"'
+    examples:
+      - 'varnishadm ban "req.url ~ ^/products"'
+      - 'varnishstat -1 | grep -E "MAIN.cache_hit|MAIN.cache_miss"'
+      - 'varnish_reload_vcl'
+    parameters:
+      - name: vcl_file
+        type: string
+        description: Path to VCL config
+      - name: ban_expression
+        type: string
+        description: Ban regex, e.g. req.url ~ ^/products
+      - name: cache_size
+        type: string
+        description: malloc size, e.g. 256m
+prerequisites:
+  - varnishd
+  - varnishadm
+  - varnishstat
+  - varnishlog
+tools: [varnishd, varnishadm, varnishstat, varnishlog]
+examples:
+  - input: Why is this URL missing?
+    output: varnishlog -g request -q "ReqURL ~ /products" shows pass/miss decisions; check Set-Cookie removal in vcl_backend_response.
+  - input: Invalidate all /products pages
+    output: varnishadm ban "req.url ~ ^/products" removes those objects from cache immediately.
+instructions: |
+  # Varnish
+
+  Hand-crafted skill for Varnish cache administration.
+
+  ## What this skill does
+
+  - Loads and reloads VCL configs
+  - Invalidates cached content with bans and purges
+  - Reads hit rates and request logs
+
+  ## When to use
+
+  - Tuning cache hit rate for an API or site
+  - Removing stale content after a release
+  - Debugging why a URL will not cache
+
+  ## Real commands
+
+  ```bash
+  # Start with a VCL and 256MB cache
+  varnishd -f /etc/varnish/default.vcl -s malloc,256m
+
+  # Reload VCL without dropping traffic
+  varnish_reload_vcl
+
+  # Ban (invalidate) matching objects
+  varnishadm ban "req.url ~ ^/products"
+  varnishadm ban "obj.http.x-cache-type ~ html"
+
+  # Stats
+  varnishstat -1 | grep -E "MAIN.cache_hit|MAIN.cache_miss|MAIN.hitmiss"
+
+  # Request log for one URL pattern
+  varnishlog -g request -q "ReqURL ~ /products"
+  ```
+
+  ## Minimal VCL
+
+  ```vcl
+  vcl 4.0;
+  backend default { .host = "127.0.0.1"; .port = "8080"; }
+
+  sub vcl_backend_response {
+    if (beresp.ttl <= 0s && bereq.method == "GET") {
+      set beresp.ttl = 120s;
+    }
+    unset beresp.http.Set-Cookie;
+  }
+  ```
+
+  ## Testing
+
+  ```bash
+  varnishstat -1 | grep "MAIN.cache_hit"   # hit count
+  varnishadm ban "req.url ~ ^/products"    # clear products
+  ```
+
+  ## Best practices
+
+  - Ban with narrow expressions; broad bans purge everything
+  - Never cache responses that carry Set-Cookie
+  - Watch hitmiss: it means miss then hit, a sign of warmup churn
+knowledge:
+  - title: Varnish VCL reference
+    type: documentation
+    source: https://varnish-cache.org/docs/trunk/reference/vcl.html
+    description: vcl_recv, vcl_backend_response
+  - title: Varnish CLI and stats
+    type: documentation
+    source: https://varnish-cache.org/docs/trunk/reference/varnishadm.html
+    description: ban, vcl.load, stats counters
+  - title: Varnish book
+    type: documentation
+    source: https://varnish-cache.org/docs/trunk/users-guide/index.html
+    description: Configuration and tuning guide

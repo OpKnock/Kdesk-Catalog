@@ -1,48 +1,45 @@
 name: spring-webflux
-display_name: Spring Webflux
+display_name: Spring WebFlux
 category: api
 subcategory: general
-description: 'Hand-crafted Spring WebFlux skill: reactive endpoints, streaming responses with curl -N,
-  SSE text/event-stream, and WebClient-based async consumers.'
+description: "Builds and tests reactive endpoints with Spring WebFlux. Streams Flux responses with curl -N, serves Server-Sent Events via text/event-stream, consumes downstream services reactively with WebClient, and handles multipart uploads non-blockingly."
 version: 2.0.0
+type: skill
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - ./mvnw
 capabilities:
 - name: webflux-reactive
-  description: Build and test reactive endpoints with Spring WebFlux
+  description: "Builds and tests reactive endpoints with Spring WebFlux. Streams Flux responses with curl -N, serves Server-Sent Events via text/event-stream, consumes downstream services reactively with WebClient, and handles multipart uploads non-blockingly."
   commands:
-  - curl -N localhost:8080/flux
-  - curl -s localhost:8080/api/prices | jq 'length'
-  - 'curl -H ''Accept: text/event-stream'' -N localhost:8080/events'
-  - curl -s -X POST localhost:8080/upload -F 'file=@data.csv'
   - ./mvnw spring-boot:run
+  - curl -N localhost:8080/flux
+  - 'curl -H "Accept: text/event-stream" -N localhost:8080/events'
+  - curl -s localhost:8080/api/prices | jq 'length'
+  - 'curl -s -X POST localhost:8080/upload -F "file=@data.csv"'
   examples:
   - curl -N localhost:8080/flux
-  - 'curl -H ''Accept: text/event-stream'' -N localhost:8080/events'
+  - 'curl -H "Accept: text/event-stream" -N localhost:8080/events'
   - curl -s localhost:8080/api/prices | jq 'length'
+  - 'curl -s -X POST localhost:8080/upload -F "file=@data.csv"'
   parameters:
-  - name: port
-    type: integer
-    description: Server port (default 8080)
-  - name: content_type
-    type: string
-    description: text/event-stream or application/json
   - name: endpoint
     type: string
-    description: Reactive endpoint path
+    description: Base URL of the WebFlux service
+  - name: accept_header
+    type: string
+    description: Accept header for SSE (text/event-stream)
+  - name: file_path
+    type: string
+    description: Path to file for multipart upload
 knowledge:
 - title: WebFlux reference
   type: documentation
   source: https://docs.spring.io/spring-framework/reference/web/webflux.html
-  description: Reactive controllers, SSE, WebClient
-- title: Project Reactor docs
-  type: documentation
-  source: https://projectreactor.io/docs/core/release/reference/
-  description: Flux/Mono operators and backpressure
+  description: "Builds and tests reactive endpoints with Spring WebFlux. Streams Flux responses with curl -N, serves Server-Sent Events via text/event-stream, consumes downstream services reactively with WebClient, and handles multipart uploads non-blockingly."
 instructions: "# Spring WebFlux\n\nHand-crafted skill for reactive Spring WebFlux APIs.\n\n## What this\
   \ skill does\n\n- Builds non-blocking endpoints returning Flux and Mono\n- Streams data with curl -N\
   \ and SSE via text/event-stream\n- Consumes services reactively with WebClient\n\n## When to use\n\n\
@@ -98,5 +95,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

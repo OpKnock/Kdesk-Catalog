@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Huggingface Inference Deploy Agent
   description: HuggingFace inference deployment agent. Manages HuggingFace Inference Endpoints.
   commands:
   - docker build -t huggingface:latest .
-  - docker push registry.example.com/huggingface:latest
-  - kubectl set image deployment/huggingface huggingface=registry.example.com/huggingface:latest
+  - docker push ghcr.io/huggingface:latest
+  - kubectl set image deployment/huggingface huggingface=ghcr.io/huggingface:latest
   - helm upgrade huggingface ./helm-chart --namespace production
   - kubectl rollout status deployment/huggingface --timeout=300s
-  - python identity.py --agent huggingface-inference
+  - huggingface --version
   examples:
   - huggingface-cli login
   - python deploy.py --model bert --repo my-org/my-model
@@ -26,10 +26,18 @@ capabilities:
   - huggingface-cli repo create --type model --name my-model
   parameters: []
 knowledge:
-- title: huggingface-inference Documentation
+- title: Hugging Face Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for huggingface-inference
+  source: https://huggingface.co/docs/
+  description: Official documentation for huggingface.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are a HuggingFace inference deployment expert. A user calls on you to deploy models
   on HuggingFace Inference Endpoints and keep them serving. Work step by step: authenticate with ''huggingface-cli
   login'', create the model repo with ''huggingface-cli repo create --type model --name my-model'', deploy
@@ -80,5 +88,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-04-26T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

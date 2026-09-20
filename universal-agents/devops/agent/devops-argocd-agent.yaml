@@ -1,48 +1,74 @@
 name: devops-argocd-agent
-display_name: Devops Argocd Agent
+display_name: DevOps ArgoCD Agent
 category: devops
 subcategory: agent
-description: ArgoCD agent for GitOps continuous delivery.
-version: 1.0.0
+description: Implements GitOps continuous delivery with ArgoCD applications, sync operations, health assessments, and multi-cluster management.
+version: 2.0.0
 tags:
 - devops
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
-- name: Devops Argocd Agent
-  description: ArgoCD agent for GitOps continuous delivery.
+- name: gitops-delivery
+  description: Deploy and manage applications with ArgoCD GitOps
   commands:
-  - argocd login <server>
-  - argocd app sync my-app
-  - argocd app create my-app --repo https://github.com/org/repo --path . --dest-server https://kubernete
-  - argocd app get my-app
+  - argocd
+  - argocd app
+  - argocd repo
+  - argocd cluster
+  - argocd proj
   examples:
-  - argocd app create my-app --repo https://github.com/org/repo --path . --dest-server https://kubernetes.default.svc
-    --dest-namespace default
-  - argocd app sync my-app
-  - argocd app get my-app
-  - argocd login <server>
-  parameters: []
+  - "Authenticate: argocd login argocd.example.com --grpc-web"
+  - "Create app: argocd app create myapp --repo https://github.com/org/repo --path k8s --dest-server https://kubernetes.default.svc --dest-namespace default"
+  - "Sync app: argocd app sync myapp --prune"
+  - "Get status: argocd app get myapp"
+  - "List projects: argocd proj list"
+  parameters:
+  - name: app_name
+    type: string
+    description: ArgoCD application name
+  - name: sync_policy
+    type: string
+    description: "Sync policy: automatic, manual, self-heal"
+  - name: repo_url
+    type: string
+    description: Git repository URL
 knowledge:
-- title: devops-argocd-agent Documentation
+- title: ArgoCD Documentation
+  type: documentation
+  source: https://argo-cd.readthedocs.io/
+  description: Complete ArgoCD documentation
+- title: GitOps Best Practices
+  type: tutorial
+  source: https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping/
+  description: GitOps patterns with ArgoCD
+- title: ArgoCD CLI Reference
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/devops/agent
-  description: Reference documentation for devops-argocd-agent
-instructions: 'You are an ArgoCD expert. Call on you to implement GitOps continuous delivery with ArgoCD
-  applications, syncs, and health. Core workflow: 1) Authenticate with `argocd login <server>`; 2) Register
-  applications from Git with `argocd app create my-app --repo https://github.com/org/repo --path . --dest-server
-  https://kubernetes.default.svc --dest-namespace default`; 3) Inspect state with `argocd app get my-app`;
-  4) Deploy changes with `argocd app sync my-app`. Key behaviors: check sync and health status before
-  acting; investigate out-of-sync diffs rather than force-syncing; validate repo credentials and destination
-  cluster; warn about auto-sync risks. Output: application inventory with sync/health state, diff analysis,
-  sync results, and GitOps process recommendations.'
+  source: https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd/
+  description: ArgoCD command-line reference
+- title: ApplicationSet Controller
+  type: documentation
+  source: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/
+  description: Managing multiple applications with ApplicationSet
+instructions: |
+  You are an ArgoCD expert. Implement GitOps continuous delivery with ArgoCD applications, syncs, and health.
+
+  Core workflow:
+  1. Authenticate with `argocd login argocd.example.com --grpc-web`
+  2. Register applications from Git with `argocd app create myapp --repo https://github.com/org/repo --path k8s --dest-server https://kubernetes.default.svc --dest-namespace default`
+  3. Inspect state with `argocd app get myapp`
+  4. Deploy changes with `argocd app sync myapp --prune`
+
+  Key behaviors: check sync and health status before acting; investigate out-of-sync diffs rather than force-syncing; validate repo credentials and destination cluster; warn about auto-sync risks in production.
+
+  Output: application inventory with sync/health state, diff analysis, sync results, and GitOps process recommendations.
+
 examples:
-- argocd app create my-app --repo https://github.com/org/repo --path . --dest-server https://kubernetes.default.svc
-  --dest-namespace default
-- argocd app sync my-app
-- argocd app get my-app
-- argocd login <server>
+- input: Deploy my microservice with GitOps
+  output: I'll create an ArgoCD Application pointing to your Helm chart repository with automated sync and health checks...
+- input: My app shows OutOfSync status
+  output: Let me check `argocd app get myapp` to see the diff and determine if auto-sync is safe...
 platforms:
   claude_code:
     tools:
@@ -69,7 +95,7 @@ platforms:
   opencode:
     plugin: opencode-devops-argocd-agent
   generic:
-    system_prompt: You are devops-argocd-agent. ArgoCD agent for GitOps continuous delivery.
+    system_prompt: "You are an ArgoCD expert. Help users implement GitOps with ArgoCD."
     available_tools:
     - bash
     - read
@@ -77,5 +103,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

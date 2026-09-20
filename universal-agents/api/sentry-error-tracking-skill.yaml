@@ -1,17 +1,21 @@
 name: sentry-error-tracking
 display_name: Sentry Error Tracking
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Hand-crafted Sentry skill: Python SDK initialization, sentry-cli release and deploy management,
-  and raw envelope ingestion for smoke tests.'
-version: 2.0.0
+description: "Operates Sentry end-to-end: bootstraps the Python SDK with DSN and release context, manages releases and deploys via sentry-cli with commit linking, and verifies the ingest pipeline with raw envelope submissions."
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
+  - api
+  - sentry
+  - error-tracking
+  - release-management
 prerequisites:
-- pip
-- sentry-cli
+  - pip
+  - sentry-cli
 capabilities:
 - name: sentry-release-workflow
   description: Initialize the SDK, track releases/deploys, and ingest test events
@@ -39,44 +43,91 @@ capabilities:
     type: string
     description: Environment for deploys, e.g. production
 knowledge:
-- title: Sentry Python SDK docs
-  type: documentation
-  source: https://docs.sentry.io/platforms/python/
-  description: sentry_sdk.init options and scopes
-- title: sentry-cli reference
-  type: documentation
-  source: https://docs.sentry.io/cli/
-  description: releases, deploys, and event commands
-instructions: "# Sentry Error Tracking\n\nHand-crafted skill for error monitoring with Sentry.\n\n## What\
-  \ this skill does\n\n- Bootstraps the Python SDK with DSN, environment, and release\n- Creates releases\
-  \ and links commits with sentry-cli\n- Sends raw events to the ingest endpoint for verification\n\n\
-  ## When to use\n\n- Onboarding a new service to Sentry\n- Release hygiene: source maps and commits per\
-  \ release\n- Verifying the ingest pipeline with a test event\n\n## Real commands\n\n```bash\n# SDK\n\
-  pip install sentry-sdk\n\n# Release management\nsentry-cli releases new -p backend 2026.08.1\nsentry-cli\
-  \ releases set-commits --auto 2026.08.1\nsentry-cli releases deploys 2026.08.1 new -e production\nsentry-cli\
-  \ releases list -p backend\n\n# Raw ingest smoke test\ncurl -X POST \"https://o1.ingest.sentry.io/api/0/store/?sentry_key=DSN_PUBLIC\"\
-  \ -H 'Content-Type: application/json' -d '{\"event_id\":\"0123456789abcdef0123456789abcdef\",\"message\"\
-  :\"smoke\",\"level\":\"warning\"}'\n```\n\n## SDK init\n\n```python\nimport sentry_sdk\n\nsentry_sdk.init(\n\
-  \    dsn=\"https://public@o1.ingest.sentry.io/1234\",\n    environment=\"production\",\n    release=\"\
-  2026.08.1\",\n    traces_sample_rate=0.1,\n)\n```\n\n## Testing\n\n```bash\nsentry-cli releases new\
-  \ -p backend smoke-$(date +%s)\ncurl -X POST \"https://o1.ingest.sentry.io/api/0/store/?sentry_key=DSN_PUBLIC\"\
-  \ -d '{\"message\":\"test\",\"level\":\"info\"}'\n```\n\n## Best practices\n\n- Set release and environment\
-  \ in init; filters depend on them\n- Run sentry-cli set-commits in CI right after deploy\n- Keep the\
-  \ DSN public key safe in client code but never the auth token\n"
+  - title: Sentry Python SDK Documentation
+    type: documentation
+    source: https://docs.sentry.io/platforms/python/
+    description: sentry_sdk.init options, scopes, and performance monitoring
+  - title: sentry-cli Reference
+    type: documentation
+    source: https://docs.sentry.io/cli/
+    description: Release, deploy, and event management commands
+  - title: Sentry Envelope API
+    type: documentation
+    source: https://develop.sentry.dev/sdk/envelopes/
+    description: Raw envelope format for direct ingestion testing
+instructions: |
+  # Sentry Error Tracking
+
+  Operates Sentry end-to-end: SDK initialization, release/deploy management, and ingest verification.
+
+  ## What this skill does
+
+  - Bootstraps the Python SDK with DSN, environment, and release context
+  - Creates releases and links commits with sentry-cli
+  - Sends raw events to the ingest endpoint for smoke testing
+
+  ## When to use
+
+  - Onboarding a new service to Sentry
+  - Release hygiene: source maps and commits per release
+  - Verifying the ingest pipeline with a test event
+
+  ## Real commands
+
+  ```bash
+  # SDK installation
+  pip install sentry-sdk
+
+  # Release management
+  sentry-cli releases new -p backend 2026.08.1
+  sentry-cli releases set-commits --auto 2026.08.1
+  sentry-cli releases deploys 2026.08.1 new -e production
+  sentry-cli releases list -p backend
+
+  # Raw ingest smoke test
+  curl -X POST "https://o1.ingest.sentry.io/api/0/store/?sentry_key=DSN_PUBLIC" \
+    -H 'Content-Type: application/json' \
+    -d '{"event_id":"0123456789abcdef0123456789abcdef","message":"smoke","level":"warning"}'
+  ```
+
+  ## SDK init
+
+  ```python
+  import sentry_sdk
+
+  sentry_sdk.init(
+      dsn="https://public@o1.ingest.sentry.io/1234",
+      environment="production",
+      release="2026.08.1",
+      traces_sample_rate=0.1,
+  )
+  ```
+
+  ## Testing
+
+  ```bash
+  sentry-cli releases new -p backend smoke-$(date +%s)
+  curl -X POST "https://o1.ingest.sentry.io/api/0/store/?sentry_key=DSN_PUBLIC" \
+    -d '{"message":"test","level":"info"}'
+  ```
+
+  ## Best practices
+
+  - Set release and environment in init; filters depend on them
+  - Run sentry-cli set-commits in CI right after deploy
+  - Keep the DSN public key safe in client code but never the auth token
 examples:
-- input: Attach commits to a release
-  output: sentry-cli releases new -p backend 2026.08.1 && sentry-cli releases set-commits --auto 2026.08.1
-    in CI after the deploy.
-- input: Is ingestion working?
-  output: POST a raw event with curl to /api/0/store/?sentry_key=DSN_PUBLIC and look for it in the project's
-    Issues feed.
+  - input: Attach commits to a release
+    output: sentry-cli releases new -p backend 2026.08.1 && sentry-cli releases set-commits --auto 2026.08.1 in CI after the deploy.
+  - input: Is ingestion working?
+    output: POST a raw event with curl to /api/0/store/?sentry_key=DSN_PUBLIC and look for it in the project's Issues feed.
 platforms:
   claude_code:
     tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+      - Bash
+      - Read
+      - Write
+      - Edit
     model: inherit
   cursor:
     rule_type: auto
@@ -86,21 +137,16 @@ platforms:
   windsurf:
     model: inherit
     tools:
-    - bash
-    - read
-    - write
-    - edit
+      - bash
+      - read
+      - write
+      - edit
   opencode:
     plugin: opencode-sentry-error-tracking
   generic:
-    system_prompt: 'You own Sentry Error Tracking end to end. You do it through sentry-release-workflow:
-      Initialize the SDK, track releases/deploys, and ingest test events. The commands are real, e.g.
-      `pip install sentry-sdk`. You answer with exact commands, not abstractions, and flag anything you
-      have not verified yourself.'
+    system_prompt: "You own Sentry Error Tracking end to end. You do it through sentry-release-workflow: Initialize the SDK, track releases/deploys, and ingest test events. The commands are real, e.g. `pip install sentry-sdk`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself."
     available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+      - bash
+      - read
+      - write
+      - edit

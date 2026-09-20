@@ -2,12 +2,11 @@ name: azure-key-vault
 display_name: Azure Key Vault
 category: api
 subcategory: general
-description: 'Manages secrets, keys, and certificates in Azure Key Vault with the Azure CLI: vault lifecycle,
-  secret CRUD, and access policies.'
+description: "Centralizes credentials and cryptographic material in a managed HSM-backed store using the Azure CLI: provisions vault instances, performs secret CRUD with versioning and expiry, manages asymmetric keys, and configures access policies or RBAC for service identities."
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: vault-lifecycle
@@ -59,13 +58,13 @@ capabilities:
   commands:
   - az keyvault key create --vault-name mykv --name rsa-key --protection software
   - az keyvault key list --vault-name mykv
-  - az keyvault set-policy --vault-name mykv --object-id <principal-id> --secret-permissions get list
+  - az keyvault set-policy --vault-name mykv --object-id a1b2c3d4-e5f6-7890-abcd-ef1234567890 --secret-permissions get list
     set delete
-  - az keyvault show-policy --vault-name mykv --object-id <principal-id>
+  - az keyvault show-policy --vault-name mykv --object-id a1b2c3d4-e5f6-7890-abcd-ef1234567890
   - az keyvault key show --vault-name mykv --name rsa-key
   examples:
   - az keyvault key create --vault-name mykv --name rsa-key --protection software --size 4096
-  - az keyvault set-policy --vault-name mykv --object-id <principal-id> --key-permissions get unwrapKey
+  - az keyvault set-policy --vault-name mykv --object-id a1b2c3d4-e5f6-7890-abcd-ef1234567890 --key-permissions get unwrapKey
     wrapKey
   - az keyvault key list --vault-name mykv --query '[].{name:name,kid:key.kid}' -o table
   parameters:
@@ -93,8 +92,7 @@ instructions: '# Azure Key Vault
   ## What this skill does
 
 
-  Manages secrets, keys, and access policies in Azure Key Vault with the Azure CLI: vault lifecycle, secret
-  CRUD with expiry, key management, and RBAC/access policies.
+  Centralizes secrets, keys, and certificates in Azure Key Vault using the Azure CLI: provisions vaults, performs secret CRUD with versioning and expiry, manages cryptographic keys, and configures access policies or RBAC for service identities.
 
 
   ## When to use
@@ -136,7 +134,7 @@ instructions: '# Azure Key Vault
 
   # Access policy
 
-  az keyvault set-policy --vault-name mykv --object-id <principal-id> --secret-permissions get list set
+  az keyvault set-policy --vault-name mykv --object-id a1b2c3d4-e5f6-7890-abcd-ef1234567890 --secret-permissions get list set
   delete
 
   ```
@@ -198,5 +196,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

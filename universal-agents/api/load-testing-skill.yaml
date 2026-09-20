@@ -7,8 +7,10 @@ description: 'General HTTP load testing with ab, wrk, hey, vegeta, and jmeter: q
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 prerequisites:
 - hey
 - jmeter
@@ -42,24 +44,24 @@ capabilities:
 - name: vegeta-jmeter
   description: Run scripted attacks with vegeta and JMeter plans.
   commands:
-  - vegeta attack -duration=30s -rate=100 -targets=targets.txt | vegeta report
-  - vegeta attack -targets=targets.txt -duration=1m | vegeta report -type=json > report.json
-  - jmeter -n -t plan.jmx -l results.jtl -Jthreads=50
-  - vegeta report -type=hist[0,100ms,200ms,500ms] < results.bin
+  - vegeta attack -duration=30s -rate=100 -targets=api-targets.txt | vegeta report
+  - vegeta attack -targets=api-targets.txt -duration=1m | vegeta report -type=json > report.json
+  - jmeter -n -t test-plan.jmx -l results.jtl -Jthreads=50
+  - cat results.bin | vegeta report -type=hist[0,100ms,200ms,500ms]
   examples:
-  - vegeta attack -duration=30s -rate=100 -targets=targets.txt | vegeta report
-  - jmeter -n -t plan.jmx -l results.jtl -Jthreads=50
-  - vegeta report -type=hist[0,100ms,200ms,500ms] < results.bin
+  - vegeta attack -duration=30s -rate=100 -targets=api-targets.txt | vegeta report
+  - jmeter -n -t test-plan.jmx -l results.jtl -Jthreads=50
+  - cat results.bin | vegeta report -type=hist[0,100ms,200ms,500ms]
   parameters:
   - name: rate
     type: integer
     description: Requests per second (vegeta).
   - name: targets
     type: string
-    description: Vegeta targets file.
+    description: Vegeta targets file (e.g., api-targets.txt).
   - name: jmx
     type: string
-    description: JMeter plan file.
+    description: JMeter plan file (e.g., test-plan.jmx).
 knowledge:
 - title: Vegeta
   type: documentation
@@ -131,17 +133,22 @@ instructions: '# Load Testing (General)
 
   # vegeta from targets file
 
-  vegeta attack -duration=1m -rate=100 -targets=targets.txt | vegeta report -type=json > report.json
+  vegeta attack -duration=1m -rate=100 -targets=api-targets.txt | vegeta report -type=json > report.json
 
 
   # JMeter non-GUI
 
-  jmeter -n -t plan.jmx -l results.jtl -Jthreads=50
+  jmeter -n -t test-plan.jmx -l results.jtl -Jthreads=50
+
+
+  # Histogram from binary results
+
+  cat results.bin | vegeta report -type=hist[0,100ms,200ms,500ms]
 
   ```
 
 
-  ## targets.txt example
+  ## api-targets.txt example
 
 
   ```text
@@ -214,5 +221,3 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

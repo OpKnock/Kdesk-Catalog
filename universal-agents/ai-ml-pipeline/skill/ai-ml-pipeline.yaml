@@ -67,7 +67,7 @@ capabilities:
   commands:
   - mlflow run . -P alpha=0.5
   - mlflow experiments create --experiment-name ab-test
-  - mlflow models serve -m runs:/<run-id>/model -p 5000
+  - mlflow models serve -m runs:/demo-run-id/model -p 5000
   - mlflow ui --host 0.0.0.0 --port 5000
   examples:
   - mlflow run . -P alpha=0.5 -P batch_size=64
@@ -89,7 +89,7 @@ capabilities:
   - kubectl apply -f pipeline.yaml
   - kfp pipeline upload
   - kubectl get pods -n kubeflow -l pipeline-sdk-type=component
-  - kubectl logs -l pipeline-run-id=<run-id> --all-containers
+  - kubectl logs -l pipeline-run-id=demo-run-id --all-containers
   examples:
   - kfp pipeline upload --name iris-pipeline pipeline.yaml
   - kubectl logs -n kubeflow -l pipeline-run-id=run-123 --tail=200

@@ -50,13 +50,13 @@ capabilities:
   commands:
   - iptables -A INPUT -p tcp --dport 80 -m connlimit --connlimit-above 100 -j DROP
   - nginx -t && nginx -s reload
-  - ab -n 10000 -c 100 https://app.example.com/
+  - ab -n 10000 -c 100 http://localhost:8080/
   - tcpdump -i eth0 -c 5000 -w /tmp/ddos.pcap
   - 'curl -s -X POST ''https://api.cloudflare.com/client/v4/zones/$ZONE/rate_limits'' -H ''Authorization:
     Bearer $TOKEN'' -H ''Content-Type: application/json'' -d ''{"match":{"request":{"url":"*"}}}'''
   examples:
   - iptables -L -n -v | head -30
-  - wrk -t8 -c500 -d60s https://app.example.com/ --latency
+  - wrk -t8 -c500 -d60s http://localhost:8080/ --latency
   - ufw limit ssh comment 'rate limit ssh'
   parameters:
   - name: connlimit-above

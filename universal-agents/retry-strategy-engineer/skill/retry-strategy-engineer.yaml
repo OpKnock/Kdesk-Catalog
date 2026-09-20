@@ -50,15 +50,15 @@ capabilities:
 - name: curl-retry
   description: Test and apply curl-level retry policies.
   commands:
-  - curl --retry 5 --retry-delay 2 --retry-all-errors -fsS https://api.example.com/healthz
+  - curl --retry 5 --retry-delay 2 --retry-all-errors -fsS http://localhost:8080/healthz
   - curl --retry 3 --retry-connrefused --retry-delay 1 http://service:8080/
-  - curl --retry 5 --retry-delay 3 --retry-max-time 60 https://api.example.com/data
+  - curl --retry 5 --retry-delay 3 --retry-max-time 60 http://localhost:8080/data
   - curl -w '%{http_code} %{num_retries}\n' --retry 3 --retry-all-errors -o /dev/null http://service:8080/
-  - curl --retry 2 --retry-all-errors --max-time 5 https://api.example.com/
+  - curl --retry 2 --retry-all-errors --max-time 5 http://localhost:8080/
   examples:
-  - curl --retry 5 --retry-delay 2 --retry-all-errors -fsS https://api.example.com/healthz
+  - curl --retry 5 --retry-delay 2 --retry-all-errors -fsS http://localhost:8080/healthz
   - curl --retry 3 --retry-connrefused -s -o /dev/null -w '%{http_code} %{num_retries}\n' http://service:8080/
-  - curl --retry-max-time 30 --retry 4 --retry-delay 1 https://api.example.com/upload
+  - curl --retry-max-time 30 --retry 4 --retry-delay 1 http://localhost:8080/upload
   parameters:
   - name: retry
     type: number

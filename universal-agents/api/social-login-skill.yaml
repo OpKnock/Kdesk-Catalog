@@ -2,49 +2,47 @@ name: social-login
 display_name: Social Login
 category: api
 subcategory: general
-description: 'Hand-crafted social login skill: OAuth2 flows with GitHub and Google, access token exchange,
-  userinfo retrieval, and callback wiring for social sign-in.'
+description: "Implements OAuth2 social sign-in with GitHub and Google. Completes authorization code exchanges, fetches profile data from userinfo endpoints, maps provider identities to local accounts by stable provider ID, and verifies state parameters to prevent CSRF."
 version: 2.0.0
+type: skill
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: oauth-social-login
-  description: Implement OAuth2 social login with GitHub and Google
+  description: "Implements OAuth2 social sign-in with GitHub and Google. Completes authorization code exchanges, fetches profile data from userinfo endpoints, maps provider identities to local accounts by stable provider ID, and verifies state parameters to prevent CSRF."
   commands:
-  - 'curl -X POST https://github.com/login/oauth/access_token -H "Accept: application/json" -d "client_id=$GITHUB_CLIENT_ID&client_secret=$GITHUB_CLIENT_SECRET&code=$CODE"
-    | jq -r .access_token'
-  - 'curl -s -H "Authorization: Bearer $ACCESS_TOKEN" https://api.github.com/user | jq ''{login, id, email}'''
-  - curl -X POST https://oauth2.googleapis.com/token -d "client_id=$GOOGLE_CLIENT_ID&client_secret=$GOOGLE_CLIENT_SECRET&code=$CODE&redirect_uri=http://localhost:3000/cb&grant_type=authorization_code"
-    | jq -r .access_token
-  - 'curl -s -H "Authorization: Bearer $ACCESS_TOKEN" https://www.googleapis.com/oauth2/v3/userinfo |
-    jq ''.sub, .email'''
+  - 'curl -X POST https://github.com/login/oauth/access_token -H "Accept: application/json" -d "client_id=$GITHUB_CLIENT_ID&client_secret=$GITHUB_CLIENT_SECRET&code=$AUTH_CODE"'
+  - 'curl -H "Authorization: Bearer $ACCESS_TOKEN" https://api.github.com/user'
+  - 'curl -X POST https://oauth2.googleapis.com/token -H "Content-Type: application/x-www-form-urlencoded" -d "client_id=$GOOGLE_CLIENT_ID&client_secret=$GOOGLE_CLIENT_SECRET&code=$AUTH_CODE&grant_type=authorization_code&redirect_uri=$REDIRECT_URI"'
+  - 'curl -H "Authorization: Bearer $ACCESS_TOKEN" https://www.googleapis.com/oauth2/v2/userinfo'
   examples:
-  - 'curl -X POST https://github.com/login/oauth/access_token -H "Accept: application/json" -d "client_id=$GITHUB_CLIENT_ID&client_secret=$GITHUB_CLIENT_SECRET&code=$CODE"
-    | jq -r .access_token'
-  - 'curl -s -H "Authorization: Bearer $ACCESS_TOKEN" https://www.googleapis.com/oauth2/v3/userinfo |
-    jq ''.email'''
-  - 'curl -s -H "Authorization: Bearer $ACCESS_TOKEN" https://api.github.com/user | jq ''{login, id}'''
+  - 'curl -X POST https://github.com/login/oauth/access_token -H "Accept: application/json" -d "client_id=$GITHUB_CLIENT_ID&client_secret=$GITHUB_CLIENT_SECRET&code=$AUTH_CODE"'
+  - 'curl -H "Authorization: Bearer $ACCESS_TOKEN" https://api.github.com/user'
+  - 'curl -X POST https://oauth2.googleapis.com/token -H "Content-Type: application/x-www-form-urlencoded" -d "client_id=$GOOGLE_CLIENT_ID&client_secret=$GOOGLE_CLIENT_SECRET&code=$AUTH_CODE&grant_type=authorization_code&redirect_uri=$REDIRECT_URI"'
+  - 'curl -H "Authorization: Bearer $ACCESS_TOKEN" https://www.googleapis.com/oauth2/v2/userinfo'
   parameters:
-  - name: provider
+  - name: github_client_id
     type: string
-    description: github or google
-  - name: client_id
+    description: GitHub OAuth application client ID
+  - name: github_client_secret
     type: string
-    description: OAuth app client ID
+    description: GitHub OAuth application client secret
+  - name: google_client_id
+    type: string
+    description: Google OAuth client ID
+  - name: google_client_secret
+    type: string
+    description: Google OAuth client secret
   - name: redirect_uri
     type: string
-    description: Registered callback URI
+    description: Registered redirect URI for OAuth callback
 knowledge:
 - title: GitHub OAuth apps
   type: documentation
   source: https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
-  description: GitHub authorization code flow
-- title: Google OAuth2 for web servers
-  type: documentation
-  source: https://developers.google.com/identity/protocols/oauth2/web-server
-  description: Google token endpoint and userinfo
+  description: "Implements OAuth2 social sign-in with GitHub and Google. Completes authorization code exchanges, fetches profile data from userinfo endpoints, maps provider identities to local accounts by stable provider ID, and verifies state parameters to prevent CSRF."
 instructions: '# Social Login
 
 
@@ -89,7 +87,7 @@ instructions: '# Social Login
 
   # Google: exchange the code
 
-  curl -X POST https://oauth2.googleapis.com/token -d "client_id=$GOOGLE_CLIENT_ID&client_secret=$GOOGLE_CLIENT_SECRET&code=$CODE&redirect_uri=http://localhost:3000/cb&grant_type=authorization_code"
+  curl -X POST https://oauth2.googleapis.com/token -d "client_id=$GOOGLE_CLIENT_ID&client_secret=$GOOGLE_CLIENT_SECRET&code=$CODE&redirect_uri=http://localhost:3000/callback&grant_type=authorization_code"
   | jq -r .access_token
 
 
@@ -175,5 +173,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -2,44 +2,94 @@ name: code-quality-mythril-agent
 display_name: Code Quality Mythril Agent
 category: code-quality
 subcategory: agent
-description: Mythril agent for Ethereum symbolic execution.
-version: 1.0.0
+description: "Symbolic execution analyzer for Ethereum smart contracts. Runs security modules, controls timeout, exports JSON findings."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Mythril Agent
-  description: Mythril agent for Ethereum symbolic execution.
+- name: analyze-solidity
+  description: Symbolic execution security analysis of Solidity contracts with Mythril
   commands:
-  - myth analyze contract.sol --execution-timeout 300
-  - myth analyze contract.sol
-  - myth analyze contract.sol --modules all
-  - myth analyze contract.sol --json report.json
+  - 'myth analyze contract.sol'
+  - 'myth analyze contract.sol --json report.json'
+  - 'myth analyze contract.sol --modules all'
+  - 'myth analyze contract.sol --execution-timeout 300'
   examples:
-  - myth analyze contract.sol
-  - myth analyze contract.sol --json report.json
-  - myth analyze contract.sol --execution-timeout 300
-  - myth analyze contract.sol --modules all
-  parameters: []
-knowledge:
-- title: code-quality-mythril-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-mythril-agent
-instructions: 'You are the Mythril agent for Ethereum symbolic execution and security analysis. Call on
-  this agent to find vulnerabilities in Solidity contracts. Core workflow: analyze with `myth analyze
-  contract.sol`; broaden coverage with `myth analyze contract.sol --modules all`; control analysis time
-  with `myth analyze contract.sol --execution-timeout 300`; and export findings with `myth analyze contract.sol
-  --json report.json`. Key behaviors: triage by severity, verify findings against the source, and provide
-  remediation for confirmed issues. Report issues by severity with module names, affected functions, and
-  fixes.'
+  - 'myth analyze MyContract.sol'
+  - 'myth analyze MyContract.sol --json mythril-report.json'
+  - 'myth analyze MyContract.sol --modules all'
+  - 'myth analyze MyContract.sol --execution-timeout 300'
+  parameters:
+  - name: contract
+    type: string
+    description: Solidity contract file to analyze
+  - name: json_output
+    type: string
+    description: Output JSON report path
+  - name: modules
+    type: string
+    description: Analysis modules (default, all, or comma-separated list)
+  - name: timeout
+    type: number
+    description: Execution timeout in seconds
+prerequisites:
+- mythril (install via `pip install mythril`)
+- python3
+tools:
+- myth
 examples:
-- myth analyze contract.sol
-- myth analyze contract.sol --json report.json
-- myth analyze contract.sol --execution-timeout 300
-- myth analyze contract.sol --modules all
+- input: "Run full symbolic execution analysis on Solidity contract"
+  output: "Runs myth analyze MyContract.sol --modules all, executes all detection modules, reports vulnerabilities by severity with affected functions"
+- input: "Export Mythril findings as JSON for CI integration"
+  output: "Runs myth analyze MyContract.sol --json mythril-report.json, outputs structured findings with SWC IDs, locations, and descriptions"
+instructions: |
+  You are the Mythril agent. Find vulnerabilities in Solidity contracts through symbolic execution.
+
+  **When to use**
+  - Deep security analysis of Ethereum smart contracts
+  - Detect reentrancy, overflow, unchecked calls, and other vulnerability classes
+  - Integrate symbolic execution into security audit pipelines
+
+  **Core workflow**
+  1. Analyze contract: `myth analyze contract.sol`
+  2. All modules: `myth analyze contract.sol --modules all`
+  3. Control timeout: `myth analyze contract.sol --execution-timeout 300`
+  4. Export JSON: `myth analyze contract.sol --json report.json`
+
+  **Key behaviors**
+  - Triage by severity (high, medium, low)
+  - Verify findings against source code before reporting
+  - Provide remediation for confirmed issues
+  - Report issues by severity with module names, affected functions, and fixes
+
+  **Configuration**
+  Use mythril.yaml for module selection, solver settings, and output formatting.
+
+knowledge:
+- title: Mythril Documentation
+  type: documentation
+  source: https://github.com/ConsenSys/mythril
+  description: Official repository with installation, usage, and vulnerability classes
+- title: Mythril CLI
+  type: reference
+  source: https://github.com/ConsenSys/mythril/blob/develop/docs/cli.md
+  description: Command-line options, modules, and output formats
+- title: SWC Registry
+  type: reference
+  source: https://swcregistry.io/
+  description: Smart Contract Weakness Classification registry for vulnerability IDs
+- title: Detection Modules
+  type: documentation
+  source: https://github.com/ConsenSys/mythril/wiki/Detection-Modules
+  description: Available analysis modules and vulnerability types detected
+- title: CI Integration
+  type: documentation
+  source: https://github.com/ConsenSys/mythril/wiki/Continuous-Integration
+  description: GitHub Actions and other CI pipeline integration
 platforms:
   claude_code:
     tools:
@@ -66,7 +116,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-mythril-agent
   generic:
-    system_prompt: You are code-quality-mythril-agent. Mythril agent for Ethereum symbolic execution.
+    system_prompt: "You are a Mythril expert. Analyze Solidity with myth analyze, run all modules, control timeout, emit JSON. Use real commands: myth analyze contract.sol, myth analyze contract.sol --json report.json, myth analyze contract.sol --modules all, myth analyze contract.sol --execution-timeout 300."
     available_tools:
     - bash
     - read
@@ -74,5 +124,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

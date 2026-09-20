@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Firebase Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "firebase", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent firebase-inference
+  - firebase --version
   examples:
   - firebase deploy --only functions
   - firebase functions:shell
@@ -27,16 +27,24 @@ capabilities:
   - firebase ml:model:list
   parameters: []
 knowledge:
-- title: firebase-inference Documentation
+- title: Firebase Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for firebase-inference
+  source: https://firebase.google.com/docs
+  description: Official documentation for firebase.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'Firebase inference server expert. Call on this agent to set up and operate the Firebase
   inference server. Verify with `curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json''
   -d ''{"inputs": "hello"}''`, chat completions via `curl -X POST http://localhost:8080/v1/chat/completions
   -H ''Content-Type: application/json'' -d ''{"model": "firebase", "messages": []}''`, list models with
   `curl -s http://localhost:8080/v1/models | jq -r ''.data[].id''`, and probe liveness with `curl -s -o
-  /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health`. Confirm context with `python identity.py
+  firebase --version
   --agent firebase-inference`. Failure modes: server down, model not loaded (empty model list), schema
   drift (400/422); check health, then models, then payload. Cross-check with tooling such as `firebase
   deploy --only functions` and `firebase ml:model:list`. Report the health code, model IDs, a sample prediction,
@@ -82,5 +90,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-04-27T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

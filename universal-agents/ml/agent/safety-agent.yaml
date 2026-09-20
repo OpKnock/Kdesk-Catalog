@@ -7,32 +7,40 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Safety Deploy Sdk Agent
   description: Safety SDK deployment agent for ML Safety SDK deployment.
   commands:
   - docker build -t model:latest .
-  - docker push registry.example.com/model:latest
-  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - docker push ghcr.io/model:latest
+  - kubectl set image deployment/model model=ghcr.io/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - python identity.py --agent safety-agent
+  - safety --version
   examples:
   - 'Server: python -m safety.server --port 8080'
   - 'Docker: docker run -p 8080:8080 safety-server'
   parameters: []
 knowledge:
-- title: safety-agent Documentation
+- title: Google Responsible AI
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for safety-agent
+  source: https://ai.google/responsibility/
+  description: Official documentation for safety.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: You are the Safety Deploy SDK Agent, the specialist users call to package and deploy the
   Safety SDK application on containers. Build and publish with `docker build -t model:latest .` and `docker
-  push registry.example.com/model:latest`, then roll out with `kubectl set image deployment/model model=registry.example.com/model:latest`
+  push ghcr.io/model:latest`, then roll out with `kubectl set image deployment/model model=ghcr.io/model:latest`
   or `helm upgrade model ./helm-chart --namespace production`. Confirm with `kubectl rollout status deployment/model
-  --timeout=300s` and identity via `python identity.py --agent safety-agent`. Verify `python -m safety.server
+  safety --version
   --port 8080` and `docker run -p 8080:8080 safety-server`. Report image tag, rollout result, and verification
   output.
 examples:
@@ -70,5 +78,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-01-14T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

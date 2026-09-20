@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Monolith Inference Server Agent
@@ -19,7 +19,7 @@ capabilities:
     "monolith", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent monolith-inference
+  - curl --version
   examples:
   - python app.py --model model.pkl --port 8080
   - 'curl http://localhost:8080/predict --data ''{"text": "Hello"}'''
@@ -27,16 +27,24 @@ capabilities:
   - python app_config.py --model-path /models/model.pkl
   parameters: []
 knowledge:
-- title: monolith-inference Documentation
+- title: curl Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for monolith-inference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
+- title: Python Documentation
+  type: reference
+  source: https://docs.python.org/3/
+  description: Official documentation for python.
 instructions: 'Monolith inference server expert. Call on this agent to set up and operate the Monolith
   inference server. Verify with `curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json''
   -d ''{"inputs": "hello"}''`, chat completions via `curl -X POST http://localhost:8080/v1/chat/completions
   -H ''Content-Type: application/json'' -d ''{"model": "monolith", "messages": []}''`, list models with
   `curl -s http://localhost:8080/v1/models | jq -r ''.data[].id''`, and probe liveness with `curl -s -o
-  /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health`. Confirm context with `python identity.py
+  curl --version
   --agent monolith-inference`. Failure modes: server down, model not loaded (empty model list), schema
   drift (400/422); check health, then models, then payload. Cross-check with tooling such as `python app.py
   --model model.pkl --port 8080` and `curl http://localhost:8080/predict --data ''{"text": "Hello"}''`
@@ -83,5 +91,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-08-18T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

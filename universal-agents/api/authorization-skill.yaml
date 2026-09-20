@@ -2,12 +2,11 @@ name: authorization
 display_name: Authorization
 category: api
 subcategory: general
-description: 'Implements authorization models for APIs: Kubernetes RBAC, AWS IAM policies, and role/permission
-  design with verification commands.'
+description: Configures Kubernetes RBAC roles and bindings with can-i verification, manages AWS IAM policies with permission simulation, and validates role-based access patterns for API endpoints.
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - aws
@@ -42,11 +41,11 @@ capabilities:
   - aws iam attach-user-policy --user-name deploy-bot --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess
   - aws iam list-attached-policies --user-name deploy-bot
   - aws iam get-policy-version --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess --version-id v1
-  - aws iam simulate-principal-policy --policy-source-arn arn:aws:iam::123456789012:user/deploy-bot --action-names
+  - aws iam simulate-principal-policy --policy-source-arn arn:aws:iam::111122223333:user/deploy-bot --action-names
     s3:GetObject --resource-arns arn:aws:s3:::my-bucket/*
   - aws iam list-policies --scope Local
   examples:
-  - aws iam simulate-principal-policy --policy-source-arn arn:aws:iam::123456789012:user/deploy-bot --action-names
+  - aws iam simulate-principal-policy --policy-source-arn arn:aws:iam::111122223333:user/deploy-bot --action-names
     s3:PutObject s3:DeleteObject --resource-arns arn:aws:s3:::my-bucket/* | jq '.EvaluationResults[].EvalDecision'
   - aws iam get-account-authorization-details --filter Role | jq '.RoleDetailList[].RoleName'
   - aws iam attach-role-policy --role-name api-role --policy-arn arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
@@ -63,12 +62,12 @@ capabilities:
 - name: design-patterns
   description: Design RBAC/ABAC models with verification checks.
   commands:
-  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $ADMIN" https://api.example.com/v1/admin'
-  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https://api.example.com/v1/admin'
-  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https://api.example.com/v1/me'
+  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $ADMIN" https://api.your-app.test/v1/admin'
+  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https://api.your-app.test/v1/admin'
+  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https://api.your-app.test/v1/me'
   - mysql -e "SHOW GRANTS FOR 'app'@'%'"
   examples:
-  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https://api.example.com/v1/other-user-resource'
+  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https://api.your-app.test/v1/other-user-resource'
   - mysql -e "SHOW GRANTS FOR 'readonly'@'%'"
   - kubectl auth can-i --list --as=ci-bot
   parameters:
@@ -131,13 +130,13 @@ instructions: '# Authorization
 
   aws iam attach-user-policy --user-name deploy-bot --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess
 
-  aws iam simulate-principal-policy --policy-source-arn arn:aws:iam::123456789012:user/deploy-bot --action-names
+  aws iam simulate-principal-policy --policy-source-arn arn:aws:iam::111122223333:user/deploy-bot --action-names
   s3:GetObject --resource-arns arn:aws:s3:::my-bucket/*
 
 
   # API role checks
 
-  curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https://api.example.com/v1/admin
+  curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $USER" https://api.your-app.test/v1/admin
 
   ```
 
@@ -198,5 +197,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

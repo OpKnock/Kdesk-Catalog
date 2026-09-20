@@ -2,12 +2,11 @@ name: authentication
 display_name: Authentication
 category: api
 subcategory: general
-description: 'Implements authentication for APIs: OAuth2/OIDC token flows, JWT verification with openssl,
-  and Bearer token testing with curl.'
+description: Acquires and validates OAuth2/OIDC tokens, inspects JWT structure and signatures with OpenSSL, and tests Bearer-token protected endpoints using curl.
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - echo
@@ -16,18 +15,18 @@ capabilities:
 - name: oauth-tokens
   description: Acquire and validate OAuth2/OIDC tokens.
   commands:
-  - curl -X POST https://auth.example.com/oauth2/token -d grant_type=client_credentials -d client_id=api
+  - curl -X POST https://auth.your-app.test/oauth2/token -d grant_type=client_credentials -d client_id=api
     -d client_secret=secret -d scope=api:read
-  - curl -X POST https://auth.example.com/oauth2/token -d grant_type=authorization_code -d code=xyz -d
-    redirect_uri=https://app.example.com/callback -d client_id=api -d client_secret=secret
-  - curl -X POST https://auth.example.com/oauth2/introspect -d token=$TOKEN -u api:secret
-  - curl -X POST https://auth.example.com/oauth2/revoke -d token=$TOKEN -u api:secret
+  - curl -X POST https://auth.your-app.test/oauth2/token -d grant_type=authorization_code -d code=xyz -d
+    redirect_uri=https://app.your-app.test/callback -d client_id=api -d client_secret=secret
+  - curl -X POST https://auth.your-app.test/oauth2/introspect -d token=$TOKEN -u api:secret
+  - curl -X POST https://auth.your-app.test/oauth2/revoke -d token=$TOKEN -u api:secret
   examples:
-  - TOKEN=$(curl -s -X POST https://auth.example.com/oauth2/token -d grant_type=client_credentials -d
+  - TOKEN=$(curl -s -X POST https://auth.your-app.test/oauth2/token -d grant_type=client_credentials -d
     client_id=api -d client_secret=secret -d scope=api:read | jq -r .access_token)
-  - curl -s -X POST https://auth.example.com/oauth2/introspect -d token=$TOKEN -u api:secret | jq '.active,
+  - curl -s -X POST https://auth.your-app.test/oauth2/introspect -d token=$TOKEN -u api:secret | jq '.active,
     .exp'
-  - curl -s -X POST https://auth.example.com/oauth2/revoke -d token=$TOKEN -u api:secret
+  - curl -s -X POST https://auth.your-app.test/oauth2/revoke -d token=$TOKEN -u api:secret
   parameters:
   - name: token_url
     type: string
@@ -60,14 +59,14 @@ capabilities:
 - name: bearer-testing
   description: Test authenticated API calls with curl.
   commands:
-  - 'curl -i -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/me'
-  - curl -i https://api.example.com/v1/me
-  - 'curl -i -H "Authorization: Bearer invalid-token" https://api.example.com/v1/me'
-  - 'curl -i -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d ''{}'' https://api.example.com/v1/orders'
+  - 'curl -i -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/me'
+  - curl -i https://api.your-app.test/v1/me
+  - 'curl -i -H "Authorization: Bearer invalid-token" https://api.your-app.test/v1/me'
+  - 'curl -i -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d ''{}'' https://api.your-app.test/v1/orders'
   examples:
-  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/me'
-  - 'curl -i -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/me | head -20'
-  - 'curl -i -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/orders'
+  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/me'
+  - 'curl -i -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/me | head -20'
+  - 'curl -i -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/orders'
   parameters:
   - name: url
     type: string
@@ -115,13 +114,13 @@ instructions: '# Authentication
 
   # Client credentials flow
 
-  TOKEN=$(curl -s -X POST https://auth.example.com/oauth2/token -d grant_type=client_credentials -d client_id=api
+  TOKEN=$(curl -s -X POST https://auth.your-app.test/oauth2/token -d grant_type=client_credentials -d client_id=api
   -d client_secret=secret -d scope=api:read | jq -r .access_token)
 
 
   # Introspect
 
-  ecurl -s -X POST https://auth.example.com/oauth2/introspect -d token=$TOKEN -u api:secret | jq ''.active,
+  curl -s -X POST https://auth.your-app.test/oauth2/introspect -d token=$TOKEN -u api:secret | jq ''.active,
   .exp''
 
 
@@ -132,7 +131,7 @@ instructions: '# Authentication
 
   # Test the endpoint
 
-  curl -i -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/me
+  curl -i -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/me
 
   ```
 
@@ -199,7 +198,7 @@ platforms:
     plugin: opencode-authentication
   generic:
     system_prompt: 'You work Authentication hands-on. You do it through oauth-tokens: Acquire and validate
-      OAuth2/OIDC tokens. The commands are real, e.g. `curl -X POST https://auth.example.com/oauth2/token
+      OAuth2/OIDC tokens. The commands are real, e.g. `curl -X POST https://auth.your-app.test/oauth2/token
       -d grant_type=client_credentials -d...`. You run and verify the real CLI commands before you claim
       anything.'
     available_tools:
@@ -207,5 +206,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

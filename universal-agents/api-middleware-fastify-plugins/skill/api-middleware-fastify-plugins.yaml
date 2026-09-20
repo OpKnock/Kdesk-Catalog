@@ -49,10 +49,10 @@ capabilities:
   - npm install fastify @fastify/cors @fastify/rate-limit @fastify/jwt @fastify/helmet @fastify/sensible
   - npm init fastify
   - node server.js
-  - 'curl -s -H ''Origin: https://app.example.com'' -D- http://localhost:3000/api | grep -i ''access-control'''
+  - 'curl -s -H ''Origin: http://localhost:8080'' -D- http://localhost:3000/api | grep -i ''access-control'''
   - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/api
   examples:
-  - 'await app.register(require(''@fastify/cors''), { origin: [''https://app.example.com''] })'
+  - 'await app.register(require(''@fastify/cors''), { origin: [''http://localhost:8080''] })'
   - 'await app.register(require(''@fastify/rate-limit''), { max: 60, timeWindow: ''1 minute'' })'
   - 'await app.register(require(''@fastify/jwt''), { secret: process.env.JWT_SECRET })'
   parameters:

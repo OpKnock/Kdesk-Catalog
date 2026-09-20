@@ -47,7 +47,7 @@ capabilities:
   description: Run Lighthouse performance audits with budget assertions
   commands:
   - npx lighthouse http://localhost:3000 --only-categories=performance --output=json --output-path=lhr.json
-  - npx lighthouse-ci --budget-config=budget.json --collect.url=https://api.example.com --assert.preset=lighthouse:recommended
+  - npx lighthouse-ci --budget-config=budget.json --collect.url=http://localhost:8080 --assert.preset=lighthouse:recommended
   - jq '.audits["network-requests"].details.items | length' lhr.json
   - npx lighthouse --only-audits=server-response-time --quiet http://localhost:3000
   examples:
@@ -68,8 +68,8 @@ capabilities:
   description: Gate merges on k6 and web performance results
   commands:
   - k6 run --summary-export=summary.json --threshold 'http_req_duration:p(95)<300' perf.js
-  - npx lighthouse-ci --budget-config=budget.json https://api.example.com
-  - curl -s -o /dev/null -w '%{time_total}\n' https://api.example.com/health
+  - npx lighthouse-ci --budget-config=budget.json http://localhost:8080
+  - curl -s -o /dev/null -w '%{time_total}\n' http://localhost:8080/health
   examples: []
   parameters: []
 prerequisites:

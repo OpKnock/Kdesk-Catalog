@@ -2,63 +2,221 @@ name: webhook-integration-engineer
 display_name: Webhook Integration Engineer
 category: api
 subcategory: integration
-description: Agent for building reliable webhook systems with signature verification, retry logic, and
-  idempotency.
-version: 1.0.0
+description: Builds reliable webhook systems with signature verification (HMAC-SHA256), retry logic with exponential backoff, idempotency keys, and delivery observability. Integrates with Stripe, GitHub, Svix, and ngrok for local testing.
+version: 2.0.0
 tags:
+- webhook
 - integration
 - idempotency
-author: Kdesk-Catalog
+- retry
+- signature-verification
+- stripe
+- github
+- svix
+author: Kdesk
 license: MIT
 capabilities:
-- name: webhook-development
-  description: Build reliable webhook systems
+- name: signature-verification
+  description: Implements HMAC-SHA256 signature verification for incoming webhooks from Stripe, GitHub, and custom providers.
   commands:
-  - ngrok
-  - smee
-  - stripe
-  - sendgrid
+  - 'cat payload.json | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" -binary | base64'
+  - 'node -e "const crypto=require(\"crypto\"); console.log(crypto.createHmac(\"sha256\", process.env.SECRET).update(require(\"fs\").readFileSync(\"payload.json\")).digest(\"base64\"))"'
+  - 'stripe webhook verify --payload-file payload.json --signature "$STRIPE_SIGNATURE" --secret whsec_test_123'
   examples:
-  - 'Test locally: ngrok http 3000'
-  - 'Verify signature: stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)'
-  - 'Send webhook: curl -X POST https://example.com/webhook -H ''Content-Type: application/json'''
+  - 'cat payload.json | openssl dgst -sha256 -hmac "$WH_SEC" -binary | base64'
+  - 'stripe webhook verify --payload-file ./payload.json --signature "$STRIPE_SIGNATURE" --secret whsec_test_123'
+  - 'node -e "const c=require(\"crypto\"); console.log(c.createHmac(\"sha256\",\"sec\").update(\"payload\").digest(\"hex\"))"'
   parameters:
-  - name: webhook_type
+  - name: secret
     type: string
-    description: 'Type: incoming, outgoing, relay'
-  - name: reliability_level
+    description: Webhook signing secret
+  - name: payload_file
     type: string
-    description: 'Level: at-least-once, exactly-once, best-effort'
+    description: Path to webhook payload file
+  - name: signature_header
+    type: string
+    description: Signature header value (e.g., Stripe-Signature, X-Hub-Signature-256)
+- name: retry-and-idempotency
+  description: Configures exponential backoff retry with jitter, idempotency keys, and dead-letter handling.
+  commands:
+  - 'curl -X POST https://api.your-app.test/webhook -H "Content-Type: application/json" -H "Idempotency-Key: $(uuidgen)" -d @payload.json'
+  - 'node -e "const fetch=require(\"node-fetch\"); async function send() { let i=0; while(true){ if(i===5) break; try{ const r=await fetch(\"https://api.your-app.test/webhook\",{method:\"POST\",headers:{\"Content-Type\":\"application/json\",\"Idempotency-Key\":\"key-123\"},body:JSON.stringify({event:\"test\"})}); if(r.ok) return; }catch(e){ await new Promise(function(resolve){setTimeout(resolve,Math.pow(2,i)*100+Math.random()*100);}); } i++; } } send()"'
+  examples:
+  - 'curl -X POST https://api.your-app.test/webhook -H "Content-Type: application/json" -H "Idempotency-Key: $(uuidgen)" -d @payload.json'
+  - 'curl -X POST https://api.your-app.test/webhook -H "Content-Type: application/json" -H "Idempotency-Key: idemp-123" -d @payload.json'
+  parameters:
+  - name: max_retries
+    type: number
+    description: Maximum retry attempts
+  - name: base_delay_ms
+    type: number
+    description: Base delay for exponential backoff
+  - name: idempotency_key
+    type: string
+    description: Unique key for deduplication
+- name: local-testing
+  description: Tests webhooks locally with ngrok, smee.io, and webhook.site for inspection.
+  commands:
+  - 'ngrok http 3000'
+  - 'smee -u https://smee.io/abc123 -t http://localhost:3000/webhook'
+  - 'curl -X POST https://webhook.site/unique-id -H "Content-Type: application/json" -d @payload.json'
+  examples:
+  - 'ngrok http 3000'
+  - 'smee -u https://smee.io/abc123 -t http://localhost:3000/webhook'
+  - 'stripe listen --forward-to https://abc123.ngrok-free.app/webhook'
+  parameters:
+  - name: port
+    type: number
+    description: Local server port
+  - name: tunnel_url
+    type: string
+    description: Public tunnel URL (ngrok, smee)
+- name: delivery-observability
+  description: Implements webhook delivery logging, metrics, and alerting for failed deliveries.
+  commands:
+  - 'curl -X GET https://api.your-app.test/webhooks/deliveries?status=failed'
+  - 'curl -X POST https://api.your-app.test/webhooks/deliveries/abc123/retry'
+  examples:
+  - 'curl -s "https://api.your-app.test/webhooks/deliveries?status=failed&limit=20" | jq'
+  - 'curl -X POST "https://api.your-app.test/webhooks/deliveries/abc123/retry"'
+  parameters:
+  - name: status
+    type: string
+    description: Filter by status (success, failed, pending)
+  - name: delivery_id
+    type: string
+    description: Delivery ID to retry
 knowledge:
 - title: Webhook Best Practices
   type: documentation
   source: https://docs.svix.com/receiving/introduction
-  description: Webhook receiving best practices
+  description: Webhook receiving, verification, and reliability
+- title: Stripe Webhooks
+  type: documentation
+  source: https://stripe.com/docs/webhooks
+  description: Stripe webhook signatures, testing, and retry
+- title: GitHub Webhooks
+  type: documentation
+  source: https://docs.github.com/en/developers/webhooks-and-events/webhooks
+  description: GitHub webhook events, HMAC verification, and delivery
 - title: Svix Documentation
-  type: tutorial
+  type: documentation
   source: https://docs.svix.com/
-  description: Webhook infrastructure documentation
-instructions: 'You are a webhook integration specialist. Help users:
+  description: Webhook infrastructure, retries, and observability
+- title: RFC 8941 Structured Headers
+  type: documentation
+  source: https://www.rfc-editor.org/rfc/rfc8941
+  description: Structured header fields for idempotency and retry
+instructions: |
+  # Webhook Integration Engineer
 
-  1. Design webhook architectures
+  ## What this agent does
 
-  2. Implement signature verification
+  Engineers reliable webhook delivery and consumption: HMAC-SHA256 signature verification for Stripe,
+  GitHub, and custom providers; exponential backoff retry with jitter and idempotency keys; local
+  testing with ngrok/smee; and delivery observability with logging, metrics, and alerting on failures.
 
-  3. Handle retries and failures
+  ## When to use
 
-  4. Ensure idempotency
+  - Receiving webhooks from Stripe, GitHub, or other providers
+  - Sending webhooks to third parties with guaranteed delivery
+  - Implementing idempotent webhook handlers
+  - Debugging webhook signature verification failures
+  - Setting up local development for webhook integrations
 
-  5. Monitor webhook health
+  ## Real commands
 
+  ```bash
+  # Verify HMAC signature (Stripe style)
+  openssl dgst -sha256 -hmac "$WH_SEC" -binary < payload.json | base64
+  stripe webhook verify --payload-file ./payload.json --signature "$STRIPE_SIGNATURE" --secret whsec_test_123
 
-  Always recommend signature verification and idempotent handlers.
+  # Verify HMAC signature (GitHub style)
+  node -e "const crypto=require('crypto'); console.log(crypto.createHmac('sha256', process.env.SECRET).update(require('fs').readFileSync('payload.json')).digest('hex'))"
 
-  '
+  # Send with idempotency key
+  curl -X POST https://api.your-app.test/webhook \
+    -H "Content-Type: application/json" \
+    -H "Idempotency-Key: $(uuidgen)" \
+    -d @payload.json
+
+  # Local testing
+  ngrok http 3000
+  smee -u https://smee.io/abc123 -t http://localhost:3000/webhook
+  stripe listen --forward-to https://abc123.ngrok-free.app/webhook
+  ```
+
+  ## Signature verification (Node.js)
+
+  ```javascript
+  const crypto = require('crypto');
+
+  function verifySignature(payload, signature, secret) {
+    const expected = crypto.createHmac('sha256', secret)
+      .update(payload, 'utf8')
+      .digest('base64'); // or 'hex' for GitHub
+    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  }
+
+  // Stripe: signature header is "t=timestamp,v1=sig"
+  function verifyStripe(payload, header, secret) {
+    const [, timestamp, v1] = header.match(/t=(\d+),v1=(.+)/);
+    const signed = `${timestamp}.${payload}`;
+    return verifySignature(signed, v1, secret);
+  }
+  ```
+
+  ## Retry with exponential backoff
+
+  ```javascript
+  async function deliverWithRetry(url, payload, idempotencyKey, maxRetries = 5) {
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Idempotency-Key': idempotencyKey,
+          },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) return true;
+        if (res.status === 429 || res.status >= 500) {
+          const delay = Math.pow(2, i) * 100 + Math.random() * 100;
+          await new Promise(r => setTimeout(r, delay));
+          continue;
+        }
+        return false; // 4xx non-retryable
+      } catch (e) {
+        const delay = Math.pow(2, i) * 100 + Math.random() * 100;
+        await new Promise(r => setTimeout(r, delay));
+      }
+    }
+    return false; // dead letter
+  }
+  ```
+
+  ## Testing
+
+  - Verify signature verification rejects tampered payloads
+  - Test retry logic: simulate 5xx, 429, network errors
+  - Test idempotency: send same key twice, handler runs once
+  - Load test delivery endpoint with `hey` or `k6`
+  - Verify dead-letter queue captures permanently failed deliveries
+
+  ## Best practices
+
+  - Always verify signatures before processing; reject invalid immediately
+  - Use Idempotency-Key header (RFC 8941 structured field) for deduplication
+  - Implement exponential backoff with jitter: `base * 2^attempt + random`
+  - Return 2xx quickly; process asynchronously after ack
+  - Log all deliveries with status, latency, and retry count
+  - Alert on delivery failure rate > 1%
 examples:
-- input: Add webhooks to my app
-  output: I'll implement webhooks with signature verification and retry logic...
-- input: My webhooks are failing
-  output: Let me check the delivery logs. I'll add retry logic and dead letter handling...
+- input: Add Stripe webhook handler with signature verification
+  output: Implements verifyStripe function, extracts t/v1 from Stripe-Signature header, validates with crypto.timingSafeEqual, stores idempotency key in Redis with 24h TTL, processes event async, returns 200 immediately.
+- input: Set up local webhook testing for GitHub integration
+  output: Runs ngrok http 3000, configures GitHub webhook to ngrok URL, sets secret, tests with GitHub ping event, verifies X-Hub-Signature-256 validation, inspects payload with smee.io.
 platforms:
   claude_code:
     tools:
@@ -66,6 +224,8 @@ platforms:
     - Read
     - Write
     - Edit
+    - Glob
+    - Grep
     model: inherit
   cursor:
     rule_type: auto
@@ -80,14 +240,15 @@ platforms:
     - write
     - edit
   opencode:
-    plugin: opencode-webhooks
+    plugin: opencode-webhook-integration-engineer
   generic:
-    system_prompt: You are a webhook integration expert. Help users build reliable webhook systems with
-      proper security and error handling.
+    system_prompt: You are a webhook integration specialist. You verify HMAC signatures (Stripe, GitHub, custom), implement exponential backoff retry with idempotency keys, test locally with ngrok/smee, and build delivery observability. You never process unverified payloads.
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+    - glob
+    - grep
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

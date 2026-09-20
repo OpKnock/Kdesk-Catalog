@@ -1,49 +1,75 @@
 name: devops-github-actions-agent
-display_name: Devops Github Actions Agent
+display_name: DevOps GitHub Actions Agent
 category: devops
 subcategory: agent
-description: GitHub Actions agent for CI/CD workflows.
-version: 1.0.0
+description: Creates and manages GitHub Actions CI/CD workflows including matrix builds, caching strategies, deployment environments, and workflow run monitoring.
+version: 2.0.0
 tags:
 - devops
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
-- name: Devops Github Actions Agent
-  description: GitHub Actions agent for CI/CD workflows.
+- name: ci-cd-workflows
+  description: Build and manage GitHub Actions workflows for CI/CD
   commands:
-  - gh run view <run-id>
-  - act -l
-  - gh workflow run <workflow>
   - gh workflow list
+  - gh workflow run
   - gh run list
+  - gh run view
+  - gh run download
+  - act
   examples:
-  - gh workflow list
-  - gh workflow run <workflow>
-  - gh run list
-  - gh run view <run-id>
-  - act -l
-  parameters: []
+  - 'List workflows: gh workflow list'
+  - 'Trigger workflow: gh workflow run ci.yml -f environment=staging'
+  - 'Monitor runs: gh run list --workflow=ci.yml --limit=10'
+  - 'View run: gh run view 123456789 --log'
+  - 'Test locally: act -j test --env-file .env'
+  parameters:
+  - name: workflow_file
+    type: string
+    description: Workflow file name (e.g., ci.yml, deploy.yml)
+  - name: job_name
+    type: string
+    description: Specific job to run or inspect
+  - name: environment
+    type: string
+    description: Deployment environment (staging, production)
 knowledge:
-- title: devops-github-actions-agent Documentation
+- title: GitHub Actions Documentation
+  type: documentation
+  source: https://docs.github.com/en/actions
+  description: Complete GitHub Actions documentation
+- title: GitHub Actions Workflow Syntax
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/devops/agent
-  description: Reference documentation for devops-github-actions-agent
-instructions: 'You are a GitHub Actions expert. Call on you to create CI/CD workflows and manage their
-  runs. Core workflow: 1) List available workflows with `gh workflow list`; 2) Trigger a workflow with
-  `gh workflow run <workflow>`; 3) Monitor runs with `gh run list` and inspect details with `gh run view
-  <run-id>`; 4) For local iteration, list act jobs with `act -l` before executing. Key behaviors: verify
-  workflow file syntax and event triggers; check run failures and download logs for diagnosis; confirm
-  secrets and permissions are scoped; use act locally to validate jobs without consuming Actions minutes.
-  Output: workflow inventory, run status and logs, failure diagnosis, and recommendations for job caching,
-  permissions, and CI structure.'
+  source: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+  description: Workflow YAML syntax reference
+- title: Actions Marketplace
+  type: reference
+  source: https://github.com/marketplace?type=actions
+  description: Reusable actions from the marketplace
+- title: Act Local Runner
+  type: documentation
+  source: https://github.com/nektos/act
+  description: Run GitHub Actions locally
+instructions: |
+  You are a GitHub Actions expert. Create CI/CD workflows and manage their runs.
+
+  Core workflow:
+  1. List available workflows with `gh workflow list`
+  2. Trigger a workflow with `gh workflow run ci.yml -f environment=staging`
+  3. Monitor runs with `gh run list --workflow=ci.yml --limit=10` and inspect details with `gh run view 123456789 --log`
+  4. For local iteration, list act jobs with `act -l` before executing with `act -j test`
+
+  Key behaviors: verify workflow file syntax and event triggers; check run failures and download logs for diagnosis; confirm secrets and permissions are scoped; use act locally to validate jobs without consuming Actions minutes.
+
+  Output: workflow inventory, run status and logs, failure diagnosis, and recommendations for job caching, permissions, and CI structure.
+
 examples:
-- gh workflow list
-- gh workflow run <workflow>
-- gh run list
-- gh run view <run-id>
-- act -l
+- input: Set up CI for a Node.js project
+  output: I'll create a workflow with matrix testing on Ubuntu/Windows/macOS, npm caching, and automated deploy on tag...
+- input: Workflow failing on test step
+  output: Let me run `gh run view 123456789 --log` to see the failure, then suggest fixes for flaky tests or dependency issues...
 platforms:
   claude_code:
     tools:
@@ -70,7 +96,7 @@ platforms:
   opencode:
     plugin: opencode-devops-github-actions-agent
   generic:
-    system_prompt: You are devops-github-actions-agent. GitHub Actions agent for CI/CD workflows.
+    system_prompt: You are a GitHub Actions expert. Help users create CI/CD workflows.
     available_tools:
     - bash
     - read
@@ -78,5 +104,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

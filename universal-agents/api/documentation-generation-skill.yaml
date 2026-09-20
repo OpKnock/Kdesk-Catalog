@@ -2,12 +2,12 @@ name: documentation-generation
 display_name: Documentation Generation
 category: api
 subcategory: general
-description: 'Auto-generate technical documentation from source code and specs: Typedoc for TypeScript,
+description: 'Auto-generates API reference documentation from source code and specs: Typedoc for TypeScript,
   sphinx-apidoc for Python, Doxygen for C++, and OpenAPI generators.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - doxygen
@@ -47,22 +47,66 @@ knowledge:
   type: documentation
   source: https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
   description: Python doc generation from docstrings via sphinx-apidoc and autodoc
-instructions: "# Documentation Generation\n\n## What this skill does\n\nDocumentation generation extracts\
-  \ docs from source code: comments, docstrings, and types. This skill covers Typedoc (TS), sphinx-apidoc\
-  \ (Python), Doxygen (C++), jsdoc, and OpenAPI-based HTML generators.\n\n## When to use\n\n- Building\
-  \ an API reference that stays in sync with the code\n- Onboarding a new team by generating module overviews\n\
-  - Shipping docs as part of the release pipeline\n\n## Real commands\n\n```bash\n# TypeScript\nnpx typedoc\
-  \ --out docs src/index.ts\n\n# Python: build module docs, then render HTML\nsphinx-apidoc -o docs/source\
-  \ src/api\nsphinx-build -b html docs/source docs/build\n\n# C/C++\ndoxygen Doxyfile\n\n# OpenAPI ->\
-  \ static HTML reference\nnpx @openapitools/openapi-generator-cli generate -i openapi.yaml -g html2 -o\
-  \ docs\n```\n\n## Config example (jsdoc.json)\n\n```json\n{\n  \"source\": {\"include\": [\"src\"]},\n\
-  \  \"opts\": {\"destination\": \"docs\", \"recurse\": true},\n  \"plugins\": [\"plugins/markdown\"]\n\
-  }\n```\n\n## CI integration\n\n```bash\n# Regenerate and fail on drift\nnpx typedoc --out docs src/index.ts\
-  \ && git diff --quiet docs/ || echo 'docs out of date'\n```\n\n## Best practices\n\n- Generate on every\
-  \ merge; treat stale generated docs as a build failure.\n- Keep doc comments on public API surfaces\
-  \ only.\n- Use `--pretty` and sort options consistently so diffs stay small.\n- Exclude generated/ and\
-  \ vendor/ from the source globs.\n\n## Testing\n\n```bash\n# Verify all module pages rendered without\
-  \ warnings\nsphinx-build -b html docs/source docs/build -W\n```\n"
+instructions: |
+  # Documentation Generation
+
+  ## What this skill does
+
+  Documentation generation extracts docs from source code: comments, docstrings, and types. This skill covers Typedoc (TS), sphinx-apidoc (Python), Doxygen (C++), jsdoc, and OpenAPI-based HTML generators.
+
+  ## When to use
+
+  - Building an API reference that stays in sync with the code
+  - Onboarding a new team by generating module overviews
+  - Shipping docs as part of the release pipeline
+
+  ## Real commands
+
+  ```bash
+  # TypeScript
+  npx typedoc --out docs src/index.ts
+
+  # Python: build module docs, then render HTML
+  sphinx-apidoc -o docs/source src/api
+  sphinx-build -b html docs/source docs/build
+
+  # C/C++
+  doxygen Doxyfile
+
+  # OpenAPI -> static HTML reference
+  npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g html2 -o docs
+  ```
+
+  ## Config example (jsdoc.json)
+
+  ```json
+  {
+    "source": {"include": ["src"]},
+    "opts": {"destination": "docs", "recurse": true},
+    "plugins": ["plugins/markdown"]
+  }
+  ```
+
+  ## CI integration
+
+  ```bash
+  # Regenerate and fail on drift
+  npx typedoc --out docs src/index.ts && git diff --quiet docs/ || echo 'docs out of date'
+  ```
+
+  ## Best practices
+
+  - Generate on every merge; treat stale generated docs as a build failure.
+  - Keep doc comments on public API surfaces only.
+  - Use `--pretty` and sort options consistently so diffs stay small.
+  - Exclude generated/ and vendor/ from the source globs.
+
+  ## Testing
+
+  ```bash
+  # Verify all module pages rendered without warnings
+  sphinx-build -b html docs/source docs/build -W
+  ```
 examples:
 - input: Generate docs for our TypeScript SDK
   output: Run npx typedoc --out docs src/index.ts, check the generated index page, and wire the command
@@ -102,5 +146,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

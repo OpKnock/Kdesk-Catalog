@@ -25,6 +25,10 @@ def _get_platform_output_count() -> int:
 
 
 GATES: List[Tuple[str, List[str]]] = [
+    # Generation first (fresh checkout has no agents/json, workflows/, etc.)
+    ("Generate JSON from YAML", ["python", "scripts/yaml-to-json.py"]),
+    ("Generate platform outputs", ["python", "scripts/universal-converter.py", "--platforms", "all", "--quiet"]),
+
     # Catalog integrity (fast)
     ("Schema validation", ["python", "scripts/schema-check.py"]),
     ("Duplicate ID validation", ["python", "scripts/check-catalog.py"]),
@@ -39,8 +43,8 @@ GATES: List[Tuple[str, List[str]]] = [
     ("Wiring integrity", ["python", "scripts/wire-skills.py"]),
     ("Graph validation", ["python", "-m", "kdesk.cli", "graph", "--root", "."]),
 
-    # Reports (fast - uses cached stats)
-    ("Report freshness", ["python", "scripts/check-report-freshness.py", "--root", "."]),
+    # Reports (fast - uses cached stats; skip on fresh checkout where JSONs are gitignored)
+    ("Report freshness", ["python", "scripts/check-report-freshness.py", "--fast", "--root", "."]),
 
     # Security
     ("Security validation (no hardcoded secrets)", ["python", "-m", "kdesk.cli", "security", "--json", "--root", "."]),
@@ -56,6 +60,7 @@ GATES: List[Tuple[str, List[str]]] = [
      "tests.test_wire_skills",
      "tests.test_marketplaces",
      "tests.test_kdesk_install",
+     "tests.test_agent_framework",
      "tests.test_yaml_to_json"]),
 
     # Packaging
@@ -64,8 +69,14 @@ GATES: List[Tuple[str, List[str]]] = [
     # Clean install + CLI smoke test
     ("Clean install + CLI smoke test", ["python", "scripts/release-smoke-test.py"]),
 
-    # No uncommitted generated output
-    ("No uncommitted generated output", ["git", "diff", "--exit-code", "--", ".", ":(exclude)reports/*"]),
+    # No uncommitted source changes (exclude regenerated output dirs)
+    ("No uncommitted source changes", ["git", "diff", "--exit-code", "--", ".",
+     ":(exclude)reports/*",
+     ":(exclude)platform-agents/*",
+     ":(exclude)agents/*",
+     ":(exclude)skills/json",
+     ":(exclude)skills/yaml",
+     ":(exclude)workflows/*"]),
 ]
 
 

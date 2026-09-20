@@ -252,7 +252,7 @@ class VerifyRunner:
     def check_cli(self) -> Dict[str, Any]:
         commands = ["resolve", "why", "plan", "run", "history", "inspect",
                     "approve", "verify", "stats", "doctor", "schema", "security",
-                    "wiring", "graph"]
+                    "wiring", "graph", "serve"]
         failed = []
         for command in commands:
             code, detail = _subprocess_ok(

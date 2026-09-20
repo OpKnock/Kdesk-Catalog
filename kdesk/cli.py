@@ -64,7 +64,7 @@ def _subprocess_ok(argv: List[str], root: Path,
 def _cmd_stats(args) -> int:
     root = Path(args.root) if args.root else default_repo_root()
     try:
-        stats = compute_stats(root)
+        stats = compute_stats(root, fast=args.fast)
     except StatsError as exc:
         print(f"FATAL: {exc}", file=sys.stderr)
         return 1
@@ -468,6 +468,7 @@ def build_parser() -> argparse.ArgumentParser:
     st = sub.add_parser("stats", parents=[root_parent], help="authoritative catalog statistics")
     st.add_argument("--format", choices=["json", "table"], default="json")
     st.add_argument("--baseline", action="store_true", help="write reports/baseline-stats.json")
+    st.add_argument("--fast", action="store_true", help="skip slow platform output file count")
 
     r = sub.add_parser("registry", parents=[root_parent], help="catalog queries and stats")
     r.add_argument("--search", default=None, help="text search over names/descriptions/tags")

@@ -305,6 +305,7 @@ class CompatibilityEngine:
 
         # Check platform-specific unsupported fields (nested under platforms.<platform>)
         platforms = content.get("platforms", {})
+        platform_config: dict = {}
         if isinstance(platforms, dict) and self.platform in platforms:
             platform_config = platforms[self.platform]
             if isinstance(platform_config, dict):

@@ -210,7 +210,7 @@ class Doctor:
 
         report = DiagnosticReport(
             project_root=str(scan_result.project_root),
-            platform=scan_result.platform or "unknown",
+            platform=platform or scan_result.platform or "unknown",
             score=score,
             max_score=100,
             components=component_list,

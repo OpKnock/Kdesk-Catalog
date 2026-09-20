@@ -2,8 +2,8 @@ name: api-schema-specialist
 version: 2.0.0
 type: skill
 category: data
-description: 'Reviews and hardens API schemas with spectral: OpenAPI rulesets, custom rules, JSON output
-  for CI, and schema quality gating.'
+description: 'Reviews and hardens API schemas with spectral: OpenAPI rulesets, custom
+  rules, JSON output for CI, and schema quality gating.'
 keywords:
 - api-schema
 - openapi
@@ -32,9 +32,10 @@ platforms:
   opencode:
     plugin: opencode-api-schema-specialist
   generic:
-    system_prompt: 'You own api-schema-specialist end to end. You do it through spectral-linting: Lint
-      OpenAPI schemas with spectral. The commands are real, e.g. `npx @stoplight/spectral-cli lint openapi.yaml
-      -r .spectral.yml`. You verify each step you report and stay honest about what you have not run.'
+    system_prompt: 'You own api-schema-specialist end to end. You do it through spectral-linting:
+      Lint OpenAPI schemas with spectral. The commands are real, e.g. `npx @stoplight/spectral-cli
+      lint openapi.yaml -r .spectral.yml`. You verify each step you report and stay
+      honest about what you have not run.'
     available_tools:
     - bash
     - read
@@ -70,7 +71,9 @@ capabilities:
   - npx @stoplight/spectral-cli lint openapi.yaml -r quality-rules.yaml
   - curl -s http://localhost:3000/openapi.json -o openapi.json
   - npx @stoplight/spectral-cli lint openapi.json -r .spectral.yml
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - openapi
@@ -88,16 +91,19 @@ examples:
   output: Adds a spectral rule and runs lint with JSON output
 - input: Gate CI on schema quality
   output: Runs spectral with --fail-severity=warn in the pipeline
-instructions: "# API Schema Specialist\n\nSchema linting and review with spectral.\n\n## What This Skill\
-  \ Does\n- Lints OpenAPI contracts for consistency\n- Enforces custom schema rules\n- Exports reports\
-  \ for CI gating\n\n## When to Use\n- Reviewing schema PRs\n- Enforcing API design standards\n- Auditing\
-  \ legacy specs\n\n## Real Commands\n\n```bash\nnpx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml\n\
-  npx @stoplight/spectral-cli lint openapi.yaml -f json -o report.json\nnpx @stoplight/spectral-cli lint\
-  \ openapi.yaml --fail-severity=warn\n```\n\n## Custom Rule\n\n```yaml\nrules:\n  schemas-need-description:\n\
-  \    given: $.components.schemas[*]\n    severity: error\n    then:\n      field: description\n    \
-  \  function: truthy\n```\n\n## Testing\n- Fail builds on error-severity violations\n- Review JSON reports\
-  \ for triage\n- Add rules incrementally\n\n## Best Practices\n- Extend a base ruleset before adding\
-  \ custom rules\n- Document rule intent in comments\n- Run lint in pre-merge checks"
+instructions: "# API Schema Specialist\n\nSchema linting and review with spectral.\n\
+  \n## What This Skill Does\n- Lints OpenAPI contracts for consistency\n- Enforces\
+  \ custom schema rules\n- Exports reports for CI gating\n\n## When to Use\n- Reviewing\
+  \ schema PRs\n- Enforcing API design standards\n- Auditing legacy specs\n\n## Real\
+  \ Commands\n\n```bash\nnpx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml\n\
+  npx @stoplight/spectral-cli lint openapi.yaml -f json -o report.json\nnpx @stoplight/spectral-cli\
+  \ lint openapi.yaml --fail-severity=warn\n```\n\n## Custom Rule\n\n```yaml\nrules:\n\
+  \  schemas-need-description:\n    given: $.components.schemas[*]\n    severity:\
+  \ error\n    then:\n      field: description\n      function: truthy\n```\n\n##\
+  \ Testing\n- Fail builds on error-severity violations\n- Review JSON reports for\
+  \ triage\n- Add rules incrementally\n\n## Best Practices\n- Extend a base ruleset\
+  \ before adding custom rules\n- Document rule intent in comments\n- Run lint in\
+  \ pre-merge checks"
 display_name: api-schema-specialist
 knowledge:
 - title: Spectral Docs

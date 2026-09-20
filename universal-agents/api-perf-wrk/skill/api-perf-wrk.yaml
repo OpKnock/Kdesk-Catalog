@@ -2,8 +2,8 @@ name: api-perf-wrk
 version: 2.0.0
 type: skill
 category: backend
-description: 'Benchmarks APIs with wrk, hey, and ApacheBench: throughput, latency percentiles, connection
-  concurrency, and POST payload testing.'
+description: 'Benchmarks APIs with wrk, hey, and ApacheBench: throughput, latency
+  percentiles, connection concurrency, and POST payload testing.'
 keywords:
 - api-perf-wrk
 platforms:
@@ -31,9 +31,10 @@ platforms:
   opencode:
     plugin: opencode-api-perf-wrk
   generic:
-    system_prompt: 'This is your domain: Api Perf Wrk. You do it through wrk: Run thread-based HTTP benchmarks
-      with latency histograms. The commands are real, e.g. `wrk -t4 -c100 -d30s http://localhost:3000/api`.
-      You work hands-on and only report outcomes you have observed.'
+    system_prompt: 'This is your domain: Api Perf Wrk. You do it through wrk: Run
+      thread-based HTTP benchmarks with latency histograms. The commands are real,
+      e.g. `wrk -t4 -c100 -d30s http://localhost:3000/api`. You work hands-on and
+      only report outcomes you have observed.'
     available_tools:
     - bash
     - read
@@ -65,11 +66,14 @@ capabilities:
 - name: hey-ab
   description: Compare with hey and ApacheBench for POST and header testing
   commands:
-  - 'hey -n 10000 -c 100 -m POST -H ''Content-Type: application/json'' -d ''{"q":"test"}'' http://localhost:3000/search'
+  - 'hey -n 10000 -c 100 -m POST -H ''Content-Type: application/json'' -d ''{"q":"test"}''
+    http://localhost:3000/search'
   - hey -n 5000 -c 50 http://localhost:3000/api
   - ab -n 5000 -c 50 -p post.json -T application/json http://localhost:3000/api
   - ab -n 1000 -c 20 -k http://localhost:3000/api
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -118,7 +122,8 @@ instructions: '# API Perf v3 - Benchmarking
 
   wrk -t4 -c100 -d30s --latency http://localhost:3000/api
 
-  hey -n 10000 -c 100 -m POST -H ''Content-Type: application/json'' -d ''{"q":"test"}'' http://localhost:3000/search
+  hey -n 10000 -c 100 -m POST -H ''Content-Type: application/json'' -d ''{"q":"test"}''
+  http://localhost:3000/search
 
   ab -n 5000 -c 50 -p post.json -T application/json http://localhost:3000/api
 

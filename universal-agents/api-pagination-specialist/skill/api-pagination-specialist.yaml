@@ -2,8 +2,8 @@ name: api-pagination-specialist
 version: 2.0.0
 type: skill
 category: backend
-description: 'Implements RFC 8288 Link headers for pagination: rel=next/prev/first/last, parsing with
-  standard libraries, and REST hypermedia navigation.'
+description: 'Implements RFC 8288 Link headers for pagination: rel=next/prev/first/last,
+  parsing with standard libraries, and REST hypermedia navigation.'
 keywords:
 - pagination
 platforms:
@@ -31,9 +31,11 @@ platforms:
   opencode:
     plugin: opencode-api-pagination-specialist
   generic:
-    system_prompt: 'This is your domain: api-pagination-specialist. You do it through link-headers: Expose
-      pagination metadata in HTTP Link headers. The commands are real, e.g. `curl -sI http://api.example.com/users?page=2&limit=10`.
-      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    system_prompt: 'This is your domain: api-pagination-specialist. You do it through
+      link-headers: Expose pagination metadata in HTTP Link headers. The commands
+      are real, e.g. `curl -sI http://api.example.com/users?page=2&limit=10`. You
+      prefer the shortest safe path, and you reproduce failures before diagnosing
+      them.'
     available_tools:
     - bash
     - read
@@ -68,10 +70,12 @@ capabilities:
 - name: header-validation
   description: Validate Link header output against RFC 8288
   commands:
-  - 'node -e "const h=''demo-http-localhost-8080-users-page; rel=\"next\"''; const m=h.match(/demo-]+)>;\s*rel=\"(\w+)\"/);
-    console.log(m ? m.slice(1) : ''invalid'')"'
+  - 'node -e "const h=''demo-http-localhost-8080-users-page; rel=\"next\"''; const
+    m=h.match(/demo-]+)>;\s*rel=\"(\w+)\"/); console.log(m ? m.slice(1) : ''invalid'')"'
   - curl -s 'http://localhost:8080/users?page=1' -D- -o /dev/null | grep -ci 'link:'
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -88,19 +92,21 @@ examples:
   output: Adds first/next/last relations and validates with curl -D- grep
 - input: Parse links in a Node client
   output: Installs parse-link-header and walks rel=next until exhausted
-instructions: "# API Pagination Specialist\n\nLink-header pagination per RFC 8288.\n\n## What This Skill\
-  \ Does\n- Emits next/prev/first/last URLs in the Link response header\n- Keeps pagination metadata out\
-  \ of the response body\n- Enables generic hypermedia-driven clients\n\n## When to Use\n- REST APIs with\
-  \ clients that follow Link relations\n- Standardizing pagination across many endpoints\n- Paginating\
-  \ where the body shape must stay fixed\n\n## Real Commands\n\n```bash\ncurl -s -D- 'http://api.example.com/users?page=2'\
-  \ | grep -i '^link:'\nnpm install parse-link-header\nnode -e \"const parse=require('parse-link-header');\
-  \ console.log(parse('<https://api.example.com/users?page=3>; rel=\\\"next\\\"'))\"\n```\n\n## Header\
-  \ Format\n\n```http\nHTTP/1.1 200 OK\nLink: <https://api.example.com/users?page=1>; rel=\"first\",\n\
-  \      <https://api.example.com/users?page=3>; rel=\"next\",\n      <https://api.example.com/users?page=10>;\
-  \ rel=\"last\"\n```\n\n## Testing\n- Assert headers exist and URLs are absolute\n- Verify last page\
-  \ omits rel=next\n- Confirm empty results still emit valid links\n\n## Best Practices\n- Build links\
-  \ from request host, never hardcode\n- Percent-encode query values in link URLs\n- Combine with rel=prev\
-  \ for bidirectional navigation"
+instructions: "# API Pagination Specialist\n\nLink-header pagination per RFC 8288.\n\
+  \n## What This Skill Does\n- Emits next/prev/first/last URLs in the Link response\
+  \ header\n- Keeps pagination metadata out of the response body\n- Enables generic\
+  \ hypermedia-driven clients\n\n## When to Use\n- REST APIs with clients that follow\
+  \ Link relations\n- Standardizing pagination across many endpoints\n- Paginating\
+  \ where the body shape must stay fixed\n\n## Real Commands\n\n```bash\ncurl -s -D-\
+  \ 'http://api.example.com/users?page=2' | grep -i '^link:'\nnpm install parse-link-header\n\
+  node -e \"const parse=require('parse-link-header'); console.log(parse('<https://api.example.com/users?page=3>;\
+  \ rel=\\\"next\\\"'))\"\n```\n\n## Header Format\n\n```http\nHTTP/1.1 200 OK\nLink:\
+  \ <https://api.example.com/users?page=1>; rel=\"first\",\n      <https://api.example.com/users?page=3>;\
+  \ rel=\"next\",\n      <https://api.example.com/users?page=10>; rel=\"last\"\n```\n\
+  \n## Testing\n- Assert headers exist and URLs are absolute\n- Verify last page omits\
+  \ rel=next\n- Confirm empty results still emit valid links\n\n## Best Practices\n\
+  - Build links from request host, never hardcode\n- Percent-encode query values in\
+  \ link URLs\n- Combine with rel=prev for bidirectional navigation"
 display_name: api-pagination-specialist
 knowledge:
 - title: RFC 8288 - Web Linking

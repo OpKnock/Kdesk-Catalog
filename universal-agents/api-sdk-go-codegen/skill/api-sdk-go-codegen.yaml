@@ -2,8 +2,8 @@ name: api-sdk-go-codegen
 version: 2.0.0
 type: skill
 category: backend
-description: 'Generates Go SDKs with oapi-codegen: typed clients from OpenAPI, server stubs, config generation,
-  and go test verification.'
+description: 'Generates Go SDKs with oapi-codegen: typed clients from OpenAPI, server
+  stubs, config generation, and go test verification.'
 keywords:
 - api-sdk
 - sdk-generation
@@ -32,9 +32,10 @@ platforms:
   opencode:
     plugin: opencode-api-sdk-go-codegen
   generic:
-    system_prompt: 'You are the Api Sdk Go Codegen specialist. You do it through go-codegen: Generate
-      Go client code from OpenAPI. The commands are real, e.g. `go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest`.
-      You run and verify the real CLI commands before you claim anything.'
+    system_prompt: 'You are the Api Sdk Go Codegen specialist. You do it through go-codegen:
+      Generate Go client code from OpenAPI. The commands are real, e.g. `go install
+      github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest`. You run and
+      verify the real CLI commands before you claim anything.'
     available_tools:
     - bash
     - read
@@ -72,7 +73,9 @@ capabilities:
   - go vet ./...
   - go mod tidy
   - go test -race ./...
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - openapi-generator
@@ -88,15 +91,18 @@ examples:
   output: Runs oapi-codegen with types,client and builds the package
 - input: Regenerate on spec change
   output: Reruns generation and tests with go test -race
-instructions: "# API SDK v4 - Go\n\nGo SDK generation with oapi-codegen.\n\n## What This Skill Does\n\
-  - Generates typed Go clients and servers\n- Configures generation via YAML\n- Validates with go build\
-  \ and tests\n\n## When to Use\n- Go services consuming the API\n- Generating server stubs for parity\n\
-  - Typed client SDKs\n\n## Real Commands\n\n```bash\ngo install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest\n\
-  oapi-codegen -package api -generate types,client -o client.gen.go openapi.yaml\ngo build ./...\ngo test\
-  \ ./...\n```\n\n## Config File\n\n```yaml\npackage: api\noutput: gen/client.gen.go\ngenerate:\n  client:\
-  \ true\n  models: true\n  chi-server: true\n```\n\n## Testing\n- Compile after regeneration\n- Test\
-  \ client calls with httptest servers\n- Run go vet in CI\n\n## Best Practices\n- Commit generated files\
-  \ with release tags\n- Keep generation config in the repo\n- Regenerate before each release"
+instructions: "# API SDK v4 - Go\n\nGo SDK generation with oapi-codegen.\n\n## What\
+  \ This Skill Does\n- Generates typed Go clients and servers\n- Configures generation\
+  \ via YAML\n- Validates with go build and tests\n\n## When to Use\n- Go services\
+  \ consuming the API\n- Generating server stubs for parity\n- Typed client SDKs\n\
+  \n## Real Commands\n\n```bash\ngo install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest\n\
+  oapi-codegen -package api -generate types,client -o client.gen.go openapi.yaml\n\
+  go build ./...\ngo test ./...\n```\n\n## Config File\n\n```yaml\npackage: api\n\
+  output: gen/client.gen.go\ngenerate:\n  client: true\n  models: true\n  chi-server:\
+  \ true\n```\n\n## Testing\n- Compile after regeneration\n- Test client calls with\
+  \ httptest servers\n- Run go vet in CI\n\n## Best Practices\n- Commit generated\
+  \ files with release tags\n- Keep generation config in the repo\n- Regenerate before\
+  \ each release"
 display_name: Api Sdk Go Codegen
 knowledge:
 - title: oapi-codegen

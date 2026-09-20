@@ -2,8 +2,8 @@ name: api-pagination-spring-data
 version: 2.0.0
 type: skill
 category: backend
-description: 'Implements offset/limit pagination with Spring Data JPA and Spring Data REST: Pageable,
-  HAL links, page metadata, and sort parameters.'
+description: 'Implements offset/limit pagination with Spring Data JPA and Spring Data
+  REST: Pageable, HAL links, page metadata, and sort parameters.'
 keywords:
 - pagination
 - offset
@@ -32,10 +32,11 @@ platforms:
   opencode:
     plugin: opencode-api-pagination-spring-data
   generic:
-    system_prompt: 'You take the Api Pagination Spring Data seat. You do it through spring-data-paging:
-      Use Spring Data Pageable with HAL response metadata. The commands are real, e.g. `curl -s http://localhost:8080/api/users?page=0&size=20
-      | jq .page.totalElements,...`. You verify each step you report and stay honest about what you have
-      not run.'
+    system_prompt: 'You take the Api Pagination Spring Data seat. You do it through
+      spring-data-paging: Use Spring Data Pageable with HAL response metadata. The
+      commands are real, e.g. `curl -s http://localhost:8080/api/users?page=0&size=20
+      | jq .page.totalElements,...`. You verify each step you report and stay honest
+      about what you have not run.'
     available_tools:
     - bash
     - read
@@ -47,8 +48,10 @@ capabilities:
 - name: spring-data-paging
   description: Use Spring Data Pageable with HAL response metadata
   commands:
-  - curl -s 'http://localhost:8080/api/users?page=0&size=20' | jq '.page.totalElements, .page.totalPages'
-  - 'curl -s -H ''Accept: application/hal+json'' ''http://localhost:8080/api/users'' | jq ''._links.next.href'''
+  - curl -s 'http://localhost:8080/api/users?page=0&size=20' | jq '.page.totalElements,
+    .page.totalPages'
+  - 'curl -s -H ''Accept: application/hal+json'' ''http://localhost:8080/api/users''
+    | jq ''._links.next.href'''
   - curl -s 'http://localhost:8080/api/users?sort=name,desc' | jq '._embedded.users[0].name'
   - ./mvnw clean test
   examples:
@@ -71,7 +74,9 @@ capabilities:
   - curl -s 'http://localhost:8080/api/users?size=0' -o /dev/null -w '%{http_code}\n'
   - curl -s 'http://localhost:8080/api/users?page=-1' -o /dev/null -w '%{http_code}\n'
   - ./mvnw spring-boot:run -Dspring-boot.run.arguments=--spring.data.rest.default-page-size=50
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -87,19 +92,23 @@ examples:
 - input: Paginate /api/users in a Spring Boot API
   output: Uses Pageable in the controller and returns Page payloads with HAL links
 - input: Cap page size at 100
-  output: Sets max-page-size via application.properties and verifies with a size=1000 request
-instructions: "# API Pagination v2 - Spring Data\n\nOffset pagination with Spring Data.\n\n## What This\
-  \ Skill Does\n- Maps Pageable parameters to JPA queries\n- Returns HAL links and page metadata\n- Enforces\
-  \ page size limits and sort whitelisting\n\n## When to Use\n- Spring Boot APIs needing standard page/size\
-  \ paging\n- HATEOAS-style clients that follow HAL links\n- Admin tables with simple data volumes\n\n\
-  ## Real Commands\n\n```bash\ncurl -s 'http://localhost:8080/api/users?page=0&size=20' | jq '.page.totalElements,\
-  \ .page.totalPages'\ncurl -s -H 'Accept: application/hal+json' 'http://localhost:8080/api/users' | jq\
-  \ '._links.next.href'\n```\n\n## Repository Method\n\n```java\n@Repository\npublic interface UserRepository\
-  \ extends JpaRepository<User, Long> {\n    Page<User> findByActiveTrue(Pageable pageable);\n}\n```\n\
-  \n## Testing\n- Verify totalPages math on boundary sizes\n- Confirm size=0 and negative pages are rejected\n\
-  - Test sort injection attempts do not cause SQL errors\n\n## Best Practices\n- Configure spring.data.rest.max-page-size\
-  \ globally\n- Whitelist sortable properties to avoid expensive sorts\n- Use Page<DTO> projections to\
-  \ avoid N+1 lazy loading"
+  output: Sets max-page-size via application.properties and verifies with a size=1000
+    request
+instructions: "# API Pagination v2 - Spring Data\n\nOffset pagination with Spring\
+  \ Data.\n\n## What This Skill Does\n- Maps Pageable parameters to JPA queries\n\
+  - Returns HAL links and page metadata\n- Enforces page size limits and sort whitelisting\n\
+  \n## When to Use\n- Spring Boot APIs needing standard page/size paging\n- HATEOAS-style\
+  \ clients that follow HAL links\n- Admin tables with simple data volumes\n\n## Real\
+  \ Commands\n\n```bash\ncurl -s 'http://localhost:8080/api/users?page=0&size=20'\
+  \ | jq '.page.totalElements, .page.totalPages'\ncurl -s -H 'Accept: application/hal+json'\
+  \ 'http://localhost:8080/api/users' | jq '._links.next.href'\n```\n\n## Repository\
+  \ Method\n\n```java\n@Repository\npublic interface UserRepository extends JpaRepository<User,\
+  \ Long> {\n    Page<User> findByActiveTrue(Pageable pageable);\n}\n```\n\n## Testing\n\
+  - Verify totalPages math on boundary sizes\n- Confirm size=0 and negative pages\
+  \ are rejected\n- Test sort injection attempts do not cause SQL errors\n\n## Best\
+  \ Practices\n- Configure spring.data.rest.max-page-size globally\n- Whitelist sortable\
+  \ properties to avoid expensive sorts\n- Use Page<DTO> projections to avoid N+1\
+  \ lazy loading"
 display_name: Api Pagination Spring Data
 knowledge:
 - title: Spring Data REST Docs

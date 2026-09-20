@@ -2,8 +2,8 @@ name: api-perf-k6-load
 version: 2.0.0
 type: skill
 category: backend
-description: 'Runs k6 load tests against APIs: virtual users, stages, thresholds, checks, and CI-friendly
-  summary exports for throughput and latency assertions.'
+description: 'Runs k6 load tests against APIs: virtual users, stages, thresholds,
+  checks, and CI-friendly summary exports for throughput and latency assertions.'
 keywords:
 - caching
 platforms:
@@ -31,9 +31,10 @@ platforms:
   opencode:
     plugin: opencode-api-perf-k6-load
   generic:
-    system_prompt: 'You own Api Perf K6 Load end to end. You do it through k6-load-testing: Execute scripted
-      load tests with thresholds. The commands are real, e.g. `k6 run script.js`. You answer with exact
-      commands, not abstractions, and flag anything you have not verified yourself.'
+    system_prompt: 'You own Api Perf K6 Load end to end. You do it through k6-load-testing:
+      Execute scripted load tests with thresholds. The commands are real, e.g. `k6
+      run script.js`. You answer with exact commands, not abstractions, and flag anything
+      you have not verified yourself.'
     available_tools:
     - bash
     - read
@@ -70,7 +71,9 @@ capabilities:
   - k6 run --threshold 'http_req_duration:p(95)<300' script.js
   - k6 run --threshold 'http_req_failed:rate<0.01' script.js
   - k6 run --quiet script.js
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -88,19 +91,22 @@ examples:
   output: Writes a k6 script with 200 VU ramp and p95 threshold, exports summary.json
 - input: Find the saturation point
   output: Runs staged ramps and identifies the QPS where latency breaks
-instructions: "# API Perf v2 - k6 Load Testing\n\nLoad testing with k6.\n\n## What This Skill Does\n-\
-  \ Simulates realistic user load with virtual users\n- Ramps traffic in stages to find saturation\n-\
-  \ Fails CI when thresholds are breached\n\n## When to Use\n- Before releases to catch regressions\n\
-  - Capacity planning for expected traffic\n- Comparing architecture options (caching, scaling)\n\n##\
-  \ Real Commands\n\n```bash\nk6 run --vus 50 --duration 60s script.js\nk6 run --stage '2s:10,30s:100,10s:0'\
-  \ ramping.js\nk6 run --summary-export=summary.json script.js\n```\n\n## Script Example\n\n```js\nimport\
-  \ http from 'k6/http';\nimport { check, sleep } from 'k6';\nexport const options = {\n  thresholds:\
-  \ { http_req_failed: ['rate<0.01'], http_req_duration: ['p(95)<300'] }\n};\nexport default function\
-  \ () {\n  const res = http.get('https://api.example.com/v1/items');\n  check(res, { 'status 200': (r)\
-  \ => r.status === 200 });\n  sleep(1);\n}\n```\n\n## Testing\n- Run a soak variant (30m at moderate\
-  \ load) for leaks\n- Add scenarios to mix read and write traffic\n- Use k6 inspect to validate options\
-  \ before full runs\n\n## Best Practices\n- Randomize test data to avoid cache skewing results\n- Set\
-  \ thresholds on percentiles, not averages\n- Store summary.json outputs for regression charts"
+instructions: "# API Perf v2 - k6 Load Testing\n\nLoad testing with k6.\n\n## What\
+  \ This Skill Does\n- Simulates realistic user load with virtual users\n- Ramps traffic\
+  \ in stages to find saturation\n- Fails CI when thresholds are breached\n\n## When\
+  \ to Use\n- Before releases to catch regressions\n- Capacity planning for expected\
+  \ traffic\n- Comparing architecture options (caching, scaling)\n\n## Real Commands\n\
+  \n```bash\nk6 run --vus 50 --duration 60s script.js\nk6 run --stage '2s:10,30s:100,10s:0'\
+  \ ramping.js\nk6 run --summary-export=summary.json script.js\n```\n\n## Script Example\n\
+  \n```js\nimport http from 'k6/http';\nimport { check, sleep } from 'k6';\nexport\
+  \ const options = {\n  thresholds: { http_req_failed: ['rate<0.01'], http_req_duration:\
+  \ ['p(95)<300'] }\n};\nexport default function () {\n  const res = http.get('https://api.example.com/v1/items');\n\
+  \  check(res, { 'status 200': (r) => r.status === 200 });\n  sleep(1);\n}\n```\n\
+  \n## Testing\n- Run a soak variant (30m at moderate load) for leaks\n- Add scenarios\
+  \ to mix read and write traffic\n- Use k6 inspect to validate options before full\
+  \ runs\n\n## Best Practices\n- Randomize test data to avoid cache skewing results\n\
+  - Set thresholds on percentiles, not averages\n- Store summary.json outputs for\
+  \ regression charts"
 display_name: Api Perf K6 Load
 knowledge:
 - title: k6 Docs - Running Tests

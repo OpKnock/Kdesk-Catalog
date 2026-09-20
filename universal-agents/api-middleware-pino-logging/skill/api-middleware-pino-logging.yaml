@@ -2,8 +2,8 @@ name: api-middleware-pino-logging
 version: 2.0.0
 type: skill
 category: backend
-description: 'Builds observability-focused middleware for Node APIs: structured JSON logging with pino,
-  request IDs, latency capture, and pretty console output in development.'
+description: 'Builds observability-focused middleware for Node APIs: structured JSON
+  logging with pino, request IDs, latency capture, and pretty console output in development.'
 keywords:
 - api-middleware
 - logging
@@ -32,10 +32,10 @@ platforms:
   opencode:
     plugin: opencode-api-middleware-pino-logging
   generic:
-    system_prompt: 'You are the Api Middleware Pino Logging specialist. You do it through pino-logging:
-      Add structured logging middleware with correlation IDs and latency measurement. The commands are
-      real, e.g. `npm install pino pino-http pino-pretty`. You work hands-on and only report outcomes
-      you have observed.'
+    system_prompt: 'You are the Api Middleware Pino Logging specialist. You do it
+      through pino-logging: Add structured logging middleware with correlation IDs
+      and latency measurement. The commands are real, e.g. `npm install pino pino-http
+      pino-pretty`. You work hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
@@ -45,7 +45,8 @@ platforms:
     - grep
 capabilities:
 - name: pino-logging
-  description: Add structured logging middleware with correlation IDs and latency measurement
+  description: Add structured logging middleware with correlation IDs and latency
+    measurement
   commands:
   - npm install pino pino-http pino-pretty
   - node app.js | npx pino-pretty
@@ -54,7 +55,8 @@ capabilities:
   examples:
   - node app.js | npx pino-pretty renders human-readable logs in dev
   - 'app.use(pinoHttp({ genReqId: (req) => req.headers[''x-request-id''] }))'
-  - 'curl -H ''X-Request-Id: abc'' localhost:3000/ traces a single request across logs'
+  - 'curl -H ''X-Request-Id: abc'' localhost:3000/ traces a single request across
+    logs'
   parameters:
   - name: base
     type: object
@@ -72,7 +74,9 @@ capabilities:
   - cat app.log | pino-pretty --translateTime
   - jq 'select(.level >= 40)' app.log
   - node -r pino-pretty app.js
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -90,19 +94,22 @@ examples:
   output: Wires pino-http genReqId to X-Request-Id and pipes app logs through pino-pretty
 - input: Find slow endpoints from logs
   output: Runs jq to filter log lines where responseTime > 1000
-instructions: "# API Middleware v2 - Observability\n\nLogging and correlation middleware for Node.js APIs.\n\
-  \n## What This Skill Does\n- Adds pino-http middleware for JSON request logging\n- Propagates X-Request-Id\
-  \ correlation IDs through the pipeline\n- Measures per-request latency and status mapping\n\n## When\
-  \ to Use\n- Debugging distributed request traces\n- Switching from text logs to structured JSON\n- Adding\
-  \ service metadata to all log lines\n\n## Real Commands\n\n```bash\nnpm install pino pino-http pino-pretty\n\
-  node app.js | npx pino-pretty\ncurl -s -H \"X-Request-Id: 123e4567\" http://localhost:3000/api/health\n\
-  ```\n\n## Middleware Setup\n\n```js\nconst pinoHttp = require('pino-http');\napp.use(pinoHttp({\n  genReqId:\
-  \ (req) => req.headers['x-request-id'],\n  base: { service: 'billing-api' },\n  customLogLevel: (req,\
-  \ res, err) => err ? 'error' : res.statusCode >= 400 ? 'warn' : 'info'\n}));\n```\n\n## Testing\n- Send\
-  \ a request with an X-Request-Id header and confirm it appears in log output\n- Verify 5xx responses\
-  \ produce error-level log lines\n- Confirm logs parse with jq for field extraction\n\n## Best Practices\n\
-  - Never log bodies of auth endpoints\n- Use genReqId to honor incoming correlation headers\n- Keep pino\
-  \ as a direct dependency so serializers are stable"
+instructions: "# API Middleware v2 - Observability\n\nLogging and correlation middleware\
+  \ for Node.js APIs.\n\n## What This Skill Does\n- Adds pino-http middleware for\
+  \ JSON request logging\n- Propagates X-Request-Id correlation IDs through the pipeline\n\
+  - Measures per-request latency and status mapping\n\n## When to Use\n- Debugging\
+  \ distributed request traces\n- Switching from text logs to structured JSON\n- Adding\
+  \ service metadata to all log lines\n\n## Real Commands\n\n```bash\nnpm install\
+  \ pino pino-http pino-pretty\nnode app.js | npx pino-pretty\ncurl -s -H \"X-Request-Id:\
+  \ 123e4567\" http://localhost:3000/api/health\n```\n\n## Middleware Setup\n\n```js\n\
+  const pinoHttp = require('pino-http');\napp.use(pinoHttp({\n  genReqId: (req) =>\
+  \ req.headers['x-request-id'],\n  base: { service: 'billing-api' },\n  customLogLevel:\
+  \ (req, res, err) => err ? 'error' : res.statusCode >= 400 ? 'warn' : 'info'\n}));\n\
+  ```\n\n## Testing\n- Send a request with an X-Request-Id header and confirm it appears\
+  \ in log output\n- Verify 5xx responses produce error-level log lines\n- Confirm\
+  \ logs parse with jq for field extraction\n\n## Best Practices\n- Never log bodies\
+  \ of auth endpoints\n- Use genReqId to honor incoming correlation headers\n- Keep\
+  \ pino as a direct dependency so serializers are stable"
 display_name: Api Middleware Pino Logging
 knowledge:
 - title: pino-http Docs

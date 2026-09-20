@@ -2,8 +2,8 @@ name: api-webhook-github-webhooks
 version: 2.0.0
 type: skill
 category: backend
-description: 'Integrates with platform webhooks: GitHub repository hooks, Stripe event triggers, Slack
-  incoming webhooks, and signature verification patterns.'
+description: 'Integrates with platform webhooks: GitHub repository hooks, Stripe event
+  triggers, Slack incoming webhooks, and signature verification patterns.'
 keywords:
 - webhooks
 - delivery
@@ -33,10 +33,10 @@ platforms:
   opencode:
     plugin: opencode-api-webhook-github-webhooks
   generic:
-    system_prompt: 'Your lane is Api Webhook Github Webhooks. You do it through github-webhooks: Manage
-      GitHub repository webhooks. The commands are real, e.g. `gh api repos/octocat/Hello-World/hooks
-      --method POST -f...`. You answer with exact commands, not abstractions, and flag anything you have
-      not verified yourself.'
+    system_prompt: 'Your lane is Api Webhook Github Webhooks. You do it through github-webhooks:
+      Manage GitHub repository webhooks. The commands are real, e.g. `gh api repos/octocat/Hello-World/hooks
+      --method POST -f...`. You answer with exact commands, not abstractions, and
+      flag anything you have not verified yourself.'
     available_tools:
     - bash
     - read
@@ -48,8 +48,8 @@ capabilities:
 - name: github-webhooks
   description: Manage GitHub repository webhooks
   commands:
-  - gh api repos/octocat/Hello-World/hooks --method POST -f config.url=http://localhost:8080/hook -f config.content_type=json
-    -f events[]=push
+  - gh api repos/octocat/Hello-World/hooks --method POST -f config.url=http://localhost:8080/hook
+    -f config.content_type=json -f events[]=push
   - gh api repos/octocat/Hello-World/hooks | jq '.[].config.url'
   - gh api repos/octocat/Hello-World/hooks/1 --method PATCH -f active=false
   - gh api repos/octocat/Hello-World/hooks/1/deliveries | jq '.[0].status'
@@ -72,10 +72,12 @@ capabilities:
   commands:
   - stripe listen --forward-to localhost:3000/webhooks
   - stripe trigger payment_intent.succeeded
-  - 'curl -s -X POST -H "Authorization: Bearer $SLACK_TOKEN" -H ''Content-Type: application/json'' -d
-    ''{"text":"Deploy complete"}'' https://slack.com/api/chat.postMessage'
+  - 'curl -s -X POST -H "Authorization: Bearer $SLACK_TOKEN" -H ''Content-Type: application/json''
+    -d ''{"text":"Deploy complete"}'' https://slack.com/api/chat.postMessage'
   - stripe trigger checkout.session.completed
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -122,8 +124,8 @@ instructions: '# API Webhook v5 - Integrations
 
   ```bash
 
-  gh api repos/octocat/Hello-World/hooks --method POST -f config.url=https://example.com/hook -f config.content_type=json
-  -f events[]=push
+  gh api repos/octocat/Hello-World/hooks --method POST -f config.url=https://example.com/hook
+  -f config.content_type=json -f events[]=push
 
   stripe listen --forward-to localhost:3000/webhooks
 

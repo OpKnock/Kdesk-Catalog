@@ -74,3 +74,7 @@ Define paging repository methods and custom Pageable defaults
 - `curl -s 'http://localhost:8080/api/users?size=0' -o /dev/null -w '%{http_code}\n'`
 - `curl -s 'http://localhost:8080/api/users?page=-1' -o /dev/null -w '%{http_code}\n'`
 - `./mvnw spring-boot:run -Dspring-boot.run.arguments=--spring.data.rest.default-page-size=50`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -66,3 +66,7 @@ Generate bulk datasets for load tests
 - `node -e "const {faker}=require('@faker-js/faker'); const out=Array.from({length:1000},()=>({id:faker.string.uuid(),email:faker.internet.email(),name:faker.person.fullName()})); require('fs').writeFileSync('users.json',JSON.stringify(out)); console.log(out.length)"`
 - `python -c "from faker import Faker; f=Faker('en_US'); rows=[{'name':f.name(),'email':f.email()} for _ in range(500)]; import json; open('users.json','w').write(json.dumps(rows)); print(len(rows))"`
 - `curl -s -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d @users.json -o /dev/null -w '%{http_code}\n'`
+
+**Examples:**
+- -cli --help
+- -api --help

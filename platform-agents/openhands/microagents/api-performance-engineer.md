@@ -77,3 +77,7 @@ Scale attacks across machines with vegeta
 - `vegeta attack -rate=0 -max-workers=10 -duration=60s -targets=targets.txt > results.bin`
 - `vegeta report -every=5s results.bin`
 - `vegeta dump results.bin | head -5`
+
+**Examples:**
+- -cli --help
+- -api --help

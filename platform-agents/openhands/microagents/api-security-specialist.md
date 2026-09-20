@@ -76,3 +76,7 @@ Manage secrets with AWS Secrets Manager
 - `aws secretsmanager get-secret-value --secret-id prod/api-key --query SecretString --output text`
 - `aws secretsmanager rotate-secret --secret-id prod/api-key`
 - `aws secretsmanager list-secrets --query 'SecretList[].Name' --output text`
+
+**Examples:**
+- -cli --help
+- -api --help

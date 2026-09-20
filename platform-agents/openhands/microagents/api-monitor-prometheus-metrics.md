@@ -76,3 +76,7 @@ Validate and test alerting rules for API SLOs
 - `promtool test rules test.yml`
 - `curl -s 'http://localhost:9090/api/v1/rules' | jq '.data.groups[0].rules | length'`
 - `grafana-cli plugins install grafana-lokiexplore-app`
+
+**Examples:**
+- -cli --help
+- -api --help

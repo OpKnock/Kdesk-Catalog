@@ -75,3 +75,7 @@ Detect O(n) degradation on deep pagination
 - `curl -s 'http://localhost:3000/api/timing?page=1' | jq '.serverTimeMs'`
 - `curl -s 'http://localhost:3000/api/timing?page=500' | jq '.serverTimeMs'`
 - `npx autocannon -c 5 -d 20 'http://localhost:3000/users?page=500'`
+
+**Examples:**
+- -cli --help
+- -api --help

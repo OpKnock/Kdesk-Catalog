@@ -77,3 +77,7 @@ Query traces from Jaeger after export
 - `curl -s 'http://localhost:16686/api/traces?service=my-api&limit=10' | jq '.data[0].spans | length'`
 - `curl -s 'http://localhost:16686/api/services' | jq '.data'`
 - `curl -s 'http://localhost:4318/v1/traces' -o /dev/null -w '%{http_code}\n'`
+
+**Examples:**
+- -cli --help
+- -api --help

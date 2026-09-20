@@ -1,13 +1,13 @@
 ---
 name: "Database Performance"
-description: "Optimize it."
+description: "Tune query plans, indexes, and caching for optimal performance."
 globs: ["**/*.r", "**/*.sql"]
 alwaysApply: false
 ---
 
 # Database Performance
 
-Optimize it.
+Tune query plans, indexes, and caching for optimal performance.
 
 ## Instructions
 

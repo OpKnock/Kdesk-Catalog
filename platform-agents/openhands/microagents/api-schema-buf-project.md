@@ -83,3 +83,7 @@ Generate code and detect breaking changes
 - `buf generate --template buf.gen.yaml`
 - `buf breaking --against .git#branch=main`
 - `buf build -o schema.binpb`
+
+**Examples:**
+- -cli --help
+- -api --help

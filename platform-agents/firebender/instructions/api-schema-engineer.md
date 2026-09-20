@@ -74,3 +74,7 @@ Handle schema drafts and formats
 - `ajv validate -s user.schema.json -d bad.json --strict=false 2>&1 | head -5`
 - `node -e "const Ajv=require('ajv'); const addFormats=require('ajv-formats'); const a=new Ajv(); addFormats(a); const v=a.compile({type:'string',format:'email'}); console.log(v('x@y.com'), v('nope'))"`
 - `node -e "console.log(require('ajv').defaults)"`
+
+**Examples:**
+- -cli --help
+- -api --help

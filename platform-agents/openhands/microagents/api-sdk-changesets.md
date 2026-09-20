@@ -75,3 +75,7 @@ Automate releases from commit messages
 - `npx semantic-release`
 - `npm version major`
 - `git tag -a v2.0.0 -m 'SDK v2.0.0'`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -79,3 +79,7 @@ Customize generated SDK templates
 - `npx @openapitools/openapi-generator-cli config-help -g typescript-axios`
 - `npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-axios -t ./custom-templates -o sdk-ts`
 - `npx @openapitools/openapi-generator-cli validate -i openapi.yaml`
+
+**Examples:**
+- -cli --help
+- -api --help

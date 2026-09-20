@@ -82,3 +82,7 @@ Generate API documentation with typedoc
 - `npx typedoc --entryPointStrategy expand src --out docs`
 - `npm pack --dry-run`
 - `npm publish`
+
+**Examples:**
+- -cli --help
+- -api --help

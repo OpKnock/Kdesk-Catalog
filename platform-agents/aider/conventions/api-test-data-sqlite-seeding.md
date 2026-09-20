@@ -67,3 +67,7 @@ Seed PostgreSQL for integration tests
 - `psql -d app -c "COPY users (name, email) FROM '/tmp/users.csv' WITH (FORMAT csv, HEADER true)"`
 - `psql -d app -c "TRUNCATE users RESTART IDENTITY"`
 - `pg_dump --data-only -t users app > seed.sql`
+
+**Examples:**
+- -cli --help
+- -api --help

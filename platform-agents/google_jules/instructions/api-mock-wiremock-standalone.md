@@ -75,3 +75,7 @@ Record real traffic and replay it as stubs
 - `curl -s -X POST http://localhost:8080/__admin/recordings/stop -H 'Content-Type: application/json'`
 - `curl -s http://localhost:8080/__admin/requests | jq '.requests | length'`
 - `curl -s -X DELETE http://localhost:8080/__admin/requests -o /dev/null -w '%{http_code}\n'`
+
+**Examples:**
+- -cli --help
+- -api --help

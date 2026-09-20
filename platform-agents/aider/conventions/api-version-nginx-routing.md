@@ -75,3 +75,7 @@ Register versioned services in Kong
 - `curl -s -X POST http://localhost:8001/services/users-v1/routes -d 'paths[]=/v1/users'`
 - `curl -s http://localhost:8000/v1/users -o /dev/null -w '%{http_code}\n'`
 - `deck gateway sync kong.yaml`
+
+**Examples:**
+- -cli --help
+- -api --help

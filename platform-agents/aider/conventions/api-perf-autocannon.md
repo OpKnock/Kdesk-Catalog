@@ -65,3 +65,7 @@ Use artillery quick for ad-hoc load scenarios
 - `npx artillery quick -d 30 -r 20 http://localhost:3000/api`
 - `npx artillery quick --count 50 --num 20 http://localhost:8080/users`
 - `npx artillery quick -d 60 -r 50 -o report.json http://localhost:3000/`
+
+**Examples:**
+- -cli --help
+- -api --help

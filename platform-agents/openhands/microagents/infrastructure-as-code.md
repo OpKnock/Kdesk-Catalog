@@ -1,13 +1,13 @@
 ---
 name: "infrastructure-as-code"
-description: "Write it."
+description: "Manage infrastructure as code with Terraform, Pulumi, and GitOps."
 type: knowledge
 triggers: ["infrastructure-as-code", "iac"]
 ---
 
 # Infrastructure as Code
 
-Write it.
+Manage infrastructure as code with Terraform, Pulumi, and GitOps.
 
 ## Instructions
 

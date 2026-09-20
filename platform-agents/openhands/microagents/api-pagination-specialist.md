@@ -75,3 +75,7 @@ Validate Link header output against RFC 8288
 **Commands:**
 - `node -e "const h='demo-http-localhost-8080-users-page; rel=\"next\"'; const m=h.match(/demo-]+)>;\s*rel=\"(\w+)\"/); console.log(m ? m.slice(1) : 'invalid')"`
 - `curl -s 'http://localhost:8080/users?page=1' -D- -o /dev/null | grep -ci 'link:'`
+
+**Examples:**
+- -cli --help
+- -api --help

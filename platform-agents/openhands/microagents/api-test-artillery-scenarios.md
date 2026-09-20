@@ -85,3 +85,7 @@ Ramp virtual users over time
 - `npx artillery run --record --key $ARTILLERY_KEY soak.yml`
 - `npx artillery run soak.yml`
 - `curl -s -o /dev/null -w '%{http_code} %{time_total}s\n' http://localhost:8080/health`
+
+**Examples:**
+- -cli --help
+- -api --help

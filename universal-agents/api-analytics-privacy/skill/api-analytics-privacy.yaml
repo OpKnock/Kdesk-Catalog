@@ -46,8 +46,8 @@ capabilities:
   description: Anonymize PII and run privacy-safe aggregations
   commands:
   - pip install presidio-analyzer presidio-anonymizer
-  - presidio-analyzer --text 'Call me at 555-1234 or email alice@example.com'
-  - presidio-anonymizer --analyzer_result /tmp/analysis.json --text 'alice@example.com called'
+  - presidio-analyzer --text 'Call me at 555-1234 or email alice@localhost'
+  - presidio-anonymizer --analyzer_result /tmp/analysis.json --text 'alice@localhost called'
   - python anonymize.py --input events.jsonl --output events_safe.jsonl --entities EMAIL_ADDRESS,PHONE_NUMBER,CREDIT_CARD
   - curl -s http://localhost:8080/api/analytics/aggregate?dimension=country | jq '.rows | length'
   examples:

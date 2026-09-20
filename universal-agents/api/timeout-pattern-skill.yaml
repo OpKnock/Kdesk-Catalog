@@ -2,12 +2,11 @@ name: timeout-pattern
 display_name: Timeout Pattern
 category: api
 subcategory: general
-description: 'Hand-crafted timeout pattern skill: curl connect/read timeouts, grpcurl deadlines, nginx
-  proxy timeouts, and code-level timeout handling for API calls.'
+description: "Apply timeouts at every layer of the call stack: HTTP client connect/read deadlines with curl and requests, gRPC deadlines with grpcurl, and proxy timeouts in nginx. Establishes a timeout ladder (client < proxy < backend) so hung downstreams fail fast without burning worker pools."
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - grpcurl
@@ -16,14 +15,14 @@ capabilities:
 - name: timeout-application
   description: Apply timeouts at client, proxy, and application layers
   commands:
-  - curl --connect-timeout 5 --max-time 15 https://api.example.com/slow
+  - curl --connect-timeout 5 --max-time 15 http://localhost:8080/slow
   - grpcurl -max-time 10 -d '{}' localhost:8080 svc.Health.Check
-  - python -c 'import requests; requests.get("https://api.example.com", timeout=(3.05, 15))'
-  - curl -s -o /dev/null -w '%{http_code} %{time_total}\n' https://api.example.com/health
+  - python -c 'import requests; requests.get("http://localhost:8080", timeout=(3.05, 15))'
+  - curl -s -o /dev/null -w '%{http_code} %{time_total}\n' http://localhost:8080/health
   examples:
-  - curl --connect-timeout 5 --max-time 15 https://api.example.com/slow
+  - curl --connect-timeout 5 --max-time 15 http://localhost:8080/slow
   - grpcurl -max-time 10 -d '{}' localhost:8080 svc.Health.Check
-  - python -c 'import requests; requests.get("https://api.example.com", timeout=(3.05, 15))'
+  - python -c 'import requests; requests.get("http://localhost:8080", timeout=(3.05, 15))'
   parameters:
   - name: connect_timeout
     type: integer
@@ -97,5 +96,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

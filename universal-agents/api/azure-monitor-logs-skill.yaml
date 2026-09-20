@@ -2,12 +2,11 @@ name: azure-monitor-logs
 display_name: Azure Monitor Logs
 category: api
 subcategory: general
-description: 'Queries and manages Azure Monitor Logs (Log Analytics): workspaces, KQL queries, diagnostic
-  settings, and log ingestion.'
+description: "Queries and administers Log Analytics workspaces with the Azure CLI: creates workspaces, runs KQL queries for application and audit diagnostics, and configures diagnostic settings to route resource logs."
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: workspaces
@@ -32,20 +31,20 @@ capabilities:
 - name: kql-queries
   description: Run Kusto queries against workspaces.
   commands:
-  - az monitor log-analytics query -w <workspace-id> --analytics-query "AzureDiagnostics | where OperationName
+  - az monitor log-analytics query -w abc123-def456-ghi789 --analytics-query "AzureDiagnostics | where OperationName
     contains 'error' | take 10"
-  - az monitor log-analytics query -w <workspace-id> --analytics-query "AppRequests | where Success ==
+  - az monitor log-analytics query -w abc123-def456-ghi789 --analytics-query "AppRequests | where Success ==
     false | summarize count() by bin(TimeGenerated, 1h)"
-  - az monitor log-analytics query -w <workspace-id> --analytics-query "AzureActivity | where OperationName
+  - az monitor log-analytics query -w abc123-def456-ghi789 --analytics-query "AzureActivity | where OperationName
     == 'Microsoft.Compute/virtualMachines/write' | take 20"
-  - az monitor log-analytics query -w <workspace-id> --analytics-query "Heartbeat | summarize count()
+  - az monitor log-analytics query -w abc123-def456-ghi789 --analytics-query "Heartbeat | summarize count()
     by Computer"
   examples:
-  - az monitor log-analytics query -w <workspace-id> --analytics-query "AppRequests | where ResultCode
+  - az monitor log-analytics query -w abc123-def456-ghi789 --analytics-query "AppRequests | where ResultCode
     == 500 | summarize count() by bin(TimeGenerated, 1h) | order by TimeGenerated desc"
-  - az monitor log-analytics query -w <workspace-id> --analytics-query "AzureDiagnostics | where Category
+  - az monitor log-analytics query -w abc123-def456-ghi789 --analytics-query "AzureDiagnostics | where Category
     == 'AuditLogs' | take 5"
-  - az monitor log-analytics query -w <workspace-id> --analytics-query "AppExceptions | project TimeGenerated,
+  - az monitor log-analytics query -w abc123-def456-ghi789 --analytics-query "AppExceptions | project TimeGenerated,
     Message | take 20"
   parameters:
   - name: workspace_id
@@ -57,16 +56,14 @@ capabilities:
 - name: diagnostic-settings
   description: Route resource logs to workspaces.
   commands:
-  - az monitor diagnostic-settings create --resource <resource-id> --workspace <workspace-id> --logs '[{"category":"AuditLogs","enabled":true}]'
-  - az monitor diagnostic-settings list --resource <resource-id>
-  - az monitor diagnostic-settings update --resource <resource-id> --name settings --logs '[{"category":"AuditLogs","enabled":false}]'
-  - az monitor diagnostic-settings delete --resource <resource-id> --name settings
+  - az monitor diagnostic-settings create --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.KeyVault/vaults/mykv --workspace abc123-def456-ghi789 --logs '[{"category":"AuditLogs","enabled":true}]'
+  - az monitor diagnostic-settings list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.KeyVault/vaults/mykv
+  - az monitor diagnostic-settings update --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.KeyVault/vaults/mykv --name settings --logs '[{"category":"AuditLogs","enabled":false}]'
+  - az monitor diagnostic-settings delete --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.KeyVault/vaults/mykv --name settings
   examples:
-  - az monitor diagnostic-settings create --resource /subscriptions/<sub>/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/mykv
-    --workspace <ws-id> --logs '[{"category":"AuditEvent","enabled":true}]'
-  - az monitor diagnostic-settings list --resource <resource-id> --query '[].{name:name,workspaceId:workspaceId}'
-    -o table
-  - az monitor diagnostic-settings create --resource <api-id> --workspace <ws-id> --metrics '[{"category":"AllMetrics","enabled":true}]'
+  - az monitor diagnostic-settings create --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.KeyVault/vaults/mykv --workspace abc123-def456-ghi789 --logs '[{"category":"AuditEvent","enabled":true}]'
+  - az monitor diagnostic-settings list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.KeyVault/vaults/mykv --query '[].{name:name,workspaceId:workspaceId}' -o table
+  - az monitor diagnostic-settings create --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-func --workspace abc123-def456-ghi789 --metrics '[{"category":"AllMetrics","enabled":true}]'
   parameters:
   - name: resource_id
     type: string
@@ -93,8 +90,7 @@ instructions: '# Azure Monitor Logs
   ## What this skill does
 
 
-  Queries and manages Azure Monitor Logs (Log Analytics): workspace lifecycle, Kusto (KQL) queries for
-  diagnostics and app logs, and diagnostic settings to route resource logs.
+  Queries and administers Log Analytics workspaces with the Azure CLI: creates workspaces, runs KQL queries for application and audit diagnostics, and configures diagnostic settings to route resource logs.
 
 
   ## When to use
@@ -125,13 +121,13 @@ instructions: '# Azure Monitor Logs
 
   # Query activity log
 
-  az monitor log-analytics query -w <workspace-id> --analytics-query "AzureActivity | where OperationName
+  az monitor log-analytics query -w abc123-def456-ghi789 --analytics-query "AzureActivity | where OperationName
   contains ''write'' | take 20"
 
 
   # Enable diagnostics for Key Vault
 
-  az monitor diagnostic-settings create --resource <kv-id> --workspace <ws-id> --logs ''[{"category":"AuditEvent","enabled":true}]''
+  az monitor diagnostic-settings create --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.KeyVault/vaults/mykv --workspace abc123-def456-ghi789 --logs ''[{"category":"AuditEvent","enabled":true}]''
 
   ```
 
@@ -190,5 +186,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

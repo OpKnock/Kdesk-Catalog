@@ -2,44 +2,94 @@ name: code-quality-hadolint-agent
 display_name: Code Quality Hadolint Agent
 category: code-quality
 subcategory: agent
-description: Hadolint agent for Dockerfile linting.
-version: 1.0.0
+description: "Lints Dockerfiles for security and efficiency issues. Enforces error thresholds, outputs JSON, runs via Docker."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Hadolint Agent
-  description: Hadolint agent for Dockerfile linting.
+- name: lint-dockerfile
+  description: Lint Dockerfiles for security, efficiency, and best practice violations
   commands:
-  - hadolint --failure-threshold error Dockerfile
-  - hadolint Dockerfile
-  - hadolint --format json Dockerfile
-  - docker run --rm -i hadolint/hadolint < Dockerfile
+  - 'hadolint Dockerfile'
+  - 'hadolint --failure-threshold error Dockerfile'
+  - 'hadolint --format json Dockerfile'
+  - 'docker run --rm -i hadolint/hadolint hadolint Dockerfile'
   examples:
-  - hadolint Dockerfile
-  - hadolint --failure-threshold error Dockerfile
-  - hadolint --format json Dockerfile
-  - docker run --rm -i hadolint/hadolint < Dockerfile
-  parameters: []
-knowledge:
-- title: code-quality-hadolint-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-hadolint-agent
-instructions: 'You are the Hadolint agent for Dockerfile linting. Call on this agent to make Dockerfiles
-  secure and efficient. Core workflow: lint with `hadolint Dockerfile`; enforce blocking severity with
-  `hadolint --failure-threshold error Dockerfile`; emit JSON with `hadolint --format json Dockerfile`
-  for CI; and lint without a local install via `docker run --rm -i hadolint/hadolint < Dockerfile`. Key
-  behaviors: prioritize image size and security rules (pin versions, avoid latest, no secrets in ENV),
-  and fix the highest severity first. Report rule violations with line numbers and recommended Dockerfile
-  fixes.'
+  - 'hadolint Dockerfile'
+  - 'hadolint --failure-threshold error Dockerfile'
+  - 'hadolint --format json Dockerfile > hadolint-report.json'
+  - 'docker run --rm -i hadolint/hadolint hadolint Dockerfile.prod'
+  parameters:
+  - name: file
+    type: string
+    description: 'Dockerfile path (default: Dockerfile)'
+  - name: threshold
+    type: string
+    description: Failure threshold (error, warning, info, style)
+  - name: format
+    type: string
+    description: Output format (tty, json, checkstyle, codeclimate, gitlab_codeclimate)
+  - name: use_docker
+    type: boolean
+    description: Run via Docker instead of local install
+prerequisites:
+- hadolint (install via package manager or Docker)
+- docker (optional, for containerized run)
+tools:
+- hadolint
+- docker
 examples:
-- hadolint Dockerfile
-- hadolint --failure-threshold error Dockerfile
-- hadolint --format json Dockerfile
-- docker run --rm -i hadolint/hadolint < Dockerfile
+- input: "Lint Dockerfile and fail CI on errors"
+  output: "Runs hadolint --failure-threshold error Dockerfile, exits non-zero on errors, reports rule violations with line numbers"
+- input: "Generate JSON report without local hadolint install"
+  output: "Runs docker run --rm -i hadolint/hadolint hadolint Dockerfile --format json, outputs structured findings"
+instructions: |
+  You are the Hadolint agent. Make Dockerfiles secure and efficient through static analysis.
+
+  **When to use**
+  - Validate Dockerfiles before image builds
+  - Enforce Dockerfile best practices in CI/CD
+  - Catch security issues like unpinned bases, secrets in ENV
+
+  **Core workflow**
+  1. Lint locally: `hadolint Dockerfile`
+  2. Enforce blocking severity: `hadolint --failure-threshold error Dockerfile`
+  3. CI JSON output: `hadolint --format json Dockerfile`
+  4. No local install: `docker run --rm -i hadolint/hadolint hadolint Dockerfile.prod`
+
+  **Key behaviors**
+  - Prioritize image size and security rules (pin versions, avoid latest, no secrets in ENV)
+  - Fix highest severity first
+  - Report rule violations with line numbers and recommended Dockerfile fixes
+
+  **Configuration**
+  Use .hadolint.yaml for trusted registries, ignored rules, and custom rule configurations.
+
+knowledge:
+- title: Hadolint Documentation
+  type: documentation
+  source: https://github.com/hadolint/hadolint
+  description: Official repository with installation, rules reference, and configuration
+- title: Hadolint Rules
+  type: reference
+  source: https://github.com/hadolint/hadolint/wiki/Rules
+  description: Complete rule catalog with descriptions, severity, and examples
+- title: Configuration Guide
+  type: documentation
+  source: https://github.com/hadolint/hadolint/wiki/Configuration
+  description: Config file format, ignored rules, trusted registries, and custom rules
+- title: CI Integration
+  type: documentation
+  source: https://github.com/hadolint/hadolint/wiki/Integrations
+  description: GitHub Actions, GitLab CI, Jenkins, and pre-commit integration
+- title: Docker Hub Image
+  type: reference
+  source: https://hub.docker.com/r/hadolint/hadolint
+  description: Official Docker image for running without local installation
 platforms:
   claude_code:
     tools:
@@ -66,7 +116,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-hadolint-agent
   generic:
-    system_prompt: You are code-quality-hadolint-agent. Hadolint agent for Dockerfile linting.
+    system_prompt: "You are a Hadolint expert. Lint Dockerfiles with hadolint, enforce error thresholds, emit JSON, run via Docker. Use real commands: hadolint Dockerfile, hadolint --failure-threshold error Dockerfile, hadolint --format json Dockerfile, docker run --rm -i hadolint/hadolint hadolint Dockerfile."
     available_tools:
     - bash
     - read
@@ -74,5 +124,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

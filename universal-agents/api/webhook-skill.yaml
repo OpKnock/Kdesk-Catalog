@@ -1,81 +1,20 @@
 name: webhook
 display_name: Webhook
+version: 2.0.0
+type: skill
 category: api
 subcategory: general
-description: 'Webhook fundamentals: register endpoints, receive events with smee, test with curl, validate
-  payloads, and inspect delivery headers end to end.'
-version: 2.0.0
+description: "Builds webhook endpoints that receive events from external systems. Registers endpoints, forwards traffic locally with smee, POSTs test payloads with headers, and inspects received events with timing and status verification."
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 tags:
-- api
-author: Kdesk-Catalog
-license: MIT
-prerequisites:
-- smee
-capabilities:
-- name: webhook-ops
-  description: Create, receive, and debug webhook endpoints
-  commands:
-  - smee --url https://smee.io/your-channel
-  - 'curl -s -X POST http://localhost:8080/hooks -H ''Content-Type: application/json'' -H ''X-Event-Type:
-    order.created'' -d ''{"id":42}'' -w ''\n%{http_code}\n'''
-  - curl -s http://localhost:8080/hooks/received | jq '.[-1] | {event, id, received_at}'
-  - curl -s -X POST http://localhost:8080/hooks/ping | jq '.message'
-  - 'curl -s http://localhost:8080/hooks -H ''X-Webhook-ID: wh_1'' -o /dev/null -w ''%{http_code}'''
-  examples:
-  - smee --url https://smee.io/demo-channel --port 8080
-  - 'curl -s -X POST http://localhost:8080/hooks -H ''Content-Type: application/json'' -d ''{"event":"payment.succeeded"}''
-    | jq ''.received'''
-  - curl -sI http://localhost:8080/hooks -X OPTIONS | grep -i 'x-webhook'
-  parameters:
-  - name: event_type
-    type: string
-    description: X-Event-Type header describing the event
-  - name: port
-    type: integer
-    description: Port for smee forwarding (default 3000)
-  - name: url
-    type: string
-    description: smee.io channel URL
-knowledge:
-- title: Webhooks.fyi
-  type: documentation
-  source: https://webhooks.fyi/
-  description: Webhook mechanics, security, and provider comparison
-- title: GitHub Webhooks
-  type: documentation
-  source: https://docs.github.com/en/webhooks
-  description: Event types, payloads, and delivery headers
-instructions: "# Webhook\n\n## What this skill does\nBuild webhook endpoints that receive events from\
-  \ external systems: register endpoints, forward traffic locally with smee, POST test payloads, and inspect\
-  \ what was received with headers intact.\n\n## When to use\n- Accepting events from GitHub, Stripe,\
-  \ or custom providers\n- Building a webhook consumer\n- Debugging payloads and headers\n\n## Real commands\n\
-  ```bash\n# Forward remote webhooks to localhost\nsmee --url https://smee.io/your-channel --port 8080\n\
-  \n# Receive a webhook POST\ncurl -s -X POST http://localhost:8080/hooks \\\n  -H 'Content-Type: application/json'\
-  \ \\\n  -H 'X-Event-Type: order.created' \\\n  -d '{\"id\":42}' -w '\\n%{http_code}\\n'\n\n# Inspect\
-  \ the most recently received event\ncurl -s http://localhost:8080/hooks/received | jq '.[-1] | {event,\
-  \ id, received_at}'\n\n# Ping handler\ncurl -s -X POST http://localhost:8080/hooks/ping | jq '.message'\n\
-  \n# Respond fast: 2xx within a few seconds\ncurl -s http://localhost:8080/hooks -o /dev/null -w '%{time_total}s\
-  \ %{http_code}\\n'\n```\n\n## Receiver contract\n- Respond 2xx quickly (providers retry otherwise)\n\
-  - Verify signature before doing work\n- Process asynchronously (queue), not inline\n- Deduplicate by\
-  \ delivery ID\n\n## Best practices\n- Return 200 for valid events, 4xx for invalid\n- Include X-Event-Type\
-  \ and X-Delivery-ID in logs\n- Acknowledge before long processing via a queue\n- Keep a received-events\
-  \ buffer for debugging\n\n## Testing\n```bash\nsmee --url https://smee.io/test --port 8080 &\ncurl -s\
-  \ -X POST http://localhost:8080/hooks -H 'X-Event-Type: test.event' -d '{\"probe\":true}'\ncurl -s http://localhost:8080/hooks/received\
-  \ | jq '.[-1]'\n```"
-examples:
-- input: Receive GitHub push events locally
-  output: Starts smee forwarding to localhost:8080, POSTs a sample push payload, and shows the parsed
-    event.
-- input: Why is the provider retrying?
-  output: Checks response time and status from the last request log, and verifies the handler returns
-    2xx promptly.
+  - api
+  - webhook
+  - events
 platforms:
   claude_code:
-    tools:
-    - Bash
-    - Read
-    - Write
-    - Edit
+    tools: [Bash, Read, Write, Edit]
     model: inherit
   cursor:
     rule_type: auto
@@ -84,21 +23,110 @@ platforms:
     extension: github.copilot
   windsurf:
     model: inherit
-    tools:
-    - bash
-    - read
-    - write
-    - edit
+    tools: [bash, read, write, edit]
   opencode:
     plugin: opencode-webhook
   generic:
-    system_prompt: 'You are the Webhook specialist. You do it through webhook-ops: Create, receive, and
-      debug webhook endpoints. The commands are real, e.g. `smee --url https://smee.io/your-channel`.
-      You verify each step you report and stay honest about what you have not run.'
-    available_tools:
-    - bash
-    - read
-    - write
-    - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+    system_prompt: "You are the Webhook specialist. You do it through webhook-ops: Create, receive, and debug webhook endpoints. The commands are real, e.g. `smee --url https://smee.io/your-channel`. You verify each step you report and stay honest about what you have not run."
+    available_tools: [bash, read, write, edit]
+capabilities:
+  - name: webhook-ops
+    description: Create, receive, and debug webhook endpoints
+    commands:
+      - 'smee --url https://smee.io/your-channel --port 8080'
+      - 'curl -s -X POST http://localhost:8080/hooks -H "Content-Type: application/json" -H "X-Event-Type: order.created" -d "{\"id\":42}" -w "\n%{http_code}\n"'
+      - 'curl -s http://localhost:8080/hooks/received | jq ".[-1] | {event, id, received_at}"'
+      - 'curl -s -X POST http://localhost:8080/hooks/ping | jq ".message"'
+      - 'curl -s http://localhost:8080/hooks -o /dev/null -w "%{time_total}s %{http_code}\n"'
+    examples:
+      - 'smee --url https://smee.io/demo-channel --port 8080'
+      - 'curl -s -X POST http://localhost:8080/hooks -H "Content-Type: application/json" -d "{\"event\":\"payment.succeeded"}" | jq ".received"'
+      - 'curl -sI http://localhost:8080/hooks -X OPTIONS | grep -i "x-webhook"'
+    parameters:
+      - name: event_type
+        type: string
+        description: X-Event-Type header describing the event
+      - name: port
+        type: integer
+        description: Port for smee forwarding (default 3000)
+      - name: url
+        type: string
+        description: smee.io channel URL
+prerequisites:
+  - smee
+  - curl
+tools: [smee, curl, jq]
+examples:
+  - input: Receive GitHub push events locally
+    output: Starts smee forwarding to localhost:8080, POSTs a sample push payload, and shows the parsed event.
+  - input: Why is the provider retrying?
+    output: Checks response time and status from the last request log, and verifies the handler returns 2xx promptly.
+instructions: |
+  # Webhook
+
+  ## What this skill does
+
+  Build webhook endpoints that receive events from external systems: register endpoints, forward traffic locally with smee, POST test payloads, and inspect what was received with headers intact.
+
+  ## When to use
+
+  - Accepting events from GitHub, Stripe, or custom providers
+  - Building a webhook consumer
+  - Debugging payloads and headers
+
+  ## Real commands
+
+  ```bash
+  # Forward remote webhooks to localhost
+  smee --url https://smee.io/your-channel --port 8080
+
+  # Receive a webhook POST
+  curl -s -X POST http://localhost:8080/hooks \
+    -H "Content-Type: application/json" \
+    -H "X-Event-Type: order.created" \
+    -d "{\"id\":42}" -w "\n%{http_code}\n"
+
+  # Inspect the most recently received event
+  curl -s http://localhost:8080/hooks/received | jq ".[-1] | {event, id, received_at}"
+
+  # Ping handler
+  curl -s -X POST http://localhost:8080/hooks/ping | jq ".message"
+
+  # Respond fast: 2xx within a few seconds
+  curl -s http://localhost:8080/hooks -o /dev/null -w "%{time_total}s %{http_code}\n"
+  ```
+
+  ## Receiver contract
+
+  - Respond 2xx quickly (providers retry otherwise)
+  - Verify signature before doing work
+  - Process asynchronously (queue), not inline
+  - Deduplicate by delivery ID
+
+  ## Best practices
+
+  - Return 200 for valid events, 4xx for invalid
+  - Include X-Event-Type and X-Delivery-ID in logs
+  - Acknowledge before long processing via a queue
+  - Keep a received-events buffer for debugging
+
+  ## Testing
+
+  ```bash
+  smee --url https://smee.io/test --port 8080 &
+  curl -s -X POST http://localhost:8080/hooks -H "X-Event-Type: test.event" -d "{\"probe\":true}"
+  curl -s http://localhost:8080/hooks/received | jq ".[-1]"
+  ```
+knowledge:
+  - title: Webhooks.fyi
+    type: documentation
+    source: https://webhooks.fyi/
+    description: Webhook mechanics, security, and provider comparison
+  - title: GitHub Webhooks
+    type: documentation
+    source: https://docs.github.com/en/webhooks
+    description: Event types, payloads, and delivery headers
+  - title: Stripe Webhooks
+    type: documentation
+    source: https://docs.stripe.com/webhooks
+    description: Event catalog and handling guides

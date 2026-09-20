@@ -73,16 +73,16 @@ capabilities:
 - name: api
   description: Verify paginated API responses.
   commands:
-  - curl -s 'https://api.example.com/items?limit=100&page=3' | jq '.items | length'
-  - curl -s 'https://api.example.com/items?limit=100&cursor=abc123' | jq '.next_page'
-  - 'curl -s ''https://api.example.com/items?limit=100&page=3'' | jq ''{count: (.items|length), next:
+  - curl -s 'http://localhost:8080/items?limit=100&page=3' | jq '.items | length'
+  - curl -s 'http://localhost:8080/items?limit=100&cursor=abc123' | jq '.next_page'
+  - 'curl -s ''http://localhost:8080/items?limit=100&page=3'' | jq ''{count: (.items|length), next:
     .links.next}'''
-  - curl -s 'https://api.example.com/items?limit=1000000' -o /dev/null -w '%{http_code}\n'
-  - curl -s 'https://api.example.com/items?limit=50&cursor=abc' | jq '.items[0].id'
+  - curl -s 'http://localhost:8080/items?limit=1000000' -o /dev/null -w '%{http_code}\n'
+  - curl -s 'http://localhost:8080/items?limit=50&cursor=abc' | jq '.items[0].id'
   examples:
-  - curl -s 'https://api.example.com/items?limit=100&page=3' | jq '.links'
-  - curl -s 'https://api.example.com/items?limit=50&cursor=abc' | jq '.items | length'
-  - curl -s 'https://api.example.com/items?limit=-1' -o /dev/null -w '%{http_code}\n'
+  - curl -s 'http://localhost:8080/items?limit=100&page=3' | jq '.links'
+  - curl -s 'http://localhost:8080/items?limit=50&cursor=abc' | jq '.items | length'
+  - curl -s 'http://localhost:8080/items?limit=-1' -o /dev/null -w '%{http_code}\n'
   parameters:
   - name: limit
     type: number

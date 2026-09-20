@@ -49,7 +49,7 @@ capabilities:
   - pip install celery redis
   - celery -A tasks worker --loglevel=info -c 4
   - celery -A tasks beat --loglevel=info
-  - celery -A tasks call tasks.send_email --args='["a@example.com"]'
+  - celery -A tasks call tasks.send_email --args='["a@localhost"]'
   - celery -A tasks inspect active
   examples:
   - celery worker -c 4 runs 4 worker processes
@@ -69,7 +69,7 @@ capabilities:
   description: Queue async work with BullMQ
   commands:
   - npm install bullmq ioredis
-  - node -e "const {Queue}=require('bullmq'); new Queue('jobs').add('email',{to:'a@example.com'},{attempts:3,backoff:{type:'exponential',delay:1000}}).then(j=>console.log('queued',j.id))"
+  - node -e "const {Queue}=require('bullmq'); new Queue('jobs').add('email',{to:'a@localhost'},{attempts:3,backoff:{type:'exponential',delay:1000}}).then(j=>console.log('queued',j.id))"
   - node worker.js
   - redis-cli ping
   - rq worker --url redis://localhost:6379

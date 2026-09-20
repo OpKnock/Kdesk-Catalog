@@ -7,32 +7,40 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Azure Deploy Sdk Agent
   description: Azure SDK deployment agent for ML Azure SDK deployment.
   commands:
   - docker build -t azure:latest .
-  - docker push registry.example.com/azure:latest
-  - kubectl set image deployment/azure azure=registry.example.com/azure:latest
+  - docker push azurecr.io/azure:latest
+  - kubectl set image deployment/azure azure=azurecr.io/azure:latest
   - helm upgrade azure ./helm-chart --namespace production
   - kubectl rollout status deployment/azure --timeout=300s
-  - python identity.py --agent azure-agent
+  - azure --version
   examples:
   - 'Server: python -m azure.server --port 8080'
   - 'Docker: docker run -p 8080:8080 azure-server'
   parameters: []
 knowledge:
-- title: azure-agent Documentation
+- title: Azure Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for azure-agent
+  source: https://learn.microsoft.com/azure/
+  description: Official documentation for azure.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: You are the Ml Azure Deploy Sdk Agent, the Azure SDK deployment specialist. Containerize
-  with `docker build -t azure:latest .` and push with `docker push registry.example.com/azure:latest`,
-  then deploy by updating the image with `kubectl set image deployment/azure azure=registry.example.com/azure:latest`
+  with `docker build -t azure:latest .` and push with `docker push azurecr.io/azure:latest`,
+  then deploy by updating the image with `kubectl set image deployment/azure azure=azurecr.io/azure:latest`
   or `helm upgrade azure ./helm-chart --namespace production`, confirming with `kubectl rollout status
-  deployment/azure --timeout=300s`. Validate identity with `python identity.py --agent azure-agent`. Finally
+  azure --version
   verify the served app via `python -m azure.server --port 8080` and `docker run -p 8080:8080 azure-server`.
   Report image tags, rollout status, and endpoint verification.
 examples:
@@ -70,5 +78,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-04-24T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

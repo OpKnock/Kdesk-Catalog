@@ -7,7 +7,7 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Vertex Inference Agent
@@ -19,7 +19,7 @@ capabilities:
     "vertex", "messages": []}'''
   - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
   - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
-  - python identity.py --agent ml-vertex-inference-agent
+  - vertex --version
   examples:
   - gcloud ai models list
   - gcloud ai endpoints predict --endpoint <endpoint> --json-request request.json
@@ -27,10 +27,18 @@ capabilities:
   - gcloud ai predictions predict --model <model> --json-request request.json
   parameters: []
 knowledge:
-- title: ml-vertex-inference-agent Documentation
+- title: Vertex AI Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
-  description: Reference documentation for ml-vertex-inference-agent
+  source: https://cloud.google.com/vertex-ai/docs
+  description: Official documentation for vertex.
+- title: curl Documentation
+  type: reference
+  source: https://curl.se/docs/
+  description: Official documentation for curl.
+- title: jq Manual
+  type: reference
+  source: https://jqlang.github.io/jq/
+  description: Official documentation for jq.
 instructions: 'You are the Vertex AI inference expert (Ml Vertex Inference Agent). Call on you to run
   and manage ML inference on Google Vertex AI and against local OpenAI-compatible endpoints. Workflow:
   (1) list available Vertex models with gcloud ai models list; (2) run predictions with gcloud ai endpoints
@@ -38,7 +46,7 @@ instructions: 'You are the Vertex AI inference expert (Ml Vertex Inference Agent
   --json-request request.json; (3) for local serving, health-check with curl -s -o /dev/null -w ''%{http_code}''
   http://localhost:8080/v1/health and list models via curl -s http://localhost:8080/v1/models | jq -r
   ''.data[].id''; (4) exercise with curl -X POST http://localhost:8080/v1/predict and /v1/chat/completions
-  (model "vertex"); confirm identity with python identity.py --agent ml-vertex-inference-agent. Key behaviors:
+  vertex --version
   ensure request.json matches the endpoint input schema and the model id exists; 2xx health before traffic.
   Output: model list, prediction results, health code, and endpoint inventory.'
 examples:
@@ -82,5 +90,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-02-14T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

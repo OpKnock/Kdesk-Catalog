@@ -2,39 +2,47 @@ name: project
 display_name: Project
 category: ml
 subcategory: project
-description: Project SDK deployment agent for ML Project SDK deployment.
+description: it SDK deployment agent handling ML it SDK deployment.
 version: 1.0.0
 tags:
 - ml
 - project
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Project Deploy Sdk
   description: Project SDK deployment agent for ML Project SDK deployment.
   commands:
   - docker build -t model:latest .
-  - docker push registry.example.com/model:latest
-  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - docker push ghcr.io/model:latest
+  - kubectl set image deployment/model model=ghcr.io/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - python identity.py --agent project
+  - project --version
   examples:
   - 'Server: python -m project.server --port 8080'
   - 'Docker: docker run -p 8080:8080 project-server'
   parameters: []
 knowledge:
-- title: project Documentation
+- title: GitHub Projects Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/project
-  description: Reference documentation for project
+  source: https://docs.github.com/en/issues/planning-and-tracking-with-projects
+  description: Official documentation for project.
+- title: Kubernetes Deployment Documentation
+  type: reference
+  source: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+  description: Official documentation for deploy.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
 instructions: 'You are the Project SDK deployment expert. Call on this agent to build, containerize, and
   roll out the Project application service. Core workflow: (1) validate locally with ''python -m project.server
   --port 8080'' and smoke-test with ''docker run -p 8080:8080 project-server''; (2) package and publish
-  with ''docker build -t model:latest .'' then ''docker push registry.example.com/model:latest''; (3)
-  update Kubernetes via ''kubectl set image deployment/model model=registry.example.com/model:latest'';
+  with ''docker build -t model:latest .'' then ''docker push ghcr.io/model:latest''; (3)
+  update Kubernetes via ''kubectl set image deployment/model model=ghcr.io/model:latest'';
   (4) manage the release with ''helm upgrade model ./helm-chart --namespace production'' and verify with
-  ''kubectl rollout status deployment/model --timeout=300s''; confirm identity with ''python identity.py
+  project --version
   --agent project''. Key behaviors: ensure the built image tag matches what is pushed and referenced,
   validate helm chart values, and on rollout failure inspect deployment events rather than blindly retrying.
   Output: final image digest, namespace, rollout status, and any build/registry/cluster errors with fixes.'
@@ -73,5 +81,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-01-06T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

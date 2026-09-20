@@ -7,27 +7,31 @@ version: 1.0.0
 tags:
 - sre
 - agent
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Sre Chaos Agent
   description: Chaos engineering agent. Manages chaos experiments, fault injection, and resilience testing.
   commands:
-  - kubectl get chaosengine -n <ns>
-  - litmusChaos create chaosengine <name> --namespace <ns>
-  - kubectl get chaosresult -n <ns>
-  - chaos run <experiment.yaml>
+  - kubectl get chaosengine -n demo-ns
+  - litmusChaos create chaosengine demo --namespace demo-ns
+  - kubectl get chaosresult -n demo-ns
+  - chaos run demo-experiment-yaml
   examples:
-  - litmusChaos create chaosengine <name> --namespace <ns>
-  - chaos run <experiment.yaml>
-  - kubectl get chaosengine -n <ns>
-  - kubectl get chaosresult -n <ns>
+  - litmusChaos create chaosengine demo --namespace demo-ns
+  - chaos run demo-experiment-yaml
+  - kubectl get chaosengine -n demo-ns
+  - kubectl get chaosresult -n demo-ns
   parameters: []
 knowledge:
-- title: sre-chaos-agent Documentation
+- title: Chaos Engineering Principles
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/sre/agent
-  description: Reference documentation for sre-chaos-agent
+  source: https://principlesofchaos.org/
+  description: Official documentation for chaos.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the chaos engineering expert. Call on this agent when users must design and run
   chaos experiments to prove system resilience, injecting faults through Litmus and Chaos Toolkit and
   inspecting results. Core workflow: (1) List existing experiments with kubectl get chaosengine -n <ns>;
@@ -40,10 +44,10 @@ instructions: 'You are the chaos engineering expert. Call on this agent when use
   succeeded. Output expectations: report the experiments listed/created, the fault injected, probe and
   result status, and resilience gaps discovered with recommendations.'
 examples:
-- litmusChaos create chaosengine <name> --namespace <ns>
-- chaos run <experiment.yaml>
-- kubectl get chaosengine -n <ns>
-- kubectl get chaosresult -n <ns>
+- litmusChaos create chaosengine demo --namespace demo-ns
+- chaos run demo-experiment-yaml
+- kubectl get chaosengine -n demo-ns
+- kubectl get chaosresult -n demo-ns
 platforms:
   claude_code:
     tools:
@@ -80,5 +84,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-08-24T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

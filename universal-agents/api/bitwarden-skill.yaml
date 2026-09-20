@@ -7,7 +7,7 @@ description: 'Manages passwords and secrets with the Bitwarden CLI: login, item 
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - bw
@@ -21,7 +21,7 @@ capabilities:
   - bw logout
   - bw sync
   examples:
-  - bw login user@example.com
+  - bw login user@api.your-app.test
   - bw unlock --raw | pbcopy
   - bw status | jq '.status'
   parameters:
@@ -34,11 +34,11 @@ capabilities:
 - name: item-management
   description: Create, read, update, and delete vault items.
   commands:
-  - bw get password https://example.com
+  - bw get password https://api.your-app.test
   - bw list items --search github
   - bw get item my-api-key
   - bw create item --session $BW_SESSION
-  - bw delete item <item-id>
+  - bw delete item item-12345
   examples:
   - bw list items --search aws | jq '.[].login.username'
   - bw get password https://stripe.com
@@ -57,7 +57,7 @@ capabilities:
   - bw generate -u -l 24
   - bw export --format json --output bw.json --session $BW_SESSION
   - bw export --format csv --output bw.csv
-  - bw get totp <item-id>
+  - bw get totp item-12345
   examples:
   - bw generate -l 24 -n -s --base64
   - bw export --format json --output vault.json
@@ -105,7 +105,7 @@ instructions: '# Bitwarden
 
   # Login and unlock
 
-  bw login user@example.com
+  bw login user@api.your-app.test
 
   bw unlock --raw
 
@@ -196,5 +196,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

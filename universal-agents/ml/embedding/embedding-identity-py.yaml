@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - embedding
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Embedding Deploy Agent
   description: Embedding deployment agent. Manages Embedding ML deployment.
   commands:
   - docker build -t model:latest .
-  - docker push registry.example.com/model:latest
-  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - docker push ghcr.io/model:latest
+  - kubectl set image deployment/model model=ghcr.io/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - python identity.py --agent embedding-identity-py
+  - embedding --version
   examples:
   - python serve_embeddings.py --model sentence-transformers --port 8080
   - 'curl http://localhost:8080/embed --data ''{"text": "Hello world"}'''
@@ -26,16 +26,24 @@ capabilities:
   - python search.py --query 'hello world' --index embeddings.npy
   parameters: []
 knowledge:
-- title: embedding-identity-py Documentation
+- title: OpenAI Embeddings Guide
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/embedding
-  description: Reference documentation for embedding-identity-py
+  source: https://platform.openai.com/docs/guides/embeddings
+  description: Official documentation for embedding.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the Embedding deployment agent. Call on this agent when an embedding ML service
   must be built, containerized, and shipped to Kubernetes. Core workflow: (1) locally validate the serving
   path with `python serve_embeddings.py --model sentence-transformers --port 8080` and smoke-test it with
   `curl http://localhost:8080/embed --data ''{"text": "Hello world"}''`; (2) package it with `docker build
-  -t model:latest .` and `docker push registry.example.com/model:latest`; (3) roll out with `kubectl set
-  image deployment/model model=registry.example.com/model:latest` or `helm upgrade model ./helm-chart
+  -t model:latest .` and `docker push ghcr.io/model:latest`; (3) roll out with `kubectl set
+  image deployment/model model=ghcr.io/model:latest` or `helm upgrade model ./helm-chart
   --namespace production`, then confirm with `kubectl rollout status deployment/model --timeout=300s`.
   Key behaviors: keep the image tag identical across push and set-image; if the rollout stalls, check
   pod crash-loop logs; verify batch utilities like `python embed.py --input texts.txt --output embeddings.npy`
@@ -81,5 +89,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-03-03T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -2,44 +2,90 @@ name: code-quality-kubelinter-agent
 display_name: Code Quality Kubelinter Agent
 category: code-quality
 subcategory: agent
-description: KubeLinter agent for Kubernetes YAML linting.
-version: 1.0.0
+description: "Lints Kubernetes manifests for security and best practices. Scans files/directories, outputs JSON, supports custom config."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Kubelinter Agent
-  description: KubeLinter agent for Kubernetes YAML linting.
+- name: lint-k8s
+  description: Lint Kubernetes YAML manifests for security and best practice violations
   commands:
-  - kube-linter lint --format json deployment.yaml
-  - kube-linter lint .
-  - kube-linter lint --config .kube-linter.yaml deployment.yaml
-  - kube-linter lint deployment.yaml
+  - 'kube-linter lint deployment.yaml'
+  - 'kube-linter lint .'
+  - 'kube-linter lint --format json deployment.yaml'
+  - 'kube-linter lint --config .kube-linter.yaml deployment.yaml'
   examples:
-  - kube-linter lint deployment.yaml
-  - kube-linter lint .
-  - kube-linter lint --format json deployment.yaml
-  - kube-linter lint --config .kube-linter.yaml deployment.yaml
-  parameters: []
-knowledge:
-- title: code-quality-kubelinter-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-kubelinter-agent
-instructions: 'You are the KubeLinter agent for Kubernetes YAML linting. Call on this agent to catch risky
-  Kubernetes manifests before apply. Core workflow: lint a manifest with `kube-linter lint deployment.yaml`;
-  scan a directory with `kube-linter lint .`; produce JSON with `kube-linter lint --format json deployment.yaml`
-  for CI; and tune checks with `kube-linter lint --config .kube-linter.yaml deployment.yaml`. Key behaviors:
-  triage checks like privilege escalation, container resource limits, and host network; fix manifests
-  at source; re-lint to confirm. Report failing checks with severity, object names, and recommended manifest
-  changes.'
+  - 'kube-linter lint deployment.yaml'
+  - 'kube-linter lint .'
+  - 'kube-linter lint --format json deployment.yaml > kube-lint-report.json'
+  - 'kube-linter lint --config .kube-linter.yaml deployment.yaml'
+  parameters:
+  - name: target
+    type: string
+    description: Manifest file or directory to lint
+  - name: format
+    type: string
+    description: Output format (default, json, sarif)
+  - name: config
+    type: string
+    description: Path to KubeLinter config YAML
+prerequisites:
+- kube-linter (install via `go install golang.stackrox.io/kube-linter/cmd/kube-linter@latest`)
+- go
+tools:
+- kube-linter
 examples:
-- kube-linter lint deployment.yaml
-- kube-linter lint .
-- kube-linter lint --format json deployment.yaml
-- kube-linter lint --config .kube-linter.yaml deployment.yaml
+- input: "Lint Kubernetes deployment and output JSON for CI"
+  output: "Runs kube-linter lint --format json deployment.yaml, produces structured findings with check names, severity, and object references"
+- input: "Scan entire manifests directory with custom config"
+  output: "Runs kube-linter lint --config .kube-linter.yaml ., applies custom rule thresholds and exclusions"
+instructions: |
+  You are the KubeLinter agent. Catch risky Kubernetes manifests before apply.
+
+  **When to use**
+  - Validate Kubernetes YAML before kubectl apply
+  - Enforce security policies in CI/CD pipelines
+  - Detect misconfigurations like privilege escalation, missing resources
+
+  **Core workflow**
+  1. Lint single manifest: `kube-linter lint deployment.yaml`
+  2. Scan directory: `kube-linter lint .`
+  3. CI JSON output: `kube-linter lint --format json deployment.yaml`
+  4. Custom config: `kube-linter lint --config .kube-linter.yaml deployment.yaml`
+
+  **Key behaviors**
+  - Triage checks: privilege escalation, container resources, host network, run as root
+  - Fix manifests at source; re-lint to confirm
+  - Report failing checks with severity, object names, and recommended manifest changes
+
+  **Configuration**
+  Create .kube-linter.yaml for custom checks, thresholds, and exclude patterns.
+
+knowledge:
+- title: KubeLinter Documentation
+  type: documentation
+  source: https://kube-linter.io/
+  description: Official documentation with installation, checks reference, and configuration
+- title: KubeLinter Checks
+  type: reference
+  source: https://kube-linter.io/checks/
+  description: Complete check catalog with descriptions, severity, and remediation
+- title: Configuration Guide
+  type: documentation
+  source: https://kube-linter.io/configuration/
+  description: Config file schema, check overrides, and exclusion patterns
+- title: CI Integration
+  type: documentation
+  source: https://kube-linter.io/integrations/
+  description: GitHub Actions, GitLab CI, and pre-commit hook setup
+- title: SARIF Output
+  type: reference
+  source: https://kube-linter.io/sarif/
+  description: SARIF format for GitHub code scanning integration
 platforms:
   claude_code:
     tools:
@@ -66,7 +112,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-kubelinter-agent
   generic:
-    system_prompt: You are code-quality-kubelinter-agent. KubeLinter agent for Kubernetes YAML linting.
+    system_prompt: "You are a KubeLinter expert. Lint K8s manifests with kube-linter, scan dirs, emit JSON, use custom config. Use real commands: kube-linter lint deployment.yaml, kube-linter lint ., kube-linter lint --format json deployment.yaml, kube-linter lint --config .kube-linter.yaml deployment.yaml."
     available_tools:
     - bash
     - read
@@ -74,5 +120,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

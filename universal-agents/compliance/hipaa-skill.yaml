@@ -2,12 +2,12 @@ name: hipaa
 display_name: Hipaa
 category: compliance
 subcategory: general
-description: 'Ensures HIPAA compliance for systems handling PHI: access controls, audit logs, encryption,
+description: Verify security controls required handling PHI systems.
   and BAAs.'
 version: 2.0.0
 tags:
 - compliance
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - gitleaks
@@ -18,13 +18,13 @@ capabilities:
   description: Verify security controls required for PHI systems
   commands:
   - openssl s_client -connect app.example.com:443 -tls1_2 -brief
-  - curl -sI https://app.example.com | grep -i strict-transport-security
+  - curl -sI http://localhost:8080 | grep -i strict-transport-security
   - trufflehog filesystem . --no-update
   - gitleaks detect --source . --verbose
-  - curl -s https://app.example.com/api/audit-logs -o /dev/null -w '%{http_code}\n'
+  - curl -s http://localhost:8080/api/audit-logs -o /dev/null -w '%{http_code}\n'
   examples:
   - rg -i "phi|medical|health|diagnosis" src/ | wc -l
-  - curl -s -o /dev/null -w '%{http_code}' -u $SA_TOKEN https://app.example.com/api/audit-logs
+  - curl -s -o /dev/null -w '%{http_code}' -u $SA_TOKEN http://localhost:8080/api/audit-logs
   - nmap -Pn -p443 --script ssl-enum-ciphers app.example.com
   parameters:
   - name: tls1_2
@@ -171,5 +171,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-01-28T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

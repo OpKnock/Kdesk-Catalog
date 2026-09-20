@@ -70,13 +70,13 @@ capabilities:
   description: Configure OAuth 2.0 authorization code and client credentials flows
   commands:
   - npm install openid-client
-  - node -e "const {Issuer}=require('openid-client');Issuer.discover('https://auth.example.com/.well-known/openid-configuration').then(i=>console.log(i.metadata.token_endpoint))"
+  - node -e "const {Issuer}=require('openid-client');Issuer.discover('http://localhost:8080/.well-known/openid-configuration').then(i=>console.log(i.metadata.token_endpoint))"
   - kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password
     admin
   - kcadm.sh create clients -r demo -s clientId=api-client -s publicClient=false -s secret=change-me
   - curl -s -X POST http://localhost:8080/realms/demo/protocol/openid-connect/token -d 'grant_type=client_credentials&client_id=api-client&client_secret=change-me'
   examples:
-  - node -e "const {Issuer}=require('openid-client');Issuer.discover('https://auth.example.com/.well-known/openid-configuration').then(i=>console.log(i.metadata.token_endpoint))"
+  - node -e "const {Issuer}=require('openid-client');Issuer.discover('http://localhost:8080/.well-known/openid-configuration').then(i=>console.log(i.metadata.token_endpoint))"
   - kcadm.sh create clients -r demo -s clientId=api-client -s secret=change-me
   - curl -s -X POST http://localhost:8080/realms/demo/protocol/openid-connect/token -d 'grant_type=client_credentials&client_id=api-client&client_secret=change-me'
   parameters:

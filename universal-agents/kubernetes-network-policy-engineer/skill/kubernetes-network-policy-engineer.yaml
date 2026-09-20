@@ -74,7 +74,7 @@ capabilities:
   - kubectl run nettest --image=curlimages/curl -it --rm -- curl -s http://payments:8080/healthz
   - kubectl run probe --image=busybox -it --rm -- wget -qO- http://auth-service:80
   - kubectl exec deploy/payments -- wget -qO- http://db:5432 -T 2 || echo 'blocked'
-  - kubectl run probe --image=curlimages/curl -it --rm --timeout 5s -- curl -s https://api.example.com
+  - kubectl run probe --image=curlimages/curl -it --rm --timeout 5s -- curl -s http://localhost:8080
   - kubectl logs deploy/probe -n kube-system --tail=20
   examples:
   - kubectl run nettest --image=curlimages/curl -it --rm --namespace payments -- curl -s http://web:80

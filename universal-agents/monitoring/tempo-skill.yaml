@@ -2,12 +2,12 @@ name: tempo
 display_name: tempo
 category: monitoring
 subcategory: general
-description: 'Operates Grafana Tempo for distributed tracing: trace search, trace queries via tempo-cli,
+description: Query traces with the it CLI. Search and query traces via the it HTTP API.
   and trace correlation.'
 version: 2.0.0
 tags:
 - tempo
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - tempo-cli
@@ -15,10 +15,10 @@ capabilities:
 - name: tempo-cli
   description: Query traces with the Tempo CLI.
   commands:
-  - tempo-cli query trace <trace-id> --host localhost:3200
+  - tempo-cli query trace 00000000000000000000000000000000 --host localhost:3200
   - tempo-cli search --host localhost:3200 '{resource.service.name="checkout"}' --limit 10
   - tempo-cli query blocks --host localhost:3200 --since 1h
-  - tempo-cli query trace <trace-id> --host localhost:3200 --format json | jq '.spans | length'
+  - tempo-cli query trace 00000000000000000000000000000000 --host localhost:3200 --format json | jq '.spans | length'
   - tempo-cli search --host localhost:3200 '{resource.service.name=~"api|checkout"} && duration > 1s'
     --limit 20
   examples:
@@ -40,7 +40,7 @@ capabilities:
   commands:
   - curl -G -s 'http://localhost:3200/api/search' --data-urlencode 'tags=service.name=checkout' --data-urlencode
     'limit=10'
-  - curl -s 'http://localhost:3200/api/traces/<trace-id>' | jq '.traceID'
+  - curl -s 'http://localhost:3200/api/traces/00000000000000000000000000000000' | jq '.traceID'
   - curl -s 'http://localhost:3200/ready' | jq
   - curl -G -s 'http://localhost:3200/api/search/tags' | jq '.tagNames'
   - curl -G -s 'http://localhost:3200/api/search' --data-urlencode 'tags=error=true' --data-urlencode
@@ -187,5 +187,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-04-05T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

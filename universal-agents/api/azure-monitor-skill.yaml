@@ -2,28 +2,26 @@ name: azure-monitor
 display_name: Azure Monitor
 category: api
 subcategory: general
-description: 'Monitors Azure resources with metrics and alerts: metric retrieval, alert rule creation,
-  action groups, and activity log queries.'
+description: "Collects and evaluates Azure resource metrics and alerts via the Azure CLI: retrieves metric time series, defines metric and activity log alert rules with conditions, manages action groups, and queries the activity log for operational auditing."
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: metrics
   description: Retrieve resource metrics and definitions.
   commands:
-  - az monitor metrics list --resource <resource-id> --metric-names Requests
-  - az monitor metrics list-definitions --resource <resource-id>
-  - az monitor metrics list --resource <resource-id> --metric-names Requests --start-time 2026-08-01T00:00:00Z
-    --end-time 2026-08-01T23:59:59Z --interval PT1H
-  - az monitor metrics list --resource <resource-id> --metric-names Requests --aggregation count --top
+  - az monitor metrics list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api --metric-names Requests
+  - az monitor metrics list-definitions --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api
+  - az monitor metrics list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api --metric-names Requests --start-time 2026-08-01T00:00:00Z --end-time 2026-08-01T23:59:59Z --interval PT1H
+  - az monitor metrics list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api --metric-names Requests --aggregation count --top
     5
   examples:
-  - az monitor metrics list --resource <resource-id> --metric-names "Requests" "5XX" --start-time $(date
+  - az monitor metrics list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api --metric-names "Requests" "5XX" --start-time $(date
     -u -d '1 day ago' +%Y-%m-%dT%H:%M:%SZ) --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) --interval PT6H
-  - az monitor metrics list-definitions --resource <resource-id> --query '[].{name:name.value}' -o table
-  - az monitor metrics list --resource <resource-id> --metric-names Percentage CPU --aggregation average
+  - az monitor metrics list-definitions --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api --query '[].{name:name.value}' -o table
+  - az monitor metrics list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api --metric-names Percentage CPU --aggregation average
   parameters:
   - name: resource_id
     type: string
@@ -37,18 +35,15 @@ capabilities:
 - name: alerts
   description: Create and manage metric/activity alerts.
   commands:
-  - az monitor alert create --name api-5xx --resource-group rg --condition "percentage CPU > 90 avg 5m"
-    --resource <resource-id>
-  - az monitor alert list --resource-group rg
-  - az monitor alert show --name api-5xx -g rg
-  - az monitor alert update --name api-5xx -g rg --condition "percentage CPU > 95 avg 5m"
-  - az monitor alert delete --name api-5xx -g rg
+  - az monitor alert create --name api-5xx --resource-group api-rg --condition "percentage CPU > 90 avg 5m" --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api
+  - az monitor alert list --resource-group api-rg
+  - az monitor alert show --name api-5xx -g api-rg
+  - az monitor alert update --name api-5xx -g api-rg --condition "percentage CPU > 95 avg 5m"
+  - az monitor alert delete --name api-5xx -g api-rg
   examples:
-  - az monitor alert create --name api-latency --resource-group rg --condition "Avg Requests Duration
-    > 5000 avg 5m" --resource <appinsights-id> --action <action-group-id>
-  - az monitor alert list --resource-group rg --query '[].{name:name,severity:severity}' -o table
-  - az monitor alert create --name vm-down --resource-group rg --condition "All VM sizes - count > 0"
-    --resource <vm-id>
+  - az monitor alert create --name api-latency --resource-group api-rg --condition "Avg Requests Duration > 5000 avg 5m" --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Insights/components/my-insights --action /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Insights/actionGroups/my-ag
+  - az monitor alert list --resource-group api-rg --query '[].{name:name,severity:severity}' -o table
+  - az monitor alert create --name vm-down --resource-group api-rg --condition "All VM sizes - count > 0" --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Compute/virtualMachines/my-vm
   parameters:
   - name: condition
     type: string
@@ -62,16 +57,16 @@ capabilities:
 - name: activity-log
   description: Query the activity log.
   commands:
-  - az monitor activity-log list --resource <resource-id>
+  - az monitor activity-log list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api
   - az monitor activity-log list --status Failed --max-events 20
-  - az monitor activity-log list --resource-group rg --start-time 2026-08-01 --end-time 2026-08-02
+  - az monitor activity-log list --resource-group api-rg --start-time 2026-08-01 --end-time 2026-08-02
   - az monitor activity-log list --category Administrative --query '[].{time:eventTimestamp,op:operationName.value}'
     -o table
   examples:
   - az monitor activity-log list --status Failed --max-events 50 | jq '.[].operationName.value'
-  - az monitor activity-log list --resource <resource-id> --query '[].{t:eventTimestamp,o:operationName.value}'
+  - az monitor activity-log list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api --query '[].{t:eventTimestamp,o:operationName.value}'
     -o table
-  - az monitor activity-log list --resource-group rg --start-time 2026-08-01T00:00:00Z --max-events 10
+  - az monitor activity-log list --resource-group api-rg --start-time 2026-08-01T00:00:00Z --max-events 10
   parameters:
   - name: status
     type: string
@@ -94,8 +89,7 @@ instructions: '# Azure Monitor
   ## What this skill does
 
 
-  Monitors Azure resources: retrieving metrics over time windows, creating metric/activity alerts with
-  conditions, managing action groups, and querying the activity log.
+  Collects and evaluates Azure resource metrics and alerts via the Azure CLI: retrieves metric time series, defines metric and activity log alert rules with conditions, manages action groups, and queries the activity log for operational auditing.
 
 
   ## When to use
@@ -115,24 +109,24 @@ instructions: '# Azure Monitor
 
   # List available metrics
 
-  az monitor metrics list-definitions --resource <resource-id>
+  az monitor metrics list-definitions --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api
 
 
   # Retrieve a metric for a day
 
-  az monitor metrics list --resource <resource-id> --metric-names Requests --start-time 2026-08-01T00:00:00Z
+  az monitor metrics list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api --metric-names Requests --start-time 2026-08-01T00:00:00Z
   --end-time 2026-08-01T23:59:59Z --interval PT1H
 
 
   # Create an alert
 
-  az monitor alert create --name api-5xx --resource-group rg --condition "percentage CPU > 90 avg 5m"
-  --resource <resource-id>
+  az monitor alert create --name api-5xx --resource-group api-rg --condition "percentage CPU > 90 avg 5m"
+  --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api
 
 
   # List alerts
 
-  az monitor alert list --resource-group rg --query ''[].{name:name,severity:severity}'' -o table
+  az monitor alert list --resource-group api-rg --query ''[].{name:name,severity:severity}'' -o table
 
 
   # Activity log failures
@@ -189,12 +183,12 @@ platforms:
     plugin: opencode-azure-monitor
   generic:
     system_prompt: 'Your lane is Azure Monitor. You do it through metrics: Retrieve resource metrics and
-      definitions. The commands are real, e.g. `az monitor metrics list --resource <resource-id> --metric-names
+      definitions. The commands are real, e.g. `az monitor metrics list --resource /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/api-rg/providers/Microsoft.Web/sites/my-api --metric-names
       Requests`. You work hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -2,36 +2,44 @@ name: governance
 display_name: Governance
 category: ml
 subcategory: governance
-description: Governance SDK deployment agent for ML Governance SDK deployment.
+description: it SDK deployment agent handling ML it SDK deployment.
 version: 1.0.0
 tags:
 - ml
 - governance
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Governance Deploy Sdk
   description: Governance SDK deployment agent for ML Governance SDK deployment.
   commands:
   - docker build -t model:latest .
-  - docker push registry.example.com/model:latest
-  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - docker push ghcr.io/model:latest
+  - kubectl set image deployment/model model=ghcr.io/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - python identity.py --agent governance
+  - governance --version
   examples:
   - 'Server: python -m governance.server --port 8080'
   - 'Docker: docker run -p 8080:8080 governance-server'
   parameters: []
 knowledge:
-- title: governance Documentation
+- title: MLflow Model Registry
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/governance
-  description: Reference documentation for governance
+  source: https://mlflow.org/docs/latest/model-registry.html
+  description: Official documentation for governance.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are the Governance SDK deployment expert. Call on this agent to build, containerize,
   and deploy an ML Governance service to Kubernetes. Core workflow: (1) validate with `python -m governance.server
-  --port 8080`; (2) build and push with `docker build -t model:latest .` and `docker push registry.example.com/model:latest`;
-  (3) roll out with `kubectl set image deployment/model model=registry.example.com/model:latest` or `helm
+  --port 8080`; (2) build and push with `docker build -t model:latest .` and `docker push ghcr.io/model:latest`;
+  (3) roll out with `kubectl set image deployment/model model=ghcr.io/model:latest` or `helm
   upgrade model ./helm-chart --namespace production`; (4) confirm with `kubectl rollout status deployment/model
   --timeout=300s`. Test container via `docker run -p 8080:8080 governance-server`. Key behaviors: keep
   tags consistent; if rollout fails, inspect pod logs and image pull; verify ports. Output expectations:
@@ -71,5 +79,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-05-08T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

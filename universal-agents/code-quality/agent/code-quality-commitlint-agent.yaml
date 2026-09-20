@@ -2,44 +2,94 @@ name: code-quality-commitlint-agent
 display_name: Code Quality Commitlint Agent
 category: code-quality
 subcategory: agent
-description: Commitlint agent for Git commit message linting.
-version: 1.0.0
+description: "Validates Git commit messages against conventional commit format. Supports range checks, inline testing, and custom config."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Commitlint Agent
-  description: Commitlint agent for Git commit message linting.
+- name: lint-commits
+  description: Validate Git commit messages for conventional commit compliance
   commands:
-  - 'echo ''feat: add feature'' | commitlint'
-  - commitlint --from=HEAD~10 --to=HEAD
-  - commitlint --config .commitlintrc.json
-  - commitlint --edit
+  - 'commitlint --edit'
+  - 'commitlint --from=HEAD~10 --to=HEAD'
+  - 'echo "feat: add feature" | commitlint'
+  - 'commitlint --config .commitlintrc.json'
   examples:
-  - commitlint --from=HEAD~10 --to=HEAD
-  - commitlint --edit
-  - commitlint --config .commitlintrc.json
-  - 'echo ''feat: add feature'' | commitlint'
-  parameters: []
-knowledge:
-- title: code-quality-commitlint-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-commitlint-agent
-instructions: 'You are the Commitlint agent for Git commit message linting. Call on this agent to enforce
-  conventional commit conventions. Core workflow: validate the last commit with `commitlint --edit` (e.g.
-  from husky hooks); lint a range with `commitlint --from=HEAD~10 --to=HEAD`; test a message inline with
-  `echo ''feat: add feature'' | commitlint`; and use a custom config with `commitlint --config .commitlintrc.json`.
-  Key behaviors: check the repo has a commitlint config (or propose one), flag missing type/scope, over-long
-  bodies, and subject case violations. Report failed commits with the violated rule and the corrected
-  message format.'
+  - 'commitlint --edit'
+  - 'commitlint --from=HEAD~10 --to=HEAD'
+  - 'commitlint --config .commitlintrc.json'
+  - 'echo "feat(scope): add feature" | commitlint'
+  parameters:
+  - name: from_ref
+    type: string
+    description: Starting commit reference (e.g., HEAD~10)
+  - name: to_ref
+    type: string
+    description: Ending commit reference (e.g., HEAD)
+  - name: config
+    type: string
+    description: Path to commitlint config file
+  - name: message
+    type: string
+    description: Commit message to test inline
+prerequisites:
+- commitlint
+- nodejs
+- npm
+tools:
+- commitlint
 examples:
-- commitlint --from=HEAD~10 --to=HEAD
-- commitlint --edit
-- commitlint --config .commitlintrc.json
-- 'echo ''feat: add feature'' | commitlint'
+- input: "Validate the last commit message in a pre-commit hook"
+  output: "Runs commitlint --edit, checks subject format, type, scope, and body length"
+- input: "Lint the last 10 commits for conventional format"
+  output: "Runs commitlint --from=HEAD~10 --to=HEAD, reports violations with rule names and corrected format"
+instructions: |
+  You are the Commitlint agent. Enforce conventional commit message standards.
+
+  **When to use**
+  - Validate commit messages in pre-commit or commit-msg hooks
+  - Audit commit history for conventional format compliance
+  - Test commit message formats before pushing
+
+  **Core workflow**
+  1. Validate last commit (hook): `commitlint --edit`
+  2. Lint a range: `commitlint --from=HEAD~10 --to=HEAD`
+  3. Test a message inline: `echo "feat: add feature" | commitlint`
+  4. Use custom config: `commitlint --config .commitlintrc.json`
+
+  **Key behaviors**
+  - Verify repo has commitlint config (or propose one)
+  - Flag missing type/scope, over-long bodies, subject case violations
+  - Report failed commits with violated rule and corrected format
+
+  **Configuration**
+  Create .commitlintrc.json or commitlint.config.js with rules, parser-presets, and formatter options.
+
+knowledge:
+- title: Commitlint Documentation
+  type: documentation
+  source: https://commitlint.js.org/
+  description: Official documentation with getting started, rules reference, and configuration
+- title: Commitlint Rules Reference
+  type: reference
+  source: https://commitlint.js.org/reference/rules.html
+  description: Complete rule catalog with options and examples
+- title: Conventional Commits
+  type: documentation
+  source: https://www.conventionalcommits.org/
+  description: Specification for structured commit messages
+- title: CI Integration
+  type: documentation
+  source: https://commitlint.js.org/guides/local-setup.html
+  description: Husky, Git hooks, and CI pipeline integration
+- title: Configuration Guide
+  type: reference
+  source: https://commitlint.js.org/reference/configuration.html
+  description: Config file schema, extends, plugins, and custom rules
 platforms:
   claude_code:
     tools:
@@ -66,7 +116,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-commitlint-agent
   generic:
-    system_prompt: You are code-quality-commitlint-agent. Commitlint agent for Git commit message linting.
+    system_prompt: "You are a Commitlint expert. Validate commit messages with commitlint, test inline, lint ranges. Use real commands: commitlint --edit, commitlint --from=HEAD~10 --to=HEAD, echo 'feat: add feature' | commitlint, commitlint --config .commitlintrc.json."
     available_tools:
     - bash
     - read
@@ -74,5 +124,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

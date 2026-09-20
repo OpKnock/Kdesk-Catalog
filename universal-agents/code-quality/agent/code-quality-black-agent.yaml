@@ -2,44 +2,89 @@ name: code-quality-black-agent
 display_name: Code Quality Black Agent
 category: code-quality
 subcategory: agent
-description: Black agent for Python code formatting.
-version: 1.0.0
+description: "Formats Python code deterministically with Black. Checks, diffs, and applies formatting with configurable line length."
+version: 2.0.0
 tags:
 - code-quality
 - agent
-author: Kdesk-Catalog
-license: MIT
+author: Kdesk
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'
 capabilities:
-- name: Code Quality Black Agent
-  description: Black agent for Python code formatting.
+- name: format-python
+  description: Format Python code with Black, check compliance, and show diffs
   commands:
-  - black .
-  - black --check .
-  - black --diff .
-  - black --line-length 100 .
+  - 'black --check .'
+  - 'black --diff .'
+  - 'black .'
+  - 'black --line-length 100 .'
   examples:
-  - black .
-  - black --check .
-  - black --diff .
-  - black --line-length 100 .
-  parameters: []
-knowledge:
-- title: code-quality-black-agent Documentation
-  type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
-  description: Reference documentation for code-quality-black-agent
-instructions: 'You are the Black agent for Python code formatting. Call on this agent to enforce deterministic
-  formatting across Python codebases. Core workflow: first check what would change with `black --check
-  .`; inspect differences with `black --diff .`; then apply formatting with `black .`. When the project
-  uses a custom line length, run `black --line-length 100 .`. Key behaviors: never modify files the user
-  hasn''t approved when --check fails; confirm the formatter version matches CI; and ensure --line-length
-  is consistent project-wide. Report number of files reformatted, remaining violations, and any config
-  suggestions.'
+  - 'black --check .'
+  - 'black --diff .'
+  - 'black --line-length 100 .'
+  parameters:
+  - name: target
+    type: string
+    description: 'File or directory to format (default: .)'
+  - name: line_length
+    type: number
+    description: 'Maximum line length (default: 88)'
+  - name: check_only
+    type: boolean
+    description: Only check, do not modify files
+prerequisites:
+- black
+- python3
+tools:
+- black
 examples:
-- black .
-- black --check .
-- black --diff .
-- black --line-length 100 .
+- input: "Check if Python files need formatting without making changes"
+  output: "Runs black --check ., exits with code 1 if changes needed, lists files that would be reformatted"
+- input: "Apply Black formatting with 100-character line length"
+  output: "Runs black --line-length 100 ., reformats all Python files in place"
+instructions: |
+  You are the Black code formatter agent. Enforce deterministic Python formatting across codebases.
+
+  **When to use**
+  - Format Python code before commits or in CI
+  - Check formatting compliance without modifying files
+  - Standardize line length across a project
+
+  **Core workflow**
+  1. Check what would change: `black --check .`
+  2. Inspect differences: `black --diff .`
+  3. Apply formatting: `black .`
+  4. For custom line length: `black --line-length 100 .`
+
+  **Key behaviors**
+  - Never modify files without approval when --check fails
+  - Confirm formatter version matches CI configuration
+  - Keep line-length consistent project-wide (configure in pyproject.toml)
+
+  **Configuration**
+  Add `[tool.black]` section to pyproject.toml for line-length, target-version, and exclude patterns.
+
+knowledge:
+- title: Black Documentation
+  type: documentation
+  source: https://black.readthedocs.io/
+  description: Official documentation with usage, configuration, and integration guides
+- title: Black Configuration
+  type: reference
+  source: https://black.readthedocs.io/en/stable/configuration_and_operation.html
+  description: Config file options, command-line flags, and editor integration
+- title: Python Style Guide (PEP 8)
+  type: documentation
+  source: https://peps.python.org/pep-0008/
+  description: Official Python style guide that Black implements
+- title: Black in CI
+  type: documentation
+  source: https://black.readthedocs.io/en/stable/integrations/continuous_integration.html
+  description: Integrating Black with GitHub Actions, GitLab CI, and pre-commit
+- title: Black vs Other Formatters
+  type: reference
+  source: https://black.readthedocs.io/en/stable/the_black_code_style.html
+  description: Design decisions and rationale behind Black's formatting choices
 platforms:
   claude_code:
     tools:
@@ -66,7 +111,7 @@ platforms:
   opencode:
     plugin: opencode-code-quality-black-agent
   generic:
-    system_prompt: You are code-quality-black-agent. Black agent for Python code formatting.
+    system_prompt: "You are a Black formatter expert. Run black to check, diff, and apply deterministic Python formatting. Use real commands: black --check ., black --diff ., black ., black --line-length 100."
     available_tools:
     - bash
     - read
@@ -74,5 +119,3 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'

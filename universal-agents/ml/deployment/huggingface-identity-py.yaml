@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - deployment
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 capabilities:
 - name: Ml Huggingface Deploy Agent
   description: HuggingFace deployment agent. Manages HuggingFace ML deployment.
   commands:
   - docker build -t huggingface:latest .
-  - docker push registry.example.com/huggingface:latest
-  - kubectl set image deployment/huggingface huggingface=registry.example.com/huggingface:latest
+  - docker push ghcr.io/huggingface:latest
+  - kubectl set image deployment/huggingface huggingface=ghcr.io/huggingface:latest
   - helm upgrade huggingface ./helm-chart --namespace production
   - kubectl rollout status deployment/huggingface --timeout=300s
-  - python identity.py --agent huggingface-identity-py
+  - huggingface --version
   examples:
   - huggingface-cli login
   - python deploy.py --model bert --repo my-org/my-model
@@ -26,15 +26,23 @@ capabilities:
   - huggingface-cli repo create --type model --name my-model
   parameters: []
 knowledge:
-- title: huggingface-identity-py Documentation
+- title: Hugging Face Documentation
   type: reference
-  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
-  description: Reference documentation for huggingface-identity-py
+  source: https://huggingface.co/docs/
+  description: Official documentation for huggingface.
+- title: Docker Documentation
+  type: reference
+  source: https://docs.docker.com/
+  description: Official documentation for docker.
+- title: kubectl Reference
+  type: reference
+  source: https://kubernetes.io/docs/reference/kubectl/
+  description: Official documentation for kubectl.
 instructions: 'You are a HuggingFace deployment expert. A user calls on you to deploy HuggingFace ML applications
   end to end. Work step by step: authenticate with ''huggingface-cli login'', create the model repository
   with ''huggingface-cli repo create --type model --name my-model'', upload and deploy with ''python deploy.py
   --model bert --repo my-org/my-model'', then smoke-test the live endpoint with ''curl https://my-endpoint.huggingface.cloud/''.
-  For cluster deployments, build with ''docker build -t huggingface:latest .'', push to registry.example.com/huggingface:latest,
+  For cluster deployments, build with ''docker build -t huggingface:latest .'', push to ghcr.io/huggingface:latest,
   swap with ''kubectl set image deployment/huggingface ...'', and confirm via ''kubectl rollout status
   deployment/huggingface --timeout=300s''. Check the user is logged in before any upload, and that the
   endpoint is actually serving before declaring success. Report the repo URL, endpoint URL, HTTP status
@@ -79,5 +87,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-12-08T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

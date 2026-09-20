@@ -2,12 +2,11 @@ name: caching
 display_name: Caching
 category: api
 subcategory: general
-description: 'Implements caching for APIs: HTTP cache headers, Redis TTL caches, invalidation patterns,
-  and hit-rate verification.'
+description: "Accelerates API responses with Redis TTL caches for computed data, HTTP cache-control and ETag headers for clients and proxies, and hit-rate measurement to validate effectiveness."
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - redis-cli
@@ -35,14 +34,14 @@ capabilities:
 - name: http-caching
   description: Control browser/proxy caching with headers.
   commands:
-  - curl -sI https://example.com/static/app.js | grep -i cache-control
-  - 'curl -s -H "Cache-Control: max-age=0" -o /dev/null -w "%{http_code} %{time_total}\n" https://example.com/static/app.js'
-  - 'curl -s -H "If-Modified-Since: $(date -R -d ''1 day ago'')" -o /dev/null -w "%{http_code}\n" https://example.com/static/app.js'
-  - 'curl -s -I -H "Cache-Control: no-cache" https://example.com/api/users'
+  - curl -sI https://api.your-app.test/static/app.js | grep -i cache-control
+  - 'curl -s -H "Cache-Control: max-age=0" -o /dev/null -w "%{http_code} %{time_total}\n" https://api.your-app.test/static/app.js'
+  - 'curl -s -H "If-Modified-Since: $(date -R -d ''1 day ago'')" -o /dev/null -w "%{http_code}\n" https://api.your-app.test/static/app.js'
+  - 'curl -s -I -H "Cache-Control: no-cache" https://api.your-app.test/api/users'
   examples:
-  - curl -sI https://example.com/static/app.js | grep -iE 'cache-control|etag|age'
-  - 'curl -s -H "If-None-Match: \"abc123\"" -o /dev/null -w "%{http_code}\n" https://example.com/static/app.js'
-  - curl -s -o /dev/null -w "%{http_code} %{time_total}\n" https://example.com/static/app.js
+  - curl -sI https://api.your-app.test/static/app.js | grep -iE 'cache-control|etag|age'
+  - 'curl -s -H "If-None-Match: \"abc123\"" -o /dev/null -w "%{http_code}\n" https://api.your-app.test/static/app.js'
+  - curl -s -o /dev/null -w "%{http_code} %{time_total}\n" https://api.your-app.test/static/app.js
   parameters:
   - name: url
     type: string
@@ -56,7 +55,7 @@ capabilities:
   - redis-cli INFO stats | grep -E 'keyspace_hits|keyspace_misses'
   - redis-cli --scan --pattern 'cache:users:*' | wc -l
   - varnishstat | grep -E 'MAIN.cache_hit|MAIN.cache_miss'
-  - 'curl -s https://example.com/static/app.js -o /dev/null -w "%{http_code}\n" -H "Cache-Control: max-age=0"'
+  - 'curl -s https://api.your-app.test/static/app.js -o /dev/null -w "%{http_code}\n" -H "Cache-Control: max-age=0"'
   examples:
   - redis-cli INFO stats | grep -E 'keyspace_hits|keyspace_misses'
   - redis-cli --scan --pattern 'cache:users:*' | head -20
@@ -116,12 +115,12 @@ instructions: '# Caching
 
   # HTTP caching headers
 
-  curl -sI https://example.com/static/app.js | grep -iE ''cache-control|etag''
+  curl -sI https://api.your-app.test/static/app.js | grep -iE ''cache-control|etag''
 
 
   # Validation request (304 expected)
 
-  curl -s -H "If-None-Match: \"abc123\"" -o /dev/null -w "%{http_code}\n" https://example.com/static/app.js
+  curl -s -H "If-None-Match: \"abc123\"" -o /dev/null -w "%{http_code}\n" https://api.your-app.test/static/app.js
 
 
   # Hit rate
@@ -196,5 +195,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

@@ -47,16 +47,16 @@ capabilities:
 - name: cdn-tuning
   description: Measure and improve cache hit rates and TTFB from origin to edge
   commands:
-  - curl -sI https://cdn.example.com/assets/app.js | grep -iE 'cache-control|age|cf-cache-status|x-cache'
-  - curl -s -o /dev/null -w 'ttfb=%{time_starttransfer}s total=%{time_total}s code=%{http_code}\n' https://cdn.example.com/
-  - ab -n 500 -c 50 https://cdn.example.com/assets/app.js
-  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H ''Accept-Encoding: gzip'' https://origin.example.com/'
-  - openssl s_client -servername cdn.example.com -connect cdn.example.com:443 </dev/null 2>/dev/null |
+  - curl -sI http://localhost:8080/assets/app.js | grep -iE 'cache-control|age|cf-cache-status|x-cache'
+  - curl -s -o /dev/null -w 'ttfb=%{time_starttransfer}s total=%{time_total}s code=%{http_code}\n' http://localhost:8080/
+  - ab -n 500 -c 50 http://localhost:8080/assets/app.js
+  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H ''Accept-Encoding: gzip'' http://localhost:8080/'
+  - openssl s_client -servername cdn.example.com -connect cdn.example.com:443 demo-dev-null/dev/null |
     grep -i 'issuer'
   examples:
-  - curl -sI https://cdn.example.com/img/logo.png | grep -i cache-control
-  - 'curl -s -o /dev/null -w ''%{size_download}'' -H ''Range: bytes=0-1023'' https://cdn.example.com/video.mp4'
-  - for f in $(cat assets.txt); do curl -s -o /dev/null -w "$f %{time_total}\n" https://cdn.example.com/$f;
+  - curl -sI http://localhost:8080/img/logo.png | grep -i cache-control
+  - 'curl -s -o /dev/null -w ''%{size_download}'' -H ''Range: bytes=0-1023'' http://localhost:8080/video.mp4'
+  - for f in $(cat assets.txt); do curl -s -o /dev/null -w "$f %{time_total}\n" http://localhost:8080/$f;
     done
   parameters:
   - name: header

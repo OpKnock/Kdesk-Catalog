@@ -2,12 +2,11 @@ name: batch-requests
 display_name: Batch Requests
 category: api
 subcategory: general
-description: 'Designs batch APIs: JSON-RPC batching, GraphQL aliases/multiple operations, server-side
-  endpoints, and client-side concurrency.'
+description: "Combines multiple API calls into single HTTP round trips using JSON-RPC batch arrays, GraphQL operation aliases, and dedicated batch endpoints to reduce client-side latency over high-latency networks."
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - jq
@@ -16,13 +15,13 @@ capabilities:
   description: Send batched JSON-RPC requests.
   commands:
   - 'curl -X POST http://localhost:8545 -H "Content-Type: application/json" -d ''[{"jsonrpc":"2.0","method":"eth_blockNumber","id":1},{"jsonrpc":"2.0","method":"eth_chainId","id":2}]'''
-  - 'curl -X POST https://api.example.com/rpc -H "Content-Type: application/json" -d ''[{"jsonrpc":"2.0","method":"getUser","params":[1],"id":1},{"jsonrpc":"2.0","method":"getOrder","params":[42],"id":2}]'''
-  - jq -c '.[]' batch.json | while read r; do curl -s -X POST https://api.example.com/rpc -d "$r"; done
+  - 'curl -X POST https://api.your-app.test/rpc -H "Content-Type: application/json" -d ''[{"jsonrpc":"2.0","method":"getUser","params":[1],"id":1},{"jsonrpc":"2.0","method":"getOrder","params":[42],"id":2}]'''
+  - jq -c '.[]' batch.json | while read r; do curl -s -X POST https://api.your-app.test/rpc -d "$r"; done
   examples:
   - 'curl -X POST http://localhost:8545 -H "Content-Type: application/json" -d ''[{"jsonrpc":"2.0","method":"eth_blockNumber","id":1},{"jsonrpc":"2.0","method":"eth_chainId","id":2}]'''
-  - 'curl -s -X POST https://api.example.com/rpc -H "Content-Type: application/json" -d ''[{"jsonrpc":"2.0","method":"getUser","params":[1],"id":1}]''
+  - 'curl -s -X POST https://api.your-app.test/rpc -H "Content-Type: application/json" -d ''[{"jsonrpc":"2.0","method":"getUser","params":[1],"id":1}]''
     | jq .'
-  - 'jq -c ''.[]'' batch.json | xargs -I{} curl -s -X POST https://api.example.com/rpc -H ''Content-Type:
+  - 'jq -c ''.[]'' batch.json | xargs -I{} curl -s -X POST https://api.your-app.test/rpc -H ''Content-Type:
     application/json'' -d ''{}'''
   parameters:
   - name: endpoint
@@ -34,16 +33,16 @@ capabilities:
 - name: graphql-batching
   description: Execute multiple GraphQL operations in one HTTP round trip.
   commands:
-  - 'curl -X POST https://api.example.com/graphql -H "Content-Type: application/json" -d ''[{"query":"{users{id}}"},{"query":"{posts{id}}"}]'''
-  - 'curl -X POST https://api.example.com/graphql -H "Content-Type: application/json" -d ''{"query":"query
+  - 'curl -X POST https://api.your-app.test/graphql -H "Content-Type: application/json" -d ''[{"query":"{users{id}}"},{"query":"{posts{id}}"}]'''
+  - 'curl -X POST https://api.your-app.test/graphql -H "Content-Type: application/json" -d ''{"query":"query
     { users { id } posts { id } }"}'''
-  - 'curl -s -X POST https://api.example.com/graphql -H "Content-Type: application/json" -d ''{"query":"{
+  - 'curl -s -X POST https://api.your-app.test/graphql -H "Content-Type: application/json" -d ''{"query":"{
     a: users { id } b: posts { id } }"}'''
   examples:
-  - 'curl -X POST https://api.example.com/graphql -H "Content-Type: application/json" -d ''[{"query":"{users{id}}"},{"query":"{posts{id}}"}]'''
-  - 'curl -s -X POST https://api.example.com/graphql -H "Content-Type: application/json" -d ''{"query":"query
+  - 'curl -X POST https://api.your-app.test/graphql -H "Content-Type: application/json" -d ''[{"query":"{users{id}}"},{"query":"{posts{id}}"}]'''
+  - 'curl -s -X POST https://api.your-app.test/graphql -H "Content-Type: application/json" -d ''{"query":"query
     A { users { id } } query B { posts { id } }"}'''
-  - 'curl -s -X POST https://api.example.com/graphql -H "Content-Type: application/json" -d ''{"query":"{
+  - 'curl -s -X POST https://api.your-app.test/graphql -H "Content-Type: application/json" -d ''{"query":"{
     a: users { id } b: posts { id } }"}'' | jq ''.data | keys'''
   parameters:
   - name: query
@@ -55,16 +54,16 @@ capabilities:
 - name: server-batch
   description: Create and test dedicated batch endpoints.
   commands:
-  - 'curl -X POST https://api.example.com/batch -H "Content-Type: application/json" -d ''{"requests":[{"path":"/users/1","method":"GET"},{"path":"/posts","method":"GET"}]}'''
-  - 'curl -s -o /dev/null -w "%{http_code} %{time_total}\n" -X POST https://api.example.com/batch -H "Content-Type:
+  - 'curl -X POST https://api.your-app.test/batch -H "Content-Type: application/json" -d ''{"requests":[{"path":"/users/1","method":"GET"},{"path":"/posts","method":"GET"}]}'''
+  - 'curl -s -o /dev/null -w "%{http_code} %{time_total}\n" -X POST https://api.your-app.test/batch -H "Content-Type:
     application/json" -d ''{"requests":[{"path":"/users/1","method":"GET"}]}'''
-  - 'curl -s -X POST https://api.example.com/batch -H "Content-Type: application/json" -d ''{"requests":[{"path":"/users/1","method":"GET"}]}''
+  - 'curl -s -X POST https://api.your-app.test/batch -H "Content-Type: application/json" -d ''{"requests":[{"path":"/users/1","method":"GET"}]}''
     | jq ''.responses | length'''
   examples:
-  - 'curl -s -X POST https://api.example.com/batch -H "Content-Type: application/json" -d ''{"requests":[{"path":"/users/1","method":"GET"},{"path":"/users/2","method":"GET"}]}'''
-  - 'curl -s -X POST https://api.example.com/batch -H "Content-Type: application/json" -d ''{"requests":[{"path":"/users","method":"POST","body":{"name":"x"}}]}''
+  - 'curl -s -X POST https://api.your-app.test/batch -H "Content-Type: application/json" -d ''{"requests":[{"path":"/users/1","method":"GET"},{"path":"/users/2","method":"GET"}]}'''
+  - 'curl -s -X POST https://api.your-app.test/batch -H "Content-Type: application/json" -d ''{"requests":[{"path":"/users","method":"POST","body":{"name":"x"}}]}''
     | jq ''.responses[0].status'''
-  - 'curl -s -X POST https://api.example.com/batch -H "Content-Type: application/json" -d ''{"requests":[]}'''
+  - 'curl -s -X POST https://api.your-app.test/batch -H "Content-Type: application/json" -d ''{"requests":[]}'''
   parameters:
   - name: batch_url
     type: string
@@ -91,8 +90,7 @@ instructions: '# Batch Requests
   ## What this skill does
 
 
-  Designs and tests batch APIs: JSON-RPC batch arrays, GraphQL multi-operation/alias batching, and dedicated
-  /batch endpoints with per-request paths.
+  Combines multiple API calls into single HTTP round trips using JSON-RPC batch arrays, GraphQL operation aliases, and dedicated batch endpoints to reduce client-side latency over high-latency networks.
 
 
   ## When to use
@@ -117,12 +115,12 @@ instructions: '# Batch Requests
 
   # GraphQL batch (JSON array of operations)
 
-  curl -X POST https://api.example.com/graphql -H "Content-Type: application/json" -d ''[{"query":"{users{id}}"},{"query":"{posts{id}}"}]''
+  curl -X POST https://api.your-app.test/graphql -H "Content-Type: application/json" -d ''[{"query":"{users{id}}"},{"query":"{posts{id}}"}]''
 
 
   # Dedicated batch endpoint
 
-  curl -X POST https://api.example.com/batch -H "Content-Type: application/json" -d ''{"requests":[{"path":"/users/1","method":"GET"},{"path":"/posts","method":"GET"}]}''
+  curl -X POST https://api.your-app.test/batch -H "Content-Type: application/json" -d ''{"requests":[{"path":"/users/1","method":"GET"},{"path":"/posts","method":"GET"}]}''
 
   ```
 
@@ -183,5 +181,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

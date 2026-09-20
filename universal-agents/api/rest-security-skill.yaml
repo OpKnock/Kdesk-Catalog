@@ -2,12 +2,11 @@ name: rest-security
 display_name: Rest Security
 category: api
 subcategory: general
-description: 'Hand-crafted REST API security skill: authenticated curl flows, TLS certificate verification,
-  OWASP ZAP baseline scans, and rate-limit/authorization probing.'
+description: 'Expert reference covering authenticated curl flows, TLS certificate verification, OWASP ZAP baseline scans, and rate-limit/authorization probing.'
 version: 2.0.0
 tags:
 - api
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - openssl
@@ -16,18 +15,18 @@ capabilities:
 - name: rest-api-hardening
   description: 'Probe and harden REST APIs: auth, TLS, scanning, rate limits'
   commands:
-  - 'curl -s -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/users'
-  - curl -skI https://api.example.com/ -o /dev/null -w '%{http_code} %{ssl_verify_result}\n'
-  - openssl s_client -connect api.example.com:443 -servername api.example.com </dev/null 2>/dev/null |
+  - 'curl -s -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/users'
+  - curl -skI https://api.your-app.test/ -o /dev/null -w '%{http_code} %{ssl_verify_result}\n'
+  - openssl s_client -connect api.your-app.test:443 -servername api.your-app.test 2>/dev/null |
     openssl x509 -noout -dates
-  - zap-baseline.py -t https://staging.example.com -r zap-report.html
-  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -X DELETE https://api.example.com/v1/orders/1 -H "Authorization:
+  - zap-baseline.py -t https://staging.your-app.test -r zap-report.html
+  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -X DELETE https://api.your-app.test/v1/orders/1 -H "Authorization:
     Bearer $TOKEN"'
   examples:
-  - curl -s -o /dev/null -w '%{http_code} %{time_total}s\n' -X POST https://api.example.com/v1/login -d
+  - curl -s -o /dev/null -w '%{http_code} %{time_total}s\n' -X POST https://api.your-app.test/v1/login -d
     '{"user":"admin","pass":"wrong"}'
-  - curl -s -o /dev/null -w '%{http_code}\n' https://api.example.com/v1/users
-  - zap-baseline.py -t https://staging.example.com -r zap-report.html
+  - curl -s -o /dev/null -w '%{http_code}\n' https://api.your-app.test/v1/users
+  - zap-baseline.py -t https://staging.your-app.test -r zap-report.html
   parameters:
   - name: token
     type: string
@@ -48,9 +47,9 @@ knowledge:
   source: https://www.zaproxy.org/docs/docker/baseline-scan/
   description: Automated passive scanning with zap-baseline.py
 instructions: '# REST API Security
-
-
-  Hand-crafted skill for securing and auditing REST APIs.
+ 
+ 
+  Expert skill for securing and auditing REST APIs.
 
 
   ## What this skill does
@@ -80,30 +79,30 @@ instructions: '# REST API Security
 
   # Does the endpoint require auth? (expect 401/403)
 
-  curl -s -o /dev/null -w ''%{http_code}\n'' https://api.example.com/v1/users
+  curl -s -o /dev/null -w ''%{http_code}\n'' https://api.your-app.test/v1/users
 
 
   # Authenticated call
 
-  curl -s -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/users
+  curl -s -H "Authorization: Bearer $TOKEN" https://api.your-app.test/v1/users
 
 
   # TLS: protocol, cipher, certificate dates
 
-  curl -skI https://api.example.com/ -o /dev/null -w ''%{ssl_protocol} %{ssl_verify_result}\n''
+  curl -skI https://api.your-app.test/ -o /dev/null -w ''%{ssl_protocol} %{ssl_verify_result}\n''
 
-  openssl s_client -connect api.example.com:443 -servername api.example.com </dev/null 2>/dev/null | openssl
+  openssl s_client -connect api.your-app.test:443 -servername api.your-app.test 2>/dev/null | openssl
   x509 -noout -dates
 
 
   # Automated passive scan
 
-  zap-baseline.py -t https://staging.example.com -r zap-report.html
+  zap-baseline.py -t https://staging.your-app.test -r zap-report.html
 
 
   # Verify authorization: low-privilege token must not delete resources
 
-  curl -s -o /dev/null -w ''%{http_code}\n'' -X DELETE https://api.example.com/v1/orders/1 -H "Authorization:
+  curl -s -o /dev/null -w ''%{http_code}\n'' -X DELETE https://api.your-app.test/v1/orders/1 -H "Authorization:
   Bearer $LOW_PRIV_TOKEN"
 
   ```
@@ -126,7 +125,7 @@ instructions: '# REST API Security
 
   ```bash
 
-  curl -s -o /dev/null -w ''%{http_code}\n'' https://staging.example.com/healthz
+  curl -s -o /dev/null -w ''%{http_code}\n'' https://staging.your-app.test/healthz
 
   ```
 
@@ -143,10 +142,10 @@ instructions: '# REST API Security
   '
 examples:
 - input: Check if an endpoint leaks data without a token
-  output: curl -s -o /dev/null -w '%{http_code}' https://api.example.com/v1/users must return 401/403;
+  output: curl -s -o /dev/null -w '%{http_code}' https://api.your-app.test/v1/users must return 401/403;
     if 200, the auth filter is broken.
 - input: Verify my TLS certificate is current
-  output: openssl s_client -connect api.example.com:443 -servername api.example.com </dev/null 2>/dev/null
+  output: openssl s_client -connect api.your-app.test:443 -servername api.your-app.test 2>/dev/null
     | openssl x509 -noout -dates shows notBefore/notAfter.
 platforms:
   claude_code:
@@ -173,12 +172,12 @@ platforms:
   generic:
     system_prompt: 'You own Rest Security end to end. You do it through rest-api-hardening: Probe and
       harden REST APIs: auth, TLS, scanning, rate limits. The commands are real, e.g. `curl -s -H Authorization:
-      Bearer $TOKEN https://api.example.com/v1/users`. You run and verify the real CLI commands before
+      Bearer $TOKEN https://api.your-app.test/v1/users`. You run and verify the real CLI commands before
       you claim anything.'
     available_tools:
     - bash
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2025-06-15T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

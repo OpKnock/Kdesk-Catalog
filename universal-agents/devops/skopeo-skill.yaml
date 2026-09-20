@@ -7,7 +7,7 @@ description: Inspects, copies, and signs container images with skopeo — regist
 version: 2.0.0
 tags:
 - devops
-author: Kdesk-Catalog
+author: Kdesk
 license: MIT
 prerequisites:
 - skopeo
@@ -17,12 +17,12 @@ capabilities:
   commands:
   - skopeo inspect docker://nginx:latest
   - skopeo inspect --raw docker://nginx:latest
-  - skopeo list-tags docker://registry.example.com/app
-  - skopeo inspect docker://registry.example.com/app:v1 --config
+  - skopeo list-tags docker://ghcr.io/app
+  - skopeo inspect docker://ghcr.io/app:v1 --config
   - skopeo inspect --format '{{.Digest}}' docker://nginx:latest
   examples:
   - skopeo inspect docker://nginx:latest
-  - skopeo list-tags docker://registry.example.com/app
+  - skopeo list-tags docker://ghcr.io/app
   - skopeo inspect --format '{{.Digest}}' docker://nginx:latest
   parameters:
   - name: image
@@ -34,15 +34,15 @@ capabilities:
 - name: copy-and-sync
   description: Copy images between transports/registries and sync repositories.
   commands:
-  - skopeo copy docker://nginx:latest docker://registry.example.com/nginx:latest
-  - skopeo copy --all --preserve-digests docker://ghcr.io/org/app:1.0 docker://registry.example.com/org/app:1.0
+  - skopeo copy docker://nginx:latest docker://ghcr.io/nginx:latest
+  - skopeo copy --all --preserve-digests docker://ghcr.io/org/app:1.0 docker://ghcr.io/org/app:1.0
   - skopeo sync --src docker --dest dir nginx:latest /opt/images
-  - skopeo delete docker://registry.example.com/old-app:v0.9
-  - skopeo login registry.example.com -u ci -p $(cat /run/secrets/registry)
+  - skopeo delete docker://ghcr.io/old-app:v0.9
+  - skopeo login ghcr.io -u ci -p $(cat /run/secrets/registry)
   examples:
-  - skopeo copy docker://nginx:latest docker://registry.example.com/nginx:latest
+  - skopeo copy docker://nginx:latest docker://ghcr.io/nginx:latest
   - skopeo sync --src docker --dest dir nginx:latest /opt/images
-  - skopeo delete docker://registry.example.com/old-app:v0.9
+  - skopeo delete docker://ghcr.io/old-app:v0.9
   parameters:
   - name: src
     type: string
@@ -102,14 +102,14 @@ instructions: '# skopeo Registry Operations
 
   skopeo inspect --format ''{{.Digest}}'' docker://nginx:latest
 
-  skopeo list-tags docker://registry.example.com/app
+  skopeo list-tags docker://ghcr.io/app
 
 
   # Copy
 
-  skopeo copy docker://nginx:latest docker://registry.example.com/nginx:latest
+  skopeo copy docker://nginx:latest docker://ghcr.io/nginx:latest
 
-  skopeo copy --all --preserve-digests docker://ghcr.io/org/app:1.0 docker://registry.example.com/org/app:1.0
+  skopeo copy --all --preserve-digests docker://ghcr.io/org/app:1.0 docker://ghcr.io/org/app:1.0
 
 
   # Sync to air gap
@@ -121,9 +121,9 @@ instructions: '# skopeo Registry Operations
 
   # Auth and delete
 
-  skopeo login registry.example.com -u ci -p $REGISTRY_PASS
+  skopeo login ghcr.io -u ci -p $REGISTRY_PASS
 
-  skopeo delete docker://registry.example.com/old-app:v0.9
+  skopeo delete docker://ghcr.io/old-app:v0.9
 
   ```
 
@@ -175,5 +175,5 @@ platforms:
     - read
     - write
     - edit
-created_at: '2024-01-01T00:00:00Z'
-updated_at: '2024-01-01T00:00:00Z'
+created_at: '2026-02-13T00:00:00Z'
+updated_at: '2026-08-19T00:00:00Z'

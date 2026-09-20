@@ -97,6 +97,7 @@ def test_run_agent_unknown_name():
 def test_run_agent_live_without_client_config_errors_helpfully(monkeypatch):
     catalog = _catalog()
     monkeypatch.delenv("FOUNDRY_PROJECT_ENDPOINT", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     with pytest.raises(ar.AgentRuntimeError, match="No chat client configured"):
         ar.run_agent(catalog, "catalog-auditor", "hi", dry_run=False)
 
@@ -106,6 +107,23 @@ def test_run_skill_matches_run_agent():
     out = ar.run_skill(catalog, "terraform-infrastructure", "plan infra")
     assert out["name"] == "terraform-infrastructure"
     assert out["type"] == "skill"
+
+
+def test_make_test_prompt_uses_own_capability():
+    catalog = _catalog()
+    defn = ar.get_definition(catalog, "terraform-infrastructure")
+    prompt = ar.make_test_prompt(defn)
+    assert "terraform-infrastructure" in prompt or "Terraform" in prompt
+    assert "Task:" in prompt
+
+
+def test_route_capability_matches_prompt():
+    catalog = _catalog()
+    defn = ar.get_definition(catalog, "terraform-infrastructure")
+    cap = ar.route_capability(defn, "run terraform plan on the state")
+    assert cap is not None
+    assert cap.name in {c.name for c in defn.capabilities}
+    assert ar.route_capability(defn, "") is None
 
 
 @pytest.mark.skipif(not ar.runtime_available(), reason="runtime package not installed")

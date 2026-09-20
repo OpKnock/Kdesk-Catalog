@@ -123,6 +123,55 @@ def build_instructions(defn: BaseDefinition) -> str:
     return "\n".join(lines).strip() + "\n"
 
 
+def make_test_prompt(defn: BaseDefinition) -> str:
+    """Build a deterministic test prompt from the definition itself.
+
+    Uses the definition's own first capability and example, so every one
+    of the 3094 agents/skills gets a prompt tailored to what it claims
+    to do. The same prompts drive offline tool-tests today and live
+    model runs tomorrow.
+    """
+    task = ""
+    example = ""
+    if defn.capabilities:
+        cap = defn.capabilities[0]
+        task = str(cap.description or cap.name or "")
+        for ex in cap.examples or []:
+            if isinstance(ex, str) and ex.strip():
+                example = ex.strip()
+                break
+    prompt = f"Act as {defn.display_name or defn.name}: {defn.description or ''}".strip()
+    if task:
+        prompt += f"\nTask: {task}"
+    if example:
+        prompt += f"\nDo it like this: {example}"
+    return prompt
+
+
+def route_capability(defn: BaseDefinition, prompt: str) -> Any:
+    """Pick the capability that best matches a prompt (keyword overlap).
+
+    Deterministic stand-in for the model's own routing: scores each
+    capability's name, description, commands, and examples against the
+    prompt words. Returns the winning Capability, or None when nothing
+    matches (caller should then treat it as out-of-scope).
+    """
+    words = {w.lower() for w in re.findall(r"[a-z0-9]+", prompt or "") if len(w) > 2}
+    if not words or not defn.capabilities:
+        return None
+    best = None
+    best_score = 0
+    for cap in defn.capabilities:
+        hay = " ".join(
+            [cap.name, cap.description, *cap.commands,
+             *(str(e) for e in (cap.examples or []))]
+        ).lower()
+        score = sum(1 for w in words if w in hay)
+        if score > best_score:
+            best, best_score = cap, score
+    return best
+
+
 def safe_tool_impls(defn: BaseDefinition, catalog: Catalog) -> dict[str, Callable[..., str]]:
     """Plain (dependency-free) implementations of the always-safe tools."""
 
@@ -247,26 +296,48 @@ def build_tools(
 def default_client() -> Any:
     """Build a chat client from environment configuration.
 
-    Reads ``FOUNDRY_PROJECT_ENDPOINT`` (and optional
-    ``FOUNDRY_MODEL_DEPLOYMENT_NAME``). Raises a helpful error when nothing
-    is configured so users never see a bare connection failure.
+    Prefers ``FOUNDRY_PROJECT_ENDPOINT`` (with optional
+    ``FOUNDRY_MODEL_DEPLOYMENT_NAME``), then falls back to OpenAI
+    (``OPENAI_API_KEY`` with optional ``OPENAI_CHAT_MODEL``/``OPENAI_MODEL``,
+    defaulting to a small economical model). Raises a helpful error when
+    nothing is configured so users never see a bare connection failure.
     """
     require_runtime()
     endpoint = os.environ.get("FOUNDRY_PROJECT_ENDPOINT", "")
-    if not endpoint:
-        raise AgentRuntimeError(
-            "No chat client configured. Set FOUNDRY_PROJECT_ENDPOINT "
-            "(and optionally FOUNDRY_MODEL_DEPLOYMENT_NAME), or pass a "
-            "client explicitly."
-        )
-    from agent_framework.foundry import FoundryChatClient
-    from azure.identity import AzureCliCredential
+    if endpoint:
+        try:
+            from agent_framework.foundry import FoundryChatClient
+        except ImportError:
+            raise AgentRuntimeError(
+                "Foundry support needs the provider package: "
+                "pip install agent-framework-foundry"
+            ) from None
+        from azure.identity import AzureCliCredential
 
-    kwargs: dict[str, Any] = {"credential": AzureCliCredential()}
-    model = os.environ.get("FOUNDRY_MODEL_DEPLOYMENT_NAME", "")
-    if model:
-        kwargs["model"] = model
-    return FoundryChatClient(endpoint=endpoint, **kwargs)
+        kwargs: dict[str, Any] = {"credential": AzureCliCredential()}
+        model = os.environ.get("FOUNDRY_MODEL_DEPLOYMENT_NAME", "")
+        if model:
+            kwargs["model"] = model
+        return FoundryChatClient(endpoint=endpoint, **kwargs)
+    if os.environ.get("OPENAI_API_KEY", ""):
+        try:
+            from agent_framework.openai import OpenAIChatClient
+        except ImportError:
+            raise AgentRuntimeError(
+                "OpenAI support needs the provider package: "
+                "pip install agent-framework-openai"
+            ) from None
+        model = (
+            os.environ.get("OPENAI_CHAT_MODEL", "")
+            or os.environ.get("OPENAI_MODEL", "")
+            or "gpt-4o-mini"
+        )
+        return OpenAIChatClient(model=model)
+    raise AgentRuntimeError(
+        "No chat client configured. Set FOUNDRY_PROJECT_ENDPOINT or "
+        "OPENAI_API_KEY (optionally OPENAI_CHAT_MODEL), or pass a "
+        "client explicitly."
+    )
 
 
 def build_agent(

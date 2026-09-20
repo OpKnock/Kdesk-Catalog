@@ -32,7 +32,6 @@ from kdesk.workflow import WorkflowEngine, WorkflowError
 from kdesk.delegation import SubAgentResolver
 from kdesk.versioning import VersionResolver, build_available_versions
 from kdesk.telemetry import summary as telemetry_summary
-from kdesk.verify import run_verify
 
 
 def _out(data: Any, fmt: str) -> None:

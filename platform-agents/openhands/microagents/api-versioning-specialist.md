@@ -72,3 +72,7 @@ Use custom headers for version selection
 - `curl -s -H 'X-API-Version: 2024-06-01' http://localhost:8080/orders | jq '.meta.version'`
 - `curl -s -H 'API-Version: 2' http://localhost:8080/orders | jq '.apiVersion'`
 - `curl -s -o /dev/null -w '%{http_code}\n' -H 'X-API-Version: 1990-01-01' http://localhost:8080/orders`
+
+**Examples:**
+- -cli --help
+- -api --help

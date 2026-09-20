@@ -75,3 +75,7 @@ Compile and inspect Avro schemas
 - `java -jar avro-tools-1.11.3.jar getmeta user.avsc`
 - `java -jar avro-tools-1.11.3.jar tojson users.avro`
 - `java -jar avro-tools-1.11.3.jar fromjson --schema-file user.avsc users.json > users.avro`
+
+**Examples:**
+- -cli --help
+- -api --help

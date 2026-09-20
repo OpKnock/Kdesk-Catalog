@@ -74,3 +74,7 @@ Apply correct HTTP status codes per operation
 - `curl -s -o /dev/null -w '%{http_code}\n' -X DELETE http://localhost:3000/api/users/1`
 - `curl -s -o /dev/null -w '%{http_code}\n' -X PATCH http://localhost:3000/api/users/1 -H 'Content-Type: application/json' -d '{"name":"bob"}'`
 - `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/api/health`
+
+**Examples:**
+- -cli --help
+- -api --help

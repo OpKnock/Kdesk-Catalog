@@ -69,3 +69,7 @@ Subclass pagination classes for custom response shapes
 - `curl -s 'http://localhost:8000/api/users/?ordering=created_at' | jq '.next'`
 - `python manage.py test api.tests.test_pagination -v 2`
 - `curl -s 'http://localhost:8000/api/users/?page=-5' -o /dev/null -w '%{http_code}\n'`
+
+**Examples:**
+- -cli --help
+- -api --help

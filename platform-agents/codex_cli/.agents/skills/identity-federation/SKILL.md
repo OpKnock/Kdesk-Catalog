@@ -1,11 +1,11 @@
 ---
 name: "identity-federation"
-description: "Implement it."
+description: "Set up SAML/OIDC federation with IdP integration and SSO flows."
 ---
 
 # Identity Federation
 
-Implement it.
+Set up SAML/OIDC federation with IdP integration and SSO flows.
 
 ## Instructions
 

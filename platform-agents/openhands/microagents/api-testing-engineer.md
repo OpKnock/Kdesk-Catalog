@@ -82,3 +82,7 @@ Write Python API tests with pytest
 - `pytest -q -k users`
 - `pytest --cov=api --cov-report=html`
 - `pytest -q --tb=short tests/test_users.py`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -81,3 +81,7 @@ Assert status, body, and headers
 - `node -e "const request=require('supertest'); console.log(typeof request)"`
 - `npx jest test/api.test.js --runInBand`
 - `npx jest --watch`
+
+**Examples:**
+- -cli --help
+- -api --help

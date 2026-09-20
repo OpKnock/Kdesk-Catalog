@@ -104,6 +104,10 @@ class Marketplace:
         existing = [s for s in skills if s["name"] == name]
         if any(s["version"] == version for s in existing) and not force:
             raise ValueError(f"{name}@{version} already published; use --force")
+        if force:
+            # Replace same-version entries instead of duplicating them.
+            skills = [s for s in skills
+                      if not (s["name"] == name and s["version"] == version)]
 
         deps = []
         for cap in doc.get("capabilities") or []:

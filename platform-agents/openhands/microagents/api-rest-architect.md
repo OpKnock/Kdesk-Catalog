@@ -71,3 +71,7 @@ Generate interactive reference documentation from the spec
 - `npx @redocly/cli build-docs openapi.yaml -o api-docs.html`
 - `npx @redocly/cli preview-docs openapi.yaml`
 - `curl -s http://localhost:8080/docs -o /dev/null -w '%{http_code}\n'`
+
+**Examples:**
+- -cli --help
+- -api --help

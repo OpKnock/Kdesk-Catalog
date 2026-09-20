@@ -71,3 +71,7 @@ Manage Prisma schema migrations
 - `npx prisma migrate status`
 - `npx prisma migrate resolve --applied 20240101000000_add_users`
 - `npx prisma generate`
+
+**Examples:**
+- -cli --help
+- -api --help

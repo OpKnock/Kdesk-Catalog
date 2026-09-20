@@ -77,3 +77,7 @@ Authenticate with Passport and oauth2-proxy
 - `node -e "const p=require('passport'); console.log(typeof p.authenticate)"`
 - `docker run -d -p 4180:4180 bitnami/oauth2-proxy --provider github --upstream http://localhost:3000 --email-domain example.com --client-id $CLIENT_ID --client-secret $CLIENT_SECRET`
 - `curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer invalid" http://localhost:4180/oauth2/start`
+
+**Examples:**
+- general-cli --help
+- general-api --help

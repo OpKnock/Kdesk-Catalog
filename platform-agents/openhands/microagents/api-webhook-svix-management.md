@@ -76,3 +76,7 @@ Route and observe webhooks with Hookdeck
 - `hookdeck sources list`
 - `hookdeck destinations list`
 - `hookdeck events list`
+
+**Examples:**
+- -cli --help
+- -api --help

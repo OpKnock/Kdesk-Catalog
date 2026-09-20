@@ -31,14 +31,18 @@ def stats(fast: bool = True) -> JSONResponse:
 
 
 @router.get("/search")
-def search(q: str = Query("", min_length=1), limit: int = 30) -> JSONResponse:
+def search(q: str = Query("", min_length=1), limit: int = 30,
+           type: str = "all") -> JSONResponse:
     from kdesk.web.app import get_state
 
+    kind = type if type in ("agent", "skill") else "all"
     catalog = get_state().catalog
-    hits = catalog.search(q)[:limit]
+    hits = catalog.search(q)[:limit * 3]
+    if kind != "all":
+        hits = [h for h in hits if h.type == kind]
     return _json([
         {"type": h.type, "name": h.name, "category": h.category}
-        for h in hits
+        for h in hits[:limit]
     ])
 
 

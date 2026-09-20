@@ -74,3 +74,7 @@ Script rate limit enforcement tests in k6
 - `k6 run --vus 5 --iterations 300 ratelimit-test.js`
 - `k6 run --threshold 'http_req_duration:p(95)<500' ratelimit-test.js`
 - `k6 run --summary-export=limit-summary.json ratelimit-test.js`
+
+**Examples:**
+- -cli --help
+- -api --help

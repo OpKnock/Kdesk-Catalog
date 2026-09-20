@@ -77,3 +77,7 @@ Manage Kong configuration as code
 - `deck gateway diff kong.yaml`
 - `deck gateway sync kong.yaml`
 - `deck gateway validate kong.yaml`
+
+**Examples:**
+- general-cli --help
+- general-api --help

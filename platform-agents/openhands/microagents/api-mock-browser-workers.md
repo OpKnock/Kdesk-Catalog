@@ -77,3 +77,7 @@ Reuse MSW handlers inside Playwright E2E tests
 - `npx playwright test tests/api-flows.spec.ts --project=chromium`
 - `npx playwright test --ui`
 - `npx playwright show-report`
+
+**Examples:**
+- -cli --help
+- -api --help

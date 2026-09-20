@@ -65,3 +65,7 @@ Maintain backward compatibility
 - `curl -s http://localhost:3000/v2/users | jq '.fields | keys'`
 - `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/v9/users`
 - `git tag -l 'v*' --sort=-v:refname | head -3`
+
+**Examples:**
+- general-cli --help
+- general-api --help

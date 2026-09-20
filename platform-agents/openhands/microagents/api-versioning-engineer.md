@@ -75,3 +75,7 @@ Test versioned endpoints
 - `./mvnw test -Dtest=UserControllerTest`
 - `curl -s -D- -H 'Accept: application/vnd.example.v1+json' http://localhost:8080/api/users | grep -i '^vary:'`
 - `curl -s -H 'Accept: application/json' http://localhost:8080/api/users -o /dev/null -w '%{http_code}\n'`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -80,3 +80,7 @@ Integrate Redis counting into a Node API
 - `redis-cli INCR rate:user:1 && redis-cli EXPIRE rate:user:1 60`
 - `redis-cli --scan --pattern 'rate:*'`
 - `node -e "const Redis=require('ioredis'); const r=new Redis(); r.multi().incr('k').expire('k',60).exec().then(x=>{console.log(x); r.quit()})"`
+
+**Examples:**
+- -cli --help
+- -api --help

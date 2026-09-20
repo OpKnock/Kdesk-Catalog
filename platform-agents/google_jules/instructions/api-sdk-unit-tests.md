@@ -76,3 +76,7 @@ Run SDKs against a live mock server
 - `node -e "const sdk=require('./sdk'); sdk.defaultClient.basePath='http://localhost:4010'; sdk.getUsers().then(r=>console.log(r.data.length))"`
 - `npm test`
 - `npx vitest run`
+
+**Examples:**
+- -cli --help
+- -api --help

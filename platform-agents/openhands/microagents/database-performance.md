@@ -1,13 +1,13 @@
 ---
 name: "database-performance"
-description: "Optimize it."
+description: "Tune query plans, indexes, and caching for optimal performance."
 type: knowledge
 triggers: ["database-performance", "db-performance"]
 ---
 
 # Database Performance
 
-Optimize it.
+Tune query plans, indexes, and caching for optimal performance.
 
 ## Instructions
 

@@ -1,0 +1,27 @@
+name: Schema
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  schema:
+    name: Source schema and catalog integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pyyaml jsonschema
+
+      - name: Schema check (0 violations required)
+        run: python scripts/schema-check.py
+
+      - name: Catalog check (divisions match definitions)
+        run: python scripts/check-catalog.py

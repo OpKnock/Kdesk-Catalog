@@ -1,0 +1,207 @@
+{
+  "name": "json-schema",
+  "display_name": "Json Schema",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Validate JSON documents against JSON Schema drafts (2020-12, 2019-09) with check-jsonschema and ajv, plus compile schemas and generate instances from tooling.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "check-jsonschema",
+    "npx",
+    "python3"
+  ],
+  "capabilities": [
+    {
+      "name": "schema-validation",
+      "description": "Validate JSON data files against a schema using check-jsonschema, ajv, and the Python jsonschema CLI.",
+      "commands": [
+        "check-jsonschema --schemafile schema.json data.json",
+        "check-jsonschema --schemafile schema.json --default-filetype json --verbose data.json",
+        "npx ajv validate -s schema.json -d data.json",
+        "npx ajv validate -s schema.json -d data.json --strict=false",
+        "python3 -m jsonschema -i data.json schema.json"
+      ],
+      "examples": [
+        "check-jsonschema --schemafile orders/schema.json orders/batch-1.json",
+        "npx ajv validate -s schema.json -d data.json",
+        "python3 -m jsonschema -i data.json schema.json"
+      ],
+      "parameters": [
+        {
+          "name": "schemafile",
+          "type": "string",
+          "description": "Path to the JSON Schema file."
+        },
+        {
+          "name": "datafile",
+          "type": "string",
+          "description": "Path to the JSON instance/document to validate."
+        },
+        {
+          "name": "filetype",
+          "type": "string",
+          "description": "Input type: json, yaml, toml, or auto (default: json)."
+        }
+      ]
+    },
+    {
+      "name": "schema-compile",
+      "description": "Compile schemas with ajv for reuse and check schema syntax early in CI.",
+      "commands": [
+        "npx ajv compile -s schema.json",
+        "npx ajv compile -s schema.json --strict=false -c ajv-formats",
+        "check-jsonschema --schemafile schema.json --default-filetype json data.json --cache-filename schema-cache.json"
+      ],
+      "examples": [
+        "npx ajv compile -s schema.json",
+        "npx ajv compile -s openapi.json -c ajv-formats"
+      ],
+      "parameters": [
+        {
+          "name": "strict",
+          "type": "boolean",
+          "description": "Enable/disable strict mode for unknown keywords."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "JSON Schema Specifications",
+      "type": "documentation",
+      "source": "https://json-schema.org/specification",
+      "description": "All JSON Schema drafts and the meta-schemas."
+    },
+    {
+      "title": "check-jsonschema",
+      "type": "documentation",
+      "source": "https://github.com/python-jsonschema/check-jsonschema",
+      "description": "CLI wrapper around jsonschema with format checks and filetype detection."
+    },
+    {
+      "title": "Ajv CLI",
+      "type": "documentation",
+      "source": "https://ajv.js.org/packages/ajv-cli.html",
+      "description": "Command line validator and compiler for JSON Schema."
+    }
+  ],
+  "instructions": "# JSON Schema\n\nValidate JSON documents against JSON Schema drafts with real CLI validators.\n\n## What this skill does\n\n- Validates JSON instances against schemas with check-jsonschema, ajv, and jsonschema.\n- Compiles schemas ahead of time to catch schema syntax errors.\n- Detects the document format (JSON/YAML/TOML) automatically.\n\n## When to use\n\n- Validating API payloads in CI before deploying.\n- Enforcing contract compliance for config files and data exports.\n- Auditing whether a schema change is backwards compatible.\n\n## Real commands\n\n```bash\n# Basic validation (schema + document)\ncheck-jsonschema --schemafile schema.json data.json\n\n# Verbose mode reports every failing property\ncheck-jsonschema --schemafile schema.json --verbose data.json\n\n# YAML documents against a JSON schema\ncheck-jsonschema --schemafile schema.json --default-filetype yaml config.yaml\n\n# ajv validation with format keywords\nnpx ajv validate -s schema.json -d data.json -c ajv-formats\n\n# Compile a schema to catch invalid schema syntax\nnpx ajv compile -s schema.json\n\n# Python CLI\npython3 -m jsonschema -i data.json schema.json\n```\n\n## Schema example (2020-12)\n\n```json\n{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"type\": \"object\",\n  \"required\": [\"id\", \"amount\", \"currency\"],\n  \"properties\": {\n    \"id\": {\"type\": \"string\", \"pattern\": \"^ord_\"},\n    \"amount\": {\"type\": \"number\", \"minimum\": 0},\n    \"currency\": {\"type\": \"string\", \"enum\": [\"USD\", \"EUR\", \"GBP\"]}\n  },\n  \"additionalProperties\": false\n}\n```\n\n## Testing\n\n```bash\n# Negative test\necho '{\"id\":\"bad\",\"amount\":-5}' | check-jsonschema --schemafile schema.json --default-filetype json /dev/stdin\n```\n\n## Best practices\n\n- Pin the draft in the $schema keyword; different drafts change keyword semantics.\n- Run check-jsonschema in CI for every schema change and data release.\n- Use -c ajv-formats for date-time, email, and uuid format validation.\n- Keep additionalProperties: false for strict contracts; relax for forward compatibility.\n",
+  "examples": [
+    {
+      "input": "Validate an orders file against its schema",
+      "output": "check-jsonschema --schemafile orders/schema.json orders/batch-1.json"
+    },
+    {
+      "input": "Check if my schema itself is valid",
+      "output": "npx ajv compile -s schema.json"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "json-schema.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-json-schema"
+    },
+    "generic": {
+      "system_prompt": "You are the Json Schema specialist. You do it through schema-validation: Validate JSON data files against a schema using check-jsonschema, ajv, and the Python jsonschema CLI. The commands are real, e.g. `check-jsonschema --schemafile schema.json data.json`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "json-schema",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "schema-validation",
+        "name": "schemafile",
+        "type": "string",
+        "description": "Path to the JSON Schema file."
+      },
+      {
+        "capability": "schema-validation",
+        "name": "datafile",
+        "type": "string",
+        "description": "Path to the JSON instance/document to validate."
+      },
+      {
+        "capability": "schema-validation",
+        "name": "filetype",
+        "type": "string",
+        "description": "Input type: json, yaml, toml, or auto (default: json)."
+      },
+      {
+        "capability": "schema-compile",
+        "name": "strict",
+        "type": "boolean",
+        "description": "Enable/disable strict mode for unknown keywords."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "check-jsonschema",
+    "npx",
+    "python3"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/json-schema-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/json-schema-skill.yaml",
+    "checksum": "3326d3f9da646c53765f4e348b9fe534213fabe7cd64995d000aae1049eb1164"
+  }
+}

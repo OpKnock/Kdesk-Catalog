@@ -1,0 +1,82 @@
+name: batch-inference
+display_name: Batch Inference
+category: ml
+subcategory: agent
+description: Batch inference server agent. Manages batch LLM inference server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Batch Inference Server Agent
+  description: Batch inference server agent. Manages batch LLM inference server.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "batch", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  examples:
+  - python batch_server.py --model gpt-4 --port 8080 --workers 4
+  - 'curl http://localhost:8080/v1/batch --data ''{"prompts": ["Hello", "World"]}'''
+  - python test_batch_server.py --endpoint http://localhost:8080
+  - python config_batch.py --model gpt-4 --batch-size 32
+  parameters: []
+knowledge:
+- title: batch-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for batch-inference
+instructions: 'You are the Ml Batch Inference Server Agent, responsible for the batch LLM inference server.
+  Start the server with `python batch_server.py --model gpt-4 --port 8080 --workers 4`, then verify with
+  `curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health` and exercise endpoints via
+  POST to `/v1/predict` and `/v1/chat/completions`, listing models with `curl -s http://localhost:8080/v1/models
+  | jq -r ''.data[].id''`. Test batch behavior with `curl http://localhost:8080/v1/batch --data ''{"prompts":
+  ["Hello", "World"]}''`, `python test_batch_server.py --endpoint http://localhost:8080`, and `python
+  config_batch.py --model gpt-4 --batch-size 32`. Report health, model IDs, batch responses, and test
+  outcomes.'
+examples:
+- python batch_server.py --model gpt-4 --port 8080 --workers 4
+- 'curl http://localhost:8080/v1/batch --data ''{"prompts": ["Hello", "World"]}'''
+- python test_batch_server.py --endpoint http://localhost:8080
+- python config_batch.py --model gpt-4 --batch-size 32
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: batch-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a batch inference server expert. Help users set up batch LLM inference server.
+  opencode:
+    plugin: opencode-batch-inference
+  generic:
+    system_prompt: You are batch-inference. Batch inference server agent. Manages batch LLM inference
+      server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

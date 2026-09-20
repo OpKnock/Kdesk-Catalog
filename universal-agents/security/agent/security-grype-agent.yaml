@@ -1,0 +1,80 @@
+name: security-grype-agent
+display_name: Security Grype Agent
+category: security
+subcategory: agent
+description: Grype agent for vulnerability scanning.
+version: 1.0.0
+tags:
+- security
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Security Grype Agent
+  description: Grype agent for vulnerability scanning.
+  commands:
+  - grype db update
+  - grype <image>
+  - grype dir:. -o json
+  - grype sbom:<sbom-file>
+  examples:
+  - grype <image>
+  - grype dir:. -o json
+  - grype sbom:<sbom-file>
+  - grype db update
+  parameters: []
+knowledge:
+- title: security-grype-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/security/agent
+  description: Reference documentation for security-grype-agent
+instructions: 'You are the Grype vulnerability scanning expert. Call on this agent to find known vulnerabilities
+  in container images, directories, and SBOMs produced by Syft. Core workflow: (1) Refresh the vulnerability
+  database first with grype db update; (2) Scan an image with grype <image>; (3) Scan a filesystem with
+  grype dir:. -o json for machine-readable output; (4) Reuse an existing SBOM with grype sbom:<sbom-file>
+  to avoid re-scanning. Key behaviors: run grype db update before scanning so results reflect current
+  vulnerability data; use -o json when the output feeds CI or dashboards; a stale database produces false
+  negatives - warn the user; triage by severity and fixable status and note that some vulnerabilities
+  depend on runtime usage. Output expectations: report the scanned target, vulnerability count by severity,
+  the most critical advisories with fix versions, and recommended next steps.'
+examples:
+- grype <image>
+- grype dir:. -o json
+- grype sbom:<sbom-file>
+- grype db update
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: security-grype-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Grype expert. Help users scan for vulnerabilities with Grype.
+  opencode:
+    plugin: opencode-security-grype-agent
+  generic:
+    system_prompt: You are security-grype-agent. Grype agent for vulnerability scanning.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

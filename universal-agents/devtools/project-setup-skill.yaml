@@ -1,0 +1,203 @@
+name: project-setup
+display_name: project-setup
+category: devtools
+subcategory: general
+description: 'Bootstraps new projects: git init, scaffolds (create-vite, cargo new, cookiecutter), venvs,
+  repo creation, and CI skeleton.'
+version: 2.0.0
+tags:
+- devtools
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- cargo
+- cookiecutter
+- echo
+- git
+- npx
+- python
+capabilities:
+- name: scaffolding
+  description: Scaffold projects with ecosystem-standard generators.
+  commands:
+  - npx create-vite@latest frontend --template react-ts
+  - cargo new my-service --bin
+  - cookiecutter gh:audreyfeldroy/cookiecutter-pypackage
+  - python -m venv .venv
+  - go mod init github.com/acme/service
+  - npx degit user/repo my-clone
+  examples:
+  - npx create-vite@latest frontend --template react-ts
+  - cargo new my-service --bin
+  - cookiecutter gh:audreyfeldroy/cookiecutter-pypackage
+  parameters:
+  - name: name
+    type: string
+    description: Project name
+  - name: template
+    type: string
+    description: Scaffold template
+- name: repo-and-hygiene
+  description: Create repos and set up baseline project hygiene.
+  commands:
+  - git init -b main
+  - gh repo create myorg/myapp --private --source=. --push
+  - 'git commit -m ''chore: initial commit'''
+  - npx eslint --init
+  - echo 'node_modules/' > .gitignore
+  - 'git add -A && git commit -m ''chore: scaffold'''
+  examples:
+  - gh repo create myorg/myapp --private --source=. --push
+  - git init -b main
+  - echo 'node_modules/' > .gitignore
+  parameters:
+  - name: org
+    type: string
+    description: GitHub org for repo creation
+  - name: repo-name
+    type: string
+    description: Repository name
+knowledge:
+- title: create-vite
+  type: documentation
+  source: https://vite.dev/guide/
+  description: Scaffolding new Vite projects
+- title: gh repo create
+  type: documentation
+  source: https://cli.github.com/manual/gh_repo_create
+  description: Create repos from CLI
+- title: Cookiecutter
+  type: documentation
+  source: https://cookiecutter.readthedocs.io/
+  description: Project templating from cookiecutters
+instructions: '# Project Bootstrapping
+
+
+  Scaffold new repositories quickly with correct structure and tooling.
+
+
+  ## What This Skill Does
+
+
+  - Scaffolds apps with framework generators (Vite, cargo new, cookiecutter)
+
+  - Initializes git and creates GitHub repos
+
+  - Sets up virtualenvs and module paths
+
+  - Adds baseline hygiene: .gitignore, lint, CI skeleton
+
+  - Makes the first commit
+
+
+  ## When to Use
+
+
+  - Starting any new project
+
+  - Standardizing project creation across teams
+
+  - Setting up CI + repo in one flow
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Scaffold
+
+  npx create-vite@latest frontend --template react-ts
+
+  cargo new my-service --bin
+
+  cookiecutter gh:audreyfeldroy/cookiecutter-pypackage
+
+  python -m venv .venv
+
+  go mod init github.com/acme/service
+
+
+  # Clone-based (no git history)
+
+  npx degit user/repo my-clone
+
+
+  # Repo setup
+
+  git init -b main
+
+  gh repo create myorg/myapp --private --source=. --push
+
+  git add -A
+
+  git commit -m ''chore: scaffold project''
+
+  ```
+
+
+  ## Baseline Hygiene Checklist
+
+
+  - .gitignore (node_modules, .env, dist, __pycache__)
+
+  - License + README
+
+  - Lint config (eslint/ruff)
+
+  - CI workflow skeleton
+
+  - Lockfile committed
+
+
+  ## Best Practices
+
+
+  - Use --template flags over manual file creation
+
+  - Create the repo with --source=. --push to avoid re-clone
+
+  - Commit the scaffold immediately to keep diffs reviewable
+
+  - Add CI in the same PR as the scaffold
+
+  - Choose generator templates that match team standards'
+examples:
+- input: Start a new React TS app in a fresh repo
+  output: Agent scaffolds with create-vite, adds .gitignore, creates the GitHub repo, and makes the initial
+    commit
+- input: Set up a Rust service project
+  output: Agent runs cargo new, adds deps, initializes git, and pushes the baseline
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: project-setup.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-project-setup
+  generic:
+    system_prompt: 'You work project-setup hands-on. You do it through scaffolding: Scaffold projects
+      with ecosystem-standard generators. The commands are real, e.g. `npx create-vite@latest frontend
+      --template react-ts`. You answer with exact commands, not abstractions, and flag anything you have
+      not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

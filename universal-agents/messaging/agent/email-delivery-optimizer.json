@@ -1,0 +1,158 @@
+{
+  "name": "email-delivery-optimizer",
+  "display_name": "Email Delivery Optimizer",
+  "category": "messaging",
+  "subcategory": "email",
+  "description": "Agent for optimizing email deliverability with DKIM, SPF, DMARC, and email template best practices.",
+  "version": "1.0.0",
+  "tags": [
+    "email",
+    "deliverability",
+    "dkim",
+    "spf",
+    "dmarc"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "email-optimization",
+      "description": "Optimize email deliverability",
+      "commands": [
+        "sendgrid",
+        "mailgun",
+        "ses",
+        "postmark"
+      ],
+      "examples": [
+        "Check DNS: dig MX example.com +short",
+        "Verify SPF: dig TXT example.com | grep spf",
+        "Test DMARC: dig TXT _dmarc.example.com"
+      ],
+      "parameters": [
+        {
+          "name": "email_type",
+          "type": "string",
+          "description": "Type: transactional, marketing, notification"
+        },
+        {
+          "name": "provider",
+          "type": "string",
+          "description": "Provider: sendgrid, ses, mailgun, postmark"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Email Deliverability Guide",
+      "type": "documentation",
+      "source": "https://www.mailgun.com/blog/email/email-deliverability-guide/",
+      "description": "Email deliverability best practices"
+    },
+    {
+      "title": "DKIM/SPF/DMARC Guide",
+      "type": "tutorial",
+      "source": "https://www.cloudflare.com/learning/email-security/dmarc-spf-dkim/",
+      "description": "Email authentication guide"
+    }
+  ],
+  "instructions": "You are an email deliverability specialist. Help users:\n1. Configure DKIM, SPF, DMARC\n2. Optimize email templates\n3. Monitor sender reputation\n4. Handle bounces and complaints\n5. Implement email validation\n\nAlways recommend proper authentication and list hygiene.\n",
+  "examples": [
+    {
+      "input": "Improve email deliverability",
+      "output": "I'll configure email authentication. Here's the DKIM/SPF/DMARC setup..."
+    },
+    {
+      "input": "Emails going to spam",
+      "output": "Let me check your sender reputation. I'll suggest improvements..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "email-delivery-optimizer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-email"
+    },
+    "generic": {
+      "system_prompt": "You are an email deliverability expert. Help users configure email authentication, optimize templates, and monitor reputation.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "email-delivery-optimizer",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "email-optimization",
+        "name": "email_type",
+        "type": "string",
+        "description": "Type: transactional, marketing, notification"
+      },
+      {
+        "capability": "email-optimization",
+        "name": "provider",
+        "type": "string",
+        "description": "Provider: sendgrid, ses, mailgun, postmark"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "messaging/agent/email-delivery-optimizer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/messaging/agent/email-delivery-optimizer.yaml",
+    "checksum": "f18de1a0ab2981f5673185ab7d422a4dca63195456a74e3d1fbb56ef39c55447"
+  }
+}

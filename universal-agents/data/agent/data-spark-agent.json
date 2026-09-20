@@ -1,0 +1,146 @@
+{
+  "name": "data-spark-agent",
+  "display_name": "Data Spark Agent",
+  "category": "data",
+  "subcategory": "agent",
+  "description": "Apache Spark data processing agent. Manages Spark jobs, RDDs, DataFrames, and cluster operations.",
+  "version": "1.0.0",
+  "tags": [
+    "data",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Data Spark Agent",
+      "description": "Apache Spark data processing agent. Manages Spark jobs, RDDs, DataFrames, and cluster operations.",
+      "commands": [
+        "pyspark --master local[*]",
+        "spark-submit --class <MainClass> <app.jar>",
+        "spark-submit --master yarn --deploy-mode cluster <app.py>",
+        "spark-shell --master local[*]"
+      ],
+      "examples": [
+        "spark-submit --master yarn --deploy-mode cluster <app.py>",
+        "spark-shell --master local[*]",
+        "pyspark --master local[*]",
+        "spark-submit --class <MainClass> <app.jar>"
+      ],
+      "parameters": [
+        {
+          "name": "master",
+          "type": "string",
+          "description": "CLI flag --master observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "data-spark-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/data/agent",
+      "description": "Reference documentation for data-spark-agent"
+    }
+  ],
+  "instructions": "You are an Apache Spark expert. Call on you for Spark application development, optimization, and cluster management. Core workflow: 1) Prototype interactively with `pyspark --master local[*]` or `spark-shell --master local[*]`; 2) Submit packaged applications with `spark-submit --class <MainClass> <app.jar>`; 3) For production, run on the cluster with `spark-submit --master yarn --deploy-mode cluster <app.py>`. Key behaviors: start with local mode for fast iteration before cluster submission; inspect the Spark UI for stages, shuffles, and memory pressure; watch for OOM, skewed partitions, and excessive broadcast sizes; confirm YARN queue permissions and app jar paths; recommend partitioning and caching strategies. Output: submission results, job progress and completion status, performance findings, and tuning recommendations (executors, memory, partitioning).",
+  "examples": [
+    "spark-submit --master yarn --deploy-mode cluster <app.py>",
+    "spark-shell --master local[*]",
+    "pyspark --master local[*]",
+    "spark-submit --class <MainClass> <app.jar>"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "data-spark-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Spark expert. Help users with Spark application development, optimization, and cluster management."
+    },
+    "opencode": {
+      "plugin": "opencode-data-spark-agent"
+    },
+    "generic": {
+      "system_prompt": "You are data-spark-agent. Apache Spark data processing agent. Manages Spark jobs, RDDs, DataFrames, and cluster operations.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "data-spark-agent",
+  "type": "agent",
+  "skills": [
+    "spark",
+    "spark-streaming",
+    "etl-pipeline"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Data Spark Agent",
+        "name": "master",
+        "type": "string",
+        "description": "CLI flag --master observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/agent/data-spark-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/agent/data-spark-agent.yaml",
+    "checksum": "b0a32ba4a2b53ac1483ff534a97a8d637a9d67b81612b4bb9e857996632272e7"
+  }
+}

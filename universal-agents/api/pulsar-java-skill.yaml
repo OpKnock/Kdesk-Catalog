@@ -1,0 +1,96 @@
+name: pulsar-java
+display_name: Pulsar Java
+category: api
+subcategory: general
+description: 'Pulsar clients in Java: producer/consumer APIs, Maven setup, message builders and configuration.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- mvn
+capabilities:
+- name: pulsar-java-client
+  description: Add pulsar-client to Maven projects and build producers and consumers in Java.
+  commands:
+  - mvn dependency:tree -Dincludes=org.apache.pulsar
+  - mvn compile
+  - mvn package
+  - mvn exec:java -Dexec.mainClass=com.example.Producer
+  - curl -s https://repo1.maven.org/maven2/org/apache/pulsar/pulsar-client/maven-metadata.xml
+  examples:
+  - mvn exec:java -Dexec.mainClass=com.example.Consumer
+  - mvn compile
+  - mvn dependency:tree -Dincludes=org.apache.pulsar | grep pulsar-client
+  parameters:
+  - name: main_class
+    type: string
+    description: Java main class to run
+  - name: topic
+    type: string
+    description: Topic name
+  - name: service_url
+    type: string
+    description: Pulsar broker URL
+knowledge:
+- title: Pulsar Java client docs
+  type: documentation
+  source: https://pulsar.apache.org/docs/3.0.x/client-libraries-java/
+  description: Producer, consumer, reader and schema APIs
+- title: pulsar-client on Maven
+  type: documentation
+  source: https://central.sonatype.com/artifact/org.apache.pulsar/pulsar-client
+  description: Maven coordinates and versions
+instructions: "# Pulsar Java\n\nBuild Pulsar producers and consumers in Java with the official client\
+  \ library.\n\n## What this skill does\n\n- Configures the Maven dependency\n- Writes producer/consumer\
+  \ code\n- Uses typed schemas\n\n## When to use\n\n- JVM services in the Pulsar ecosystem\n- Replacing\
+  \ Kafka clients with Pulsar\n\n## Real commands\n\n```bash\nmvn compile\nmvn exec:java -Dexec.mainClass=com.example.Producer\n\
+  mvn dependency:tree -Dincludes=org.apache.pulsar\nmvn package\n```\n\n## Producer\n\n```java\nPulsarClient\
+  \ client = PulsarClient.builder().serviceUrl(\"pulsar://localhost:6650\").build();\nProducer<String>\
+  \ producer = client.newProducer(Schema.STRING)\n    .topic(\"my-topic\").create();\nproducer.send(\"\
+  hello\");\nclient.close();\n```\n\n## Consumer\n\n```java\nConsumer<String> consumer = client.newConsumer(Schema.STRING)\n\
+  \    .topic(\"my-topic\").subscriptionName(\"worker\").subscribe();\nMessage<String> msg = consumer.receive();\n\
+  System.out.println(msg.getValue());\nconsumer.acknowledge(msg);\n```\n\n## pom.xml\n\n```xml\n<dependency>\n\
+  \  <groupId>org.apache.pulsar</groupId>\n  <artifactId>pulsar-client</artifactId>\n  <version>3.2.0</version>\n\
+  </dependency>\n```\n\n## Best practices\n\n- Use schemas (Schema.STRING/JSON) instead of raw bytes\n\
+  - Always acknowledge received messages\n- Tune batching for producer throughput"
+examples:
+- input: Publish events from Java when an order completes
+  output: The agent adds the dependency, writes a typed producer, and verifies with a consumer.
+- input: Consume and acknowledge messages in Java
+  output: The agent shows the consumer loop with acknowledge and error handling.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: pulsar-java.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-pulsar-java
+  generic:
+    system_prompt: 'You work Pulsar Java hands-on. You do it through pulsar-java-client: Add pulsar-client
+      to Maven projects and build producers and consumers in Java. The commands are real, e.g. `mvn dependency:tree
+      -Dincludes=org.apache.pulsar`. You verify each step you report and stay honest about what you have
+      not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

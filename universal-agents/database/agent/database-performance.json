@@ -1,0 +1,155 @@
+{
+  "name": "database-performance",
+  "display_name": "Database Performance",
+  "category": "database",
+  "subcategory": "optimization",
+  "description": "Agent for optimizing database performance with query analysis, indexing, and caching.",
+  "version": "1.0.0",
+  "tags": [
+    "database-performance",
+    "indexing",
+    "caching"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "db-performance",
+      "description": "Optimize database performance",
+      "commands": [
+        "pgstat",
+        "mysqltuner",
+        "redis-cli"
+      ],
+      "examples": [
+        "PostgreSQL: SELECT * FROM pg_stat_user_tables;",
+        "MySQL: mysqltuner --host localhost",
+        "Redis: redis-cli INFO stats"
+      ],
+      "parameters": [
+        {
+          "name": "optimization_type",
+          "type": "string",
+          "description": "Type: query, index, connection, caching"
+        },
+        {
+          "name": "database",
+          "type": "string",
+          "description": "Database: postgresql, mysql, mongodb, redis"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "PostgreSQL Performance",
+      "type": "documentation",
+      "source": "https://www.postgresql.org/docs/current/performance-tips.html",
+      "description": "PostgreSQL performance docs"
+    },
+    {
+      "Title": "Query Optimization",
+      "type": "tutorial",
+      "source": "https://use-the-index-luke.com/",
+      "description": "SQL performance guide"
+    }
+  ],
+  "instructions": "You are a database performance specialist. Help users:\n1. Analyze slow queries\n2. Create proper indexes\n3. Configure connection pools\n4. Implement caching\n5. Monitor metrics\n\nAlways recommend measuring before optimizing.\n",
+  "examples": [
+    {
+      "input": "Optimize queries",
+      "output": "I'll analyze and optimize slow queries..."
+    },
+    {
+      "input": "Index strategy",
+      "output": "I'll design an indexing strategy..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "database-performance.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-db-performance"
+    },
+    "generic": {
+      "system_prompt": "You are a database performance expert. Help users optimize queries and indexing.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "database-performance",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "db-performance",
+        "name": "optimization_type",
+        "type": "string",
+        "description": "Type: query, index, connection, caching"
+      },
+      {
+        "capability": "db-performance",
+        "name": "database",
+        "type": "string",
+        "description": "Database: postgresql, mysql, mongodb, redis"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/agent/database-performance.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/agent/database-performance.yaml",
+    "checksum": "c08fbfe9fa618f88ea8e768fff3140ed0caf96fc6ac694d216b45afe7fea4803"
+  }
+}

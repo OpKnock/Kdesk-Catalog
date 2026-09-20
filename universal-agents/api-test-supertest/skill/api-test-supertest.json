@@ -1,0 +1,186 @@
+{
+  "name": "api-test-supertest",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "testing",
+  "description": "Tests Express APIs with supertest and jest: request assertions, route coverage, snapshot testing, and CI-friendly test configuration.",
+  "keywords": [
+    "api-testing"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-test-supertest.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-test-supertest"
+    },
+    "generic": {
+      "system_prompt": "You are the Api Test Supertest specialist. You do it through supertest: Test HTTP APIs in-process with supertest. The commands are real, e.g. `npm install -D supertest jest`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "supertest",
+      "description": "Test HTTP APIs in-process with supertest",
+      "commands": [
+        "npm install -D supertest jest",
+        "npx jest test/api.test.js --verbose",
+        "npx jest --coverage --collectCoverageFrom='routes/**/*.js'",
+        "npx jest -t 'creates a user'",
+        "npm test"
+      ],
+      "examples": [
+        "supertest(app).get('/api/users') mounts the app in-process",
+        "jest --coverage reports route coverage",
+        "-t filters to a single test name"
+      ],
+      "parameters": [
+        {
+          "name": "test-file",
+          "type": "string",
+          "description": "Test file path"
+        },
+        {
+          "name": "coverage",
+          "type": "boolean",
+          "description": "Collect coverage"
+        },
+        {
+          "name": "test-name",
+          "type": "string",
+          "description": "Filter by test name"
+        }
+      ]
+    },
+    {
+      "name": "assertion-patterns",
+      "description": "Assert status, body, and headers",
+      "commands": [
+        "node -e \"const request=require('supertest'); console.log(typeof request)\"",
+        "npx jest test/api.test.js --runInBand",
+        "npx jest --watch"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "jest",
+    "pytest",
+    "postman"
+  ],
+  "tools": [
+    "jest",
+    "pytest",
+    "postman",
+    "newman",
+    "supertest"
+  ],
+  "examples": [
+    {
+      "input": "Test the users routes",
+      "output": "Writes supertest cases and runs jest with coverage"
+    },
+    {
+      "input": "Add a regression test for a bug fix",
+      "output": "Adds a focused test and runs it with -t"
+    }
+  ],
+  "instructions": "# API Test v3 - Supertest/Jest\n\nIn-process API testing.\n\n## What This Skill Does\n- Tests routes without binding a port\n- Asserts status, bodies, and headers\n- Reports coverage per route\n\n## When to Use\n- Node/Express API suites\n- Fast unit-style endpoint tests\n- Route regression coverage\n\n## Real Commands\n\n```bash\nnpm install -D supertest jest\nnpx jest test/api.test.js --verbose\nnpx jest --coverage --collectCoverageFrom='routes/**/*.js'\n```\n\n## Test Example\n\n```js\nconst request = require('supertest');\nconst app = require('../app');\n\ntest('creates a user', async () => {\n  const res = await request(app).post('/api/users').send({ name: 'alice' });\n  expect(res.status).toBe(201);\n  expect(res.body.id).toBeDefined();\n});\n```\n\n## Testing\n- Cover success and error paths per route\n- Use coverage thresholds in CI\n- Keep tests independent with in-memory DBs\n\n\n## Best Practices\n- Export the app separately from the server\n- Test through the HTTP interface\n- Group tests by route resource",
+  "display_name": "Api Test Supertest",
+  "knowledge": [
+    {
+      "title": "Supertest Docs",
+      "type": "documentation",
+      "source": "https://github.com/ladjs/supertest",
+      "description": "HTTP assertion library"
+    },
+    {
+      "title": "Jest Docs",
+      "type": "documentation",
+      "source": "https://jestjs.io/docs/getting-started",
+      "description": "Jest testing framework"
+    }
+  ],
+  "id": "api-test-supertest",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "supertest",
+        "name": "test-file",
+        "type": "string",
+        "description": "Test file path"
+      },
+      {
+        "capability": "supertest",
+        "name": "coverage",
+        "type": "boolean",
+        "description": "Collect coverage"
+      },
+      {
+        "capability": "supertest",
+        "name": "test-name",
+        "type": "string",
+        "description": "Filter by test name"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "jest",
+    "pytest",
+    "postman"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-test-supertest/skill/api-test-supertest.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-test-supertest/skill/api-test-supertest.yaml",
+    "checksum": "b3b9c3bbdd76aa0163a1fce38e267706d7a9e71f5ea455baaab2e45bcfa38436"
+  }
+}

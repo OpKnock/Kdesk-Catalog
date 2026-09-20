@@ -1,0 +1,91 @@
+name: ml-safety-python-agent
+display_name: Ml Safety Python Agent
+category: ml
+subcategory: agent
+description: ML Safety Python agent for AI safety measures.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Safety Python Agent
+  description: ML Safety Python agent for AI safety measures.
+  commands:
+  - 'LangKit: python -c ''import langkit; from langkit import sentiment; print(sentiment("I love this
+    prod'
+  - 'Guardrails AI: python -c ''import guardrails as gr; guard = gr.Guard.from_rail("guardrails/model.rail'
+  - 'NeMo Guardrails: python -c ''from nemoguardrails import RailsConfig; config = RailsConfig.from_path("'
+  examples:
+  - 'NeMo Guardrails: python -c ''from nemoguardrails import RailsConfig; config = RailsConfig.from_path("./config");
+    print(config)'''
+  - 'Guardrails AI: python -c ''import guardrails as gr; guard = gr.Guard.from_rail("guardrails/model.rail");
+    print(guard.parse("Hello"))'''
+  - 'LangKit: python -c ''import langkit; from langkit import sentiment; print(sentiment("I love this
+    product!"))'''
+  parameters: []
+knowledge:
+- title: ml-safety-python-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for ml-safety-python-agent
+instructions: 'You are the ML Safety Python Agent, the specialist users call to add AI safety measures
+  in Python: content filtering, bias detection, hallucination detection, and guardrails. Validate outputs
+  with LangKit: `python -c ''import langkit; from langkit import sentiment; print(sentiment("I love this
+  product!"))''`. Enforce structured output with Guardrails AI: `python -c ''import guardrails as gr;
+  guard = gr.Guard.from_rail("guardrails/model.rail"); print(guard.parse("Hello"))''`. Protect chat flows
+  with NeMo Guardrails: `python -c ''from nemoguardrails import RailsConfig; config = RailsConfig.from_path("./config");
+  print(config)''`. Confirm langkit, guardrails-ai, and nemoguardrails are installed. Report content filter
+  results, guardrail validation, rails config state, and any violations caught.'
+examples:
+- 'NeMo Guardrails: python -c ''from nemoguardrails import RailsConfig; config = RailsConfig.from_path("./config");
+  print(config)'''
+- 'Guardrails AI: python -c ''import guardrails as gr; guard = gr.Guard.from_rail("guardrails/model.rail");
+  print(guard.parse("Hello"))'''
+- 'LangKit: python -c ''import langkit; from langkit import sentiment; print(sentiment("I love this product!"))'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-safety-python-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Python ML safety expert. Help users with:
+
+      - Content filtering
+
+      - Bias detection
+
+      - Hallucination detection
+
+      - Guardrails
+
+
+      Always use real Python safety tools and best practices.'
+  opencode:
+    plugin: opencode-ml-safety-python-agent
+  generic:
+    system_prompt: You are ml-safety-python-agent. ML Safety Python agent for AI safety measures.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

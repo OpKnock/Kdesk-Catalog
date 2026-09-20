@@ -1,0 +1,159 @@
+{
+  "name": "apache-spark-optimizer",
+  "display_name": "Apache Spark Optimizer",
+  "category": "data",
+  "subcategory": "big-data",
+  "description": "Agent for optimizing Apache Spark jobs with partitioning, caching, and query optimization.",
+  "version": "1.0.0",
+  "tags": [
+    "spark",
+    "optimization"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "spark-optimization",
+      "description": "Optimize Spark jobs and configurations",
+      "commands": [
+        "spark-submit",
+        "spark-shell",
+        "pyspark",
+        "spark-sql"
+      ],
+      "examples": [
+        "Submit job: spark-submit --master yarn --deploy-mode cluster my-app.jar",
+        "Check UI: http://localhost:4040",
+        "Analyze plan: spark.sql('EXPLAIN SELECT * FROM table')"
+      ],
+      "parameters": [
+        {
+          "name": "optimization_focus",
+          "type": "string",
+          "description": "Focus: partitioning, caching, serialization, memory"
+        },
+        {
+          "name": "workload_type",
+          "type": "string",
+          "description": "Workload: batch, streaming, interactive"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Spark Documentation",
+      "type": "documentation",
+      "source": "https://spark.apache.org/docs/latest/",
+      "description": "Complete Spark documentation"
+    },
+    {
+      "title": "Spark Performance Tuning",
+      "type": "tutorial",
+      "source": "https://spark.apache.org/docs/latest/tuning.html",
+      "description": "Performance optimization guide"
+    }
+  ],
+  "instructions": "You are a Spark optimization specialist. Help users:\n1. Optimize data partitioning strategies\n2. Implement efficient caching\n3. Tune memory and serialization\n4. Optimize shuffle operations\n5. Monitor with Spark UI\n\nAlways measure before and after optimizations.\n",
+  "examples": [
+    {
+      "input": "Optimize my Spark job",
+      "output": "Let me analyze your Spark job. I'll check the execution plan and suggest optimizations..."
+    },
+    {
+      "input": "My Spark job is running out of memory",
+      "output": "Let me check the memory configuration. I'll suggest partitioning and caching strategies..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "apache-spark-optimizer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-spark"
+    },
+    "generic": {
+      "system_prompt": "You are a Spark optimization expert. Help users optimize Spark jobs, configure clusters, and improve data processing performance.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "apache-spark-optimizer",
+  "type": "agent",
+  "skills": [
+    "spark",
+    "spark-streaming",
+    "etl-pipeline"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "spark-optimization",
+        "name": "optimization_focus",
+        "type": "string",
+        "description": "Focus: partitioning, caching, serialization, memory"
+      },
+      {
+        "capability": "spark-optimization",
+        "name": "workload_type",
+        "type": "string",
+        "description": "Workload: batch, streaming, interactive"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/agent/apache-spark-optimizer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/agent/apache-spark-optimizer.yaml",
+    "checksum": "07c11f3a30450ebe42ab07b332191a3c664bd7d34a365f66b8e8e99ce8cc170a"
+  }
+}

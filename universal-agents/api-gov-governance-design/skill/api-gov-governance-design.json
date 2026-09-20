@@ -1,0 +1,203 @@
+{
+  "name": "api-gov-governance-design",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Designs API governance programs: style guide structure, ruleset architecture, and enforcement workflows before rollout.",
+  "keywords": [
+    "api-governance",
+    "style-guide"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-gov-governance-design.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-gov-governance-design"
+    },
+    "generic": {
+      "system_prompt": "You take the Api Gov Governance Design seat. You do it through governance-design: Structure style guides and rulesets with severity tiers and scopes. The commands are real, e.g. `mkdir -p rules/guides rules/functions tests/fixtures`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "governance-design",
+      "description": "Structure style guides and rulesets with severity tiers and scopes",
+      "commands": [
+        "mkdir -p rules/guides rules/functions tests/fixtures",
+        "node -e \"const fs=require('fs');fs.writeFileSync('rules/guides/naming.yaml','# naming rules\\n')\"",
+        "node -e \"const fs=require('fs');fs.writeFileSync('rules/guides/errors.yaml','# error rules\\n')\"",
+        "node -e \"console.log('tiers: recommended > org > strict')\"",
+        "python -c \"open('tests/fixtures/bad.yaml','w').write('paths:\\n  /BadPath:\\n')\""
+      ],
+      "examples": [
+        "mkdir -p rules/guides rules/functions tests/fixtures",
+        "node -e \"const fs=require('fs');fs.writeFileSync('rules/guides/naming.yaml','# naming rules\\n')\"",
+        "python -c \"open('tests/fixtures/bad.yaml','w').write('paths:\\n  /BadPath:\\n')\""
+      ],
+      "parameters": [
+        {
+          "name": "tier",
+          "type": "string",
+          "description": "Rule severity tier"
+        },
+        {
+          "name": "domain",
+          "type": "string",
+          "description": "Rule domain: naming, errors, pagination"
+        }
+      ]
+    },
+    {
+      "name": "workflow-design",
+      "description": "Design review workflows: who reviews, what CI checks, exception process",
+      "commands": [
+        "node -e \"console.log('flow: lint -> diff -> review -> approve')\"",
+        "python -c \"print('gate: fail on error severity')\"",
+        "node -e \"const fs=require('fs');fs.writeFileSync('docs/EXCEPTIONS.md','# Exceptions\\n\\n1. Submit waiver PR\\n2. Time-box 30 days\\n')\"",
+        "python -c \"print('review cadence: weekly')\"",
+        "git add docs/EXCEPTIONS.md && git commit -m 'document exception process'"
+      ],
+      "examples": [
+        "node -e \"const fs=require('fs');fs.writeFileSync('docs/EXCEPTIONS.md','# Exceptions\\n\\n1. Submit waiver PR\\n2. Time-box 30 days\\n')\"",
+        "node -e \"console.log('flow: lint -> diff -> review -> approve')\"",
+        "git add docs/EXCEPTIONS.md && git commit -m 'document exception process'"
+      ],
+      "parameters": [
+        {
+          "name": "waiverDays",
+          "type": "string",
+          "description": "Waiver duration"
+        },
+        {
+          "name": "gate",
+          "type": "string",
+          "description": "CI gate severity"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "spectral",
+    "openapi"
+  ],
+  "tools": [
+    "spectral",
+    "openapi",
+    "node.js",
+    "python",
+    "stoplight-studio"
+  ],
+  "examples": [
+    {
+      "input": "Design a governance program for the platform team",
+      "output": "Produces tiered ruleset architecture, per-domain rule docs, and an exception workflow"
+    },
+    {
+      "input": "Design review workflows for API changes",
+      "output": "Documents the lint-diff-review-approve flow with CI gate severities and waiver process"
+    }
+  ],
+  "instructions": "# API Gov (Design)\n\nDesigns the governance program before enforcing it: rules, tiers, and workflows.\n\n## When to Use\n- Planning governance for many teams\n- Avoiding over-strict rule sets\n- Documenting review and waiver flows\n\n## Real Commands\n\n```bash\n# Layout\nmkdir -p rules/guides rules/functions tests/fixtures\n\n# Draft rule docs\nnode -e \"const fs=require('fs');fs.writeFileSync('rules/guides/naming.yaml','# naming rules\\n')\"\n\n# Fixtures for testing rules\npython -c \"open('tests/fixtures/bad.yaml','w').write('paths:\\n  /BadPath:\\n')\"\n\n# Exception process\nnode -e \"const fs=require('fs');fs.writeFileSync('docs/EXCEPTIONS.md','# Exceptions\\n\\n1. Submit waiver PR\\n2. Time-box 30 days\\n')\"\n```\n\n## Design Decisions\n- Three tiers: recommended, org, strict\n- One rule doc per domain\n- Fixtures per rule for automated tests\n\n## Workflow Design\nlint -> diff -> human review -> approve; waivers are PRs with expiry.\n\n## Testing\nValidate every new rule against fixtures before rollout.\n\n## Best Practices\n- Enforce incrementally: warn first, error later",
+  "display_name": "Api Gov Governance Design",
+  "knowledge": [
+    {
+      "title": "Spectral Ruleset Design",
+      "type": "documentation",
+      "source": "https://docs.stoplight.io/docs/spectral/reference/rulesets",
+      "description": "Ruleset composition patterns"
+    },
+    {
+      "title": "Governance Maturity",
+      "type": "documentation",
+      "source": "https://www.getambassador.io/resources/api-governance",
+      "description": "API governance program guidance"
+    }
+  ],
+  "id": "api-gov-governance-design",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "governance-design",
+        "name": "tier",
+        "type": "string",
+        "description": "Rule severity tier"
+      },
+      {
+        "capability": "governance-design",
+        "name": "domain",
+        "type": "string",
+        "description": "Rule domain: naming, errors, pagination"
+      },
+      {
+        "capability": "workflow-design",
+        "name": "waiverDays",
+        "type": "string",
+        "description": "Waiver duration"
+      },
+      {
+        "capability": "workflow-design",
+        "name": "gate",
+        "type": "string",
+        "description": "CI gate severity"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "spectral",
+    "openapi"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-gov-governance-design/skill/api-gov-governance-design.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-gov-governance-design/skill/api-gov-governance-design.yaml",
+    "checksum": "8cc1cb34d3081dee0709a5ab5416a5294a28ef42a15cbc6ac9a06201af48624b"
+  }
+}

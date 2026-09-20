@@ -1,0 +1,101 @@
+name: redis-streams-go
+display_name: Redis Streams Go
+category: api
+subcategory: general
+description: 'Hand-crafted Go skill for Redis Streams with go-redis: XAdd producers, XRead/XReadGroup
+  consumers, XAck, and XPending introspection.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- redis-cli
+capabilities:
+- name: go-redis-streams
+  description: Produce and consume Redis Streams from Go with go-redis
+  commands:
+  - go get github.com/redis/go-redis/v9
+  - redis-cli XADD orders * amount 99.50
+  - redis-cli XLEN orders
+  - redis-cli XGROUP CREATE orders workers $ MKSTREAM
+  - redis-cli XINFO GROUPS orders
+  examples:
+  - redis-cli XGROUP CREATE orders workers $ MKSTREAM
+  - redis-cli XINFO GROUPS orders
+  - go run main.go
+  parameters:
+  - name: stream
+    type: string
+    description: Stream key name
+  - name: group
+    type: string
+    description: Consumer group name for XGroupCreate
+  - name: count
+    type: integer
+    description: Max entries per XRead/XReadGroup call
+knowledge:
+- title: go-redis streams API
+  type: documentation
+  source: https://pkg.go.dev/github.com/redis/go-redis/v9#Client.XAdd
+  description: XAdd, XRead, XReadGroup, XAck, XPending signatures
+- title: Redis Streams docs
+  type: documentation
+  source: https://redis.io/docs/latest/develop/data-types/streams/
+  description: Stream model and consumer group semantics
+instructions: "# Redis Streams in Go\n\nHand-crafted skill for Redis Streams with the go-redis client.\n\
+  \n## What this skill does\n\n- Adds entries to a stream with rdb.XAdd and lets Redis assign IDs\n- Reads\
+  \ with XRead for raw tailing and XReadGroup for consumer groups\n- Acknowledges processed messages and\
+  \ inspects pending state\n\n## When to use\n\n- Event sourcing with Redis Streams as the log\n- Replacing\
+  \ polling jobs with blocking stream readers\n- Implementing at-least-once processing in Go services\n\
+  \n## Real commands\n\n```bash\ngo get github.com/redis/go-redis/v9\n\n# Seed entries from the CLI\n\
+  redis-cli XADD orders * amount 99.50\nredis-cli XLEN orders\n\n# Create a group (MKSTREAM creates the\
+  \ stream if missing)\nredis-cli XGROUP CREATE orders workers $ MKSTREAM\nredis-cli XINFO GROUPS orders\n\
+  \n# Run the Go producer/consumer\ngo run main.go\n```\n\n## Producer snippet\n\n```go\nid, err := rdb.XAdd(ctx,\
+  \ &redis.XAddArgs{\n    Stream: \"orders\",\n    Values: map[string]interface{}{\"amount\": 99.50, \"\
+  sku\": \"A1\"},\n}).Result()\n```\n\n## Consumer snippet\n\n```go\nmsgs, err := rdb.XReadGroup(ctx,\
+  \ &redis.XReadGroupArgs{\n    Group:    \"workers\",\n    Consumer: \"c1\",\n    Streams:  []string{\"\
+  orders\", \">\"},\n    Count:    5,\n    Block:    0,\n}).Result()\nfor _, m := range msgs {\n    for\
+  \ _, e := range m.Messages {\n        rdb.XAck(ctx, \"orders\", \"workers\", e.ID)\n    }\n}\n```\n\n\
+  ## Testing\n\n```bash\nredis-cli XINFO STREAM orders\nredis-cli XPENDING orders workers\n```\n\n## Best\
+  \ practices\n\n- Read with \">\" in the Streams arg for new messages only\n- Always XAck after successful\
+  \ handling to keep the PEL small\n- Set a Block timeout so readers idle instead of busy-looping\n"
+examples:
+- input: Create a stream consumer group in Go
+  output: 'Call rdb.XGroupCreate(ctx, "orders", "workers", "$") with MkStream: true, then read with rdb.XReadGroup
+    using Streams []string{"orders", ">"}.'
+- input: Add an event to the stream from the CLI
+  output: redis-cli XADD orders * amount 99.50 prints the auto-generated ID like 1699999999999-0.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: redis-streams-go.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-redis-streams-go
+  generic:
+    system_prompt: 'This is your domain: Redis Streams Go. You do it through go-redis-streams: Produce
+      and consume Redis Streams from Go with go-redis. The commands are real, e.g. `go get github.com/redis/go-redis/v9`.
+      You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

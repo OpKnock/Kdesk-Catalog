@@ -1,0 +1,120 @@
+{
+  "name": "spring",
+  "display_name": "spring",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Spring Boot Java development. Real mvn/gradle CLI.",
+  "version": "1.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "./gradlew",
+    "mvn"
+  ],
+  "capabilities": [
+    {
+      "name": "spring",
+      "description": "Spring Boot Java development. Real mvn/gradle CLI.",
+      "commands": [
+        "mvn spring-boot:run",
+        "./gradlew bootRun",
+        "mvn clean package",
+        "./gradlew build",
+        "mvn test",
+        "./gradlew test",
+        "mvn test -Dtest=UserServiceTest",
+        "mvn package -DskipTests"
+      ],
+      "examples": [
+        "mvn spring-boot:run",
+        "./gradlew bootRun",
+        "mvn clean package"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "spring Skill Documentation",
+      "type": "documentation",
+      "source": "skills/backend/spring.md",
+      "description": "Complete guide for spring"
+    }
+  ],
+  "instructions": "# Spring Boot\n\nSpring Boot development using real CLI.\n\n## When to Use\n\n- Enterprise Java apps\n- Microservices\n- REST APIs\n\n## Commands\n\n```bash\n# Create project (Maven)\nmvn spring-boot:run\n\n# Create project (Gradle)\n./gradlew bootRun\n\n# Build\nmvn clean package\n./gradlew build\n\n# Run tests\nmvn test\n./gradlew test\n\n# Run specific test\nmvn test -Dtest=UserServiceTest\n\n# Package\nmvn package -DskipTests\n```\n\n## Application\n\n```java\n// src/main/java/com/example/DemoApplication.java\n@SpringBootApplication\npublic class DemoApplication {\n    public static void main(String[] args) {\n        SpringApplication.run(DemoApplication.class, args);\n    }\n}\n```\n\n## Controller\n\n```java\n// src/main/java/com/example/UserController.java\n@RestController\n@RequestMapping(\"/users\")\npublic class UserController {\n    \n    @Autowired\n    private UserService userService;\n    \n    @GetMapping\n    public List<User> getAll() {\n        return userService.findAll();\n    }\n    \n    @GetMapping(\"/{id}\")\n    public User getById(@PathVariable Long id) {\n        return userService.findById(id);\n    }\n    \n    @PostMapping\n    public User create(@RequestBody User user) {\n        return userService.save(user);\n    }\n    \n    @PutMapping(\"/{id}\")\n    public User update(@PathVariable Long id, @RequestBody User user) {\n        return userService.update(id, user);\n    }\n    \n    @DeleteMapping(\"/{id}\")\n    public void delete(@PathVariable Long id) {\n        userService.delete(id);\n    }\n}\n```\n\n## Entity\n\n```java\n// src/main/java/com/example/User.java\n@Entity\n@Table(name = \"users\")\npublic class User {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    \n    @Column(nullable = false)\n    private String name;\n    \n    @Column(nullable = false, unique = true)\n    private String email;\n    \n    // getters and setters\n}\n```\n\n## Repository\n\n```java\n// src/main/java/com/example/UserRepository.java\n@Repository\npublic interface UserRepository extends JpaRepository<User, Long> {\n    Optional<User> findByEmail(String email);\n    List<User> findByNameContaining(String name);\n}\n```\n\n## Service\n\n```java\n// src/main/java/com/example/UserService.java\n@Service\n@Transactional\npublic class UserService {\n    \n    @Autowired\n    private UserRepository userRepository;\n    \n    public List<User> findAll() {\n        return userRepository.findAll();\n    }\n    \n    public User findById(Long id) {\n        return userRepository.findById(id)\n            .orElseThrow(() -> new ResourceNotFoundException(\"User not found\"));\n    }\n    \n    public User save(User user) {\n        return userRepository.save(user);\n    }\n}\n```\n\n## application.properties\n\n```properties\nspring.datasource.url=jdbc:mysql://localhost:3306/mydb\nspring.datasource.username=root\nspring.datasource.password=password\nspring.jpa.hibernate.ddl-auto=update\nspring.jpa.show-sql=true\n```",
+  "examples": [],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "spring.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-spring"
+    },
+    "generic": {
+      "system_prompt": "You work spring hands-on. You do it through spring: Spring Boot Java development. Real mvn/gradle CLI. The commands are real, e.g. `mvn spring-boot:run`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "spring",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [
+    "./gradlew",
+    "mvn"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/spring-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/spring-skill.yaml",
+    "checksum": "934e79a5a1d83008bc359ebcd93f8f3298118d8b4caeb779971a64cdbc0589bc"
+  }
+}

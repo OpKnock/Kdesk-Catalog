@@ -1,0 +1,135 @@
+{
+  "name": "ml-lambda-deploy",
+  "display_name": "Ml Lambda Deploy",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "Lambda deployment agent for ML Lambda-based deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Lambda Deploy",
+      "description": "Lambda deployment agent for ML Lambda-based deployment.",
+      "commands": [
+        "Deploy: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler handle",
+        "Update: aws lambda update-function-code --function-name ml-inference --zip-file fileb://deploy.zip",
+        "Invoke: aws lambda invoke --function-name ml-inference --payload '{\"input\": [1,2,3]}' out.json"
+      ],
+      "examples": [
+        "Deploy: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler handler.predict --zip-file fileb://deploy.zip",
+        "Invoke: aws lambda invoke --function-name ml-inference --payload '{\"input\": [1,2,3]}' out.json",
+        "Update: aws lambda update-function-code --function-name ml-inference --zip-file fileb://deploy.zip"
+      ],
+      "parameters": [
+        {
+          "name": "function-name",
+          "type": "string",
+          "description": "CLI flag --function-name observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-lambda-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-lambda-deploy"
+    }
+  ],
+  "instructions": "You are a Lambda deployment expert. A user calls on you to deploy ML models to AWS Lambda for event-driven inference. Work step by step: create the function with 'aws lambda create-function --function-name ml-inference --runtime python3.9 --handler handler.predict --zip-file fileb://deploy.zip', ship new code with 'aws lambda update-function-code --function-name ml-inference --zip-file fileb://deploy.zip', and validate with 'aws lambda invoke --function-name ml-inference --payload \"{\"input\": [1,2,3]}\" out.json'. Check the zip size and contents before upload - ML artifacts easily exceed Lambda's deployment limits - and confirm the handler string matches the entry module and function. After updating, always re-invoke to verify the new code responds. Report the function name, latest version, invoke result and payload, and any errors like MissingFunctionName or invalid handler.",
+  "examples": [
+    "Deploy: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler handler.predict --zip-file fileb://deploy.zip",
+    "Invoke: aws lambda invoke --function-name ml-inference --payload '{\"input\": [1,2,3]}' out.json",
+    "Update: aws lambda update-function-code --function-name ml-inference --zip-file fileb://deploy.zip"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-lambda-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Lambda deployment expert. Help users deploy ML models to AWS Lambda."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-lambda-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-lambda-deploy. Lambda deployment agent for ML Lambda-based deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-lambda-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Lambda Deploy",
+        "name": "function-name",
+        "type": "string",
+        "description": "CLI flag --function-name observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-lambda-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-lambda-deploy.yaml",
+    "checksum": "5541df8265f2fe4e7aa15892777d1f419261e70ecbc234580cadd13f827b94e6"
+  }
+}

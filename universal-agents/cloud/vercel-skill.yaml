@@ -1,0 +1,113 @@
+name: vercel
+display_name: Vercel
+category: cloud
+subcategory: general
+description: 'Deploys frontend and serverless functions with Vercel: CLI deploys, project linking, environment
+  variables, and previews.'
+version: 2.0.0
+tags:
+- cloud
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npm
+- vercel
+capabilities:
+- commands:
+  - npm install -g vercel
+  - vercel login
+  - vercel
+  - vercel --prod
+  - vercel dev
+  description: Build, deploy, and manage Vercel projects.
+  name: vercel-cli
+  examples:
+  - vercel --prod --yes
+  - vercel deploy --prebuilt
+  - vercel --prod --name myapp
+  parameters:
+  - description: Deploy to production
+    name: prod
+    type: boolean
+  - description: Deploy prebuilt output
+    name: prebuilt
+    type: boolean
+- commands:
+  - vercel env add API_KEY production
+  - vercel env ls
+  - vercel env rm API_KEY production
+  - vercel link
+  - vercel ls
+  description: Manage environment variables and project settings.
+  name: vercel-config
+  examples:
+  - vercel env add DATABASE_URL preview
+  - vercel pull --environment=production
+  - vercel project ls
+  parameters:
+  - description: Env var name
+    name: name
+    type: string
+  - description: production, preview, development
+    name: env
+    type: string
+knowledge:
+- title: Vercel Docs
+  description: Deployments, env vars, and framework support
+  source: https://vercel.com/docs
+  type: documentation
+- title: Vercel CLI Reference
+  description: vercel command reference
+  source: https://vercel.com/docs/cli
+  type: documentation
+instructions: "# Vercel\n\nDeploy frontend apps and serverless functions.\n\n## When to Use\n\n- Next.js,\
+  \ Vite, and static sites\n- Preview deployments for every PR\n- Serverless functions and edge middleware\n\
+  - Global CDN with automatic caching\n\n## Commands\n\n```bash\n# Setup\nnpm install -g vercel\nvercel\
+  \ login\nvercel link\n\n# Deploy\nvercel            # preview\nvercel --prod     # production\nvercel\
+  \ --prebuilt # use local build output\n\n# Local dev\nvercel dev\n\n# Env vars\nvercel env add API_KEY\
+  \ production\nvercel env add DATABASE_URL preview\nvercel env ls\nvercel env rm API_KEY production\n\
+  \n# Inspect\nvercel ls\nvercel project ls\n```\n\n## vercel.json Example\n\n```json\n{\n  \"builds\"\
+  : [{ \"src\": \"api/**/*.js\", \"use\": \"@vercel/node\" }],\n  \"rewrites\": [{ \"source\": \"/api/(.*)\"\
+  , \"destination\": \"/api/$1\" }]\n}\n```\n\n## Best Practices\n\n- Let PRs create preview deployments\
+  \ automatically\n- Scope env vars to production/preview/development\n- Use vercel pull in CI to sync\
+  \ env before builds\n- Verify redirects and rewrites locally with vercel dev\n- Monitor deployment status\
+  \ with vercel ls\n- Pin the CLI version in CI scripts"
+examples:
+- input: Deploy my Next.js app to production
+  output: Agent links the project, runs vercel --prod, and checks the deployment URL and build logs.
+- input: Set different secrets for preview vs production
+  output: Agent adds env vars per environment with vercel env add NAME production/preview and pulls them
+    in CI.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: vercel.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-vercel
+  generic:
+    system_prompt: 'You take the Vercel seat. You do it through vercel-cli: Build, deploy, and manage
+      Vercel projects. The commands are real, e.g. `npm install -g vercel`. You work hands-on and only
+      report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

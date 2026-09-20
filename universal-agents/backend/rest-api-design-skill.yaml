@@ -1,0 +1,191 @@
+name: rest-api-design
+display_name: Rest Api Design
+category: backend
+subcategory: general
+description: 'Designs consistent REST APIs: resource modeling, status codes, versioning, pagination, filtering,
+  and OpenAPI documentation.'
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+- python
+capabilities:
+- commands:
+  - npx @redocly/cli lint openapi.yaml
+  - npx @redocly/cli bundle openapi.yaml -o bundled.yaml
+  - npx swagger-cli validate openapi.yaml
+  - python -m json.tool openapi.json > /dev/null
+  description: Validate and serve OpenAPI specifications.
+  name: rest-openapi
+  examples:
+  - npx @redocly/cli lint openapi.yaml --extends recommended
+  - npx @redocly/cli preview-docs openapi.yaml
+  - npx swagger-cli validate openapi.yaml
+  parameters:
+  - description: OpenAPI file path
+    name: spec
+    type: string
+  - name: format
+    type: string
+    description: 'Spec format: yaml or json'
+- commands:
+  - 'curl -s -X POST http://localhost:8000/api/users -H "Content-Type: application/json" -d "{\"name\":\"ann\"}"'
+  - curl -s http://localhost:8000/api/users?page=2&limit=20
+  - curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/api/users/999
+  - curl -sI http://localhost:8000/api/users
+  description: Exercise endpoints and verify API behavior.
+  name: rest-testing
+  examples:
+  - curl -s -X DELETE -o /dev/null -w "%{http_code}" http://localhost:8000/api/users/1
+  - curl -s "http://localhost:8000/api/users?sort=-created_at&status=active"
+  - curl -s http://localhost:8000/api/users/1 | python -m json.tool
+  parameters:
+  - description: API endpoint URL
+    name: endpoint
+    type: string
+  - description: HTTP method
+    name: method
+    type: string
+knowledge:
+- title: REST API Tutorial
+  description: Resource naming, status codes, and design
+  source: https://restfulapi.net
+  type: documentation
+- title: OpenAPI Spec
+  description: OpenAPI 3.1 specification
+  source: https://spec.openapis.org/oas/v3.1.0
+  type: documentation
+- title: Redocly CLI
+  description: Lint and bundle OpenAPI
+  source: https://redocly.com/docs/cli/
+  type: documentation
+instructions: '# REST API Design
+
+
+  Design consistent, documented REST APIs.
+
+
+  ## When to Use
+
+
+  - Any HTTP service that will outlive its first version
+
+  - Multi-consumer APIs where the contract matters
+
+  - Public or partner-facing integrations
+
+
+  ## Resource Modeling
+
+
+  - Nouns for resources: /users, /orders/{id}
+
+  - Actions as sub-resources: /orders/{id}/cancel (POST)
+
+  - Collections support ?filter, ?sort, ?page, ?limit
+
+  - Versions in the path: /v1/users
+
+
+  ## Status Codes
+
+
+  - 200 OK, 201 Created, 204 No Content
+
+  - 400 bad request, 401 unauthenticated, 403 forbidden
+
+  - 404 missing, 409 conflict, 422 validation, 429 rate limited
+
+  - 5xx only for server faults
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Lint your OpenAPI spec
+
+  npx @redocly/cli lint openapi.yaml
+
+  npx swagger-cli validate openapi.yaml
+
+
+  # Bundle for distribution
+
+  npx @redocly/cli bundle openapi.yaml -o bundled.yaml
+
+
+  # Preview docs
+
+  npx @redocly/cli preview-docs openapi.yaml
+
+
+  # Exercise endpoints
+
+  curl -s -X POST http://localhost:8000/api/users -H "Content-Type: application/json" -d ''{"name":"ann"}''
+
+  curl -s "http://localhost:8000/api/users?page=2&limit=20"
+
+  curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/api/users/999
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use consistent plural nouns and kebab-case paths
+
+  - Return error envelopes with machine-readable codes
+
+  - Paginate with page/limit and return total where cheap
+
+  - Version the API before breaking changes ship
+
+  - Document everything in OpenAPI and lint it in CI
+
+  - Use 204 for deletes, 201 with Location for creates'
+examples:
+- input: Review my API design for consistency
+  output: Agent reviews resource naming, status codes, pagination params, and produces a linted OpenAPI
+    spec with Redocly.
+- input: How do I paginate large collections?
+  output: Agent implements page/limit with total, shows cursor alternatives for deep pages, and adds the
+    params to OpenAPI.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: rest-api-design.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-rest-api-design
+  generic:
+    system_prompt: 'You own Rest Api Design end to end. You do it through rest-openapi: Validate and serve
+      OpenAPI specifications. The commands are real, e.g. `npx @redocly/cli lint openapi.yaml`. You answer
+      with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

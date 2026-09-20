@@ -1,0 +1,188 @@
+{
+  "name": "api-sec-specialist",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "security",
+  "description": "Security-tests APIs with OWASP ZAP: automated API scans from OpenAPI, baseline scans, active scan rules, and HTML/JSON vulnerability reports.",
+  "keywords": [
+    "api-security",
+    "authentication",
+    "vulnerability",
+    "owasp"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-sec-specialist.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-sec-specialist"
+    },
+    "generic": {
+      "system_prompt": "You work api-sec-specialist hands-on. You do it through zap-api-scan: Run ZAP automated scans against APIs. The commands are real, e.g. `docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t...`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "zap-api-scan",
+      "description": "Run ZAP automated scans against APIs",
+      "commands": [
+        "docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t https://api.example.com/v3/api-docs -f openapi -O -r zap_api_report.html",
+        "docker run -t ghcr.io/zaproxy/zaproxy zap-baseline.py -t https://api.example.com -r zap_baseline.html",
+        "docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.yaml -f openapi -j -l WARN -r report.html",
+        "docker run -t ghcr.io/zaproxy/zaproxy zap-cli.py --help"
+      ],
+      "examples": [
+        "zap-api-scan.py -f openapi scans from the OpenAPI spec",
+        "zap-baseline.py runs a passive baseline scan",
+        "-l WARN sets the minimum alert level reported"
+      ],
+      "parameters": [
+        {
+          "name": "target",
+          "type": "string",
+          "description": "API URL or spec file"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "openapi, soap, graphql"
+        },
+        {
+          "name": "level",
+          "type": "string",
+          "description": "Alert threshold: WARN, FAIL, PASS"
+        }
+      ]
+    },
+    {
+      "name": "zap-automation",
+      "description": "Automate ZAP scans in CI pipelines",
+      "commands": [
+        "curl -s https://api.example.com/v3/api-docs -o openapi.json",
+        "docker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.json -f openapi -J -j -l FAIL -r report.html",
+        "curl -s https://api.example.com/health -o /dev/null -w '%{http_code}\\n'"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "owasp-zap"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "owasp-zap",
+    "helmet",
+    "cors"
+  ],
+  "examples": [
+    {
+      "input": "Scan the API before release",
+      "output": "Runs zap-api-scan against the OpenAPI spec and fails CI on critical alerts"
+    },
+    {
+      "input": "Weekly security baseline",
+      "output": "Schedules zap-baseline.py and publishes the HTML report"
+    }
+  ],
+  "instructions": "# API Security Specialist\n\nAutomated API security testing with ZAP.\n\n## What This Skill Does\n- Scans APIs for OWASP top-ten vulnerabilities\n- Uses OpenAPI specs to discover endpoints\n- Produces actionable reports\n\n## When to Use\n- Pre-release security gates\n- Continuous security monitoring\n- PCI/SOC2 audit evidence\n\n## Real Commands\n\n```bash\ndocker run -t ghcr.io/zaproxy/zaproxy zap-api-scan.py -t openapi.yaml -f openapi -j -l WARN -r report.html\ndocker run -t ghcr.io/zaproxy/zaproxy zap-baseline.py -t https://api.example.com -r zap_baseline.html\n```\n\n## Scan Workflow\n1. Export the OpenAPI spec\n2. Run the API scan with the spec\n3. Triage alerts by confidence\n4. Track findings in the bug tracker\n\n## Testing\n- Verify the scanner reaches authenticated endpoints\n- Set up authentication headers for deep scans\n- Fail CI on HIGH/CRITICAL alerts\n\n## Best Practices\n- Scan staging, never production\n- Keep the spec in sync with routes\n- Tune scan rules to reduce false positives",
+  "display_name": "api-sec-specialist",
+  "knowledge": [
+    {
+      "title": "ZAP API Scan Docs",
+      "type": "documentation",
+      "source": "https://www.zaproxy.org/docs/docker/api-scan/",
+      "description": "ZAP API scan docker images"
+    },
+    {
+      "title": "ZAP User Guide",
+      "type": "documentation",
+      "source": "https://www.zaproxy.org/docs/desktop/start/",
+      "description": "Getting started with ZAP"
+    }
+  ],
+  "id": "api-sec-specialist",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "zap-api-scan",
+        "name": "target",
+        "type": "string",
+        "description": "API URL or spec file"
+      },
+      {
+        "capability": "zap-api-scan",
+        "name": "format",
+        "type": "string",
+        "description": "openapi, soap, graphql"
+      },
+      {
+        "capability": "zap-api-scan",
+        "name": "level",
+        "type": "string",
+        "description": "Alert threshold: WARN, FAIL, PASS"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "owasp-zap"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-sec-specialist/skill/api-sec-specialist.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-sec-specialist/skill/api-sec-specialist.yaml",
+    "checksum": "29bd62aa334ec580c96ee30ede5f81f17e254dfd69cd78ffd412f565fb421f70"
+  }
+}

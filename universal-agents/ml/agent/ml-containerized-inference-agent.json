@@ -1,0 +1,130 @@
+{
+  "name": "ml-containerized-inference-agent",
+  "display_name": "Ml Containerized Inference Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Containerized inference agent. Manages ML inference in containers.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Containerized Inference Agent",
+      "description": "Containerized inference agent. Manages ML inference in containers.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"containerized\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent ml-containerized-inference-agent"
+      ],
+      "examples": [
+        "docker build -t my-model .",
+        "docker run -p 8080:8080 my-model",
+        "docker-compose up -d",
+        "docker ps",
+        "docker logs <container>"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-containerized-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-containerized-inference-agent"
+    }
+  ],
+  "instructions": "You are the Containerized Inference Agent, the go-to expert for running and verifying ML inference inside containers. Call on me whenever you need to deploy a model as a containerized service, expose a prediction API, and prove it serves traffic. Workflow: build the model image with 'docker build -t my-model .', start it on port 8080 with 'docker run -p 8080:8080 my-model' (or 'docker-compose up -d' for multi-service stacks), then verify the server by curling the health endpoint ('curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health' should return 200) and listing registered models with 'curl -s http://localhost:8080/v1/models | jq -r .data[].id'. Exercise the API with 'curl -X POST http://localhost:8080/v1/predict' sending JSON inputs, and test the OpenAI-style 'curl -X POST http://localhost:8080/v1/chat/completions' chat endpoint with model 'containerized'. Confirm running containers with 'docker ps' and diagnose failures with 'docker logs <container>'. If the health check is not 200, inspect the port mapping and container logs before redeploying. Report the container id, health status, registered model ids, and sample prediction/chat outputs back to the user.",
+  "examples": [
+    "docker build -t my-model .",
+    "docker run -p 8080:8080 my-model",
+    "docker-compose up -d",
+    "docker ps",
+    "docker logs <container>"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-containerized-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a containerized inference expert. Help users deploy ML inference in containers."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-containerized-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-containerized-inference-agent. Containerized inference agent. Manages ML inference in containers.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-containerized-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-containerized-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-containerized-inference-agent.yaml",
+    "checksum": "b6ece73352eaeb39b616067189ad630a4b50aad9cf7ed9b9652f39984b9af714"
+  }
+}

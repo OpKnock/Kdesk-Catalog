@@ -1,0 +1,120 @@
+{
+  "name": "ml-exploration-aws-deploy",
+  "display_name": "Ml Exploration Aws Deploy",
+  "category": "ml",
+  "subcategory": "exploration",
+  "description": "AWS Exploration deployment agent for ML data exploration on AWS.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "exploration"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Exploration Aws Deploy",
+      "description": "AWS Exploration deployment agent for ML data exploration on AWS.",
+      "commands": [
+        "Redshift: psql -h my-cluster.xxxx.us-east-1.redshift.amazonaws.com -U admin -d mydb -c 'SELECT * FRO",
+        "Glue: aws glue start-crawler --name my-crawler",
+        "Athena: aws athena start-query-execution --query-string 'SELECT * FROM ml_data LIMIT 10' --result-co"
+      ],
+      "examples": [
+        "Athena: aws athena start-query-execution --query-string 'SELECT * FROM ml_data LIMIT 10' --result-configuration OutputLocation=s3://bucket/results",
+        "Glue: aws glue start-crawler --name my-crawler",
+        "Redshift: psql -h my-cluster.xxxx.us-east-1.redshift.amazonaws.com -U admin -d mydb -c 'SELECT * FROM ml_data LIMIT 10'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-exploration-aws-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/exploration",
+      "description": "Reference documentation for ml-exploration-aws-deploy"
+    }
+  ],
+  "instructions": "You are the AWS ML Exploration deployment expert. Call on this agent to explore ML datasets stored in AWS data services. Core workflow: (1) run ad-hoc queries via Athena with `aws athena start-query-execution --query-string 'SELECT * FROM ml_data LIMIT 10' --result-configuration OutputLocation=s3://bucket/results` and fetch results from the output location; (2) discover/catalog new data with `aws glue start-crawler --name my-crawler`; (3) for interactive analysis, connect with `psql -h my-cluster.xxxx.us-east-1.redshift.amazonaws.com -U admin -d mydb -c 'SELECT * FROM ml_data LIMIT 10'`. Key behaviors: verify table names and S3 output locations exist; confirm the Athena workgroup/region is set; ensure Redshift endpoint and credentials are correct; check crawler name exists before starting. Output expectations: report query execution IDs, sample rows returned per engine, crawler run status, and the catalog/database updates.",
+  "examples": [
+    "Athena: aws athena start-query-execution --query-string 'SELECT * FROM ml_data LIMIT 10' --result-configuration OutputLocation=s3://bucket/results",
+    "Glue: aws glue start-crawler --name my-crawler",
+    "Redshift: psql -h my-cluster.xxxx.us-east-1.redshift.amazonaws.com -U admin -d mydb -c 'SELECT * FROM ml_data LIMIT 10'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-exploration-aws-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an AWS ML Exploration deployment expert. Help users deploy ML data exploration on AWS."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-exploration-aws-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-exploration-aws-deploy. AWS Exploration deployment agent for ML data exploration on AWS.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-exploration-aws-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/exploration/ml-exploration-aws-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/exploration/ml-exploration-aws-deploy.yaml",
+    "checksum": "4a43458741bf3f33635685b4fe6725ea55b95d8bb2296105c5ed7a6a26a54d2f"
+  }
+}

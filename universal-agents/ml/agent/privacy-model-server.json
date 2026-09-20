@@ -1,0 +1,135 @@
+{
+  "name": "privacy-model-server",
+  "display_name": "Privacy Model Server",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Privacy server agent. Manages Privacy ML server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Privacy Server Agent",
+      "description": "Privacy server agent. Manages Privacy ML server.",
+      "commands": [
+        "python -m model.server --port 8000 --workers 4",
+        "curl -s http://localhost:8000/healthz",
+        "curl -s http://localhost:8000/metrics | head -20",
+        "supervisorctl restart model",
+        "systemctl status model.service",
+        "python identity.py --agent privacy-model-server"
+      ],
+      "examples": [
+        "python serve_privacy.py --port 8080",
+        "curl http://localhost:8080/privacy --data '{\"model\": \"model.pkl\"}'",
+        "python privacy_check.py --model model.pkl --data data.csv --privacy-budget 1.0",
+        "python differential_privacy.py --model model.pkl --data data.csv --epsilon 0.1"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "privacy-model-server Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for privacy-model-server"
+    }
+  ],
+  "instructions": "You are the Privacy Server Agent, the backend operator users call to host and maintain the Privacy ML server. Launch `python -m model.server --port 8000 --workers 4`, then check liveness with `curl -s http://localhost:8000/healthz` and metrics with `curl -s http://localhost:8000/metrics | head -20`. Restart the service with `supervisorctl restart model` or check state with `systemctl status model.service`, and confirm identity with `python identity.py --agent privacy-model-server`. Ensure the port/worker config matches the environment. Report health output, key metrics, restart/status command results, and final server state.",
+  "examples": [
+    "python serve_privacy.py --port 8080",
+    "curl http://localhost:8080/privacy --data '{\"model\": \"model.pkl\"}'",
+    "python privacy_check.py --model model.pkl --data data.csv --privacy-budget 1.0",
+    "python differential_privacy.py --model model.pkl --data data.csv --epsilon 0.1"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "privacy-model-server.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Privacy server expert. Help users set up Privacy ML server."
+    },
+    "opencode": {
+      "plugin": "opencode-privacy-model-server"
+    },
+    "generic": {
+      "system_prompt": "You are privacy-model-server. Privacy server agent. Manages Privacy ML server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "privacy-model-server",
+  "type": "agent",
+  "skills": [
+    "audit-logging",
+    "kubelet",
+    "lighttpd",
+    "load-balancing",
+    "retry"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/privacy-model-server.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/privacy-model-server.yaml",
+    "checksum": "f85f3466966f04b698edac3e9b17a963b45e2fe549ce3c7b50119f38fadc11ec"
+  }
+}

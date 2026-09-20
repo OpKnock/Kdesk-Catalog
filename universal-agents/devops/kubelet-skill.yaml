@@ -1,0 +1,203 @@
+name: kubelet
+display_name: kubelet
+category: devops
+subcategory: general
+description: 'Operates and troubleshoots the kubelet: service management, journal logs, kubeadm join flow,
+  config flags, and node registration.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- journalctl
+- kubeadm
+- kubectl
+- kubelet
+- systemctl
+capabilities:
+- name: kubelet-service
+  description: Check, restart, and inspect the kubelet systemd service.
+  commands:
+  - systemctl status kubelet
+  - systemctl restart kubelet
+  - journalctl -u kubelet -f
+  - journalctl -u kubelet --since '1 hour ago' --no-pager
+  - systemctl enable kubelet
+  - kubectl get nodes
+  examples:
+  - systemctl status kubelet
+  - journalctl -u kubelet -f
+  - systemctl restart kubelet
+  parameters:
+  - name: since
+    type: string
+    description: Time window for journal logs
+  - name: follow
+    type: boolean
+    description: Tail logs with -f
+- name: join-and-config
+  description: Join nodes to the cluster and inspect kubelet configuration.
+  commands:
+  - kubeadm token create --print-join-command
+  - kubeadm join 10.0.0.5:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>
+  - kubelet --version
+  - kubelet --config /var/lib/kubelet/config.yaml --dump-config
+  - kubectl get node worker-1 -o jsonpath='{.status.conditions[*].type}'
+  examples:
+  - kubeadm token create --print-join-command
+  - kubeadm join 10.0.0.5:6443 --token ... --discovery-token-ca-cert-hash sha256:...
+  - kubelet --config /var/lib/kubelet/config.yaml --dump-config
+  parameters:
+  - name: config
+    type: string
+    description: Kubelet config file path
+  - name: api-server
+    type: string
+    description: Control plane endpoint address
+knowledge:
+- title: kubelet Reference
+  type: documentation
+  source: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/
+  description: kubelet flags and configuration options
+- title: Kubelet Configuration
+  type: documentation
+  source: https://kubernetes.io/docs/reference/config-api/kubelet-config.v1/
+  description: KubeletConfiguration schema
+- title: kubeadm Join
+  type: documentation
+  source: https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/
+  description: kubeadm join flags and token flow
+instructions: '# kubelet Operations
+
+
+  Run and fix the node agent that registers workers and runs pods.
+
+
+  ## What This Skill Does
+
+
+  - Manages the kubelet systemd unit (status, restart, logs)
+
+  - Joins worker nodes via kubeadm tokens
+
+  - Dumps and validates kubelet config
+
+  - Checks node conditions and registration
+
+  - Troubleshoots crashes, auth, and CNI registration failures
+
+
+  ## When to Use
+
+
+  - A node shows NotReady
+
+  - Kubelet fails to start or constantly restarts
+
+  - Adding worker nodes to a cluster
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Service management
+
+  systemctl status kubelet
+
+  systemctl restart kubelet
+
+  journalctl -u kubelet -f
+
+  journalctl -u kubelet --since ''1 hour ago'' --no-pager -p err
+
+
+  # Join flow (from control plane)
+
+  kubeadm token create --print-join-command
+
+  # from worker
+
+  kubeadm join 10.0.0.5:6443 --token <token>   --discovery-token-ca-cert-hash sha256:<hash>
+
+
+  # Config and version
+
+  kubelet --version
+
+  kubelet --config /var/lib/kubelet/config.yaml --dump-config
+
+  kubectl get node worker-1 -o jsonpath=''{.status.conditions[*].type}''
+
+
+  # Registration check
+
+  kubectl get nodes -o wide
+
+  kubectl describe node worker-1
+
+  ```
+
+
+  ## Common Failure Patterns
+
+
+  - `failed to run Kubelet: misconfiguration` -> fix --config flags
+
+  - `NodeNotReady` + CNI errors -> check CNI pods and kubelet network plugin flag
+
+  - Certificate expiry -> `kubeadm certs renew all` + restart
+
+
+  ## Best Practices
+
+
+  - Always look at `journalctl -u kubelet -f` first during node issues
+
+  - Use `--config` file over legacy flags; keep it in git
+
+  - Restart kubelet after config edits and verify with kubectl get nodes
+
+  - Keep kubelet and kubeadm versions aligned with the control plane
+
+  - Rotate certs proactively before 1-year expiry'
+examples:
+- input: worker-1 is NotReady after reboot
+  output: Agent checks journalctl -u kubelet for errors, restarts the service, and verifies node conditions
+    return to Ready
+- input: Add two new workers to the cluster
+  output: Agent generates join tokens on the control plane, runs kubeadm join on each worker, and confirms
+    with kubectl get nodes -o wide
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kubelet.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kubelet
+  generic:
+    system_prompt: 'You take the kubelet seat. You do it through kubelet-service: Check, restart, and
+      inspect the kubelet systemd service. The commands are real, e.g. `systemctl status kubelet`. You
+      work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

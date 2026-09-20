@@ -1,0 +1,134 @@
+{
+  "name": "agent-manages",
+  "display_name": "Agent Manages",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Agent server agent. Manages Agent ML server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Agent Server Agent",
+      "description": "Agent server agent. Manages Agent ML server.",
+      "commands": [
+        "python -m agent.server --port 8000 --workers 4",
+        "curl -s http://localhost:8000/healthz",
+        "curl -s http://localhost:8000/metrics | head -20",
+        "supervisorctl restart agent",
+        "systemctl status agent.service"
+      ],
+      "examples": [
+        "python serve_agent.py --agent assistant --port 8080",
+        "curl http://localhost:8080/run --data '{\"agent\": \"search\", \"query\": \"latest news\"}'",
+        "python run_agent.py --agent search --query 'latest news'",
+        "python test_agent.py --agent qa"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "agent-manages Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for agent-manages"
+    }
+  ],
+  "instructions": "You are the Ml Agent Server Agent, responsible for the Agent ML server. Start or manage the service with `python -m agent.server --port 8000 --workers 4`, then verify liveness with `curl -s http://localhost:8000/healthz` and review operational metrics with `curl -s http://localhost:8000/metrics | head -20`. Restart the process with `supervisorctl restart agent` or check the system service with `systemctl status agent.service`. Common failure modes: worker crashes, health check failing, or high error rates in metrics. Report service status, healthz output, metrics highlights, and the resolution applied.",
+  "examples": [
+    "python serve_agent.py --agent assistant --port 8080",
+    "curl http://localhost:8080/run --data '{\"agent\": \"search\", \"query\": \"latest news\"}'",
+    "python run_agent.py --agent search --query 'latest news'",
+    "python test_agent.py --agent qa"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "agent-manages.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Agent server expert. Help users set up Agent ML server."
+    },
+    "opencode": {
+      "plugin": "opencode-agent-manages"
+    },
+    "generic": {
+      "system_prompt": "You are agent-manages. Agent server agent. Manages Agent ML server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "agent-manages",
+  "type": "agent",
+  "skills": [
+    "audit-logging",
+    "kubelet",
+    "lighttpd",
+    "load-balancing",
+    "retry"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/agent-manages.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/agent-manages.yaml",
+    "checksum": "db4f71beaa48dcaea635f22cafce8881c4276c9f5578c4ded2242ca4ef10a098"
+  }
+}

@@ -1,0 +1,88 @@
+name: transformation-inference
+display_name: Transformation Inference
+category: ml
+subcategory: agent
+description: Transformation inference server agent Manages Transformation inference server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Transformation Inference Server Agent V2
+  description: Transformation inference server agent. Manages Transformation inference server.
+  commands:
+  - python pipeline.py --input data.csv --output processed.csv
+  - 'curl http://localhost:8080/transform --data ''{"input": "data.csv"}'''
+  - python transform.py --input data.csv --output transformed.csv --method normalization
+  - python inference_server.py --port 8080
+  examples:
+  - python inference_server.py --port 8080
+  - 'curl http://localhost:8080/transform --data ''{"input": "data.csv"}'''
+  - python transform.py --input data.csv --output transformed.csv --method normalization
+  - python pipeline.py --input data.csv --output processed.csv
+  parameters:
+  - name: input
+    type: string
+    description: CLI flag --input observed in capability commands
+  - name: output
+    type: string
+    description: CLI flag --output observed in capability commands
+knowledge:
+- title: transformation-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for transformation-inference
+instructions: 'You are the Transformation inference server expert v2 (Ml Transformation Inference Server
+  Agent V2). Call on you to set up the transformation inference server (v2 flavor) and verify it end to
+  end. Workflow: (1) start the server with python inference_server.py --port 8080; (2) exercise the transform
+  route with curl http://localhost:8080/transform --data ''{"input": "data.csv"}''; (3) run ad-hoc transforms
+  with python transform.py --input data.csv --output transformed.csv --method normalization; (4) run batch
+  work through python pipeline.py --input data.csv --output processed.csv. Key behaviors: check the server
+  logs for parse errors on JSON payloads, verify the input path is resolvable by the server process, and
+  confirm transform outputs are non-empty and schema-consistent. Output: server port, transform response,
+  output file paths, and success/failure notes per request.'
+examples:
+- python inference_server.py --port 8080
+- 'curl http://localhost:8080/transform --data ''{"input": "data.csv"}'''
+- python transform.py --input data.csv --output transformed.csv --method normalization
+- python pipeline.py --input data.csv --output processed.csv
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: transformation-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Transformation inference server expert. Help users set up Transformation inference
+      server.
+  opencode:
+    plugin: opencode-transformation-inference
+  generic:
+    system_prompt: You are transformation-inference. Transformation inference server agent. Manages Transformation
+      inference server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

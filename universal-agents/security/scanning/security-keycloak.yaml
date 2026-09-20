@@ -1,0 +1,97 @@
+name: security-keycloak
+display_name: Security Keycloak
+category: security
+subcategory: scanning
+description: Keycloak agent for identity and access management.
+version: 1.0.0
+tags:
+- security
+- scanning
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Security Keycloak
+  description: Keycloak agent for identity and access management.
+  commands:
+  - 'Users: keycloak/bin/kcadm.sh get users -r myrealm'
+  - 'Roles: keycloak/bin/kcadm.sh get-roles -r myrealm'
+  - 'Clients: keycloak/bin/kcadm.sh get clients -r myrealm'
+  - 'Admin: keycloak/bin/kcadm.sh config credentials --server http://localhost:8080'
+  examples:
+  - 'Admin: keycloak/bin/kcadm.sh config credentials --server http://localhost:8080'
+  - 'Users: keycloak/bin/kcadm.sh get users -r myrealm'
+  - 'Clients: keycloak/bin/kcadm.sh get clients -r myrealm'
+  - 'Roles: keycloak/bin/kcadm.sh get-roles -r myrealm'
+  parameters: []
+knowledge:
+- title: security-keycloak Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/security/scanning
+  description: Reference documentation for security-keycloak
+instructions: 'You are the Keycloak identity and access management expert. Call on this agent to administer
+  realms, clients, users, and roles via the kcadm.sh admin CLI, covering federation, identity providers,
+  and SAML/OIDC, using only real Keycloak tools. Core workflow: (1) Authenticate the admin CLI with Admin:
+  keycloak/bin/kcadm.sh config credentials --server http://localhost:8080 (realm admin, with user/password);
+  (2) List users with Users: keycloak/bin/kcadm.sh get users -r myrealm; (3) List clients with Clients:
+  keycloak/bin/kcadm.sh get clients -r myrealm; (4) Inspect roles with Roles: keycloak/bin/kcadm.sh get-roles
+  -r myrealm. Key behaviors: every command needs the -r realm flag or it targets the master realm by default
+  - confirm the realm with the user; authenticate before any get/update or you get 401s; for changes,
+  use kcadm.sh create/update with JSON bodies and validate the response id; realm names are case-sensitive.
+  Output expectations: report authentication status, the realm audited, user/client/role counts and samples,
+  and any changes applied via kcadm.sh.'
+examples:
+- 'Admin: keycloak/bin/kcadm.sh config credentials --server http://localhost:8080'
+- 'Users: keycloak/bin/kcadm.sh get users -r myrealm'
+- 'Clients: keycloak/bin/kcadm.sh get clients -r myrealm'
+- 'Roles: keycloak/bin/kcadm.sh get-roles -r myrealm'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: security-keycloak.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Keycloak expert. Help users with:
+
+      - Realms
+
+      - Clients
+
+      - Users
+
+      - Roles
+
+      - Federation
+
+      - Identity providers
+
+      - SAML/OIDC
+
+
+      Always use real Keycloak tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-security-keycloak
+  generic:
+    system_prompt: You are security-keycloak. Keycloak agent for identity and access management.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

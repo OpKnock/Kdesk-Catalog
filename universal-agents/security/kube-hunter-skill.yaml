@@ -1,0 +1,177 @@
+name: kube-hunter
+display_name: kube-hunter
+category: security
+subcategory: general
+description: Probes Kubernetes clusters for exploitable attack surfaces with kube-hunter active and passive
+  scans.
+version: 2.0.0
+tags:
+- security
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kube-hunter
+capabilities:
+- name: cluster-hunting
+  description: Scan clusters locally, remotely, or across CIDR ranges.
+  commands:
+  - kube-hunter
+  - kube-hunter --remote 10.0.0.5:6443
+  - kube-hunter --cidr 10.0.0.0/24
+  - kube-hunter --active
+  - kube-hunter --interface eth0
+  examples:
+  - kube-hunter --remote k8s-api.example.com:6443
+  - kube-hunter --cidr 192.168.1.0/24
+  - kube-hunter --active --remote 10.0.0.5:6443
+  parameters:
+  - name: remote
+    type: string
+    description: Remote endpoint host:port to scan
+  - name: cidr
+    type: string
+    description: CIDR range to scan for clusters
+  - name: active
+    type: boolean
+    description: Run active exploits/hunting checks
+- name: reporting
+  description: Capture findings to reports and logs.
+  commands:
+  - kube-hunter --report report.json --format json
+  - kube-hunter --report report.html --format html
+  - kube-hunter --log /tmp/kube-hunter.log
+  - kube-hunter --active --report report.html
+  examples:
+  - kube-hunter --report report.html
+  - kube-hunter --report findings.json --format json
+  - kube-hunter --active --report report.html
+  parameters:
+  - name: report
+    type: string
+    description: Report file path
+  - name: format
+    type: string
+    description: 'Report format: html, json, console'
+knowledge:
+- title: kube-hunter GitHub
+  type: documentation
+  source: https://github.com/aquasecurity/kube-hunter
+  description: Usage, hunting scenarios, and output formats
+- title: kube-hunter Hunting Scenarios
+  type: documentation
+  source: https://github.com/aquasecurity/kube-hunter/blob/master/docs/HUNTING_SCENARIOS.md
+  description: Attack scenarios probed by the tool
+instructions: '# kube-hunter
+
+
+  Penetration-test your Kubernetes cluster''s attack surface.
+
+
+  ## What This Skill Does
+
+
+  - Discovers clusters on local interfaces, remotes, or CIDRs
+
+  - Runs passive checks for known misconfigurations
+
+  - Runs active hunts for exposed API, dashboard, or RBAC issues
+
+  - Reports vulnerabilities with severity and remediation
+
+
+  ## When to Use
+
+
+  - Pre-launch security assessment of a cluster
+
+  - Checking whether admin interfaces are exposed externally
+
+  - Recurring attack-surface audits
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Discover from the local network
+
+  kube-hunter
+
+  kube-hunter --interface eth0
+
+
+  # Scan a remote API server
+
+  kube-hunter --remote k8s-api.example.com:6443
+
+
+  # Scan a subnet
+
+  kube-hunter --cidr 10.0.0.0/24
+
+
+  # Active hunting (tests exploits, use with care)
+
+  kube-hunter --active --remote 10.0.0.5:6443
+
+
+  # Reporting
+
+  kube-hunter --report report.html
+
+  kube-hunter --report findings.json --format json
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Run active hunts only against test clusters or with authorization
+
+  - Pair with kube-bench (static CIS) for complementary coverage
+
+  - Re-run after networking or RBAC changes
+
+  - Treat findings as attack-surface candidates, not proof of compromise
+
+  - Automate passive scans weekly; active scans on release cadence'
+examples:
+- input: Is my cluster API exposed to the internet?
+  output: Agent runs kube-hunter --remote api.example.com:6443 in passive mode and reports exposed services
+    with severity.
+- input: Run a full attack-surface audit
+  output: Agent runs kube-hunter --cidr 10.0.0.0/24 --report report.html and summarizes high-severity
+    findings with remediation steps.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kube-hunter.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kube-hunter
+  generic:
+    system_prompt: 'You work kube-hunter hands-on. You do it through cluster-hunting: Scan clusters locally,
+      remotely, or across CIDR ranges. The commands are real, e.g. `kube-hunter`. You prefer the shortest
+      safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

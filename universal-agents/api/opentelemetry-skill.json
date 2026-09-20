@@ -1,0 +1,173 @@
+{
+  "name": "opentelemetry",
+  "display_name": "Opentelemetry",
+  "category": "api",
+  "subcategory": "general",
+  "description": "OpenTelemetry setup: collector config, OTLP export, SDK initialization in services, and pipeline verification.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "otelcol",
+    "otelcol-contrib"
+  ],
+  "capabilities": [
+    {
+      "name": "otel-pipelines",
+      "description": "Run the OTel Collector, configure receivers/exporters, and verify OTLP ingestion.",
+      "commands": [
+        "otelcol --config config.yaml",
+        "otelcol-contrib --config config.yaml",
+        "curl -X POST http://localhost:4318/v1/traces -H \"Content-Type: application/json\" -d @trace.json",
+        "curl -X POST http://localhost:4318/v1/metrics -H \"Content-Type: application/json\" -d @metric.json",
+        "curl -s http://localhost:8888/metrics | grep otelcol"
+      ],
+      "examples": [
+        "docker run -p 4317:4317 -p 4318:4318 otel/opentelemetry-collector-contrib",
+        "curl -X POST http://localhost:4318/v1/traces -H \"Content-Type: application/json\" -d @trace.json",
+        "curl -s http://localhost:8888/metrics | grep otelcol_receiver"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Collector config file path"
+        },
+        {
+          "name": "protocol",
+          "type": "string",
+          "description": "otlp/grpc (4317) or otlp/http (4318)"
+        },
+        {
+          "name": "exporter",
+          "type": "string",
+          "description": "Destination: otlp, prometheus, jaeger, loki"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OpenTelemetry Docs",
+      "type": "documentation",
+      "source": "https://opentelemetry.io/docs/",
+      "description": "Collector, SDKs, OTLP and instrumentation"
+    },
+    {
+      "title": "Collector Configuration",
+      "type": "documentation",
+      "source": "https://opentelemetry.io/docs/collector/configuration/",
+      "description": "Receivers, processors, exporters pipeline syntax"
+    }
+  ],
+  "instructions": "# OpenTelemetry\n\nOpenTelemetry standardizes how traces, metrics and logs are produced and shipped.\n\n## What this skill does\n\n- Runs the OTel Collector with a config pipeline\n- Exports telemetry over OTLP\n- Verifies data reaches the collector\n\n## When to use\n\n- Adopting observability across services\n- Replacing vendor-specific SDKs\n\n## Real commands\n\n```bash\n# Run collector\notelcol --config config.yaml\notelcol-contrib --config config.yaml\n\n# OTLP/HTTP ingest test\ncurl -X POST http://localhost:4318/v1/traces -H \"Content-Type: application/json\" -d @trace.json\ncurl -X POST http://localhost:4318/v1/metrics -H \"Content-Type: application/json\" -d @metric.json\n\n# Collector self-metrics\ncurl -s http://localhost:8888/metrics | grep otelcol\n```\n\n## config.yaml\n\n```yaml\nreceivers:\n  otlp:\n    protocols:\n      grpc:\n      http:\nprocessors:\n  batch:\nexporters:\n  otlp:\n    endpoint: jaeger:4317\n    tls:\n      insecure: true\nservice:\n  pipelines:\n    traces:\n      receivers: [otlp]\n      processors: [batch]\n      exporters: [otlp]\n```\n\n## SDK setup (Node)\n\n```js\nconst { NodeSDK } = require('@opentelemetry/sdk-node');\nconst sdk = new NodeSDK();\nsdk.start();\n```\n\n## Best practices\n\n- Start with traces, then metrics, then logs\n- Batch processor in every pipeline\n- Export to a backend before scaling collection",
+  "examples": [
+    {
+      "input": "Set up the collector to forward traces to Jaeger",
+      "output": "The agent writes the otlp receiver + batch + jaeger exporter config and starts otelcol."
+    },
+    {
+      "input": "My collector receives nothing from the app",
+      "output": "The agent tests OTLP ingest with curl, checks the 4317/4318 ports and the collector self-metrics."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "opentelemetry.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-opentelemetry"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Opentelemetry. You do it through otel-pipelines: Run the OTel Collector, configure receivers/exporters, and verify OTLP ingestion. The commands are real, e.g. `otelcol --config config.yaml`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "opentelemetry",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "otel-pipelines",
+        "name": "config",
+        "type": "string",
+        "description": "Collector config file path"
+      },
+      {
+        "capability": "otel-pipelines",
+        "name": "protocol",
+        "type": "string",
+        "description": "otlp/grpc (4317) or otlp/http (4318)"
+      },
+      {
+        "capability": "otel-pipelines",
+        "name": "exporter",
+        "type": "string",
+        "description": "Destination: otlp, prometheus, jaeger, loki"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "otelcol",
+    "otelcol-contrib"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/opentelemetry-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/opentelemetry-skill.yaml",
+    "checksum": "c3ede418efbf1cbc89166088a4a485d4b2a9281c5f2c74487eb0e033d58a245b"
+  }
+}

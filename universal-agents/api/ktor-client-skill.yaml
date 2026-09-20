@@ -1,0 +1,113 @@
+name: ktor-client
+display_name: Ktor Client
+category: api
+subcategory: general
+description: 'Make HTTP calls from Ktor applications with ktor-client: engine selection, serialization
+  plugins, and timeouts for API integration.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- ./gradlew
+- gradle
+capabilities:
+- name: client-setup
+  description: Add ktor-client dependencies and configure an engine with plugins.
+  commands:
+  - gradle dependencies --configuration runtimeClasspath | grep ktor-client
+  - ./gradlew run
+  - curl -s http://localhost:8080/proxy
+  - ./gradlew build
+  examples:
+  - gradle dependencies --configuration runtimeClasspath | grep ktor-client
+  - ./gradlew run
+  - curl -s http://localhost:8080/proxy
+  parameters:
+  - name: engine
+    type: string
+    description: 'Client engine: CIO, OkHttp, Apache, Java.'
+  - name: endpoint
+    type: string
+    description: Proxy endpoint that exercises the client.
+- name: call-verify
+  description: 'Verify outbound calls: status, JSON body, and error mapping.'
+  commands:
+  - curl -s http://localhost:8080/proxy | jq .
+  - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/proxy-404
+  - curl -s http://localhost:8080/proxy-timeout
+  - ./gradlew test
+  examples:
+  - curl -s http://localhost:8080/proxy | jq .
+  - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/proxy-404
+  - ./gradlew test
+  parameters:
+  - name: path
+    type: string
+    description: App route that triggers an outbound client call.
+knowledge:
+- title: Ktor Client
+  type: documentation
+  source: https://ktor.io/docs/client-create-new-application.html
+  description: 'Official Ktor client docs: engines, plugins, serialization.'
+- title: Ktor Client Serialization
+  type: documentation
+  source: https://ktor.io/docs/client-serialization.html
+  description: JSON serialization and content negotiation for the client.
+instructions: "# Ktor Client\n\nMake typed HTTP calls from Ktor applications.\n\n## What this skill does\n\
+  \n- Configures HttpClient with an engine and content negotiation.\n- Uses Json plugin for typed request/response\
+  \ bodies.\n- Handles timeouts and non-2xx responses.\n\n## When to use\n\n- Kotlin services calling\
+  \ other APIs (REST or gRPC-json).\n- Building BFF routes that proxy upstream services.\n- Testing API\
+  \ clients with Ktor test infrastructure.\n\n## Real commands\n\n```bash\n# Verify dependencies resolved\n\
+  gradle dependencies --configuration runtimeClasspath | grep ktor-client\n\n# Run the app that makes\
+  \ outbound calls\n./gradlew run\n\n# Exercise the proxy route\ncurl -s http://localhost:8080/proxy |\
+  \ jq .\n\n# Error mapping: upstream 404 -> 502\ncurl -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/proxy-404\n\
+  \n# Timeout behavior\ncurl -s http://localhost:8080/proxy-timeout\n```\n\n## Client example\n\n```kotlin\n\
+  val client = HttpClient(CIO) {\n    install(ContentNegotiation) {\n        json(Json { ignoreUnknownKeys\
+  \ = true })\n    }\n    install(HttpTimeout) {\n        requestTimeoutMillis = 5_000\n        connectTimeoutMillis\
+  \ = 2_000\n    }\n    defaultRequest {\n        contentType(ContentType.Application.Json)\n    }\n}\n\
+  \nsuspend fun fetchOrder(id: String): Order =\n    client.get(\"https://api.example.com/orders/$id\"\
+  ).body()\n```\n\n## Testing\n\n```bash\n./gradlew test\n```\n\n## Best practices\n\n- Install HttpTimeout;\
+  \ clients without timeouts hang requests.\n- Use expectSuccess = true and catch ClientRequestException/ServerResponseException.\n\
+  - Reuse one HttpClient per application; don't create per request.\n"
+examples:
+- input: Call an upstream JSON API from my Ktor app
+  output: Create HttpClient(CIO) with ContentNegotiation+Json, use client.get(...).body<Order>(), and
+    expose a route to test with curl.
+- input: Handle upstream 500s gracefully
+  output: Wrap calls in try/catch for ServerResponseException and map to 502 with a log.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ktor-client.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-ktor-client
+  generic:
+    system_prompt: 'You are the Ktor Client specialist. You do it through client-setup: Add ktor-client
+      dependencies and configure an engine with plugins. The commands are real, e.g. `gradle dependencies
+      --configuration runtimeClasspath | grep ktor-client`. You run and verify the real CLI commands before
+      you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

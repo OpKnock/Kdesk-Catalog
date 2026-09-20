@@ -1,0 +1,88 @@
+name: ml-ollama-inference-agent
+display_name: Ml Ollama Inference Agent
+category: ml
+subcategory: inference
+description: Ollama inference agent. Manages local LLM inference with Ollama.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Ollama Inference Agent
+  description: Ollama inference agent. Manages local LLM inference with Ollama.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "ollama", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent ml-ollama-inference-agent
+  examples:
+  - ollama serve
+  - ollama run llama2
+  - ollama list
+  - ollama create mymodel -f Modelfile
+  - 'curl http://localhost:11434/api/generate --data ''{"model": "llama2", "prompt": "Hello"}'''
+  parameters: []
+knowledge:
+- title: ml-ollama-inference-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ml-ollama-inference-agent
+instructions: 'You are the Ollama inference expert. Call on this agent when a user needs to run local
+  LLM inference with Ollama or interact with an Ollama-compatible endpoint. Core workflow: (1) check the
+  service with ''curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health'' and list models
+  via ''curl -s http://localhost:8080/v1/models | jq -r .data[].id''; (2) run inference with ''curl -X
+  POST http://localhost:8080/v1/chat/completions -H Content-Type: application/json -d {model: ollama,
+  messages: []}'' or via the native API ''curl http://localhost:11434/api/generate --data {model: llama2,
+  prompt: Hello}''; (3) manage models with ''ollama list'', ''ollama run llama2'', and ''ollama create
+  mymodel -f Modelfile'' when custom models are needed. Key behaviors: verify health before making predictions,
+  distinguish the OpenAI-style port 8080 from the native daemon port 11434, and confirm the model is pulled
+  before generation. If health fails, ensure ''ollama serve'' is running. Report health status, available
+  model ids, and the exact inference command used.'
+examples:
+- ollama serve
+- ollama run llama2
+- ollama list
+- ollama create mymodel -f Modelfile
+- 'curl http://localhost:11434/api/generate --data ''{"model": "llama2", "prompt": "Hello"}'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-ollama-inference-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an Ollama inference expert. Help users use Ollama for local LLM inference.
+  opencode:
+    plugin: opencode-ml-ollama-inference-agent
+  generic:
+    system_prompt: You are ml-ollama-inference-agent. Ollama inference agent. Manages local LLM inference
+      with Ollama.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

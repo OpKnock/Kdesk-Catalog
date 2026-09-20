@@ -1,0 +1,169 @@
+name: api-security-hardening
+version: 2.0.0
+type: skill
+category: security
+description: 'Hardens API deployments: container scanning with trivy, secret detection with gitleaks,
+  dependency upgrades, and least-privilege configuration checks.'
+keywords:
+- api-security
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-security-hardening.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-security-hardening
+  generic:
+    system_prompt: 'You own api-security-hardening end to end. You do it through container-scanning: Scan
+      container images and filesystems for vulnerabilities. The commands are real, e.g. `trivy image --severity
+      HIGH,CRITICAL myapi:1.0.0`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: container-scanning
+  description: Scan container images and filesystems for vulnerabilities
+  commands:
+  - trivy image --severity HIGH,CRITICAL myapi:1.0.0
+  - trivy image --ignore-unfixed --exit-code 1 --severity CRITICAL myapi:1.0.0
+  - trivy fs --severity HIGH,CRITICAL .
+  - trivy config --exit-code 1 Dockerfile
+  - trivy image --format sarif -o trivy.sarif myapi:1.0.0
+  examples:
+  - trivy image scans OS and app dependencies
+  - --exit-code 1 fails CI on findings
+  - --format sarif exports to code scanning
+  parameters:
+  - name: target
+    type: string
+    description: Image name or path
+  - name: severity
+    type: string
+    description: Severity filter
+  - name: exit-code
+    type: integer
+    description: Fail threshold
+- name: secret-detection
+  description: Detect leaked secrets in repositories
+  commands:
+  - gitleaks detect -v
+  - gitleaks detect --report-format json --report-path gitleaks.json
+  - gitleaks detect --source . --no-git
+  - gitleaks protect -v
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- owasp-zap
+- burp-suite
+tools:
+- node.js
+- python
+- owasp-zap
+- burp-suite
+- helmet
+- cors
+examples:
+- input: Harden a release image
+  output: Scans with trivy, fixes critical CVEs, and re-tags the image
+- input: Check for leaked keys
+  output: Runs gitleaks detect and audits findings with JSON output
+instructions: '# API Security Hardening
+
+
+  Hardening scans for API deployments.
+
+
+  ## What This Skill Does
+
+  - Scans images and repos for vulnerabilities
+
+  - Detects secrets before merge
+
+  - Validates infrastructure config
+
+
+  ## When to Use
+
+  - Pre-production hardening gates
+
+  - Rotation and exposure audits
+
+  - Container supply-chain checks
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  trivy image --severity HIGH,CRITICAL myapi:1.0.0
+
+  trivy fs --severity HIGH,CRITICAL .
+
+  gitleaks detect -v
+
+  gitleaks protect -v
+
+  ```
+
+
+  ## Hardening Checklist
+
+  - No critical CVEs in base images
+
+  - No secrets in git history
+
+  - Least-privilege IAM/roles
+
+  - Immutable image tags
+
+
+  ## Testing
+
+  - Fail CI on critical findings
+
+  - Verify secret rotation after leaks
+
+  - Scan the lockfile changes in PRs
+
+
+  ## Best Practices
+
+  - Scan images at build time
+
+  - Use distroless base images
+
+  - Enforce gitleaks on pre-commit'
+display_name: api-security-hardening
+knowledge:
+- title: Trivy Docs
+  type: documentation
+  source: https://aquasecurity.github.io/trivy/
+  description: Container and filesystem vulnerability scanner
+- title: Gitleaks
+  type: documentation
+  source: https://github.com/gitleaks/gitleaks
+  description: Secret scanning tool

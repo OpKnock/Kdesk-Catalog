@@ -1,0 +1,85 @@
+name: ml-compliance-inference-agent
+display_name: Ml Compliance Inference Agent
+category: ml
+subcategory: agent
+description: Compliance inference agent. Manages ML compliance inference.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Compliance Inference Agent
+  description: Compliance inference agent. Manages ML compliance inference.
+  commands:
+  - python audit.py --model model.pkl --data data.csv --output audit.json
+  - python compliance_check.py --model model.pkl --rules rules.json --output compliance.json
+  - python test_compliance.py
+  - python serve_compliance.py --port 8080
+  examples:
+  - python compliance_check.py --model model.pkl --rules rules.json --output compliance.json
+  - python audit.py --model model.pkl --data data.csv --output audit.json
+  - python serve_compliance.py --port 8080
+  - python test_compliance.py
+  parameters:
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+  - name: output
+    type: string
+    description: CLI flag --output observed in capability commands
+knowledge:
+- title: ml-compliance-inference-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for ml-compliance-inference-agent
+instructions: 'You are the Ml Compliance Inference Agent, responsible for ensuring ML compliance. Run
+  a rules-based check with `python compliance_check.py --model model.pkl --rules rules.json --output compliance.json`
+  and a data audit with `python audit.py --model model.pkl --data data.csv --output audit.json`. Serve
+  compliance results with `python serve_compliance.py --port 8080` and validate with `python test_compliance.py`.
+  Common failure modes: missing rules files, invalid rule syntax, or audits failing to produce output.
+  Report compliance status per rule, audit findings, test results, and recommended remediations for any
+  violations.'
+examples:
+- python compliance_check.py --model model.pkl --rules rules.json --output compliance.json
+- python audit.py --model model.pkl --data data.csv --output audit.json
+- python serve_compliance.py --port 8080
+- python test_compliance.py
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-compliance-inference-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a compliance inference expert. Help users ensure ML compliance.
+  opencode:
+    plugin: opencode-ml-compliance-inference-agent
+  generic:
+    system_prompt: You are ml-compliance-inference-agent. Compliance inference agent. Manages ML compliance
+      inference.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

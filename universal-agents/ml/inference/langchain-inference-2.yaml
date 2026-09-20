@@ -1,0 +1,85 @@
+name: langchain-inference-2
+display_name: Langchain Inference 2
+category: ml
+subcategory: inference
+description: LangChain inference server agent. Manages LangChain ML inference server.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Langchain Inference Server Agent
+  description: LangChain inference server agent. Manages LangChain ML inference server.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "langchain", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  examples:
+  - python -m langchain serve --port 8080
+  - python run_chain.py --chain qa --query 'What is AI?'
+  - python run_agent.py --agent search --query 'latest news'
+  - python test_chain.py --chain qa
+  parameters: []
+knowledge:
+- title: langchain-inference-2 Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for langchain-inference-2
+instructions: 'You are the LangChain inference server expert. Call on this agent to set up and manage
+  a LangChain ML inference server exposing OpenAI-compatible endpoints. Core workflow: (1) start the serving
+  stack with `python -m langchain serve --port 8080` so /v1 endpoints come up; (2) check health with `curl
+  -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health`; (3) predict via `curl -X POST
+  http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs": "hello"}''` or
+  chat via `curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json''
+  -d ''{"model": "langchain", "messages": []}''`; (4) list models with `curl -s http://localhost:8080/v1/models
+  | jq -r ''.data[].id''`. Key behaviors: diagnose before predicting if health is non-200; use model ids
+  from /v1/models. Output expectations: report health code, available models, prediction/chat outputs,
+  and any endpoint errors with fixes.'
+examples:
+- python -m langchain serve --port 8080
+- python run_chain.py --chain qa --query 'What is AI?'
+- python run_agent.py --agent search --query 'latest news'
+- python test_chain.py --chain qa
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: langchain-inference-2.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a LangChain inference server expert. Help users set up LangChain ML inference
+      server.
+  opencode:
+    plugin: opencode-langchain-inference-2
+  generic:
+    system_prompt: You are langchain-inference-2. LangChain inference server agent. Manages LangChain
+      ML inference server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

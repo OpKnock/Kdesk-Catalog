@@ -1,0 +1,191 @@
+name: azure
+display_name: azure
+category: cloud
+subcategory: general
+description: 'Operates Microsoft Azure with the az CLI: resource groups, VMs, AKS, functions, storage,
+  and Azure AD.'
+version: 2.0.0
+tags:
+- cloud
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- func
+- kubectl
+capabilities:
+- commands:
+  - az login
+  - az account list --output table
+  - az group create --name myrg --location eastus
+  - az storage account create --name mystore --resource-group myrg --sku Standard_LRS
+  - az account show --query "user.name"
+  description: Manage subscriptions, groups, and storage.
+  name: azure-core
+  examples:
+  - az group list --output table
+  - az storage container list --account-name mystore
+  - az account set --subscription "My Sub"
+  parameters:
+  - description: Resource group name
+    name: resource-group
+    type: string
+  - description: Azure region
+    name: location
+    type: string
+- commands:
+  - az aks create --resource-group myrg --name mycluster --node-count 3 --enable-managed-identity
+  - az aks get-credentials --resource-group myrg --name mycluster
+  - az aks list
+  - az aks scale --resource-group myrg --name mycluster --node-count 5
+  - kubectl get nodes
+  description: Manage AKS clusters and get credentials.
+  name: azure-aks
+  examples:
+  - az aks get-credentials --resource-group myrg --name mycluster --admin
+  - az aks show --resource-group myrg --name mycluster --query "powerState.code"
+  parameters:
+  - description: AKS cluster name
+    name: cluster
+    type: string
+  - name: node-count
+    type: integer
+    description: Number of worker nodes
+- commands:
+  - func azure functionapp publish myfuncapp
+  - az functionapp list --resource-group myrg
+  - az functionapp config appsettings set --name myfuncapp --resource-group myrg --settings "KEY=VALUE"
+  - func init --python
+  description: Deploy and manage Azure Functions.
+  name: azure-functions
+  examples:
+  - func azure functionapp publish myfuncapp --build remote
+  - az functionapp show --name myfuncapp --query "defaultHostName"
+  parameters:
+  - description: Function app name
+    name: app
+    type: string
+  - name: runtime
+    type: string
+    description: 'Function runtime: python, node, dotnet'
+knowledge:
+- title: Azure CLI Reference
+  description: az command reference
+  source: https://learn.microsoft.com/cli/azure/
+  type: documentation
+- title: Azure for Developers
+  description: Service documentation
+  source: https://learn.microsoft.com/azure/
+  type: documentation
+instructions: '# Azure
+
+
+  Operate Azure with the az CLI.
+
+
+  ## When to Use
+
+
+  - Managing resource groups, VMs, and storage
+
+  - AKS cluster provisioning and credential access
+
+  - Deploying Azure Functions
+
+  - Role-based access control (Azure AD/RBAC)
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Auth and context
+
+  az login
+
+  az account list --output table
+
+  az account set --subscription "My Sub"
+
+
+  # Resource groups and storage
+
+  az group create --name myrg --location eastus
+
+  az storage account create --name mystore --resource-group myrg --sku Standard_LRS
+
+  az storage container list --account-name mystore
+
+
+  # AKS
+
+  az aks create --resource-group myrg --name mycluster --node-count 3 --enable-managed-identity
+
+  az aks get-credentials --resource-group myrg --name mycluster
+
+  az aks scale --resource-group myrg --name mycluster --node-count 5
+
+  kubectl get nodes
+
+
+  # Functions
+
+  func init --python
+
+  func azure functionapp publish myfuncapp
+
+  az functionapp config appsettings set --name myfuncapp --resource-group myrg --settings "KEY=VALUE"
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use managed identity over service principals where possible
+
+  - Scope RBAC roles to the resource group level
+
+  - Name resources with a consistent convention
+
+  - Use az aks get-credentials --admin only for break-glass
+
+  - Enable diagnostics and metrics for every service
+
+  - Prefer Bicep/Terraform for reproducible infrastructure'
+examples:
+- input: Create a resource group and storage for a new app
+  output: Agent runs az group create and az storage account create, then validates with az resource list.
+- input: Connect kubectl to my AKS cluster
+  output: Agent runs az aks get-credentials, verifies with kubectl get nodes, and checks RBAC context.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: azure.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-azure
+  generic:
+    system_prompt: 'You work azure hands-on. You do it through azure-core: Manage subscriptions, groups,
+      and storage. The commands are real, e.g. `az login`. You verify each step you report and stay honest
+      about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

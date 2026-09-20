@@ -1,0 +1,187 @@
+name: schema-evolution
+display_name: Schema Evolution
+category: api
+subcategory: general
+description: 'Hand-crafted schema evolution skill: Avro compatibility modes, protoc descriptor generation,
+  and backward/forward compatibility checks for streaming contracts.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- grpcurl
+- java
+- protoc
+capabilities:
+- name: schema-compat
+  description: Evolve Avro/Protobuf schemas and check compatibility
+  commands:
+  - java -jar avro-tools-1.11.3.jar getschema user.avsc
+  - java -jar avro-tools-1.11.3.jar compile schema user.avsc .
+  - protoc --version
+  - protoc --descriptor_set_out=user.pb --include_imports user.proto
+  - grpcurl -protoset user.pb list
+  examples:
+  - java -jar avro-tools-1.11.3.jar compile schema user.avsc out/
+  - protoc --descriptor_set_out=user.pb --include_imports user.proto
+  - java -jar avro-tools-1.11.3.jar getmeta user.avsc
+  parameters:
+  - name: schema_file
+    type: string
+    description: Path to .avsc or .proto file
+  - name: compatibility
+    type: string
+    description: BACKWARD, FORWARD, FULL, NONE for Avro
+  - name: proto_file
+    type: string
+    description: Protobuf source file
+knowledge:
+- title: Avro specification
+  type: documentation
+  source: https://avro.apache.org/docs/current/specification/
+  description: Schema resolution rules and compatibility
+- title: Protobuf language guide
+  type: documentation
+  source: https://protobuf.dev/programming-guides/proto3/
+  description: Field numbering and evolution rules
+instructions: '# Schema Evolution
+
+
+  Hand-crafted skill for evolving serialization schemas without breaking consumers.
+
+
+  ## What this skill does
+
+
+  - Compiles Avro and Protobuf schemas to check they parse
+
+  - Generates descriptors to inspect wire contracts
+
+  - Applies compatibility rules so old and new readers interoperate
+
+
+  ## When to use
+
+
+  - Adding fields to a schema consumed by old versions
+
+  - Migrating a topic''s message format
+
+  - Reviewing a schema PR for breaking changes
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Parse and validate an Avro schema
+
+  java -jar avro-tools-1.11.3.jar getschema user.avsc
+
+
+  # Generate Java/Python classes
+
+  java -jar avro-tools-1.11.3.jar compile schema user.avsc out/
+
+
+  # Protobuf toolchain
+
+  protoc --version
+
+  protoc --descriptor_set_out=user.pb --include_imports user.proto
+
+
+  # Inspect a compiled service descriptor
+
+  grpcurl -protoset user.pb list
+
+  ```
+
+
+  ## Avro compatibility rules
+
+
+  - BACKWARD: new schema can read old data (add fields with defaults)
+
+  - FORWARD: old schema can read new data (remove-only safe)
+
+  - FULL: both directions
+
+  - Adding a required field is a breaking change without a default
+
+
+  ## Protobuf rules
+
+
+  - Never reuse a field number with a different type
+
+  - Add fields with new numbers; old clients ignore them
+
+  - Renaming a field keeps the number, so wire compatibility holds
+
+
+  ## Testing
+
+
+  ```bash
+
+  java -jar avro-tools-1.11.3.jar getschema user.avsc
+
+  protoc --descriptor_set_out=user.pb --include_imports user.proto && grpcurl -protoset user.pb list
+
+  ```
+
+
+  ## Best practices
+
+
+  - Give new fields defaults when the consumer may be older
+
+  - Register schemas in the schema registry before deploying producers
+
+  - Treat any schema change as a release note for consumers
+
+  '
+examples:
+- input: Can I add an optional email field to the user Avro schema?
+  output: 'Yes if it has a default: {"name":"email","type":"string","default":""} keeps BACKWARD compatibility
+    for old readers.'
+- input: Verify a proto still compiles
+  output: protoc --descriptor_set_out=user.pb --include_imports user.proto; any field-number or type error
+    fails immediately.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: schema-evolution.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-schema-evolution
+  generic:
+    system_prompt: 'Your lane is Schema Evolution. You do it through schema-compat: Evolve Avro/Protobuf
+      schemas and check compatibility. The commands are real, e.g. `java -jar avro-tools-1.11.3.jar getschema
+      user.avsc`. You answer with exact commands, not abstractions, and flag anything you have not verified
+      yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

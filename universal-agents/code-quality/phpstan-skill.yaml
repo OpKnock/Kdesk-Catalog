@@ -1,0 +1,101 @@
+name: phpstan
+display_name: Phpstan
+category: code-quality
+subcategory: general
+description: Static analysis of PHP code with PHPStan at increasing rule levels, including baselines for
+  legacy code.
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- vendor/bin/phpstan
+capabilities:
+- name: phpstan-analysis
+  description: Run PHPStan analysis with level control, baselines, and CI output
+  commands:
+  - vendor/bin/phpstan analyse src/
+  - vendor/bin/phpstan analyse -l 8 src/
+  - vendor/bin/phpstan analyse --memory-limit=1G src tests
+  - vendor/bin/phpstan analyse --generate-baseline
+  - vendor/bin/phpstan clear-result-cache
+  examples:
+  - vendor/bin/phpstan analyse --level=max src/
+  - vendor/bin/phpstan analyse -c phpstan.neon --no-progress
+  - vendor/bin/phpstan analyse --error-format=github src/
+  parameters:
+  - name: level
+    type: integer
+    description: Analysis strictness level 0-9 (or max)
+  - name: error-format
+    type: string
+    description: 'Output format: table, raw, json, github, checkstyle'
+  - name: generate-baseline
+    type: boolean
+    description: Write current errors to phpstan-baseline.neon
+knowledge:
+- title: PHPStan docs
+  type: documentation
+  source: https://phpstan.org/
+  description: Levels, config file, and CLI reference
+- title: PHPStan config reference
+  type: documentation
+  source: https://phpstan.org/config-reference
+  description: phpstan.neon options including paths, level, and extensions
+instructions: "# PHPStan\n\nFinds bugs in PHP without running it: undefined variables, wrong types, and\
+  \ unsafe\ncalls, controlled by strictness levels 0-9.\n\n## When to Use\n\n- Catching type errors before\
+  \ deployment\n- Raising analysis level incrementally on a mature codebase\n- CI gate for PHP quality\n\
+  \n## Real Commands\n\n```bash\n# Install\ncomposer require --dev phpstan/phpstan\n\n# Analyse with the\
+  \ configured level\nvendor/bin/phpstan analyse src/\n\n# Explicit level\nvendor/bin/phpstan analyse\
+  \ -l 8 src/\n\n# Legacy code: baseline current errors\nvendor/bin/phpstan analyse --generate-baseline\n\
+  \n# Then continue analysing with baseline loaded\nvendor/bin/phpstan analyse src/\n\n# CI-friendly output\n\
+  vendor/bin/phpstan analyse --error-format=github src/\n\n# Clear stale result cache after config changes\n\
+  vendor/bin/phpstan clear-result-cache\n```\n\n## Config (phpstan.neon)\n\n```neon\nparameters:\n  level:\
+  \ 8\n  paths:\n    - src\n  excludePaths:\n    - src/Generated\n  ignoreErrors:\n    - '#Undefined variable.*#i'\n\
+  ```\n\n## Best Practices\n\n- Start at level 5, raise one level per sprint\n- Commit the generated baseline\
+  \ and shrink it deliberately\n- Use `--memory-limit` in CI containers with low memory\n- Add PHPStan\
+  \ to `composer.json` scripts: `\"analyse\": \"phpstan analyse src/\"`\n\n## Example Response\n\nLists\
+  \ errors as `file:line` with rule names (e.g. 'Property is never read'), groups by\nclass, and suggests\
+  \ the config change or code fix."
+examples:
+- input: Set up PHPStan for this Laravel project
+  output: Adds phpstan/phpstan and phpstan/phpstan-laravel dev deps, writes phpstan.neon at level 6 with
+    excludes, runs analyse, and creates a baseline if errors exist
+- input: Raise analysis strictness
+  output: Increases level in phpstan.neon, runs vendor/bin/phpstan analyse to find new errors, and fixes
+    them or adds specific ignoreErrors
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: phpstan.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-phpstan
+  generic:
+    system_prompt: 'You own Phpstan end to end. You do it through phpstan-analysis: Run PHPStan analysis
+      with level control, baselines, and CI output. The commands are real, e.g. `vendor/bin/phpstan analyse
+      src/`. You answer with exact commands, not abstractions, and flag anything you have not verified
+      yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

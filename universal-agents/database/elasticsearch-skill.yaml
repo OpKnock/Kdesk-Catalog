@@ -1,0 +1,158 @@
+name: elasticsearch
+display_name: elasticsearch
+category: database
+subcategory: general
+description: 'Operates Elasticsearch: index management, document CRUD, search, and cluster health via
+  the REST API.'
+version: 2.0.0
+tags:
+- database
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: elasticsearch-rest
+  description: Manage indices, documents, and searches with curl against Elasticsearch
+  commands:
+  - curl -X PUT 'localhost:9200/orders?pretty'
+  - 'curl -X POST ''localhost:9200/orders/_doc?pretty'' -H ''Content-Type: application/json'' -d ''{"order_id":
+    1, "amount": 99.5}'''
+  - curl 'localhost:9200/orders/_search?q=amount:>90&pretty'
+  - curl 'localhost:9200/_cat/indices?v'
+  - 'curl -X PUT ''localhost:9200/_cluster/settings?pretty'' -H ''Content-Type: application/json'' -d
+    ''{"transient": {"cluster.routing.allocation.enable": "all"}}'''
+  examples:
+  - curl -X DELETE 'localhost:9200/orders'
+  - 'curl ''localhost:9200/orders/_search'' -H ''Content-Type: application/json'' -d ''{"query": {"match":
+    {"customer": "jane"}}, "size": 5}'''
+  - curl 'localhost:9200/_cat/health?v'
+  parameters:
+  - name: query
+    type: string
+    description: Query DSL JSON for the search request
+  - name: size
+    type: integer
+    description: Number of results to return
+  - name: pretty
+    type: boolean
+    description: Pretty-print the JSON response
+knowledge:
+- title: Elasticsearch guide
+  type: documentation
+  source: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
+  description: REST API, mappings, and cluster administration
+- title: Elasticsearch search API
+  type: documentation
+  source: https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html
+  description: Query DSL and search parameters
+instructions: '# Elasticsearch
+
+
+  Search and analytics engine operations: index lifecycle, document CRUD, queries,
+
+  and cluster health.
+
+
+  ## When to Use
+
+
+  - Indexing and querying documents
+
+  - Checking cluster/index health
+
+  - Debugging mapping conflicts
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Cluster health
+
+  curl ''localhost:9200/_cat/health?v''
+
+  curl ''localhost:9200/_cat/nodes?v''
+
+
+  # Index management
+
+  curl -X PUT ''localhost:9200/orders?pretty''
+
+  curl -X PUT ''localhost:9200/orders/_mapping?pretty'' -H ''Content-Type: application/json'' -d ''{"properties":
+  {"amount": {"type": "double"}}}''
+
+  curl ''localhost:9200/_cat/indices?v''
+
+
+  # Documents
+
+  curl -X POST ''localhost:9200/orders/_doc?pretty'' -H ''Content-Type: application/json'' -d ''{"order_id":
+  1, "amount": 99.5, "customer": "jane"}''
+
+  curl -X GET ''localhost:9200/orders/_doc/1?pretty''
+
+
+  # Search
+
+  curl -X GET ''localhost:9200/orders/_search?pretty'' -H ''Content-Type: application/json'' -d ''{"query":
+  {"range": {"amount": {"gt": 50}}}, "size": 10}''
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Define mappings up front; dynamic mappings cause type conflicts
+
+  - Use index lifecycle policies for time-series data
+
+  - Search by query DSL, not q= strings, in apps
+
+  - Check `_cat/health` for yellow/red shards
+
+  - Set explicit shard/replica counts per index
+
+
+  ## Example Response
+
+
+  Indexes documents, runs the search, and returns hits with scores plus cluster
+
+  health status.'
+examples:
+- input: Index and search orders
+  output: Creates the index with mapping, POSTs documents, runs a range query, and reports hits
+- input: Cluster shows yellow status
+  output: Runs _cat/health and _cat/shards to find unassigned replicas and fixes allocation
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: elasticsearch.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-elasticsearch
+  generic:
+    system_prompt: 'This is your domain: elasticsearch. You do it through elasticsearch-rest: Manage indices,
+      documents, and searches with curl against Elasticsearch. The commands are real, e.g. `curl -X PUT
+      localhost:9200/orders?pretty`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

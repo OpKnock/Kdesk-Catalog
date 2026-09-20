@@ -1,0 +1,172 @@
+{
+  "name": "rolling-deployment",
+  "display_name": "Rolling Deployment",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Kubernetes rolling deployment skill: set image, rollout status/history, undo, pause/resume, and canary verification with kubectl.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kubectl"
+  ],
+  "capabilities": [
+    {
+      "name": "k8s-rolling-deploy",
+      "description": "Roll out and roll back Kubernetes Deployments safely",
+      "commands": [
+        "kubectl set image deployment/api api=registry.example.com/api:v2.1",
+        "kubectl rollout status deployment/api --timeout=180s",
+        "kubectl rollout history deployment/api",
+        "kubectl rollout undo deployment/api",
+        "kubectl rollout pause deployment/api",
+        "kubectl rollout resume deployment/api"
+      ],
+      "examples": [
+        "kubectl rollout status deployment/api --timeout=180s",
+        "kubectl rollout undo deployment/api --to-revision=3",
+        "kubectl get pods -l app=api -w"
+      ],
+      "parameters": [
+        {
+          "name": "deployment",
+          "type": "string",
+          "description": "Deployment name, e.g. deployment/api"
+        },
+        {
+          "name": "image",
+          "type": "string",
+          "description": "New image reference, e.g. registry.example.com/api:v2.1"
+        },
+        {
+          "name": "timeout",
+          "type": "string",
+          "description": "Rollout wait timeout, e.g. 180s"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "K8s Deployment docs",
+      "type": "documentation",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "description": "Rolling update strategy, maxSurge, maxUnavailable"
+    },
+    {
+      "title": "kubectl rollout reference",
+      "type": "documentation",
+      "source": "https://kubernetes.io/docs/reference/kubectl/generated/kubectl_rollout/",
+      "description": "rollout status, history, undo, pause, resume"
+    }
+  ],
+  "instructions": "# Rolling Deployment\n\nHand-crafted skill for safe Kubernetes rolling deployments.\n\n## What this skill does\n\n- Swaps container images on a Deployment with zero downtime\n- Watches rollout progress and knows when it is complete or failed\n- Rolls back instantly to a known-good revision\n\n## When to use\n\n- Shipping a new API version without downtime\n- Recovering from a bad release quickly\n- Validating progressive rollouts with pause/resume\n\n## Real commands\n\n```bash\n# Update the image (triggers a new ReplicaSet)\nkubectl set image deployment/api api=registry.example.com/api:v2.1\n\n# Wait until the rollout completes or times out\nkubectl rollout status deployment/api --timeout=180s\n\n# Review revision history with images\nkubectl rollout history deployment/api\nkubectl rollout history deployment/api --revision=3\n\n# Roll back (latest by default, or pick a revision)\nkubectl rollout undo deployment/api\nkubectl rollout undo deployment/api --to-revision=3\n\n# Canary-style: pause, verify, resume\nkubectl rollout pause deployment/api\nkubectl get pods -l app=api -w\nkubectl rollout resume deployment/api\n```\n\n## Deployment strategy\n\n```yaml\nstrategy:\n  type: RollingUpdate\n  rollingUpdate:\n    maxSurge: 1\n    maxUnavailable: 0\n```\n\n## Testing\n\n```bash\nkubectl rollout status deployment/api --timeout=180s\nkubectl get replicasets -l app=api\nkubectl get pods -l app=api -w\n```\n\n## Best practices\n\n- Set maxUnavailable: 0 to keep capacity during the swap\n- Verify readinessProbes before the new pods take traffic\n- Have a rollback runbook: one kubectl rollout undo away\n",
+  "examples": [
+    {
+      "input": "Deploy api:v2.1 without downtime",
+      "output": "kubectl set image deployment/api api=registry.example.com/api:v2.1, then kubectl rollout status deployment/api --timeout=180s."
+    },
+    {
+      "input": "The new version is broken; go back",
+      "output": "kubectl rollout undo deployment/api, or kubectl rollout undo deployment/api --to-revision=<known-good>."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rolling-deployment.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rolling-deployment"
+    },
+    "generic": {
+      "system_prompt": "You work Rolling Deployment hands-on. You do it through k8s-rolling-deploy: Roll out and roll back Kubernetes Deployments safely. The commands are real, e.g. `kubectl set image deployment/api api=registry.example.com/api:v2.1`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rolling-deployment",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "k8s-rolling-deploy",
+        "name": "deployment",
+        "type": "string",
+        "description": "Deployment name, e.g. deployment/api"
+      },
+      {
+        "capability": "k8s-rolling-deploy",
+        "name": "image",
+        "type": "string",
+        "description": "New image reference, e.g. registry.example.com/api:v2.1"
+      },
+      {
+        "capability": "k8s-rolling-deploy",
+        "name": "timeout",
+        "type": "string",
+        "description": "Rollout wait timeout, e.g. 180s"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kubectl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/rolling-deployment-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/rolling-deployment-skill.yaml",
+    "checksum": "895f34448810b4441c23645d634489fe8f4834a4fb186082ba8b87acb1ac30ed"
+  }
+}

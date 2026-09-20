@@ -1,0 +1,205 @@
+{
+  "name": "websocket-mgmt",
+  "display_name": "Websocket Mgmt",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Implements and operates WebSocket servers: connections, heartbeats, reconnects, broadcasting, and scaling with Redis pub/sub.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker",
+    "node",
+    "npx",
+    "redis-cli",
+    "websocat"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "npx wscat -c ws://localhost:3000",
+        "npx wscat -c wss://example.com/socket",
+        "websocat ws://localhost:3000",
+        "node server.js"
+      ],
+      "description": "Run WebSocket servers and inspect traffic.",
+      "name": "ws-servers",
+      "examples": [
+        "npx wscat -c ws://localhost:3000 -H \"Authorization: Bearer token\"",
+        "websocat -t ws://localhost:3000",
+        "wscat -c wss://example.com --header \"Origin: https://app.example.com\""
+      ],
+      "parameters": [
+        {
+          "description": "WebSocket URL",
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "description": "Extra header",
+          "name": "header",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "redis-cli publish ws:channel \"event\"",
+        "redis-cli pubsub numsub ws:channel",
+        "redis-cli llen ws:connections",
+        "docker compose up -d redis"
+      ],
+      "description": "Scale WebSocket apps across instances.",
+      "name": "ws-scaling",
+      "examples": [
+        "redis-cli publish notifications \"{\\\"userId\\\":1,\\\"msg\\\":\\\"hi\\\"}\"",
+        "redis-cli psubscribe \"ws:*\""
+      ],
+      "parameters": [
+        {
+          "description": "Pub/sub channel",
+          "name": "channel",
+          "type": "string"
+        },
+        {
+          "name": "payload",
+          "type": "string",
+          "description": "Message payload to publish"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "MDN WebSockets",
+      "description": "Browser WebSocket API",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/API/WebSocket",
+      "type": "documentation"
+    },
+    {
+      "title": "Socket.IO Docs",
+      "description": "Realtime framework with fallbacks",
+      "source": "https://socket.io/docs/",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# WebSocket Management\n\nBuild and operate realtime WebSocket services.\n\n## When to Use\n\n- Live notifications, chat, and collaborative editing\n- Real-time dashboards and streaming updates\n- Bidirectional protocols where polling is wasteful\n\n## Core Concerns\n\n- Heartbeat: ping/pong to detect dead connections\n- Reconnect: exponential backoff with jitter on the client\n- Broadcasting: fan out messages to rooms or all clients\n- Scaling: one instance cannot hold every connection\n\n## Commands\n\n```bash\n# Test a server\nnpx wscat -c ws://localhost:3000\nnpx wscat -c wss://example.com/socket\n\n# With headers\nnpx wscat -c ws://localhost:3000 -H \"Authorization: Bearer token\"\n\n# Alternative client\nwebsocat ws://localhost:3000\n\n# Cross-instance broadcast via Redis\nredis-cli publish ws:channel '{\"userId\":1,\"msg\":\"hi\"}'\nredis-cli pubsub numsub ws:channel\n```\n\n## Node Example\n\n```javascript\nconst { WebSocketServer } = require(\"ws\");\nconst wss = new WebSocketServer({ port: 3000 });\n\nwss.on(\"connection\", (ws) => {\n  ws.isAlive = true;\n  ws.on(\"pong\", () => (ws.isAlive = true));\n  ws.on(\"message\", (data) => wss.clients.forEach((c) => c.send(data)));\n});\n\nsetInterval(() => {\n  wss.clients.forEach((ws) => {\n    if (!ws.isAlive) return ws.terminate();\n    ws.isAlive = false;\n    ws.ping();\n  });\n}, 30000);\n```\n\n## Best Practices\n\n- Heartbeat every 20-30s and terminate silent sockets\n- Limit payload size and rate per connection\n- Authenticate on the upgrade request, not after connect\n- Use Redis pub/sub to broadcast across instances\n- Handle backpressure; do not buffer unbounded\n- Load test with many concurrent connections before launch",
+  "examples": [
+    {
+      "input": "Clients disconnect randomly from my socket",
+      "output": "Agent adds ping/pong heartbeat with termination, checks proxies for idle timeouts, and tunes keep-alive."
+    },
+    {
+      "input": "Broadcast to all connected users",
+      "output": "Agent implements a broadcast loop and scales it with Redis pub/sub across instances."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "websocket-mgmt.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-websocket-mgmt"
+    },
+    "generic": {
+      "system_prompt": "You own Websocket Mgmt end to end. You do it through ws-servers: Run WebSocket servers and inspect traffic. The commands are real, e.g. `npx wscat -c ws://localhost:3000`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "websocket-mgmt",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "ws-servers",
+        "name": "url",
+        "type": "string",
+        "description": "WebSocket URL"
+      },
+      {
+        "capability": "ws-servers",
+        "name": "header",
+        "type": "string",
+        "description": "Extra header"
+      },
+      {
+        "capability": "ws-scaling",
+        "name": "channel",
+        "type": "string",
+        "description": "Pub/sub channel"
+      },
+      {
+        "capability": "ws-scaling",
+        "name": "payload",
+        "type": "string",
+        "description": "Message payload to publish"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker",
+    "node",
+    "npx",
+    "redis-cli",
+    "websocat"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/websocket-mgmt-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/websocket-mgmt-skill.yaml",
+    "checksum": "692a4b4038e0a158c589f79f15fd8e2c536ad44f964ecbc1b7bfbe3f8828d405"
+  }
+}

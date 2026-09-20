@@ -1,0 +1,173 @@
+{
+  "name": "pulsar-python",
+  "display_name": "Pulsar Python",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Pulsar clients in Python: producer/consumer code, pulsar-client wheel, and message schemas.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "pip",
+    "python3"
+  ],
+  "capabilities": [
+    {
+      "name": "pulsar-python-client",
+      "description": "Install pulsar-client and build Python producers and consumers.",
+      "commands": [
+        "pip install pulsar-client",
+        "python3 -m pip show pulsar-client",
+        "python3 producer.py",
+        "python3 consumer.py",
+        "python3 -c \"import pulsar; print(pulsar.__version__)\""
+      ],
+      "examples": [
+        "python3 producer.py",
+        "python3 consumer.py",
+        "pip install pulsar-client==3.2.0"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic name"
+        },
+        {
+          "name": "subscription",
+          "type": "string",
+          "description": "Consumer subscription name"
+        },
+        {
+          "name": "service_url",
+          "type": "string",
+          "description": "pulsar:// broker URL"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Pulsar Python client docs",
+      "type": "documentation",
+      "source": "https://pulsar.apache.org/docs/3.0.x/client-libraries-python/",
+      "description": "Python client usage and schemas"
+    },
+    {
+      "title": "pulsar-client on PyPI",
+      "type": "documentation",
+      "source": "https://pypi.org/project/pulsar-client/",
+      "description": "Installation and versions"
+    }
+  ],
+  "instructions": "# Pulsar Python\n\nProduce and consume Pulsar messages in Python with the official client.\n\n## What this skill does\n\n- Installs the client wheel\n- Writes producer and consumer scripts\n- Handles schemas and acking\n\n## When to use\n\n- Data pipelines in Python\n- Quick integrations with Pulsar\n\n## Real commands\n\n```bash\npip install pulsar-client\npython3 -m pip show pulsar-client\npython3 producer.py\npython3 consumer.py\n```\n\n## Producer\n\n```python\nimport pulsar\nclient = pulsar.Client(\"pulsar://localhost:6650\")\nproducer = client.create_producer(\"my-topic\")\nproducer.send((\"hello\").encode(\"utf-8\"))\nclient.close()\n```\n\n## Consumer\n\n```python\nconsumer = client.subscribe(\"my-topic\", subscription_name=\"worker\")\nwhile True:\n    msg = consumer.receive()\n    print(msg.data().decode())\n    consumer.acknowledge(msg)\n```\n\n## Best practices\n\n- Use JsonSchema for structured data\n- Always acknowledge messages after processing\n- Close the client on exit to flush pending",
+  "examples": [
+    {
+      "input": "Consume events from Pulsar in a Python worker",
+      "output": "The agent writes a consumer with ack handling and runs it against the topic."
+    },
+    {
+      "input": "Publish a JSON payload from Python",
+      "output": "The agent uses a JsonSchema producer and sends serialized records."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pulsar-python.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pulsar-python"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Pulsar Python. You do it through pulsar-python-client: Install pulsar-client and build Python producers and consumers. The commands are real, e.g. `pip install pulsar-client`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "pulsar-python",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pulsar-python-client",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic name"
+      },
+      {
+        "capability": "pulsar-python-client",
+        "name": "subscription",
+        "type": "string",
+        "description": "Consumer subscription name"
+      },
+      {
+        "capability": "pulsar-python-client",
+        "name": "service_url",
+        "type": "string",
+        "description": "pulsar:// broker URL"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pip",
+    "python3"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/pulsar-python-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/pulsar-python-skill.yaml",
+    "checksum": "34e6a5b437dfa33ac8ce39f2d2f992ea62a1413c2e29fc266949da733c37d1a0"
+  }
+}

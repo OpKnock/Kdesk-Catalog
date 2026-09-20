@@ -1,0 +1,223 @@
+{
+  "name": "api-gov-governance-audit",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Audits and enforces API governance on existing OpenAPI specs, blocking non-compliant changes via CI linting with Spectral rulesets.",
+  "keywords": [
+    "api-governance",
+    "style-guide",
+    "linting",
+    "compliance",
+    "standards"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-gov-governance-audit.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-gov-governance-audit"
+    },
+    "generic": {
+      "system_prompt": "You work Api Gov Governance Audit hands-on. You do it through governance-audit: Run Spectral linting against existing OpenAPI specs to surface style guide violations and drift. The commands are real, e.g. `npx @stoplight/spectral-cli lint openapi.yaml`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "governance-audit",
+      "description": "Run Spectral linting against existing OpenAPI specs to surface style guide violations and drift",
+      "commands": [
+        "npx @stoplight/spectral-cli lint openapi.yaml",
+        "npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --format json openapi.yaml",
+        "redocly lint openapi.yaml --extends=recommended",
+        "swagger-cli validate openapi.yaml",
+        "npx @stoplight/spectral-cli lint --fail-severity error openapi.yaml"
+      ],
+      "examples": [
+        "npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --format json openapi.yaml > spectral-report.json",
+        "redocly lint api/v1/*.yaml --output-style=github-actions",
+        "swagger-cli validate openapi.yaml && npx @stoplight/spectral-cli lint openapi.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "spec",
+          "type": "string",
+          "description": "Path to the OpenAPI spec to lint"
+        },
+        {
+          "name": "ruleset",
+          "type": "string",
+          "description": "Path to the Spectral ruleset file"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Output format: stylish, json, github-actions"
+        }
+      ]
+    },
+    {
+      "name": "compliance-gates",
+      "description": "Wire lint gates into CI/CD so non-compliant API changes fail the pipeline",
+      "commands": [
+        "npx @stoplight/spectral-cli lint --fail-severity warn openapi.yaml",
+        "npx @stoplight/spectral-cli lint --fail-on-unmatched-globs openapi.yaml",
+        "git diff --name-only HEAD~1 | grep -E '\\.(yaml|yml|json)$' | xargs npx @stoplight/spectral-cli lint",
+        "openapi-diff --fail-on-incompatible old.yaml new.yaml",
+        "npx @stoplight/spectral-cli lint --summary openapi.yaml"
+      ],
+      "examples": [
+        "git diff --name-only HEAD~1 | xargs npx @stoplight/spectral-cli lint --fail-severity error",
+        "openapi-diff --fail-on-incompatible prod-spec.yaml pr-spec.yaml",
+        "npx @stoplight/spectral-cli lint --summary --quiet openapi.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "baseRef",
+          "type": "string",
+          "description": "Git ref to diff spec changes against"
+        },
+        {
+          "name": "failSeverity",
+          "type": "string",
+          "description": "Minimum severity that fails CI"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "spectral",
+    "openapi"
+  ],
+  "tools": [
+    "spectral",
+    "openapi",
+    "node.js",
+    "python",
+    "stoplight-studio"
+  ],
+  "examples": [
+    {
+      "input": "Enforce API standards on our existing specs",
+      "output": "Runs Spectral with the team ruleset over every OpenAPI file and produces a JSON violation report grouped by rule"
+    },
+    {
+      "input": "Automate API review in the PR pipeline",
+      "output": "Adds a GitHub Actions job that lints changed specs and fails the PR on error-severity violations"
+    }
+  ],
+  "instructions": "# API Gov (Audit & Enforce)\n\nAudits existing OpenAPI specs against an organizational style guide and enforces compliance in CI.\n\n## When to Use\n- Enforcing standards on a mature spec base\n- Blocking breaking or non-compliant PRs\n- Measuring governance drift over time\n- Onboarding teams onto a published style guide\n\n## Real Commands\n\n```bash\n# Install tooling\nnpm install -g @stoplight/spectral-cli\nnpm install -g @redocly/cli\n\n# Lint a spec\nnpx @stoplight/spectral-cli lint openapi.yaml\n\n# Lint with a custom ruleset\nnpx @stoplight/spectral-cli lint --ruleset .spectral.yaml --format json openapi.yaml\n\n# Recommended defaults\nredocly lint openapi.yaml --extends=recommended\n\n# Validate structure first\nswagger-cli validate openapi.yaml\n```\n\n## CI Gate\n\n```yaml\n# .github/workflows/api-governance.yml\n- name: Lint specs\n  run: npx @stoplight/spectral-cli lint --fail-severity error ${{ matrix.spec }}\n```\n\n## Testing\nRun the linter on the PR branch against the main branch baseline and compare JSON reports.\n\n## Best Practices\n- Publish the style guide alongside the ruleset\n- Use `--fail-severity error` in CI, `warn` locally\n- Review lint report trends each sprint",
+  "display_name": "Api Gov Governance Audit",
+  "knowledge": [
+    {
+      "title": "Spectral Documentation",
+      "type": "documentation",
+      "source": "https://docs.stoplight.io/docs/spectral",
+      "description": "Ruleset authoring, CLI usage, custom functions"
+    },
+    {
+      "title": "OpenAPI Specification 3.1",
+      "type": "documentation",
+      "source": "https://spec.openapis.org/oas/v3.1.0",
+      "description": "Full OpenAPI 3.1 schema reference"
+    },
+    {
+      "title": "Redocly CLI",
+      "type": "documentation",
+      "source": "https://redocly.com/docs/cli/",
+      "description": "Linting and bundling with recommended rule sets"
+    }
+  ],
+  "id": "api-gov-governance-audit",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "governance-audit",
+        "name": "spec",
+        "type": "string",
+        "description": "Path to the OpenAPI spec to lint"
+      },
+      {
+        "capability": "governance-audit",
+        "name": "ruleset",
+        "type": "string",
+        "description": "Path to the Spectral ruleset file"
+      },
+      {
+        "capability": "governance-audit",
+        "name": "format",
+        "type": "string",
+        "description": "Output format: stylish, json, github-actions"
+      },
+      {
+        "capability": "compliance-gates",
+        "name": "baseRef",
+        "type": "string",
+        "description": "Git ref to diff spec changes against"
+      },
+      {
+        "capability": "compliance-gates",
+        "name": "failSeverity",
+        "type": "string",
+        "description": "Minimum severity that fails CI"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "spectral",
+    "openapi"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-gov-governance-audit/skill/api-gov-governance-audit.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-gov-governance-audit/skill/api-gov-governance-audit.yaml",
+    "checksum": "0fcc50d6ced26273a3e4bbeb83e64cb6ac7b9cbf7e8d3372cb8b3fd5615b7db3"
+  }
+}

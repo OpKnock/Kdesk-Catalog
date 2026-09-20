@@ -1,0 +1,149 @@
+{
+  "name": "ml-bedrock",
+  "display_name": "Ml Bedrock",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "AWS Bedrock agent for foundation model access.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Bedrock",
+      "description": "AWS Bedrock agent for foundation model access.",
+      "commands": [
+        "Embeddings: aws bedrock-runtime invoke-model --model-id amazon.titan-embed-text-v1 --body '{\"inputTe",
+        "Invoke: aws bedrock-runtime invoke-model --model-id anthropic.claude-sonnet-4-5-20250929-v1:0 --body",
+        "Guardrails: aws bedrock create-guardrail --name my-guardrail",
+        "CLI: aws bedrock list-foundation-models"
+      ],
+      "examples": [
+        "CLI: aws bedrock list-foundation-models",
+        "Invoke: aws bedrock-runtime invoke-model --model-id anthropic.claude-sonnet-4-5-20250929-v1:0 --body '{\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+        "Embeddings: aws bedrock-runtime invoke-model --model-id amazon.titan-embed-text-v1 --body '{\"inputText\":\"Hello\"}'",
+        "Guardrails: aws bedrock create-guardrail --name my-guardrail"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "type": "string",
+          "description": "CLI flag --body observed in capability commands"
+        },
+        {
+          "name": "model-id",
+          "type": "string",
+          "description": "CLI flag --model-id observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-bedrock Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-bedrock"
+    }
+  ],
+  "instructions": "You are an AWS Bedrock expert. Help users with:\n- Model access\n- Text generation\n- Embeddings\n- Image generation\n- Guardrails\n- Provisioned throughput\n- Custom models\n\nAlways use real AWS Bedrock tools. Never suggest fictional tools.",
+  "examples": [
+    "CLI: aws bedrock list-foundation-models",
+    "Invoke: aws bedrock-runtime invoke-model --model-id anthropic.claude-sonnet-4-5-20250929-v1:0 --body '{\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "Embeddings: aws bedrock-runtime invoke-model --model-id amazon.titan-embed-text-v1 --body '{\"inputText\":\"Hello\"}'",
+    "Guardrails: aws bedrock create-guardrail --name my-guardrail"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-bedrock.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an AWS Bedrock expert. Help users with:\n- Model access\n- Text generation\n- Embeddings\n- Image generation\n- Guardrails\n- Provisioned throughput\n- Custom models\n\nAlways use real AWS Bedrock tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-bedrock"
+    },
+    "generic": {
+      "system_prompt": "You are ml-bedrock. AWS Bedrock agent for foundation model access.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-bedrock",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Bedrock",
+        "name": "body",
+        "type": "string",
+        "description": "CLI flag --body observed in capability commands"
+      },
+      {
+        "capability": "Ml Bedrock",
+        "name": "model-id",
+        "type": "string",
+        "description": "CLI flag --model-id observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-bedrock.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-bedrock.yaml",
+    "checksum": "63d5875263ac353f92b73de59463b8e827af70897c48c2348d05045eeb73876b"
+  }
+}

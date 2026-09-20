@@ -1,0 +1,228 @@
+{
+  "name": "tooling",
+  "display_name": "Tooling",
+  "category": "infrastructure",
+  "subcategory": "general",
+  "description": "Standardizes everyday infra developer tooling: jq/yq data processing, Docker Compose workflows, and task runners.",
+  "version": "2.0.0",
+  "tags": [
+    "infrastructure"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker"
+  ],
+  "capabilities": [
+    {
+      "name": "data-tools",
+      "description": "Process JSON and YAML with jq and yq.",
+      "commands": [
+        "jq '.name, .version' package.json",
+        "jq -r '.items[] | select(.status==\"running\") | .id' instances.json",
+        "yq eval '.services.web.image' docker-compose.yml",
+        "yq eval '.services | keys' docker-compose.yml",
+        "jq '.[] | {id, name} | @csv' data.json"
+      ],
+      "examples": [
+        "jq -r '.[] | .name' package-lock.json | sort -u | head",
+        "yq eval '.services.redis.ports' docker-compose.yml",
+        "curl -s https://api.github.com/repos/opencode/opencode | jq '.stargazers_count'"
+      ],
+      "parameters": [
+        {
+          "name": "filter",
+          "type": "string",
+          "description": "jq/yq filter expression"
+        },
+        {
+          "name": "input",
+          "type": "string",
+          "description": "Input JSON/YAML file"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output transformation like @csv, @tsv"
+        }
+      ]
+    },
+    {
+      "name": "compose",
+      "description": "Manage local dev environments with Docker Compose.",
+      "commands": [
+        "docker compose up -d",
+        "docker compose ps",
+        "docker compose logs -f web",
+        "docker compose exec web sh",
+        "docker compose down -v"
+      ],
+      "examples": [
+        "docker compose up -d --build",
+        "docker compose logs --tail=50 api",
+        "docker compose run --rm migrate"
+      ],
+      "parameters": [
+        {
+          "name": "service",
+          "type": "string",
+          "description": "Compose service name"
+        },
+        {
+          "name": "detach",
+          "type": "string",
+          "description": "Run in background with -d"
+        },
+        {
+          "name": "follow",
+          "type": "string",
+          "description": "Follow logs with -f"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "jq Manual",
+      "type": "documentation",
+      "source": "https://jqlang.github.io/jq/manual/",
+      "description": "jq filters, selectors, and output formats"
+    },
+    {
+      "title": "yq Docs",
+      "type": "documentation",
+      "source": "https://mikefarah.gitbook.io/yq",
+      "description": "YAML processing with jq-like syntax"
+    },
+    {
+      "title": "Docker Compose",
+      "type": "documentation",
+      "source": "https://docs.docker.com/compose/",
+      "description": "Compose CLI and compose.yaml reference"
+    }
+  ],
+  "instructions": "# Infrastructure Tooling\n\nStandardize local and CI tooling across the org.\n\n## When to Use\n\n- Parsing API responses or configs in scripts\n- Booting full local stacks with one command\n- CI pipelines that inspect manifests\n\n## jq for JSON\n\n```bash\njq -r '.items[] | select(.status==\"running\") | .id' instances.json\ncurl -s https://api.github.com/repos/opencode/opencode | jq '.stargazers_count'\n```\n\nUse `-r` for raw strings, `@csv`/`@tsv` for tables.\n\n## yq for YAML\n\n```bash\nyq eval '.services.web.image' docker-compose.yml\nyq eval '.services | keys' docker-compose.yml\n```\n\nGreat for pulling values out of k8s manifests and compose files.\n\n## Compose development loop\n\n```bash\ndocker compose up -d --build\ndocker compose ps\ndocker compose logs -f web\ndocker compose down -v\n```\n\n## Task runner pattern\n\nUse `make` or `task` to encode common commands:\n\n```makefile\nup:\n\tdocker compose up -d\nlint:\n\tnpx eslint . --max-warnings 0\ntest:\n\tnpx vitest run\n```\n\n```bash\nmake up make lint\n```\n\n## Best practices\n\n- Pin tool versions via mise/asdf in a shared .tool-versions.\n- Keep compose files env-driven with .env.example committed.\n- Prefer `docker compose run --rm` for one-off jobs.\n- Add a CI job that runs every script from the Makefile.\n\n## Testing\n\n```bash\njq empty file.json && echo valid\ncurl -s <api> | jq -e 'has(\"data\")'\n```\n\nValidate JSON/YAML in CI before scripts consume them.",
+  "examples": [
+    {
+      "input": "Extract running instance ids from an API response.",
+      "output": "Pipes the JSON through jq filtering status==running and prints ids raw."
+    },
+    {
+      "input": "Boot the local stack and follow web logs.",
+      "output": "Runs docker compose up -d --build, then docker compose logs -f web."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "tooling.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-tooling"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Tooling. You do it through data-tools: Process JSON and YAML with jq and yq. The commands are real, e.g. `jq .name, .version package.json`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "tooling",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "data-tools",
+        "name": "filter",
+        "type": "string",
+        "description": "jq/yq filter expression"
+      },
+      {
+        "capability": "data-tools",
+        "name": "input",
+        "type": "string",
+        "description": "Input JSON/YAML file"
+      },
+      {
+        "capability": "data-tools",
+        "name": "output",
+        "type": "string",
+        "description": "Output transformation like @csv, @tsv"
+      },
+      {
+        "capability": "compose",
+        "name": "service",
+        "type": "string",
+        "description": "Compose service name"
+      },
+      {
+        "capability": "compose",
+        "name": "detach",
+        "type": "string",
+        "description": "Run in background with -d"
+      },
+      {
+        "capability": "compose",
+        "name": "follow",
+        "type": "string",
+        "description": "Follow logs with -f"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "infrastructure/tooling-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/infrastructure/tooling-skill.yaml",
+    "checksum": "b480612c53f8ab0dbdd884bda8534809c3fe623077f3e7106f346906accd5f35"
+  }
+}

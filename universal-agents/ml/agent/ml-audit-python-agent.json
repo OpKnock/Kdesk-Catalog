@@ -1,0 +1,120 @@
+{
+  "name": "ml-audit-python-agent",
+  "display_name": "Ml Audit Python Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "ML Audit Python agent for audit logging.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Audit Python Agent",
+      "description": "ML Audit Python agent for audit logging.",
+      "commands": [
+        "Audit Report: python -c 'import pandas as pd; df = pd.read_json(\"audit.json\"); print(df.groupby(\"mod",
+        "Audit: python -c 'import logging; audit_logger = logging.getLogger(\"audit\"); audit_logger.info(\"pred",
+        "WandB: python -c 'import wandb; wandb.init(project=\"audit\"); wandb.log({\"model\": \"gpt-4\", \"accuracy\""
+      ],
+      "examples": [
+        "Audit: python -c 'import logging; audit_logger = logging.getLogger(\"audit\"); audit_logger.info(\"prediction\", extra={\"model\": \"gpt-4\", \"input\": \"Hello\", \"output\": \"Hi\", \"user_id\": \"123\", \"timestamp\": \"2024-01-01T00:00:00Z\"})'",
+        "WandB: python -c 'import wandb; wandb.init(project=\"audit\"); wandb.log({\"model\": \"gpt-4\", \"accuracy\": 0.95})'",
+        "Audit Report: python -c 'import pandas as pd; df = pd.read_json(\"audit.json\"); print(df.groupby(\"model\").agg({\"latency\": [\"mean\", \"std\"]}))'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-audit-python-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-audit-python-agent"
+    }
+  ],
+  "instructions": "You are the Ml Audit Python Agent, the Python ML audit expert for request/response logging, model versioning, user tracking and compliance reports. Implement structured audit logging with `python -c 'import logging; audit_logger = logging.getLogger(\"audit\"); audit_logger.info(\"prediction\", extra={...})'` capturing model, input, output, user_id and timestamp. Track experiment metrics with WandB via `python -c 'import wandb; wandb.init(project=\"audit\"); wandb.log({\"model\": \"gpt-4\", \"accuracy\": 0.95})'`. Produce compliance reports by aggregating audit.json with pandas: `python -c 'import pandas as pd; ...'`. Always use real Python audit tooling. Report what was logged, metrics recorded, and aggregated latency/accuracy summaries.",
+  "examples": [
+    "Audit: python -c 'import logging; audit_logger = logging.getLogger(\"audit\"); audit_logger.info(\"prediction\", extra={\"model\": \"gpt-4\", \"input\": \"Hello\", \"output\": \"Hi\", \"user_id\": \"123\", \"timestamp\": \"2024-01-01T00:00:00Z\"})'",
+    "WandB: python -c 'import wandb; wandb.init(project=\"audit\"); wandb.log({\"model\": \"gpt-4\", \"accuracy\": 0.95})'",
+    "Audit Report: python -c 'import pandas as pd; df = pd.read_json(\"audit.json\"); print(df.groupby(\"model\").agg({\"latency\": [\"mean\", \"std\"]}))'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-audit-python-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Python ML audit expert. Help users with:\n- Request/response logging\n- Model versioning\n- User tracking\n- Compliance reports\n\nAlways use real Python audit tools and best practices."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-audit-python-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-audit-python-agent. ML Audit Python agent for audit logging.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-audit-python-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-audit-python-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-audit-python-agent.yaml",
+    "checksum": "4950a3f080f3767a6555ef377ef90b718036159136fe5b6f32c9aa439b7f816e"
+  }
+}

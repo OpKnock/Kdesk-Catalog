@@ -1,0 +1,236 @@
+{
+  "name": "alerting-rules",
+  "display_name": "Alerting Rules",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Authors and tests Prometheus alerting rules and Alertmanager config: rule files, promtool validation, unit tests, silences, and the HTTP API.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "amtool",
+    "promtool"
+  ],
+  "capabilities": [
+    {
+      "name": "rules-authoring",
+      "description": "Author Prometheus alerting/recording rules and validate them.",
+      "commands": [
+        "promtool check rules alerting-rules.yml",
+        "promtool test rules rules.test.yml",
+        "promtool query instant 'up'",
+        "promtool query range 'http_requests_total[5m]'",
+        "curl 'http://localhost:9090/api/v1/rules?type=alert'"
+      ],
+      "examples": [
+        "promtool check rules /etc/prometheus/alerts.yml",
+        "promtool test rules unit-tests.yml",
+        "curl -s 'http://localhost:9090/api/v1/rules' | jq '.data.groups[].rules[] | {name, state}'"
+      ],
+      "parameters": [
+        {
+          "name": "rules_file",
+          "type": "string",
+          "description": "Path to the alerting rules YAML"
+        },
+        {
+          "name": "test_file",
+          "type": "string",
+          "description": "Path to promtool unit test YAML"
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "description": "PromQL expression to evaluate"
+        }
+      ]
+    },
+    {
+      "name": "alertmanager",
+      "description": "Configure Alertmanager routing, manage silences, and inspect the API.",
+      "commands": [
+        "amtool check-config /etc/alertmanager/alertmanager.yml",
+        "amtool alert list",
+        "amtool silence add --expires=1h 'severity=\"critical\"'",
+        "amtool silence list",
+        "curl -X POST http://localhost:9093/api/v2/silences -d @silence.json"
+      ],
+      "examples": [
+        "amtool check-config /etc/alertmanager/alertmanager.yml",
+        "amtool silence add --author=oncall --comment=\"draining node\" 'instance=\"node1\"'",
+        "curl -X GET http://localhost:9093/api/v2/alerts | jq '.[].labels.alertname'"
+      ],
+      "parameters": [
+        {
+          "name": "expires",
+          "type": "string",
+          "description": "Silence duration, e.g. 1h"
+        },
+        {
+          "name": "author",
+          "type": "string",
+          "description": "Silence creator name"
+        },
+        {
+          "name": "matchers",
+          "type": "string",
+          "description": "Label matchers like severity=\"critical\""
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Alerting Rules",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/",
+      "description": "Rule file format, annotations, labels"
+    },
+    {
+      "title": "Alertmanager",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/alerting/latest/alertmanager/",
+      "description": "Routing, receivers, silences"
+    },
+    {
+      "title": "promtool",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/command-line/promtool/",
+      "description": "check rules, test rules, queries"
+    },
+    {
+      "title": "Alerting on SLOs",
+      "type": "documentation",
+      "source": "https://sre.google/workbook/alerting-on-slos/",
+      "description": "Burn-rate alert design"
+    }
+  ],
+  "instructions": "# Alerting Rules\n\n## What this skill does\n\nAuthors and operates Prometheus alerting: rule files, promtool validation and unit tests, Alertmanager routing and silences, and alert state queries via the HTTP API.\n\n## When to use\n\n- Creating an alert for a new SLO or error condition\n- Debugging an alert that fires (or fails to fire)\n- Managing an outage via silences without stopping metrics collection\n\n## Real commands\n\n```bash\n# Validate rules\npromtool check rules alerts.yml\n\n# Unit-test rule evaluation\npromtool test rules tests.yml\n\n# Inspect live alert state\ncurl -s 'http://localhost:9090/api/v1/rules?type=alert' | jq '.data.groups[].rules[] | {name,state}'\n\n# Alertmanager\namtool check-config alertmanager.yml\namtool alert list\namtool silence add --expires=2h --author=oncall 'severity=\"critical\"'\n```\n\n## Rules file\n\n```yaml\ngroups:\n- name: api\n  rules:\n  - alert: APIHighErrorRate\n    expr: sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m])) > 0.05\n    for: 5m\n    labels:\n      severity: critical\n    annotations:\n      summary: \"API 5xx rate above 5%\"\n```\n\n## Unit test\n\n```yaml\nrule_files: [alerts.yml]\nevaluation_interval: 1m\ntests:\n- interval: 1m\n  input_series:\n  - series: 'http_requests_total{status=\"500\"}'\n    values: '0+10x10'\n  alert_rule_test:\n  - eval_time: 10m\n    alertname: APIHighErrorRate\n```\n\n## Testing\n\n- Run `promtool check rules` in CI before merge\n- Write promtool test rules cases for fire/no-fire thresholds\n\n## Best practices\n\n- Prefer SLO burn-rate alerts over raw thresholds\n- Every alert needs a runbook URL in annotations\n- Use `for:` clauses to avoid flapping",
+  "examples": [
+    {
+      "input": "Alert when 5xx exceeds 5% for 5 minutes",
+      "output": "Writes the rule with expr/for:5m, verifies with promtool check rules and a unit test, then reloads Prometheus."
+    },
+    {
+      "input": "Silence disk alerts during tonight's maintenance",
+      "output": "Runs `amtool silence add --expires=8h --comment='maintenance' 'job=\"node-exporter\"'`, confirms with amtool silence list."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "alerting-rules.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-alerting-rules"
+    },
+    "generic": {
+      "system_prompt": "You own Alerting Rules end to end. You do it through rules-authoring: Author Prometheus alerting/recording rules and validate them. The commands are real, e.g. `promtool check rules alerting-rules.yml`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "alerting-rules",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rules-authoring",
+        "name": "rules_file",
+        "type": "string",
+        "description": "Path to the alerting rules YAML"
+      },
+      {
+        "capability": "rules-authoring",
+        "name": "test_file",
+        "type": "string",
+        "description": "Path to promtool unit test YAML"
+      },
+      {
+        "capability": "rules-authoring",
+        "name": "query",
+        "type": "string",
+        "description": "PromQL expression to evaluate"
+      },
+      {
+        "capability": "alertmanager",
+        "name": "expires",
+        "type": "string",
+        "description": "Silence duration, e.g. 1h"
+      },
+      {
+        "capability": "alertmanager",
+        "name": "author",
+        "type": "string",
+        "description": "Silence creator name"
+      },
+      {
+        "capability": "alertmanager",
+        "name": "matchers",
+        "type": "string",
+        "description": "Label matchers like severity=\"critical\""
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "amtool",
+    "promtool"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/alerting-rules-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/alerting-rules-skill.yaml",
+    "checksum": "9946b38f21bf4746fa4d8a5f939c2ef9c3bb74b87aa3f4d4d99848199f660890"
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "name": "hasura",
+  "display_name": "hasura",
+  "category": "cloud",
+  "subcategory": "general",
+  "description": "Operates Hasura GraphQL engines: metadata management, migrations, console access, remote schemas, and permissions.",
+  "version": "2.0.0",
+  "tags": [
+    "cloud"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "hasura"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "hasura init myproject --endpoint http://localhost:8080",
+        "hasura console",
+        "hasura migrate create init --from-server",
+        "hasura migrate apply",
+        "hasura metadata export"
+      ],
+      "description": "Manage Hasura metadata and migrations.",
+      "name": "hasura-cli",
+      "examples": [
+        "hasura init --endpoint http://localhost:8080 --admin-secret mysecret",
+        "hasura metadata apply --project myproject",
+        "hasura migrate status"
+      ],
+      "parameters": [
+        {
+          "description": "Hasura endpoint",
+          "name": "endpoint",
+          "type": "string"
+        },
+        {
+          "description": "Admin secret",
+          "name": "admin-secret",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/graphql -H \"x-hasura-admin-secret: mysecret\" -H \"Content-Type: application/json\" -d \"{\\\"query\\\":\\\"{ __schema { types { name } } }\\\"}\"",
+        "curl -X POST http://localhost:8080/v1/query -H \"x-hasura-admin-secret: mysecret\" -H \"Content-Type: application/json\" -d \"{\\\"type\\\":\\\"run_sql\\\",\\\"args\\\":{\\\"sql\\\":\\\"SELECT version();\\\"}}\"",
+        "hasura metadata reload",
+        "hasura seed create users"
+      ],
+      "description": "Query the GraphQL engine and manage schema.",
+      "name": "graphql-engine",
+      "examples": [
+        "curl -s http://localhost:8080/healthz",
+        "hasura seed apply"
+      ],
+      "parameters": [
+        {
+          "description": "GraphQL query",
+          "name": "query",
+          "type": "string"
+        },
+        {
+          "description": "SQL to run",
+          "name": "sql",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Hasura Docs",
+      "description": "GraphQL engine and CLI reference",
+      "source": "https://hasura.io/docs/",
+      "type": "documentation"
+    },
+    {
+      "title": "Hasura CLI",
+      "description": "hasura command reference",
+      "source": "https://hasura.io/docs/3.0/cli/",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Hasura\n\nInstant GraphQL APIs on top of Postgres.\n\n## When to Use\n\n- Auto-generated GraphQL CRUD over existing Postgres\n- Permission-driven multi-tenant data access\n- Composing remote schemas and actions\n- Event-driven data (webhooks, cron) on database events\n\n## Commands\n\n```bash\n# Init and console\nhasura init myproject --endpoint http://localhost:8080\nhasura console\n\n# Migrations\nhasura migrate create init --from-server\nhasura migrate apply\nhasura migrate status\n\n# Metadata\nhasura metadata export\nhasura metadata apply\nhasura metadata reload\n\n# Seeds\nhasura seed create users\nhasura seed apply\n\n# Engine health\ncurl -s http://localhost:8080/healthz\n\n# Run SQL via the metadata API\ncurl -X POST http://localhost:8080/v1/query \\\n  -H \"x-hasura-admin-secret: mysecret\" -H \"Content-Type: application/json\" \\\n  -d '{\"type\":\"run_sql\",\"args\":{\"sql\":\"SELECT version();\"}}'\n```\n\n## Best Practices\n\n- Manage schema via migrations, metadata via version control\n- Never ship the admin secret in client code\n- Use permissions/roles per consumer instead of one super-user\n- Track Hasura version to plan upgrades\n- Use remote schemas for non-Postgres data\n- Apply metadata in CI and verify with a schema diff",
+  "examples": [
+    {
+      "input": "Point Hasura at my Postgres database",
+      "output": "Agent sets the database URL in docker-compose/env, runs hasura migrate apply, and tracks tables via the console metadata."
+    },
+    {
+      "input": "Give users read access to their own rows",
+      "output": "Agent configures a permission with x-hasura-user-id session variables and tests with a role-scoped query."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "hasura.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-hasura"
+    },
+    "generic": {
+      "system_prompt": "You work hasura hands-on. You do it through hasura-cli: Manage Hasura metadata and migrations. The commands are real, e.g. `hasura init myproject --endpoint http://localhost:8080`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "hasura",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "hasura-cli",
+        "name": "endpoint",
+        "type": "string",
+        "description": "Hasura endpoint"
+      },
+      {
+        "capability": "hasura-cli",
+        "name": "admin-secret",
+        "type": "string",
+        "description": "Admin secret"
+      },
+      {
+        "capability": "graphql-engine",
+        "name": "query",
+        "type": "string",
+        "description": "GraphQL query"
+      },
+      {
+        "capability": "graphql-engine",
+        "name": "sql",
+        "type": "string",
+        "description": "SQL to run"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "hasura"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/hasura-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/hasura-skill.yaml",
+    "checksum": "23c9fa238b12e7e9c463e89f073659af1ae106beb91f04ccae496a2c1f90415f"
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "name": "nginx-tuning",
+  "display_name": "Nginx Tuning",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Tune nginx for production: worker processes, keepalive, buffering, gzip, OS-level kernel params and load testing.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "nginx",
+    "sysctl"
+  ],
+  "capabilities": [
+    {
+      "name": "nginx-performance-tuning",
+      "description": "Optimize nginx core settings and kernel parameters, then benchmark with ab.",
+      "commands": [
+        "nginx -t",
+        "nginx -s reload",
+        "nginx -T",
+        "sysctl -w net.core.somaxconn=65535",
+        "ab -n 10000 -c 100 http://localhost/"
+      ],
+      "examples": [
+        "nginx -T | grep -E 'worker_processes|worker_connections'",
+        "sysctl -w net.ipv4.tcp_fin_timeout=30",
+        "ab -n 5000 -c 50 -k http://localhost/api"
+      ],
+      "parameters": [
+        {
+          "name": "workers",
+          "type": "integer",
+          "description": "worker_processes value"
+        },
+        {
+          "name": "connections",
+          "type": "integer",
+          "description": "worker_connections value"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "URL for load testing"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "nginx Core Module",
+      "type": "documentation",
+      "source": "https://nginx.org/en/docs/http/ngx_http_core_module.html",
+      "description": "worker_processes, worker_connections, keepalive_timeout directives"
+    },
+    {
+      "title": "nginx Tuning Guide",
+      "type": "documentation",
+      "source": "https://www.nginx.com/blog/tuning-nginx/",
+      "description": "Official tuning recommendations for production"
+    }
+  ],
+  "instructions": "# nginx Tuning\n\nTune nginx and the OS so a single box handles maximum concurrent connections and throughput.\n\n## What this skill does\n\n- Sizes workers and connection pools\n- Tunes kernel networking parameters\n- Benchmarks before/after with ab\n\n## When to use\n\n- Capacity planning for high-traffic sites\n- 499/502 errors under load\n\n## Real commands\n\n```bash\n# Validate and inspect current config\nnginx -t\nnginx -T\nnginx -s reload\n\n# OS-level tuning\nsysctl -w net.core.somaxconn=65535\nsysctl -w net.ipv4.tcp_fin_timeout=30\n\n# Benchmark\nab -n 10000 -c 100 http://localhost/\nab -n 5000 -c 50 -k http://localhost/api\n```\n\n## Recommended config\n\n```nginx\nworker_processes auto;\nworker_rlimit_nofile 65535;\nevents {\n    worker_connections 4096;\n    use epoll;\n    multi_accept on;\n}\nhttp {\n    keepalive_timeout 65;\n    sendfile on;\n    tcp_nopush on;\n    tcp_nodelay on;\n    gzip on;\n    gzip_types text/css application/json;\n}\n```\n\n## Benchmark interpretation\n\n- Requests/sec and time per request from ab\n- Re-run after each change to measure impact\n\n## Best practices\n\n- Match worker_processes to CPU cores\n- Raise `ulimit -n` and file descriptor limits\n- Test one variable at a time",
+  "examples": [
+    {
+      "input": "nginx handles only 100 concurrent users before erroring",
+      "output": "The agent raises worker_connections, enables epoll/multi_accept, tunes somaxconn and re-benchmarks with ab."
+    },
+    {
+      "input": "Static files are served slowly",
+      "output": "The agent enables sendfile, tcp_nopush and gzip, and measures the improvement with ab."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "nginx-tuning.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-nginx-tuning"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Nginx Tuning. You do it through nginx-performance-tuning: Optimize nginx core settings and kernel parameters, then benchmark with ab. The commands are real, e.g. `nginx -t`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "nginx-tuning",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "nginx-performance-tuning",
+        "name": "workers",
+        "type": "integer",
+        "description": "worker_processes value"
+      },
+      {
+        "capability": "nginx-performance-tuning",
+        "name": "connections",
+        "type": "integer",
+        "description": "worker_connections value"
+      },
+      {
+        "capability": "nginx-performance-tuning",
+        "name": "url",
+        "type": "string",
+        "description": "URL for load testing"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "nginx",
+    "sysctl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/nginx-tuning-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/nginx-tuning-skill.yaml",
+    "checksum": "3039ffbef9b9151367e3a0ca8d8dac14363b0890cea8491df428f64ca927a5a7"
+  }
+}

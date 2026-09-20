@@ -1,0 +1,118 @@
+name: gitleaks
+display_name: gitleaks
+category: security
+subcategory: general
+description: Detects hardcoded secrets in git history and files with gitleaks, including CI-safe configs
+  and custom allowlists.
+version: 2.0.0
+tags:
+- security
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- gitleaks
+capabilities:
+- name: secret-detection
+  description: Scan working trees, git history, and stashes for leaked secrets.
+  commands:
+  - gitleaks detect --source . -v
+  - gitleaks git --log-opts="--all"
+  - gitleaks git --remote https://github.com/org/repo
+  - gitleaks detect --source . --redact
+  - gitleaks detect --source . --exit-code 1
+  examples:
+  - gitleaks detect --source . -v
+  - gitleaks git --log-opts="--all"
+  - gitleaks detect --source . --redact
+  parameters:
+  - name: source
+    type: string
+    description: Directory or repo to scan
+  - name: logOpts
+    type: string
+    description: Git log options to limit scan range
+  - name: redact
+    type: boolean
+    description: Mask secret values in output
+- name: config-and-ci
+  description: Generate baseline configs and run gitleaks in CI workflows.
+  commands:
+  - gitleaks generate
+  - gitleaks detect --source . --config gitleaks.toml
+  - gitleaks protect --staged
+  - gitleaks secret-key
+  - gitleaks detect --source . --report-path report.json --report-format json
+  examples:
+  - gitleaks generate > gitleaks.toml
+  - gitleaks protect --staged
+  - gitleaks detect --source . --report-path gitleaks-report.json
+  parameters:
+  - name: config
+    type: string
+    description: Custom config TOML path
+  - name: reportPath
+    type: string
+    description: Output report file path
+knowledge:
+- title: gitleaks GitHub
+  type: documentation
+  source: https://github.com/gitleaks/gitleaks
+  description: Installation, commands, and configuration reference
+- title: gitleaks Configuration
+  type: documentation
+  source: https://github.com/gitleaks/gitleaks#configuration
+  description: TOML config, allowlists, and custom rules
+instructions: "# gitleaks\n\nSecret scanning for git repositories with SAST-grade accuracy.\n\n## What\
+  \ This Skill Does\n\n- Scans commits, branches, tags, and the working tree for 100+ secret types\n-\
+  \ Runs as a pre-commit hook and in CI\n- Generates custom rule configs with allowlists\n- Produces JSON/SARIF\
+  \ reports for triage\n\n## When to Use\n\n- Auditing a repo before making it public\n- Enforcing no-new-secrets\
+  \ policy in CI\n- Discovering how far back a leaked key goes\n\n## Real Commands\n\n```bash\n# Basic\
+  \ working tree scan\n gitleaks detect --source . -v\n\n# Full history scan\ngitleaks git --log-opts=\"\
+  --all\"\n\n# Remote repo scan\ngitleaks git --remote https://github.com/org/repo\n\n# Protect staged\
+  \ changes before commit\ngitleaks protect --staged\n\n# Generate a config to customize\n gitleaks generate\
+  \ > gitleaks.toml\n gitleaks detect --source . --config gitleaks.toml --report-path report.json\n```\n\
+  \n## Sample Config (allowlist)\n\n```toml\n[extend]\nuseDefault = true\n\n[[rules]]\nid = \"custom-aws-access-key\"\
+  \ndescription = \"AWS access key\"\nregex = '''AKIA[0-9A-Z]{16}'''\n\n[[rules.allowlists]]\ndescription\
+  \ = \"test fixtures\"\nregexes = ['''AKIA0000000000000000''']\npaths = ['''fixtures/.*''']\n```\n\n\
+  ## Best Practices\n\n- Scan full history once, then gate on new commits in CI\n- Use --redact in logs\
+  \ so secrets never hit your terminal/CI logs\n- Rotate any secret found in history; purging history\
+  \ is not enough\n- Keep an allowlist for fixtures, but review it in PRs\n- Export findings to SARIF\
+  \ for GitHub code scanning annotations"
+examples:
+- input: Check if this repo has leaked keys before making it public
+  output: Agent runs gitleaks git --log-opts="--all" over the full history, lists found secrets with commit
+    references, and recommends rotation.
+- input: Block secrets in CI
+  output: Agent adds gitleaks detect --source . --redact with exit-code 1 to CI, uploads a JSON report
+    as an artifact, and configures an allowlist for test fixtures.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: gitleaks.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-gitleaks
+  generic:
+    system_prompt: 'Your lane is gitleaks. You do it through secret-detection: Scan working trees, git
+      history, and stashes for leaked secrets. The commands are real, e.g. `gitleaks detect --source .
+      -v`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

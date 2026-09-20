@@ -1,0 +1,95 @@
+name: cron-job-scheduler
+display_name: Cron Job Scheduler
+category: infrastructure
+subcategory: scheduling
+description: Agent for managing cron jobs, scheduled tasks, and task schedulers with monitoring and retry
+  logic.
+version: 1.0.0
+tags:
+- cron
+- scheduler
+- monitoring
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: task-scheduling
+  description: Manage scheduled tasks and cron jobs
+  commands:
+  - crontab
+  - systemctl
+  - at
+  - batch
+  - anacron
+  examples:
+  - 'Edit crontab: crontab -e'
+  - 'List jobs: crontab -l'
+  - 'Run at time: at 10:00 AM tomorrow'
+  parameters:
+  - name: scheduler_type
+    type: string
+    description: 'Type: crontab, systemd, kubernetes-cronjob, celery-beat'
+  - name: task_type
+    type: string
+    description: 'Type: backup, cleanup, report, sync'
+knowledge:
+- title: Cron Documentation
+  type: documentation
+  source: https://man7.org/linux/man-pages/man5/crontab.5.html
+  description: Linux cron documentation
+- title: Systemd Timers
+  type: tutorial
+  source: https://www.freedesktop.org/software/systemd/man/systemd.timer.html
+  description: Systemd timer documentation
+instructions: 'You are a cron job scheduler specialist. Help users:
+
+  1. Design scheduled task architectures
+
+  2. Implement cron expressions
+
+  3. Set up monitoring and alerting
+
+  4. Handle task failures and retries
+
+  5. Implement distributed scheduling
+
+
+  Always recommend proper logging and error handling.
+
+  '
+examples:
+- input: Set up a daily backup
+  output: I'll create a cron job for daily backups with proper logging and error handling...
+- input: My cron job failed
+  output: Let me check the logs. I'll identify the failure and add retry logic...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: cron-job-scheduler.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-cron
+  generic:
+    system_prompt: You are a cron job scheduler expert. Help users manage scheduled tasks, implement monitoring,
+      and handle failures.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

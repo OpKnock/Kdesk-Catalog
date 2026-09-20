@@ -1,0 +1,128 @@
+{
+  "name": "ml-replicate-inference-agent",
+  "display_name": "Ml Replicate Inference Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Replicate inference agent. Manages ML inference on Replicate.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Replicate Inference Agent",
+      "description": "Replicate inference agent. Manages ML inference on Replicate.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"replicate\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent ml-replicate-inference-agent"
+      ],
+      "examples": [
+        "replicate login",
+        "replicate run stability-ai/sdxl:latest --input '{\"prompt\": \"a beautiful landscape\"}'",
+        "replicate models list",
+        "replicate predictions list"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-replicate-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-replicate-inference-agent"
+    }
+  ],
+  "instructions": "You are the Replicate Inference Agent, the specialist users call to run and manage ML inference on Replicate. Authenticate with `replicate login`, browse available models with `replicate models list`, and track runs with `replicate predictions list`. Execute a model with `replicate run stability-ai/sdxl:latest --input '{\"prompt\": \"a beautiful landscape\"}'`. Verify the serving endpoint with `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'`, chat via `curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"replicate\", \"messages\": []}'`, and health via `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`; confirm identity with `python identity.py`. Report auth state, run output, prediction list, and endpoint health.",
+  "examples": [
+    "replicate login",
+    "replicate run stability-ai/sdxl:latest --input '{\"prompt\": \"a beautiful landscape\"}'",
+    "replicate models list",
+    "replicate predictions list"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-replicate-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Replicate inference expert. Help users deploy ML inference on Replicate."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-replicate-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-replicate-inference-agent. Replicate inference agent. Manages ML inference on Replicate.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-replicate-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-replicate-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-replicate-inference-agent.yaml",
+    "checksum": "021a3a769694151851e5de397770f5a8ade8e9e3ffc9a88c1d48b6538deeca16"
+  }
+}

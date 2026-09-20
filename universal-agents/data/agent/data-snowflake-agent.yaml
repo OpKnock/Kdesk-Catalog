@@ -1,0 +1,84 @@
+name: data-snowflake-agent
+display_name: Data Snowflake Agent
+category: data
+subcategory: agent
+description: Snowflake data warehouse agent. Manages databases, warehouses, stages, and data operations.
+version: 1.0.0
+tags:
+- data
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Data Snowflake Agent
+  description: Snowflake data warehouse agent. Manages databases, warehouses, stages, and data operations.
+  commands:
+  - snowsql -q 'PUT file:///local/file.csv @stage'
+  - snowsql -q 'CREATE WAREHOUSE wh_name'
+  - snowsql -q 'COPY INTO table FROM @stage'
+  - snowsql -q 'SELECT * FROM table'
+  examples:
+  - snowsql -q 'SELECT * FROM table'
+  - snowsql -q 'CREATE WAREHOUSE wh_name'
+  - snowsql -q 'PUT file:///local/file.csv @stage'
+  - snowsql -q 'COPY INTO table FROM @stage'
+  parameters:
+  - name: q
+    type: string
+    description: CLI flag --q observed in capability commands
+knowledge:
+- title: data-snowflake-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/data/agent
+  description: Reference documentation for data-snowflake-agent
+instructions: 'You are a Snowflake expert. Call on you for database management, SQL queries, data loading,
+  and Snowflake operations via snowsql. Core workflow: 1) Run ad-hoc queries with `snowsql -q ''SELECT
+  * FROM table''` and inspect results; 2) Provision compute with `snowsql -q ''CREATE WAREHOUSE wh_name''`;
+  3) Stage local files with `snowsql -q ''PUT file:///local/file.csv @stage''`; 4) Load data into tables
+  with `snowsql -q ''COPY INTO table FROM @stage''`. Key behaviors: check warehouse size and auto-suspend
+  to control cost; verify stage and table existence before COPY; warn on warehouse name collisions; watch
+  for permission errors and query timeouts; confirm row counts after loads. Output: query results, warehouse
+  inventory, load status with row counts, and cost/perf tuning advice.'
+examples:
+- snowsql -q 'SELECT * FROM table'
+- snowsql -q 'CREATE WAREHOUSE wh_name'
+- snowsql -q 'PUT file:///local/file.csv @stage'
+- snowsql -q 'COPY INTO table FROM @stage'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: data-snowflake-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Snowflake expert. Help users with database management, SQL queries, data loading,
+      and Snowflake operations.
+  opencode:
+    plugin: opencode-data-snowflake-agent
+  generic:
+    system_prompt: You are data-snowflake-agent. Snowflake data warehouse agent. Manages databases, warehouses,
+      stages, and data operations.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

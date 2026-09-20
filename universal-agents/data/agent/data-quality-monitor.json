@@ -1,0 +1,163 @@
+{
+  "name": "data-quality-monitor",
+  "display_name": "Data Quality Monitor",
+  "category": "data",
+  "subcategory": "quality",
+  "description": "Agent for monitoring data quality with Great Expectations, Soda, and data contracts.",
+  "version": "1.0.0",
+  "tags": [
+    "data-quality",
+    "great-expectations",
+    "soda",
+    "data-contracts",
+    "validation"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "data-quality",
+      "description": "Monitor data quality",
+      "commands": [
+        "great-expectations",
+        "soda",
+        "dbt"
+      ],
+      "examples": [
+        "GE: great_expectations checkpoint run my_checkpoint",
+        "Soda: soda scan my_dataset soda.yaml",
+        "dbt: dbt test --select path:models/quality"
+      ],
+      "parameters": [
+        {
+          "name": "quality_type",
+          "type": "string",
+          "description": "Type: validation, profiling, monitoring, contracts"
+        },
+        {
+          "name": "tool",
+          "type": "string",
+          "description": "Tool: great-expectations, soda, dbt-tests, pandera"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Great Expectations",
+      "type": "documentation",
+      "source": "https://docs.greatexpectations.io/",
+      "description": "Great Expectations docs"
+    },
+    {
+      "Title": "Soda",
+      "type": "tutorial",
+      "source": "https://docs.soda.io/",
+      "description": "Soda documentation"
+    }
+  ],
+  "instructions": "You are a data quality specialist. Help users:\n1. Define data contracts\n2. Implement validation\n3. Monitor data quality\n4. Alert on anomalies\n5. Track quality trends\n\nAlways recommend proactive monitoring.\n",
+  "examples": [
+    {
+      "input": "Monitor data quality",
+      "output": "I'll set up Great Expectations for data validation..."
+    },
+    {
+      "input": "Data contracts",
+      "output": "I'll implement data contracts with Soda..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "data-quality-monitor.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-data-quality"
+    },
+    "generic": {
+      "system_prompt": "You are a data quality expert. Help users monitor data quality with Great Expectations and Soda.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "data-quality-monitor",
+  "type": "agent",
+  "skills": [
+    "data-pipeline-orchestrator-data-pipeline-orchestrator",
+    "business-intelligence",
+    "data-governance-engineer",
+    "data-validation-engineer",
+    "dbt"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "data-quality",
+        "name": "quality_type",
+        "type": "string",
+        "description": "Type: validation, profiling, monitoring, contracts"
+      },
+      {
+        "capability": "data-quality",
+        "name": "tool",
+        "type": "string",
+        "description": "Tool: great-expectations, soda, dbt-tests, pandera"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/agent/data-quality-monitor.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/agent/data-quality-monitor.yaml",
+    "checksum": "8bb07dcc86af458af7af1b95aa5a988453404bf98e30b6361e4637f01639d4c1"
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "name": "prometheus-grafana-stack",
+  "display_name": "Prometheus & Grafana Monitoring Stack",
+  "category": "monitoring",
+  "subcategory": "metrics",
+  "description": "Agent for setting up Prometheus metrics collection and Grafana dashboards with alerting.",
+  "version": "1.0.0",
+  "tags": [
+    "prometheus",
+    "grafana",
+    "monitoring",
+    "metrics",
+    "alerting"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "monitoring-setup",
+      "description": "Configure Prometheus metrics and Grafana dashboards",
+      "commands": [
+        "prometheus",
+        "grafana-cli",
+        "amtool",
+        "promtool"
+      ],
+      "examples": [
+        "Check config: promtool check config prometheus.yml",
+        "Test alert: amtool alert --alertmanager.url=http://localhost:9093",
+        "Generate dashboard: grafana-cli admin home-admin reset"
+      ],
+      "parameters": [
+        {
+          "name": "metrics_type",
+          "type": "string",
+          "description": "Metrics: application, infrastructure, business"
+        },
+        {
+          "name": "alerting",
+          "type": "boolean",
+          "description": "Enable Alertmanager integration"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Prometheus Documentation",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/",
+      "description": "Complete Prometheus documentation"
+    },
+    {
+      "title": "Grafana Documentation",
+      "type": "tutorial",
+      "source": "https://grafana.com/docs/",
+      "description": "Grafana dashboard and alerting guide"
+    }
+  ],
+  "instructions": "You are a Prometheus/Grafana monitoring specialist. Help users:\n1. Instrument applications with Prometheus metrics\n2. Create PromQL queries for dashboards\n3. Set up alerting rules and Alertmanager\n4. Design Grafana dashboards\n5. Implement SLO monitoring\n\nAlways recommend proper metric naming and label cardinality.\n",
+  "examples": [
+    {
+      "input": "Set up monitoring for my app",
+      "output": "I'll instrument your app with Prometheus metrics and create Grafana dashboards..."
+    },
+    {
+      "input": "Create an alert for high error rate",
+      "output": "I'll create a Prometheus alerting rule for error rate threshold..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "prometheus-grafana-stack.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-prometheus"
+    },
+    "generic": {
+      "system_prompt": "You are a Prometheus/Grafana monitoring expert. Help users set up metrics collection, create dashboards, and configure alerting.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "prometheus-grafana-stack",
+  "type": "agent",
+  "skills": [
+    "alerting-rules",
+    "burn-rate-alerts",
+    "monitoring-sre",
+    "alertmanager",
+    "grafana",
+    "grafana-dashboards",
+    "prometheus-monitoring"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "monitoring-setup",
+        "name": "metrics_type",
+        "type": "string",
+        "description": "Metrics: application, infrastructure, business"
+      },
+      {
+        "capability": "monitoring-setup",
+        "name": "alerting",
+        "type": "boolean",
+        "description": "Enable Alertmanager integration"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "monitoring/agent/prometheus-grafana-stack.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/monitoring/agent/prometheus-grafana-stack.yaml",
+    "checksum": "b89dc7bdddaf95e9b4ef071bd82b756a7c3ef8049f2ee3fc0b944378b380cf7e"
+  }
+}

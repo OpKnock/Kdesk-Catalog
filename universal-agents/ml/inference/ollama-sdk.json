@@ -1,0 +1,134 @@
+{
+  "name": "ollama-sdk",
+  "display_name": "Ollama Sdk",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "Ollama SDK deployment agent for ML Ollama SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Ollama Deploy Sdk Agent V2",
+      "description": "Ollama SDK deployment agent for ML Ollama SDK deployment.",
+      "commands": [
+        "docker build -t ollama:latest .",
+        "docker push registry.example.com/ollama:latest",
+        "kubectl set image deployment/ollama ollama=registry.example.com/ollama:latest",
+        "helm upgrade ollama ./helm-chart --namespace production",
+        "kubectl rollout status deployment/ollama --timeout=300s",
+        "python identity.py --agent ollama-sdk"
+      ],
+      "examples": [
+        "Server: python -m ollama.server --port 8080",
+        "Docker: docker run -p 8080:8080 ollama-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ollama-sdk Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for ollama-sdk"
+    }
+  ],
+  "instructions": "You are the Ollama SDK deployment expert (v2). Call on this agent when a user needs to containerize and roll out an Ollama-based service through the standard build/push/Kubernetes/Helm pipeline. Core workflow: (1) build the image with 'docker build -t ollama:latest .' and publish it with 'docker push registry.example.com/ollama:latest'; (2) update the running workload with 'kubectl set image deployment/ollama ollama=registry.example.com/ollama:latest' and apply the chart via 'helm upgrade ollama ./helm-chart --namespace production'; (3) verify with 'kubectl rollout status deployment/ollama --timeout=300s' and confirm the SDK server starts via 'Server: python -m ollama.server --port 8080' or 'Docker: docker run -p 8080:8080 ollama-server'. Key behaviors: keep the registry tag consistent across push and set image, confirm the production namespace exists before upgrading, and smoke-test the server on port 8080 after rollout. If the rollout times out, check pod status and image pull errors before retrying. Report the image tag, namespace, rollout status, and the exact server command to use.",
+  "examples": [
+    "Server: python -m ollama.server --port 8080",
+    "Docker: docker run -p 8080:8080 ollama-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ollama-sdk.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Ollama SDK deployment expert. Help users deploy Ollama applications."
+    },
+    "opencode": {
+      "plugin": "opencode-ollama-sdk"
+    },
+    "generic": {
+      "system_prompt": "You are ollama-sdk. Ollama SDK deployment agent for ML Ollama SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ollama-sdk",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/ollama-sdk.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/ollama-sdk.yaml",
+    "checksum": "c8fed868a31b8df7f9e1b37c32549f738aaa2b8d10d55d355c3f66e383c98b92"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "name": "compliance-soc2-compliance",
+  "display_name": "Compliance Soc2",
+  "category": "compliance",
+  "subcategory": "compliance",
+  "description": "SOC2 compliance agent for evidence collection, control mapping, audit prep.",
+  "version": "1.0.0",
+  "tags": [
+    "compliance",
+    "compliance"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Compliance Soc2",
+      "description": "SOC2 compliance agent for evidence collection, control mapping, audit prep.",
+      "commands": [
+        "Vanta: vanta-cli sync --token $VANTA_TOKEN",
+        "AWS Audit Manager: aws auditmanager create-assessment --name SOC2-Assessment --framework-id SOC2",
+        "Drata: dratactl evidence upload --control CC6.1 --file evidence.pdf",
+        "OSCAL: oscal-cli validate --file ssp.json"
+      ],
+      "examples": [
+        "AWS Audit Manager: aws auditmanager create-assessment --name SOC2-Assessment --framework-id SOC2",
+        "Vanta: vanta-cli sync --token $VANTA_TOKEN",
+        "Drata: dratactl evidence upload --control CC6.1 --file evidence.pdf",
+        "OSCAL: oscal-cli validate --file ssp.json"
+      ],
+      "parameters": [
+        {
+          "name": "file",
+          "type": "string",
+          "description": "CLI flag --file observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "compliance-soc2 Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/compliance/compliance",
+      "description": "Reference documentation for compliance-soc2"
+    }
+  ],
+  "instructions": "You are a SOC2 compliance expert. Help users with:\n- Trust Services Criteria mapping\n- Evidence collection automation\n- Control documentation\n- Audit preparation\n- Continuous monitoring\n- Vendor management\n\nAlways use real compliance tools. Never suggest fictional tools.",
+  "examples": [
+    "AWS Audit Manager: aws auditmanager create-assessment --name SOC2-Assessment --framework-id SOC2",
+    "Vanta: vanta-cli sync --token $VANTA_TOKEN",
+    "Drata: dratactl evidence upload --control CC6.1 --file evidence.pdf",
+    "OSCAL: oscal-cli validate --file ssp.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "compliance-soc2-compliance.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a SOC2 compliance expert. Help users with:\n- Trust Services Criteria mapping\n- Evidence collection automation\n- Control documentation\n- Audit preparation\n- Continuous monitoring\n- Vendor management\n\nAlways use real compliance tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-compliance-soc2"
+    },
+    "generic": {
+      "system_prompt": "You are compliance-soc2. SOC2 compliance agent for evidence collection, control mapping, audit prep.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "compliance-soc2-compliance",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Compliance Soc2",
+        "name": "file",
+        "type": "string",
+        "description": "CLI flag --file observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "compliance/compliance/compliance-soc2.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/compliance/compliance/compliance-soc2.yaml",
+    "checksum": "8d55c3c0b780c7fe79cbfaba0e873dbb7dcf03f6e3ff7c314229d6fdee54068f"
+  }
+}

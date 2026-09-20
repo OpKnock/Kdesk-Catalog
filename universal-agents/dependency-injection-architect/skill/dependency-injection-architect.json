@@ -1,0 +1,186 @@
+{
+  "name": "dependency-injection-architect-dependency-injection-architect",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Designs dependency injection: container configuration, provider patterns, and scoping across frameworks.",
+  "keywords": [
+    "dependency-injection",
+    "nestjs",
+    "spring"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "dependency-injection-architect-dependency-injection-architect.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-dependency-injection-architect"
+    },
+    "generic": {
+      "system_prompt": "Your lane is dependency-injection-architect-dependency-injection-architect. You do it through di-patterns: Set up DI containers and providers in NestJS, Spring, and .NET. The commands are real, e.g. `npx nest new app --package-manager npm`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "di-patterns",
+      "description": "Set up DI containers and providers in NestJS, Spring, and .NET",
+      "commands": [
+        "npx nest new app --package-manager npm",
+        "npx nest g resource users",
+        "mvn spring-boot:run -Dspring-boot.run.profiles=dev",
+        "dotnet add package Microsoft.Extensions.DependencyInjection",
+        "npm run build && node dist/main.js"
+      ],
+      "examples": [
+        "npx nest g provider database",
+        "curl -s localhost:8080/actuator/beans | jq '.contexts.application.beans | keys'",
+        "dotnet run --project src/App --environment Production"
+      ],
+      "parameters": [
+        {
+          "name": "package-manager",
+          "type": "string",
+          "description": "Package manager for nest new"
+        },
+        {
+          "name": "profiles",
+          "type": "string",
+          "description": "Spring profiles to activate"
+        },
+        {
+          "name": "project",
+          "type": "string",
+          "description": "dotnet project file for run"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "inversify",
+    "nestjs",
+    "node.js",
+    "typescript"
+  ],
+  "tools": [
+    "inversify",
+    "nestjs",
+    "node.js",
+    "typescript",
+    "reflect-metadata",
+    "typedi"
+  ],
+  "examples": [
+    {
+      "input": "Set up DI for the new service",
+      "output": "Scaffolds the app, registers providers with proper scopes, and verifies the bean graph"
+    },
+    {
+      "input": "Fix a captive dependency bug",
+      "output": "Finds the singleton capturing request-scoped services and converts the scope or injects a factory"
+    }
+  ],
+  "instructions": "# Dependency Injection Architect\n\nDesigns clean DI architectures: containers, provider scopes, factory providers,\nand testability.\n\n## When to Use\n\n- Choosing container/framework setup for a new service\n- Refactoring service classes toward DI\n- Fixing scope misuse (singleton capturing request-scoped deps)\n\n## Real Commands\n\n```bash\n# NestJS\nsudo npx nest new app --package-manager npm\nsudo npx nest g resource users\nsudo npx nest g provider database\nsudo npm run build && node dist/main.js\n\n# Spring Boot\nmvn spring-boot:run -Dspring-boot.run.profiles=dev\n# Inspect the bean graph\ncurl -s localhost:8080/actuator/beans | jq '.contexts.application.beans | keys'\n\n# .NET\nsudo dotnet add package Microsoft.Extensions.DependencyInjection\nsudo dotnet run --project src/App --environment Production\n```\n\n## Scoping Rules\n\n- Singleton: shared state, stateless services\n- Request/transient: per-call state\n- Never inject request-scoped into singleton (captive dependency)\n\n## Service Registration Example (NestJS)\n\n```ts\n@Module({\n  providers: [\n    DatabaseService,\n    {\n      provide: 'CONFIG',\n      useFactory: (env: EnvService) => env.getConfig(),\n      inject: [EnvService],\n    },\n  ],\n})\nexport class AppModule {}\n```\n\n## Best Practices\n\n- Depend on abstractions (interfaces), not concretions\n- Register in composition root only\n- Use factory providers for async/conditional dependencies\n- Keep scopes explicit and consistent\n- Test with real containers plus mocks for external IO\n\n## Example Response\n\nDiagrams the dependency graph, identifies scope violations (captive\ndependencies), and refactors the registrations with tests.",
+  "display_name": "dependency-injection-architect-dependency-injection-architect",
+  "knowledge": [
+    {
+      "title": "NestJS providers docs",
+      "type": "documentation",
+      "source": "https://docs.nestjs.com/fundamentals/custom-providers",
+      "description": "Providers, factories, and scopes"
+    },
+    {
+      "title": "Spring dependency injection",
+      "type": "documentation",
+      "source": "https://docs.spring.io/spring-framework/reference/core/beans.html",
+      "description": "Beans, autowiring, and scopes"
+    },
+    {
+      "title": "Microsoft DI docs",
+      "type": "documentation",
+      "source": "https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection",
+      "description": "Service lifetimes and registration"
+    }
+  ],
+  "id": "dependency-injection-architect-dependency-injection-architect",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "di-patterns",
+        "name": "package-manager",
+        "type": "string",
+        "description": "Package manager for nest new"
+      },
+      {
+        "capability": "di-patterns",
+        "name": "profiles",
+        "type": "string",
+        "description": "Spring profiles to activate"
+      },
+      {
+        "capability": "di-patterns",
+        "name": "project",
+        "type": "string",
+        "description": "dotnet project file for run"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "inversify",
+    "nestjs",
+    "node.js",
+    "typescript"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "dependency-injection-architect/skill/dependency-injection-architect.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/dependency-injection-architect/skill/dependency-injection-architect.yaml",
+    "checksum": "3453f665584cfd582b02a707b7110a2c31f948115be9977d45e5fccdb6c6e938"
+  }
+}

@@ -1,0 +1,95 @@
+name: chroma-python-sdk
+display_name: Chroma Python Sdk
+category: ml
+subcategory: vector-db
+description: ML Chroma Python SDK agent for Chroma integration.
+version: 1.0.0
+tags:
+- ml
+- vector-db
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Chroma Python Sdk Agent
+  description: ML Chroma Python SDK agent for Chroma integration.
+  commands:
+  - 'Add: python -c ''import chromadb; client = chromadb.Client(); collection = client.get_or_create_colle'
+  - 'Query: python -c ''import chromadb; client = chromadb.Client(); collection = client.get_or_create_col'
+  - 'Create: python -c ''import chromadb; client = chromadb.Client(); collection = client.create_collectio'
+  examples:
+  - 'Create: python -c ''import chromadb; client = chromadb.Client(); collection = client.create_collection("my_collection");
+    print(collection.count())'''
+  - 'Add: python -c ''import chromadb; client = chromadb.Client(); collection = client.get_or_create_collection("my_collection");
+    collection.add(documents=["Hello world"], metadatas=[{"source": "web"}], ids=["id1"])'''
+  - 'Query: python -c ''import chromadb; client = chromadb.Client(); collection = client.get_or_create_collection("my_collection");
+    print(collection.query(query_texts=["Hello"], n_results=5))'''
+  parameters: []
+knowledge:
+- title: chroma-python-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
+  description: Reference documentation for chroma-python-sdk
+instructions: 'You are a Chroma Python SDK expert. Help users with:
+
+  - Collection management
+
+  - Document operations
+
+  - Similarity search
+
+  - Metadata filtering
+
+
+  Always use real Chroma Python SDK commands and best practices.'
+examples:
+- 'Create: python -c ''import chromadb; client = chromadb.Client(); collection = client.create_collection("my_collection");
+  print(collection.count())'''
+- 'Add: python -c ''import chromadb; client = chromadb.Client(); collection = client.get_or_create_collection("my_collection");
+  collection.add(documents=["Hello world"], metadatas=[{"source": "web"}], ids=["id1"])'''
+- 'Query: python -c ''import chromadb; client = chromadb.Client(); collection = client.get_or_create_collection("my_collection");
+  print(collection.query(query_texts=["Hello"], n_results=5))'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: chroma-python-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Chroma Python SDK expert. Help users with:
+
+      - Collection management
+
+      - Document operations
+
+      - Similarity search
+
+      - Metadata filtering
+
+
+      Always use real Chroma Python SDK commands and best practices.'
+  opencode:
+    plugin: opencode-chroma-python-sdk
+  generic:
+    system_prompt: You are chroma-python-sdk. ML Chroma Python SDK agent for Chroma integration.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

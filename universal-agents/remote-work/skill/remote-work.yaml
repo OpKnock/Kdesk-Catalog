@@ -1,0 +1,200 @@
+name: remote-work
+version: 2.0.0
+type: skill
+category: collaboration
+description: 'Runs distributed-team operations: async documentation, calendar visibility, and GitHub-first
+  collaboration rituals.'
+keywords:
+- remote-work
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: remote-work.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-remote-work
+  generic:
+    system_prompt: 'You own remote-work end to end. You do it through async-docs: Maintain the async-first
+      documentation practice. The commands are real, e.g. `markdownlint README.md`. You verify each step
+      you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: async-docs
+  description: Maintain the async-first documentation practice.
+  commands:
+  - markdownlint README.md
+  - npx prettier --check 'docs/**/*.md'
+  - git diff --check
+  - 'gh pr create --title ''RFC: cache strategy'' --body ''RFC body with decision log'''
+  - 'gh issue comment 42 --body ''Async update: milestone adjusted - see link'''
+  examples:
+  - npx prettier --write 'docs/**/*.md'
+  - markdownlint docs/ --config .markdownlint.json
+  - 'gh pr create --draft --title ''WIP: onboarding guide'''
+  parameters:
+  - name: pattern
+    type: string
+    description: File glob for linting
+  - name: config
+    type: string
+    description: markdownlint config
+  - name: check
+    type: string
+    description: Check-only mode for prettier
+- name: calendar
+  description: Keep visibility across timezones with gcalcli.
+  commands:
+  - gcalcli agenda 'tomorrow'
+  - gcalcli calw 3
+  - gcalcli quickadd 'Deep work 09:00-11:00'
+  - gcalcli search 'standup' --ts
+  - gcalcli calquery --cal 'Team Sync' --ts
+  examples:
+  - gcalcli agenda today --nostarted
+  - gcalcli quickadd '1:1 with Ada tomorrow 15:00' --cal 'Meetings'
+  - gcalcli calw 1 --military
+  parameters:
+  - name: query
+    type: string
+    description: Event search term
+  - name: days
+    type: number
+    description: Week view days
+  - name: cal
+    type: string
+    description: Calendar name
+prerequisites:
+- slack
+- zoom
+- notion
+- github
+tools:
+- slack
+- zoom
+- notion
+- github
+- luma
+examples:
+- input: Coordinate a decision across three timezones.
+  output: Writes an RFC PR, announces it with a deadline in the issue, and merges via async review.
+- input: Improve calendar transparency for the team.
+  output: Publishes shared calendars, blocks deep-work slots with gcalcli, and documents the availability
+    policy.
+instructions: '# Remote Work
+
+
+  Make distributed work visible, documented, and humane.
+
+
+  ## When to Use
+
+
+  - Teams across timezones
+
+  - Asynchronous decision making
+
+  - Calendar transparency and focus time
+
+
+  ## Async-first rules
+
+
+  - Write decisions down: RFCs and decision logs beat meetings.
+
+  - Default to pull requests and issues over chat.
+
+  - Reply within the agreed SLA (24h), not instantly.
+
+
+  ## Documentation hygiene
+
+
+  ```bash
+
+  markdownlint README.md
+
+  npx prettier --check ''docs/**/*.md''
+
+  ```
+
+
+  ## Calendar transparency
+
+
+  ```bash
+
+  gcalcli agenda ''tomorrow''
+
+  gcalcli calw 3
+
+  gcalcli quickadd ''Deep work 09:00-11:00''
+
+  ```
+
+
+  Block focus time visibly; the calendar is the team''s availability signal.
+
+
+  ## Meeting rhythm
+
+
+  - 1:1s async-first: agenda docs before the call.
+
+  - Record decisions in issues, not meeting minutes.
+
+  - Timezone rotation for global standups.
+
+
+  ## Best practices
+
+
+  - Keep a public ''what I''m working on'' thread per week.
+
+  - Update docs before asking questions in chat.
+
+  - Respect focus blocks; batch interruptions.
+
+  - Ergonomic setup: quality headset, lighting, stable network.
+
+
+  ## Testing
+
+
+  Audit that every active decision has a doc link and every issue has a comment trail.'
+display_name: remote-work
+knowledge:
+- title: GitLab Communication Handbook
+  type: documentation
+  source: https://handbook.gitlab.com/handbook/communication/
+  description: Async-first communication practices
+- title: gcalcli
+  type: documentation
+  source: https://github.com/insanum/gcalcli
+  description: Google Calendar CLI
+- title: markdownlint
+  type: documentation
+  source: https://github.com/DavidAnson/markdownlint
+  description: Markdown linting rules

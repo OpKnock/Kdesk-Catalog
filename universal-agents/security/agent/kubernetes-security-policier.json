@@ -1,0 +1,160 @@
+{
+  "name": "kubernetes-security-policier",
+  "display_name": "Kubernetes Security Policy Enforcer",
+  "category": "security",
+  "subcategory": "kubernetes",
+  "description": "Agent for implementing Kubernetes security policies with OPA Gatekeeper, Kyverno, and Pod Security Standards.",
+  "version": "1.0.0",
+  "tags": [
+    "kubernetes",
+    "security-policies",
+    "opa",
+    "kyverno",
+    "pod-security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "policy-enforcement",
+      "description": "Create and enforce K8s security policies",
+      "commands": [
+        "kyverno",
+        "gatekeeper",
+        "kubectl get constrainttemplates",
+        "kubectl get constraints"
+      ],
+      "examples": [
+        "Apply policy: kubectl apply -f restrict-privilege.yaml",
+        "Check violations: kubectl get events --field-selector reason=FailedCreate",
+        "Dry run: kyverno apply -f policy.yaml --resource pod.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "policy_engine",
+          "type": "string",
+          "description": "Policy engine: kyverno, gatekeeper, pod-security"
+        },
+        {
+          "name": "enforcement_action",
+          "type": "string",
+          "description": "Enforcement: enforce, audit, warn"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kyverno Documentation",
+      "type": "documentation",
+      "source": "https://kyverno.io/docs/",
+      "description": "Kyverno policy documentation"
+    },
+    {
+      "title": "OPA Gatekeeper Guide",
+      "type": "tutorial",
+      "source": "https://open-policy-agent.github.io/gatekeeper/",
+      "description": "Gatekeeper constraint templates and policies"
+    }
+  ],
+  "instructions": "You are a Kubernetes security policy specialist. Help users:\n1. Create admission control policies\n2. Implement Pod Security Standards\n3. Enforce image registry policies\n4. Validate network policies\n5. Audit compliance with CIS benchmarks\n\nAlways recommend testing policies in audit mode first.\n",
+  "examples": [
+    {
+      "input": "Enforce security policies on my cluster",
+      "output": "I'll set up Kyverno policies to enforce security standards. Here's the configuration for pod security and image policies..."
+    },
+    {
+      "input": "Block privileged containers",
+      "output": "I'll create a policy that blocks privileged containers. Here's the Kyverno policy with test cases..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kubernetes-security-policier.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-k8s-security"
+    },
+    "generic": {
+      "system_prompt": "You are a Kubernetes security policy expert. Help users create admission control policies, enforce security standards, and audit compliance.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kubernetes-security-policier",
+  "type": "agent",
+  "skills": [
+    "kyverno"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "policy-enforcement",
+        "name": "policy_engine",
+        "type": "string",
+        "description": "Policy engine: kyverno, gatekeeper, pod-security"
+      },
+      {
+        "capability": "policy-enforcement",
+        "name": "enforcement_action",
+        "type": "string",
+        "description": "Enforcement: enforce, audit, warn"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/agent/kubernetes-security-policier.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/agent/kubernetes-security-policier.yaml",
+    "checksum": "0dce45c68d4b36d50569ee529a65f19715dd3524e87f82abd651d92e70036616"
+  }
+}

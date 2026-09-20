@@ -1,0 +1,171 @@
+{
+  "name": "nftables",
+  "display_name": "Nftables",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Firewall rules with nftables: tables, chains, rules, sets, and persistent config files.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "nft"
+  ],
+  "capabilities": [
+    {
+      "name": "nftables-rules",
+      "description": "Create tables/chains/rules, manage sets and apply nftables config files.",
+      "commands": [
+        "nft list ruleset",
+        "nft add table inet filter",
+        "nft add chain inet filter input '{ type filter hook input priority 0; policy drop; }'",
+        "nft add rule inet filter input tcp dport 22 accept",
+        "nft -f /etc/nftables.conf"
+      ],
+      "examples": [
+        "nft add rule inet filter input tcp dport 443 accept",
+        "nft add set inet filter allowed '{ type ipv4_addr; flags interval; }'",
+        "nft list ruleset | grep -A5 'chain input'"
+      ],
+      "parameters": [
+        {
+          "name": "table",
+          "type": "string",
+          "description": "Table name and family, e.g. inet filter"
+        },
+        {
+          "name": "chain",
+          "type": "string",
+          "description": "Chain name with hook and policy"
+        },
+        {
+          "name": "rule",
+          "type": "string",
+          "description": "nft rule expression"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "nftables Wiki",
+      "type": "documentation",
+      "source": "https://wiki.nftables.org/wiki-nftables/index.php/Main_Page",
+      "description": "Tutorials, expressions, sets and examples"
+    },
+    {
+      "title": "nft man page",
+      "type": "documentation",
+      "source": "https://man7.org/linux/man-pages/man8/nft.8.html",
+      "description": "Command syntax for tables, chains, rules and sets"
+    }
+  ],
+  "instructions": "# nftables\n\nnftables is the modern Linux packet filtering framework, successor to iptables.\n\n## What this skill does\n\n- Creates tables, chains and rules\n- Uses sets for efficient address/port matching\n- Applies persistent rule files\n\n## When to use\n\n- Replacing iptables with nftables\n- Writing firewall rules for new servers\n\n## Real commands\n\n```bash\n# Inspect current ruleset\nnft list ruleset\n\n# Table and base chain\nnft add table inet filter\nnft add chain inet filter input '{ type filter hook input priority 0; policy drop; }'\n\n# Rules\nnft add rule inet filter input tcp dport 22 accept\nnft add rule inet filter input tcp dport 443 accept\nnft add rule inet filter input ct state established,related accept\n\n# Delete a rule by handle\nnft -a list chain inet filter input\nnft delete rule inet filter input handle 3\n\n# Apply config file\nnft -f /etc/nftables.conf\n```\n\n## Config file\n\n```nft\n#!/usr/sbin/nft -f\nflush ruleset\n\ntable inet filter {\n  chain input {\n    type filter hook input priority 0; policy drop;\n    ct state established,related accept\n    tcp dport 22 accept\n    iif lo accept\n  }\n}\n```\n\n## Best practices\n\n- Always keep a policy that still allows your SSH (or fallback access)\n- Test with `nft -c -f` (check mode) before applying\n- Persist to /etc/nftables.conf and enable the service",
+  "examples": [
+    {
+      "input": "Write a basic firewall allowing SSH and HTTPS only",
+      "output": "The agent creates an inet table with a drop-policy input chain and rules for 22 and 443, then tests with nft -c -f."
+    },
+    {
+      "input": "Convert my iptables rules to nftables",
+      "output": "The agent shows iptables-translate equivalents and rewrites the ruleset in nft syntax."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "nftables.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-nftables"
+    },
+    "generic": {
+      "system_prompt": "You work Nftables hands-on. You do it through nftables-rules: Create tables/chains/rules, manage sets and apply nftables config files. The commands are real, e.g. `nft list ruleset`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "nftables",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "nftables-rules",
+        "name": "table",
+        "type": "string",
+        "description": "Table name and family, e.g. inet filter"
+      },
+      {
+        "capability": "nftables-rules",
+        "name": "chain",
+        "type": "string",
+        "description": "Chain name with hook and policy"
+      },
+      {
+        "capability": "nftables-rules",
+        "name": "rule",
+        "type": "string",
+        "description": "nft rule expression"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "nft"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/nftables-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/nftables-skill.yaml",
+    "checksum": "f8ce71e25e0ea95c643bebb0ad927f7c3446cca4cdd94be6ffba4787146a69e8"
+  }
+}

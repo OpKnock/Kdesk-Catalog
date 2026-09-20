@@ -1,0 +1,173 @@
+{
+  "name": "singleton",
+  "display_name": "Singleton",
+  "category": "patterns",
+  "subcategory": "general",
+  "description": "Implements the Singleton pattern in Java with javac: controlled single instance creation and its thread-safety trade-offs.",
+  "version": "2.0.0",
+  "tags": [
+    "singleton"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "java",
+    "javac"
+  ],
+  "capabilities": [
+    {
+      "name": "java",
+      "description": "Implement and verify singleton examples.",
+      "commands": [
+        "javac -d out Singleton.java Main.java",
+        "java -cp out Main",
+        "javac -Xlint:all -d out Singleton.java",
+        "java -cp out com.example.singleton.Main",
+        "javac -d out SingletonTest.java && java -cp out -ea SingletonTest"
+      ],
+      "examples": [
+        "javac -d out Singleton.java && java -cp out com.example.Main",
+        "javac -Xlint:all -d out *.java",
+        "java -cp out com.example.Main | grep -c 'same instance'"
+      ],
+      "parameters": [
+        {
+          "name": "cp",
+          "type": "string",
+          "description": "Classpath directory"
+        },
+        {
+          "name": "Xlint",
+          "type": "string",
+          "description": "Compiler warnings"
+        },
+        {
+          "name": "ea",
+          "type": "string",
+          "description": "Enable assertions"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Refactoring Guru: Singleton",
+      "type": "documentation",
+      "source": "https://refactoring.guru/design-patterns/singleton",
+      "description": "Singleton intent and controversy"
+    },
+    {
+      "title": "JLS Enum",
+      "type": "documentation",
+      "source": "https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html",
+      "description": "Enum-based singletons in Java"
+    }
+  ],
+  "instructions": "# Singleton Pattern\n\nEnsure one instance and one access point.\n\n## When to Use\n\n- Shared resources: config, connection pools, caches\n- Logging and audit infrastructure\n- Cross-cutting services with no state needs\n\n## Example (Java)\n\n```java\npublic final class Config {\n    private static final Config INSTANCE = new Config();\n    private Config() {}\n    public static Config getInstance() { return INSTANCE; }\n\n    private String env = \"prod\";\n    public String env() { return env; }\n}\n```\n\nEager init via `static final` is thread-safe without locks.\n\n## Verify\n\n```java\npublic class Main {\n    public static void main(String[] args) {\n        Config a = Config.getInstance();\n        Config b = Config.getInstance();\n        System.out.println(a == b ? \"same instance\" : \"different\");\n    }\n}\n```\n\n```bash\njavac -d out Singleton.java Main.java\njava -cp out Main\n```\n\n## When NOT to use\n\n- Global mutable state hides dependencies.\n- Testing becomes harder - inject dependencies instead.\n- Prefer dependency injection containers over singletons.\n\n## Best practices\n\n- Keep singletons stateless or read-only after init.\n- Prefer enum singleton in Java for serialization safety.\n- If lazily initialized, guard double-checked locking carefully.\n- Limit to genuinely system-wide resources.\n\n## Testing\n\nTest that repeated getInstance returns identical references.",
+  "examples": [
+    {
+      "input": "Centralize app config access.",
+      "output": "Implements a stateless Config singleton and verifies identity with an assertion run."
+    },
+    {
+      "input": "Refactor accidental global state into an injectable service.",
+      "output": "Replaces the singleton usage with constructor injection at the composition root."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "singleton.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-singleton"
+    },
+    "generic": {
+      "system_prompt": "You own Singleton end to end. You do it through java: Implement and verify singleton examples. The commands are real, e.g. `javac -d out Singleton.java Main.java`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "singleton",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "java",
+        "name": "cp",
+        "type": "string",
+        "description": "Classpath directory"
+      },
+      {
+        "capability": "java",
+        "name": "Xlint",
+        "type": "string",
+        "description": "Compiler warnings"
+      },
+      {
+        "capability": "java",
+        "name": "ea",
+        "type": "string",
+        "description": "Enable assertions"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "java",
+    "javac"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "patterns/singleton-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/patterns/singleton-skill.yaml",
+    "checksum": "e50de6a9de91332b571952a1489ac9ba961b20a0cf58ef00353a7ec037e0802a"
+  }
+}

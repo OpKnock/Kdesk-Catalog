@@ -1,0 +1,216 @@
+name: kafka-messaging
+display_name: Kafka
+category: messaging
+subcategory: general
+description: 'Operates Apache Kafka clusters: topic lifecycle, producer/consumer tools, consumer groups,
+  and performance benchmarking.'
+version: 2.0.0
+tags:
+- messaging
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kafka-console-consumer.sh
+- kafka-console-producer.sh
+- kafka-consumer-groups.sh
+- kafka-topics.sh
+capabilities:
+- name: topics
+  description: Create, describe, and alter Kafka topics.
+  commands:
+  - kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 12 --replication-factor
+    3
+  - kafka-topics.sh --bootstrap-server localhost:9092 --list
+  - kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic events
+  - kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic events --partitions 24
+  - kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic legacy_events
+  examples:
+  - kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic events --topics-with-overrides
+  - kafka-topics.sh --bootstrap-server localhost:9092 --list | grep -v internal
+  - kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic events --config retention.ms=604800000
+  parameters:
+  - name: partitions
+    type: number
+    description: Partition count
+  - name: replication-factor
+    type: number
+    description: Replication factor
+  - name: config
+    type: string
+    description: Topic config like retention.ms
+- name: console
+  description: Produce and consume messages from the CLI.
+  commands:
+  - kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events
+  - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning
+  - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --group debug-group --property
+    print.offset=true --max-messages 10
+  - 'kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events --property parse.key=true
+    --property key.separator=:'
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group debug-group --describe
+  examples:
+  - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning --max-messages
+    5
+  - 'echo ''key1:value1'' | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events
+    --property parse.key=true --property key.separator=:'
+  - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
+  parameters:
+  - name: topic
+    type: string
+    description: Topic to produce/consume
+  - name: group
+    type: string
+    description: Consumer group id
+  - name: max-messages
+    type: number
+    description: Consume N messages then exit
+knowledge:
+- title: Kafka Quickstart
+  type: documentation
+  source: https://kafka.apache.org/quickstart
+  description: Local cluster and CLI tool usage
+- title: Kafka Operations
+  type: documentation
+  source: https://kafka.apache.org/documentation/#operations
+  description: Topic admin, rebalancing, and monitoring
+- title: Consumer Groups
+  type: documentation
+  source: https://kafka.apache.org/documentation/#intro_consumers
+  description: Group semantics, offsets, and rebalances
+instructions: '# Kafka
+
+
+  Operate Kafka with the standard CLI toolchain.
+
+
+  ## When to Use
+
+
+  - Event streaming pipelines
+
+  - Consumer group debugging
+
+  - Topic lifecycle management
+
+
+  ## Topics
+
+
+  ```bash
+
+  kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 12 --replication-factor
+  3
+
+  kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic events
+
+  ```
+
+
+  Partitions bound parallelism; keep them stable unless growth requires more.
+
+
+  ## Produce and consume
+
+
+  ```bash
+
+  kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events
+
+  kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning
+
+  ```
+
+
+  ## Consumer groups
+
+
+  ```bash
+
+  kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group order-processor --describe
+
+  ```
+
+
+  Watch LAG; a growing lag with healthy consumers means under-provisioning.
+
+
+  ## Offset reset (troubleshooting)
+
+
+  ```bash
+
+  kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group order-processor --reset-offsets --to-earliest
+  --execute
+
+  ```
+
+
+  Only reset when a consumer bug caused data to be skipped - document first.
+
+
+  ## Config tuning
+
+
+  ```bash
+
+  kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic events --config retention.ms=604800000
+
+  ```
+
+
+  ## Best practices
+
+
+  - Prefer `--describe` before any alter/delete.
+
+  - Use keyed producers to preserve order per key.
+
+  - Monitor ISR (in-sync replicas) - under-replicated partitions signal trouble.
+
+  - Right-size consumer parallelism to partitions.
+
+
+  ## Testing
+
+
+  Produce 10k keyed messages, consume with a group, and verify LAG reaches 0.'
+examples:
+- input: Create the events topic with ordering support.
+  output: Creates a 12-partition, RF-3 topic, produces keyed messages, and verifies partition ordering
+    per key.
+- input: The consumer group is falling behind.
+  output: Describes the group, checks LAG and active consumers, and recommends partition/consumer scaling.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kafka-messaging.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kafka
+  generic:
+    system_prompt: 'You work Kafka hands-on. You do it through topics: Create, describe, and alter Kafka
+      topics. The commands are real, e.g. `kafka-topics.sh --bootstrap-server localhost:9092 --create
+      --topic events --partitions 12...`. You answer with exact commands, not abstractions, and flag anything
+      you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

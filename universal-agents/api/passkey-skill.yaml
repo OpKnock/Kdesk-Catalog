@@ -1,0 +1,100 @@
+name: passkey
+display_name: Passkey
+category: api
+subcategory: general
+description: 'Passkeys and WebAuthn: registration/authentication flows, relying party setup, and the SimpleWebAuthn
+  libraries.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npm
+capabilities:
+- name: passkey-integration
+  description: 'Integrate WebAuthn passkeys into web apps: registration, authentication, and verification
+    with SimpleWebAuthn.'
+  commands:
+  - npm install @simplewebauthn/server @simplewebauthn/browser
+  - npm install @simplewebauthn/server --save
+  - curl -s -X POST http://localhost:3000/register/start | jq .
+  - curl -s -X POST http://localhost:3000/login/start | jq .options
+  - curl -sI https://webauthn.io | grep -i 'permissions-policy'
+  examples:
+  - 'curl -s -X POST http://localhost:3000/register/start -d ''{"email":"alice@example.com"}'' -H ''Content-Type:
+    application/json'' | jq .'
+  - curl -s -X POST http://localhost:3000/login/start | jq '.options.publicKey'
+  - npm install @simplewebauthn/server
+  parameters:
+  - name: rp_id
+    type: string
+    description: Relying party ID (effective domain)
+  - name: rp_name
+    type: string
+    description: Relying party display name
+  - name: origin
+    type: string
+    description: Allowed origin(s) for attestation
+knowledge:
+- title: Passkeys on Google
+  type: documentation
+  source: https://developers.google.com/identity/passkeys
+  description: Passkey concepts and developer guidance
+- title: SimpleWebAuthn Docs
+  type: documentation
+  source: https://simplewebauthn.dev/docs/
+  description: Server and browser libraries for WebAuthn
+instructions: "# Passkeys\n\nPasskeys replace passwords with device-bound WebAuthn credentials, protected\
+  \ by biometrics or PINs.\n\n## What this skill does\n\n- Implements registration (attestation) and login\
+  \ (assertion) endpoints\n- Uses SimpleWebAuthn for ceremony verification\n- Configures relying party\
+  \ settings\n\n## When to use\n\n- Passwordless login in web apps\n- Removing passwords from accounts\n\
+  \n## Real commands\n\n```bash\n# Dependencies\nnpm install @simplewebauthn/server @simplewebauthn/browser\n\
+  \n# RP endpoints (dev server)\ncurl -s -X POST http://localhost:3000/register/start -d '{\"email\":\"\
+  alice@example.com\"}' -H 'Content-Type: application/json' | jq .\ncurl -s -X POST http://localhost:3000/login/start\
+  \ | jq '.options.publicKey'\n```\n\n## Server flow (Node)\n\n```js\nconst { generateRegistrationOptions,\
+  \ verifyRegistrationResponse } = require('@simplewebauthn/server');\n\nconst options = await generateRegistrationOptions({\n\
+  \  rpName: 'MyApp',\n  rpID: 'example.com',\n  userName: user.email,\n  timeout: 60000,\n});\n// send\
+  \ options to browser, then verify attestation response\nconst verification = await verifyRegistrationResponse({\
+  \ response, expectedChallenge, expectedOrigin: 'https://example.com', expectedRPID: 'example.com' });\n\
+  ```\n\n## Best practices\n\n- Store challenge + user session server-side\n- Verify expectedOrigin and\
+  \ expectedRPID strictly\n- Always test in a real browser; localhost uses special origins"
+examples:
+- input: Add passkey login to my Node app
+  output: The agent wires SimpleWebAuthn registration and login endpoints and shows the browser side.
+- input: Why does attestation fail on my subdomain?
+  output: The agent checks rpID vs origin mismatch and shows the correct rpID config.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: passkey.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-passkey
+  generic:
+    system_prompt: 'You take the Passkey seat. You do it through passkey-integration: Integrate WebAuthn
+      passkeys into web apps: registration, authentication, and verification with SimpleWebAuthn. The
+      commands are real, e.g. `npm install @simplewebauthn/server @simplewebauthn/browser`. You work hands-on
+      and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

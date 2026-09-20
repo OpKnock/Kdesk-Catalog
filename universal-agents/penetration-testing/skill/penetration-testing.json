@@ -1,0 +1,237 @@
+{
+  "name": "penetration-testing",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "security",
+  "description": "Runs authorized security assessments: reconnaissance with nmap, web scanning with nuclei/gobuster, and targeted exploitation checks.",
+  "keywords": [
+    "penetration-testing",
+    "recon",
+    "exploitation",
+    "reporting"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "penetration-testing.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-penetration-testing"
+    },
+    "generic": {
+      "system_prompt": "You are the penetration-testing specialist. You do it through recon: Discover hosts, ports, and services. The commands are real, e.g. `nmap -sV -sC -p- -T4 target.example.com`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "recon",
+      "description": "Discover hosts, ports, and services.",
+      "commands": [
+        "nmap -sV -sC -p- -T4 target.example.com",
+        "nmap -sV -p 80,443,8080 10.0.0.0/24",
+        "nmap --script vulners -p 443 target.example.com",
+        "whois example.com && dig example.com A +short",
+        "nmap -sn 10.0.0.0/24"
+      ],
+      "examples": [
+        "nmap -sV -sC 10.0.1.5 -oN scan.txt",
+        "nmap --top-ports 1000 -T4 target.example.com",
+        "nmap -sV -p 3306,5432,6379 db.internal"
+      ],
+      "parameters": [
+        {
+          "name": "target",
+          "type": "string",
+          "description": "Host, IP, or CIDR"
+        },
+        {
+          "name": "ports",
+          "type": "string",
+          "description": "Port list or range"
+        },
+        {
+          "name": "scripts",
+          "type": "string",
+          "description": "NSE script selection"
+        }
+      ]
+    },
+    {
+      "name": "web",
+      "description": "Scan web apps for vulnerabilities and content.",
+      "commands": [
+        "nuclei -u https://target.example.com -severity high,critical",
+        "gobuster dir -u http://target.example.com -w /usr/share/wordlists/dirb/common.txt -t 40",
+        "sqlmap -u 'http://target.example.com/item?id=1' --batch --dbs",
+        "nikto -h http://target.example.com -p 80",
+        "ffuf -u http://target.example.com/FUZZ -w /usr/share/wordlists/dirb/common.txt -mc 200,301"
+      ],
+      "examples": [
+        "nuclei -u https://target.example.com -t http/exposures -o nuclei-results.txt",
+        "gobuster dir -u http://target.example.com -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt",
+        "sqlmap -u 'http://target.example.com/item?id=1' --batch --technique=BEU --level=2"
+      ],
+      "parameters": [
+        {
+          "name": "target-url",
+          "type": "string",
+          "description": "Target URL"
+        },
+        {
+          "name": "wordlist",
+          "type": "string",
+          "description": "Wordlist path"
+        },
+        {
+          "name": "severity",
+          "type": "string",
+          "description": "Minimum severity filter"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "nmap",
+    "burp-suite",
+    "metasploit",
+    "kali"
+  ],
+  "tools": [
+    "nmap",
+    "burp-suite",
+    "metasploit",
+    "kali",
+    "nikto"
+  ],
+  "examples": [
+    {
+      "input": "Assess the public web app for common vulnerabilities.",
+      "output": "Runs nmap recon, nuclei severity scan, gobuster enumeration, and reports findings with evidence."
+    },
+    {
+      "input": "Verify the SQL injection fix is effective.",
+      "output": "Re-runs sqlmap with the same payload set and confirms no exploitable paths remain."
+    }
+  ],
+  "instructions": "# Penetration Testing\n\nAuthorized security assessments with a repeatable methodology.\n\n## When to Use\n\n- Scope-based security reviews of apps/infra\n- Compliance-required periodic testing\n- Verifying fixes after incidents\n\n## Rules of engagement\n\nOnly scan systems you own or have written authorization for. Document scope, timing, and approved techniques before starting.\n\n## Reconnaissance\n\n```bash\nnmap -sV -sC -p- -T4 target.example.com\nnmap -sV -p 80,443,8080 10.0.0.0/24\n```\n\n## Web scanning\n\n```bash\nnuclei -u https://target.example.com -severity high,critical\ngobuster dir -u http://target.example.com -w /usr/share/wordlists/dirb/common.txt\nnikto -h http://target.example.com\n```\n\n## Injection checks\n\n```bash\nsqlmap -u 'http://target.example.com/item?id=1' --batch --dbs\n```\n\n## Reporting\n\n- Every finding: severity, evidence (request/response), impact, remediation.\n- Separate exploitable from informational.\n- Re-test after fixes; close findings with evidence.\n\n## Best practices\n\n- Keep scan logs; they prove scope compliance.\n- Rate-limit scans to avoid DoS of the target.\n- Store findings in a tracker, never just a PDF.\n- Coordinate with the defender team on timing.\n\n## Testing\n\nValidate scanner configuration against a lab target before production scoping.",
+  "display_name": "penetration-testing",
+  "knowledge": [
+    {
+      "title": "Nmap Reference Guide",
+      "type": "documentation",
+      "source": "https://nmap.org/book/man.html",
+      "description": "Scan types, scripts, and options"
+    },
+    {
+      "title": "Nuclei",
+      "type": "documentation",
+      "source": "https://nuclei.projectdiscovery.io/",
+      "description": "Template-driven vulnerability scanner"
+    },
+    {
+      "title": "OWASP Testing Guide",
+      "type": "documentation",
+      "source": "https://owasp.org/www-project-web-security-testing-guide/",
+      "description": "Web application testing methodology"
+    }
+  ],
+  "id": "penetration-testing",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "recon",
+        "name": "target",
+        "type": "string",
+        "description": "Host, IP, or CIDR"
+      },
+      {
+        "capability": "recon",
+        "name": "ports",
+        "type": "string",
+        "description": "Port list or range"
+      },
+      {
+        "capability": "recon",
+        "name": "scripts",
+        "type": "string",
+        "description": "NSE script selection"
+      },
+      {
+        "capability": "web",
+        "name": "target-url",
+        "type": "string",
+        "description": "Target URL"
+      },
+      {
+        "capability": "web",
+        "name": "wordlist",
+        "type": "string",
+        "description": "Wordlist path"
+      },
+      {
+        "capability": "web",
+        "name": "severity",
+        "type": "string",
+        "description": "Minimum severity filter"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "nmap",
+    "burp-suite",
+    "metasploit",
+    "kali"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "penetration-testing/skill/penetration-testing.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/penetration-testing/skill/penetration-testing.yaml",
+    "checksum": "49bd5e739a62e8cfb77507251309f6f3edf143c1d3ebd317beba53006c5140a7"
+  }
+}

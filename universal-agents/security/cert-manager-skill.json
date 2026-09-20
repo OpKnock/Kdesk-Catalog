@@ -1,0 +1,199 @@
+{
+  "name": "cert-manager-security",
+  "display_name": "cert-manager-security",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Issues, renews, and troubleshoots TLS certificates in Kubernetes with cert-manager, ACME issuers, and the cmctl CLI.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "cmctl",
+    "kubectl"
+  ],
+  "capabilities": [
+    {
+      "name": "cmctl-management",
+      "description": "Inspect and manage certificates, issuers, and renewals with cmctl.",
+      "commands": [
+        "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml",
+        "kubectl get certificates -A",
+        "kubectl describe certificate example-tls",
+        "cmctl check api",
+        "cmctl renew example-tls",
+        "cmctl status certificate example-tls"
+      ],
+      "examples": [
+        "kubectl get certificates -A",
+        "cmctl status certificate example-tls",
+        "cmctl renew --all"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Certificate resource name"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace of the certificate"
+        }
+      ]
+    },
+    {
+      "name": "acme-issuer-setup",
+      "description": "Configure ClusterIssuers with Let's Encrypt and manage issuance resources.",
+      "commands": [
+        "kubectl get clusterissuers",
+        "kubectl apply -f cluster-issuer-letsencrypt.yaml",
+        "kubectl get orders.acme.cert-manager.io",
+        "kubectl get challenges.acme.cert-manager.io",
+        "kubectl get certificaterequests"
+      ],
+      "examples": [
+        "kubectl apply -f cluster-issuer-letsencrypt.yaml",
+        "kubectl get orders.acme.cert-manager.io -n istio-system",
+        "kubectl get certificaterequests -A"
+      ],
+      "parameters": [
+        {
+          "name": "issuerFile",
+          "type": "string",
+          "description": "ClusterIssuer manifest path"
+        },
+        {
+          "name": "server",
+          "type": "string",
+          "description": "ACME directory URL, e.g. https://acme-v02.api.letsencrypt.org/directory"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "cert-manager Documentation",
+      "type": "documentation",
+      "source": "https://cert-manager.io/docs/",
+      "description": "Installation, issuers, certificate resources, and troubleshooting"
+    },
+    {
+      "title": "cmctl Reference",
+      "type": "documentation",
+      "source": "https://cert-manager.io/docs/usage/cmctl/",
+      "description": "Command reference for the cmctl CLI"
+    }
+  ],
+  "instructions": "# cert-manager\n\nAutomatic TLS certificate issuance and renewal in Kubernetes using cert-manager.\n\n## What This Skill Does\n\n- Installs cert-manager and verifies the API is available\n- Creates ClusterIssuers for ACME (Let's Encrypt), CA, and self-signed backends\n- Issues Certificate resources and tracks their lifecycle\n- Forces renewals and debugs ACME order/challenge failures\n\n## When to Use\n\n- A cluster needs automatic HTTPS for ingresses\n- Certificates fail to issue or renew\n- An issuer needs switching (staging to production Let's Encrypt)\n\n## Real Commands\n\n```bash\n# Install\nkubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml\ncmctl check api\n\n# Issuer and certificate status\nkubectl get clusterissuers\nkubectl get certificates -A\nkubectl describe certificate example-tls\ncmctl status certificate example-tls\n\n# Debug ACME\nkubectl get orders.acme.cert-manager.io\nkubectl get challenges.acme.cert-manager.io\nkubectl get certificaterequests -A\n\n# Operations\ncmctl renew example-tls\ncmctl renew --all\n```\n\n## Sample Certificate\n\n```yaml\napiVersion: cert-manager.io/v1\nkind: Certificate\nmetadata:\n  name: example-tls\n  namespace: istio-system\nspec:\n  secretName: example-tls\n  dnsNames:\n    - example.com\n  issuerRef:\n    name: letsencrypt-prod\n    kind: ClusterIssuer\n```\n\n## Best Practices\n\n- Use ClusterIssuer for shared issuers, Issuer for namespace-scoped control\n- Start with the staging ACME server to avoid rate limits\n- Enable the HTTP-01 solver via an ingress class annotation or DNS-01 for wildcards\n- Monitor certificate expiry with cert-manager's built-in metrics\n- Pin the cert-manager release and upgrade via helm to match CRD versions",
+  "examples": [
+    {
+      "input": "Set up automatic HTTPS for my ingress on example.com",
+      "output": "Agent installs cert-manager, applies a Let's Encrypt ClusterIssuer, creates a Certificate for example.com bound to a secret, and validates with cmctl status certificate."
+    },
+    {
+      "input": "My cert stopped renewing, HTTP-01 challenge fails",
+      "output": "Agent inspects kubectl get orders and challenges, checks the ingress is reachable and port 80 responds, then suggests DNS-01 or fixing the ingressClass annotation."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cert-manager-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cert-manager"
+    },
+    "generic": {
+      "system_prompt": "Your lane is cert-manager-security. You do it through cmctl-management: Inspect and manage certificates, issuers, and renewals with cmctl. The commands are real, e.g. `kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/ce...`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cert-manager-security",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cmctl-management",
+        "name": "name",
+        "type": "string",
+        "description": "Certificate resource name"
+      },
+      {
+        "capability": "cmctl-management",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace of the certificate"
+      },
+      {
+        "capability": "acme-issuer-setup",
+        "name": "issuerFile",
+        "type": "string",
+        "description": "ClusterIssuer manifest path"
+      },
+      {
+        "capability": "acme-issuer-setup",
+        "name": "server",
+        "type": "string",
+        "description": "ACME directory URL, e.g. https://acme-v02.api.letsencrypt.org/directory"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cmctl",
+    "kubectl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/cert-manager-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/cert-manager-skill.yaml",
+    "checksum": "25f5ad0a24f71b5a2c0bdc66a5c11678aa0c2f7305d701e8f0d3cfe459a89335"
+  }
+}

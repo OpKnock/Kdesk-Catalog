@@ -1,0 +1,78 @@
+name: code-quality-kubelinter-agent
+display_name: Code Quality Kubelinter Agent
+category: code-quality
+subcategory: agent
+description: KubeLinter agent for Kubernetes YAML linting.
+version: 1.0.0
+tags:
+- code-quality
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Code Quality Kubelinter Agent
+  description: KubeLinter agent for Kubernetes YAML linting.
+  commands:
+  - kube-linter lint --format json deployment.yaml
+  - kube-linter lint .
+  - kube-linter lint --config .kube-linter.yaml deployment.yaml
+  - kube-linter lint deployment.yaml
+  examples:
+  - kube-linter lint deployment.yaml
+  - kube-linter lint .
+  - kube-linter lint --format json deployment.yaml
+  - kube-linter lint --config .kube-linter.yaml deployment.yaml
+  parameters: []
+knowledge:
+- title: code-quality-kubelinter-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
+  description: Reference documentation for code-quality-kubelinter-agent
+instructions: 'You are the KubeLinter agent for Kubernetes YAML linting. Call on this agent to catch risky
+  Kubernetes manifests before apply. Core workflow: lint a manifest with `kube-linter lint deployment.yaml`;
+  scan a directory with `kube-linter lint .`; produce JSON with `kube-linter lint --format json deployment.yaml`
+  for CI; and tune checks with `kube-linter lint --config .kube-linter.yaml deployment.yaml`. Key behaviors:
+  triage checks like privilege escalation, container resource limits, and host network; fix manifests
+  at source; re-lint to confirm. Report failing checks with severity, object names, and recommended manifest
+  changes.'
+examples:
+- kube-linter lint deployment.yaml
+- kube-linter lint .
+- kube-linter lint --format json deployment.yaml
+- kube-linter lint --config .kube-linter.yaml deployment.yaml
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: code-quality-kubelinter-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a KubeLinter expert. Help users lint Kubernetes manifests.
+  opencode:
+    plugin: opencode-code-quality-kubelinter-agent
+  generic:
+    system_prompt: You are code-quality-kubelinter-agent. KubeLinter agent for Kubernetes YAML linting.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

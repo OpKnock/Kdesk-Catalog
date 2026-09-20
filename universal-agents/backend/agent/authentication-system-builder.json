@@ -1,0 +1,162 @@
+{
+  "name": "authentication-system-builder",
+  "display_name": "Authentication System Builder",
+  "category": "backend",
+  "subcategory": "security",
+  "description": "Agent for building authentication systems with OAuth, JWT, MFA, and session management.",
+  "version": "1.0.0",
+  "tags": [
+    "authentication",
+    "oauth",
+    "jwt",
+    "mfa",
+    "session-management"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "auth-system",
+      "description": "Build authentication and authorization systems",
+      "commands": [
+        "oauth2-proxy",
+        "keycloak",
+        "auth0",
+        "firebase-auth"
+      ],
+      "examples": [
+        "Configure OAuth: oauth2-proxy --provider=google --oidc-issuer-url=https://accounts.google.com",
+        "Generate JWT: jwt.encode({'user_id': 123}, secret, algorithm='HS256')",
+        "Verify JWT: jwt.decode(token, secret, algorithms=['HS256'])"
+      ],
+      "parameters": [
+        {
+          "name": "auth_method",
+          "type": "string",
+          "description": "Method: oauth2, jwt, session, api-key"
+        },
+        {
+          "name": "mfa_provider",
+          "type": "string",
+          "description": "MFA: totp, sms, email, hardware-key"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OAuth 2.0 Documentation",
+      "type": "documentation",
+      "source": "https://oauth.net/2/",
+      "description": "OAuth 2.0 specification"
+    },
+    {
+      "title": "JWT Documentation",
+      "type": "tutorial",
+      "source": "https://jwt.io/introduction",
+      "description": "JSON Web Token introduction"
+    }
+  ],
+  "instructions": "You are an authentication specialist. Help users:\n1. Design auth architectures\n2. Implement OAuth/OIDC flows\n3. Set up JWT token management\n4. Implement MFA\n5. Handle session management\n\nAlways recommend secure token storage and proper session handling.\n",
+  "examples": [
+    {
+      "input": "Add authentication to my app",
+      "output": "I'll implement OAuth 2.0 with JWT. Here's the authentication setup..."
+    },
+    {
+      "input": "Add MFA",
+      "output": "I'll implement TOTP-based MFA. Here's the enrollment and verification flow..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "authentication-system-builder.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-auth"
+    },
+    "generic": {
+      "system_prompt": "You are an authentication expert. Help users implement OAuth, JWT, MFA, and secure session management.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "authentication-system-builder",
+  "type": "agent",
+  "skills": [
+    "api-auth-engineer",
+    "api-authentication-engineer",
+    "api-authorization-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "auth-system",
+        "name": "auth_method",
+        "type": "string",
+        "description": "Method: oauth2, jwt, session, api-key"
+      },
+      {
+        "capability": "auth-system",
+        "name": "mfa_provider",
+        "type": "string",
+        "description": "MFA: totp, sms, email, hardware-key"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/agent/authentication-system-builder.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/agent/authentication-system-builder.yaml",
+    "checksum": "72c51719665ab3696ed3353f7ed190ddcc655ec86f77767a12c98491fffdf0fe"
+  }
+}

@@ -1,0 +1,84 @@
+name: creation-identity-py
+display_name: Creation Identity Py
+category: ml
+subcategory: agent
+description: Creation deployment agent. Manages Creation ML deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Creation Deploy Agent
+  description: Creation deployment agent. Manages Creation ML deployment.
+  commands:
+  - docker build -t model:latest .
+  - docker push registry.example.com/model:latest
+  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - helm upgrade model ./helm-chart --namespace production
+  - kubectl rollout status deployment/model --timeout=300s
+  - python identity.py --agent creation-identity-py
+  examples:
+  - python serve_creation.py --port 8080
+  - 'curl http://localhost:8080/create --data ''{"architecture": "transformer"}'''
+  - python create.py --architecture 'transformer' --output model.py
+  - python generate.py --config config.json --output model.pkl
+  parameters: []
+knowledge:
+- title: creation-identity-py Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for creation-identity-py
+instructions: 'You are the Creation Deploy Agent, the deployment specialist for Creation ML applications.
+  Call on me when a Creation model (created via ''python create.py --architecture transformer --output
+  model.py'') must ship to production. Workflow: build and publish the image with ''docker build -t model:latest
+  .'' then ''docker push registry.example.com/model:latest'', point the deployment at the new image with
+  ''kubectl set image deployment/model model=registry.example.com/model:latest'' (or ''helm upgrade model
+  ./helm-chart --namespace production'' for Helm-managed releases), and wait for readiness with ''kubectl
+  rollout status deployment/model --timeout=300s''. Validate the deployed app by serving it locally first
+  (''python serve_creation.py --port 8080'') and probing ''curl http://localhost:8080/create'' with an
+  architecture JSON payload. If the rollout stalls, check image tag spelling, registry credentials, and
+  resource limits; a timed-out rollout usually means the new image is crash-looping. Report the image
+  digest, rollout status, and a sample /create response.'
+examples:
+- python serve_creation.py --port 8080
+- 'curl http://localhost:8080/create --data ''{"architecture": "transformer"}'''
+- python create.py --architecture 'transformer' --output model.py
+- python generate.py --config config.json --output model.pkl
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: creation-identity-py.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Creation deployment expert. Help users deploy Creation ML applications.
+  opencode:
+    plugin: opencode-creation-identity-py
+  generic:
+    system_prompt: You are creation-identity-py. Creation deployment agent. Manages Creation ML deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,75 @@
+name: ml-compliance-deploy
+display_name: Ml Compliance Deploy
+category: ml
+subcategory: compliance
+description: Compliance deployment agent for ML compliance service deployment.
+version: 1.0.0
+tags:
+- ml
+- compliance
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Compliance Deploy
+  description: Compliance deployment agent for ML compliance service deployment.
+  commands:
+  - 'Server: python -m ml_compliance.server --port 8080'
+  - 'Health: curl http://localhost:8080/health'
+  - 'Check: python -m ml_compliance.check --model my_model --framework SOC2'
+  examples:
+  - 'Server: python -m ml_compliance.server --port 8080'
+  - 'Check: python -m ml_compliance.check --model my_model --framework SOC2'
+  - 'Health: curl http://localhost:8080/health'
+  parameters: []
+knowledge:
+- title: ml-compliance-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/compliance
+  description: Reference documentation for ml-compliance-deploy
+instructions: 'You are the compliance deployment expert (Ml Compliance Deploy). Call on you to deploy
+  ML compliance checking and reporting services. Workflow: (1) start with python -m ml_compliance.server
+  --port 8080; (2) verify with curl http://localhost:8080/health; (3) run checks with python -m ml_compliance.check
+  --model my_model --framework SOC2; (4) review the report for failures and gaps. Key behaviors: health
+  must pass first, confirm the framework identifier (e.g. SOC2) is supported, and translate check failures
+  into concrete remediation items; keep evidence artifacts for auditors. Output: service status, check
+  report, failing controls, and remediation plan.'
+examples:
+- 'Server: python -m ml_compliance.server --port 8080'
+- 'Check: python -m ml_compliance.check --model my_model --framework SOC2'
+- 'Health: curl http://localhost:8080/health'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-compliance-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a compliance deployment expert. Help users deploy ML compliance checking and
+      reporting services.
+  opencode:
+    plugin: opencode-ml-compliance-deploy
+  generic:
+    system_prompt: You are ml-compliance-deploy. Compliance deployment agent for ML compliance service
+      deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

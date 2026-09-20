@@ -1,0 +1,139 @@
+{
+  "name": "ml-governance",
+  "display_name": "Ml Governance",
+  "category": "ml",
+  "subcategory": "governance",
+  "description": "ML governance agent for model management and compliance.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "governance"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Governance",
+      "description": "ML governance agent for model management and compliance.",
+      "commands": [
+        "python register_model.py --model model --version 2.0 --stage staging",
+        "python promote_model.py --model model --from staging --to production --approved-by reviewer",
+        "python list_model_versions.py --model model --all",
+        "python approve_model.py --model model --version 2.0 --approver ml-lead",
+        "python identity.py --agent ml-governance"
+      ],
+      "examples": [
+        "MLflow: mlflow models register-name; mlflow models list",
+        "Model Registry: from mlflow.tracking import MlflowClient; client = MlflowClient(); client.create_registered_model('my-model')",
+        "Neptune: import neptune; run = neptune.init_model(name='my-model'); run['model'].upload('model.pkl')",
+        "Vertex AI: from google.cloud import aiplatform; model = aiplatform.Model('my-model')"
+      ],
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-governance Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/governance",
+      "description": "Reference documentation for ml-governance"
+    }
+  ],
+  "instructions": "You are an ML governance expert. Help users with:\n- Model registry\n- Version control\n- Audit logging\n- Compliance\n- Access control\n- Documentation\n- Lifecycle management\n\nAlways use real governance tools. Never suggest fictional tools.",
+  "examples": [
+    "MLflow: mlflow models register-name; mlflow models list",
+    "Model Registry: from mlflow.tracking import MlflowClient; client = MlflowClient(); client.create_registered_model('my-model')",
+    "Neptune: import neptune; run = neptune.init_model(name='my-model'); run['model'].upload('model.pkl')",
+    "Vertex AI: from google.cloud import aiplatform; model = aiplatform.Model('my-model')"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-governance.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an ML governance expert. Help users with:\n- Model registry\n- Version control\n- Audit logging\n- Compliance\n- Access control\n- Documentation\n- Lifecycle management\n\nAlways use real governance tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-governance"
+    },
+    "generic": {
+      "system_prompt": "You are ml-governance. ML governance agent for model management and compliance.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-governance",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Governance",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/governance/ml-governance.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/governance/ml-governance.yaml",
+    "checksum": "c24c80da1f01767f77a61790213b76a329fd2a715306a2372cf78b4849a42f02"
+  }
+}

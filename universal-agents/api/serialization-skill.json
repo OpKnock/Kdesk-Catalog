@@ -1,0 +1,181 @@
+{
+  "name": "serialization",
+  "display_name": "Serialization",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted serialization skill: protobuf code generation, flatbuffers schemas, JSON validation, and wire-format inspection across languages.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "flatc",
+    "protoc",
+    "python"
+  ],
+  "capabilities": [
+    {
+      "name": "serialization-toolchain",
+      "description": "Compile and inspect serialization schemas and payloads",
+      "commands": [
+        "protoc --version",
+        "protoc --python_out=. --proto_path=. user.proto",
+        "flatc --ts user.fbs",
+        "python -m json.tool payload.json",
+        "jq -c '.items[] | select(.price > 10)' data.json"
+      ],
+      "examples": [
+        "protoc --go_out=. --go_opt=paths=source_relative user.proto",
+        "flatc --ts user.fbs",
+        "python -m json.tool payload.json"
+      ],
+      "parameters": [
+        {
+          "name": "schema_file",
+          "type": "string",
+          "description": "Input .proto or .fbs schema"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "description": "Target language for code generation"
+        },
+        {
+          "name": "input_file",
+          "type": "string",
+          "description": "Data file to validate or pretty-print"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Protobuf docs",
+      "type": "documentation",
+      "source": "https://protobuf.dev/",
+      "description": "proto3 language guide and codegen"
+    },
+    {
+      "title": "FlatBuffers docs",
+      "type": "documentation",
+      "source": "https://flatbuffers.dev/",
+      "description": "Schema language and compiler"
+    },
+    {
+      "title": "jq manual",
+      "type": "documentation",
+      "source": "https://jqlang.github.io/jq/manual/",
+      "description": "Filter and transform JSON"
+    }
+  ],
+  "instructions": "# Serialization\n\nHand-crafted skill for choosing and operating serialization formats.\n\n## What this skill does\n\n- Generates typed code from protobuf and flatbuffers schemas\n- Validates and pretty-prints JSON payloads\n- Compares formats for size and schema evolution fit\n\n## When to use\n\n- Picking a wire format for a new service-to-service contract\n- Regenerating code after a schema change\n- Debugging malformed JSON in API logs\n\n## Real commands\n\n```bash\n# Protobuf codegen\nprotoc --version\nprotoc --python_out=. --proto_path=. user.proto\nprotoc --go_out=. --go_opt=paths=source_relative user.proto\n\n# FlatBuffers\nflatc --ts user.fbs\n\n# JSON tooling\npython -m json.tool payload.json\njq -c '.items[] | select(.price > 10)' data.json\njq '.data | keys' response.json\n```\n\n## Schema example\n\n```proto\nsyntax = \"proto3\";\nmessage User {\n  string id = 1;\n  string email = 2;\n  int64 created_at = 3;\n}\n```\n\n```fbs\nnamespace app;\ntable User {\n  id: string;\n  email: string;\n}\nroot_type User;\n```\n\n## Testing\n\n```bash\nprotoc --python_out=. --proto_path=. user.proto && python -c 'import user_pb2; print(user_pb2.User(id=\"1\", email=\"a@b.c\"))'\npython -m json.tool payload.json > /dev/null && echo valid\n```\n\n## Best practices\n\n- Protobuf for high-traffic RPC payloads; JSON for external APIs\n- Keep field numbers stable; they are the wire contract\n- Validate JSON with jq or json.tool before it reaches consumers\n",
+  "examples": [
+    {
+      "input": "Generate Go structs from user.proto",
+      "output": "protoc --go_out=. --go_opt=paths=source_relative user.proto generates user.pb.go with typed structs."
+    },
+    {
+      "input": "Is this API response valid JSON?",
+      "output": "python -m json.tool payload.json prints the parsed document or the exact syntax error."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "serialization.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-serialization"
+    },
+    "generic": {
+      "system_prompt": "You own Serialization end to end. You do it through serialization-toolchain: Compile and inspect serialization schemas and payloads. The commands are real, e.g. `protoc --version`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "serialization",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "serialization-toolchain",
+        "name": "schema_file",
+        "type": "string",
+        "description": "Input .proto or .fbs schema"
+      },
+      {
+        "capability": "serialization-toolchain",
+        "name": "language",
+        "type": "string",
+        "description": "Target language for code generation"
+      },
+      {
+        "capability": "serialization-toolchain",
+        "name": "input_file",
+        "type": "string",
+        "description": "Data file to validate or pretty-print"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "flatc",
+    "protoc",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/serialization-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/serialization-skill.yaml",
+    "checksum": "7d15ea40945205856df54cd3760859585ec7c8282b2f398d3036e8a313180039"
+  }
+}

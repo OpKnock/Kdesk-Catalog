@@ -1,0 +1,173 @@
+{
+  "name": "quarkus-kotlin",
+  "display_name": "Quarkus Kotlin",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Quarkus with Kotlin: quarkus CLI scaffolding, Kotlin endpoints, coroutines and native builds.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "./mvnw",
+    "quarkus"
+  ],
+  "capabilities": [
+    {
+      "name": "quarkus-kotlin-build",
+      "description": "Create Kotlin Quarkus apps, add extensions and run the dev loop with the quarkus CLI.",
+      "commands": [
+        "quarkus create app my-app --lang kotlin",
+        "quarkus dev",
+        "quarkus build",
+        "quarkus ext add rest",
+        "./mvnw compile"
+      ],
+      "examples": [
+        "quarkus create app orders --lang kotlin -P io.quarkus.platform:quarkus-bom:3.10.0",
+        "quarkus dev",
+        "quarkus build -Dquarkus.package.type=uber-jar"
+      ],
+      "parameters": [
+        {
+          "name": "lang",
+          "type": "string",
+          "description": "kotlin or java"
+        },
+        {
+          "name": "extensions",
+          "type": "array",
+          "description": "Quarkus extensions to add"
+        },
+        {
+          "name": "package_type",
+          "type": "string",
+          "description": "uber-jar, fast-jar or native"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Quarkus Kotlin Guide",
+      "type": "documentation",
+      "source": "https://quarkus.io/guides/kotlin",
+      "description": "Kotlin support, coroutines and native compilation"
+    },
+    {
+      "title": "Quarkus CLI Reference",
+      "type": "documentation",
+      "source": "https://quarkus.io/guides/cli-tooling",
+      "description": "quarkus create/dev/build/ext commands"
+    }
+  ],
+  "instructions": "# Quarkus Kotlin\n\nQuarkus brings fast startup and low memory to Kotlin microservices.\n\n## What this skill does\n\n- Scaffolds Kotlin projects with the quarkus CLI\n- Adds extensions and Kotlin endpoints\n- Builds native images\n\n## When to use\n\n- Kotlin JVM services needing GraalVM native\n- Replacing heavier frameworks\n\n## Real commands\n\n```bash\n# Create with Kotlin\nquarkus create app my-app --lang kotlin\n\n# Dev mode with hot reload\nquarkus dev\n\n# Add extensions\nquarkus ext add rest\nquarkus ext add rest-client,resteasy-reactive-jackson\n\n# Build\nquarkus build\nquarkus build -Dquarkus.package.type=uber-jar\n./mvnw compile\n```\n\n## Kotlin endpoint\n\n```kotlin\n@Path(\"/hello\")\nclass HelloResource {\n    @GET\n    suspend fun hello(): String = \"Hello from Kotlin\"\n}\n```\n\n## Native build\n\n```bash\nquarkus build --native\n```\n\n## Best practices\n\n- Use suspend functions with RESTEasy Reactive\n- Test with quarkus dev and the continuous test mode\n- Profile with `quarkus dev` before native builds",
+  "examples": [
+    {
+      "input": "Start a Kotlin Quarkus project",
+      "output": "The agent runs quarkus create app --lang kotlin and shows the dev loop with quarkus dev."
+    },
+    {
+      "input": "Build a native binary of my Kotlin app",
+      "output": "The agent configures the native build and runs quarkus build --native."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "quarkus-kotlin.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-quarkus-kotlin"
+    },
+    "generic": {
+      "system_prompt": "You own Quarkus Kotlin end to end. You do it through quarkus-kotlin-build: Create Kotlin Quarkus apps, add extensions and run the dev loop with the quarkus CLI. The commands are real, e.g. `quarkus create app my-app --lang kotlin`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "quarkus-kotlin",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "quarkus-kotlin-build",
+        "name": "lang",
+        "type": "string",
+        "description": "kotlin or java"
+      },
+      {
+        "capability": "quarkus-kotlin-build",
+        "name": "extensions",
+        "type": "array",
+        "description": "Quarkus extensions to add"
+      },
+      {
+        "capability": "quarkus-kotlin-build",
+        "name": "package_type",
+        "type": "string",
+        "description": "uber-jar, fast-jar or native"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "./mvnw",
+    "quarkus"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/quarkus-kotlin-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/quarkus-kotlin-skill.yaml",
+    "checksum": "b92c6dbb39ac5ea4e243df1d886522fbf0c24a88384c7ece1772ce53e1f6b6b1"
+  }
+}

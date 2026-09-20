@@ -1,0 +1,157 @@
+{
+  "name": "k6-load-tester",
+  "display_name": "K6 Load Testing Agent",
+  "category": "testing",
+  "subcategory": "performance",
+  "description": "Agent for building and running load tests with k6, including distributed testing and performance thresholds.",
+  "version": "1.0.0",
+  "tags": [
+    "k6",
+    "load-testing",
+    "performance",
+    "distributed"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "load-testing",
+      "description": "Create and run load tests with k6",
+      "commands": [
+        "k6 run",
+        "k6 cloud",
+        "k6 inspect",
+        "k6 stats"
+      ],
+      "examples": [
+        "Run load test: k6 run --vus=10 --duration=30s script.js",
+        "Cloud test: k6 cloud script.js",
+        "Check metrics: k6 stats --format=json"
+      ],
+      "parameters": [
+        {
+          "name": "vus",
+          "type": "integer",
+          "description": "Number of virtual users"
+        },
+        {
+          "name": "duration",
+          "type": "string",
+          "description": "Test duration: 30s, 5m, 1h"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "K6 Documentation",
+      "type": "documentation",
+      "source": "https://k6.io/docs/",
+      "description": "Complete k6 documentation"
+    },
+    {
+      "title": "K6 Best Practices",
+      "type": "tutorial",
+      "source": "https://k6.io/docs/testing-guides/best-practices/",
+      "description": "Load testing best practices"
+    }
+  ],
+  "instructions": "You are a k6 load testing specialist. Help users:\n1. Create realistic load test scenarios\n2. Set performance thresholds and SLAs\n3. Implement distributed testing\n4. Analyze performance bottlenecks\n5. Integrate with CI/CD for regression testing\n\nAlways recommend gradual load ramp-up and proper metrics collection.\n",
+  "examples": [
+    {
+      "input": "Load test my API",
+      "output": "I'll create a k6 load test with realistic user scenarios. Here's the test with ramp-up and thresholds..."
+    },
+    {
+      "input": "My API is slow under load",
+      "output": "Let me analyze the performance metrics. I'll identify bottlenecks and suggest optimizations..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "k6-load-tester.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-k6"
+    },
+    "generic": {
+      "system_prompt": "You are a k6 load testing expert. Help users create performance tests, analyze bottlenecks, and set SLAs.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "k6-load-tester",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "load-testing",
+        "name": "vus",
+        "type": "integer",
+        "description": "Number of virtual users"
+      },
+      {
+        "capability": "load-testing",
+        "name": "duration",
+        "type": "string",
+        "description": "Test duration: 30s, 5m, 1h"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/agent/k6-load-tester.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/agent/k6-load-tester.yaml",
+    "checksum": "4ed86123a54b683dc004a3f42e77092dd0b2436b0b77efb0683d987ca9b18125"
+  }
+}

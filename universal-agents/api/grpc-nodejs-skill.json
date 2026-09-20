@@ -1,0 +1,175 @@
+{
+  "name": "grpc-nodejs",
+  "display_name": "Grpc Nodejs",
+  "category": "api",
+  "subcategory": "general",
+  "description": "gRPC services and clients in Node.js with @grpc/grpc-js and @grpc/proto-loader: dynamic proto loading, streaming RPCs, and grpc_tools_node_protoc codegen.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "./node_modules/.bin/grpc_tools_node_protoc",
+    "node",
+    "npm"
+  ],
+  "capabilities": [
+    {
+      "name": "nodejs-grpc",
+      "description": "Load proto definitions dynamically and implement gRPC servers/clients in Node.js.",
+      "commands": [
+        "npm install @grpc/grpc-js @grpc/proto-loader",
+        "npm install -D grpc-tools",
+        "./node_modules/.bin/grpc_tools_node_protoc -I ./proto --js_out=import_style=commonjs:./generated --grpc_out=./generated ./proto/greet.proto",
+        "node server.js",
+        "node client.js"
+      ],
+      "examples": [
+        "node server.js & node client.js",
+        "npm run proto:gen && node server.js",
+        "node --inspect server.js"
+      ],
+      "parameters": [
+        {
+          "name": "proto_path",
+          "type": "string",
+          "description": "Directory containing the .proto files."
+        },
+        {
+          "name": "host",
+          "type": "string",
+          "description": "Server host:port, e.g. localhost:50051."
+        },
+        {
+          "name": "keepalive_ms",
+          "type": "integer",
+          "description": "Keepalive ping interval in ms for long-lived channels."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "gRPC Node.js Docs",
+      "type": "documentation",
+      "source": "https://grpc.io/docs/languages/node/",
+      "description": "Official gRPC Node quickstart and basics with @grpc/grpc-js."
+    },
+    {
+      "title": "@grpc/grpc-js npm",
+      "type": "documentation",
+      "source": "https://www.npmjs.com/package/@grpc/grpc-js",
+      "description": "Package docs and options for the pure-JS grpc implementation."
+    }
+  ],
+  "instructions": "# gRPC Node.js\n\ngRPC services and clients in Node with @grpc/grpc-js.\n\n## What this skill does\n\n- Loads .proto files at runtime with @grpc/proto-loader (no build step needed).\n- Implements unary and streaming RPC handlers.\n- Generates static JS stubs with grpc_tools_node_protoc when preferred.\n- Configures channels: deadlines, keepalive, and interceptors.\n\n## When to use\n\n- A Node microservice needs internal typed RPC calls.\n- Prototype gRPC APIs quickly without a codegen pipeline.\n- Building gateway workers that fan out to gRPC services.\n\n## Real commands\n\n```bash\n# Install\nnpm install @grpc/grpc-js @grpc/proto-loader\nnpm install -D grpc-tools\n\n# Dynamic loading (no codegen) is the default pattern\nnode server.js &\nnode client.js\n\n# Optional static codegen\n./node_modules/.bin/grpc_tools_node_protoc -I ./proto \\\n  --js_out=import_style=commonjs:./generated --grpc_out=./generated ./proto/greet.proto\n```\n\n## Server skeleton\n\n```js\nconst grpc = require('@grpc/grpc-js');\nconst protoLoader = require('@grpc/proto-loader');\nconst pkgDef = protoLoader.loadSync('./proto/greet.proto');\nconst greet = grpc.loadPackageDefinition(pkgDef).helloworld;\n\nconst server = new grpc.Server();\nserver.addService(greet.Greeter.service, {\n  sayHello: (call, callback) => callback(null, { message: 'Hello ' + call.request.name })\n});\nserver.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => server.start());\n```\n\n## Client skeleton\n\n```js\nconst client = new greet.Greeter('localhost:50051', grpc.credentials.createInsecure(), {\n  'grpc.keepalive_time_ms': 10000\n});\nclient.sayHello({ name: 'Node' }, (err, res) => console.log(res.message));\n```\n\n## Testing\n\n```bash\nnode server.js &\ngrpcurl -plaintext -d '{\"name\":\"Node\"}' localhost:50051 helloworld.Greeter/SayHello\nnode client.js\n```\n\n## Best practices\n\n- Use dynamic loading for dev velocity, static stubs for strict typing in TS.\n- Always `server.tryShutdown()` on SIGTERM for a clean drain.\n- Set `grpc.keepalive_time_ms` on channels behind load balancers.\n- Proto-loader `keepCase:false` (default) camelCases field names; keep it consistent client-side.\n\n## Example exchange\n\n```\nUser: My Node client times out after the server restarts.\nAgent: Create a new channel on reconnect and set a deadline per call:\n       client.sayHello(req, { deadline: Date.now() + 5000 }, cb)\n```",
+  "examples": [
+    {
+      "input": "Start the Node gRPC server and verify with grpcurl",
+      "output": "node server.js & grpcurl -plaintext -d '{\"name\":\"Node\"}' localhost:50051 helloworld.Greeter/SayHello"
+    },
+    {
+      "input": "Generate static JS stubs from greet.proto",
+      "output": "./node_modules/.bin/grpc_tools_node_protoc -I ./proto --js_out=import_style=commonjs:./generated --grpc_out=./generated ./proto/greet.proto"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "grpc-nodejs.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-grpc-nodejs"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Grpc Nodejs. You do it through nodejs-grpc: Load proto definitions dynamically and implement gRPC servers/clients in Node.js. The commands are real, e.g. `npm install @grpc/grpc-js @grpc/proto-loader`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "grpc-nodejs",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "nodejs-grpc",
+        "name": "proto_path",
+        "type": "string",
+        "description": "Directory containing the .proto files."
+      },
+      {
+        "capability": "nodejs-grpc",
+        "name": "host",
+        "type": "string",
+        "description": "Server host:port, e.g. localhost:50051."
+      },
+      {
+        "capability": "nodejs-grpc",
+        "name": "keepalive_ms",
+        "type": "integer",
+        "description": "Keepalive ping interval in ms for long-lived channels."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "./node_modules/.bin/grpc_tools_node_protoc",
+    "node",
+    "npm"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/grpc-nodejs-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/grpc-nodejs-skill.yaml",
+    "checksum": "9a6caf7d14dbc3f4818d7a56ccf8244bb67d7bf245b6986c2a226b17d0b249cb"
+  }
+}

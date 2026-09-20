@@ -1,0 +1,173 @@
+{
+  "name": "span-attributes",
+  "display_name": "Span Attributes",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted span attributes skill: otel-cli span creation, semantic conventions for http/db attributes, and OTLP export of annotated spans.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "export",
+    "otel-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "otel-span-attrs",
+      "description": "Create spans and attach semantic attributes with otel-cli",
+      "commands": [
+        "otel-cli span --name 'http.request' --attrs 'http.method=GET,http.status_code=200,http.route=/v1/users'",
+        "otel-cli span --name 'db.query' --kind client --attrs 'db.system=postgresql,db.statement=SELECT 1'",
+        "otel-cli exec --service my-svc --name 'deploy job' -- curl -s https://example.com",
+        "export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 && otel-cli span --name 'boot' --attrs \"host.name=$(hostname)\"",
+        "otel-cli span --name 'operation' --start --end"
+      ],
+      "examples": [
+        "otel-cli span --name 'http.request' --attrs 'http.method=GET,http.status_code=200'",
+        "otel-cli exec --service my-svc --name 'db.migrate' -- ./migrate.sh",
+        "otel-cli span --name 'cache.get' --kind client --attrs 'db.system=redis,cache.hit=false'"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Span name, e.g. http.request"
+        },
+        {
+          "name": "attrs",
+          "type": "string",
+          "description": "Comma-separated key=value semantic attributes"
+        },
+        {
+          "name": "service",
+          "type": "string",
+          "description": "Service name for the span's resource"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OpenTelemetry span API spec",
+      "type": "documentation",
+      "source": "https://opentelemetry.io/docs/specs/otel/trace/api/",
+      "description": "Span creation, attributes, and events"
+    },
+    {
+      "title": "otel-cli repo",
+      "type": "documentation",
+      "source": "https://github.com/equinix-labs/otel-cli",
+      "description": "span, exec commands and OTLP export"
+    }
+  ],
+  "instructions": "# Span Attributes\n\nHand-crafted skill for attaching semantic attributes to traces with otel-cli.\n\n## What this skill does\n\n- Creates spans from the CLI with otel-cli span\n- Attaches semantic-convention attributes for http and db spans\n- Wraps arbitrary commands with otel-cli exec\n\n## When to use\n\n- Instrumenting shell scripts and cron jobs without code changes\n- Verifying attribute names follow semantic conventions\n- Building trace samples for dashboards\n\n## Real commands\n\n```bash\n# A span with HTTP semantic attributes\notel-cli span --name 'http.request' --attrs 'http.method=GET,http.status_code=200,http.route=/v1/users'\n\n# Database span\notel-cli span --name 'db.query' --kind client --attrs 'db.system=postgresql,db.statement=SELECT 1'\n\n# Wrap any command; span duration equals the command\notel-cli exec --service my-svc --name 'deploy job' -- curl -s https://example.com\n\n# Manual start/end pair for a longer operation\notel-cli span --name 'operation' --start\nsleep 5\notel-cli span --name 'operation' --end\n\n# Export via OTLP to the local collector\nexport OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318\notel-cli span --name 'boot' --attrs \"host.name=$(hostname)\"\n```\n\n## Attribute conventions\n\n- http.method, http.status_code, http.route, http.url\n- db.system, db.statement, db.name, cache.hit\n- Custom attributes: any key=value pair is valid\n\n## Testing\n\n```bash\notel-cli span --name 'test' --attrs 'http.method=GET,http.status_code=200' --traceparent-file t.txt\ncat t.txt\n```\n\n## Best practices\n\n- Follow semantic conventions so tools and dashboards understand spans\n- Keep attribute cardinality low: never put user IDs or URLs in span names\n- Use --traceparent-file to stitch child spans into a parent trace\n",
+  "examples": [
+    {
+      "input": "Trace a cron job from the shell",
+      "output": "otel-cli exec --service cron --name 'nightly-report' -- ./report.sh wraps the job in a span with its duration."
+    },
+    {
+      "input": "Mark a DB call in an existing trace",
+      "output": "Capture the parent via --traceparent-file in the first command and pass it with --parent in the db span."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "span-attributes.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-span-attributes"
+    },
+    "generic": {
+      "system_prompt": "You own Span Attributes end to end. You do it through otel-span-attrs: Create spans and attach semantic attributes with otel-cli. The commands are real, e.g. `otel-cli span --name http.request --attrs...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "span-attributes",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "otel-span-attrs",
+        "name": "name",
+        "type": "string",
+        "description": "Span name, e.g. http.request"
+      },
+      {
+        "capability": "otel-span-attrs",
+        "name": "attrs",
+        "type": "string",
+        "description": "Comma-separated key=value semantic attributes"
+      },
+      {
+        "capability": "otel-span-attrs",
+        "name": "service",
+        "type": "string",
+        "description": "Service name for the span's resource"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "export",
+    "otel-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/span-attributes-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/span-attributes-skill.yaml",
+    "checksum": "b83e209baa1a1a3af8dad0dfeb2802110ee5166592771f20018fa82acb06561b"
+  }
+}

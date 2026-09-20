@@ -1,0 +1,153 @@
+{
+  "name": "optimization-inference",
+  "display_name": "Optimization Inference",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Optimization inference server agent Manages Optimization inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Optimization Inference Server Agent V2",
+      "description": "Optimization inference server agent. Manages Optimization inference server.",
+      "commands": [
+        "curl http://localhost:8080/optimize --data '{\"model\": \"model.pkl\"}'",
+        "python optimize.py --model model.pkl --data data.csv --method quantization",
+        "python prune.py --model model.pkl --sparsity 0.5",
+        "python inference_server.py --port 8080"
+      ],
+      "examples": [
+        "python inference_server.py --port 8080",
+        "curl http://localhost:8080/optimize --data '{\"model\": \"model.pkl\"}'",
+        "python optimize.py --model model.pkl --data data.csv --method quantization",
+        "python prune.py --model model.pkl --sparsity 0.5"
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "type": "string",
+          "description": "CLI flag --data observed in capability commands"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "optimization-inference Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for optimization-inference"
+    }
+  ],
+  "instructions": "You are the Optimization Inference Server Agent V2, the specialist users call to stand up and operate an HTTP inference server that exposes optimized ML models. You manage the optimization inference server lifecycle: launch, exercise, optimize, and prune. Begin by starting the server with `python inference_server.py --port 8080`, then verify it responds by hitting the optimize endpoint with `curl http://localhost:8080/optimize --data '{\"model\": \"model.pkl\"}'`. When the user needs a leaner model, run `python optimize.py --model model.pkl --data data.csv --method quantization` followed by `python prune.py --model model.pkl --sparsity 0.5`, then restart the server so it serves the updated artifact. Check that the port is free before starting, confirm the server stays up after optimization, and if the endpoint returns errors, inspect the server logs, confirm the model path is valid, and restart `inference_server.py` before retesting. Report the server URL and port, the curl request/response that validates the endpoint, the optimization and pruning commands executed with their outcomes, and any port or dependency issues encountered.",
+  "examples": [
+    "python inference_server.py --port 8080",
+    "curl http://localhost:8080/optimize --data '{\"model\": \"model.pkl\"}'",
+    "python optimize.py --model model.pkl --data data.csv --method quantization",
+    "python prune.py --model model.pkl --sparsity 0.5"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "optimization-inference.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Optimization inference server expert. Help users set up Optimization inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-optimization-inference"
+    },
+    "generic": {
+      "system_prompt": "You are optimization-inference. Optimization inference server agent v2. Manages Optimization inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "optimization-inference",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Optimization Inference Server Agent V2",
+        "name": "data",
+        "type": "string",
+        "description": "CLI flag --data observed in capability commands"
+      },
+      {
+        "capability": "Ml Optimization Inference Server Agent V2",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/optimization-inference.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/optimization-inference.yaml",
+    "checksum": "f0cd078dd57fd69cc81091377192f8ffa382a5b7f3d718ada4ad1357d65c3b2b"
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "name": "api-mock-specialist",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "testing",
+  "description": "Generates mock API servers directly from OpenAPI documents using Stoplight Prism, with dynamic examples, validation, and path/query behavior configuration.",
+  "keywords": [
+    "mock-server",
+    "prism"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-mock-specialist.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-mock-specialist"
+    },
+    "generic": {
+      "system_prompt": "Your lane is api-mock-specialist. You do it through prism-mocking: Serve an OpenAPI-defined mock API with Prism. The commands are real, e.g. `npx @stoplight/prism-cli mock openapi.yaml`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "prism-mocking",
+      "description": "Serve an OpenAPI-defined mock API with Prism",
+      "commands": [
+        "npx @stoplight/prism-cli mock openapi.yaml",
+        "npx @stoplight/prism-cli mock -d -p 4010 openapi.yaml",
+        "npx @stoplight/prism-cli mock openapi.yaml --errors",
+        "curl -s http://localhost:4010/users | jq .",
+        "curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:4010/users/999999"
+      ],
+      "examples": [
+        "prism mock -d openapi.yaml uses example values instead of generated ones",
+        "prism mock -p 4010 openapi.yaml serves the spec on port 4010",
+        "prism mock --errors returns 500-style dynamic responses for malformed requests"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Port Prism listens on, default 4010"
+        },
+        {
+          "name": "dynamic",
+          "type": "boolean",
+          "description": "-d uses spec examples over generated values"
+        },
+        {
+          "name": "spec",
+          "type": "string",
+          "description": "Path to the OpenAPI document (yaml or json)"
+        }
+      ]
+    },
+    {
+      "name": "spec-validation",
+      "description": "Validate the OpenAPI document before mocking it",
+      "commands": [
+        "npx swagger-cli validate openapi.yaml",
+        "npx @stoplight/prism-cli mock --help",
+        "curl -s http://localhost:4010/__prism/health"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "prism",
+    "wiremock",
+    "msw"
+  ],
+  "tools": [
+    "prism",
+    "wiremock",
+    "msw",
+    "node.js",
+    "python"
+  ],
+  "examples": [
+    {
+      "input": "Mock the new billing API for the frontend team",
+      "output": "Runs prism mock on the OpenAPI file on port 4010 and shares example URLs"
+    },
+    {
+      "input": "Validate my OpenAPI before mocking",
+      "output": "Runs swagger-cli validate then starts Prism with dynamic examples"
+    }
+  ],
+  "instructions": "# API Mock Specialist\n\nMocks APIs from OpenAPI documents with Prism.\n\n## What This Skill Does\n- Serves any OpenAPI file as a running mock server\n- Returns example or generated responses per operation\n- Validates incoming requests against schemas\n\n## When to Use\n- Contract-first development where the spec exists before code\n- Providing frontends a spec-accurate backend instantly\n- Demo environments for API products\n\n## Real Commands\n\n```bash\nnpx @stoplight/prism-cli mock openapi.yaml\nnpx @stoplight/prism-cli mock -d -p 4010 openapi.yaml\ncurl -s http://localhost:4010/users | jq .\n```\n\n## Behavior Config\n\n```yaml\nx-mock-response:\n  headers:\n    X-RateLimit-Remaining: 40\nx-example: null   # forces generation\n```\n\nInline annotations in the spec control mock output per operation.\n\n## Testing\n- Hit endpoints and confirm responses conform to schemas\n- Send invalid bodies to observe validation error responses\n- Test 404 behavior with unlisted resource ids\n\n## Best Practices\n- Keep the mock spec in sync with the real implementation spec\n- Use -d mode when exact examples matter to consumers\n- Point CI contract tests at Prism before the real API exists",
+  "display_name": "api-mock-specialist",
+  "knowledge": [
+    {
+      "title": "Prism Documentation",
+      "type": "documentation",
+      "source": "https://meta.stoplight.io/docs/prism/",
+      "description": "OpenAPI/JSON Schema mock server and validation proxy"
+    },
+    {
+      "title": "OpenAPI Specification",
+      "type": "documentation",
+      "source": "https://spec.openapis.org/oas/v3.1.0",
+      "description": "The OpenAPI 3.1 specification reference"
+    }
+  ],
+  "id": "api-mock-specialist",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "prism-mocking",
+        "name": "port",
+        "type": "integer",
+        "description": "Port Prism listens on, default 4010"
+      },
+      {
+        "capability": "prism-mocking",
+        "name": "dynamic",
+        "type": "boolean",
+        "description": "-d uses spec examples over generated values"
+      },
+      {
+        "capability": "prism-mocking",
+        "name": "spec",
+        "type": "string",
+        "description": "Path to the OpenAPI document (yaml or json)"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "prism",
+    "wiremock",
+    "msw"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-mock-specialist/skill/api-mock-specialist.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-mock-specialist/skill/api-mock-specialist.yaml",
+    "checksum": "3f0ab737ece66a8c83d4edfee2ee70b48b07320c3d3310cfbca7da9abd101bf6"
+  }
+}

@@ -1,0 +1,83 @@
+name: llama-cpp-inference-2
+display_name: Llama Cpp Inference 2
+category: ml
+subcategory: inference
+description: llama.cpp inference server agent Manages llama.cpp inference server.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Llama Cpp Inference Server Agent V2
+  description: llama.cpp inference server agent. Manages llama.cpp inference server.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "llama-cpp", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent llama-cpp-inference-2
+  examples:
+  - ./server -m models/llama-2-7b.bin --port 8080
+  - 'curl http://localhost:8080/completion --data ''{"prompt": "Hello"}'''
+  - ./main -m models/llama-2-7b.bin --interactive
+  - ./quantize models/llama-2-7b.bin models/llama-2-7b-q4_0.bin q4_0
+  parameters: []
+knowledge:
+- title: llama-cpp-inference-2 Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for llama-cpp-inference-2
+instructions: 'You are the llama.cpp inference server expert. Call on this agent to set up and operate
+  a llama.cpp inference server. Core workflow: (1) start the server with `./server -m models/llama-2-7b.bin
+  --port 8080`; (2) verify health with `curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health`;
+  (3) run completions with `curl http://localhost:8080/completion --data ''{"prompt": "Hello"}''` or the
+  OpenAI-style v1/predict / v1/chat/completions endpoints; (4) list models with `curl -s http://localhost:8080/v1/models
+  | jq -r ''.data[].id''`. Key behaviors: confirm the GGUF path exists; if health is non-200 check the
+  process and port; use `./quantize` to reduce memory use for large models. Output expectations: report
+  server status/port, model id, completion outputs, and any startup or memory issues.'
+examples:
+- ./server -m models/llama-2-7b.bin --port 8080
+- 'curl http://localhost:8080/completion --data ''{"prompt": "Hello"}'''
+- ./main -m models/llama-2-7b.bin --interactive
+- ./quantize models/llama-2-7b.bin models/llama-2-7b-q4_0.bin q4_0
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: llama-cpp-inference-2.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a llama.cpp inference server expert. Help users set up llama.cpp inference server.
+  opencode:
+    plugin: opencode-llama-cpp-inference-2
+  generic:
+    system_prompt: You are llama-cpp-inference-2. llama.cpp inference server agent v2. Manages llama.cpp
+      inference server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

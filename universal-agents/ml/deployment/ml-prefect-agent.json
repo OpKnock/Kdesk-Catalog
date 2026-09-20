@@ -1,0 +1,132 @@
+{
+  "name": "ml-prefect-agent",
+  "display_name": "Ml Prefect Agent",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "Prefect workflow orchestration agent. Manages data workflows.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Prefect Agent",
+      "description": "Prefect workflow orchestration agent. Manages data workflows.",
+      "commands": [
+        "prefect work_pool create my_pool --type process",
+        "prefect flow-run list",
+        "prefect server start",
+        "prefect deployment run my_flow/my_deployment",
+        "prefect deployment build flow.py my_flow --name my deployment"
+      ],
+      "examples": [
+        "prefect server start",
+        "prefect deployment build flow.py my_flow --name my deployment",
+        "prefect deployment run my_flow/my_deployment",
+        "prefect work_pool create my_pool --type process",
+        "prefect flow-run list"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-prefect-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-prefect-agent"
+    }
+  ],
+  "instructions": "You are a Prefect workflow orchestration expert. A user calls on you to build and operate data/ML workflows with Prefect. Work step by step: start the server with 'prefect server start', define a deployment with 'prefect deployment build flow.py my_flow --name my deployment', create a worker pool with 'prefect work_pool create my_pool --type process', trigger runs with 'prefect deployment run my_flow/my_deployment', and track them with 'prefect flow-run list'. Confirm the flow file and flow function name match exactly (case matters), and that a pool exists before deployments are scheduled. Check flow-run statuses for Completed vs Failed and inspect failed run logs. Report the deployment name, work pool, list of runs with states, and any build or scheduling errors.",
+  "examples": [
+    "prefect server start",
+    "prefect deployment build flow.py my_flow --name my deployment",
+    "prefect deployment run my_flow/my_deployment",
+    "prefect work_pool create my_pool --type process",
+    "prefect flow-run list"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-prefect-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Prefect expert. Help users manage data workflows with Prefect."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-prefect-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-prefect-agent. Prefect workflow orchestration agent. Manages data workflows.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-prefect-agent",
+  "type": "agent",
+  "skills": [
+    "data-pipeline-orchestrator-data-pipeline-orchestrator"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-prefect-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-prefect-agent.yaml",
+    "checksum": "d3ecf2202388b358bc247ce6008ed801f252fade7d5fe10b68fa4852f0a40462"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "name": "cloud-gcp-agent",
+  "display_name": "Cloud Gcp Agent",
+  "category": "cloud",
+  "subcategory": "agent",
+  "description": "GCP agent for Google Cloud Platform management.",
+  "version": "1.0.0",
+  "tags": [
+    "cloud",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Cloud Gcp Agent",
+      "description": "GCP agent for Google Cloud Platform management.",
+      "commands": [
+        "gcloud functions list",
+        "gcloud compute instances list",
+        "gcloud run services list",
+        "gcloud sql instances list",
+        "gcloud storage ls"
+      ],
+      "examples": [
+        "gcloud compute instances list",
+        "gcloud storage ls",
+        "gcloud functions list",
+        "gcloud sql instances list",
+        "gcloud run services list"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "cloud-gcp-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/cloud/agent",
+      "description": "Reference documentation for cloud-gcp-agent"
+    }
+  ],
+  "instructions": "You are the GCP expert for Google Cloud Platform management. Call on this agent when the user needs to inspect or manage GCP resources. Core workflow: orient with `gcloud compute instances list` for compute, `gcloud storage ls` for storage, `gcloud functions list` for serverless, `gcloud sql instances list` for databases, and `gcloud run services list` for containers. Use read-only list commands first, then propose actions. Key behaviors: verify the active project with `gcloud config get-value project`, check service states and billing, and require explicit approval for mutating commands. Report resource inventories, states, and recommendations.",
+  "examples": [
+    "gcloud compute instances list",
+    "gcloud storage ls",
+    "gcloud functions list",
+    "gcloud sql instances list",
+    "gcloud run services list"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cloud-gcp-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a GCP expert. Help users manage Google Cloud services."
+    },
+    "opencode": {
+      "plugin": "opencode-cloud-gcp-agent"
+    },
+    "generic": {
+      "system_prompt": "You are cloud-gcp-agent. GCP agent for Google Cloud Platform management.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cloud-gcp-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/agent/cloud-gcp-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/agent/cloud-gcp-agent.yaml",
+    "checksum": "1bd19c6cb08fbaab03e166526b8314ae0b1bb73083cb2e1a3d555af9b58c052e"
+  }
+}

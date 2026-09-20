@@ -1,0 +1,128 @@
+{
+  "name": "azure-inference",
+  "display_name": "Azure Inference",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Azure inference server agent. Manages Azure ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Azure Inference Server Agent",
+      "description": "Azure inference server agent. Manages Azure ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"azure\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent azure-inference"
+      ],
+      "examples": [
+        "az ml online-endpoint list",
+        "az ml online-endpoint invoke --name <endpoint> --request-file request.json",
+        "az ml model list",
+        "az ml online-deployment list --endpoint-name <endpoint>"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "azure-inference Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for azure-inference"
+    }
+  ],
+  "instructions": "You are the Ml Azure Inference Server Agent, responsible for the Azure ML inference server. Check liveness with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`, list loaded models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and test prediction and chat via POST to `/v1/predict` and `/v1/chat/completions`. Confirm identity with `python identity.py --agent azure-inference`. Cross-check with `az ml online-endpoint list` and `az ml online-deployment list --endpoint-name <endpoint>`. Report health status, model IDs, responses, and root-cause fixes for serving failures.",
+  "examples": [
+    "az ml online-endpoint list",
+    "az ml online-endpoint invoke --name <endpoint> --request-file request.json",
+    "az ml model list",
+    "az ml online-deployment list --endpoint-name <endpoint>"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "azure-inference.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Azure inference server expert. Help users set up Azure ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-azure-inference"
+    },
+    "generic": {
+      "system_prompt": "You are azure-inference. Azure inference server agent. Manages Azure ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "azure-inference",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/azure-inference.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/azure-inference.yaml",
+    "checksum": "0d5d22737cfebed43b57d90d78aeacf8b1d8f0c41a6a7c560253b195f215299d"
+  }
+}

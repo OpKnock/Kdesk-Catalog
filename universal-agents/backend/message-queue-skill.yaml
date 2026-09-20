@@ -1,0 +1,198 @@
+name: message-queue
+display_name: Message Queue
+category: backend
+subcategory: general
+description: Operates message brokers (RabbitMQ, Redis, NATS) for reliable pub/sub, work queues, and routing
+  with durability and DLX handling.
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- nats
+- rabbitmqadmin
+- rabbitmqctl
+- redis-cli
+capabilities:
+- commands:
+  - rabbitmqctl list_queues name messages_ready messages_unacknowledged
+  - rabbitmqadmin declare queue name=emails durable=true
+  - rabbitmqadmin declare exchange name=orders type=topic
+  - rabbitmqctl list_exchanges name type
+  - rabbitmqctl status
+  description: Manage RabbitMQ exchanges, queues, and bindings.
+  name: rabbitmq-ops
+  examples:
+  - rabbitmqadmin declare binding source=orders destination=email-svc routing_key=order.created
+  - rabbitmqctl list_queues | awk "{print $1}"
+  - rabbitmq-diagnostics ping
+  parameters:
+  - description: Queue name
+    name: queue
+    type: string
+  - description: Exchange name
+    name: exchange
+    type: string
+  - description: Binding routing key
+    name: routing-key
+    type: string
+- commands:
+  - redis-cli llen work:queue
+  - redis-cli pubsub channels
+  - nats sub "orders.*" --raw
+  - nats pub orders.created "{\"id\":1}"
+  - rabbitmqctl list_consumers
+  description: Monitor broker health and consumer state.
+  name: broker-utilization
+  examples:
+  - nats stream ls
+  - redis-cli pubsub numsub orders
+  - rabbitmqctl list_channels | head -20
+  parameters:
+  - description: NATS subject
+    name: subject
+    type: string
+  - description: Key pattern
+    name: pattern
+    type: string
+knowledge:
+- title: RabbitMQ Docs
+  description: Exchanges, queues, and DLX reference
+  source: https://www.rabbitmq.com/documentation.html
+  type: documentation
+- title: NATS Docs
+  description: JetStream, subjects, and CLI
+  source: https://docs.nats.io
+  type: documentation
+- title: Redis Pub/Sub
+  description: Redis publish/subscribe commands
+  source: https://redis.io/docs/latest/develop/data-types/pubsub/
+  type: documentation
+instructions: '# Message Queue
+
+
+  Operate brokers for reliable asynchronous messaging.
+
+
+  ## When to Use
+
+
+  - Decoupling producers from consumers
+
+  - Buffering bursts that consumers cannot keep up with
+
+  - Fan-out to multiple subscribers
+
+  - Work distribution with acknowledgments and redelivery
+
+
+  ## Core Concepts
+
+
+  - Queue: durable buffer of messages
+
+  - Exchange: routing rules (direct, topic, fanout)
+
+  - Binding: queue-to-exchange route
+
+  - Ack: consumer confirmation; redelivery without it
+
+  - Dead-letter exchange: poison message parking
+
+
+  ## Commands
+
+
+  ```bash
+
+  # RabbitMQ inspection
+
+  rabbitmqctl list_queues name messages_ready messages_unacknowledged
+
+  rabbitmqctl list_exchanges name type
+
+  rabbitmqctl status
+
+  rabbitmq-diagnostics ping
+
+
+  # Declare resources
+
+  rabbitmqadmin declare queue name=emails durable=true
+
+  rabbitmqadmin declare exchange name=orders type=topic
+
+
+  # NATS
+
+  nats pub orders.created ''{"id":1}''
+
+  nats sub "orders.*" --raw
+
+  nats stream ls
+
+
+  # Redis
+
+  redis-cli llen work:queue
+
+  redis-cli pubsub numsub orders
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Make queues durable and messages persistent for critical paths
+
+  - Ack only after successful processing to avoid loss
+
+  - Route failures to a dead-letter exchange instead of dropping
+
+  - Use prefetch limits so one consumer is not swamped
+
+  - Monitor queue depth and unacked counts continuously
+
+  - Design consumers to be idempotent; redelivery happens'
+examples:
+- input: Messages are stuck as unacknowledged
+  output: Agent checks rabbitmqctl list_queues, finds the stuck consumer with list_consumers, and recommends
+    ack/timeout fixes.
+- input: Set up fan-out notifications
+  output: Agent declares a fanout exchange and binds two durable queues, then shows the declare commands.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: message-queue.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-message-queue
+  generic:
+    system_prompt: 'You are the Message Queue specialist. You do it through rabbitmq-ops: Manage RabbitMQ
+      exchanges, queues, and bindings. The commands are real, e.g. `rabbitmqctl list_queues name messages_ready
+      messages_unacknowledged`. You verify each step you report and stay honest about what you have not
+      run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

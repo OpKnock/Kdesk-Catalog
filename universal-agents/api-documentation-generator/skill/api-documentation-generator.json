@@ -1,0 +1,216 @@
+{
+  "name": "api-documentation-generator",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Automates documentation generation: extracts OpenAPI from code, bundles specs, builds static sites, and publishes in CI.",
+  "keywords": [
+    "api-documentation",
+    "openapi",
+    "swagger",
+    "redoc"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-documentation-generator.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-documentation-generator"
+    },
+    "generic": {
+      "system_prompt": "You own api-documentation-generator end to end. You do it through spec-extraction: Extract OpenAPI specs from code with decorators and tooling. The commands are real, e.g. `npm install @nestjs/swagger`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "spec-extraction",
+      "description": "Extract OpenAPI specs from code with decorators and tooling",
+      "commands": [
+        "npm install @nestjs/swagger",
+        "npm install swagger-autogen",
+        "node -e \"const a=require('swagger-autogen')();console.log(typeof a)\"",
+        "pip install fastapi && python -c \"from fastapi.openapi.utils import get_openapi;print('fastapi openapi ready')\"",
+        "node -e \"console.log('swagger-autogen -o ./swagger.json')\""
+      ],
+      "examples": [
+        "npm install swagger-autogen && node -e \"const a=require('swagger-autogen')();console.log(typeof a)\"",
+        "pip install fastapi && python -c \"from fastapi.openapi.utils import get_openapi;print('fastapi openapi ready')\"",
+        "npm install @nestjs/swagger"
+      ],
+      "parameters": [
+        {
+          "name": "framework",
+          "type": "string",
+          "description": "FastAPI, NestJS, Express"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Spec output path"
+        }
+      ]
+    },
+    {
+      "name": "publish-pipeline",
+      "description": "Build and publish documentation sites in CI",
+      "commands": [
+        "npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml",
+        "npx @redocly/cli build-docs dist/bundled.yaml -o dist/index.html",
+        "npx @redocly/cli lint dist/bundled.yaml",
+        "npm install -g docusaurus",
+        "npx docusaurus build"
+      ],
+      "examples": [
+        "npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml && npx @redocly/cli build-docs dist/bundled.yaml -o dist/index.html",
+        "npx @redocly/cli lint dist/bundled.yaml",
+        "npm install -g docusaurus && npx docusaurus build"
+      ],
+      "parameters": [
+        {
+          "name": "spec",
+          "type": "string",
+          "description": "Source OpenAPI spec"
+        },
+        {
+          "name": "outputDir",
+          "type": "string",
+          "description": "Static site output"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "swagger-cli",
+    "redoc-cli",
+    "openapi-generator",
+    "prism"
+  ],
+  "tools": [
+    "swagger-cli",
+    "redoc-cli",
+    "openapi-generator",
+    "prism",
+    "stoplight-studio",
+    "postman"
+  ],
+  "examples": [
+    {
+      "input": "Generate OpenAPI from the FastAPI service",
+      "output": "Exports the app's OpenAPI schema and builds a bundled Redoc site automatically"
+    },
+    {
+      "input": "Automate docs publishing in CI",
+      "output": "Adds a pipeline that lints, bundles, and deploys reference docs on each release"
+    }
+  ],
+  "instructions": "# API Documentation Generator\n\nAutomates docs from code to static site with zero hand-written reference content.\n\n## When to Use\n- Docs drift from code constantly\n- Reference docs must be generated\n- Publishing docs in CI\n\n## Real Commands\n\n```bash\n# Extract from FastAPI\npython -c \"from fastapi.openapi.utils import get_openapi;print('fastapi openapi ready')\"\n\n# Extract from Express\nnpm install swagger-autogen\n\n# Bundle and lint\nnpx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml\nnpx @redocly/cli lint dist/bundled.yaml\n\n# Build site\nnpx @redocly/cli build-docs dist/bundled.yaml -o dist/index.html\nnpm install -g docusaurus && npx docusaurus build\n```\n\n## CI Flow\n1. Extract spec from code\n2. Lint and bundle\n3. Build reference pages\n4. Publish to hosting\n\n## Testing\nCompare generated docs against the running API automatically.\n\n## Best Practices\n- Generation in CI on every merge\n- Keep hand-written guides separate from generated reference",
+  "display_name": "api-documentation-generator",
+  "knowledge": [
+    {
+      "title": "swagger-autogen",
+      "type": "documentation",
+      "source": "https://github.com/davibaltar/swagger-autogen",
+      "description": "Generate specs from Express routes"
+    },
+    {
+      "title": "FastAPI OpenAPI",
+      "type": "documentation",
+      "source": "https://fastapi.tiangolo.com/advanced/openapi-callbacks/",
+      "description": "Automatic OpenAPI from Python"
+    },
+    {
+      "title": "Docusaurus",
+      "type": "documentation",
+      "source": "https://docusaurus.io/docs",
+      "description": "Static docs site generator"
+    }
+  ],
+  "id": "api-documentation-generator",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "spec-extraction",
+        "name": "framework",
+        "type": "string",
+        "description": "FastAPI, NestJS, Express"
+      },
+      {
+        "capability": "spec-extraction",
+        "name": "output",
+        "type": "string",
+        "description": "Spec output path"
+      },
+      {
+        "capability": "publish-pipeline",
+        "name": "spec",
+        "type": "string",
+        "description": "Source OpenAPI spec"
+      },
+      {
+        "capability": "publish-pipeline",
+        "name": "outputDir",
+        "type": "string",
+        "description": "Static site output"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "swagger-cli",
+    "redoc-cli",
+    "openapi-generator",
+    "prism"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-documentation-generator/skill/api-documentation-generator.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-documentation-generator/skill/api-documentation-generator.yaml",
+    "checksum": "344455e10a76b75d43dc0afae1dd9414628daddeab8b5202e10e68af0c07deb6"
+  }
+}

@@ -1,0 +1,105 @@
+name: h2o
+display_name: H2O
+category: api
+subcategory: general
+description: 'H2O.ai machine learning platform: starting H2O clusters with java -jar h2o.jar, importing
+  data, training models, and querying the REST API.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- java
+capabilities:
+- name: h2o-cluster-ops
+  description: Start H2O clusters, import datasets, and train/inspect models via the H2O REST API.
+  commands:
+  - java -Xmx4g -jar h2o.jar -port 54321 -name myCluster
+  - curl http://localhost:54321/3/Cloud
+  - curl -X POST 'http://localhost:54321/3/ImportFiles?path=/data/housing.csv'
+  - curl 'http://localhost:54321/3/Models?all_states=true'
+  - curl -X POST 'http://localhost:54321/3/TrainModel?model_id=glm1&training_frame=housing.hex&algo=glm'
+  examples:
+  - java -Xmx8g -jar h2o.jar -port 54322 -name prod
+  - curl 'http://localhost:54321/3/Frames?row_count=5' | jq .frames[0].rows
+  - curl 'http://localhost:54321/3/Predictions/models/glm1/frames/housing.hex'
+  parameters:
+  - name: port
+    type: integer
+    description: H2O REST/Flow port (default 54321).
+  - name: max_mem
+    type: string
+    description: JVM heap, e.g. -Xmx4g.
+  - name: name
+    type: string
+    description: Cluster name used for multinode discovery.
+knowledge:
+- title: H2O Docs
+  type: documentation
+  source: https://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html
+  description: 'Official H2O documentation: getting started, algorithms, and REST API.'
+- title: H2O REST API
+  type: documentation
+  source: https://docs.h2o.ai/h2o/latest-stable/h2o-docs/rest-api-reference.html
+  description: H2O REST API reference for Frames, Models, and Predictions endpoints.
+instructions: "# H2O\n\nRun H2O.ai machine learning clusters and drive them with the REST API.\n\n## What\
+  \ this skill does\n\n- Starts single-node and multinode H2O clusters with the java jar.\n- Imports CSV/parquet\
+  \ data into H2O frames.\n- Trains GLM, GBM, XGBoost, and Deep Learning models via API.\n- Inspects models,\
+  \ frames, and predictions through Flow or REST.\n\n## When to use\n\n- Training tabular models locally\
+  \ without cloud dependencies.\n- Automating model training from scripts.\n- Verifying cluster health\
+  \ and memory across nodes.\n\n## Real commands\n\n```bash\n# Start a single-node cluster with 4GB heap\n\
+  java -Xmx4g -jar h2o.jar -port 54321 -name myCluster\n\n# Multinode: start more nodes on other hosts\
+  \ with the same name\njava -Xmx4g -jar h2o.jar -name myCluster -ip 10.0.0.5 -port 54322\n\n# Check the\
+  \ cloud (all nodes)\ncurl http://localhost:54321/3/Cloud | jq .cloud_name\n\n# Import a dataset\ncurl\
+  \ -X POST 'http://localhost:54321/3/ImportFiles?path=/data/housing.csv'\ncurl -X POST 'http://localhost:54321/3/ParseSetup?source_frames=housing.hex'\
+  \  # then Parse\n\n# List trained models\ncurl 'http://localhost:54321/3/Models?all_states=true' | jq\
+  \ '.models[].model_id.name'\n\n# Train a GLM\ncurl -X POST 'http://localhost:54321/3/TrainModel?model_id=glm1&training_frame=housing.hex&algo=glm'\
+  \ \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"parameters\":{\"x\":[\"crim\",\"rm\",\"age\"\
+  ],\"y\":\"medv\"}}'\n```\n\n## Flow UI\n\nOpen http://localhost:54321 in a browser for the Flow notebook\
+  \ UI.\n\n## Predictions\n\n```bash\ncurl 'http://localhost:54321/3/Predictions/models/glm1/frames/housing.hex'\
+  \ | jq '.predictions.rows[0:5]'\n```\n\n## Testing\n\n```bash\ncurl -fsS http://localhost:54321/3/Cloud\
+  \ > /dev/null && echo \"cluster up\"\n```\n\n## Best practices\n\n- Size heap for the dataset: rule\
+  \ of thumb 4x the data size in RAM.\n- Use parse job IDs to poll Parse completion before training.\n\
+  - Set `-nthreads` to leave cores for the training workload.\n- Save models as MOJO for production serving:\
+  \ POST /3/Models/<id>/mojo.\n\n## Example exchange\n\n```\nUser: How many nodes are in my H2O cloud?\n\
+  Agent: curl http://localhost:54321/3/Cloud | jq .nodes  # lists node addresses\n```"
+examples:
+- input: Start a 4GB H2O cluster on port 54321
+  output: java -Xmx4g -jar h2o.jar -port 54321 -name myCluster
+- input: List all trained models
+  output: curl 'http://localhost:54321/3/Models?all_states=true' | jq '.models[].model_id.name'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: h2o.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-h2o
+  generic:
+    system_prompt: 'Your lane is H2O. You do it through h2o-cluster-ops: Start H2O clusters, import datasets,
+      and train/inspect models via the H2O REST API. The commands are real, e.g. `java -Xmx4g -jar h2o.jar
+      -port 54321 -name myCluster`. You answer with exact commands, not abstractions, and flag anything
+      you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

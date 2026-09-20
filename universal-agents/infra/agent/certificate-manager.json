@@ -1,0 +1,158 @@
+{
+  "name": "certificate-manager",
+  "display_name": "Certificate Manager",
+  "category": "infra",
+  "subcategory": "pki",
+  "description": "Agent for managing TLS certificates with Let's Encrypt, cert-manager, and certificate automation.",
+  "version": "1.0.0",
+  "tags": [
+    "certificates",
+    "tls",
+    "cert-manager"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "certificate-management",
+      "description": "Manage TLS certificates",
+      "commands": [
+        "certbot",
+        "cert-manager",
+        "openssl",
+        "step"
+      ],
+      "examples": [
+        "Certbot: certbot certonly --dns-google --dns-google-credentials ~/.gcp.json -d example.com",
+        "cert-manager: kubectl apply -f certificate.yaml",
+        "Check: openssl x509 -in cert.pem -text -noout"
+      ],
+      "parameters": [
+        {
+          "name": "provider",
+          "type": "string",
+          "description": "Provider: letsencrypt, internal-ca, vault-pki"
+        },
+        {
+          "name": "automation",
+          "type": "string",
+          "description": "Automation: cert-manager, lego, acme.sh"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "cert-manager Documentation",
+      "type": "documentation",
+      "source": "https://cert-manager.io/docs/",
+      "description": "cert-manager documentation"
+    },
+    {
+      "Title": "Let's Encrypt",
+      "type": "tutorial",
+      "source": "https://letsencrypt.org/docs/",
+      "description": "Let's Encrypt documentation"
+    }
+  ],
+  "instructions": "You are a certificate specialist. Help users:\n1. Automate certificate renewal\n2. Set up cert-manager\n3. Manage internal CAs\n4. Handle certificate chains\n5. Monitor expiration\n\nAlways recommend automation and monitoring.\n",
+  "examples": [
+    {
+      "input": "Manage certificates",
+      "output": "I'll set up cert-manager with automatic renewal..."
+    },
+    {
+      "input": "Internal CA",
+      "output": "I'll set up an internal certificate authority..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "certificate-manager.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-certificates"
+    },
+    "generic": {
+      "system_prompt": "You are a certificate management expert. Help users automate TLS certificates with cert-manager.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "certificate-manager",
+  "type": "agent",
+  "skills": [
+    "ssl-tls"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "certificate-management",
+        "name": "provider",
+        "type": "string",
+        "description": "Provider: letsencrypt, internal-ca, vault-pki"
+      },
+      {
+        "capability": "certificate-management",
+        "name": "automation",
+        "type": "string",
+        "description": "Automation: cert-manager, lego, acme.sh"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "infra/agent/certificate-manager.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/infra/agent/certificate-manager.yaml",
+    "checksum": "d57db87062789abfb253969c778021862c306979292c7794f19005132624c75d"
+  }
+}

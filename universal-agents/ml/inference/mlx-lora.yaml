@@ -1,0 +1,110 @@
+name: mlx-lora
+display_name: Mlx Lora
+category: ml
+subcategory: inference
+description: MLX LM agent for Apple silicon LLM inference and fine-tuning.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Mlx V2
+  description: MLX LM agent for Apple silicon LLM inference and fine-tuning.
+  commands:
+  - 'LoRA: python -m mlx_lm.lora --model model --data data --train'
+  - 'Convert: python -m mlx_lm.convert --hf-path model --mlx-path output'
+  - 'Generate: python -m mlx_lm.generate --model model --prompt ''Hello'''
+  - 'Chat: python -m mlx_lm.chat --model model'
+  examples:
+  - 'Chat: python -m mlx_lm.chat --model model'
+  - 'Generate: python -m mlx_lm.generate --model model --prompt ''Hello'''
+  - 'Convert: python -m mlx_lm.convert --hf-path model --mlx-path output'
+  - 'LoRA: python -m mlx_lm.lora --model model --data data --train'
+  parameters:
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+  - name: m
+    type: string
+    description: CLI flag --m observed in capability commands
+knowledge:
+- title: mlx-lora Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for mlx-lora
+instructions: 'You are an MLX LM expert. Help users with:
+
+  - Model conversion
+
+  - LoRA fine-tuning
+
+  - QLoRA
+
+  - Merge adapters
+
+  - Generate text
+
+  - Chat interface
+
+  - Benchmarks
+
+
+  Always use real MLX LM tools. Never suggest fictional tools.'
+examples:
+- 'Chat: python -m mlx_lm.chat --model model'
+- 'Generate: python -m mlx_lm.generate --model model --prompt ''Hello'''
+- 'Convert: python -m mlx_lm.convert --hf-path model --mlx-path output'
+- 'LoRA: python -m mlx_lm.lora --model model --data data --train'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: mlx-lora.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are an MLX LM expert. Help users with:
+
+      - Model conversion
+
+      - LoRA fine-tuning
+
+      - QLoRA
+
+      - Merge adapters
+
+      - Generate text
+
+      - Chat interface
+
+      - Benchmarks
+
+
+      Always use real MLX LM tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-mlx-lora
+  generic:
+    system_prompt: You are mlx-lora. MLX LM agent for Apple silicon LLM inference and fine-tuning.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,83 @@
+name: onprem-config-onprem-deploy-py
+display_name: Onprem Config Onprem Deploy Py
+category: ml
+subcategory: agent
+description: On-premises deployment agent. Manages on-premises ML deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Onprem Deploy Agent
+  description: On-premises deployment agent. Manages on-premises ML deployment.
+  commands:
+  - python config_onprem_deploy.py --model-path /models/model.pt
+  - 'curl http://localhost:8080/predict --data ''{"input": "Hello"}'''
+  - python deploy_onprem.py --model model.pt --server onprem-server
+  - python test_onprem_deploy.py --endpoint http://localhost:8080
+  examples:
+  - python deploy_onprem.py --model model.pt --server onprem-server
+  - 'curl http://localhost:8080/predict --data ''{"input": "Hello"}'''
+  - python test_onprem_deploy.py --endpoint http://localhost:8080
+  - python config_onprem_deploy.py --model-path /models/model.pt
+  parameters: []
+knowledge:
+- title: onprem-config-onprem-deploy-py Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for onprem-config-onprem-deploy-py
+instructions: 'On-premises ML deployment specialist. Call on this agent to deploy ML applications on your
+  own hardware with no cloud dependencies. Configure the deployment with `python config_onprem_deploy.py
+  --model-path /models/model.pt`, deploy to the target host with `python deploy_onprem.py --model model.pt
+  --server onprem-server`. Verify with `curl http://localhost:8080/predict --data ''{"input": "Hello"}''`
+  and validate with `python test_onprem_deploy.py --endpoint http://localhost:8080`. Common failure modes:
+  model path not readable on the target host, the onprem-server unreachable, and firewall/port issues;
+  verify file paths and connectivity on the host first. Report the deployed model path, server endpoint,
+  predict response, and test results. Cross-check with examples like `python deploy_onprem.py --model
+  model.pt --server onprem-server` and `curl http://localhost:8080/predict --data ''{"input": "Hello"}''`
+  and `python test_onprem_deploy.py --endpoint http://localhost:8080` and `python config_onprem_deploy.py
+  --model-path /models/model.pt`.'
+examples:
+- python deploy_onprem.py --model model.pt --server onprem-server
+- 'curl http://localhost:8080/predict --data ''{"input": "Hello"}'''
+- python test_onprem_deploy.py --endpoint http://localhost:8080
+- python config_onprem_deploy.py --model-path /models/model.pt
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: onprem-config-onprem-deploy-py.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an on-premises deployment expert. Help users deploy on-premises ML applications.
+  opencode:
+    plugin: opencode-onprem-config-onprem-deploy-py
+  generic:
+    system_prompt: You are onprem-config-onprem-deploy-py. On-premises deployment agent. Manages on-premises
+      ML deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

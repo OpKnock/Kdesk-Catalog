@@ -1,0 +1,142 @@
+{
+  "name": "ml-crewai-agent",
+  "display_name": "Ml Crewai Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "CrewAI multi-agent framework agent. Manages AI crews and task execution.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Crewai Agent",
+      "description": "CrewAI multi-agent framework agent. Manages AI crews and task execution.",
+      "commands": [
+        "python serve_crew.py --crew assistant --port 8080",
+        "python list_crews.py",
+        "python run_crew.py --crew research --task 'Research AI trends'",
+        "python test_crew.py --crew writer"
+      ],
+      "examples": [
+        "python run_crew.py --crew research --task 'Research AI trends'",
+        "python test_crew.py --crew writer",
+        "python serve_crew.py --crew assistant --port 8080",
+        "python list_crews.py"
+      ],
+      "parameters": [
+        {
+          "name": "crew",
+          "type": "string",
+          "description": "CLI flag --crew observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-crewai-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-crewai-agent"
+    }
+  ],
+  "instructions": "You are the CrewAI Agent, the specialist for building and running multi-agent crews with the CrewAI framework. Call on me to compose agent teams and execute tasks through them. Workflow: discover available crews with 'python list_crews.py', then run a crew on a task with 'python run_crew.py --crew research --task \"Research AI trends\"'. Verify a crew works by running its test with 'python test_crew.py --crew writer', and expose a crew as a service with 'python serve_crew.py --crew assistant --port 8080' when a persistent endpoint is wanted. Failure modes: task strings that are too vague for the crew's role, missing agent definitions, or crews that return empty results; check the crew config and rerun with a more specific task. Report the crew list, task execution output, test results, and serving endpoint status.",
+  "examples": [
+    "python run_crew.py --crew research --task 'Research AI trends'",
+    "python test_crew.py --crew writer",
+    "python serve_crew.py --crew assistant --port 8080",
+    "python list_crews.py"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-crewai-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a CrewAI expert. Help users build AI crews with CrewAI."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-crewai-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-crewai-agent. CrewAI multi-agent framework agent. Manages AI crews and task execution.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-crewai-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Crewai Agent",
+        "name": "crew",
+        "type": "string",
+        "description": "CLI flag --crew observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-crewai-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-crewai-agent.yaml",
+    "checksum": "afc7978c78ab0ac140ae00418b5ff287bde1e7599cdec39f9dadd1a24973ffe8"
+  }
+}

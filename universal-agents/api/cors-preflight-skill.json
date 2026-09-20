@@ -1,0 +1,189 @@
+{
+  "name": "cors-preflight",
+  "display_name": "Cors Preflight",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Handle and debug CORS preflight OPTIONS requests: correct status codes, Access-Control-Allow headers, and caching.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "node",
+    "npm"
+  ],
+  "capabilities": [
+    {
+      "name": "preflight-debug",
+      "description": "Send preflight OPTIONS requests with curl and inspect the Access-Control response headers",
+      "commands": [
+        "curl -i -X OPTIONS http://localhost:8080/api -H \"Origin: http://localhost:3000\" -H \"Access-Control-Request-Method: PUT\" -H \"Access-Control-Request-Headers: X-Custom-Header,Content-Type\"",
+        "curl -s -o /dev/null -w \"%{http_code}\" -X OPTIONS http://localhost:8080/api -H \"Origin: http://localhost:3000\" -H \"Access-Control-Request-Method: POST\"",
+        "curl -s -D - -o /dev/null -X OPTIONS http://localhost:8080/api -H \"Origin: http://localhost:3000\" -H \"Access-Control-Request-Method: DELETE\" | grep -i access-control",
+        "curl -i -X OPTIONS http://localhost:8080/api -H \"Origin: http://evil.com\" -H \"Access-Control-Request-Method: POST\""
+      ],
+      "examples": [
+        "curl -i -X OPTIONS http://localhost:8080/api -H \"Origin: http://localhost:3000\" -H \"Access-Control-Request-Method: POST\"",
+        "curl -s -D - -o /dev/null -X OPTIONS http://localhost:8080/api -H \"Origin: http://localhost:3000\" -H \"Access-Control-Request-Method: PUT\" -H \"Access-Control-Request-Headers: Authorization\" | grep -i access-control",
+        "curl -s -o /dev/null -w \"preflight status: %{http_code}\\n\" -X OPTIONS http://localhost:8080/api -H \"Origin: http://localhost:3000\" -H \"Access-Control-Request-Method: GET\""
+      ],
+      "parameters": [
+        {
+          "name": "origin",
+          "type": "string",
+          "description": "Origin header, e.g. http://localhost:3000"
+        },
+        {
+          "name": "request_method",
+          "type": "string",
+          "description": "Access-Control-Request-Method value"
+        }
+      ]
+    },
+    {
+      "name": "preflight-config",
+      "description": "Configure preflight handling with middleware and caching headers",
+      "commands": [
+        "npm install cors",
+        "node server.js",
+        "curl -s -D - -o /dev/null -X OPTIONS http://localhost:8080/api -H \"Origin: http://localhost:3000\" -H \"Access-Control-Request-Method: POST\" | grep -i access-control-max-age",
+        "curl -s -D - -o /dev/null -X OPTIONS http://localhost:8080/api -H \"Origin: http://localhost:3000\" -H \"Access-Control-Request-Method: POST\" | grep -i 'access-control-allow-\\|access-control-max-age'"
+      ],
+      "examples": [
+        "npm install cors && node server.js",
+        "curl -s -D - -o /dev/null -X OPTIONS http://localhost:8080/api -H \"Origin: http://localhost:3000\" -H \"Access-Control-Request-Method: POST\" | grep -i access-control-max-age",
+        "curl -s -D - -o /dev/null -X OPTIONS http://localhost:8080/api -H \"Origin: http://localhost:3000\" -H \"Access-Control-Request-Method: DELETE\" | grep -ci 'access-control-allow-'\n"
+      ],
+      "parameters": [
+        {
+          "name": "max_age",
+          "type": "string",
+          "description": "Access-Control-Max-Age in seconds"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "MDN Preflight Requests",
+      "type": "documentation",
+      "source": "https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request",
+      "description": "When preflights happen and what headers they require"
+    },
+    {
+      "title": "CORS Errors and Headers",
+      "type": "documentation",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors",
+      "description": "Common CORS preflight failure messages"
+    }
+  ],
+  "instructions": "# CORS Preflight\n\nHandle and debug preflight OPTIONS requests correctly.\n\n## When to Use\n\n- Browser requests fail with CORS errors on non-simple methods or custom headers\n- Verifying the OPTIONS route returns 200 or 204 with the right headers\n- Optimizing preflight cost with Access-Control-Max-Age\n\n## When a Preflight Happens\n\nBrowsers preflight when the request is not simple: PUT/DELETE/PATCH methods, custom headers, or Content-Type other than text/plain, multipart/form-data, or application/x-www-form-urlencoded.\n\n## Debug with curl\n\n```bash\ncurl -i -X OPTIONS http://localhost:8080/api \\\n  -H \"Origin: http://localhost:3000\" \\\n  -H \"Access-Control-Request-Method: PUT\" \\\n  -H \"Access-Control-Request-Headers: X-Custom-Header,Content-Type\"\n\ncurl -s -o /dev/null -w \"preflight status: %{http_code}\\n\" \\\n  -X OPTIONS http://localhost:8080/api \\\n  -H \"Origin: http://localhost:3000\" -H \"Access-Control-Request-Method: POST\"\n```\n\nA correct preflight response:\n\n```\nHTTP/1.1 204 No Content\nAccess-Control-Allow-Origin: http://localhost:3000\nAccess-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\nAccess-Control-Allow-Headers: Content-Type, Authorization, X-Custom-Header\nAccess-Control-Max-Age: 86400\nVary: Origin\n```\n\n## Express Middleware\n\n```js\nconst cors = require('cors');\napp.use(cors({\n  origin: ['http://localhost:3000'],\n  methods: ['GET', 'POST', 'PUT', 'DELETE'],\n  allowedHeaders: ['Content-Type', 'Authorization', 'X-Custom-Header'],\n  maxAge: 86400\n}));\n```\n\n## Testing\n\n```bash\ncurl -s -D - -o /dev/null -X OPTIONS http://localhost:8080/api \\\n  -H \"Origin: http://localhost:3000\" -H \"Access-Control-Request-Method: DELETE\" | grep -i access-control\ncurl -s -D - -o /dev/null -X OPTIONS http://localhost:8080/api \\\n  -H \"Origin: http://evil.com\" -H \"Access-Control-Request-Method: POST\"\n```\n\n## Best Practices\n\n- Return 204 for preflight, with no body\n- Include Vary: Origin for caching correctness\n- Set Access-Control-Max-Age to reduce repeated preflights\n- Echo only allowed headers and methods\n- Never reflect arbitrary origins when credentials are used",
+  "examples": [
+    {
+      "input": "My PUT request from the browser fails with a CORS error.",
+      "output": "The agent sends curl -i -X OPTIONS with Origin and Access-Control-Request-Method: PUT, checks the Allow headers, and fixes the middleware config."
+    },
+    {
+      "input": "Too many preflight requests are slowing down my app.",
+      "output": "The agent checks for Access-Control-Max-Age and adds maxAge: 86400 to the cors middleware."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cors-preflight.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cors-preflight"
+    },
+    "generic": {
+      "system_prompt": "You work Cors Preflight hands-on. You do it through preflight-debug: Send preflight OPTIONS requests with curl and inspect the Access-Control response headers. The commands are real, e.g. `curl -i -X OPTIONS http://localhost:8080/api -H Origin: http://localhost:3000 -H...`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cors-preflight",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "preflight-debug",
+        "name": "origin",
+        "type": "string",
+        "description": "Origin header, e.g. http://localhost:3000"
+      },
+      {
+        "capability": "preflight-debug",
+        "name": "request_method",
+        "type": "string",
+        "description": "Access-Control-Request-Method value"
+      },
+      {
+        "capability": "preflight-config",
+        "name": "max_age",
+        "type": "string",
+        "description": "Access-Control-Max-Age in seconds"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node",
+    "npm"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/cors-preflight-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/cors-preflight-skill.yaml",
+    "checksum": "0a3b4ed895ac9d51c277fed8c2a995c1a0687a3896cbbece59c283b38b741c2f"
+  }
+}

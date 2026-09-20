@@ -1,0 +1,181 @@
+{
+  "name": "api-auth-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "security",
+  "description": "Implement API authentication: OAuth2 flows with Keycloak, token exchange, client registration, and end-to-end token verification.",
+  "keywords": [
+    "api-auth",
+    "oauth",
+    "session",
+    "authentication"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-auth-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-auth-engineer"
+    },
+    "generic": {
+      "system_prompt": "You work api-auth-engineer hands-on. You do it through oauth2-implementation: Set up and verify OAuth2 flows against Keycloak. The commands are real, e.g. `docker run -d -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin...`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "oauth2-implementation",
+      "description": "Set up and verify OAuth2 flows against Keycloak",
+      "commands": [
+        "docker run -d -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:latest start-dev",
+        "curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' -H 'Content-Type: application/x-www-form-urlencoded' -d 'grant_type=password&client_id=api&username=alice&password=secret' | jq -r '.access_token'",
+        "curl -s 'http://localhost:8080/realms/demo/.well-known/openid-configuration' | jq '.token_endpoint, .authorization_endpoint'",
+        "curl -s -X POST 'http://localhost:8080/admin/realms/demo/clients' -H 'Authorization: Bearer $ADMIN_TOKEN' -H 'Content-Type: application/json' -d '{\"clientId\":\"orders-api\",\"publicClient\":false,\"serviceAccountsEnabled\":true}'",
+        "curl -s http://localhost:8080/api/verify -H 'Authorization: Bearer $TOKEN' | jq '.subject'"
+      ],
+      "examples": [
+        "curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' -d 'grant_type=client_credentials&client_id=orders-api&client_secret=abc123' | jq -r '.access_token'",
+        "curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/revoke' -d 'token=$REFRESH&client_id=api&client_secret=abc123'",
+        "curl -s -H 'Authorization: Bearer $TOKEN' http://localhost:8080/api/protected | jq '.role'"
+      ],
+      "parameters": [
+        {
+          "name": "realm",
+          "type": "string",
+          "description": "Keycloak realm name"
+        },
+        {
+          "name": "client_id",
+          "type": "string",
+          "description": "OAuth2 client ID"
+        },
+        {
+          "name": "grant_type",
+          "type": "string",
+          "description": "password, client_credentials, authorization_code, or refresh_token"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "jsonwebtoken",
+    "passport"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "jsonwebtoken",
+    "passport",
+    "keycloak",
+    "auth0"
+  ],
+  "examples": [
+    {
+      "input": "Add OAuth2 password flow to my API",
+      "output": "Starts Keycloak, creates the client, obtains a token, and verifies it at the API."
+    },
+    {
+      "input": "Server-to-server auth for a batch job",
+      "output": "Configures a service account and walks the client_credentials flow."
+    }
+  ],
+  "instructions": "# API Auth Engineer\n\n## What this skill does\nImplement and verify API authentication using OAuth2 with Keycloak as the identity provider. Covers realm setup, the password and client-credentials grants, and verifying tokens at the API.\n\n## When to use\n- Adding OAuth2 to an API\n- Standing up a local identity provider\n- Testing grant flows and token verification\n\n## Real commands\n```bash\n# Start Keycloak (dev mode)\ndocker run -d -p 8080:8080 \\\n  -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin \\\n  quay.io/keycloak/keycloak:latest start-dev\n\n# Discovery endpoints\ncurl -s 'http://localhost:8080/realms/demo/.well-known/openid-configuration' | jq '.token_endpoint, .authorization_endpoint'\n\n# Password grant\ncurl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' \\\n  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -d 'grant_type=password&client_id=api&username=alice&password=secret' | jq -r '.access_token'\n\n# Client credentials grant\ncurl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' \\\n  -d 'grant_type=client_credentials&client_id=orders-api&client_secret=abc123' | jq -r '.access_token'\n\n# Refresh token\ncurl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' \\\n  -d 'grant_type=refresh_token&refresh_token=$REFRESH&client_id=api&client_secret=abc123' | jq -r '.access_token'\n\n# Revoke\ncurl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/revoke' -d 'token=$TOKEN&client_id=api'\n\n# Verify at the API\ncurl -s http://localhost:8080/api/verify -H 'Authorization: Bearer $TOKEN' | jq '.subject'\n```\n\n## Flow selection\n- password: first-party apps with user creds (no longer recommended)\n- client_credentials: server-to-server\n- authorization_code + PKCE: SPAs and mobile\n- refresh_token: long-lived sessions\n\n## Best practices\n- Never use the password grant for third parties\n- Use PKCE for public clients\n- Validate signatures, issuer, audience, and expiry\n- Rotate client secrets and refresh tokens\n\n## Testing\n```bash\nTOKEN=$(curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' -d 'grant_type=password&client_id=api&username=alice&password=secret' | jq -r '.access_token')\ncurl -s http://localhost:8080/api/verify -H \"Authorization: Bearer $TOKEN\" | jq\n```",
+  "display_name": "api-auth-engineer",
+  "knowledge": [
+    {
+      "title": "OAuth 2.0 Framework (RFC 6749)",
+      "type": "documentation",
+      "source": "https://datatracker.ietf.org/doc/html/rfc6749",
+      "description": "The OAuth2 protocol specification"
+    },
+    {
+      "title": "Keycloak Docs",
+      "type": "documentation",
+      "source": "https://www.keycloak.org/documentation",
+      "description": "Server admin and authorization services guides"
+    }
+  ],
+  "id": "api-auth-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "oauth2-implementation",
+        "name": "realm",
+        "type": "string",
+        "description": "Keycloak realm name"
+      },
+      {
+        "capability": "oauth2-implementation",
+        "name": "client_id",
+        "type": "string",
+        "description": "OAuth2 client ID"
+      },
+      {
+        "capability": "oauth2-implementation",
+        "name": "grant_type",
+        "type": "string",
+        "description": "password, client_credentials, authorization_code, or refresh_token"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "jsonwebtoken",
+    "passport"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-auth-engineer/skill/api-auth-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-auth-engineer/skill/api-auth-engineer.yaml",
+    "checksum": "16b30556ea1bdcef2fc8d71ac7dcb65193d5189d28009acc50c1427b621dd5a2"
+  }
+}

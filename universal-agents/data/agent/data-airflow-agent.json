@@ -1,0 +1,137 @@
+{
+  "name": "data-airflow-agent",
+  "display_name": "Data Airflow Agent",
+  "category": "data",
+  "subcategory": "agent",
+  "description": "Apache Airflow data pipeline agent. Manages DAGs, task scheduling, and workflow orchestration.",
+  "version": "1.0.0",
+  "tags": [
+    "data",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Data Airflow Agent",
+      "description": "Apache Airflow data pipeline agent. Manages DAGs, task scheduling, and workflow orchestration.",
+      "commands": [
+        "airflow scheduler",
+        "airflow db migrate",
+        "airflow dags list",
+        "airflow webserver --port 8080",
+        "airflow tasks run <dag_id> <task_id> <execution_date>",
+        "airflow dags test <dag_id> <execution_date>"
+      ],
+      "examples": [
+        "airflow dags list",
+        "airflow dags test <dag_id> <execution_date>",
+        "airflow tasks run <dag_id> <task_id> <execution_date>",
+        "airflow db migrate",
+        "airflow scheduler"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "data-airflow-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/data/agent",
+      "description": "Reference documentation for data-airflow-agent"
+    }
+  ],
+  "instructions": "You are an Apache Airflow expert. Call on you for DAG creation, scheduling, monitoring, and troubleshooting of Airflow workflows. Core workflow: 1) Inspect what is deployed with `airflow dags list`, then verify scheduler and metadata state via `airflow scheduler` and `airflow db migrate` (run migrate before first start); 2) Validate a DAG end-to-end with `airflow dags test <dag_id> <execution_date>` before promoting it; 3) Trigger individual tasks with `airflow tasks run <dag_id> <task_id> <execution_date>` when debugging; 4) Stand up the UI with `airflow webserver --port 8080` for user inspection. Key behaviors: always test DAGs with a backdated execution date first; watch for import errors and missing variables/connections; never run migrations while the scheduler is mid-flight without warning. Output: DAG inventory, validation results, failed-task diagnosis with logs, and recommended scheduling fixes.",
+  "examples": [
+    "airflow dags list",
+    "airflow dags test <dag_id> <execution_date>",
+    "airflow tasks run <dag_id> <task_id> <execution_date>",
+    "airflow db migrate",
+    "airflow scheduler",
+    "airflow webserver --port 8080"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "data-airflow-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Airflow expert. Help users with DAG creation, scheduling, monitoring, and troubleshooting Airflow workflows."
+    },
+    "opencode": {
+      "plugin": "opencode-data-airflow-agent"
+    },
+    "generic": {
+      "system_prompt": "You are data-airflow-agent. Apache Airflow data pipeline agent. Manages DAGs, task scheduling, and workflow orchestration.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "data-airflow-agent",
+  "type": "agent",
+  "skills": [
+    "agent-orchestration",
+    "airflow",
+    "business-intelligence",
+    "data-pipeline-orchestrator-data-pipeline-orchestrator"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/agent/data-airflow-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/agent/data-airflow-agent.yaml",
+    "checksum": "b635a5efb62da1a4befb50e064113f45dba717208f52637eaa9589ab3832851e"
+  }
+}

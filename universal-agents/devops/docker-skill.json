@@ -1,0 +1,216 @@
+{
+  "name": "docker",
+  "display_name": "docker",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Builds, runs, and manages containers and images with the docker CLI: images, volumes, networks, and container lifecycle.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker"
+  ],
+  "capabilities": [
+    {
+      "name": "container-lifecycle",
+      "description": "Run, stop, exec into, and remove containers with full flag control.",
+      "commands": [
+        "docker run -d --name web -p 8080:80 nginx:1.26",
+        "docker ps -a",
+        "docker stop web && docker rm web",
+        "docker exec -it web bash",
+        "docker logs --tail 100 web",
+        "docker inspect web"
+      ],
+      "examples": [
+        "docker run -d --name web -p 8080:80 nginx:1.26",
+        "docker exec -it web bash",
+        "docker logs --tail 100 web"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Container name"
+        },
+        {
+          "name": "ports",
+          "type": "string",
+          "description": "Port mapping, e.g. 8080:80"
+        },
+        {
+          "name": "image",
+          "type": "string",
+          "description": "Image reference"
+        }
+      ]
+    },
+    {
+      "name": "images-and-storage",
+      "description": "Build images, manage image lifecycle, and work with volumes and networks.",
+      "commands": [
+        "docker build -t myapp:1.0 .",
+        "docker images",
+        "docker pull node:20-alpine",
+        "docker push registry.example.com/myapp:1.0",
+        "docker volume create pgdata",
+        "docker network create backend",
+        "docker system df"
+      ],
+      "examples": [
+        "docker build -t myapp:1.0 .",
+        "docker volume create pgdata && docker run -v pgdata:/data postgres",
+        "docker system df"
+      ],
+      "parameters": [
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "Image tag, e.g. myapp:1.0"
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Build context path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Docker Engine CLI Reference",
+      "type": "documentation",
+      "source": "https://docs.docker.com/engine/reference/commandline/docker/",
+      "description": "Every docker command, flag, and example"
+    },
+    {
+      "title": "Dockerfile Reference",
+      "type": "documentation",
+      "source": "https://docs.docker.com/engine/reference/builder/",
+      "description": "Dockerfile instructions: FROM, RUN, COPY, ENTRYPOINT, HEALTHCHECK"
+    },
+    {
+      "title": "Docker Best Practices",
+      "type": "documentation",
+      "source": "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/",
+      "description": "Layer caching, image size, and security guidance"
+    }
+  ],
+  "instructions": "# Docker CLI Operations\n\nBuild, run, and troubleshoot containers with the docker command line.\n\n## What This Skill Does\n\n- Runs containers with ports, volumes, env, and resource limits\n- Builds efficient images with proper layering\n- Manages images, volumes, and networks\n- Inspects container state and logs for debugging\n- Cleans up orphaned resources\n\n## When to Use\n\n- Any container build/run/debug task\n- Image optimization and registry pushes\n- Disk cleanup on build machines\n\n## Real Commands\n\n```bash\n# Run and manage containers\ndocker run -d --name web -p 8080:80 -e APP_ENV=prod --restart unless-stopped nginx:1.26\ndocker ps -a\ndocker exec -it web bash\ndocker logs --tail 100 web\ndocker inspect web | jq '.[0].State'\ndocker stop web && docker rm web\n\n# Images\ndocker build -t myapp:1.0 .\ndocker images\ndocker pull node:20-alpine\ndocker push registry.example.com/myapp:1.0\n\n# Storage and networking\ndocker volume create pgdata\ndocker network create backend\ndocker run --network backend --volume pgdata:/data postgres:16\n\n# Cleanup\ndocker system df\ndocker image prune -a\ndocker volume prune --filter label=tmp\n```\n\n## Efficient Dockerfile\n\n```dockerfile\nFROM node:20-alpine\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci --omit=dev\nCOPY . .\nENV NODE_ENV=production\nEXPOSE 3000\nCMD [\"node\", \"server.js\"]\n```\n\n## Best Practices\n\n- Combine RUN commands to reduce layers; copy deps before source for cache hits\n- Run as non-root; add HEALTHCHECK to images\n- Pin base image digests for supply chain safety\n- Prefer named volumes over bind mounts for data\n- Prune regularly: `docker system prune -af` on CI runners",
+  "examples": [
+    {
+      "input": "Run a Postgres container with a volume for local dev",
+      "output": "Agent creates a named volume, runs postgres:16 with env credentials and healthcheck, and shows docker ps output"
+    },
+    {
+      "input": "Reduce our image size",
+      "output": "Agent switches to alpine base, chains RUN layers, adds .dockerignore, and rebuilds, reporting before/after sizes"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "docker.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-docker"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: docker. You do it through container-lifecycle: Run, stop, exec into, and remove containers with full flag control. The commands are real, e.g. `docker run -d --name web -p 8080:80 nginx:1.26`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "docker",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "container-lifecycle",
+        "name": "name",
+        "type": "string",
+        "description": "Container name"
+      },
+      {
+        "capability": "container-lifecycle",
+        "name": "ports",
+        "type": "string",
+        "description": "Port mapping, e.g. 8080:80"
+      },
+      {
+        "capability": "container-lifecycle",
+        "name": "image",
+        "type": "string",
+        "description": "Image reference"
+      },
+      {
+        "capability": "images-and-storage",
+        "name": "tag",
+        "type": "string",
+        "description": "Image tag, e.g. myapp:1.0"
+      },
+      {
+        "capability": "images-and-storage",
+        "name": "path",
+        "type": "string",
+        "description": "Build context path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/docker-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/docker-skill.yaml",
+    "checksum": "8b0c5ce06105531532cdb085c1227af7e92cc1c40f2f5d9ce0919cc687d1f90e"
+  }
+}

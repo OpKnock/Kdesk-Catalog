@@ -1,0 +1,190 @@
+name: wget-devtools
+display_name: wget-devtools
+category: devtools
+subcategory: general
+description: 'Downloads web resources with wget: recursive site mirroring, resuming, URL lists, rate limiting,
+  and authentication.'
+version: 2.0.0
+tags:
+- devtools
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- wget
+capabilities:
+- name: download-operations
+  description: Download files with output control and resume.
+  commands:
+  - wget https://example.com/file.zip
+  - wget -O app.tar.gz https://example.com/app.tar.gz
+  - wget -c https://example.com/big.iso
+  - wget -P /downloads https://example.com/file.zip
+  - wget -i urls.txt
+  - wget --limit-rate=2M https://example.com/big.iso
+  examples:
+  - wget -c https://example.com/big.iso
+  - wget -i urls.txt
+  - wget -O app.tar.gz https://example.com/app.tar.gz
+  parameters:
+  - name: url
+    type: string
+    description: Download URL
+  - name: output
+    type: string
+    description: Output file name
+  - name: dir
+    type: string
+    description: Output directory
+- name: mirroring-and-auth
+  description: Mirror sites recursively and authenticate downloads.
+  commands:
+  - wget -r -l 2 -np https://example.com/docs/
+  - wget --mirror -p --convert-links -P ./site https://example.com
+  - wget -r -A pdf,epub https://example.com/books/
+  - wget --user=jane --password=s3cr3t https://example.com/private/file.zip
+  - wget -q --show-progress https://example.com/file.zip
+  - wget --no-check-certificate https://selfsigned.local/file.zip
+  examples:
+  - wget -r -l 2 -np https://example.com/docs/
+  - wget --mirror -p --convert-links -P ./site https://example.com
+  - wget -r -A pdf,epub https://example.com/books/
+  parameters:
+  - name: level
+    type: integer
+    description: Recursion depth (-l)
+  - name: accept
+    type: string
+    description: Accepted extensions (-A)
+  - name: reject
+    type: string
+    description: Rejected extensions (-R)
+knowledge:
+- title: GNU wget Manual
+  type: documentation
+  source: https://www.gnu.org/software/wget/manual/wget.html
+  description: All wget options and recursive rules
+- title: wget Linux Manual
+  type: documentation
+  source: https://man7.org/linux/man-pages/man1/wget.1.html
+  description: Quick option reference
+instructions: '# wget Downloads
+
+
+  Fetch files and mirror websites from the command line.
+
+
+  ## What This Skill Does
+
+
+  - Downloads files with custom names and directories
+
+  - Resumes interrupted transfers
+
+  - Recursively mirrors sites and doc trees
+
+  - Filters by extension and limits rate
+
+  - Authenticates and handles redirects
+
+
+  ## When to Use
+
+
+  - Scriptable downloads in CI/cron
+
+  - Site mirrors for offline documentation
+
+  - Batch URL list downloads
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Basic downloads
+
+  wget https://example.com/file.zip
+
+  wget -O app.tar.gz https://example.com/app.tar.gz
+
+  wget -P /downloads https://example.com/file.zip
+
+  wget -c https://example.com/big.iso
+
+  wget -q --show-progress https://example.com/file.zip
+
+
+  # Batch and limits
+
+  wget -i urls.txt
+
+  wget --limit-rate=2M https://example.com/big.iso
+
+
+  # Mirrors
+
+  wget -r -l 2 -np https://example.com/docs/
+
+  wget --mirror -p --convert-links -P ./site https://example.com
+
+  wget -r -A pdf,epub https://example.com/books/
+
+
+  # Auth
+
+  wget --user=jane --password=s3cr3t https://example.com/private/file.zip
+
+  wget --no-check-certificate https://selfsigned.local/file.zip
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use -c for resume on large downloads
+
+  - Scope mirrors with -l depth and -np (no parent)
+
+  - Use -A/-R to control mirrored content
+
+  - Prefer --show-progress for readable logs in scripts
+
+  - Never put credentials in URLs; use --user/--password flags'
+examples:
+- input: Mirror the docs site for offline use
+  output: Agent runs wget --mirror with convert-links and a depth limit, verifying the local site tree
+- input: Batch download assets from a list
+  output: Agent writes urls.txt and runs wget -i with rate limiting
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: wget-devtools.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-wget
+  generic:
+    system_prompt: 'You are the wget-devtools specialist. You do it through download-operations: Download
+      files with output control and resume. The commands are real, e.g. `wget https://example.com/file.zip`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

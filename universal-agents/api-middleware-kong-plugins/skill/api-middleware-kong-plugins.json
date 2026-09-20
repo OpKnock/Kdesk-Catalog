@@ -1,0 +1,193 @@
+{
+  "name": "api-middleware-kong-plugins",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Configures API gateway middleware using Kong Gateway and decK: global plugins like rate-limiting, key-auth, request-transformer, and CORS applied at the gateway edge.",
+  "keywords": [
+    "api-middleware"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-middleware-kong-plugins.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-middleware-kong-plugins"
+    },
+    "generic": {
+      "system_prompt": "You own Api Middleware Kong Plugins end to end. You do it through kong-plugins: Apply global and per-service middleware plugins on Kong Gateway. The commands are real, e.g. `docker run -d --name kong -p 8000:8000 -p 8443:8443 -p 8001:8001 kong/kong-gateway`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "kong-plugins",
+      "description": "Apply global and per-service middleware plugins on Kong Gateway",
+      "commands": [
+        "docker run -d --name kong -p 8000:8000 -p 8443:8443 -p 8001:8001 kong/kong-gateway",
+        "curl -s http://localhost:8001/plugins | jq '.data | length'",
+        "curl -s -X POST http://localhost:8001/plugins -d 'name=rate-limiting' -d 'config.minute=60'",
+        "curl -s -X POST http://localhost:8001/plugins -d 'name=key-auth'",
+        "curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:8000/api"
+      ],
+      "examples": [
+        "curl -s -X POST localhost:8001/plugins -d 'name=rate-limiting' -d 'config.minute=60' applies global limits",
+        "deck gateway sync kong.yaml applies plugins from declarative config",
+        "curl -s localhost:8001/plugins returns installed gateway middleware"
+      ],
+      "parameters": [
+        {
+          "name": "plugin-name",
+          "type": "string",
+          "description": "Kong plugin: rate-limiting, key-auth, cors, request-transformer"
+        },
+        {
+          "name": "config",
+          "type": "object",
+          "description": "Plugin-specific config (minute, allow list, header names)"
+        },
+        {
+          "name": "scope",
+          "type": "string",
+          "description": "Global, per-service, per-route, or per-consumer plugin scope"
+        }
+      ]
+    },
+    {
+      "name": "plugin-operations",
+      "description": "Inspect, update, and remove gateway middleware plugins via the Kong Admin API",
+      "commands": [
+        "curl -s http://localhost:8001/plugins -G --data-urlencode \"name=key-auth\" | jq '.data[0] | {name, enabled}'",
+        "curl -s -X PATCH http://localhost:8001/plugins/$(curl -s http://localhost:8001/plugins | jq -r '.data[0].id') -d 'config.minute=120'",
+        "curl -s -X DELETE http://localhost:8001/plugins/$(curl -s http://localhost:8001/plugins | jq -r '.data[0].id') -o /dev/null -w '%{http_code}\\n'",
+        "curl -s http://localhost:8001/plugins -o /dev/null -w '%{http_code}\\n'"
+      ],
+      "examples": [
+        "curl with --data-urlencode filters plugins by name",
+        "PATCH updates plugin config in place",
+        "DELETE removes a middleware plugin"
+      ],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "express",
+    "fastify"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "express",
+    "fastify",
+    "koa"
+  ],
+  "examples": [
+    {
+      "input": "Add key auth at the gateway",
+      "output": "Enables key-auth plugin globally and issues consumer credentials via the Admin API"
+    },
+    {
+      "input": "Rate limit only /v1 beta routes",
+      "output": "Writes a kong.yaml with a per-route rate-limiting plugin and syncs with deck"
+    }
+  ],
+  "instructions": "# API Middleware v5 - Gateway Edge\n\nMiddleware implemented as Kong Gateway plugins.\n\n## What This Skill Does\n- Applies rate limiting, key-auth, CORS, and request transformation at the gateway\n- Manages plugins as declarative config with decK\n- Moves cross-cutting concerns out of service code\n\n## When to Use\n- Centralizing auth and throttling across many services\n- Applying CORS at the edge instead of per service\n- Auditing middleware config in version control\n\n## Real Commands\n\n```bash\ndocker run -d --name kong -p 8000:8000 -p 8001:8001 kong/kong-gateway\ncurl -s -X POST http://localhost:8001/plugins -d 'name=rate-limiting' -d 'config.minute=60'\ncurl -s -X POST http://localhost:8001/plugins -d 'name=key-auth'\n```\n\n## Plugin Operations\n- Filter plugins by name with --data-urlencode\n- Update config in place with PATCH\n- Remove plugins with DELETE\n\n## Testing\n- POST to /plugins then hit the proxy route to observe 429 or 401\n- Run deck gateway diff before syncing changes\n- Verify plugin order matches execution phases (auth before rate-limit)\n\n## Best Practices\n- Prefer decK files over Admin API mutations for reproducibility\n- Scope plugins per route when global behavior differs\n- Keep secrets out of declarative config via vault references",
+  "display_name": "Api Middleware Kong Plugins",
+  "knowledge": [
+    {
+      "title": "Kong Gateway Plugins",
+      "type": "documentation",
+      "source": "https://docs.konghq.com/gateway/latest/reference/proxy-reference/",
+      "description": "Reference for gateway proxy behavior and plugin execution order"
+    },
+    {
+      "title": "decK Documentation",
+      "type": "documentation",
+      "source": "https://docs.konghq.com/deck/",
+      "description": "Declarative management of Kong configuration as code"
+    }
+  ],
+  "id": "api-middleware-kong-plugins",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "kong-plugins",
+        "name": "plugin-name",
+        "type": "string",
+        "description": "Kong plugin: rate-limiting, key-auth, cors, request-transformer"
+      },
+      {
+        "capability": "kong-plugins",
+        "name": "config",
+        "type": "object",
+        "description": "Plugin-specific config (minute, allow list, header names)"
+      },
+      {
+        "capability": "kong-plugins",
+        "name": "scope",
+        "type": "string",
+        "description": "Global, per-service, per-route, or per-consumer plugin scope"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "express",
+    "fastify"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-middleware-kong-plugins/skill/api-middleware-kong-plugins.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-middleware-kong-plugins/skill/api-middleware-kong-plugins.yaml",
+    "checksum": "3d0e66ef5d6c106a39453fc505d9d7783e2ab1003e93b5ca12075001de0cfcf0"
+  }
+}

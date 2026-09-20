@@ -1,0 +1,167 @@
+{
+  "name": "ts-prune",
+  "display_name": "ts-prune",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Finds unused exports and dead code in TypeScript projects with ts-prune.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "ts-prune",
+      "description": "Detect unused exports and configure failure thresholds",
+      "commands": [
+        "npx ts-prune",
+        "npx ts-prune -p tsconfig.json",
+        "npx ts-prune --error",
+        "npx ts-prune --ignore \"src/**/*.test.ts\"",
+        "npx ts-prune -s src/ --json > unused.json"
+      ],
+      "examples": [
+        "npx ts-prune --error | head -30",
+        "npx ts-prune -p tsconfig.build.json --skip 'node_modules'",
+        "npx ts-prune --allowUnreachableCode"
+      ],
+      "parameters": [
+        {
+          "name": "project",
+          "type": "string",
+          "description": "Path to tsconfig.json"
+        },
+        {
+          "name": "error",
+          "type": "boolean",
+          "description": "Exit with code 1 if unused exports exist (CI mode)"
+        },
+        {
+          "name": "ignore",
+          "type": "string",
+          "description": "Regex of files to skip"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ts-prune GitHub",
+      "type": "documentation",
+      "source": "https://github.com/nadeesha/ts-prune",
+      "description": "CLI flags and usage examples"
+    },
+    {
+      "title": "ts-prune npm",
+      "type": "documentation",
+      "source": "https://www.npmjs.com/package/ts-prune",
+      "description": "Package reference and CI integration examples"
+    }
+  ],
+  "instructions": "# ts-prune\n\nFinds unused exports in TypeScript codebases by analyzing the type graph, helping\ndelete dead code safely.\n\n## When to Use\n\n- Cleaning up dead exports before a refactor\n- Enforcing no-unused-exports in CI\n- Locating public API surface that nothing consumes\n\n## Real Commands\n\n```bash\n# Install\ndev-npx ts-prune\nnpm install --save-dev ts-prune\n\n# Default run\nnpx ts-prune\n\n# With explicit tsconfig\nnpx ts-prune -p tsconfig.json\n\n# Fail in CI\nnpx ts-prune --error\n\n# Ignore test files\nnpx ts-prune --ignore \"src/**/*.test.ts\"\n\n# JSON for scripting\nnpx ts-prune --json > unused-exports.json\n\n# Skip vendored code\nnpx ts-prune -p tsconfig.build.json --skip node_modules\n```\n\n## Output Format\n\n```\nsrc/utils/format.ts:12 - formatDate\nsrc/api/client.ts:34 - HttpClient\n```\n\n## Best Practices\n\n- Scope with `--ignore` for tests and generated files (e.g. API client stubs)\n- Delete exports in batches and rely on type-check + tests\n- Keep `--error` in CI to prevent regression\n- Review the report before bulk-deleting; entry points may be imported dynamically\n\n## Example Response\n\nLists each unused export as file:line with the symbol name, then deletes them in\nsmall batches, running tsc --noEmit after each.",
+  "examples": [
+    {
+      "input": "Find dead code in our TypeScript app",
+      "output": "Runs npx ts-prune --ignore '*.test.ts' --json and reports all unused exports grouped by module"
+    },
+    {
+      "input": "Prevent unused exports in CI",
+      "output": "Adds npx ts-prune --error --ignore '**/*.test.ts' to CI and cleans the existing findings"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ts-prune.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ts-prune"
+    },
+    "generic": {
+      "system_prompt": "You take the ts-prune seat. You do it through ts-prune: Detect unused exports and configure failure thresholds. The commands are real, e.g. `npx ts-prune`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ts-prune",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "ts-prune",
+        "name": "project",
+        "type": "string",
+        "description": "Path to tsconfig.json"
+      },
+      {
+        "capability": "ts-prune",
+        "name": "error",
+        "type": "boolean",
+        "description": "Exit with code 1 if unused exports exist (CI mode)"
+      },
+      {
+        "capability": "ts-prune",
+        "name": "ignore",
+        "type": "string",
+        "description": "Regex of files to skip"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/ts-prune-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/ts-prune-skill.yaml",
+    "checksum": "57ca1a2e1e6abd93edcfb5637566a784d3fa31da4208f7c1a37442e56bec00eb"
+  }
+}

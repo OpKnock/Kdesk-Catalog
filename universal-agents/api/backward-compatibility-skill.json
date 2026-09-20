@@ -1,0 +1,256 @@
+{
+  "name": "backward-compatibility",
+  "display_name": "Backward Compatibility",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Maintains backward compatibility for APIs: semantic versioning, additive change discipline, media-type versioning, and diff checks.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "git",
+    "npm",
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "semver",
+      "description": "Apply semantic versioning rules to releases.",
+      "commands": [
+        "npm version minor",
+        "npm version major",
+        "git tag v2.0.0",
+        "npx semver --range \">=1.0.0 <2.0.0\" 1.5.0",
+        "git diff v1.0.0 v2.0.0 --stat"
+      ],
+      "examples": [
+        "npm version patch -m \"release %s\"",
+        "git tag -a v1.1.0 -m \"additive release\"",
+        "npx semver --coerce \"v1.2.3\""
+      ],
+      "parameters": [
+        {
+          "name": "version_bump",
+          "type": "string",
+          "description": "major, minor, or patch"
+        },
+        {
+          "name": "range",
+          "type": "string",
+          "description": "Semver range expression"
+        }
+      ]
+    },
+    {
+      "name": "api-versioning",
+      "description": "Version APIs via media types or URL prefixes.",
+      "commands": [
+        "curl -s -H \"Accept: application/vnd.myapi.v2+json\" https://api.example.com/users",
+        "curl -s -H \"Accept: application/vnd.myapi.v1+json\" https://api.example.com/users",
+        "curl -s https://api.example.com/v2/users?limit=10",
+        "curl -s https://api.example.com/v1/users",
+        "curl -s -H \"Api-Version: 2026-01-01\" https://api.example.com/users"
+      ],
+      "examples": [
+        "curl -s -H \"Accept: application/vnd.myapi.v2+json\" https://api.example.com/users | jq '.schema'",
+        "curl -s https://api.example.com/v1/users -o v1.json && curl -s https://api.example.com/v2/users -o v2.json && diff v1.json v2.json",
+        "curl -s -o /dev/null -w \"%{http_code}\\n\" -H \"Accept: application/vnd.myapi.v99+json\" https://api.example.com/users"
+      ],
+      "parameters": [
+        {
+          "name": "accept_header",
+          "type": "string",
+          "description": "Media type version header"
+        },
+        {
+          "name": "base_url",
+          "type": "string",
+          "description": "API base URL"
+        }
+      ]
+    },
+    {
+      "name": "compat-checks",
+      "description": "Detect breaking changes between specs.",
+      "commands": [
+        "npx openapi-diff old.yaml new.yaml",
+        "npx @redocly/cli lint new.yaml",
+        "npx swagger-cli validate new.yaml",
+        "npx openapi-changes compare old.yaml new.yaml",
+        "git diff --exit-code v1.0.0 v1.1.0 -- openapi.yaml"
+      ],
+      "examples": [
+        "npx openapi-diff old.yaml new.yaml | grep -i breaking",
+        "npx @redocly/cli lint --extends minimal new.yaml",
+        "npx openapi-changes compare old.yaml new.yaml --json"
+      ],
+      "parameters": [
+        {
+          "name": "old_spec",
+          "type": "string",
+          "description": "Baseline OpenAPI spec"
+        },
+        {
+          "name": "new_spec",
+          "type": "string",
+          "description": "Candidate OpenAPI spec"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Semantic Versioning",
+      "type": "documentation",
+      "source": "https://semver.org/",
+      "description": "Versioning rules"
+    },
+    {
+      "title": "openapi-diff",
+      "type": "documentation",
+      "source": "https://github.com/OpenAPITools/openapi-diff",
+      "description": "Breaking change detection"
+    },
+    {
+      "title": "Redocly CLI",
+      "type": "documentation",
+      "source": "https://redocly.com/docs/cli/",
+      "description": "Linting and breaking-change checks"
+    },
+    {
+      "title": "RFC 9110 Content Negotiation",
+      "type": "documentation",
+      "source": "https://www.rfc-editor.org/rfc/rfc9110#name-content-negotiation",
+      "description": "Media type negotiation"
+    }
+  ],
+  "instructions": "# Backward Compatibility\n\n## What this skill does\n\nKeeps APIs backward compatible: semantic versioning discipline, additive-only changes, media-type/URL versioning, and automated breaking-change detection between OpenAPI specs.\n\n## When to use\n\n- Planning a release that touches public API contracts\n- Evaluating whether a spec change is breaking\n- Setting up CI gates against spec drift\n\n## Real commands\n\n```bash\n# Version bumps\nnpm version minor\nnpm version patch -m \"release %s\"\ngit tag v2.0.0\n\n# Test versioned endpoints\ncurl -s -H \"Accept: application/vnd.myapi.v2+json\" https://api.example.com/users\ncurl -s https://api.example.com/v1/users\n\n# Breaking change detection\nnpx openapi-diff old.yaml new.yaml | grep -i breaking\nnpx @redocly/cli lint new.yaml\n```\n\n## Rules of thumb\n\n- Adding an optional field/parameter: compatible\n- Removing or renaming a field: breaking (major)\n- Changing a required field to optional: usually safe; reverse is not\n\n## Testing\n\n- Run openapi-diff in CI on every spec change\n- Keep a compat test calling v1 endpoints after v2 ships\n\n## Best practices\n\n- Deprecate with headers and docs, then remove after a published timeline\n- Use additive evolutions (openapi-diff 'non-breaking') as the default\n- Pin clients to media-type versions to decouple releases",
+  "examples": [
+    {
+      "input": "Can we change the users endpoint response?",
+      "output": "Runs openapi-diff between the released and candidate specs; if breaking, proposes additive alternatives (new field, new media type) and a major version bump."
+    },
+    {
+      "input": "V2 is out; when can we drop v1?",
+      "output": "Checks v1 usage via logs/metrics, sets a deprecation header, communicates a timeline, then removes v1 routes and bumps major."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "backward-compatibility.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-backward-compatibility"
+    },
+    "generic": {
+      "system_prompt": "You work Backward Compatibility hands-on. You do it through semver: Apply semantic versioning rules to releases. The commands are real, e.g. `npm version minor`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "backward-compatibility",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "semver",
+        "name": "version_bump",
+        "type": "string",
+        "description": "major, minor, or patch"
+      },
+      {
+        "capability": "semver",
+        "name": "range",
+        "type": "string",
+        "description": "Semver range expression"
+      },
+      {
+        "capability": "api-versioning",
+        "name": "accept_header",
+        "type": "string",
+        "description": "Media type version header"
+      },
+      {
+        "capability": "api-versioning",
+        "name": "base_url",
+        "type": "string",
+        "description": "API base URL"
+      },
+      {
+        "capability": "compat-checks",
+        "name": "old_spec",
+        "type": "string",
+        "description": "Baseline OpenAPI spec"
+      },
+      {
+        "capability": "compat-checks",
+        "name": "new_spec",
+        "type": "string",
+        "description": "Candidate OpenAPI spec"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "git",
+    "npm",
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/backward-compatibility-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/backward-compatibility-skill.yaml",
+    "checksum": "8a0728464da8b9c8dc4765189fe1a1e6e11e93131dd770621b02fd16794bb8f6"
+  }
+}

@@ -1,0 +1,124 @@
+name: pulumi
+display_name: pulumi
+category: devops
+subcategory: general
+description: 'Builds and deploys infrastructure with Pulumi (TypeScript/Python/Go): stacks, previews,
+  outputs, imports, and state management.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- pulumi
+capabilities:
+- name: stack-lifecycle
+  description: Create, preview, deploy, and destroy infrastructure stacks.
+  commands:
+  - pulumi new aws-typescript
+  - pulumi stack init dev
+  - pulumi preview
+  - pulumi up -y
+  - pulumi destroy -y
+  - pulumi stack select prod
+  examples:
+  - pulumi new aws-typescript
+  - pulumi preview
+  - pulumi up -y
+  parameters:
+  - name: stack
+    type: string
+    description: Stack name
+  - name: template
+    type: string
+    description: Project template, e.g. aws-typescript
+- name: config-and-state
+  description: Manage configuration, secrets, outputs, and import existing resources.
+  commands:
+  - pulumi config set aws:region us-east-1
+  - pulumi config set --secret db_password 's3cr3t'
+  - pulumi config get aws:region
+  - pulumi stack output
+  - pulumi import aws:s3/bucket:Bucket my-bucket aws-123456
+  - pulumi state refresh
+  examples:
+  - pulumi config set --secret db_password 's3cr3t'
+  - pulumi stack output endpoint
+  - pulumi import aws:s3/bucket:Bucket my-bucket aws-123456
+  parameters:
+  - name: key
+    type: string
+    description: Config key
+  - name: value
+    type: string
+    description: Config value
+  - name: output
+    type: string
+    description: Stack output name
+knowledge:
+- title: Pulumi Documentation
+  type: documentation
+  source: https://www.pulumi.com/docs/
+  description: Getting started, languages, providers, and automation
+- title: Pulumi CLI Commands
+  type: documentation
+  source: https://www.pulumi.com/docs/cli/commands/
+  description: pulumi CLI reference
+- title: Pulumi Registry
+  type: documentation
+  source: https://www.pulumi.com/registry/
+  description: Provider and package registry
+instructions: "# Pulumi Infrastructure as Code\n\nProvision cloud resources with real programming languages:\
+  \ stacks, previews, and secrets.\n\n## What This Skill Does\n\n- Scaffolds projects in TypeScript, Python,\
+  \ Go, or .NET\n- Creates and selects stacks per environment\n- Previews diffs before applying changes\n\
+  - Manages config and encrypted secrets\n- Imports existing resources and refreshes state\n\n## When\
+  \ to Use\n\n- Preferring real code (loops, conditionals) over HCL\n- Multi-environment infrastructure\
+  \ with shared packages\n- Teams that want typed resource APIs\n\n## Real Commands\n\n```bash\n# Project\
+  \ setup\npulumi new aws-typescript --name infra --stack dev\npulumi stack init dev\npulumi stack select\
+  \ prod\n\n# Deploy loop\npulumi preview\npulumi up -y\npulumi destroy -y\n\n# Config and secrets\npulumi\
+  \ config set aws:region us-east-1\npulumi config set --secret db_password 's3cr3t'\npulumi config get\
+  \ aws:region\n\n# Outputs and state\npulumi stack output endpoint\npulumi stack output --json\npulumi\
+  \ import aws:s3/bucket:Bucket my-bucket aws-123456\npulumi state refresh\npulumi state unprotect 'urn:...'\n\
+  ```\n\n## Minimal Program\n\n```typescript\nimport * as aws from \"@pulumi/aws\";\nconst bucket = new\
+  \ aws.s3.Bucket(\"my-bucket\", {\n  acl: \"private\",\n});\nexport const bucketName = bucket.id;\n```\n\
+  \n## Best Practices\n\n- One stack per environment (dev/staging/prod) with config separation\n- Always\
+  \ use `--secret` for credentials; never plaintext config\n- Run `pulumi preview` in CI and require human\
+  \ approval for prod up\n- Use automation API or policy-as-code (OPA) for guardrails\n- Lock provider\
+  \ versions via package manifests"
+examples:
+- input: Create an S3 bucket stack with outputs
+  output: Agent scaffolds a TypeScript project, adds the bucket resource, sets region config, previews
+    and applies, then shows outputs
+- input: Migrate a manually created bucket into Pulumi
+  output: Agent runs pulumi import with the type and ID, then refreshes state and verifies diff is empty
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: pulumi.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-pulumi
+  generic:
+    system_prompt: 'This is your domain: pulumi. You do it through stack-lifecycle: Create, preview, deploy,
+      and destroy infrastructure stacks. The commands are real, e.g. `pulumi new aws-typescript`. You
+      work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,139 @@
+name: e2e-testing
+display_name: e2e-testing
+category: testing
+subcategory: general
+description: End-to-end testing across browsers and devices with Playwright, including codegen, tracing,
+  and sharded CI runs.
+version: 2.0.0
+tags:
+- testing
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+capabilities:
+- name: playwright-e2e
+  description: Run E2E suites across browsers and projects.
+  commands:
+  - npx playwright test
+  - npx playwright test --project=chromium
+  - npx playwright test tests/login.spec.ts
+  - npx playwright test --headed
+  - npx playwright test --grep @regression
+  examples:
+  - npx playwright test --project=chromium
+  - npx playwright test tests/login.spec.ts --headed
+  - npx playwright test --grep @smoke
+  parameters:
+  - name: project
+    type: string
+    description: Browser project from config
+  - name: grep
+    type: string
+    description: Tag or title filter
+  - name: headed
+    type: boolean
+    description: Run with visible browser
+- name: codegen-and-tracing
+  description: Generate tests by recording and debug with traces.
+  commands:
+  - npx playwright codegen https://example.com
+  - npx playwright test --trace on
+  - npx playwright test --debug
+  - npx playwright show-report
+  - npx playwright show-trace trace.zip
+  examples:
+  - npx playwright codegen https://example.com
+  - npx playwright test --trace on
+  - npx playwright show-report
+  parameters:
+  - name: url
+    type: string
+    description: URL for codegen recording
+  - name: trace
+    type: string
+    description: 'Trace mode: on, off, retain-on-failure'
+- name: install-and-ci
+  description: Install browsers and run sharded CI jobs.
+  commands:
+  - npx playwright install chromium
+  - npx playwright install --with-deps
+  - npx playwright test --shard=1/4
+  - npx playwright test --workers=8
+  - npx playwright test --retries=2
+  examples:
+  - npx playwright install --with-deps
+  - npx playwright test --shard=1/4 --retries=2
+  - npx playwright test --workers=8
+  parameters:
+  - name: shard
+    type: string
+    description: Shard identifier, e.g. 1/4
+  - name: workers
+    type: number
+    description: Parallel worker count
+  - name: retries
+    type: number
+    description: Retry count
+knowledge:
+- title: Playwright Documentation
+  type: documentation
+  source: https://playwright.dev/docs/intro
+  description: Test authoring, fixtures, and CLI
+- title: Playwright Test Config
+  type: documentation
+  source: https://playwright.dev/docs/test-configuration
+  description: Projects, browsers, and CI configuration
+instructions: "# E2E Testing\n\nTest complete user journeys across real browsers with Playwright.\n\n\
+  ## What This Skill Does\n\n- Runs E2E suites on Chromium, Firefox, and WebKit\n- Generates tests by\
+  \ recording interactions\n- Captures traces for flake debugging\n- Shards runs across CI workers\n\n\
+  ## When to Use\n\n- Validating critical user journeys pre-release\n- Cross-browser compatibility checks\n\
+  - Regression protection for checkout/payment flows\n\n## Real Commands\n\n```bash\n# Run\nnpx playwright\
+  \ test\nnpx playwright test --project=chromium\nnpx playwright test tests/login.spec.ts --headed\nnpx\
+  \ playwright test --grep @smoke\n\n# Debug\nnpx playwright codegen https://example.com\nnpx playwright\
+  \ test --trace on\nnpx playwright show-report\n\n# CI\nnpx playwright install --with-deps\nnpx playwright\
+  \ test --shard=1/4 --retries=2\nnpx playwright test --workers=8\n```\n\n## Sample Spec\n\n```ts\nimport\
+  \ { test, expect } from '@playwright/test';\n\ntest('user can checkout', async ({ page }) => {\n  await\
+  \ page.goto('/checkout');\n  await page.getByLabel('Email').fill('alice@example.com');\n  await page.getByRole('button',\
+  \ { name: 'Pay' }).click();\n  await expect(page.getByText('Order confirmed')).toBeVisible();\n});\n\
+  ```\n\n## Best Practices\n\n- Prefer getByRole/getByLabel over CSS selectors\n- Use web-first assertions\
+  \ (toBeVisible) over sleeps\n- Run smoke tags on PRs, full suite on release\n- Shard on CI; retry flakes\
+  \ with trace analysis\n- Test against production-like staging data"
+examples:
+- input: Add E2E coverage for checkout
+  output: Agent records the flow with codegen, refines the spec, and runs it on all projects with trace
+    on.
+- input: The suite is flaky in CI
+  output: Agent enables --trace on, reviews traces for races, adds retries, and shards the suite across
+    runners.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: e2e-testing.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-e2e-testing
+  generic:
+    system_prompt: 'You work e2e-testing hands-on. You do it through playwright-e2e: Run E2E suites across
+      browsers and projects. The commands are real, e.g. `npx playwright test`. You run and verify the
+      real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

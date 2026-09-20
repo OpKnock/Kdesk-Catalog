@@ -1,0 +1,171 @@
+{
+  "name": "honeycomb-observability",
+  "display_name": "Honeycomb Observability",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Honeycomb observability: honeycomb CLI dataset management, query runs, event ingestion, and OpenTelemetry env var wiring for traces and metrics.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "honeycomb"
+  ],
+  "capabilities": [
+    {
+      "name": "honeycomb-ops",
+      "description": "Manage datasets, run queries, and send events with the Honeycomb CLI.",
+      "commands": [
+        "honeycomb auth login",
+        "honeycomb dataset list",
+        "honeycomb query run --dataset myservice '{\"time_range\": 3600, \"breakdowns\": [\"app.name\"], \"calculations\": [{\"op\": \"COUNT\"}]}'",
+        "honeycomb events post --dataset myservice --json '{\"name\":\"GET /api\",\"duration_ms\":42}'",
+        "honeycomb --version"
+      ],
+      "examples": [
+        "honeycomb query run --dataset myservice '{\"time_range\": 900, \"order\": [{\"op\": \"COUNT\"}]}'",
+        "honeycomb dataset create frontend",
+        "export OTEL_EXPORTER_OTLP_ENDPOINT=https://api.honeycomb.io"
+      ],
+      "parameters": [
+        {
+          "name": "dataset",
+          "type": "string",
+          "description": "Honeycomb dataset name."
+        },
+        {
+          "name": "time_range",
+          "type": "integer",
+          "description": "Query window in seconds."
+        },
+        {
+          "name": "api_key",
+          "type": "string",
+          "description": "Honeycomb API key (or OTEL header)."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Honeycomb Docs",
+      "type": "documentation",
+      "source": "https://docs.honeycomb.io/",
+      "description": "Official Honeycomb documentation: datasets, queries, and OTLP ingestion."
+    },
+    {
+      "title": "Honeycomb CLI",
+      "type": "documentation",
+      "source": "https://docs.honeycomb.io/working-with-your-data/honeycomb-cli/",
+      "description": "honeycomb CLI commands: auth, datasets, query run, events."
+    }
+  ],
+  "instructions": "# Honeycomb Observability\n\nQuery and instrument with Honeycomb from the CLI.\n\n## What this skill does\n\n- Logs into Honeycomb from the CLI and lists datasets.\n- Runs ad-hoc queries against live data (time ranges, breakdowns, calculations).\n- Posts raw events for testing ingestion.\n- Wires OpenTelemetry exporters to Honeycomb.\n\n## When to use\n\n- Investigating a latency spike with a quick query.\n- Verifying a service is sending telemetry to the right dataset.\n- Bootstrapping OTLP config for new services.\n\n## Real commands\n\n```bash\n# Authenticate\nhoneycomb auth login\n\n# List datasets\nhoneycomb dataset list\n\n# Run a query: count of events per app.name in the last hour\nhoneycomb query run --dataset myservice '{\n  \"time_range\": 3600,\n  \"breakdowns\": [\"app.name\"],\n  \"calculations\": [{\"op\": \"COUNT\"}]\n}'\n\n# Post a test event\nhoneycomb events post --dataset myservice --json '{\"name\":\"GET /api\",\"duration_ms\":42}'\n```\n\n## OTLP wiring\n\n```bash\nexport OTEL_EXPORTER_OTLP_ENDPOINT=https://api.honeycomb.io\nexport OTEL_EXPORTER_OTLP_HEADERS=\"x-honeycomb-team=$HONEYCOMB_API_KEY\"\nexport OTEL_SERVICE_NAME=myservice\n```\n\n## Testing\n\n```bash\nhoneycomb events post --dataset myservice --json '{\"check\":\"pipeline\"}' \\\n  && honeycomb query run --dataset myservice '{\"time_range\": 300, \"calculations\": [{\"op\": \"COUNT\"}]}'\n```\n\n## Best practices\n\n- Set a meaningful service name for every service so breakdowns work.\n- Keep dataset names consistent with service names.\n- Use derived columns for slow queries instead of heavy breakdowns.\n- Store the API key in the honeycomb CLI keyring, not in code.\n\n## Example exchange\n\n```\nUser: Which app version is generating 500s right now?\nAgent: honeycomb query run --dataset myservice '{\"time_range\": 900, \"breakdowns\": [\"app.version\"], \"calculations\": [{\"op\":\"COUNT\",\"field\":\"*\"}]}'\n```",
+  "examples": [
+    {
+      "input": "Check which datasets exist",
+      "output": "honeycomb dataset list"
+    },
+    {
+      "input": "Count events per service in the last hour",
+      "output": "honeycomb query run --dataset myservice '{\"time_range\": 3600, \"breakdowns\": [\"app.name\"], \"calculations\": [{\"op\": \"COUNT\"}]}'"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "honeycomb-observability.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-honeycomb-observability"
+    },
+    "generic": {
+      "system_prompt": "You own Honeycomb Observability end to end. You do it through honeycomb-ops: Manage datasets, run queries, and send events with the Honeycomb CLI. The commands are real, e.g. `honeycomb auth login`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "honeycomb-observability",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "honeycomb-ops",
+        "name": "dataset",
+        "type": "string",
+        "description": "Honeycomb dataset name."
+      },
+      {
+        "capability": "honeycomb-ops",
+        "name": "time_range",
+        "type": "integer",
+        "description": "Query window in seconds."
+      },
+      {
+        "capability": "honeycomb-ops",
+        "name": "api_key",
+        "type": "string",
+        "description": "Honeycomb API key (or OTEL header)."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "honeycomb"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/honeycomb-observability-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/honeycomb-observability-skill.yaml",
+    "checksum": "c8f652fa08e91c9f90d112a1ad01f4451db69e684adfe5e862731929e1e711d5"
+  }
+}

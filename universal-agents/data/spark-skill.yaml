@@ -1,0 +1,104 @@
+name: spark
+display_name: Spark
+category: data
+subcategory: general
+description: 'Develops and runs Apache Spark jobs: spark-submit, interactive shells, SQL, and package
+  management.'
+version: 2.0.0
+tags:
+- data
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- pyspark
+- spark-shell
+- spark-sql
+- spark-submit
+capabilities:
+- name: spark-submit
+  description: Submit batch jobs with cluster/local masters and dependencies
+  commands:
+  - spark-submit --master local[4] --executor-memory 4g jobs/wordcount.py
+  - spark-submit --master yarn --deploy-mode cluster --num-executors 8 --executor-cores 4 etl.py
+  - pyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0
+  - spark-shell --master yarn --deploy-mode client -i setup.scala
+  - spark-sql -f queries/aggregate.sql --conf spark.sql.shuffle.partitions=200
+  examples:
+  - spark-submit --master local[*] --py-files utils.py job.py
+  - spark-submit --master k8s://https://k8s:6443 --deploy-mode cluster --conf spark.kubernetes.container.image=img
+    job.py
+  - pyspark -i init.sql
+  parameters:
+  - name: master
+    type: string
+    description: local[N], yarn, mesos://, or k8s:// master URL
+  - name: deploy-mode
+    type: string
+    description: client or cluster
+  - name: num-executors
+    type: integer
+    description: Executor count for the job
+knowledge:
+- title: Spark docs
+  type: documentation
+  source: https://spark.apache.org/docs/latest/
+  description: Quick start, programming guides, and configuration
+- title: Spark SQL guide
+  type: documentation
+  source: https://spark.apache.org/docs/latest/sql-programming-guide.html
+  description: DataFrames, SQL, and performance tuning
+instructions: "# Spark\n\nDevelops and operates Apache Spark batch jobs: submission, tuning, SQL analysis,\n\
+  and debugging.\n\n## When to Use\n\n- Processing large datasets in batch\n- Interactive analysis with\
+  \ pyspark/spark-shell\n- Tuning shuffle and memory for slow jobs\n\n## Real Commands\n\n```bash\n# Local\
+  \ development run\nspark-submit --master local[4] --executor-memory 4g jobs/wordcount.py\n\n# YARN cluster\
+  \ run\nspark-submit --master yarn --deploy-mode cluster \\\n  --num-executors 8 --executor-cores 4 --executor-memory\
+  \ 8g etl.py\n\n# With Python dependencies\nspark-submit --master local[*] --py-files utils.py,models.zip\
+  \ job.py\n\n# Spark SQL\nspark-sql -f queries/aggregate.sql --conf spark.sql.shuffle.partitions=200\n\
+  \n# Interactive\npyspark --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0\nspark-shell --master\
+  \ yarn --deploy-mode client\n```\n\n## Tuning Cheat Sheet\n\n- Total executors ~= cluster cores / 4\n\
+  - Shuffle partitions ~= 2-4x executors x cores\n- Use broadcast joins for small tables (`spark.sql.autoBroadcastJoinThreshold`)\n\
+  - Cache hot DataFrames; unpersist after use\n- Monitor via Spark UI port 4040\n\n## Best Practices\n\
+  \n- Test on a sample with `local[*]` before cluster runs\n- Use `--py-files` for local modules\n- Set\
+  \ `spark.sql.shuffle.partitions` explicitly\n- Check for data skew in GROUP BY keys\n- Persist intermediate\
+  \ results only when reused\n\n## Example Response\n\nFor a slow job: reviews the Spark UI metrics, identifies\
+  \ shuffle-heavy stages or\nskew, and applies tuning options with expected impact."
+examples:
+- input: Run our ETL on the cluster
+  output: Submits the job with spark-submit --master yarn --deploy-mode cluster and tuned executor settings,
+    then reports application ID and status
+- input: Analyze this data interactively
+  output: Starts pyspark with the needed packages, loads the data, runs aggregations, and exports results
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: spark.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-spark
+  generic:
+    system_prompt: 'You own Spark end to end. You do it through spark-submit: Submit batch jobs with cluster/local
+      masters and dependencies. The commands are real, e.g. `spark-submit --master local[4] --executor-memory
+      4g jobs/wordcount.py`. You prefer the shortest safe path, and you reproduce failures before diagnosing
+      them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,167 @@
+{
+  "name": "encryption-in-transit",
+  "display_name": "Encryption In Transit",
+  "category": "api",
+  "subcategory": "general",
+  "description": "TLS encryption in transit: test certificates with openssl s_client, inspect cipher suites and handshakes, and verify proper SNI and chain validation.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "echo",
+    "nmap"
+  ],
+  "capabilities": [
+    {
+      "name": "tls-verification",
+      "description": "Probe TLS endpoints, inspect certificates and ciphers, and validate chains.",
+      "commands": [
+        "echo | openssl s_client -connect api.example.com:443 -servername api.example.com 2>/dev/null | openssl x509 -noout -dates -subject -issuer",
+        "echo | openssl s_client -connect api.example.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'",
+        "echo | openssl s_client -connect api.example.com:443 -verify_return_error 2>&1 | grep -iE 'verify|error'",
+        "nmap --script ssl-enum-ciphers -p 443 api.example.com",
+        "curl -sI https://api.example.com | grep -i 'strict-transport-security'"
+      ],
+      "examples": [
+        "echo | openssl s_client -connect api.example.com:443 -servername api.example.com 2>/dev/null | openssl x509 -noout -dates -subject -issuer",
+        "echo | openssl s_client -connect api.example.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'",
+        "curl -sI https://api.example.com | grep -i 'strict-transport-security'"
+      ],
+      "parameters": [
+        {
+          "name": "host",
+          "type": "string",
+          "description": "Hostname of the TLS endpoint"
+        },
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "TLS port, usually 443"
+        },
+        {
+          "name": "sni-host",
+          "type": "string",
+          "description": "SNI name for virtual-hosted endpoints"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "openssl s_client man page",
+      "type": "documentation",
+      "source": "https://docs.openssl.org/master/man1/openssl-s_client/",
+      "description": "Full s_client options for handshake debugging and certificate inspection"
+    }
+  ],
+  "instructions": "# Encryption in Transit\n\n## What this skill does\n\nEncryption in transit means every byte between client and server is protected by TLS. This skill focuses on verifying that protection: certificate validity, protocol versions, cipher suites, chain trust, and HSTS.\n\n## When to use\n\n- Diagnosing certificate expiry or chain errors\n- Auditing cipher and TLS version support\n- Verifying SNI serves the right certificate\n\n## Real commands\n\n```bash\n# Certificate dates, subject, issuer\n echo | openssl s_client -connect api.example.com:443 -servername api.example.com 2>/dev/null | openssl x509 -noout -dates -subject -issuer\n\n# TLS version and negotiated cipher\n echo | openssl s_client -connect api.example.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'\n\n# Strict chain validation\n echo | openssl s_client -connect api.example.com:443 -verify_return_error 2>&1 | grep -iE 'verify|error'\n\n# Enumerate supported ciphers\n nmap --script ssl-enum-ciphers -p 443 api.example.com\n\n# HSTS presence\n curl -sI https://api.example.com | grep -i 'strict-transport-security'\n```\n\n## Chain debugging\n\n```bash\n# Print the full chain presented by the server\n echo | openssl s_client -connect api.example.com:443 -showcerts 2>/dev/null | grep -E '^\\s+i:|^s:' | head -20\n```\n\n## Hardening config example (nginx)\n\n```nginx\nssl_protocols TLSv1.2 TLSv1.3;\nssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256;\nssl_prefer_server_ciphers off;\nadd_header Strict-Transport-Security \"max-age=31536000; includeSubDomains\" always;\n```\n\n## Best practices\n\n- Disable TLS 1.0/1.1; require 1.2 minimum.\n- Set HSTS before deploying HTTPS so browsers never downgrade.\n- Automate certificate renewal monitoring (e.g. expiry alerts 30 days out).\n- Always pass `-servername` when testing virtual-hosted endpoints.\n",
+  "examples": [
+    {
+      "input": "Is the certificate about to expire?",
+      "output": "Run echo | openssl s_client -connect api.example.com:443 -servername api.example.com 2>/dev/null | openssl x509 -noout -dates to read the notAfter date."
+    },
+    {
+      "input": "Weak ciphers on our endpoint",
+      "output": "Run nmap --script ssl-enum-ciphers, then enforce modern suites in the nginx ssl_ciphers line and re-test."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "encryption-in-transit.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-encryption-in-transit"
+    },
+    "generic": {
+      "system_prompt": "You are the Encryption In Transit specialist. You do it through tls-verification: Probe TLS endpoints, inspect certificates and ciphers, and validate chains. The commands are real, e.g. `echo | openssl s_client -connect api.example.com:443 -servername api.example.com...`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "encryption-in-transit",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "tls-verification",
+        "name": "host",
+        "type": "string",
+        "description": "Hostname of the TLS endpoint"
+      },
+      {
+        "capability": "tls-verification",
+        "name": "port",
+        "type": "integer",
+        "description": "TLS port, usually 443"
+      },
+      {
+        "capability": "tls-verification",
+        "name": "sni-host",
+        "type": "string",
+        "description": "SNI name for virtual-hosted endpoints"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "echo",
+    "nmap"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/encryption-in-transit-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/encryption-in-transit-skill.yaml",
+    "checksum": "4232e7234885be5f6440ccc466eb0ad853a0535fe43412517dd1ced162b7d3e6"
+  }
+}

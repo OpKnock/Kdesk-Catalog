@@ -1,0 +1,171 @@
+{
+  "name": "insomnia",
+  "display_name": "Insomnia",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Insomnia API client workflows: inso CLI for linting OpenAPI specs, running collections and tests headlessly, and exporting design documents.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "inso"
+  ],
+  "capabilities": [
+    {
+      "name": "inso-cli",
+      "description": "Lint API specs and run Insomnia collections and tests from CI.",
+      "commands": [
+        "inso lint spec openapi.yaml",
+        "inso run test \"My Collection\" --env prod",
+        "inso run collection \"My Collection\" -e prod --verbose",
+        "inso export spec openapi.yaml --output out/",
+        "inso generate config spec openapi.yaml"
+      ],
+      "examples": [
+        "inso lint spec openapi.yaml --ci",
+        "inso run test \"Checkout\" -e staging --reporter json --output results.json",
+        "inso run collection \"Smoke\" --env dev -t false"
+      ],
+      "parameters": [
+        {
+          "name": "spec_file",
+          "type": "string",
+          "description": "OpenAPI spec path for lint/export."
+        },
+        {
+          "name": "collection",
+          "type": "string",
+          "description": "Collection name to run."
+        },
+        {
+          "name": "env",
+          "type": "string",
+          "description": "Environment (dev/staging/prod) for variables."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Insomnia Docs",
+      "type": "documentation",
+      "source": "https://docs.insomnia.rest/",
+      "description": "Official Insomnia documentation: workspace, design, and debug features."
+    },
+    {
+      "title": "Inso CLI Docs",
+      "type": "documentation",
+      "source": "https://docs.insomnia.rest/inso-cli/introduction",
+      "description": "Inso CLI: lint, run, export, and config commands."
+    }
+  ],
+  "instructions": "# Insomnia\n\nDesign, test, and debug APIs with Insomnia and the inso CLI.\n\n## What this skill does\n\n- Lints OpenAPI specs with inso.\n- Runs collections and assertion tests headlessly in CI.\n- Exports design documents and generates configs.\n- Manages environments for multi-stage testing.\n\n## When to use\n\n- Teams want API tests that run in CI without code.\n- Validating OpenAPI specs before codegen.\n- Replaying request suites after changes.\n\n## Real commands\n\n```bash\n# Lint an OpenAPI spec\ninso lint spec openapi.yaml\n\n# Run collection tests against prod\ninso run test \"My Collection\" --env prod\n\n# Run requests only (no assertions)\ninso run collection \"My Collection\" -e prod --verbose\n\n# Export the spec as bundle\ninso export spec openapi.yaml --output out/\n\n# Generate an Insomnia config from a spec\ninso generate config spec openapi.yaml\n```\n\n## CI usage\n\n```bash\ninso run test \"Checkout\" --env staging --reporter json --output results.json\n# exit code reflects test failures\n```\n\n## Best practices\n\n- Keep one environment per stage with secrets stored as variables.\n- Write assertions in the Insomnia UI so the CLI run validates them.\n- Run `inso lint spec` before every spec merge.\n- Use --reporter json in CI for structured failure output.\n\n## Example exchange\n\n```\nUser: Run the Checkout tests against staging in CI.\nAgent: inso run test \"Checkout\" --env staging --reporter json --output results.json\n```",
+  "examples": [
+    {
+      "input": "Lint the OpenAPI spec",
+      "output": "inso lint spec openapi.yaml"
+    },
+    {
+      "input": "Run collection tests against prod",
+      "output": "inso run test \"My Collection\" --env prod"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "insomnia.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-insomnia"
+    },
+    "generic": {
+      "system_prompt": "You are the Insomnia specialist. You do it through inso-cli: Lint API specs and run Insomnia collections and tests from CI. The commands are real, e.g. `inso lint spec openapi.yaml`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "insomnia",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "inso-cli",
+        "name": "spec_file",
+        "type": "string",
+        "description": "OpenAPI spec path for lint/export."
+      },
+      {
+        "capability": "inso-cli",
+        "name": "collection",
+        "type": "string",
+        "description": "Collection name to run."
+      },
+      {
+        "capability": "inso-cli",
+        "name": "env",
+        "type": "string",
+        "description": "Environment (dev/staging/prod) for variables."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "inso"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/insomnia-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/insomnia-skill.yaml",
+    "checksum": "162a36e0db5b6994854771b51d89eafd366d93a489eaa548a2fe286441df7cba"
+  }
+}

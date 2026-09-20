@@ -1,0 +1,208 @@
+{
+  "name": "api-documentation-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Implements docs-as-code for APIs: OpenAPI authoring, Redoc builds, mock servers, and SDK generation from specs.",
+  "keywords": [
+    "api-documentation",
+    "openapi",
+    "swagger",
+    "redoc",
+    "sdk-generation"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-documentation-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-documentation-engineer"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: api-documentation-engineer. You do it through docs-as-code: Author specs in Git, validate, bundle, and build interactive docs. The commands are real, e.g. `npm install -g redoc-cli`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "docs-as-code",
+      "description": "Author specs in Git, validate, bundle, and build interactive docs",
+      "commands": [
+        "npm install -g redoc-cli",
+        "redoc-cli build openapi.yaml -o public/index.html",
+        "redoc-cli bundle openapi.yaml -o bundled.yaml",
+        "swagger-cli validate openapi.yaml",
+        "redoc-cli serve openapi.yaml"
+      ],
+      "examples": [
+        "redoc-cli build openapi.yaml -o public/index.html",
+        "swagger-cli validate openapi.yaml && redoc-cli build openapi.yaml -o public/index.html",
+        "redoc-cli serve openapi.yaml -p 8090"
+      ],
+      "parameters": [
+        {
+          "name": "spec",
+          "type": "string",
+          "description": "OpenAPI spec path"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "HTML output path"
+        }
+      ]
+    },
+    {
+      "name": "mock-and-sdk",
+      "description": "Stand up mock servers and generate SDKs from the spec",
+      "commands": [
+        "npm install -g @stoplight/prism-cli",
+        "prism mock openapi.yaml -p 4010",
+        "openapi-generator generate -i openapi.yaml -g typescript-fetch -o sdk/ts",
+        "openapi-generator generate -i openapi.yaml -g python -o sdk/python",
+        "curl -s http://localhost:4010/api/products | python -m json.tool"
+      ],
+      "examples": [
+        "prism mock openapi.yaml -p 4010 & curl -s http://localhost:4010/api/products | python -m json.tool",
+        "openapi-generator generate -i openapi.yaml -g typescript-fetch -o sdk/ts",
+        "openapi-generator generate -i openapi.yaml -g python --package-name store_api -o sdk/python"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "string",
+          "description": "Mock server port"
+        },
+        {
+          "name": "generator",
+          "type": "string",
+          "description": "SDK generator name"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "swagger-cli",
+    "redoc-cli",
+    "openapi-generator"
+  ],
+  "tools": [
+    "swagger-cli",
+    "redoc-cli",
+    "openapi-generator",
+    "stoplight-studio",
+    "postman"
+  ],
+  "examples": [
+    {
+      "input": "Generate OpenAPI spec from the Express API",
+      "output": "Extracts and validates the spec, builds Redoc HTML, and generates TS/Python SDKs"
+    },
+    {
+      "input": "Create interactive docs with try-it-out",
+      "output": "Deploys Redoc with prism-powered examples so developers can test endpoints from the docs"
+    }
+  ],
+  "instructions": "# API Documentation Engineer\n\nImplements a docs-as-code pipeline: spec in Git, docs generated in CI.\n\n## When to Use\n- Keeping docs in sync with code\n- Shipping interactive docs fast\n- Generating SDKs alongside docs\n\n## Real Commands\n\n```bash\n# Build docs\nnpm install -g redoc-cli\nredoc-cli build openapi.yaml -o public/index.html\n\n# Serve locally\nredoc-cli serve openapi.yaml -p 8090\n\n# Mock server\nnpm install -g @stoplight/prism-cli\nprism mock openapi.yaml -p 4010\ncurl -s http://localhost:4010/api/products | python -m json.tool\n\n# SDKs\nopenapi-generator generate -i openapi.yaml -g typescript-fetch -o sdk/ts\nopenapi-generator generate -i openapi.yaml -g python --package-name store_api -o sdk/python\n```\n\n## CI Pipeline\n1. Validate spec\n2. Build HTML\n3. Generate SDKs\n4. Publish to docs site\n\n## Testing\nWalk through the mock endpoints matching each documented example.\n\n## Best Practices\n- Never hand-edit generated HTML or SDKs\n- Review spec diffs in PRs",
+  "display_name": "api-documentation-engineer",
+  "knowledge": [
+    {
+      "title": "redoc-cli",
+      "type": "documentation",
+      "source": "https://github.com/Redocly/redoc/blob/master/cli/README.md",
+      "description": "Build and bundle docs from OpenAPI"
+    },
+    {
+      "title": "Prism CLI",
+      "type": "documentation",
+      "source": "https://meta.stoplight.io/docs/prism",
+      "description": "Mock and proxy servers"
+    }
+  ],
+  "id": "api-documentation-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "docs-as-code",
+        "name": "spec",
+        "type": "string",
+        "description": "OpenAPI spec path"
+      },
+      {
+        "capability": "docs-as-code",
+        "name": "output",
+        "type": "string",
+        "description": "HTML output path"
+      },
+      {
+        "capability": "mock-and-sdk",
+        "name": "port",
+        "type": "string",
+        "description": "Mock server port"
+      },
+      {
+        "capability": "mock-and-sdk",
+        "name": "generator",
+        "type": "string",
+        "description": "SDK generator name"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "swagger-cli",
+    "redoc-cli",
+    "openapi-generator"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-documentation-engineer/skill/api-documentation-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-documentation-engineer/skill/api-documentation-engineer.yaml",
+    "checksum": "2133434afcd7fba1e43c22bbc9aa96bc1b55c58c9310f48c8e2375bb292175f8"
+  }
+}

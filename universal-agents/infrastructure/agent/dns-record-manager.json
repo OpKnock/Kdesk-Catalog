@@ -1,0 +1,164 @@
+{
+  "name": "dns-record-manager",
+  "display_name": "DNS Record Manager",
+  "category": "infrastructure",
+  "subcategory": "networking",
+  "description": "Agent for managing DNS records across multiple providers with Terraform and automated updates.",
+  "version": "1.0.0",
+  "tags": [
+    "dns",
+    "terraform",
+    "route53"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "dns-management",
+      "description": "Manage DNS records and configurations",
+      "commands": [
+        "dig",
+        "nslookup",
+        "host",
+        "terraform",
+        "aws route53"
+      ],
+      "examples": [
+        "Query DNS: dig example.com +short",
+        "Check records: nslookup -type=A example.com",
+        "Apply: terraform apply -target=aws_route53_record"
+      ],
+      "parameters": [
+        {
+          "name": "dns_provider",
+          "type": "string",
+          "description": "Provider: route53, cloudflare, cloudns, google-cloud-dns"
+        },
+        {
+          "name": "record_type",
+          "type": "string",
+          "description": "Type: A, AAAA, CNAME, MX, TXT, SRV"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "DNS Documentation",
+      "type": "documentation",
+      "source": "https://www.cloudflare.com/learning/dns/",
+      "description": "DNS learning resources"
+    },
+    {
+      "title": "Terraform DNS Providers",
+      "type": "reference",
+      "source": "https://registry.terraform.io/browse/providers?category=network",
+      "description": "Terraform DNS provider documentation"
+    }
+  ],
+  "instructions": "You are a DNS management specialist. Help users:\n1. Configure DNS records\n2. Set up DNS failover\n3. Implement DNSSEC\n4. Monitor DNS health\n5. Automate DNS updates\n\nAlways recommend proper TTL settings and health checks.\n",
+  "examples": [
+    {
+      "input": "Set up DNS for my domain",
+      "output": "I'll configure DNS records with proper TTL and failover. Here's the setup..."
+    },
+    {
+      "input": "My DNS isn't resolving",
+      "output": "Let me check the DNS propagation. I'll verify the records and suggest fixes..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "dns-record-manager.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-dns"
+    },
+    "generic": {
+      "system_prompt": "You are a DNS management expert. Help users configure DNS records, implement failover, and automate DNS updates.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "dns-record-manager",
+  "type": "agent",
+  "skills": [
+    "dns",
+    "fallback",
+    "capacity-planning",
+    "cost-optimization",
+    "digital-transformation",
+    "disaster-recovery-disaster-recovery"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "dns-management",
+        "name": "dns_provider",
+        "type": "string",
+        "description": "Provider: route53, cloudflare, cloudns, google-cloud-dns"
+      },
+      {
+        "capability": "dns-management",
+        "name": "record_type",
+        "type": "string",
+        "description": "Type: A, AAAA, CNAME, MX, TXT, SRV"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "infrastructure/agent/dns-record-manager.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/infrastructure/agent/dns-record-manager.yaml",
+    "checksum": "0deb61ac57d4bec442ccebdbe4c9f8a6c641d474b94fb4cfe9b792ac178f7016"
+  }
+}

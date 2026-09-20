@@ -1,0 +1,111 @@
+name: firebase-analytics
+display_name: Firebase Analytics
+category: api
+subcategory: general
+description: 'Firebase Analytics operations: export events, query event data from BigQuery, manage measurement
+  settings, and debug event flows with the Firebase CLI.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- firebase
+- gcloud
+capabilities:
+- name: analytics-ops
+  description: Manage Firebase Analytics projects, export data, and query events.
+  commands:
+  - firebase projects:list
+  - firebase analytics:export
+  - bq query --use_legacy_sql=false 'SELECT event_name, COUNT(*) AS cnt FROM `project.analytics_123456.events_*`
+    WHERE _TABLE_SUFFIX = FORMAT_DATE("%Y%m%d", CURRENT_DATE()) GROUP BY event_name ORDER BY cnt DESC
+    LIMIT 20'
+  - firebase analytics:data:events
+  - gcloud firebase analytics --help
+  examples:
+  - bq query --use_legacy_sql=false 'SELECT event_name, COUNT(*) AS cnt FROM `project.analytics_123456.events_*`
+    WHERE _TABLE_SUFFIX = FORMAT_DATE("%Y%m%d", CURRENT_DATE()) GROUP BY event_name ORDER BY cnt DESC
+    LIMIT 20'
+  - firebase analytics:export
+  - firebase projects:list
+  parameters:
+  - name: project-id
+    type: string
+    description: Firebase project id
+  - name: dataset-id
+    type: string
+    description: BigQuery dataset holding analytics events
+  - name: date
+    type: string
+    description: YYYYMMDD date suffix for events tables
+knowledge:
+- title: Firebase Analytics docs
+  type: documentation
+  source: https://firebase.google.com/docs/analytics
+  description: Event collection, conversions, and audiences
+- title: Analytics BigQuery export
+  type: documentation
+  source: https://firebase.google.com/docs/analytics/bigquery-export
+  description: Schema and query patterns for the events_* dataset
+instructions: "# Firebase Analytics\n\n## What this skill does\n\nFirebase Analytics collects app and\
+  \ web events automatically. Power users export raw events to BigQuery and run SQL against `events_*`\
+  \ tables for custom reporting beyond the console.\n\n## When to use\n\n- Verifying events fire correctly\
+  \ after a release\n- Building custom funnels or user cohorts in BigQuery\n- Setting up export before\
+  \ analytics dashboards go live\n\n## Real commands\n\n```bash\n# Project context\nfirebase projects:list\n\
+  \n# Trigger/verify the BigQuery export\nfirebase analytics:export\n\n# Top events today from BigQuery\n\
+  bq query --use_legacy_sql=false 'SELECT event_name, COUNT(*) AS cnt FROM `project.analytics_123456.events_*`\
+  \ WHERE _TABLE_SUFFIX = FORMAT_DATE(\"%Y%m%d\", CURRENT_DATE()) GROUP BY event_name ORDER BY cnt DESC\
+  \ LIMIT 20'\n\n# Recent raw events for debugging\nbq query --use_legacy_sql=false 'SELECT event_date,\
+  \ event_timestamp, event_name, user_pseudo_id FROM `project.analytics_123456.events_*` WHERE event_name\
+  \ = \"add_to_cart\" ORDER BY event_timestamp DESC LIMIT 10'\n```\n\n## Common queries\n\n```sql\n--\
+  \ Funnel: view_item -> add_to_cart -> begin_checkout -> purchase\nSELECT\n  COUNTIF(event_name = 'view_item')\
+  \ AS viewed,\n  COUNTIF(event_name = 'add_to_cart') AS added,\n  COUNTIF(event_name = 'begin_checkout')\
+  \ AS checked,\n  COUNTIF(event_name = 'purchase') AS purchased\nFROM `project.analytics_123456.events_*`\n\
+  WHERE _TABLE_SUFFIX >= FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY))\n```\n\n## Testing\n\
+  \n```bash\n# Fire a debug event and watch it appear in BigQuery (allow ~10-60 min latency)\nbq query\
+  \ --use_legacy_sql=false 'SELECT COUNT(*) FROM `project.analytics_123456.events_*` WHERE event_name\
+  \ = \"test_event\"'\n```\n\n## Best practices\n\n- Enable BigQuery export at project setup; backfills\
+  \ are manual after that.\n- Always filter on `_TABLE_SUFFIX` (dates) to keep queries cheap.\n- Use `event_timestamp`\
+  \ (microseconds) not event_date for ordering.\n- Check the console's DebugView for real-time validation,\
+  \ BigQuery for reporting.\n"
+examples:
+- input: Are my purchase events reaching BigQuery?
+  output: Run a query counting event_name='purchase' over the last 7 days with _TABLE_SUFFIX filtering,
+    and confirm the SDK event name matches exactly.
+- input: Set up analytics export for a new project
+  output: Enable the BigQuery export in the console, run firebase analytics:export, and confirm events_*
+    tables appear in the dataset.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: firebase-analytics.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-firebase-analytics
+  generic:
+    system_prompt: 'This is your domain: Firebase Analytics. You do it through analytics-ops: Manage Firebase
+      Analytics projects, export data, and query events. The commands are real, e.g. `firebase projects:list`.
+      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

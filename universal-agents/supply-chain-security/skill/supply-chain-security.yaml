@@ -1,0 +1,151 @@
+name: supply-chain-security-supply-chain-security
+version: 2.0.0
+type: skill
+category: security
+description: Secures the software supply chain with dependency auditing, SBOM generation, signing, and
+  provenance verification across ecosystems.
+keywords:
+- supply-chain-security
+- sbom
+- provenance
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: supply-chain-security-supply-chain-security.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-supply-chain-security
+  generic:
+    system_prompt: 'You take the supply-chain-security-supply-chain-security seat. You do it through dependency-auditing:
+      Audit dependencies across package ecosystems. The commands are real, e.g. `npm audit --json`. You
+      run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: dependency-auditing
+  description: Audit dependencies across package ecosystems.
+  commands:
+  - npm audit --json
+  - npm audit fix --force
+  - pip-audit
+  - govulncheck ./...
+  - cargo audit
+  examples:
+  - npm audit --audit-level=high
+  - pip-audit -r requirements.txt
+  - govulncheck ./...
+  parameters:
+  - name: ecosystem
+    type: string
+    description: 'Ecosystem: npm, pip, go, cargo, maven'
+  - name: auditLevel
+    type: string
+    description: Minimum severity for npm audit exit code
+- name: sbom-and-signing
+  description: Generate SBOMs and sign artifacts for provenance.
+  commands:
+  - syft . -o cyclonedx-json > sbom.cdx.json
+  - cosign generate-key-pair
+  - cosign sign --key cosign.key ghcr.io/org/app:latest
+  - cosign attest --key cosign.key --type slsaprovenance --predicate provenance.json ghcr.io/org/app:latest
+  - slsa-verifier verify-artifact dist.tgz --provenance-path dist.intoto.jsonl --source-uri github.com/org/repo
+  examples:
+  - syft . -o cyclonedx-json > sbom.cdx.json
+  - cosign sign --key cosign.key ghcr.io/org/app:latest
+  - slsa-verifier verify-artifact dist.tgz --provenance-path dist.intoto.jsonl --source-uri github.com/org/repo
+  parameters:
+  - name: image
+    type: string
+    description: Image reference to sign
+  - name: sbomFormat
+    type: string
+    description: 'SBOM format: cyclonedx, spdx'
+- name: vuln-scanning
+  description: Scan repos and dependencies for known vulnerabilities.
+  commands:
+  - trivy fs --scanners vuln,secret,config .
+  - osv-scanner scan -r .
+  - safety check -r requirements.txt
+  - dependabot CLI
+  examples:
+  - trivy fs --scanners vuln,secret .
+  - osv-scanner scan -r .
+  - safety check -r requirements.txt
+  parameters:
+  - name: recursive
+    type: boolean
+    description: Scan recursively (osv-scanner -r)
+  - default: vuln,secret,config
+    description: 'Trivy scanners to enable: vuln, secret, config, license.'
+    name: scanner
+    type: string
+prerequisites:
+- syft
+- grype
+- cosign
+- sigstore
+tools:
+- syft
+- grype
+- cosign
+- sigstore
+- snyk
+examples:
+- input: Audit my Node repo's supply chain
+  output: Agent runs npm audit, trivy fs --scanners vuln,secret, and osv-scanner, then ranks findings
+    by severity with fix versions.
+- input: Meet SLSA Level 3 for our releases
+  output: Agent wires SBOM generation, cosign signing, and slsa-verifier verification into the release
+    pipeline and validates the flow.
+instructions: "# Supply Chain Security\n\nProtect the software supply chain from dependency to deployment.\n\
+  \n## What This Skill Does\n\n- Audits dependencies for known vulnerabilities per ecosystem\n- Generates\
+  \ SBOMs in standard formats\n- Signs artifacts and images for tamper evidence\n- Verifies provenance\
+  \ before deployment\n\n## When to Use\n\n- Onboarding dependency scanning for a repo\n- Meeting SLSA/Sigstore\
+  \ requirements\n- Auditing third-party dependencies\n\n## Real Commands\n\n```bash\n# Audit dependencies\n\
+  npm audit --audit-level=high\npip-audit -r requirements.txt\ngovulncheck ./...\ncargo audit\n\n# Scan\
+  \ for vulns incl. secrets\n trivy fs --scanners vuln,secret,config .\nosv-scanner scan -r .\n\n# SBOM\
+  \ + signing\nsyft . -o cyclonedx-json > sbom.cdx.json\ncosign sign --key cosign.key ghcr.io/org/app:latest\n\
+  cosign attest --key cosign.key --type slsaprovenance --predicate provenance.json ghcr.io/org/app:latest\n\
+  \n# Verify\nslsa-verifier verify-artifact dist.tgz \\\n  --provenance-path dist.intoto.jsonl --source-uri\
+  \ github.com/org/repo\n```\n\n## Pipeline Shape\n\n```yaml\nstages:\n  audit: [npm audit, pip-audit]\n\
+  \  sbom: [syft . -o cyclonedx-json > sbom.cdx.json]\n  sign: [cosign sign --key cosign.key image]\n\
+  \  verify: [slsa-verifier verify-artifact dist.tgz --provenance-path ...]\n```\n\n## Best Practices\n\
+  \n- Pin dependencies to lockfiles and review updates\n- Scan at PR time; re-scan before release\n- Generate\
+  \ and store SBOMs with every release artifact\n- Sign releases with cosign and verify at deploy\n- Use\
+  \ Dependabot/Renovate for automated update PRs"
+display_name: supply-chain-security-supply-chain-security
+knowledge:
+- title: SLSA Framework
+  type: documentation
+  source: https://slsa.dev/
+  description: Supply chain integrity levels and requirements
+- title: Sigstore Documentation
+  type: documentation
+  source: https://docs.sigstore.dev/
+  description: Signing and verification with cosign
+- title: OSV Scanner
+  type: documentation
+  source: https://google.github.io/osv-scanner/
+  description: Open source vulnerability scanning for deps

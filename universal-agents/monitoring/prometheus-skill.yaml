@@ -1,0 +1,206 @@
+name: prometheus-monitoring-2
+display_name: prometheus-monitoring-2
+category: monitoring
+subcategory: general
+description: 'Queries Prometheus for live monitoring: PromQL, the HTTP API, targets health, and ad-hoc
+  alert inspection.'
+version: 2.0.0
+tags:
+- monitoring
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: api-query
+  description: Query Prometheus data with the HTTP API.
+  commands:
+  - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=up'
+  - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=rate(http_requests_total[5m])'
+  - curl -G http://localhost:9090/api/v1/query_range --data-urlencode 'query=node_cpu_seconds_total' --data-urlencode
+    'start=1750000000' --data-urlencode 'end=1750086400' --data-urlencode 'step=60'
+  - curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | {scrapeUrl, health}'
+  - 'curl -s http://localhost:9090/api/v1/alerts | jq ''.data.alerts[] | {name: .labels.alertname, state}'''
+  examples:
+  - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m]))
+    * 100)'
+  - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))'
+    | jq '.data.result'
+  - curl -s http://localhost:9090/api/v1/targets | jq '[.data.activeTargets[] | select(.health=="down")]
+    | length'
+  parameters:
+  - name: query
+    type: string
+    description: PromQL expression
+  - name: step
+    type: number
+    description: Query range step in seconds
+  - name: timeout
+    type: string
+    description: Query timeout
+- name: promql
+  description: Write and validate PromQL for dashboards and alerts.
+  commands:
+  - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=sum by (job) (rate(http_requests_total[5m]))'
+  - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=sum(rate(container_cpu_usage_seconds_total[5m]))
+    by (namespace)'
+  - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=changes(process_start_time_seconds{job="api"}[15m])
+    > 0'
+  - curl -s http://localhost:9090/api/v1/labels | jq '.data'
+  - curl -G http://localhost:9090/api/v1/series --data-urlencode 'match[]=up' | jq '.data | length'
+  examples:
+  - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=rate(node_network_receive_bytes_total[5m])'
+  - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=sum(rate(http_requests_total{status=~"5.."}[5m]))
+    / sum(rate(http_requests_total[5m]))' | jq '.data.result[0].value[1]'
+  - curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=topk(5, sum by (job) (rate(http_requests_total[5m])))'
+  parameters:
+  - name: match
+    type: string
+    description: Series matcher for /series
+  - name: labels
+    type: string
+    description: Label name to list values
+  - name: topk
+    type: number
+    description: Top-N aggregation
+knowledge:
+- title: Prometheus Querying
+  type: documentation
+  source: https://prometheus.io/docs/prometheus/latest/querying/basics/
+  description: PromQL basics, vectors, and functions
+- title: Prometheus HTTP API
+  type: documentation
+  source: https://prometheus.io/docs/prometheus/latest/querying/api/
+  description: query, query_range, targets, alerts endpoints
+- title: Querying examples
+  type: documentation
+  source: https://prometheus.io/docs/prometheus/latest/querying/examples/
+  description: Common PromQL recipes
+instructions: '# Prometheus Monitoring
+
+
+  Answer live monitoring questions directly from the API.
+
+
+  ## When to Use
+
+
+  - On-call queries during incidents
+
+  - Validating dashboards and alerts
+
+  - Auditing target health
+
+
+  ## Target health
+
+
+  ```bash
+
+  curl -s http://localhost:9090/api/v1/targets | jq ''.data.activeTargets[] | {scrapeUrl, health}''
+
+  ```
+
+
+  ## Instant queries
+
+
+  ```bash
+
+  curl -G http://localhost:9090/api/v1/query --data-urlencode ''query=up{job="api"}''
+
+  curl -G http://localhost:9090/api/v1/query --data-urlencode ''query=rate(http_requests_total[5m])''
+
+  ```
+
+
+  ## Range queries
+
+
+  ```bash
+
+  curl -G http://localhost:9090/api/v1/query_range --data-urlencode ''query=node_memory_Active_bytes''
+  --data-urlencode ''start=...'' --data-urlencode ''end=...'' --data-urlencode ''step=60''
+
+  ```
+
+
+  ## Common recipes
+
+
+  - CPU: `100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)`
+
+  - Error rate: `sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))`
+
+  - Restarts: `changes(process_start_time_seconds[15m]) > 0`
+
+  - p99: `histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))`
+
+
+  ## Alerts
+
+
+  ```bash
+
+  curl -s http://localhost:9090/api/v1/alerts | jq ''.data.alerts[] | {name: .labels.alertname, state}''
+
+  ```
+
+
+  ## Best practices
+
+
+  - Prefer rates over raw counters in dashboards.
+
+  - Use recording rules for expensive queries.
+
+  - Check label cardinality quarterly via /api/v1/series.
+
+  - Timeout every ad-hoc query to avoid long API hangs.
+
+
+  ## Testing
+
+
+  ```bash
+
+  curl -G http://localhost:9090/api/v1/query --data-urlencode ''query=up'' | jq ''.data.result | length''
+
+  ```
+
+
+  Assert expected target counts after config changes.'
+examples:
+- input: Is the API still serving traffic after the deploy?
+  output: Queries rate(http_requests_total[5m]) and target health, and compares with the previous 15 minutes.
+- input: Which targets are down right now?
+  output: Filters activeTargets by health==down and lists their scrape URLs.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: prometheus-monitoring-2.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-prometheus
+  generic:
+    system_prompt: 'You are the prometheus-monitoring-2 specialist. You do it through api-query: Query
+      Prometheus data with the HTTP API. The commands are real, e.g. `curl -G http://localhost:9090/api/v1/query
+      --data-urlencode query=up`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,171 @@
+{
+  "name": "thrift",
+  "display_name": "Thrift",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Apache Thrift skill: IDL authoring, code generation across languages, strict parsing, and service/client file layout.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "thrift"
+  ],
+  "capabilities": [
+    {
+      "name": "thrift-codegen",
+      "description": "Compile Thrift IDL to client/server code in many languages",
+      "commands": [
+        "thrift --version",
+        "thrift --gen py shared.thrift",
+        "thrift -r --gen go calculator.thrift",
+        "thrift -r --gen java --out gen/java calculator.thrift",
+        "thrift --gen py -out gen/ --strict calculator.thrift"
+      ],
+      "examples": [
+        "thrift -r --gen go calculator.thrift",
+        "thrift --gen py shared.thrift",
+        "thrift -r --gen js:node calculator.thrift"
+      ],
+      "parameters": [
+        {
+          "name": "language",
+          "type": "string",
+          "description": "Target language generator, e.g. py, go, java, cpp"
+        },
+        {
+          "name": "idl_file",
+          "type": "string",
+          "description": "Input .thrift file"
+        },
+        {
+          "name": "out_dir",
+          "type": "string",
+          "description": "Output directory with --out"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Thrift IDL docs",
+      "type": "documentation",
+      "source": "https://thrift.apache.org/docs/idl",
+      "description": "Namespaces, structs, services, exceptions"
+    },
+    {
+      "title": "Thrift compiler",
+      "type": "documentation",
+      "source": "https://thrift.apache.org/docs/UsingThrift",
+      "description": "Code generation workflow and generators"
+    }
+  ],
+  "instructions": "# Apache Thrift\n\nHand-crafted skill for cross-language RPC with Apache Thrift.\n\n## What this skill does\n\n- Writes .thrift IDL files with structs, enums, and services\n- Generates code for Python, Go, Java, Node, and more\n- Runs strict mode to catch ambiguous IDL early\n\n## When to use\n\n- Polyglot teams sharing one RPC contract\n- Legacy services already speaking Thrift\n- When protobuf/gRPC tooling is not an option\n\n## Real commands\n\n```bash\n# Check the compiler\nthrift --version\n\n# Python client/server code\nthrift --gen py shared.thrift\n\n# Go (include included files with -r)\nthrift -r --gen go calculator.thrift\n\n# Java into a specific dir\nthrift -r --gen java --out gen/java calculator.thrift\n\n# Node\nthrift -r --gen js:node calculator.thrift\n\n# Strict parsing: unknown fields and sloppy includes fail\nthrift --gen py -out gen/ --strict calculator.thrift\n```\n\n## IDL example\n\n```thrift\nnamespace py calculator\nnamespace go calculator\n\nenum Operation {\n  ADD = 1,\n  SUBTRACT = 2\n}\n\nstruct Work {\n  1: i32 num1,\n  2: i32 num2,\n  3: Operation op\n}\n\nexception InvalidOperation {\n  1: i32 code,\n  2: string why\n}\n\nservice Calculator {\n  i32 calculate(1: Work w) throws (1: InvalidOperation e),\n  oneway void ping()\n}\n```\n\n## Testing\n\n```bash\nthrift -r --gen py calculator.thrift && ls -R gen-py\nthrift --gen py --strict calculator.thrift\n```\n\n## Best practices\n\n- Keep one .thrift per bounded domain, include shared definitions\n- Never renumber fields: wire compatibility depends on IDs\n- Generate at build time and pin the thrift compiler version\n",
+  "examples": [
+    {
+      "input": "Generate Go code from my IDL",
+      "output": "thrift -r --gen go calculator.thrift produces gen-go/ with service stubs and struct types."
+    },
+    {
+      "input": "Add a new method to the service",
+      "output": "Add the method to the service block in the .thrift file and regenerate all clients and servers."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "thrift.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-thrift"
+    },
+    "generic": {
+      "system_prompt": "You work Thrift hands-on. You do it through thrift-codegen: Compile Thrift IDL to client/server code in many languages. The commands are real, e.g. `thrift --version`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "thrift",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "thrift-codegen",
+        "name": "language",
+        "type": "string",
+        "description": "Target language generator, e.g. py, go, java, cpp"
+      },
+      {
+        "capability": "thrift-codegen",
+        "name": "idl_file",
+        "type": "string",
+        "description": "Input .thrift file"
+      },
+      {
+        "capability": "thrift-codegen",
+        "name": "out_dir",
+        "type": "string",
+        "description": "Output directory with --out"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "thrift"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/thrift-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/thrift-skill.yaml",
+    "checksum": "48e4c9508e44ab69421acd19026965bd875a261fb0a53f84dc35070cf33c69c3"
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "name": "api-perf-autocannon",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Analyzes API latency distribution and connection behavior with autocannon, artillery quick mode, and request-level timing to separate network from application cost.",
+  "keywords": [
+    "api-perf-autocannon"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-perf-autocannon.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-perf-autocannon"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Api Perf Autocannon. You do it through autocannon: Run pipelined HTTP benchmarks with full statistics. The commands are real, e.g. `npx autocannon -c 20 -d 30 -p 1 http://localhost:3000/`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "autocannon",
+      "description": "Run pipelined HTTP benchmarks with full statistics",
+      "commands": [
+        "npx autocannon -c 20 -d 30 -p 1 http://localhost:3000/",
+        "npx autocannon -c 10 -d 20 -m POST -b '{\"a\":1}' -H 'Content-Type=application/json' http://localhost:3000/api",
+        "npx autocannon -c 20 -d 30 --json http://localhost:3000/ > results.json",
+        "npx autocannon --renderStatusCodes -c 20 -d 10 http://localhost:3000/"
+      ],
+      "examples": [
+        "autocannon -p 1 disables pipelining for realistic latency",
+        "--json emits machine-readable results for charts",
+        "--renderStatusCodes shows the status code mix"
+      ],
+      "parameters": [
+        {
+          "name": "connections",
+          "type": "integer",
+          "description": "Number of concurrent connections"
+        },
+        {
+          "name": "duration",
+          "type": "integer",
+          "description": "Duration in seconds"
+        },
+        {
+          "name": "pipelining",
+          "type": "integer",
+          "description": "Pipelined requests per connection"
+        }
+      ]
+    },
+    {
+      "name": "artillery-quick",
+      "description": "Use artillery quick for ad-hoc load scenarios",
+      "commands": [
+        "npx artillery quick -d 30 -r 20 http://localhost:3000/api",
+        "npx artillery quick --count 50 --num 20 https://api.example.com/users",
+        "npx artillery quick -d 60 -r 50 -o report.json http://localhost:3000/"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "redis",
+    "k6"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "redis",
+    "k6",
+    "new-relic"
+  ],
+  "examples": [
+    {
+      "input": "Did adding gzip improve p95?",
+      "output": "Runs autocannon before/after and compares the p95 rows"
+    },
+    {
+      "input": "Quick load check before demo",
+      "output": "Runs artillery quick at 50 rps for 60s and reviews the report"
+    }
+  ],
+  "instructions": "# API Perf v4 - Latency Analysis\n\nLatency distribution analysis with autocannon.\n\n## What This Skill Does\n- Measures latency percentiles with pipelining control\n- Produces JSON artifacts for trend tracking\n- Drives ad-hoc loads with artillery quick\n\n## When to Use\n- Verifying latency improvements after a fix\n- Comparing request sizes and connection reuse\n- Ad-hoc load checks without writing scripts\n\n## Real Commands\n\n```bash\nnpx autocannon -c 20 -d 30 -p 1 http://localhost:3000/\nnpx autocannon --json http://localhost:3000/ > results.json\nnpx artillery quick -d 30 -r 20 http://localhost:3000/api\n```\n\n## Interpreting Output\n- avg/max: central and worst-case latency\n- p1-p99: full distribution shape\n- errors: connection and timeout failures\n- requests/sec: achieved throughput\n\n## Testing\n- Repeat runs 3x and compare medians\n- Vary payload size to expose serialization cost\n- Test HTTP/1.1 vs HTTP/2 if both available\n\n## Best Practices\n- Keep -p 1 for mobile-like latency measurements\n- Persist JSON outputs per build for regression charts\n- Correlate latency shifts with deploy timestamps",
+  "display_name": "Api Perf Autocannon",
+  "knowledge": [
+    {
+      "title": "autocannon GitHub",
+      "type": "documentation",
+      "source": "https://github.com/mcollina/autocannon",
+      "description": "Fast HTTP/1.1 benchmarking tool"
+    },
+    {
+      "title": "Artillery Quick Docs",
+      "type": "documentation",
+      "source": "https://www.artillery.io/docs/guides/getting-started/overview",
+      "description": "Load testing with quick and YAML scenarios"
+    }
+  ],
+  "id": "api-perf-autocannon",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "autocannon",
+        "name": "connections",
+        "type": "integer",
+        "description": "Number of concurrent connections"
+      },
+      {
+        "capability": "autocannon",
+        "name": "duration",
+        "type": "integer",
+        "description": "Duration in seconds"
+      },
+      {
+        "capability": "autocannon",
+        "name": "pipelining",
+        "type": "integer",
+        "description": "Pipelined requests per connection"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "redis",
+    "k6"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-perf-autocannon/skill/api-perf-autocannon.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-perf-autocannon/skill/api-perf-autocannon.yaml",
+    "checksum": "831a13e972422476d7d1a2cc4f8f26f6639c2ee475782b2c70aa32e70a27c227"
+  }
+}

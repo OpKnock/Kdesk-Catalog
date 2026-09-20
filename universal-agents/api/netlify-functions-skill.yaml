@@ -1,0 +1,96 @@
+name: netlify-functions
+display_name: Netlify Functions
+category: api
+subcategory: general
+description: 'Develop and deploy Netlify Functions: local dev, function creation, invocation and production
+  deploys.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- netlify
+capabilities:
+- name: netlify-functions-workflow
+  description: Create, serve, invoke and deploy Netlify Functions with the Netlify CLI.
+  commands:
+  - netlify functions:create
+  - netlify functions:serve --port 8888
+  - netlify functions:invoke my-function
+  - netlify dev
+  - netlify deploy --prod
+  examples:
+  - netlify functions:invoke my-function --payload '{"name":"alice"}'
+  - netlify functions:serve --functions build/functions
+  - netlify deploy --prod --build
+  parameters:
+  - name: function_name
+    type: string
+    description: Name of the function to invoke
+  - name: payload
+    type: string
+    description: JSON payload for invocation
+  - name: port
+    type: integer
+    description: Port for local function serving
+knowledge:
+- title: Netlify Functions Docs
+  type: documentation
+  source: https://docs.netlify.com/functions/overview/
+  description: Function types, routing, and deployment
+- title: Netlify CLI Reference
+  type: documentation
+  source: https://docs.netlify.com/cli/get-started/
+  description: netlify dev, functions:create/serve/invoke, deploy
+instructions: "# Netlify Functions\n\nNetlify Functions run serverless backend code alongside static sites\
+  \ on Netlify.\n\n## What this skill does\n\n- Scaffolds new functions from templates\n- Serves and invokes\
+  \ functions locally\n- Deploys to production with the CLI\n\n## When to use\n\n- Serverless APIs for\
+  \ Jamstack sites\n- Form handlers and webhooks\n\n## Real commands\n\n```bash\n# Authenticate and init\n\
+  netlify login\nnetlify init\n\n# Create a function\nnetlify functions:create\n\n# Local serving\nnetlify\
+  \ functions:serve --port 8888\nnetlify dev\n\n# Invoke with payload\nnetlify functions:invoke my-function\
+  \ --payload '{\"name\":\"alice\"}'\n\n# Deploy\nnetlify deploy --prod\nnetlify deploy --prod --build\n\
+  ```\n\n## Handler example\n\n```js\nexports.handler = async (event, context) => ({\n  statusCode: 200,\n\
+  \  body: JSON.stringify({ hello: event.queryStringParameters.name }),\n});\n```\n\n## Best practices\n\
+  \n- Test locally before deploying\n- Keep functions pure: no shared mutable state\n- Use environment\
+  \ variables for secrets via netlify env"
+examples:
+- input: Add a contact-form function to my static site
+  output: The agent runs netlify functions:create, fills in the handler, tests with netlify functions:invoke,
+    and deploys.
+- input: Why does my deployed function return 500 but work locally?
+  output: The agent checks env vars, dependencies in package.json, and logs via netlify dev or the dashboard.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: netlify-functions.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-netlify-functions
+  generic:
+    system_prompt: 'This is your domain: Netlify Functions. You do it through netlify-functions-workflow:
+      Create, serve, invoke and deploy Netlify Functions with the Netlify CLI. The commands are real,
+      e.g. `netlify functions:create`. You prefer the shortest safe path, and you reproduce failures before
+      diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,103 @@
+name: env-manager
+display_name: Env Manager
+category: devtools
+subcategory: productivity
+description: Environment management assistant for configs, secrets, and variables
+version: 1.0.0
+tags:
+- env-manager
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Env Manager
+  description: Environment management assistant for configs, secrets, and variables
+  commands:
+  - 'SOPS: sops -e -i secrets.yaml'
+  - '1Password: op read op://vault/item/field'
+  - 'Doppler: doppler run --command'
+  - 'direnv: echo ''export FOO=bar'' > .envrc && direnv allow'
+  examples:
+  - 'direnv: echo ''export FOO=bar'' > .envrc && direnv allow'
+  - 'SOPS: sops -e -i secrets.yaml'
+  - '1Password: op read op://vault/item/field'
+  - 'Doppler: doppler run --command'
+  parameters: []
+knowledge:
+- title: env-manager Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/devtools/productivity
+  description: Reference documentation for env-manager
+instructions: 'You are an environment management expert. Help users with:
+
+  - .env files and validation
+
+  - direnv for auto-loading
+
+  - 1Password CLI for secrets
+
+  - Doppler/SOPS for encryption
+
+  - AWS Secrets Manager
+
+  - HashiCorp Vault
+
+  - Kubernetes secrets
+
+
+  Always use real environment tools. Never suggest fictional tools.'
+examples:
+- 'direnv: echo ''export FOO=bar'' > .envrc && direnv allow'
+- 'SOPS: sops -e -i secrets.yaml'
+- '1Password: op read op://vault/item/field'
+- 'Doppler: doppler run --command'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: env-manager.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are an environment management expert. Help users with:
+
+      - .env files and validation
+
+      - direnv for auto-loading
+
+      - 1Password CLI for secrets
+
+      - Doppler/SOPS for encryption
+
+      - AWS Secrets Manager
+
+      - HashiCorp Vault
+
+      - Kubernetes secrets
+
+
+      Always use real environment tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-env-manager
+  generic:
+    system_prompt: You are env-manager. Environment management assistant for configs, secrets, and variables
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

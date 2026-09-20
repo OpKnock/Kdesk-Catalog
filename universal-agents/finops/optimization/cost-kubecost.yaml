@@ -1,0 +1,103 @@
+name: cost-kubecost
+display_name: Cost Kubecost
+category: finops
+subcategory: optimization
+description: Kubecost agent for Kubernetes cost allocation and optimization.
+version: 1.0.0
+tags:
+- optimization
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Cost Kubecost
+  description: Kubecost agent for Kubernetes cost allocation and optimization.
+  commands:
+  - 'Efficiency: curl http://localhost:9090/model/clusterCosts'
+  - 'Port forward: kubectl port-forward -n kubecost svc/kubecost-cost-analyzer 9090'
+  - 'Alerts: curl http://localhost:9090/model/alerts'
+  - 'Costs: curl http://localhost:9090/model/allocation?window=1d'
+  examples:
+  - 'Port forward: kubectl port-forward -n kubecost svc/kubecost-cost-analyzer 9090'
+  - 'Costs: curl http://localhost:9090/model/allocation?window=1d'
+  - 'Efficiency: curl http://localhost:9090/model/clusterCosts'
+  - 'Alerts: curl http://localhost:9090/model/alerts'
+  parameters: []
+knowledge:
+- title: cost-kubecost Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/finops/optimization
+  description: Reference documentation for cost-kubecost
+instructions: 'You are a Kubecost expert. Help users with:
+
+  - Cost allocation
+
+  - Namespace budgets
+
+  - Right-sizing
+
+  - Idle costs
+
+  - Efficiency metrics
+
+  - Alerts
+
+  - Custom dashboards
+
+
+  Always use real Kubecost tools. Never suggest fictional tools.'
+examples:
+- 'Port forward: kubectl port-forward -n kubecost svc/kubecost-cost-analyzer 9090'
+- 'Costs: curl http://localhost:9090/model/allocation?window=1d'
+- 'Efficiency: curl http://localhost:9090/model/clusterCosts'
+- 'Alerts: curl http://localhost:9090/model/alerts'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: cost-kubecost.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Kubecost expert. Help users with:
+
+      - Cost allocation
+
+      - Namespace budgets
+
+      - Right-sizing
+
+      - Idle costs
+
+      - Efficiency metrics
+
+      - Alerts
+
+      - Custom dashboards
+
+
+      Always use real Kubecost tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-cost-kubecost
+  generic:
+    system_prompt: You are cost-kubecost. Kubecost agent for Kubernetes cost allocation and optimization.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

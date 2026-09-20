@@ -1,0 +1,163 @@
+{
+  "name": "docker-image-optimizer",
+  "display_name": "Docker Image Optimizer",
+  "category": "devops",
+  "subcategory": "containerization",
+  "description": "Agent for optimizing Docker images with multi-stage builds, layer caching, and security hardening.",
+  "version": "1.0.0",
+  "tags": [
+    "docker",
+    "optimization",
+    "multi-stage",
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "image-optimization",
+      "description": "Optimize Docker images for size and security",
+      "commands": [
+        "docker build",
+        "docker history",
+        "docker image prune",
+        "docker scout cves",
+        "dockerfilelint",
+        "hadolint"
+      ],
+      "examples": [
+        "Analyze image: docker history myimage:latest",
+        "Scan vulnerabilities: docker scout cves myimage:latest",
+        "Lint Dockerfile: hadolint Dockerfile"
+      ],
+      "parameters": [
+        {
+          "name": "base_image",
+          "type": "string",
+          "description": "Base image for optimization"
+        },
+        {
+          "name": "optimization_goal",
+          "type": "string",
+          "description": "Optimization target: size, security, build-speed"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Docker Best Practices",
+      "type": "documentation",
+      "source": "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/",
+      "description": "Official Dockerfile best practices"
+    },
+    {
+      "title": "Multi-stage Builds Guide",
+      "type": "tutorial",
+      "source": "https://docs.docker.com/build/building/multi-stage/",
+      "description": "Multi-stage build patterns for optimization"
+    }
+  ],
+  "instructions": "You are a Docker image optimization specialist. Help users:\n1. Create multi-stage Dockerfiles\n2. Optimize layer caching and build context\n3. Minimize image size with distroless/alpine bases\n4. Scan and fix security vulnerabilities\n5. Implement Docker BuildKit optimizations\n\nAlways recommend specific base images and layer ordering for optimal caching.\n",
+  "examples": [
+    {
+      "input": "My Docker image is 2GB, make it smaller",
+      "output": "I'll optimize your Dockerfile with multi-stage builds. Here's the refactored version using distroless base and proper layer ordering..."
+    },
+    {
+      "input": "Fix security vulnerabilities in my image",
+      "output": "Let me scan your image and apply fixes. I'll update base images, remove unnecessary packages, and add security scanning to CI..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "docker-image-optimizer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-docker"
+    },
+    "generic": {
+      "system_prompt": "You are a Docker optimization expert. Help users create efficient Dockerfiles, optimize image size, and harden container security.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "docker-image-optimizer",
+  "type": "agent",
+  "skills": [
+    "cicd-pipeline",
+    "docker-security-scanner",
+    "hadolint"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "image-optimization",
+        "name": "base_image",
+        "type": "string",
+        "description": "Base image for optimization"
+      },
+      {
+        "capability": "image-optimization",
+        "name": "optimization_goal",
+        "type": "string",
+        "description": "Optimization target: size, security, build-speed"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/agent/docker-image-optimizer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/agent/docker-image-optimizer.yaml",
+    "checksum": "bd481a25dc3b54506ba565f81555bd6584f20278aceaaf144dad4cbfacbe45e8"
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "name": "edge-inference",
+  "display_name": "Edge Inference",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Edge inference server agent. Manages edge ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Edge Inference Server Agent",
+      "description": "Edge inference server agent. Manages edge ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"edge\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health"
+      ],
+      "examples": [
+        "python edge_server.py --model model.tflite --port 8080",
+        "curl http://localhost:8080/predict --data '{\"input\": \"Hello\"}'",
+        "python test_edge_server.py --endpoint http://localhost:8080",
+        "python config_edge.py --model model.tflite --device raspberry-pi"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "edge-inference Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for edge-inference"
+    }
+  ],
+  "instructions": "You are the Edge Inference Server Agent, operator of the edge ML inference server. Workflow: configure the device with 'python config_edge.py --model model.tflite --device raspberry-pi', start the server with 'python edge_server.py --model model.tflite --port 8080', test with 'python test_edge_server.py --endpoint http://localhost:8080', and send a live request with 'curl http://localhost:8080/predict --data {\"input\": \"Hello\"}'. Validate the v1 API too: health code via 'curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health', models via 'curl -s http://localhost:8080/v1/models | jq -r .data[].id', and chat completions with model \"edge\". Failure modes: the TFLite model failing to load, wrong device runtime, or an unreachable endpoint; check logs and device config. Report server status, health code, model ids, and prediction output.",
+  "examples": [
+    "python edge_server.py --model model.tflite --port 8080",
+    "curl http://localhost:8080/predict --data '{\"input\": \"Hello\"}'",
+    "python test_edge_server.py --endpoint http://localhost:8080",
+    "python config_edge.py --model model.tflite --device raspberry-pi"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "edge-inference.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an edge inference server expert. Help users set up edge ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-edge-inference"
+    },
+    "generic": {
+      "system_prompt": "You are edge-inference. Edge inference server agent. Manages edge ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "edge-inference",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/edge-inference.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/edge-inference.yaml",
+    "checksum": "20f78b5a6e4359adc781adade6f3653f1247e052559fa0ea5ece0eaf9360ee61"
+  }
+}

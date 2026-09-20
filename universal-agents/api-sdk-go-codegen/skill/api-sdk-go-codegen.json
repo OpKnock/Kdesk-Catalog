@@ -1,0 +1,187 @@
+{
+  "name": "api-sdk-go-codegen",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Generates Go SDKs with oapi-codegen: typed clients from OpenAPI, server stubs, config generation, and go test verification.",
+  "keywords": [
+    "api-sdk",
+    "sdk-generation"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-sdk-go-codegen.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-sdk-go-codegen"
+    },
+    "generic": {
+      "system_prompt": "You are the Api Sdk Go Codegen specialist. You do it through go-codegen: Generate Go client code from OpenAPI. The commands are real, e.g. `go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "go-codegen",
+      "description": "Generate Go client code from OpenAPI",
+      "commands": [
+        "go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest",
+        "oapi-codegen -package api -generate types,client -o client.gen.go openapi.yaml",
+        "oapi-codegen -package api -generate types,chi-server -o server.gen.go openapi.yaml",
+        "oapi-codegen -config oapi-codegen.yaml openapi.yaml",
+        "go build ./..."
+      ],
+      "examples": [
+        "-generate types,client emits a typed Go client",
+        "-generate chi-server emits a server stub",
+        "-config uses a YAML config file"
+      ],
+      "parameters": [
+        {
+          "name": "package",
+          "type": "string",
+          "description": "Go package name"
+        },
+        {
+          "name": "generate",
+          "type": "string",
+          "description": "Comma-separated generation targets"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output Go file"
+        }
+      ]
+    },
+    {
+      "name": "go-testing",
+      "description": "Test the generated Go client",
+      "commands": [
+        "go test ./...",
+        "go vet ./...",
+        "go mod tidy",
+        "go test -race ./..."
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "openapi-generator",
+    "node.js",
+    "python"
+  ],
+  "tools": [
+    "openapi-generator",
+    "node.js",
+    "python",
+    "typescript"
+  ],
+  "examples": [
+    {
+      "input": "Generate a Go client",
+      "output": "Runs oapi-codegen with types,client and builds the package"
+    },
+    {
+      "input": "Regenerate on spec change",
+      "output": "Reruns generation and tests with go test -race"
+    }
+  ],
+  "instructions": "# API SDK v4 - Go\n\nGo SDK generation with oapi-codegen.\n\n## What This Skill Does\n- Generates typed Go clients and servers\n- Configures generation via YAML\n- Validates with go build and tests\n\n## When to Use\n- Go services consuming the API\n- Generating server stubs for parity\n- Typed client SDKs\n\n## Real Commands\n\n```bash\ngo install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest\noapi-codegen -package api -generate types,client -o client.gen.go openapi.yaml\ngo build ./...\ngo test ./...\n```\n\n## Config File\n\n```yaml\npackage: api\noutput: gen/client.gen.go\ngenerate:\n  client: true\n  models: true\n  chi-server: true\n```\n\n## Testing\n- Compile after regeneration\n- Test client calls with httptest servers\n- Run go vet in CI\n\n## Best Practices\n- Commit generated files with release tags\n- Keep generation config in the repo\n- Regenerate before each release",
+  "display_name": "Api Sdk Go Codegen",
+  "knowledge": [
+    {
+      "title": "oapi-codegen",
+      "type": "documentation",
+      "source": "https://github.com/oapi-codegen/oapi-codegen",
+      "description": "Go code generation from OpenAPI"
+    },
+    {
+      "title": "Go Tooling",
+      "type": "documentation",
+      "source": "https://go.dev/doc/modules/",
+      "description": "Go modules reference"
+    }
+  ],
+  "id": "api-sdk-go-codegen",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "go-codegen",
+        "name": "package",
+        "type": "string",
+        "description": "Go package name"
+      },
+      {
+        "capability": "go-codegen",
+        "name": "generate",
+        "type": "string",
+        "description": "Comma-separated generation targets"
+      },
+      {
+        "capability": "go-codegen",
+        "name": "output",
+        "type": "string",
+        "description": "Output Go file"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "openapi-generator",
+    "node.js",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-sdk-go-codegen/skill/api-sdk-go-codegen.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-sdk-go-codegen/skill/api-sdk-go-codegen.yaml",
+    "checksum": "097038607dc089c968a678a4c5dcdbcdb2f22aa35f2bcc00b3d9a833e1a49497"
+  }
+}

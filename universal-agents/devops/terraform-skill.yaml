@@ -1,0 +1,194 @@
+name: terraform
+display_name: Terraform
+category: devops
+subcategory: general
+description: 'Writes and applies Terraform configurations: init, plan, apply, format, validate, workspaces,
+  providers, and outputs.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- terraform
+capabilities:
+- name: core-workflow
+  description: Initialize, plan, apply, and destroy infrastructure.
+  commands:
+  - terraform init
+  - terraform plan -out plan.tfplan
+  - terraform apply plan.tfplan
+  - terraform destroy -auto-approve
+  - terraform fmt -recursive
+  - terraform validate
+  examples:
+  - terraform init
+  - terraform plan -out plan.tfplan
+  - terraform apply plan.tfplan
+  parameters:
+  - name: plan-file
+    type: string
+    description: Saved plan file
+  - name: dir
+    type: string
+    description: Config directory
+- name: modules-and-workspaces
+  description: Work with modules, workspaces, outputs, and provider configs.
+  commands:
+  - terraform get -update
+  - terraform workspace new prod
+  - terraform workspace select dev
+  - terraform output -json
+  - terraform providers
+  - terraform providers lock -platform=linux_amd64
+  examples:
+  - terraform get -update
+  - terraform workspace select prod
+  - terraform output -json
+  parameters:
+  - name: workspace
+    type: string
+    description: Workspace name
+  - name: output
+    type: string
+    description: Output name to query
+knowledge:
+- title: Terraform Documentation
+  type: documentation
+  source: https://developer.hashicorp.com/terraform/docs
+  description: Language, CLI, providers, and state
+- title: Terraform Language
+  type: documentation
+  source: https://developer.hashicorp.com/terraform/language
+  description: HCL syntax, expressions, and built-in functions
+- title: Terraform Registry
+  type: documentation
+  source: https://registry.terraform.io/
+  description: Official providers and modules
+instructions: '# Terraform Operations
+
+
+  Provision cloud infrastructure with Terraform: plan, apply, modules, and workspaces.
+
+
+  ## What This Skill Does
+
+
+  - Initializes providers and module dependencies
+
+  - Plans and applies infrastructure safely
+
+  - Formats and validates HCL
+
+  - Manages workspaces and provider locking
+
+  - Reads outputs for CI consumption
+
+
+  ## When to Use
+
+
+  - Provisioning cloud resources reproducibly
+
+  - Evolving infrastructure with reviewable diffs
+
+  - Building reusable modules
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Core loop
+
+  terraform init
+
+  terraform fmt -recursive
+
+  terraform validate
+
+  terraform plan -out plan.tfplan
+
+  terraform apply plan.tfplan
+
+  terraform destroy -auto-approve -target=aws_instance.web
+
+
+  # Modules and workspaces
+
+  terraform get -update
+
+  terraform workspace new prod
+
+  terraform workspace select dev
+
+  terraform workspace list
+
+
+  # Outputs and providers
+
+  terraform output -json
+
+  terraform providers
+
+  terraform providers lock -platform=linux_amd64 -platform=darwin_arm64
+
+  terraform console
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Always plan with -out and apply that exact plan
+
+  - Use -detailed-exitcode in CI to detect diffs
+
+  - Pin provider versions in required_providers
+
+  - Keep state in remote backends with locking
+
+  - Store terraform.tfvars in CI secret storage, not git
+
+  - Structure with modules: root modules per environment'
+examples:
+- input: Review what this terraform change will do
+  output: Agent inits, runs plan -out, summarizes resources to add/change/delete
+- input: Set up environments dev/staging/prod
+  output: Agent creates workspaces and per-environment tfvars, verifying isolation with workspace select
+    and plan
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: terraform.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-terraform
+  generic:
+    system_prompt: 'You work Terraform hands-on. You do it through core-workflow: Initialize, plan, apply,
+      and destroy infrastructure. The commands are real, e.g. `terraform init`. You prefer the shortest
+      safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

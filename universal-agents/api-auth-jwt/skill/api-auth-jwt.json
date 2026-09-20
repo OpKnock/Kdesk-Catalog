@@ -1,0 +1,177 @@
+{
+  "name": "api-auth-jwt",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "security",
+  "description": "API auth with JWT-based authentication - issue tokens with jsonwebtoken, validate signatures and claims, and enforce expiry and audience.",
+  "keywords": [
+    "api-auth",
+    "jwt",
+    "authentication"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-auth-jwt.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-auth-jwt"
+    },
+    "generic": {
+      "system_prompt": "You take the Api Auth JWT seat. You do it through jwt-auth: Issue and validate JWT tokens for API access. The commands are real, e.g. `npm install jsonwebtoken`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "jwt-auth",
+      "description": "Issue and validate JWT tokens for API access",
+      "commands": [
+        "npm install jsonwebtoken",
+        "node -e \"const jwt=require('jsonwebtoken');const t=jwt.sign({sub:'user-1',role:'admin'},process.env.SECRET,{expiresIn:'1h',audience:'api',issuer:'auth-api'});console.log(t)\"",
+        "node -e \"const jwt=require('jsonwebtoken');const t=process.argv[1];try{jwt.verify(t,process.env.SECRET,{audience:'api'});console.log('valid')}catch(e){console.error(e.message)}\" $TOKEN",
+        "node -e \"const jwt=require('jsonwebtoken');console.log(jwt.decode(process.argv[1]))\" $TOKEN",
+        "curl -s http://localhost:8080/api/users -H \"Authorization: Bearer $TOKEN\" | jq '.user'"
+      ],
+      "examples": [
+        "node -e \"const jwt=require('jsonwebtoken');console.log(jwt.sign({scope:['read:orders']},process.env.SECRET,{expiresIn:'5m',audience:'api'}))\"",
+        "echo $TOKEN | cut -d. -f2 | base64 -d | jq '.exp, .scope'",
+        "curl -s http://localhost:8080/api/users -H 'Authorization: Bearer invalid.token.here' -o /dev/null -w '%{http_code}'"
+      ],
+      "parameters": [
+        {
+          "name": "secret",
+          "type": "string",
+          "description": "HMAC secret for signing"
+        },
+        {
+          "name": "expiresIn",
+          "type": "string",
+          "description": "Token lifetime, e.g. 1h, 15m, 7d"
+        },
+        {
+          "name": "audience",
+          "type": "string",
+          "description": "Expected audience claim"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "jsonwebtoken"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "jsonwebtoken",
+    "passport",
+    "keycloak"
+  ],
+  "examples": [
+    {
+      "input": "Issue a 15-minute admin token",
+      "output": "Signs a JWT with scope read:orders and expiry 5m/15m per the request and shows the encoded token."
+    },
+    {
+      "input": "Why is this token rejected?",
+      "output": "Decodes it, checks exp/aud/iss, and verifies the signature against the secret."
+    }
+  ],
+  "instructions": "# API Auth (JWT)\n\n## What this skill does\nIssue and validate JWTs for API authentication with the jsonwebtoken library. Covers signing, verification with audience/issuer enforcement, decoding for debugging, and expiry handling.\n\n## When to use\n- Replacing opaque session tokens with JWTs\n- Adding stateless auth to an API\n- Debugging token expiry issues\n\n## Real commands\n```bash\n# Install\nnpm install jsonwebtoken\n\n# Sign a token (1h, audience=api)\nnode -e \"const jwt=require('jsonwebtoken');\\\nconst t=jwt.sign({sub:'user-1',role:'admin'},process.env.SECRET,\\\n{expiresIn:'1h',audience:'api',issuer:'auth-api'});console.log(t)\"\n\n# Verify (fails on bad signature, wrong audience, or expiry)\nnode -e \"const jwt=require('jsonwebtoken');\\\nconst t=process.argv[1];\\\ntry{jwt.verify(t,process.env.SECRET,{audience:'api'});console.log('valid')}\\ncatch(e){console.error(e.message)}\" $TOKEN\n\n# Decode without verifying (debugging only)\nnode -e \"const jwt=require('jsonwebtoken');console.log(jwt.decode(process.argv[1]))\" $TOKEN\n\n# Shell decode\necho $TOKEN | cut -d. -f2 | base64 -d | jq '.exp, .scope'\n\n# Use the token\ncurl -s http://localhost:8080/api/users -H \"Authorization: Bearer $TOKEN\" | jq '.user'\n```\n\n## Best practices\n- Prefer RS256 with a JWKS; use HS256 only for single-service setups\n- Always verify signature AND audience AND issuer\n- Keep tokens short-lived (15m-1h); refresh via refresh token\n- Never log tokens or put secrets in claims\n\n## Testing\n```bash\nBAD=invalid.token.here\ncurl -s http://localhost:8080/api/users -H \"Authorization: Bearer $BAD\" -o /dev/null -w '%{http_code}\\n'\n# Expect 401\n```",
+  "display_name": "Api Auth JWT",
+  "knowledge": [
+    {
+      "title": "jwt.io Introduction",
+      "type": "documentation",
+      "source": "https://jwt.io/introduction",
+      "description": "JWT anatomy, claims, and signing algorithms"
+    },
+    {
+      "title": "jsonwebtoken npm",
+      "type": "documentation",
+      "source": "https://www.npmjs.com/package/jsonwebtoken",
+      "description": "Node.js sign/verify/decode API reference"
+    }
+  ],
+  "id": "api-auth-jwt",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "jwt-auth",
+        "name": "secret",
+        "type": "string",
+        "description": "HMAC secret for signing"
+      },
+      {
+        "capability": "jwt-auth",
+        "name": "expiresIn",
+        "type": "string",
+        "description": "Token lifetime, e.g. 1h, 15m, 7d"
+      },
+      {
+        "capability": "jwt-auth",
+        "name": "audience",
+        "type": "string",
+        "description": "Expected audience claim"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "jsonwebtoken"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-auth-jwt/skill/api-auth-jwt.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-auth-jwt/skill/api-auth-jwt.yaml",
+    "checksum": "0742c7abc444fcfe66c25bc9506a3e7cd8bc4fcd14366f7ae185bcc83f1f5947"
+  }
+}

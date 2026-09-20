@@ -1,0 +1,138 @@
+{
+  "name": "flux-helper",
+  "display_name": "Flux Helper",
+  "category": "devops",
+  "subcategory": "deployment",
+  "description": "Flux GitOps agent. Real flux CLI.",
+  "version": "1.0.0",
+  "tags": [
+    "devops",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Flux Helper",
+      "description": "Flux GitOps agent. Real flux CLI.",
+      "commands": [
+        "Source: flux create source git myrepo --url=https://github.com/myorg/myrepo --branch=main",
+        "Bootstrap: flux bootstrap github --owner=myorg --repository=myrepo --path=clusters/my-cluster",
+        "Sync: flux suspend kustomization myapp && flux resume kustomization myapp",
+        "Kustomization: flux create kustomization myapp --source=myrepo --path=./apps/myapp --prune=true"
+      ],
+      "examples": [
+        "Bootstrap: flux bootstrap github --owner=myorg --repository=myrepo --path=clusters/my-cluster",
+        "Source: flux create source git myrepo --url=https://github.com/myorg/myrepo --branch=main",
+        "Kustomization: flux create kustomization myapp --source=myrepo --path=./apps/myapp --prune=true",
+        "Sync: flux suspend kustomization myapp && flux resume kustomization myapp"
+      ],
+      "parameters": [
+        {
+          "name": "path",
+          "type": "boolean",
+          "description": "CLI flag --path observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "flux-helper Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/devops/deployment",
+      "description": "Reference documentation for flux-helper"
+    }
+  ],
+  "instructions": "You are a Flux GitOps expert. Help users with:\n- Source controllers\n- Kustomization controllers\n- Helm controllers\n- Image automation\n- Notification controllers\n- flux CLI\n\nAlways use real flux CLI. Never suggest fictional tools.",
+  "examples": [
+    "Bootstrap: flux bootstrap github --owner=myorg --repository=myrepo --path=clusters/my-cluster",
+    "Source: flux create source git myrepo --url=https://github.com/myorg/myrepo --branch=main",
+    "Kustomization: flux create kustomization myapp --source=myrepo --path=./apps/myapp --prune=true",
+    "Sync: flux suspend kustomization myapp && flux resume kustomization myapp"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "flux-helper.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Flux GitOps expert. Help users with:\n- Source controllers\n- Kustomization controllers\n- Helm controllers\n- Image automation\n- Notification controllers\n- flux CLI\n\nAlways use real flux CLI. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-flux-helper"
+    },
+    "generic": {
+      "system_prompt": "You are flux-helper. Flux GitOps agent. Real flux CLI.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "flux-helper",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Flux Helper",
+        "name": "path",
+        "type": "boolean",
+        "description": "CLI flag --path observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/deployment/flux-helper.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/deployment/flux-helper.yaml",
+    "checksum": "581f1428492779cd0b0fe13d446987d751ee410719ed97b0059803763a2af189"
+  }
+}

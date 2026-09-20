@@ -1,0 +1,112 @@
+name: api-sdk-unit-tests
+version: 2.0.0
+type: skill
+category: backend
+description: 'Tests generated API SDKs: unit tests for clients, mock-server integration tests, generated
+  code quality gates, and regression suites.'
+keywords:
+- api-sdk
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-sdk-unit-tests.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-sdk-unit-tests
+  generic:
+    system_prompt: 'You are the Api Sdk Unit Tests specialist. You do it through sdk-unit-tests: Write
+      unit tests for SDK client code. The commands are real, e.g. `npm install vitest`. You verify each
+      step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: sdk-unit-tests
+  description: Write unit tests for SDK client code
+  commands:
+  - npm install vitest
+  - npx vitest run tests/sdk.test.ts
+  - npx vitest run --coverage
+  - npm install nock
+  - node -e "const nock=require('nock'); nock('https://api.example.com').get('/users').reply(200,[{id:1}]);
+    fetch('https://api.example.com/users').then(r=>r.json()).then(console.log)"
+  examples:
+  - nock intercepts HTTP for client tests
+  - vitest run executes the SDK test suite
+  - --coverage reports branch coverage
+  parameters:
+  - name: test-file
+    type: string
+    description: Test file path
+  - name: mock-target
+    type: string
+    description: URL intercepted by nock
+  - name: coverage
+    type: boolean
+    description: Collect coverage
+- name: integration-tests
+  description: Run SDKs against a live mock server
+  commands:
+  - npx @stoplight/prism-cli mock openapi.yaml -p 4010 &
+  - node -e "const sdk=require('./sdk'); sdk.defaultClient.basePath='http://localhost:4010'; sdk.getUsers().then(r=>console.log(r.data.length))"
+  - npm test
+  - npx vitest run
+  examples: []
+  parameters: []
+prerequisites:
+- openapi-generator
+- node.js
+- python
+tools:
+- openapi-generator
+- node.js
+- python
+- typescript
+- swagger-codegen
+examples:
+- input: Test the generated client
+  output: Writes nock-backed unit tests and runs vitest with coverage
+- input: Validate SDK against the spec
+  output: Runs the SDK against a Prism mock of the OpenAPI
+instructions: "# API SDK Engineer v2 - Testing\n\nSDK testing and validation.\n\n## What This Skill Does\n\
+  - Unit-tests client behavior with mocks\n- Integration-tests against mock servers\n- Gates SDK quality\
+  \ in CI\n\n## When to Use\n- Verifying generated clients\n- Catching SDK regressions\n- Testing error\
+  \ paths\n\n## Real Commands\n\n```bash\nnpm install vitest\nnpx vitest run tests/sdk.test.ts\nnpx @stoplight/prism-cli\
+  \ mock openapi.yaml -p 4010 &\nnode -e \"const sdk=require('./sdk'); sdk.defaultClient.basePath='http://localhost:4010';\
+  \ sdk.getUsers().then(r=>console.log(r.data.length))\"\n```\n\n## Test Pattern\n\n```ts\nimport nock\
+  \ from 'nock';\nimport { UsersApi } from '../sdk';\n\ntest('lists users', async () => {\n  nock('https://api.example.com').get('/users').reply(200,\
+  \ [{ id: 1 }]);\n  const api = new UsersApi();\n  const res = await api.getUsers();\n  expect(res.data).toHaveLength(1);\n\
+  });\n```\n\n## Testing\n- Cover success, 4xx, and 5xx paths\n- Test pagination and auth headers\n- Run\
+  \ coverage thresholds in CI\n\n## Best Practices\n- Keep tests independent of live APIs\n- Test through\
+  \ the public SDK surface\n- Regenerate mocks when specs change"
+display_name: Api Sdk Unit Tests
+knowledge:
+- title: Vitest Docs
+  type: documentation
+  source: https://vitest.dev/guide/
+  description: Vitest test runner
+- title: nock Docs
+  type: documentation
+  source: https://github.com/nock/nock
+  description: HTTP mocking for Node tests

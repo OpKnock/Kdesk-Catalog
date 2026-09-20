@@ -1,0 +1,208 @@
+{
+  "name": "graphql-server",
+  "display_name": "Graphql Server",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Designs and runs GraphQL servers with Apollo Server, GraphQL Yoga, and gqlgen including resolvers, schema stitching, and query cost limiting.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "node",
+    "npm",
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "npm install @apollo/server graphql",
+        "npx apollo init",
+        "node index.js",
+        "npm install graphql-yoga",
+        "go run github.com/99designs/gqlgen/cmd/gqlgen@latest init"
+      ],
+      "description": "Scaffold and run popular GraphQL server frameworks.",
+      "name": "graphql-servers",
+      "examples": [
+        "npx @graphql-codegen/cli init",
+        "npx gqlgen init",
+        "npm start"
+      ],
+      "parameters": [
+        {
+          "description": "Server listen port",
+          "name": "port",
+          "type": "integer"
+        },
+        {
+          "name": "framework",
+          "type": "string",
+          "description": "apollo, yoga, or gqlgen"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "curl -X POST http://localhost:4000/graphql -H \"Content-Type: application/json\" -d \"{\\\"query\\\":\\\"{ __schema { queryType { name } } }\\\"}\"",
+        "curl -X POST http://localhost:4000/graphql -H \"Content-Type: application/json\" -d \"{\\\"query\\\":\\\"{ users { id name } }\\\"}\"",
+        "npx graphql-codegen",
+        "npx apollo schema:check"
+      ],
+      "description": "Run introspection and test queries against a server.",
+      "name": "graphql-querying",
+      "examples": [
+        "curl -s -X POST localhost:4000/graphql -d \"{\\\"query\\\":\\\"{ __typename }\\\"}\"",
+        "npx graphql-codegen --config codegen.yml"
+      ],
+      "parameters": [
+        {
+          "description": "GraphQL query string",
+          "name": "query",
+          "type": "string"
+        },
+        {
+          "description": "GraphQL endpoint URL",
+          "name": "endpoint",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "GraphQL Spec",
+      "description": "Official GraphQL specification",
+      "source": "https://spec.graphql.org",
+      "type": "documentation"
+    },
+    {
+      "title": "Apollo Server Docs",
+      "description": "Node.js GraphQL server framework",
+      "source": "https://www.apollographql.com/docs/apollo-server/",
+      "type": "documentation"
+    },
+    {
+      "title": "gqlgen Docs",
+      "description": "Schema-first GraphQL server for Go",
+      "source": "https://gqlgen.com",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# GraphQL Server\n\nDesign and operate GraphQL APIs.\n\n## When to Use\n\n- Clients need to fetch nested data in one round trip\n- Many consumers with divergent data needs\n- Schema-first development where the contract is the source of truth\n- Aggregating multiple services behind one API layer\n\n## Core Concepts\n\n- Schema: type definitions that define the API contract\n- Resolvers: functions that fetch each field\n- Query vs Mutation: reads vs writes\n- Federation/stitching: combining multiple schemas\n- Query complexity: cost of a query to prevent abuse\n\n## Commands\n\n```bash\n# Apollo Server (Node)\nnpm install @apollo/server graphql\nnode server.js\n\n# GraphQL Yoga\nnpm install graphql-yoga\n\n# gqlgen (Go)\ngo run github.com/99designs/gqlgen/cmd/gqlgen@latest init\n\n# Introspect the schema\ncurl -X POST http://localhost:4000/graphql -H \"Content-Type: application/json\" \\\n  -d '{\"query\":\"{ __schema { queryType { name } } }\"}'\n\n# Run a query\ncurl -X POST http://localhost:4000/graphql -H \"Content-Type: application/json\" \\\n  -d '{\"query\":\"{ users { id name } }\"}'\n```\n\n## Schema Example\n\n```graphql\ntype Query {\n  user(id: ID!): User\n}\n\ntype User {\n  id: ID!\n  name: String!\n  posts: [Post!]!\n}\n\ntype Post {\n  id: ID!\n  title: String!\n}\n```\n\n## Best Practices\n\n- Always define a __typename-friendly schema with unique type names\n- Cap query depth and complexity to avoid nested-DoS attacks\n- Batch data fetches with DataLoader to avoid N+1 resolvers\n- Use persisted queries for stable, cacheable clients\n- Run schema checks (apollo schema:check) in CI before releasing",
+  "examples": [
+    {
+      "input": "My GraphQL API has an N+1 problem",
+      "output": "Agent introduces DataLoader batching in resolvers and shows before/after query profiling."
+    },
+    {
+      "input": "Expose a GraphQL schema for introspection",
+      "output": "Agent starts the server, curls the __schema query, and confirms enabled introspection flags."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "graphql-server.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-graphql-server"
+    },
+    "generic": {
+      "system_prompt": "You take the Graphql Server seat. You do it through graphql-servers: Scaffold and run popular GraphQL server frameworks. The commands are real, e.g. `npm install @apollo/server graphql`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "graphql-server",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "graphql-servers",
+        "name": "port",
+        "type": "integer",
+        "description": "Server listen port"
+      },
+      {
+        "capability": "graphql-servers",
+        "name": "framework",
+        "type": "string",
+        "description": "apollo, yoga, or gqlgen"
+      },
+      {
+        "capability": "graphql-querying",
+        "name": "query",
+        "type": "string",
+        "description": "GraphQL query string"
+      },
+      {
+        "capability": "graphql-querying",
+        "name": "endpoint",
+        "type": "string",
+        "description": "GraphQL endpoint URL"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node",
+    "npm",
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/graphql-server-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/graphql-server-skill.yaml",
+    "checksum": "a602affebb7ee60385f0ac5db0f4763ec15c42c8c957f74cc92dfd2e36063013"
+  }
+}

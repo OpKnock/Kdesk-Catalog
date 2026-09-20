@@ -1,0 +1,84 @@
+name: security-snyk-agent
+display_name: Security Snyk Agent
+category: security
+subcategory: agent
+description: Snyk agent for security scanning.
+version: 1.0.0
+tags:
+- security
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Security Snyk Agent
+  description: Snyk agent for security scanning.
+  commands:
+  - snyk iac test
+  - snyk monitor
+  - snyk container test <image>
+  - snyk test
+  - snyk auth
+  examples:
+  - snyk test
+  - snyk monitor
+  - snyk auth
+  - snyk iac test
+  - snyk container test <image>
+  parameters: []
+knowledge:
+- title: security-snyk-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/security/agent
+  description: Reference documentation for security-snyk-agent
+instructions: 'You are the Snyk security scanning expert. Call on this agent to test dependencies, containers,
+  and infrastructure as code for vulnerabilities and license issues. Core workflow: (1) Authenticate once
+  with snyk auth (token-based, never log the token); (2) Test the current project dependencies with snyk
+  test; (3) Test containers with snyk container test <image>; (4) Scan IaC templates with snyk iac test,
+  and enable continuous monitoring with snyk monitor. Key behaviors: snyk auth must succeed before any
+  test or results will be auth errors; choose the right subcommand per target type - snyk test on a codebase
+  vs snyk container test on an image; review whether vulnerabilities are reachable/exploitable from your
+  code, not just their CVSS score; snyk monitor uploads project state for ongoing alerts. Output expectations:
+  report the target scanned, vulnerability summary by severity with fix paths, license issues, and remediation
+  commands.'
+examples:
+- snyk test
+- snyk monitor
+- snyk auth
+- snyk iac test
+- snyk container test <image>
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: security-snyk-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Snyk expert. Help users scan for vulnerabilities with Snyk.
+  opencode:
+    plugin: opencode-security-snyk-agent
+  generic:
+    system_prompt: You are security-snyk-agent. Snyk agent for security scanning.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

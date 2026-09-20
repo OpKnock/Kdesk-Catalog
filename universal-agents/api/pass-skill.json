@@ -1,0 +1,171 @@
+{
+  "name": "pass",
+  "display_name": "Pass",
+  "category": "api",
+  "subcategory": "general",
+  "description": "pass (passwordstore) operations: init, generate, insert, edit, git sync and GPG management.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "pass"
+  ],
+  "capabilities": [
+    {
+      "name": "pass-passwordstore",
+      "description": "Initialize the password store, generate and manage secrets with pass, and sync via git.",
+      "commands": [
+        "pass init \"FINGERPRINT\"",
+        "pass generate -n Email/example 20",
+        "pass insert dev/apitoken",
+        "pass show dev/apitoken",
+        "pass edit dev/apitoken"
+      ],
+      "examples": [
+        "pass generate --no-symbols -l 24 server/root",
+        "pass ls",
+        "pass git push"
+      ],
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Store path, e.g. dev/apitoken"
+        },
+        {
+          "name": "length",
+          "type": "integer",
+          "description": "Generated password length"
+        },
+        {
+          "name": "no_symbols",
+          "type": "boolean",
+          "description": "Exclude symbols from generation"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "pass Official Site",
+      "type": "documentation",
+      "source": "https://www.passwordstore.org/",
+      "description": "The standard unix password manager: usage and extensions"
+    },
+    {
+      "title": "pass man page",
+      "type": "documentation",
+      "source": "https://git.zx2c4.com/password-store/about/",
+      "description": "Full command reference for pass"
+    }
+  ],
+  "instructions": "# pass\n\npass stores secrets as GPG-encrypted files in a git-tracked directory.\n\n## What this skill does\n\n- Initializes stores with a GPG key\n- Generates and inserts passwords/API tokens\n- Syncs the store with git\n\n## When to use\n\n- CLI-centric secret management on servers\n- Committing encrypted secrets to git\n\n## Real commands\n\n```bash\n# Initialize\npass init \"ABCD1234...\"\n\n# Generate (no symbols, 20 chars)\npass generate -n Email/example 20\npass generate --no-symbols -l 24 server/root\n\n# Insert and view\npass insert dev/apitoken\npass show dev/apitoken\npass show -c dev/apitoken   # copy to clipboard\n\n# Edit multi-line\npass edit dev/credentials\n\n# List and git\npass ls\npass git status\npass git push\n```\n\n## Multiline entries\n\n```\npassword123\n---\nurl: https://example.com\nusername: alice\n```\n\n## Best practices\n\n- Use `-c` to copy instead of printing secrets to logs\n- Keep the store in a private git repo with GPG-only access\n- Rotate keys by re-encrypting with `pass init` and old recipients",
+  "examples": [
+    {
+      "input": "Store my API tokens securely on this server",
+      "output": "The agent initializes the store, inserts each token under dev/, and shows pass show usage."
+    },
+    {
+      "input": "Generate a strong random password",
+      "output": "The agent runs `pass generate -n Email/example 20` and explains the length/symbol options."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pass.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pass"
+    },
+    "generic": {
+      "system_prompt": "You own Pass end to end. You do it through pass-passwordstore: Initialize the password store, generate and manage secrets with pass, and sync via git. The commands are real, e.g. `pass init FINGERPRINT`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "pass",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pass-passwordstore",
+        "name": "path",
+        "type": "string",
+        "description": "Store path, e.g. dev/apitoken"
+      },
+      {
+        "capability": "pass-passwordstore",
+        "name": "length",
+        "type": "integer",
+        "description": "Generated password length"
+      },
+      {
+        "capability": "pass-passwordstore",
+        "name": "no_symbols",
+        "type": "boolean",
+        "description": "Exclude symbols from generation"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pass"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/pass-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/pass-skill.yaml",
+    "checksum": "9a2daae60cd89503bf58f9e4b4c231420b699f5113d1f1553d87eec43abb2374"
+  }
+}

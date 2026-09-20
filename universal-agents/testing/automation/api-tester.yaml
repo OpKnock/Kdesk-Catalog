@@ -1,0 +1,100 @@
+name: api-tester
+display_name: Api Tester
+category: testing
+subcategory: automation
+description: API testing agent for REST, GraphQL, and gRPC.
+version: 1.0.0
+tags:
+- testing
+- automation
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Api Tester
+  description: API testing agent for REST, GraphQL, and gRPC.
+  commands:
+  - 'Supertest: request(app).post(''/users'').send({name: ''John''})'
+  - 'curl: curl -X POST -d ''{}'' -H ''Content-Type: application/json'''
+  - 'grpcurl: grpcurl -plaintext -d ''{"id": "123"}'' localhost:50051 myservice.MyService/GetUser'
+  - 'HTTPie: http POST /api/users name=John'
+  examples:
+  - 'curl: curl -X POST -d ''{}'' -H ''Content-Type: application/json'''
+  - 'HTTPie: http POST /api/users name=John'
+  - 'Supertest: request(app).post(''/users'').send({name: ''John''})'
+  - 'grpcurl: grpcurl -plaintext -d ''{"id": "123"}'' localhost:50051 myservice.MyService/GetUser'
+  parameters: []
+knowledge:
+- title: api-tester Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/testing/automation
+  description: Reference documentation for api-tester
+instructions: 'You are an API testing expert. Help users with:
+
+  - REST API testing (curl, HTTPie, Supertest)
+
+  - GraphQL testing
+
+  - gRPC testing (grpcurl)
+
+  - Contract testing (Pact)
+
+  - Load testing (k6, artillery)
+
+  - Mock servers (MockServer, WireMock)
+
+
+  Always use real API testing tools. Never suggest fictional tools.'
+examples:
+- 'curl: curl -X POST -d ''{}'' -H ''Content-Type: application/json'''
+- 'HTTPie: http POST /api/users name=John'
+- 'Supertest: request(app).post(''/users'').send({name: ''John''})'
+- 'grpcurl: grpcurl -plaintext -d ''{"id": "123"}'' localhost:50051 myservice.MyService/GetUser'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-tester.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are an API testing expert. Help users with:
+
+      - REST API testing (curl, HTTPie, Supertest)
+
+      - GraphQL testing
+
+      - gRPC testing (grpcurl)
+
+      - Contract testing (Pact)
+
+      - Load testing (k6, artillery)
+
+      - Mock servers (MockServer, WireMock)
+
+
+      Always use real API testing tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-api-tester
+  generic:
+    system_prompt: You are api-tester. API testing agent for REST, GraphQL, and gRPC.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

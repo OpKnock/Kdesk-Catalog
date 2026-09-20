@@ -1,0 +1,202 @@
+{
+  "name": "cdc",
+  "display_name": "Cdc",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Implement Change Data Capture with Debezium and Kafka Connect: connectors, topics, and consuming change events.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker",
+    "kafka-console-consumer",
+    "kafka-topics"
+  ],
+  "capabilities": [
+    {
+      "name": "debezium-connect",
+      "description": "Deploy Debezium Connect and register source connectors via the Kafka Connect REST API",
+      "commands": [
+        "docker run -d --name connect -p 8083:8083 quay.io/debezium/connect:latest",
+        "curl -X POST http://localhost:8083/connectors -H \"Content-Type: application/json\" -d @debezium.json",
+        "curl http://localhost:8083/connectors",
+        "curl -X DELETE http://localhost:8083/connectors/postgres-connector"
+      ],
+      "examples": [
+        "curl -X POST http://localhost:8083/connectors -H \"Content-Type: application/json\" -d @debezium.json",
+        "curl -s http://localhost:8083/connectors | jq '.connectors'",
+        "curl -s http://localhost:8083/connectors/postgres-connector/status | jq '.connector.state'"
+      ],
+      "parameters": [
+        {
+          "name": "connector_name",
+          "type": "string",
+          "description": "Name of the Debezium connector"
+        },
+        {
+          "name": "connector_config",
+          "type": "string",
+          "description": "JSON config file for the connector"
+        }
+      ]
+    },
+    {
+      "name": "kafka-streams",
+      "description": "Inspect CDC topics and consume change events from Kafka",
+      "commands": [
+        "kafka-topics --bootstrap-server localhost:9092 --list",
+        "kafka-topics --bootstrap-server localhost:9092 --describe --topic dbserver.public.users",
+        "kafka-console-consumer --bootstrap-server localhost:9092 --topic dbserver.public.users --from-beginning",
+        "kafka-console-consumer --bootstrap-server localhost:9092 --topic dbserver.public.users --from-beginning --property print.key=true --property key.separator=--"
+      ],
+      "examples": [
+        "kafka-topics --bootstrap-server localhost:9092 --list | grep dbserver",
+        "kafka-console-consumer --bootstrap-server localhost:9092 --topic dbserver.public.users --from-beginning | jq '.payload.op'",
+        "kafka-console-consumer --bootstrap-server localhost:9092 --topic dbserver.public.users --from-beginning --max-messages 5"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Kafka topic name, e.g. dbserver.public.users"
+        },
+        {
+          "name": "bootstrap_servers",
+          "type": "string",
+          "description": "Kafka bootstrap servers, e.g. localhost:9092"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Debezium Documentation",
+      "type": "documentation",
+      "source": "https://debezium.io/documentation/reference/stable/index.html",
+      "description": "Debezium connectors, deployment, and message format reference"
+    },
+    {
+      "title": "Kafka Connect API",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/#connect_rest",
+      "description": "Kafka Connect REST API reference"
+    }
+  ],
+  "instructions": "# Change Data Capture (CDC)\n\nStream database changes to Kafka with Debezium and Kafka Connect.\n\n## When to Use\n\n- Feeding search indexes, caches, or analytics from database writes\n- Building event-driven pipelines from existing relational data\n- Replicating changes without application code changes\n\n## Deploy Debezium Connect\n\n```bash\ndocker run -d --name connect -p 8083:8083 quay.io/debezium/connect:latest\ncurl http://localhost:8083/connectors\n```\n\n## Register a Connector\n\n```json\n{\n  \"name\": \"postgres-connector\",\n  \"config\": {\n    \"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\",\n    \"database.hostname\": \"postgres\",\n    \"database.port\": \"5432\",\n    \"database.user\": \"postgres\",\n    \"database.password\": \"postgres\",\n    \"database.dbname\": \"appdb\",\n    \"database.server.name\": \"dbserver\",\n    \"table.include.list\": \"public.users\",\n    \"plugin.name\": \"pgoutput\"\n  }\n}\n```\n\n```bash\ncurl -X POST http://localhost:8083/connectors -H \"Content-Type: application/json\" -d @debezium.json\ncurl -s http://localhost:8083/connectors/postgres-connector/status | jq '.connector.state'\n```\n\n## Consume Events\n\n```bash\nkafka-topics --bootstrap-server localhost:9092 --list | grep dbserver\nkafka-console-consumer --bootstrap-server localhost:9092 --topic dbserver.public.users --from-beginning\n```\n\nEach record has op (c/u/d), before, after, and source metadata.\n\n## Testing\n\n```bash\n# Insert a row and watch the event\npsql -c \"INSERT INTO users (name) VALUES ('alice');\"\nkafka-console-consumer --bootstrap-server localhost:9092 --topic dbserver.public.users --from-beginning --max-messages 1\n```\n\n## Best Practices\n\n- Use logical decoding (pgoutput) for Postgres\n- Include table.include.list to limit capture\n- Handle schema changes with Debezium schema evolution\n- Set IDs and keys on events for exactly-once consumers\n- Monitor connector status in production",
+  "examples": [
+    {
+      "input": "Stream inserts from my users table to Kafka.",
+      "output": "The agent starts debezium/connect in Docker, registers a Postgres connector with table.include.list public.users, and shows consumption with kafka-console-consumer."
+    },
+    {
+      "input": "Is my Debezium connector running?",
+      "output": "The agent curls http://localhost:8083/connectors/postgres-connector/status and checks connector.state and task state."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cdc.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cdc"
+    },
+    "generic": {
+      "system_prompt": "You own Cdc end to end. You do it through debezium-connect: Deploy Debezium Connect and register source connectors via the Kafka Connect REST API. The commands are real, e.g. `docker run -d --name connect -p 8083:8083 quay.io/debezium/connect:latest`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cdc",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "debezium-connect",
+        "name": "connector_name",
+        "type": "string",
+        "description": "Name of the Debezium connector"
+      },
+      {
+        "capability": "debezium-connect",
+        "name": "connector_config",
+        "type": "string",
+        "description": "JSON config file for the connector"
+      },
+      {
+        "capability": "kafka-streams",
+        "name": "topic",
+        "type": "string",
+        "description": "Kafka topic name, e.g. dbserver.public.users"
+      },
+      {
+        "capability": "kafka-streams",
+        "name": "bootstrap_servers",
+        "type": "string",
+        "description": "Kafka bootstrap servers, e.g. localhost:9092"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker",
+    "kafka-console-consumer",
+    "kafka-topics"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/cdc-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/cdc-skill.yaml",
+    "checksum": "60a0c646ddc9bff28cc9a3d930f7a838ca67e7336a77ec3a9f791093d9951f3f"
+  }
+}

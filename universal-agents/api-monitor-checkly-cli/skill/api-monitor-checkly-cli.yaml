@@ -1,0 +1,111 @@
+name: api-monitor-checkly-cli
+version: 2.0.0
+type: skill
+category: sre
+description: 'Builds synthetic monitoring with Checkly: multi-step browser checks, API checks as code,
+  and deployment to Checkly''s global runners from a Node project.'
+keywords:
+- api-monitor-checkly-cli
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-monitor-checkly-cli.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-monitor-checkly-cli
+  generic:
+    system_prompt: 'This is your domain: Api Monitor Checkly Cli. You do it through checkly-cli: Author
+      and deploy API/browser checks as code. The commands are real, e.g. `npx create-checkly-project my-checks
+      --template api-check`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: checkly-cli
+  description: Author and deploy API/browser checks as code
+  commands:
+  - npx create-checkly-project my-checks --template api-check
+  - npx checkly test
+  - npx checkly deploy
+  - npx checkly run-check api-health
+  - curl -s -o /dev/null -w '%{http_code} %{time_total}s\n' https://api.example.com/health
+  examples:
+  - npx checkly test runs checks locally with live results
+  - npx checkly deploy publishes checks to global runners
+  - npx checkly run-check api-health triggers a single check on demand
+  parameters:
+  - name: check-name
+    type: string
+    description: Identifier of the check to run
+  - name: template
+    type: string
+    description: 'Scaffold template: api-check, browser-check, group'
+  - name: env
+    type: string
+    description: Environment variable file for check secrets
+- name: synthetic-flows
+  description: Script multi-step user journeys as Playwright browser checks
+  commands:
+  - npm install @playwright/test
+  - npx playwright test --project=chromium
+  - npx checkly test --browser
+  - npx checkly login
+  examples: []
+  parameters: []
+prerequisites:
+- prometheus
+- grafana
+tools:
+- prometheus
+- grafana
+- node.js
+- python
+- new-relic
+examples:
+- input: Monitor the login flow end-to-end
+  output: Writes a browser check with Playwright steps and deploys it with npx checkly deploy
+- input: Add a health check to CI
+  output: Adds an ApiCheck to the repo and runs npx checkly test in the pipeline
+instructions: "# API Monitor v3 - Synthetic Checks\n\nSynthetic monitoring with Checkly.\n\n## What This\
+  \ Skill Does\n- Defines API and browser checks as TypeScript code\n- Runs checks locally and on global\
+  \ runners\n- Alerts on failures via email, Slack, or PagerDuty\n\n## When to Use\n- Monitoring user-critical\
+  \ flows the backend cannot measure\n- Pre-deploy canary checks\n- Third-party dependency monitoring\n\
+  \n## Real Commands\n\n```bash\nnpx create-checkly-project my-checks --template api-check\nnpx checkly\
+  \ test\nnpx checkly deploy\n```\n\n## API Check Example\n\n```ts\nimport { ApiCheck, AssertionBuilder\
+  \ } from 'checkly/constructs';\nnew ApiCheck('api-health', {\n  request: { method: 'GET', url: 'https://api.example.com/health'\
+  \ },\n  assertions: [\n    AssertionBuilder.statusCode().equals(200),\n    AssertionBuilder.jsonBody('status').equals('ok')\n\
+  \  ]\n});\n```\n\n## Testing\n- Run npx checkly test before merging changes\n- Use browser checks for\
+  \ multi-step journeys (login -> search)\n- Schedule groups with frequency and regions\n\n## Best Practices\n\
+  - Store check code in the API repository\n- Use environments for stage-specific URLs\n- Keep assertions\
+  \ tight; alert on user impact only"
+display_name: Api Monitor Checkly Cli
+knowledge:
+- title: Checkly CLI Docs
+  type: documentation
+  source: https://www.checklyhq.com/docs/cli/
+  description: Authoring and deploying synthetic checks as code
+- title: Checkly API Checks
+  type: documentation
+  source: https://www.checklyhq.com/docs/api-checks/
+  description: HTTP API check assertions and retries

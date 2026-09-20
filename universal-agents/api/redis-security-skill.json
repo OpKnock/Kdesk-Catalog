@@ -1,0 +1,172 @@
+{
+  "name": "redis-security",
+  "display_name": "Redis Security",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Redis security skill: ACL users, requirepass, TLS listener configuration, dangerous command rename, and exposure auditing.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "redis-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "redis-hardening",
+      "description": "Lock down Redis with ACLs, passwords, TLS, and command renaming",
+      "commands": [
+        "redis-cli ACL LIST",
+        "redis-cli ACL SETUSER appuser on >StrongPass123 ~cache:* +get +set +del",
+        "redis-cli --no-auth-warning -a 'pass' ACL GETUSER appuser",
+        "redis-cli CONFIG SET requirepass 's3cr3t'",
+        "redis-cli CONFIG REWRITE",
+        "redis-cli -p 6380 --tls --cacert /etc/redis/ca.crt PING"
+      ],
+      "examples": [
+        "redis-cli ACL SETUSER readonly on >pw123 ~cache:* +get -set",
+        "redis-cli CONFIG GET bind",
+        "redis-cli --tls --cacert ca.crt -a $REDIS_PASS ping"
+      ],
+      "parameters": [
+        {
+          "name": "username",
+          "type": "string",
+          "description": "ACL user to create or modify"
+        },
+        {
+          "name": "key_pattern",
+          "type": "string",
+          "description": "Key pattern the user may touch, e.g. cache:*"
+        },
+        {
+          "name": "commands",
+          "type": "string",
+          "description": "Allow/deny command list, e.g. +get -set"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Redis Security",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/operate/oss_and_stack/management/security/",
+      "description": "Official ACL, requirepass, TLS, and protection docs"
+    },
+    {
+      "title": "ACL command reference",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/commands/acl-setuser/",
+      "description": "ACL SETUSER rule syntax and examples"
+    }
+  ],
+  "instructions": "# Redis Security\n\nHand-crafted skill for hardening Redis instances against exposure and misuse.\n\n## What this skill does\n\n- Creates least-privilege ACL users with key and command allowlists\n- Enables requirepass for the default user and rewrites the config\n- Configures a TLS listener and renames dangerous commands like FLUSHALL\n\n## When to use\n\n- A Redis instance is reachable from outside localhost\n- Multiple teams share one server and need isolated permissions\n- Compliance reviews ask for auth on all datastores\n\n## Real commands\n\n```bash\n# Inventory users\nredis-cli ACL LIST\n\n# Create a scoped app user\nredis-cli ACL SETUSER appuser on >StrongPass123 ~cache:* +get +set +del\n\n# Inspect a user's effective rules\nredis-cli --no-auth-warning -a 'pass' ACL GETUSER appuser\n\n# Password-protect the default user\nredis-cli CONFIG SET requirepass 's3cr3t'\nredis-cli CONFIG REWRITE\n\n# TLS listener check\nredis-cli -p 6380 --tls --cacert /etc/redis/ca.crt PING\n```\n\n## Config example\n\n```conf\n# redis.conf\nbind 127.0.0.1 10.0.0.5\nprotected-mode yes\nrequirepass s3cr3t\nrename-command FLUSHALL \"\"\n\nport 6379\nport 6380 tls\ntls-port 6380\ntls-cert-file /etc/redis/server.crt\ntls-key-file /etc/redis/server.key\ntls-ca-cert-file /etc/redis/ca.crt\n```\n\n## Testing\n\n```bash\nredis-cli -a 's3cr3t' ping\nredis-cli -p 6380 --tls --cacert ca.crt -a 's3cr3t' ping\nredis-cli ACL WHOAMI\n```\n\n## Best practices\n\n- Never bind 0.0.0.0 without TLS plus a strong password\n- Give each service its own ACL user with only the commands it needs\n- Rename FLUSHALL/FLUSHDB/KEYS on shared servers\n",
+  "examples": [
+    {
+      "input": "Give a background worker read-write access to only its cache keys",
+      "output": "redis-cli ACL SETUSER worker on >WorkerPass123 ~worker:* +get +set +del and verify with ACL GETUSER worker."
+    },
+    {
+      "input": "Check if my Redis is exposed publicly",
+      "output": "Run redis-cli CONFIG GET bind and CONFIG GET protected-mode; if bind is 0.0.0.0 and protected-mode no, fix immediately."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "redis-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-redis-security"
+    },
+    "generic": {
+      "system_prompt": "You own Redis Security end to end. You do it through redis-hardening: Lock down Redis with ACLs, passwords, TLS, and command renaming. The commands are real, e.g. `redis-cli ACL LIST`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "redis-security",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "redis-hardening",
+        "name": "username",
+        "type": "string",
+        "description": "ACL user to create or modify"
+      },
+      {
+        "capability": "redis-hardening",
+        "name": "key_pattern",
+        "type": "string",
+        "description": "Key pattern the user may touch, e.g. cache:*"
+      },
+      {
+        "capability": "redis-hardening",
+        "name": "commands",
+        "type": "string",
+        "description": "Allow/deny command list, e.g. +get -set"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/redis-security-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/redis-security-skill.yaml",
+    "checksum": "9d59fca48f668f1d30213c803ca2b584e7e2c42ae61aa1ca6d55c305687a93f7"
+  }
+}

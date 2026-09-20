@@ -1,0 +1,105 @@
+name: firebase-storage
+display_name: Firebase Storage
+category: api
+subcategory: general
+description: 'Firebase Storage: upload and manage files, set security rules, and configure CORS for client
+  uploads.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- firebase
+- gcloud
+- gsutil
+capabilities:
+- name: storage-ops
+  description: Upload, download, delete, and secure files in Firebase Storage buckets.
+  commands:
+  - firebase deploy --only storage:rules
+  - gsutil ls gs://project.appspot.com/
+  - gsutil cp local-file gs://project.appspot.com/uploads/file1
+  - gsutil rm -r gs://project.appspot.com/uploads/
+  - gcloud storage cors set cors.json gs://project.appspot.com
+  examples:
+  - gsutil cp local-file gs://project.appspot.com/uploads/file1
+  - gsutil ls gs://project.appspot.com/uploads/
+  - gcloud storage cors set cors.json gs://project.appspot.com
+  parameters:
+  - name: bucket
+    type: string
+    description: Storage bucket like project.appspot.com
+  - name: object-path
+    type: string
+    description: Object path in the bucket
+  - name: rules-file
+    type: string
+    description: Path to storage.rules
+knowledge:
+- title: Firebase Storage docs
+  type: documentation
+  source: https://firebase.google.com/docs/storage
+  description: Uploads, downloads, security rules, and CORS
+- title: Storage security rules
+  type: documentation
+  source: https://firebase.google.com/docs/storage/security/rules-conditions
+  description: Path matching and request/condition-based rules
+instructions: "# Firebase Storage\n\n## What this skill does\n\nFirebase Storage stores user-generated\
+  \ files on Google Cloud Storage behind Firebase rules. gsutil/gcloud manage the bucket; storage.rules\
+  \ control read/write access.\n\n## When to use\n\n- Setting up file uploads for an app\n- Cleaning up\
+  \ orphaned uploads\n- Adding CORS so browsers can upload directly\n\n## Real commands\n\n```bash\n#\
+  \ Deploy rules\nfirebase deploy --only storage:rules\n\n# Manage objects\n gsutil ls gs://project.appspot.com/uploads/\n\
+  \ gsutil cp local-file gs://project.appspot.com/uploads/file1\n gsutil rm -r gs://project.appspot.com/uploads/\n\
+  \n# CORS for web uploads\n gcloud storage cors set cors.json gs://project.appspot.com\n```\n\n## storage.rules\
+  \ example\n\n```javascript\nrules_version = '2';\nservice firebase.storage {\n  match /b/{bucket}/o\
+  \ {\n    match /uploads/{userId}/{file} {\n      allow read: if request.auth != null;\n      allow write:\
+  \ if request.auth != null && request.auth.uid == userId;\n    }\n  }\n}\n```\n\n## cors.json example\n\
+  \n```json\n[\n  {\n    \"origin\": [\"https://myapp.example.com\"],\n    \"method\": [\"GET\", \"PUT\"\
+  , \"POST\"],\n    \"maxAgeSeconds\": 3600,\n    \"responseHeader\": [\"Content-Type\", \"x-goog-meta-*\"\
+  , \"x-firebase-storage-version\"]\n  }\n]\n```\n\n## Testing\n\n```bash\n# Verify rules deny unauthenticated\
+  \ writes\ncurl -s -o /dev/null -w '%{http_code}' -X PUT -F 'file=@x' 'https://firebasestorage.googleapis.com/v0/b/project.appspot.com/o/uploads%2Fanon%2Ffile'\n\
+  ```\n\n## Best practices\n\n- Keep user files under /uploads/{uid}/ paths enforced by rules.\n- Set\
+  \ lifecycle rules in GCS to expire temp/derived objects.\n- Never grant broad write access to the whole\
+  \ bucket.\n- Test CORS changes with curl OPTIONS requests.\n- Use resumable uploads for large files\
+  \ from clients.\n"
+examples:
+- input: Allow users to upload avatars
+  output: Write rules matching /uploads/{uid}/avatar.jpg with write access gated on request.auth.uid ==
+    uid, deploy, and set bucket CORS for the web client.
+- input: Clean up a stale uploads folder
+  output: gsutil ls gs://project.appspot.com/uploads/ to review, then gsutil rm -r gs://project.appspot.com/uploads/
+    for the purge.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: firebase-storage.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-firebase-storage
+  generic:
+    system_prompt: 'You are the Firebase Storage specialist. You do it through storage-ops: Upload, download,
+      delete, and secure files in Firebase Storage buckets. The commands are real, e.g. `firebase deploy
+      --only storage:rules`. You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

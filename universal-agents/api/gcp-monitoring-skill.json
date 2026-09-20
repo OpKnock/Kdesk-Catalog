@@ -1,0 +1,171 @@
+{
+  "name": "gcp-monitoring",
+  "display_name": "Gcp Monitoring",
+  "category": "api",
+  "subcategory": "general",
+  "description": "GCP Cloud Monitoring operations: query metric time series, create alerting policies, and check uptime from the gcloud CLI.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "gcloud"
+  ],
+  "capabilities": [
+    {
+      "name": "gcp-monitoring",
+      "description": "Query metrics, manage alerting policies, and verify uptime checks.",
+      "commands": [
+        "gcloud monitoring time-series list --filter='metric.type=\"run.googleapis.com/request_count\" AND resource.labels.service_name=\"orders\"' --format='table(metric.labels.response_code, pointCount)'",
+        "gcloud monitoring time-series list --filter='metric.type=\"cloudfunctions.googleapis.com/function/execution_times\"' --format='json' | jq '.timeSeries[0].points[0].value'",
+        "gcloud monitoring channels create --display-name=ops-email --type=email --channel-labels=address=oncall@example.com",
+        "gcloud monitoring policies create --display-name='5xx high' --condition-filter='metric.type=\"run.googleapis.com/request_count\" AND metric.labels.response_code=\"500\"' --duration=300s",
+        "gcloud monitoring uptime-checks create --display-name=orders --resource-type=url --resource-url=https://orders.example.com/health --timeout=5s"
+      ],
+      "examples": [
+        "gcloud monitoring time-series list --filter='metric.type=\"run.googleapis.com/request_count\" AND resource.labels.service_name=\"orders\"' --format='table(metric.labels.response_code, pointCount)'",
+        "gcloud monitoring channels create --display-name=ops-email --type=email --channel-labels=address=oncall@example.com",
+        "gcloud monitoring uptime-checks create --display-name=orders --resource-type=url --resource-url=https://orders.example.com/health --timeout=5s"
+      ],
+      "parameters": [
+        {
+          "name": "metric-type",
+          "type": "string",
+          "description": "Metric descriptor like run.googleapis.com/request_count"
+        },
+        {
+          "name": "filter",
+          "type": "string",
+          "description": "Time series filter expression"
+        },
+        {
+          "name": "duration",
+          "type": "string",
+          "description": "Alert condition duration like 300s"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Cloud Monitoring docs",
+      "type": "documentation",
+      "source": "https://cloud.google.com/monitoring/docs",
+      "description": "Metrics, alerting policies, and uptime checks"
+    },
+    {
+      "title": "gcloud monitoring reference",
+      "type": "documentation",
+      "source": "https://cloud.google.com/sdk/gcloud/reference/monitoring",
+      "description": "time-series, policies, channels, and uptime-checks commands"
+    }
+  ],
+  "instructions": "# GCP Monitoring\n\n## What this skill does\n\nCloud Monitoring collects metrics from GCP services and custom agents. The gcloud CLI lists time series, creates alerting policies and notification channels, and manages uptime checks.\n\n## When to use\n\n- Verifying a service emits expected metrics\n- Creating alerts for SLO violations\n- Adding synthetic uptime checks to external endpoints\n\n## Real commands\n\n```bash\n# Query request counts by response code\n gcloud monitoring time-series list --filter='metric.type=\"run.googleapis.com/request_count\" AND resource.labels.service_name=\"orders\"' --format='table(metric.labels.response_code, pointCount)'\n\n# Notification channel\n gcloud monitoring channels create --display-name=ops-email --type=email --channel-labels=address=oncall@example.com\n\n# Alerting policy\n gcloud monitoring policies create --display-name='5xx high' --condition-filter='metric.type=\"run.googleapis.com/request_count\" AND metric.labels.response_code=\"500\"' --duration=300s\n\n# Uptime check\n gcloud monitoring uptime-checks create --display-name=orders --resource-type=url --resource-url=https://orders.example.com/health --timeout=5s\n```\n\n## Custom metric ingestion\n\n```bash\n# Push a custom counter from a VM\ncurl -s -X POST https://monitoring.googleapis.com/v3/projects/my-project/timeSeries -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' -d @ts.json | jq\n```\n\n## Testing\n\n```bash\n# Confirm an alert fires: stop the service, wait 5m, list incidents\n gcloud monitoring incidents list --filter='policy.displayName=\"5xx high\"' --freshness=1d | jq '.incidents | length'\n```\n\n## Best practices\n\n- Alert on error budgets and burn rate, not raw metrics.\n- Attach channels (email, PagerDuty) at policy creation.\n- Use uptime checks for external endpoints; keep timeouts small.\n- Pin metric types to documented descriptors (check the UI for typos).\n- Prefer `--format=json` + jq when scripting metric queries.\n",
+  "examples": [
+    {
+      "input": "Alert when the service returns 5xx for 5 minutes",
+      "output": "Create a policy with the request_count response_code=500 filter and 300s duration, wire the email channel, and test by forcing errors."
+    },
+    {
+      "input": "Verify our service reports metrics",
+      "output": "List time series filtered on the service's metric types and confirm pointCount is increasing."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "gcp-monitoring.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-gcp-monitoring"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Gcp Monitoring. You do it through gcp-monitoring: Query metrics, manage alerting policies, and verify uptime checks. The commands are real, e.g. `gcloud monitoring time-series list --filter=metric.type=run.googleapis.com/request_count...`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "gcp-monitoring",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "gcp-monitoring",
+        "name": "metric-type",
+        "type": "string",
+        "description": "Metric descriptor like run.googleapis.com/request_count"
+      },
+      {
+        "capability": "gcp-monitoring",
+        "name": "filter",
+        "type": "string",
+        "description": "Time series filter expression"
+      },
+      {
+        "capability": "gcp-monitoring",
+        "name": "duration",
+        "type": "string",
+        "description": "Alert condition duration like 300s"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "gcloud"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/gcp-monitoring-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/gcp-monitoring-skill.yaml",
+    "checksum": "0cb1f0bc5c6acf33c63a5383a1f50dd2b53e8acb47cbbc1645fd88725435fa2f"
+  }
+}

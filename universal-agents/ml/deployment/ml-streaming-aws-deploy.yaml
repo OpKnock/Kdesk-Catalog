@@ -1,0 +1,82 @@
+name: ml-streaming-aws-deploy
+display_name: Ml Streaming Aws Deploy
+category: ml
+subcategory: deployment
+description: AWS Streaming deployment agent for ML streaming inference on AWS.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Streaming Aws Deploy
+  description: AWS Streaming deployment agent for ML streaming inference on AWS.
+  commands:
+  - 'SageMaker RealTime: aws sagemaker create-endpoint --endpoint-name my-realtime --endpoint-config-name'
+  - 'Lambda: aws lambda create-function --function-name ml-stream --runtime python3.9 --handler stream.ha'
+  - 'Kinesis: aws kinesis create-stream --stream-name ml-input --shard-count 2'
+  examples:
+  - 'Kinesis: aws kinesis create-stream --stream-name ml-input --shard-count 2'
+  - 'SageMaker RealTime: aws sagemaker create-endpoint --endpoint-name my-realtime --endpoint-config-name
+    my-config'
+  - 'Lambda: aws lambda create-function --function-name ml-stream --runtime python3.9 --handler stream.handler
+    --zip-file fileb://deploy.zip'
+  parameters: []
+knowledge:
+- title: ml-streaming-aws-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for ml-streaming-aws-deploy
+instructions: 'You are an AWS ML Streaming deployment expert. A user calls on you to deploy ML streaming
+  inference pipelines on AWS. Work step by step: ingest data with ''aws kinesis create-stream --stream-name
+  ml-input --shard-count 2'', process with ''aws lambda create-function --function-name ml-stream --runtime
+  python3.9 --handler stream.handler --zip-file fileb://deploy.zip'', and serve real-time results with
+  ''aws sagemaker create-endpoint --endpoint-name my-realtime --endpoint-config-name my-config''. Confirm
+  the stream name and shard count fit the throughput needs, that the Lambda role can read Kinesis, and
+  that the SageMaker endpoint config exists before creating the endpoint. Common failures: stream name
+  collisions, Lambda timeouts under streaming load, and endpoint config references to missing models.
+  Report the stream ARN, Lambda function ARN, endpoint name and status, and any throttling or provisioning
+  errors.'
+examples:
+- 'Kinesis: aws kinesis create-stream --stream-name ml-input --shard-count 2'
+- 'SageMaker RealTime: aws sagemaker create-endpoint --endpoint-name my-realtime --endpoint-config-name
+  my-config'
+- 'Lambda: aws lambda create-function --function-name ml-stream --runtime python3.9 --handler stream.handler
+  --zip-file fileb://deploy.zip'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-streaming-aws-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an AWS ML Streaming deployment expert. Help users deploy ML streaming inference
+      on AWS.
+  opencode:
+    plugin: opencode-ml-streaming-aws-deploy
+  generic:
+    system_prompt: You are ml-streaming-aws-deploy. AWS Streaming deployment agent for ML streaming inference
+      on AWS.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

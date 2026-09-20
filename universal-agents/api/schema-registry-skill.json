@@ -1,0 +1,171 @@
+{
+  "name": "schema-registry",
+  "display_name": "Schema Registry",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Confluent Schema Registry skill: register Avro schemas, check compatibility before promotion, and list subjects/versions via REST.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kafka-avro-console-producer"
+  ],
+  "capabilities": [
+    {
+      "name": "schema-registry-api",
+      "description": "Register and validate schemas against the Confluent Schema Registry",
+      "commands": [
+        "curl -s http://localhost:8081/subjects",
+        "curl -s http://localhost:8081/subjects/orders-value/versions/latest | jq .version",
+        "curl -X POST http://localhost:8081/subjects/orders-value/versions -H 'Content-Type: application/vnd.schemaregistry.v1+json' -d @new-schema.json",
+        "curl -s -H 'Content-Type: application/vnd.schemaregistry.v1+json' 'http://localhost:8081/compat/subjects/orders-value/versions/latest' -d @candidate.json",
+        "kafka-avro-console-producer --broker-list localhost:9092 --topic orders --property schema.registry.url=http://localhost:8081 --property value.schema=\"$(cat order.avsc)\""
+      ],
+      "examples": [
+        "curl -s http://localhost:8081/subjects/orders-value/versions | jq",
+        "curl -X POST http://localhost:8081/subjects/orders-value/versions -H 'Content-Type: application/vnd.schemaregistry.v1+json' -d @new-schema.json",
+        "curl -s http://localhost:8081/config | jq"
+      ],
+      "parameters": [
+        {
+          "name": "subject",
+          "type": "string",
+          "description": "Subject name, e.g. orders-value"
+        },
+        {
+          "name": "schema_file",
+          "type": "string",
+          "description": "JSON file with {\"schema\": \"...\"} payload"
+        },
+        {
+          "name": "registry_url",
+          "type": "string",
+          "description": "Schema Registry base URL"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Schema Registry API reference",
+      "type": "documentation",
+      "source": "https://docs.confluent.io/platform/current/schema-registry/develop/api.html",
+      "description": "Subjects, versions, compatibility endpoints"
+    },
+    {
+      "title": "Schema Registry docs",
+      "type": "documentation",
+      "source": "https://docs.confluent.io/platform/current/schema-registry/index.html",
+      "description": "Concepts: subjects, versions, compatibility modes"
+    }
+  ],
+  "instructions": "# Schema Registry\n\nHand-crafted skill for managing Avro schemas with Confluent Schema Registry.\n\n## What this skill does\n\n- Lists subjects and versions registered in the registry\n- Registers new schema versions over the REST API\n- Pre-checks compatibility before a schema can break consumers\n\n## When to use\n\n- Releasing a new Kafka message format\n- Enforcing backward compatibility on shared topics\n- Investigating schema-not-found producer errors\n\n## Real commands\n\n```bash\n# List subjects\ncurl -s http://localhost:8081/subjects\n\n# Latest version of one subject\ncurl -s http://localhost:8081/subjects/orders-value/versions/latest | jq .version\n\n# Register a new version (payload: {\"schema\": \"...\"})\ncurl -X POST http://localhost:8081/subjects/orders-value/versions -H 'Content-Type: application/vnd.schemaregistry.v1+json' -d @new-schema.json\n\n# Compatibility check against latest (BACKWARD by default)\ncurl -s -H 'Content-Type: application/vnd.schemaregistry.v1+json' 'http://localhost:8081/compat/subjects/orders-value/versions/latest' -d @candidate.json\n\n# Produce with the registry\nkafka-avro-console-producer --broker-list localhost:9092 --topic orders --property schema.registry.url=http://localhost:8081 --property value.schema=\"$(cat order.avsc)\"\n```\n\n## Config\n\n```json\n// candidate.json\n{ \"schema\": \"{\"type\":\"record\",\"name\":\"Order\",\"fields\":[{\"name\":\"id\",\"type\":\"long\"},{\"name\":\"email\",\"type\":\"string\",\"default\":\"\"}]}\" }\n```\n\n## Testing\n\n```bash\ncurl -s http://localhost:8081/subjects/orders-value/versions | jq\ncurl -s http://localhost:8081/config | jq   # current compatibility mode\n```\n\n## Best practices\n\n- Set compatibility per subject before the first breaking need: BACKWARD\n- Check /compat before registering, not after producers fail\n- Version consumers with the same tag as the schema version\n",
+  "examples": [
+    {
+      "input": "Register the initial orders schema",
+      "output": "curl -X POST http://localhost:8081/subjects/orders-value/versions -H 'Content-Type: application/vnd.schemaregistry.v1+json' -d @new-schema.json returns the assigned version 1."
+    },
+    {
+      "input": "Will my new schema break existing consumers?",
+      "output": "curl -s -H 'Content-Type: application/vnd.schemaregistry.v1+json' 'http://localhost:8081/compat/subjects/orders-value/versions/latest' -d @candidate.json returns is_compatible: true or the failure reason."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "schema-registry.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-schema-registry"
+    },
+    "generic": {
+      "system_prompt": "You take the Schema Registry seat. You do it through schema-registry-api: Register and validate schemas against the Confluent Schema Registry. The commands are real, e.g. `curl -s http://localhost:8081/subjects`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "schema-registry",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "schema-registry-api",
+        "name": "subject",
+        "type": "string",
+        "description": "Subject name, e.g. orders-value"
+      },
+      {
+        "capability": "schema-registry-api",
+        "name": "schema_file",
+        "type": "string",
+        "description": "JSON file with {\"schema\": \"...\"} payload"
+      },
+      {
+        "capability": "schema-registry-api",
+        "name": "registry_url",
+        "type": "string",
+        "description": "Schema Registry base URL"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kafka-avro-console-producer"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/schema-registry-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/schema-registry-skill.yaml",
+    "checksum": "52f9389019d859ec46b4845bc255bdda05a7c12347424c1a7addc93c69b14258"
+  }
+}

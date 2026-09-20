@@ -1,0 +1,160 @@
+{
+  "name": "streaming-data-processor",
+  "display_name": "Streaming Data Processor",
+  "category": "data",
+  "subcategory": "streaming",
+  "description": "Agent for building real-time streaming data pipelines with Kafka Streams, Flink, and processing patterns.",
+  "version": "1.0.0",
+  "tags": [
+    "streaming",
+    "real-time",
+    "kafka-streams",
+    "flink"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "streaming-processing",
+      "description": "Build real-time streaming data pipelines",
+      "commands": [
+        "kafka-streams",
+        "flink",
+        "spark-streaming",
+        "faust"
+      ],
+      "examples": [
+        "Create stream: kafka-streams.KafkaStreams(builder.build(), config)",
+        "Window operation: stream.groupByKey().windowedBy(TimeWindows.of(Duration.ofMinutes(5)))",
+        "Aggregate: stream.aggregate(lambda: 0, lambda k, v, a: a + v)"
+      ],
+      "parameters": [
+        {
+          "name": "stream_processor",
+          "type": "string",
+          "description": "Processor: kafka-streams, flink, spark-streaming, faust"
+        },
+        {
+          "name": "processing_pattern",
+          "type": "string",
+          "description": "Pattern: windowing, aggregation, join, filter"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kafka Streams Documentation",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/streams/",
+      "description": "Kafka Streams API documentation"
+    },
+    {
+      "title": "Apache Flink Guide",
+      "type": "tutorial",
+      "source": "https://nightlies.apache.org/flink/flink-docs-stable/",
+      "description": "Apache Flink streaming documentation"
+    }
+  ],
+  "instructions": "You are a streaming data specialist. Help users:\n1. Design streaming architectures\n2. Implement windowing and aggregation\n3. Handle event time processing\n4. Build fault-tolerant streams\n5. Monitor stream health\n\nAlways recommend proper state management and exactly-once semantics.\n",
+  "examples": [
+    {
+      "input": "Build a real-time aggregation",
+      "output": "I'll create a streaming aggregation with windowing. Here's the implementation..."
+    },
+    {
+      "input": "My stream is lagging",
+      "output": "Let me check the consumer lag. I'll suggest partitioning and parallelism improvements..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "streaming-data-processor.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-streaming"
+    },
+    "generic": {
+      "system_prompt": "You are a streaming data expert. Help users build real-time pipelines with proper windowing, state management, and fault tolerance.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "streaming-data-processor",
+  "type": "agent",
+  "skills": [
+    "flink",
+    "flink-sql"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "streaming-processing",
+        "name": "stream_processor",
+        "type": "string",
+        "description": "Processor: kafka-streams, flink, spark-streaming, faust"
+      },
+      {
+        "capability": "streaming-processing",
+        "name": "processing_pattern",
+        "type": "string",
+        "description": "Pattern: windowing, aggregation, join, filter"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/agent/streaming-data-processor.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/agent/streaming-data-processor.yaml",
+    "checksum": "77fc6fd61b08031d926dfa4e268fddc098e0c33543c724ee9d0dbb00912a34ed"
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "name": "code-quality-maven-dependency-scan-agent",
+  "display_name": "Code Quality Maven Dependency Scan Agent",
+  "category": "code-quality",
+  "subcategory": "agent",
+  "description": "Maven dependency scan agent for Java/Maven vulnerability scanning.",
+  "version": "1.0.0",
+  "tags": [
+    "code-quality",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Code Quality Maven Dependency Scan Agent",
+      "description": "Maven dependency scan agent for Java/Maven vulnerability scanning.",
+      "commands": [
+        "mvn org.owasp:dependency-check-maven:purge",
+        "mvn dependency:tree",
+        "mvn org.owasp:dependency-check-maven:check",
+        "mvn org.owasp:dependency-check-maven:update-only"
+      ],
+      "examples": [
+        "mvn org.owasp:dependency-check-maven:check",
+        "mvn org.owasp:dependency-check-maven:update-only",
+        "mvn org.owasp:dependency-check-maven:purge",
+        "mvn dependency:tree"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "code-quality-maven-dependency-scan-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/code-quality/agent",
+      "description": "Reference documentation for code-quality-maven-dependency-scan-agent"
+    }
+  ],
+  "instructions": "You are the Maven dependency scan agent for Java/Maven vulnerability scanning with OWASP Dependency-Check. Call on this agent to audit JVM dependencies. Core workflow: update the NVD database with `mvn org.owasp:dependency-check-maven:update-only`, then scan with `mvn org.owasp:dependency-check-maven:check`; purge cached data with `mvn org.owasp:dependency-check-maven:purge`; and map the dependency graph with `mvn dependency:tree`. Key behaviors: update data feeds before scanning, prioritize CVSS critical/high findings, and check the generated report under target/. Report vulnerabilities by severity with CVE IDs, affected artifacts, and remediation.",
+  "examples": [
+    "mvn org.owasp:dependency-check-maven:check",
+    "mvn org.owasp:dependency-check-maven:update-only",
+    "mvn org.owasp:dependency-check-maven:purge",
+    "mvn dependency:tree"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "code-quality-maven-dependency-scan-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Maven dependency scan expert. Help users scan Java/Maven dependencies."
+    },
+    "opencode": {
+      "plugin": "opencode-code-quality-maven-dependency-scan-agent"
+    },
+    "generic": {
+      "system_prompt": "You are code-quality-maven-dependency-scan-agent. Maven dependency scan agent for Java/Maven vulnerability scanning.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "code-quality-maven-dependency-scan-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/agent/code-quality-maven-dependency-scan-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/agent/code-quality-maven-dependency-scan-agent.yaml",
+    "checksum": "fc8c5e1c2e74ce6ce127547393d2dcf8a7b8f8c7ed711f2de1bd66bb7cd2360e"
+  }
+}

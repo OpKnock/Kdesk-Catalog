@@ -1,0 +1,240 @@
+name: wireguard
+display_name: Wireguard
+category: networking
+subcategory: general
+description: 'Deploys WireGuard VPNs: key generation, peer configuration, and interface management with
+  wg and wg-quick.'
+version: 2.0.0
+tags:
+- networking
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- cat
+- umask
+- wg-quick
+capabilities:
+- name: keys
+  description: Generate WireGuard key pairs securely.
+  commands:
+  - umask 077 && wg genkey | tee privatekey | wg pubkey > publickey
+  - wg genkey
+  - wg pubkey < privatekey
+  - wg genpsk
+  - cat privatekey publickey
+  examples:
+  - umask 077 && wg genkey | tee server_private.key | wg pubkey > server_public.key
+  - wg genpsk > preshared.key
+  - umask 077 && wg genkey > peer1_private.key
+  parameters:
+  - name: umask
+    type: string
+    description: Secure file permissions, e.g. 077
+  - name: output
+    type: string
+    description: Key output file
+  - name: preshared
+    type: string
+    description: Generate a preshared key
+- name: interfaces
+  description: Bring up, tear down, and inspect WireGuard interfaces.
+  commands:
+  - wg-quick up wg0
+  - wg-quick down wg0
+  - wg show
+  - wg show wg0 allowed-ips
+  - wg showconf wg0
+  examples:
+  - wg-quick up /etc/wireguard/wg0.conf
+  - wg show wg0 transfer
+  - wg show wg0 peers | wc -l
+  parameters:
+  - name: interface
+    type: string
+    description: wg0, wg1, or config path
+  - name: allowed-ips
+    type: string
+    description: Show peer allowed IPs
+  - name: transfer
+    type: string
+    description: Show transfer counters
+knowledge:
+- title: WireGuard Quickstart
+  type: documentation
+  source: https://www.wireguard.com/quickstart/
+  description: Key generation and interface configuration
+- title: wg man page
+  type: documentation
+  source: https://man7.org/linux/man-pages/man8/wg.8.html
+  description: 'wg commands: genkey, pubkey, set, show'
+- title: wg-quick man page
+  type: documentation
+  source: https://man7.org/linux/man-pages/man8/wg-quick.8.html
+  description: wg-quick up/down interface management
+instructions: '# WireGuard
+
+
+  Deploy fast, modern VPN tunnels.
+
+
+  ## When to Use
+
+
+  - Site-to-site tunnels and road-warrior VPNs
+
+  - Kubernetes cluster networking (Cilium)
+
+  - Replacing IPSec/OpenVPN with simpler crypto
+
+
+  ## Key generation
+
+
+  ```bash
+
+  umask 077 && wg genkey | tee privatekey | wg pubkey > publickey
+
+  ```
+
+
+  Private keys stay on the host; only public keys are shared.
+
+
+  ## Server config
+
+
+  ```ini
+
+  [Interface]
+
+  Address = 10.0.0.1/24
+
+  ListenPort = 51820
+
+  PrivateKey = <server-private>
+
+
+  [Peer]
+
+  PublicKey = <peer1-public>
+
+  AllowedIPs = 10.0.0.2/32
+
+  ```
+
+
+  ## Client config
+
+
+  ```ini
+
+  [Interface]
+
+  Address = 10.0.0.2/24
+
+  PrivateKey = <peer1-private>
+
+
+  [Peer]
+
+  PublicKey = <server-public>
+
+  Endpoint = vpn.example.com:51820
+
+  AllowedIPs = 10.0.0.0/24
+
+  PersistentKeepalive = 25
+
+  ```
+
+
+  ## Up and inspect
+
+
+  ```bash
+
+  wg-quick up wg0
+
+  wg show
+
+  wg show wg0 transfer
+
+  wg-quick down wg0
+
+  ```
+
+
+  ## Peering rules
+
+
+  - AllowedIPs defines routing, not auth - set it precisely.
+
+  - Add PersistentKeepalive behind NAT.
+
+  - Preshared keys add post-quantum resilience - use wg genpsk.
+
+
+  ## Best practices
+
+
+  - Never commit private keys; generate per host.
+
+  - Use 10.x or 100.64.0.0/10 ranges to avoid LAN clashes.
+
+  - Route only needed subnets (AllowedIPs); no full-tunnel by default.
+
+  - Monitor handshake age: `wg show wg0` recent-handshake column.
+
+
+  ## Testing
+
+
+  ```bash
+
+  wg show wg0
+
+  timeout 2 ping -c 1 10.0.0.2
+
+  ```
+
+
+  Confirm handshake and ping before wiring services.'
+examples:
+- input: Set up a WireGuard tunnel between two servers.
+  output: Generates key pairs, writes server and peer configs, brings up wg0 on both ends, and verifies
+    with wg show.
+- input: A peer drops connection every few minutes.
+  output: Checks handshake age, adds PersistentKeepalive, and validates AllowedIPs on both sides.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: wireguard.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-wireguard
+  generic:
+    system_prompt: 'You own Wireguard end to end. You do it through keys: Generate WireGuard key pairs
+      securely. The commands are real, e.g. `umask 077 && wg genkey | tee privatekey | wg pubkey > publickey`.
+      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

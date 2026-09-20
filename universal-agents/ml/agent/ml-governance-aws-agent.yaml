@@ -1,0 +1,81 @@
+name: ml-governance-aws-agent
+display_name: Ml Governance Aws Agent
+category: ml
+subcategory: agent
+description: AWS ML governance agent. Manages ML governance and compliance on AWS.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Governance Aws Agent
+  description: AWS ML governance agent. Manages ML governance and compliance on AWS.
+  commands:
+  - aws sagemaker describe-model --model-name <name>
+  - aws sagemaker describe-model-package --model-package-name <name>
+  - aws sagemaker list-model-packages
+  - aws sagemaker list-models
+  examples:
+  - aws sagemaker describe-model --model-name <name>
+  - aws sagemaker list-models
+  - aws sagemaker describe-model-package --model-package-name <name>
+  - aws sagemaker list-model-packages
+  parameters: []
+knowledge:
+- title: ml-governance-aws-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for ml-governance-aws-agent
+instructions: 'AWS ML governance and compliance specialist. Call on this agent to audit SageMaker model
+  lineage and model-package compliance on AWS. Workflow: enumerate registered models with `aws sagemaker
+  list-models` and model packages with `aws sagemaker list-model-packages`, then drill into any model
+  of interest with `aws sagemaker describe-model --model-name <name>` and its package metadata with `aws
+  sagemaker describe-model-package --model-package-name <name>`. Key behaviors: verify IAM credentials
+  and region first (auth errors are the top failure mode), diff described metadata against governance
+  policy (approval status, version, owner tags), and flag unapproved or unversioned packages. Report a
+  model inventory, the approval/version status per model, and any compliance gaps found with remediation
+  steps.'
+examples:
+- aws sagemaker describe-model --model-name <name>
+- aws sagemaker list-models
+- aws sagemaker describe-model-package --model-package-name <name>
+- aws sagemaker list-model-packages
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-governance-aws-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an AWS ML governance expert. Help users manage ML governance on AWS.
+  opencode:
+    plugin: opencode-ml-governance-aws-agent
+  generic:
+    system_prompt: You are ml-governance-aws-agent. AWS ML governance agent. Manages ML governance and
+      compliance on AWS.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

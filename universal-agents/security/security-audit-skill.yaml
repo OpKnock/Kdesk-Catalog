@@ -1,0 +1,191 @@
+name: security-audit
+display_name: security-audit
+category: security
+subcategory: general
+description: Performs end-to-end host and network security audits with Lynis, ssh-audit, and nmap, producing
+  hardening recommendations.
+version: 2.0.0
+tags:
+- security
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- lynis
+- nmap
+- ssh-audit
+capabilities:
+- name: lynis-system-audit
+  description: Run Lynis hardening audits on Linux/macOS hosts.
+  commands:
+  - lynis audit system
+  - lynis audit system --quick
+  - lynis audit system --auditor "Security Team"
+  - lynis audit system --log-file /var/log/lynis-report.log
+  - lynis show commands
+  examples:
+  - lynis audit system --quick
+  - lynis audit system --auditor "Ops"
+  - lynis show commands
+  parameters:
+  - name: auditor
+    type: string
+    description: Name of the auditor for the report
+  - name: logFile
+    type: string
+    description: Log file path for the audit
+- name: network-and-service-scan
+  description: Scan services and SSH configurations for weaknesses.
+  commands:
+  - ssh-audit 10.0.0.5
+  - ssh-audit --level=info 10.0.0.5
+  - nmap -sV -sC 10.0.0.5
+  - nmap -p- --min-rate 1000 10.0.0.5
+  - lynis audit policies
+  examples:
+  - ssh-audit 10.0.0.5
+  - nmap -sV -sC 10.0.0.5
+  - lynis audit policies
+  parameters:
+  - name: target
+    type: string
+    description: Hostname or IP of the target
+  - name: ports
+    type: string
+    description: Port range for nmap scans
+knowledge:
+- title: Lynis Documentation
+  type: documentation
+  source: https://cisofy.com/lynis/
+  description: Hardening audit tool and report interpretation
+- title: Lynis GitHub
+  type: documentation
+  source: https://github.com/CISOfy/lynis
+  description: Installation and audit options
+- title: Nmap Reference
+  type: documentation
+  source: https://nmap.org/docs.html
+  description: Port scanning and service detection
+instructions: '# Security Audit
+
+
+  Systematic host and network security auditing with hardening evidence.
+
+
+  ## What This Skill Does
+
+
+  - Runs Lynis hardening audits with CIS-style scoring
+
+  - Audits SSH daemon configuration with ssh-audit
+
+  - Scans open ports and service versions with nmap
+
+  - Produces actionable hardening checklists
+
+
+  ## When to Use
+
+
+  - Pre-production host hardening review
+
+  - Investigating unusual listening services
+
+  - Compliance evidence collection
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Host audit
+
+  lynis audit system
+
+  lynis audit system --quick
+
+  lynis audit system --auditor "Security Team"
+
+  lynis audit policies
+
+
+  # SSH audit
+
+  ssh-audit 10.0.0.5
+
+  ssh-audit --level=info 10.0.0.5
+
+
+  # Network scan
+
+  nmap -sV -sC 10.0.0.5
+
+  nmap -p- --min-rate 1000 10.0.0.5
+
+  ```
+
+
+  ## Hardening Checklist
+
+
+  - Disable password SSH auth; enforce key-only access
+
+  - Update packages; enable automatic security updates
+
+  - Close unused ports and restrict with firewall rules
+
+  - Enable auditd and system accounting
+
+  - Harden kernel params (sysctl) per CIS guidance
+
+
+  ## Best Practices
+
+
+  - Run audits on clean images before patching to measure drift
+
+  - Re-run after every major upgrade and compare hardening index
+
+  - Automate weekly lynis --quick in cron and ship logs to central storage
+
+  - Verify findings manually before applying changes
+
+  - Keep the audit log as compliance evidence'
+examples:
+- input: Audit this server before launch
+  output: Agent runs lynis audit system --quick, reviews the hardening index and warnings, then adds ssh-audit
+    and nmap checks for exposed services.
+- input: Is SSH configured safely?
+  output: Agent runs ssh-audit on the host and lists weak algorithms and recommended sshd config changes.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: security-audit.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-security-audit
+  generic:
+    system_prompt: 'Your lane is security-audit. You do it through lynis-system-audit: Run Lynis hardening
+      audits on Linux/macOS hosts. The commands are real, e.g. `lynis audit system`. You run and verify
+      the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

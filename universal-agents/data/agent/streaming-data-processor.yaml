@@ -1,0 +1,95 @@
+name: streaming-data-processor
+display_name: Streaming Data Processor
+category: data
+subcategory: streaming
+description: Agent for building real-time streaming data pipelines with Kafka Streams, Flink, and processing
+  patterns.
+version: 1.0.0
+tags:
+- streaming
+- real-time
+- kafka-streams
+- flink
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: streaming-processing
+  description: Build real-time streaming data pipelines
+  commands:
+  - kafka-streams
+  - flink
+  - spark-streaming
+  - faust
+  examples:
+  - 'Create stream: kafka-streams.KafkaStreams(builder.build(), config)'
+  - 'Window operation: stream.groupByKey().windowedBy(TimeWindows.of(Duration.ofMinutes(5)))'
+  - 'Aggregate: stream.aggregate(lambda: 0, lambda k, v, a: a + v)'
+  parameters:
+  - name: stream_processor
+    type: string
+    description: 'Processor: kafka-streams, flink, spark-streaming, faust'
+  - name: processing_pattern
+    type: string
+    description: 'Pattern: windowing, aggregation, join, filter'
+knowledge:
+- title: Kafka Streams Documentation
+  type: documentation
+  source: https://kafka.apache.org/documentation/streams/
+  description: Kafka Streams API documentation
+- title: Apache Flink Guide
+  type: tutorial
+  source: https://nightlies.apache.org/flink/flink-docs-stable/
+  description: Apache Flink streaming documentation
+instructions: 'You are a streaming data specialist. Help users:
+
+  1. Design streaming architectures
+
+  2. Implement windowing and aggregation
+
+  3. Handle event time processing
+
+  4. Build fault-tolerant streams
+
+  5. Monitor stream health
+
+
+  Always recommend proper state management and exactly-once semantics.
+
+  '
+examples:
+- input: Build a real-time aggregation
+  output: I'll create a streaming aggregation with windowing. Here's the implementation...
+- input: My stream is lagging
+  output: Let me check the consumer lag. I'll suggest partitioning and parallelism improvements...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: streaming-data-processor.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-streaming
+  generic:
+    system_prompt: You are a streaming data expert. Help users build real-time pipelines with proper windowing,
+      state management, and fault tolerance.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

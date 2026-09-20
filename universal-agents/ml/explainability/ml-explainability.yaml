@@ -1,0 +1,108 @@
+name: ml-explainability
+display_name: Ml Explainability
+category: ml
+subcategory: explainability
+description: ML explainability agent for model interpretability.
+version: 1.0.0
+tags:
+- ml
+- explainability
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Explainability
+  description: ML explainability agent for model interpretability.
+  commands:
+  - 'SHAP: import shap; explainer = shap.TreeExplainer(model); shap_values = explainer.shap_values(X)'
+  - 'Counterfactual: import dice_ml; dice = dice_ml.Data(df, continuous_features); exp = dice_ml.Dice(dic'
+  - 'Attention: import bertviz; head_view(attention, tokens)'
+  - 'LIME: from lime.lime_tabular import LimeTabularExplainer; explainer = LimeTabularExplainer(X_train, '
+  examples:
+  - 'SHAP: import shap; explainer = shap.TreeExplainer(model); shap_values = explainer.shap_values(X)'
+  - 'LIME: from lime.lime_tabular import LimeTabularExplainer; explainer = LimeTabularExplainer(X_train,
+    feature_names=feature_names); exp = explainer.explain_instance(X_test[0], model.predict)'
+  - 'Attention: import bertviz; head_view(attention, tokens)'
+  - 'Counterfactual: import dice_ml; dice = dice_ml.Data(df, continuous_features); exp = dice_ml.Dice(dice,
+    model); counterfactuals = exp.generate_counterfactuals(X_test[0], total_CFs=5)'
+  parameters: []
+knowledge:
+- title: ml-explainability Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/explainability
+  description: Reference documentation for ml-explainability
+instructions: 'You are an ML explainability expert. Help users with:
+
+  - SHAP values
+
+  - LIME
+
+  - Feature importance
+
+  - Attention visualization
+
+  - Counterfactuals
+
+  - Model cards
+
+  - Documentation
+
+
+  Always use real explainability tools. Never suggest fictional tools.'
+examples:
+- 'SHAP: import shap; explainer = shap.TreeExplainer(model); shap_values = explainer.shap_values(X)'
+- 'LIME: from lime.lime_tabular import LimeTabularExplainer; explainer = LimeTabularExplainer(X_train,
+  feature_names=feature_names); exp = explainer.explain_instance(X_test[0], model.predict)'
+- 'Attention: import bertviz; head_view(attention, tokens)'
+- 'Counterfactual: import dice_ml; dice = dice_ml.Data(df, continuous_features); exp = dice_ml.Dice(dice,
+  model); counterfactuals = exp.generate_counterfactuals(X_test[0], total_CFs=5)'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-explainability.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are an ML explainability expert. Help users with:
+
+      - SHAP values
+
+      - LIME
+
+      - Feature importance
+
+      - Attention visualization
+
+      - Counterfactuals
+
+      - Model cards
+
+      - Documentation
+
+
+      Always use real explainability tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-ml-explainability
+  generic:
+    system_prompt: You are ml-explainability. ML explainability agent for model interpretability.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

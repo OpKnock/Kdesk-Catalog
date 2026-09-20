@@ -1,0 +1,109 @@
+name: ml-torchserve
+display_name: Ml Torchserve
+category: ml
+subcategory: inference
+description: TorchServe agent for PyTorch model serving.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Torchserve
+  description: TorchServe agent for PyTorch model serving.
+  commands:
+  - 'Archive: torch-model-archiver --model-name my_model --version 1.0 --model-file model.py --serialized'
+  - 'Infer: curl -X POST http://localhost:8080/predictions/my_model -H ''Content-Type: application/json''
+    -'
+  - 'Status: curl http://localhost:8080/models/my_model'
+  - 'Serve: torchserve --start --model-store model_store --models my_model=my_model.mar'
+  examples:
+  - 'Archive: torch-model-archiver --model-name my_model --version 1.0 --model-file model.py --serialized-file
+    model.pt --handler image_classifier'
+  - 'Serve: torchserve --start --model-store model_store --models my_model=my_model.mar'
+  - 'Infer: curl -X POST http://localhost:8080/predictions/my_model -H ''Content-Type: application/json''
+    -d ''{"data": "base64_encoded_data"}'''
+  - 'Status: curl http://localhost:8080/models/my_model'
+  parameters: []
+knowledge:
+- title: ml-torchserve Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ml-torchserve
+instructions: 'You are a TorchServe expert. Help users with:
+
+  - Model archiving
+
+  - Model serving
+
+  - Inference
+
+  - Management API
+
+  - Metrics
+
+  - Logging
+
+  - Scalability
+
+
+  Always use real TorchServe tools. Never suggest fictional tools.'
+examples:
+- 'Archive: torch-model-archiver --model-name my_model --version 1.0 --model-file model.py --serialized-file
+  model.pt --handler image_classifier'
+- 'Serve: torchserve --start --model-store model_store --models my_model=my_model.mar'
+- 'Infer: curl -X POST http://localhost:8080/predictions/my_model -H ''Content-Type: application/json''
+  -d ''{"data": "base64_encoded_data"}'''
+- 'Status: curl http://localhost:8080/models/my_model'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-torchserve.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a TorchServe expert. Help users with:
+
+      - Model archiving
+
+      - Model serving
+
+      - Inference
+
+      - Management API
+
+      - Metrics
+
+      - Logging
+
+      - Scalability
+
+
+      Always use real TorchServe tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-ml-torchserve
+  generic:
+    system_prompt: You are ml-torchserve. TorchServe agent for PyTorch model serving.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

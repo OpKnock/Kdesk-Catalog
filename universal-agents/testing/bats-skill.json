@@ -1,0 +1,219 @@
+{
+  "name": "bats",
+  "display_name": "Bats",
+  "category": "testing",
+  "subcategory": "general",
+  "description": "Writes and runs BASH unit tests with Bats, covering assertions, setup/teardown, and CI-friendly TAP output.",
+  "version": "2.0.0",
+  "tags": [
+    "testing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "assert_output",
+    "assert_success",
+    "bats",
+    "load",
+    "run"
+  ],
+  "capabilities": [
+    {
+      "name": "bats-testing",
+      "description": "Author and run Bats test files with filters.",
+      "commands": [
+        "bats test.bats",
+        "bats -t test.bats",
+        "bats --tap tests/",
+        "bats -f 'parses' test.bats",
+        "bats -c test.bats"
+      ],
+      "examples": [
+        "bats test.bats",
+        "bats --tap tests/",
+        "bats -f 'returns error' test.bats"
+      ],
+      "parameters": [
+        {
+          "name": "filter",
+          "type": "string",
+          "description": "Run only tests matching the regex (-f)"
+        },
+        {
+          "name": "tap",
+          "type": "boolean",
+          "description": "TAP output format"
+        },
+        {
+          "name": "dryRun",
+          "type": "boolean",
+          "description": "Count and print tests without running (-c)"
+        }
+      ]
+    },
+    {
+      "name": "assertions-and-fixtures",
+      "description": "Use bats-assert helpers and fixtures in tests.",
+      "commands": [
+        "load 'test_helper/bats-support/load'",
+        "load 'test_helper/bats-assert/load'",
+        "assert_success",
+        "assert_output --partial 'error'",
+        "run ./deploy.sh --dry-run"
+      ],
+      "examples": [
+        "assert_success",
+        "assert_output --regexp 'deploying.*prod'",
+        "run ./script.sh -h && assert_failure"
+      ],
+      "parameters": [
+        {
+          "name": "command",
+          "type": "string",
+          "description": "Command to run under `run`"
+        },
+        {
+          "name": "expected",
+          "type": "string",
+          "description": "Expected output for assertions"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Bats Documentation",
+      "type": "documentation",
+      "source": "https://bats-core.readthedocs.io/",
+      "description": "Bats core usage, setup/teardown, and filtering"
+    },
+    {
+      "title": "bats-assert GitHub",
+      "type": "documentation",
+      "source": "https://github.com/bats-core/bats-assert",
+      "description": "Assertion helpers for Bats"
+    }
+  ],
+  "instructions": "# Bats\n\nUnit testing for Bash and shell scripts.\n\n## What This Skill Does\n\n- Writes test files with @test blocks\n- Uses run, assert_success, and assert_output\n- Manages setup/teardown fixtures\n- Produces TAP output for CI\n\n## When to Use\n\n- Testing shell scripts and CLI tools\n- Regression tests for deploy and ops scripts\n- CI for anything written in Bash\n\n## Real Commands\n\n```bash\n# Run tests\nbats test.bats\nbats --tap tests/\nbats -f 'parses' test.bats\n\n# Run a Bats suite in CI\nbats --tap tests/ | tee results.tap\n```\n\n## Sample Test File\n\n```bash\n#!/usr/bin/env bats\n\nload 'test_helper/bats-support/load'\nload 'test_helper/bats-assert/load'\n\nsetup() {\n  export FOO=\"bar\"\n}\n\nteardown() {\n  rm -f /tmp/test-output\n}\n\n@test \"greeting prints hello\" {\n  run ./greet.sh alice\n  assert_success\n  assert_output 'hello alice'\n}\n\n@test \"greeting fails without args\" {\n  run ./greet.sh\n  assert_failure\n  assert_output --partial 'usage'\n}\n```\n\n## Best Practices\n\n- Keep tests deterministic: set env in setup, clean in teardown\n- Use run to capture stdout/stderr/exit code\n- Prefer assert_output --partial over exact matching\n- Use tags and -f filters for targeted debugging\n- Run the full suite in CI with --tap output",
+  "examples": [
+    {
+      "input": "Write tests for my backup script",
+      "output": "Agent writes Bats tests with setup/teardown, runs them with bats -t, and fixes the script until all pass."
+    },
+    {
+      "input": "Why does test 3 fail in CI?",
+      "output": "Agent runs bats -f 'test 3 name' with -t to see the failure trace and isolates the environment issue."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "bats.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-bats"
+    },
+    "generic": {
+      "system_prompt": "You are the Bats specialist. You do it through bats-testing: Author and run Bats test files with filters. The commands are real, e.g. `bats test.bats`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "bats",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "bats-testing",
+        "name": "filter",
+        "type": "string",
+        "description": "Run only tests matching the regex (-f)"
+      },
+      {
+        "capability": "bats-testing",
+        "name": "tap",
+        "type": "boolean",
+        "description": "TAP output format"
+      },
+      {
+        "capability": "bats-testing",
+        "name": "dryRun",
+        "type": "boolean",
+        "description": "Count and print tests without running (-c)"
+      },
+      {
+        "capability": "assertions-and-fixtures",
+        "name": "command",
+        "type": "string",
+        "description": "Command to run under `run`"
+      },
+      {
+        "capability": "assertions-and-fixtures",
+        "name": "expected",
+        "type": "string",
+        "description": "Expected output for assertions"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "assert_output",
+    "assert_success",
+    "bats",
+    "load",
+    "run"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/bats-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/bats-skill.yaml",
+    "checksum": "8643cd3319bd090740d03304ea2665ae5cc2ceeea54b3c705e719d3a1ed27262"
+  }
+}

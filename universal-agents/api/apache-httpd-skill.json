@@ -1,0 +1,221 @@
+{
+  "name": "apache-httpd",
+  "display_name": "Apache Httpd",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Administers Apache HTTP Server: config validation, virtual hosts, module inspection, htpasswd basic auth, and graceful reloads.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "apachectl",
+    "htpasswd",
+    "httpd"
+  ],
+  "capabilities": [
+    {
+      "name": "config-management",
+      "description": "Validate, dump, and hot-reload the Apache configuration.",
+      "commands": [
+        "apachectl -t",
+        "apachectl -S",
+        "httpd -V",
+        "apachectl graceful",
+        "apachectl configtest"
+      ],
+      "examples": [
+        "apachectl -t && apachectl graceful",
+        "apachectl -S | grep -E \"port|vhost\"",
+        "httpd -t -D DUMP_MODULES | grep ssl"
+      ],
+      "parameters": [
+        {
+          "name": "config_file",
+          "type": "string",
+          "description": "Alternate config file via -f"
+        },
+        {
+          "name": "module",
+          "type": "string",
+          "description": "Module name to check via DUMP_MODULES"
+        }
+      ]
+    },
+    {
+      "name": "vhost-and-auth",
+      "description": "Configure virtual hosts and protect directories with htpasswd.",
+      "commands": [
+        "htpasswd -c /etc/httpd/conf/.htpasswd alice",
+        "htpasswd -b /etc/httpd/conf/.htpasswd bob bobpass",
+        "htpasswd -D /etc/httpd/conf/.htpasswd bob",
+        "htpasswd -nB alice",
+        "curl -u alice:pass -I http://localhost/private/"
+      ],
+      "examples": [
+        "htpasswd -c .htpasswd admin && apachectl -t && apachectl graceful",
+        "curl -I -u alice:secret http://localhost/private/",
+        "htpasswd -bB /etc/httpd/conf/.htpasswd deploy deploypass"
+      ],
+      "parameters": [
+        {
+          "name": "file",
+          "type": "string",
+          "description": "htpasswd file path"
+        },
+        {
+          "name": "user",
+          "type": "string",
+          "description": "Username to add/remove"
+        },
+        {
+          "name": "bcrypt",
+          "type": "boolean",
+          "description": "-B enables bcrypt hashing"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Apache httpd Docs",
+      "type": "documentation",
+      "source": "https://httpd.apache.org/docs/2.4/",
+      "description": "Core directives, vhosts, SSL"
+    },
+    {
+      "title": "htpasswd",
+      "type": "documentation",
+      "source": "https://httpd.apache.org/docs/2.4/programs/htpasswd.html",
+      "description": "Password file management"
+    },
+    {
+      "title": "Apache Invocation",
+      "type": "documentation",
+      "source": "https://httpd.apache.org/docs/2.4/invoking.html",
+      "description": "apachectl/httpd flags and graceful reload"
+    }
+  ],
+  "instructions": "# Apache HTTP Server\n\n## What this skill does\n\nAdministers Apache httpd: validating configs before reload, inspecting virtual hosts and modules, configuring reverse proxies and SSL, and protecting paths with htpasswd basic auth.\n\n## When to use\n\n- A config change must be validated before a reload\n- Setting up a virtual host for a new site\n- Password-protecting an internal path\n\n## Real commands\n\n```bash\n# Validate config\napachectl -t\n\n# Dump vhost summary\napachectl -S\n\n# Check loaded modules\nhttpd -t -D DUMP_MODULES | grep -E \"ssl|proxy\"\n\n# Graceful reload\napachectl graceful\n\n# htpasswd management\nhtpasswd -c /etc/httpd/conf/.htpasswd alice\nhtpasswd -b /etc/httpd/conf/.htpasswd bob bobpass\napachectl -t && apachectl graceful\n```\n\n## Vhost example\n\n```apache\n<VirtualHost *:443>\n  ServerName api.example.com\n  SSLEngine on\n  SSLCertificateFile /etc/pki/tls/certs/api.crt\n  SSLCertificateKeyFile /etc/pki/tls/private/api.key\n  ProxyPass /api/ http://backend:8080/api/\n  ErrorLog logs/api-error.log\n  CustomLog logs/api-access.log combined\n</VirtualHost>\n```\n\n## Basic auth block\n\n```apache\n<Location /admin>\n  AuthType Basic\n  AuthName \"Admin\"\n  AuthUserFile /etc/httpd/conf/.htpasswd\n  Require valid-user\n</Location>\n```\n\n## Testing\n\n- Always run `apachectl -t` before `graceful`\n- Test auth with curl -u and confirm 401 without credentials\n\n## Best practices\n\n- Prefer graceful over restart to avoid dropping connections\n- Use bcrypt (htpasswd -B) for password files\n- Check apachectl -S after adding vhosts for name collisions",
+  "examples": [
+    {
+      "input": "Protect /admin with basic auth",
+      "output": "Runs htpasswd -c, adds an AuthType/AuthUserFile Location block, validates with apachectl -t, reloads with graceful, tests 200 vs 401 with curl."
+    },
+    {
+      "input": "Reload Apache after a config edit",
+      "output": "Runs `apachectl -t` first; on success `apachectl graceful`; on failure shows the offending directive and line."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "apache-httpd.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-apache-httpd"
+    },
+    "generic": {
+      "system_prompt": "You work Apache Httpd hands-on. You do it through config-management: Validate, dump, and hot-reload the Apache configuration. The commands are real, e.g. `apachectl -t`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "apache-httpd",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "config-management",
+        "name": "config_file",
+        "type": "string",
+        "description": "Alternate config file via -f"
+      },
+      {
+        "capability": "config-management",
+        "name": "module",
+        "type": "string",
+        "description": "Module name to check via DUMP_MODULES"
+      },
+      {
+        "capability": "vhost-and-auth",
+        "name": "file",
+        "type": "string",
+        "description": "htpasswd file path"
+      },
+      {
+        "capability": "vhost-and-auth",
+        "name": "user",
+        "type": "string",
+        "description": "Username to add/remove"
+      },
+      {
+        "capability": "vhost-and-auth",
+        "name": "bcrypt",
+        "type": "boolean",
+        "description": "-B enables bcrypt hashing"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "apachectl",
+    "htpasswd",
+    "httpd"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/apache-httpd-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/apache-httpd-skill.yaml",
+    "checksum": "7aa7136987e05a31b86834cbfb771e3ffa9166382303285924261a1d8504d605"
+  }
+}

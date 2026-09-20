@@ -1,0 +1,198 @@
+{
+  "name": "jq",
+  "display_name": "jq",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Processes JSON in the shell with jq: filtering, transformations, aggregation, and scripting against APIs and log streams.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "cat"
+  ],
+  "capabilities": [
+    {
+      "name": "query-and-filter",
+      "description": "Extract and filter values from JSON documents.",
+      "commands": [
+        "cat data.json | jq '.users[].name'",
+        "jq '.items[] | select(.status == \"open\")' data.json",
+        "jq '.[] | {name, id}' data.json",
+        "jq '.total' data.json",
+        "jq 'has(\"errors\")' data.json",
+        "curl -s https://api.example.com/data | jq '.result'"
+      ],
+      "examples": [
+        "jq '.users[].name' data.json",
+        "jq '.items[] | select(.status == \"open\")' data.json",
+        "curl -s https://api.example.com/data | jq '.result'"
+      ],
+      "parameters": [
+        {
+          "name": "filter",
+          "type": "string",
+          "description": "jq filter expression"
+        },
+        {
+          "name": "file",
+          "type": "string",
+          "description": "JSON file path"
+        }
+      ]
+    },
+    {
+      "name": "transform-and-aggregate",
+      "description": "Build new JSON, group, count, and reshape data.",
+      "commands": [
+        "jq '{count: (.items | length), names: [.items[].name]}' data.json",
+        "jq 'group_by(.kind) | map({kind: .[0].kind, count: length})' data.json",
+        "jq '[.items[] | {name, size}] | sort_by(.size) | reverse' data.json",
+        "jq -r '.items[] | \"\\(.name)\\t\\(.id)\"' data.json",
+        "jq 'map(.price) | add / length' data.json",
+        "jq -n '{hello: \"world\", arr: [1,2,3]}'"
+      ],
+      "examples": [
+        "jq 'group_by(.kind) | map({kind: .[0].kind, count: length})' data.json",
+        "jq -r '.items[] | \"\\(.name)\\t\\(.id)\"' data.json",
+        "jq 'map(.price) | add / length' data.json"
+      ],
+      "parameters": [
+        {
+          "name": "raw",
+          "type": "boolean",
+          "description": "Output raw strings without quotes (-r)"
+        },
+        {
+          "name": "compact",
+          "type": "boolean",
+          "description": "Compact single-line output (-c)"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "jq Manual",
+      "type": "documentation",
+      "source": "https://jqlang.github.io/jq/manual/",
+      "description": "Complete jq language reference"
+    },
+    {
+      "title": "jq Playground",
+      "type": "documentation",
+      "source": "https://jqplay.org/",
+      "description": "Interactive jq testing"
+    }
+  ],
+  "instructions": "# jq JSON Processing\n\nQuery, transform, and aggregate JSON from the command line.\n\n## What This Skill Does\n\n- Filters and extracts values from JSON documents\n- Selects objects by conditions\n- Builds new JSON objects and arrays\n- Aggregates with group_by, length, add\n- Formats output (raw, compact, colored)\n- Powers API pipelines: curl | jq\n\n## When to Use\n\n- Inspecting API responses in the shell\n- Parsing Kubernetes/cloud CLI JSON output\n- Data wrangling in pipelines\n\n## Real Commands\n\n```bash\n# Extract\ncat data.json | jq '.users[].name'\njq '.items[] | select(.status == \"open\")' data.json\njq '.total' data.json\n\n# Transform\njq '{count: (.items | length), names: [.items[].name]}' data.json\njq '[.items[] | {name, size}] | sort_by(.size) | reverse' data.json\njq 'map(.price) | add / length' data.json\njq -n '{hello: \"world\", arr: [1,2,3]}'\n\n# Output modes\njq -r '.items[] | \"\\(.name)\t\\(.id)\"' data.json\njq -c '.items[]' data.json\ncurl -s https://api.example.com/data | jq '.result'\n```\n\n## Best Practices\n\n- Use -r for unquoted output (CSV, TSV, shell assignment)\n- Use select() early in pipelines for performance\n- Quote filters in single quotes to protect shell expansion\n- Prefer jq for ad-hoc; SQL or duckdb for large data analysis\n- Use --arg to inject shell variables: jq --arg name \"$N\" '.name=$name'",
+  "examples": [
+    {
+      "input": "Get all pod names and statuses from kubectl",
+      "output": "Agent pipes kubectl get pods -o json into jq with a projected output filter"
+    },
+    {
+      "input": "Summarize an API response by category counts",
+      "output": "Agent groups items by kind and produces {kind, count} pairs"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "jq.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-jq"
+    },
+    "generic": {
+      "system_prompt": "Your lane is jq. You do it through query-and-filter: Extract and filter values from JSON documents. The commands are real, e.g. `cat data.json | jq .users[].name`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "jq",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "query-and-filter",
+        "name": "filter",
+        "type": "string",
+        "description": "jq filter expression"
+      },
+      {
+        "capability": "query-and-filter",
+        "name": "file",
+        "type": "string",
+        "description": "JSON file path"
+      },
+      {
+        "capability": "transform-and-aggregate",
+        "name": "raw",
+        "type": "boolean",
+        "description": "Output raw strings without quotes (-r)"
+      },
+      {
+        "capability": "transform-and-aggregate",
+        "name": "compact",
+        "type": "boolean",
+        "description": "Compact single-line output (-c)"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cat"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/jq-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/jq-skill.yaml",
+    "checksum": "d6d49f9827a9dee66d83e82658c69c6353f813e6255ba2a532ceb14b84355c12"
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "name": "retry-pattern",
+  "display_name": "Retry Pattern",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted retry pattern skill: exponential backoff with tenacity, curl retry flags, Retry-After handling, and jitter to survive cascading failures.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "pip"
+  ],
+  "capabilities": [
+    {
+      "name": "exponential-backoff",
+      "description": "Retry failing calls with exponential backoff, jitter, and Retry-After",
+      "commands": [
+        "curl --retry 5 --retry-delay 2 --retry-all-errors --retry-connrefused https://api.example.com/health",
+        "pip install tenacity",
+        "curl -si https://api.example.com/rate-limited | grep -i retry-after",
+        "curl --retry 3 --retry-connrefused -s https://api.example.com/data -o data.json"
+      ],
+      "examples": [
+        "curl --retry 5 --retry-delay 2 --retry-all-errors https://api.example.com/health",
+        "python -c 'from tenacity import retry, stop_after_attempt, wait_exponential; print(retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, max=10))(__import__(\"requests\").get).__name__)'",
+        "curl -si https://api.example.com/429 | grep -i retry-after"
+      ],
+      "parameters": [
+        {
+          "name": "max_attempts",
+          "type": "integer",
+          "description": "Total attempts before giving up"
+        },
+        {
+          "name": "backoff_multiplier",
+          "type": "integer",
+          "description": "Base delay in seconds for exponential growth"
+        },
+        {
+          "name": "jitter",
+          "type": "boolean",
+          "description": "Randomize delay to avoid thundering herd"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Azure retry pattern",
+      "type": "documentation",
+      "source": "https://learn.microsoft.com/en-us/azure/architecture/patterns/retry",
+      "description": "Retry/backoff guidance and circuit breaker relationship"
+    },
+    {
+      "title": "tenacity docs",
+      "type": "documentation",
+      "source": "https://tenacity.readthedocs.io/en/latest/",
+      "description": "Retrying library: stop, wait, retry conditions"
+    }
+  ],
+  "instructions": "# Retry Pattern\n\nHand-crafted skill for resilient retries with exponential backoff.\n\n## What this skill does\n\n- Retries transient failures a bounded number of times\n- Grows delays exponentially with jitter\n- Honors Retry-After headers from rate-limited APIs\n\n## When to use\n\n- Downstream services return 503/429 or refuse connections\n- Batch jobs should survive brief network blips\n- Rate-limited third-party APIs need polite retries\n\n## Real commands\n\n```bash\n# curl: 5 attempts, 2s base delay, retry on everything including connection refused\ncurl --retry 5 --retry-delay 2 --retry-all-errors --retry-connrefused https://api.example.com/health\n\n# Honoring Retry-After from a 429\ncurl -si https://api.example.com/rate-limited | grep -i retry-after\n\n# Python tenacity: 3 attempts, exponential 1s..10s\npip install tenacity\n```\n\n## Python retry\n\n```python\nfrom tenacity import retry, stop_after_attempt, wait_exponential, wait_jitter\n\n@retry(stop=stop_after_attempt(5),\n       wait=wait_exponential(multiplier=1, max=10) + wait_jitter(1, 3),\n       retry_on=lambda e: isinstance(e, ConnectionError))\ndef call_downstream():\n    return requests.get(\"https://api.example.com/health\", timeout=5)\n```\n\n## Testing\n\n```bash\n# Simulate flakiness with a proxy like toxiproxy, then:\ncurl --retry 5 --retry-delay 2 --retry-all-errors -s https://api.example.com/health\n```\n\n## Best practices\n\n- Always bound retries: stop_after_attempt or a deadline\n- Add jitter so retries do not synchronize across clients\n- For 429s, sleep on Retry-After when present, else back off\n- Do not retry 4xx validation errors: they will never succeed\n",
+  "examples": [
+    {
+      "input": "Call an API that flakes out during deploys",
+      "output": "curl --retry 5 --retry-delay 2 --retry-all-errors --retry-connrefused https://api.example.com/health survives the blip; in code use tenacity with wait_exponential."
+    },
+    {
+      "input": "My API returns 429 with Retry-After",
+      "output": "Parse Retry-After from curl -si and sleep that long; otherwise apply exponential backoff with jitter."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "retry-pattern.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-retry-pattern"
+    },
+    "generic": {
+      "system_prompt": "You work Retry Pattern hands-on. You do it through exponential-backoff: Retry failing calls with exponential backoff, jitter, and Retry-After. The commands are real, e.g. `curl --retry 5 --retry-delay 2 --retry-all-errors --retry-connrefused...`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "retry-pattern",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "exponential-backoff",
+        "name": "max_attempts",
+        "type": "integer",
+        "description": "Total attempts before giving up"
+      },
+      {
+        "capability": "exponential-backoff",
+        "name": "backoff_multiplier",
+        "type": "integer",
+        "description": "Base delay in seconds for exponential growth"
+      },
+      {
+        "capability": "exponential-backoff",
+        "name": "jitter",
+        "type": "boolean",
+        "description": "Randomize delay to avoid thundering herd"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pip"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/retry-pattern-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/retry-pattern-skill.yaml",
+    "checksum": "3a42c9ca5ea8a29e49fa76c60dbe2773dbaa70c2603ba6523306c1539f51eb1d"
+  }
+}

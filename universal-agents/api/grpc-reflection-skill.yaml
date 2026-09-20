@@ -1,0 +1,109 @@
+name: grpc-reflection
+display_name: Grpc Reflection
+category: api
+subcategory: general
+description: 'gRPC server reflection: enabling reflection on servers and discovering services, methods,
+  and message schemas at runtime with grpcurl.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- grpcurl
+capabilities:
+- name: reflection-discovery
+  description: Discover services, methods, and message types from a running gRPC server without proto
+    files.
+  commands:
+  - grpcurl -plaintext localhost:50051 list
+  - grpcurl -plaintext localhost:50051 describe helloworld.Greeter
+  - grpcurl -plaintext localhost:50051 describe helloworld.HelloRequest
+  - grpcurl -plaintext localhost:50051 list helloworld.Greeter
+  - grpcurl -plaintext localhost:50051 describe
+  examples:
+  - grpcurl -plaintext localhost:50051 list | grep -i health
+  - grpcurl -plaintext localhost:50051 describe helloworld.Greeter.SayHello
+  - grpcurl -plaintext localhost:50051 list my.package.Service
+  parameters:
+  - name: target
+    type: string
+    description: gRPC endpoint host:port, e.g. localhost:50051.
+  - name: symbol
+    type: string
+    description: Fully-qualified service, method, or message symbol to describe.
+  - name: use_tls
+    type: boolean
+    description: Use TLS (default) or -plaintext for dev.
+knowledge:
+- title: gRPC Server Reflection
+  type: documentation
+  source: https://github.com/grpc/grpc/blob/master/doc/server-reflection.md
+  description: Specification of the grpc.reflection.v1alpha.ServerReflection service.
+- title: grpcurl README
+  type: documentation
+  source: https://github.com/fullstorydev/grpcurl
+  description: 'grpcurl usage: list, describe, invoke with reflection.'
+instructions: "# gRPC Reflection\n\nDiscover and introspect gRPC servers at runtime with server reflection.\n\
+  \n## What this skill does\n\n- Lists all services exposed by a gRPC server.\n- Describes methods and\
+  \ message schemas without proto files.\n- Checks which services are registered (health, reflection itself).\n\
+  - Enables reflection on Go, Java, Python, and Node servers.\n\n## When to use\n\n- You have a running\
+  \ gRPC server but no proto files locally.\n- Verifying that a newly registered service is actually exposed.\n\
+  - Generating client code by exporting the schema from the live server.\n\n## Real commands\n\n```bash\n\
+  # List all services\ngrpcurl -plaintext localhost:50051 list\n\n# List methods of one service\ngrpcurl\
+  \ -plaintext localhost:50051 list helloworld.Greeter\n\n# Describe a service\ngrpcurl -plaintext localhost:50051\
+  \ describe helloworld.Greeter\n\n# Describe a message\ngrpcurl -plaintext localhost:50051 describe helloworld.HelloRequest\n\
+  \n# Describe everything\ngrpcurl -plaintext localhost:50051 describe\n\n# Check the health service is\
+  \ registered\ngrpcurl -plaintext localhost:50051 list | grep -i health\n```\n\n## Enabling reflection\
+  \ (Go)\n\n```go\nimport \"google.golang.org/grpc/reflection\"\nreflection.Register(s)  // after pb.RegisterGreeterServer(s,\
+  \ svc)\n```\n\n## Enabling reflection (Java)\n\n```java\nimport io.grpc.services.ReflectionService;\n\
+  Server server = ServerBuilder.forPort(50051)\n    .addService(new GreeterServiceImpl())\n    .addService(ReflectionService.newInstance())\n\
+  \    .build();\n```\n\n## Enabling reflection (Python)\n\n```python\nfrom grpc_reflection.v1alpha import\
+  \ reflection\nfrom grpc_reflection.v1alpha import reflection_pb2_grpc\nreflection.enable_server_reflection(SERVICE_NAMES,\
+  \ server)\n```\n\n## Testing\n\n```bash\n# Expect 4+ lines: grpc.health.v1.Health, grpc.reflection.v1alpha.ServerReflection,\
+  \ helloworld.Greeter\ngrpcurl -plaintext localhost:50051 list\n```\n\n## Best practices\n\n- Enable\
+  \ reflection in dev and staging; disable in production or gate it behind a flag.\n- Use reflection output\
+  \ to validate proto versions match the running binary.\n- `grpcurl describe` prints the full schema:\
+  \ pipe it into a protoset export for clients.\n- Verify the reflection service itself appears in `list`\
+  \ before debugging clients.\n\n## Example exchange\n\n```\nUser: I can't find the new OrderService on\
+  \ the running server.\nAgent: grpcurl -plaintext localhost:50051 list | grep Order  # if missing, the\
+  \ server binary is stale\n```"
+examples:
+- input: List all gRPC services on localhost:50051
+  output: grpcurl -plaintext localhost:50051 list
+- input: See the schema of the Greeter service
+  output: grpcurl -plaintext localhost:50051 describe helloworld.Greeter
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: grpc-reflection.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-grpc-reflection
+  generic:
+    system_prompt: 'You own Grpc Reflection end to end. You do it through reflection-discovery: Discover
+      services, methods, and message types from a running gRPC server without proto files. The commands
+      are real, e.g. `grpcurl -plaintext localhost:50051 list`. You run and verify the real CLI commands
+      before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

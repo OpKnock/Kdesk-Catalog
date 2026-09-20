@@ -1,0 +1,250 @@
+{
+  "name": "playwright-config",
+  "display_name": "playwright-config",
+  "category": "testing",
+  "subcategory": "general",
+  "description": "Configures Playwright test projects: browsers, webServer, baseURL, devices, and CI settings.",
+  "version": "2.0.0",
+  "tags": [
+    "testing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npm",
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "playwright-init",
+      "description": "Initialize and validate Playwright configuration.",
+      "commands": [
+        "npm init playwright@latest",
+        "npx playwright install chromium",
+        "npx playwright install --with-deps",
+        "npx playwright test --list",
+        "npx playwright test --config=playwright.config.ts"
+      ],
+      "examples": [
+        "npm init playwright@latest",
+        "npx playwright install --with-deps",
+        "npx playwright test --list"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Config file path"
+        },
+        {
+          "name": "browser",
+          "type": "string",
+          "description": "Browser to install: chromium, firefox, webkit"
+        }
+      ]
+    },
+    {
+      "name": "config-projects",
+      "description": "Configure projects, devices, and baseURL.",
+      "commands": [
+        "npx playwright test --project=desktop",
+        "npx playwright test --project=mobile --grep @smoke",
+        "npx playwright test --config=playwright.config.ts --baseURL=https://staging.example.com",
+        "npx playwright test --project=webkit"
+      ],
+      "examples": [
+        "npx playwright test --project=desktop",
+        "npx playwright test --config=playwright.config.ts --baseURL=https://staging.example.com",
+        "npx playwright test --project=mobile"
+      ],
+      "parameters": [
+        {
+          "name": "project",
+          "type": "string",
+          "description": "Project name from config"
+        },
+        {
+          "name": "baseURL",
+          "type": "string",
+          "description": "Base URL override"
+        }
+      ]
+    },
+    {
+      "name": "ci-and-webserver",
+      "description": "Web server and CI worker configuration.",
+      "commands": [
+        "npx playwright test --workers=2",
+        "npx playwright test --reporter=html",
+        "npx playwright test --retries=3",
+        "npx playwright test --global-timeout=1800000",
+        "npx playwright test --timeout=30000"
+      ],
+      "examples": [
+        "npx playwright test --workers=2 --retries=3",
+        "npx playwright test --reporter=html",
+        "npx playwright test --timeout=30000"
+      ],
+      "parameters": [
+        {
+          "name": "workers",
+          "type": "number",
+          "description": "Parallel workers"
+        },
+        {
+          "name": "retries",
+          "type": "number",
+          "description": "Flake retries"
+        },
+        {
+          "name": "timeout",
+          "type": "number",
+          "description": "Per-test timeout ms"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Playwright Test Configuration",
+      "type": "documentation",
+      "source": "https://playwright.dev/docs/test-configuration",
+      "description": "Config schema and options"
+    },
+    {
+      "title": "Playwright CI Documentation",
+      "type": "documentation",
+      "source": "https://playwright.dev/docs/ci",
+      "description": "CI best practices and settings"
+    }
+  ],
+  "instructions": "# Playwright Configuration\n\nTune Playwright Test for your projects and CI.\n\n## What This Skill Does\n\n- Initializes Playwright and installs browsers\n- Defines projects for desktop/mobile devices\n- Manages webServer startup and baseURL\n- Configures parallelism, retries, and reporters\n\n## When to Use\n\n- Setting up Playwright for a new repo\n- Adjusting browser matrix and sharding\n- Debugging CI flakiness via config\n\n## Real Commands\n\n```bash\n# Init\nnpm init playwright@latest\nnpx playwright install --with-deps\nnpx playwright test --list\n\n# Projects\nnpx playwright test --project=desktop\nnpx playwright test --project=mobile --grep @smoke\n\n# CI overrides\nnpx playwright test --workers=2 --retries=3 --reporter=html\nnpx playwright test --config=playwright.config.ts --baseURL=https://staging.example.com\n```\n\n## Sample Config\n\n```ts\nimport { defineConfig, devices } from '@playwright/test';\n\nexport default defineConfig({\n  testDir: './tests',\n  timeout: 30_000,\n  retries: process.env.CI ? 2 : 0,\n  workers: process.env.CI ? 2 : undefined,\n  use: {\n    baseURL: process.env.BASE_URL ?? 'http://localhost:3000',\n    trace: 'on-first-retry'\n  },\n  webServer: {\n    command: 'npm run dev',\n    url: 'http://localhost:3000',\n    reuseExistingServer: !process.env.CI\n  },\n  projects: [\n    { name: 'desktop', use: { ...devices['Desktop Chrome'] } },\n    { name: 'mobile', use: { ...devices['iPhone 13'] } }\n  ]\n});\n```\n\n## Best Practices\n\n- Enable trace on-first-retry for flake debugging\n- Use reuseExistingServer locally for fast loops\n- Set retries higher in CI than locally\n- Pin devices from the devices module; avoid hardcoded viewports\n- Keep webServer commands environment-agnostic",
+  "examples": [
+    {
+      "input": "Configure Playwright for a React app",
+      "output": "Agent initializes Playwright, sets up webServer for the dev server, and defines desktop/mobile projects."
+    },
+    {
+      "input": "Fix flaky CI runs",
+      "output": "Agent raises retries in CI, enables trace on-first-retry, and pins workers to avoid resource contention."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "playwright-config.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-playwright-config"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: playwright-config. You do it through playwright-init: Initialize and validate Playwright configuration. The commands are real, e.g. `npm init playwright@latest`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "playwright-config",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "playwright-init",
+        "name": "config",
+        "type": "string",
+        "description": "Config file path"
+      },
+      {
+        "capability": "playwright-init",
+        "name": "browser",
+        "type": "string",
+        "description": "Browser to install: chromium, firefox, webkit"
+      },
+      {
+        "capability": "config-projects",
+        "name": "project",
+        "type": "string",
+        "description": "Project name from config"
+      },
+      {
+        "capability": "config-projects",
+        "name": "baseURL",
+        "type": "string",
+        "description": "Base URL override"
+      },
+      {
+        "capability": "ci-and-webserver",
+        "name": "workers",
+        "type": "number",
+        "description": "Parallel workers"
+      },
+      {
+        "capability": "ci-and-webserver",
+        "name": "retries",
+        "type": "number",
+        "description": "Flake retries"
+      },
+      {
+        "capability": "ci-and-webserver",
+        "name": "timeout",
+        "type": "number",
+        "description": "Per-test timeout ms"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npm",
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/playwright-config-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/playwright-config-skill.yaml",
+    "checksum": "b8ab96e9eb788dcf85a4095965b420a303b9992189280498d2d1324876a04810"
+  }
+}

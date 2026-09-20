@@ -1,0 +1,194 @@
+name: ktlint
+display_name: Ktlint
+category: code-quality
+subcategory: general
+description: 'Formats and lints Kotlin with ktlint: style enforcement, experimental rules, Gradle integration,
+  and IDE setup.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- gradle
+- ktlint
+capabilities:
+- commands:
+  - ktlint src/
+  - ktlint --format src/
+  - ktlint --experimental src/
+  - ktlint "src/**/*.kt"
+  - ktlint --verbose src/Main.kt
+  description: Lint and format Kotlin files.
+  name: ktlint-run
+  examples:
+  - ktlint --format --experimental src/
+  - ktlint --reporter=json --output=report.json
+  - ktlint --android src/
+  parameters:
+  - description: Files or directories
+    name: paths
+    type: string
+  - description: Auto-format
+    name: format
+    type: boolean
+  - description: Enable experimental rules
+    name: experimental
+    type: boolean
+- commands:
+  - gradle ktlintCheck
+  - gradle ktlintFormat
+  - gradle ktlintGenerateBaseline
+  - gradle ktlintApplyToIDEA
+  description: Run ktlint through Gradle.
+  name: ktlint-gradle
+  examples:
+  - gradle ktlintCheck --continue
+  - gradle ktlintFormat -PktlintExperimental=true
+  parameters:
+  - description: Baseline file path
+    name: baseline
+    type: string
+  - name: android
+    type: boolean
+    description: Apply Android-specific conventions
+knowledge:
+- title: ktlint Docs
+  description: Rules, CLI, and Gradle plugin
+  source: https://pinterest.github.io/ktlint/
+  type: documentation
+- title: Kotlin Official Style Guide
+  description: Kotlin conventions
+  source: https://kotlinlang.org/docs/coding-conventions.html
+  type: documentation
+instructions: '# ktlint
+
+
+  Kotlin linter and formatter.
+
+
+  ## When to Use
+
+
+  - Enforcing the official Kotlin style guide
+
+  - Auto-formatting Kotlin in pre-commit
+
+  - CI checks for style drift
+
+  - Android and multiplatform projects
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Lint
+
+  ktlint src/
+
+  ktlint "src/**/*.kt"
+
+
+  # Auto-format
+
+  ktlint --format src/
+
+
+  # Experimental rules
+
+  ktlint --experimental src/
+
+  ktlint --format --experimental src/
+
+
+  # Android conventions
+
+  ktlint --android src/
+
+
+  # Reports
+
+  ktlint --reporter=json --output=report.json
+
+
+  # Gradle
+
+  gradle ktlintCheck
+
+  gradle ktlintFormat
+
+  gradle ktlintGenerateBaseline
+
+  ```
+
+
+  ## Config Example
+
+
+  ```yaml
+
+  # .editorconfig
+
+  [*.{kt,kts}]
+
+  ktlint_standard_max-line-length = 120
+
+  ktlint_experimental = enabled
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Run ktlint --format locally, ktlintCheck in CI
+
+  - Generate a baseline when adopting on legacy code
+
+  - Enable experimental rules only when team-agreed
+
+  - Keep editorconfig as the single source of settings
+
+  - Pair with detekt for deeper analysis
+
+  - Format before linting for stable results'
+examples:
+- input: Format my Kotlin codebase
+  output: Agent runs ktlint --format src/, reviews the diff, and adds ktlintCheck to CI.
+- input: ktlint is too noisy on an old codebase
+  output: Agent generates a baseline with gradle ktlintGenerateBaseline and sets the max-line-length in
+    editorconfig.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ktlint.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-ktlint
+  generic:
+    system_prompt: 'You work Ktlint hands-on. You do it through ktlint-run: Lint and format Kotlin files.
+      The commands are real, e.g. `ktlint src/`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

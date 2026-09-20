@@ -1,0 +1,248 @@
+{
+  "name": "falco",
+  "display_name": "falco",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Detects abnormal container and host behavior at runtime with Falco rule engines, event generators, and falcoctl artifact management.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "falco",
+    "falco-event-generator",
+    "falcoctl",
+    "kubectl"
+  ],
+  "capabilities": [
+    {
+      "name": "falco-runtime",
+      "description": "Run Falco, configure rules, and view detected events.",
+      "commands": [
+        "falco",
+        "falco --version",
+        "falco -r /etc/falco/rules.d/custom.yaml",
+        "falco --set rules_files=[] --set rules_files[0]=/etc/falco/custom.yaml",
+        "falco -e /dev/null -c falco.yaml"
+      ],
+      "examples": [
+        "falco -r rules.d/custom.yaml",
+        "falco --version",
+        "falco --set output.format='%evt.time %user.name %proc.name'"
+      ],
+      "parameters": [
+        {
+          "name": "rulesFile",
+          "type": "string",
+          "description": "Additional rules file to load"
+        },
+        {
+          "name": "set",
+          "type": "object",
+          "description": "Config overrides, e.g. output.format or rules_files"
+        }
+      ]
+    },
+    {
+      "name": "falcoctl-artifacts",
+      "description": "Manage rules artifacts and drivers with falcoctl.",
+      "commands": [
+        "falcoctl driver install",
+        "falcoctl driver list",
+        "falcoctl artifact install falcosecurity/falco-rules",
+        "falcoctl index list",
+        "falcoctl artifact list falcosecurity"
+      ],
+      "examples": [
+        "falcoctl driver install",
+        "falcoctl artifact install falcosecurity/falco-rules",
+        "falcoctl index list"
+      ],
+      "parameters": [
+        {
+          "name": "artifact",
+          "type": "string",
+          "description": "Artifact name, e.g. falcosecurity/falco-rules"
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "description": "Artifact version constraint"
+        }
+      ]
+    },
+    {
+      "name": "event-generation",
+      "description": "Generate test events to validate rule coverage.",
+      "commands": [
+        "falco-event-generator run",
+        "falco-event-generator run syscall",
+        "falco-event-generator list",
+        "kubectl apply -f https://raw.githubusercontent.com/falcosecurity/event-generator/main/deploy/kubernetes/event-generator.yaml"
+      ],
+      "examples": [
+        "falco-event-generator run syscall",
+        "falco-event-generator list",
+        "falco-event-generator run network"
+      ],
+      "parameters": [
+        {
+          "name": "action",
+          "type": "string",
+          "description": "Event action: run, list, or a specific action name"
+        },
+        {
+          "default": "falco",
+          "description": "Namespace to deploy the event-generator workload in.",
+          "name": "namespace",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Falco Documentation",
+      "type": "documentation",
+      "source": "https://falco.org/docs/",
+      "description": "Installation, rules authoring, and output configuration"
+    },
+    {
+      "title": "falcoctl Guide",
+      "type": "documentation",
+      "source": "https://falco.org/docs/falcoctl/",
+      "description": "Driver and artifact management with falcoctl"
+    },
+    {
+      "title": "Falco Rules Reference",
+      "type": "documentation",
+      "source": "https://falco.org/docs/reference/rules/",
+      "description": "Rule syntax, conditions, and macros"
+    }
+  ],
+  "instructions": "# Falco\n\nRuntime security monitoring for containers and hosts using syscall-driven rules.\n\n## What This Skill Does\n\n- Deploys Falco on hosts or in-cluster (DaemonSet via Helm)\n- Loads default and custom rule files\n- Generates realistic attack events for testing rule coverage\n- Manages rules artifacts and kernel drivers with falcoctl\n- Streams alerts to stdout, files, or external sinks\n\n## When to Use\n\n- Detecting shell access, privilege escalation, or odd syscall patterns\n- Validating that custom detection rules fire\n- Auditing container runtime behavior after an incident\n\n## Real Commands\n\n```bash\n# Install drivers and run\nfalcoctl driver install\nfalco\n\n# Custom rules\nfalco -r /etc/falco/rules.d/custom.yaml\n\n# Configure via --set\nfalco --set rules_files=[] --set rules_files[0]=/etc/falco/rules.d/custom.yaml\n\n# Manage artifacts\nfalcoctl artifact install falcosecurity/falco-rules\nfalcoctl index list\n\n# Generate test events\nfalco-event-generator run syscall\nfalco-event-generator run network\n```\n\n## Sample Custom Rule\n\n```yaml\n- rule: Write Below Binary Dir\n  desc: Detect writes to /usr/bin\n  condition: evt.dir = < and fd.name startswith /usr/bin and evt.type in (open, openat, rename)\n  output: \"File below /usr/bin opened for writing (user=%user.name file=%fd.name)\"\n  priority: WARNING\n  tags: [filesystem, mitre_persistence]\n```\n\n## Best Practices\n\n- Run Falco as a DaemonSet so every node is covered\n- Validate new rules against the event generator before production\n- Forward alerts to a SIEM or alertmanager for correlation\n- Keep rules artifacts versioned via falcoctl and pin versions\n- Update the kernel driver on node upgrades before enabling Falco",
+  "examples": [
+    {
+      "input": "Detect if anyone opens a shell in my containers",
+      "output": "Agent enables the default 'Terminal shell in container' rules, installs the driver with falcoctl driver install, runs falco, and verifies with falco-event-generator run syscall."
+    },
+    {
+      "input": "Write a custom rule to alert on curl being executed",
+      "output": "Agent writes a rule matching evt.type execve and proc.name=curl, loads it with falco -r rules.yaml, and tests it with an event generator or manual curl."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "falco.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-falco"
+    },
+    "generic": {
+      "system_prompt": "Your lane is falco. You do it through falco-runtime: Run Falco, configure rules, and view detected events. The commands are real, e.g. `falco`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "falco",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "falco-runtime",
+        "name": "rulesFile",
+        "type": "string",
+        "description": "Additional rules file to load"
+      },
+      {
+        "capability": "falco-runtime",
+        "name": "set",
+        "type": "object",
+        "description": "Config overrides, e.g. output.format or rules_files"
+      },
+      {
+        "capability": "falcoctl-artifacts",
+        "name": "artifact",
+        "type": "string",
+        "description": "Artifact name, e.g. falcosecurity/falco-rules"
+      },
+      {
+        "capability": "falcoctl-artifacts",
+        "name": "version",
+        "type": "string",
+        "description": "Artifact version constraint"
+      },
+      {
+        "capability": "event-generation",
+        "name": "action",
+        "type": "string",
+        "description": "Event action: run, list, or a specific action name"
+      },
+      {
+        "capability": "event-generation",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace to deploy the event-generator workload in."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "falco",
+    "falco-event-generator",
+    "falcoctl",
+    "kubectl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/falco-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/falco-skill.yaml",
+    "checksum": "519dfa515e7d20e01944da933a638e8e1b13413978f38a69dca656395e524a4f"
+  }
+}

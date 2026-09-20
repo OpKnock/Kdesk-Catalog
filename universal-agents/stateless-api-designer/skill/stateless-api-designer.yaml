@@ -1,0 +1,224 @@
+name: stateless-api-designer-stateless-api-designer
+version: 2.0.0
+type: skill
+category: backend
+description: Designs stateless, versioned REST/HTTP APIs with OpenAPI specs, validating contracts with
+  Redocly, Spectral, and Swagger CLI.
+keywords:
+- stateless
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: stateless-api-designer-stateless-api-designer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-stateless-api-designer
+  generic:
+    system_prompt: 'You own stateless-api-designer-stateless-api-designer end to end. You do it through
+      openapi-authoring: Create, bundle, and validate OpenAPI documents. The commands are real, e.g. `npx
+      @redocly/cli init`. You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: openapi-authoring
+  description: Create, bundle, and validate OpenAPI documents.
+  commands:
+  - npx @redocly/cli init
+  - npx @redocly/cli bundle openapi.yaml -o bundled.yaml
+  - npx @redocly/cli lint openapi.yaml
+  - npx @redocly/cli preview-docs openapi.yaml
+  - npx swagger-cli validate openapi.yaml
+  examples:
+  - npx @redocly/cli lint openapi.yaml
+  - npx @redocly/cli bundle openapi.yaml -o bundled.yaml
+  - npx swagger-cli validate openapi.yaml
+  parameters:
+  - name: spec
+    type: string
+    description: OpenAPI spec file path
+  - name: output
+    type: string
+    description: Bundled output path
+- name: spectral-linting
+  description: Enforce API style rules with Spectral.
+  commands:
+  - npx spectral lint openapi.yaml
+  - npx spectral lint openapi.yaml --ruleset api-style.rules.yaml
+  - npx spectral lint openapi.yaml --format sarif
+  - npx spectral validate .spectral.yaml
+  examples:
+  - npx spectral lint openapi.yaml
+  - npx spectral lint openapi.yaml --format sarif
+  - npx spectral lint openapi.yaml --ruleset team-rules.yaml
+  parameters:
+  - name: ruleset
+    type: string
+    description: Custom ruleset file
+  - name: format
+    type: string
+    description: 'Output format: stylish, json, sarif'
+- name: code-generation
+  description: Generate server stubs and clients from specs.
+  commands:
+  - openapi-generator-cli generate -i openapi.yaml -g python-fastapi -o server/
+  - openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o client/
+  - openapi-generator-cli validate -i openapi.yaml
+  - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g go -o api/ --skip-validate-spec
+  examples:
+  - openapi-generator-cli generate -i openapi.yaml -g python-fastapi -o server/
+  - openapi-generator-cli validate -i openapi.yaml
+  - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o client/
+  parameters:
+  - name: generator
+    type: string
+    description: 'Generator name: python-fastapi, typescript-fetch, go, spring'
+  - name: output
+    type: string
+    description: Output directory
+prerequisites:
+- redis
+- node.js
+- python
+- kubernetes
+tools:
+- redis
+- node.js
+- python
+- kubernetes
+- postgresql
+- memcached
+examples:
+- input: Design an API for a payment service
+  output: Agent drafts an OpenAPI spec with idempotency keys and versioning, lints it with Spectral, and
+    bundles it with Redocly.
+- input: Check if this spec has breaking changes
+  output: Agent runs spectral lint and redocly lint against the ruleset, flags breaking changes, and suggests
+    version bumps.
+instructions: '# Stateless API Design
+
+
+  Design stateless, versioned HTTP APIs with contract-first tooling.
+
+
+  ## What This Skill Does
+
+
+  - Authors OpenAPI 3.x specs for REST endpoints
+
+  - Validates and bundles specs with Redocly
+
+  - Enforces API style with Spectral rulesets
+
+  - Generates server stubs and typed clients
+
+
+  ## When to Use
+
+
+  - Designing a new public/internal API
+
+  - Reviewing a spec for breaking changes
+
+  - Generating SDKs that match the contract
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Author and validate
+
+  npx @redocly/cli init
+
+  npx @redocly/cli lint openapi.yaml
+
+  npx swagger-cli validate openapi.yaml
+
+
+  # Bundle for distribution
+
+  npx @redocly/cli bundle openapi.yaml -o bundled.yaml
+
+
+  # Preview docs
+
+  npx @redocly/cli preview-docs openapi.yaml
+
+
+  # Style enforcement
+
+  npx spectral lint openapi.yaml --ruleset api-style.rules.yaml
+
+
+  # Generate code
+
+  openapi-generator-cli generate -i openapi.yaml -g python-fastapi -o server/
+
+  openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o client/
+
+  ```
+
+
+  ## Stateless API Principles
+
+
+  - No server-side session state; all state in request/response or client
+
+  - Version in the URL (or header) from day one
+
+  - Use idempotency keys for mutating operations
+
+  - Paginate list endpoints; document cursor semantics
+
+  - Return RFC 7807 problem details on errors
+
+
+  ## Best Practices
+
+
+  - Contract-first: the spec is the source of truth
+
+  - Lint in CI with Spectral; block breaking changes
+
+  - Keep one spec per major version
+
+  - Use OpenAPI 3.1 for webhook and JSON Schema alignment
+
+  - Generate clients from the bundled spec only'
+display_name: stateless-api-designer-stateless-api-designer
+knowledge:
+- title: OpenAPI Specification
+  type: documentation
+  source: https://spec.openapis.org/oas/v3.1.0
+  description: OpenAPI 3.1 structure and semantics
+- title: Redocly CLI Documentation
+  type: documentation
+  source: https://redocly.com/docs/cli/
+  description: Lint, bundle, and preview commands
+- title: Spectral Documentation
+  type: documentation
+  source: https://docs.stoplight.io/docs/spectral
+  description: Custom API linting rulesets

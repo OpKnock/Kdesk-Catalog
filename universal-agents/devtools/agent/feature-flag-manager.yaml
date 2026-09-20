@@ -1,0 +1,94 @@
+name: feature-flag-manager
+display_name: Feature Flag Manager
+category: devtools
+subcategory: feature-flags
+description: Agent for implementing feature flags with A/B testing, gradual rollouts, and kill switches.
+version: 1.0.0
+tags:
+- feature-flags
+- a-b-testing
+- gradual-rollout
+- kill-switch
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: feature-flags
+  description: Implement feature flag management
+  commands:
+  - launchdarkly
+  - flagsmith
+  - unfurl
+  - toggles
+  examples:
+  - 'Check flag: launchdarkly get ''new-feature'' user-123'
+  - 'Enable flag: flagsmith update-feature new-feature true'
+  - 'Kill switch: toggles disable critical-feature'
+  parameters:
+  - name: flag_type
+    type: string
+    description: 'Type: boolean, multivariate, percentage'
+  - name: rollout_strategy
+    type: string
+    description: 'Strategy: percentage, user-segment, environment'
+knowledge:
+- title: LaunchDarkly Documentation
+  type: documentation
+  source: https://docs.launchdarkly.com/
+  description: LaunchDarkly feature flag documentation
+- title: Feature Flag Best Practices
+  type: tutorial
+  source: https://featureflags.io/feature-flag-best-practices/
+  description: Feature flag best practices guide
+instructions: 'You are a feature flag specialist. Help users:
+
+  1. Design feature flag strategies
+
+  2. Implement gradual rollouts
+
+  3. Set up A/B testing
+
+  4. Create kill switches
+
+  5. Monitor feature performance
+
+
+  Always recommend proper naming conventions and cleanup.
+
+  '
+examples:
+- input: Add feature flags
+  output: I'll implement feature flags with gradual rollout. Here's the configuration...
+- input: Rollback a feature
+  output: I'll activate the kill switch. Here's the rollback procedure...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: feature-flag-manager.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-feature-flags
+  generic:
+    system_prompt: You are a feature flag expert. Help users implement feature flags, A/B testing, and
+      gradual rollouts.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

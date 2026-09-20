@@ -1,0 +1,171 @@
+{
+  "name": "yaml",
+  "display_name": "Yaml",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Work with YAML: query and transform with yq, validate with yamllint, merge multi-document files, and convert between YAML and JSON.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "yamllint"
+  ],
+  "capabilities": [
+    {
+      "name": "yaml-processing",
+      "description": "Query, validate, and transform YAML documents",
+      "commands": [
+        "yq eval '.metadata.name' deployment.yaml",
+        "yq eval '.spec.containers[0].image' pod.yaml",
+        "yq eval-all 'select(di == 0) * select(di == 1)' base.yaml overlay.yaml",
+        "yamllint -d relaxed docker-compose.yml",
+        "yq eval -o=json . config.yaml > config.json"
+      ],
+      "examples": [
+        "yq eval '.data | keys' configmap.yaml",
+        "yq eval '.spec.template.spec.containers[].image' deployment.yaml | sort -u",
+        "python -c \"import yaml;print(yaml.safe_load(open('config.yaml')))\""
+      ],
+      "parameters": [
+        {
+          "name": "expression",
+          "type": "string",
+          "description": "jq-style query expression"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Output format: yaml, json, xml, csv"
+        },
+        {
+          "name": "file",
+          "type": "string",
+          "description": "Input YAML file"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "yq on GitHub",
+      "type": "documentation",
+      "source": "https://github.com/mikefarah/yq",
+      "description": "Installation and expression syntax for yq"
+    },
+    {
+      "title": "YAML 1.2 Spec",
+      "type": "documentation",
+      "source": "https://yaml.org/spec/1.2.2/",
+      "description": "Official YAML specification"
+    }
+  ],
+  "instructions": "# YAML\n\n## What this skill does\nParse, query, and transform YAML files with yq; validate syntax and style with yamllint; merge multi-document files; and convert between YAML and JSON for API tooling.\n\n## When to use\n- Reading config from k8s manifests or CI files\n- Transforming YAML in scripts/CI\n- Validating hand-written YAML\n\n## Real commands\n```bash\n# Query values\nyq eval '.metadata.name' deployment.yaml\nyq eval '.spec.containers[0].image' pod.yaml\n\n# List keys\nyq eval '.data | keys' configmap.yaml\n\n# All images in a template\nyq eval '.spec.template.spec.containers[].image' deployment.yaml | sort -u\n\n# Merge base + overlay\nyq eval-all 'select(di == 0) * select(di == 1)' base.yaml overlay.yaml\n\n# Validate with yamllint (relaxed for k8s)\nyamllint -d relaxed docker-compose.yml\n\n# Convert YAML -> JSON\nyq eval -o=json . config.yaml > config.json\n\n# Convert JSON -> YAML\ncat spec.json | yq eval -P - > spec.yaml\n```\n\n## Python fallback\n```bash\npython -c \"import yaml,pprint;pprint.pprint(yaml.safe_load(open('config.yaml')))\"\n```\n\n## Gotchas\n- `yq` (mikefarah) vs `yq` (kislyuk): different syntax\n- Use `-e` to exit non-zero when no matches\n- Quote keys with special characters: `.\\\"app.kubernetes.io/name\\\"`\n\n## Best practices\n- Always lint YAML in CI before using it\n- Avoid tabs; YAML forbids them in indentation\n- Use `eastl` for alignment style consistency\n\n## Testing\n```bash\nyamllint config.yaml && echo OK\nyq eval '.spec.replicas' deployment.yaml\n```",
+  "examples": [
+    {
+      "input": "Extract image tags from all deployments",
+      "output": "Runs yq over each manifest and lists unique images."
+    },
+    {
+      "input": "Merge two config files",
+      "output": "Uses yq eval-all to merge base with overlay and prints the result."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "yaml.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-yaml"
+    },
+    "generic": {
+      "system_prompt": "You work Yaml hands-on. You do it through yaml-processing: Query, validate, and transform YAML documents. The commands are real, e.g. `yq eval .metadata.name deployment.yaml`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "yaml",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "yaml-processing",
+        "name": "expression",
+        "type": "string",
+        "description": "jq-style query expression"
+      },
+      {
+        "capability": "yaml-processing",
+        "name": "format",
+        "type": "string",
+        "description": "Output format: yaml, json, xml, csv"
+      },
+      {
+        "capability": "yaml-processing",
+        "name": "file",
+        "type": "string",
+        "description": "Input YAML file"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "yamllint"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/yaml-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/yaml-skill.yaml",
+    "checksum": "09ec157b20c6d4bb4d031096c31a5359f2eb97e21a083210730ed0b8d50602e8"
+  }
+}

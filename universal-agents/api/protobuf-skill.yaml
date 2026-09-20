@@ -1,0 +1,97 @@
+name: protobuf
+display_name: Protobuf
+category: api
+subcategory: general
+description: 'Protocol Buffers: proto authoring, protoc code generation, buf lint/breaking checks, and
+  gRPC schema workflows.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- buf
+- protoc
+capabilities:
+- name: protobuf-generation
+  description: Compile .proto files to Go/Java/Python, lint with buf, and check breaking changes.
+  commands:
+  - protoc --version
+  - protoc --go_out=. --go_opt=paths=source_relative user.proto
+  - protoc --java_out=. user.proto
+  - protoc --python_out=. user.proto
+  - buf lint
+  examples:
+  - protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. user.proto
+  - buf generate
+  - buf breaking --against .git#branch=main
+  parameters:
+  - name: proto_file
+    type: string
+    description: Path to the .proto file
+  - name: language
+    type: string
+    description: go, java, python, cpp, etc.
+  - name: out_dir
+    type: string
+    description: Output directory for generated code
+knowledge:
+- title: Protobuf.dev
+  type: documentation
+  source: https://protobuf.dev/
+  description: Language guides, proto3 spec and encoding docs
+- title: Buf Docs
+  type: documentation
+  source: https://buf.build/docs/
+  description: Linting, formatting and breaking change detection
+instructions: "# Protocol Buffers\n\nProtobuf is a compact, language-neutral schema-driven serialization\
+  \ format.\n\n## What this skill does\n\n- Authors .proto schemas\n- Generates code with protoc or buf\n\
+  - Enforces compatibility with breaking checks\n\n## When to use\n\n- gRPC services\n- Binary payloads\
+  \ shared across languages\n\n## Real commands\n\n```bash\n# Compile for Go (needs protoc-gen-go)\nprotoc\
+  \ --go_out=. --go_opt=paths=source_relative user.proto\nprotoc --go_out=. --go_opt=paths=source_relative\
+  \ --go-grpc_out=. user.proto\n\n# Java / Python\nprotoc --java_out=. user.proto\nprotoc --python_out=.\
+  \ user.proto\n\n# buf workflow\nbuf lint\nbuf generate\nbuf breaking --against .git#branch=main\n```\n\
+  \n## proto example\n\n```proto\nsyntax = \"proto3\";\n\nmessage User {\n  string id = 1;\n  string name\
+  \ = 2;\n  repeated string roles = 3;\n}\n```\n\n## Compatibility rules\n\n- Never change field numbers\n\
+  - Adding fields is safe; removing is breaking\n- Use reserved for retired fields\n\n## Best practices\n\
+  \n- Run buf breaking in CI before merging\n- One package per domain; keep files small\n- Use buf.gen.yaml\
+  \ to standardize generation"
+examples:
+- input: Generate Go structs from my user.proto
+  output: The agent runs protoc with the Go plugin and shows the generated file layout.
+- input: Did my schema change break the API?
+  output: The agent runs buf breaking --against the main branch and lists the violations.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: protobuf.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-protobuf
+  generic:
+    system_prompt: 'Your lane is Protobuf. You do it through protobuf-generation: Compile .proto files
+      to Go/Java/Python, lint with buf, and check breaking changes. The commands are real, e.g. `protoc
+      --version`. You answer with exact commands, not abstractions, and flag anything you have not verified
+      yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

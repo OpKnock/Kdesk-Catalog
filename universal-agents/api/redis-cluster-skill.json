@@ -1,0 +1,172 @@
+{
+  "name": "redis-cluster",
+  "display_name": "Redis Cluster",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Redis Cluster skill: build clusters with redis-cli --cluster, inspect slot coverage and node topology, and safely reshard or add replicas.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "redis-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "redis-cluster-admin",
+      "description": "Create, inspect, and rebalance Redis Cluster topologies with redis-cli cluster commands",
+      "commands": [
+        "redis-cli -c -p 7000 cluster info",
+        "redis-cli --cluster create 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005 --cluster-replicas 1",
+        "redis-cli --cluster add-node 127.0.0.1:7006 127.0.0.1:7000",
+        "redis-cli --cluster reshard 127.0.0.1:7000 --cluster-from <source-node-id> --cluster-to <target-node-id> --cluster-slots 1000 --cluster-yes",
+        "redis-cli --cluster check 127.0.0.1:7000",
+        "redis-cli -p 7000 cluster nodes"
+      ],
+      "examples": [
+        "redis-cli --cluster check 127.0.0.1:7000",
+        "redis-cli -c -p 7000 cluster info",
+        "redis-cli --cluster reshard 127.0.0.1:7000 --cluster-from 8a4f9c --cluster-to 7b2cd1 --cluster-slots 1000 --cluster-yes"
+      ],
+      "parameters": [
+        {
+          "name": "cluster-replicas",
+          "type": "integer",
+          "description": "Number of replicas per master when creating a cluster"
+        },
+        {
+          "name": "cluster-slots",
+          "type": "integer",
+          "description": "Number of hash slots to move during resharding"
+        },
+        {
+          "name": "cluster-yes",
+          "type": "boolean",
+          "description": "Auto-answer the resharding confirmation prompts"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Redis Cluster Tutorial",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/operate/oss_and_stack/management/scaling/",
+      "description": "Official guide to cluster creation, resharding, and failover"
+    },
+    {
+      "title": "CLUSTER command reference",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/commands/cluster-info/",
+      "description": "Every CLUSTER subcommand and its output fields"
+    }
+  ],
+  "instructions": "# Redis Cluster\n\nHand-crafted skill for operating Redis Cluster topologies from the command line.\n\n## What this skill does\n\n- Boots a 6-node cluster (3 masters, 3 replicas) with redis-cli --cluster create\n- Verifies that all 16384 hash slots are covered and master-replica links are healthy\n- Adds nodes and reshards slots between masters without manual slot math\n\n## When to use\n\n- Setting up a production Redis Cluster from scratch\n- Debugging CLUSTERDOWN or \"Slot X already busy\" errors\n- Planning slot migrations before a maintenance window\n\n## Real commands\n\n```bash\n# Create a cluster from six nodes on ports 7000-7005\nredis-cli --cluster create 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005 --cluster-replicas 1\n\n# Health check: reports slot coverage and link status\nredis-cli --cluster check 127.0.0.1:7000\n\n# Cluster-wide stats\nredis-cli -c -p 7000 cluster info\n\n# Node table: id, ip:port, flags, slots\nredis-cli -c -p 7000 cluster nodes\n\n# Add a fresh node, then move 1000 slots onto it\nredis-cli --cluster add-node 127.0.0.1:7006 127.0.0.1:7000\nredis-cli --cluster reshard 127.0.0.1:7000 --cluster-from <src-id> --cluster-to <dst-id> --cluster-slots 1000 --cluster-yes\n```\n\n## Config example\n\nStart six isolated instances:\n\n```bash\nfor port in 7000 7001 7002 7003 7004 7005; do\n  mkdir -p /data/redis/$port\n  redis-server --port $port --cluster-enabled yes     --cluster-config-file nodes-$port.conf     --appendonly yes --dir /data/redis/$port --daemonize yes\ndone\n```\n\n## Testing\n\n```bash\nredis-cli -c -p 7000 set foo bar\nredis-cli -c -p 7000 get foo\nredis-cli --cluster check 127.0.0.1:7000\n```\n\n## Best practices\n\n- Always run `--cluster check` before and after resharding\n- Keep a replication factor of at least 1 in production\n- Use hash tags like {user:42} to pin related keys to the same slot\n- If partial availability is acceptable, set cluster-require-full-coverage no\n",
+  "examples": [
+    {
+      "input": "My cluster reports CLUSTERDOWN, what do I check?",
+      "output": "Run redis-cli --cluster check 127.0.0.1:7000 to find uncovered slots, then redis-cli -p 7000 cluster nodes to verify replicas are linked."
+    },
+    {
+      "input": "Add a node and move 2000 slots to it",
+      "output": "redis-cli --cluster add-node 127.0.0.1:7006 127.0.0.1:7000, then redis-cli --cluster reshard 127.0.0.1:7000 --cluster-from <src-id> --cluster-to <dst-id> --cluster-slots 2000 --cluster-yes."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "redis-cluster.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-redis-cluster"
+    },
+    "generic": {
+      "system_prompt": "You work Redis Cluster hands-on. You do it through redis-cluster-admin: Create, inspect, and rebalance Redis Cluster topologies with redis-cli cluster commands. The commands are real, e.g. `redis-cli -c -p 7000 cluster info`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "redis-cluster",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "redis-cluster-admin",
+        "name": "cluster-replicas",
+        "type": "integer",
+        "description": "Number of replicas per master when creating a cluster"
+      },
+      {
+        "capability": "redis-cluster-admin",
+        "name": "cluster-slots",
+        "type": "integer",
+        "description": "Number of hash slots to move during resharding"
+      },
+      {
+        "capability": "redis-cluster-admin",
+        "name": "cluster-yes",
+        "type": "boolean",
+        "description": "Auto-answer the resharding confirmation prompts"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/redis-cluster-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/redis-cluster-skill.yaml",
+    "checksum": "543002f43eb23efac3645cd2770154fdcab8c6c5fd4a0abe02df08018a2ee9d0"
+  }
+}

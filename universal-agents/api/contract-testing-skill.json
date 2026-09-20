@@ -1,0 +1,200 @@
+{
+  "name": "contract-testing",
+  "display_name": "Contract Testing",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Contract testing APIs with Pact: consumer expectations, provider verification, and mock services with pact-js.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npm",
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "pact-consumer",
+      "description": "Write consumer contract tests with pact-js against a mock provider",
+      "commands": [
+        "npm install @pact-foundation/pact @pact-foundation/pact-node",
+        "npx jest --config jest.config.js",
+        "npm test",
+        "npm run test:contract"
+      ],
+      "examples": [
+        "npm install @pact-foundation/pact && npx jest --config jest.config.js",
+        "npm test -- --runInBand",
+        "npx jest contracts/ -t 'a request for a user'"
+      ],
+      "parameters": [
+        {
+          "name": "consumer_name",
+          "type": "string",
+          "description": "Consumer application name"
+        },
+        {
+          "name": "provider_name",
+          "type": "string",
+          "description": "Provider application name"
+        }
+      ]
+    },
+    {
+      "name": "pact-verify",
+      "description": "Run provider verification against published pacts and mock the provider for local checks",
+      "commands": [
+        "npx @pact-foundation/pact-cli verify --provider-base-url http://localhost:8080 --pact-urls ./pacts/*.json",
+        "npx @pact-foundation/pact-cli publish ./pacts --broker-base-url http://localhost:9292 --consumer-version 1.0.0",
+        "npx @pact-foundation/pact-cli can-i-deploy --pacticipant UserService --version 2.0.0 --to-environment production",
+        "npm run test:provider"
+      ],
+      "examples": [
+        "npx @pact-foundation/pact-cli verify --provider-base-url http://localhost:8080 --pact-urls ./pacts/*.json",
+        "npx @pact-foundation/pact-cli can-i-deploy --pacticipant WebApp --version 1.0.0 --to-environment production",
+        "npx @pact-foundation/pact-cli publish ./pacts --broker-base-url http://localhost:9292 --consumer-version 1.0.0"
+      ],
+      "parameters": [
+        {
+          "name": "pact_urls",
+          "type": "string",
+          "description": "Glob or URL list of pact files"
+        },
+        {
+          "name": "provider_base_url",
+          "type": "string",
+          "description": "Base URL of the running provider"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Pact Docs",
+      "type": "documentation",
+      "source": "https://docs.pact.io/",
+      "description": "Pact testing framework documentation"
+    },
+    {
+      "title": "Pact JS GitHub",
+      "type": "documentation",
+      "source": "https://github.com/pact-foundation/pact-js",
+      "description": "pact-js consumer and provider examples"
+    }
+  ],
+  "instructions": "# Contract Testing (Pact)\n\nTest that consumers and providers agree on the API contract.\n\n## When to Use\n\n- Proving API compatibility without full integration tests\n- CI feedback on every consumer or provider change\n- Replacing brittle end-to-end tests between teams\n\n## Consumer Test\n\n```bash\nnpm install @pact-foundation/pact @pact-foundation/pact-node\n```\n\n```js\nconst { PactV3 } = require('@pact-foundation/pact');\nconst provider = new PactV3({ consumer: 'WebApp', provider: 'UserService' });\n\ndescribe('UserService contract', () => {\n  it('returns a user', async () => {\n    await provider.addInteraction({\n      uponReceiving: 'a request for a user',\n      withRequest: { method: 'GET', path: '/users/42' },\n      willRespondWith: { status: 200, body: { id: 42, name: 'alice' } },\n    });\n    await provider.executeTest(async (mockServer) => {\n      const res = await fetch(`${mockServer.url}/users/42`);\n      expect(await res.json()).toEqual({ id: 42, name: 'alice' });\n    });\n  });\n});\n```\n\n```bash\nnpx jest --config jest.config.js\nls pacts/\n```\n\n## Provider Verification\n\n```bash\nnpx @pact-foundation/pact-cli verify \\\n  --provider-base-url http://localhost:8080 \\\n  --pact-urls ./pacts/*.json\n```\n\n## Publish and Gate\n\n```bash\nnpx @pact-foundation/pact-cli publish ./pacts --broker-base-url http://localhost:9292 --consumer-version 1.0.0\nnpx @pact-foundation/pact-cli can-i-deploy --pacticipant UserService --version 2.0.0 --to-environment production\n```\n\n## Testing\n\n```bash\n# Break the provider response and re-run verification to see a mismatch\nnpm run test:provider\n```\n\n## Best Practices\n\n- Consumers define expectations; providers verify them\n- Use provider states for data setup\n- Run consumer tests fast in unit test suites\n- Publish pacts from CI with the commit SHA as version\n- Verify against latest pact of every consumer\n- Gate deploys with can-i-deploy\n- Keep matchers loose enough for safe evolution",
+  "examples": [
+    {
+      "input": "Write a consumer contract test for my web app against the user API.",
+      "output": "The agent writes a PactV3 test with a GET /users/42 interaction, runs it with jest, and generates a pact file in ./pacts."
+    },
+    {
+      "input": "Verify my provider still satisfies all consumer pacts.",
+      "output": "The agent runs npx @pact-foundation/pact-cli verify against the running provider and reports passing and failing interactions."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "contract-testing.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-contract-testing"
+    },
+    "generic": {
+      "system_prompt": "You take the Contract Testing seat. You do it through pact-consumer: Write consumer contract tests with pact-js against a mock provider. The commands are real, e.g. `npm install @pact-foundation/pact @pact-foundation/pact-node`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "contract-testing",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pact-consumer",
+        "name": "consumer_name",
+        "type": "string",
+        "description": "Consumer application name"
+      },
+      {
+        "capability": "pact-consumer",
+        "name": "provider_name",
+        "type": "string",
+        "description": "Provider application name"
+      },
+      {
+        "capability": "pact-verify",
+        "name": "pact_urls",
+        "type": "string",
+        "description": "Glob or URL list of pact files"
+      },
+      {
+        "capability": "pact-verify",
+        "name": "provider_base_url",
+        "type": "string",
+        "description": "Base URL of the running provider"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npm",
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/contract-testing-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/contract-testing-skill.yaml",
+    "checksum": "ec54b32c947e3fcbf545528611c69ce1beda812c993aa80ae9e8723619e29fb5"
+  }
+}

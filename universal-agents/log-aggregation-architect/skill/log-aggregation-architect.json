@@ -1,0 +1,242 @@
+{
+  "name": "log-aggregation-architect",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "infrastructure",
+  "description": "Architects log pipelines with Loki, logcli, and Elasticsearch: collection, querying, retention, and cost-effective storage.",
+  "keywords": [
+    "elasticsearch",
+    "loki",
+    "grafana"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "log-aggregation-architect.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-log-aggregation-architect"
+    },
+    "generic": {
+      "system_prompt": "Your lane is log-aggregation-architect. You do it through loki: Query and operate Grafana Loki with logcli. The commands are real, e.g. `logcli query {app=api} --since 1h`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "loki",
+      "description": "Query and operate Grafana Loki with logcli.",
+      "commands": [
+        "logcli query '{app=\"api\"}' --since 1h",
+        "logcli query '{app=\"api\"} |= \"error\"' --since 24h --limit 500",
+        "logcli labels --since 1h",
+        "logcli series '{app=~\".+\"}' --since 6h",
+        "logcli live '{app=\"api\"}'"
+      ],
+      "examples": [
+        "logcli query '{service=\"checkout\", level=\"error\"}' --since 1h | head -50",
+        "logcli query '{app=\"api\"} | json | level=\"ERROR\"' --since 6h",
+        "logcli query '{app=\"api\"} |= \"panic\" | line_format \"{{.ts}} {{.message}}\"' --since 24h"
+      ],
+      "parameters": [
+        {
+          "name": "since",
+          "type": "string",
+          "description": "Time window like 1h, 24h"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "description": "Max lines returned"
+        },
+        {
+          "name": "selector",
+          "type": "string",
+          "description": "Log stream selector in braces"
+        }
+      ]
+    },
+    {
+      "name": "elasticsearch",
+      "description": "Search and manage Elasticsearch indices.",
+      "commands": [
+        "curl -s 'http://localhost:9200/_cat/indices?v' | head -20",
+        "curl -s -X POST 'http://localhost:9200/logs-2026.08.10/_search' -H 'Content-Type: application/json' -d '{\"query\":{\"match\":{\"level\":\"ERROR\"}},\"size\":10}'",
+        "curl -s 'http://localhost:9200/_cat/indices?v&h=index,docs.count,store.size' | sort -k3 -rn | head",
+        "curl -s -X PUT 'http://localhost:9200/logs-2026.08.10/_settings' -H 'Content-Type: application/json' -d '{\"index\":{\"number_of_replicas\":0}}'",
+        "curl -s -X POST 'http://localhost:9200/logs-*/_delete_by_query' -H 'Content-Type: application/json' -d '{\"query\":{\"range\":{\"@timestamp\":{\"lte\":\"2025-01-01\"}}}}'"
+      ],
+      "examples": [
+        "curl -s 'http://localhost:9200/_cat/indices?v&h=index,docs.count' | grep logs-",
+        "curl -s -X POST 'http://localhost:9200/logs-*/_search' -H 'Content-Type: application/json' -d '{\"query\":{\"match_phrase\":{\"message\":\"out of memory\"}},\"size\":20}'",
+        "curl -s 'http://localhost:9200/_cluster/health' | jq"
+      ],
+      "parameters": [
+        {
+          "name": "index",
+          "type": "string",
+          "description": "Index or wildcard pattern"
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "description": "Elasticsearch query DSL JSON"
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "description": "Result limit"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "elasticsearch",
+    "fluentd",
+    "kibana",
+    "loki",
+    "grafana",
+    "vector"
+  ],
+  "tools": [
+    "elasticsearch",
+    "fluentd",
+    "kibana",
+    "loki",
+    "grafana",
+    "vector",
+    "logcli"
+  ],
+  "examples": [
+    {
+      "input": "Find every 500 error for checkout in the last hour.",
+      "output": "Runs logcli query with the checkout selector and |= error filter, then formats fields with line_format."
+    },
+    {
+      "input": "Reduce Elasticsearch storage cost for old logs.",
+      "output": "Checks per-index size, deletes pre-retention documents with _delete_by_query, and lowers replicas on cold indices."
+    }
+  ],
+  "instructions": "# Log Aggregation\n\nCentralize logs so incidents are searchable in seconds.\n\n## When to Use\n\n- Consolidating logs from many services\n- Building the search-first debugging workflow\n- Right-sizing retention vs cost\n\n## Loki + logcli\n\n```bash\nlogcli query '{app=\"api\"}' --since 1h\nlogcli query '{app=\"api\"} |= \"error\"' --since 24h --limit 500\nlogcli query '{service=\"checkout\"} | json | level=\"ERROR\"' --since 6h\n```\n\nLogQL pipelines: `|=` substring, `|~` regex, `| json`, `| line_format`.\n\n## Live tail\n\n```bash\nlogcli live '{app=\"api\"}'\n```\n\n## Collection\n\nPromtail agents label streams with k8s metadata: `{app=...}`, `{namespace=...}`, `{pod=...}`. Cardinally label with app/service/namespace only.\n\n## Elasticsearch path\n\n```bash\ncurl -s 'http://localhost:9200/_cat/indices?v&h=index,docs.count,store.size'\ncurl -s -X POST 'http://localhost:9200/logs-2026.08.10/_search' -H 'Content-Type: application/json' -d '{\"query\":{\"match\":{\"level\":\"ERROR\"}},\"size\":10}'\n```\n\n## Retention design\n\n- Hot: 7 days at full cardinality.\n- Warm: 30 days at reduced verbosity.\n- Cold: 90+ days sampled or in object storage.\n\n## Best practices\n\n- Structured logs (JSON) beat grep-able prose.\n- Correlate logs with traces via trace_id field.\n- Alert on error-rate metrics, not raw log volume.\n- Sample debug logs; keep error logs complete.\n\n## Testing\n\n```bash\nlogcli query '{app=\"api\"}' --since 10m | wc -l\n```\n\nVerify pipelines after every deploy.",
+  "display_name": "log-aggregation-architect",
+  "knowledge": [
+    {
+      "title": "Loki Docs",
+      "type": "documentation",
+      "source": "https://grafana.com/docs/loki/latest/",
+      "description": "LogQL, storage, and collection architecture"
+    },
+    {
+      "title": "logcli",
+      "type": "documentation",
+      "source": "https://grafana.com/docs/loki/latest/reference/cli/logcli/",
+      "description": "logcli query and label commands"
+    },
+    {
+      "title": "Elasticsearch Query DSL",
+      "type": "documentation",
+      "source": "https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html",
+      "description": "Search queries and index operations"
+    }
+  ],
+  "id": "log-aggregation-architect",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "loki",
+        "name": "since",
+        "type": "string",
+        "description": "Time window like 1h, 24h"
+      },
+      {
+        "capability": "loki",
+        "name": "limit",
+        "type": "number",
+        "description": "Max lines returned"
+      },
+      {
+        "capability": "loki",
+        "name": "selector",
+        "type": "string",
+        "description": "Log stream selector in braces"
+      },
+      {
+        "capability": "elasticsearch",
+        "name": "index",
+        "type": "string",
+        "description": "Index or wildcard pattern"
+      },
+      {
+        "capability": "elasticsearch",
+        "name": "query",
+        "type": "string",
+        "description": "Elasticsearch query DSL JSON"
+      },
+      {
+        "capability": "elasticsearch",
+        "name": "size",
+        "type": "number",
+        "description": "Result limit"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "elasticsearch",
+    "fluentd",
+    "kibana",
+    "loki",
+    "grafana",
+    "vector"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "log-aggregation-architect/skill/log-aggregation-architect.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/log-aggregation-architect/skill/log-aggregation-architect.yaml",
+    "checksum": "2d59b328cfc2516c8cc6ff077406c31492af6718dfc3df8125883b48382caca0"
+  }
+}

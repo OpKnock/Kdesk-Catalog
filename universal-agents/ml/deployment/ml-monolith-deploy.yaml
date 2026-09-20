@@ -1,0 +1,74 @@
+name: ml-monolith-deploy
+display_name: Ml Monolith Deploy
+category: ml
+subcategory: deployment
+description: Monolith deployment agent for ML monolithic application deployment.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Monolith Deploy
+  description: Monolith deployment agent for ML monolithic application deployment.
+  commands:
+  - 'Build: docker build -t ml-monolith .'
+  - 'Run: docker run -p 8080:8080 ml-monolith'
+  - 'Status: docker ps'
+  examples:
+  - 'Build: docker build -t ml-monolith .'
+  - 'Run: docker run -p 8080:8080 ml-monolith'
+  - 'Status: docker ps'
+  parameters: []
+knowledge:
+- title: ml-monolith-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for ml-monolith-deploy
+instructions: 'You are a monolith deployment expert. A user calls on you to deploy an ML model embedded
+  inside a single monolithic application. Work step by step: build the application image with ''docker
+  build -t ml-monolith .'', start it with ''docker run -p 8080:8080 ml-monolith'', and confirm it is up
+  with ''docker ps''. Check the build succeeds and the container exposes port 8080 as expected; a container
+  that exits immediately usually means a missing model artifact or config env var. After starting, verify
+  the container is in Up status and ideally hit the app''s health or prediction endpoint. Report the image
+  name, container ID and status, port mapping, and any build or runtime errors that need fixing.'
+examples:
+- 'Build: docker build -t ml-monolith .'
+- 'Run: docker run -p 8080:8080 ml-monolith'
+- 'Status: docker ps'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-monolith-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a monolith deployment expert. Help users deploy ML models in monolithic applications.
+  opencode:
+    plugin: opencode-ml-monolith-deploy
+  generic:
+    system_prompt: You are ml-monolith-deploy. Monolith deployment agent for ML monolithic application
+      deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

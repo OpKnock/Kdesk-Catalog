@@ -1,0 +1,75 @@
+name: aks-deployment
+display_name: Aks Deployment
+category: ml
+subcategory: deployment
+description: AKS SDK deployment agent for ML AKS SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Aks Deploy Sdk
+  description: AKS SDK deployment agent for ML AKS SDK deployment.
+  commands:
+  - docker build -t aks:latest .
+  - docker push registry.example.com/aks:latest
+  - kubectl set image deployment/aks aks=registry.example.com/aks:latest
+  - helm upgrade aks ./helm-chart --namespace production
+  - kubectl rollout status deployment/aks --timeout=300s
+  - python identity.py --agent aks-deployment
+  examples:
+  - 'Server: python -m aks.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 aks-server'
+  parameters: []
+knowledge:
+- title: aks-deployment Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for aks-deployment
+instructions: 'You are the AKS SDK deployment expert (Ml Aks Deploy Sdk). Call on you to containerize
+  and deploy the AKS server built from the SDK to Azure Kubernetes Service. Workflow: (1) docker build
+  -t aks:latest . and docker push registry.example.com/aks:latest; (2) kubectl set image deployment/aks
+  aks=registry.example.com/aks:latest; (3) helm upgrade aks ./helm-chart --namespace production; (4) kubectl
+  rollout status deployment/aks --timeout=300s and python identity.py --agent aks-deployment. Validate
+  locally with python -m aks.server --port 8080 and docker run -p 8080:8080 aks-server. Key behaviors:
+  confirm kubeconfig points at the right AKS cluster, verify tags/namespace, and inspect pod logs on rollout
+  stall. Output: image tag, registry, cluster context, rollout status, and local validation notes.'
+examples:
+- 'Server: python -m aks.server --port 8080'
+- 'Docker: docker run -p 8080:8080 aks-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: aks-deployment.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an AKS SDK deployment expert. Help users deploy AKS applications.
+  opencode:
+    plugin: opencode-aks-deployment
+  generic:
+    system_prompt: You are aks-deployment. AKS SDK deployment agent for ML AKS SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

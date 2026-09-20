@@ -1,0 +1,180 @@
+name: api-sdk-python-package
+version: 2.0.0
+type: skill
+category: backend
+description: 'Builds Python SDKs: pyproject.toml configuration, python -m build, editable installs, twine
+  checks, and PyPI publishing.'
+keywords:
+- api-sdk
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-sdk-python-package.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-sdk-python-package
+  generic:
+    system_prompt: 'Your lane is Api Sdk Python Package. You do it through python-package: Package a Python
+      SDK with build and setuptools. The commands are real, e.g. `pip install build twine`. You work hands-on
+      and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: python-package
+  description: Package a Python SDK with build and setuptools
+  commands:
+  - pip install build twine
+  - python -m build
+  - pip install -e .
+  - twine check dist/*
+  - twine upload dist/*
+  examples:
+  - python -m build creates sdist and wheel
+  - pip install -e . installs in editable mode
+  - twine check validates package metadata
+  parameters:
+  - name: dist
+    type: string
+    description: Distribution files glob
+  - name: repository
+    type: string
+    description: PyPI repository URL
+  - name: token
+    type: string
+    description: PyPI API token
+- name: package-metadata
+  description: Configure pyproject.toml metadata
+  commands:
+  - python -c "import tomllib; d=tomllib.load(open('pyproject.toml','rb')); print(d['project']['name'],
+    d['project']['version'])"
+  - pip show my-sdk
+  - python -c "import my_sdk; print(my_sdk.__version__)"
+  examples: []
+  parameters: []
+prerequisites:
+- openapi-generator
+- node.js
+- python
+tools:
+- openapi-generator
+- node.js
+- python
+- typescript
+examples:
+- input: Package and publish a Python SDK
+  output: Builds dist artifacts, checks with twine, and uploads to PyPI
+- input: Verify editable dev install
+  output: Installs with pip install -e . and imports the module
+instructions: '# API SDK v3 - Python
+
+
+  Python SDK packaging.
+
+
+  ## What This Skill Does
+
+  - Configures pyproject.toml
+
+  - Builds sdist and wheels
+
+  - Publishes to PyPI with twine
+
+
+  ## When to Use
+
+  - Building Python clients
+
+  - Distributing SDKs to internal users
+
+  - Open-source SDK releases
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  pip install build twine
+
+  python -m build
+
+  pip install -e .
+
+  twine check dist/*
+
+  twine upload dist/*
+
+  ```
+
+
+  ## pyproject.toml
+
+
+  ```toml
+
+  [build-system]
+
+  requires = ["setuptools>=68"]
+
+  build-backend = "setuptools.build_meta"
+
+
+  [project]
+
+  name = "my-sdk"
+
+  version = "1.0.0"
+
+  description = "Client SDK for My API"
+
+  ```
+
+
+  ## Testing
+
+  - Install from the built wheel in a venv
+
+  - Verify import works after install
+
+  - Check twine metadata before upload
+
+
+  ## Best Practices
+
+  - Test on test.pypi.org first
+
+  - Pin dependency ranges loosely
+
+  - Keep the package importable and typed'
+display_name: Api Sdk Python Package
+knowledge:
+- title: Packaging Python Projects
+  type: documentation
+  source: https://packaging.python.org/en/latest/tutorials/packaging-projects/
+  description: Python packaging tutorial
+- title: Twine Docs
+  type: documentation
+  source: https://twine.readthedocs.io/en/stable/
+  description: Uploading packages to PyPI

@@ -1,0 +1,220 @@
+name: test-automation-architect
+version: 2.0.0
+type: skill
+category: testing
+description: Designs and implements test automation strategies across unit, integration, and E2E layers
+  with coverage gates and parallel execution.
+keywords:
+- test-automation
+- playwright
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: test-automation-architect.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-test-automation-architect
+  generic:
+    system_prompt: 'You take the test-automation-architect seat. You do it through pytest-strategy: Structure
+      Python test suites with parallelism and coverage. The commands are real, e.g. `pytest --maxfail=1
+      -q`. You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: pytest-strategy
+  description: Structure Python test suites with parallelism and coverage.
+  commands:
+  - pytest --maxfail=1 -q
+  - pytest -n 4 tests/unit
+  - pytest --cov=src --cov-report=term-missing
+  - pytest --junitxml=results.xml
+  - pytest --lf --last-failed-no-failures=all
+  examples:
+  - pytest -n 4 --cov=src tests/
+  - pytest --junitxml=results.xml
+  - pytest --lf
+  parameters:
+  - name: workers
+    type: number
+    description: Parallel workers (-n)
+  - name: coverage
+    type: string
+    description: Package to measure coverage
+- name: jest-strategy
+  description: Organize JS/TS unit and integration tests with jest.
+  commands:
+  - npx jest --ci --coverage
+  - npx jest --runInBand
+  - npx jest --maxWorkers=50%
+  - npx jest --projects src/api src/ui
+  - npx jest --silent --testPathIgnorePatterns=e2e
+  examples:
+  - npx jest --ci --coverage
+  - npx jest --maxWorkers=50%
+  - npx jest --projects src/api src/ui
+  parameters:
+  - name: maxWorkers
+    type: string
+    description: Worker limit, e.g. 50% or 2
+  - name: coverageThreshold
+    type: object
+    description: Coverage gate config
+- name: e2e-strategy
+  description: Orchestrate end-to-end suites with Playwright.
+  commands:
+  - npx playwright test --project=chromium
+  - npx playwright test --grep @smoke
+  - npx playwright test --workers=4
+  - npx playwright test --retries=2 --reporter=html
+  - npx playwright test --shard=1/3
+  examples:
+  - npx playwright test --grep @smoke
+  - npx playwright test --shard=1/3
+  - npx playwright test --retries=2
+  parameters:
+  - name: grep
+    type: string
+    description: Tag or name filter, e.g. @smoke
+  - name: shard
+    type: string
+    description: Shard identifier, e.g. 1/3
+  - name: retries
+    type: number
+    description: Retry count for flaky tests
+prerequisites:
+- playwright
+- cypress
+- selenium
+- node.js
+tools:
+- playwright
+- cypress
+- selenium
+- node.js
+- python
+- robot-framework
+examples:
+- input: Design a test strategy for our payment service
+  output: Agent maps unit/integration/E2E layers to pytest, supertest, and Playwright, with tags, coverage
+    gates, and CI sharding.
+- input: Our E2E suite takes 40 minutes
+  output: Agent splits tests with --shard=3, adds retries for flakes, and moves stable flows to API-level
+    tests.
+instructions: '# Test Automation Architecture
+
+
+  Design scalable, reliable test suites across the pyramid.
+
+
+  ## What This Skill Does
+
+
+  - Lays out unit/integration/E2E test structures
+
+  - Configures coverage gates and parallel execution
+
+  - Implements tagging for smoke vs full suites
+
+  - Handles flakiness with retries and sharding
+
+
+  ## When to Use
+
+
+  - Setting up testing from scratch for a service
+
+  - Speeding up a slow test suite
+
+  - Enforcing coverage policies in CI
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Python
+
+  pytest -n 4 --cov=src --cov-report=term-missing tests/
+
+  pytest --junitxml=results.xml
+
+
+  # Node
+
+  npx jest --ci --coverage --maxWorkers=50%
+
+  npx jest --projects src/api src/ui
+
+
+  # E2E
+
+  npx playwright test --project=chromium --grep @smoke
+
+  npx playwright test --shard=1/3 --retries=2 --reporter=html
+
+  ```
+
+
+  ## Pyramid Shape
+
+
+  ```text
+
+  E2E:    10%  - Playwright, few, slow, business-critical
+
+  API:    30%  - supertest/pytest, fast, contract-level
+
+  Unit:   60%  - jest/pytest, instant, logic-level
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Keep unit tests deterministic; no network or clocks
+
+  - Tag smoke tests and run them on every PR
+
+  - Shard E2E across CI runners to keep feedback fast
+
+  - Set coverage gates (e.g. 80% lines) that fail the build
+
+  - Treat flaky tests as defects: quarantine or fix, never ignore'
+display_name: test-automation-architect
+knowledge:
+- title: pytest Documentation
+  type: documentation
+  source: https://docs.pytest.org/
+  description: Fixtures, parametrization, and plugins
+- title: Jest Documentation
+  type: documentation
+  source: https://jestjs.io/docs/getting-started
+  description: Test organization and configuration
+- title: Playwright Test Docs
+  type: documentation
+  source: https://playwright.dev/docs/test-intro
+  description: E2E test authoring and execution

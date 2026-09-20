@@ -1,0 +1,177 @@
+name: insomnia
+display_name: Insomnia
+category: api
+subcategory: general
+description: 'Insomnia API client workflows: inso CLI for linting OpenAPI specs, running collections and
+  tests headlessly, and exporting design documents.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- inso
+capabilities:
+- name: inso-cli
+  description: Lint API specs and run Insomnia collections and tests from CI.
+  commands:
+  - inso lint spec openapi.yaml
+  - inso run test "My Collection" --env prod
+  - inso run collection "My Collection" -e prod --verbose
+  - inso export spec openapi.yaml --output out/
+  - inso generate config spec openapi.yaml
+  examples:
+  - inso lint spec openapi.yaml --ci
+  - inso run test "Checkout" -e staging --reporter json --output results.json
+  - inso run collection "Smoke" --env dev -t false
+  parameters:
+  - name: spec_file
+    type: string
+    description: OpenAPI spec path for lint/export.
+  - name: collection
+    type: string
+    description: Collection name to run.
+  - name: env
+    type: string
+    description: Environment (dev/staging/prod) for variables.
+knowledge:
+- title: Insomnia Docs
+  type: documentation
+  source: https://docs.insomnia.rest/
+  description: 'Official Insomnia documentation: workspace, design, and debug features.'
+- title: Inso CLI Docs
+  type: documentation
+  source: https://docs.insomnia.rest/inso-cli/introduction
+  description: 'Inso CLI: lint, run, export, and config commands.'
+instructions: '# Insomnia
+
+
+  Design, test, and debug APIs with Insomnia and the inso CLI.
+
+
+  ## What this skill does
+
+
+  - Lints OpenAPI specs with inso.
+
+  - Runs collections and assertion tests headlessly in CI.
+
+  - Exports design documents and generates configs.
+
+  - Manages environments for multi-stage testing.
+
+
+  ## When to use
+
+
+  - Teams want API tests that run in CI without code.
+
+  - Validating OpenAPI specs before codegen.
+
+  - Replaying request suites after changes.
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Lint an OpenAPI spec
+
+  inso lint spec openapi.yaml
+
+
+  # Run collection tests against prod
+
+  inso run test "My Collection" --env prod
+
+
+  # Run requests only (no assertions)
+
+  inso run collection "My Collection" -e prod --verbose
+
+
+  # Export the spec as bundle
+
+  inso export spec openapi.yaml --output out/
+
+
+  # Generate an Insomnia config from a spec
+
+  inso generate config spec openapi.yaml
+
+  ```
+
+
+  ## CI usage
+
+
+  ```bash
+
+  inso run test "Checkout" --env staging --reporter json --output results.json
+
+  # exit code reflects test failures
+
+  ```
+
+
+  ## Best practices
+
+
+  - Keep one environment per stage with secrets stored as variables.
+
+  - Write assertions in the Insomnia UI so the CLI run validates them.
+
+  - Run `inso lint spec` before every spec merge.
+
+  - Use --reporter json in CI for structured failure output.
+
+
+  ## Example exchange
+
+
+  ```
+
+  User: Run the Checkout tests against staging in CI.
+
+  Agent: inso run test "Checkout" --env staging --reporter json --output results.json
+
+  ```'
+examples:
+- input: Lint the OpenAPI spec
+  output: inso lint spec openapi.yaml
+- input: Run collection tests against prod
+  output: inso run test "My Collection" --env prod
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: insomnia.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-insomnia
+  generic:
+    system_prompt: 'You are the Insomnia specialist. You do it through inso-cli: Lint API specs and run
+      Insomnia collections and tests from CI. The commands are real, e.g. `inso lint spec openapi.yaml`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

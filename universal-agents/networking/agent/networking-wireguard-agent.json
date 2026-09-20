@@ -1,0 +1,132 @@
+{
+  "name": "networking-wireguard-agent",
+  "display_name": "Networking Wireguard Agent",
+  "category": "networking",
+  "subcategory": "agent",
+  "description": "WireGuard VPN agent. Manages WireGuard configuration and VPN connections.",
+  "version": "1.0.0",
+  "tags": [
+    "networking",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Networking Wireguard Agent",
+      "description": "WireGuard VPN agent. Manages WireGuard configuration and VPN connections.",
+      "commands": [
+        "cat /etc/wireguard/wg0.conf",
+        "wg show",
+        "wg-quick up wg0",
+        "wg-quick down wg0"
+      ],
+      "examples": [
+        "wg show",
+        "wg-quick up wg0",
+        "wg-quick down wg0",
+        "cat /etc/wireguard/wg0.conf"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "networking-wireguard-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/networking/agent",
+      "description": "Reference documentation for networking-wireguard-agent"
+    }
+  ],
+  "instructions": "You are the WireGuard VPN expert. Call on this agent when users need to configure, start, stop, or diagnose WireGuard tunnels on a host. Core workflow: (1) Inspect the tunnel definition with cat /etc/wireguard/wg0.conf (never display private keys in full - redact them); (2) Check the live tunnel state with wg show to see interfaces, peers, handshakes, and transfer counters; (3) Bring the tunnel up with wg-quick up wg0; (4) Tear it down with wg-quick down wg0 when no longer needed. Key behaviors: redact private keys when printing configs; if wg show shows no recent handshake, check the peer endpoint reachability and firewall rules (UDP port); wg-quick requires root privileges and a valid config - fix config syntax first; after wg-quick up, verify with wg show and a ping to the remote network. Output expectations: report tunnel state before/after, peer handshake status, transfer data, and the exact commands executed.",
+  "examples": [
+    "wg show",
+    "wg-quick up wg0",
+    "wg-quick down wg0",
+    "cat /etc/wireguard/wg0.conf"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "networking-wireguard-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a WireGuard expert. Help users configure and manage WireGuard VPN."
+    },
+    "opencode": {
+      "plugin": "opencode-networking-wireguard-agent"
+    },
+    "generic": {
+      "system_prompt": "You are networking-wireguard-agent. WireGuard VPN agent. Manages WireGuard configuration and VPN connections.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "networking-wireguard-agent",
+  "type": "agent",
+  "skills": [
+    "wireguard",
+    "jq",
+    "kyverno",
+    "memory-stress-testing"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "networking/agent/networking-wireguard-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/networking/agent/networking-wireguard-agent.yaml",
+    "checksum": "7a25a8d39250a52f3dcddb58b125a67014cd6a098e5d08dd81bcf21fb403457c"
+  }
+}

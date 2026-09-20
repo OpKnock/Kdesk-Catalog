@@ -1,0 +1,189 @@
+name: load-testing-testing-2
+display_name: load-testing-testing-2
+category: testing
+subcategory: general
+description: Load-tests HTTP services with hey, ApacheBench, and wrk for quick throughput and latency
+  measurements.
+version: 2.0.0
+tags:
+- testing
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- diff
+- hey
+- wrk
+capabilities:
+- name: quick-load-tools
+  description: Generate load with hey, ab, and wrk.
+  commands:
+  - hey -n 10000 -c 100 https://api.example.com/v1/users
+  - ab -n 10000 -c 100 https://api.example.com/v1/users
+  - wrk -t4 -c100 -d30s https://api.example.com/v1/users
+  - hey -z 30s -c 50 -m POST -d '{"q":"x"}' https://api.example.com/v1/search
+  - ab -n 5000 -c 50 -k https://api.example.com/v1/health
+  examples:
+  - hey -n 10000 -c 100 https://api.example.com/v1/users
+  - ab -n 10000 -c 100 -k https://api.example.com/v1/health
+  - wrk -t4 -c100 -d30s https://api.example.com/v1/users
+  parameters:
+  - name: requests
+    type: number
+    description: Total requests (-n)
+  - name: concurrency
+    type: number
+    description: Concurrent clients (-c)
+  - name: duration
+    type: string
+    description: Duration for wrk (-d30s)
+- name: result-analysis
+  description: Parse and compare load-test results.
+  commands:
+  - hey -n 1000 -c 50 https://api.example.com/v1/users | grep -E 'Requests|Total|Average|p99'
+  - wrk -t4 -c100 -d30s https://api.example.com/v1/users > baseline.txt
+  - diff <(wrk -t4 -c100 -d30s https://api.example.com/v1/users) baseline.txt
+  - hey -n 1000 -c 50 -disable-compression https://api.example.com/v1/users | grep 'status code'
+  examples:
+  - hey -n 1000 -c 50 https://api.example.com/v1/users | grep -E 'Average|p99'
+  - wrk -t4 -c100 -d30s https://api.example.com/v1/users > baseline.txt
+  - diff <(wrk -t4 -c100 -d30s https://api.example.com/v1/users) baseline.txt
+  parameters:
+  - name: pattern
+    type: string
+    description: Output line filter
+  - default: '50'
+    description: Concurrent connections or workers (-c).
+    name: concurrency
+    type: integer
+knowledge:
+- title: hey GitHub
+  type: documentation
+  source: https://github.com/rakyll/hey
+  description: HTTP load generator usage
+- title: ApacheBench Documentation
+  type: documentation
+  source: https://httpd.apache.org/docs/2.4/programs/ab.html
+  description: ab tool reference
+- title: wrk GitHub
+  type: documentation
+  source: https://github.com/wg/wrk
+  description: High-concurrency HTTP benchmarking
+instructions: '# Load Testing
+
+
+  Quick, reproducible load tests with lightweight CLI tools.
+
+
+  ## What This Skill Does
+
+
+  - Generates high concurrency with hey, ab, and wrk
+
+  - Measures throughput, latency, and error rates
+
+  - Compares results against baselines
+
+  - Tests with headers, methods, and payloads
+
+
+  ## When to Use
+
+
+  - Sanity-checking capacity before releases
+
+  - Comparing performance between versions
+
+  - Verifying config changes under load
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # hey
+
+  hey -n 10000 -c 100 https://api.example.com/v1/users
+
+  hey -z 30s -c 50 -m POST -d ''{"q":"x"}'' https://api.example.com/v1/search
+
+
+  # ApacheBench
+
+  ab -n 10000 -c 100 -k https://api.example.com/v1/health
+
+
+  # wrk
+
+  wrk -t4 -c100 -d30s https://api.example.com/v1/users
+
+
+  # Baseline comparison
+
+  wrk -t4 -c100 -d30s https://api.example.com/v1/users > baseline.txt
+
+  wrk -t4 -c100 -d30s https://api.example.com/v1/users | grep -E ''Requests/sec|Latency''
+
+  ```
+
+
+  ## Reading Results
+
+
+  - Requests/sec: throughput under the given concurrency
+
+  - Latency distribution: p50/p90/p99 skew reveals tail latency
+
+  - Non-2xx responses: error rate under load
+
+  - Connection timeouts at high concurrency indicate pool exhaustion
+
+
+  ## Best Practices
+
+
+  - Warm up the service before measuring
+
+  - Use keep-alive (-k) for realistic HTTP/1.1 behavior
+
+  - Test both small and payload-heavy requests
+
+  - Record baselines per release for regression detection
+
+  - Never load-test production without authorization'
+examples:
+- input: Quick capacity check of the checkout API
+  output: Agent runs hey -n 5000 -c 100 and reports throughput, p99 latency, and error counts.
+- input: Compare performance before/after the refactor
+  output: Agent records a wrk baseline, reruns after the change, and diffs the summaries.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: load-testing-testing-2.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-load-testing
+  generic:
+    system_prompt: 'This is your domain: load-testing-testing-2. You do it through quick-load-tools: Generate
+      load with hey, ab, and wrk. The commands are real, e.g. `hey -n 10000 -c 100 https://api.example.com/v1/users`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

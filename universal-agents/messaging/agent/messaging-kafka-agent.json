@@ -1,0 +1,172 @@
+{
+  "name": "messaging-kafka-agent",
+  "display_name": "Messaging Kafka Agent",
+  "category": "messaging",
+  "subcategory": "agent",
+  "description": "Kafka messaging agent. Manages Kafka topics, producers, consumers, and cluster operations.",
+  "version": "1.0.0",
+  "tags": [
+    "messaging",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Messaging Kafka Agent",
+      "description": "Kafka messaging agent. Manages Kafka topics, producers, consumers, and cluster operations.",
+      "commands": [
+        "kafka-consumer-groups --bootstrap-server localhost:9092 --list",
+        "kafka-topics --bootstrap-server localhost:9092 --list",
+        "kafka-console-producer --bootstrap-server localhost:9092 --topic test",
+        "kafka-console-consumer --bootstrap-server localhost:9092 --topic test"
+      ],
+      "examples": [
+        "kafka-topics --bootstrap-server localhost:9092 --list",
+        "kafka-console-producer --bootstrap-server localhost:9092 --topic test",
+        "kafka-console-consumer --bootstrap-server localhost:9092 --topic test",
+        "kafka-consumer-groups --bootstrap-server localhost:9092 --list"
+      ],
+      "parameters": [
+        {
+          "name": "bootstrap-server",
+          "type": "string",
+          "description": "CLI flag --bootstrap-server observed in capability commands"
+        },
+        {
+          "name": "list",
+          "type": "boolean",
+          "description": "CLI flag --list observed in capability commands"
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "CLI flag --topic observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "messaging-kafka-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/messaging/agent",
+      "description": "Reference documentation for messaging-kafka-agent"
+    }
+  ],
+  "instructions": "You are the Messaging Kafka Agent, the Kafka expert for topics, producers, consumers and cluster operations. Start by inventorying the cluster: `kafka-topics --bootstrap-server localhost:9092 --list` to see topics and `kafka-consumer-groups --bootstrap-server localhost:9092 --list` to see consumer groups and lag sources. To verify message flow end-to-end, produce test messages with `kafka-console-producer --bootstrap-server localhost:9092 --topic test` and consume them with `kafka-console-consumer --bootstrap-server localhost:9092 --topic test`. Diagnose common failure modes: missing topic, consumer-group lag, partition imbalance, or broker connectivity issues. Report topic and group inventories, producer/consumer verification results, anomalies found, and fixes such as replication factor or retention changes.",
+  "examples": [
+    "kafka-topics --bootstrap-server localhost:9092 --list",
+    "kafka-console-producer --bootstrap-server localhost:9092 --topic test",
+    "kafka-console-consumer --bootstrap-server localhost:9092 --topic test",
+    "kafka-consumer-groups --bootstrap-server localhost:9092 --list"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "messaging-kafka-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Kafka messaging expert. Help users manage Kafka clusters and messaging."
+    },
+    "opencode": {
+      "plugin": "opencode-messaging-kafka-agent"
+    },
+    "generic": {
+      "system_prompt": "You are messaging-kafka-agent. Kafka messaging agent. Manages Kafka topics, producers, consumers, and cluster operations.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "messaging-kafka-agent",
+  "type": "agent",
+  "skills": [
+    "event-driven",
+    "kafka-cli",
+    "event-sourcing",
+    "cdc",
+    "asyncapi-security",
+    "flink-sql",
+    "spark-streaming"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Messaging Kafka Agent",
+        "name": "bootstrap-server",
+        "type": "string",
+        "description": "CLI flag --bootstrap-server observed in capability commands"
+      },
+      {
+        "capability": "Messaging Kafka Agent",
+        "name": "list",
+        "type": "boolean",
+        "description": "CLI flag --list observed in capability commands"
+      },
+      {
+        "capability": "Messaging Kafka Agent",
+        "name": "topic",
+        "type": "string",
+        "description": "CLI flag --topic observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "messaging/agent/messaging-kafka-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/messaging/agent/messaging-kafka-agent.yaml",
+    "checksum": "63dc899c3dc3243e79442723a1c3a35cfde110f8adb426b78ec8f41de09a3a13"
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "name": "mqtt-emqx",
+  "display_name": "Mqtt Emqx",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Operate EMQX MQTT brokers: start/stop, cluster status, publish/subscribe via emqx ctl, and dashboard access.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "emqx"
+  ],
+  "capabilities": [
+    {
+      "name": "emqx-broker-operations",
+      "description": "Control the EMQX broker daemon and inspect clusters, subscriptions and message traffic with emqx ctl.",
+      "commands": [
+        "emqx start",
+        "emqx ctl status",
+        "emqx ctl broker pub test/topic \"hello\"",
+        "emqx ctl broker sub test/topic",
+        "emqx ctl cluster status"
+      ],
+      "examples": [
+        "emqx ctl broker pub demo/temp \"21.5\" --qos 1",
+        "emqx ctl broker sub demo/temp --qos 1",
+        "emqx ctl listener list"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "MQTT topic to publish or subscribe to"
+        },
+        {
+          "name": "qos",
+          "type": "integer",
+          "description": "Quality of service level 0, 1 or 2"
+        },
+        {
+          "name": "payload",
+          "type": "string",
+          "description": "Message payload to publish"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "EMQX Documentation",
+      "type": "documentation",
+      "source": "https://docs.emqx.com/en/emqx/latest/",
+      "description": "Installation, clustering, emqx ctl commands and dashboard"
+    },
+    {
+      "title": "EMQX Dashboard",
+      "type": "documentation",
+      "source": "https://docs.emqx.com/en/emqx/latest/admin/observability/dashboard.html",
+      "description": "Web UI at http://localhost:18083"
+    }
+  ],
+  "instructions": "# EMQX\n\nEMQX is a scalable open-source MQTT broker for IoT and edge workloads.\n\n## What this skill does\n\n- Starts/stops the broker and checks status\n- Publishes and subscribes from the CLI for testing\n- Inspects clusters and listeners\n\n## When to use\n\n- Deploying a production MQTT broker\n- Verifying connectivity and message flow end-to-end\n- Scaling to a multi-node EMQX cluster\n\n## Real commands\n\n```bash\n# Start and check\nemqx start\nemqx ctl status\n\n# Publish from CLI\nemqx ctl broker pub test/topic \"hello\"\nemqx ctl broker pub demo/temp \"21.5\" --qos 1\n\n# Subscribe from CLI\nemqx ctl broker sub test/topic --qos 1\n\n# Cluster and listeners\nemqx ctl cluster status\nemqx ctl listener list\n```\n\n## Dashboard\n\n- Web UI: `http://localhost:18083` (default admin/public)\n\n## Config files\n\n- `/etc/emqx/emqx.conf` - node name, listeners, auth\n- Authentication: `emqx ctl authn ...`? Use built-in MQTT auth users or HTTP auth\n\n## Best practices\n\n- Pin EMQX version and test upgrades on staging\n- Configure TLS listeners for production (`listener.ssl.external`)\n- Monitor `emqx ctl broker metrics` for dropped messages",
+  "examples": [
+    {
+      "input": "Install and start EMQX on this server",
+      "output": "The agent installs via the official repo, runs `emqx start` and verifies with `emqx ctl status` and the dashboard URL."
+    },
+    {
+      "input": "Test that my topic flow works without writing code",
+      "output": "The agent runs `emqx ctl broker sub sensors/#` in one terminal and `emqx ctl broker pub sensors/temp \"22.1\"` in another."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "mqtt-emqx.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-mqtt-emqx"
+    },
+    "generic": {
+      "system_prompt": "You work Mqtt Emqx hands-on. You do it through emqx-broker-operations: Control the EMQX broker daemon and inspect clusters, subscriptions and message traffic with emqx ctl. The commands are real, e.g. `emqx start`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "mqtt-emqx",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "emqx-broker-operations",
+        "name": "topic",
+        "type": "string",
+        "description": "MQTT topic to publish or subscribe to"
+      },
+      {
+        "capability": "emqx-broker-operations",
+        "name": "qos",
+        "type": "integer",
+        "description": "Quality of service level 0, 1 or 2"
+      },
+      {
+        "capability": "emqx-broker-operations",
+        "name": "payload",
+        "type": "string",
+        "description": "Message payload to publish"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "emqx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/mqtt-emqx-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/mqtt-emqx-skill.yaml",
+    "checksum": "bb002a6fed7ff75831b034a07700f38167688218dcc8a39807ed4a8ab79ef105"
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "name": "rabbitmq-security",
+  "display_name": "Rabbitmq Security",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Secure RabbitMQ: users, vhosts, permissions, TLS listeners, and credential management.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "rabbitmqctl"
+  ],
+  "capabilities": [
+    {
+      "name": "rabbitmq-security-config",
+      "description": "Manage users, vhosts and permissions, and configure TLS with rabbitmq.conf.",
+      "commands": [
+        "rabbitmqctl add_user svc-orders s3cret",
+        "rabbitmqctl set_permissions -p orders-vhost svc-orders \".*\" \".*\" \".*\"",
+        "rabbitmqctl set_user_tags svc-orders monitoring",
+        "rabbitmqctl add_vhost orders-vhost",
+        "rabbitmqctl list_permissions -p orders-vhost"
+      ],
+      "examples": [
+        "rabbitmqctl add_user admin strongpass && rabbitmqctl set_user_tags admin administrator",
+        "rabbitmqctl list_users",
+        "rabbitmqctl clear_permissions -p orders-vhost svc-orders"
+      ],
+      "parameters": [
+        {
+          "name": "user",
+          "type": "string",
+          "description": "RabbitMQ username"
+        },
+        {
+          "name": "vhost",
+          "type": "string",
+          "description": "Virtual host"
+        },
+        {
+          "name": "permissions",
+          "type": "array",
+          "description": "configure, write, read regex patterns"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "RabbitMQ Access Control",
+      "type": "documentation",
+      "source": "https://www.rabbitmq.com/access-control.html",
+      "description": "Users, vhosts, permissions and authentication"
+    },
+    {
+      "title": "TLS for RabbitMQ",
+      "type": "documentation",
+      "source": "https://www.rabbitmq.com/ssl.html",
+      "description": "TLS listener configuration"
+    }
+  ],
+  "instructions": "# RabbitMQ Security\n\nRestrict who can touch what: users, vhosts, and per-vhost configure/write/read permissions.\n\n## What this skill does\n\n- Creates users and vhosts\n- Grants minimal permissions\n- Enables TLS\n\n## When to use\n\n- Multi-team brokers\n- Compliance requirements\n\n## Real commands\n\n```bash\n# Users\nrabbitmqctl add_user svc-orders s3cret\nrabbitmqctl set_user_tags svc-orders monitoring\nrabbitmqctl list_users\n\n# Vhosts\nrabbitmqctl add_vhost orders-vhost\n\n# Permissions (configure, write, read)\nrabbitmqctl set_permissions -p orders-vhost svc-orders \".*\" \".*\" \".*\"\nrabbitmqctl list_permissions -p orders-vhost\nrabbitmqctl clear_permissions -p orders-vhost svc-orders\n```\n\n## rabbitmq.conf TLS\n\n```conf\nlisteners.ssl.default = 5671\nssl_options.cacertfile = /etc/rabbitmq/ca.crt\nssl_options.certfile   = /etc/rabbitmq/server.crt\nssl_options.keyfile    = /etc/rabbitmq/server.key\nssl_options.verify     = verify_peer\nssl_options.fail_if_no_peer_cert = true\n```\n\n## Best practices\n\n- One user per service; rotate secrets regularly\n- Give read-only access where possible\n- Use 5671 with client certs for production",
+  "examples": [
+    {
+      "input": "Create a read-only user for a monitoring tool",
+      "output": "The agent adds the user, sets the monitoring tag and grants read-only permission on the vhost."
+    },
+    {
+      "input": "Enable TLS on RabbitMQ",
+      "output": "The agent configures listeners.ssl.default and ssl_options in rabbitmq.conf and restarts."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rabbitmq-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rabbitmq-security"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Rabbitmq Security. You do it through rabbitmq-security-config: Manage users, vhosts and permissions, and configure TLS with rabbitmq.conf. The commands are real, e.g. `rabbitmqctl add_user svc-orders s3cret`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rabbitmq-security",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rabbitmq-security-config",
+        "name": "user",
+        "type": "string",
+        "description": "RabbitMQ username"
+      },
+      {
+        "capability": "rabbitmq-security-config",
+        "name": "vhost",
+        "type": "string",
+        "description": "Virtual host"
+      },
+      {
+        "capability": "rabbitmq-security-config",
+        "name": "permissions",
+        "type": "array",
+        "description": "configure, write, read regex patterns"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "rabbitmqctl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/rabbitmq-security-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/rabbitmq-security-skill.yaml",
+    "checksum": "166623343077231d640c5fc65ea5cab9f171b03070fe8c97de58dd6d69bec9d6"
+  }
+}

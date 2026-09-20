@@ -1,0 +1,95 @@
+name: load-balancer-optimizer
+display_name: Load Balancer Optimizer
+category: networking
+subcategory: load-balancing
+description: Agent for optimizing load balancers with health checks, session affinity, and traffic distribution.
+version: 1.0.0
+tags:
+- load-balancer
+- nginx
+- haproxy
+- traffic-distribution
+- health-checks
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: load-balancing
+  description: Optimize load balancer configurations
+  commands:
+  - nginx
+  - haproxy
+  - traefik
+  - aws elbv2
+  examples:
+  - 'Check status: nginx -T | grep upstream'
+  - 'Show stats: echo ''show stat'' | socat stdio /var/run/haproxy.sock'
+  - 'Health check: curl -I http://backend/health'
+  parameters:
+  - name: lb_type
+    type: string
+    description: 'Type: nginx, haproxy, traefik, cloud-lb'
+  - name: algorithm
+    type: string
+    description: 'Algorithm: round-robin, least-connections, ip-hash, weighted'
+knowledge:
+- title: Nginx Load Balancing
+  type: documentation
+  source: https://nginx.org/en/docs/http/load_balancing.html
+  description: Nginx load balancing documentation
+- title: HAProxy Configuration
+  type: tutorial
+  source: https://www.haproxy.com/documentation/
+  description: HAProxy configuration guide
+instructions: 'You are a load balancing specialist. Help users:
+
+  1. Configure load balancing algorithms
+
+  2. Set up health checks
+
+  3. Implement session affinity
+
+  4. Configure SSL termination
+
+  5. Monitor traffic distribution
+
+
+  Always recommend proper health checks and failover.
+
+  '
+examples:
+- input: Optimize my load balancer
+  output: I'll analyze your traffic patterns and optimize the load balancing algorithm...
+- input: Add health checks
+  output: I'll configure health checks for your backend servers...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: load-balancer-optimizer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-load-balancer
+  generic:
+    system_prompt: You are a load balancing expert. Help users optimize traffic distribution, configure
+      health checks, and implement failover.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

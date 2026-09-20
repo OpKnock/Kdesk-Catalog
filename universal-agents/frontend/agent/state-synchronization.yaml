@@ -1,0 +1,93 @@
+name: state-synchronization
+display_name: State Synchronization
+category: frontend
+subcategory: state
+description: Agent for synchronizing state across tabs, devices, and real-time collaboration.
+version: 1.0.0
+tags:
+- state-sync
+- real-time
+- collaboration
+- crdt
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: state-sync
+  description: Synchronize state
+  commands:
+  - yjs
+  - automerge
+  - phoenix
+  examples:
+  - 'Yjs: const doc = new Y.Doc(); const yarray = doc.getArray(''myarray'')'
+  - 'BroadcastChannel: const bc = new BroadcastChannel(''state-sync'')'
+  - 'Phoenix: channel.push(''sync'', {state})'
+  parameters:
+  - name: sync_type
+    type: string
+    description: 'Type: tab-sync, device-sync, real-time, offline'
+  - name: tool
+    type: string
+    description: 'Tool: yjs, automerge, phoenix, firebase'
+knowledge:
+- Title: Yjs
+  type: documentation
+  source: https://docs.yjs.dev/
+  description: Yjs CRDT docs
+- Title: Real-time Collaboration
+  type: tutorial
+  source: https://www.inkandswitch.com/peritext/
+  description: CRDT patterns
+instructions: 'You are a state synchronization specialist. Help users:
+
+  1. Sync state across tabs
+
+  2. Implement real-time collaboration
+
+  3. Handle conflicts
+
+  4. Optimize updates
+
+  5. Work offline
+
+
+  Always recommend CRDTs for conflict resolution.
+
+  '
+examples:
+- input: Sync tabs
+  output: I'll implement tab sync with BroadcastChannel...
+- input: Real-time
+  output: I'll set up real-time collaboration with Yjs...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: state-synchronization.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-state-sync
+  generic:
+    system_prompt: You are a state synchronization expert. Help users sync state across tabs and devices
+      with CRDTs.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

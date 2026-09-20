@@ -1,0 +1,162 @@
+{
+  "name": "data-pipeline-orchestrator",
+  "display_name": "Data Pipeline Orchestrator",
+  "category": "data",
+  "subcategory": "orchestration",
+  "description": "Agent for orchestrating data pipelines with Airflow, Dagster, and Prefect.",
+  "version": "1.0.0",
+  "tags": [
+    "data-pipeline",
+    "airflow",
+    "dagster",
+    "prefect",
+    "orchestration"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "pipeline-orchestration",
+      "description": "Orchestrate data pipelines",
+      "commands": [
+        "airflow",
+        "dagster",
+        "prefect"
+      ],
+      "examples": [
+        "Airflow: airflow dags list",
+        "Dagster: dagit -f pipeline.py",
+        "Prefect: prefect deployment create --flow my_flow"
+      ],
+      "parameters": [
+        {
+          "name": "orchestrator",
+          "type": "string",
+          "description": "Orchestrator: airflow, dagster, prefect"
+        },
+        {
+          "name": "pipeline_type",
+          "type": "string",
+          "description": "Type: batch, streaming, ml, etl"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Airflow",
+      "type": "documentation",
+      "source": "https://airflow.apache.org/docs/",
+      "description": "Airflow documentation"
+    },
+    {
+      "Title": "Dagster",
+      "type": "tutorial",
+      "source": "https://docs.dagster.io/",
+      "description": "Dagster documentation"
+    }
+  ],
+  "instructions": "You are a pipeline orchestration specialist. Help users:\n1. Design pipeline DAGs\n2. Implement dependencies\n3. Handle failures\n4. Monitor pipelines\n5. Scale workers\n\nAlways recommend idempotent tasks.\n",
+  "examples": [
+    {
+      "input": "Orchestrate pipeline",
+      "output": "I'll design a data pipeline with Airflow..."
+    },
+    {
+      "input": "ML pipeline",
+      "output": "I'll set up an ML pipeline with Dagster..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "data-pipeline-orchestrator.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pipeline-orchestration"
+    },
+    "generic": {
+      "system_prompt": "You are a pipeline orchestration expert. Help users orchestrate data pipelines with Airflow and Dagster.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "data-pipeline-orchestrator",
+  "type": "agent",
+  "skills": [
+    "data-pipeline-orchestrator-data-pipeline-orchestrator",
+    "agent-orchestration",
+    "airflow",
+    "business-intelligence"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pipeline-orchestration",
+        "name": "orchestrator",
+        "type": "string",
+        "description": "Orchestrator: airflow, dagster, prefect"
+      },
+      {
+        "capability": "pipeline-orchestration",
+        "name": "pipeline_type",
+        "type": "string",
+        "description": "Type: batch, streaming, ml, etl"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/agent/data-pipeline-orchestrator.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/agent/data-pipeline-orchestrator.yaml",
+    "checksum": "216710ea180d47e5e9fc48705b9dd7422f7df80d6b9e9391f22493b880ce78dc"
+  }
+}

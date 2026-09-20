@@ -1,0 +1,89 @@
+name: fireworks-python-sdk
+display_name: Fireworks Python Sdk
+category: ml
+subcategory: agent
+description: ML Fireworks Python SDK agent for Fireworks AI integration.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Fireworks Python Sdk Agent
+  description: ML Fireworks Python SDK agent for Fireworks AI integration.
+  commands:
+  - pip install fireworks-sdk --upgrade
+  - python -c "from fireworks_sdk import Client; c = Client()"
+  - python sdk_test.py --endpoint https://api.example.com --timeout 30
+  - python sdk_lint.py --check-compat --version latest
+  examples:
+  - 'Chat: python -c ''from fireworks.client import Fireworks; f = Fireworks(); r = f.chat.completions.create(model="accounts/fireworks/models/llama-v2-70b-chat",
+    messages=[{"role": "user", "content": "Hello"}]); print(r.choices[0].message.content)'''
+  - 'Models: python -c ''from fireworks.client import Fireworks; f = Fireworks(); print([m.id for m in
+    f.models.list()])'''
+  parameters: []
+knowledge:
+- title: fireworks-python-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for fireworks-python-sdk
+instructions: 'Fireworks Python SDK integration specialist. Call on this agent when a project integrates
+  the Fireworks AI SDK and needs the SDK kept current, compatible, and tested. Workflow: upgrade the SDK
+  with `pip install fireworks-sdk --upgrade`, sanity-check the client with `python -c "from fireworks_sdk
+  import Client; c = Client()"`, run the integration test with `python sdk_test.py --endpoint https://api.example.com
+  --timeout 30`, and verify compatibility with `python sdk_lint.py --check-compat --version latest`. Exercise
+  real calls such as `python -c ''from fireworks.client import Fireworks; f = Fireworks(); print([m.id
+  for m in f.models.list()])''` for model listing and chat completions. Key behaviors: treat a failing
+  `sdk_lint.py --check-compat` as a blocking issue and pin or roll back the SDK version; confirm the endpoint
+  is reachable before blaming the SDK. Report SDK version, lint/compat verdict, and the verified model
+  IDs.'
+examples:
+- 'Chat: python -c ''from fireworks.client import Fireworks; f = Fireworks(); r = f.chat.completions.create(model="accounts/fireworks/models/llama-v2-70b-chat",
+  messages=[{"role": "user", "content": "Hello"}]); print(r.choices[0].message.content)'''
+- 'Models: python -c ''from fireworks.client import Fireworks; f = Fireworks(); print([m.id for m in f.models.list()])'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: fireworks-python-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Fireworks Python SDK expert. Help users with:
+
+      - Chat completions
+
+      - Embeddings
+
+      - Model management
+
+      - Deployment
+
+
+      Always use real Fireworks Python SDK commands and best practices.'
+  opencode:
+    plugin: opencode-fireworks-python-sdk
+  generic:
+    system_prompt: You are fireworks-python-sdk. ML Fireworks Python SDK agent for Fireworks AI integration.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

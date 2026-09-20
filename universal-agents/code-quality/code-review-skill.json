@@ -1,0 +1,204 @@
+{
+  "name": "code-review",
+  "display_name": "code-review",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Performs systematic code reviews: diff analysis, security checks, test coverage review, and actionable feedback.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "git",
+    "gitleaks",
+    "grep",
+    "trufflehog"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "git diff HEAD~1",
+        "git diff --stat HEAD~1",
+        "git diff --check",
+        "git log --oneline -10",
+        "git show HEAD"
+      ],
+      "description": "Analyze diffs and changed files.",
+      "name": "diff-review",
+      "examples": [
+        "git diff HEAD~3..HEAD -- src/",
+        "git diff --check HEAD~1",
+        "git diff -U20 HEAD~1 | less"
+      ],
+      "parameters": [
+        {
+          "description": "Commit range",
+          "name": "range",
+          "type": "string"
+        },
+        {
+          "description": "Path filter",
+          "name": "path",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "gitleaks detect",
+        "gitleaks detect --source .",
+        "trufflehog filesystem .",
+        "grep -rnE \"api[_-]?key\\s*=\\s*[^[:space:]]{4,}\" . --include=\"*.js\" --include=\"*.ts\"",
+        "git log -p --all -S \"password\""
+      ],
+      "description": "Scan for secrets and vulnerable patterns.",
+      "name": "security-review",
+      "examples": [
+        "gitleaks detect --log-opts=\"-20\"",
+        "trufflehog git --branch main",
+        "git log -S \"BEGIN RSA PRIVATE KEY\" --all"
+      ],
+      "parameters": [
+        {
+          "description": "Files or history to scan",
+          "name": "scope",
+          "type": "string"
+        },
+        {
+          "name": "range",
+          "type": "string",
+          "description": "Commit range to scan"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Google Code Review Guide",
+      "description": "Review standards and etiquette",
+      "source": "https://google.github.io/eng-practices/review/",
+      "type": "documentation"
+    },
+    {
+      "title": "Gitleaks Docs",
+      "description": "Secret scanning CLI",
+      "source": "https://github.com/gitleaks/gitleaks",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Code Review\n\nReview code effectively and systematically.\n\n## When to Use\n\n- Before merging any non-trivial change\n- Auditing a commit range for security issues\n- Giving feedback that improves the codebase\n- Catching secrets and risky patterns early\n\n## Review Checklist\n\n1. Understand the change intent (commit message, issue)\n2. Diff analysis: logic, edge cases, error paths\n3. Style and consistency with the codebase\n4. Tests: do they cover the change and the failure modes?\n5. Security: secrets, injection, authz, input validation\n6. Performance: N+1, blocking I/O, memory leaks\n\n## Commands\n\n```bash\n# Diff analysis\ngit diff HEAD~1\ngit diff --stat HEAD~1\ngit diff --check\ngit log --oneline -10\n\n# Secret scanning\ngitleaks detect\ntrufflehog filesystem .\ngit log -p --all -S \"password\"\n\n# History search for leaked material\ngit log -S \"BEGIN RSA PRIVATE KEY\" --all\n```\n\n## Best Practices\n\n- Review the diff, not the whole file, unless asked\n- Ask questions over commands; suggest over demand\n- Separate blocking issues from nits clearly\n- Verify claims: run the tests, not just read them\n- Check that secrets are never committed (gitleaks in CI)\n- Approve only when tests pass and concerns are resolved",
+  "examples": [
+    {
+      "input": "Review this commit range for me",
+      "output": "Agent analyzes git diff HEAD~1, checks tests and edge cases, and lists blocking vs non-blocking feedback."
+    },
+    {
+      "input": "Check if we leaked any secrets in git history",
+      "output": "Agent runs gitleaks detect and git log -S for common secret patterns, then reports any hits."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "code-review.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-code-review"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: code-review. You do it through diff-review: Analyze diffs and changed files. The commands are real, e.g. `git diff HEAD~1`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "code-review",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "diff-review",
+        "name": "range",
+        "type": "string",
+        "description": "Commit range"
+      },
+      {
+        "capability": "diff-review",
+        "name": "path",
+        "type": "string",
+        "description": "Path filter"
+      },
+      {
+        "capability": "security-review",
+        "name": "scope",
+        "type": "string",
+        "description": "Files or history to scan"
+      },
+      {
+        "capability": "security-review",
+        "name": "range",
+        "type": "string",
+        "description": "Commit range to scan"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "git",
+    "gitleaks",
+    "grep",
+    "trufflehog"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/code-review-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/code-review-skill.yaml",
+    "checksum": "8095cda77af53f9659abb0ad12a05f8f1046aa71129c2fe43957db2f2cb88230"
+  }
+}

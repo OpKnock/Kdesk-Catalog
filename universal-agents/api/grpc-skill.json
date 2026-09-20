@@ -1,0 +1,167 @@
+{
+  "name": "grpc",
+  "display_name": "grpc",
+  "category": "api",
+  "subcategory": "general",
+  "description": "General gRPC API operations with grpcurl: listing services, describing schemas, invoking unary and streaming RPCs, and debugging from the CLI.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "grpcurl"
+  ],
+  "capabilities": [
+    {
+      "name": "grpcurl-ops",
+      "description": "Inspect and call gRPC services from the command line with grpcurl.",
+      "commands": [
+        "go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest",
+        "grpcurl -plaintext localhost:50051 list",
+        "grpcurl -plaintext localhost:50051 list mypackage.MyService",
+        "grpcurl -plaintext -d '{\"name\":\"John\"}' localhost:50051 mypackage.MyService/SayHello",
+        "grpcurl -plaintext localhost:50051 describe mypackage.MyService"
+      ],
+      "examples": [
+        "grpcurl -plaintext -proto myservice.proto -d '{\"name\":\"John\"}' localhost:50051 mypackage.MyService/SayHello",
+        "grpcurl -plaintext localhost:50051 describe mypackage.HelloRequest",
+        "grpcurl -plaintext -d '{\"name\":\"x\"}' localhost:50051 mypackage.MyService/StreamMessages"
+      ],
+      "parameters": [
+        {
+          "name": "target",
+          "type": "string",
+          "description": "gRPC endpoint host:port."
+        },
+        {
+          "name": "method",
+          "type": "string",
+          "description": "Fully-qualified method, e.g. mypackage.MyService/SayHello."
+        },
+        {
+          "name": "data",
+          "type": "string",
+          "description": "JSON payload for the call (-d)."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "gRPC Core Docs",
+      "type": "documentation",
+      "source": "https://grpc.io/docs/",
+      "description": "Official gRPC documentation: concepts, guides, and language quickstarts."
+    },
+    {
+      "title": "grpcurl README",
+      "type": "documentation",
+      "source": "https://github.com/fullstorydev/grpcurl",
+      "description": "grpcurl CLI reference with examples for every flag."
+    }
+  ],
+  "instructions": "# gRPC\n\nGeneral gRPC API operations using the real `grpcurl` CLI.\n\n## What this skill does\n\n- Lists services and methods on a running gRPC server.\n- Invokes unary and streaming RPCs with JSON payloads.\n- Describes message and service schemas (from reflection or proto files).\n- Handles both plaintext and TLS endpoints.\n\n## When to use\n\n- Testing gRPC services during development.\n- Debugging a production gRPC call path.\n- Learning a service contract before writing a client.\n\n## Real commands\n\n```bash\n# Install\ngo install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest\n\n# List services\ngrpcurl -plaintext localhost:50051 list\n\n# List methods\ngrpcurl -plaintext localhost:50051 list mypackage.MyService\n\n# Call a method\ngrpcurl -plaintext -d '{\"name\":\"John\"}' localhost:50051 mypackage.MyService/SayHello\n\n# Call with a local proto file\ngrpcurl -proto myservice.proto -d '{\"name\":\"John\"}' localhost:50051 mypackage.MyService/SayHello\n\n# Streaming call\ngrpcurl -plaintext -d '{\"name\":\"John\"}' localhost:50051 mypackage.MyService/StreamMessages\n\n# Describe schemas\ngrpcurl -plaintext localhost:50051 describe mypackage.MyService\ngrpcurl -plaintext localhost:50051 describe mypackage.HelloRequest\n```\n\n## Server Reflection\n\n```bash\n# With reflection enabled on the server:\ngrpcurl -plaintext localhost:50051 list\ngrpcurl -plaintext localhost:50051 describe\n```\n\n## Example proto\n\n```protobuf\nsyntax = \"proto3\";\npackage mypackage;\n\nservice MyService {\n  rpc SayHello (HelloRequest) returns (HelloResponse);\n  rpc StreamMessages (HelloRequest) returns (stream HelloResponse);\n}\n\nmessage HelloRequest { string name = 1; }\nmessage HelloResponse { string message = 1; }\n```\n\n## Testing\n\n```bash\ngrpcurl -plaintext -d '{\"name\":\"John\"}' localhost:50051 mypackage.MyService/SayHello\n# expected: { \"message\": \"Hello John\" }\n```\n\n## Best practices\n\n- Use `-max-time` on flaky endpoints: `grpcurl -plaintext -max-time 10 ...`.\n- Pipe responses through jq: `grpcurl ... | jq .`.\n- Prefer reflection when available; fall back to `-proto` files otherwise.\n- For interactive exploration, try evans (see grpc-v2 skill) with `-r` repl mode.\n\n## Example exchange\n\n```\nUser: What methods does the Greeter service expose?\nAgent: grpcurl -plaintext localhost:50051 list helloworld.Greeter\n```",
+  "examples": [
+    {
+      "input": "Call SayHello on a local gRPC server",
+      "output": "grpcurl -plaintext -d '{\"name\":\"John\"}' localhost:50051 mypackage.MyService/SayHello"
+    },
+    {
+      "input": "Inspect the HelloRequest schema",
+      "output": "grpcurl -plaintext localhost:50051 describe mypackage.HelloRequest"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "grpc.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-grpc"
+    },
+    "generic": {
+      "system_prompt": "Your lane is grpc. You do it through grpcurl-ops: Inspect and call gRPC services from the command line with grpcurl. The commands are real, e.g. `go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "grpc",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "grpcurl-ops",
+        "name": "target",
+        "type": "string",
+        "description": "gRPC endpoint host:port."
+      },
+      {
+        "capability": "grpcurl-ops",
+        "name": "method",
+        "type": "string",
+        "description": "Fully-qualified method, e.g. mypackage.MyService/SayHello."
+      },
+      {
+        "capability": "grpcurl-ops",
+        "name": "data",
+        "type": "string",
+        "description": "JSON payload for the call (-d)."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "grpcurl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/grpc-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/grpc-skill.yaml",
+    "checksum": "3ee61cdfdf1524adf6752e40718d96f9a1f49283b757a1fe03a1e15867707569"
+  }
+}

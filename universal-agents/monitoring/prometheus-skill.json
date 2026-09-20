@@ -1,0 +1,219 @@
+{
+  "name": "prometheus-monitoring-2",
+  "display_name": "prometheus-monitoring-2",
+  "category": "monitoring",
+  "subcategory": "general",
+  "description": "Queries Prometheus for live monitoring: PromQL, the HTTP API, targets health, and ad-hoc alert inspection.",
+  "version": "2.0.0",
+  "tags": [
+    "monitoring"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "api-query",
+      "description": "Query Prometheus data with the HTTP API.",
+      "commands": [
+        "curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=up'",
+        "curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=rate(http_requests_total[5m])'",
+        "curl -G http://localhost:9090/api/v1/query_range --data-urlencode 'query=node_cpu_seconds_total' --data-urlencode 'start=1750000000' --data-urlencode 'end=1750086400' --data-urlencode 'step=60'",
+        "curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | {scrapeUrl, health}'",
+        "curl -s http://localhost:9090/api/v1/alerts | jq '.data.alerts[] | {name: .labels.alertname, state}'"
+      ],
+      "examples": [
+        "curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)'",
+        "curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))' | jq '.data.result'",
+        "curl -s http://localhost:9090/api/v1/targets | jq '[.data.activeTargets[] | select(.health==\"down\")] | length'"
+      ],
+      "parameters": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "PromQL expression"
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "description": "Query range step in seconds"
+        },
+        {
+          "name": "timeout",
+          "type": "string",
+          "description": "Query timeout"
+        }
+      ]
+    },
+    {
+      "name": "promql",
+      "description": "Write and validate PromQL for dashboards and alerts.",
+      "commands": [
+        "curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=sum by (job) (rate(http_requests_total[5m]))'",
+        "curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=sum(rate(container_cpu_usage_seconds_total[5m])) by (namespace)'",
+        "curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=changes(process_start_time_seconds{job=\"api\"}[15m]) > 0'",
+        "curl -s http://localhost:9090/api/v1/labels | jq '.data'",
+        "curl -G http://localhost:9090/api/v1/series --data-urlencode 'match[]=up' | jq '.data | length'"
+      ],
+      "examples": [
+        "curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=rate(node_network_receive_bytes_total[5m])'",
+        "curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))' | jq '.data.result[0].value[1]'",
+        "curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=topk(5, sum by (job) (rate(http_requests_total[5m])))'"
+      ],
+      "parameters": [
+        {
+          "name": "match",
+          "type": "string",
+          "description": "Series matcher for /series"
+        },
+        {
+          "name": "labels",
+          "type": "string",
+          "description": "Label name to list values"
+        },
+        {
+          "name": "topk",
+          "type": "number",
+          "description": "Top-N aggregation"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Prometheus Querying",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/querying/basics/",
+      "description": "PromQL basics, vectors, and functions"
+    },
+    {
+      "title": "Prometheus HTTP API",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/querying/api/",
+      "description": "query, query_range, targets, alerts endpoints"
+    },
+    {
+      "title": "Querying examples",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/querying/examples/",
+      "description": "Common PromQL recipes"
+    }
+  ],
+  "instructions": "# Prometheus Monitoring\n\nAnswer live monitoring questions directly from the API.\n\n## When to Use\n\n- On-call queries during incidents\n- Validating dashboards and alerts\n- Auditing target health\n\n## Target health\n\n```bash\ncurl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | {scrapeUrl, health}'\n```\n\n## Instant queries\n\n```bash\ncurl -G http://localhost:9090/api/v1/query --data-urlencode 'query=up{job=\"api\"}'\ncurl -G http://localhost:9090/api/v1/query --data-urlencode 'query=rate(http_requests_total[5m])'\n```\n\n## Range queries\n\n```bash\ncurl -G http://localhost:9090/api/v1/query_range --data-urlencode 'query=node_memory_Active_bytes' --data-urlencode 'start=...' --data-urlencode 'end=...' --data-urlencode 'step=60'\n```\n\n## Common recipes\n\n- CPU: `100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)`\n- Error rate: `sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))`\n- Restarts: `changes(process_start_time_seconds[15m]) > 0`\n- p99: `histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))`\n\n## Alerts\n\n```bash\ncurl -s http://localhost:9090/api/v1/alerts | jq '.data.alerts[] | {name: .labels.alertname, state}'\n```\n\n## Best practices\n\n- Prefer rates over raw counters in dashboards.\n- Use recording rules for expensive queries.\n- Check label cardinality quarterly via /api/v1/series.\n- Timeout every ad-hoc query to avoid long API hangs.\n\n## Testing\n\n```bash\ncurl -G http://localhost:9090/api/v1/query --data-urlencode 'query=up' | jq '.data.result | length'\n```\n\nAssert expected target counts after config changes.",
+  "examples": [
+    {
+      "input": "Is the API still serving traffic after the deploy?",
+      "output": "Queries rate(http_requests_total[5m]) and target health, and compares with the previous 15 minutes."
+    },
+    {
+      "input": "Which targets are down right now?",
+      "output": "Filters activeTargets by health==down and lists their scrape URLs."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "prometheus-monitoring-2.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-prometheus"
+    },
+    "generic": {
+      "system_prompt": "You are the prometheus-monitoring-2 specialist. You do it through api-query: Query Prometheus data with the HTTP API. The commands are real, e.g. `curl -G http://localhost:9090/api/v1/query --data-urlencode query=up`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "prometheus-monitoring-2",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "api-query",
+        "name": "query",
+        "type": "string",
+        "description": "PromQL expression"
+      },
+      {
+        "capability": "api-query",
+        "name": "step",
+        "type": "number",
+        "description": "Query range step in seconds"
+      },
+      {
+        "capability": "api-query",
+        "name": "timeout",
+        "type": "string",
+        "description": "Query timeout"
+      },
+      {
+        "capability": "promql",
+        "name": "match",
+        "type": "string",
+        "description": "Series matcher for /series"
+      },
+      {
+        "capability": "promql",
+        "name": "labels",
+        "type": "string",
+        "description": "Label name to list values"
+      },
+      {
+        "capability": "promql",
+        "name": "topk",
+        "type": "number",
+        "description": "Top-N aggregation"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "monitoring/prometheus-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/monitoring/prometheus-skill.yaml",
+    "checksum": "5434c2923352d0fbcd7b3b143a87c7579e85280716daedbe811aad497520cc79"
+  }
+}

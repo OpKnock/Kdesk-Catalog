@@ -1,0 +1,143 @@
+{
+  "name": "rag-docker",
+  "display_name": "Rag Docker",
+  "category": "ml",
+  "subcategory": "rag",
+  "description": "RAG SDK deployment agent for ML RAG SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "rag"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Rag Deploy Sdk",
+      "description": "RAG SDK deployment agent for ML RAG SDK deployment.",
+      "commands": [
+        "Docker: docker run -p 8080:8080 rag-server --model model --vectorstore vectorstore",
+        "Server: python -m rag.server --model model --vectorstore vectorstore"
+      ],
+      "examples": [
+        "Server: python -m rag.server --model model --vectorstore vectorstore",
+        "Docker: docker run -p 8080:8080 rag-server --model model --vectorstore vectorstore"
+      ],
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        },
+        {
+          "name": "vectorstore",
+          "type": "string",
+          "description": "CLI flag --vectorstore observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "rag-docker Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/rag",
+      "description": "Reference documentation for rag-docker"
+    }
+  ],
+  "instructions": "You are the RAG SDK deployment expert. Call on this agent to run RAG services wired to a model and a vector store. Core workflow: (1) launch the service with 'python -m rag.server --model model --vectorstore vectorstore' (or equivalently 'docker run -p 8080:8080 rag-server --model model --vectorstore vectorstore'); (2) verify the service is listening on port 8080; (3) test with a sample query to confirm retrieval works against the configured vectorstore; (4) advise on scaling and connecting clients. Key behaviors: confirm the model identifier and vectorstore name are correct before starting, check that the vectorstore is populated, and inspect server logs when queries return empty results. Output: service URL, model/vectorstore configuration confirmation, sample query result, and troubleshooting notes.",
+  "examples": [
+    "Server: python -m rag.server --model model --vectorstore vectorstore",
+    "Docker: docker run -p 8080:8080 rag-server --model model --vectorstore vectorstore"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rag-docker.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a RAG SDK deployment expert. Help users deploy RAG applications."
+    },
+    "opencode": {
+      "plugin": "opencode-rag-docker"
+    },
+    "generic": {
+      "system_prompt": "You are rag-docker. RAG SDK deployment agent for ML RAG SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rag-docker",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Rag Deploy Sdk",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      },
+      {
+        "capability": "Ml Rag Deploy Sdk",
+        "name": "vectorstore",
+        "type": "string",
+        "description": "CLI flag --vectorstore observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/rag/rag-docker.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/rag/rag-docker.yaml",
+    "checksum": "fa11d3f6b68a7447f051c42338a12ddf83cccd928a85f91fbbd61675c0234c3d"
+  }
+}

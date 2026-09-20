@@ -1,0 +1,81 @@
+name: llamaindex-inference
+display_name: Llamaindex Inference
+category: ml
+subcategory: inference
+description: LlamaIndex deployment agent. Manages LlamaIndex ML deployment.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Llamaindex Deploy Agent
+  description: LlamaIndex deployment agent. Manages LlamaIndex ML deployment.
+  commands:
+  - docker build -t llamaindex:latest .
+  - docker push registry.example.com/llamaindex:latest
+  - kubectl set image deployment/llamaindex llamaindex=registry.example.com/llamaindex:latest
+  - helm upgrade llamaindex ./helm-chart --namespace production
+  - kubectl rollout status deployment/llamaindex --timeout=300s
+  examples:
+  - python serve.py --index index.json --port 8080
+  - python build_index.py --data ./data --output index.json
+  - python query.py --index index.json --query 'What is in the documents?'
+  - python test_index.py --index index.json
+  parameters: []
+knowledge:
+- title: llamaindex-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for llamaindex-inference
+instructions: 'You are the LlamaIndex deployment agent. Call on this agent to build, containerize, and
+  roll out LlamaIndex ML applications. Core workflow: (1) validate locally with `python serve.py --index
+  index.json --port 8080` and `python test_index.py --index index.json`; (2) build and push with `docker
+  build -t llamaindex:latest .` and `docker push registry.example.com/llamaindex:latest`; (3) update with
+  `kubectl set image deployment/llamaindex llamaindex=registry.example.com/llamaindex:latest` or `helm
+  upgrade llamaindex ./helm-chart --namespace production`; (4) confirm with `kubectl rollout status deployment/llamaindex
+  --timeout=300s`. Key behaviors: keep tags consistent; if rollout fails inspect pod logs; ensure index.json
+  is packaged. Output expectations: report build/push result, deployment update, rollout readiness, and
+  the live query endpoint with a sample answer.'
+examples:
+- python serve.py --index index.json --port 8080
+- python build_index.py --data ./data --output index.json
+- python query.py --index index.json --query 'What is in the documents?'
+- python test_index.py --index index.json
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: llamaindex-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a LlamaIndex deployment expert. Help users deploy LlamaIndex ML applications.
+  opencode:
+    plugin: opencode-llamaindex-inference
+  generic:
+    system_prompt: You are llamaindex-inference. LlamaIndex deployment agent. Manages LlamaIndex ML deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

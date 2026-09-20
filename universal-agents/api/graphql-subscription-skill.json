@@ -1,0 +1,175 @@
+{
+  "name": "graphql-subscription",
+  "display_name": "Graphql Subscription",
+  "category": "api",
+  "subcategory": "general",
+  "description": "GraphQL subscriptions: set up realtime channels over WebSocket (graphql-ws), publish events, and test subscription flows.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "grep",
+    "node",
+    "npm"
+  ],
+  "capabilities": [
+    {
+      "name": "subscriptions",
+      "description": "Connect to GraphQL subscription endpoints over WebSocket and verify event delivery.",
+      "commands": [
+        "npm install graphql-ws @apollo/server @apollo/server/plugin/subscriptionCallback",
+        "curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ __type(name: \\\"Subscription\\\") { fields { name } } }\"}' | jq '.data.__type.fields[].name'",
+        "node -e \"const {createClient}=require('graphql-ws');const c=createClient({url:'ws://localhost:4000/graphql'});c.subscribe({query:'subscription { orderUpdated { id status } }'},{next:d=>console.log(d.data),error:e=>console.error(e)});setTimeout(()=>c.dispose(),15000)\"",
+        "grep -rn 'pubsub\\|PubSub' src/ | head -10",
+        "curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"mutation{ placeOrder { orderId } }\"}' | jq"
+      ],
+      "examples": [
+        "node -e \"const {createClient}=require('graphql-ws');const c=createClient({url:'ws://localhost:4000/graphql'});c.subscribe({query:'subscription { orderUpdated { id status } }'},{next:d=>console.log(d.data),error:e=>console.error(e)});setTimeout(()=>c.dispose(),15000)\"",
+        "curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ __type(name: \\\"Subscription\\\") { fields { name } } }\"}' | jq '.data.__type.fields[].name'",
+        "grep -rn 'pubsub\\|PubSub' src/ | head -10"
+      ],
+      "parameters": [
+        {
+          "name": "subscription-query",
+          "type": "string",
+          "description": "Subscription document"
+        },
+        {
+          "name": "ws-url",
+          "type": "string",
+          "description": "WebSocket endpoint URL"
+        },
+        {
+          "name": "event-topic",
+          "type": "string",
+          "description": "PubSub topic emitting the event"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "graphql-ws docs",
+      "type": "documentation",
+      "source": "https://the-guild.dev/graphql/ws",
+      "description": "The GraphQL over WebSocket protocol and client usage"
+    },
+    {
+      "title": "Apollo subscriptions",
+      "type": "documentation",
+      "source": "https://www.apollographql.com/docs/apollo-server/data/subscriptions/",
+      "description": "Subscriptions with the subscriptionCallback plugin"
+    }
+  ],
+  "instructions": "# GraphQL Subscriptions\n\n## What this skill does\n\nSubscriptions push realtime updates over WebSocket using the graphql-ws protocol. Servers publish via PubSub; clients subscribe with a subscription document and receive events as they happen.\n\n## When to use\n\n- Live order boards, chat, and presence\n- Push notifications from mutations\n- Replacing polling with event-driven updates\n\n## Real commands\n\n```bash\n# What subscriptions does the schema offer?\ncurl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ __type(name: \\\"Subscription\\\") { fields { name } } }\"}' | jq '.data.__type.fields[].name'\n\n# Subscribe via graphql-ws from Node\nnode -e \"const {createClient}=require('graphql-ws');const c=createClient({url:'ws://localhost:4000/graphql'});c.subscribe({query:'subscription { orderUpdated { id status } }'},{next:d=>console.log(d.data),error:e=>console.error(e)});setTimeout(()=>c.dispose(),15000)\"\n\n# Find the pubsub wiring\n grep -rn 'pubsub\\|PubSub' src/ | head -10\n```\n\n## Server example (Apollo)\n\n```javascript\nconst { PubSub } = require('graphql-subscriptions')\nconst pubsub = new PubSub()\n\nconst typeDefs = `\n  type Subscription { orderUpdated: Order }\n  type Mutation { placeOrder: Order }\n`\n\n// in the mutation resolver:\nawait pubsub.publish('ORDER_UPDATED', { orderUpdated: order })\n\n// in the subscription resolver:\nSubscription: { orderUpdated: { subscribe: () => pubsub.asyncIterator('ORDER_UPDATED') } }\n```\n\n## Testing\n\n```bash\n# Terminal A: subscribe; Terminal B: mutate; watch the push\nnode -e \"const {createClient}=require('graphql-ws');const c=createClient({url:'ws://localhost:4000/graphql'});c.subscribe({query:'subscription { orderUpdated { id } }'},{next:d=>console.log('pushed',d.data)});setTimeout(()=>c.dispose(),30000)\"\n# terminal B:\ncurl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"mutation{ placeOrder { orderId } }\"}' | jq\n```\n\n## Best practices\n\n- Filter subscription events by context (user/tenant) inside resolvers.\n- Always dispose clients on disconnect to free the socket.\n- Prefer small payloads over the wire; fetch details via query.\n- Add heartbeat/keepalive handling to clients.\n- Use a scalable pubsub (Redis) when scaling horizontally.\n",
+  "examples": [
+    {
+      "input": "Live order updates in our admin panel",
+      "output": "Add a Subscription type with pubsub.asyncIterator, subscribe with graphql-ws from the client, and publish from the placeOrder mutation."
+    },
+    {
+      "input": "Subscription never receives events",
+      "output": "Verify the schema advertises the subscription, check pubsub publish topic matches the iterator topic, and watch for WS errors in the client log."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "graphql-subscription.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-graphql-subscription"
+    },
+    "generic": {
+      "system_prompt": "You own Graphql Subscription end to end. You do it through subscriptions: Connect to GraphQL subscription endpoints over WebSocket and verify event delivery. The commands are real, e.g. `npm install graphql-ws @apollo/server @apollo/server/plugin/subscriptionCallback`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "graphql-subscription",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "subscriptions",
+        "name": "subscription-query",
+        "type": "string",
+        "description": "Subscription document"
+      },
+      {
+        "capability": "subscriptions",
+        "name": "ws-url",
+        "type": "string",
+        "description": "WebSocket endpoint URL"
+      },
+      {
+        "capability": "subscriptions",
+        "name": "event-topic",
+        "type": "string",
+        "description": "PubSub topic emitting the event"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "grep",
+    "node",
+    "npm"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/graphql-subscription-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/graphql-subscription-skill.yaml",
+    "checksum": "367498110891a5b7218bc9611febfde04eab38080a47dbd600ca55703c9d03eb"
+  }
+}

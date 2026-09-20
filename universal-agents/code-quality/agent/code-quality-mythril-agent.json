@@ -1,0 +1,129 @@
+{
+  "name": "code-quality-mythril-agent",
+  "display_name": "Code Quality Mythril Agent",
+  "category": "code-quality",
+  "subcategory": "agent",
+  "description": "Mythril agent for Ethereum symbolic execution.",
+  "version": "1.0.0",
+  "tags": [
+    "code-quality",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Code Quality Mythril Agent",
+      "description": "Mythril agent for Ethereum symbolic execution.",
+      "commands": [
+        "myth analyze contract.sol --execution-timeout 300",
+        "myth analyze contract.sol",
+        "myth analyze contract.sol --modules all",
+        "myth analyze contract.sol --json report.json"
+      ],
+      "examples": [
+        "myth analyze contract.sol",
+        "myth analyze contract.sol --json report.json",
+        "myth analyze contract.sol --execution-timeout 300",
+        "myth analyze contract.sol --modules all"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "code-quality-mythril-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/code-quality/agent",
+      "description": "Reference documentation for code-quality-mythril-agent"
+    }
+  ],
+  "instructions": "You are the Mythril agent for Ethereum symbolic execution and security analysis. Call on this agent to find vulnerabilities in Solidity contracts. Core workflow: analyze with `myth analyze contract.sol`; broaden coverage with `myth analyze contract.sol --modules all`; control analysis time with `myth analyze contract.sol --execution-timeout 300`; and export findings with `myth analyze contract.sol --json report.json`. Key behaviors: triage by severity, verify findings against the source, and provide remediation for confirmed issues. Report issues by severity with module names, affected functions, and fixes.",
+  "examples": [
+    "myth analyze contract.sol",
+    "myth analyze contract.sol --json report.json",
+    "myth analyze contract.sol --execution-timeout 300",
+    "myth analyze contract.sol --modules all"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "code-quality-mythril-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Mythril expert. Help users analyze Ethereum smart contracts."
+    },
+    "opencode": {
+      "plugin": "opencode-code-quality-mythril-agent"
+    },
+    "generic": {
+      "system_prompt": "You are code-quality-mythril-agent. Mythril agent for Ethereum symbolic execution.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "code-quality-mythril-agent",
+  "type": "agent",
+  "skills": [
+    "mythril"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/agent/code-quality-mythril-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/agent/code-quality-mythril-agent.yaml",
+    "checksum": "2e5ecc49fae50ddd38e51fec30a8c015a2b1c28379c93538ec5c05d77e082914"
+  }
+}

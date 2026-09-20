@@ -1,0 +1,178 @@
+{
+  "name": "cors",
+  "display_name": "Cors",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Configure and debug Cross-Origin Resource Sharing for APIs: setting CORS headers, preflight handling, and origin allowlists.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "node",
+    "npm"
+  ],
+  "capabilities": [
+    {
+      "name": "cors-headers",
+      "description": "Configure CORS headers on API responses and test them with curl",
+      "commands": [
+        "curl -i -H \"Origin: http://example.com\" https://api.example.com/v1/users",
+        "curl -s -D - -o /dev/null -H \"Origin: http://example.com\" https://api.example.com/v1/users | grep -i access-control",
+        "curl -s -o /dev/null -w \"%{http_code}\" -H \"Origin: http://example.com\" https://api.example.com/v1/users",
+        "curl -sI -H \"Origin: http://example.com\" https://api.example.com/v1/users"
+      ],
+      "examples": [
+        "curl -i -H \"Origin: http://localhost:3000\" http://localhost:8080/api/users",
+        "curl -s -D - -o /dev/null -H \"Origin: http://example.com\" https://api.example.com/v1/users | grep -i access-control",
+        "curl -s -D - -o /dev/null -H \"Origin: http://evil.com\" https://api.example.com/v1/users | grep -i access-control"
+      ],
+      "parameters": [
+        {
+          "name": "origin",
+          "type": "string",
+          "description": "Origin header to test, e.g. http://example.com"
+        }
+      ]
+    },
+    {
+      "name": "express-cors",
+      "description": "Configure CORS with the cors npm package and restrict allowed origins",
+      "commands": [
+        "npm install cors",
+        "node server.js",
+        "curl -i -H \"Origin: http://localhost:3000\" http://localhost:8080/api",
+        "curl -i -X OPTIONS http://localhost:8080/api -H \"Origin: http://localhost:3000\" -H \"Access-Control-Request-Method: GET\""
+      ],
+      "examples": [
+        "npm install cors && node server.js",
+        "curl -i -H \"Origin: http://localhost:3000\" http://localhost:8080/api",
+        "curl -s -D - -o /dev/null -H \"Origin: http://not-allowed.com\" http://localhost:8080/api | grep -i access-control-allow-origin"
+      ],
+      "parameters": [
+        {
+          "name": "allowed_origins",
+          "type": "string",
+          "description": "Comma-separated list of allowed origins"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "MDN CORS Guide",
+      "type": "documentation",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS",
+      "description": "Cross-Origin Resource Sharing headers, preflight, and credentials reference"
+    },
+    {
+      "title": "cors npm package",
+      "type": "documentation",
+      "source": "https://www.npmjs.com/package/cors",
+      "description": "CORS middleware for Express and configuration options"
+    }
+  ],
+  "instructions": "# CORS\n\nConfigure and debug Cross-Origin Resource Sharing for APIs.\n\n## When to Use\n\n- Allowing browser apps on other origins to call your API\n- Handling preflight OPTIONS requests\n- Restricting credentials sharing to trusted origins\n\n## Inspect CORS Headers\n\n```bash\ncurl -i -H \"Origin: http://example.com\" https://api.example.com/v1/users\ncurl -s -D - -o /dev/null -H \"Origin: http://evil.com\" https://api.example.com/v1/users | grep -i access-control\n```\n\nA correct response includes:\n\n```\nAccess-Control-Allow-Origin: http://example.com\nAccess-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\nAccess-Control-Allow-Headers: Content-Type, Authorization\nVary: Origin\n```\n\n## Express\n\n```bash\nnpm install cors\n```\n\n```js\nconst cors = require('cors');\napp.use(cors({\n  origin: ['http://localhost:3000', 'https://app.example.com'],\n  methods: ['GET', 'POST', 'PUT', 'DELETE'],\n  allowedHeaders: ['Content-Type', 'Authorization'],\n  credentials: true\n}));\n```\n\n```bash\nnode server.js &\ncurl -i -H \"Origin: http://localhost:3000\" http://localhost:8080/api\n```\n\n## Credentials\n\nWhen `credentials: true`, the Allow-Origin header must echo the exact origin, never `*`.\n\n## Testing\n\n```bash\ncurl -i -X OPTIONS http://localhost:8080/api -H \"Origin: http://localhost:3000\" -H \"Access-Control-Request-Method: POST\"\ncurl -s -D - -o /dev/null -H \"Origin: http://not-allowed.com\" http://localhost:8080/api | grep -i access-control-allow-origin\n```\n\n## Best Practices\n\n- Never use `Access-Control-Allow-Origin: *` with credentials\n- Set `Vary: Origin` to enable caching\n- Keep the allowlist minimal\n- Test both allowed and disallowed origins\n- Handle OPTIONS preflight explicitly or via middleware",
+  "examples": [
+    {
+      "input": "Why does my browser block calls to the API from localhost:3000?",
+      "output": "The agent checks the API with curl -i -H \"Origin: http://localhost:3000\", finds missing Access-Control-Allow-Origin headers, and shows the cors middleware config."
+    },
+    {
+      "input": "Allow only my two frontend origins to call the API.",
+      "output": "The agent configures the cors package with an origin allowlist and verifies both allowed and denied origins with curl."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cors.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cors"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Cors. You do it through cors-headers: Configure CORS headers on API responses and test them with curl. The commands are real, e.g. `curl -i -H Origin: http://example.com https://api.example.com/v1/users`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cors",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cors-headers",
+        "name": "origin",
+        "type": "string",
+        "description": "Origin header to test, e.g. http://example.com"
+      },
+      {
+        "capability": "express-cors",
+        "name": "allowed_origins",
+        "type": "string",
+        "description": "Comma-separated list of allowed origins"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node",
+    "npm"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/cors-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/cors-skill.yaml",
+    "checksum": "1475d2c999b58e62be5719c1190a16d48cdc60e0d080676b444cedeb7d1c3f80"
+  }
+}

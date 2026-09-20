@@ -1,0 +1,170 @@
+name: timescaledb
+display_name: Timescaledb
+category: database
+subcategory: general
+description: 'Time-series data with TimescaleDB: hypertables, continuous aggregates, retention policies,
+  and time_bucket queries.'
+version: 2.0.0
+tags:
+- database
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- psql
+capabilities:
+- name: timescaledb
+  description: Create hypertables, aggregates, and retention policies with psql
+  commands:
+  - psql -d app -c "CREATE EXTENSION IF NOT EXISTS timescaledb;"
+  - psql -d app -c "SELECT create_hypertable('conditions', 'time', chunk_time_interval => INTERVAL '1
+    day');"
+  - psql -d app -c "SELECT time_bucket('15 minutes', time) AS bucket, avg(temp) FROM conditions GROUP
+    BY bucket ORDER BY bucket DESC LIMIT 10;"
+  - psql -d app -c "SELECT add_retention_policy('conditions', INTERVAL '30 days');"
+  - psql -d app -c "SELECT * FROM timescaledb_information.hypertables;"
+  examples:
+  - psql -d app -c "SELECT create_continuous_aggregate('avg_temp', 'SELECT time_bucket(""1 hour"", time)
+    t, avg(temp) FROM conditions GROUP BY t');"
+  - psql -d app -c "SELECT drop_chunks('conditions', older_than => INTERVAL '90 days');"
+  - psql -d app -c "SELECT chunks FROM chunk_relation_size_pretty('conditions');"
+  parameters:
+  - name: chunk_time_interval
+    type: string
+    description: Time range per chunk, e.g. INTERVAL '1 day'
+  - name: older_than
+    type: string
+    description: Drop chunks older than this interval
+  - name: dbname
+    type: string
+    description: Target database for psql (-d)
+knowledge:
+- title: TimescaleDB docs
+  type: documentation
+  source: https://docs.timescale.com/
+  description: Hypertables, aggregates, retention, and best practices
+- title: Continuous aggregates
+  type: documentation
+  source: https://docs.timescale.com/use-timescale/latest/continuous-aggregates/
+  description: Materialized views for time-series rollups
+instructions: '# TimescaleDB
+
+
+  Time-series PostgreSQL: hypertables auto-partition by time, with continuous
+
+  aggregates and retention policies.
+
+
+  ## When to Use
+
+
+  - Metrics, IoT, and event data at high write rates
+
+  - Rollups over long time ranges
+
+  - Data retention management
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Enable the extension
+
+  psql -d app -c "CREATE EXTENSION IF NOT EXISTS timescaledb;"
+
+
+  # Create a hypertable
+
+  psql -d app -c "SELECT create_hypertable(''conditions'', ''time'', chunk_time_interval => INTERVAL ''1
+  day'');"
+
+
+  # Time-bucketed query
+
+  psql -d app -c "SELECT time_bucket(''15 minutes'', time) AS bucket, avg(temp) FROM conditions GROUP
+  BY bucket ORDER BY bucket DESC LIMIT 10;"
+
+
+  # Continuous aggregate
+
+  psql -d app -c "SELECT create_continuous_aggregate(''avg_temp_hour'', ''SELECT time_bucket(""1 hour"",
+  time) t, avg(temp) FROM conditions GROUP BY t'');"
+
+
+  # Retention
+
+  psql -d app -c "SELECT add_retention_policy(''conditions'', INTERVAL ''30 days'');"
+
+
+  # Drop old chunks immediately
+
+  psql -d app -c "SELECT drop_chunks(''conditions'', older_than => INTERVAL ''90 days'');"
+
+
+  # Inspect
+
+  psql -d app -c "SELECT * FROM timescaledb_information.hypertables;"
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Choose chunk_time_interval so chunks are 1-7 days of data
+
+  - Add indexes on (time, tag) columns
+
+  - Use continuous aggregates for hourly/daily rollups, not raw queries
+
+  - Set retention policies before data explodes
+
+  - Backfill with `time_bucket` queries on hypertables
+
+
+  ## Example Response
+
+
+  Creates the hypertable, verifies chunk distribution, and sets up the aggregate
+
+  plus retention policy; reports expected storage savings.'
+examples:
+- input: Store sensor data efficiently
+  output: Creates the hypertable with 1-day chunks, adds a (time, sensor) index, and verifies with hypertable
+    info
+- input: Keep only 30 days of raw data
+  output: Adds a retention policy and drops pre-existing old chunks with drop_chunks
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: timescaledb.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-timescaledb
+  generic:
+    system_prompt: 'Your lane is Timescaledb. You do it through timescaledb: Create hypertables, aggregates,
+      and retention policies with psql. The commands are real, e.g. `psql -d app -c CREATE EXTENSION IF
+      NOT EXISTS timescaledb;`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,211 @@
+{
+  "name": "kafka-security",
+  "display_name": "Kafka Security",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Secure Kafka: SCRAM-SHA-256 credentials, ACLs for topics/groups/clusters, TLS client configs, and verifying authorized access.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kafka-acls.sh",
+    "kafka-configs.sh"
+  ],
+  "capabilities": [
+    {
+      "name": "authn",
+      "description": "Manage SCRAM users and SASL credentials for clients.",
+      "commands": [
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type users --entity-name alice --alter --add-config \"SCRAM-SHA-256=[iterations=8192,password=secret]\"",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type users --entity-name alice --alter --add-config \"SCRAM-SHA-512=[iterations=8192,password=secret]\"",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type users --entity-name alice --describe",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type users --entity-name alice --alter --delete-config 'SCRAM-SHA-256'"
+      ],
+      "examples": [
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type users --entity-name alice --alter --add-config \"SCRAM-SHA-256=[iterations=8192,password=secret]\"",
+        "kafka-configs.sh --bootstrap-server localhost:9092 --entity-type users --entity-name alice --describe"
+      ],
+      "parameters": [
+        {
+          "name": "user",
+          "type": "string",
+          "description": "Principal user name."
+        },
+        {
+          "name": "mechanism",
+          "type": "string",
+          "description": "SCRAM-SHA-256 or SCRAM-SHA-512."
+        }
+      ]
+    },
+    {
+      "name": "authorization",
+      "description": "Grant and revoke ACLs on topics, consumer groups, and cluster operations.",
+      "commands": [
+        "kafka-acls.sh --bootstrap-server localhost:9092 --add --allow-principal User:alice --operation Read --operation Write --topic orders",
+        "kafka-acls.sh --bootstrap-server localhost:9092 --add --allow-principal User:alice --group analytics --operation Read",
+        "kafka-acls.sh --bootstrap-server localhost:9092 --add --allow-principal User:admin --cluster --operation Alter",
+        "kafka-acls.sh --bootstrap-server localhost:9092 --list --topic orders",
+        "kafka-acls.sh --bootstrap-server localhost:9092 --remove --allow-principal User:alice --operation Write --topic orders"
+      ],
+      "examples": [
+        "kafka-acls.sh --bootstrap-server localhost:9092 --add --allow-principal User:alice --operation Read --operation Write --topic orders",
+        "kafka-acls.sh --bootstrap-server localhost:9092 --list --topic orders",
+        "kafka-acls.sh --bootstrap-server localhost:9092 --remove --allow-principal User:alice --operation Write --topic orders"
+      ],
+      "parameters": [
+        {
+          "name": "principal",
+          "type": "string",
+          "description": "User:<name> principal."
+        },
+        {
+          "name": "operation",
+          "type": "string",
+          "description": "Read, Write, Describe, Alter, Create, Delete."
+        },
+        {
+          "name": "resource",
+          "type": "string",
+          "description": "Topic, group, or --cluster resource."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kafka Security",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/#security",
+      "description": "Official security guide: SASL, TLS, ACLs."
+    },
+    {
+      "title": "kafka-acls.sh",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/#security_authz_cli",
+      "description": "ACL CLI reference."
+    }
+  ],
+  "instructions": "# Kafka Security\n\nLock down Kafka with SASL authentication, TLS encryption, and ACL authorization.\n\n## What this skill does\n\n- Creates SCRAM-SHA-256/512 credentials for clients.\n- Grants and revokes fine-grained ACLs (topic, group, cluster).\n- Writes client properties for SASL_SSL connections.\n\n## When to use\n\n- Enforcing multi-tenant access control on shared clusters.\n- Compliance audits that require principal-level accounting.\n- Securing replication and tooling connections.\n\n## Real commands\n\n```bash\n# Create SCRAM user\nkafka-configs.sh --bootstrap-server localhost:9092 \\\n  --entity-type users --entity-name alice --alter \\\n  --add-config \"SCRAM-SHA-256=[iterations=8192,password=secret]\"\n\n# Grant topic read/write\nkafka-acls.sh --bootstrap-server localhost:9092 \\\n  --add --allow-principal User:alice \\\n  --operation Read --operation Write --topic orders\n\n# Grant group read (required for consuming)\nkafka-acls.sh --bootstrap-server localhost:9092 \\\n  --add --allow-principal User:alice --group analytics --operation Read\n\n# Cluster admin ACL\nkafka-acls.sh --bootstrap-server localhost:9092 \\\n  --add --allow-principal User:admin --cluster --operation Alter\n\n# List ACLs for a topic\nkafka-acls.sh --bootstrap-server localhost:9092 --list --topic orders\n\n# Revoke\nkafka-acls.sh --bootstrap-server localhost:9092 \\\n  --remove --allow-principal User:alice --operation Write --topic orders\n```\n\n## Client properties (SASL_SSL)\n\n```properties\nsecurity.protocol=SASL_SSL\nsasl.mechanism=SCRAM-SHA-256\nsasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username=\"alice\" password=\"secret\";\nssl.truststore.location=/etc/kafka/truststore.jks\n```\n\n## Testing\n\n```bash\n# Verify access\nkafka-console-consumer.sh --bootstrap-server localhost:9092 \\\n  --topic orders --group analytics --consumer.config client.properties --max-messages 1\n```\n\n## Best practices\n\n- Grant group ACLs alongside topic ACLs or consumption fails with GroupAuthorizationException.\n- Use prefixes for wildcard ACLs sparingly; explicit beats wildcard.\n- Rotate SCRAM credentials and keep JAAS passwords out of git.\n",
+  "examples": [
+    {
+      "input": "Give alice read access to orders",
+      "output": "Create the SCRAM user, then add --operation Read ACL for topic orders AND for group <her-group>."
+    },
+    {
+      "input": "Audit who can write to orders",
+      "output": "kafka-acls.sh --bootstrap-server localhost:9092 --list --topic orders"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kafka-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kafka-security"
+    },
+    "generic": {
+      "system_prompt": "You are the Kafka Security specialist. You do it through authn: Manage SCRAM users and SASL credentials for clients. The commands are real, e.g. `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type users --entity-name...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kafka-security",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "authn",
+        "name": "user",
+        "type": "string",
+        "description": "Principal user name."
+      },
+      {
+        "capability": "authn",
+        "name": "mechanism",
+        "type": "string",
+        "description": "SCRAM-SHA-256 or SCRAM-SHA-512."
+      },
+      {
+        "capability": "authorization",
+        "name": "principal",
+        "type": "string",
+        "description": "User:<name> principal."
+      },
+      {
+        "capability": "authorization",
+        "name": "operation",
+        "type": "string",
+        "description": "Read, Write, Describe, Alter, Create, Delete."
+      },
+      {
+        "capability": "authorization",
+        "name": "resource",
+        "type": "string",
+        "description": "Topic, group, or --cluster resource."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kafka-acls.sh",
+    "kafka-configs.sh"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/kafka-security-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/kafka-security-skill.yaml",
+    "checksum": "b8b79e1dd109bbc05baca186eb2604e9715a8015e04fbcb5468858a0ac7e3272"
+  }
+}

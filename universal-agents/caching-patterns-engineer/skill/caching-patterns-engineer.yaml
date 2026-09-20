@@ -1,0 +1,130 @@
+name: caching-patterns-engineer
+version: 2.0.0
+type: skill
+category: infrastructure
+description: 'Implements battle-tested caching patterns: cache-aside, read/write-through, stampede protection,
+  and distributed locks.'
+keywords:
+- caching-patterns
+- cache-aside
+- write-through
+- write-behind
+- read-through
+- redis
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: caching-patterns-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-caching-patterns-engineer
+  generic:
+    system_prompt: 'You are the caching-patterns-engineer specialist. You do it through pattern-implementation:
+      Implement caching patterns in code with Redis. The commands are real, e.g. `pip install redis`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- commands:
+  - pip install redis
+  - npm install ioredis
+  - redis-cli set user:1 "data" EX 60 NX
+  - redis-cli setnx lock:task:1 "1" EX 30
+  description: Implement caching patterns in code with Redis.
+  name: pattern-implementation
+  examples:
+  - redis-cli SET user:1 "data" EX 60 NX
+  - redis-cli GETSET lock:task:1 "1"
+  - python -c "import redis; r=redis.Redis(); print(r.set('k','v',ex=60,nx=True))"
+  parameters:
+  - description: Cache key
+    name: key
+    type: string
+  - description: TTL seconds
+    name: ttl
+    type: integer
+  - description: Only set if key absent
+    name: nx
+    type: boolean
+- commands:
+  - redis-cli setnx lock:regen:popular-key "1" EX 10
+  - redis-cli ttl popular-key
+  - redis-cli get popular-key
+  - redis-cli pttl popular-key
+  description: Prevent thundering herd on cache expiry.
+  name: stampede-protection
+  examples:
+  - redis-cli setnx lock:regen:report "1" EX 15
+  - redis-cli ttl report
+  parameters:
+  - description: Stampede lock key
+    name: lock-key
+    type: string
+  - name: ttl
+    type: integer
+    description: Lock TTL in seconds
+prerequisites:
+- redis
+- node.js
+- python
+- memcached
+tools:
+- redis
+- node.js
+- python
+- memcached
+- varnish
+examples:
+- input: Implement cache-aside for user profiles
+  output: Agent writes the read-miss-populate flow with Redis SET NX EX and invalidate-on-write, plus
+    stampede protection.
+- input: My popular key stampedes at midnight
+  output: Agent adds a SETNX regeneration lock and TTL jitter so only one worker recomputes.
+instructions: "# Caching Patterns Engineer\n\nImplement reliable caching patterns.\n\n## When to Use\n\
+  \n- Adding caching to existing code paths safely\n- Fixing cache coherence bugs (stale data, stampedes)\n\
+  - Building distributed locking around expensive work\n\n## Patterns\n\n- Cache-aside: read cache; on\
+  \ miss load + populate; invalidate on write\n- Read-through: cache loads missing values from the store\
+  \ itself\n- Write-through: update cache and store together\n- Write-behind: update store asynchronously\
+  \ after cache write\n- Stampede lock: only one process regenerates an expired key\n\n## Commands\n\n\
+  ```bash\n# Atomic set-if-absent with TTL\nredis-cli SET user:1 \"data\" EX 60 NX\n\n# Stampede lock\n\
+  redis-cli SETNX lock:regen:popular-key \"1\" EX 10\n\n# Inspect TTL\nredis-cli ttl popular-key\nredis-cli\
+  \ pttl popular-key\n\n# Invalidate\nredis-cli unlink user:1\n```\n\n## Python Cache-Aside\n\n```python\n\
+  import redis\n\nr = redis.Redis()\n\ndef get_user(uid):\n    key = f\"user:{uid}\"\n    cached = r.get(key)\n\
+  \    if cached:\n        return cached\n    lock = r.set(f\"lock:{key}\", \"1\", ex=5, nx=True)\n  \
+  \  if lock:\n        data = fetch_from_db(uid)\n        r.set(key, data, ex=300)\n    else:\n      \
+  \  time.sleep(0.05)\n        return r.get(key)\n    return data\n```\n\n## Best Practices\n\n- Use SET\
+  \ NX EX for atomic stampede locks\n- Validate before caching: never cache errors as success\n- Invalidate\
+  \ on write with unlink for large values\n- Keep TTLs short enough that drift self-heals\n- Measure hit\
+  \ rate and latency before/after changes"
+display_name: caching-patterns-engineer
+knowledge:
+- title: Redis Cache-Aside Pattern
+  description: Reference cache-aside design
+  source: https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside
+  type: documentation
+- title: Redis Commands
+  description: SET, SETNX, EXPIRE reference
+  source: https://redis.io/commands/
+  type: documentation

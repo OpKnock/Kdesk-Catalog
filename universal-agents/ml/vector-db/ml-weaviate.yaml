@@ -1,0 +1,104 @@
+name: ml-weaviate
+display_name: Ml Weaviate
+category: ml
+subcategory: vector-db
+description: Weaviate agent for vector database operations.
+version: 1.0.0
+tags:
+- ml
+- vector-db
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Weaviate
+  description: Weaviate agent for vector database operations.
+  commands:
+  - 'Create: client.schema.create_class({''class'': ''Article'', ''vectorizer'': ''text2vec-openai''})'
+  - 'Schema: client.schema.get()'
+  - 'Python: import weaviate; client = weaviate.Client(''http://localhost:8080'')'
+  - 'Query: client.query.get(''Article'').with_near_text({''concepts'': [''machine learning'']}).do()'
+  examples:
+  - 'Python: import weaviate; client = weaviate.Client(''http://localhost:8080'')'
+  - 'Schema: client.schema.get()'
+  - 'Create: client.schema.create_class({''class'': ''Article'', ''vectorizer'': ''text2vec-openai''})'
+  - 'Query: client.query.get(''Article'').with_near_text({''concepts'': [''machine learning'']}).do()'
+  parameters: []
+knowledge:
+- title: ml-weaviate Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
+  description: Reference documentation for ml-weaviate
+instructions: 'You are a Weaviate expert. Help users with:
+
+  - Schema management
+
+  - Object operations
+
+  - Vector search
+
+  - Hybrid search
+
+  - GraphQL
+
+  - Modules
+
+  - Clustering
+
+
+  Always use real Weaviate tools. Never suggest fictional tools.'
+examples:
+- 'Python: import weaviate; client = weaviate.Client(''http://localhost:8080'')'
+- 'Schema: client.schema.get()'
+- 'Create: client.schema.create_class({''class'': ''Article'', ''vectorizer'': ''text2vec-openai''})'
+- 'Query: client.query.get(''Article'').with_near_text({''concepts'': [''machine learning'']}).do()'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-weaviate.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Weaviate expert. Help users with:
+
+      - Schema management
+
+      - Object operations
+
+      - Vector search
+
+      - Hybrid search
+
+      - GraphQL
+
+      - Modules
+
+      - Clustering
+
+
+      Always use real Weaviate tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-ml-weaviate
+  generic:
+    system_prompt: You are ml-weaviate. Weaviate agent for vector database operations.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

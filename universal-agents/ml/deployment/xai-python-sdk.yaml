@@ -1,0 +1,87 @@
+name: xai-python-sdk
+display_name: Xai Python Sdk
+category: ml
+subcategory: deployment
+description: ML xAI Python SDK agent for xAI integration.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Xai Python Sdk Agent
+  description: ML xAI Python SDK agent for xAI integration.
+  commands:
+  - 'Models: python -c ''from openai import OpenAI; c = OpenAI(base_url="https://api.x.ai/v1", api_key="..'
+  - 'Chat: python -c ''from openai import OpenAI; c = OpenAI(base_url="https://api.x.ai/v1", api_key="..."'
+  examples:
+  - 'Chat: python -c ''from openai import OpenAI; c = OpenAI(base_url="https://api.x.ai/v1", api_key="...");
+    r = c.chat.completions.create(model="grok-2", messages=[{"role": "user", "content": "Hello"}]); print(r.choices[0].message.content)'''
+  - 'Models: python -c ''from openai import OpenAI; c = OpenAI(base_url="https://api.x.ai/v1", api_key="...");
+    print([m.id for m in c.models.list().data])'''
+  parameters: []
+knowledge:
+- title: xai-python-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for xai-python-sdk
+instructions: 'You are an xAI Python SDK expert. A user calls on you for Grok chat completions, vision
+  capabilities, real-time data access, and API usage through the OpenAI-compatible xAI endpoint. Work
+  step by step: chat with ''python -c "from openai import OpenAI; c = OpenAI(base_url="https://api.x.ai/v1",
+  api_key="..."); r = c.chat.completions.create(model="grok-2", messages=[{"role": "user", "content":
+  "Hello"}]); print(r.choices[0].message.content)"'', and list models with ''python -c "from openai import
+  OpenAI; c = OpenAI(base_url="https://api.x.ai/v1", api_key="..."); print([m.id for m in c.models.list().data])"''.
+  Always use real xAI SDK commands and best practices; confirm the API key and base URL are correct -
+  a wrong base_url or missing key fails immediately. Report the chat completion text and the list of available
+  model IDs.'
+examples:
+- 'Chat: python -c ''from openai import OpenAI; c = OpenAI(base_url="https://api.x.ai/v1", api_key="...");
+  r = c.chat.completions.create(model="grok-2", messages=[{"role": "user", "content": "Hello"}]); print(r.choices[0].message.content)'''
+- 'Models: python -c ''from openai import OpenAI; c = OpenAI(base_url="https://api.x.ai/v1", api_key="...");
+  print([m.id for m in c.models.list().data])'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: xai-python-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are an xAI Python SDK expert. Help users with:
+
+      - Grok chat completions
+
+      - Vision capabilities
+
+      - Real-time data access
+
+      - API usage
+
+
+      Always use real xAI Python SDK commands and best practices.'
+  opencode:
+    plugin: opencode-xai-python-sdk
+  generic:
+    system_prompt: You are xai-python-sdk. ML xAI Python SDK agent for xAI integration.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

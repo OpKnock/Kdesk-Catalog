@@ -1,0 +1,110 @@
+name: betterer
+display_name: betterer
+category: code-quality
+subcategory: general
+description: 'Tracks and enforces code quality metrics over time with betterer: type coverage, lint counts,
+  and complexity budgets that never regress.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npm
+- npx
+capabilities:
+- commands:
+  - npx betterer init
+  - npx betterer
+  - npx betterer --update
+  - npx betterer --strict
+  - npx betterer --check-timestamps
+  description: Initialize, run, and update betterer metrics.
+  name: betterer-core
+  examples:
+  - npx betterer --update --workers 4
+  - npx betterer --precommit
+  - npx betterer --config .betterer.ts
+  parameters:
+  - description: Update baseline results
+    name: update
+    type: boolean
+  - description: Reject unchanged results as failures
+    name: strict
+    type: boolean
+- commands:
+  - npx betterer --ci
+  - npx betterer --cache
+  - npx betterer --silent
+  - npm run betterer
+  description: Configure custom tests and thresholds.
+  name: betterer-config
+  examples:
+  - npx betterer --ci --silent
+  - npx betterer --cache-dir .cache/betterer
+  parameters:
+  - description: CI-friendly mode
+    name: ci
+    type: boolean
+  - name: workers
+    type: integer
+    description: Worker processes for checks
+knowledge:
+- title: Betterer Docs
+  description: Setup, config, and test types
+  source: https://phenomnomnominal.github.io/betterer/
+  type: documentation
+- title: Betterer on GitHub
+  description: Source and issue tracker
+  source: https://github.com/phenomnomnominal/betterer
+  type: documentation
+instructions: "# Betterer\n\nPrevent code quality regressions over time.\n\n## When to Use\n\n- Inheriting\
+  \ a codebase with existing lint/type debt\n- Ensuring debt only decreases, never increases\n- Gating\
+  \ merges on quality metric budgets\n- Tracking coverage, complexity, or TODO counts\n\n## Commands\n\
+  \n```bash\n# Init\nnpx betterer init\n\n# Run and compare against baseline\nnpx betterer\n\n# Update\
+  \ baseline after intentional improvements\nnpx betterer --update\n\n# Strict: any regression fails\n\
+  npx betterer --strict\n\n# CI mode\nnpx betterer --ci\n\n# Precommit check\nnpx betterer --precommit\n\
+  ```\n\n## Config Example\n\n```typescript\n// .betterer.ts\nimport { ts } from \"@betterer/typescript\"\
+  ;\n\nexport default {\n  \"no unused\": ts.noUnusedLocals(\"./src/**/*.ts\"),\n  \"test coverage\":\
+  \ coverage(...),\n};\n```\n\n## Best Practices\n\n- Run betterer in CI; never let results regress\n\
+  - Update baselines only with an explicit, reviewed change\n- Use --strict in CI to catch even unchanged\
+  \ failures\n- Combine with eslint/tsc outputs for a single quality gate\n- Keep the baseline file in\
+  \ version control\n- Document why each baseline entry exists"
+examples:
+- input: Track our TypeScript error count over time
+  output: Agent configures a betterer test for tsc errors, runs npx betterer --update to baseline, and
+    adds a CI gate.
+- input: Someone added 200 new eslint errors
+  output: Agent runs npx betterer, shows the regression against baseline, and blocks the change or fixes
+    the errors.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: betterer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-betterer
+  generic:
+    system_prompt: 'You are the betterer specialist. You do it through betterer-core: Initialize, run,
+      and update betterer metrics. The commands are real, e.g. `npx betterer init`. You verify each step
+      you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

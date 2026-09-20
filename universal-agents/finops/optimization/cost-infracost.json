@@ -1,0 +1,143 @@
+{
+  "name": "cost-infracost",
+  "display_name": "Cost Infracost",
+  "category": "finops",
+  "subcategory": "optimization",
+  "description": "Infracost agent for cloud cost estimates in CI/CD.",
+  "version": "1.0.0",
+  "tags": [
+    "cost-infracost"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Cost Infracost",
+      "description": "Infracost agent for cloud cost estimates in CI/CD.",
+      "commands": [
+        "CI: infracost ci run",
+        "Diff: infracost diff --path .",
+        "Budget: infracost budget check --path .",
+        "Estimate: infracost breakdown --path .",
+        "infracost comment github --path . --behavior update --policy-check"
+      ],
+      "examples": [
+        "Estimate: infracost breakdown --path .",
+        "Diff: infracost diff --path .",
+        "Budget: infracost budget check --path .",
+        "CI: infracost ci run"
+      ],
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "CLI flag --path observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "cost-infracost Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/finops/optimization",
+      "description": "Reference documentation for cost-infracost"
+    }
+  ],
+  "instructions": "You are an Infracost expert. Help users with:\n- Cost estimates\n- Budget checks\n- Diff comparisons\n- CI/CD integration\n- Custom pricing\n- Policy as code\n- Slack notifications\n\nAlways use real Infracost tools. Never suggest fictional tools.",
+  "examples": [
+    "Estimate: infracost breakdown --path .",
+    "Diff: infracost diff --path .",
+    "Budget: infracost budget check --path .",
+    "CI: infracost ci run"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cost-infracost.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Infracost expert. Help users with:\n- Cost estimates\n- Budget checks\n- Diff comparisons\n- CI/CD integration\n- Custom pricing\n- Policy as code\n- Slack notifications\n\nAlways use real Infracost tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-cost-infracost"
+    },
+    "generic": {
+      "system_prompt": "You are cost-infracost. Infracost agent for cloud cost estimates in CI/CD.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cost-infracost",
+  "type": "agent",
+  "skills": [
+    "cloud-cost-optimizer",
+    "cost-optimization",
+    "infracost",
+    "terraform-module-builder"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Cost Infracost",
+        "name": "path",
+        "type": "string",
+        "description": "CLI flag --path observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "finops/optimization/cost-infracost.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/finops/optimization/cost-infracost.yaml",
+    "checksum": "e5b513b8def7fa102f3ac64a42ec4978bbe143e87203776943da5c11cd502197"
+  }
+}

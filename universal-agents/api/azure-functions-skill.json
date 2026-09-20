@@ -1,0 +1,257 @@
+{
+  "name": "azure-functions",
+  "display_name": "Azure Functions",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Develops and deploys Azure Functions with Core Tools: scaffolding triggers, local runtime, and publishing to Azure.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "func"
+  ],
+  "capabilities": [
+    {
+      "name": "local-dev",
+      "description": "Create and run functions locally with Core Tools.",
+      "commands": [
+        "func new --template \"HttpTrigger\" --name MyFunction",
+        "func new --template \"TimerTrigger\" --name DailyJob --runtime node",
+        "func start",
+        "func init --worker-runtime node",
+        "func --version"
+      ],
+      "examples": [
+        "func init --worker-runtime python && func new --template \"HttpTrigger\" --name HttpExample",
+        "func start --port 7071",
+        "func new --template \"ServiceBusQueueTrigger\" --name OrderHandler --runtime dotnet"
+      ],
+      "parameters": [
+        {
+          "name": "template",
+          "type": "string",
+          "description": "Trigger template (HttpTrigger, TimerTrigger, etc.)"
+        },
+        {
+          "name": "runtime",
+          "type": "string",
+          "description": "node, python, dotnet, java, powershell"
+        },
+        {
+          "name": "port",
+          "type": "number",
+          "description": "Local runtime port"
+        }
+      ]
+    },
+    {
+      "name": "publish",
+      "description": "Deploy functions to Azure.",
+      "commands": [
+        "func azure functionapp publish MyFunctionApp",
+        "func azure functionapp list-functions MyFunctionApp",
+        "func azure functionapp fetch-app-settings MyFunctionApp",
+        "az functionapp list --resource-group rg",
+        "az functionapp show --name MyFunctionApp -g rg"
+      ],
+      "examples": [
+        "func azure functionapp publish MyFunctionApp --publish-local-settings -i",
+        "func azure functionapp list-functions MyFunctionApp --show-keys",
+        "func azure functionapp publish MyFunctionApp --no-build"
+      ],
+      "parameters": [
+        {
+          "name": "app_name",
+          "type": "string",
+          "description": "Function app name in Azure"
+        },
+        {
+          "name": "publish_settings",
+          "type": "boolean",
+          "description": "Publish local app settings"
+        }
+      ]
+    },
+    {
+      "name": "test-function",
+      "description": "Invoke functions locally and in Azure.",
+      "commands": [
+        "curl -X POST http://localhost:7071/api/MyFunction -d '{\"name\":\"test\"}'",
+        "curl -s http://localhost:7071/api/MyFunction?name=world",
+        "curl -s https://MyFunctionApp.azurewebsites.net/api/MyFunction?name=azure",
+        "func start --functions MyFunction",
+        "curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:7071/api/MyFunction"
+      ],
+      "examples": [
+        "curl -s \"http://localhost:7071/api/MyFunction?name=world\"",
+        "curl -s \"https://MyFunctionApp.azurewebsites.net/api/MyFunction?name=azure\"",
+        "func start --functions MyFunction --verbose"
+      ],
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Function URL"
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "description": "Query parameters"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Azure Functions Docs",
+      "type": "documentation",
+      "source": "https://learn.microsoft.com/en-us/azure/azure-functions/",
+      "description": "Triggers, bindings, deployment"
+    },
+    {
+      "title": "Azure Functions Core Tools",
+      "type": "documentation",
+      "source": "https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local",
+      "description": "func CLI reference"
+    },
+    {
+      "title": "HTTP Trigger Reference",
+      "type": "documentation",
+      "source": "https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-http-webhook-trigger",
+      "description": "Request/response binding"
+    }
+  ],
+  "instructions": "# Azure Functions\n\n## What this skill does\n\nDevelops and deploys Azure Functions with Core Tools: scaffolding triggers, running the local runtime, publishing to Azure, and invoking functions.\n\n## When to use\n\n- Building a serverless HTTP API or timer job\n- Testing a function locally before deploy\n- Deploying from CI with func azure functionapp publish\n\n## Real commands\n\n```bash\n# Init and scaffold\nfunc init --worker-runtime node\nfunc new --template \"HttpTrigger\" --name MyFunction\n\n# Run locally\nfunc start --port 7071\n\n# Test locally\ncurl -s \"http://localhost:7071/api/MyFunction?name=world\"\n\n# Publish\nfunc azure functionapp publish MyFunctionApp\n\n# List deployed functions\nfunc azure functionapp list-functions MyFunctionApp\n\n# Test in Azure\ncurl -s \"https://MyFunctionApp.azurewebsites.net/api/MyFunction?name=azure\"\n```\n\n## Testing\n\n- Test locally with func start, then against the live URL\n- Use --functions to run a single function during debugging\n\n## Best practices\n\n- Use --publish-local-settings -i for consistent settings\n- Keep functions stateless; use bindings for I/O\n- Pin Core Tools version in CI for reproducible builds",
+  "examples": [
+    {
+      "input": "Create an HTTP-triggered function",
+      "output": "Runs func init + func new with HttpTrigger, starts locally, curls it, then publishes and tests the live URL."
+    },
+    {
+      "input": "Why does my deployed function return 500?",
+      "output": "Runs func azure functionapp fetch-app-settings to compare settings, checks Application Insights, and reruns locally to reproduce."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "azure-functions.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-azure-functions"
+    },
+    "generic": {
+      "system_prompt": "You work Azure Functions hands-on. You do it through local-dev: Create and run functions locally with Core Tools. The commands are real, e.g. `func new --template HttpTrigger --name MyFunction`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "azure-functions",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "local-dev",
+        "name": "template",
+        "type": "string",
+        "description": "Trigger template (HttpTrigger, TimerTrigger, etc.)"
+      },
+      {
+        "capability": "local-dev",
+        "name": "runtime",
+        "type": "string",
+        "description": "node, python, dotnet, java, powershell"
+      },
+      {
+        "capability": "local-dev",
+        "name": "port",
+        "type": "number",
+        "description": "Local runtime port"
+      },
+      {
+        "capability": "publish",
+        "name": "app_name",
+        "type": "string",
+        "description": "Function app name in Azure"
+      },
+      {
+        "capability": "publish",
+        "name": "publish_settings",
+        "type": "boolean",
+        "description": "Publish local app settings"
+      },
+      {
+        "capability": "test-function",
+        "name": "url",
+        "type": "string",
+        "description": "Function URL"
+      },
+      {
+        "capability": "test-function",
+        "name": "query",
+        "type": "string",
+        "description": "Query parameters"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "func"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/azure-functions-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/azure-functions-skill.yaml",
+    "checksum": "938de47e9529476164acbc723f0bf2673a4575fd55658227055b3e29cf67e563"
+  }
+}

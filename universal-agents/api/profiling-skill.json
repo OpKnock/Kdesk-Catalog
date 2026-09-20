@@ -1,0 +1,171 @@
+{
+  "name": "profiling",
+  "display_name": "Profiling",
+  "category": "api",
+  "subcategory": "general",
+  "description": "CPU and memory profiling: perf record/report, Go pprof, and flamegraph generation.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "perf"
+  ],
+  "capabilities": [
+    {
+      "name": "profiling-analysis",
+      "description": "Capture CPU profiles with perf, analyze Go profiles with pprof, and visualize as flamegraphs.",
+      "commands": [
+        "perf record -g ./myapp",
+        "perf report --stdio",
+        "perf top",
+        "go tool pprof -top http://localhost:6060/debug/pprof/heap",
+        "go tool pprof -http=:8081 http://localhost:6060/debug/pprof/profile"
+      ],
+      "examples": [
+        "perf record -g -p 1234 -- sleep 60",
+        "go tool pprof -top http://localhost:6060/debug/pprof/cpu",
+        "go tool pprof -http=:8081 http://localhost:6060/debug/pprof/goroutine"
+      ],
+      "parameters": [
+        {
+          "name": "pid",
+          "type": "integer",
+          "description": "Process ID to profile"
+        },
+        {
+          "name": "profile_source",
+          "type": "string",
+          "description": "pprof URL or profile file"
+        },
+        {
+          "name": "duration",
+          "type": "string",
+          "description": "Capture duration"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "perf wiki",
+      "type": "documentation",
+      "source": "https://perf.wiki.kernel.org/index.php/Main_Page",
+      "description": "perf record, report, top documentation"
+    },
+    {
+      "title": "pprof docs",
+      "type": "documentation",
+      "source": "https://pkg.go.dev/net/http/pprof",
+      "description": "Go runtime profiling endpoints and go tool pprof"
+    }
+  ],
+  "instructions": "# Profiling\n\nFind where CPU time and memory actually go with sampling profilers.\n\n## What this skill does\n\n- Records CPU profiles with perf\n- Reads Go pprof endpoints\n- Visualizes results\n\n## When to use\n\n- High CPU usage or latency mysteries\n- Memory growth investigations\n\n## Real commands\n\n```bash\n# perf\nperf record -g ./myapp\nperf record -g -p 1234 -- sleep 60\nperf report --stdio\nperf top\n\n# Go pprof (app must import net/http/pprof)\ngo tool pprof -top http://localhost:6060/debug/pprof/heap\ngo tool pprof -top http://localhost:6060/debug/pprof/cpu\ngo tool pprof -http=:8081 http://localhost:6060/debug/pprof/profile\ngo tool pprof -http=:8081 http://localhost:6060/debug/pprof/goroutine\n```\n\n## Reading results\n\n- Flat: time in this function; Cum: including callees\n- Look for hot call chains, not just hot functions\n\n## Best practices\n\n- Profile under production-like load\n- Capture 30-60s windows\n- Compare profiles before/after optimizations",
+  "examples": [
+    {
+      "input": "My Go service burns 100% CPU, where?",
+      "output": "The agent captures the CPU profile and runs go tool pprof -top to find the hot functions."
+    },
+    {
+      "input": "Profile this native binary without rebuilding",
+      "output": "The agent runs perf record -g against the process and summarizes with perf report."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "profiling.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-profiling"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Profiling. You do it through profiling-analysis: Capture CPU profiles with perf, analyze Go profiles with pprof, and visualize as flamegraphs. The commands are real, e.g. `perf record -g ./myapp`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "profiling",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "profiling-analysis",
+        "name": "pid",
+        "type": "integer",
+        "description": "Process ID to profile"
+      },
+      {
+        "capability": "profiling-analysis",
+        "name": "profile_source",
+        "type": "string",
+        "description": "pprof URL or profile file"
+      },
+      {
+        "capability": "profiling-analysis",
+        "name": "duration",
+        "type": "string",
+        "description": "Capture duration"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "perf"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/profiling-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/profiling-skill.yaml",
+    "checksum": "f1c75f017e0b442f48a2f146620d3b105c5e79f67954efedfa907a4d97fb4743"
+  }
+}

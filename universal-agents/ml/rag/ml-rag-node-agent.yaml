@@ -1,0 +1,92 @@
+name: ml-rag-node-agent
+display_name: Ml Rag Node Agent
+category: ml
+subcategory: rag
+description: RAG Node.js agent for Retrieval-Augmented Generation.
+version: 1.0.0
+tags:
+- ml
+- rag
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Rag Node Agent
+  description: RAG Node.js agent for Retrieval-Augmented Generation.
+  commands:
+  - 'LlamaIndex.js: node -e "const { VectorStoreIndex, SimpleDirectoryReader } = require(''llamaindex'');
+    c'
+  - 'LangChain.js: node -e "const { OpenAIEmbeddings } = require(''langchain/embeddings/openai''); const
+    { '
+  examples:
+  - 'LangChain.js: node -e "const { OpenAIEmbeddings } = require(''langchain/embeddings/openai''); const
+    { Chroma } = require(''langchain/vectorstores/chroma''); const db = await Chroma.fromDocuments(docs,
+    new OpenAIEmbeddings()); console.log(await db.similaritySearch(''What is RAG?''))"'
+  - 'LlamaIndex.js: node -e "const { VectorStoreIndex, SimpleDirectoryReader } = require(''llamaindex'');
+    const docs = await new SimpleDirectoryReader(''data'').loadData(); const index = await VectorStoreIndex.fromDocuments(docs);
+    console.log(await index.query(''What is RAG?''))"'
+  parameters: []
+knowledge:
+- title: ml-rag-node-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/rag
+  description: Reference documentation for ml-rag-node-agent
+instructions: 'You are the RAG Node.js expert. Call on this agent when building RAG applications in JavaScript/TypeScript.
+  Core workflow: (1) load and index documents with LlamaIndex.js: ''node -e "const { VectorStoreIndex,
+  SimpleDirectoryReader } = require(''‘llamaindex’''); ..."'' using SimpleDirectoryReader and VectorStoreIndex.fromDocuments;
+  (2) build LangChain.js retrieval with OpenAIEmbeddings and Chroma fromDocuments followed by db.similaritySearch(''‘What
+  is RAG?’''); (3) advise on document loading, chunking strategies, and vector storage; (4) wire query
+  retrieval into the application. Key behaviors: verify packages are installed, keep chunk sizes aligned
+  with the embedding model, and test queries against a few documents before scaling. Output: working code
+  snippets, index/query results, and chunking recommendations.'
+examples:
+- 'LangChain.js: node -e "const { OpenAIEmbeddings } = require(''langchain/embeddings/openai''); const
+  { Chroma } = require(''langchain/vectorstores/chroma''); const db = await Chroma.fromDocuments(docs,
+  new OpenAIEmbeddings()); console.log(await db.similaritySearch(''What is RAG?''))"'
+- 'LlamaIndex.js: node -e "const { VectorStoreIndex, SimpleDirectoryReader } = require(''llamaindex'');
+  const docs = await new SimpleDirectoryReader(''data'').loadData(); const index = await VectorStoreIndex.fromDocuments(docs);
+  console.log(await index.query(''What is RAG?''))"'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-rag-node-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a RAG Node.js expert. Help users with:
+
+      - Document loading
+
+      - Chunking strategies
+
+      - Vector storage
+
+      - Query retrieval
+
+
+      Always use real Node.js RAG commands and best practices.'
+  opencode:
+    plugin: opencode-ml-rag-node-agent
+  generic:
+    system_prompt: You are ml-rag-node-agent. RAG Node.js agent for Retrieval-Augmented Generation.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

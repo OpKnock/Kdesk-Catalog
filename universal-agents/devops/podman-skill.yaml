@@ -1,0 +1,199 @@
+name: podman
+display_name: podman
+category: devops
+subcategory: general
+description: 'Runs daemonless containers with Podman: build, run, pods, quadlets, compose, and Kubernetes
+  YAML generation without root.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- podman
+capabilities:
+- name: container-lifecycle
+  description: Run and manage rootless containers with podman.
+  commands:
+  - podman pull nginx:alpine
+  - podman run -d --name web -p 8080:80 nginx:alpine
+  - podman ps -a
+  - podman exec -it web sh
+  - podman logs -f web
+  - podman rm -f web
+  examples:
+  - podman run -d --name web -p 8080:80 nginx:alpine
+  - podman ps -a
+  - podman logs -f web
+  parameters:
+  - name: name
+    type: string
+    description: Container name
+  - name: image
+    type: string
+    description: Image reference
+  - name: ports
+    type: string
+    description: Port mapping
+- name: pods-and-kubernetes
+  description: Create pods, run compose stacks, and generate Kubernetes YAML.
+  commands:
+  - podman pod create --name webpod -p 8080:80
+  - podman run -d --pod webpod nginx
+  - podman generate kube webpod > webpod.yaml
+  - podman play kube webpod.yaml
+  - podman compose -f compose.yaml up -d
+  - podman machine init --cpus 4 --memory 4096
+  examples:
+  - podman pod create --name webpod -p 8080:80
+  - podman generate kube webpod > webpod.yaml
+  - podman play kube webpod.yaml
+  parameters:
+  - name: pod
+    type: string
+    description: Pod name
+  - name: yaml
+    type: string
+    description: Kubernetes YAML file
+knowledge:
+- title: Podman Documentation
+  type: documentation
+  source: https://docs.podman.io/
+  description: Rootless containers, pods, quadlets, and networking
+- title: Podman Machine
+  type: documentation
+  source: https://docs.podman.io/en/latest/markdown/podman-machine.1.html
+  description: VM-based podman on macOS/Windows
+- title: Podman Compose
+  type: documentation
+  source: https://github.com/containers/podman-compose
+  description: Compose-compatible workflow for podman
+instructions: '# Podman Containers
+
+
+  Run containers daemonlessly with Podman — Docker-compatible but rootless by default.
+
+
+  ## What This Skill Does
+
+
+  - Runs containers/pods without a daemon (fork-exec model)
+
+  - Builds images with buildah-compatible frontend
+
+  - Generates Kubernetes YAML from running pods
+
+  - Runs compose files via podman-compose or podman play
+
+  - Manages macOS/Windows VMs with podman machine
+
+
+  ## When to Use
+
+
+  - Rootless container workflows on Linux workstations/servers
+
+  - RHEL/Fedora environments where Docker is replaced
+
+  - Generating Kubernetes manifests from running containers
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Lifecycle
+
+  podman pull nginx:alpine
+
+  podman run -d --name web -p 8080:80 nginx:alpine
+
+  podman ps -a
+
+  podman exec -it web sh
+
+  podman logs -f web
+
+  podman rm -f web
+
+
+  # Build and images
+
+  podman build -t myapp:1.0 .
+
+  podman images
+
+  podman push registry.example.com/myapp:1.0
+
+
+  # Pods and Kubernetes
+
+  podman pod create --name webpod -p 8080:80
+
+  podman run -d --pod webpod nginx
+
+  podman generate kube webpod > webpod.yaml
+
+  podman play kube webpod.yaml
+
+
+  # Compose + machine
+
+  podman compose -f compose.yaml up -d
+
+  podman machine init --cpus 4 --memory 4096
+
+  podman machine start
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Run rootless unless bind-mounting privileged devices
+
+  - Use pods for sidecar groupings that must share localhost
+
+  - Prefer podman play kube to standardize on Kubernetes YAML
+
+  - Add `--userns=keep-id` for clean bind-mount permissions
+
+  - For Docker parity, alias docker=podman and test with docker compose v1 projects'
+examples:
+- input: Run our compose stack rootless on a workstation
+  output: Agent uses podman compose up -d, validates containers are running with ps, and checks logs
+- input: Turn a running container into Kubernetes manifests
+  output: Agent creates a pod, generates kube YAML, and reviews the deployment/service before play kube
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: podman.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-podman
+  generic:
+    system_prompt: 'This is your domain: podman. You do it through container-lifecycle: Run and manage
+      rootless containers with podman. The commands are real, e.g. `podman pull nginx:alpine`. You prefer
+      the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,179 @@
+name: api-gateway-specialist
+version: 2.0.0
+type: skill
+category: infrastructure
+description: 'Deep expertise in API gateways: Kong plugin ecosystems, Traefik middlewares, gateway security,
+  and observability.'
+keywords:
+- api-gateway
+- kong
+- traefik
+- security
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-gateway-specialist.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-gateway-specialist
+  generic:
+    system_prompt: 'This is your domain: api-gateway-specialist. You do it through gateway-security: Harden
+      gateways: auth plugins, CORS, request validation, and IP allowlists. The commands are real, e.g.
+      `curl -s -X POST http://localhost:8001/routes/orders/plugins -H Content-Type:...`. You prefer the
+      shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: gateway-security
+  description: 'Harden gateways: auth plugins, CORS, request validation, and IP allowlists'
+  commands:
+  - 'curl -s -X POST http://localhost:8001/routes/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"oauth2"}'''
+  - 'curl -s -X POST http://localhost:8001/routes/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"cors","config":{"origins":["https://app.example.com"]}}'''
+  - 'curl -s -X POST http://localhost:8001/routes/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"ip-restriction","config":{"allow":["10.0.0.0/8"]}}'''
+  - 'curl -s -X POST http://localhost:8001/routes/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"request-validator"}'''
+  - curl -s http://localhost:8001/routes/orders/plugins | python -m json.tool
+  examples:
+  - 'curl -s -X POST http://localhost:8001/routes/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"oauth2"}'''
+  - 'curl -s -X POST http://localhost:8001/routes/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"cors","config":{"origins":["https://app.example.com"]}}'''
+  - curl -s http://localhost:8001/routes/orders/plugins | python -m json.tool
+  parameters:
+  - name: route
+    type: string
+    description: Route name
+  - name: plugin
+    type: string
+    description: Plugin name
+- name: gateway-observability
+  description: Enable logging, metrics, and tracing on gateway traffic
+  commands:
+  - 'curl -s -X POST http://localhost:8001/routes/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"http-log","config":{"http_endpoint":"http://elk:8080/logs"}}'''
+  - 'curl -s -X POST http://localhost:8001/routes/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"prometheus"}'''
+  - curl -s http://localhost:9100/metrics | grep -E 'kong_http|kong_request' | head -10
+  - 'curl -s -X POST http://localhost:8001/routes/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"zipkin","config":{"http_endpoint":"http://zipkin:9411/api/v2/spans"}}'''
+  - curl -s http://localhost:8001/status | python -m json.tool
+  examples:
+  - curl -s http://localhost:9100/metrics | grep -E 'kong_http|kong_request' | head -10
+  - 'curl -s -X POST http://localhost:8001/routes/orders/plugins -H ''Content-Type: application/json''
+    -d ''{"name":"zipkin","config":{"http_endpoint":"http://zipkin:9411/api/v2/spans"}}'''
+  - curl -s http://localhost:8001/status | python -m json.tool
+  parameters:
+  - name: metricsUrl
+    type: string
+    description: Prometheus metrics endpoint
+  - name: traceEndpoint
+    type: string
+    description: Tracing endpoint
+prerequisites:
+- kong
+- traefik
+- aws-cli
+tools:
+- kong
+- traefik
+- aws-cli
+- docker
+- kubernetes
+examples:
+- input: Harden the gateway with auth and CORS
+  output: Enables OAuth2 and CORS plugins scoped to routes and verifies blocked origins
+- input: Add gateway observability
+  output: Enables Prometheus metrics and Zipkin tracing with logs shipped to the central sink
+instructions: '# API Gateway Specialist
+
+
+  Applies gateway best practices: security, observability, and plugin discipline.
+
+
+  ## When to Use
+
+  - Gateways need security hardening
+
+  - Adding metrics and tracing at the edge
+
+  - Choosing between plugin strategies
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Security plugins
+
+  curl -s -X POST http://localhost:8001/routes/orders/plugins -H ''Content-Type: application/json'' -d
+  ''{"name":"oauth2"}''
+
+  curl -s -X POST http://localhost:8001/routes/orders/plugins -H ''Content-Type: application/json'' -d
+  ''{"name":"ip-restriction","config":{"allow":["10.0.0.0/8"]}}''
+
+
+  # Observability
+
+  curl -s -X POST http://localhost:8001/routes/orders/plugins -H ''Content-Type: application/json'' -d
+  ''{"name":"prometheus"}''
+
+  curl -s http://localhost:9100/metrics | grep -E ''kong_http|kong_request'' | head -10
+
+  ```
+
+
+  ## Security Layering
+
+  - Edge: IP restrictions, rate limits
+
+  - Gateway: OAuth/JWT validation
+
+  - Service: fine-grained authorization
+
+
+  ## Testing
+
+  Attempt unauthenticated and cross-origin requests and verify rejection.
+
+
+  ## Best Practices
+
+  - Never expose admin API publicly
+
+  - Export metrics to the central dashboard'
+display_name: api-gateway-specialist
+knowledge:
+- title: Kong Plugin Hub
+  type: documentation
+  source: https://docs.konghq.com/hub/
+  description: All Kong plugins and configs
+- title: Traefik Middlewares
+  type: documentation
+  source: https://doc.traefik.io/traefik/middlewares/overview/
+  description: Middleware catalog

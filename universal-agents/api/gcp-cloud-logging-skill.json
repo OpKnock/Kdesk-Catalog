@@ -1,0 +1,172 @@
+{
+  "name": "gcp-cloud-logging",
+  "display_name": "Gcp Cloud Logging",
+  "category": "api",
+  "subcategory": "general",
+  "description": "GCP Cloud Logging operations: query logs with gcloud logging read, create log-based metrics, and export logs to storage sinks.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "gcloud"
+  ],
+  "capabilities": [
+    {
+      "name": "gcp-logging",
+      "description": "Read logs, create log-based metrics, and manage exports.",
+      "commands": [
+        "gcloud logging read 'resource.type=cloud_run_revision AND severity>=ERROR' --limit=50 --format='table(timestamp,severity,jsonPayload.message)'",
+        "gcloud logging read 'logName=projects/my-project/logs/requests' --freshness=1d --limit=20",
+        "gcloud logging metrics create 5xx-errors --description='5xx rate' --filter='resource.type=global AND httpRequest.status>=500'",
+        "gcloud logging metrics describe 5xx-errors",
+        "gcloud logging sinks create archive-errors storage.googleapis.com --log-filter='severity>=ERROR'",
+        "gcloud logging tail 'severity=ERROR'"
+      ],
+      "examples": [
+        "gcloud logging read 'resource.type=cloud_run_revision AND severity>=ERROR' --limit=50 --format='table(timestamp,severity,jsonPayload.message)'",
+        "gcloud logging metrics create 5xx-errors --description='5xx rate' --filter='resource.type=global AND httpRequest.status>=500'",
+        "gcloud logging tail 'severity=ERROR'"
+      ],
+      "parameters": [
+        {
+          "name": "filter",
+          "type": "string",
+          "description": "Logging filter expression"
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "description": "Number of entries to return"
+        },
+        {
+          "name": "sink-name",
+          "type": "string",
+          "description": "Log sink name for exports"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Cloud Logging docs",
+      "type": "documentation",
+      "source": "https://cloud.google.com/logging/docs",
+      "description": "Log filters, structured logging, metrics, and sinks"
+    },
+    {
+      "title": "gcloud logging reference",
+      "type": "documentation",
+      "source": "https://cloud.google.com/sdk/gcloud/reference/logging",
+      "description": "read, tail, metrics, and sinks commands"
+    }
+  ],
+  "instructions": "# GCP Cloud Logging\n\n## What this skill does\n\nCloud Logging aggregates logs from GCP services. gcloud logging read filters and returns entries; metrics turn filters into counters for dashboards; sinks export to Storage/BigQuery.\n\n## When to use\n\n- Debugging errors across Cloud Run/Functions/VM services\n- Building error-rate metrics for SLOs\n- Archiving logs for compliance\n\n## Real commands\n\n```bash\n# Read recent errors\n gcloud logging read 'resource.type=cloud_run_revision AND severity>=ERROR' --limit=50 --format='table(timestamp,severity,jsonPayload.message)'\n\n# Recent request logs\n gcloud logging read 'logName=projects/my-project/logs/requests' --freshness=1d --limit=20\n\n# Stream live\n gcloud logging tail 'severity=ERROR'\n\n# Log-based metric\n gcloud logging metrics create 5xx-errors --description='5xx rate' --filter='resource.type=global AND httpRequest.status>=500'\n\n# Export sink\n gcloud logging sinks create archive-errors storage.googleapis.com --log-filter='severity>=ERROR'\n```\n\n## Structured logging (Python example)\n\n```python\nimport json, sys\nprint(json.dumps({\"message\": \"order failed\", \"severity\": \"ERROR\", \"orderId\": oid}))\n```\n\n## Testing\n\n```bash\n# Trigger an error, then confirm it is searchable\n gcloud logging read 'jsonPayload.orderId=\"1\"' --freshness=10m --limit=5\n```\n\n## Best practices\n\n- Emit structured JSON logs so filters can target fields.\n- Add `trace` fields to correlate with Cloud Trace.\n- Use log-based metrics for SLO counters instead of scraping logs.\n- Set sink filters tight; archiving everything costs storage.\n- Prefer `--format='table(...)'` for human-readable triage output.\n",
+  "examples": [
+    {
+      "input": "Find why requests failed this morning",
+      "output": "gcloud logging read with severity>=ERROR and a time freshness, format as a table, and cross-check the trace field."
+    },
+    {
+      "input": "Track 5xx rate for an SLO",
+      "output": "Create a log-based metric with the httpRequest.status>=500 filter and chart it in Cloud Monitoring."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "gcp-cloud-logging.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-gcp-cloud-logging"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Gcp Cloud Logging. You do it through gcp-logging: Read logs, create log-based metrics, and manage exports. The commands are real, e.g. `gcloud logging read resource.type=cloud_run_revision AND severity>=ERROR --limit=50...`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "gcp-cloud-logging",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "gcp-logging",
+        "name": "filter",
+        "type": "string",
+        "description": "Logging filter expression"
+      },
+      {
+        "capability": "gcp-logging",
+        "name": "limit",
+        "type": "integer",
+        "description": "Number of entries to return"
+      },
+      {
+        "capability": "gcp-logging",
+        "name": "sink-name",
+        "type": "string",
+        "description": "Log sink name for exports"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "gcloud"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/gcp-cloud-logging-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/gcp-cloud-logging-skill.yaml",
+    "checksum": "831231887263d6eb6f8492528613efdc242995566b9ad889d16be5ad4e9cfc2e"
+  }
+}

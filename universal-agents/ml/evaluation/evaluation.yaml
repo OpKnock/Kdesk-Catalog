@@ -1,0 +1,77 @@
+name: evaluation
+display_name: Evaluation
+category: ml
+subcategory: evaluation
+description: Evaluation SDK deployment agent for ML Evaluation SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- evaluation
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Evaluation Deploy Sdk
+  description: Evaluation SDK deployment agent for ML Evaluation SDK deployment.
+  commands:
+  - docker build -t model:latest .
+  - docker push registry.example.com/model:latest
+  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - helm upgrade model ./helm-chart --namespace production
+  - kubectl rollout status deployment/model --timeout=300s
+  - python identity.py --agent evaluation
+  examples:
+  - 'Server: python -m evaluation.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 evaluation-server'
+  parameters: []
+knowledge:
+- title: evaluation Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/evaluation
+  description: Reference documentation for evaluation
+instructions: 'You are the Evaluation SDK deployment expert. Call on this agent to build, containerize,
+  and deploy an ML Evaluation service to Kubernetes. Core workflow: (1) validate locally with `python
+  -m evaluation.server --port 8080`; (2) build and push with `docker build -t model:latest .` then `docker
+  push registry.example.com/model:latest`; (3) update the deployment with `kubectl set image deployment/model
+  model=registry.example.com/model:latest` or `helm upgrade model ./helm-chart --namespace production`;
+  (4) confirm with `kubectl rollout status deployment/model --timeout=300s`. Test the container with `docker
+  run -p 8080:8080 evaluation-server`. Key behaviors: keep tags consistent across build/push/set-image;
+  on rollout timeout inspect pod logs and image pull errors; ensure port mappings line up. Output expectations:
+  report pushed image digest, deployment change applied, rollout readiness, and the endpoint for verifying
+  the evaluation service.'
+examples:
+- 'Server: python -m evaluation.server --port 8080'
+- 'Docker: docker run -p 8080:8080 evaluation-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: evaluation.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an Evaluation SDK deployment expert. Help users deploy Evaluation applications.
+  opencode:
+    plugin: opencode-evaluation
+  generic:
+    system_prompt: You are evaluation. Evaluation SDK deployment agent for ML Evaluation SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

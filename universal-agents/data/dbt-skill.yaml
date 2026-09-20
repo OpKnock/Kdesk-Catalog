@@ -1,0 +1,100 @@
+name: dbt
+display_name: Dbt
+category: data
+subcategory: general
+description: 'Develops and runs dbt models and tests: data transformation, testing, and documentation
+  generation.'
+version: 2.0.0
+tags:
+- data
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- dbt
+capabilities:
+- name: dbt-core
+  description: Run models, tests, and docs for dbt projects
+  commands:
+  - dbt debug
+  - dbt run
+  - dbt test
+  - dbt build --select my_model+
+  - dbt docs generate && dbt docs serve --port 8080
+  examples:
+  - dbt run --select tag:daily
+  - dbt test --select source:raw.orders --store-failures
+  - dbt compile --select stg_orders
+  parameters:
+  - name: select
+    type: string
+    description: Node selection syntax, e.g. my_model+, tag:daily, 1+2
+  - name: store-failures
+    type: boolean
+    description: Persist test failures to the database
+  - name: profiles-dir
+    type: string
+    description: Directory containing profiles.yml
+knowledge:
+- title: dbt docs
+  type: documentation
+  source: https://docs.getdbt.com/
+  description: Project structure, model configs, and tests
+- title: dbt node selection
+  type: documentation
+  source: https://docs.getdbt.com/reference/node-selection/syntax
+  description: 'Selection syntax: +, @, tags, and fqn'
+instructions: "# dbt\n\nAnalytics engineering: transforms raw tables into modeled datasets with SQL,\n\
+  enforces tests, and generates docs.\n\n## When to Use\n\n- Building a staging-to-marts transformation\
+  \ layer\n- Testing data quality (nulls, uniqueness, referential integrity)\n- Documenting lineage and\
+  \ generating docs site\n\n## Real Commands\n\n```bash\n# Verify connection\nsudo dbt debug\n\n# Compile-only\
+  \ (no run)\nsudo dbt compile --select stg_orders\n\n# Run everything\nsudo dbt run\n\n# Run a model\
+  \ and its downstream\nsudo dbt run --select stg_orders+ --target prod\n\n# Tests\nsudo dbt test\nsudo\
+  \ dbt test --select source:raw.orders --store-failures\n\n# Build = run + test in one\nsudo dbt build\
+  \ --select my_model+\n\n# Docs\nsudo dbt docs generate\nsudo dbt docs serve --port 8080\n```\n\n## Example\
+  \ Model (models/marts/fct_orders.sql)\n\n```sql\nselect\n  o.order_id,\n  c.customer_id,\n  o.order_date,\n\
+  \  sum(o.amount) as amount\nfrom {{ ref('stg_orders') }} o\njoin {{ ref('stg_customers') }} c using\
+  \ (customer_id)\ngroup by 1, 2, 3\n```\n\n## Example Test (schema.yml)\n\n```yaml\nmodels:\n  - name:\
+  \ fct_orders\n    columns:\n      - name: order_id\n        tests: [unique, not_null]\n```\n\n## Best\
+  \ Practices\n\n- One model per file, named after the relation\n- Use `ref()` and `source()`, never hardcoded\
+  \ table names\n- Keep models modular: staging -> intermediate -> marts\n- Test every primary key for\
+  \ unique/not_null\n- Run `dbt build` in CI, not just `dbt run`\n\n## Example Response\n\nFor a failing\
+  \ test: reports the model/column, the test type, and the number of\nfailing rows, then proposes the\
+  \ data fix or test adjustment."
+examples:
+- input: Run today's models and tests
+  output: Runs dbt build --select tag:daily, then reports test results and failing-rows counts
+- input: Which models break if I change stg_orders?
+  output: Runs dbt ls --select stg_orders+ to list downstream models, then dbt compile to verify
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: dbt.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-dbt
+  generic:
+    system_prompt: 'You own Dbt end to end. You do it through dbt-core: Run models, tests, and docs for
+      dbt projects. The commands are real, e.g. `dbt debug`. You work hands-on and only report outcomes
+      you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

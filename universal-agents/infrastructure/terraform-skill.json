@@ -1,0 +1,224 @@
+{
+  "name": "terraform-infrastructure",
+  "display_name": "terraform-infrastructure",
+  "category": "infrastructure",
+  "subcategory": "general",
+  "description": "Manages infrastructure as code with Terraform: init, plan, apply, state, and modules across environments.",
+  "version": "2.0.0",
+  "tags": [
+    "infrastructure"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "terraform"
+  ],
+  "capabilities": [
+    {
+      "name": "core",
+      "description": "Run the core Terraform workflow.",
+      "commands": [
+        "terraform init",
+        "terraform plan -out=tfplan",
+        "terraform apply tfplan",
+        "terraform destroy -auto-approve",
+        "terraform fmt -recursive"
+      ],
+      "examples": [
+        "terraform init -upgrade",
+        "terraform plan -var-file=envs/prod.tfvars -out=tfplan",
+        "terraform apply -auto-approve -target=module.vpc"
+      ],
+      "parameters": [
+        {
+          "name": "var-file",
+          "type": "string",
+          "description": "Environment variable file"
+        },
+        {
+          "name": "out",
+          "type": "string",
+          "description": "Save plan to a file"
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "description": "Target a specific resource/module"
+        }
+      ]
+    },
+    {
+      "name": "state",
+      "description": "Inspect and repair Terraform state.",
+      "commands": [
+        "terraform state list",
+        "terraform state show aws_instance.web[0]",
+        "terraform import aws_instance.web i-0abc123",
+        "terraform state rm aws_instance.legacy",
+        "terraform refresh"
+      ],
+      "examples": [
+        "terraform state list | grep module.vpc",
+        "terraform state show aws_s3_bucket.logs",
+        "terraform import aws_iam_user.ci ci-bot"
+      ],
+      "parameters": [
+        {
+          "name": "address",
+          "type": "string",
+          "description": "Resource address like aws_instance.web[0]"
+        },
+        {
+          "name": "import-id",
+          "type": "string",
+          "description": "Provider resource id to import"
+        },
+        {
+          "name": "rm",
+          "type": "string",
+          "description": "Remove resource from state"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Terraform CLI",
+      "type": "documentation",
+      "source": "https://developer.hashicorp.com/terraform/cli/commands",
+      "description": "All terraform CLI commands and options"
+    },
+    {
+      "title": "Terraform Language",
+      "type": "documentation",
+      "source": "https://developer.hashicorp.com/terraform/language",
+      "description": "Configuration syntax, variables, and modules"
+    },
+    {
+      "title": "Terraform Best Practices",
+      "type": "documentation",
+      "source": "https://developer.hashicorp.com/terraform/tutorials/configuration-language/best-practices",
+      "description": "Module structure and workspace conventions"
+    }
+  ],
+  "instructions": "# Terraform\n\nProvision infrastructure as code with the standard workflow.\n\n## When to Use\n\n- All cloud resources defined in code\n- Multi-environment parity (dev/staging/prod)\n- Auditability: every change is a reviewed plan\n\n## Core workflow\n\n```bash\nterraform init\nterraform plan -out=tfplan\nterraform apply tfplan\n```\n\nNever `apply -auto-approve` in production without a reviewed plan.\n\n## Structure\n\n```\n.\n├─ main.tf\n├─ variables.tf\n├─ outputs.tf\n├─ envs/\n│   ├─ prod.tfvars\n│   ├─ staging.tfvars\n└─ modules/\n    └─ vpc/\n```\n\n```bash\nterraform plan -var-file=envs/prod.tfvars -out=tfplan\n```\n\n## State management\n\n```bash\nterraform state list\nterraform state show aws_instance.web[0]\nterraform import aws_instance.web i-0abc123\nterraform state rm aws_instance.legacy\n```\n\nStore state in a remote backend with locking:\n\n```hcl\nterraform {\n  backend \"s3\" {\n    bucket         = \"tf-state\"\n    key            = \"prod/terraform.tfstate\"\n    region         = \"us-east-1\"\n    dynamodb_table = \"tf-locks\"\n    encrypt        = true\n  }\n}\n```\n\n## Formatting and validation\n\n```bash\nterraform fmt -recursive\nterraform validate\n```\n\n## Best practices\n\n- Use modules for vpc, ec2, rds; keep root config thin.\n- Pin provider versions; plan upgrades separately.\n- Never store secrets in state - use variable references to a vault.\n- Run plan in CI with comment bot on every PR.\n\n## Testing\n\n```bash\nterraform validate\nterraform plan -detailed-exitcode\n```\n\nAdd Terratest or tofu test suites for module behavior.",
+  "examples": [
+    {
+      "input": "Provision a VPC module for production.",
+      "output": "Creates the vpc module, wires envs/prod.tfvars, runs init, plan -out, and applies after review."
+    },
+    {
+      "input": "An EC2 instance was created manually - bring it under Terraform.",
+      "output": "Imports aws_instance.web with the instance id, runs plan to reconcile, and applies."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "terraform-infrastructure.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-terraform"
+    },
+    "generic": {
+      "system_prompt": "You own terraform-infrastructure end to end. You do it through core: Run the core Terraform workflow. The commands are real, e.g. `terraform init`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "terraform-infrastructure",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "core",
+        "name": "var-file",
+        "type": "string",
+        "description": "Environment variable file"
+      },
+      {
+        "capability": "core",
+        "name": "out",
+        "type": "string",
+        "description": "Save plan to a file"
+      },
+      {
+        "capability": "core",
+        "name": "target",
+        "type": "string",
+        "description": "Target a specific resource/module"
+      },
+      {
+        "capability": "state",
+        "name": "address",
+        "type": "string",
+        "description": "Resource address like aws_instance.web[0]"
+      },
+      {
+        "capability": "state",
+        "name": "import-id",
+        "type": "string",
+        "description": "Provider resource id to import"
+      },
+      {
+        "capability": "state",
+        "name": "rm",
+        "type": "string",
+        "description": "Remove resource from state"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "terraform"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "infrastructure/terraform-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/infrastructure/terraform-skill.yaml",
+    "checksum": "b4d8e2cad077a866e778910e4c5cc18b26e98a8165f4f14fcbf77c1242eb3190"
+  }
+}

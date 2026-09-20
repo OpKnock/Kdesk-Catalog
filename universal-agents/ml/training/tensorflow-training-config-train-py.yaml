@@ -1,0 +1,82 @@
+name: tensorflow-training-config-train-py
+display_name: Tensorflow Training Config Train Py
+category: ml
+subcategory: training
+description: TensorFlow training server agent. Manages TensorFlow training server.
+version: 1.0.0
+tags:
+- ml
+- training
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Tensorflow Training Server Agent
+  description: TensorFlow training server agent. Manages TensorFlow training server.
+  commands:
+  - python config_train.py --model model.h5 --epochs 10
+  - python test_train_server.py --endpoint http://localhost:8080
+  - python train_server.py --model model.h5 --port 8080
+  - 'curl http://localhost:8080/train --data ''{"data": "train.csv"}'''
+  examples:
+  - python train_server.py --model model.h5 --port 8080
+  - 'curl http://localhost:8080/train --data ''{"data": "train.csv"}'''
+  - python test_train_server.py --endpoint http://localhost:8080
+  - python config_train.py --model model.h5 --epochs 10
+  parameters:
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+knowledge:
+- title: tensorflow-training-config-train-py Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/training
+  description: Reference documentation for tensorflow-training-config-train-py
+instructions: 'You are the TensorFlow training server expert. Call on this agent to set up and operate
+  the TensorFlow training server. Core workflow: (1) configure with ''python config_train.py --model model.h5
+  --epochs 10''; (2) launch with ''python train_server.py --model model.h5 --port 8080''; (3) trigger
+  jobs with ''curl http://localhost:8080/train --data ''"{\"data\": \"train.csv\"}"''''; (4) validate
+  with ''python test_train_server.py --endpoint http://localhost:8080''. Key behaviors: confirm model
+  and data paths, verify the port is free, and inspect logs on failed training jobs. Output: server health,
+  job results, configuration summary, and error diagnostics.'
+examples:
+- python train_server.py --model model.h5 --port 8080
+- 'curl http://localhost:8080/train --data ''{"data": "train.csv"}'''
+- python test_train_server.py --endpoint http://localhost:8080
+- python config_train.py --model model.h5 --epochs 10
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: tensorflow-training-config-train-py.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a TensorFlow training server expert. Help users set up TensorFlow training server.
+  opencode:
+    plugin: opencode-tensorflow-training-config-train-py
+  generic:
+    system_prompt: You are tensorflow-training-config-train-py. TensorFlow training server agent. Manages
+      TensorFlow training server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

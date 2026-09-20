@@ -1,0 +1,107 @@
+name: security-kube-bench
+display_name: Security Kube Bench
+category: security
+subcategory: scanning
+description: kube-bench agent for CIS Kubernetes benchmark checks.
+version: 1.0.0
+tags:
+- security
+- scanning
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Security Kube Bench
+  description: kube-bench agent for CIS Kubernetes benchmark checks.
+  commands:
+  - 'Worker: kube-bench run --targets node'
+  - 'Master: kube-bench run --targets master'
+  - 'Run: kube-bench run'
+  - 'Config: cat /etc/kube-bench/config.yaml'
+  examples:
+  - 'Run: kube-bench run'
+  - 'Master: kube-bench run --targets master'
+  - 'Worker: kube-bench run --targets node'
+  - 'Config: cat /etc/kube-bench/config.yaml'
+  parameters:
+  - name: targets
+    type: string
+    description: CLI flag --targets observed in capability commands
+knowledge:
+- title: security-kube-bench Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/security/scanning
+  description: Reference documentation for security-kube-bench
+instructions: 'You are a kube-bench expert. Help users with:
+
+  - CIS benchmark checks
+
+  - Master node checks
+
+  - Worker node checks
+
+  - etcd checks
+
+  - Control plane checks
+
+  - Remediation
+
+  - Reporting
+
+
+  Always use real kube-bench tools. Never suggest fictional tools.'
+examples:
+- 'Run: kube-bench run'
+- 'Master: kube-bench run --targets master'
+- 'Worker: kube-bench run --targets node'
+- 'Config: cat /etc/kube-bench/config.yaml'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: security-kube-bench.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a kube-bench expert. Help users with:
+
+      - CIS benchmark checks
+
+      - Master node checks
+
+      - Worker node checks
+
+      - etcd checks
+
+      - Control plane checks
+
+      - Remediation
+
+      - Reporting
+
+
+      Always use real kube-bench tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-security-kube-bench
+  generic:
+    system_prompt: You are security-kube-bench. kube-bench agent for CIS Kubernetes benchmark checks.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,100 @@
+name: graphql-codegen
+display_name: Graphql Codegen
+category: api
+subcategory: general
+description: 'GraphQL Code Generator: generate TypeScript types, React hooks, and client SDKs from GraphQL
+  schemas and operations.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+capabilities:
+- name: codegen
+  description: Generate typed code from GraphQL schemas and operation documents.
+  commands:
+  - npx graphql-codegen init
+  - npx graphql-codegen --config codegen.yml
+  - npx graphql-codegen --watch --config codegen.yml
+  - npx graphql-codegen --config codegen.yml --verbose
+  - npx graphql-codegen --check --config codegen.yml
+  examples:
+  - npx graphql-codegen init && npx graphql-codegen --config codegen.yml
+  - npx graphql-codegen --config codegen.yml
+  - npx graphql-codegen --check --config codegen.yml
+  parameters:
+  - name: config-file
+    type: string
+    description: codegen.yml path
+  - name: schema
+    type: string
+    description: 'Schema source: URL or .graphql file'
+  - name: documents
+    type: string
+    description: Glob of operation documents
+knowledge:
+- title: GraphQL Code Generator docs
+  type: documentation
+  source: https://the-guild.dev/graphql/codegen/docs
+  description: Config, plugins, and CLI reference
+- title: codegen.yml reference
+  type: documentation
+  source: https://the-guild.dev/graphql/codegen/docs/config-reference/codegen-config
+  description: Schema, documents, generates, and hooks configuration
+instructions: "# GraphQL Codegen\n\n## What this skill does\n\nGraphQL Code Generator turns schemas +\
+  \ operations into typed code: TypeScript types, React hooks, Zod schemas, or full SDKs. It validates\
+  \ queries against the schema at generation time.\n\n## When to use\n\n- Eliminating handwritten API\
+  \ types in clients\n- Catching stale operations against a changed schema\n- Generating hooks for React/Apollo\
+  \ or SWR\n\n## Real commands\n\n```bash\n# Interactive setup\nnpx graphql-codegen init\n\n# One-shot\
+  \ generation\nnpx graphql-codegen --config codegen.yml\n\n# Watch mode during development\nnpx graphql-codegen\
+  \ --watch --config codegen.yml\n\n# CI gate: fail if types are stale\nnpx graphql-codegen --check --config\
+  \ codegen.yml\n```\n\n## codegen.yml example\n\n```yaml\nschema: http://localhost:4000/graphql\ndocuments:\
+  \ './src/**/*.graphql'\ngenerates:\n  ./src/__generated__/graphql.ts:\n    plugins:\n      - typescript\n\
+  \      - typescript-operations\n      - typescript-react-apollo\n    config:\n      withHooks: true\n\
+  ```\n\n## Testing\n\n```bash\n# Run against a local schema and verify output types\nnpx graphql-codegen\
+  \ --config codegen.yml && grep -c 'export type' src/__generated__/graphql.ts\n```\n\n## Best practices\n\
+  \n- Commit generated files or regenerate in CI; never both silently.\n- Use `--check` in CI to fail\
+  \ on drift.\n- Keep documents colocated with components (*.graphql next to tsx).\n- Point the schema\
+  \ at a CI-published artifact, not a dev server.\n- Add a custom plugin only when built-in types are\
+  \ insufficient.\n"
+examples:
+- input: Generate React hooks for our queries
+  output: Set up codegen.yml with typescript-react-apollo and withHooks:true, run npx graphql-codegen,
+    and import the hooks in components.
+- input: CI should fail when generated types are stale
+  output: Add npx graphql-codegen --check --config codegen.yml to the pipeline after running generation.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: graphql-codegen.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-graphql-codegen
+  generic:
+    system_prompt: 'This is your domain: Graphql Codegen. You do it through codegen: Generate typed code
+      from GraphQL schemas and operation documents. The commands are real, e.g. `npx graphql-codegen init`.
+      You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,251 @@
+{
+  "name": "monitoring-sre",
+  "display_name": "Monitoring",
+  "category": "sre",
+  "subcategory": "general",
+  "description": "Builds monitoring stacks with Prometheus, Grafana, and exporters, querying metrics and alerting on SLO burn.",
+  "version": "2.0.0",
+  "tags": [
+    "sre"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "blackbox_exporter",
+    "grafana-cli",
+    "kube-state-metrics",
+    "node_exporter",
+    "promtool"
+  ],
+  "capabilities": [
+    {
+      "name": "prometheus-operations",
+      "description": "Query, reload, and inspect Prometheus targets.",
+      "commands": [
+        "promtool check config prometheus.yml",
+        "promtool query 'up' --url=http://localhost:9090",
+        "curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[].labels.job'",
+        "curl -X POST http://localhost:9090/-/reload",
+        "curl -s 'http://localhost:9090/api/v1/query?query=rate(http_requests_total[5m])' | jq ."
+      ],
+      "examples": [
+        "promtool check config prometheus.yml",
+        "curl -s 'http://localhost:9090/api/v1/query?query=up' | jq -r '.data.result[] | .labels.job'",
+        "curl -X POST http://localhost:9090/-/reload"
+      ],
+      "parameters": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "PromQL expression"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Prometheus base URL"
+        }
+      ]
+    },
+    {
+      "name": "grafana-management",
+      "description": "Provision dashboards, datasources, and plugins.",
+      "commands": [
+        "grafana-cli plugins install grafana-piechart-panel",
+        "grafana-cli admin reset-admin-password newpass",
+        "curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/dashboards/db -d @dashboard.json",
+        "curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/datasources -d '{\"name\":\"Prom\",\"type\":\"prometheus\",\"url\":\"http://prometheus:9090\"}'"
+      ],
+      "examples": [
+        "grafana-cli plugins install grafana-piechart-panel",
+        "curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/datasources -d '{\"name\":\"Prom\",\"type\":\"prometheus\",\"url\":\"http://prometheus:9090\"}'"
+      ],
+      "parameters": [
+        {
+          "name": "token",
+          "type": "string",
+          "description": "Grafana service account token"
+        },
+        {
+          "name": "dashboardJson",
+          "type": "string",
+          "description": "Dashboard JSON file path"
+        }
+      ]
+    },
+    {
+      "name": "exporter-setup",
+      "description": "Collect host and app metrics with exporters.",
+      "commands": [
+        "node_exporter --web.listen-address=:9100",
+        "curl -s localhost:9100/metrics | head -20",
+        "blackbox_exporter --config.file=blackbox.yml",
+        "curl -s 'http://localhost:9115/probe?target=https://example.com&module=http_2xx' | jq .",
+        "kube-state-metrics --port 8080"
+      ],
+      "examples": [
+        "node_exporter --web.listen-address=:9100",
+        "curl -s 'http://localhost:9115/probe?target=https://example.com&module=http_2xx' | jq ."
+      ],
+      "parameters": [
+        {
+          "name": "target",
+          "type": "string",
+          "description": "Probe target for blackbox exporter"
+        },
+        {
+          "name": "module",
+          "type": "string",
+          "description": "Blackbox probe module"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Prometheus Documentation",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/",
+      "description": "Querying, configuration, and alerting"
+    },
+    {
+      "title": "Grafana Documentation",
+      "type": "documentation",
+      "source": "https://grafana.com/docs/",
+      "description": "Dashboards, datasources, and provisioning"
+    },
+    {
+      "title": "Node Exporter Docs",
+      "type": "documentation",
+      "source": "https://github.com/prometheus/node_exporter",
+      "description": "Host metric collection reference"
+    }
+  ],
+  "instructions": "# Monitoring\n\nDesign and operate metrics monitoring with Prometheus and Grafana.\n\n## What This Skill Does\n\n- Configures and validates Prometheus scrape configs\n- Queries metrics and inspects target health\n- Provisions Grafana datasources and dashboards via API\n- Sets up node, blackbox, and kube-state exporters\n\n## When to Use\n\n- Standing up monitoring for a new service\n- Investigating a metrics gap or broken target\n- Building alerting rules from observed data\n\n## Real Commands\n\n```bash\n# Prometheus\npromtool check config prometheus.yml\ncurl -X POST http://localhost:9090/-/reload\ncurl -s 'http://localhost:9090/api/v1/query?query=up' | jq -r '.data.result[] | .labels.job'\ncurl -s 'http://localhost:9090/api/v1/query?query=rate(http_requests_total[5m])' | jq .\n\n# Grafana\ncurl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/datasources \\\n  -d '{\"name\":\"Prom\",\"type\":\"prometheus\",\"url\":\"http://prometheus:9090\"}'\n\n# Exporters\nnode_exporter --web.listen-address=:9100\ncurl -s 'http://localhost:9115/probe?target=https://example.com&module=http_2xx' | jq .\n```\n\n## Alert Rule Example\n\n```yaml\ngroups:\n  - name: instance-down\n    rules:\n      - alert: InstanceDown\n        expr: up == 0\n        for: 5m\n        labels: { severity: page }\n        annotations: { summary: \"Instance {{ $labels.instance }} down\" }\n```\n\n## Best Practices\n\n- Scrape the same job from two paths (app + LB) for comparison\n- Alert on SLO burn and anomalies, not raw thresholds\n- Keep dashboard annotations for deploys and incidents\n- Validate configs in CI with promtool check config\n- Watch cardinality: limit label values per metric",
+  "examples": [
+    {
+      "input": "Why is a target down in Prometheus?",
+      "output": "Agent checks /api/v1/targets for scrape state, reloads config if needed, and inspects the exporter's /metrics endpoint."
+    },
+    {
+      "input": "Set up monitoring for a new service",
+      "output": "Agent adds the scrape config, validates with promtool, provisions a Grafana datasource via API, and creates a dashboard."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "monitoring-sre.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-monitoring"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Monitoring. You do it through prometheus-operations: Query, reload, and inspect Prometheus targets. The commands are real, e.g. `promtool check config prometheus.yml`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "monitoring-sre",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "prometheus-operations",
+        "name": "query",
+        "type": "string",
+        "description": "PromQL expression"
+      },
+      {
+        "capability": "prometheus-operations",
+        "name": "url",
+        "type": "string",
+        "description": "Prometheus base URL"
+      },
+      {
+        "capability": "grafana-management",
+        "name": "token",
+        "type": "string",
+        "description": "Grafana service account token"
+      },
+      {
+        "capability": "grafana-management",
+        "name": "dashboardJson",
+        "type": "string",
+        "description": "Dashboard JSON file path"
+      },
+      {
+        "capability": "exporter-setup",
+        "name": "target",
+        "type": "string",
+        "description": "Probe target for blackbox exporter"
+      },
+      {
+        "capability": "exporter-setup",
+        "name": "module",
+        "type": "string",
+        "description": "Blackbox probe module"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "blackbox_exporter",
+    "grafana-cli",
+    "kube-state-metrics",
+    "node_exporter",
+    "promtool"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "sre/monitoring-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/sre/monitoring-skill.yaml",
+    "checksum": "18c7ce7ff4e447a0caf584b905a411e80cf1b3a8f74ae6d1dc099237013a4937"
+  }
+}

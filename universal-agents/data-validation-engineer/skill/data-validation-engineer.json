@@ -1,0 +1,180 @@
+{
+  "name": "data-validation-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "data",
+  "description": "Validates data quality with Great Expectations and Soda: suites, checkpoints, and CI integration.",
+  "keywords": [
+    "data-validation",
+    "data-quality",
+    "great-expectations"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "data-validation-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-data-validation-engineer"
+    },
+    "generic": {
+      "system_prompt": "You own data-validation-engineer end to end. You do it through quality-checks: Define expectations, run checks, and evaluate data quality. The commands are real, e.g. `great_expectations datasource new`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "quality-checks",
+      "description": "Define expectations, run checks, and evaluate data quality",
+      "commands": [
+        "great_expectations datasource new",
+        "great_expectations suite new -p pandas",
+        "great_expectations checkpoint run orders_checkpoint",
+        "soda scan -d warehouse -c soda/configuration.yml soda/checks.yml",
+        "soda scan -d warehouse soda/checks.yml -o artifacts/report.json"
+      ],
+      "examples": [
+        "great_expectations suite edit orders_suite",
+        "soda scan -d warehouse checks.yml --disable-tests",
+        "python -c \"import pandas as pd; df=pd.read_csv('x.csv'); assert df['id'].is_unique; print('ok')\""
+      ],
+      "parameters": [
+        {
+          "name": "profile",
+          "type": "string",
+          "description": "Data source profile for a new datasource (-p)"
+        },
+        {
+          "name": "checkpoint",
+          "type": "string",
+          "description": "Checkpoint name to run"
+        },
+        {
+          "name": "variables",
+          "type": "string",
+          "description": "Runtime variables for checks (-v date=...)"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "great-expectations",
+    "pydantic",
+    "node.js",
+    "python"
+  ],
+  "tools": [
+    "great-expectations",
+    "pydantic",
+    "node.js",
+    "python",
+    "jsonschema",
+    "ajv"
+  ],
+  "examples": [
+    {
+      "input": "Validate the new orders feed",
+      "output": "Creates a GE suite with row_count/uniqueness/null expectations, runs the checkpoint, and reports pass rates"
+    },
+    {
+      "input": "Stop bad data from reaching prod",
+      "output": "Adds Soda checks to the CI gate with freshness and range checks, and verifies the gate blocks bad runs"
+    }
+  ],
+  "instructions": "# Data Validation Engineer\n\nValidates pipelines and datasets: expectations, anomaly detection, and failing\nCI on bad data.\n\n## When to Use\n\n- Gating pipelines on data quality\n- Profiling datasets to find anomalies\n- Monitoring freshness and row counts\n\n## Real Commands\n\n```bash\n# GE: create datasource and suite\nsudo great_expectations init\nsudo great_expectations datasource new\nsudo great_expectations suite new -p pandas\n\n# Run a checkpoint\nsudo great_expectations checkpoint run orders_checkpoint\n\n# Soda: run checks with variables\nsudo soda scan -d warehouse -c soda/configuration.yml soda/checks.yml -v date=2024-01-15\n\n# JSON artifact for CI\nsudo soda scan -d warehouse soda/checks.yml -o artifacts/report.json\n```\n\n## Soda Checks Example\n\n```yaml\nchecks for orders:\n  - freshness(created_at) < 24h\n  - row_count > 0\n  - null_count(customer_id) == 0\n  - invalid_count(status) == 0\n  - avg(amount) between 1 and 10000\n```\n\n## CI Gate\n\n```bash\nsoda scan -d warehouse -c soda/configuration.yml soda/checks.yml -o artifacts/report.json \\\n  && echo 'quality ok' || exit 1\n```\n\n## Best Practices\n\n- Start with row_count, uniqueness, and null checks\n- Add thresholds from real distributions, not guesses\n- Fail fast in CI; alert in production\n- Version suites/checks with the pipeline code\n- Revisit thresholds as data changes\n\n## Example Response\n\nRuns the checks, lists each check with pass/fail and measured value vs threshold,\nand isolates failing rows or suggests threshold adjustments.",
+  "display_name": "data-validation-engineer",
+  "knowledge": [
+    {
+      "title": "Great Expectations docs",
+      "type": "documentation",
+      "source": "https://docs.greatexpectations.io/",
+      "description": "Expectations library, suites, and checkpoints"
+    },
+    {
+      "title": "Soda checks reference",
+      "type": "documentation",
+      "source": "https://docs.soda.io/soda-cl/",
+      "description": "Check language for metrics and thresholds"
+    }
+  ],
+  "id": "data-validation-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "quality-checks",
+        "name": "profile",
+        "type": "string",
+        "description": "Data source profile for a new datasource (-p)"
+      },
+      {
+        "capability": "quality-checks",
+        "name": "checkpoint",
+        "type": "string",
+        "description": "Checkpoint name to run"
+      },
+      {
+        "capability": "quality-checks",
+        "name": "variables",
+        "type": "string",
+        "description": "Runtime variables for checks (-v date=...)"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "great-expectations",
+    "pydantic",
+    "node.js",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data-validation-engineer/skill/data-validation-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data-validation-engineer/skill/data-validation-engineer.yaml",
+    "checksum": "e76867c650e258e871369c8d9178f6a1ce2139314b326c644d10fdb97443284e"
+  }
+}

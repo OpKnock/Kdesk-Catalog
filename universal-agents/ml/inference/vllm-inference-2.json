@@ -1,0 +1,128 @@
+{
+  "name": "vllm-inference-2",
+  "display_name": "Vllm Inference 2",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "vLLM inference server agent Manages vLLM inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Vllm Inference Server Agent V2",
+      "description": "vLLM inference server agent. Manages vLLM inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"vllm\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent vllm-inference-2"
+      ],
+      "examples": [
+        "python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-hf --port 8000",
+        "curl http://localhost:8000/v1/models",
+        "curl http://localhost:8000/v1/completions --data '{\"model\": \"meta-llama/Llama-2-7b-hf\", \"prompt\": \"Hello\"}'",
+        "python -m vllm.entrypoints.openai.api_server --help"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "vllm-inference-2 Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for vllm-inference-2"
+    }
+  ],
+  "instructions": "You are the vLLM inference server expert (v2). Call on this agent to set up and operate a vLLM inference server. Core workflow: (1) verify the service with 'curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health' and list models via 'curl -s http://localhost:8080/v1/models | jq -r .data[].id'; (2) generate with 'curl -X POST http://localhost:8080/v1/chat/completions -H Content-Type: application/json -d {model: vllm, messages: []}' and 'curl http://localhost:8000/v1/completions --data {model: meta-llama/Llama-2-7b-hf, prompt: Hello}'; (3) launch with 'python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-hf --port 8000' and consult --help for flags. Key behaviors: health-check before inference, confirm the model id, and check GPU resources. If startup fails, verify CUDA and model download. Report health status, served models, and sample outputs.",
+  "examples": [
+    "python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-hf --port 8000",
+    "curl http://localhost:8000/v1/models",
+    "curl http://localhost:8000/v1/completions --data '{\"model\": \"meta-llama/Llama-2-7b-hf\", \"prompt\": \"Hello\"}'",
+    "python -m vllm.entrypoints.openai.api_server --help"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "vllm-inference-2.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a vLLM inference server expert. Help users set up vLLM inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-vllm-inference-2"
+    },
+    "generic": {
+      "system_prompt": "You are vllm-inference-2. vLLM inference server agent. Manages vLLM inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "vllm-inference-2",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/vllm-inference-2.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/vllm-inference-2.yaml",
+    "checksum": "5a0d561c9797029096a129e91c10e8fc68f546fdfa8b2965118786bd2f249034"
+  }
+}

@@ -1,0 +1,187 @@
+name: rsync
+display_name: rsync
+category: devtools
+subcategory: general
+description: 'Synchronizes files and directories with rsync: incremental sync, archive mode, deletion,
+  exclusions, and remote transfers over SSH.'
+version: 2.0.0
+tags:
+- devtools
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- rsync
+capabilities:
+- name: sync-operations
+  description: Copy and synchronize directories with archive semantics.
+  commands:
+  - rsync -avz src/ user@host:/srv/app/
+  - rsync -av --delete src/ dest/
+  - rsync -n -av --delete src/ dest/
+  - rsync -av --exclude 'node_modules' --exclude '.git' src/ dest/
+  - rsync --partial --progress -avz bigfile.iso user@host:/tmp/
+  examples:
+  - rsync -avz src/ user@host:/srv/app/
+  - rsync -n -av --delete src/ dest/
+  - rsync -av --exclude 'node_modules' src/ dest/
+  parameters:
+  - name: src
+    type: string
+    description: Source path
+  - name: dest
+    type: string
+    description: Destination path
+  - name: exclude
+    type: string
+    description: Pattern to exclude
+- name: backup-and-advanced
+  description: Incremental backups with hard links and remote shell options.
+  commands:
+  - rsync -av --link-dest ../backup-2026-08-09 data/ backup-2026-08-10/
+  - rsync -az -e 'ssh -p 2222 -i key.pem' src/ user@host:/dest/
+  - rsync -av --bwlimit=2000 bigdir/ user@host:/backup/
+  - rsync -avz --delete-after src/ dest/
+  - rsync -ai source/ dest/
+  examples:
+  - rsync -av --link-dest ../backup-2026-08-09 data/ backup-2026-08-10/
+  - rsync -az -e 'ssh -p 2222 -i key.pem' src/ user@host:/dest/
+  - rsync -av --bwlimit=2000 bigdir/ user@host:/backup/
+  parameters:
+  - name: link-dest
+    type: string
+    description: Previous backup dir for hard-link dedup
+  - name: bwlimit
+    type: integer
+    description: Bandwidth limit in KB/s
+knowledge:
+- title: rsync Manual
+  type: documentation
+  source: https://man7.org/linux/man-pages/man1/rsync.1.html
+  description: Full rsync option reference
+- title: rsync Archive
+  type: documentation
+  source: https://rsync.samba.org/documentation.html
+  description: Official rsync documentation
+instructions: '# rsync Synchronization
+
+
+  Copy and sync files efficiently — local or remote, incremental.
+
+
+  ## What This Skill Does
+
+
+  - Syncs directories with archive mode (perms, times, links)
+
+  - Removes extraneous files with --delete
+
+  - Excludes patterns (node_modules, .git)
+
+  - Creates hard-link incremental backups
+
+  - Transfers over custom SSH ports/keys
+
+  - Dry-runs to preview changes
+
+
+  ## When to Use
+
+
+  - Deploying code to servers
+
+  - Backing up data with dedup (link-dest)
+
+  - Mirroring directories across machines
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Basic sync
+
+  rsync -avz src/ user@host:/srv/app/
+
+  rsync -av src/ dest/
+
+
+  # Mirror (delete extras) with dry run
+
+  rsync -n -av --delete src/ dest/
+
+  rsync -av --delete src/ dest/
+
+
+  # Exclusions
+
+  rsync -av --exclude ''node_modules'' --exclude ''.git'' src/ dest/
+
+
+  # Remote with custom SSH
+
+  rsync -az -e ''ssh -p 2222 -i key.pem'' src/ user@host:/dest/
+
+
+  # Incremental backups
+
+  rsync -av --link-dest ../backup-2026-08-09 data/ backup-2026-08-10/
+
+
+  # Limits and progress
+
+  rsync --partial --progress -avz bigfile.iso user@host:/tmp/
+
+  rsync -av --bwlimit=2000 bigdir/ user@host:/backup/
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Always dry-run (-n) before --delete on production
+
+  - Trailing slash matters: src/ copies contents, src copies the dir
+
+  - Use --link-dest for space-efficient daily backups
+
+  - Compress (-z) only for slow links
+
+  - Pair with --checksum when timestamps lie (e.g. build artifacts)'
+examples:
+- input: Deploy the build folder to prod
+  output: Agent dry-runs rsync, then syncs with delete + excludes, verifying file counts
+- input: Set up daily deduplicated backups
+  output: Agent configures --link-dest against the previous day's backup and schedules it
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: rsync.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-rsync
+  generic:
+    system_prompt: 'You own rsync end to end. You do it through sync-operations: Copy and synchronize
+      directories with archive semantics. The commands are real, e.g. `rsync -avz src/ user@host:/srv/app/`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

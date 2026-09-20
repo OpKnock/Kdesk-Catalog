@@ -1,0 +1,130 @@
+name: kafka-partitions
+display_name: Kafka Partitions
+category: api
+subcategory: general
+description: 'Manage Kafka topic partitions: sizing, expansion via kafka-topics alter, and rebalancing
+  with kafka-reassign-partitions for even data distribution.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kafka-reassign-partitions.sh
+- kafka-topics.sh
+capabilities:
+- name: partition-sizing
+  description: Create and expand partitions with controlled replica placement.
+  commands:
+  - kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 12 --replication-factor
+    3
+  - kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders --partitions 24
+  - kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders
+  - kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders --partitions 48 --validate-only
+  examples:
+  - kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 12 --replication-factor
+    3
+  - kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders --partitions 24
+  - kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders | grep PartitionCount
+  parameters:
+  - name: topic
+    type: string
+    description: Topic name.
+  - name: partitions
+    type: integer
+    description: Target partition count.
+  - name: replication_factor
+    type: integer
+    description: Replication factor.
+- name: reassignment
+  description: Generate and execute partition reassignment plans across brokers.
+  commands:
+  - kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --generate --topics-to-move-json-file
+    topics.json --broker-list "1,2,3,4"
+  - kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --reassignment-json-file reassignment.json
+    --execute
+  - kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --reassignment-json-file reassignment.json
+    --verify
+  - kafka-topics.sh --bootstrap-server localhost:9092 --describe --topics-with-overrides
+  examples:
+  - kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --generate --topics-to-move-json-file
+    topics.json --broker-list "1,2,3,4"
+  - kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --reassignment-json-file reassignment.json
+    --execute
+  - kafka-reassign-partitions.sh --bootstrap-server localhost:9092 --reassignment-json-file reassignment.json
+    --verify
+  parameters:
+  - name: brokers
+    type: string
+    description: Target broker ids, e.g. "1,2,3,4".
+  - name: plan_file
+    type: string
+    description: Reassignment plan JSON.
+knowledge:
+- title: Kafka Partitions
+  type: documentation
+  source: https://kafka.apache.org/documentation/#intro_topics
+  description: Topic and partition concepts from the official docs.
+- title: Partition Reassignment
+  type: documentation
+  source: https://kafka.apache.org/documentation/#basic_ops_cluster_expansion
+  description: Reassigning partitions for cluster expansion and rebalancing.
+instructions: "# Kafka Partitions\n\nSize, expand, and rebalance Kafka topic partitions.\n\n## What this\
+  \ skill does\n\n- Creates topics with the right partition and replica layout.\n- Increases partitions\
+  \ safely (never decreases).\n- Generates and executes reassignment plans for balanced distribution.\n\
+  \n## When to use\n\n- Capacity planning when a topic's throughput grows.\n- Rebalancing after adding\
+  \ brokers to the cluster.\n- Fixing hotspot brokers with uneven partition counts.\n\n## Real commands\n\
+  \n```bash\n# Create with sizing\nkafka-topics.sh --bootstrap-server localhost:9092 --create \\\n  --topic\
+  \ orders --partitions 12 --replication-factor 3\n\n# Expand partitions (can only increase)\nkafka-topics.sh\
+  \ --bootstrap-server localhost:9092 --alter \\\n  --topic orders --partitions 24\n\n# Inspect current\
+  \ layout\nkafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders\n\n# Generate\
+  \ reassignment plan to spread across 4 brokers\ncat > topics.json <<'EOF'\n{\"topics\":[{\"topic\":\"\
+  orders\"}],\"version\":1}\nEOF\nkafka-reassign-partitions.sh --bootstrap-server localhost:9092 \\\n\
+  \  --generate --topics-to-move-json-file topics.json --broker-list \"1,2,3,4\"\n\n# Execute and verify\
+  \ the plan\nkafka-reassign-partitions.sh --bootstrap-server localhost:9092 \\\n  --reassignment-json-file\
+  \ reassignment.json --execute\nkafka-reassign-partitions.sh --bootstrap-server localhost:9092 \\\n \
+  \ --reassignment-json-file reassignment.json --verify\n```\n\n## topics.json / reassignment example\n\
+  \n```json\n{\"topics\":[{\"topic\":\"orders\"}],\"version\":1}\n```\n\n## Testing\n\n```bash\nkafka-topics.sh\
+  \ --bootstrap-server localhost:9092 --describe --topic orders | head -20\n```\n\n## Best practices\n\
+  \n- Partition count is a maximum parallelism ceiling; size for peak, not average.\n- Reassign during\
+  \ low traffic; reassignment moves data across the wire.\n- Always --verify after --execute and watch\
+  \ for throttled leader movement.\n"
+examples:
+- input: Double partitions on orders from 12 to 24
+  output: kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders --partitions 24
+- input: Balance load across 4 brokers
+  output: Generate a plan with --broker-list "1,2,3,4", execute it, then verify reassignment is complete.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kafka-partitions.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kafka-partitions
+  generic:
+    system_prompt: 'You take the Kafka Partitions seat. You do it through partition-sizing: Create and
+      expand partitions with controlled replica placement. The commands are real, e.g. `kafka-topics.sh
+      --bootstrap-server localhost:9092 --create --topic orders --partitions 12...`. You prefer the shortest
+      safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

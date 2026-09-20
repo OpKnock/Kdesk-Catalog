@@ -1,0 +1,261 @@
+{
+  "name": "asyncapi-codegen",
+  "display_name": "Asyncapi Codegen",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Generates code and docs from AsyncAPI documents with the AsyncAPI CLI, generator templates, and Modelina multi-language models.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "validation",
+      "description": "Validate and lint AsyncAPI documents.",
+      "commands": [
+        "npx @asyncapi/cli validate asyncapi.yaml",
+        "npx @asyncapi/cli lint asyncapi.yaml",
+        "npx @asyncapi/cli validate https://raw.githubusercontent.com/asyncapi/spec/master/examples/simple.yml",
+        "npx @asyncapi/cli --version"
+      ],
+      "examples": [
+        "npx @asyncapi/cli validate asyncapi.yaml",
+        "npx @asyncapi/cli lint --ruleset config.json asyncapi.yaml",
+        "npx @asyncapi/cli validate --spec-parser-options '{}' asyncapi.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "file",
+          "type": "string",
+          "description": "Path or URL of the AsyncAPI document"
+        },
+        {
+          "name": "ruleset",
+          "type": "string",
+          "description": "Custom lint ruleset file"
+        }
+      ]
+    },
+    {
+      "name": "generation",
+      "description": "Generate server/client code and docs from templates.",
+      "commands": [
+        "npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-template -o ./generated --force-write",
+        "npx @asyncapi/generator asyncapi.yaml @asyncapi/java-spring-template -o ./generated",
+        "npx @asyncapi/generator asyncapi.yaml @asyncapi/python-paho-template -o ./generated",
+        "npx @asyncapi/generator asyncapi.yaml @asyncapi/html-template -o ./docs",
+        "npx @asyncapi/generator --param server=production asyncapi.yaml @asyncapi/nodejs-template -o ./generated"
+      ],
+      "examples": [
+        "npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-template -o ./out --force-write",
+        "npx @asyncapi/generator --param password=secret asyncapi.yaml @asyncapi/java-spring-template -o ./out",
+        "npx @asyncapi/generator asyncapi.yaml @asyncapi/markdown-template -o ./docs"
+      ],
+      "parameters": [
+        {
+          "name": "template",
+          "type": "string",
+          "description": "Generator template name"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output directory (-o)"
+        },
+        {
+          "name": "param",
+          "type": "string",
+          "description": "Template parameter in key=value form"
+        }
+      ]
+    },
+    {
+      "name": "modelina",
+      "description": "Generate data models for multiple languages from the schema.",
+      "commands": [
+        "npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language TypeScript",
+        "npx @asyncapi/modelina generate --input asyncapi.yaml --output ./src/main/java --language Java",
+        "npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language Go",
+        "npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language Python"
+      ],
+      "examples": [
+        "npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language TypeScript --packageName com.example",
+        "npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language Java --type-mapping string=UUID",
+        "npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language Python --generate-optional"
+      ],
+      "parameters": [
+        {
+          "name": "language",
+          "type": "string",
+          "description": "Target language: TypeScript, Java, Go, Python, C#"
+        },
+        {
+          "name": "package_name",
+          "type": "string",
+          "description": "Package name for generated code"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "AsyncAPI Generator",
+      "type": "documentation",
+      "source": "https://www.asyncapi.com/docs/tools/generator",
+      "description": "Templates, params, custom templates"
+    },
+    {
+      "title": "AsyncAPI CLI",
+      "type": "documentation",
+      "source": "https://www.asyncapi.com/docs/tools/cli",
+      "description": "validate, lint, start commands"
+    },
+    {
+      "title": "Modelina",
+      "type": "documentation",
+      "source": "https://www.asyncapi.com/docs/tools/modelina",
+      "description": "Multi-language model generation"
+    },
+    {
+      "title": "AsyncAPI Spec v3",
+      "type": "documentation",
+      "source": "https://www.asyncapi.com/docs/reference/specification/v3.0.0",
+      "description": "Document structure"
+    }
+  ],
+  "instructions": "# AsyncAPI Codegen\n\n## What this skill does\n\nWorks with AsyncAPI documents end-to-end: validating and linting, generating servers/clients/docs from templates, and producing typed models with Modelina.\n\n## When to use\n\n- An event-driven API needs code generated from its spec\n- Validating an AsyncAPI file in CI\n- Bootstrapping a Node/Java/Python subscriber from a spec\n\n## Real commands\n\n```bash\n# Validate\nnpx @asyncapi/cli validate asyncapi.yaml\nnpx @asyncapi/cli lint asyncapi.yaml\n\n# Generate a Node.js app\nnpx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-template -o ./generated --force-write\n\n# Generate Java Spring project\nnpx @asyncapi/generator asyncapi.yaml @asyncapi/java-spring-template -o ./generated\n\n# Generate HTML docs\nnpx @asyncapi/generator asyncapi.yaml @asyncapi/html-template -o ./docs\n\n# Generate TypeScript models\nnpx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language TypeScript\n```\n\n## AsyncAPI document (v3)\n\n```yaml\nasyncapi: 3.0.0\ninfo:\n  title: Order Service\n  version: 1.0.0\nchannels:\n  orderCreated:\n    address: order.created\n    messages:\n      OrderCreated:\n        payload:\n          type: object\n          properties:\n            id: {type: string}\noperations:\n  publishOrder:\n    action: send\n    channel: { $ref: '#/channels/orderCreated' }\n```\n\n## Testing\n\n- Validate in CI with npx @asyncapi/cli validate\n- Smoke-test generated code with npm install && npm start in the output dir\n\n## Best practices\n\n- Keep the spec the single source of truth\n- Re-generate in CI and diff to catch drift\n- Use --param server= to select environments",
+  "examples": [
+    {
+      "input": "Generate a Node.js subscriber from our AsyncAPI spec",
+      "output": "Runs npx @asyncapi/generator with the nodejs-template, then explains the generated handlers and how to run them."
+    },
+    {
+      "input": "Is my AsyncAPI file valid?",
+      "output": "Runs npx @asyncapi/cli validate + lint and explains any parse or semantic errors."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "asyncapi-codegen.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-asyncapi-codegen"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Asyncapi Codegen. You do it through validation: Validate and lint AsyncAPI documents. The commands are real, e.g. `npx @asyncapi/cli validate asyncapi.yaml`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "asyncapi-codegen",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "validation",
+        "name": "file",
+        "type": "string",
+        "description": "Path or URL of the AsyncAPI document"
+      },
+      {
+        "capability": "validation",
+        "name": "ruleset",
+        "type": "string",
+        "description": "Custom lint ruleset file"
+      },
+      {
+        "capability": "generation",
+        "name": "template",
+        "type": "string",
+        "description": "Generator template name"
+      },
+      {
+        "capability": "generation",
+        "name": "output",
+        "type": "string",
+        "description": "Output directory (-o)"
+      },
+      {
+        "capability": "generation",
+        "name": "param",
+        "type": "string",
+        "description": "Template parameter in key=value form"
+      },
+      {
+        "capability": "modelina",
+        "name": "language",
+        "type": "string",
+        "description": "Target language: TypeScript, Java, Go, Python, C#"
+      },
+      {
+        "capability": "modelina",
+        "name": "package_name",
+        "type": "string",
+        "description": "Package name for generated code"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/asyncapi-codegen-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/asyncapi-codegen-skill.yaml",
+    "checksum": "beb1ba88c731faaeee90f6342117ba689c5e00f41bc609d57bb78dcfb45840e8"
+  }
+}

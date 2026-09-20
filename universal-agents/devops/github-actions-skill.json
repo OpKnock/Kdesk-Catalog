@@ -1,0 +1,248 @@
+{
+  "name": "github-actions",
+  "display_name": "github-actions",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Author, validate, and operate GitHub Actions: workflow YAML, secrets, self-hosted runners, and run inspection via gh and actionlint.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "./config.sh",
+    "actionlint"
+  ],
+  "capabilities": [
+    {
+      "name": "workflow-authoring",
+      "description": "Create and validate workflow files with correct syntax and events.",
+      "commands": [
+        "actionlint .github/workflows/*.yml",
+        "gh workflow list",
+        "gh workflow disable ci.yml",
+        "gh api repos/{owner}/{repo}/actions/workflows --paginate",
+        "yq '.on' .github/workflows/ci.yml"
+      ],
+      "examples": [
+        "actionlint .github/workflows/deploy.yml",
+        "gh workflow list --all",
+        "gh api repos/{owner}/{repo}/actions/workflows"
+      ],
+      "parameters": [
+        {
+          "name": "workflow",
+          "type": "string",
+          "description": "Workflow file name"
+        },
+        {
+          "name": "owner-repo",
+          "type": "string",
+          "description": "owner/repo for gh api calls"
+        }
+      ]
+    },
+    {
+      "name": "run-operations",
+      "description": "Trigger runs, watch them live, and fetch failed logs.",
+      "commands": [
+        "gh workflow run ci.yml -f environment=staging",
+        "gh run list --workflow=ci.yml --limit 5",
+        "gh run watch <run-id> --exit-status",
+        "gh run view <run-id> --log-failed",
+        "gh run rerun <run-id> --failed",
+        "gh run cancel <run-id>"
+      ],
+      "examples": [
+        "gh workflow run ci.yml -f environment=staging",
+        "gh run view 4473148674 --log-failed",
+        "gh run rerun 4473148674 --failed"
+      ],
+      "parameters": [
+        {
+          "name": "run-id",
+          "type": "string",
+          "description": "Workflow run ID"
+        },
+        {
+          "name": "inputs",
+          "type": "object",
+          "description": "workflow_dispatch inputs via -f"
+        }
+      ]
+    },
+    {
+      "name": "secrets-and-runners",
+      "description": "Manage repository secrets and self-hosted runner registration.",
+      "commands": [
+        "gh secret set AWS_ACCESS_KEY_ID --body \"value\"",
+        "gh secret list",
+        "gh variable set MY_VAR --body \"value\"",
+        "gh runner list",
+        "./config.sh --url https://github.com/org/repo --token <token> --labels prod,arm64",
+        "gh api repos/{owner}/{repo}/actions/runners"
+      ],
+      "examples": [
+        "gh secret set DEPLOY_TOKEN --body \"s3cr3t\"",
+        "gh secret list",
+        "gh runner list"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Secret or variable name"
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "description": "Secret value"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "GitHub Actions Docs",
+      "type": "documentation",
+      "source": "https://docs.github.com/en/actions",
+      "description": "Workflow syntax, expressions, contexts, and security hardening"
+    },
+    {
+      "title": "actionlint",
+      "type": "documentation",
+      "source": "https://github.com/rhysd/actionlint",
+      "description": "Static checker for workflow files"
+    },
+    {
+      "title": "gh CLI Manual",
+      "type": "documentation",
+      "source": "https://cli.github.com/manual/",
+      "description": "gh workflow, run, secret, runner subcommands"
+    }
+  ],
+  "instructions": "# GitHub Actions Engineering\n\nBuild, validate, and operate CI/CD on GitHub Actions.\n\n## What This Skill Does\n\n- Writes workflow YAML with correct triggers, jobs, and expressions\n- Validates syntax locally with actionlint\n- Triggers, watches, reruns, and debugs runs with gh\n- Manages secrets, variables, environments, and runners\n- Hardens workflows against injection and secret leaks\n\n## When to Use\n\n- Setting up CI/CD in a GitHub repo\n- A workflow run failed and needs diagnosis\n- Registering self-hosted runners for specific hardware\n\n## Real Commands\n\n```bash\n# Author + validate\nactionlint .github/workflows/ci.yml\nyq '.on' .github/workflows/ci.yml\n\n# Run operations\ngh workflow run ci.yml -f environment=staging --ref main\ngh run list --limit 10\ngh run watch 4473148674 --exit-status\ngh run view 4473148674 --log-failed\ngh run rerun 4473148674 --failed\ngh run cancel 4473148674\n\n# Secrets / vars / runners\ngh secret set DEPLOY_TOKEN --body \"s3cr3t\"\ngh secret list\ngh variable set IMAGE_TAG --body \"1.2.0\"\ngh runner list\n./config.sh --url https://github.com/org/repo --token <token> --labels prod\n```\n\n## Workflow Template\n\n```yaml\nname: ci\non:\n  push: { branches: [main] }\n  pull_request:\npermissions:\n  contents: read\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with: { node-version: 20, cache: npm }\n      - run: npm ci && npm test\n```\n\n## Best Practices\n\n- Pin actions to SHAs or major versions; audit third-party actions\n- Set `permissions:` at top level to least privilege\n- Never echo secrets; use env passthrough with masking\n- Use `gh run watch --exit-status` in CI scripts\n- Validate with actionlint in a pre-commit hook or a lint job",
+  "examples": [
+    {
+      "input": "A pull_request workflow is not triggering",
+      "output": "Agent validates syntax with actionlint, checks trigger paths and branch filters, and confirms workflow is enabled with gh workflow list"
+    },
+    {
+      "input": "Register an arm64 self-hosted runner",
+      "output": "Agent generates a runner token, downloads the runner package, configures with labels arm64,prod, and starts with ./run.sh"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "github-actions.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-github-actions"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: github-actions. You do it through workflow-authoring: Create and validate workflow files with correct syntax and events. The commands are real, e.g. `actionlint .github/workflows/*.yml`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "github-actions",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "workflow-authoring",
+        "name": "workflow",
+        "type": "string",
+        "description": "Workflow file name"
+      },
+      {
+        "capability": "workflow-authoring",
+        "name": "owner-repo",
+        "type": "string",
+        "description": "owner/repo for gh api calls"
+      },
+      {
+        "capability": "run-operations",
+        "name": "run-id",
+        "type": "string",
+        "description": "Workflow run ID"
+      },
+      {
+        "capability": "run-operations",
+        "name": "inputs",
+        "type": "object",
+        "description": "workflow_dispatch inputs via -f"
+      },
+      {
+        "capability": "secrets-and-runners",
+        "name": "name",
+        "type": "string",
+        "description": "Secret or variable name"
+      },
+      {
+        "capability": "secrets-and-runners",
+        "name": "body",
+        "type": "string",
+        "description": "Secret value"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "./config.sh",
+    "actionlint"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/github-actions-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/github-actions-skill.yaml",
+    "checksum": "125b904e8393e4c33db16e1adc31349813fef057e17df2fc06aed97eab6e077d"
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "name": "optimization-sdk",
+  "display_name": "Optimization Sdk",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Optimization SDK deployment agent for ML Optimization SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Optimization Deploy Sdk Agent V2",
+      "description": "Optimization SDK deployment agent for ML Optimization SDK deployment.",
+      "commands": [
+        "docker build -t optimization:latest .",
+        "docker push registry.example.com/optimization:latest",
+        "kubectl set image deployment/optimization optimization=registry.example.com/optimization:latest",
+        "helm upgrade optimization ./helm-chart --namespace production",
+        "kubectl rollout status deployment/optimization --timeout=300s",
+        "python identity.py --agent optimization-sdk"
+      ],
+      "examples": [
+        "Server: python -m optimization.server --port 8080",
+        "Docker: docker run -p 8080:8080 optimization-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "optimization-sdk Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for optimization-sdk"
+    }
+  ],
+  "instructions": "Optimization SDK deployment engineer (v2). Call on this agent to ship the Optimization ML application as a containerized service from the SDK. Workflow: build with `docker build -t optimization:latest .`, publish with `docker push registry.example.com/optimization:latest`, roll over with `kubectl set image deployment/optimization optimization=registry.example.com/optimization:latest`, apply charts with `helm upgrade optimization ./helm-chart --namespace production`, and verify with `kubectl rollout status deployment/optimization --timeout=300s`. Start by confirming context with `python identity.py --agent optimization-sdk`. For local bring-up use `python -m optimization.server --port 8080` or `docker run -p 8080:8080 optimization-server`. Watch for tag mismatch and rollout stalls; verify the pushed digest equals the deployed tag before retrying. Report the deployed tag, revision, and local endpoint health.",
+  "examples": [
+    "Server: python -m optimization.server --port 8080",
+    "Docker: docker run -p 8080:8080 optimization-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "optimization-sdk.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Optimization SDK deployment expert. Help users deploy Optimization applications."
+    },
+    "opencode": {
+      "plugin": "opencode-optimization-sdk"
+    },
+    "generic": {
+      "system_prompt": "You are optimization-sdk. Optimization SDK deployment agent for ML Optimization SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "optimization-sdk",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/optimization-sdk.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/optimization-sdk.yaml",
+    "checksum": "1b117d6c82aef72dbe96473be204993cc3192905bc5906f4c324eba18d5d78b6"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "name": "ml-lambda",
+  "display_name": "Ml Lambda",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "ML Lambda agent for AWS Lambda ML deployments.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Lambda",
+      "description": "ML Lambda agent for AWS Lambda ML deployments.",
+      "commands": [
+        "API Gateway: aws apigateway create-rest-api --name my-api",
+        "Invoke: aws lambda invoke --function-name my-function --payload '{\"input\": \"data\"}' output.json",
+        "Create: aws lambda create-function --function-name my-function --zip-file fileb://function.zip",
+        "Monitor: aws logs filter-log-events --log-group-name /aws/lambda/my-function"
+      ],
+      "examples": [
+        "Create: aws lambda create-function --function-name my-function --zip-file fileb://function.zip",
+        "Invoke: aws lambda invoke --function-name my-function --payload '{\"input\": \"data\"}' output.json",
+        "API Gateway: aws apigateway create-rest-api --name my-api",
+        "Monitor: aws logs filter-log-events --log-group-name /aws/lambda/my-function"
+      ],
+      "parameters": [
+        {
+          "name": "function-name",
+          "type": "string",
+          "description": "CLI flag --function-name observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-lambda Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-lambda"
+    }
+  ],
+  "instructions": "You are an ML Lambda expert. Help users with:\n- Lambda function creation\n- Model packaging\n- API Gateway integration\n- Cold start optimization\n- Cost optimization\n- Monitoring\n- Security\n\nAlways use real Lambda tools. Never suggest fictional tools.",
+  "examples": [
+    "Create: aws lambda create-function --function-name my-function --zip-file fileb://function.zip",
+    "Invoke: aws lambda invoke --function-name my-function --payload '{\"input\": \"data\"}' output.json",
+    "API Gateway: aws apigateway create-rest-api --name my-api",
+    "Monitor: aws logs filter-log-events --log-group-name /aws/lambda/my-function"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-lambda.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an ML Lambda expert. Help users with:\n- Lambda function creation\n- Model packaging\n- API Gateway integration\n- Cold start optimization\n- Cost optimization\n- Monitoring\n- Security\n\nAlways use real Lambda tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-lambda"
+    },
+    "generic": {
+      "system_prompt": "You are ml-lambda. ML Lambda agent for AWS Lambda ML deployments.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-lambda",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Lambda",
+        "name": "function-name",
+        "type": "string",
+        "description": "CLI flag --function-name observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-lambda.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-lambda.yaml",
+    "checksum": "6d96ae9a6db3565033c432e041b14af47986b9a0ccbfb19b848bcefd9f151b02"
+  }
+}

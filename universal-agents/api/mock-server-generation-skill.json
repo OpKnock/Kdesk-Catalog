@@ -1,0 +1,181 @@
+{
+  "name": "mock-server-generation",
+  "display_name": "Mock Server Generation",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Generate mock servers from OpenAPI specs: Prism, WireMock stubs, and OpenAPI Generator server skeletons.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "java",
+    "npx",
+    "openapi-generator-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "mock-server-generate",
+      "description": "Generate and run mock servers from an OpenAPI/Swagger specification, and manage WireMock stubs.",
+      "commands": [
+        "npx @stoplight/prism-cli mock openapi.yaml",
+        "npx @stoplight/prism-cli mock -p 4010 openapi.yaml",
+        "java -jar wiremock-standalone.jar --port 8080 --verbose",
+        "curl -X POST http://localhost:8080/__admin/mappings -d @stub.json",
+        "openapi-generator-cli generate -g nodejs-express-server -i openapi.yaml -o mock-server/"
+      ],
+      "examples": [
+        "npx @stoplight/prism-cli mock -p 4010 petstore.yaml",
+        "curl -X POST http://localhost:8080/__admin/mappings -d '{\"request\":{\"method\":\"GET\",\"url\":\"/api/users\"},\"response\":{\"status\":200,\"jsonBody\":[{\"id\":1}]}}'",
+        "openapi-generator-cli generate -g go-server -i openapi.yaml -o out/"
+      ],
+      "parameters": [
+        {
+          "name": "spec",
+          "type": "string",
+          "description": "Path to the OpenAPI YAML/JSON spec"
+        },
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Port for the mock server"
+        },
+        {
+          "name": "generator",
+          "type": "string",
+          "description": "openapi-generator language target, e.g. nodejs-express-server"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Prism Documentation",
+      "type": "documentation",
+      "source": "https://docs.stoplight.io/docs/prism",
+      "description": "Prism mock server: dynamic/static mocks, validation, proxy"
+    },
+    {
+      "title": "WireMock Docs",
+      "type": "documentation",
+      "source": "https://wiremock.org/docs/",
+      "description": "Stub mapping admin API, proxying, and recording"
+    },
+    {
+      "title": "OpenAPI Generator",
+      "type": "documentation",
+      "source": "https://github.com/OpenAPITools/openapi-generator",
+      "description": "Server/client code generation from specs"
+    }
+  ],
+  "instructions": "# Mock Server Generation\n\nTurn an OpenAPI spec into a running mock server in seconds so frontend and tests never block on backend availability.\n\n## What this skill does\n\n- Runs Prism mock servers straight from the spec\n- Creates and manages WireMock stub mappings over the admin API\n- Generates full server skeletons with openapi-generator\n\n## When to use\n\n- Frontend development before the backend exists\n- Contract-based integration tests\n- Demonstrations and demo environments\n\n## Real commands\n\n```bash\n# Dynamic mock from spec (synthetic example data)\nnpx @stoplight/prism-cli mock openapi.yaml\nnpx @stoplight/prism-cli mock -p 4010 openapi.yaml\n\n# WireMock standalone\njava -jar wiremock-standalone.jar --port 8080 --verbose\n\n# Register a stub mapping\ncurl -X POST http://localhost:8080/__admin/mappings -d @stub.json\n\n# List registered mappings\ncurl http://localhost:8080/__admin/mappings\n\n# Generate a Node express skeleton server\nopenapi-generator-cli generate -g nodejs-express-server -i openapi.yaml -o mock-server/\n```\n\n## stub.json example\n\n```json\n{\n  \"request\": { \"method\": \"GET\", \"url\": \"/api/users/1\" },\n  \"response\": { \"status\": 200, \"jsonBody\": { \"id\": 1, \"name\": \"Alice\" } }\n}\n```\n\n## Best practices\n\n- Validate the spec first (`openapi-generator-cli validate -i openapi.yaml`)\n- Use Prism for dynamic mocks, WireMock for deterministic stubs\n- Keep generated skeletons out of version control or regenerate on spec change",
+  "examples": [
+    {
+      "input": "Generate a mock of my petstore API so my frontend team can work",
+      "output": "The agent starts `npx @stoplight/prism-cli mock -p 4010 petstore.yaml` and shows how to hit the mock endpoints with curl."
+    },
+    {
+      "input": "Create a WireMock stub that returns a 404 for unknown users",
+      "output": "The agent registers priority-ordered stub mappings via the admin API and verifies with curl."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "mock-server-generation.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-mock-server-generation"
+    },
+    "generic": {
+      "system_prompt": "You own Mock Server Generation end to end. You do it through mock-server-generate: Generate and run mock servers from an OpenAPI/Swagger specification, and manage WireMock stubs. The commands are real, e.g. `npx @stoplight/prism-cli mock openapi.yaml`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "mock-server-generation",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "mock-server-generate",
+        "name": "spec",
+        "type": "string",
+        "description": "Path to the OpenAPI YAML/JSON spec"
+      },
+      {
+        "capability": "mock-server-generate",
+        "name": "port",
+        "type": "integer",
+        "description": "Port for the mock server"
+      },
+      {
+        "capability": "mock-server-generate",
+        "name": "generator",
+        "type": "string",
+        "description": "openapi-generator language target, e.g. nodejs-express-server"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "java",
+    "npx",
+    "openapi-generator-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/mock-server-generation-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/mock-server-generation-skill.yaml",
+    "checksum": "46fa6eee453ea85190fba71a3b3734e0ae1b7b3824bd6efd6b311603b68a0c23"
+  }
+}

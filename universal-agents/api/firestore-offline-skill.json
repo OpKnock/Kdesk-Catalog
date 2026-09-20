@@ -1,0 +1,175 @@
+{
+  "name": "firestore-offline",
+  "display_name": "Firestore Offline",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Firestore offline persistence: enable local caching, debug cache reads, and design apps that work when connectivity drops.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "firebase",
+    "grep",
+    "node"
+  ],
+  "capabilities": [
+    {
+      "name": "offline-persistence",
+      "description": "Enable and debug offline persistence, and verify cache behavior in client SDKs.",
+      "commands": [
+        "node -e \"const db=require('firebase/firestore');firebase.firestore().settings({persistence: true});firebase.firestore().enablePersistence().then(()=>console.log('offline ok'))\"",
+        "node -e \"const {initializeFirestore,persistentLocalCache,indexedDbLocalCache}=require('firebase/firestore');const db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:indexedDbLocalCache()})});console.log(db)\"",
+        "firebase emulators:start --only firestore",
+        "grep -rn 'enablePersistence\\|persistentLocalCache' src/ | head -10",
+        "curl -s 'http://localhost:8080/api/cache-stats' | jq '.localDocuments'"
+      ],
+      "examples": [
+        "node -e \"const {initializeFirestore,persistentLocalCache,indexedDbLocalCache}=require('firebase/firestore');const db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:indexedDbLocalCache()})});console.log(db)\"",
+        "firebase emulators:start --only firestore",
+        "grep -rn 'enablePersistence\\|persistentLocalCache' src/ | head -10"
+      ],
+      "parameters": [
+        {
+          "name": "cache-mode",
+          "type": "string",
+          "description": "persistent or memory local cache mode"
+        },
+        {
+          "name": "tab-manager",
+          "type": "string",
+          "description": "indexedDbLocalCache or multiTabLocalCache"
+        },
+        {
+          "name": "settings-file",
+          "type": "string",
+          "description": "File where Firestore settings are configured"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Firestore offline data",
+      "type": "documentation",
+      "source": "https://firebase.google.com/docs/firestore/manage-data/enable-offline",
+      "description": "Enabling persistence on mobile and web SDKs"
+    },
+    {
+      "title": "Firestore cache semantics",
+      "type": "documentation",
+      "source": "https://firebase.google.com/docs/firestore/manage-data/enable-offline#monitor_network_status",
+      "description": "Source options, cache eviction, and network state handling"
+    }
+  ],
+  "instructions": "# Firestore Offline\n\n## What this skill does\n\nFirestore caches data locally so reads and queued writes continue offline. Mobile SDKs enable persistence by default; web needs explicit settings. This skill covers enabling and verifying the cache.\n\n## When to use\n\n- Mobile apps that must work on subways/airplanes\n- Web apps wanting instant re-renders from cache\n- Queuing writes that happened offline\n\n## Real commands\n\n```bash\n# Web: persistent cache with IndexedDB tab manager\nnode -e \"const {initializeFirestore,persistentLocalCache,indexedDbLocalCache}=require('firebase/firestore');const db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:indexedDbLocalCache()})});console.log(db)\"\n\n# Older web SDK pattern\nfirebase.firestore().enablePersistence().catch(e => console.log('multi-tab needs config'))\n\n# Local emulation to test offline behavior\nfirebase emulators:start --only firestore\n\n# Audit cache config in the codebase\n grep -rn 'enablePersistence\\|persistentLocalCache' src/ | head -10\n```\n\n## Read source options\n\n```javascript\n// Server-first vs cache-first reads\nimport { getDoc, source } from 'firebase/firestore'\nconst snap = await getDoc(docRef, { source: source.server })\nconst cached = await getDoc(docRef, { source: source.cache })\n```\n\n## Testing offline behavior\n\n```bash\n# Simulate offline: kill the emulator or disable the network\nfirebase emulators:start --only firestore\n# load the page, disconnect, verify reads still render from cache\n```\n\n## Best practices\n\n- Web: pick `persistentLocalCache` explicitly; avoid mixing persistence modes per tab.\n- Use `multiTabLocalCache` for multi-tab consistency on web.\n- Remember cache-only data may be stale: use `snapshotListeners` to reconcile.\n- Test with `getDoc(docRef, { source: source.cache })` to force cache reads.\n- Handle `failed-precondition` errors (persistence unavailable) gracefully.\n",
+  "examples": [
+    {
+      "input": "Make our web app read from cache first",
+      "output": "Initialize Firestore with persistentLocalCache({tabManager: indexedDbLocalCache()}) and use cache-source reads for read-mostly screens."
+    },
+    {
+      "input": "Offline writes are lost on app restart",
+      "output": "Verify enablePersistence/persistentLocalCache is set before any queries; without persistence, queued writes drop when the page closes."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "firestore-offline.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-firestore-offline"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Firestore Offline. You do it through offline-persistence: Enable and debug offline persistence, and verify cache behavior in client SDKs. The commands are real, e.g. `node -e const db=require(firebase/firestore);firebase.firestore().settings({persistence:...`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "firestore-offline",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "offline-persistence",
+        "name": "cache-mode",
+        "type": "string",
+        "description": "persistent or memory local cache mode"
+      },
+      {
+        "capability": "offline-persistence",
+        "name": "tab-manager",
+        "type": "string",
+        "description": "indexedDbLocalCache or multiTabLocalCache"
+      },
+      {
+        "capability": "offline-persistence",
+        "name": "settings-file",
+        "type": "string",
+        "description": "File where Firestore settings are configured"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "firebase",
+    "grep",
+    "node"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/firestore-offline-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/firestore-offline-skill.yaml",
+    "checksum": "1dcf7923a24793c740a3b9f4826cf75e88f4ae2ddda9875b4f35d4fd538b32a5"
+  }
+}

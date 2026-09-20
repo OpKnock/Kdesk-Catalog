@@ -1,0 +1,231 @@
+{
+  "name": "ethical-ai",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "ai",
+  "description": "Builds guardrails for AI systems: model vulnerability scanning with garak, supply-chain checks, PII detection, and bias assessment.",
+  "keywords": [
+    "ethical-ai",
+    "fairness"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ethical-ai.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ethical-ai"
+    },
+    "generic": {
+      "system_prompt": "You take the ethical-ai seat. You do it through llm-security-scanning: Probe LLMs for prompt injection, jailbreaks, and harmful output with garak. The commands are real, e.g. `garak --model_type openai-chat --model_name gpt-4o-mini`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "llm-security-scanning",
+      "description": "Probe LLMs for prompt injection, jailbreaks, and harmful output with garak.",
+      "commands": [
+        "garak --model_type openai-chat --model_name gpt-4o-mini",
+        "garak --model_type huggingface --model_name org/model --probes dan,encoding",
+        "garak --report_type html -G /tmp/garak-report",
+        "garak --probes dan --model_type openai-chat --model_name gpt-4o-mini",
+        "python -m garak.scan --model_type claude --model_name claude-3-5-sonnet"
+      ],
+      "examples": [
+        "garak --model_type openai-chat --model_name gpt-4o-mini",
+        "garak --probes dan --model_type openai-chat --model_name gpt-4o-mini",
+        "garak --report_type html -G /tmp/garak-report"
+      ],
+      "parameters": [
+        {
+          "name": "model_type",
+          "type": "string",
+          "description": "Model interface: openai-chat, huggingface, claude"
+        },
+        {
+          "name": "model_name",
+          "type": "string",
+          "description": "Model identifier"
+        },
+        {
+          "name": "probes",
+          "type": "string",
+          "description": "Probe groups, e.g. dan, encoding"
+        }
+      ]
+    },
+    {
+      "name": "data-and-supply-chain",
+      "description": "Scan repos for secrets, PII, and supply-chain risks.",
+      "commands": [
+        "gitleaks detect --source . --report-format json --report-path leak.json",
+        "detect-secrets scan --baseline .secrets.baseline",
+        "scorecard --repo=github.com/org/app",
+        "presidio-analyzer --analyzer text 'Call me at 555-0100'",
+        "gitleaks detect --redact",
+        "pip-audit -r requirements.txt"
+      ],
+      "examples": [
+        "gitleaks detect --source . --report-format json",
+        "scorecard --repo=github.com/org/app",
+        "presidio-analyzer --analyzer text 'Call me at 555-0100'"
+      ],
+      "parameters": [
+        {
+          "name": "source",
+          "type": "string",
+          "description": "Path or repo to scan"
+        },
+        {
+          "name": "report",
+          "type": "string",
+          "description": "Report output path"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "fairlearn",
+    "ai-fairness",
+    "shap",
+    "lime"
+  ],
+  "tools": [
+    "fairlearn",
+    "ai-fairness",
+    "shap",
+    "lime",
+    "tensorflow-model-analysis"
+  ],
+  "examples": [
+    {
+      "input": "Our chat feature keeps leaking instructions",
+      "output": "Agent runs garak injection probes, reports failing categories, and suggests system-prompt hardening"
+    },
+    {
+      "input": "Audit the AI project before launch",
+      "output": "Agent runs the guardrail checklist: garak, gitleaks, scorecard, PII scan"
+    }
+  ],
+  "instructions": "# Ethical AI Engineering\n\nBuild and ship AI systems with guardrails: security, privacy, and fairness.\n\n## What This Skill Does\n\n- Probes LLMs for injection/jailbreak vulnerabilities with garak\n- Scans repos for secrets and PII\n- Assesses supply-chain security with Scorecard\n- Detects PII in text with Presidio\n- Advises on bias testing and model documentation\n\n## When to Use\n\n- Releasing a new LLM-powered feature\n- Auditing an AI system before deployment\n- Responding to red-team findings\n\n## Real Commands\n\n```bash\n# LLM scanning (garak)\ngarak --model_type openai-chat --model_name gpt-4o-mini\ngarak --probes dan,encoding --model_type openai-chat --model_name gpt-4o-mini\ngarak --report_type html -G /tmp/garak-report\npython -m garak.scan --model_type claude --model_name claude-3-5-sonnet\n\n# Secrets and PII\ngitleaks detect --source . --report-format json --report-path leak.json\ndetect-secrets scan --baseline .secrets.baseline\npresidio-analyzer --analyzer text 'Call me at 555-0100'\n\n# Supply chain\nscorecard --repo=github.com/org/app\npip-audit -r requirements.txt\n```\n\n## Guardrail Checklist\n\n1. Prompt injection probes pass with mitigations in place\n2. No secrets in training data or prompts (gitleaks baseline)\n3. PII redaction before model input/output\n4. Supply-chain scorecard >= 7\n5. Bias evaluation documented for sensitive use cases\n\n## Best Practices\n\n- Run garak in CI on model updates, not just releases\n- Establish a secrets baseline, then fail on new leaks\n- Log model decisions for audit (human-in-the-loop where risky)\n- Write model cards: data, limitations, mitigations\n- Publish an AI ethics review checklist with the product",
+  "display_name": "ethical-ai",
+  "knowledge": [
+    {
+      "title": "garak LLM Vulnerability Scanner",
+      "type": "documentation",
+      "source": "https://docs.garak.ai/garak/",
+      "description": "Probe catalog and scanning configuration"
+    },
+    {
+      "title": "OpenSSF Scorecard",
+      "type": "documentation",
+      "source": "https://scorecard.dev/",
+      "description": "Repository supply-chain security scoring"
+    },
+    {
+      "title": "Microsoft Presidio",
+      "type": "documentation",
+      "source": "https://microsoft.github.io/presidio/",
+      "description": "PII detection and anonymization"
+    },
+    {
+      "title": "NIST AI RMF",
+      "type": "documentation",
+      "source": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "description": "AI risk management framework"
+    }
+  ],
+  "id": "ethical-ai",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "llm-security-scanning",
+        "name": "model_type",
+        "type": "string",
+        "description": "Model interface: openai-chat, huggingface, claude"
+      },
+      {
+        "capability": "llm-security-scanning",
+        "name": "model_name",
+        "type": "string",
+        "description": "Model identifier"
+      },
+      {
+        "capability": "llm-security-scanning",
+        "name": "probes",
+        "type": "string",
+        "description": "Probe groups, e.g. dan, encoding"
+      },
+      {
+        "capability": "data-and-supply-chain",
+        "name": "source",
+        "type": "string",
+        "description": "Path or repo to scan"
+      },
+      {
+        "capability": "data-and-supply-chain",
+        "name": "report",
+        "type": "string",
+        "description": "Report output path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "fairlearn",
+    "ai-fairness",
+    "shap",
+    "lime"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ethical-ai/skill/ethical-ai.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ethical-ai/skill/ethical-ai.yaml",
+    "checksum": "8115805e96ce0b2c0826af7f81cf9c2743013f8dd70bca680f184e7022e3adcd"
+  }
+}

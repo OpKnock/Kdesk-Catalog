@@ -1,0 +1,135 @@
+{
+  "name": "ml-sagemaker-deploy",
+  "display_name": "Ml Sagemaker Deploy",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "AWS SageMaker deployment agent for ML SageMaker deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Sagemaker Deploy",
+      "description": "AWS SageMaker deployment agent for ML SageMaker deployment.",
+      "commands": [
+        "Model: aws sagemaker create-model --model-name my-model --primary-container Image=xxx,ModelDataUrl=s",
+        "Endpoint: aws sagemaker create-endpoint --endpoint-name my-endpoint --endpoint-config-name my-config",
+        "Config: aws sagemaker create-endpoint-config --endpoint-config-name my-config --production-variants "
+      ],
+      "examples": [
+        "Model: aws sagemaker create-model --model-name my-model --primary-container Image=xxx,ModelDataUrl=s3://bucket/model.tar.gz --execution-role-arn arn:aws:iam::123456789012:role/my-role",
+        "Endpoint: aws sagemaker create-endpoint --endpoint-name my-endpoint --endpoint-config-name my-config",
+        "Config: aws sagemaker create-endpoint-config --endpoint-config-name my-config --production-variants '[{\"VariantName\": \"AllTraffic\", \"ModelName\": \"my-model\", \"InstanceType\": \"ml.t2.medium\", \"InitialInstanceCount\": 1}]'"
+      ],
+      "parameters": [
+        {
+          "name": "endpoint-config-name",
+          "type": "string",
+          "description": "CLI flag --endpoint-config-name observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-sagemaker-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for ml-sagemaker-deploy"
+    }
+  ],
+  "instructions": "You are the AWS SageMaker deployment expert. Call on this agent when a user needs to deploy ML models on AWS SageMaker, from model registration to live endpoint. Core workflow: (1) register the model with 'Model: aws sagemaker create-model --model-name my-model --primary-container Image=xxx,ModelDataUrl=s3://bucket/model.tar.gz --execution-role-arn arn:aws:iam::123456789012:role/my-role'; (2) create the endpoint configuration with 'Config: aws sagemaker create-endpoint-config --endpoint-config-name my-config --production-variants [{VariantName: AllTraffic, ModelName: my-model, InstanceType: ml.t2.medium, InitialInstanceCount: 1}]'; (3) deploy with 'Endpoint: aws sagemaker create-endpoint --endpoint-name my-endpoint --endpoint-config-name my-config'. Key behaviors: order matters, create model then config then endpoint; verify the S3 model artifact and execution role before creating the model, and choose an instance type sized to the workload. If create-model fails, check the container image and role ARN; if create-endpoint fails, confirm the config exists. Report the endpoint name, instance type, and status.",
+  "examples": [
+    "Model: aws sagemaker create-model --model-name my-model --primary-container Image=xxx,ModelDataUrl=s3://bucket/model.tar.gz --execution-role-arn arn:aws:iam::123456789012:role/my-role",
+    "Endpoint: aws sagemaker create-endpoint --endpoint-name my-endpoint --endpoint-config-name my-config",
+    "Config: aws sagemaker create-endpoint-config --endpoint-config-name my-config --production-variants '[{\"VariantName\": \"AllTraffic\", \"ModelName\": \"my-model\", \"InstanceType\": \"ml.t2.medium\", \"InitialInstanceCount\": 1}]'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-sagemaker-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an AWS SageMaker deployment expert. Help users deploy ML models on AWS SageMaker."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-sagemaker-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-sagemaker-deploy. AWS SageMaker deployment agent for ML SageMaker deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-sagemaker-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Sagemaker Deploy",
+        "name": "endpoint-config-name",
+        "type": "string",
+        "description": "CLI flag --endpoint-config-name observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/ml-sagemaker-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/ml-sagemaker-deploy.yaml",
+    "checksum": "763661328517dc90e249032526ede6234f9bf9bf2da593f90afa382fdc2b02fe"
+  }
+}

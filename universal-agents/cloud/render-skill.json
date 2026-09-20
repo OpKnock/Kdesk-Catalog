@@ -1,0 +1,200 @@
+{
+  "name": "render-cloud",
+  "display_name": "Render",
+  "category": "cloud",
+  "subcategory": "general",
+  "description": "Deploys web services, static sites, and background workers to Render with the CLI and render.yaml infrastructure configs.",
+  "version": "2.0.0",
+  "tags": [
+    "cloud"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npm",
+    "render"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "npm install -g @render/cli",
+        "render login",
+        "render deploy --service <service-id>",
+        "render services list",
+        "render logs --service <service-id>"
+      ],
+      "description": "Deploy and manage services on Render.",
+      "name": "render-cli",
+      "examples": [
+        "render deploy --service svc_123 --commit main",
+        "render services list --project prj_abc",
+        "render blueprints apply"
+      ],
+      "parameters": [
+        {
+          "description": "Service id",
+          "name": "service",
+          "type": "string"
+        },
+        {
+          "description": "Commit or branch to deploy",
+          "name": "commit",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "render blueprints apply --file render.yaml",
+        "render blueprints list",
+        "render project list",
+        "render env group list"
+      ],
+      "description": "Manage render.yaml blueprint infrastructure.",
+      "name": "render-infra",
+      "examples": [
+        "render blueprints apply --file render.yaml --detach",
+        "render blueprints index --file render.yaml"
+      ],
+      "parameters": [
+        {
+          "description": "render.yaml path",
+          "name": "file",
+          "type": "string"
+        },
+        {
+          "name": "detach",
+          "type": "boolean",
+          "description": "Do not wait for apply to finish"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Render Docs",
+      "description": "Services, blueprints, and CLI reference",
+      "source": "https://docs.render.com",
+      "type": "documentation"
+    },
+    {
+      "title": "Render Blueprint Spec",
+      "description": "render.yaml schema",
+      "source": "https://docs.render.com/blueprint-spec",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Render\n\nDeploy apps on Render.\n\n## When to Use\n\n- Web services from Docker or buildpacks\n- Static sites and SPAs\n- Background workers and cron jobs\n- Managed Postgres and Redis\n\n## render.yaml Example\n\n```yaml\nservices:\n  - type: web\n    name: api\n    runtime: node\n    plan: starter\n    buildCommand: npm ci && npm run build\n    startCommand: node dist/server.js\n    envVars:\n      - key: DATABASE_URL\n        fromDatabase:\n          name: mydb\n          property: connectionString\ndatabases:\n  - name: mydb\n    plan: basic\n```\n\n## Commands\n\n```bash\n# Setup\nnpm install -g @render/cli\nrender login\n\n# Deploy a specific service\nrender deploy --service svc_123\nrender deploy --service svc_123 --commit main\n\n# List and inspect\nrender services list\nrender logs --service svc_123\n\n# Blueprints\nrender blueprints apply --file render.yaml\nrender blueprints list\nrender project list\n```\n\n## Best Practices\n\n- Define all services in render.yaml for repeatable environments\n- Use the database property to wire connection strings automatically\n- Set health check paths on every web service\n- Deploy previews from PR branches to a separate service\n- Stream logs with render logs to debug cold starts\n- Promote with blueprints so staging and prod match",
+  "examples": [
+    {
+      "input": "Deploy my Node service with a database",
+      "output": "Agent writes render.yaml with a web service and Postgres, then runs render blueprints apply."
+    },
+    {
+      "input": "Redeploy after a bad release",
+      "output": "Agent rolls back by deploying the previous commit with render deploy --service --commit <sha>."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "render-cloud.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-render"
+    },
+    "generic": {
+      "system_prompt": "You are the Render specialist. You do it through render-cli: Deploy and manage services on Render. The commands are real, e.g. `npm install -g @render/cli`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "render-cloud",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "render-cli",
+        "name": "service",
+        "type": "string",
+        "description": "Service id"
+      },
+      {
+        "capability": "render-cli",
+        "name": "commit",
+        "type": "string",
+        "description": "Commit or branch to deploy"
+      },
+      {
+        "capability": "render-infra",
+        "name": "file",
+        "type": "string",
+        "description": "render.yaml path"
+      },
+      {
+        "capability": "render-infra",
+        "name": "detach",
+        "type": "boolean",
+        "description": "Do not wait for apply to finish"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npm",
+    "render"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/render-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/render-skill.yaml",
+    "checksum": "f76ef892bdaee4781b4df963533e5957ad592d562afc721328d3ff20c075d14c"
+  }
+}

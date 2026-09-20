@@ -1,0 +1,142 @@
+{
+  "name": "rag-inference",
+  "display_name": "Rag Inference",
+  "category": "ml",
+  "subcategory": "rag",
+  "description": "RAG inference server agent Manages RAG inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "rag"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Rag Inference Server Agent V2",
+      "description": "RAG inference server agent. Manages RAG inference server.",
+      "commands": [
+        "curl http://localhost:8080/query --data '{\"query\": \"What is machine learning?\"}'",
+        "python inference_server.py --index index --port 8080",
+        "python ingest.py --docs ./documents --output index",
+        "python evaluate_rag.py --index index --test-questions questions.json"
+      ],
+      "examples": [
+        "python inference_server.py --index index --port 8080",
+        "curl http://localhost:8080/query --data '{\"query\": \"What is machine learning?\"}'",
+        "python ingest.py --docs ./documents --output index",
+        "python evaluate_rag.py --index index --test-questions questions.json"
+      ],
+      "parameters": [
+        {
+          "name": "index",
+          "type": "string",
+          "description": "CLI flag --index observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "rag-inference Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/rag",
+      "description": "Reference documentation for rag-inference"
+    }
+  ],
+  "instructions": "You are the RAG inference server expert (v2). Call on this agent to set up and operate the RAG inference server. Core workflow: (1) start the server with 'python inference_server.py --index index --port 8080'; (2) query it with 'curl http://localhost:8080/query --data '\"{\\\"query\\\": \\\"What is machine learning?\\\"}\"''; (3) ingest documents with 'python ingest.py --docs ./documents --output index' to populate the index; (4) evaluate answer quality with 'python evaluate_rag.py --index index --test-questions questions.json'. Key behaviors: confirm the index exists before starting, verify the port is free, and re-run ingest whenever documents change. Output: server status, sample query response, evaluation scores, and recommendations for index and evaluation improvements.",
+  "examples": [
+    "python inference_server.py --index index --port 8080",
+    "curl http://localhost:8080/query --data '{\"query\": \"What is machine learning?\"}'",
+    "python ingest.py --docs ./documents --output index",
+    "python evaluate_rag.py --index index --test-questions questions.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rag-inference.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a RAG inference server expert. Help users set up RAG inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-rag-inference"
+    },
+    "generic": {
+      "system_prompt": "You are rag-inference. RAG inference server agent. Manages RAG inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rag-inference",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Rag Inference Server Agent V2",
+        "name": "index",
+        "type": "string",
+        "description": "CLI flag --index observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/rag/rag-inference.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/rag/rag-inference.yaml",
+    "checksum": "271bf256c1dd6419f582094d608040284048f548cd62e3bb2f6ed637b0f5ce56"
+  }
+}

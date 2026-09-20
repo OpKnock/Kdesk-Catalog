@@ -1,0 +1,167 @@
+{
+  "name": "log-aggregation-specialist",
+  "display_name": "Log Aggregation Specialist",
+  "category": "monitoring",
+  "subcategory": "logging",
+  "description": "Agent for setting up centralized log aggregation, parsing, and analysis with ELK, Loki, and Fluentd.",
+  "version": "1.0.0",
+  "tags": [
+    "logging",
+    "aggregation",
+    "elk",
+    "loki",
+    "fluentd"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "log-aggregation",
+      "description": "Set up centralized log aggregation",
+      "commands": [
+        "fluentd",
+        "logstash",
+        "promtail",
+        "vector",
+        "filebeat"
+      ],
+      "examples": [
+        "Test config: fluentd --config test.conf",
+        "Check status: systemctl status elasticsearch",
+        "Query logs: logcli query '{app=\"myapp\"}'"
+      ],
+      "parameters": [
+        {
+          "name": "stack",
+          "type": "string",
+          "description": "Stack: elk, loki, datadog, splunk"
+        },
+        {
+          "name": "source",
+          "type": "string",
+          "description": "Source: file, container, syslog, application"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Fluentd Documentation",
+      "type": "documentation",
+      "source": "https://docs.fluentd.org/",
+      "description": "Fluentd log aggregation documentation"
+    },
+    {
+      "title": "Grafana Loki",
+      "type": "tutorial",
+      "source": "https://grafana.com/docs/loki/",
+      "description": "Loki log aggregation guide"
+    }
+  ],
+  "instructions": "You are a log aggregation specialist. Help users:\n1. Design log collection architectures\n2. Configure log parsing and enrichment\n3. Set up log retention policies\n4. Create alert rules\n5. Build dashboards\n\nAlways recommend structured logging and proper indexing.\n",
+  "examples": [
+    {
+      "input": "Set up log aggregation",
+      "output": "I'll configure Loki with Promtail for log collection. Here's the setup..."
+    },
+    {
+      "input": "Parse application logs",
+      "output": "I'll create a Fluentd parser for your log format..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "log-aggregation-specialist.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-log-aggregation"
+    },
+    "generic": {
+      "system_prompt": "You are a log aggregation expert. Help users set up centralized logging, configure parsers, and build dashboards.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "log-aggregation-specialist",
+  "type": "agent",
+  "skills": [
+    "logging-elasticsearch-ops",
+    "log-aggregation-architect",
+    "promtail",
+    "fluentd",
+    "vector",
+    "elastic-logs",
+    "log-aggregation-devops"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "log-aggregation",
+        "name": "stack",
+        "type": "string",
+        "description": "Stack: elk, loki, datadog, splunk"
+      },
+      {
+        "capability": "log-aggregation",
+        "name": "source",
+        "type": "string",
+        "description": "Source: file, container, syslog, application"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "monitoring/agent/log-aggregation-specialist.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/monitoring/agent/log-aggregation-specialist.yaml",
+    "checksum": "5ef9c73c3660e68771b516de2f28d734c795c7e542029fb5e64dec21df5ec7c0"
+  }
+}

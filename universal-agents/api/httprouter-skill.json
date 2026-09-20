@@ -1,0 +1,166 @@
+{
+  "name": "httprouter",
+  "display_name": "Httprouter",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Go httprouter: radix-tree routing with typed path params, method handlers, middleware wrapping, and benchmark-grade request dispatch.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "httprouter-routing",
+      "description": "Build typed HTTP routes with httprouter and wrap handlers with middleware.",
+      "commands": [
+        "go get github.com/julienschmidt/httprouter@latest",
+        "go build -o app .",
+        "go test ./...",
+        "go vet ./...",
+        "curl -X GET http://localhost:8080/users/42"
+      ],
+      "examples": [
+        "go run . & curl -s http://localhost:8080/hello/world",
+        "go test -bench=. -benchmem ./...",
+        "curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/users/42"
+      ],
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Route pattern, e.g. /users/:id."
+        },
+        {
+          "name": "method",
+          "type": "string",
+          "description": "HTTP method to register."
+        },
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Listen port, default 8080."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "httprouter GitHub",
+      "type": "documentation",
+      "source": "https://github.com/julienschmidt/httprouter",
+      "description": "httprouter README: API, routing rules, and benchmarks."
+    },
+    {
+      "title": "Go net/http docs",
+      "type": "documentation",
+      "source": "https://pkg.go.dev/net/http",
+      "description": "Standard library http package for Handler interface."
+    }
+  ],
+  "instructions": "# httprouter\n\nHigh-performance radix-tree routing for Go.\n\n## What this skill does\n\n- Registers typed routes with :param path segments.\n- Dispatches by HTTP method automatically.\n- Wraps handlers with middleware the standard library way.\n- Serves 404/405 with method-specific handling.\n\n## When to use\n\n- A Go service needs fast routing without framework weight.\n- You want explicit path parameters instead of string parsing.\n- Serving REST endpoints with clean method separation.\n\n## Real commands\n\n```bash\n# Install\ngo get github.com/julienschmidt/httprouter@latest\n\n# Build, vet, test\ngo build -o app .\ngo vet ./...\ngo test ./...\n\n# Run and hit a param route\ngo run . &\ncurl -X GET http://localhost:8080/users/42\n```\n\n## Router setup\n\n```go\npackage main\n\nimport (\n    \"fmt\"\n    \"net/http\"\n    \"github.com/julienschmidt/httprouter\"\n)\n\nfunc Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {\n    fmt.Fprintf(w, \"hello, %s!\", ps.ByName(\"name\"))\n}\n\nfunc main() {\n    router := httprouter.New()\n    router.GET(\"/hello/:name\", Hello)\n    router.POST(\"/users\", CreateUser)\n    router.PUT(\"/users/:id\", UpdateUser)\n    router.DELETE(\"/users/:id\", DeleteUser)\n    http.ListenAndServe(\":8080\", router)\n}\n```\n\n## Middleware wrapper\n\n```go\nfunc logging(next httprouter.Handle) httprouter.Handle {\n    return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {\n        log.Printf(\"%s %s\", r.Method, r.URL.Path)\n        next(w, r, ps)\n    }\n}\n\nrouter.GET(\"/users/:id\", logging(GetUser))\n```\n\n## Testing\n\n```bash\ncurl -s http://localhost:8080/hello/world\ngo test -bench=. -benchmem ./...\n```\n\n## Best practices\n\n- Path params are matched in a single segment; use `:name` not `*` for required parts.\n- Wrap handlers with standard `func(http.Handler, ...) http.Handler` style for reuse.\n- Set `router.RedirectTrailingSlash = true` consciously; it can surprise clients.\n- Keep handlers httprouter.Handle-typed to use Params without globals.\n\n## Example exchange\n\n```\nUser: Add a GET /users/:id route.\nAgent: router.GET(\"/users/:id\", func(w, r, ps) { id := ps.ByName(\"id\") ... })\n```",
+  "examples": [
+    {
+      "input": "Register GET /hello/:name and test it",
+      "output": "router.GET(\"/hello/:name\", Hello) && curl -s http://localhost:8080/hello/world"
+    },
+    {
+      "input": "Run benchmarks on the router",
+      "output": "go test -bench=. -benchmem ./..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "httprouter.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-httprouter"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Httprouter. You do it through httprouter-routing: Build typed HTTP routes with httprouter and wrap handlers with middleware. The commands are real, e.g. `go get github.com/julienschmidt/httprouter@latest`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "httprouter",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "httprouter-routing",
+        "name": "path",
+        "type": "string",
+        "description": "Route pattern, e.g. /users/:id."
+      },
+      {
+        "capability": "httprouter-routing",
+        "name": "method",
+        "type": "string",
+        "description": "HTTP method to register."
+      },
+      {
+        "capability": "httprouter-routing",
+        "name": "port",
+        "type": "integer",
+        "description": "Listen port, default 8080."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/httprouter-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/httprouter-skill.yaml",
+    "checksum": "b6414e0b9dcb87f749d2d16909948d946f2ec0b721035e2f3aaff53c8af2a8fe"
+  }
+}

@@ -1,0 +1,123 @@
+name: api-gateway-engineer
+version: 2.0.0
+type: skill
+category: infrastructure
+description: 'Hands-on API gateway engineering: Kong and Traefik installation, ingress setup on Kubernetes,
+  and plugin wiring.'
+keywords:
+- api-gateway
+- kong
+- traefik
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-gateway-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-gateway-engineer
+  generic:
+    system_prompt: 'You work api-gateway-engineer hands-on. You do it through kong-setup: Install Kong,
+      bootstrap the database, and configure services and routes. The commands are real, e.g. `kong migrations
+      bootstrap`. You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: kong-setup
+  description: Install Kong, bootstrap the database, and configure services and routes
+  commands:
+  - kong migrations bootstrap
+  - kong start
+  - 'curl -s -X POST http://localhost:8001/services -H ''Content-Type: application/json'' -d ''{"name":"orders","url":"http://orders-service:8080"}'''
+  - 'curl -s -X POST http://localhost:8001/services/orders/routes -H ''Content-Type: application/json''
+    -d ''{"paths":["/orders"]}'''
+  - kong health
+  examples:
+  - kong migrations bootstrap && kong start
+  - 'curl -s -X POST http://localhost:8001/services -H ''Content-Type: application/json'' -d ''{"name":"orders","url":"http://orders-service:8080"}'''
+  - curl -s http://localhost:8001/services | python -m json.tool
+  parameters:
+  - name: service
+    type: string
+    description: Upstream service
+  - name: upstreamUrl
+    type: string
+    description: Upstream URL
+- name: traefik-ingress
+  description: Configure Traefik as Kubernetes ingress with middlewares and TLS
+  commands:
+  - helm repo add traefik https://helm.traefik.io/traefik && helm install traefik traefik/traefik
+  - kubectl apply -f ingressroute.yaml
+  - kubectl get ingressroute -A
+  - kubectl apply -f middleware-rate-limit.yaml
+  - kubectl logs -l app.kubernetes.io/name=traefik -n traefik --tail=50
+  examples:
+  - helm install traefik traefik/traefik -n traefik --create-namespace
+  - kubectl apply -f ingressroute.yaml && kubectl get ingressroute -A
+  - kubectl logs -l app.kubernetes.io/name=traefik -n traefik --tail=50
+  parameters:
+  - name: namespace
+    type: string
+    description: Kubernetes namespace
+  - name: host
+    type: string
+    description: Ingress host
+prerequisites:
+- kong
+- traefik
+- aws-cli
+tools:
+- kong
+- traefik
+- aws-cli
+- docker
+- kubernetes
+examples:
+- input: Set up Kong gateway with routing and auth
+  output: Bootstraps Kong, registers services and routes, and enables JWT and rate-limiting plugins
+- input: Configure Traefik for Kubernetes
+  output: Installs Traefik via Helm, defines IngressRoutes with middlewares, and verifies with kubectl
+instructions: "# API Gateway Engineer\n\nInstalls and operates API gateways in front of services.\n\n\
+  ## When to Use\n- Rolling out a gateway for the first time\n- Moving auth/rate limits to the edge\n\
+  - Kubernetes ingress management\n\n## Real Commands\n\n```bash\n# Kong\nkong migrations bootstrap\n\
+  kong start\ncurl -s -X POST http://localhost:8001/services -H 'Content-Type: application/json' -d '{\"\
+  name\":\"orders\",\"url\":\"http://orders-service:8080\"}'\ncurl -s -X POST http://localhost:8001/services/orders/routes\
+  \ -H 'Content-Type: application/json' -d '{\"paths\":[\"/orders\"]}'\n\n# Traefik on K8s\nhelm repo\
+  \ add traefik https://helm.traefik.io/traefik\nhelm install traefik traefik/traefik\nkubectl apply -f\
+  \ ingressroute.yaml\nkubectl get ingressroute -A\n```\n\n## IngressRoute Example\n\n```yaml\napiVersion:\
+  \ traefik.io/v1alpha1\nkind: IngressRoute\nmetadata: {name: api}\nspec:\n  entryPoints: [web]\n  routes:\n\
+  \    - match: Host(`api.example.com`) && PathPrefix(`/orders`)\n      kind: Rule\n      services: [{name:\
+  \ orders, port: 8080}]\n```\n\n## Testing\nRoute real traffic through the gateway and verify headers,\
+  \ rate limits, and health checks.\n\n## Best Practices\n- Run gateway nodes with redundancy\n- Enable\
+  \ access logs for auditing"
+display_name: api-gateway-engineer
+knowledge:
+- title: Kong Gateway Install
+  type: documentation
+  source: https://docs.konghq.com/gateway/latest/install/
+  description: Install and bootstrap guides
+- title: Traefik Kubernetes Ingress
+  type: documentation
+  source: https://doc.traefik.io/traefik/routing/providers/kubernetes-crd/
+  description: IngressRoute CRDs and middlewares

@@ -1,0 +1,171 @@
+{
+  "name": "strategy",
+  "display_name": "Strategy",
+  "category": "patterns",
+  "subcategory": "general",
+  "description": "Implements the Strategy pattern in Python with pytest: interchangeable algorithms selected at runtime.",
+  "version": "2.0.0",
+  "tags": [
+    "strategy"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "python"
+  ],
+  "capabilities": [
+    {
+      "name": "python-pytest",
+      "description": "Implement and test strategy examples.",
+      "commands": [
+        "python -m pytest tests/ -v",
+        "python -m pytest tests/test_strategy.py -k discount",
+        "python -m pytest tests/ -q --tb=short",
+        "python -m pytest --cov=strategy tests/",
+        "python -m pytest tests/test_strategy.py --maxfail=1"
+      ],
+      "examples": [
+        "python -m pytest tests/test_strategy.py -v",
+        "python -m pytest --cov=strategy --cov-report=term-missing tests/",
+        "python -c 'from strategy import apply_discount; print(apply_discount(100, \"holiday\"))'"
+      ],
+      "parameters": [
+        {
+          "name": "k",
+          "type": "string",
+          "description": "Test name filter"
+        },
+        {
+          "name": "cov",
+          "type": "string",
+          "description": "Coverage target module"
+        },
+        {
+          "name": "tb",
+          "type": "string",
+          "description": "Traceback format: short, long, line"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Refactoring Guru: Strategy",
+      "type": "documentation",
+      "source": "https://refactoring.guru/design-patterns/strategy",
+      "description": "Strategy intent, structure, and usage"
+    },
+    {
+      "title": "pytest",
+      "type": "documentation",
+      "source": "https://docs.pytest.org/",
+      "description": "pytest fixtures and assertions"
+    }
+  ],
+  "instructions": "# Strategy Pattern\n\nSwap algorithms at runtime behind one interface.\n\n## When to Use\n\n- Multiple ways to do one thing (pricing, auth, format)\n- Avoiding conditional chains in business logic\n- Testing algorithms independently\n\n## Example (Python)\n\n```python\nfrom dataclasses import dataclass\nfrom typing import Protocol\n\nclass DiscountStrategy(Protocol):\n    def apply(self, amount: float) -> float: ...\n\nclass NoDiscount:\n    def apply(self, amount: float) -> float:\n        return amount\n\nclass TenPercent:\n    def apply(self, amount: float) -> float:\n        return amount * 0.9\n\nclass HolidayDiscount:\n    def apply(self, amount: float) -> float:\n        return amount * 0.75\n\ndef apply_discount(amount: float, kind: str) -> float:\n    strategies: dict[str, DiscountStrategy] = {\n        \"none\": NoDiscount(),\n        \"10pct\": TenPercent(),\n        \"holiday\": HolidayDiscount(),\n    }\n    return strategies[kind].apply(amount)\n```\n\n## Test\n\n```python\nimport pytest\nfrom strategy import apply_discount\n\ndef test_holiday_discount():\n    assert apply_discount(100, \"holiday\") == 75.0\n\ndef test_unknown_strategy():\n    with pytest.raises(KeyError):\n        apply_discount(100, \"nope\")\n```\n\n```bash\npython -m pytest tests/ -v\n```\n\n## Best practices\n\n- Strategies implement the same protocol - no type checks.\n- Register strategies in a lookup, not if/elif chains.\n- Make strategies stateless when possible.\n- Name by behavior: TenPercent, not Strategy1.\n\n## Testing\n\nTest each strategy and the registry lookups, including unknown keys.",
+  "examples": [
+    {
+      "input": "Apply different discount rules per campaign.",
+      "output": "Implements strategy classes behind one protocol and routes via a strategy registry."
+    },
+    {
+      "input": "Add a new shipping calculator without touching checkout.",
+      "output": "Adds a new strategy class and one registry entry; checkout logic untouched."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "strategy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-strategy"
+    },
+    "generic": {
+      "system_prompt": "You work Strategy hands-on. You do it through python-pytest: Implement and test strategy examples. The commands are real, e.g. `python -m pytest tests/ -v`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "strategy",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "python-pytest",
+        "name": "k",
+        "type": "string",
+        "description": "Test name filter"
+      },
+      {
+        "capability": "python-pytest",
+        "name": "cov",
+        "type": "string",
+        "description": "Coverage target module"
+      },
+      {
+        "capability": "python-pytest",
+        "name": "tb",
+        "type": "string",
+        "description": "Traceback format: short, long, line"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "patterns/strategy-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/patterns/strategy-skill.yaml",
+    "checksum": "c2610407de48a454a90ad6e594f97ea748f4f6631cabdd742e4f3741942f77b5"
+  }
+}

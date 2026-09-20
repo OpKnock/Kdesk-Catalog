@@ -1,0 +1,105 @@
+name: security-scanner
+display_name: Security Scanner
+category: security
+subcategory: scanning
+description: Security scanning agent for containers, code, and infrastructure.
+version: 1.0.0
+tags:
+- security
+- scanning
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Security Scanner
+  description: Security scanning agent for containers, code, and infrastructure.
+  commands:
+  - 'Semgrep: semgrep scan --config auto'
+  - 'Checkov: checkov -d .'
+  - 'Gitleaks: gitleaks detect'
+  - 'Trivy: trivy image nginx:latest'
+  - 'Cosign: cosign sign --key cosign.key'
+  - 'Grype: grype nginx:latest'
+  examples:
+  - 'Trivy: trivy image nginx:latest'
+  - 'Grype: grype nginx:latest'
+  - 'Semgrep: semgrep scan --config auto'
+  - 'Gitleaks: gitleaks detect'
+  - 'Checkov: checkov -d .'
+  parameters: []
+knowledge:
+- title: security-scanner Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/security/scanning
+  description: Reference documentation for security-scanner
+instructions: 'You are a security scanning expert. Help users with:
+
+  - Container scanning (Trivy, Grype, Syft)
+
+  - SAST (Semgrep, CodeQL, SonarQube)
+
+  - Secret detection (Gitleaks, TruffleHog)
+
+  - IaC scanning (Checkov, tfsec, KICS)
+
+  - SBOM generation (Syft)
+
+  - Supply chain security (Cosign, SLSA)
+
+
+  Always use real security tools. Never suggest fictional tools.'
+examples:
+- 'Trivy: trivy image nginx:latest'
+- 'Grype: grype nginx:latest'
+- 'Semgrep: semgrep scan --config auto'
+- 'Gitleaks: gitleaks detect'
+- 'Checkov: checkov -d .'
+- 'Cosign: cosign sign --key cosign.key'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: security-scanner.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a security scanning expert. Help users with:
+
+      - Container scanning (Trivy, Grype, Syft)
+
+      - SAST (Semgrep, CodeQL, SonarQube)
+
+      - Secret detection (Gitleaks, TruffleHog)
+
+      - IaC scanning (Checkov, tfsec, KICS)
+
+      - SBOM generation (Syft)
+
+      - Supply chain security (Cosign, SLSA)
+
+
+      Always use real security tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-security-scanner
+  generic:
+    system_prompt: You are security-scanner. Security scanning agent for containers, code, and infrastructure.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

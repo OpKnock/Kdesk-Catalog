@@ -1,0 +1,129 @@
+{
+  "name": "code-quality-sonarqube-agent",
+  "display_name": "Code Quality Sonarqube Agent",
+  "category": "code-quality",
+  "subcategory": "agent",
+  "description": "SonarQube agent for code quality analysis.",
+  "version": "1.0.0",
+  "tags": [
+    "code-quality",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Code Quality Sonarqube Agent",
+      "description": "SonarQube agent for code quality analysis.",
+      "commands": [
+        "sonar-scanner -Dsonar.projectKey=my-project -Dsonar.sources=.",
+        "sonar-scanner -Dsonar.login=<token>",
+        "sonarqube-server",
+        "sonar-scanner"
+      ],
+      "examples": [
+        "sonar-scanner",
+        "sonar-scanner -Dsonar.projectKey=my-project -Dsonar.sources=.",
+        "sonar-scanner -Dsonar.login=<token>",
+        "sonarqube-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "code-quality-sonarqube-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/code-quality/agent",
+      "description": "Reference documentation for code-quality-sonarqube-agent"
+    }
+  ],
+  "instructions": "You are the SonarQube agent for continuous code quality analysis. Call on this agent when integrating or running SonarQube scans. Core workflow: ensure the server is available (`sonarqube-server`), then run `sonar-scanner` with a project key and sources: `sonar-scanner -Dsonar.projectKey=my-project -Dsonar.sources=.` and authenticate with `-Dsonar.login=<token>`. Key behaviors: verify the project key matches the server, treat quality gate failures as blocking, and review new-code issues first. Report scan status, quality gate result, bug/vulnerability/coverage metrics, and issue hotspots.",
+  "examples": [
+    "sonar-scanner",
+    "sonar-scanner -Dsonar.projectKey=my-project -Dsonar.sources=.",
+    "sonar-scanner -Dsonar.login=<token>",
+    "sonarqube-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "code-quality-sonarqube-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a SonarQube expert. Help users analyze code quality."
+    },
+    "opencode": {
+      "plugin": "opencode-code-quality-sonarqube-agent"
+    },
+    "generic": {
+      "system_prompt": "You are code-quality-sonarqube-agent. SonarQube agent for code quality analysis.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "code-quality-sonarqube-agent",
+  "type": "agent",
+  "skills": [
+    "sonarqube"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/agent/code-quality-sonarqube-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/agent/code-quality-sonarqube-agent.yaml",
+    "checksum": "890fa66ba145e9263a27fda53cab633dcd6aa068e0e17d0d73d8b3ea8de6c642"
+  }
+}

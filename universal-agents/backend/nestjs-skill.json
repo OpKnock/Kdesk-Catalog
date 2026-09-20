@@ -1,0 +1,192 @@
+{
+  "name": "nestjs",
+  "display_name": "nestjs",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Builds structured Node.js services with NestJS: modules, controllers, providers, CLI scaffolding, and testing.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npm",
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "npx @nestjs/cli new myapp",
+        "npx nest generate module orders",
+        "npx nest generate controller orders",
+        "npx nest generate service orders",
+        "npm run start:dev"
+      ],
+      "description": "Scaffold modules, controllers, and services.",
+      "name": "nestjs-cli",
+      "examples": [
+        "npx nest g resource users --no-spec",
+        "npx nest generate pipe validation",
+        "npm run start -- --watch"
+      ],
+      "parameters": [
+        {
+          "description": "Element name",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "description": "module, controller, service, pipe, guard",
+          "name": "type",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "npm test",
+        "npm run test:e2e",
+        "npm run test -- --testPathPattern=\"orders\"",
+        "npm run test -- --coverage"
+      ],
+      "description": "Run unit and e2e tests.",
+      "name": "nestjs-testing",
+      "examples": [
+        "npm run test:e2e -- --runInBand",
+        "npm run test -- --watch"
+      ],
+      "parameters": [
+        {
+          "description": "Test name pattern",
+          "name": "testPathPattern",
+          "type": "string"
+        },
+        {
+          "name": "e2e",
+          "type": "boolean",
+          "description": "Run the end-to-end suite"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "NestJS Docs",
+      "description": "Modules, DI, guards, and testing guide",
+      "source": "https://docs.nestjs.com",
+      "type": "documentation"
+    },
+    {
+      "title": "NestJS CLI Reference",
+      "description": "nest generate commands",
+      "source": "https://docs.nestjs.com/cli/overview",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# NestJS\n\nStructured Node.js framework for scalable services.\n\n## When to Use\n\n- Services needing clear module boundaries and dependency injection\n- Teams that want opinionated structure and conventions\n- APIs combining REST, GraphQL, WebSockets, and microservices\n- Enterprise Node.js with built-in testing support\n\n## Commands\n\n```bash\n# New app\nnpx @nestjs/cli new myapp\n\n# Scaffolding\nnpx nest generate module orders\nnpx nest generate controller orders\nnpx nest generate service orders\nnpx nest generate pipe validation\n\n# Run\nnpm run start:dev\nnpm run start -- --watch\n\n# Tests\nnpm test\nnpm run test:e2e\n```\n\n## Module Example\n\n```typescript\n// orders.module.ts\n@Module({\n  imports: [DatabaseModule],\n  controllers: [OrdersController],\n  providers: [OrdersService],\n})\nexport class OrdersModule {}\n```\n\n```typescript\n// orders.controller.ts\n@Controller(\"orders\")\nexport class OrdersController {\n  constructor(private readonly ordersService: OrdersService) {}\n\n  @Get(\":id\")\n  findOne(@Param(\"id\") id: string) {\n    return this.ordersService.findOne(id);\n  }\n}\n```\n\n## Best Practices\n\n- One resource per module with clear imports/exports\n- Use guards for auth and pipes for validation at boundaries\n- Keep services free of HTTP concerns\n- Write unit tests with jest mocks for providers\n- Run e2e tests against a real test database in CI\n- Follow the nest CLI naming for consistency",
+  "examples": [
+    {
+      "input": "Add a users resource with CRUD",
+      "output": "Agent runs npx nest g resource users, wires the module into app.module, and starts the dev server to verify."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "nestjs.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-nestjs"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: nestjs. You do it through nestjs-cli: Scaffold modules, controllers, and services. The commands are real, e.g. `npx @nestjs/cli new myapp`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "nestjs",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "nestjs-cli",
+        "name": "name",
+        "type": "string",
+        "description": "Element name"
+      },
+      {
+        "capability": "nestjs-cli",
+        "name": "type",
+        "type": "string",
+        "description": "module, controller, service, pipe, guard"
+      },
+      {
+        "capability": "nestjs-testing",
+        "name": "testPathPattern",
+        "type": "string",
+        "description": "Test name pattern"
+      },
+      {
+        "capability": "nestjs-testing",
+        "name": "e2e",
+        "type": "boolean",
+        "description": "Run the end-to-end suite"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npm",
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/nestjs-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/nestjs-skill.yaml",
+    "checksum": "b88f490869c5898393a1fb5868ae43abe410394e8b074d89922b396f194e97a1"
+  }
+}

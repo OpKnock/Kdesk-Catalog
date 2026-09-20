@@ -1,0 +1,179 @@
+name: buildah
+display_name: buildah
+category: devops
+subcategory: general
+description: 'Builds OCI container images without a daemon using buildah: containerfiles, commits, and
+  pushes.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- buildah
+capabilities:
+- name: buildah-images
+  description: Create, modify, commit, and push container images
+  commands:
+  - buildah bud -t myapp:latest .
+  - buildah from alpine:3.19
+  - buildah run container1 -- sh -c "apk add --no-cache curl"
+  - buildah commit container1 myimage:v1
+  - buildah push myimage quay.io/org/myimage:v1
+  examples:
+  - buildah bud -f Containerfile.dev -t myapp:dev .
+  - buildah images
+  - buildah rm -a && buildah rmi -a
+  parameters:
+  - name: tag
+    type: string
+    description: Image tag, e.g. myapp:latest
+  - name: file
+    type: string
+    description: Containerfile path (-f)
+  - name: layers
+    type: boolean
+    description: Use layer caching during bud
+knowledge:
+- title: buildah docs
+  type: documentation
+  source: https://buildah.io/
+  description: CLI reference and use cases
+- title: buildah command reference
+  type: documentation
+  source: https://github.com/containers/buildah/blob/main/docs/buildah.1.md
+  description: Full command list with examples
+instructions: '# Buildah
+
+
+  Builds OCI images without a daemon and without root for many workflows: handy for
+
+  CI where Docker isn''t available.
+
+
+  ## When to Use
+
+
+  - Building images in rootless CI environments
+
+  - Fine-grained image creation from the CLI
+
+  - Replacing docker build in daemon-less hosts
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Build from a Containerfile
+
+  sudo buildah bud -t myapp:latest .
+
+  sudo buildah bud -f Containerfile.dev -t myapp:dev --layers .
+
+
+  # Manual image construction
+
+  ctr=$(sudo buildah from alpine:3.19)
+
+  sudo buildah run $ctr -- sh -c "apk add --no-cache curl"
+
+  sudo buildah config --entrypoint ''["/usr/bin/myapp"]'' $ctr
+
+  sudo buildah commit $ctr myimage:v1
+
+
+  # Inspect
+
+  sudo buildah images
+
+  sudo buildah inspect myimage:v1
+
+
+  # Push
+
+  sudo buildah push myimage:v1 quay.io/org/myimage:v1
+
+
+  # Cleanup
+
+  sudo buildah rm -a
+
+  sudo buildah rmi -a
+
+  ```
+
+
+  ## Containerfile Example
+
+
+  ```dockerfile
+
+  FROM alpine:3.19
+
+  RUN apk add --no-cache curl
+
+  COPY app /usr/bin/app
+
+  ENTRYPOINT ["/usr/bin/app"]
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Prefer `buildah bud` from a committed Containerfile
+
+  - Use `--layers` to reuse cache in CI
+
+  - Set labels and entrypoint via buildah config
+
+  - Combine buildah push with skopeo for cross-repo copies
+
+  - Clean up build containers in CI to avoid leaks
+
+
+  ## Example Response
+
+
+  Builds the image, verifies it with inspect, pushes it, and cleans up the
+
+  intermediate build containers.'
+examples:
+- input: Build the app image in CI
+  output: Runs buildah bud --layers, tags it, pushes to the registry, and cleans up
+- input: Add a debugging tool to an image
+  output: Runs the container, installs curl via buildah run, commits as a new tag
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: buildah.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-buildah
+  generic:
+    system_prompt: 'This is your domain: buildah. You do it through buildah-images: Create, modify, commit,
+      and push container images. The commands are real, e.g. `buildah bud -t myapp:latest .`. You run
+      and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

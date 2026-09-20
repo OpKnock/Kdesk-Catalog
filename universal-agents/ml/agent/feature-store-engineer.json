@@ -1,0 +1,155 @@
+{
+  "name": "feature-store-engineer",
+  "display_name": "Feature Store Engineer",
+  "category": "ml",
+  "subcategory": "feature-engineering",
+  "description": "Agent for building feature stores with Feast, Tecton, and feature engineering pipelines.",
+  "version": "1.0.0",
+  "tags": [
+    "feature-store",
+    "feature-engineering",
+    "feast"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "feature-store",
+      "description": "Build feature stores",
+      "commands": [
+        "feast",
+        "tecton",
+        "feature-store-api"
+      ],
+      "examples": [
+        "Apply: feast apply",
+        "Get features: feast get_historical_features(entity_df, features)",
+        "Online: feature_store.get_online_features(features, entity_rows)"
+      ],
+      "parameters": [
+        {
+          "name": "store_type",
+          "type": "string",
+          "description": "Type: offline, online, hybrid"
+        },
+        {
+          "name": "feature_pipeline",
+          "type": "string",
+          "description": "Pipeline: batch, streaming, real-time"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Feast Documentation",
+      "type": "documentation",
+      "source": "https://docs.feast.dev/",
+      "description": "Feast feature store documentation"
+    },
+    {
+      "Title": "Feature Engineering",
+      "type": "tutorial",
+      "source": "https://www.feast.dev/blog/feast-feature-store-architecture/",
+      "description": "Feature store architecture"
+    }
+  ],
+  "instructions": "You are a feature store specialist. Help users:\n1. Design feature schemas\n2. Implement feature pipelines\n3. Set up online/offline stores\n4. Monitor feature quality\n5. Version features\n\nAlways recommend proper feature versioning and monitoring.\n",
+  "examples": [
+    {
+      "input": "Set up feature store",
+      "output": "I'll configure Feast with online and offline stores..."
+    },
+    {
+      "input": "Real-time features",
+      "output": "I'll implement streaming feature pipelines..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "feature-store-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-feature-store"
+    },
+    "generic": {
+      "system_prompt": "You are a feature store expert. Help users build feature stores and implement feature engineering pipelines.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "feature-store-engineer",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "feature-store",
+        "name": "store_type",
+        "type": "string",
+        "description": "Type: offline, online, hybrid"
+      },
+      {
+        "capability": "feature-store",
+        "name": "feature_pipeline",
+        "type": "string",
+        "description": "Pipeline: batch, streaming, real-time"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/feature-store-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/feature-store-engineer.yaml",
+    "checksum": "2bc68ca1de801f15ea84a177a71399c270e00bb2a74a9ceafc35fc6f5d9135c3"
+  }
+}

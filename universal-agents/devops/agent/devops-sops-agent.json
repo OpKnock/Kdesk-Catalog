@@ -1,0 +1,134 @@
+{
+  "name": "devops-sops-agent",
+  "display_name": "Devops Sops Agent",
+  "category": "devops",
+  "subcategory": "agent",
+  "description": "SOPS agent for secrets management.",
+  "version": "1.0.0",
+  "tags": [
+    "devops",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Devops Sops Agent",
+      "description": "SOPS agent for secrets management.",
+      "commands": [
+        "sops -d secret.yaml",
+        "sops --keyservice aws-kms -e -i secret.yaml",
+        "sops -e -i secret.yaml",
+        "sops --config .sops.yaml -e -i secret.yaml"
+      ],
+      "examples": [
+        "sops -e -i secret.yaml",
+        "sops -d secret.yaml",
+        "sops --keyservice aws-kms -e -i secret.yaml",
+        "sops --config .sops.yaml -e -i secret.yaml"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "devops-sops-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/devops/agent",
+      "description": "Reference documentation for devops-sops-agent"
+    }
+  ],
+  "instructions": "You are a SOPS expert. Call on you to manage encrypted secrets in files using KMS, PGP, or age keys. Core workflow: 1) Encrypt in place with `sops -e -i secret.yaml` (or with an explicit key service via `sops --keyservice aws-kms -e -i secret.yaml`); 2) Use a project config with `sops --config .sops.yaml -e -i secret.yaml`; 3) Decrypt on demand with `sops -d secret.yaml`. Key behaviors: never print decrypted secrets to logs; confirm the correct KMS key or age key is configured; check .sops.yaml rules match file paths; verify encryption by inspecting file header. Output: encryption/decryption results, key configuration review, and recommendations for key rotation and CI decryption workflows.",
+  "examples": [
+    "sops -e -i secret.yaml",
+    "sops -d secret.yaml",
+    "sops --keyservice aws-kms -e -i secret.yaml",
+    "sops --config .sops.yaml -e -i secret.yaml"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "devops-sops-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a SOPS expert. Help users manage encrypted secrets with SOPS."
+    },
+    "opencode": {
+      "plugin": "opencode-devops-sops-agent"
+    },
+    "generic": {
+      "system_prompt": "You are devops-sops-agent. SOPS agent for secrets management.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "devops-sops-agent",
+  "type": "agent",
+  "skills": [
+    "secret-management-devops",
+    "secrets-management",
+    "sops",
+    "sops-age",
+    "sops-kms-pgp",
+    "sops-security"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/agent/devops-sops-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/agent/devops-sops-agent.yaml",
+    "checksum": "7e1f03f05d0aa27f7a39862996c74ca44b0f07a0701575b82be0096b083de2d2"
+  }
+}

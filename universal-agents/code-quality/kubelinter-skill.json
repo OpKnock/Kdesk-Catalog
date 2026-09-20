@@ -1,0 +1,209 @@
+{
+  "name": "kubelinter",
+  "display_name": "Kubelinter",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Lints Kubernetes manifests with KubeLinter: security, best-practice, and reliability checks with config-driven rules.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kubelinter"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "kubelinter lint deploy.yaml",
+        "kubelinter lint k8s/",
+        "kubelinter lint --config .kubelinter.yaml deploy.yaml",
+        "kubelinter lint --fail-on warning deploy.yaml",
+        "kubelinter lint --format json -o report.json k8s/"
+      ],
+      "description": "Scan manifests and directories.",
+      "name": "kubelinter-scan",
+      "examples": [
+        "kubelinter lint --fail-on error k8s/",
+        "kubelinter lint --format sarif -o report.sarif k8s/",
+        "kubelinter lint --default-checks k8s/"
+      ],
+      "parameters": [
+        {
+          "description": "Files or directories",
+          "name": "paths",
+          "type": "string"
+        },
+        {
+          "description": "warning, error",
+          "name": "fail-on",
+          "type": "string"
+        },
+        {
+          "description": "text, json, sarif",
+          "name": "format",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "kubelinter lint --list-checks",
+        "kubelinter lint --disable-checks privileged-containers deploy.yaml",
+        "kubelinter lint --only-checks no-read-only-root-fs deploy.yaml",
+        "kubelinter version"
+      ],
+      "description": "Customize checks and policies.",
+      "name": "kubelinter-config",
+      "examples": [
+        "kubelinter lint --list-checks | grep -i \"privileged\"",
+        "kubelinter lint --only-checks run-as-non-root deploy.yaml"
+      ],
+      "parameters": [
+        {
+          "description": "Comma-separated checks",
+          "name": "checks",
+          "type": "string"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Config file path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "KubeLinter Docs",
+      "description": "Checks, config, and CLI",
+      "source": "https://docs.kubelinter.io",
+      "type": "documentation"
+    },
+    {
+      "title": "KubeLinter on GitHub",
+      "description": "Source and default checks",
+      "source": "https://github.com/stackrox/kube-linter",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# KubeLinter\n\nLint Kubernetes YAML for security and reliability.\n\n## When to Use\n\n- Scanning manifests before apply or deploy\n- CI gates on configuration drift\n- Enforcing security defaults (non-root, read-only fs)\n- Auditing existing cluster manifests\n\n## Commands\n\n```bash\n# Lint a file or directory\nkubelinter lint deploy.yaml\nkubelinter lint k8s/\n\n# Custom config\nkubelinter lint --config .kubelinter.yaml deploy.yaml\n\n# Fail on warnings\nkubelinter lint --fail-on warning deploy.yaml\n\n# Reports\nkubelinter lint --format json -o report.json k8s/\nkubelinter lint --format sarif -o report.sarif k8s/\n\n# Check selection\nkubelinter lint --list-checks\nkubelinter lint --disable-checks privileged-containers deploy.yaml\nkubelinter lint --only-checks no-read-only-root-fs deploy.yaml\n```\n\n## Config Example\n\n```yaml\n# .kubelinter.yaml\nchecks:\n  addAllBuiltIn: true\n  doNotAutoAddDefaults: false\n  exclude:\n    - privileged-containers\n```\n\n## Best Practices\n\n- Run kubelinter in CI before every deploy\n- Enable run-as-non-root and no-read-only-root-fs checks\n- Use --fail-on error for blockers, warning for review\n- Generate SARIF for GitHub Code Scanning\n- Keep the config in the repo for consistency\n- Review default checks before disabling any",
+  "examples": [
+    {
+      "input": "Lint my k8s manifests before deploy",
+      "output": "Agent runs kubelinter lint k8s/, fixes the warnings, and wires it into the pipeline with --fail-on warning."
+    },
+    {
+      "input": "Enforce non-root containers",
+      "output": "Agent configures the check in .kubelinter.yaml and flags offending deployments."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kubelinter.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kubelinter"
+    },
+    "generic": {
+      "system_prompt": "You are the Kubelinter specialist. You do it through kubelinter-scan: Scan manifests and directories. The commands are real, e.g. `kubelinter lint deploy.yaml`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kubelinter",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "kubelinter-scan",
+        "name": "paths",
+        "type": "string",
+        "description": "Files or directories"
+      },
+      {
+        "capability": "kubelinter-scan",
+        "name": "fail-on",
+        "type": "string",
+        "description": "warning, error"
+      },
+      {
+        "capability": "kubelinter-scan",
+        "name": "format",
+        "type": "string",
+        "description": "text, json, sarif"
+      },
+      {
+        "capability": "kubelinter-config",
+        "name": "checks",
+        "type": "string",
+        "description": "Comma-separated checks"
+      },
+      {
+        "capability": "kubelinter-config",
+        "name": "config",
+        "type": "string",
+        "description": "Config file path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kubelinter"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/kubelinter-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/kubelinter-skill.yaml",
+    "checksum": "920823b7f6dbc9cfea9d2bbcdcf512990883ed0a02c9cf09bc9dc8b5f9b7d18f"
+  }
+}

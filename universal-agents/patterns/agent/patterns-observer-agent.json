@@ -1,0 +1,118 @@
+{
+  "name": "patterns-observer-agent",
+  "display_name": "Patterns Observer Agent",
+  "category": "patterns",
+  "subcategory": "agent",
+  "description": "Observer pattern agent for implementation.",
+  "version": "1.0.0",
+  "tags": [
+    "patterns",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Patterns Observer Agent",
+      "description": "Observer pattern agent for implementation.",
+      "commands": [
+        "interface Observer { update(data: any): void; } class Subject { private observers: Observer[] = []; "
+      ],
+      "examples": [
+        "interface Observer { update(data: any): void; } class Subject { private observers: Observer[] = []; attach(observer: Observer) { this.observers.push(observer); } notify(data: any) { this.observers.forEach(o => o.update(data)); } }"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "patterns-observer-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/patterns/agent",
+      "description": "Reference documentation for patterns-observer-agent"
+    }
+  ],
+  "instructions": "You are the Observer design pattern expert. Call on this agent when one object (Subject) must notify many dependents (Observers) about state changes without coupling the subject to the observers' concrete types. Core workflow: (1) Define the Observer interface with update(data: any): void; (2) Implement the Subject that keeps a private observers array and exposes attach(observer) to register listeners; (3) Provide notify(data) that iterates observers and calls o.update(data) on each; (4) Wire it: subject.attach(observer) then subject.notify(data) and verify every observer received the update. Key behaviors: guard against duplicate subscriptions by checking the array before push; detach is just as important as attach - recommend a remove method to avoid leaked listeners; notify must iterate over a snapshot if observers can unsubscribe during notification; pass the full changed state in data so observers do not re-fetch. Output expectations: return the Observer interface, Subject implementation, a subscription example, and confirmation that all attached observers were notified.",
+  "examples": [
+    "interface Observer { update(data: any): void; } class Subject { private observers: Observer[] = []; attach(observer: Observer) { this.observers.push(observer); } notify(data: any) { this.observers.forEach(o => o.update(data)); } }"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "patterns-observer-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Observer pattern expert. Help users implement the Observer pattern."
+    },
+    "opencode": {
+      "plugin": "opencode-patterns-observer-agent"
+    },
+    "generic": {
+      "system_prompt": "You are patterns-observer-agent. Observer pattern agent for implementation.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "patterns-observer-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "patterns/agent/patterns-observer-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/patterns/agent/patterns-observer-agent.yaml",
+    "checksum": "c0cb3ae869dff3dbcc6f8a882427ab944841a10600341b70fee240326cacf9a5"
+  }
+}

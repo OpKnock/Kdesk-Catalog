@@ -1,0 +1,186 @@
+{
+  "name": "api-sdk-changesets",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Manages SDK versioning and releases with changesets: change tracking, version bumps, changelogs, and semantic-release automation.",
+  "keywords": [
+    "api-sdk"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-sdk-changesets.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-sdk-changesets"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Api Sdk Changesets. You do it through changesets: Track SDK changes with changesets. The commands are real, e.g. `npx @changesets/cli init`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "changesets",
+      "description": "Track SDK changes with changesets",
+      "commands": [
+        "npx @changesets/cli init",
+        "npx changeset",
+        "npx changeset version",
+        "npx changeset status",
+        "npx changeset publish"
+      ],
+      "examples": [
+        "npx changeset adds a changeset file",
+        "changeset version bumps versions and changelogs",
+        "changeset publish releases to npm"
+      ],
+      "parameters": [
+        {
+          "name": "semver",
+          "type": "string",
+          "description": "major, minor, or patch bump"
+        },
+        {
+          "name": "package",
+          "type": "string",
+          "description": "Package to release"
+        },
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "npm dist-tag"
+        }
+      ]
+    },
+    {
+      "name": "semantic-release",
+      "description": "Automate releases from commit messages",
+      "commands": [
+        "npx semantic-release --dry-run",
+        "npx semantic-release",
+        "npm version major",
+        "git tag -a v2.0.0 -m 'SDK v2.0.0'"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "openapi-generator",
+    "node.js",
+    "python"
+  ],
+  "tools": [
+    "openapi-generator",
+    "node.js",
+    "python",
+    "typescript"
+  ],
+  "examples": [
+    {
+      "input": "Release SDK v1.1.0",
+      "output": "Adds a patch changeset, runs version and publish"
+    },
+    {
+      "input": "Preview a release",
+      "output": "Runs semantic-release --dry-run to verify the next version"
+    }
+  ],
+  "instructions": "# API SDK v5 - Releases\n\nSDK versioning and release automation.\n\n## What This Skill Does\n- Tracks changes with changesets\n- Bumps versions and writes changelogs\n- Automates publishing with semantic-release\n\n## When to Use\n- Multi-package SDK releases\n- Enforcing semver discipline\n- Automating npm publishing\n\n## Real Commands\n\n```bash\nnpx @changesets/cli init\nnpx changeset\nnpx changeset version\nnpx changeset publish\nnpx semantic-release --dry-run\n```\n\n## Changeset Flow\n1. Author changes: npx changeset\n2. Version: npx changeset version\n3. Publish: npx changeset publish\n\n## Testing\n- Run version bumps in a dry run\n- Verify changelog entries per release\n- Test publish on a canary tag\n\n## Best Practices\n- Require changesets for all PRs\n- Use semver ranges intentionally\n- Automate release notes from changelogs",
+  "display_name": "Api Sdk Changesets",
+  "knowledge": [
+    {
+      "title": "Changesets",
+      "type": "documentation",
+      "source": "https://github.com/changesets/changesets",
+      "description": "Versioning and changelog tooling"
+    },
+    {
+      "title": "Semantic Release",
+      "type": "documentation",
+      "source": "https://semantic-release.gitbook.io/",
+      "description": "Automated release tool"
+    }
+  ],
+  "id": "api-sdk-changesets",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "changesets",
+        "name": "semver",
+        "type": "string",
+        "description": "major, minor, or patch bump"
+      },
+      {
+        "capability": "changesets",
+        "name": "package",
+        "type": "string",
+        "description": "Package to release"
+      },
+      {
+        "capability": "changesets",
+        "name": "tag",
+        "type": "string",
+        "description": "npm dist-tag"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "openapi-generator",
+    "node.js",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-sdk-changesets/skill/api-sdk-changesets.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-sdk-changesets/skill/api-sdk-changesets.yaml",
+    "checksum": "333e4979e75f63e4bdf0f20aa4aced37d45c6bf5718935e2defb2741d0f666a5"
+  }
+}

@@ -1,0 +1,208 @@
+{
+  "name": "circuit-breaker-implementer-circuit-breaker-implementer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Implements circuit breakers and bulkheads in services with resilience4j, Hystrix-style patterns, and fallback strategies.",
+  "keywords": [
+    "circuit-breaker",
+    "resilience",
+    "hystrix",
+    "resilience4j",
+    "bulkhead"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "circuit-breaker-implementer-circuit-breaker-implementer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-circuit-breaker-implementer"
+    },
+    "generic": {
+      "system_prompt": "You own circuit-breaker-implementer-circuit-breaker-implementer end to end. You do it through resilience4j: Configure circuit breaker, retry, and bulkhead policies. The commands are real, e.g. `mvn dependency:tree | grep resilience4j`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "commands": [
+        "mvn dependency:tree | grep resilience4j",
+        "gradle dependencies | grep resilience4j",
+        "curl -s http://localhost:8080/actuator/health",
+        "curl -s http://localhost:8080/actuator/circuitbreakers",
+        "curl -s http://localhost:8080/actuator/metrics/resilience4j.circuitbreaker.state"
+      ],
+      "description": "Configure circuit breaker, retry, and bulkhead policies.",
+      "name": "resilience4j",
+      "examples": [
+        "curl -s http://localhost:8080/actuator/circuitbreakers | python -m json.tool",
+        "curl -s http://localhost:8080/actuator/health | python -m json.tool"
+      ],
+      "parameters": [
+        {
+          "description": "Downstream service name",
+          "name": "service",
+          "type": "string"
+        },
+        {
+          "description": "Failure rate threshold",
+          "name": "threshold",
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/api/orders",
+        "ab -n 500 -c 20 http://localhost:8080/api/orders",
+        "curl -s http://localhost:8080/actuator/circuitbreakerevents",
+        "curl -s -H \"Accept: application/json\" http://localhost:8080/api/orders -w \"\\n%{http_code}\""
+      ],
+      "description": "Verify breaker behavior under failure.",
+      "name": "failure-probing",
+      "examples": [
+        "ab -n 500 -c 20 -H \"Accept: application/json\" http://localhost:8080/api/orders",
+        "curl -s http://localhost:8080/actuator/circuitbreakerevents | python -m json.tool"
+      ],
+      "parameters": [
+        {
+          "description": "Protected endpoint",
+          "name": "endpoint",
+          "type": "string"
+        },
+        {
+          "name": "concurrency",
+          "type": "integer",
+          "description": "Concurrent requests for load probing"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "resilience4j",
+    "redis"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "resilience4j",
+    "redis",
+    "prometheus",
+    "grafana"
+  ],
+  "examples": [
+    {
+      "input": "Protect my API from a failing payment service",
+      "output": "Agent adds a circuit breaker with a fallback, sets threshold from baseline error rate, and verifies transitions via actuator."
+    },
+    {
+      "input": "Why is my circuit breaker always open?",
+      "output": "Agent checks recorded exceptions, sliding window size, and suggested adjusting failureRateThreshold and timeouts."
+    }
+  ],
+  "instructions": "# Circuit Breaker Implementer\n\nProtect services from cascading failures.\n\n## When to Use\n\n- Calls to flaky or slow downstream services\n- Preventing timeout pileups during outages\n- Providing fast fallbacks when a dependency is down\n- Isolating failure domains (bulkheads)\n\n## States\n\n- Closed: requests pass; failure rate tracked\n- Open: fail fast; no calls to the dependency\n- Half-open: limited trial calls to test recovery\n\n## Config Example (resilience4j)\n\n```yaml\nresilience4j.circuitbreaker:\n  instances:\n    ordersApi:\n      slidingWindowSize: 10\n      failureRateThreshold: 50\n      waitDurationInOpenState: 30s\n      permittedNumberOfCallsInHalfOpenState: 3\n      recordExceptions:\n        - java.io.IOException\n```\n\n## Commands\n\n```bash\n# Check breaker state via actuator\ncurl -s http://localhost:8080/actuator/circuitbreakers\ncurl -s http://localhost:8080/actuator/health\ncurl -s http://localhost:8080/actuator/circuitbreakerevents\n\n# Load test to observe transitions\nab -n 500 -c 20 http://localhost:8080/api/orders\n```\n\n## Java Example\n\n```java\n@CircuitBreaker(name = \"ordersApi\", fallbackMethod = \"ordersFallback\")\npublic List<Order> fetchOrders() {\n    return ordersClient.getOrders();\n}\n\npublic List<Order> ordersFallback(Exception ex) {\n    return List.of(); // degraded response\n}\n```\n\n## Best Practices\n\n- Set failure thresholds from observed baseline error rates\n- Keep waitDurationInOpenState long enough to let deps recover\n- Always provide a fallback; never fail without one\n- Record exceptions narrowly (timeouts, 5xx) not domain errors\n- Combine with retry that has its own limits (retry then break)\n- Expose breaker state in metrics and alert on transitions",
+  "display_name": "circuit-breaker-implementer-circuit-breaker-implementer",
+  "knowledge": [
+    {
+      "title": "Resilience4j Docs",
+      "description": "Circuit breaker, retry, bulkhead reference",
+      "source": "https://resilience4j.readme.io",
+      "type": "documentation"
+    },
+    {
+      "title": "Circuit Breaker Pattern",
+      "description": "Pattern description and guidance",
+      "source": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker",
+      "type": "documentation"
+    }
+  ],
+  "id": "circuit-breaker-implementer-circuit-breaker-implementer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "resilience4j",
+        "name": "service",
+        "type": "string",
+        "description": "Downstream service name"
+      },
+      {
+        "capability": "resilience4j",
+        "name": "threshold",
+        "type": "number",
+        "description": "Failure rate threshold"
+      },
+      {
+        "capability": "failure-probing",
+        "name": "endpoint",
+        "type": "string",
+        "description": "Protected endpoint"
+      },
+      {
+        "capability": "failure-probing",
+        "name": "concurrency",
+        "type": "integer",
+        "description": "Concurrent requests for load probing"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "resilience4j",
+    "redis"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "circuit-breaker-implementer/skill/circuit-breaker-implementer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/circuit-breaker-implementer/skill/circuit-breaker-implementer.yaml",
+    "checksum": "ff17d589250416e201361b31497736d9dc1135484c55a2ee03f0d822bd8333a3"
+  }
+}

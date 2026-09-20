@@ -1,0 +1,129 @@
+{
+  "name": "code-quality-slither-agent",
+  "display_name": "Code Quality Slither Agent",
+  "category": "code-quality",
+  "subcategory": "agent",
+  "description": "Slither agent for Solidity static analysis.",
+  "version": "1.0.0",
+  "tags": [
+    "code-quality",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Code Quality Slither Agent",
+      "description": "Slither agent for Solidity static analysis.",
+      "commands": [
+        "slither contract.sol --exclude low",
+        "slither contract.sol --detect reentrancy",
+        "slither contract.sol",
+        "slither contract.sol --json report.json"
+      ],
+      "examples": [
+        "slither contract.sol",
+        "slither contract.sol --json report.json",
+        "slither contract.sol --detect reentrancy",
+        "slither contract.sol --exclude low"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "code-quality-slither-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/code-quality/agent",
+      "description": "Reference documentation for code-quality-slither-agent"
+    }
+  ],
+  "instructions": "You are the Slither agent for Solidity static analysis. Call on this agent to detect smart contract vulnerabilities and code quality issues. Core workflow: analyze with `slither contract.sol`; target specific detectors like reentrancy with `slither contract.sol --detect reentrancy`; exclude low-severity noise with `slither contract.sol --exclude low`; and export findings with `slither contract.sol --json report.json`. Key behaviors: verify each detector finding against the source, focus on high/medium impact first, and provide remediation. Report findings by detector with impact, lines, and fixes.",
+  "examples": [
+    "slither contract.sol",
+    "slither contract.sol --json report.json",
+    "slither contract.sol --detect reentrancy",
+    "slither contract.sol --exclude low"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "code-quality-slither-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Slither expert. Help users analyze Solidity smart contracts."
+    },
+    "opencode": {
+      "plugin": "opencode-code-quality-slither-agent"
+    },
+    "generic": {
+      "system_prompt": "You are code-quality-slither-agent. Slither agent for Solidity static analysis.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "code-quality-slither-agent",
+  "type": "agent",
+  "skills": [
+    "slither"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/agent/code-quality-slither-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/agent/code-quality-slither-agent.yaml",
+    "checksum": "a5e87698188da7cb9262f67a445a4851281d8dcea0cecda7a5c7709c02ee53af"
+  }
+}

@@ -1,0 +1,219 @@
+{
+  "name": "api-contract-consumer-tests",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "testing",
+  "description": "Implements contract testing basics: Pact consumer expectations, mock services, and first provider verification runs.",
+  "keywords": [
+    "contract-testing",
+    "pact",
+    "consumer-driven"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-contract-consumer-tests.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-contract-consumer-tests"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Api Contract Consumer Tests. You do it through consumer-tests: Write Pact consumer tests with interactions and expected responses. The commands are real, e.g. `npm install @pact-foundation/pact --save-dev`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "consumer-tests",
+      "description": "Write Pact consumer tests with interactions and expected responses",
+      "commands": [
+        "npm install @pact-foundation/pact --save-dev",
+        "npx jest --testMatch '**/*.pact.test.js'",
+        "npx pact-broker publish ./pacts --consumer-version 0.1.0 --broker-base-url http://localhost:9292",
+        "npx pact-broker describe-version --pacticipant consumer --version 0.1.0 --broker-base-url http://localhost:9292",
+        "cat pacts/consumer-provider.json | python -m json.tool"
+      ],
+      "examples": [
+        "npx jest --testMatch '**/*.pact.test.js' --runInBand",
+        "cat pacts/consumer-provider.json | python -m json.tool",
+        "npx pact-broker publish ./pacts --consumer-version 0.1.0 --broker-base-url http://localhost:9292"
+      ],
+      "parameters": [
+        {
+          "name": "consumer",
+          "type": "string",
+          "description": "Consumer name"
+        },
+        {
+          "name": "provider",
+          "type": "string",
+          "description": "Provider name"
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "description": "Contract version"
+        }
+      ]
+    },
+    {
+      "name": "provider-verification",
+      "description": "Verify the provider against published contracts",
+      "commands": [
+        "npm install @pact-foundation/pact-js --save-dev",
+        "npx pact-provider-verifier --provider-base-url http://localhost:8080 --pact-urls ./pacts/consumer-provider.json",
+        "npx pact-provider-verifier --provider-base-url http://localhost:8080 --pact-broker-base-url http://localhost:9292 --provider consumer",
+        "npm run verify:pacts",
+        "npx pact-broker can-i-deploy --pacticipant provider --version 1.0.0 --to prod --broker-base-url http://localhost:9292"
+      ],
+      "examples": [
+        "npx pact-provider-verifier --provider-base-url http://localhost:8080 --pact-urls ./pacts/consumer-provider.json",
+        "npm run verify:pacts",
+        "npx pact-provider-verifier --provider-base-url http://localhost:8080 --pact-broker-base-url http://localhost:9292 --provider consumer"
+      ],
+      "parameters": [
+        {
+          "name": "baseUrl",
+          "type": "string",
+          "description": "Provider base URL"
+        },
+        {
+          "name": "pactUrls",
+          "type": "string",
+          "description": "Pact file paths"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "pact",
+    "openapi",
+    "node.js",
+    "python"
+  ],
+  "tools": [
+    "pact",
+    "openapi",
+    "node.js",
+    "python",
+    "postman"
+  ],
+  "examples": [
+    {
+      "input": "Implement contract testing between frontend and backend",
+      "output": "Writes the first Pact consumer test, publishes the contract, and verifies the provider"
+    },
+    {
+      "input": "Validate API responses in tests",
+      "output": "Adds schema checks to contract expectations and CI"
+    }
+  ],
+  "instructions": "# API Contract (Basics)\n\nImplements the core consumer-driven contract loop: expectations, publication, verification.\n\n## When to Use\n- First contract test in a codebase\n- Single consumer-provider pair\n- Learning the Pact flow\n\n## Real Commands\n\n```bash\n# Consumer side\nnpm install @pact-foundation/pact --save-dev\nnpx jest --testMatch '**/*.pact.test.js'\n\n# Inspect the generated pact\ncat pacts/consumer-provider.json | python -m json.tool\n\n# Publish\nnpx pact-broker publish ./pacts --consumer-version 0.1.0 --broker-base-url http://localhost:9292\n\n# Provider side\nnpx pact-provider-verifier --provider-base-url http://localhost:8080 --pact-urls ./pacts/consumer-provider.json\n```\n\n## The Loop\n1. Consumer defines expectations\n2. Pact file is generated\n3. Provider verifies against it\n4. can-i-deploy gates the release\n\n## Testing\nRun consumer tests in CI on every PR and provider verification nightly.\n\n## Best Practices\n- Keep interactions minimal\n- Version every publish",
+  "display_name": "Api Contract Consumer Tests",
+  "knowledge": [
+    {
+      "title": "Pact Mock Service",
+      "type": "documentation",
+      "source": "https://docs.pact.io/implementation_guides/mock_service/",
+      "description": "Mock services for consumer tests"
+    },
+    {
+      "title": "Pact Verifier",
+      "type": "documentation",
+      "source": "https://docs.pact.io/implementation_guides/rust/verifier_cli",
+      "description": "Provider verification CLI"
+    }
+  ],
+  "id": "api-contract-consumer-tests",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "consumer-tests",
+        "name": "consumer",
+        "type": "string",
+        "description": "Consumer name"
+      },
+      {
+        "capability": "consumer-tests",
+        "name": "provider",
+        "type": "string",
+        "description": "Provider name"
+      },
+      {
+        "capability": "consumer-tests",
+        "name": "version",
+        "type": "string",
+        "description": "Contract version"
+      },
+      {
+        "capability": "provider-verification",
+        "name": "baseUrl",
+        "type": "string",
+        "description": "Provider base URL"
+      },
+      {
+        "capability": "provider-verification",
+        "name": "pactUrls",
+        "type": "string",
+        "description": "Pact file paths"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pact",
+    "openapi",
+    "node.js",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-contract-consumer-tests/skill/api-contract-consumer-tests.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-contract-consumer-tests/skill/api-contract-consumer-tests.yaml",
+    "checksum": "286f7ede2cbb35006931c0e8f0a809ab1b2c566ed4183712651011b746605483"
+  }
+}

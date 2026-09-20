@@ -1,0 +1,236 @@
+{
+  "name": "graphql-schema-designer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Designs and evolves GraphQL schemas: linting with graphql-schema-linter, drift checks with graphql-inspector, and typed codegen.",
+  "keywords": [
+    "graphql",
+    "schema"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "graphql-schema-designer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-graphql-schema-designer"
+    },
+    "generic": {
+      "system_prompt": "You take the graphql-schema-designer seat. You do it through lint: Lint GraphQL schemas against rulesets. The commands are real, e.g. `npx graphql-schema-linter schema.graphql`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "lint",
+      "description": "Lint GraphQL schemas against rulesets.",
+      "commands": [
+        "npx graphql-schema-linter schema.graphql",
+        "npx graphql-schema-linter schema.graphql --rules fields-have-descriptions,types-have-descriptions",
+        "npx graphql-schema-linter schema.graphql --format json",
+        "npx graphql-schema-linter 'schema/**/*.graphql' --ignore 'deprecations-have-a-reason'",
+        "npx graphql-schema-linter schema.graphql --comment-descriptions"
+      ],
+      "examples": [
+        "npx graphql-schema-linter schema.graphql --rules enum-values-sorted-alphabetically",
+        "npx graphql-schema-linter 'schema/**/*.graphql' --format json > lint.json",
+        "npx graphql-schema-linter schema.graphql --ignore 'description-style'"
+      ],
+      "parameters": [
+        {
+          "name": "rules",
+          "type": "string",
+          "description": "Comma-separated rule names"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "stylish or json output"
+        },
+        {
+          "name": "ignore",
+          "type": "string",
+          "description": "Rules to skip"
+        }
+      ]
+    },
+    {
+      "name": "diff",
+      "description": "Compare schema versions and generate typed clients.",
+      "commands": [
+        "npx graphql-inspector diff old.graphql new.graphql",
+        "npx graphql-inspector validate --schema new.graphql 'operations/**/*.graphql'",
+        "npx graphql-inspector similar --schema schema.graphql",
+        "npx graphql-codegen --config codegen.ts",
+        "npx graphql-codegen generate --config codegen.ts --watch"
+      ],
+      "examples": [
+        "npx graphql-inspector diff schema-2026-07.graphql schema-2026-08.graphql",
+        "npx graphql-codegen --config codegen.ts --silent",
+        "npx graphql-inspector validate --schema schema.graphql 'src/**/*.graphql'"
+      ],
+      "parameters": [
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Schema file(s) to analyze"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "codegen configuration file"
+        },
+        {
+          "name": "watch",
+          "type": "string",
+          "description": "Regenerate on file changes"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "apollo-server",
+    "graphql-codegen",
+    "rover",
+    "altair"
+  ],
+  "tools": [
+    "apollo-server",
+    "graphql-codegen",
+    "rover",
+    "altair",
+    "postman",
+    "graphql-inspector"
+  ],
+  "examples": [
+    {
+      "input": "Check whether the new schema version breaks any clients.",
+      "output": "Runs graphql-inspector diff against the production schema and graphql-inspector validate on client operations, reporting breaking changes."
+    },
+    {
+      "input": "Generate typed React hooks for the storefront.",
+      "output": "Runs graphql-codegen with the client preset, generating hooks and fragments for all operations."
+    }
+  ],
+  "instructions": "# GraphQL Schema Design\n\nDesign clean GraphQL schemas and keep them stable across releases.\n\n## When to Use\n\n- Designing a new GraphQL API surface\n- Reviewing schema changes in pull requests\n- Generating typed clients for consumers\n\n## Schema linting\n\n```graphql\n\"\"\"A product in the catalog\"\"\"\ntype Product implements Node {\n  \"\"\"Globally unique id\"\"\"\n  id: ID!\n  \"\"\"Display name\"\"\"\n  name: String!\n  \"\"\"Price in cents\"\"\"\n  price: Int!\n}\n```\n\n```bash\nnpx graphql-schema-linter schema.graphql --rules fields-have-descriptions,types-have-descriptions\n```\n\n## Breaking change detection\n\n```bash\nnpx graphql-inspector diff schema-prod.graphql schema-next.graphql\n```\n\nBreaking = field removed, type made non-null, arg added without default. Fix them before merge.\n\n## Operation validation\n\n```bash\nnpx graphql-inspector validate --schema schema.graphql 'operations/**/*.graphql'\n```\n\n## Codegen\n\n```ts\n// codegen.ts\nimport type { CodegenConfig } from '@graphql-codegen/cli';\n\nconst config: CodegenConfig = {\n  schema: 'schema.graphql',\n  documents: 'operations/**/*.graphql',\n  generates: {\n    'src/gql/': {\n      preset: 'client',\n      plugins: []\n    }\n  }\n};\nexport default config;\n```\n\n```bash\nnpx graphql-codegen --config codegen.ts\n```\n\n## Best practices\n\n- Use interfaces and unions over flag enums where behavior differs.\n- Keep enums sorted; reordering is a breaking change.\n- Prefer nullable return fields over throwing for optional data.\n- Name arguments explicitly; never rely on positional order.\n\n## Testing\n\nRun the linter and inspector diff in CI on every PR touching schema files.",
+  "display_name": "graphql-schema-designer",
+  "knowledge": [
+    {
+      "title": "GraphQL Schema Spec",
+      "type": "documentation",
+      "source": "https://graphql.org/learn/schema/",
+      "description": "Type system: scalars, objects, interfaces, unions, and arguments"
+    },
+    {
+      "title": "GraphQL Inspector",
+      "type": "documentation",
+      "source": "https://the-guild.dev/graphql/inspector/docs",
+      "description": "Schema diffing, validation, and similarity analysis"
+    },
+    {
+      "title": "GraphQL Codegen",
+      "type": "documentation",
+      "source": "https://the-guild.dev/graphql/codegen/docs",
+      "description": "Generate typed resolvers, hooks, and SDKs from schema"
+    }
+  ],
+  "id": "graphql-schema-designer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "lint",
+        "name": "rules",
+        "type": "string",
+        "description": "Comma-separated rule names"
+      },
+      {
+        "capability": "lint",
+        "name": "format",
+        "type": "string",
+        "description": "stylish or json output"
+      },
+      {
+        "capability": "lint",
+        "name": "ignore",
+        "type": "string",
+        "description": "Rules to skip"
+      },
+      {
+        "capability": "diff",
+        "name": "schema",
+        "type": "string",
+        "description": "Schema file(s) to analyze"
+      },
+      {
+        "capability": "diff",
+        "name": "config",
+        "type": "string",
+        "description": "codegen configuration file"
+      },
+      {
+        "capability": "diff",
+        "name": "watch",
+        "type": "string",
+        "description": "Regenerate on file changes"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "apollo-server",
+    "graphql-codegen",
+    "rover",
+    "altair"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "graphql-schema-designer/skill/graphql-schema-designer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/graphql-schema-designer/skill/graphql-schema-designer.yaml",
+    "checksum": "6105d60a3d9fdf36e4249d88eacd153d63c87f17b1e2d298bd1bbae07fdac02e"
+  }
+}

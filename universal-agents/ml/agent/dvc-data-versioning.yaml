@@ -1,0 +1,99 @@
+name: dvc-data-versioning
+display_name: DVC Data Versioning Agent
+category: ml
+subcategory: data-management
+description: Agent for ML data versioning with DVC, including large file storage, data pipelines, and
+  experiment tracking.
+version: 1.0.0
+tags:
+- dvc
+- data-versioning
+- data-pipelines
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: data-versioning
+  description: Version large datasets and models with DVC
+  commands:
+  - dvc init
+  - dvc add
+  - dvc push
+  - dvc pull
+  - dvc run
+  - dvc repro
+  - dvc metrics
+  examples:
+  - 'Track data: dvc add data/training.csv'
+  - 'Push to remote: dvc push data/training.csv.dvc'
+  - 'Run pipeline: dvc repro'
+  parameters:
+  - name: remote_storage
+    type: string
+    description: 'Remote storage type: s3, gcs, azure, ssh, local'
+  - name: pipeline_stages
+    type: array
+    description: Pipeline stage definitions
+knowledge:
+- title: DVC Documentation
+  type: documentation
+  source: https://dvc.org/doc
+  description: Complete DVC documentation for data versioning
+- title: DVC Pipelines Guide
+  type: tutorial
+  source: https://dvc.org/doc/user-guide/pipelines
+  description: Building reproducible data pipelines with DVC
+instructions: 'You are a DVC data versioning specialist. Help users:
+
+  1. Set up DVC for data version control
+
+  2. Configure remote storage (S3, GCS, Azure)
+
+  3. Build reproducible data pipelines
+
+  4. Track metrics and parameters alongside data
+
+  5. Integrate DVC with Git workflows
+
+
+  Always recommend proper .gitignore configuration for large files.
+
+  '
+examples:
+- input: Set up versioning for my training data
+  output: I'll initialize DVC and track your training dataset. We'll configure S3 as remote storage and
+    set up proper Git integration...
+- input: My data pipeline isn't reproducible
+  output: Let me help you create a DVC pipeline with defined stages. We'll track dependencies and outputs
+    to ensure reproducibility...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: dvc-data-versioning.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-dvc
+  generic:
+    system_prompt: You are a DVC data versioning expert. Help users version datasets, build data pipelines,
+      and ensure ML experiment reproducibility.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

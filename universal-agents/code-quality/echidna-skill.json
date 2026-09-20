@@ -1,0 +1,209 @@
+{
+  "name": "echidna",
+  "display_name": "Echidna",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Fuzzes Ethereum smart contracts with Echidna: property-based invariant testing, corpus, and CI integration.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "echidna"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "echidna test/Invariants.sol",
+        "echidna test/Invariants.sol --test-mode assertion",
+        "echidna test/Invariants.sol --test-limit 100000",
+        "echidna test/Invariants.sol --config echidna.yaml",
+        "echidna test/Invariants.sol --corpus-dir corpus"
+      ],
+      "description": "Run property-based fuzzing campaigns.",
+      "name": "echidna-fuzz",
+      "examples": [
+        "echidna test/Invariants.sol --test-mode assertion --test-limit 50000",
+        "echidna test/Invariants.sol --config echidna.yaml --corpus-dir corpus",
+        "echidna test/Invariants.sol --seq-len 100"
+      ],
+      "parameters": [
+        {
+          "description": "Solidity file",
+          "name": "contract",
+          "type": "string"
+        },
+        {
+          "description": "Max test calls",
+          "name": "test-limit",
+          "type": "integer"
+        },
+        {
+          "description": "Config yaml path",
+          "name": "config",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "echidna test/Invariants.sol --test-mode property --test-limit 0",
+        "echidna test/Invariants.sol --format text",
+        "echidna test/Invariants.sol --list-tests",
+        "echidna test/Invariants.sol --deployer 0x30000"
+      ],
+      "description": "Analyze and shrink failing sequences.",
+      "name": "echidna-analysis",
+      "examples": [
+        "echidna test/Invariants.sol --test-limit 0 --format text",
+        "echidna test/Invariants.sol --seq-len 100 --test-limit 5000"
+      ],
+      "parameters": [
+        {
+          "description": "Deployer address",
+          "name": "deployer",
+          "type": "string"
+        },
+        {
+          "description": "text or json",
+          "name": "format",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Echidna Docs",
+      "description": "Testing guide and config reference",
+      "source": "https://echidna.readthedocs.io",
+      "type": "documentation"
+    },
+    {
+      "title": "Echidna on GitHub",
+      "description": "Install and examples",
+      "source": "https://github.com/crytic/echidna",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Echidna\n\nFuzz EVM smart contracts with property testing.\n\n## When to Use\n\n- Verifying invariants (balance sums, roles, limits)\n- Finding assertion failures in complex contracts\n- Testing upgrade and reentrancy scenarios\n- Pre-audit and CI regression checks\n\n## Invariant Example\n\n```solidity\n// test/Invariants.sol\nimport \"echidna/Test.sol\";\n\ncontract Invariants is Test {\n    Vault vault;\n\n    function setUp() public {\n        vault = new Vault();\n    }\n\n    // total supply must equal sum of balances\n    function echidna_total_never_changes() public view returns (bool) {\n        return vault.total() == vault.balanceOf(address(this));\n    }\n}\n```\n\n## Commands\n\n```bash\n# Property fuzzing\nechidna test/Invariants.sol\n\n# Assertion mode (fail on assert failures)\nechidna test/Invariants.sol --test-mode assertion\n\n# Limit the campaign\nechidna test/Invariants.sol --test-limit 100000\n\n# Config driven\nechidna test/Invariants.sol --config echidna.yaml\n\n# Corpus for reuse\nechidna test/Invariants.sol --corpus-dir corpus\n```\n\n## Config Example\n\n```yaml\n# echidna.yaml\ntestMode: assertion\ntestLimit: 50000\nseqLen: 100\ndeployer: \"0x30000\"\nsender: [\"0x10000\", \"0x20000\"]\n```\n\n## Best Practices\n\n- Write invariants as named echidna_* functions\n- Use --test-mode assertion for existing assert tests\n- Save corpora to accelerate future runs\n- Run a long campaign (millions of calls) before audits\n- Shrink sequences on failure to find minimal repro\n- Integrate into CI with a fixed fuzz budget",
+  "examples": [
+    {
+      "input": "Fuzz my token contract for invariant violations",
+      "output": "Agent writes echidna_ invariants, runs echidna with a config, and analyzes any failed sequences."
+    },
+    {
+      "input": "Echidna found a failure; what now?",
+      "output": "Agent extracts the minimized call sequence, replays it in a unit test, and fixes the underlying logic."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "echidna.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-echidna"
+    },
+    "generic": {
+      "system_prompt": "You are the Echidna specialist. You do it through echidna-fuzz: Run property-based fuzzing campaigns. The commands are real, e.g. `echidna test/Invariants.sol`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "echidna",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "echidna-fuzz",
+        "name": "contract",
+        "type": "string",
+        "description": "Solidity file"
+      },
+      {
+        "capability": "echidna-fuzz",
+        "name": "test-limit",
+        "type": "integer",
+        "description": "Max test calls"
+      },
+      {
+        "capability": "echidna-fuzz",
+        "name": "config",
+        "type": "string",
+        "description": "Config yaml path"
+      },
+      {
+        "capability": "echidna-analysis",
+        "name": "deployer",
+        "type": "string",
+        "description": "Deployer address"
+      },
+      {
+        "capability": "echidna-analysis",
+        "name": "format",
+        "type": "string",
+        "description": "text or json"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "echidna"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/echidna-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/echidna-skill.yaml",
+    "checksum": "aad12d7f656a27c0054971b0603ffb957059b6cfb615b68d0c05efaa8e92eee4"
+  }
+}

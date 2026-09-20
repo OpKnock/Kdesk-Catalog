@@ -1,0 +1,188 @@
+{
+  "name": "api-sec-jwt-auditing",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "security",
+  "description": "Hardens API authentication security: JWT inspection and validation, token lifecycle, algorithm confusion tests, and auth header verification with jwt-cli.",
+  "keywords": [
+    "api-security",
+    "authentication",
+    "authorization"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-sec-jwt-auditing.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-sec-jwt-auditing"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Api Sec JWT Auditing. You do it through jwt-auditing: Inspect and validate JWTs. The commands are real, e.g. `npm install -g jwt-cli`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "jwt-auditing",
+      "description": "Inspect and validate JWTs",
+      "commands": [
+        "npm install -g jwt-cli",
+        "jwt decode $TOKEN",
+        "jwt encode --secret \"s3cret\" --alg HS256 '{\"sub\":\"1234567890\",\"name\":\"alice\"}'",
+        "jwt encode --secret \"s3cret\" --alg none '{\"sub\":\"admin\"}'",
+        "curl -s -o /dev/null -w '%{http_code}\\n' -H \"Authorization: Bearer $TOKEN\" https://api.example.com/me"
+      ],
+      "examples": [
+        "jwt decode $TOKEN prints header and payload",
+        "jwt encode with alg none probes algorithm confusion",
+        "curl with the token checks endpoint enforcement"
+      ],
+      "parameters": [
+        {
+          "name": "token",
+          "type": "string",
+          "description": "JWT to decode"
+        },
+        {
+          "name": "secret",
+          "type": "string",
+          "description": "HMAC signing secret"
+        },
+        {
+          "name": "claims",
+          "type": "object",
+          "description": "Claims object to encode"
+        }
+      ]
+    },
+    {
+      "name": "auth-header-checks",
+      "description": "Verify bearer and basic auth enforcement",
+      "commands": [
+        "curl -s -o /dev/null -w '%{http_code}\\n' https://api.example.com/me",
+        "curl -s -o /dev/null -w '%{http_code}\\n' -H 'Authorization: Bearer expired-token' https://api.example.com/me",
+        "node -e \"const jwt=require('jsonwebtoken'); const t=jwt.sign({sub:'1'},'secret',{expiresIn:'1h'}); console.log(t.split('.')[0]); console.log(jwt.verify(t,'secret').sub)\""
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "owasp-zap"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "owasp-zap",
+    "helmet",
+    "cors"
+  ],
+  "examples": [
+    {
+      "input": "Audit JWT handling",
+      "output": "Decodes tokens with jwt-cli and tests alg none and expiry vectors"
+    },
+    {
+      "input": "Verify /me enforcement",
+      "output": "Curls the endpoint with missing, expired, and valid tokens"
+    }
+  ],
+  "instructions": "# API Security v2 - Auth Tokens\n\nJWT security hardening.\n\n## What This Skill Does\n- Inspects tokens for weak signatures\n- Tests algorithm confusion vectors\n- Verifies endpoint enforcement\n\n## When to Use\n- Auditing authentication implementation\n- Testing token expiry handling\n- Investigating auth bypasses\n\n## Real Commands\n\n```bash\nnpm install -g jwt-cli\njwt decode $TOKEN\njwt encode --secret \"s3cret\" --alg HS256 '{\"sub\":\"1234567890\"}'\ncurl -s -o /dev/null -w '%{http_code}\\n' -H \"Authorization: Bearer $TOKEN\" https://api.example.com/me\n```\n\n## Checks to Run\n- alg none: does the server accept unsigned tokens?\n- Expired tokens: are they rejected with 401?\n- Tampered payloads: does signature validation catch them?\n- Weak secrets: crackable HS256 keys\n\n## Testing\n- Confirm 401 without a token\n- Confirm 401 with an expired token\n- Verify the server pins the expected algorithm\n\n## Best Practices\n- Reject alg:none explicitly\n- Use RS256/ES256 for issuance\n- Rotate signing keys on rotation schedules",
+  "display_name": "Api Sec JWT Auditing",
+  "knowledge": [
+    {
+      "title": "jwt-cli GitHub",
+      "type": "documentation",
+      "source": "https://github.com/mike-engel/jwt-cli",
+      "description": "JWT CLI encoding and decoding"
+    },
+    {
+      "title": "JWT.io Introduction",
+      "type": "documentation",
+      "source": "https://jwt.io/introduction",
+      "description": "JWT structure and usage"
+    }
+  ],
+  "id": "api-sec-jwt-auditing",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "jwt-auditing",
+        "name": "token",
+        "type": "string",
+        "description": "JWT to decode"
+      },
+      {
+        "capability": "jwt-auditing",
+        "name": "secret",
+        "type": "string",
+        "description": "HMAC signing secret"
+      },
+      {
+        "capability": "jwt-auditing",
+        "name": "claims",
+        "type": "object",
+        "description": "Claims object to encode"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "owasp-zap"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-sec-jwt-auditing/skill/api-sec-jwt-auditing.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-sec-jwt-auditing/skill/api-sec-jwt-auditing.yaml",
+    "checksum": "2a01ecb2cfbd76e3ef49ef1f9aea554bf8b9b6847b6ef51f4f5ad3a6f589216d"
+  }
+}

@@ -1,0 +1,213 @@
+name: runbook
+display_name: Runbook
+category: sre
+subcategory: general
+description: Creates and maintains operational runbooks with MkDocs and mdBook, including alerts-to-runbook
+  linking and searchable playbooks.
+version: 2.0.0
+tags:
+- sre
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- grep
+- mdbook
+- mkdocs
+- npx
+capabilities:
+- name: runbook-authoring
+  description: Scaffold, write, and preview runbook documentation sites.
+  commands:
+  - mkdocs new runbooks
+  - mkdocs serve
+  - mkdocs build
+  - mkdocs gh-deploy
+  - mkdocs build --strict
+  examples:
+  - mkdocs new runbooks && cd runbooks && mkdocs serve
+  - mkdocs build --strict
+  - mkdocs gh-deploy
+  parameters:
+  - name: project
+    type: string
+    description: Docs project directory name
+  - name: strict
+    type: boolean
+    description: Fail build on warnings
+- name: runbook-maintenance
+  description: Maintain search index, structure, and quality.
+  commands:
+  - mkdocs build --clean
+  - grep -rl 'TODO' runbooks/
+  - npx markdownlint-cli runbooks/**/*.md
+  - mkdocs serve -a 0.0.0.0:8000
+  - mdbook build
+  examples:
+  - npx markdownlint-cli runbooks/**/*.md
+  - mkdocs build --clean
+  - grep -rl 'TODO' runbooks/
+  parameters:
+  - name: dir
+    type: string
+    description: Docs directory to lint or search
+  - default: '8000'
+    description: Port for the local mkdocs preview server.
+    name: port
+    type: integer
+knowledge:
+- title: MkDocs Documentation
+  type: documentation
+  source: https://www.mkdocs.org/
+  description: Site scaffolding, navigation, and themes
+- title: Google SRE Runbook Guidance
+  type: documentation
+  source: https://sre.google/workbook/incident-response/
+  description: Runbook structure and incident response workflows
+- title: mdBook Documentation
+  type: documentation
+  source: https://rust-lang.github.io/mdBook/
+  description: Rust-based documentation site generator
+instructions: '# Runbooks
+
+
+  Operational playbooks that turn alerts into confident actions.
+
+
+  ## What This Skill Does
+
+
+  - Scaffolds a searchable runbook site with MkDocs
+
+  - Structures playbooks: symptoms, diagnosis, fix, verify
+
+  - Links alerts to runbooks for one-click context
+
+  - Keeps runbooks fresh with linting and TODOs
+
+
+  ## When to Use
+
+
+  - An alert needs a documented response path
+
+  - Onboarding new on-call engineers
+
+  - Centralizing operational knowledge
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Scaffold and preview
+
+  mkdocs new runbooks
+
+  cd runbooks && mkdocs serve
+
+  mkdocs build --strict
+
+  mkdocs gh-deploy
+
+
+  # Maintain
+
+  mkdocs build --clean
+
+  npx markdownlint-cli runbooks/**/*.md
+
+  grep -rl ''TODO'' runbooks/
+
+  ```
+
+
+  ## Runbook Template
+
+
+  ```markdown
+
+  # High API Error Rate
+
+
+  ## Symptoms
+
+  - 5xx rate > 1% for 5 minutes
+
+  - SLO burn rate > 1
+
+
+  ## Diagnosis
+
+  1. Check k8s events: kubectl get events --sort-by=.lastTimestamp
+
+  2. Check deploys in the last hour
+
+
+  ## Fix
+
+  1. Roll back: kubectl rollout undo deployment/api
+
+  2. Scale out if resource-bound
+
+
+  ## Verify
+
+  - 5xx rate below 0.1% for 10 minutes
+
+  - Alert resolves
+
+  ```
+
+
+  ## Best Practices
+
+
+  - One runbook per alert; keep the alert label pointing to it
+
+  - Write for the tired on-call engineer at 3am
+
+  - Version-control runbooks with the service code
+
+  - Review runbooks after every incident (update, don''t rearchive)
+
+  - Test runbooks in game days; mark last-tested dates'
+examples:
+- input: Create a runbook for the disk-space alert
+  output: Agent scaffolds an MkDocs site, writes a disk-space playbook with symptoms/diagnosis/fix/verify,
+    and links the alert annotation to it.
+- input: Find runbooks that are outdated
+  output: Agent greps for TODO markers and stale last-tested dates, and lints the docs with markdownlint.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: runbook.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-runbook
+  generic:
+    system_prompt: 'Your lane is Runbook. You do it through runbook-authoring: Scaffold, write, and preview
+      runbook documentation sites. The commands are real, e.g. `mkdocs new runbooks`. You verify each
+      step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,134 @@
+{
+  "name": "safety-agent",
+  "display_name": "Safety Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Safety SDK deployment agent for ML Safety SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Safety Deploy Sdk Agent",
+      "description": "Safety SDK deployment agent for ML Safety SDK deployment.",
+      "commands": [
+        "docker build -t model:latest .",
+        "docker push registry.example.com/model:latest",
+        "kubectl set image deployment/model model=registry.example.com/model:latest",
+        "helm upgrade model ./helm-chart --namespace production",
+        "kubectl rollout status deployment/model --timeout=300s",
+        "python identity.py --agent safety-agent"
+      ],
+      "examples": [
+        "Server: python -m safety.server --port 8080",
+        "Docker: docker run -p 8080:8080 safety-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "safety-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for safety-agent"
+    }
+  ],
+  "instructions": "You are the Safety Deploy SDK Agent, the specialist users call to package and deploy the Safety SDK application on containers. Build and publish with `docker build -t model:latest .` and `docker push registry.example.com/model:latest`, then roll out with `kubectl set image deployment/model model=registry.example.com/model:latest` or `helm upgrade model ./helm-chart --namespace production`. Confirm with `kubectl rollout status deployment/model --timeout=300s` and identity via `python identity.py --agent safety-agent`. Verify `python -m safety.server --port 8080` and `docker run -p 8080:8080 safety-server`. Report image tag, rollout result, and verification output.",
+  "examples": [
+    "Server: python -m safety.server --port 8080",
+    "Docker: docker run -p 8080:8080 safety-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "safety-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Safety SDK deployment expert. Help users deploy Safety applications."
+    },
+    "opencode": {
+      "plugin": "opencode-safety-agent"
+    },
+    "generic": {
+      "system_prompt": "You are safety-agent. Safety SDK deployment agent for ML Safety SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "safety-agent",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/safety-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/safety-agent.yaml",
+    "checksum": "88ca51e27f1e4e89543d8b73aca59983de9859f086a087d4ae2c2757d8e810d5"
+  }
+}

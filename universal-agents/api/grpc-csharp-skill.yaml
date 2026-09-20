@@ -1,0 +1,105 @@
+name: grpc-csharp
+display_name: Grpc Csharp
+category: api
+subcategory: general
+description: gRPC services and clients in C# with Grpc.Net.Client, Grpc.Tools proto codegen, and dotnet
+  CLI project scaffolding.
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- dotnet
+capabilities:
+- name: csharp-grpc
+  description: Scaffold .NET gRPC projects, generate code from proto files, and call services with Grpc.Net.Client.
+  commands:
+  - dotnet new grpc -o GrpcGreeter
+  - dotnet add package Grpc.Net.Client
+  - dotnet add package Google.Protobuf
+  - dotnet add package Grpc.Tools
+  - dotnet run --project GrpcGreeter
+  examples:
+  - dotnet build GrpcGreeter && dotnet run --project GrpcGreeter
+  - dotnet add package Grpc.AspNetCore
+  - dotnet add GrpcGreeterClient reference GrpcGreeter
+  parameters:
+  - name: project
+    type: string
+    description: Project or solution path to build/run.
+  - name: package
+    type: string
+    description: NuGet package to add (Grpc.Net.Client, Grpc.Tools, Grpc.AspNetCore).
+  - name: proto_file
+    type: string
+    description: Proto file referenced in the csproj for codegen.
+knowledge:
+- title: gRPC C# Docs
+  type: documentation
+  source: https://grpc.io/docs/languages/csharp/
+  description: Official gRPC C# quickstart and basics including Grpc.Net.Client.
+- title: gRPC on ASP.NET Core
+  type: documentation
+  source: https://learn.microsoft.com/en-us/aspnet/core/grpc/
+  description: Microsoft docs for building gRPC services with ASP.NET Core.
+instructions: "# gRPC C#\n\nBuild gRPC services and clients in .NET with Grpc.Net.Client and Grpc.Tools.\n\
+  \n## What this skill does\n\n- Scaffolds gRPC service and client projects with the dotnet CLI.\n- Generates\
+  \ C# code from proto files at build time via Grpc.Tools.\n- Calls unary, streaming, and server-streaming\
+  \ RPCs from client apps.\n- Configures channels, deadlines, and interceptors.\n\n## When to use\n\n\
+  - A .NET backend needs internal RPC communication.\n- Porting an existing proto contract into a C# microservice.\n\
+  - Adding gRPC health checks to an ASP.NET Core service.\n\n## Real commands\n\n```bash\n# Scaffold a\
+  \ service\ndotnet new grpc -o GrpcGreeter\ncd GrpcGreeter\n\n# Client-side packages\ndotnet add package\
+  \ Grpc.Net.Client\ndotnet add package Google.Protobuf\ndotnet add package Grpc.Tools\n\n# Build and\
+  \ run\ndotnet build\ndotnet run\n```\n\n## csproj proto codegen\n\n```xml\n<ItemGroup>\n  <Protobuf\
+  \ Include=\"Protos\\greet.proto\" GrpcServices=\"Server\" />\n  <Protobuf Include=\"Protos\\greet.proto\"\
+  \ GrpcServices=\"Client\" />\n</ItemGroup>\n```\n\n## Client call\n\n```csharp\nusing var channel =\
+  \ GrpcChannel.ForAddress(\"https://localhost:5001\");\nvar client = new Greeter.GreeterClient(channel);\n\
+  var reply = await client.SayHelloAsync(new HelloRequest { Name = \"Ada\" });\nConsole.WriteLine(reply.Message);\n\
+  ```\n\n## Testing\n\n```bash\ndotnet test\ndotnet run --project GrpcGreeter &\ncurl -s http://localhost:5001/greet/ada\
+  \  # if grpc-gateway endpoint exposed\n```\n\n## Best practices\n\n- Use one shared GrpcChannel per\
+  \ service, not one per call.\n- Set deadlines: `client.SayHelloAsync(req, deadline: DateTime.UtcNow.AddSeconds(5))`.\n\
+  - Enable HTTP/2 cleartext on dev: `AppContext.SetSwitch(\"System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport\"\
+  , true)`.\n- Keep protos in a shared class library so client and server reference the same contract.\n\
+  \n## Example exchange\n\n```\nUser: The client can't reach the local gRPC server over plain HTTP.\n\
+  Agent: Enable unencrypted HTTP/2 support in the client, or run the server over HTTPS.\n```"
+examples:
+- input: Create a new gRPC service project named GrpcGreeter
+  output: dotnet new grpc -o GrpcGreeter && cd GrpcGreeter && dotnet run
+- input: Add client libraries to consume the greet service
+  output: dotnet add package Grpc.Net.Client && dotnet add package Google.Protobuf && dotnet add package
+    Grpc.Tools
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: grpc-csharp.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-grpc-csharp
+  generic:
+    system_prompt: 'You own Grpc Csharp end to end. You do it through csharp-grpc: Scaffold .NET gRPC
+      projects, generate code from proto files, and call services with Grpc.Net.Client. The commands are
+      real, e.g. `dotnet new grpc -o GrpcGreeter`. You verify each step you report and stay honest about
+      what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

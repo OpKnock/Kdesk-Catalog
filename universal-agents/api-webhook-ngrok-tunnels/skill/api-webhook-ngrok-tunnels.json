@@ -1,0 +1,189 @@
+{
+  "name": "api-webhook-ngrok-tunnels",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Tests webhooks with local tooling: ngrok tunnels for public callbacks, webhook.site inspection, curl replays, and delivery simulation.",
+  "keywords": [
+    "webhooks",
+    "delivery",
+    "retry"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-webhook-ngrok-tunnels.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-webhook-ngrok-tunnels"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Api Webhook Ngrok Tunnels. You do it through ngrok-tunnels: Expose local webhook receivers publicly. The commands are real, e.g. `ngrok http 3000`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "ngrok-tunnels",
+      "description": "Expose local webhook receivers publicly",
+      "commands": [
+        "ngrok http 3000",
+        "ngrok http --host-header=rewrite 3000",
+        "curl -s http://localhost:4040/api/tunnels | jq '.tunnels[0].public_url'",
+        "ngrok config check"
+      ],
+      "examples": [
+        "ngrok http 3000 creates a public tunnel",
+        "localhost:4040 exposes tunnel status",
+        "ngrok config check validates the config"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Local port to tunnel"
+        },
+        {
+          "name": "subdomain",
+          "type": "string",
+          "description": "Fixed subdomain"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "description": "Tunnel region"
+        }
+      ]
+    },
+    {
+      "name": "delivery-simulation",
+      "description": "Simulate webhook deliveries",
+      "commands": [
+        "curl -s -X POST http://localhost:3000/webhook-test -H 'Content-Type: application/json' -d '{\"event\":\"test\"}' -w '\\n%{http_code}\\n'",
+        "curl -s -X POST http://localhost:3000/webhook-test -H 'Content-Type: application/json' -d '{\"event\":\"test\"}' --retry 2 --retry-delay 1 -w '\\n%{http_code}\\n'",
+        "curl -s https://webhook.site/token | jq '.uuid'"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "ngrok",
+    "redis"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "ngrok",
+    "redis",
+    "stripe-cli"
+  ],
+  "examples": [
+    {
+      "input": "Test Stripe webhooks locally",
+      "output": "Runs ngrok http 3000 and points the dashboard to the public URL"
+    },
+    {
+      "input": "Inspect a failed delivery",
+      "output": "Replays the event with curl and inspects the receiver log"
+    }
+  ],
+  "instructions": "# API Webhook v2 - Testing\n\nWebhook testing tooling.\n\n## What This Skill Does\n- Tunnels local receivers with ngrok\n- Inspects incoming payloads\n- Replays deliveries for verification\n\n## When to Use\n- Testing provider webhooks locally\n- Debugging delivery payloads\n- Demonstrating receivers\n\n## Real Commands\n\n```bash\nngrok http 3000\ncurl -s http://localhost:4040/api/tunnels | jq '.tunnels[0].public_url'\ncurl -s -X POST http://localhost:3000/webhook-test -H 'Content-Type: application/json' -d '{\"event\":\"test\"}'\n```\n\n## Workflow\n1. Start ngrok on the receiver port\n2. Configure the provider with the public URL\n3. Trigger the provider event\n4. Inspect payloads at the tunnel console\n\n## Testing\n- Replay events with curl --retry\n- Verify headers and raw bodies arrive intact\n- Test concurrent deliveries\n\n\n## Best Practices\n- Use fixed subdomains in dev\n- Keep receiver logs enabled\n- Reset delivery state between tests",
+  "display_name": "Api Webhook Ngrok Tunnels",
+  "knowledge": [
+    {
+      "title": "ngrok Docs",
+      "type": "documentation",
+      "source": "https://ngrok.com/docs",
+      "description": "Tunneling local servers"
+    },
+    {
+      "title": "webhook.site",
+      "type": "documentation",
+      "source": "https://webhook.site/",
+      "description": "Inspect webhook requests"
+    }
+  ],
+  "id": "api-webhook-ngrok-tunnels",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "ngrok-tunnels",
+        "name": "port",
+        "type": "integer",
+        "description": "Local port to tunnel"
+      },
+      {
+        "capability": "ngrok-tunnels",
+        "name": "subdomain",
+        "type": "string",
+        "description": "Fixed subdomain"
+      },
+      {
+        "capability": "ngrok-tunnels",
+        "name": "region",
+        "type": "string",
+        "description": "Tunnel region"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "ngrok",
+    "redis"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-webhook-ngrok-tunnels/skill/api-webhook-ngrok-tunnels.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-webhook-ngrok-tunnels/skill/api-webhook-ngrok-tunnels.yaml",
+    "checksum": "de5620aef96b5eb117393b11f17ceb6cd16e18c6711131f09b6b4203d60d2f91"
+  }
+}

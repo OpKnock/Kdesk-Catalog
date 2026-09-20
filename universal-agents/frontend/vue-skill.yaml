@@ -1,0 +1,125 @@
+name: vue
+display_name: vue
+category: frontend
+subcategory: general
+description: 'Builds Vue 3 applications with the create-vue toolchain: SFCs, Pinia state, vue-router,
+  and vue-tsc type checking.'
+version: 2.0.0
+tags:
+- frontend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npm
+- npx
+capabilities:
+- name: scaffold
+  description: Create Vue 3 projects and add libraries.
+  commands:
+  - npm create vue@latest my-app -- --typescript --router --pinia --eslint
+  - npm install
+  - npm run dev
+  - npm run build
+  - npm run lint
+  examples:
+  - npm create vue@latest store -- --typescript --router --pinia --eslint --vitest
+  - npm run dev -- --port 5173
+  - npm run build
+  parameters:
+  - name: typescript
+    type: string
+    description: Enable TypeScript support
+  - name: router
+    type: string
+    description: Add vue-router
+  - name: pinia
+    type: string
+    description: Add Pinia state store
+- name: typecheck-test
+  description: Type-check, test, and analyze Vue components.
+  commands:
+  - npx vue-tsc --noEmit
+  - npm run test
+  - npx vitest run --coverage
+  - npm run lint -- --fix
+  - npm run build && npx vue-tsc --noEmit
+  examples:
+  - npx vue-tsc --noEmit --strict
+  - npx vitest run tests/unit/cart.spec.ts
+  - npm run lint -- --fix
+  parameters:
+  - name: noEmit
+    type: string
+    description: Type-check SFC templates without emitting
+  - name: coverage
+    type: string
+    description: Enable Vitest coverage
+  - name: fix
+    type: string
+    description: Auto-fix ESLint issues
+knowledge:
+- title: Vue 3 Guide
+  type: documentation
+  source: https://vuejs.org/guide/introduction.html
+  description: Composition API, SFCs, and reactivity
+- title: create-vue
+  type: documentation
+  source: https://github.com/vuejs/create-vue
+  description: Official scaffolding tool for Vue 3
+- title: Pinia
+  type: documentation
+  source: https://pinia.vuejs.org/
+  description: Vue store library for state management
+instructions: "# Vue\n\nBuild Vue 3 applications with the official create-vue toolchain.\n\n## When to\
+  \ Use\n\n- New SPAs with Composition API and SFCs\n- Teams wanting granular reactivity without a build-API\
+  \ lock-in\n- Progressive adoption: Vue drops into existing HTML projects too\n\n## Scaffold\n\n```bash\n\
+  npm create vue@latest my-app -- --typescript --router --pinia --eslint\nnpm run dev\n```\n\n## Composition\
+  \ API basics\n\n```vue\n<script setup lang=\"ts\">\nimport { ref, computed } from 'vue';\n\nconst count\
+  \ = ref(0);\nconst doubled = computed(() => count.value * 2);\n</script>\n\n<template>\n  <button @click=\"\
+  count++\">{{ count }} / {{ doubled }}</button>\n</template>\n```\n\n## Pinia store\n\n```typescript\n\
+  import { defineStore } from 'pinia';\n\nexport const useCartStore = defineStore('cart', {\n  state:\
+  \ () => ({ items: [] as string[] }),\n  actions: { add(sku: string) { this.items.push(sku); } },\n \
+  \ getters: { size: (s) => s.items.length }\n});\n```\n\n## Type-checking SFCs\n\n```bash\nnpx vue-tsc\
+  \ --noEmit\nnpm run build\n```\n\nvue-tsc validates template expressions against prop/ref types.\n\n\
+  ## Routing\n\n```typescript\nconst routes = [\n  { path: '/', component: Home },\n  { path: '/products/:id',\
+  \ component: ProductDetail, props: true },\n  { path: '/checkout', component: Checkout, meta: { requiresAuth:\
+  \ true } }\n];\n```\n\n## Best practices\n\n- Use `<script setup lang=\"ts\">` everywhere.\n- Keep stores\
+  \ feature-scoped; avoid one global mega-store.\n- Gate CI on vue-tsc --noEmit and npm run lint.\n- Prefer\
+  \ computed over watchers for derived values.\n\n## Testing\n\n```bash\nnpm run test\nnpx vitest run\
+  \ --coverage\n```\n\nTest stores and composables; keep coverage above 80% for critical logic."
+examples:
+- input: Create a Vue app with router, Pinia, and TypeScript.
+  output: Scaffolds with create-vue flags, then adds routes and a cart store with typed state and actions.
+- input: Type-check all SFC templates before release.
+  output: Runs npx vue-tsc --noEmit followed by npm run build in CI to catch template type errors.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: vue.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-vue
+  generic:
+    system_prompt: 'You own vue end to end. You do it through scaffold: Create Vue 3 projects and add
+      libraries. The commands are real, e.g. `npm create vue@latest my-app -- --typescript --router --pinia
+      --eslint`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

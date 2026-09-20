@@ -1,0 +1,187 @@
+name: asyncapi-nodejs
+display_name: Asyncapi Nodejs
+category: api
+subcategory: general
+description: Generates Node.js applications from AsyncAPI documents with the nodejs-template, then installs,
+  runs, and tests the generated subscriber.
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- node
+- npm
+- npx
+capabilities:
+- name: node-generation
+  description: Generate a Node.js async API app from the spec.
+  commands:
+  - npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-template -o ./generated --force-write
+  - npm install --prefix ./generated
+  - npm start --prefix ./generated
+  - npm test --prefix ./generated
+  - node -e "const p=require('./generated/package.json'); console.log(p.scripts)"
+  examples:
+  - npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-template -o ./generated --force-write --param
+    server=development
+  - npm install --prefix ./generated && npm start --prefix ./generated
+  - npm test --prefix ./generated
+  parameters:
+  - name: output
+    type: string
+    description: Output directory
+  - name: param
+    type: string
+    description: Template params like server=production
+- name: ts-models
+  description: Generate TypeScript models from the schema with Modelina.
+  commands:
+  - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./generated/src/models --language TypeScript
+  - npm run build --prefix ./generated
+  - npm run lint --prefix ./generated
+  - npx tsc --noEmit --project ./generated
+  examples:
+  - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./src/models --language TypeScript
+    --model-type interface
+  - npm run build --prefix ./generated
+  - npx tsc --noEmit --project ./generated
+  parameters:
+  - name: model_type
+    type: string
+    description: class or interface for TypeScript models
+  - name: output
+    type: string
+    description: Models output directory
+knowledge:
+- title: Node.js Template
+  type: documentation
+  source: https://github.com/asyncapi/nodejs-template
+  description: Template features and layout
+- title: Modelina TypeScript
+  type: documentation
+  source: https://www.asyncapi.com/docs/tools/modelina/languages/TypeScript
+  description: Interface vs class options
+- title: AsyncAPI Tutorials
+  type: documentation
+  source: https://www.asyncapi.com/docs/tutorials/getting-started/event-driven-architectures
+  description: Node.js async API tutorial
+instructions: '# AsyncAPI Node.js
+
+
+  ## What this skill does
+
+
+  Generates a Node.js event-driven application from an AsyncAPI document using the nodejs-template: scaffolding,
+  dependency install, generated handlers, and TypeScript models via Modelina.
+
+
+  ## When to use
+
+
+  - Bootstrapping a Node.js Kafka/MQTT/AMQP subscriber or publisher
+
+  - Generating typed message models for a TS codebase
+
+  - Prototyping an event-driven service from a spec
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Generate the app
+
+  npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-template -o ./generated --force-write
+
+
+  # Install dependencies
+
+  npm install --prefix ./generated
+
+
+  # Run
+
+  npm start --prefix ./generated
+
+
+  # Tests
+
+  npm test --prefix ./generated
+
+
+  # TypeScript models
+
+  npx @asyncapi/modelina generate --input asyncapi.yaml --output ./generated/src/models --language TypeScript
+
+  npm run build --prefix ./generated
+
+  ```
+
+
+  ## Generated handlers
+
+
+  The template creates handler stubs per channel operation (e.g. handleOrderCreated) where you fill in
+  business logic.
+
+
+  ## Testing
+
+
+  - npm test --prefix ./generated runs scaffolded unit tests
+
+  - Integration: start a local broker (docker run -p 9092:9092 apache/kafka), publish a sample message,
+  confirm the handler logs it
+
+
+  ## Best practices
+
+
+  - Use --param server=... to select the broker environment
+
+  - Regenerate in CI and git diff --exit-code to catch drift
+
+  - Keep business logic in separate modules, not inside generated handlers'
+examples:
+- input: Generate a Node.js consumer for our Kafka topics
+  output: Runs the nodejs-template into ./generated, npm install, starts a local Kafka with docker, and
+    runs npm start to show the subscriber connecting and logging messages.
+- input: TypeScript types for our event payloads
+  output: Runs Modelina --language TypeScript --model-type interface into src/models, then npm run build
+    to typecheck the app against them.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: asyncapi-nodejs.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-asyncapi-nodejs
+  generic:
+    system_prompt: 'You are the Asyncapi Nodejs specialist. You do it through node-generation: Generate
+      a Node.js async API app from the spec. The commands are real, e.g. `npx @asyncapi/generator asyncapi.yaml
+      @asyncapi/nodejs-template -o ./generated --force-write`. You answer with exact commands, not abstractions,
+      and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

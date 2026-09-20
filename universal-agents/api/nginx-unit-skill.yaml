@@ -1,0 +1,100 @@
+name: nginx-unit
+display_name: Nginx Unit
+category: api
+subcategory: general
+description: 'NGINX Unit runtime: config via JSON API, application objects, PHP/Node/Python/Go apps, and
+  lifecycle management.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- unitd
+capabilities:
+- name: nginx-unit-config
+  description: 'Control NGINX Unit through its JSON control API: configure listeners, routes and application
+    objects.'
+  commands:
+  - unitd --no-daemon
+  - curl -X PUT --data-binary @config.json http://127.0.0.1:8080/config
+  - curl -X PUT --data-binary @app.json http://127.0.0.1:8080/config/applications/web
+  - curl -X DELETE http://127.0.0.1:8080/config/listeners/127.0.0.1:8300
+  - curl -s http://127.0.0.1:8080/status
+  examples:
+  - curl -X PUT --data-binary '{"type":"python3","processes":4,"path":"/srv/app","module":"app"}' http://127.0.0.1:8080/config/applications/web
+  - curl -X PUT --data-binary '{"listeners":{"*:8300":{"pass":"applications/web"}}}' http://127.0.0.1:8080/config
+  - curl -s http://127.0.0.1:8080/config
+  parameters:
+  - name: listener
+    type: string
+    description: Socket address the app listens on
+  - name: app_type
+    type: string
+    description: php, python3, node, go or perl
+  - name: config_path
+    type: string
+    description: Path to JSON config file
+knowledge:
+- title: NGINX Unit Docs
+  type: documentation
+  source: https://unit.nginx.org/
+  description: Installation, configuration reference and application objects
+- title: Unit control API
+  type: documentation
+  source: https://unit.nginx.org/controlapi/
+  description: PUT/GET/DELETE operations on /config
+instructions: "# NGINX Unit\n\nNGINX Unit is an application server for PHP, Python, Node.js, Go and more,\
+  \ configured entirely over a JSON API.\n\n## What this skill does\n\n- Runs unitd and manages the control\
+  \ API\n- Configures listeners, routes and applications\n- Reloads configs without restarts\n\n## When\
+  \ to use\n\n- Polyglot workloads behind one runtime\n- Zero-downtime config changes\n\n## Real commands\n\
+  \n```bash\n# Start\nunitd\nunitd --no-daemon   # foreground\n\n# Full config\ncurl -X PUT --data-binary\
+  \ @config.json http://127.0.0.1:8080/config\n\n# Add an application object\ncurl -X PUT --data-binary\
+  \ '{\"type\":\"python3\",\"processes\":4,\"path\":\"/srv/app\",\"module\":\"app\"}' \\\n  http://127.0.0.1:8080/config/applications/web\n\
+  \n# Route a listener to it\ncurl -X PUT --data-binary '{\"listeners\":{\"*:8300\":{\"pass\":\"applications/web\"\
+  }}}' \\\n  http://127.0.0.1:8080/config\n\n# Inspect\ncurl -s http://127.0.0.1:8080/config\ncurl -s\
+  \ http://127.0.0.1:8080/status\n```\n\n## config.json example\n\n```json\n{\n  \"listeners\": { \"*:8300\"\
+  : { \"pass\": \"routes/main\" } },\n  \"routes\": { \"main\": [ { \"action\": { \"pass\": \"applications/web\"\
+  \ } } ] },\n  \"applications\": { \"web\": { \"type\": \"php\", \"root\": \"/srv/www\" } }\n}\n```\n\
+  \n## Best practices\n\n- Apply config as JSON files for auditability\n- Use routes for request routing\
+  \ across apps\n- Check /status for application and request counters"
+examples:
+- input: Serve a PHP app on port 8300 with Unit
+  output: The agent starts unitd, PUTs the php application object and listener, and verifies with curl
+    against the app.
+- input: Change app processes from 2 to 8 without downtime
+  output: The agent PATCHes the application object's processes field via the control API.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: nginx-unit.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-nginx-unit
+  generic:
+    system_prompt: 'This is your domain: Nginx Unit. You do it through nginx-unit-config: Control NGINX
+      Unit through its JSON control API: configure listeners, routes and application objects. The commands
+      are real, e.g. `unitd --no-daemon`. You verify each step you report and stay honest about what you
+      have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

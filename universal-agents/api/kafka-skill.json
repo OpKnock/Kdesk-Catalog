@@ -1,0 +1,211 @@
+{
+  "name": "kafka",
+  "display_name": "Kafka",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Core Kafka operations: run a local cluster, manage topics, produce and consume messages, and inspect consumer groups from the command line.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kafka-broker-api-versions.sh",
+    "kafka-console-consumer.sh",
+    "kafka-console-producer.sh",
+    "kafka-consumer-groups.sh",
+    "kafka-server-start.sh",
+    "kafka-storage.sh",
+    "kafka-topics.sh"
+  ],
+  "capabilities": [
+    {
+      "name": "core-cluster",
+      "description": "Start and verify a Kafka broker (KRaft mode).",
+      "commands": [
+        "kafka-server-start.sh config/kraft/server.properties",
+        "kafka-storage.sh format -t $(kafka-storage.sh random-uuid) -c config/kraft/server.properties",
+        "kafka-server-start.sh config/server.properties",
+        "kafka-broker-api-versions.sh --bootstrap-server localhost:9092"
+      ],
+      "examples": [
+        "kafka-storage.sh format -t $(kafka-storage.sh random-uuid) -c config/kraft/server.properties",
+        "kafka-server-start.sh config/kraft/server.properties",
+        "kafka-broker-api-versions.sh --bootstrap-server localhost:9092"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Server properties file."
+        }
+      ]
+    },
+    {
+      "name": "core-messaging",
+      "description": "Create topics, produce and consume messages, and inspect groups.",
+      "commands": [
+        "kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 3 --replication-factor 1",
+        "kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events",
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning",
+        "kafka-topics.sh --bootstrap-server localhost:9092 --list",
+        "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list"
+      ],
+      "examples": [
+        "kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 3 --replication-factor 1",
+        "kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events",
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic name."
+        },
+        {
+          "name": "partitions",
+          "type": "integer",
+          "description": "Partition count."
+        },
+        {
+          "name": "from_beginning",
+          "type": "boolean",
+          "description": "Read all historical messages."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kafka Documentation",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/",
+      "description": "Official Kafka documentation: concepts, configs, tools."
+    },
+    {
+      "title": "Kafka Quickstart",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/quickstart",
+      "description": "Run a local cluster and basic operations."
+    }
+  ],
+  "instructions": "# Kafka (Core)\n\nCore Kafka operations for developers and operators.\n\n## What this skill does\n\n- Boots a local KRaft-based Kafka cluster.\n- Creates topics and streams messages with the console tools.\n- Inspects consumer groups and broker state.\n\n## When to use\n\n- Local development and demos.\n- First-time cluster bring-up and smoke tests.\n- Teaching the messaging model (topic, partition, offset).\n\n## Real commands\n\n```bash\n# Format KRaft storage (one-time)\nkafka-storage.sh format -t $(kafka-storage.sh random-uuid) \\\n  -c config/kraft/server.properties\n\n# Start broker\nkafka-server-start.sh config/kraft/server.properties\n\n# Verify broker is up\nkafka-broker-api-versions.sh --bootstrap-server localhost:9092\n\n# Create a topic\nkafka-topics.sh --bootstrap-server localhost:9092 \\\n  --create --topic events --partitions 3 --replication-factor 1\n\n# Produce (type lines, Ctrl-D to exit)\nkafka-console-producer.sh --bootstrap-server localhost:9092 --topic events\n\n# Consume from beginning\nkafka-console-consumer.sh --bootstrap-server localhost:9092 \\\n  --topic events --from-beginning\n\n# List topics and groups\nkafka-topics.sh --bootstrap-server localhost:9092 --list\nkafka-consumer-groups.sh --bootstrap-server localhost:9092 --list\n```\n\n## Producer with keys\n\n```bash\nkafka-console-producer.sh --bootstrap-server localhost:9092 \\\n  --topic events --property parse.key=true --property key.separator=:\n```\n\n## Testing\n\n```bash\n# End-to-end smoke test\necho 'hello kafka' | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events\nkafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning --max-messages 1\n```\n\n## Best practices\n\n- Use partitions >= consumers for parallel processing.\n- Name topics <domain>.<event>; document keys and value schemas.\n- Stop brokers with kafka-server-stop.sh to flush state cleanly.\n",
+  "examples": [
+    {
+      "input": "Start a local Kafka for development",
+      "output": "kafka-storage.sh format, then kafka-server-start.sh config/kraft/server.properties, and verify with kafka-broker-api-versions.sh."
+    },
+    {
+      "input": "Stream a message through a topic",
+      "output": "echo 'hello' | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events, then kafka-console-consumer.sh --from-beginning."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kafka.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kafka"
+    },
+    "generic": {
+      "system_prompt": "You take the Kafka seat. You do it through core-cluster: Start and verify a Kafka broker (KRaft mode). The commands are real, e.g. `kafka-server-start.sh config/kraft/server.properties`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kafka",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "core-cluster",
+        "name": "config",
+        "type": "string",
+        "description": "Server properties file."
+      },
+      {
+        "capability": "core-messaging",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic name."
+      },
+      {
+        "capability": "core-messaging",
+        "name": "partitions",
+        "type": "integer",
+        "description": "Partition count."
+      },
+      {
+        "capability": "core-messaging",
+        "name": "from_beginning",
+        "type": "boolean",
+        "description": "Read all historical messages."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kafka-broker-api-versions.sh",
+    "kafka-console-consumer.sh",
+    "kafka-console-producer.sh",
+    "kafka-consumer-groups.sh",
+    "kafka-server-start.sh",
+    "kafka-storage.sh",
+    "kafka-topics.sh"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/kafka-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/kafka-skill.yaml",
+    "checksum": "f34f5e01ed362febbc69cc6a78353362dbe8a2afec13e4e5af7f412865d618c1"
+  }
+}

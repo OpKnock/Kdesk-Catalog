@@ -1,0 +1,166 @@
+{
+  "name": "mqtt-paho-go",
+  "display_name": "Mqtt Paho Go",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Write MQTT clients in Go with eclipse/paho.mqtt.golang: connect options, pub/sub, tokens and TLS.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "paho-go-client",
+      "description": "Add the Paho Go module, write connect/publish/subscribe code and run it against a broker.",
+      "commands": [
+        "go get github.com/eclipse/paho.mqtt.golang",
+        "go mod tidy",
+        "go run main.go",
+        "go vet ./...",
+        "go test ./..."
+      ],
+      "examples": [
+        "go get github.com/eclipse/paho.mqtt.golang@v1.5.0",
+        "go run main.go",
+        "go test -run TestPublish -v ./..."
+      ],
+      "parameters": [
+        {
+          "name": "broker",
+          "type": "string",
+          "description": "Broker URL, e.g. tcp://localhost:1883 or ssl://host:8883"
+        },
+        {
+          "name": "client_id",
+          "type": "string",
+          "description": "Client identifier for the connection"
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic filter used in the handler"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Paho MQTT Go repo",
+      "type": "documentation",
+      "source": "https://github.com/eclipse/paho.mqtt.golang",
+      "description": "README, examples and API docs for the Go client"
+    },
+    {
+      "title": "pkg.go.dev paho.mqtt.golang",
+      "type": "documentation",
+      "source": "https://pkg.go.dev/github.com/eclipse/paho.mqtt.golang",
+      "description": "Package documentation for client, options and tokens"
+    }
+  ],
+  "instructions": "# Paho MQTT Go\n\n`github.com/eclipse/paho.mqtt.golang` is the de-facto standard MQTT client for Go.\n\n## What this skill does\n\n- Wires the module into a Go project\n- Writes publish, subscribe and request/response clients\n- Handles connection loss and TLS options\n\n## When to use\n\n- IoT and telemetry services in Go\n- Microservices that need light async messaging\n\n## Real commands\n\n```bash\n# Add dependency\n go get github.com/eclipse/paho.mqtt.golang\ngo mod tidy\n\n# Build and verify\n go run main.go\ngo vet ./...\ngo test ./...\n```\n\n## Publish client\n\n```go\nopts := mqtt.NewClientOptions().AddBroker(\"tcp://localhost:1883\").SetClientID(\"go-pub\")\nc := mqtt.NewClient(opts)\nif t := c.Connect(); t.Wait() && t.Error() != nil { log.Fatal(t.Error()) }\nc.Publish(\"sensors/temp\", 1, false, \"21.5\").Wait()\nc.Disconnect(250)\n```\n\n## Subscribe with handler\n\n```go\nc.Subscribe(\"sensors/#\", 0, func(_ mqtt.Client, m mqtt.Message) {\n    fmt.Printf(\"%s: %s\\n\", m.Topic(), m.Payload())\n})\n```\n\n## Best practices\n\n- Always `Wait()` on tokens and check `t.Error()`\n- Set `SetConnectRetry(true)` for resilient clients\n- Use `ssl://` scheme + tls.Config for TLS brokers",
+  "examples": [
+    {
+      "input": "Write a Go subscriber that logs all messages on sensors/#",
+      "output": "The agent writes the client with a Subscribe handler, runs `go run main.go` and verifies with mosquitto_pub."
+    },
+    {
+      "input": "My Go client drops offline every hour",
+      "output": "The agent reviews connect options, adds SetConnectRetry and a ConnectionLostHandler, and shows the fix."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "mqtt-paho-go.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-mqtt-paho-go"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Mqtt Paho Go. You do it through paho-go-client: Add the Paho Go module, write connect/publish/subscribe code and run it against a broker. The commands are real, e.g. `go get github.com/eclipse/paho.mqtt.golang`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "mqtt-paho-go",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "paho-go-client",
+        "name": "broker",
+        "type": "string",
+        "description": "Broker URL, e.g. tcp://localhost:1883 or ssl://host:8883"
+      },
+      {
+        "capability": "paho-go-client",
+        "name": "client_id",
+        "type": "string",
+        "description": "Client identifier for the connection"
+      },
+      {
+        "capability": "paho-go-client",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic filter used in the handler"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/mqtt-paho-go-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/mqtt-paho-go-skill.yaml",
+    "checksum": "f5d85b4f44195f837a1644bda73a651d79fe9468d9fa5d30ead496c25dcdcb5b"
+  }
+}

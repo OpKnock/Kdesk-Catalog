@@ -1,0 +1,235 @@
+{
+  "name": "azure",
+  "display_name": "azure",
+  "category": "cloud",
+  "subcategory": "general",
+  "description": "Operates Microsoft Azure with the az CLI: resource groups, VMs, AKS, functions, storage, and Azure AD.",
+  "version": "2.0.0",
+  "tags": [
+    "cloud"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "func",
+    "kubectl"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "az login",
+        "az account list --output table",
+        "az group create --name myrg --location eastus",
+        "az storage account create --name mystore --resource-group myrg --sku Standard_LRS",
+        "az account show --query \"user.name\""
+      ],
+      "description": "Manage subscriptions, groups, and storage.",
+      "name": "azure-core",
+      "examples": [
+        "az group list --output table",
+        "az storage container list --account-name mystore",
+        "az account set --subscription \"My Sub\""
+      ],
+      "parameters": [
+        {
+          "description": "Resource group name",
+          "name": "resource-group",
+          "type": "string"
+        },
+        {
+          "description": "Azure region",
+          "name": "location",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "az aks create --resource-group myrg --name mycluster --node-count 3 --enable-managed-identity",
+        "az aks get-credentials --resource-group myrg --name mycluster",
+        "az aks list",
+        "az aks scale --resource-group myrg --name mycluster --node-count 5",
+        "kubectl get nodes"
+      ],
+      "description": "Manage AKS clusters and get credentials.",
+      "name": "azure-aks",
+      "examples": [
+        "az aks get-credentials --resource-group myrg --name mycluster --admin",
+        "az aks show --resource-group myrg --name mycluster --query \"powerState.code\""
+      ],
+      "parameters": [
+        {
+          "description": "AKS cluster name",
+          "name": "cluster",
+          "type": "string"
+        },
+        {
+          "name": "node-count",
+          "type": "integer",
+          "description": "Number of worker nodes"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "func azure functionapp publish myfuncapp",
+        "az functionapp list --resource-group myrg",
+        "az functionapp config appsettings set --name myfuncapp --resource-group myrg --settings \"KEY=VALUE\"",
+        "func init --python"
+      ],
+      "description": "Deploy and manage Azure Functions.",
+      "name": "azure-functions",
+      "examples": [
+        "func azure functionapp publish myfuncapp --build remote",
+        "az functionapp show --name myfuncapp --query \"defaultHostName\""
+      ],
+      "parameters": [
+        {
+          "description": "Function app name",
+          "name": "app",
+          "type": "string"
+        },
+        {
+          "name": "runtime",
+          "type": "string",
+          "description": "Function runtime: python, node, dotnet"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Azure CLI Reference",
+      "description": "az command reference",
+      "source": "https://learn.microsoft.com/cli/azure/",
+      "type": "documentation"
+    },
+    {
+      "title": "Azure for Developers",
+      "description": "Service documentation",
+      "source": "https://learn.microsoft.com/azure/",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Azure\n\nOperate Azure with the az CLI.\n\n## When to Use\n\n- Managing resource groups, VMs, and storage\n- AKS cluster provisioning and credential access\n- Deploying Azure Functions\n- Role-based access control (Azure AD/RBAC)\n\n## Commands\n\n```bash\n# Auth and context\naz login\naz account list --output table\naz account set --subscription \"My Sub\"\n\n# Resource groups and storage\naz group create --name myrg --location eastus\naz storage account create --name mystore --resource-group myrg --sku Standard_LRS\naz storage container list --account-name mystore\n\n# AKS\naz aks create --resource-group myrg --name mycluster --node-count 3 --enable-managed-identity\naz aks get-credentials --resource-group myrg --name mycluster\naz aks scale --resource-group myrg --name mycluster --node-count 5\nkubectl get nodes\n\n# Functions\nfunc init --python\nfunc azure functionapp publish myfuncapp\naz functionapp config appsettings set --name myfuncapp --resource-group myrg --settings \"KEY=VALUE\"\n```\n\n## Best Practices\n\n- Use managed identity over service principals where possible\n- Scope RBAC roles to the resource group level\n- Name resources with a consistent convention\n- Use az aks get-credentials --admin only for break-glass\n- Enable diagnostics and metrics for every service\n- Prefer Bicep/Terraform for reproducible infrastructure",
+  "examples": [
+    {
+      "input": "Create a resource group and storage for a new app",
+      "output": "Agent runs az group create and az storage account create, then validates with az resource list."
+    },
+    {
+      "input": "Connect kubectl to my AKS cluster",
+      "output": "Agent runs az aks get-credentials, verifies with kubectl get nodes, and checks RBAC context."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "azure.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-azure"
+    },
+    "generic": {
+      "system_prompt": "You work azure hands-on. You do it through azure-core: Manage subscriptions, groups, and storage. The commands are real, e.g. `az login`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "azure",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "azure-core",
+        "name": "resource-group",
+        "type": "string",
+        "description": "Resource group name"
+      },
+      {
+        "capability": "azure-core",
+        "name": "location",
+        "type": "string",
+        "description": "Azure region"
+      },
+      {
+        "capability": "azure-aks",
+        "name": "cluster",
+        "type": "string",
+        "description": "AKS cluster name"
+      },
+      {
+        "capability": "azure-aks",
+        "name": "node-count",
+        "type": "integer",
+        "description": "Number of worker nodes"
+      },
+      {
+        "capability": "azure-functions",
+        "name": "app",
+        "type": "string",
+        "description": "Function app name"
+      },
+      {
+        "capability": "azure-functions",
+        "name": "runtime",
+        "type": "string",
+        "description": "Function runtime: python, node, dotnet"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "func",
+    "kubectl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/azure-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/azure-skill.yaml",
+    "checksum": "289d9a986d49f530d237fb14bc2a6dc692d69eabfd4c4b402222d66d7d5b3ef2"
+  }
+}

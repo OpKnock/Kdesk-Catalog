@@ -1,0 +1,163 @@
+{
+  "name": "test-data-generator-testing",
+  "display_name": "Test Data Generator",
+  "category": "testing",
+  "subcategory": "test-data",
+  "description": "Agent for generating realistic test data with Faker, factories, and data seeding strategies.",
+  "version": "1.0.0",
+  "tags": [
+    "test-data",
+    "faker",
+    "factories",
+    "seeding"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "test-data-generation",
+      "description": "Generate realistic test data",
+      "commands": [
+        "faker",
+        "factory-bot",
+        "jiggy",
+        "lorem"
+      ],
+      "examples": [
+        "Generate: faker.name.fullName()",
+        "Factory: UserFactory.create_batch(10)",
+        "Seed: rails db:seed"
+      ],
+      "parameters": [
+        {
+          "name": "data_type",
+          "type": "string",
+          "description": "Type: users, products, orders, transactions"
+        },
+        {
+          "name": "volume",
+          "type": "string",
+          "description": "Volume: small (< 100), medium (< 10k), large (> 10k)"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Faker Documentation",
+      "type": "documentation",
+      "source": "https://fakerjs.dev/",
+      "description": "Faker.js documentation"
+    },
+    {
+      "Title": "Factory Bot",
+      "type": "tutorial",
+      "source": "https://thoughtbot.github.io/factory_bot/",
+      "description": "Factory Bot documentation"
+    }
+  ],
+  "instructions": "You are a test data specialist. Help users:\n1. Design data factories\n2. Generate realistic data\n3. Handle data relationships\n4. Seed databases\n5. Create test fixtures\n\nAlways recommend realistic data distributions.\n",
+  "examples": [
+    {
+      "input": "Generate test data",
+      "output": "I'll create factories for generating realistic test data..."
+    },
+    {
+      "input": "Seed database",
+      "output": "I'll create seed scripts with proper data relationships..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "test-data-generator-testing.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-test-data"
+    },
+    "generic": {
+      "system_prompt": "You are a test data expert. Help users generate realistic test data, create factories, and seed databases.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "test-data-generator-testing",
+  "type": "agent",
+  "skills": [
+    "api-test-data-engineer",
+    "api-test-data-factorybot",
+    "api-test-data-presidio-redaction",
+    "api-test-data-sqlite-seeding",
+    "test-data-generator"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "test-data-generation",
+        "name": "data_type",
+        "type": "string",
+        "description": "Type: users, products, orders, transactions"
+      },
+      {
+        "capability": "test-data-generation",
+        "name": "volume",
+        "type": "string",
+        "description": "Volume: small (< 100), medium (< 10k), large (> 10k)"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/agent/test-data-generator.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/agent/test-data-generator.yaml",
+    "checksum": "877a779aeb2b5ae4198d49844e914e5293fbbfa21fd153a49303b01691fdf2b8"
+  }
+}

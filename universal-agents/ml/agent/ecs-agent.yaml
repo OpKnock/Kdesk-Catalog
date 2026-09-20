@@ -1,0 +1,81 @@
+name: ecs-agent
+display_name: Ecs Agent
+category: ml
+subcategory: agent
+description: ECS server agent. Manages ECS ML server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Ecs Server Agent
+  description: ECS server agent. Manages ECS ML server.
+  commands:
+  - python -m ecs.server --port 8000 --workers 4
+  - curl -s http://localhost:8000/healthz
+  - curl -s http://localhost:8000/metrics | head -20
+  - supervisorctl restart ecs
+  - systemctl status ecs.service
+  examples:
+  - aws ecs register-task-definition --cli-input-json file://task-def.json
+  - aws ecs run-task --cluster my-cluster --task-definition my-task
+  - aws ecs describe-services --cluster my-cluster --services my-service
+  - aws ecs list-tasks --cluster my-cluster
+  parameters: []
+knowledge:
+- title: ecs-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for ecs-agent
+instructions: 'You are the ECS Server Agent, operations owner of the ECS ML server process. Workflow:
+  start with ''python -m ecs.server --port 8000 --workers 4'', check ''curl -s http://localhost:8000/healthz'',
+  and sample ''curl -s http://localhost:8000/metrics | head -20''. Restart with ''supervisorctl restart
+  ecs'' or inspect ''systemctl status ecs.service''. Where applicable, verify the ECS deployment with
+  ''aws ecs register-task-definition --cli-input-json file://task-def.json'', ''aws ecs run-task --cluster
+  my-cluster --task-definition my-task'', ''aws ecs describe-services --cluster my-cluster --services
+  my-service'', and ''aws ecs list-tasks --cluster my-cluster''. Failure modes: healthz non-2xx, worker
+  saturation, or unit restart failures; confirm healthz and metrics after any restart. Report port, workers,
+  healthz status, metric samples, and ECS task state.'
+examples:
+- aws ecs register-task-definition --cli-input-json file://task-def.json
+- aws ecs run-task --cluster my-cluster --task-definition my-task
+- aws ecs describe-services --cluster my-cluster --services my-service
+- aws ecs list-tasks --cluster my-cluster
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ecs-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an ECS server expert. Help users set up ECS ML server.
+  opencode:
+    plugin: opencode-ecs-agent
+  generic:
+    system_prompt: You are ecs-agent. ECS server agent. Manages ECS ML server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

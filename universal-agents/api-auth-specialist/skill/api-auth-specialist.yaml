@@ -1,0 +1,115 @@
+name: api-auth-specialist
+version: 2.0.0
+type: skill
+category: security
+description: 'Deep API auth expertise: JWT validation, JWKS fetching, token introspection, session revocation,
+  and auditing auth failures.'
+keywords:
+- api-auth
+- jwt
+- oauth
+- authentication
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-auth-specialist.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-auth-specialist
+  generic:
+    system_prompt: 'You own api-auth-specialist end to end. You do it through auth-deep: Validate tokens,
+      introspect, and audit auth flows. The commands are real, e.g. `curl -s http://localhost:8080/.well-known/jwks.json
+      | jq .keys[0] | {kid, kty}`. You answer with exact commands, not abstractions, and flag anything
+      you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: auth-deep
+  description: Validate tokens, introspect, and audit auth flows
+  commands:
+  - curl -s http://localhost:8080/.well-known/jwks.json | jq '.keys[0] | {kid, kty}'
+  - 'curl -s -X POST http://localhost:8080/oauth/introspect -H ''Content-Type: application/x-www-form-urlencoded''
+    -d ''token=$TOKEN'' | jq ''.active'''
+  - node -e "const t=process.argv[1];console.log(JSON.parse(Buffer.from(t.split('.')[1],'base64url')))"
+    $TOKEN
+  - curl -s http://localhost:8080/api/auth/audit?action=login | jq '.events[-1] | {user, ip, result}'
+  - 'curl -s -X POST http://localhost:8080/oauth/revoke -H ''Content-Type: application/x-www-form-urlencoded''
+    -d ''token=$TOKEN'' | jq ''.revoked'''
+  examples:
+  - curl -s 'http://localhost:8080/oauth/introspect?token=$TOKEN' | jq '.exp'
+  - echo $TOKEN | cut -d. -f2 | base64 -d 2>/dev/null | jq '.exp, .scope'
+  - curl -s http://localhost:8080/api/auth/audit?result=failed | jq '.events | length'
+  parameters:
+  - name: token
+    type: string
+    description: Access or refresh token to inspect
+  - name: audience
+    type: string
+    description: Expected audience for validation
+  - name: issuer
+    type: string
+    description: Expected token issuer
+prerequisites:
+- node.js
+- python
+- jsonwebtoken
+tools:
+- node.js
+- python
+- jsonwebtoken
+- passport
+- keycloak
+examples:
+- input: Token rejected but looks valid
+  output: Decodes the payload, checks expiry/issuer/audience, and re-fetches JWKS for key rotation.
+- input: Revoke a stolen token
+  output: Calls the revoke endpoint and confirms introspection returns active:false.
+instructions: "# API Auth Specialist\n\n## What this skill does\nExpert-level authentication: validate\
+  \ JWTs against JWKS, introspect opaque tokens, decode and check claims, revoke sessions, and audit failed\
+  \ logins.\n\n## When to use\n- Debugging rejected tokens\n- Enforcing revocation policies\n- Auditing\
+  \ authentication security\n\n## Real commands\n```bash\n# Fetch the JWKS\ncurl -s http://localhost:8080/.well-known/jwks.json\
+  \ | jq '.keys[0] | {kid, kty}'\n\n# Decode JWT payload (no signature check!)\nnode -e \"const t=process.argv[1];console.log(JSON.parse(Buffer.from(t.split('.')[1],'base64url')))\"\
+  \ $TOKEN\n\n# Introspect an opaque token\ncurl -s -X POST http://localhost:8080/oauth/introspect \\\n\
+  \  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -d 'token=$TOKEN' | jq '.active'\n\n#\
+  \ Revoke a token\ncurl -s -X POST http://localhost:8080/oauth/revoke -d 'token=$TOKEN' | jq '.revoked'\n\
+  \n# Audit logins\ncurl -s 'http://localhost:8080/api/auth/audit?action=login' | jq '.events[-1] | {user,\
+  \ ip, result}'\n\n# Count failed logins\ncurl -s 'http://localhost:8080/api/auth/audit?result=failed'\
+  \ | jq '.events | length'\n```\n\n## JWT validation checklist\n- Verify signature with the JWKS key\
+  \ matching `kid`\n- Check `exp` (with leeway), `nbf`, `iat`\n- Validate `iss` and `aud`\n- Check scope/role\
+  \ claims against the route\n\n## Best practices\n- Cache JWKS and refresh on unknown `kid`\n- Use opaque\
+  \ tokens + introspection for instant revocation\n- Log failures with reason codes but never the token\n\
+  - Rate-limit auth endpoints against brute force\n\n## Testing\n```bash\nTOKEN=$(curl -s -X POST http://localhost:8080/oauth/token\
+  \ -d 'grant_type=password&username=a&password=b' | jq -r '.access_token')\ncurl -s -X POST http://localhost:8080/oauth/introspect\
+  \ -d \"token=$TOKEN\" | jq '.active'\n```"
+display_name: api-auth-specialist
+knowledge:
+- title: JWT RFC 7519
+  type: documentation
+  source: https://datatracker.ietf.org/doc/html/rfc7519
+  description: JWT structure and claims
+- title: Token Introspection RFC 7662
+  type: documentation
+  source: https://datatracker.ietf.org/doc/html/rfc7662
+  description: Introspection endpoint semantics

@@ -1,0 +1,192 @@
+name: httpie-devtools
+display_name: httpie-devtools
+category: devtools
+subcategory: general
+description: 'Makes human-friendly HTTP requests with httpie: intuitive syntax, pretty-printed JSON, sessions,
+  and file uploads.'
+version: 2.0.0
+tags:
+- devtools
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- http
+capabilities:
+- name: request-syntax
+  description: Send requests with readable syntax and inspect responses.
+  commands:
+  - http GET https://api.example.com/items
+  - http POST https://api.example.com/items name=x price:=10
+  - http PUT https://api.example.com/items/1 name=y
+  - http -a user:pass https://api.example.com/me
+  - http https://api.example.com/search q==hello
+  - http -v https://api.example.com/items
+  examples:
+  - http POST https://api.example.com/items name=x price:=10
+  - http https://api.example.com/search q==hello
+  - http -a user:pass https://api.example.com/me
+  parameters:
+  - name: method
+    type: string
+    description: HTTP method
+  - name: url
+    type: string
+    description: Request URL
+  - name: auth
+    type: string
+    description: user:pass basic auth via -a
+- name: sessions-and-output
+  description: Reuse sessions, control output, and handle JSON/files.
+  commands:
+  - http --session user-login POST https://api.example.com/login email=a@b.c
+  - http --session user-login GET https://api.example.com/me
+  - http --json --pretty=all GET https://api.example.com/data
+  - http --follow -b https://example.com
+  - http -f POST https://api.example.com/upload file@./report.pdf
+  - http --offline POST https://api.example.com/items name=x
+  examples:
+  - http --session user-login POST https://api.example.com/login email=a@b.c
+  - http -f POST https://api.example.com/upload file@./report.pdf
+  - http --offline POST https://api.example.com/items name=x
+  parameters:
+  - name: session
+    type: string
+    description: Session name
+  - name: pretty
+    type: string
+    description: 'Output style: all, colors, none'
+knowledge:
+- title: HTTPie CLI Docs
+  type: documentation
+  source: https://httpie.io/docs/cli
+  description: Request items, output, sessions, and plugins
+- title: HTTPie GitHub
+  type: documentation
+  source: https://github.com/httpie/cli
+  description: Source and example collections
+instructions: '# HTTPie Requests
+
+
+  Test and debug HTTP APIs with an ergonomic curl replacement.
+
+
+  ## What This Skill Does
+
+
+  - Sends requests with `http method url` syntax
+
+  - Sets fields with `key=value` and typed `:=` syntax
+
+  - Pretty-prints JSON responses with color
+
+  - Manages cookies across requests with sessions
+
+  - Handles file uploads and form data
+
+
+  ## When to Use
+
+
+  - Daily API exploration and debugging
+
+  - Writing readable test scripts for endpoints
+
+  - Teams that prefer clarity over curl flags
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Basics
+
+  http GET https://api.example.com/items
+
+  http POST https://api.example.com/items name=x price:=10
+
+  http PUT https://api.example.com/items/1 name=y
+
+  http DELETE https://api.example.com/items/1
+
+
+  # Fields and query
+
+  http GET https://api.example.com/search q==hello      # ?q=hello
+
+  http POST https://api.example.com/items name=x price:=10 enabled:=true
+
+
+  # Auth and headers
+
+  http -a user:pass https://api.example.com/me
+
+  http https://api.example.com/items ''Authorization: Bearer token123''
+
+
+  # Sessions
+
+  http --session login POST https://api.example.com/login email=a@b.c
+
+  http --session login GET https://api.example.com/me
+
+
+  # Output and uploads
+
+  http --json --pretty=all GET https://api.example.com/data
+
+  http -f POST https://api.example.com/upload file@./report.pdf
+
+  http -v GET https://api.example.com/health
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use := for JSON types (numbers, booleans, null)
+
+  - Use sessions for multi-step auth flows
+
+  - Use --offline to draft and check request syntax without sending
+
+  - Pair with jq when piping response bodies into transformations
+
+  - Use -v or --traceback when debugging unusual responses'
+examples:
+- input: POST a new item and see the response
+  output: Agent sends http POST with fields, shows status + pretty body, and follows up with a GET
+- input: Test the full login -> profile flow
+  output: Agent uses a session for login, then reuses it to fetch the profile
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: httpie-devtools.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-httpie
+  generic:
+    system_prompt: 'You are the httpie-devtools specialist. You do it through request-syntax: Send requests
+      with readable syntax and inspect responses. The commands are real, e.g. `http GET https://api.example.com/items`.
+      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

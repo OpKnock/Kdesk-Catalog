@@ -1,0 +1,230 @@
+{
+  "name": "cert-manager-infrastructure",
+  "display_name": "Cert Manager",
+  "category": "infrastructure",
+  "subcategory": "general",
+  "description": "Manages TLS certificates in Kubernetes with cert-manager and cmctl: issuance, renewal, approval, and cluster status.",
+  "version": "2.0.0",
+  "tags": [
+    "infrastructure"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "cmctl",
+    "kubectl"
+  ],
+  "capabilities": [
+    {
+      "name": "cmctl",
+      "description": "Inspect and operate cert-manager resources with cmctl.",
+      "commands": [
+        "cmctl check api",
+        "cmctl status certificate my-tls-cert",
+        "cmctl renew my-tls-cert",
+        "cmctl approve certificate/my-tls-cert",
+        "cmctl status certificaterequest/my-tls-cert-1234"
+      ],
+      "examples": [
+        "cmctl status certificate ingress-tls --namespace web",
+        "cmctl renew ingress-tls --namespace web --failsafe",
+        "cmctl check api --wait 10m"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Certificate or CertificateRequest name"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace of the resource"
+        },
+        {
+          "name": "wait",
+          "type": "string",
+          "description": "Wait duration for API readiness"
+        }
+      ]
+    },
+    {
+      "name": "issuers",
+      "description": "Manage ClusterIssuers and certificates via kubectl.",
+      "commands": [
+        "kubectl apply -f clusterissuer.yaml",
+        "kubectl get certificates -A",
+        "kubectl get certificaterequests -A",
+        "kubectl describe certificate ingress-tls",
+        "kubectl get challenges -A"
+      ],
+      "examples": [
+        "kubectl get certificates -A | grep -v READY",
+        "kubectl describe clusterissuer letsencrypt-prod",
+        "kubectl get challenges -A -o wide"
+      ],
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "string",
+          "description": "certificate, certificaterequest, clusterissuer, challenge"
+        },
+        {
+          "name": "all-namespaces",
+          "type": "string",
+          "description": "Query across namespaces with -A"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output format: wide, yaml, json"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "cert-manager Docs",
+      "type": "documentation",
+      "source": "https://cert-manager.io/docs/",
+      "description": "Issuers, certificates, and HTTP01/DNS01 challenges"
+    },
+    {
+      "title": "cmctl",
+      "type": "documentation",
+      "source": "https://cert-manager.io/docs/usage/cmctl/",
+      "description": "Command-line tool for cert-manager"
+    },
+    {
+      "title": "Let's Encrypt with cert-manager",
+      "type": "documentation",
+      "source": "https://cert-manager.io/docs/configuration/acme/",
+      "description": "ACME issuers, staging, and production profiles"
+    }
+  ],
+  "instructions": "# cert-manager\n\nAutomate TLS certificate lifecycle in Kubernetes.\n\n## When to Use\n\n- Issuing Let's Encrypt certificates for ingresses\n- Monitoring certificate expiry and renewal failures\n- Approving internal certificate requests\n\n## ClusterIssuer\n\n```yaml\napiVersion: cert-manager.io/v1\nkind: ClusterIssuer\nmetadata:\n  name: letsencrypt-prod\nspec:\n  acme:\n    server: https://acme-v02.api.letsencrypt.org/directory\n    email: ops@example.com\n    privateKeySecretRef: { name: letsencrypt-prod-key }\n    solvers:\n      - http01: { ingress: { class: nginx } }\n```\n\n```bash\nkubectl apply -f clusterissuer.yaml\n```\n\nUse the staging server first to avoid rate limits during testing.\n\n## Certificate\n\n```yaml\napiVersion: cert-manager.io/v1\nkind: Certificate\nmetadata: { name: ingress-tls, namespace: web }\nspec:\n  secretName: ingress-tls\n  issuerRef: { name: letsencrypt-prod, kind: ClusterIssuer }\n  dnsNames: [www.example.com, api.example.com]\n```\n\n```bash\nkubectl apply -f certificate.yaml\ncmctl status certificate ingress-tls --namespace web\n```\n\n## Renewal and troubleshooting\n\n```bash\ncmctl renew ingress-tls --namespace web --failsafe\nkubectl describe certificate ingress-tls\nkubectl get challenges -A\n```\n\nCheck challenges when renewal stalls - HTTP01 fails usually mean ingress misrouting.\n\n## Best practices\n\n- Set `renewBefore` to 30 days (default 2/3 lifetime).\n- Alert when `cmctl status certificate` shows NotReady.\n- Keep ACME email valid - expiry notices are sent there.\n- Prefer external DNS01 for wildcards; internal ClusterIssuer for mTLS.\n\n## Testing\n\n```bash\ncmctl check api\ncmctl status certificate ingress-tls\n```\n\nVerify certs are 30+ days from expiry after renewal runs.",
+  "examples": [
+    {
+      "input": "Issue a Let's Encrypt cert for api.example.com via nginx ingress.",
+      "output": "Creates the ClusterIssuer with HTTP01, applies the Certificate, and verifies Ready with cmctl status."
+    },
+    {
+      "input": "Renewal is failing; diagnose.",
+      "output": "Runs cmctl renew --failsafe, describes the certificate for conditions, and inspects challenges for the failure reason."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cert-manager-infrastructure.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cert-manager"
+    },
+    "generic": {
+      "system_prompt": "You work Cert Manager hands-on. You do it through cmctl: Inspect and operate cert-manager resources with cmctl. The commands are real, e.g. `cmctl check api`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cert-manager-infrastructure",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cmctl",
+        "name": "name",
+        "type": "string",
+        "description": "Certificate or CertificateRequest name"
+      },
+      {
+        "capability": "cmctl",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace of the resource"
+      },
+      {
+        "capability": "cmctl",
+        "name": "wait",
+        "type": "string",
+        "description": "Wait duration for API readiness"
+      },
+      {
+        "capability": "issuers",
+        "name": "resource",
+        "type": "string",
+        "description": "certificate, certificaterequest, clusterissuer, challenge"
+      },
+      {
+        "capability": "issuers",
+        "name": "all-namespaces",
+        "type": "string",
+        "description": "Query across namespaces with -A"
+      },
+      {
+        "capability": "issuers",
+        "name": "output",
+        "type": "string",
+        "description": "Output format: wide, yaml, json"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cmctl",
+    "kubectl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "infrastructure/cert-manager-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/infrastructure/cert-manager-skill.yaml",
+    "checksum": "32f5e4aa98553dc925e486d6d46110147867635e5047e9e075c9b33e26b6d148"
+  }
+}

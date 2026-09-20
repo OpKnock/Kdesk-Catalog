@@ -1,0 +1,171 @@
+{
+  "name": "elastic-logs",
+  "display_name": "Elastic Logs",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Ship, index, and query application logs into Elasticsearch with Filebeat, and run Elasticsearch log queries from the CLI.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "filebeat"
+  ],
+  "capabilities": [
+    {
+      "name": "log-shipping",
+      "description": "Configure and run Filebeat, test pipelines, and query indexed logs via the Elasticsearch REST API.",
+      "commands": [
+        "filebeat test config -c filebeat.yml",
+        "filebeat setup -e -c filebeat.yml --index-management",
+        "filebeat -e -c filebeat.yml",
+        "curl -s 'localhost:9200/filebeat-*/_search' -H 'Content-Type: application/json' -d '{\"query\":{\"match_all\":{}},\"size\":5}' | jq '.hits.total'",
+        "curl -s 'localhost:9200/filebeat-*/_mapping' | jq '.filebeat-2024.*'"
+      ],
+      "examples": [
+        "filebeat test config -c filebeat.yml && filebeat -e -c filebeat.yml",
+        "curl -s 'localhost:9200/filebeat-*/_search' -H 'Content-Type: application/json' -d '{\"query\":{\"bool\":{\"filter\":[{\"term\":{\"log.level\":\"ERROR\"}}]}},\"size\":10}' | jq '.hits.hits[]._source.message'",
+        "curl -s 'localhost:9200/_cat/indices/filebeat-*?v'"
+      ],
+      "parameters": [
+        {
+          "name": "config-file",
+          "type": "string",
+          "description": "Filebeat YAML config path"
+        },
+        {
+          "name": "index-pattern",
+          "type": "string",
+          "description": "Elasticsearch index pattern like filebeat-*"
+        },
+        {
+          "name": "es-url",
+          "type": "string",
+          "description": "Elasticsearch endpoint for queries"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Filebeat Reference",
+      "type": "documentation",
+      "source": "https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-overview.html",
+      "description": "Filebeat inputs, processors, and Elasticsearch output configuration"
+    },
+    {
+      "title": "Elasticsearch Query DSL",
+      "type": "documentation",
+      "source": "https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html",
+      "description": "Query and filter DSL for log search"
+    }
+  ],
+  "instructions": "# Elastic Logs\n\n## What this skill does\n\nThis skill covers shipping application and system logs into Elasticsearch with Filebeat and querying them with the Elasticsearch REST API. Filebeat tails files, applies processors, and sends events to Elasticsearch or Logstash.\n\n## When to use\n\n- Standing up centralized logging for services\n- Adding error-rate dashboards over filebeat-* indices\n- Troubleshooting why logs are not arriving in Kibana\n\n## Real commands\n\n```bash\n# Validate config, then run\nfilebeat test config -c filebeat.yml\nfilebeat -e -c filebeat.yml\n\n# Set up index templates and ILM\nfilebeat setup -e -c filebeat.yml --index-management\n\n# Query the latest error lines\ncurl -s 'localhost:9200/filebeat-*/_search' -H 'Content-Type: application/json' -d '{\"query\":{\"bool\":{\"filter\":[{\"term\":{\"log.level\":\"ERROR\"}}]}},\"size\":10}' | jq '.hits.hits[]._source.message'\n\n# List log indices\ncurl -s 'localhost:9200/_cat/indices/filebeat-*?v'\n```\n\n## filebeat.yml example\n\n```yaml\nfilebeat.inputs:\n  - type: filestream\n    id: app-logs\n    paths:\n      - /var/log/app/*.log\n    parsers:\n      - ndjson:\n          target: \"\"\nprocessors:\n  - add_host_metadata: {}\n  - add_cloud_metadata: {}\noutput.elasticsearch:\n  hosts: ['https://es.example.com:9200']\n  username: filebeat_writer\n  password: '${FILEBEAT_PASSWORD}'\n```\n\n## Testing\n\n```bash\n# Watch the beat's own output while tailing a file\nfilebeat -e -c filebeat.yml -d 'publish'\n```\n\n## Best practices\n\n- Use ILM (index lifecycle management) with 7-day hot then warm phases.\n- Tag and namespace logs with `fields.service` for multi-tenant filtering.\n- Set `filebeat.inputs` to filestream (modern) not log (legacy).\n- Monitor `monitoring` dashboards for dropped events and registry errors.\n- Keep secrets in `${VAR}` env references, never in the config file.\n",
+  "examples": [
+    {
+      "input": "Ship app logs to Elasticsearch",
+      "output": "Write a filebeat.yml with a filestream input on the log paths, filebeat test config, run setup --index-management, then filebeat -e and verify with _cat/indices."
+    },
+    {
+      "input": "Logs missing in Kibana but app writes files",
+      "output": "Run filebeat -e -c filebeat.yml -d 'publish' to see registry/pipeline errors, verify the filestream id matches, and check the ES output credentials."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "elastic-logs.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-elastic-logs"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Elastic Logs. You do it through log-shipping: Configure and run Filebeat, test pipelines, and query indexed logs via the Elasticsearch REST API. The commands are real, e.g. `filebeat test config -c filebeat.yml`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "elastic-logs",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "log-shipping",
+        "name": "config-file",
+        "type": "string",
+        "description": "Filebeat YAML config path"
+      },
+      {
+        "capability": "log-shipping",
+        "name": "index-pattern",
+        "type": "string",
+        "description": "Elasticsearch index pattern like filebeat-*"
+      },
+      {
+        "capability": "log-shipping",
+        "name": "es-url",
+        "type": "string",
+        "description": "Elasticsearch endpoint for queries"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "filebeat"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/elastic-logs-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/elastic-logs-skill.yaml",
+    "checksum": "1ad33ca1d681082c5000ce02473e1613064c05368caec355f73ec2c06d87227d"
+  }
+}

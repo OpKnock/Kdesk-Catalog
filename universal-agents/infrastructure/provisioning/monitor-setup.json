@@ -1,0 +1,295 @@
+{
+  "name": "monitor-setup",
+  "display_name": "Monitoring & Alerting Setup",
+  "category": "infrastructure",
+  "subcategory": "provisioning",
+  "description": "Sets up Prometheus, Grafana, and Alertmanager observability stacks with real scrape configs, dashboards, and alert rules.",
+  "version": "2.0.0",
+  "tags": [
+    "provisioning",
+    "prometheus",
+    "grafana",
+    "alerting",
+    "observability"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "prometheus-setup",
+      "description": "Install and configure Prometheus with scrape targets, retention, and rules",
+      "commands": [
+        "helm repo add prometheus-community https://prometheus-community.github.io/helm-charts",
+        "helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring",
+        "promtool check config /etc/prometheus/prometheus.yml",
+        "promtool check rules /etc/prometheus/rules/*.yml",
+        "curl -s http://localhost:9090/api/v1/targets | jq -r '.data.activeTargets[] | [.scrapeUrl, .health] | @tsv'"
+      ],
+      "examples": [
+        "Validate config: promtool check config prometheus.yml",
+        "Validate rules: promtool check rules rules.yml",
+        "List targets: curl -s localhost:9090/api/v1/targets | jq"
+      ],
+      "parameters": [
+        {
+          "name": "config_path",
+          "type": "string",
+          "description": "Path to prometheus.yml"
+        }
+      ]
+    },
+    {
+      "name": "grafana-setup",
+      "description": "Provision Grafana dashboards, data sources, and API operations",
+      "commands": [
+        "grafana-cli plugins install grafana-piechart-panel",
+        "curl -s -H \"Authorization: Bearer $GRAFANA_TOKEN\" http://localhost:3000/api/dashboards/db",
+        "curl -s http://admin:admin@localhost:3000/api/health",
+        "grafana-cli admin reset-admin-password newpass",
+        "curl -X POST -H \"Content-Type: application/json\" -d @datasource.json http://localhost:3000/api/datasources"
+      ],
+      "examples": [
+        "Health check: curl -s http://admin:admin@localhost:3000/api/health",
+        "List dashboards: curl -s -H 'Authorization: Bearer $TOKEN' localhost:3000/api/search",
+        "Add datasource: curl -X POST -d @datasource.json localhost:3000/api/datasources"
+      ],
+      "parameters": [
+        {
+          "name": "grafana_url",
+          "type": "string",
+          "description": "Grafana base URL"
+        },
+        {
+          "name": "api_token",
+          "type": "string",
+          "description": "Grafana API token"
+        }
+      ]
+    },
+    {
+      "name": "alert-rules",
+      "description": "Write and validate Prometheus alert rules with real query expressions",
+      "commands": [
+        "cat > alerts.yml <<EOF",
+        "promtool check rules alerts.yml",
+        "curl -s http://localhost:9090/api/v1/rules | jq -r '.data.groups[].rules[].name'",
+        "curl -s http://localhost:9090/api/v1/alerts | jq -r '.data.alerts[] | select(.state == \"firing\") | .labels.alertname'"
+      ],
+      "examples": [
+        "List firing alerts: curl -s localhost:9090/api/v1/alerts | jq",
+        "Check rules: promtool check rules alerts.yml"
+      ],
+      "parameters": [
+        {
+          "name": "rules_path",
+          "type": "string",
+          "description": "Path to alert rules YAML"
+        }
+      ]
+    },
+    {
+      "name": "alertmanager-config",
+      "description": "Configure Alertmanager routes, receivers (email, Slack, PagerDuty), and silences",
+      "commands": [
+        "amtool check-config alertmanager.yml",
+        "amtool silence add --alertname=HighCPU --duration=1h",
+        "amtool alert query --alertmanager.url=http://localhost:9093",
+        "amtool silence expire $(amtool silence query --output=json | jq -r '.[0].id')",
+        "curl -s http://localhost:9093/api/v2/status | jq -r '.versionInfo'"
+      ],
+      "examples": [
+        "Validate config: amtool check-config alertmanager.yml",
+        "Add silence: amtool silence add --alertname=HighCPU --duration=1h",
+        "Query alerts: amtool alert query"
+      ],
+      "parameters": [
+        {
+          "name": "config_path",
+          "type": "string",
+          "description": "Path to alertmanager.yml"
+        }
+      ]
+    },
+    {
+      "name": "health-check-endpoints",
+      "description": "Add and verify health check endpoints for applications",
+      "commands": [
+        "curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/health",
+        "curl -s http://localhost:8080/healthz | jq -r '.status'",
+        "promtool query instant http_requests_total",
+        "curl -s http://localhost:9090/api/v1/query?query=up | jq -r '.data.result[] | .value[1]'"
+      ],
+      "examples": [
+        "Check health: curl -s -o /dev/null -w '%{http_code}' localhost:8080/health",
+        "Query metric: promtool query instant up",
+        "All targets up: curl -s 'localhost:9090/api/v1/query?query=up'"
+      ],
+      "parameters": [
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "Health check URL"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Prometheus Configuration",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/configuration/configuration/",
+      "description": "Prometheus configuration reference"
+    },
+    {
+      "title": "Alerting Rules",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/",
+      "description": "Alert rule syntax and best practices"
+    },
+    {
+      "title": "Grafana Provisioning",
+      "type": "documentation",
+      "source": "https://grafana.com/docs/grafana/latest/administration/provisioning/",
+      "description": "Grafana dashboard/datasource provisioning"
+    }
+  ],
+  "instructions": "You are a monitoring stack specialist. Help users:\n1. Install and configure Prometheus, Grafana, Alertmanager\n2. Write scrape configs and instrument endpoints\n3. Create alert rules with realistic thresholds\n4. Build Grafana dashboards and alerts\n5. Verify monitoring is actually working (targets up, metrics flowing)\n\nALWAYS verify with real checks after setup:\n1. `promtool check config prometheus.yml` - config valid\n2. `curl -s localhost:9090/api/v1/targets | jq` - targets up\n3. `curl -s localhost:9090/api/v1/query?query=up | jq` - metrics flowing\n4. `promtool check rules alerts.yml` - rules valid\n\nBest practices:\n- Use promtool to validate configs before applying\n- Alert on symptoms (latency, errors, saturation) not causes\n- Always add health check endpoints (/healthz, /readyz)\n- Use `for:` clauses to avoid flapping alerts\n- Rate alerts use irate/rate with proper windows\n\nCommon alert examples:\n- High error rate: `sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m])) > 0.05`\n- Service down: `up == 0`\n- High CPU: `100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100) > 85`\n- Disk full: `(1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100 > 90`\n",
+  "examples": [
+    {
+      "input": "Set up monitoring for my application",
+      "output": "I'll provision Prometheus + Grafana, add your app's scrape config, validate with promtool, and verify targets are up..."
+    },
+    {
+      "input": "Alert me when error rate is high",
+      "output": "I'll create an alert rule using rate() on http_requests_total with status=5xx filter, validate it, and configure Alertmanager route..."
+    },
+    {
+      "input": "Why is my dashboard showing no data?",
+      "output": "Let me check scrape targets: curl -s localhost:9090/api/v1/targets | jq, and verify the metric exists: promtool query instant up"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "monitor-setup.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-monitor-setup"
+    },
+    "generic": {
+      "system_prompt": "You are a Monitoring & Alerting Setup agent. Set up Prometheus, Grafana, and Alertmanager with real configs and alert rules.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2025-01-15T00:00:00Z",
+  "id": "monitor-setup",
+  "type": "agent",
+  "skills": [
+    "alerting-rules",
+    "burn-rate-alerts",
+    "monitoring-sre",
+    "alertmanager",
+    "grafana",
+    "grafana-dashboards",
+    "jq",
+    "kyverno",
+    "memory-stress-testing",
+    "wireguard"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "prometheus-setup",
+        "name": "config_path",
+        "type": "string",
+        "description": "Path to prometheus.yml"
+      },
+      {
+        "capability": "grafana-setup",
+        "name": "grafana_url",
+        "type": "string",
+        "description": "Grafana base URL"
+      },
+      {
+        "capability": "grafana-setup",
+        "name": "api_token",
+        "type": "string",
+        "description": "Grafana API token"
+      },
+      {
+        "capability": "alert-rules",
+        "name": "rules_path",
+        "type": "string",
+        "description": "Path to alert rules YAML"
+      },
+      {
+        "capability": "alertmanager-config",
+        "name": "config_path",
+        "type": "string",
+        "description": "Path to alertmanager.yml"
+      },
+      {
+        "capability": "health-check-endpoints",
+        "name": "endpoint",
+        "type": "string",
+        "description": "Health check URL"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "infrastructure/provisioning/monitor-setup.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/infrastructure/provisioning/monitor-setup.yaml",
+    "checksum": "79f28981cf1a76d830ac13b6a0f56e43afb3018448a16fa05b68bd41524b7fa7"
+  }
+}

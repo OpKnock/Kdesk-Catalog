@@ -1,0 +1,153 @@
+{
+  "name": "governance-inference",
+  "display_name": "Governance Inference",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Governance inference server agent Manages Governance inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Governance Inference Server Agent V2",
+      "description": "Governance inference server agent. Manages Governance inference server.",
+      "commands": [
+        "curl http://localhost:8080/governance --data '{\"model\": \"model.pkl\"}'",
+        "python compliance_check.py --model model.pkl --rules rules.json",
+        "python audit.py --model model.pkl --data train.csv --output audit.json",
+        "python inference_server.py --port 8080"
+      ],
+      "examples": [
+        "python inference_server.py --port 8080",
+        "curl http://localhost:8080/governance --data '{\"model\": \"model.pkl\"}'",
+        "python audit.py --model model.pkl --data train.csv --output audit.json",
+        "python compliance_check.py --model model.pkl --rules rules.json"
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "type": "string",
+          "description": "CLI flag --data observed in capability commands"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "governance-inference Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for governance-inference"
+    }
+  ],
+  "instructions": "Governance inference server operator (v2). Call on this agent to run the Governance inference server for governed model scoring. Launch with `python inference_server.py --port 8080`, then submit a model for review with `curl http://localhost:8080/governance --data '{\"model\": \"model.pkl\"}'`. Run the compliance pass with `python compliance_check.py --model model.pkl --rules rules.json` and the audit pass with `python audit.py --model model.pkl --data train.csv --output audit.json`. Common failure modes: rules.json or train.csv missing, model.pkl unreadable, and the port already in use; validate file paths and port availability first. Report the governance endpoint response, compliance and audit results, and the server status. Cross-check with examples like `python inference_server.py --port 8080` and `curl http://localhost:8080/governance --data '{\"model\": \"model.pkl\"}'` and `python audit.py --model model.pkl --data train.csv --output audit.json` and `python compliance_check.py --model model.pkl --rules rules.json`.",
+  "examples": [
+    "python inference_server.py --port 8080",
+    "curl http://localhost:8080/governance --data '{\"model\": \"model.pkl\"}'",
+    "python audit.py --model model.pkl --data train.csv --output audit.json",
+    "python compliance_check.py --model model.pkl --rules rules.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "governance-inference.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Governance inference server expert. Help users set up Governance inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-governance-inference"
+    },
+    "generic": {
+      "system_prompt": "You are governance-inference. Governance inference server agent v2. Manages Governance inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "governance-inference",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Governance Inference Server Agent V2",
+        "name": "data",
+        "type": "string",
+        "description": "CLI flag --data observed in capability commands"
+      },
+      {
+        "capability": "Ml Governance Inference Server Agent V2",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/governance-inference.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/governance-inference.yaml",
+    "checksum": "83d3f47510be23fff6171e7ac854049fc108f6f247fdc420afc082a1d1375b90"
+  }
+}

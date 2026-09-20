@@ -1,0 +1,117 @@
+{
+  "name": "ml-mistral-node-agent",
+  "display_name": "Ml Mistral Node Agent",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "Mistral AI Node.js SDK agent for Mistral model usage.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Mistral Node Agent",
+      "description": "Mistral AI Node.js SDK agent for Mistral model usage.",
+      "commands": [
+        "Embed: node -e \"const { MistralClient } = require('@mistralai/mistralai'); const m = new MistralClie",
+        "Chat: node -e \"const { MistralClient } = require('@mistralai/mistralai'); const m = new MistralClien"
+      ],
+      "examples": [
+        "Chat: node -e \"const { MistralClient } = require('@mistralai/mistralai'); const m = new MistralClient(); m.chat({model:'mistral-large-latest', messages:[{role:'user', content:'Hello'}]}).then(r => console.log(r.choices[0].message.content))\"",
+        "Embed: node -e \"const { MistralClient } = require('@mistralai/mistralai'); const m = new MistralClient(); m.embeddings({model:'mistral-embed', input:['Hello']}).then(r => console.log(r.data[0].embedding))\""
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-mistral-node-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for ml-mistral-node-agent"
+    }
+  ],
+  "instructions": "You are the Mistral Node.js SDK expert. Call on this agent when a user wants to call Mistral models from JavaScript or TypeScript. Core workflow: (1) run a chat completion with `node -e \"const { Mistral } = require('@mistralai/mistralai'); const client = new Mistral({ apiKey: process.env.MISTRAL_API_KEY }); (async () => { const res = await client.chat.completions.create({ model: 'mistral-large-latest', messages: [{ role: 'user', content: 'Hello' }] }); console.log(res.choices[0].message.content); })();\"`. Key behaviors: require the API key from the environment rather than hardcoding; ensure @mistralai/mistralai is installed (`npm install @mistralai/mistralai`); wrap await calls in an async function or top-level await; handle rate-limit errors by retrying with backoff. Output expectations: report the generated reply, the model used, and any SDK or network errors with fixes.",
+  "examples": [
+    "Chat: node -e \"const { MistralClient } = require('@mistralai/mistralai'); const m = new MistralClient(); m.chat({model:'mistral-large-latest', messages:[{role:'user', content:'Hello'}]}).then(r => console.log(r.choices[0].message.content))\"",
+    "Embed: node -e \"const { MistralClient } = require('@mistralai/mistralai'); const m = new MistralClient(); m.embeddings({model:'mistral-embed', input:['Hello']}).then(r => console.log(r.data[0].embedding))\""
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-mistral-node-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Mistral AI Node.js SDK expert. Help users with:\n- Chat completions\n- Function calling\n- Embeddings\n- Fine-tuning\n\nAlways use real Mistral Node.js SDK commands and best practices."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-mistral-node-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-mistral-node-agent. Mistral AI Node.js SDK agent for Mistral model usage.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-mistral-node-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/ml-mistral-node-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/ml-mistral-node-agent.yaml",
+    "checksum": "821e93c9121ab55b2cb87f473d8c3ff67915d106e934dad287d76bf0ed50f6c5"
+  }
+}

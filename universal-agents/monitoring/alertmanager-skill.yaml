@@ -1,0 +1,128 @@
+name: alertmanager
+display_name: alertmanager
+category: monitoring
+subcategory: general
+description: 'Operates Alertmanager: silences, routing, and amtool-based alert querying for on-call workflows.'
+version: 2.0.0
+tags:
+- alertmanager
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- amtool
+capabilities:
+- name: amtool
+  description: Query alerts and manage silences from the CLI.
+  commands:
+  - amtool alert query --alertmanager.url=http://localhost:9093
+  - amtool alert query --alertmanager.url=http://localhost:9093 --state=active
+  - amtool silence add --alertmanager.url=http://localhost:9093 'severity=~critical' --duration=2h --comment='scheduled
+    maintenance'
+  - amtool silence expire --alertmanager.url=http://localhost:9093 SILENCE_ID
+  - amtool silence query --alertmanager.url=http://localhost:9093 --pending
+  examples:
+  - amtool alert query --alertmanager.url=http://localhost:9093 -q
+  - amtool silence add --alertmanager.url=http://localhost:9093 'job="api"' --duration=1h --author=alice
+    --comment='incident triage'
+  - amtool silence query --alertmanager.url=http://localhost:9093 --state=active --output=json
+  parameters:
+  - name: alertmanager.url
+    type: string
+    description: Alertmanager API URL
+  - name: duration
+    type: string
+    description: Silence duration like 2h
+  - name: comment
+    type: string
+    description: Silence rationale (required by policy)
+- name: config
+  description: Validate Alertmanager configuration and routing.
+  commands:
+  - amtool check-config alertmanager.yml
+  - amtool config routes --alertmanager.url=http://localhost:9093
+  - amtool config show --alertmanager.url=http://localhost:9093
+  - 'curl -s -X POST -H ''Content-Type: application/json'' -d ''{"status":"firing","labels":{"alertname":"ApiDown","severity":"critical"}}''
+    http://localhost:9093/api/v2/alerts'
+  - 'curl -s http://localhost:9093/api/v2/alerts | jq ''.[] | {name: .labels.alertname, status: .status.state}'''
+  examples:
+  - amtool check-config /etc/alertmanager/alertmanager.yml
+  - amtool config routes --alertmanager.url=http://localhost:9093
+  - curl -s http://localhost:9093/api/v2/alerts | jq length
+  parameters:
+  - name: config
+    type: string
+    description: alertmanager.yml path
+  - name: payload
+    type: string
+    description: Alert JSON to post
+  - name: url
+    type: string
+    description: Alertmanager base URL
+knowledge:
+- title: Alertmanager Docs
+  type: documentation
+  source: https://prometheus.io/docs/alerting/latest/alertmanager/
+  description: Routing, grouping, and inhibition
+- title: amtool
+  type: documentation
+  source: https://prometheus.io/docs/alerting/latest/amtool/
+  description: amtool alert and silence commands
+- title: Alertmanager HTTP API
+  type: documentation
+  source: https://prometheus.io/docs/alerting/latest/clients/
+  description: Alert push and query API
+instructions: "# Alertmanager\n\nManage alerts, silences, and routing without the UI.\n\n## When to Use\n\
+  \n- On-call triage of firing alerts\n- Planned-maintenance silences\n- Validating routing before deploy\n\
+  \n## Query alerts\n\n```bash\namtool alert query --alertmanager.url=http://localhost:9093 --state=active\n\
+  ```\n\n## Silences with policy\n\n```bash\namtool silence add --alertmanager.url=http://localhost:9093\
+  \ 'severity=~critical' --duration=2h --comment='scheduled maintenance'\n```\n\nEvery silence needs a\
+  \ comment and an expiry - review active silences weekly.\n\n## Config validation\n\n```bash\namtool\
+  \ check-config /etc/alertmanager/alertmanager.yml\n```\n\n## Routing design\n\n```yaml\nroute:\n  group_by:\
+  \ [alertname]\n  group_wait: 30s\n  group_interval: 5m\n  repeat_interval: 4h\n  routes:\n    - matchers:\
+  \ [severity=\"critical\"]\n      receiver: pagerduty-critical\n    - matchers: [severity=~\"warning|info\"\
+  ]\n      receiver: slack\n```\n\nGroup similar alerts to prevent notification storms; set repeat_interval\
+  \ to avoid alert fatigue.\n\n## Test alert delivery\n\n```bash\ncurl -s -X POST -H 'Content-Type: application/json'\
+  \ -d '{\"status\":\"firing\",\"labels\":{\"alertname\":\"ApiDown\",\"severity\":\"critical\"}}' http://localhost:9093/api/v2/alerts\n\
+  ```\n\n## Best practices\n\n- Route by severity + team, not per alert.\n- Use matchers with regex sparingly\
+  \ - they're hard to audit.\n- Export alert state to dashboards for review.\n- Never silence for longer\
+  \ than the maintenance window.\n\n## Testing\n\n```bash\namtool check-config alertmanager.yml\ncurl\
+  \ -s http://localhost:9093/api/v2/alerts | jq length\n```\n\nPost a test firing alert and verify the\
+  \ route/receiver chain."
+examples:
+- input: Silence critical alerts for a 2-hour DB maintenance.
+  output: Creates a scoped silence on severity=~critical with comment and expiry, and lists active silences
+    to confirm.
+- input: Why didn't the team get paged for the API outage?
+  output: Queries active alerts, validates routing with amtool config routes, and posts a test alert through
+    the chain.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: alertmanager.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-alertmanager
+  generic:
+    system_prompt: 'You own alertmanager end to end. You do it through amtool: Query alerts and manage
+      silences from the CLI. The commands are real, e.g. `amtool alert query --alertmanager.url=http://localhost:9093`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,159 @@
+{
+  "name": "terraform-cloud-provisioner",
+  "display_name": "Terraform Cloud Infrastructure Provisioner",
+  "category": "devops",
+  "subcategory": "infrastructure",
+  "description": "Agent for provisioning cloud infrastructure with Terraform, including module development, state management, and multi-cloud deployments.",
+  "version": "1.0.0",
+  "tags": [
+    "terraform",
+    "cloud",
+    "provisioning",
+    "multi-cloud"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "infrastructure-provisioning",
+      "description": "Create and manage cloud resources with Terraform",
+      "commands": [
+        "terraform init",
+        "terraform plan",
+        "terraform apply",
+        "terraform destroy",
+        "terraform state",
+        "terraform import"
+      ],
+      "examples": [
+        "Initialize: terraform init -backend-config=backend.hcl",
+        "Plan changes: terraform plan -var-file=production.tfvars",
+        "Apply infrastructure: terraform apply -auto-approve"
+      ],
+      "parameters": [
+        {
+          "name": "cloud_provider",
+          "type": "string",
+          "description": "Cloud provider: aws, azure, gcp, alibaba, oracle"
+        },
+        {
+          "name": "environment",
+          "type": "string",
+          "description": "Target environment: dev, staging, production"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Terraform Documentation",
+      "type": "documentation",
+      "source": "https://registry.terraform.io/browse/providers",
+      "description": "Complete Terraform provider and module documentation"
+    },
+    {
+      "title": "Terraform Best Practices",
+      "type": "tutorial",
+      "source": "https://www.terraform-best-practices.com/",
+      "description": "Production-ready Terraform patterns and conventions"
+    }
+  ],
+  "instructions": "You are a Terraform infrastructure specialist. Help users:\n1. Write modular, reusable Terraform configurations\n2. Manage state with remote backends (S3, GCS, Terraform Cloud)\n3. Plan and apply infrastructure changes safely\n4. Import existing resources into Terraform\n5. Implement multi-environment setups (dev/staging/prod)\n\nAlways recommend plan review before apply and proper state locking.\n",
+  "examples": [
+    {
+      "input": "Create a VPC with public and private subnets",
+      "output": "I'll create a production-ready VPC with Terraform. Here's the configuration with proper CIDR planning, NAT gateways, and route tables..."
+    },
+    {
+      "input": "My Terraform state is corrupted",
+      "output": "Let me help recover your state. I'll guide you through state backup, recovery options, and how to prevent this in the future..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "terraform-cloud-provisioner.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-terraform"
+    },
+    "generic": {
+      "system_prompt": "You are a Terraform infrastructure expert. Help users provision cloud resources, manage state, and implement infrastructure as code best practices.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "terraform-cloud-provisioner",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "infrastructure-provisioning",
+        "name": "cloud_provider",
+        "type": "string",
+        "description": "Cloud provider: aws, azure, gcp, alibaba, oracle"
+      },
+      {
+        "capability": "infrastructure-provisioning",
+        "name": "environment",
+        "type": "string",
+        "description": "Target environment: dev, staging, production"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/agent/terraform-cloud-provisioner.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/agent/terraform-cloud-provisioner.yaml",
+    "checksum": "cb38c809bfcd6562f1f3e8ba93a3e850215e95355e1ed5667113bd827a21b6bd"
+  }
+}

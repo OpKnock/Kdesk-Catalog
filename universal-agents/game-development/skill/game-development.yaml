@@ -1,0 +1,138 @@
+name: game-development
+version: 2.0.0
+type: skill
+category: gaming
+description: 'Builds games with Godot and Unity headless pipelines: project export, automated builds,
+  and CI artifact generation.'
+keywords:
+- game-development
+- unity
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: game-development.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-game-development
+  generic:
+    system_prompt: 'You take the game-development seat. You do it through godot: Run Godot headless for
+      imports, tests, and exports. The commands are real, e.g. `godot --headless --path project/ --import`.
+      You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: godot
+  description: Run Godot headless for imports, tests, and exports.
+  commands:
+  - godot --headless --path project/ --import
+  - godot --headless --path project/ --script res://tests/run_tests.gd
+  - godot --headless --path project/ --export-release 'Windows Desktop' build/game.exe
+  - godot --headless --path project/ --export-pack 'Linux' build/game.pck
+  - godot --headless --path project/ --quit-after 5
+  examples:
+  - godot --headless --path ./game --import && godot --headless --path ./game --export-release 'Web' dist/index.html
+  - godot --headless --path ./game --script res://tests/run_tests.gd --verbose
+  - godot --headless --path ./game --export-debug 'Linux' build/game.x86_64
+  parameters:
+  - name: headless
+    type: string
+    description: Run without a window (CI mode)
+  - name: export-release
+    type: string
+    description: Export preset name and output path
+  - name: script
+    type: string
+    description: GDScript entry point to run
+- name: unity
+  description: Drive Unity builds and test runs from the command line.
+  commands:
+  - unity-editor -batchmode -quit -projectPath . -executeMethod BuildScript.PerformBuild
+  - unity-editor -batchmode -quit -runTests -testPlatform PlayMode -testResults results.xml
+  - unity-editor -batchmode -quit -projectPath . -buildTarget Android -outputPath build/app.apk
+  - unity-editor -batchmode -quit -logFile build.log -executeMethod BuildScript.AndroidBuild
+  - unity-editor -batchmode -quit -projectPath . -deleteLibrary
+  examples:
+  - unity-editor -batchmode -quit -projectPath . -buildTarget WebGL -outputPath build/web
+  - unity-editor -batchmode -quit -runTests -testPlatform EditMode -testResults edit.xml
+  - unity-editor -batchmode -quit -projectPath . -executeMethod BuildScript.PerformBuild -nographics
+  parameters:
+  - name: batchmode
+    type: string
+    description: Run without editor UI for CI
+  - name: buildTarget
+    type: string
+    description: Android, WebGL, StandaloneWindows64, etc.
+  - name: executeMethod
+    type: string
+    description: Static build method to invoke
+prerequisites:
+- unity
+- unreal
+- godot
+- phaser
+tools:
+- unity
+- unreal
+- godot
+- phaser
+- pixi
+examples:
+- input: Build the game for Windows and Web on a Linux CI runner.
+  output: Runs godot --headless --import, then exports Windows and Web presets, and uploads artifacts.
+- input: Run PlayMode tests for the Unity project.
+  output: Invokes unity-editor -batchmode -quit -runTests -testPlatform PlayMode and parses results.xml
+    for failures.
+instructions: "# Game Development\n\nAutomate Godot and Unity game builds with headless CLI pipelines.\n\
+  \n## When to Use\n\n- Setting up CI builds for game projects\n- Running automated tests without an editor\
+  \ session\n- Producing release artifacts for multiple platforms\n\n## Godot headless\n\nFirst, import\
+  \ assets so the export cache is warm:\n\n```bash\ngodot --headless --path project/ --import\n```\n\n\
+  Run GDScript tests:\n\n```bash\ngodot --headless --path project/ --script res://tests/run_tests.gd\n\
+  ```\n\nExport for platforms:\n\n```bash\ngodot --headless --path project/ --export-release 'Windows\
+  \ Desktop' build/game.exe\ngodot --headless --path project/ --export-release 'Web' dist/index.html\n\
+  ```\n\n## Unity batch mode\n\n```bash\nunity-editor -batchmode -quit -projectPath . -executeMethod BuildScript.PerformBuild\
+  \ -logFile build.log\nunity-editor -batchmode -quit -runTests -testPlatform PlayMode -testResults results.xml\n\
+  ```\n\nSample BuildScript:\n\n```csharp\npublic static class BuildScript\n{\n    public static void\
+  \ PerformBuild()\n    {\n        BuildPipeline.BuildPlayer(new[] { \"Assets/Scenes/Main.unity\" },\n\
+  \            \"build/game.exe\", BuildTarget.StandaloneWindows64, BuildOptions.None);\n    }\n}\n```\n\
+  \n## CI considerations\n\n- Use a license-free batch mode on Linux agents with the nographics flag.\n\
+  - Cache Godot import files and Unity Library/ folders between runs.\n- Store signed keystores in CI\
+  \ secrets, never in the repo.\n\n## Best practices\n\n- Version export presets in the repo.\n- Test\
+  \ on the platform you ship: mobile builds need device smoke tests.\n- Keep scene asset import deterministic\
+  \ by running --import first.\n\n## Testing\n\nRun unit (GDScript / EditMode) and PlayMode suites in\
+  \ CI and gate merges on results."
+display_name: game-development
+knowledge:
+- title: Godot Docs
+  type: documentation
+  source: https://docs.godotengine.org/en/stable/tutorials/editor/command_line_tutorial.html
+  description: Godot command line options for import, export, and scripts
+- title: Unity command line arguments
+  type: documentation
+  source: https://docs.unity3d.com/Manual/CommandLineArguments.html
+  description: Unity Editor batch mode and build automation
+- title: Godot Export
+  type: documentation
+  source: https://docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html
+  description: Export presets and platform packaging

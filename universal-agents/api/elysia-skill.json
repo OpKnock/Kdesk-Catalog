@@ -1,0 +1,165 @@
+{
+  "name": "elysia",
+  "display_name": "Elysia",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Build TypeScript APIs with the Elysia framework (Bun): scaffold endpoints, run the dev server, and test routes.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "bun"
+  ],
+  "capabilities": [
+    {
+      "name": "elysia-development",
+      "description": "Scaffold, run, and test Elysia Bun apps with the bun runtime.",
+      "commands": [
+        "bun create elysia app",
+        "bun add elysia",
+        "bun run --watch src/index.ts",
+        "bun test",
+        "bun build src/index.ts --target=bun --outdir dist"
+      ],
+      "examples": [
+        "bun create elysia app && cd app && bun run --watch src/index.ts",
+        "bun add elysia @elysiajs/cors @elysiajs/jwt",
+        "curl -s localhost:3000/hello/name | jq"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Port Elysia listens on (default 3000)"
+        },
+        {
+          "name": "watch",
+          "type": "boolean",
+          "description": "Run the dev server with hot reload"
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "description": "Build target for bun build"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Elysia Documentation",
+      "type": "documentation",
+      "source": "https://elysiajs.com/",
+      "description": "Elysia core concepts: routes, lifecycle, plugins, and TypeScript-first types"
+    }
+  ],
+  "instructions": "# Elysia\n\n## What this skill does\n\nElysia is a TypeScript-first web framework built for Bun, with end-to-end type safety inferred from route handlers. It has a built-in dev server, Bun-native runtime, and a large plugin ecosystem.\n\n## When to use\n\n- Starting a new TypeScript API with Bun as the runtime\n- Migrating Express/Fastify services to Bun for speed\n- Prototyping a typed API quickly\n\n## Real commands\n\n```bash\n# Scaffold\nbun create elysia app\ncd app\n\n# Dev server with watch\nbun run --watch src/index.ts\n\n# Install plugins\nbun add @elysiajs/cors @elysiajs/jwt\n\n# Tests and build\nbun test\nbun build src/index.ts --target=bun --outdir dist\n```\n\n## Minimal app example\n\n```typescript\nimport { Elysia, t } from 'elysia'\n\nconst app = new Elysia()\n  .get('/', () => 'Hello Elysia')\n  .get('/hello/:name', ({ params }) => `Hello ${params.name}`)\n  .post('/orders', ({ body }) => ({ created: body.id }), {\n    body: t.Object({ id: t.String() })\n  })\n  .listen(3000)\n\nconsole.log(`Running at ${app.server?.hostname}:${app.server?.port}`)\n```\n\n## Testing\n\n```bash\n# Inline tests with bun:test\nbun test src/app.test.ts\n# Manual check\ncurl -s localhost:3000/hello/world | jq\n```\n\n## Best practices\n\n- Let Elysia infer types; don't hand-write duplicate interfaces.\n- Use the `t` schema validator for request bodies to get validation + types for free.\n- Keep plugins in `@elysiajs/*` scope where possible.\n- For production, build with `bun build --target=bun` and run the compiled file.\n",
+  "examples": [
+    {
+      "input": "Scaffold a new API project",
+      "output": "Run bun create elysia app, add @elysiajs/cors, start with bun run --watch src/index.ts and verify routes with curl."
+    },
+    {
+      "input": "Add a typed POST route",
+      "output": "Use the t.Object body schema in the route definition so validation and TypeScript types come from one source."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "elysia.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-elysia"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Elysia. You do it through elysia-development: Scaffold, run, and test Elysia Bun apps with the bun runtime. The commands are real, e.g. `bun create elysia app`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "elysia",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "elysia-development",
+        "name": "port",
+        "type": "integer",
+        "description": "Port Elysia listens on (default 3000)"
+      },
+      {
+        "capability": "elysia-development",
+        "name": "watch",
+        "type": "boolean",
+        "description": "Run the dev server with hot reload"
+      },
+      {
+        "capability": "elysia-development",
+        "name": "target",
+        "type": "string",
+        "description": "Build target for bun build"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "bun"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/elysia-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/elysia-skill.yaml",
+    "checksum": "12a7a805842876d3c8a52d831b6e2d607a4ff6bdce5454b1fd7142773fd6f234"
+  }
+}

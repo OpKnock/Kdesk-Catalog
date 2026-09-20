@@ -1,0 +1,100 @@
+name: fiber
+display_name: Fiber
+category: api
+subcategory: general
+description: 'Build high-performance Go HTTP APIs with Fiber: run the server, wire middleware, and test
+  routes.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: fiber-routing
+  description: Run Fiber apps, add middleware, and test endpoints.
+  commands:
+  - go get github.com/gofiber/fiber/v2
+  - go run main.go
+  - go build -o server main.go
+  - go test ./... -v
+  - curl -s localhost:3000/api/orders | jq
+  examples:
+  - go get github.com/gofiber/fiber/v2 && go run main.go
+  - go test ./... -v
+  - curl -s localhost:3000/api/orders | jq
+  parameters:
+  - name: port
+    type: integer
+    description: Fiber listen port
+  - name: route
+    type: string
+    description: Path pattern to register
+  - name: middleware
+    type: string
+    description: Middleware stack like logger, recover, cors
+knowledge:
+- title: Fiber Documentation
+  type: documentation
+  source: https://docs.gofiber.io/
+  description: Routing, middleware, context API, and error handling
+- title: Fiber GitHub
+  type: documentation
+  source: https://github.com/gofiber/fiber
+  description: Benchmarks, recipes, and community middleware
+instructions: "# Fiber\n\n## What this skill does\n\nFiber is an Express-inspired web framework for Go\
+  \ built on fasthttp, known for high throughput and low memory usage. It provides familiar routing, middleware,\
+  \ and context APIs.\n\n## When to use\n\n- Building fast Go REST APIs or BFFs\n- Teams coming from Express/Node\
+  \ wanting Go performance\n- Embedding HTTP servers in existing Go services\n\n## Real commands\n\n```bash\n\
+  # Get the module and run\ngo get github.com/gofiber/fiber/v2\ngo run main.go\n\n# Build and test\ngo\
+  \ build -o server main.go\n go test ./... -v\n\n# Smoke test\ncurl -s localhost:3000/api/orders | jq\n\
+  ```\n\n## Minimal app\n\n```go\npackage main\n\nimport (\n    \"github.com/gofiber/fiber/v2\"\n    \"\
+  github.com/gofiber/fiber/v2/middleware/logger\"\n)\n\nfunc main() {\n    app := fiber.New()\n    app.Use(logger.New())\n\
+  \n    app.Get(\"/api/orders/:id\", func(c *fiber.Ctx) error {\n        if c.Params(\"id\") == \"\" {\n\
+  \            return c.Status(400).JSON(fiber.Map{\"error\": \"missing id\"})\n        }\n        return\
+  \ c.JSON(fiber.Map{\"id\": c.Params(\"id\")})\n    })\n\n    app.Listen(\":3000\")\n}\n```\n\n## Testing\n\
+  \n```go\nfunc TestGetOrder(t *testing.T) {\n    app := buildApp()\n    req := httptest.NewRequest(\"\
+  GET\", \"/api/orders/1\", nil)\n    resp, _ := app.Test(req)\n    if resp.StatusCode != 200 {\n    \
+  \    t.Fatalf(\"expected 200, got %d\", resp.StatusCode)\n    }\n}\n```\n\n## Best practices\n\n- Use\
+  \ the embedded `app.Test()` in tests; no need to bind a port.\n- Add recover and request-id middleware\
+  \ first in the stack.\n- Use `fiber.Map` for ad hoc JSON, typed structs for contracts.\n- Enable prefork\
+  \ only with a single process supervisor model.\n- Set `IdleTimeout` and `ReadTimeout` on production\
+  \ listeners.\n"
+examples:
+- input: Start a Fiber API for our Go service
+  output: go get fiber/v2, write the routes with app.Get/Post, run with go run main.go, and smoke-test
+    with curl.
+- input: Add request logging and panic recovery
+  output: Register logger and recover middleware from fiber/middleware at the top of the app.Use chain.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: fiber.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-fiber
+  generic:
+    system_prompt: 'You own Fiber end to end. You do it through fiber-routing: Run Fiber apps, add middleware,
+      and test endpoints. The commands are real, e.g. `go get github.com/gofiber/fiber/v2`. You verify
+      each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

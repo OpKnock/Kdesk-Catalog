@@ -1,0 +1,172 @@
+name: pass
+display_name: Pass
+category: api
+subcategory: general
+description: 'pass (passwordstore) operations: init, generate, insert, edit, git sync and GPG management.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- pass
+capabilities:
+- name: pass-passwordstore
+  description: Initialize the password store, generate and manage secrets with pass, and sync via git.
+  commands:
+  - pass init "FINGERPRINT"
+  - pass generate -n Email/example 20
+  - pass insert dev/apitoken
+  - pass show dev/apitoken
+  - pass edit dev/apitoken
+  examples:
+  - pass generate --no-symbols -l 24 server/root
+  - pass ls
+  - pass git push
+  parameters:
+  - name: path
+    type: string
+    description: Store path, e.g. dev/apitoken
+  - name: length
+    type: integer
+    description: Generated password length
+  - name: no_symbols
+    type: boolean
+    description: Exclude symbols from generation
+knowledge:
+- title: pass Official Site
+  type: documentation
+  source: https://www.passwordstore.org/
+  description: 'The standard unix password manager: usage and extensions'
+- title: pass man page
+  type: documentation
+  source: https://git.zx2c4.com/password-store/about/
+  description: Full command reference for pass
+instructions: '# pass
+
+
+  pass stores secrets as GPG-encrypted files in a git-tracked directory.
+
+
+  ## What this skill does
+
+
+  - Initializes stores with a GPG key
+
+  - Generates and inserts passwords/API tokens
+
+  - Syncs the store with git
+
+
+  ## When to use
+
+
+  - CLI-centric secret management on servers
+
+  - Committing encrypted secrets to git
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Initialize
+
+  pass init "ABCD1234..."
+
+
+  # Generate (no symbols, 20 chars)
+
+  pass generate -n Email/example 20
+
+  pass generate --no-symbols -l 24 server/root
+
+
+  # Insert and view
+
+  pass insert dev/apitoken
+
+  pass show dev/apitoken
+
+  pass show -c dev/apitoken   # copy to clipboard
+
+
+  # Edit multi-line
+
+  pass edit dev/credentials
+
+
+  # List and git
+
+  pass ls
+
+  pass git status
+
+  pass git push
+
+  ```
+
+
+  ## Multiline entries
+
+
+  ```
+
+  password123
+
+  ---
+
+  url: https://example.com
+
+  username: alice
+
+  ```
+
+
+  ## Best practices
+
+
+  - Use `-c` to copy instead of printing secrets to logs
+
+  - Keep the store in a private git repo with GPG-only access
+
+  - Rotate keys by re-encrypting with `pass init` and old recipients'
+examples:
+- input: Store my API tokens securely on this server
+  output: The agent initializes the store, inserts each token under dev/, and shows pass show usage.
+- input: Generate a strong random password
+  output: The agent runs `pass generate -n Email/example 20` and explains the length/symbol options.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: pass.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-pass
+  generic:
+    system_prompt: 'You own Pass end to end. You do it through pass-passwordstore: Initialize the password
+      store, generate and manage secrets with pass, and sync via git. The commands are real, e.g. `pass
+      init FINGERPRINT`. You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

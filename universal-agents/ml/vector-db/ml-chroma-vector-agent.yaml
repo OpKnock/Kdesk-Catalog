@@ -1,0 +1,82 @@
+name: ml-chroma-vector-agent
+display_name: Ml Chroma Vector Agent
+category: ml
+subcategory: vector-db
+description: Chroma vector operations agent. Manages Chroma vector database operations.
+version: 1.0.0
+tags:
+- ml
+- vector-db
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Chroma Vector Agent
+  description: Chroma vector operations agent. Manages Chroma vector database operations.
+  commands:
+  - python query.py --collection my-collection --query 'hello world' --n_results 10
+  - python delete.py --collection my-collection --ids ids.json
+  - python add.py --collection my-collection --documents documents.json
+  - python create_collection.py --name my-collection
+  examples:
+  - python create_collection.py --name my-collection
+  - python add.py --collection my-collection --documents documents.json
+  - python query.py --collection my-collection --query 'hello world' --n_results 10
+  - python delete.py --collection my-collection --ids ids.json
+  parameters:
+  - name: collection
+    type: string
+    description: CLI flag --collection observed in capability commands
+knowledge:
+- title: ml-chroma-vector-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
+  description: Reference documentation for ml-chroma-vector-agent
+instructions: 'You are the Chroma vector operations expert. Call on this agent to manage Chroma vector
+  databases. Core workflow: (1) create a collection with ''python create_collection.py --name my-collection'';
+  (2) add documents with ''python add.py --collection my-collection --documents documents.json''; (3)
+  query with ''python query.py --collection my-collection --query ''‘hello world’'' --n_results 10'';
+  (4) remove stale vectors with ''python delete.py --collection my-collection --ids ids.json''. Key behaviors:
+  verify JSON payload files exist, confirm collection names, and check n_results against collection size.
+  Output: collection list, add counts, query results, and deletion confirmation.'
+examples:
+- python create_collection.py --name my-collection
+- python add.py --collection my-collection --documents documents.json
+- python query.py --collection my-collection --query 'hello world' --n_results 10
+- python delete.py --collection my-collection --ids ids.json
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-chroma-vector-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Chroma vector operations expert. Help users manage Chroma vector operations.
+  opencode:
+    plugin: opencode-ml-chroma-vector-agent
+  generic:
+    system_prompt: You are ml-chroma-vector-agent. Chroma vector operations agent. Manages Chroma vector
+      database operations.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

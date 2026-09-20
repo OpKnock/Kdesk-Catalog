@@ -1,0 +1,207 @@
+{
+  "name": "kics",
+  "display_name": "kics",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Scans IaC files (Terraform, Docker, K8s, Ansible, CloudFormation) with KICS static analysis queries for cloud misconfigurations.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kics"
+  ],
+  "capabilities": [
+    {
+      "name": "kics-scan",
+      "description": "Scan directories or files across supported platforms.",
+      "commands": [
+        "kics scan -p .",
+        "kics scan -p terraform/ -i terraform",
+        "kics scan -p Dockerfile -q ./queries",
+        "kics scan -p . --exclude-queries 0684d1ba-9253-4bc1-8f1f-6d1c8e8b5e00",
+        "kics scan -p . --ignore-on-exit results"
+      ],
+      "examples": [
+        "kics scan -p .",
+        "kics scan -p terraform/ -i terraform",
+        "kics scan -p k8s/ -i kubernetes"
+      ],
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Path to scan (file or directory)"
+        },
+        {
+          "name": "inputType",
+          "type": "string",
+          "description": "IaC type: terraform, dockerfile, kubernetes, ansible, cloudformation"
+        },
+        {
+          "name": "queries",
+          "type": "string",
+          "description": "Custom queries path"
+        }
+      ]
+    },
+    {
+      "name": "reporting-and-gating",
+      "description": "Emit reports and control exit codes for CI integration.",
+      "commands": [
+        "kics scan -p . -o results.json --output-path results/",
+        "kics scan -p . -o sarif",
+        "kics scan -p . --report-formats json,html",
+        "kics list-platforms",
+        "kics scan -p . --disable-full-descriptions"
+      ],
+      "examples": [
+        "kics scan -p . --report-formats json,sarif --output-path ./reports",
+        "kics scan -p . --fail-on high",
+        "kics list-platforms"
+      ],
+      "parameters": [
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Report format: json, sarif, html, glsast"
+        },
+        {
+          "name": "failOn",
+          "type": "string",
+          "description": "Exit nonzero on findings at or above severity: low, medium, high, critical"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "KICS Documentation",
+      "type": "documentation",
+      "source": "https://docs.kics.io/",
+      "description": "Installation, scanning, and query authoring"
+    },
+    {
+      "title": "KICS GitHub",
+      "type": "documentation",
+      "source": "https://github.com/Checkmarx/kics",
+      "description": "Supported platforms and query catalog"
+    }
+  ],
+  "instructions": "# KICS\n\nKeep Infrastructure as Code Secure with static query scanning.\n\n## What This Skill Does\n\n- Scans Terraform, Kubernetes, Docker, Ansible, CloudFormation, and more\n- Applies 2000+ security, compliance, and best-practice queries\n- Emits SARIF, JSON, HTML, and GitLab SAST reports\n- Supports custom query packs written in Rego-like syntax\n\n## When to Use\n\n- Pre-merge IaC misconfiguration checks\n- Multi-platform IaC repos where one tool should cover everything\n- Compliance evidence for CSPM baselines\n\n## Real Commands\n\n```bash\n# Basic scan\nkics scan -p .\n\n# Platform-scoped scan\nkics scan -p terraform/ -i terraform\nkics scan -p k8s/ -i kubernetes\n\n# Custom queries and exclusions\nkics scan -p . -q ./custom-queries\nkics scan -p . --exclude-queries 0684d1ba-9253-4bc1-8f1f-6d1c8e8b5e00\n\n# Reports\nkics scan -p . --report-formats json,sarif --output-path ./reports\n\n# CI gating\nkics scan -p . --fail-on high\n```\n\n## Best Practices\n\n- Pin KICS version in CI to keep query results stable\n- Start with --fail-on high and relax after reviewing noise\n- Track exclusions in config rather than hiding output\n- Feed SARIF into GitHub code scanning for inline PR annotations\n- Pair with runtime scanning (Falco/Gatekeeper) for defense in depth",
+  "examples": [
+    {
+      "input": "Scan my Terraform and Kubernetes configs",
+      "output": "Agent runs kics scan -p terraform/ -i terraform and kics scan -p k8s/ -i kubernetes, then summarizes HIGH findings with query IDs and remediation."
+    },
+    {
+      "input": "Get SARIF output for code scanning",
+      "output": "Agent runs kics scan -p . --report-formats sarif --output-path ./reports and uploads the .sarif artifact to code scanning."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kics.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kics"
+    },
+    "generic": {
+      "system_prompt": "Your lane is kics. You do it through kics-scan: Scan directories or files across supported platforms. The commands are real, e.g. `kics scan -p .`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kics",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "kics-scan",
+        "name": "path",
+        "type": "string",
+        "description": "Path to scan (file or directory)"
+      },
+      {
+        "capability": "kics-scan",
+        "name": "inputType",
+        "type": "string",
+        "description": "IaC type: terraform, dockerfile, kubernetes, ansible, cloudformation"
+      },
+      {
+        "capability": "kics-scan",
+        "name": "queries",
+        "type": "string",
+        "description": "Custom queries path"
+      },
+      {
+        "capability": "reporting-and-gating",
+        "name": "output",
+        "type": "string",
+        "description": "Report format: json, sarif, html, glsast"
+      },
+      {
+        "capability": "reporting-and-gating",
+        "name": "failOn",
+        "type": "string",
+        "description": "Exit nonzero on findings at or above severity: low, medium, high, critical"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kics"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/kics-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/kics-skill.yaml",
+    "checksum": "9c038ba09930915b3cda98a74f6db2051c5dc3df1f381b35ab338a96c890edde"
+  }
+}

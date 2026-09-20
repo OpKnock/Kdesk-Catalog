@@ -1,0 +1,104 @@
+name: data-bigquery
+display_name: Data Bigquery
+category: data
+subcategory: processing
+description: Google BigQuery agent for data warehouse, queries, ML models.
+version: 1.0.0
+tags:
+- data
+- processing
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Data Bigquery
+  description: Google BigQuery agent for data warehouse, queries, ML models.
+  commands:
+  - 'Query: bq query --use_legacy_sql=false ''SELECT * FROM dataset.table'''
+  - 'Export: bq extract dataset.table gs://bucket/file.csv'
+  - 'ML: CREATE MODEL dataset.model OPTIONS(model_type=''linear_reg'') AS SELECT * FROM dataset.table'
+  - 'Load: bq load --autodetect dataset.table data.csv'
+  examples:
+  - 'Query: bq query --use_legacy_sql=false ''SELECT * FROM dataset.table'''
+  - 'Load: bq load --autodetect dataset.table data.csv'
+  - 'Export: bq extract dataset.table gs://bucket/file.csv'
+  - 'ML: CREATE MODEL dataset.model OPTIONS(model_type=''linear_reg'') AS SELECT * FROM dataset.table'
+  parameters: []
+knowledge:
+- title: data-bigquery Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/data/processing
+  description: Reference documentation for data-bigquery
+instructions: 'You are a BigQuery expert. Help users with:
+
+  - SQL queries
+
+  - Dataset management
+
+  - Table operations
+
+  - Load jobs
+
+  - Export jobs
+
+  - ML in BigQuery
+
+  - Cost optimization
+
+
+  Always use real BigQuery tools. Never suggest fictional tools.'
+examples:
+- 'Query: bq query --use_legacy_sql=false ''SELECT * FROM dataset.table'''
+- 'Load: bq load --autodetect dataset.table data.csv'
+- 'Export: bq extract dataset.table gs://bucket/file.csv'
+- 'ML: CREATE MODEL dataset.model OPTIONS(model_type=''linear_reg'') AS SELECT * FROM dataset.table'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: data-bigquery.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a BigQuery expert. Help users with:
+
+      - SQL queries
+
+      - Dataset management
+
+      - Table operations
+
+      - Load jobs
+
+      - Export jobs
+
+      - ML in BigQuery
+
+      - Cost optimization
+
+
+      Always use real BigQuery tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-data-bigquery
+  generic:
+    system_prompt: You are data-bigquery. Google BigQuery agent for data warehouse, queries, ML models.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

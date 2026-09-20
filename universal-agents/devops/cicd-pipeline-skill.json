@@ -1,0 +1,227 @@
+{
+  "name": "cicd-pipeline",
+  "display_name": "Cicd Pipeline",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Designs pipeline-as-code flows, runs CI locally with act, and enforces pipeline quality gates with linters and security scanners.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "act",
+    "actionlint",
+    "hadolint",
+    "semgrep",
+    "shellcheck",
+    "trufflehog"
+  ],
+  "capabilities": [
+    {
+      "name": "local-pipeline-runtime",
+      "description": "Execute GitHub Actions workflows locally without a runner using nektos/act.",
+      "commands": [
+        "act -l",
+        "act push -j test",
+        "act pull_request --container-architecture linux/amd64",
+        "act --secret-file .secrets -W .github/workflows",
+        "act --reuse"
+      ],
+      "examples": [
+        "act -l",
+        "act push -j test",
+        "act --secret-file .secrets -W .github/workflows"
+      ],
+      "parameters": [
+        {
+          "name": "event",
+          "type": "string",
+          "description": "Event to simulate, e.g. push, pull_request, schedule"
+        },
+        {
+          "name": "job",
+          "type": "string",
+          "description": "Single job to execute, e.g. -j test"
+        },
+        {
+          "name": "secret-file",
+          "type": "string",
+          "description": "File containing secrets for local run"
+        }
+      ]
+    },
+    {
+      "name": "pipeline-quality-gates",
+      "description": "Enforce pipeline quality with linting, shell checks, and image scanning in CI.",
+      "commands": [
+        "actionlint .github/workflows/ci.yml",
+        "shellcheck scripts/*.sh",
+        "hadolint Dockerfile",
+        "trufflehog filesystem --only-verified .",
+        "semgrep ci --config auto"
+      ],
+      "examples": [
+        "actionlint .github/workflows/ci.yml",
+        "shellcheck deploy.sh && hadolint Dockerfile",
+        "trufflehog filesystem --only-verified ."
+      ],
+      "parameters": [
+        {
+          "name": "config-path",
+          "type": "string",
+          "description": "Path to workflow or Dockerfile to lint"
+        },
+        {
+          "name": "severity",
+          "type": "string",
+          "description": "Minimum severity threshold for scanners"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "act - Run GitHub Actions locally",
+      "type": "documentation",
+      "source": "https://github.com/nektos/act",
+      "description": "Local execution of GitHub Actions workflows"
+    },
+    {
+      "title": "GitHub Actions Security Hardening",
+      "type": "documentation",
+      "source": "https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions",
+      "description": "Guards against script injection and unintended secret exposure"
+    },
+    {
+      "title": "Hadolint",
+      "type": "documentation",
+      "source": "https://github.com/hadolint/hadolint",
+      "description": "Dockerfile linter with best-practice rules"
+    }
+  ],
+  "instructions": "# Pipeline-as-Code Engineering\n\nBuild reproducible CI/CD pipelines that run the same way in CI and locally.\n\n## What This Skill Does\n\n- Runs GitHub Actions workflows locally with act for fast iteration\n- Adds lint/security gates that fail merges early\n- Converts ad-hoc build scripts into reusable CI steps\n- Validates YAML, shell, and Dockerfile quality in one pass\n\n## When to Use\n\n- Iterating on a workflow without pushing dozens of commits\n- Adding security scanning (secrets, SAST) to a pipeline\n- Standardizing quality gates across repos\n\n## Real Commands\n\n```bash\n# Local workflow runs\nact -l                                  # list available jobs\nact push -j test                        # run only 'test' job\nact push --secret-file .secrets         # provide local secrets\nact --reuse                             # reuse containers between runs\n\n# Quality gates\nactionlint .github/workflows/*.yml      # workflow syntax + anti-patterns\nshellcheck scripts/deploy.sh            # bash correctness\nhadolint Dockerfile                     # Dockerfile lint\ntrufflehog filesystem --only-verified . # leaked secrets\nsemgrep ci --config auto                # SAST on the repo\n```\n\n## Standard Gate Order\n\n1. actionlint (workflow validity)\n2. shellcheck (scripts)\n3. hadolint (containers)\n4. unit tests\n5. secret scanning\n6. SAST/container scan\n7. deploy (staging) then promote to prod\n\n## Best Practices\n\n- Keep the pipeline fast: fail lint in under a minute\n- Never interpolate untrusted input directly into a script step (injection)\n- Use `$GITHUB_ACTION_PATH` and quoting around step scripts\n- Run act with the same container image as production runners\n- Add `permissions:` blocks to least-privilege every job",
+  "examples": [
+    {
+      "input": "I want to test my GitHub Actions workflow locally",
+      "output": "Agent installs act, runs act -l to list jobs, then act push -j build to reproduce the failure locally"
+    },
+    {
+      "input": "Add security checks to our pipeline",
+      "output": "Agent adds actionlint, trufflehog, and semgrep steps to the ci workflow with fail-fast severity thresholds"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cicd-pipeline.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cicd-pipeline"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Cicd Pipeline. You do it through local-pipeline-runtime: Execute GitHub Actions workflows locally without a runner using nektos/act. The commands are real, e.g. `act -l`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cicd-pipeline",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "local-pipeline-runtime",
+        "name": "event",
+        "type": "string",
+        "description": "Event to simulate, e.g. push, pull_request, schedule"
+      },
+      {
+        "capability": "local-pipeline-runtime",
+        "name": "job",
+        "type": "string",
+        "description": "Single job to execute, e.g. -j test"
+      },
+      {
+        "capability": "local-pipeline-runtime",
+        "name": "secret-file",
+        "type": "string",
+        "description": "File containing secrets for local run"
+      },
+      {
+        "capability": "pipeline-quality-gates",
+        "name": "config-path",
+        "type": "string",
+        "description": "Path to workflow or Dockerfile to lint"
+      },
+      {
+        "capability": "pipeline-quality-gates",
+        "name": "severity",
+        "type": "string",
+        "description": "Minimum severity threshold for scanners"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "act",
+    "actionlint",
+    "hadolint",
+    "semgrep",
+    "shellcheck",
+    "trufflehog"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/cicd-pipeline-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/cicd-pipeline-skill.yaml",
+    "checksum": "07fcc5ee95ae1fd96602fc9f9b107378f76dc79c1e3ed2051fdc31366ea0c83b"
+  }
+}

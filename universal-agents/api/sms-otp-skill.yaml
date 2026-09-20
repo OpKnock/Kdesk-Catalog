@@ -1,0 +1,187 @@
+name: sms-otp
+display_name: Sms Otp
+category: api
+subcategory: general
+description: 'Hand-crafted SMS OTP skill: Twilio Messages and Verify APIs, TOTP fallback with oathtool,
+  and rate-limited OTP delivery for login flows.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- oathtool
+- pip
+capabilities:
+- name: sms-otp-delivery
+  description: Send and verify OTPs over SMS with Twilio and TOTP fallback
+  commands:
+  - curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://api.twilio.com/2010-04-01/Accounts/$TWILIO_SID/Messages.json"
+    --data-urlencode "To=+15551234567" --data-urlencode "From=+15559876543" --data-urlencode "Body=Your
+    code is 123456"
+  - curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/Verifications"
+    --data-urlencode "To=+15551234567" --data-urlencode "Channel=sms"
+  - curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/VerificationCheck"
+    --data-urlencode "To=+15551234567" --data-urlencode "Code=123456"
+  - oathtool --totp --base32 "JBSWY3DPEHPK3PXP"
+  - pip install twilio
+  examples:
+  - curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/Verifications"
+    --data-urlencode "To=+15551234567" --data-urlencode "Channel=sms"
+  - oathtool --totp --base32 "JBSWY3DPEHPK3PXP"
+  - curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/VerificationCheck"
+    --data-urlencode "To=+15551234567" --data-urlencode "Code=123456"
+  parameters:
+  - name: phone
+    type: string
+    description: E.164 recipient number
+  - name: channel
+    type: string
+    description: sms or voice for Verify
+  - name: code
+    type: string
+    description: OTP to check
+knowledge:
+- title: Twilio Verify API
+  type: documentation
+  source: https://www.twilio.com/docs/verify/api
+  description: Verification and VerificationCheck endpoints
+- title: RFC 6238 TOTP
+  type: documentation
+  source: https://www.rfc-editor.org/rfc/rfc6238
+  description: Time-based one-time password algorithm
+instructions: '# SMS OTP
+
+
+  Hand-crafted skill for OTP delivery and verification over SMS.
+
+
+  ## What this skill does
+
+
+  - Sends one-time codes via Twilio Messages and Verify
+
+  - Checks submitted codes against the Verify service
+
+  - Generates TOTP fallback codes with oathtool
+
+
+  ## When to use
+
+
+  - Login flows that need a second factor
+
+  - Account recovery via phone
+
+  - Testing OTP delivery end to end
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Raw SMS with the Messages API
+
+  curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://api.twilio.com/2010-04-01/Accounts/$TWILIO_SID/Messages.json"
+  --data-urlencode "To=+15551234567" --data-urlencode "From=+15559876543" --data-urlencode "Body=Your
+  code is 123456"
+
+
+  # Twilio Verify: send the code
+
+  curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/Verifications"
+  --data-urlencode "To=+15551234567" --data-urlencode "Channel=sms"
+
+
+  # Twilio Verify: check the code
+
+  curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/VerificationCheck"
+  --data-urlencode "To=+15551234567" --data-urlencode "Code=123456"
+
+
+  # TOTP fallback
+
+  oathtool --totp --base32 "JBSWY3DPEHPK3PXP"
+
+
+  # Python SDK
+
+  pip install twilio
+
+  ```
+
+
+  ## Verify flow
+
+
+  1. POST /Verifications to send a code
+
+  2. User submits the code
+
+  3. POST /VerificationCheck; status approved means valid
+
+
+  ## Testing
+
+
+  ```bash
+
+  oathtool --totp --base32 "JBSWY3DPEHPK3PXP"   # current code
+
+  curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/VerificationCheck"
+  --data-urlencode "To=+15551234567" --data-urlencode "Code=$(oathtool --totp --base32 ''JBSWY3DPEHPK3PXP'')"
+
+  ```
+
+
+  ## Best practices
+
+
+  - Rate-limit sends per phone: max 3-5 per hour
+
+  - Use Verify instead of raw Messages: it handles expiry and checking
+
+  - Never log codes; hash them at rest
+
+  '
+examples:
+- input: Send a login code to a user's phone
+  output: POST to /Verifications with To and Channel=sms; the Verify service generates and sends the code
+    and handles its expiry.
+- input: Validate the code the user typed
+  output: POST /VerificationCheck with the phone and code; status=approved grants access, otherwise it
+    is invalid or expired.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: sms-otp.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-sms-otp
+  generic:
+    system_prompt: 'This is your domain: Sms Otp. You do it through sms-otp-delivery: Send and verify
+      OTPs over SMS with Twilio and TOTP fallback. The commands are real, e.g. `curl -s -u $TWILIO_SID:$TWILIO_AUTH
+      -X POST...`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

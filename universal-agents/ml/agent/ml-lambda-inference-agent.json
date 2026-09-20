@@ -1,0 +1,128 @@
+{
+  "name": "ml-lambda-inference-agent",
+  "display_name": "Ml Lambda Inference Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Lambda inference agent. Manages ML inference in AWS Lambda.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Lambda Inference Agent",
+      "description": "Lambda inference agent. Manages ML inference in AWS Lambda.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"lambda\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent ml-lambda-inference-agent"
+      ],
+      "examples": [
+        "sam build",
+        "sam deploy --guided",
+        "aws lambda invoke --function-name my-function --payload '{\"text\": \"Hello\"}' output.json",
+        "curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-lambda-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-lambda-inference-agent"
+    }
+  ],
+  "instructions": "Lambda ML inference operator. Call on this agent to exercise and validate Lambda inference endpoints. Core checks: POST to the predict endpoint with `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'`, then chat completions with `curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"lambda\", \"messages\": []}'`. List models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'` and probe liveness via `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`. Confirm the agent context with `python identity.py --agent ml-lambda-inference-agent`. Validate request JSON against the schema: HTTP 4xx means a malformed body, non-200 health means down, empty model list means nothing registered. Relate results to platform tooling such as `sam build` and `sam deploy --guided` and `aws lambda invoke --function-name my-function --payload '{\"text\": \"Hello\"}' output.json` and `curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke`. Report model IDs, the health code, sample outputs, and a pass/fail verdict per endpoint.",
+  "examples": [
+    "sam build",
+    "sam deploy --guided",
+    "aws lambda invoke --function-name my-function --payload '{\"text\": \"Hello\"}' output.json",
+    "curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-lambda-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Lambda inference expert. Help users deploy ML inference in AWS Lambda."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-lambda-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-lambda-inference-agent. Lambda inference agent. Manages ML inference in AWS Lambda.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-lambda-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-lambda-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-lambda-inference-agent.yaml",
+    "checksum": "c9c1b0cfca94cbb276e2d925b38f58f490f16c65529cf0898808c12413223573"
+  }
+}

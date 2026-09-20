@@ -1,0 +1,113 @@
+name: api-rest-generation
+version: 2.0.0
+type: skill
+category: backend
+description: 'Generates REST clients and documentation from OpenAPI with openapi-generator-cli and Redocly:
+  multi-language client generation, config files, and docs deployment.'
+keywords:
+- rest
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-rest-generation.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-rest-generation
+  generic:
+    system_prompt: 'This is your domain: Api Rest Generation. You do it through client-generation: Generate
+      typed API clients in multiple languages. The commands are real, e.g. `npx @openapitools/openapi-generator-cli
+      generate -i openapi.yaml -g typescript-fetch -o...`. You verify each step you report and stay honest
+      about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: client-generation
+  description: Generate typed API clients in multiple languages
+  commands:
+  - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o ./client-ts
+  - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g python -o ./client-py
+  - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g go -o ./client-go
+  - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g java -o ./client-java
+  - npx @openapitools/openapi-generator-cli config-help -g typescript-fetch
+  examples:
+  - -g typescript-fetch produces a fetch-based TS client
+  - -g python generates a requests-based client
+  - config-help documents generator options
+  parameters:
+  - name: input-spec
+    type: string
+    description: OpenAPI file path
+  - name: generator
+    type: string
+    description: Target language generator
+  - name: output
+    type: string
+    description: Output directory
+- name: docs-deployment
+  description: Build and preview reference documentation
+  commands:
+  - npx @redocly/cli build-docs openapi.yaml -o dist/api.html
+  - npx @redocly/cli preview-docs openapi.yaml
+  - npx @redocly/cli bundle openapi.yaml -o dist/openapi.bundle.yaml
+  - npx @redocly/cli lint openapi.yaml
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- express
+- fastapi
+tools:
+- node.js
+- python
+- express
+- fastify
+- openapi
+examples:
+- input: Publish a Python SDK
+  output: Generates a python client and validates it with a live smoke test
+- input: Host API docs
+  output: Builds an HTML docs bundle and deploys it to a static site
+instructions: "# API REST v5 - Clients & Docs\n\nCode and doc generation from OpenAPI.\n\n## What This\
+  \ Skill Does\n- Generates clients for TS, Python, Go, Java\n- Builds static docs from the spec\n- Keeps\
+  \ generated artifacts in sync\n\n## When to Use\n- Releasing official SDKs\n- Sharing docs with consumers\n\
+  - Multi-language client support\n\n## Real Commands\n\n```bash\nnpx @openapitools/openapi-generator-cli\
+  \ generate -i openapi.yaml -g typescript-fetch -o ./client-ts\nnpx @openapitools/openapi-generator-cli\
+  \ generate -i openapi.yaml -g python -o ./client-py\nnpx @redocly/cli build-docs openapi.yaml -o dist/api.html\n\
+  ```\n\n## Generation Config\n\n```yaml\ninputSpec: openapi.yaml\ngenerators:\n  typescript-fetch:\n\
+  \    output: client-ts\n    additionalProperties:\n      useSingleRequestParameter: true\n```\n\n##\
+  \ Testing\n- Compile each generated client\n- Run a smoke call against the live API\n- Diff generated\
+  \ output on spec changes\n\n## Best Practices\n- Commit generated clients in SDK repos\n- Regenerate\
+  \ on tagged releases only\n- Validate specs before generation"
+display_name: Api Rest Generation
+knowledge:
+- title: OpenAPI Generator CLI
+  type: documentation
+  source: https://openapi-generator.tech/docs/usage/
+  description: CLI usage and generators
+- title: Redocly CLI
+  type: documentation
+  source: https://redocly.com/docs/cli/
+  description: Docs generation and bundling

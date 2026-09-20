@@ -1,0 +1,205 @@
+{
+  "name": "api-doc-site-architecture",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Designs documentation site architecture: structure, navigation, code samples, and OpenAPI-based generation pipelines.",
+  "keywords": [
+    "openapi",
+    "redoc"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-doc-site-architecture.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-doc-site-architecture"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Api Doc Site Architecture. You do it through site-architecture: Structure docs sites: guides, reference, tutorials, and changelog. The commands are real, e.g. `mkdir -p docs/guides docs/reference docs/tutorials docs/changelog`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "site-architecture",
+      "description": "Structure docs sites: guides, reference, tutorials, and changelog",
+      "commands": [
+        "mkdir -p docs/guides docs/reference docs/tutorials docs/changelog",
+        "node -e \"const fs=require('fs');fs.writeFileSync('docs/guides/quickstart.md','# Quickstart\\n')\"",
+        "node -e \"const fs=require('fs');fs.writeFileSync('docs/changelog/CHANGELOG.md','# Changelog\\n')\"",
+        "node -e \"console.log('nav: Guides > Reference > Tutorials')\"",
+        "git add docs && git commit -m 'scaffold docs site'"
+      ],
+      "examples": [
+        "mkdir -p docs/guides docs/reference docs/tutorials docs/changelog",
+        "node -e \"const fs=require('fs');fs.writeFileSync('docs/guides/quickstart.md','# Quickstart\\n')\"",
+        "git add docs && git commit -m 'scaffold docs site'"
+      ],
+      "parameters": [
+        {
+          "name": "siteDir",
+          "type": "string",
+          "description": "Docs root directory"
+        },
+        {
+          "name": "sections",
+          "type": "string",
+          "description": "Site sections"
+        }
+      ]
+    },
+    {
+      "name": "generation-pipeline",
+      "description": "Generate reference docs from OpenAPI with Redocly",
+      "commands": [
+        "npx @redocly/cli lint openapi.yaml",
+        "npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml",
+        "npx @redocly/cli build-docs dist/bundled.yaml -o dist/index.html",
+        "npx @redocly/cli preview-docs openapi.yaml",
+        "npx @redocly/cli build-docs openapi.yaml --output public/reference.html"
+      ],
+      "examples": [
+        "npx @redocly/cli lint openapi.yaml && npx @redocly/cli build-docs openapi.yaml -o public/reference.html",
+        "npx @redocly/cli preview-docs openapi.yaml",
+        "npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "spec",
+          "type": "string",
+          "description": "OpenAPI spec path"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output HTML path"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "swagger-cli",
+    "redoc-cli",
+    "openapi-generator"
+  ],
+  "tools": [
+    "swagger-cli",
+    "redoc-cli",
+    "openapi-generator",
+    "stoplight-studio",
+    "postman"
+  ],
+  "examples": [
+    {
+      "input": "Design the developer portal structure",
+      "output": "Scaffolds tutorials, guides, reference, and changelog sections with a generation pipeline"
+    },
+    {
+      "input": "Automate reference docs from the spec",
+      "output": "Wires Redocly lint/bundle/build-docs so reference pages update with each spec change"
+    }
+  ],
+  "instructions": "# API Doc (Site Design)\n\nDesigns the documentation site before filling it with content.\n\n## When to Use\n- Launching a developer portal\n- Reorganizing scattered docs\n- Automating reference generation\n\n## Real Commands\n\n```bash\n# Scaffold\nmkdir -p docs/guides docs/reference docs/tutorials docs/changelog\n\n# Generate reference from spec\nnpx @redocly/cli lint openapi.yaml\nnpx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml\nnpx @redocly/cli build-docs dist/bundled.yaml -o dist/index.html\n\n# Preview\nnpx @redocly/cli preview-docs openapi.yaml\n```\n\n## Site Taxonomy\n- Tutorials: step-by-step onboarding\n- Guides: task-oriented how-tos\n- Reference: generated from OpenAPI\n- Changelog: releases and breaking changes\n\n## Testing\nPreview docs locally and verify every link and example.\n\n## Best Practices\n- Reference is generated; guides are curated\n- Search should index all sections",
+  "display_name": "Api Doc Site Architecture",
+  "knowledge": [
+    {
+      "title": "Redocly CLI",
+      "type": "documentation",
+      "source": "https://redocly.com/docs/cli/",
+      "description": "Lint, bundle, build-docs commands"
+    },
+    {
+      "title": "Diátaxis Framework",
+      "type": "documentation",
+      "source": "https://diataxis.fr/",
+      "description": "Docs taxonomy: tutorials, guides, reference, explanation"
+    }
+  ],
+  "id": "api-doc-site-architecture",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "site-architecture",
+        "name": "siteDir",
+        "type": "string",
+        "description": "Docs root directory"
+      },
+      {
+        "capability": "site-architecture",
+        "name": "sections",
+        "type": "string",
+        "description": "Site sections"
+      },
+      {
+        "capability": "generation-pipeline",
+        "name": "spec",
+        "type": "string",
+        "description": "OpenAPI spec path"
+      },
+      {
+        "capability": "generation-pipeline",
+        "name": "output",
+        "type": "string",
+        "description": "Output HTML path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "swagger-cli",
+    "redoc-cli",
+    "openapi-generator"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-doc-site-architecture/skill/api-doc-site-architecture.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-doc-site-architecture/skill/api-doc-site-architecture.yaml",
+    "checksum": "e3906eb0550e6da36b6ada74425e2b9c5d4c8be847b19ac314e5ee64d96dc047"
+  }
+}

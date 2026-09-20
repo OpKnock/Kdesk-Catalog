@@ -1,0 +1,172 @@
+name: ts-prune
+display_name: ts-prune
+category: code-quality
+subcategory: general
+description: Finds unused exports and dead code in TypeScript projects with ts-prune.
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+capabilities:
+- name: ts-prune
+  description: Detect unused exports and configure failure thresholds
+  commands:
+  - npx ts-prune
+  - npx ts-prune -p tsconfig.json
+  - npx ts-prune --error
+  - npx ts-prune --ignore "src/**/*.test.ts"
+  - npx ts-prune -s src/ --json > unused.json
+  examples:
+  - npx ts-prune --error | head -30
+  - npx ts-prune -p tsconfig.build.json --skip 'node_modules'
+  - npx ts-prune --allowUnreachableCode
+  parameters:
+  - name: project
+    type: string
+    description: Path to tsconfig.json
+  - name: error
+    type: boolean
+    description: Exit with code 1 if unused exports exist (CI mode)
+  - name: ignore
+    type: string
+    description: Regex of files to skip
+knowledge:
+- title: ts-prune GitHub
+  type: documentation
+  source: https://github.com/nadeesha/ts-prune
+  description: CLI flags and usage examples
+- title: ts-prune npm
+  type: documentation
+  source: https://www.npmjs.com/package/ts-prune
+  description: Package reference and CI integration examples
+instructions: '# ts-prune
+
+
+  Finds unused exports in TypeScript codebases by analyzing the type graph, helping
+
+  delete dead code safely.
+
+
+  ## When to Use
+
+
+  - Cleaning up dead exports before a refactor
+
+  - Enforcing no-unused-exports in CI
+
+  - Locating public API surface that nothing consumes
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Install
+
+  dev-npx ts-prune
+
+  npm install --save-dev ts-prune
+
+
+  # Default run
+
+  npx ts-prune
+
+
+  # With explicit tsconfig
+
+  npx ts-prune -p tsconfig.json
+
+
+  # Fail in CI
+
+  npx ts-prune --error
+
+
+  # Ignore test files
+
+  npx ts-prune --ignore "src/**/*.test.ts"
+
+
+  # JSON for scripting
+
+  npx ts-prune --json > unused-exports.json
+
+
+  # Skip vendored code
+
+  npx ts-prune -p tsconfig.build.json --skip node_modules
+
+  ```
+
+
+  ## Output Format
+
+
+  ```
+
+  src/utils/format.ts:12 - formatDate
+
+  src/api/client.ts:34 - HttpClient
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Scope with `--ignore` for tests and generated files (e.g. API client stubs)
+
+  - Delete exports in batches and rely on type-check + tests
+
+  - Keep `--error` in CI to prevent regression
+
+  - Review the report before bulk-deleting; entry points may be imported dynamically
+
+
+  ## Example Response
+
+
+  Lists each unused export as file:line with the symbol name, then deletes them in
+
+  small batches, running tsc --noEmit after each.'
+examples:
+- input: Find dead code in our TypeScript app
+  output: Runs npx ts-prune --ignore '*.test.ts' --json and reports all unused exports grouped by module
+- input: Prevent unused exports in CI
+  output: Adds npx ts-prune --error --ignore '**/*.test.ts' to CI and cleans the existing findings
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ts-prune.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-ts-prune
+  generic:
+    system_prompt: 'You take the ts-prune seat. You do it through ts-prune: Detect unused exports and
+      configure failure thresholds. The commands are real, e.g. `npx ts-prune`. You answer with exact
+      commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

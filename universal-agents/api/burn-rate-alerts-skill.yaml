@@ -1,0 +1,203 @@
+name: burn-rate-alerts
+display_name: Burn Rate Alerts
+category: api
+subcategory: general
+description: 'Designs SLO burn-rate alerts: multi-window burn rates, Prometheus rules, SLO windows, and
+  alert fatigue control.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- amtool
+- promtool
+- python
+capabilities:
+- name: slo-calculation
+  description: Compute error budget and burn rates.
+  commands:
+  - promtool query instant 'sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))'
+  - promtool query instant '1 - (sum(rate(http_requests_total{status=~"2.."}[1h])) / sum(rate(http_requests_total[1h])))'
+  - curl -s 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total%5B5m%5D))' | jq '.data.result'
+  - python -c "print('burn_rate = error_rate / error_budget_share')"
+  examples:
+  - promtool query instant 'sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))'
+  - curl -s 'http://localhost:9090/api/v1/query?query=(1%20-%20sum(rate(http_requests_total%7Bstatus%3D~%222..%22%7D%5B1h%5D))%20/%20sum(rate(http_requests_total%5B1h%5D)))'
+    | jq .
+  - promtool query range 'sum(rate(http_requests_total[5m]))' --start=... --end=... --step=60
+  parameters:
+  - name: window
+    type: string
+    description: Evaluation window (5m, 1h, 1d)
+  - name: status_regex
+    type: string
+    description: Status class regex
+- name: multi-window-rules
+  description: Author multi-window, multi-burn-rate alert rules.
+  commands:
+  - promtool check rules burn-rate.yml
+  - promtool test rules burn-rate-test.yml
+  - curl -s 'http://localhost:9090/api/v1/rules?type=alert' | jq '.data.groups[].rules[] | {name,state}'
+  - amtool alert list
+  examples:
+  - promtool check rules /etc/prometheus/burn-rate.yml
+  - promtool test rules burn-rate-test.yml
+  - curl -s 'http://localhost:9090/api/v1/rules?type=alert' | jq -r '.data.groups[].rules[] | select(.state=="firing")
+    | .name'
+  parameters:
+  - name: rules_file
+    type: string
+    description: Burn-rate rule file
+  - name: test_file
+    type: string
+    description: Rule unit test file
+- name: budget-ops
+  description: Track error budget consumption.
+  commands:
+  - curl -s 'http://localhost:9090/api/v1/query?query=(1%20-%20sum(rate(http_requests_total%7Bstatus%3D~%222..%22%7D%5B30d%5D))%20/%20sum(rate(http_requests_total%5B30d%5D)))'
+    | jq '.data.result[0].value[1]'
+  - promtool query instant '(1 - error_rate_30d) < 0.99'
+  - curl -s 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total%5B30d%5D))' | jq .
+  examples:
+  - curl -s 'http://localhost:9090/api/v1/query?query=(1%20-%20sum(rate(http_requests_total%7Bstatus%3D~%222..%22%7D%5B30d%5D))%20/%20sum(rate(http_requests_total%5B30d%5D)))'
+    | jq -r '.data.result[0].value[1]'
+  - promtool query instant 'error_budget_remaining = 1 - (1 - availability30d) / (1 - 0.99)'
+  - curl -s 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total%7Bstatus%3D~%225..%22%7D%5B30d%5D))%20/%20sum(rate(http_requests_total%5B30d%5D))'
+    | jq .
+  parameters:
+  - name: slo_target
+    type: number
+    description: SLO target, e.g. 0.99
+  - name: window
+    type: string
+    description: Budget window (30d, 7d)
+knowledge:
+- title: 'SRE Workbook: Alerting on SLOs'
+  type: documentation
+  source: https://sre.google/workbook/alerting-on-slos/
+  description: Multi-window burn rate guidance
+- title: Prometheus Alerting
+  type: documentation
+  source: https://prometheus.io/docs/alerting/latest/overview/
+  description: Rule authoring and alertmanager
+- title: Site Reliability Engineering
+  type: documentation
+  source: https://sre.google/sre-book/service-level-objectives/
+  description: SLO concepts
+instructions: '# Burn-Rate Alerts
+
+
+  ## What this skill does
+
+
+  Designs SLO burn-rate alerts: computing error rates and burn rates with PromQL, authoring multi-window
+  alert rules (e.g. 14.4x/5m, 6x/30m, 1x/6h), validating with promtool, and tracking budget consumption.
+
+
+  ## When to use
+
+
+  - Replacing threshold alerts with SLO-based paging
+
+  - Answering ''how fast are we burning budget?''
+
+  - Reducing alert fatigue
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Error rate over 5m
+
+  promtool query instant ''sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))''
+
+
+  # Availability over 1h
+
+  promtool query instant ''1 - (sum(rate(http_requests_total{status=~"5.."}[1h])) / sum(rate(http_requests_total[1h])))''
+
+
+  # 30-day availability
+
+  curl -s ''http://localhost:9090/api/v1/query?query=(1%20-%20sum(rate(http_requests_total%7Bstatus%3D~%222..%22%7D%5B30d%5D))%20/%20sum(rate(http_requests_total%5B30d%5D)))''
+  | jq -r ''.data.result[0].value[1]''
+
+
+  # Validate rules
+
+  promtool check rules burn-rate.yml
+
+  promtool test rules burn-rate-test.yml
+
+  ```
+
+
+  ## Rule design (99% SLO)
+
+
+  - Page: burn rate >= 14.4 over 5m (2h to exhaust budget)
+
+  - Page: burn rate >= 6 over 30m (5h to exhaust)
+
+  - Ticket: burn rate >= 1 over 6h (3 days to exhaust)
+
+
+  ## Testing
+
+
+  - Unit-test each window''s firing conditions with promtool test rules
+
+  - Confirm short-burst errors do not page (window guards)
+
+
+  ## Best practices
+
+
+  - Use two windows per severity (fast/slow)
+
+  - Compute burn rate = error_rate / (1 - SLO)
+
+  - Track remaining budget monthly and review'
+examples:
+- input: Alert when we are burning the 99% SLO budget fast
+  output: Writes multi-window rules at 14.4x/5m page level and 1x/6h ticket level, validates with promtool,
+    and explains when each fires.
+- input: How much budget did we burn this month?
+  output: Queries 30d availability via the API and computes remaining error budget.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: burn-rate-alerts.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-burn-rate-alerts
+  generic:
+    system_prompt: 'You own Burn Rate Alerts end to end. You do it through slo-calculation: Compute error
+      budget and burn rates. The commands are real, e.g. `promtool query instant sum(rate(http_requests_total{status=~5..}[5m]))
+      /...`. You answer with exact commands, not abstractions, and flag anything you have not verified
+      yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,103 @@
+name: sre-capacity
+display_name: Sre Capacity
+category: sre
+subcategory: operations
+description: Capacity planning agent for resource forecasting and optimization.
+version: 1.0.0
+tags:
+- sre
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Sre Capacity
+  description: Capacity planning agent for resource forecasting and optimization.
+  commands:
+  - 'PromQL: predict_linear(node_memory_MemAvailable[7d], 86400 * 30)'
+  - 'Disk: node_filesystem_avail_bytes / node_filesystem_size_bytes'
+  - 'CPU: rate(node_cpu_seconds_total{mode="idle"}[5m])'
+  - 'Network: rate(node_network_receive_bytes_total[5m])'
+  examples:
+  - 'PromQL: predict_linear(node_memory_MemAvailable[7d], 86400 * 30)'
+  - 'CPU: rate(node_cpu_seconds_total{mode="idle"}[5m])'
+  - 'Disk: node_filesystem_avail_bytes / node_filesystem_size_bytes'
+  - 'Network: rate(node_network_receive_bytes_total[5m])'
+  parameters: []
+knowledge:
+- title: sre-capacity Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/sre/operations
+  description: Reference documentation for sre-capacity
+instructions: 'You are a capacity planning expert. Help users with:
+
+  - Resource forecasting
+
+  - Trend analysis
+
+  - Cost optimization
+
+  - Right-sizing
+
+  - Autoscaling
+
+  - Peak load planning
+
+  - Growth projections
+
+
+  Always use real capacity planning tools. Never suggest fictional tools.'
+examples:
+- 'PromQL: predict_linear(node_memory_MemAvailable[7d], 86400 * 30)'
+- 'CPU: rate(node_cpu_seconds_total{mode="idle"}[5m])'
+- 'Disk: node_filesystem_avail_bytes / node_filesystem_size_bytes'
+- 'Network: rate(node_network_receive_bytes_total[5m])'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: sre-capacity.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a capacity planning expert. Help users with:
+
+      - Resource forecasting
+
+      - Trend analysis
+
+      - Cost optimization
+
+      - Right-sizing
+
+      - Autoscaling
+
+      - Peak load planning
+
+      - Growth projections
+
+
+      Always use real capacity planning tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-sre-capacity
+  generic:
+    system_prompt: You are sre-capacity. Capacity planning agent for resource forecasting and optimization.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

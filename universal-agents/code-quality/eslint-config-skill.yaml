@@ -1,0 +1,112 @@
+name: eslint-config
+display_name: eslint-config
+category: code-quality
+subcategory: general
+description: Designs and maintains ESLint flat configs and shareable config packages with rulesets, overrides,
+  and presets.
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npm
+- npx
+capabilities:
+- commands:
+  - npm install --save-dev eslint @eslint/js typescript-eslint
+  - npx eslint --init
+  - npx eslint --print-config src/main.js
+  - npx eslint --debug src/
+  - npx eslint --env-info
+  description: Author flat config and legacy config files.
+  name: eslint-config-authoring
+  examples:
+  - npx eslint --print-config src/main.js | python -m json.tool | head -60
+  - npx eslint --config eslint.config.js src/
+  - npm install --save-dev eslint-plugin-react eslint-plugin-react-hooks
+  parameters:
+  - description: Config file path
+    name: config
+    type: string
+  - description: File to resolve config for
+    name: target
+    type: string
+- commands:
+  - 'npx eslint --rule "semi: [error, never]" src/'
+  - npx eslint --rulesdir ./custom-rules src/
+  - npx eslint --no-eslintrc --env browser src/
+  - npx eslint --ext .js,.ts src/
+  description: Validate configs and lint output.
+  name: config-testing
+  examples:
+  - 'npx eslint --rule "quotes: [error, single]" src/'
+  - npx eslint --no-eslintrc --config base.js src/
+  parameters:
+  - description: Inline rule override
+    name: rule
+    type: string
+  - name: ext
+    type: string
+    description: File extensions to lint
+knowledge:
+- title: ESLint Config Guide
+  description: Flat config and rules configuration
+  source: https://eslint.org/docs/latest/use/configure/
+  type: documentation
+- title: typescript-eslint Docs
+  description: TS config presets
+  source: https://typescript-eslint.io
+  type: documentation
+instructions: "# ESLint Config\n\nDesign and maintain ESLint configuration.\n\n## When to Use\n\n- Setting\
+  \ up linting for new or existing JS/TS projects\n- Building shareable config packages\n- Migrating .eslintrc\
+  \ to flat config\n- Tuning rules for a codebase\n\n## Flat Config Example\n\n```javascript\n// eslint.config.js\n\
+  import js from \"@eslint/js\";\nimport tseslint from \"typescript-eslint\";\n\nexport default tseslint.config(\n\
+  \  { ignores: [\"dist/**\", \"coverage/**\"] },\n  js.configs.recommended,\n  ...tseslint.configs.recommended,\n\
+  \  {\n    rules: {\n      semi: [\"error\", \"always\"],\n      \"@typescript-eslint/no-explicit-any\"\
+  : \"warn\",\n    },\n  }\n);\n```\n\n## Commands\n\n```bash\nnpm install --save-dev eslint @eslint/js\
+  \ typescript-eslint\n\n# Debug what config applies\nnpx eslint --print-config src/main.js\nnpx eslint\
+  \ --debug src/\n\n# Environment info\nnpx eslint --env-info\n\n# Rule experiments\nnpx eslint --rule\
+  \ \"semi: [error, never]\" src/\n```\n\n## Best Practices\n\n- Start from recommended presets; add rules\
+  \ deliberately\n- Use overrides for test files (globals, rules)\n- Keep ignores in config, not scattered\
+  \ .eslintignore\n- Test config changes with --print-config in CI\n- Ship shareable configs as packages\
+  \ with semver\n- Run npx eslint --debug to diagnose config merging"
+examples:
+- input: Migrate my project to flat config
+  output: Agent replaces .eslintrc with eslint.config.js using @eslint/js and typescript-eslint presets,
+    then verifies with --print-config.
+- input: My config is not applying a rule
+  output: Agent runs eslint --debug and --print-config to trace config resolution and overrides.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: eslint-config.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-eslint-config
+  generic:
+    system_prompt: 'You work eslint-config hands-on. You do it through eslint-config-authoring: Author
+      flat config and legacy config files. The commands are real, e.g. `npm install --save-dev eslint
+      @eslint/js typescript-eslint`. You prefer the shortest safe path, and you reproduce failures before
+      diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

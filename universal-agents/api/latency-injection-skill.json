@@ -1,0 +1,223 @@
+{
+  "name": "latency-injection",
+  "display_name": "Latency Injection",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Inject network latency and packet loss with Linux tc netem: add/change/remove qdisc rules and measure the impact with ping and curl.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "mtr",
+    "ping"
+  ],
+  "capabilities": [
+    {
+      "name": "netem-rules",
+      "description": "Add, change, and remove latency/loss rules on interfaces.",
+      "commands": [
+        "tc qdisc add dev eth0 root netem delay 200ms",
+        "tc qdisc change dev eth0 root netem delay 200ms 50ms distribution normal",
+        "tc qdisc change dev eth0 root netem loss 5%",
+        "tc qdisc add dev eth0 root netem delay 200ms loss 2% duplicate 1%",
+        "tc qdisc del dev eth0 root netem"
+      ],
+      "examples": [
+        "tc qdisc add dev eth0 root netem delay 200ms",
+        "tc qdisc change dev eth0 root netem delay 200ms 50ms distribution normal",
+        "tc qdisc del dev eth0 root netem"
+      ],
+      "parameters": [
+        {
+          "name": "iface",
+          "type": "string",
+          "description": "Network interface, e.g. eth0."
+        },
+        {
+          "name": "delay",
+          "type": "integer",
+          "description": "Delay in milliseconds."
+        },
+        {
+          "name": "jitter",
+          "type": "integer",
+          "description": "Jitter in milliseconds."
+        },
+        {
+          "name": "loss",
+          "type": "integer",
+          "description": "Packet loss percentage."
+        }
+      ]
+    },
+    {
+      "name": "impact-measure",
+      "description": "Measure latency and application impact after injection.",
+      "commands": [
+        "tc qdisc show dev eth0",
+        "ping -c 10 10.0.0.5 | tail -3",
+        "curl -s -o /dev/null -w 'total: %{time_total}s\\n' http://10.0.0.5/",
+        "mtr -r -c 10 10.0.0.5 | tail -5"
+      ],
+      "examples": [
+        "ping -c 10 10.0.0.5 | tail -3",
+        "curl -s -o /dev/null -w 'total: %{time_total}s\\n' http://10.0.0.5/",
+        "tc qdisc show dev eth0"
+      ],
+      "parameters": [
+        {
+          "name": "host",
+          "type": "string",
+          "description": "Target host for measurements."
+        },
+        {
+          "name": "count",
+          "type": "integer",
+          "description": "Number of probe packets."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "tc-netem man page",
+      "type": "documentation",
+      "source": "https://man7.org/linux/man-pages/man8/tc-netem.8.html",
+      "description": "tc netem command reference."
+    },
+    {
+      "title": "Network Emulation (netem)",
+      "type": "documentation",
+      "source": "https://wiki.linuxfoundation.org/networking/netem",
+      "description": "netem overview and examples."
+    }
+  ],
+  "instructions": "# Latency Injection\n\nEmulate network conditions (latency, jitter, loss) with Linux tc netem.\n\n## What this skill does\n\n- Adds netem qdisc rules with delay, jitter, and loss.\n- Changes rules live and removes them cleanly.\n- Measures the impact with ping, curl, and mtr.\n\n## When to use\n\n- Chaos/resilience testing for cross-datacenter flows.\n- Testing timeouts and retry logic in clients.\n- Validating SLO behavior under degraded networks.\n\n## Real commands\n\n```bash\n# Add 200ms delay\nsudo tc qdisc add dev eth0 root netem delay 200ms\n\n# Delay with jitter (200ms +/- 50ms, normal distribution)\nsudo tc qdisc change dev eth0 root netem delay 200ms 50ms distribution normal\n\n# Packet loss 5%\nsudo tc qdisc change dev eth0 root netem loss 5%\n\n# Combined rule\nsudo tc qdisc add dev eth0 root netem delay 200ms loss 2% duplicate 1%\n\n# Show current rule\ntc qdisc show dev eth0\n\n# Measure impact\nping -c 10 10.0.0.5 | tail -3\ncurl -s -o /dev/null -w 'total: %{time_total}s\\n' http://10.0.0.5/\nmtr -r -c 10 10.0.0.5 | tail -5\n\n# Remove the rule (restore normal networking)\nsudo tc qdisc del dev eth0 root netem\n```\n\n## Testing\n\n```bash\n# Before/after comparison\nping -c 5 10.0.0.5 | tail -2   # baseline\nsudo tc qdisc add dev eth0 root netem delay 300ms\nping -c 5 10.0.0.5 | tail -2   # injected\nsudo tc qdisc del dev eth0 root netem\n```\n\n## Best practices\n\n- Inject on the test path only; never on production interfaces without change control.\n- Always pair injection with cleanup (tc qdisc del) in a trap/finally block.\n- Start with small values (50-100ms) and scale up gradually.\n",
+  "examples": [
+    {
+      "input": "Simulate 300ms cross-region latency",
+      "output": "sudo tc qdisc add dev eth0 root netem delay 300ms, verify with ping, then tc qdisc del when done."
+    },
+    {
+      "input": "Test my client's timeout handling",
+      "output": "Inject delay + loss: tc qdisc change dev eth0 root netem delay 500ms loss 5%, run the client, observe timeouts, then delete the rule."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "latency-injection.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-latency-injection"
+    },
+    "generic": {
+      "system_prompt": "You take the Latency Injection seat. You do it through netem-rules: Add, change, and remove latency/loss rules on interfaces. The commands are real, e.g. `tc qdisc add dev eth0 root netem delay 200ms`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "latency-injection",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "netem-rules",
+        "name": "iface",
+        "type": "string",
+        "description": "Network interface, e.g. eth0."
+      },
+      {
+        "capability": "netem-rules",
+        "name": "delay",
+        "type": "integer",
+        "description": "Delay in milliseconds."
+      },
+      {
+        "capability": "netem-rules",
+        "name": "jitter",
+        "type": "integer",
+        "description": "Jitter in milliseconds."
+      },
+      {
+        "capability": "netem-rules",
+        "name": "loss",
+        "type": "integer",
+        "description": "Packet loss percentage."
+      },
+      {
+        "capability": "impact-measure",
+        "name": "host",
+        "type": "string",
+        "description": "Target host for measurements."
+      },
+      {
+        "capability": "impact-measure",
+        "name": "count",
+        "type": "integer",
+        "description": "Number of probe packets."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "mtr",
+    "ping"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/latency-injection-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/latency-injection-skill.yaml",
+    "checksum": "23a6e0b227858d19d2a3d7b1ec59c27abf34e3a3338167b52f5bcc7636e48707"
+  }
+}

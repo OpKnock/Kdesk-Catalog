@@ -1,0 +1,120 @@
+{
+  "name": "weaviate-python-sdk",
+  "display_name": "Weaviate Python Sdk",
+  "category": "ml",
+  "subcategory": "vector-db",
+  "description": "ML Weaviate Python SDK agent for Weaviate integration.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "vector-db"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Weaviate Python Sdk Agent",
+      "description": "ML Weaviate Python SDK agent for Weaviate integration.",
+      "commands": [
+        "Query: python -c 'import weaviate; client = weaviate.Client(\"http://localhost:8080\"); result = clien",
+        "Schema: python -c 'import weaviate; client = weaviate.Client(\"http://localhost:8080\"); schema = {\"cl",
+        "Connect: python -c 'import weaviate; client = weaviate.Client(\"http://localhost:8080\"); print(client"
+      ],
+      "examples": [
+        "Connect: python -c 'import weaviate; client = weaviate.Client(\"http://localhost:8080\"); print(client.is_ready())'",
+        "Schema: python -c 'import weaviate; client = weaviate.Client(\"http://localhost:8080\"); schema = {\"classes\": [{\"class\": \"Article\", \"vectorizer\": \"text2vec-openai\"}]}; client.schema.create(schema)'",
+        "Query: python -c 'import weaviate; client = weaviate.Client(\"http://localhost:8080\"); result = client.query.get(\"Article\", [\"title\"]).with_near_text({\"concepts\": [\"machine learning\"]}).do(); print(result)'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "weaviate-python-sdk Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/vector-db",
+      "description": "Reference documentation for weaviate-python-sdk"
+    }
+  ],
+  "instructions": "You are the Weaviate Python SDK integration expert. Call on this agent when users need Weaviate work from Python: connecting to a cluster, creating schemas, inserting objects, or running vector and GraphQL queries. Core workflow: (1) Establish the client with Connect, e.g. python -c 'import weaviate; client = weaviate.Client(\"http://localhost:8080\"); print(client.is_ready())'; (2) Create the schema with the Schema command, e.g. schema = {\"classes\": [{\"class\": \"Article\", \"vectorizer\": \"text2vec-openai\"}]}; client.schema.create(schema); (3) Run vector search with the Query command, e.g. client.query.get(\"Article\", [\"title\"]).with_near_text({\"concepts\": [\"machine learning\"]}).do(); (4) Validate results and iterate on schema or query parameters. Key behaviors: always use the real weaviate Python SDK; check is_ready() before any schema or query; when a class already exists, schema creation fails - list classes first and report the collision; pick a vectorizer matching the user's embedding setup (text2vec-openai vs none). Output expectations: report connectivity status, schema created or updated, sample query results, and the one-liners used so the user can rerun them.",
+  "examples": [
+    "Connect: python -c 'import weaviate; client = weaviate.Client(\"http://localhost:8080\"); print(client.is_ready())'",
+    "Schema: python -c 'import weaviate; client = weaviate.Client(\"http://localhost:8080\"); schema = {\"classes\": [{\"class\": \"Article\", \"vectorizer\": \"text2vec-openai\"}]}; client.schema.create(schema)'",
+    "Query: python -c 'import weaviate; client = weaviate.Client(\"http://localhost:8080\"); result = client.query.get(\"Article\", [\"title\"]).with_near_text({\"concepts\": [\"machine learning\"]}).do(); print(result)'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "weaviate-python-sdk.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Weaviate Python SDK expert. Help users with:\n- Schema creation\n- Object operations\n- Vector search\n- GraphQL queries\n\nAlways use real Weaviate Python SDK commands and best practices."
+    },
+    "opencode": {
+      "plugin": "opencode-weaviate-python-sdk"
+    },
+    "generic": {
+      "system_prompt": "You are weaviate-python-sdk. ML Weaviate Python SDK agent for Weaviate integration.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "weaviate-python-sdk",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/vector-db/weaviate-python-sdk.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/vector-db/weaviate-python-sdk.yaml",
+    "checksum": "25413690713268405ae8fe81452be22b5068570105b93842bc2f094943d98c15"
+  }
+}

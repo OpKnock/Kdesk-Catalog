@@ -1,0 +1,127 @@
+name: haproxy
+display_name: Haproxy
+category: infrastructure
+subcategory: general
+description: 'Configures and operates HAProxy: config validation, hot reloads, and runtime inspection
+  via the stats socket.'
+version: 2.0.0
+tags:
+- infrastructure
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- echo
+- haproxy
+capabilities:
+- name: config
+  description: Validate and reload HAProxy configuration.
+  commands:
+  - haproxy -c -f /etc/haproxy/haproxy.cfg
+  - haproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -sf $(cat /run/haproxy.pid)
+  - haproxy -vv
+  - haproxy -f /etc/haproxy/haproxy.cfg -d
+  - haproxy -c -f /etc/haproxy/haproxy.cfg -C /etc/haproxy/errors
+  examples:
+  - haproxy -c -f haproxy.cfg -f haproxy-extra.cfg
+  - haproxy -vv | grep -E 'HA-Proxy version|OpenSSL'
+  - haproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -sf $(cat /run/haproxy.pid)
+  parameters:
+  - name: c
+    type: string
+    description: Check configuration only
+  - name: f
+    type: string
+    description: Config file path (repeatable)
+  - name: sf
+    type: string
+    description: Soft-stop old PIDs for reload
+- name: stats
+  description: Inspect runtime state via the admin socket.
+  commands:
+  - echo 'show info' | socat /run/haproxy/admin.sock -
+  - echo 'show stat' | socat /run/haproxy/admin.sock -
+  - echo 'show servers state' | socat /run/haproxy/admin.sock -
+  - echo 'set server web/web-1 state maint' | socat /run/haproxy/admin.sock -
+  - echo 'show backend' | socat /run/haproxy/admin.sock -
+  examples:
+  - echo 'show stat' | socat /run/haproxy/admin.sock - | grep -E 'web,.*DOWN'
+  - echo 'set server web/web-2 state ready' | socat /run/haproxy/admin.sock -
+  - echo 'show info' | socat /run/haproxy/admin.sock - | grep -E 'CurrConns|Uptime'
+  parameters:
+  - name: command
+    type: string
+    description: 'Socket command: show stat, show info, set server'
+  - name: server
+    type: string
+    description: backend/server pair, e.g. web/web-1
+  - name: state
+    type: string
+    description: drain, maint, or ready state
+knowledge:
+- title: HAProxy Configuration Manual
+  type: documentation
+  source: https://www.haproxy.com/documentation/haproxy-configuration-manual/latest/
+  description: Global, defaults, frontend, and backend directives
+- title: HAProxy Management
+  type: documentation
+  source: https://www.haproxy.org/download/2.9/doc/management.txt
+  description: CLI, signals, and runtime socket commands
+- title: HAProxy Stats Socket
+  type: documentation
+  source: https://docs.haproxy.org/2.9/management.html#9.3
+  description: Runtime administrative commands
+instructions: "# HAProxy\n\nConfigure, reload, and operate HAProxy load balancers.\n\n## When to Use\n\
+  \n- Fronting web services with layer 4/7 load balancing\n- Zero-downtime config changes\n- Traffic control:\
+  \ drain, maintenance, and health checks\n\n## Basic config\n\n```haproxy\nfrontend web\n  bind *:80\n\
+  \  default_backend servers\n\nbackend servers\n  balance roundrobin\n  option httpchk GET /healthz\n\
+  \  server web-1 10.0.1.11:8080 check inter 3s fall 3 rise 2\n  server web-2 10.0.1.12:8080 check inter\
+  \ 3s fall 3 rise 2\n```\n\n## Validate before touching production\n\n```bash\nhaproxy -c -f /etc/haproxy/haproxy.cfg\n\
+  ```\n\n## Reload without dropping connections\n\n```bash\nhaproxy -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid\
+  \ -sf $(cat /run/haproxy.pid)\n```\n\n`-sf` asks the old process to finish in-flight connections before\
+  \ exiting.\n\n## Runtime control\n\n```bash\necho 'show stat' | socat /run/haproxy/admin.sock - | grep\
+  \ 'web,'\necho 'set server web/web-1 state maint' | socat /run/haproxy/admin.sock -\necho 'set server\
+  \ web/web-1 state ready' | socat /run/haproxy/admin.sock -\n```\n\n## Diagnostics\n\n```bash\necho 'show\
+  \ info' | socat /run/haproxy/admin.sock -\nhaproxy -vv\n```\n\n## Best practices\n\n- Always validate\
+  \ config in CI before deploying.\n- Enable `option log` with a local syslog endpoint.\n- Use drain (not\
+  \ maint) for graceful node removal.\n- Check the socket file permissions - it is an admin channel.\n\
+  \n## Testing\n\n```bash\nhaproxy -c -f /etc/haproxy/haproxy.cfg\necho 'show stat' | socat /run/haproxy/admin.sock\
+  \ - | grep DOWN\n```\n\nSimulate a server down and confirm the health check flips state."
+examples:
+- input: Change the backend weight safely on a live balancer.
+  output: Validates the new config with haproxy -c, reloads with -sf, and verifies state via show stat.
+- input: Take web-1 out for maintenance without dropping sessions.
+  output: Sets the server to drain, lets existing sessions finish, then maint, and later restores with
+    state ready.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: haproxy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-haproxy
+  generic:
+    system_prompt: 'You take the Haproxy seat. You do it through config: Validate and reload HAProxy configuration.
+      The commands are real, e.g. `haproxy -c -f /etc/haproxy/haproxy.cfg`. You prefer the shortest safe
+      path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

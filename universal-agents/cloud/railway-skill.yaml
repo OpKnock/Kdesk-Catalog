@@ -1,0 +1,182 @@
+name: railway-cloud
+display_name: Railway
+category: cloud
+subcategory: general
+description: 'Deploys apps to Railway with the CLI: project linking, deploys, services, variables, and
+  logs.'
+version: 2.0.0
+tags:
+- cloud
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npm
+- railway
+capabilities:
+- commands:
+  - npm install -g @railway/cli
+  - railway login
+  - railway init
+  - railway up
+  - railway deploy
+  description: Link projects and deploy services.
+  name: railway-cli
+  examples:
+  - railway init --name myapp
+  - railway up --detach
+  - railway deploy --detach
+  parameters:
+  - description: Project name
+    name: project
+    type: string
+  - description: Do not stream logs
+    name: detach
+    type: boolean
+- commands:
+  - railway variables
+  - railway variables set DATABASE_URL=postgres://...
+  - railway logs
+  - railway service
+  - railway down
+  description: Manage variables, services, and logs.
+  name: railway-ops
+  examples:
+  - railway variables set --env production API_KEY=abc
+  - railway logs --service api
+  - railway status
+  parameters:
+  - description: Variable name
+    name: key
+    type: string
+  - description: Service name
+    name: service
+    type: string
+knowledge:
+- title: Railway Docs
+  description: CLI, services, and variables reference
+  source: https://docs.railway.com
+  type: documentation
+- title: Railway CLI Reference
+  description: Command reference
+  source: https://docs.railway.com/reference/cli-api
+  type: documentation
+instructions: '# Railway
+
+
+  Deploy apps with the Railway CLI.
+
+
+  ## When to Use
+
+
+  - Quick deploys from a git repo or local directory
+
+  - Auto-provisioned Postgres/Redis plugins
+
+  - Environments for staging and production
+
+  - Simple zero-config deploys for side projects
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Setup
+
+  npm install -g @railway/cli
+
+  railway login
+
+  railway init
+
+
+  # Deploy
+
+  railway up
+
+  railway up --detach
+
+  railway deploy --detach
+
+
+  # Variables
+
+  railway variables
+
+  railway variables set DATABASE_URL=postgres://...
+
+  railway variables set --env production API_KEY=abc
+
+
+  # Observability
+
+  railway logs
+
+  railway logs --service api
+
+  railway status
+
+  railway service
+
+
+  # Tear down
+
+  railway down
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Link the project once per machine with railway init
+
+  - Use --detach for CI so pipelines do not block on logs
+
+  - Store secrets in variables, never in repo files
+
+  - Use environments to isolate staging from production
+
+  - Watch logs after deploy; they stream with railway up
+
+  - Pin the CLI version in CI scripts'
+examples:
+- input: Deploy my Dockerized backend to Railway
+  output: Agent links the project, runs railway up, and checks logs for startup errors.
+- input: Add a Postgres database to my service
+  output: Agent provisions the plugin in the dashboard and sets DATABASE_URL with railway variables set.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: railway-cloud.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-railway
+  generic:
+    system_prompt: 'You take the Railway seat. You do it through railway-cli: Link projects and deploy
+      services. The commands are real, e.g. `npm install -g @railway/cli`. You prefer the shortest safe
+      path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

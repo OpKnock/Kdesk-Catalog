@@ -1,0 +1,216 @@
+{
+  "name": "api-input-validation-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "security",
+  "description": "Secures API endpoints with schema validation (Joi/Zod/Pydantic), sanitization, and injection prevention.",
+  "keywords": [
+    "input-validation",
+    "schema-validation",
+    "sanitization",
+    "injection-prevention"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-input-validation-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-input-validation-engineer"
+    },
+    "generic": {
+      "system_prompt": "You own api-input-validation-engineer end to end. You do it through schema-validation: Validate request bodies, query params, and headers with typed schemas. The commands are real, e.g. `npm install zod`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "schema-validation",
+      "description": "Validate request bodies, query params, and headers with typed schemas",
+      "commands": [
+        "npm install zod",
+        "node -e \"const {z}=require('zod');const s=z.object({email:z.string().email(),age:z.number().min(0).max(120)});console.log(s.safeParse({email:'a@b.com',age:30}))\"",
+        "npm install joi",
+        "node -e \"const J=require('joi');const r=J.object({email:J.string().email()}).validate({email:'bad'});console.log(r.error)\"",
+        "pip install pydantic && python -c \"from pydantic import BaseModel, EmailStr; m=type('U',(BaseModel,),{'__annotations__':{'email':EmailStr}}); print(m(email='a@b.com'))\""
+      ],
+      "examples": [
+        "node -e \"const {z}=require('zod');const r=z.object({email:z.string().email()}).safeParse({email:'nope'});console.log(r.success?'ok':r.error.issues)\"",
+        "node -e \"const J=require('joi');const r=J.object({id:J.number().integer().min(1)}).validate({id:0});console.log(r.error.message)\"",
+        "pip install pydantic && python -c \"from pydantic import BaseModel, EmailStr; c=type('U',(BaseModel,),{'__annotations__':{'email':EmailStr}}); print(c(email='x@y.z'))\""
+      ],
+      "parameters": [
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Validation schema definition"
+        },
+        {
+          "name": "payload",
+          "type": "string",
+          "description": "Request payload to validate"
+        }
+      ]
+    },
+    {
+      "name": "injection-testing",
+      "description": "Verify injection resistance with automated scanners and manual probes",
+      "commands": [
+        "zap-baseline.py -t http://localhost:3000/api -r zap-report.html",
+        "zap-full-scan.py -t http://localhost:3000/api -J zap.json",
+        "curl -s 'http://localhost:3000/api/users?id=1%20OR%201%3D1' -o /dev/null -w '%{http_code}'",
+        "curl -s -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d '{\"name\":\"<script>alert(1)</script>\"}' -w '\\n%{http_code}'",
+        "python -m pip install sqlmap && sqlmap -u 'http://localhost:3000/api/users?id=1' --batch --crawl 2"
+      ],
+      "examples": [
+        "zap-baseline.py -t http://localhost:3000/api -r zap-report.html && start zap-report.html",
+        "curl -s 'http://localhost:3000/api/users?id=1%20OR%201%3D1' -o /dev/null -w '%{http_code}\\n'",
+        "sqlmap -u 'http://localhost:3000/api/users?id=1' --batch"
+      ],
+      "parameters": [
+        {
+          "name": "target",
+          "type": "string",
+          "description": "Target URL for scanning"
+        },
+        {
+          "name": "scanner",
+          "type": "string",
+          "description": "zap-baseline, zap-full-scan, sqlmap"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "joi",
+    "zod"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "joi",
+    "zod",
+    "owasp-zap",
+    "burp-suite"
+  ],
+  "examples": [
+    {
+      "input": "Add input validation to an endpoint",
+      "output": "Adds a Zod schema to the route with strict typing, sanitization, and 422 error responses"
+    },
+    {
+      "input": "Prevent SQL injection in the user search",
+      "output": "Replaces string concatenation with parameterized queries and verifies with sqlmap and ZAP"
+    }
+  ],
+  "instructions": "# API Input Validation Engineer\n\nValidates and sanitizes all API input to prevent injection, type confusion, and XSS.\n\n## When to Use\n- Securing public endpoints\n- Preventing SQL/command injection\n- Enforcing data integrity\n\n## Real Commands\n\n```bash\n# Zod\nnpm install zod\nnode -e \"const {z}=require('zod');const r=z.object({email:z.string().email()}).safeParse({email:'nope'});console.log(r.error.issues)\"\n\n# Joi\nnpm install joi\nnode -e \"const J=require('joi');const r=J.object({id:J.number().integer().min(1)}).validate({id:0});console.log(r.error.message)\"\n\n# Pydantic\npip install pydantic\n\n# Scanners\nzap-baseline.py -t http://localhost:3000/api -r zap-report.html\nsqlmap -u 'http://localhost:3000/api/users?id=1' --batch\n```\n\n## Validation Layers\n- Schema: types, formats, ranges\n- Sanitize: strip control chars and scripts\n- Query: parameterized statements only\n\n## Testing\nProbe with `' OR 1=1`, `<script>`, oversized payloads, and wrong types.\n\n## Best Practices\n- Validate at the boundary, never trust clients\n- Fail fast with 422 + details\n- Never put user input in raw SQL",
+  "display_name": "api-input-validation-engineer",
+  "knowledge": [
+    {
+      "title": "Zod Docs",
+      "type": "documentation",
+      "source": "https://zod.dev/",
+      "description": "TypeScript-first schema validation"
+    },
+    {
+      "title": "Joi",
+      "type": "documentation",
+      "source": "https://joi.dev/api/",
+      "description": "JavaScript validation library"
+    },
+    {
+      "title": "OWASP ZAP",
+      "type": "documentation",
+      "source": "https://www.zaproxy.org/docs/",
+      "description": "Automated security testing"
+    }
+  ],
+  "id": "api-input-validation-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "schema-validation",
+        "name": "schema",
+        "type": "string",
+        "description": "Validation schema definition"
+      },
+      {
+        "capability": "schema-validation",
+        "name": "payload",
+        "type": "string",
+        "description": "Request payload to validate"
+      },
+      {
+        "capability": "injection-testing",
+        "name": "target",
+        "type": "string",
+        "description": "Target URL for scanning"
+      },
+      {
+        "capability": "injection-testing",
+        "name": "scanner",
+        "type": "string",
+        "description": "zap-baseline, zap-full-scan, sqlmap"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "joi",
+    "zod"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-input-validation-engineer/skill/api-input-validation-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-input-validation-engineer/skill/api-input-validation-engineer.yaml",
+    "checksum": "879ae457e1d426c17408fbe17b7ce12d37281d9422f76834e5a0c71c514665ef"
+  }
+}

@@ -1,0 +1,160 @@
+name: pumba
+display_name: Pumba
+category: api
+subcategory: general
+description: 'Chaos testing for containers with Pumba: kill, pause, netem, stress and Docker container
+  manipulation.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- pumba
+capabilities:
+- name: pumba-chaos-actions
+  description: 'Inject chaos into containers: kill, pause, network emulation and resource stress.'
+  commands:
+  - pumba kill --signal SIGKILL docker://web-container
+  - pumba pause --duration 60s docker://db-container
+  - pumba netem --duration 30s loss --percent 100 docker://api-container
+  - pumba netem --duration 20s delay --time 500 docker://api-container
+  - pumba stress --duration 60s --cpu 2 docker://app-container
+  examples:
+  - pumba kill --signal SIGTERM docker://web-1
+  - pumba netem --duration 30s delay --time 1000 --jitter 200 docker://api-1
+  - pumba pause --duration 45s --regex '^svc' docker
+  parameters:
+  - name: action
+    type: string
+    description: kill, pause, netem, stress, rm
+  - name: container
+    type: string
+    description: Container name, regex or docker:// URI
+  - name: duration
+    type: string
+    description: Chaos duration like 30s
+knowledge:
+- title: Pumba GitHub
+  type: documentation
+  source: https://github.com/alexei-led/pumba
+  description: Chaos commands, netem options and examples
+- title: Pumba Chaos Guide
+  type: documentation
+  source: https://github.com/alexei-led/pumba#chaos-commands
+  description: kill/pause/netem/stress usage and flags
+instructions: '# Pumba
+
+
+  Pumba injects chaos into Docker containers: kill them, pause them, damage their network, or stress their
+  resources.
+
+
+  ## What this skill does
+
+
+  - Kills and pauses containers for failover tests
+
+  - Emulates network loss/delay with netem
+
+  - Stresses CPU/memory
+
+
+  ## When to use
+
+
+  - Resilience testing in dev/staging
+
+  - Validating Kubernetes self-healing
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Kill
+
+  pumba kill --signal SIGKILL docker://web-container
+
+  pumba kill --signal SIGTERM docker://web-1
+
+
+  # Pause
+
+  pumba pause --duration 60s docker://db-container
+
+  pumba pause --duration 45s --regex ''^svc'' docker
+
+
+  # Network chaos
+
+  pumba netem --duration 30s loss --percent 100 docker://api-container
+
+  pumba netem --duration 20s delay --time 500 docker://api-container
+
+  pumba netem --duration 30s delay --time 1000 --jitter 200 docker://api-1
+
+
+  # Resource stress
+
+  pumba stress --duration 60s --cpu 2 docker://app-container
+
+  ```
+
+
+  ## Targeting
+
+
+  - `docker://name` exact match
+
+  - `--regex ''^svc''` match many containers
+
+
+  ## Best practices
+
+
+  - Run pumba in a dedicated chaos namespace
+
+  - Pair with monitoring to prove detection works
+
+  - Always scope chaos to staging first'
+examples:
+- input: Test that my orchestrator restarts killed containers
+  output: The agent kills the web container with SIGKILL and watches the orchestrator recreate it.
+- input: Simulate packet loss to my API container
+  output: The agent runs pumba netem loss 100% for 30s and observes client behavior.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: pumba.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-pumba
+  generic:
+    system_prompt: 'You take the Pumba seat. You do it through pumba-chaos-actions: Inject chaos into
+      containers: kill, pause, network emulation and resource stress. The commands are real, e.g. `pumba
+      kill --signal SIGKILL docker://web-container`. You answer with exact commands, not abstractions,
+      and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

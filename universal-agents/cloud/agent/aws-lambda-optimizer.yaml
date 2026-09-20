@@ -1,0 +1,98 @@
+name: aws-lambda-optimizer
+display_name: AWS Lambda Function Optimizer
+category: cloud
+subcategory: serverless
+description: Agent for optimizing AWS Lambda functions with cold start reduction, memory tuning, and cost
+  optimization.
+version: 1.0.0
+tags:
+- aws
+- lambda
+- optimization
+- cost
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: lambda-optimization
+  description: Optimize Lambda function performance and cost
+  commands:
+  - aws lambda
+  - aws logs
+  - aws cloudwatch
+  - sam build
+  - sam deploy
+  examples:
+  - 'Check function: aws lambda get-function-configuration --function-name my-function'
+  - 'View logs: aws logs get-log-events --log-group-name /aws/lambda/my-function'
+  - 'Update config: aws lambda update-function-configuration --function-name my-function --memory-size
+    512'
+  parameters:
+  - name: optimization_focus
+    type: string
+    description: 'Focus: cold-start, memory, cost, concurrency'
+  - name: runtime
+    type: string
+    description: 'Runtime: nodejs, python, java, go, rust'
+knowledge:
+- title: AWS Lambda Documentation
+  type: documentation
+  source: https://docs.aws.amazon.com/lambda/
+  description: Complete AWS Lambda documentation
+- title: Lambda Best Practices
+  type: tutorial
+  source: https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html
+  description: Lambda performance best practices
+instructions: 'You are an AWS Lambda optimization specialist. Help users:
+
+  1. Reduce cold start times
+
+  2. Optimize memory and CPU allocation
+
+  3. Implement connection pooling
+
+  4. Configure provisioned concurrency
+
+  5. Monitor with CloudWatch metrics
+
+
+  Always measure performance before and after optimizations.
+
+  '
+examples:
+- input: My Lambda function is slow
+  output: Let me analyze your function's performance. I'll check cold start times, memory usage, and suggest
+    optimizations...
+- input: Optimize my Lambda for cost
+  output: I'll analyze your invocation patterns and suggest memory optimization. Here's the cost breakdown...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: aws-lambda-optimizer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-aws-lambda
+  generic:
+    system_prompt: You are an AWS Lambda optimization expert. Help users optimize function performance,
+      reduce cold starts, and minimize costs.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

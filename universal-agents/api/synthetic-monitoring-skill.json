@@ -1,0 +1,171 @@
+{
+  "name": "synthetic-monitoring",
+  "display_name": "Synthetic Monitoring",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted synthetic monitoring skill: Playwright browser checks, k6 uptime probes, and curl health probes for always-on site monitoring.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "synthetic-checks",
+      "description": "Build browser and uptime checks that run on a schedule",
+      "commands": [
+        "npx playwright test",
+        "npx playwright test --headed",
+        "npx playwright codegen https://example.com/login",
+        "k6 run --vus 1 --iterations 1 uptime.js",
+        "curl -s -o /dev/null -w '%{http_code} %{time_total}\\n' https://example.com/health"
+      ],
+      "examples": [
+        "npx playwright test --headed",
+        "npx playwright codegen https://example.com/login",
+        "k6 run --vus 1 --iterations 1 uptime.js"
+      ],
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "URL under check"
+        },
+        {
+          "name": "browser",
+          "type": "string",
+          "description": "chromium, firefox, or webkit for Playwright"
+        },
+        {
+          "name": "schedule",
+          "type": "string",
+          "description": "Run cadence, e.g. every 5m"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Playwright test docs",
+      "type": "documentation",
+      "source": "https://playwright.dev/docs/test-intro",
+      "description": "Writing and running browser checks"
+    },
+    {
+      "title": "k6 docs",
+      "type": "documentation",
+      "source": "https://grafana.com/docs/k6/latest/",
+      "description": "Checks and thresholds for uptime probes"
+    }
+  ],
+  "instructions": "# Synthetic Monitoring\n\nHand-crafted skill for always-on checks that catch outages before users do.\n\n## What this skill does\n\n- Records browser journeys with Playwright codegen and replays them\n- Runs lightweight uptime probes with k6 and curl\n- Verifies status codes, timing, and page content\n\n## When to use\n\n- Critical journeys: login, checkout, search\n- Verifying deployments from outside the network\n- Catching slow-but-not-down degradations\n\n## Real commands\n\n```bash\n# Record a journey\nnpx playwright codegen https://example.com/login\n\n# Run the recorded checks\nnpx playwright test\nnpx playwright test --headed\n\n# k6 uptime probe\nk6 run --vus 1 --iterations 1 uptime.js\n\n# Instant probe\ncurl -s -o /dev/null -w '%{http_code} %{time_total}\\n' https://example.com/health\n```\n\n## Playwright check\n\n```js\nimport { test, expect } from \"@playwright/test\";\n\ntest(\"login works\", async ({ page }) => {\n  await page.goto(\"https://example.com/login\");\n  await page.fill(\"#email\", \"ada@example.com\");\n  await page.fill(\"#password\", \"secret\");\n  await page.click(\"button[type=submit]\");\n  await expect(page.locator(\".welcome\")).toContainText(\"Ada\");\n});\n```\n\n## k6 uptime probe\n\n```javascript\nimport http from \"k6/http\";\nimport { check } from \"k6\";\n\nexport const options = { vus: 1, iterations: 1 };\n\nexport default function () {\n  const res = http.get(\"https://example.com/health\");\n  check(res, {\n    \"status is 200\": (r) => r.status === 200,\n    \"responds fast\": (r) => r.timings.duration < 1000,\n  });\n}\n```\n\n## Best practices\n\n- Run synthetic checks from multiple regions\n- Alert on 2 consecutive failures to avoid flapping\n- Keep journeys short: a check that times out helps nobody\n",
+  "examples": [
+    {
+      "input": "Monitor the login flow nightly",
+      "output": "Record with npx playwright codegen, save as a test, and run it on a schedule; alert when the journey fails twice."
+    },
+    {
+      "input": "Is the site up right now?",
+      "output": "curl -s -o /dev/null -w '%{http_code} %{time_total}\\n' https://example.com/health, or k6 run --vus 1 --iterations 1 uptime.js for thresholds."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "synthetic-monitoring.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-synthetic-monitoring"
+    },
+    "generic": {
+      "system_prompt": "You work Synthetic Monitoring hands-on. You do it through synthetic-checks: Build browser and uptime checks that run on a schedule. The commands are real, e.g. `npx playwright test`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "synthetic-monitoring",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "synthetic-checks",
+        "name": "url",
+        "type": "string",
+        "description": "URL under check"
+      },
+      {
+        "capability": "synthetic-checks",
+        "name": "browser",
+        "type": "string",
+        "description": "chromium, firefox, or webkit for Playwright"
+      },
+      {
+        "capability": "synthetic-checks",
+        "name": "schedule",
+        "type": "string",
+        "description": "Run cadence, e.g. every 5m"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/synthetic-monitoring-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/synthetic-monitoring-skill.yaml",
+    "checksum": "9242f7698f9d72570fcd57163b08254ad652d2e4044cd883dc298cb783908156"
+  }
+}

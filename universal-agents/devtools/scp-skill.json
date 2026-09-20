@@ -1,0 +1,179 @@
+{
+  "name": "scp",
+  "display_name": "scp",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Copies files to and from remote hosts with scp: recursive dirs, custom ports/keys, and multiple source files.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "scp"
+  ],
+  "capabilities": [
+    {
+      "name": "file-transfer",
+      "description": "Copy files and directories between local and remote hosts.",
+      "commands": [
+        "scp file.txt user@host:/home/user/",
+        "scp -r project/ user@host:/srv/",
+        "scp user@host:/var/log/app.log ./app.log",
+        "scp file1.txt file2.txt user@host:/tmp/",
+        "scp -P 2222 file.txt user@host:/tmp/",
+        "scp -i ~/.ssh/id_ed25519 file.txt user@host:/tmp/"
+      ],
+      "examples": [
+        "scp file.txt user@host:/home/user/",
+        "scp -r project/ user@host:/srv/",
+        "scp -i ~/.ssh/id_ed25519 file.txt user@host:/tmp/"
+      ],
+      "parameters": [
+        {
+          "name": "src",
+          "type": "string",
+          "description": "Source path (local or user@host:path)"
+        },
+        {
+          "name": "dest",
+          "type": "string",
+          "description": "Destination path"
+        },
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "SSH port (-P)"
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Identity file (-i)"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "scp Manual (OpenBSD)",
+      "type": "documentation",
+      "source": "https://man.openbsd.org/scp",
+      "description": "scp options and usage"
+    },
+    {
+      "title": "scp Linux Manual",
+      "type": "documentation",
+      "source": "https://man7.org/linux/man-pages/man1/scp.1.html",
+      "description": "Linux scp reference"
+    }
+  ],
+  "instructions": "# scp File Transfer\n\nCopy files securely to and from remote machines.\n\n## What This Skill Does\n\n- Copies single files and whole directories (-r)\n- Supports custom ports, keys, and multiple sources\n- Preserves permissions with -p\n- Compresses on slow links with -C\n- Fetches remote files to local paths\n\n## When to Use\n\n- Quick file transfers without full rsync\n- Pulling logs/configs from servers\n- Pushing artifacts to hosts\n\n## Real Commands\n\n```bash\n# Basic\nscp file.txt user@host:/home/user/\nscp user@host:/var/log/app.log ./app.log\n\n# Directories\nscp -r project/ user@host:/srv/\nscp -r user@host:/etc/nginx/ ./nginx-backup/\n\n# Options\nscp -P 2222 file.txt user@host:/tmp/\nscp -i ~/.ssh/id_ed25519 file.txt user@host:/tmp/\nscp -p file.txt user@host:/home/user/    # preserve mtime/perms\nscp -C bigfile.tar user@host:/tmp/       # compress\n\n# Multiple sources\nscp file1.txt file2.txt dir/ user@host:/tmp/\n```\n\n## Best Practices\n\n- Use -P for the remote SSH port (lowercase -p means preserve)\n- Prefer rsync for directories with many files (resume support)\n- Verify remote paths are absolute to avoid surprises\n- Use -C for large text files over slow links\n- Batch with scp -r and a single host for scriptable deploys",
+  "examples": [
+    {
+      "input": "Push the deploy package to staging",
+      "output": "Agent scps the tar with a key file and custom port, verifying checksums after"
+    },
+    {
+      "input": "Pull today's nginx logs",
+      "output": "Agent fetches the log directory recursively with preserve flags"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "scp.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-scp"
+    },
+    "generic": {
+      "system_prompt": "You work scp hands-on. You do it through file-transfer: Copy files and directories between local and remote hosts. The commands are real, e.g. `scp file.txt user@host:/home/user/`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "scp",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "file-transfer",
+        "name": "src",
+        "type": "string",
+        "description": "Source path (local or user@host:path)"
+      },
+      {
+        "capability": "file-transfer",
+        "name": "dest",
+        "type": "string",
+        "description": "Destination path"
+      },
+      {
+        "capability": "file-transfer",
+        "name": "port",
+        "type": "integer",
+        "description": "SSH port (-P)"
+      },
+      {
+        "capability": "file-transfer",
+        "name": "key",
+        "type": "string",
+        "description": "Identity file (-i)"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "scp"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/scp-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/scp-skill.yaml",
+    "checksum": "798e5eefe07196c4d98334ecbe28903fa985b92c97c10da765f138e05f0a8ec3"
+  }
+}

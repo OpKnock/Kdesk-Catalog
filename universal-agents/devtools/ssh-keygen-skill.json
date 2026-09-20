@@ -1,0 +1,221 @@
+{
+  "name": "ssh-keygen",
+  "display_name": "ssh-keygen",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Generates and manages SSH key pairs: ed25519/RSA creation, fingerprinting, passphrase changes, host key verification, and known_hosts.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "ssh-keygen",
+    "ssh-keyscan"
+  ],
+  "capabilities": [
+    {
+      "name": "key-generation",
+      "description": "Generate strong key pairs and export public keys.",
+      "commands": [
+        "ssh-keygen -t ed25519 -C \"jane@example.com\"",
+        "ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa",
+        "ssh-keygen -y -f ~/.ssh/id_ed25519",
+        "ssh-keygen -t ed25519 -N '' -f /tmp/testkey",
+        "ssh-keygen -p -f ~/.ssh/id_ed25519"
+      ],
+      "examples": [
+        "ssh-keygen -t ed25519 -C \"jane@example.com\"",
+        "ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa",
+        "ssh-keygen -p -f ~/.ssh/id_ed25519"
+      ],
+      "parameters": [
+        {
+          "name": "type",
+          "type": "string",
+          "description": "Key type: ed25519, rsa, ecdsa"
+        },
+        {
+          "name": "bits",
+          "type": "integer",
+          "description": "Key bits for rsa (-b)"
+        },
+        {
+          "name": "file",
+          "type": "string",
+          "description": "Key file path (-f)"
+        },
+        {
+          "name": "comment",
+          "type": "string",
+          "description": "Key comment (-C)"
+        }
+      ]
+    },
+    {
+      "name": "host-and-fingerprints",
+      "description": "Verify host keys and manage known_hosts.",
+      "commands": [
+        "ssh-keygen -l -f ~/.ssh/id_ed25519.pub",
+        "ssh-keygen -l -E sha256 -f /etc/ssh/ssh_host_ed25519_key.pub",
+        "ssh-keygen -F github.com",
+        "ssh-keygen -R github.com",
+        "ssh-keygen -H -F github.com",
+        "ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts"
+      ],
+      "examples": [
+        "ssh-keygen -l -f ~/.ssh/id_ed25519.pub",
+        "ssh-keygen -R github.com",
+        "ssh-keyscan -t ed25519 github.com"
+      ],
+      "parameters": [
+        {
+          "name": "host",
+          "type": "string",
+          "description": "Host name for known_hosts ops"
+        },
+        {
+          "name": "file",
+          "type": "string",
+          "description": "Public key file for fingerprinting"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ssh-keygen Manual",
+      "type": "documentation",
+      "source": "https://man.openbsd.org/ssh-keygen",
+      "description": "Full ssh-keygen option reference"
+    },
+    {
+      "title": "GitHub SSH Docs",
+      "type": "documentation",
+      "source": "https://docs.github.com/en/authentication/connecting-to-github-with-ssh",
+      "description": "Generating and adding keys to GitHub"
+    }
+  ],
+  "instructions": "# SSH Key Management\n\nCreate and manage SSH keys: generation, fingerprints, passphrases, known_hosts.\n\n## What This Skill Does\n\n- Generates ed25519/RSA key pairs\n- Exports and fingerprints keys\n- Changes passphrases and re-keys\n- Manages known_hosts entries\n- Verifies host keys before connecting\n\n## When to Use\n\n- Setting up SSH auth for a new machine\n- Auditing key fingerprints\n- Fixing host key mismatch errors\n\n## Real Commands\n\n```bash\n# Generation\nssh-keygen -t ed25519 -C \"jane@example.com\"\nssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa\nssh-keygen -t ed25519 -N '' -f /tmp/ci-key\n\n# Public key and fingerprints\nssh-keygen -y -f ~/.ssh/id_ed25519\nssh-keygen -l -f ~/.ssh/id_ed25519.pub\nssh-keygen -l -E sha256 -f /etc/ssh/ssh_host_ed25519_key.pub\n\n# Passphrase\nssh-keygen -p -f ~/.ssh/id_ed25519\n\n# known_hosts\nssh-keygen -F github.com\nssh-keygen -R github.com\nssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts\n```\n\n## Best Practices\n\n- Prefer ed25519; use RSA 4096 only for legacy servers\n- Always set a comment (-C) identifying the key owner\n- Verify fingerprints against official channels before trusting hosts\n- Use ssh-keygen -R to purge stale host entries\n- Never share private keys; public keys travel safely",
+  "examples": [
+    {
+      "input": "Set up SSH for GitHub",
+      "output": "Agent generates an ed25519 key, prints the pub key for GitHub, and tests with ssh -T git@github.com"
+    },
+    {
+      "input": "Host key changed on our server",
+      "output": "Agent verifies the new fingerprint, removes the old entry, and re-adds the fresh one"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ssh-keygen.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ssh-keygen"
+    },
+    "generic": {
+      "system_prompt": "Your lane is ssh-keygen. You do it through key-generation: Generate strong key pairs and export public keys. The commands are real, e.g. `ssh-keygen -t ed25519 -C jane@example.com`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ssh-keygen",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "key-generation",
+        "name": "type",
+        "type": "string",
+        "description": "Key type: ed25519, rsa, ecdsa"
+      },
+      {
+        "capability": "key-generation",
+        "name": "bits",
+        "type": "integer",
+        "description": "Key bits for rsa (-b)"
+      },
+      {
+        "capability": "key-generation",
+        "name": "file",
+        "type": "string",
+        "description": "Key file path (-f)"
+      },
+      {
+        "capability": "key-generation",
+        "name": "comment",
+        "type": "string",
+        "description": "Key comment (-C)"
+      },
+      {
+        "capability": "host-and-fingerprints",
+        "name": "host",
+        "type": "string",
+        "description": "Host name for known_hosts ops"
+      },
+      {
+        "capability": "host-and-fingerprints",
+        "name": "file",
+        "type": "string",
+        "description": "Public key file for fingerprinting"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "ssh-keygen",
+    "ssh-keyscan"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/ssh-keygen-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/ssh-keygen-skill.yaml",
+    "checksum": "839278771d7a7d97b14137e2d5206db84abb668e07360c3113dc22fbaa316dd5"
+  }
+}

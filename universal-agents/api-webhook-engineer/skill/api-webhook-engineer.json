@@ -1,0 +1,192 @@
+{
+  "name": "api-webhook-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Implements webhook delivery in Node.js: receiver endpoints, retry with backoff, delivery logging, and idempotent handling of events.",
+  "keywords": [
+    "webhooks",
+    "delivery",
+    "retry",
+    "idempotency",
+    "debugging"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-webhook-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-webhook-engineer"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: api-webhook-engineer. You do it through webhook-receiver: Build a webhook receiver endpoint. The commands are real, e.g. `npm install express`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "webhook-receiver",
+      "description": "Build a webhook receiver endpoint",
+      "commands": [
+        "npm install express",
+        "node server.js",
+        "curl -s -X POST http://localhost:3000/webhooks -H 'Content-Type: application/json' -d '{\"event\":\"order.created\",\"data\":{\"id\":1}}' -w '\\n%{http_code}\\n'",
+        "curl -s -X POST http://localhost:3000/webhooks -H 'Content-Type: application/json' -d '{\"event\":\"order.created\",\"data\":{\"id\":1}}' -w '\\n%{http_code}\\n'",
+        "curl -s http://localhost:3000/webhooks/log | jq 'length'"
+      ],
+      "examples": [
+        "POST /webhooks receives events",
+        "Replaying the same event is idempotent",
+        "Delivery logs record every attempt"
+      ],
+      "parameters": [
+        {
+          "name": "event",
+          "type": "string",
+          "description": "Event type name"
+        },
+        {
+          "name": "payload",
+          "type": "object",
+          "description": "Event payload"
+        },
+        {
+          "name": "idempotency-key",
+          "type": "string",
+          "description": "Delivery identifier"
+        }
+      ]
+    },
+    {
+      "name": "retry-policy",
+      "description": "Retry failed deliveries with backoff",
+      "commands": [
+        "npm install p-retry",
+        "node -e \"const pRetry=require('p-retry'); const send=()=>Promise.reject(new Error('down')); pRetry(send,{retries:3,factor:2}).catch(e=>console.log('gave up:',e.message))\"",
+        "node -e \"const r=require('retry'); const o=r.operation({retries:4,factor:2,minTimeout:1000}); o.attempt(n=>console.log('attempt',n))\""
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "ngrok",
+    "redis"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "ngrok",
+    "redis",
+    "stripe-cli"
+  ],
+  "examples": [
+    {
+      "input": "Receive order events",
+      "output": "Builds a receiver with idempotent handling and delivery logs"
+    },
+    {
+      "input": "Handle transient failures",
+      "output": "Adds retry with backoff and gives up after max attempts"
+    }
+  ],
+  "instructions": "# API Webhook Engineer\n\nWebhook delivery implementation.\n\n## What This Skill Does\n- Receives and processes webhook events\n- Implements retries with exponential backoff\n- Logs deliveries for debugging\n\n## When to Use\n- Building webhook receivers\n- Adding reliable event delivery\n- Handling third-party webhooks\n\n## Real Commands\n\n```bash\nnpm install express\nnode server.js\ncurl -s -X POST http://localhost:3000/webhooks -H 'Content-Type: application/json' -d '{\"event\":\"order.created\",\"data\":{\"id\":1}}' -w '\\n%{http_code}\\n'\n```\n\n## Receiver Pattern\n\n```js\napp.post('/webhooks', async (req, res) => {\n  const key = req.body.id || hash(req.body);\n  if (await processed(key)) return res.sendStatus(200);\n  await processEvent(req.body);\n  res.sendStatus(200);\n});\n```\n\n## Testing\n- Replay events and verify idempotency\n- Simulate handler failure and check retries\n- Verify logs capture delivery attempts\n\n\n## Best Practices\n- Respond 200 fast, process asynchronously\n- Use idempotency keys for every event\n- Log delivery metadata with event IDs",
+  "display_name": "api-webhook-engineer",
+  "knowledge": [
+    {
+      "title": "Webhooks Guide (Svix)",
+      "type": "documentation",
+      "source": "https://www.svix.com/resources/guides/",
+      "description": "Webhook implementation guidance"
+    },
+    {
+      "title": "Express Docs",
+      "type": "documentation",
+      "source": "https://expressjs.com/",
+      "description": "Express web framework"
+    }
+  ],
+  "id": "api-webhook-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "webhook-receiver",
+        "name": "event",
+        "type": "string",
+        "description": "Event type name"
+      },
+      {
+        "capability": "webhook-receiver",
+        "name": "payload",
+        "type": "object",
+        "description": "Event payload"
+      },
+      {
+        "capability": "webhook-receiver",
+        "name": "idempotency-key",
+        "type": "string",
+        "description": "Delivery identifier"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "ngrok",
+    "redis"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-webhook-engineer/skill/api-webhook-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-webhook-engineer/skill/api-webhook-engineer.yaml",
+    "checksum": "d75ccf99c5e3417f507a4171dcd6b06d51f686a6e64e7c2ccd88601ae04411ca"
+  }
+}

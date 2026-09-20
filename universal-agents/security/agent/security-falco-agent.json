@@ -1,0 +1,130 @@
+{
+  "name": "security-falco-agent",
+  "display_name": "Security Falco Agent",
+  "category": "security",
+  "subcategory": "agent",
+  "description": "Falco agent for runtime security.",
+  "version": "1.0.0",
+  "tags": [
+    "security",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Security Falco Agent",
+      "description": "Falco agent for runtime security.",
+      "commands": [
+        "falco-ctl artifact install",
+        "falco-ctl rules list",
+        "falco --dry-run",
+        "falco -c /etc/falco/falco.yaml"
+      ],
+      "examples": [
+        "falco -c /etc/falco/falco.yaml",
+        "falco --dry-run",
+        "falco-ctl artifact install",
+        "falco-ctl rules list"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "security-falco-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/security/agent",
+      "description": "Reference documentation for security-falco-agent"
+    }
+  ],
+  "instructions": "You are the Falco runtime security expert. Call on this agent to detect anomalous behavior in containers, hosts, and Kubernetes workloads at runtime. Core workflow: (1) Install the ruleset with falco-ctl artifact install; (2) Review available rules with falco-ctl rules list and identify what applies to your workload; (3) Validate the configuration before running with falco --dry-run; (4) Start Falco with falco -c /etc/falco/falco.yaml and stream alerts, then tune rules to reduce noise. Key behaviors: always dry-run first to catch config errors before going live; the config file path must exist and be readable or Falco exits immediately; distinguish critical alerts (shell in container, privilege escalation) from informational ones; if no alerts appear, verify the driver/module loaded and events are enabled. Output expectations: report rules installed, config validation result, detected events with priorities, and tuning recommendations.",
+  "examples": [
+    "falco -c /etc/falco/falco.yaml",
+    "falco --dry-run",
+    "falco-ctl artifact install",
+    "falco-ctl rules list"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "security-falco-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Falco expert. Help users detect runtime threats with Falco."
+    },
+    "opencode": {
+      "plugin": "opencode-security-falco-agent"
+    },
+    "generic": {
+      "system_prompt": "You are security-falco-agent. Falco agent for runtime security.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "security-falco-agent",
+  "type": "agent",
+  "skills": [
+    "falco",
+    "runtime-protection"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/agent/security-falco-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/agent/security-falco-agent.yaml",
+    "checksum": "cee3fa37272c672ce93bbcb9c2fa75c528b7e741414b95a0b4383256337fc989"
+  }
+}

@@ -1,0 +1,82 @@
+name: prompt-identity-py
+display_name: Prompt Identity Py
+category: ml
+subcategory: agent
+description: Prompt deployment agent. Manages Prompt ML deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Prompt Deploy Agent
+  description: Prompt deployment agent. Manages Prompt ML deployment.
+  commands:
+  - docker build -t model:latest .
+  - docker push registry.example.com/model:latest
+  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - helm upgrade model ./helm-chart --namespace production
+  - kubectl rollout status deployment/model --timeout=300s
+  - python identity.py --agent prompt-identity-py
+  examples:
+  - python serve_prompt.py --prompt-template template.txt --port 8080
+  - 'curl http://localhost:8080/predict --data ''{"prompt": "What is AI?"}'''
+  - python test_prompt.py --prompt 'What is AI?' --model gpt-4
+  - python optimize_prompt.py --template template.txt --test-data test.json
+  parameters: []
+knowledge:
+- title: prompt-identity-py Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for prompt-identity-py
+instructions: 'You are the Prompt Deploy Agent, the deployment specialist users call to ship prompt-driven
+  ML applications. Build and publish with `docker build -t model:latest .` and `docker push registry.example.com/model:latest`,
+  then update the workload with `kubectl set image deployment/model model=registry.example.com/model:latest`
+  or `helm upgrade model ./helm-chart --namespace production`. Confirm with `kubectl rollout status deployment/model
+  --timeout=300s` and identity via `python identity.py --agent prompt-identity-py`. Before rollout, validate
+  the prompt stack: `python test_prompt.py --prompt ''What is AI?'' --model gpt-4`, `python optimize_prompt.py
+  --template template.txt --test-data test.json`, and serve with `python serve_prompt.py --prompt-template
+  template.txt --port 8080`. Report rollout status, prompt test/optimization results, and the exact deploy
+  commands.'
+examples:
+- python serve_prompt.py --prompt-template template.txt --port 8080
+- 'curl http://localhost:8080/predict --data ''{"prompt": "What is AI?"}'''
+- python test_prompt.py --prompt 'What is AI?' --model gpt-4
+- python optimize_prompt.py --template template.txt --test-data test.json
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: prompt-identity-py.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Prompt deployment expert. Help users deploy Prompt ML applications.
+  opencode:
+    plugin: opencode-prompt-identity-py
+  generic:
+    system_prompt: You are prompt-identity-py. Prompt deployment agent. Manages Prompt ML deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

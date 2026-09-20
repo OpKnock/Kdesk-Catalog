@@ -1,0 +1,253 @@
+{
+  "name": "biometric",
+  "display_name": "Biometric",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Implements biometric authentication with WebAuthn/FIDO2: attestation, credential registration, assertion verification, and testing with libfido2.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "fido2-assert",
+    "fido2-cred",
+    "fido2-token",
+    "lsusb",
+    "openssl"
+  ],
+  "capabilities": [
+    {
+      "name": "webauthn-registration",
+      "description": "Test WebAuthn registration flows at the hardware level.",
+      "commands": [
+        "fido2-cred -M -r -i client.data /dev/hidraw0",
+        "fido2-cred -M -r -i client.data -o cred /dev/hidraw0",
+        "fido2-token -L",
+        "fido2-token -I /dev/hidraw0",
+        "fido2-cred -V -r -i client.data -o cred -c cred /dev/hidraw0"
+      ],
+      "examples": [
+        "fido2-token -L | grep -i yubikey",
+        "fido2-cred -M -r -i client.data -o cred /dev/hidraw0",
+        "fido2-cred -V -r -i client.data -o cred -c cred /dev/hidraw0"
+      ],
+      "parameters": [
+        {
+          "name": "device",
+          "type": "string",
+          "description": "HID device path, e.g. /dev/hidraw0"
+        },
+        {
+          "name": "client_data",
+          "type": "string",
+          "description": "Client data JSON file"
+        }
+      ]
+    },
+    {
+      "name": "assertion",
+      "description": "Perform biometric assertions for authentication.",
+      "commands": [
+        "fido2-assert -G -r -i client.data /dev/hidraw0",
+        "fido2-assert -G -r -i client.data -o assert /dev/hidraw0",
+        "fido2-assert -V -r -i client.data -o assert -c cred /dev/hidraw0",
+        "fido2-token -R /dev/hidraw0"
+      ],
+      "examples": [
+        "fido2-assert -G -r -i client.data -o assert /dev/hidraw0",
+        "fido2-assert -V -r -i client.data -o assert -c cred /dev/hidraw0",
+        "fido2-token -R /dev/hidraw0"
+      ],
+      "parameters": [
+        {
+          "name": "device",
+          "type": "string",
+          "description": "HID device path"
+        },
+        {
+          "name": "assertion_file",
+          "type": "string",
+          "description": "Output assertion file"
+        }
+      ]
+    },
+    {
+      "name": "attestation",
+      "description": "Inspect attestation and key metadata.",
+      "commands": [
+        "openssl x509 -in attestation.der -inform DER -noout -text",
+        "openssl x509 -in attestation.der -inform DER -noout -subject -issuer",
+        "fido2-token -I /dev/hidraw0",
+        "fido2-cred -Q -r /dev/hidraw0",
+        "lsusb | grep -i -E 'fido|yubikey|feitian'"
+      ],
+      "examples": [
+        "openssl x509 -in attestation.der -inform DER -noout -subject -issuer",
+        "fido2-token -I /dev/hidraw0",
+        "lsusb | grep -i fido"
+      ],
+      "parameters": [
+        {
+          "name": "cert_file",
+          "type": "string",
+          "description": "Attestation certificate file"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "DER or PEM"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "WebAuthn Spec",
+      "type": "documentation",
+      "source": "https://www.w3.org/TR/webauthn-2/",
+      "description": "Registration and authentication ceremony"
+    },
+    {
+      "title": "libfido2",
+      "type": "documentation",
+      "source": "https://github.com/Yubico/libfido2",
+      "description": "fido2-cred, fido2-assert tools"
+    },
+    {
+      "title": "OWASP Biometrics",
+      "type": "documentation",
+      "source": "https://owasp.org/www-community/controls/Biometric_Authentication",
+      "description": "Biometric auth considerations"
+    }
+  ],
+  "instructions": "# Biometric\n\n## What this skill does\n\nImplements biometric authentication using WebAuthn/FIDO2: registering authenticators with attestation, performing assertions, inspecting attestation certificates, and testing with libfido2 hardware tools.\n\n## When to use\n\n- Adding passkey/fingerprint login to an app\n- Testing FIDO2 flows with real hardware\n- Verifying attestation certificates from authenticators\n\n## Real commands\n\n```bash\n# List tokens\nfido2-token -L\n\n# Make a credential (registration)\nfido2-cred -M -r -i client.data -o cred /dev/hidraw0\n\n# Verify the credential\nfido2-cred -V -r -i client.data -o cred -c cred /dev/hidraw0\n\n# Assert (login)\nfido2-assert -G -r -i client.data -o assert /dev/hidraw0\n\n# Inspect attestation cert\nopenssl x509 -in attestation.der -inform DER -noout -subject -issuer\n```\n\n## Testing\n\n- Verify attestation chains with openssl x509 against vendor roots\n- Exercise reject paths: wrong user presence, revoked credential\n\n## Best practices\n\n- Verify signature counters and origin in the RP\n- Store only public keys and credential IDs, never biometric templates\n- Offer fallback (password/TOTP) alongside biometrics\n- Use a passkey provider SDK (e.g. WebAuthn lib) rather than raw hardware in production",
+  "examples": [
+    {
+      "input": "Test our WebAuthn registration with a YubiKey",
+      "output": "Walks through fido2-token -L, fido2-cred -M to make a credential, and verification with fido2-cred -V against client data."
+    },
+    {
+      "input": "Check the attestation certificate of a device",
+      "output": "Exports attestation.der and inspects subject/issuer/serial with openssl x509, mapping issuer to the vendor."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "biometric.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-biometric"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Biometric. You do it through webauthn-registration: Test WebAuthn registration flows at the hardware level. The commands are real, e.g. `fido2-cred -M -r -i client.data /dev/hidraw0`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "biometric",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "webauthn-registration",
+        "name": "device",
+        "type": "string",
+        "description": "HID device path, e.g. /dev/hidraw0"
+      },
+      {
+        "capability": "webauthn-registration",
+        "name": "client_data",
+        "type": "string",
+        "description": "Client data JSON file"
+      },
+      {
+        "capability": "assertion",
+        "name": "device",
+        "type": "string",
+        "description": "HID device path"
+      },
+      {
+        "capability": "assertion",
+        "name": "assertion_file",
+        "type": "string",
+        "description": "Output assertion file"
+      },
+      {
+        "capability": "attestation",
+        "name": "cert_file",
+        "type": "string",
+        "description": "Attestation certificate file"
+      },
+      {
+        "capability": "attestation",
+        "name": "format",
+        "type": "string",
+        "description": "DER or PEM"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "fido2-assert",
+    "fido2-cred",
+    "fido2-token",
+    "lsusb",
+    "openssl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/biometric-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/biometric-skill.yaml",
+    "checksum": "ee27ea52b4a479c840204cdcd36223c0dec98bafb0d525b23829a64468b34d72"
+  }
+}

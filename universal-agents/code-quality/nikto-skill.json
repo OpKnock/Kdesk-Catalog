@@ -1,0 +1,171 @@
+{
+  "name": "nikto",
+  "display_name": "Nikto",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Web server vulnerability scanning with Nikto: fingerprinting servers, finding misconfigurations, and producing reports.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "nikto"
+  ],
+  "capabilities": [
+    {
+      "name": "web-vuln-scan",
+      "description": "Run Nikto scans against web servers with tuning, auth, and report options",
+      "commands": [
+        "nikto -h https://example.com",
+        "nikto -h 192.168.1.10 -p 8443 -ssl",
+        "nikto -h example.com -o report.html -Format html",
+        "nikto -h example.com -Tuning 1234 -Pause 2",
+        "nikto -h example.com -useragent \"Mozilla/5.0\" -evasion 1"
+      ],
+      "examples": [
+        "nikto -h https://api.example.com -ssl -port 443",
+        "nikto -h intranet.example.com -id admin:password",
+        "nikto -h example.com -o results.csv -Format csv"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Port to scan when not 80/443"
+        },
+        {
+          "name": "ssl",
+          "type": "boolean",
+          "description": "Force SSL/TLS connection"
+        },
+        {
+          "name": "Format",
+          "type": "string",
+          "description": "Report format: html, csv, txt, xml, json"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Nikto GitHub",
+      "type": "documentation",
+      "source": "https://github.com/sullo/nikto",
+      "description": "CLI options, tuning codes, database updates"
+    },
+    {
+      "title": "Nikto wiki",
+      "type": "documentation",
+      "source": "https://github.com/sullo/nikto/wiki",
+      "description": "Usage guide and scan tuning documentation"
+    }
+  ],
+  "instructions": "# Nikto\n\nOpen-source web server scanner that checks for dangerous files, outdated software,\nand server misconfigurations.\n\n## When to Use\n\n- Quick reconnaissance of a web server before deeper testing\n- Checking for default files (backups, admin pages) on a host\n- Verifying a host is patched after a CVE advisory\n\n## Real Commands\n\n```bash\n# Update the vulnerability database first\nnikto -update\n\n# Basic HTTPS scan\nnikto -h https://example.com\n\n# Specific port with SSL\nnikto -h 10.0.0.5 -p 8443 -ssl\n\n# HTML report\nnikto -h example.com -o report.html -Format html\n\n# Reduced false positives: only interesting file checks\nnikto -h example.com -Tuning 123\n\n# Polite scanning with delay\nnikto -h example.com -Pause 2 -evasion 1\n```\n\n## Tuning Codes\n\n- `1` Interesting files, `2` Misconfiguration, `3` Information disclosure\n- `4` Injection, `6` Remote file retrieval\n\n```bash\n# Only interesting files + misconfig + info disclosure\nnikto -h target -Tuning 123\n```\n\n## Best Practices\n\n- Run `nikto -update` before each engagement\n- Combine with Nmap: `nmap -sV -p80,443 target` first to narrow the port list\n- Use `-Pause` for production hosts to avoid load\n- Nikto finds low-hanging fruit only; pair with OWASP ZAP for full testing\n\n## Example Response\n\nReturns matched items like 'Server: nginx/1.18.0 may be vulnerable' with OSVDB IDs,\nthen the agent recommends upgrading or confirming the config.",
+  "examples": [
+    {
+      "input": "Scan the staging web server",
+      "output": "Runs nikto -update then nikto -h https://staging.example.com -o report.html -Format html and summarizes findings by category"
+    },
+    {
+      "input": "Check port 8080 on an internal host",
+      "output": "Runs nikto -h 10.0.0.7 -p 8080 and reports the matched checks"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "nikto.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-nikto"
+    },
+    "generic": {
+      "system_prompt": "You work Nikto hands-on. You do it through web-vuln-scan: Run Nikto scans against web servers with tuning, auth, and report options. The commands are real, e.g. `nikto -h https://example.com`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "nikto",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "web-vuln-scan",
+        "name": "port",
+        "type": "integer",
+        "description": "Port to scan when not 80/443"
+      },
+      {
+        "capability": "web-vuln-scan",
+        "name": "ssl",
+        "type": "boolean",
+        "description": "Force SSL/TLS connection"
+      },
+      {
+        "capability": "web-vuln-scan",
+        "name": "Format",
+        "type": "string",
+        "description": "Report format: html, csv, txt, xml, json"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "nikto"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/nikto-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/nikto-skill.yaml",
+    "checksum": "57902ce0d3d8ca642725e692ee1ee3d5648d92238d0dc257b42dd2f4b50edfa5"
+  }
+}

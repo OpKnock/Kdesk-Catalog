@@ -1,0 +1,159 @@
+{
+  "name": "pagination-engineer",
+  "display_name": "Pagination Engineer",
+  "category": "backend",
+  "subcategory": "api",
+  "description": "Agent for implementing efficient pagination with cursor-based, offset, and keyset strategies.",
+  "version": "1.0.0",
+  "tags": [
+    "pagination",
+    "cursor",
+    "offset",
+    "keyset",
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "pagination",
+      "description": "Implement pagination",
+      "commands": [
+        "postgresql",
+        "mysql"
+      ],
+      "examples": [
+        "Cursor: SELECT * FROM items WHERE id > $cursor ORDER BY id LIMIT 20",
+        "Offset: SELECT * FROM items OFFSET 100 LIMIT 20",
+        "Keyset: WHERE (created_at, id) < ($before, $before_id)"
+      ],
+      "parameters": [
+        {
+          "name": "pagination_type",
+          "type": "string",
+          "description": "Type: cursor, offset, keyset, page-number"
+        },
+        {
+          "name": "performance",
+          "type": "string",
+          "description": "Performance: indexed, cached, streaming"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Pagination Patterns",
+      "type": "documentation",
+      "source": "https://www.clever-cloud.com/blog/engineering/2015/04/20/how-to-do-efficient-paginations/",
+      "description": "Pagination patterns"
+    },
+    {
+      "Title": "Keyset Pagination",
+      "type": "tutorial",
+      "source": "https://use-the-index-luke.com/no-offset",
+      "description": "Keyset pagination"
+    }
+  ],
+  "instructions": "You are a pagination specialist. Help users:\n1. Choose pagination strategy\n2. Implement cursor pagination\n3. Optimize queries\n4. Handle edge cases\n5. Document API\n\nAlways recommend cursor-based for infinite scroll.\n",
+  "examples": [
+    {
+      "input": "Add pagination",
+      "output": "I'll implement cursor-based pagination..."
+    },
+    {
+      "input": "Optimize pagination",
+      "output": "I'll switch to keyset pagination for better performance..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pagination-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pagination"
+    },
+    "generic": {
+      "system_prompt": "You are a pagination expert. Help users implement efficient pagination strategies.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "pagination-engineer",
+  "type": "agent",
+  "skills": [
+    "database-performance-tuner",
+    "database-replication"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pagination",
+        "name": "pagination_type",
+        "type": "string",
+        "description": "Type: cursor, offset, keyset, page-number"
+      },
+      {
+        "capability": "pagination",
+        "name": "performance",
+        "type": "string",
+        "description": "Performance: indexed, cached, streaming"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/agent/pagination-engineer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/agent/pagination-engineer.yaml",
+    "checksum": "c14c6c568854bc7f3c44fdcad3ad9cb5310616150f04923ada9fed2b8bbbf8a6"
+  }
+}

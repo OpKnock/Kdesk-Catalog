@@ -1,0 +1,259 @@
+{
+  "name": "ssl-tls",
+  "display_name": "ssl-tls",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Inspects, validates, and troubleshoots TLS certificates and handshakes with openssl, sslscan, and certbot.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "certbot",
+    "nmap",
+    "openssl",
+    "sslscan"
+  ],
+  "capabilities": [
+    {
+      "name": "certificate-inspection",
+      "description": "Inspect certificates, chains, and server handshakes.",
+      "commands": [
+        "openssl s_client -connect example.com:443 -servername example.com -showcerts",
+        "openssl x509 -in cert.pem -text -noout",
+        "openssl x509 -in cert.pem -dates -issuer -subject",
+        "openssl s_client -connect example.com:443 -servername example.com 2>/dev/null | openssl x509 -noout -dates",
+        "openssl verify -CAfile ca-bundle.pem cert.pem"
+      ],
+      "examples": [
+        "openssl s_client -connect example.com:443 -servername example.com | openssl x509 -noout -subject -issuer -dates",
+        "openssl x509 -in cert.pem -text -noout | head -40",
+        "openssl verify -CAfile ca-bundle.pem server.pem"
+      ],
+      "parameters": [
+        {
+          "name": "host",
+          "type": "string",
+          "description": "Hostname to connect to"
+        },
+        {
+          "name": "port",
+          "type": "number",
+          "description": "Port, default 443"
+        },
+        {
+          "name": "certFile",
+          "type": "string",
+          "description": "Path to a certificate file"
+        }
+      ]
+    },
+    {
+      "name": "certificate-generation",
+      "description": "Generate CSRs, self-signed certs, and renew with certbot.",
+      "commands": [
+        "openssl req -new -newkey rsa:2048 -nodes -keyout key.pem -out csr.pem",
+        "openssl req -x509 -newkey rsa:2048 -nodes -days 365 -keyout key.pem -out cert.pem",
+        "openssl x509 -req -in csr.pem -signkey key.pem -out cert.pem -days 365",
+        "certbot certonly --standalone -d example.com",
+        "certbot renew --dry-run"
+      ],
+      "examples": [
+        "openssl req -new -newkey rsa:2048 -nodes -keyout key.pem -out csr.pem",
+        "certbot certonly --standalone -d example.com",
+        "certbot renew --dry-run"
+      ],
+      "parameters": [
+        {
+          "name": "keySize",
+          "type": "number",
+          "description": "RSA key size, e.g. 2048 or 4096"
+        },
+        {
+          "name": "days",
+          "type": "number",
+          "description": "Validity in days"
+        }
+      ]
+    },
+    {
+      "name": "protocol-scanning",
+      "description": "Check TLS protocol and cipher support.",
+      "commands": [
+        "sslscan example.com",
+        "sslscan --tls-min-version 1.2 example.com",
+        "openssl s_client -connect example.com:443 -tls1_2 -servername example.com",
+        "nmap --script ssl-enum-ciphers -p 443 example.com"
+      ],
+      "examples": [
+        "sslscan example.com",
+        "nmap --script ssl-enum-ciphers -p 443 example.com",
+        "openssl s_client -connect example.com:443 -tls1_3 -servername example.com"
+      ],
+      "parameters": [
+        {
+          "name": "tlsVersion",
+          "type": "string",
+          "description": "TLS version to test: tls1_2, tls1_3"
+        },
+        {
+          "default": "443",
+          "description": "TCP port to scan for TLS.",
+          "name": "port",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OpenSSL Documentation",
+      "type": "documentation",
+      "source": "https://www.openssl.org/docs/",
+      "description": "s_client, x509, and req command references"
+    },
+    {
+      "title": "Let's Encrypt Certbot Docs",
+      "type": "documentation",
+      "source": "https://certbot.eff.org/docs/",
+      "description": "Certificate issuance and renewal workflows"
+    },
+    {
+      "title": "sslscan GitHub",
+      "type": "documentation",
+      "source": "https://github.com/rbsec/sslscan",
+      "description": "TLS protocol and cipher enumeration"
+    }
+  ],
+  "instructions": "# SSL/TLS\n\nInspect, validate, and troubleshoot TLS certificates and handshakes.\n\n## What This Skill Does\n\n- Reads certificates and verifies chains with openssl\n- Tests live handshakes and ciphers against servers\n- Generates CSRs and self-signed certificates\n- Automates Let's Encrypt issuance and renewal with certbot\n\n## When to Use\n\n- A certificate fails validation or is about to expire\n- Checking which ciphers a server supports\n- Generating local test certificates\n\n## Real Commands\n\n```bash\n# Inspect a live cert\nopenssl s_client -connect example.com:443 -servername example.com -showcerts\nopenssl s_client -connect example.com:443 -servername example.com 2>/dev/null | openssl x509 -noout -dates\n\n# Local cert inspection\nopenssl x509 -in cert.pem -text -noout\nopenssl verify -CAfile ca-bundle.pem server.pem\n\n# Generate a CSR and self-signed cert\nopenssl req -new -newkey rsa:2048 -nodes -keyout key.pem -out csr.pem\nopenssl req -x509 -newkey rsa:2048 -nodes -days 365 -keyout key.pem -out cert.pem\n\n# Cipher support\nsslscan example.com\nnmap --script ssl-enum-ciphers -p 443 example.com\n\n# Let's Encrypt\ncertbot certonly --standalone -d example.com\ncertbot renew --dry-run\n```\n\n## Best Practices\n\n- Verify expiry via monitoring; alerts 30 days before renewal\n- Serve full chain; verify with openssl verify -CAfile\n- Disable TLS 1.0/1.1 and weak ciphers\n- Test renewals with certbot renew --dry-run after config changes\n- Use key size 2048+ and pin via SRI/HSTS headers",
+  "examples": [
+    {
+      "input": "Is my certificate about to expire?",
+      "output": "Agent connects with openssl s_client, extracts the dates, and if close to expiry runs certbot renew or reissues."
+    },
+    {
+      "input": "Why does the browser complain about my chain?",
+      "output": "Agent fetches the server chain with -showcerts, verifies each link with openssl verify, and identifies the missing intermediate."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ssl-tls.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ssl-tls"
+    },
+    "generic": {
+      "system_prompt": "Your lane is ssl-tls. You do it through certificate-inspection: Inspect certificates, chains, and server handshakes. The commands are real, e.g. `openssl s_client -connect example.com:443 -servername example.com -showcerts`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ssl-tls",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "certificate-inspection",
+        "name": "host",
+        "type": "string",
+        "description": "Hostname to connect to"
+      },
+      {
+        "capability": "certificate-inspection",
+        "name": "port",
+        "type": "number",
+        "description": "Port, default 443"
+      },
+      {
+        "capability": "certificate-inspection",
+        "name": "certFile",
+        "type": "string",
+        "description": "Path to a certificate file"
+      },
+      {
+        "capability": "certificate-generation",
+        "name": "keySize",
+        "type": "number",
+        "description": "RSA key size, e.g. 2048 or 4096"
+      },
+      {
+        "capability": "certificate-generation",
+        "name": "days",
+        "type": "number",
+        "description": "Validity in days"
+      },
+      {
+        "capability": "protocol-scanning",
+        "name": "tlsVersion",
+        "type": "string",
+        "description": "TLS version to test: tls1_2, tls1_3"
+      },
+      {
+        "capability": "protocol-scanning",
+        "name": "port",
+        "type": "integer",
+        "description": "TCP port to scan for TLS."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "certbot",
+    "nmap",
+    "openssl",
+    "sslscan"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/ssl-tls-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/ssl-tls-skill.yaml",
+    "checksum": "899ae0b732e4894f5a6dc699a293ce2b5f94a7423db00ce29fac104471e06777"
+  }
+}

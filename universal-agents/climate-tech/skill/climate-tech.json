@@ -1,0 +1,209 @@
+{
+  "name": "climate-tech",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "environment",
+  "description": "Analyzes climate and energy data with Python ecosystem: pandas, xarray, rasterio, and emissions computation workflows.",
+  "keywords": [
+    "climate-tech"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "climate-tech.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-climate-tech"
+    },
+    "generic": {
+      "system_prompt": "You take the climate-tech seat. You do it through climate-data: Process climate and weather datasets. The commands are real, e.g. `pip install pandas xarray netcdf4`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "commands": [
+        "pip install pandas xarray netcdf4",
+        "python -c \"import xarray as xr; ds=xr.open_dataset(\\\"data.nc\\\"); print(ds)\"",
+        "python -c \"import pandas as pd; print(pd.read_csv(\\\"emissions.csv\\\").head())\"",
+        "pip install rasterio",
+        "python -c \"import rasterio; print(rasterio.open(\\\"tif/raster.tif\\\"))\""
+      ],
+      "description": "Process climate and weather datasets.",
+      "name": "climate-data",
+      "examples": [
+        "python -c \"import xarray as xr; print(xr.open_dataset(\\\"data.nc\\\").mean(dim=\\\"time\\\"))\"",
+        "python -c \"import pandas as pd; df=pd.read_csv(\\\"emissions.csv\\\"); print(df.groupby(\\\"year\\\").co2.sum())\""
+      ],
+      "parameters": [
+        {
+          "description": "NetCDF, CSV, or GeoTIFF path",
+          "name": "file",
+          "type": "string"
+        },
+        {
+          "name": "engine",
+          "type": "string",
+          "description": "Backend: xarray, pandas, or rasterio"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "python -c \"import pandas as pd; df=pd.read_csv(\\\"emissions.csv\\\"); df[\\\"co2e\\\"]=df.co2*df.gwp; print(df.groupby(\\\"sector\\\").co2e.sum())\"",
+        "python -m venv .venv && source .venv/bin/activate",
+        "pip install openpyxl",
+        "python -c \"import pandas as pd; pd.DataFrame({\\\"x\\\":[1]}).to_excel(\\\"report.xlsx\\\"); print(\\\"ok\\\")\""
+      ],
+      "description": "Compute and report emissions metrics.",
+      "name": "emissions-accounting",
+      "examples": [
+        "python -c \"import pandas as pd; df=pd.read_csv(\\\"emissions.csv\\\"); print(df.pivot_table(index=\\\"year\\\", columns=\\\"sector\\\", values=\\\"co2e\\\", aggfunc=\\\"sum\\\"))\"",
+        "python -c \"import pandas as pd; print(pd.read_excel(\\\"report.xlsx\\\"))\""
+      ],
+      "parameters": [
+        {
+          "description": "Emissions dataset path",
+          "name": "dataset",
+          "type": "string"
+        },
+        {
+          "name": "unit",
+          "type": "string",
+          "description": "Units: tCO2e, kgCO2e, or MtCO2e"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "prometheus",
+    "grafana"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "prometheus",
+    "grafana",
+    "aws"
+  ],
+  "examples": [
+    {
+      "input": "Compute regional temperature trends from NetCDF",
+      "output": "Agent opens the dataset with xarray, resamples to annual means, masks by region, and plots or exports the trend."
+    },
+    {
+      "input": "Convert emissions data to CO2e",
+      "output": "Agent multiplies by GWP factors per gas with pandas and aggregates by sector and year."
+    }
+  ],
+  "instructions": "# Climate Tech\n\nAnalyze climate, weather, and energy data.\n\n## When to Use\n\n- Processing NetCDF/CMIP model output\n- Emissions accounting and scenario analysis\n- Geospatial raster analysis (land cover, solar irradiance)\n- Building energy and grid data pipelines\n\n## Commands\n\n```bash\npip install pandas xarray netcdf4 rasterio\n\n# Inspect a NetCDF dataset\npython -c \"import xarray as xr; ds=xr.open_dataset('data.nc'); print(ds)\"\n\n# Time-averaged means\npython -c \"import xarray as xr; print(xr.open_dataset('data.nc').mean(dim='time'))\"\n\n# Emissions aggregation\npython -c \"import pandas as pd; df=pd.read_csv('emissions.csv'); print(df.groupby('year').co2.sum())\"\n\n# GWP-weighted CO2e\npython -c \"import pandas as pd; df=pd.read_csv('emissions.csv'); df['co2e']=df.co2*df.gwp; print(df.groupby('sector').co2e.sum())\"\n\n# Raster inspection\npython -c \"import rasterio; print(rasterio.open('raster.tif'))\"\n```\n\n## Analysis Example\n\n```python\nimport xarray as xr\n\nds = xr.open_dataset(\"temp_2m.nc\")\nannual_mean = ds.t2m.groupby(\"time.year\").mean()\nprint(annual_mean.isel(year=-1))\n```\n\n## Best Practices\n\n- Check units and coordinate systems before arithmetic\n- Use xarray for labeled N-D data, pandas for tabular\n- Prefer chunked reads for large CMIP files\n- Record data provenance (source, version, processing steps)\n- Validate against published figures before reporting\n- Pin scientific package versions for reproducibility",
+  "display_name": "climate-tech",
+  "knowledge": [
+    {
+      "title": "xarray Docs",
+      "description": "N-D labeled arrays for climate data",
+      "source": "https://docs.xarray.dev",
+      "type": "documentation"
+    },
+    {
+      "title": "Rasterio Docs",
+      "description": "Geospatial raster I/O",
+      "source": "https://rasterio.readthedocs.io",
+      "type": "documentation"
+    },
+    {
+      "title": "IPCC GWP Values",
+      "description": "Global warming potential factors",
+      "source": "https://www.ipcc.ch/report/ar6/wg1/",
+      "type": "documentation"
+    }
+  ],
+  "id": "climate-tech",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "climate-data",
+        "name": "file",
+        "type": "string",
+        "description": "NetCDF, CSV, or GeoTIFF path"
+      },
+      {
+        "capability": "climate-data",
+        "name": "engine",
+        "type": "string",
+        "description": "Backend: xarray, pandas, or rasterio"
+      },
+      {
+        "capability": "emissions-accounting",
+        "name": "dataset",
+        "type": "string",
+        "description": "Emissions dataset path"
+      },
+      {
+        "capability": "emissions-accounting",
+        "name": "unit",
+        "type": "string",
+        "description": "Units: tCO2e, kgCO2e, or MtCO2e"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "prometheus",
+    "grafana"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "climate-tech/skill/climate-tech.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/climate-tech/skill/climate-tech.yaml",
+    "checksum": "0d11268991dd8348aed57f4cf0fd5e49d5d4cb317172782152c7c18b9b44961e"
+  }
+}

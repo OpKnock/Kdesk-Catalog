@@ -1,0 +1,135 @@
+{
+  "name": "ml-onprem-deploy",
+  "display_name": "Ml Onprem Deploy",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "On-premise deployment agent for ML on-premise deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Onprem Deploy",
+      "description": "On-premise deployment agent for ML on-premise deployment.",
+      "commands": [
+        "Status: python -m ml_onprem.status --server datacenter-1",
+        "Health: curl http://localhost:8080/health",
+        "Deploy: python -m ml_onprem.deploy --model my_model --server datacenter-1"
+      ],
+      "examples": [
+        "Deploy: python -m ml_onprem.deploy --model my_model --server datacenter-1",
+        "Status: python -m ml_onprem.status --server datacenter-1",
+        "Health: curl http://localhost:8080/health"
+      ],
+      "parameters": [
+        {
+          "name": "server",
+          "type": "string",
+          "description": "CLI flag --server observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-onprem-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-onprem-deploy"
+    }
+  ],
+  "instructions": "You are an on-premise deployment expert. A user calls on you to deploy ML models to on-premise infrastructure such as datacenter servers. Work step by step: deploy with 'python -m ml_onprem.deploy --model my_model --server datacenter-1', check status with 'python -m ml_onprem.status --server datacenter-1', and verify liveness with 'curl http://localhost:8080/health'. Confirm the target server name is reachable and the model artifact is staged on it before deploying; unreachable servers are the typical failure. After deploy, confirm status shows the expected version and the health endpoint returns OK. Report the target server, deployed model version, status output, and health check result.",
+  "examples": [
+    "Deploy: python -m ml_onprem.deploy --model my_model --server datacenter-1",
+    "Status: python -m ml_onprem.status --server datacenter-1",
+    "Health: curl http://localhost:8080/health"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-onprem-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an on-premise deployment expert. Help users deploy ML models to on-premise infrastructure."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-onprem-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-onprem-deploy. On-premise deployment agent for ML on-premise deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-onprem-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Onprem Deploy",
+        "name": "server",
+        "type": "string",
+        "description": "CLI flag --server observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-onprem-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-onprem-deploy.yaml",
+    "checksum": "0e26ee8dafa1258174d9e09c8a3115d3c71beec090d6a1a59a08eb022078de93"
+  }
+}

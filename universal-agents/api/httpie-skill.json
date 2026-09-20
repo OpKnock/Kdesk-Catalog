@@ -1,0 +1,171 @@
+{
+  "name": "httpie",
+  "display_name": "Httpie",
+  "category": "api",
+  "subcategory": "general",
+  "description": "HTTPie CLI: expressive HTTP requests with intuitive syntax, JSON bodies, auth flags, file downloads, and streaming responses.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "http"
+  ],
+  "capabilities": [
+    {
+      "name": "httpie-requests",
+      "description": "Compose and send HTTP requests with HTTPie's shorthand syntax.",
+      "commands": [
+        "http http://localhost:8000/api/users",
+        "http POST http://localhost:8000/api/users name=John age:=30",
+        "http -a user:pass http://localhost:8000/protected",
+        "http --stream http://localhost:8000/events",
+        "http -d https://example.com/file.zip"
+      ],
+      "examples": [
+        "http GET http://localhost:8000/api/users/42 Accept:application/json",
+        "http PUT http://localhost:8000/api/users/42 name=Jane",
+        "http -f POST http://localhost:8000/upload file@photo.png"
+      ],
+      "parameters": [
+        {
+          "name": "method",
+          "type": "string",
+          "description": "HTTP method, defaults to GET."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Target URL."
+        },
+        {
+          "name": "headers",
+          "type": "string",
+          "description": "Header shorthand, e.g. Accept:application/json."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "HTTPie Docs",
+      "type": "documentation",
+      "source": "https://httpie.io/docs",
+      "description": "Official HTTPie documentation: CLI reference and usage examples."
+    },
+    {
+      "title": "HTTPie CLI GitHub",
+      "type": "documentation",
+      "source": "https://github.com/httpie/cli",
+      "description": "HTTPie CLI repository with README examples."
+    }
+  ],
+  "instructions": "# HTTPie\n\nHuman-friendly HTTP requests from the terminal.\n\n## What this skill does\n\n- Sends HTTP requests with intuitive `key=value` and `key:=json` syntax.\n- Handles JSON bodies, file uploads, and downloads.\n- Streams responses with --stream.\n- Shows colorized request/response pairs by default.\n\n## When to use\n\n- Everyday API debugging where curl is too terse.\n- Demonstrating API calls in docs or demos.\n- Quick checks of headers and status codes.\n\n## Real commands\n\n```bash\n# Simple GET\nhttp http://localhost:8000/api/users\n\n# POST JSON body\nhttp POST http://localhost:8000/api/users name=John age:=30\n\n# Explicit header\nhttp GET http://localhost:8000/api/users/42 Accept:application/json\n\n# Basic auth\nhttp -a user:pass http://localhost:8000/protected\n\n# Stream SSE-style responses\nhttp --stream http://localhost:8000/events\n\n# Download a file\nhttp -d https://example.com/file.zip\n\n# File upload\nhttp -f POST http://localhost:8000/upload file@photo.png\n\n# Raw JSON body\nhttp POST http://localhost:8000/api/users <<< '{\"name\": \"John\"}'\n```\n\n## Syntax cheat sheet\n\n- `name=John` sends a string field.\n- `age:=30` sends a raw JSON value.\n- `Accept:application/json` sends a header.\n- `file@photo.png` attaches a file (with -f for forms).\n\n## Testing\n\n```bash\nhttp -h http://localhost:8000/health  # headers only\n```\n\n## Best practices\n\n- Use `-h`/`-b` to show only headers or only body in scripts.\n- Combine with jq for assertions: `http -b ... | jq .id`.\n- Use `--check-status` to fail on 4xx/5xx in CI.\n- Prefer `key:=` for numbers/booleans to avoid string coercion.\n\n## Example exchange\n\n```\nUser: Create a user with JSON fields name and age.\nAgent: http POST http://localhost:8000/api/users name=John age:=30\n```",
+  "examples": [
+    {
+      "input": "GET /api/users with JSON accept header",
+      "output": "http GET http://localhost:8000/api/users Accept:application/json"
+    },
+    {
+      "input": "POST a user with typed fields",
+      "output": "http POST http://localhost:8000/api/users name=John age:=30"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "httpie.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-httpie"
+    },
+    "generic": {
+      "system_prompt": "You work Httpie hands-on. You do it through httpie-requests: Compose and send HTTP requests with HTTPies shorthand syntax. The commands are real, e.g. `http http://localhost:8000/api/users`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "httpie",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "httpie-requests",
+        "name": "method",
+        "type": "string",
+        "description": "HTTP method, defaults to GET."
+      },
+      {
+        "capability": "httpie-requests",
+        "name": "url",
+        "type": "string",
+        "description": "Target URL."
+      },
+      {
+        "capability": "httpie-requests",
+        "name": "headers",
+        "type": "string",
+        "description": "Header shorthand, e.g. Accept:application/json."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "http"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/httpie-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/httpie-skill.yaml",
+    "checksum": "7c227e455305ad2738fde2fe9111d6bda42ba2d6bd04c41add33f23b08559c05"
+  }
+}

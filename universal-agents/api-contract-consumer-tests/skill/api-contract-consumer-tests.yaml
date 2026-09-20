@@ -1,0 +1,181 @@
+name: api-contract-consumer-tests
+version: 2.0.0
+type: skill
+category: testing
+description: 'Implements contract testing basics: Pact consumer expectations, mock services, and first
+  provider verification runs.'
+keywords:
+- contract-testing
+- pact
+- consumer-driven
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-contract-consumer-tests.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-contract-consumer-tests
+  generic:
+    system_prompt: 'Your lane is Api Contract Consumer Tests. You do it through consumer-tests: Write
+      Pact consumer tests with interactions and expected responses. The commands are real, e.g. `npm install
+      @pact-foundation/pact --save-dev`. You answer with exact commands, not abstractions, and flag anything
+      you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: consumer-tests
+  description: Write Pact consumer tests with interactions and expected responses
+  commands:
+  - npm install @pact-foundation/pact --save-dev
+  - npx jest --testMatch '**/*.pact.test.js'
+  - npx pact-broker publish ./pacts --consumer-version 0.1.0 --broker-base-url http://localhost:9292
+  - npx pact-broker describe-version --pacticipant consumer --version 0.1.0 --broker-base-url http://localhost:9292
+  - cat pacts/consumer-provider.json | python -m json.tool
+  examples:
+  - npx jest --testMatch '**/*.pact.test.js' --runInBand
+  - cat pacts/consumer-provider.json | python -m json.tool
+  - npx pact-broker publish ./pacts --consumer-version 0.1.0 --broker-base-url http://localhost:9292
+  parameters:
+  - name: consumer
+    type: string
+    description: Consumer name
+  - name: provider
+    type: string
+    description: Provider name
+  - name: version
+    type: string
+    description: Contract version
+- name: provider-verification
+  description: Verify the provider against published contracts
+  commands:
+  - npm install @pact-foundation/pact-js --save-dev
+  - npx pact-provider-verifier --provider-base-url http://localhost:8080 --pact-urls ./pacts/consumer-provider.json
+  - npx pact-provider-verifier --provider-base-url http://localhost:8080 --pact-broker-base-url http://localhost:9292
+    --provider consumer
+  - npm run verify:pacts
+  - npx pact-broker can-i-deploy --pacticipant provider --version 1.0.0 --to prod --broker-base-url http://localhost:9292
+  examples:
+  - npx pact-provider-verifier --provider-base-url http://localhost:8080 --pact-urls ./pacts/consumer-provider.json
+  - npm run verify:pacts
+  - npx pact-provider-verifier --provider-base-url http://localhost:8080 --pact-broker-base-url http://localhost:9292
+    --provider consumer
+  parameters:
+  - name: baseUrl
+    type: string
+    description: Provider base URL
+  - name: pactUrls
+    type: string
+    description: Pact file paths
+prerequisites:
+- pact
+- openapi
+- node.js
+- python
+tools:
+- pact
+- openapi
+- node.js
+- python
+- postman
+examples:
+- input: Implement contract testing between frontend and backend
+  output: Writes the first Pact consumer test, publishes the contract, and verifies the provider
+- input: Validate API responses in tests
+  output: Adds schema checks to contract expectations and CI
+instructions: '# API Contract (Basics)
+
+
+  Implements the core consumer-driven contract loop: expectations, publication, verification.
+
+
+  ## When to Use
+
+  - First contract test in a codebase
+
+  - Single consumer-provider pair
+
+  - Learning the Pact flow
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Consumer side
+
+  npm install @pact-foundation/pact --save-dev
+
+  npx jest --testMatch ''**/*.pact.test.js''
+
+
+  # Inspect the generated pact
+
+  cat pacts/consumer-provider.json | python -m json.tool
+
+
+  # Publish
+
+  npx pact-broker publish ./pacts --consumer-version 0.1.0 --broker-base-url http://localhost:9292
+
+
+  # Provider side
+
+  npx pact-provider-verifier --provider-base-url http://localhost:8080 --pact-urls ./pacts/consumer-provider.json
+
+  ```
+
+
+  ## The Loop
+
+  1. Consumer defines expectations
+
+  2. Pact file is generated
+
+  3. Provider verifies against it
+
+  4. can-i-deploy gates the release
+
+
+  ## Testing
+
+  Run consumer tests in CI on every PR and provider verification nightly.
+
+
+  ## Best Practices
+
+  - Keep interactions minimal
+
+  - Version every publish'
+display_name: Api Contract Consumer Tests
+knowledge:
+- title: Pact Mock Service
+  type: documentation
+  source: https://docs.pact.io/implementation_guides/mock_service/
+  description: Mock services for consumer tests
+- title: Pact Verifier
+  type: documentation
+  source: https://docs.pact.io/implementation_guides/rust/verifier_cli
+  description: Provider verification CLI

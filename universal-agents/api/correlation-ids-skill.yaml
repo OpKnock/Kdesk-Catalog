@@ -1,0 +1,117 @@
+name: correlation-ids
+display_name: Correlation Ids
+category: api
+subcategory: general
+description: 'Implement correlation/request IDs across APIs: generate, propagate via headers, and trace
+  requests through logs.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- node
+- npm
+- uuidgen
+capabilities:
+- name: id-generation
+  description: Generate and send correlation IDs with curl and system tools
+  commands:
+  - 'curl -H "X-Correlation-ID: $(uuidgen)" https://api.example.com/v1/users'
+  - uuidgen
+  - 'curl -H "X-Request-ID: $(uuidgen)" -H "X-Correlation-ID: $(uuidgen)" https://api.example.com/v1/orders'
+  - curl -s -D - -o /dev/null https://api.example.com/v1/users | grep -i correlation
+  examples:
+  - 'curl -H "X-Correlation-ID: $(uuidgen)" https://api.example.com/v1/users | jq ''.trace_id'''
+  - 'CID=$(uuidgen) && curl -H "X-Correlation-ID: $CID" https://api.example.com/v1/orders'
+  - 'curl -s -D - -o /dev/null -H "X-Correlation-ID: $(uuidgen)" https://api.example.com/v1/users | grep
+    -i ''correlation\|request-id'''
+  parameters:
+  - name: header
+    type: string
+    description: Header name such as X-Correlation-ID
+  - name: id
+    type: string
+    description: Correlation ID value
+- name: middleware
+  description: Implement correlation ID middleware that accepts, generates, and propagates IDs
+  commands:
+  - npm install express
+  - node server.js
+  - 'curl -s -D - -o /dev/null -H "X-Correlation-ID: $(uuidgen)" http://localhost:8080/api | grep -i correlation'
+  - curl -s http://localhost:8080/api -D - -o /dev/null | grep -i correlation
+  examples:
+  - node server.js
+  - 'curl -s -D - -o /dev/null -H "X-Correlation-ID: test-123" http://localhost:8080/api | grep -i correlation'
+  - curl -s -D - -o /dev/null http://localhost:8080/api | grep -i correlation
+  parameters:
+  - name: server_port
+    type: string
+    description: Server port for testing
+knowledge:
+- title: Zalando REST API Guidelines
+  type: documentation
+  source: https://opensource.zalando.com/restful-api-guidelines/
+  description: Trace/correlation ID header conventions
+- title: Microsoft Correlation Pattern
+  type: documentation
+  source: https://learn.microsoft.com/en-us/azure/architecture/patterns/correlation-id
+  description: Correlation ID pattern in distributed systems
+instructions: "# Correlation IDs\n\nTrace a single request across services and logs with correlation IDs.\n\
+  \n## When to Use\n\n- Debugging multi-service requests\n- Joining logs and metrics across services\n\
+  - Supporting user support tickets with trace IDs\n\n## Naming Conventions\n\nUse X-Correlation-ID for\
+  \ cross-service traces and X-Request-ID for the immediate request; return it in the response.\n\n##\
+  \ Generate and Send\n\n```bash\nuuidgen\ncurl -H \"X-Correlation-ID: $(uuidgen)\" https://api.example.com/v1/users\n\
+  ```\n\n## Middleware (Express)\n\n```js\nconst crypto = require('crypto');\n\napp.use((req, res, next)\
+  \ => {\n  const cid = req.headers['x-correlation-id'] || crypto.randomUUID();\n  req.correlationId =\
+  \ cid;\n  res.setHeader('X-Correlation-ID', cid);\n  next();\n});\n```\n\n## Propagate Downstream\n\n\
+  ```js\nconst headers = { 'X-Correlation-ID': req.correlationId };\nfetch(downstreamUrl, { headers });\n\
+  ```\n\n## Log With the ID\n\n```js\nconsole.log(JSON.stringify({ correlationId: cid, level: 'info',\
+  \ message: 'checkout started' }));\n```\n\n## Verify\n\n```bash\nnode server.js &\ncurl -s -D - -o /dev/null\
+  \ http://localhost:8080/api | grep -i correlation\nCID=$(uuidgen)\ncurl -s -D - -o /dev/null -H \"X-Correlation-ID:\
+  \ $CID\" http://localhost:8080/api | grep -i correlation\n```\n\n## Testing\n\n```bash\n# Same ID must\
+  \ be echoed back in the response\ncurl -s -D - -o /dev/null -H \"X-Correlation-ID: test-123\" http://localhost:8080/api\
+  \ | grep -i 'correlation'\n```\n\n## Best Practices\n\n- Accept and echo inbound IDs, never regenerate\
+  \ them\n- Propagate to every downstream call\n- Include the ID in every log line and error response\n\
+  - Cap ID length and sanitize header values\n- Add a correlation ID to distributed traces (OpenTelemetry\
+  \ trace_id)\n- Standardize the header name across the org"
+examples:
+- input: Trace one request across my API and payment service.
+  output: The agent adds correlation ID middleware that accepts and echoes X-Correlation-ID, propagates
+    it on the downstream fetch, and verifies with curl.
+- input: Make my API return a correlation ID for support tickets.
+  output: The agent sets res.setHeader('X-Correlation-ID', cid) in middleware and verifies the header
+    is echoed with curl -D -.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: correlation-ids.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-correlation-ids
+  generic:
+    system_prompt: 'Your lane is Correlation Ids. You do it through id-generation: Generate and send correlation
+      IDs with curl and system tools. The commands are real, e.g. `curl -H X-Correlation-ID: $(uuidgen)
+      https://api.example.com/v1/users`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

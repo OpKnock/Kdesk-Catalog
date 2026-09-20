@@ -1,0 +1,166 @@
+name: sqlite
+display_name: Sqlite
+category: database
+subcategory: general
+description: 'Works with SQLite databases: queries, schema management, CSV import/export, and integrity
+  checks via sqlite3.'
+version: 2.0.0
+tags:
+- database
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- sqlite3
+capabilities:
+- name: sqlite3-cli
+  description: Query, manage, and convert SQLite databases
+  commands:
+  - sqlite3 app.db ".tables"
+  - sqlite3 app.db "SELECT * FROM users LIMIT 10;"
+  - sqlite3 app.db ".schema users"
+  - sqlite3 app.db ".mode csv" "SELECT * FROM users" > users.csv
+  - sqlite3 app.db "PRAGMA integrity_check;"
+  examples:
+  - sqlite3 app.db "CREATE INDEX idx_users_email ON users(email);"
+  - sqlite3 app.db ".mode csv" ".import users.csv users"
+  - sqlite3 app.db "PRAGMA journal_mode=WAL;"
+  parameters:
+  - name: mode
+    type: string
+    description: 'Output mode: csv, json, column, list'
+  - name: header
+    type: boolean
+    description: Show column headers in output
+  - name: backup
+    type: string
+    description: Online backup destination with .backup
+knowledge:
+- title: SQLite CLI docs
+  type: documentation
+  source: https://sqlite.org/cli.html
+  description: All dot-commands and invocation options
+- title: SQLite pragmas
+  type: documentation
+  source: https://sqlite.org/pragma.html
+  description: journal_mode, integrity_check, and tuning pragmas
+instructions: '# SQLite
+
+
+  Embedded SQL database operations: queries, schema, CSV roundtrips, and integrity
+
+  verification via sqlite3.
+
+
+  ## When to Use
+
+
+  - Inspecting an app''s local database file
+
+  - Converting data between CSV and tables
+
+  - Quick analytics on single-file data
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Explore
+
+  sudo sqlite3 app.db ".tables"
+
+  sudo sqlite3 app.db ".schema users"
+
+
+  # Queries
+
+  sudo sqlite3 app.db "SELECT count(*), max(created_at) FROM orders;"
+
+  sudo sqlite3 app.db "SELECT * FROM users WHERE email LIKE ''%example.com'' LIMIT 5;"
+
+
+  # CSV export/import
+
+  sudo sqlite3 -header -csv app.db "SELECT * FROM orders;" > orders.csv
+
+  sudo sqlite3 app.db ".mode csv" ".import orders.csv orders"
+
+
+  # Integrity
+
+  sudo sqlite3 app.db "PRAGMA integrity_check;"
+
+  sudo sqlite3 app.db "PRAGMA quick_check;"
+
+
+  # WAL for concurrency
+
+  sudo sqlite3 app.db "PRAGMA journal_mode=WAL;"
+
+
+  # Backup
+
+  sudo sqlite3 app.db ".backup app-backup.db"
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Enable WAL for production-ish usage; better concurrency
+
+  - Run `PRAGMA integrity_check` before and after risky ops
+
+  - Use `.backup` for live backups; don''t copy the file blindly
+
+  - Create indexes for query columns
+
+  - `ANALYZE` after bulk imports
+
+
+  ## Example Response
+
+
+  Reports schema, row counts, and integrity status; performs the requested import/
+
+  export and verifies row counts both ways.'
+examples:
+- input: Export orders to CSV
+  output: Runs sqlite3 with .mode csv and headers, then verifies line counts
+- input: Check the database is healthy
+  output: Runs PRAGMA integrity_check and quick_check and reports the result
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: sqlite.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-sqlite
+  generic:
+    system_prompt: 'You own Sqlite end to end. You do it through sqlite3-cli: Query, manage, and convert
+      SQLite databases. The commands are real, e.g. `sqlite3 app.db .tables`. You answer with exact commands,
+      not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

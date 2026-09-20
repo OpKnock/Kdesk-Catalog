@@ -1,0 +1,116 @@
+name: ktor-server
+display_name: Ktor Server
+category: api
+subcategory: general
+description: 'Build Ktor server applications: routing, content negotiation, static files, and deployment
+  as a standalone JVM app.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- ./gradlew
+- java
+capabilities:
+- name: server-routes
+  description: Define Ktor routes and run the server.
+  commands:
+  - ./gradlew run
+  - ./gradlew build
+  - java -jar build/libs/ktor-server-all.jar
+  - curl -s http://localhost:8080/hello
+  examples:
+  - ./gradlew run
+  - java -jar build/libs/ktor-server-all.jar
+  - curl -s http://localhost:8080/hello
+  parameters:
+  - name: port
+    type: integer
+    description: Listen port, default 8080.
+  - name: route
+    type: string
+    description: Route path to test.
+- name: json-api
+  description: Serve JSON APIs with content negotiation and test them.
+  commands:
+  - curl -s http://localhost:8080/api/orders/42 | jq .
+  - 'curl -s -X POST http://localhost:8080/api/orders -H ''Content-Type: application/json'' -d ''{"id":43,"amount":99.5}'''
+  - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/api/orders/notfound
+  - ./gradlew test
+  examples:
+  - curl -s http://localhost:8080/api/orders/42 | jq .
+  - 'curl -s -X POST http://localhost:8080/api/orders -H ''Content-Type: application/json'' -d ''{"id":43,"amount":99.5}'''
+  - ./gradlew test
+  parameters:
+  - name: method
+    type: string
+    description: HTTP method.
+  - name: body
+    type: string
+    description: JSON body for POST/PUT.
+knowledge:
+- title: Ktor Server
+  type: documentation
+  source: https://ktor.io/docs/server-create-a-new-project.html
+  description: 'Official Ktor server docs: routing, plugins, deployment.'
+- title: Ktor ContentNegotiation
+  type: documentation
+  source: https://ktor.io/docs/server-serialization.html
+  description: JSON serialization for Ktor server.
+instructions: "# Ktor Server\n\nBuild production Ktor server applications.\n\n## What this skill does\n\
+  \n- Sets up routing with typed handlers.\n- Serves JSON via ContentNegotiation.\n- Packages and runs\
+  \ the standalone JAR.\n\n## When to use\n\n- New Kotlin backend services.\n- Lightweight REST APIs with\
+  \ coroutine support.\n- Services needing static files + JSON APIs.\n\n## Real commands\n\n```bash\n\
+  # Run in dev\n./gradlew run\n\n# Build a runnable fat jar (shadow plugin)\n./gradlew build\njava -jar\
+  \ build/libs/ktor-server-all.jar\n\n# Test routes\ncurl -s http://localhost:8080/hello\ncurl -s http://localhost:8080/api/orders/42\
+  \ | jq .\ncurl -s -X POST http://localhost:8080/api/orders \\\n  -H 'Content-Type: application/json'\
+  \ -d '{\"id\":43,\"amount\":99.5}'\ncurl -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/api/orders/notfound\n\
+  ```\n\n## Routing example\n\n```kotlin\nfun Application.module() {\n    install(ContentNegotiation)\
+  \ { json() }\n    routing {\n        get(\"/hello\") { call.respondText(\"Hello, world!\") }\n     \
+  \   get(\"/api/orders/{id}\") {\n            val id = call.parameters[\"id\"]\n            val order\
+  \ = ordersRepo.findById(id)\n            if (order == null) call.respond(HttpStatusCode.NotFound)\n\
+  \            else call.respond(order)\n        }\n        post(\"/api/orders\") {\n            val order\
+  \ = call.receive<Order>()\n            ordersRepo.save(order)\n            call.respond(HttpStatusCode.Created,\
+  \ order)\n        }\n    }\n}\n```\n\n## Testing\n\n```bash\n./gradlew test\n```\n\n## Best practices\n\
+  \n- Use Ktor's status pages plugin to centralize error responses.\n- Serve behind a proxy (nginx/haproxy)\
+  \ for TLS termination.\n- Set engine config (threads, queue size) for production throughput.\n"
+examples:
+- input: Create a JSON API on Ktor
+  output: Install ContentNegotiation, add routing for GET/POST /api/orders, run with ./gradlew run, and
+    test with curl -s http://localhost:8080/api/orders/42.
+- input: Package the server for production
+  output: Use the shadow jar plugin, ./gradlew build, then java -jar build/libs/ktor-server-all.jar.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ktor-server.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-ktor-server
+  generic:
+    system_prompt: 'You work Ktor Server hands-on. You do it through server-routes: Define Ktor routes
+      and run the server. The commands are real, e.g. `./gradlew run`. You work hands-on and only report
+      outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

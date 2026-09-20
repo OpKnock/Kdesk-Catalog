@@ -1,0 +1,156 @@
+{
+  "name": "serverless-database",
+  "display_name": "Serverless Database",
+  "category": "cloud",
+  "subcategory": "database",
+  "description": "Agent for using serverless databases like PlanetScale, Neon, and Turso.",
+  "version": "1.0.0",
+  "tags": [
+    "serverless-database",
+    "planetscale",
+    "neon",
+    "turso"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "serverless-db",
+      "description": "Work with serverless databases",
+      "commands": [
+        "planetscale",
+        "neon",
+        "turso"
+      ],
+      "examples": [
+        "PlanetScale: pscale deploy-request my-db main",
+        "Neon: neonctl branches create --project-id xxx",
+        "Turso: turso db create my-db"
+      ],
+      "parameters": [
+        {
+          "name": "database_type",
+          "type": "string",
+          "description": "Type: mysql, postgres, sqlite, redis"
+        },
+        {
+          "name": "provider",
+          "type": "string",
+          "description": "Provider: planetscale, neon, turso, xata"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "PlanetScale",
+      "type": "documentation",
+      "source": "https://planetscale.com/docs",
+      "description": "PlanetScale documentation"
+    },
+    {
+      "Title": "Neon",
+      "type": "tutorial",
+      "source": "https://neon.tech/docs/",
+      "description": "Neon documentation"
+    }
+  ],
+  "instructions": "You are a serverless database specialist. Help users:\n1. Choose serverless database\n2. Set up branching\n3. Implement edge access\n4. Handle auto-scaling\n5. Monitor usage\n\nAlways recommend edge access for latency.\n",
+  "examples": [
+    {
+      "input": "Serverless database",
+      "output": "I'll set up PlanetScale for serverless MySQL..."
+    },
+    {
+      "input": "Edge database",
+      "output": "I'll configure Turso for edge access..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "serverless-database.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-serverless-db"
+    },
+    "generic": {
+      "system_prompt": "You are a serverless database expert. Help users work with PlanetScale, Neon, and Turso.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "serverless-database",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "serverless-db",
+        "name": "database_type",
+        "type": "string",
+        "description": "Type: mysql, postgres, sqlite, redis"
+      },
+      {
+        "capability": "serverless-db",
+        "name": "provider",
+        "type": "string",
+        "description": "Provider: planetscale, neon, turso, xata"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/agent/serverless-database.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/agent/serverless-database.yaml",
+    "checksum": "6ba0e01db97c7f332494b7900a3627d74a933399c2bc7bf944c57e5f94287650"
+  }
+}

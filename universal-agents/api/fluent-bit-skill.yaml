@@ -1,0 +1,102 @@
+name: fluent-bit
+display_name: Fluent Bit
+category: api
+subcategory: general
+description: 'Lightweight log and metric forwarding with Fluent Bit: configure inputs, parsers, and outputs,
+  and validate configs before running.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- fluent-bit
+capabilities:
+- name: fluentbit-config
+  description: Validate configs, run Fluent Bit with tail/forward inputs, and test outputs.
+  commands:
+  - fluent-bit --dry-run -c fluent-bit.conf
+  - fluent-bit -c fluent-bit.conf
+  - fluent-bit -i tail -p path=/var/log/app.log -o stdout -f 1
+  - fluent-bit -R parsers.conf -i dummy -o stdout
+  - fluent-bit --help | grep -A2 tail
+  examples:
+  - fluent-bit --dry-run -c fluent-bit.conf
+  - fluent-bit -i tail -p path=/var/log/app.log -o stdout -f 1
+  - fluent-bit -R parsers.conf -i dummy -o stdout
+  parameters:
+  - name: config-file
+    type: string
+    description: Path to fluent-bit.conf
+  - name: input-plugin
+    type: string
+    description: tail, forward, syslog, dummy
+  - name: output-plugin
+    type: string
+    description: stdout, es, loki, s3
+knowledge:
+- title: Fluent Bit docs
+  type: documentation
+  source: https://docs.fluentbit.io/manual/
+  description: Configuration schema, inputs, parsers, filters, and outputs
+- title: Fluent Bit service config
+  type: documentation
+  source: https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/
+  description: SERVICE, INPUT, OUTPUT sections and CLI overrides
+instructions: "# Fluent Bit\n\n## What this skill does\n\nFluent Bit is a high-performance log/metric\
+  \ processor written in C, ideal for sidecars and edge agents. Config is declared in fluent-bit.conf\
+  \ with [SERVICE], [INPUT], [FILTER], and [OUTPUT] sections; the CLI overrides at runtime.\n\n## When\
+  \ to use\n\n- Tailing container logs to Elasticsearch/Loki\n- Forwarding syslog from network devices\n\
+  - Low-footprint logging on edge nodes\n\n## Real commands\n\n```bash\n# Validate without running\nfluent-bit\
+  \ --dry-run -c fluent-bit.conf\n\n# Run with a config\nfluent-bit -c fluent-bit.conf\n\n# Quick inline\
+  \ pipeline: tail -> stdout\nfluent-bit -i tail -p path=/var/log/app.log -o stdout -f 1\n\n# Parsers\
+  \ at runtime\nfluent-bit -R parsers.conf -i dummy -o stdout\n```\n\n## fluent-bit.conf example\n\n```ini\n\
+  [SERVICE]\n    Flush 1\n    Log_Level info\n\n[INPUT]\n    Name tail\n    Path /var/log/app/*.log\n\
+  \    Parser json\n    Tag app.*\n\n[FILTER]\n    Name rewrite_tag\n    Match app.*\n    Rule $log_level\
+  \ ^(ERROR|WARN)$ error.$TAG true\n\n[OUTPUT]\n    Name es\n    Match *\n    Host elasticsearch\n   \
+  \ Port 9200\n    Index app-logs\n```\n\n## Testing\n\n```bash\n# Watch the pipeline end to end\nfluent-bit\
+  \ -i tail -p path=/tmp/demo.log -o stdout\n# in another shell:\necho '{\"log_level\":\"ERROR\",\"msg\"\
+  :\"boom\"}' >> /tmp/demo.log\n```\n\n## Best practices\n\n- Always run `--dry-run` in CI before deploying\
+  \ configs.\n- Tag early, filter by tag, and route outputs by tag.\n- Use built-in parsers (json, syslog,\
+  \ nginx) before writing custom regexes.\n- Set reasonable Buffer_Size and Mem_Buf_Limit to avoid OOM\
+  \ on bursts.\n- Test parser regexes with `fluent-bit -R parsers.conf -i dummy` offline.\n"
+examples:
+- input: Ship app JSON logs to Elasticsearch
+  output: Write a config with tail input + json parser and es output, validate with --dry-run, run, and
+    confirm the index appears.
+- input: Config won't start
+  output: Run fluent-bit --dry-run -c fluent-bit.conf to see the exact section/plugin error before debugging
+    the pipeline.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: fluent-bit.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-fluent-bit
+  generic:
+    system_prompt: 'You take the Fluent Bit seat. You do it through fluentbit-config: Validate configs,
+      run Fluent Bit with tail/forward inputs, and test outputs. The commands are real, e.g. `fluent-bit
+      --dry-run -c fluent-bit.conf`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

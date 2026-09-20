@@ -1,0 +1,173 @@
+{
+  "name": "grpc-health-check",
+  "display_name": "Grpc Health Check",
+  "category": "api",
+  "subcategory": "general",
+  "description": "gRPC health checking protocol: probing services with grpc_health_probe and grpcurl against the grpc.health.v1.Health service, including per-service checks.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "grpc_health_probe",
+    "grpcurl"
+  ],
+  "capabilities": [
+    {
+      "name": "health-probing",
+      "description": "Probe gRPC endpoints for health status using the standard grpc.health.v1.Health protocol.",
+      "commands": [
+        "grpc_health_probe -addr=localhost:50051",
+        "grpc_health_probe -addr=localhost:50051 -service helloworld.Greeter",
+        "grpcurl -plaintext localhost:50051 grpc.health.v1.Health/Check",
+        "grpcurl -plaintext -d '{\"service\":\"helloworld.Greeter\"}' localhost:50051 grpc.health.v1.Health/Check",
+        "go install github.com/grpc-ecosystem/grpc-health-probe/cmd/grpc_health_probe@latest"
+      ],
+      "examples": [
+        "grpc_health_probe -addr=localhost:50051 -connect-timeout 5s",
+        "kubectl exec deployment/myapp -- grpc_health_probe -addr=:50051",
+        "grpcurl -plaintext localhost:50051 list | grep health"
+      ],
+      "parameters": [
+        {
+          "name": "addr",
+          "type": "string",
+          "description": "gRPC endpoint host:port to probe."
+        },
+        {
+          "name": "service",
+          "type": "string",
+          "description": "Specific service name to health check (default checks overall status)."
+        },
+        {
+          "name": "connect_timeout",
+          "type": "string",
+          "description": "Connection timeout, e.g. 5s."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "gRPC Health Checking Protocol",
+      "type": "documentation",
+      "source": "https://github.com/grpc/grpc/blob/master/doc/health-checking.md",
+      "description": "Specification of the grpc.health.v1.Health service and status semantics."
+    },
+    {
+      "title": "grpc-health-probe",
+      "type": "documentation",
+      "source": "https://github.com/grpc-ecosystem/grpc-health-probe",
+      "description": "grpc_health_probe binary docs: flags and Kubernetes liveness probe usage."
+    }
+  ],
+  "instructions": "# gRPC Health Check\n\nProbe gRPC services with the standard health protocol.\n\n## What this skill does\n\n- Checks overall and per-service health of gRPC endpoints.\n- Runs health probes as Kubernetes liveness/readiness probes.\n- Interprets SERVING, NOT_SERVING, and UNKNOWN statuses.\n- Wires the health service into Go servers via the grpc_health_probe package.\n\n## When to use\n\n- A Kubernetes deployment with a gRPC app needs liveness/readiness probes.\n- A load balancer needs health signals that speak gRPC, not HTTP.\n- Debugging why a service is not receiving traffic.\n\n## Real commands\n\n```bash\n# Install the probe\ngo install github.com/grpc-ecosystem/grpc-health-probe/cmd/grpc_health_probe@latest\n\n# Check overall health\ngrpc_health_probe -addr=localhost:50051\n\n# Check a specific service\ngrpc_health_probe -addr=localhost:50051 -service helloworld.Greeter\n\n# With gRPC reflection, query the health service directly\ngrpcurl -plaintext localhost:50051 grpc.health.v1.Health/Check\ngrpcurl -plaintext -d '{\"service\":\"helloworld.Greeter\"}' localhost:50051 grpc.health.v1.Health/Check\n```\n\n## Server wiring (Go)\n\n```go\nimport \"google.golang.org/grpc/health\"\nimport healthpb \"google.golang.org/grpc/health/grpc_health_v1\"\n\nhs := health.NewServer()\nhs.SetServingStatus(\"helloworld.Greeter\", healthpb.HealthCheckResponse_SERVING)\nhealthpb.RegisterHealthServer(s, hs)\n```\n\n## Kubernetes probe\n\n```yaml\nlivenessProbe:\n  exec:\n    command: [\"/bin/grpc_health_probe\", \"-addr=:50051\"]\n  initialDelaySeconds: 10\nreadinessProbe:\n  exec:\n    command: [\"/bin/grpc_health_probe\", \"-addr=:50051\", \"-service\", \"helloworld.Greeter\"]\n```\n\n## Testing\n\n```bash\ngo run ./server &\ngrpc_health_probe -addr=localhost:50051 && echo HEALTHY\ngrpc_health_probe -addr=localhost:50051 -service does.not.Exist; echo \"exit=$?\"  # non-zero\n```\n\n## Best practices\n\n- Register per-service status when your binary hosts multiple gRPC services.\n- Report NOT_SERVING while the service is starting or shutting down.\n- Use `-connect-timeout` to bound probe time in Kubernetes.\n- The probe exits non-zero when unhealthy: perfect for `exec` probes.\n\n## Example exchange\n\n```\nUser: The pod is marked healthy but not ready.\nAgent: Add a readiness probe for the specific service:\n       grpc_health_probe -addr=:50051 -service helloworld.Greeter\n```",
+  "examples": [
+    {
+      "input": "Check if the Greeter service is healthy",
+      "output": "grpc_health_probe -addr=localhost:50051 -service helloworld.Greeter"
+    },
+    {
+      "input": "Probe health directly through reflection",
+      "output": "grpcurl -plaintext -d '{\"service\":\"helloworld.Greeter\"}' localhost:50051 grpc.health.v1.Health/Check"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "grpc-health-check.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-grpc-health-check"
+    },
+    "generic": {
+      "system_prompt": "You are the Grpc Health Check specialist. You do it through health-probing: Probe gRPC endpoints for health status using the standard grpc.health.v1.Health protocol. The commands are real, e.g. `grpc_health_probe -addr=localhost:50051`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "grpc-health-check",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "health-probing",
+        "name": "addr",
+        "type": "string",
+        "description": "gRPC endpoint host:port to probe."
+      },
+      {
+        "capability": "health-probing",
+        "name": "service",
+        "type": "string",
+        "description": "Specific service name to health check (default checks overall status)."
+      },
+      {
+        "capability": "health-probing",
+        "name": "connect_timeout",
+        "type": "string",
+        "description": "Connection timeout, e.g. 5s."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "grpc_health_probe",
+    "grpcurl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/grpc-health-check-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/grpc-health-check-skill.yaml",
+    "checksum": "9e7efb97ea0a7be5ab682ca9b8da8e339b9adc9a3f6255aec78b1b60a45c0f95"
+  }
+}

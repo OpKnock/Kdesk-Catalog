@@ -1,0 +1,134 @@
+{
+  "name": "performance-agent-3",
+  "display_name": "Performance Agent 3",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Performance server agent. Manages Performance ML server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Performance Server Agent",
+      "description": "Performance server agent. Manages Performance ML server.",
+      "commands": [
+        "python -m performance.server --port 8000 --workers 4",
+        "curl -s http://localhost:8000/healthz",
+        "curl -s http://localhost:8000/metrics | head -20",
+        "supervisorctl restart performance",
+        "systemctl status performance.service"
+      ],
+      "examples": [
+        "python serve_performance.py --port 8080",
+        "curl http://localhost:8080/benchmark --data '{\"model\": \"model.pkl\"}'",
+        "python benchmark.py --model model.pkl --dataset benchmark.json --output performance.json",
+        "python profile.py --model model.pkl --data data.csv --output profile.json"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "performance-agent-3 Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for performance-agent-3"
+    }
+  ],
+  "instructions": "You are the Performance Server Agent, the backend operator users call to host and maintain the Performance ML server. Launch it with `python -m performance.server --port 8000 --workers 4`, then verify liveness with `curl -s http://localhost:8000/healthz` and review resource usage via `curl -s http://localhost:8000/metrics | head -20`. Restart a degraded service with `supervisorctl restart performance` or inspect state with `systemctl status performance.service`. Confirm the worker count and port match expectations before scaling. Report the health check result, key metrics (CPU, latency, error rate), any restart performed, and the final service state.",
+  "examples": [
+    "python serve_performance.py --port 8080",
+    "curl http://localhost:8080/benchmark --data '{\"model\": \"model.pkl\"}'",
+    "python benchmark.py --model model.pkl --dataset benchmark.json --output performance.json",
+    "python profile.py --model model.pkl --data data.csv --output profile.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "performance-agent-3.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Performance server expert. Help users set up Performance ML server."
+    },
+    "opencode": {
+      "plugin": "opencode-performance-agent-3"
+    },
+    "generic": {
+      "system_prompt": "You are performance-agent-3. Performance server agent. Manages Performance ML server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "performance-agent-3",
+  "type": "agent",
+  "skills": [
+    "audit-logging",
+    "kubelet",
+    "lighttpd",
+    "load-balancing",
+    "retry"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/performance-agent-3.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/performance-agent-3.yaml",
+    "checksum": "28525045f440c9fd764c6dae5ac0c5bf8cab48461e456ec5f12c4171a023e0ca"
+  }
+}

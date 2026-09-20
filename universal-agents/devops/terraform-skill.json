@@ -1,0 +1,208 @@
+{
+  "name": "terraform",
+  "display_name": "Terraform",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Writes and applies Terraform configurations: init, plan, apply, format, validate, workspaces, providers, and outputs.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "terraform"
+  ],
+  "capabilities": [
+    {
+      "name": "core-workflow",
+      "description": "Initialize, plan, apply, and destroy infrastructure.",
+      "commands": [
+        "terraform init",
+        "terraform plan -out plan.tfplan",
+        "terraform apply plan.tfplan",
+        "terraform destroy -auto-approve",
+        "terraform fmt -recursive",
+        "terraform validate"
+      ],
+      "examples": [
+        "terraform init",
+        "terraform plan -out plan.tfplan",
+        "terraform apply plan.tfplan"
+      ],
+      "parameters": [
+        {
+          "name": "plan-file",
+          "type": "string",
+          "description": "Saved plan file"
+        },
+        {
+          "name": "dir",
+          "type": "string",
+          "description": "Config directory"
+        }
+      ]
+    },
+    {
+      "name": "modules-and-workspaces",
+      "description": "Work with modules, workspaces, outputs, and provider configs.",
+      "commands": [
+        "terraform get -update",
+        "terraform workspace new prod",
+        "terraform workspace select dev",
+        "terraform output -json",
+        "terraform providers",
+        "terraform providers lock -platform=linux_amd64"
+      ],
+      "examples": [
+        "terraform get -update",
+        "terraform workspace select prod",
+        "terraform output -json"
+      ],
+      "parameters": [
+        {
+          "name": "workspace",
+          "type": "string",
+          "description": "Workspace name"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output name to query"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Terraform Documentation",
+      "type": "documentation",
+      "source": "https://developer.hashicorp.com/terraform/docs",
+      "description": "Language, CLI, providers, and state"
+    },
+    {
+      "title": "Terraform Language",
+      "type": "documentation",
+      "source": "https://developer.hashicorp.com/terraform/language",
+      "description": "HCL syntax, expressions, and built-in functions"
+    },
+    {
+      "title": "Terraform Registry",
+      "type": "documentation",
+      "source": "https://registry.terraform.io/",
+      "description": "Official providers and modules"
+    }
+  ],
+  "instructions": "# Terraform Operations\n\nProvision cloud infrastructure with Terraform: plan, apply, modules, and workspaces.\n\n## What This Skill Does\n\n- Initializes providers and module dependencies\n- Plans and applies infrastructure safely\n- Formats and validates HCL\n- Manages workspaces and provider locking\n- Reads outputs for CI consumption\n\n## When to Use\n\n- Provisioning cloud resources reproducibly\n- Evolving infrastructure with reviewable diffs\n- Building reusable modules\n\n## Real Commands\n\n```bash\n# Core loop\nterraform init\nterraform fmt -recursive\nterraform validate\nterraform plan -out plan.tfplan\nterraform apply plan.tfplan\nterraform destroy -auto-approve -target=aws_instance.web\n\n# Modules and workspaces\nterraform get -update\nterraform workspace new prod\nterraform workspace select dev\nterraform workspace list\n\n# Outputs and providers\nterraform output -json\nterraform providers\nterraform providers lock -platform=linux_amd64 -platform=darwin_arm64\nterraform console\n```\n\n## Best Practices\n\n- Always plan with -out and apply that exact plan\n- Use -detailed-exitcode in CI to detect diffs\n- Pin provider versions in required_providers\n- Keep state in remote backends with locking\n- Store terraform.tfvars in CI secret storage, not git\n- Structure with modules: root modules per environment",
+  "examples": [
+    {
+      "input": "Review what this terraform change will do",
+      "output": "Agent inits, runs plan -out, summarizes resources to add/change/delete"
+    },
+    {
+      "input": "Set up environments dev/staging/prod",
+      "output": "Agent creates workspaces and per-environment tfvars, verifying isolation with workspace select and plan"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "terraform.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-terraform"
+    },
+    "generic": {
+      "system_prompt": "You work Terraform hands-on. You do it through core-workflow: Initialize, plan, apply, and destroy infrastructure. The commands are real, e.g. `terraform init`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "terraform",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "core-workflow",
+        "name": "plan-file",
+        "type": "string",
+        "description": "Saved plan file"
+      },
+      {
+        "capability": "core-workflow",
+        "name": "dir",
+        "type": "string",
+        "description": "Config directory"
+      },
+      {
+        "capability": "modules-and-workspaces",
+        "name": "workspace",
+        "type": "string",
+        "description": "Workspace name"
+      },
+      {
+        "capability": "modules-and-workspaces",
+        "name": "output",
+        "type": "string",
+        "description": "Output name to query"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "terraform"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/terraform-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/terraform-skill.yaml",
+    "checksum": "babc045e0db32f6f4129895498f47c5497a9ca88a0ff78c9d604797da0f9366d"
+  }
+}

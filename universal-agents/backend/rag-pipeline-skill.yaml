@@ -1,0 +1,188 @@
+name: rag-pipeline
+display_name: Rag Pipeline
+category: backend
+subcategory: general
+description: 'Builds retrieval-augmented generation pipelines: chunking, embeddings, vector search, reranking,
+  and grounded answer generation.'
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+- ollama
+- pip
+- python
+capabilities:
+- commands:
+  - pip install chromadb sentence-transformers
+  - python -c "import chromadb; c=chromadb.PersistentClient(path=\"./db\"); c.create_collection(\"docs\");
+    print(\"ok\")"
+  - ollama pull nomic-embed-text
+  - python -c "from sentence_transformers import SentenceTransformer; m=SentenceTransformer(\"all-MiniLM-L6-v2\");
+    print(m.encode([\"hi\"]).shape)"
+  description: Index documents into vector stores with embedding models.
+  name: vector-indexing
+  examples:
+  - python -c "import chromadb; c=chromadb.PersistentClient(path=\"./db\"); col=c.get_collection(\"docs\");
+    print(col.count())"
+  - ollama list
+  parameters:
+  - description: Vector collection name
+    name: collection
+    type: string
+  - description: Embedding model id
+    name: model
+    type: string
+- commands:
+  - python -c "import chromadb; c=chromadb.PersistentClient(path=\"./db\"); col=c.get_collection(\"docs\");
+    r=col.query(query_texts=[\"how to deploy\"], n_results=5); print(r)"
+  - npx llamaindex-cli
+  - pip install langchain
+  - python -c "from langchain.vectorstores import Chroma; print(\"ok\")"
+  description: Retrieve context and generate grounded answers.
+  name: rag-querying
+  examples:
+  - python -c "import chromadb; c=chromadb.PersistentClient(path=\"./db\"); print([m[\"metadatas\"] for
+    m in [c.get_collection(\"docs\").query(query_texts=[\"pricing\"], n_results=3)]])"
+  - curl -s http://localhost:8000/query -d "{\"q\":\"refund policy\"}"
+  parameters:
+  - description: Natural language query
+    name: query
+    type: string
+  - description: Number of results to retrieve
+    name: top-k
+    type: integer
+knowledge:
+- title: RAG Guide (OpenAI)
+  description: RAG concepts for GPT-based apps
+  source: https://help.openai.com/en/articles/8868588-retrieval-augmented-generation-rag-and-semantic-search-for-gpts
+  type: documentation
+- title: LangChain Docs
+  description: Chunking, retrievers, and chains
+  source: https://python.langchain.com/docs/
+  type: documentation
+- title: ChromaDB Docs
+  description: Vector store API
+  source: https://docs.trychroma.com
+  type: documentation
+instructions: '# RAG Pipeline
+
+
+  Build retrieval-augmented generation pipelines.
+
+
+  ## When to Use
+
+
+  - Answering questions from private or changing document sets
+
+  - Grounding LLM output in verified source material
+
+  - Reducing hallucinations in summarization and Q&A features
+
+  - Handling content that is too large for the model context window
+
+
+  ## Pipeline Stages
+
+
+  1. Ingestion: parse documents, split into chunks
+
+  2. Embedding: map chunks to vectors
+
+  3. Indexing: store vectors with metadata in a vector DB
+
+  4. Retrieval: query the index by similarity
+
+  5. Reranking: refine top-k with a cross-encoder
+
+  6. Generation: answer with retrieved chunks as context
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Install tools
+
+  pip install chromadb sentence-transformers langchain
+
+  ollama pull nomic-embed-text
+
+
+  # Create a collection
+
+  python -c "import chromadb; c=chromadb.PersistentClient(path=''./db''); c.create_collection(''docs'');
+  print(''ok'')"
+
+
+  # Query the index
+
+  python -c "import chromadb; c=chromadb.PersistentClient(path=''./db''); col=c.get_collection(''docs'');
+  r=col.query(query_texts=[''how to deploy''], n_results=5); print(r)"
+
+
+  # Inspect count
+
+  python -c "import chromadb; c=chromadb.PersistentClient(path=''./db''); print(c.get_collection(''docs'').count())"
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Chunk by semantic boundaries (sections), not fixed sizes only
+
+  - Store metadata (source, date, page) with every chunk
+
+  - Set the LLM temperature low and instruct: cite only retrieved facts
+
+  - Rerank with a cross-encoder when retrieval quality matters
+
+  - Evaluate with a golden set of Q/A pairs before launch
+
+  - Embed query and docs with the same model'
+examples:
+- input: Answer questions from our internal docs
+  output: Agent sets up ChromaDB ingestion with chunked markdown, embeds with all-MiniLM-L6-v2, and wires
+    retrieval into the LLM call with source citations.
+- input: Retrieval returns irrelevant chunks
+  output: Agent checks embedding model mismatch, adjusts chunk size and overlap, adds metadata filters,
+    and suggests a cross-encoder reranker.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: rag-pipeline.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-rag-pipeline
+  generic:
+    system_prompt: 'Your lane is Rag Pipeline. You do it through vector-indexing: Index documents into
+      vector stores with embedding models. The commands are real, e.g. `pip install chromadb sentence-transformers`.
+      You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,230 @@
+{
+  "name": "rabbitmq",
+  "display_name": "Rabbitmq",
+  "category": "messaging",
+  "subcategory": "general",
+  "description": "Operates RabbitMQ brokers: vhosts, users, queues, exchanges, and message flow with rabbitmqctl and rabbitmqadmin.",
+  "version": "2.0.0",
+  "tags": [
+    "rabbitmq"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "rabbitmqadmin",
+    "rabbitmqctl"
+  ],
+  "capabilities": [
+    {
+      "name": "rabbitmqctl",
+      "description": "Administer the broker with rabbitmqctl.",
+      "commands": [
+        "rabbitmqctl status",
+        "rabbitmqctl list_queues name messages consumers --formatter table",
+        "rabbitmqctl add_vhost orders_vhost",
+        "rabbitmqctl add_user svc_orders secret123",
+        "rabbitmqctl set_permissions -p orders_vhost svc_orders '.*' '.*' '.*'"
+      ],
+      "examples": [
+        "rabbitmqctl list_queues name messages | sort -k2 -rn | head",
+        "rabbitmqctl list_exchanges name type --formatter json",
+        "rabbitmqctl set_user_tags svc_orders monitoring"
+      ],
+      "parameters": [
+        {
+          "name": "vhost",
+          "type": "string",
+          "description": "Virtual host name"
+        },
+        {
+          "name": "user",
+          "type": "string",
+          "description": "RabbitMQ user"
+        },
+        {
+          "name": "formatter",
+          "type": "string",
+          "description": "table, tsv, or json"
+        }
+      ]
+    },
+    {
+      "name": "rabbitmqadmin",
+      "description": "Declare and inspect topology with rabbitmqadmin.",
+      "commands": [
+        "rabbitmqadmin declare queue name=orders durable=true",
+        "rabbitmqadmin declare exchange name=order.events type=topic durable=true",
+        "rabbitmqadmin declare binding source=order.events destination=orders routing_key='orders.*'",
+        "rabbitmqadmin list queues name messages rate",
+        "rabbitmqadmin get queue=orders count=10 --format=json"
+      ],
+      "examples": [
+        "rabbitmqadmin declare queue name=dead.orders durable=true --vhost=orders_vhost",
+        "rabbitmqadmin list bindings source destination routing_key",
+        "rabbitmqadmin get queue=orders ackmode=ack_requeue_true count=1 --format=raw_json"
+      ],
+      "parameters": [
+        {
+          "name": "queue",
+          "type": "string",
+          "description": "Queue name"
+        },
+        {
+          "name": "exchange",
+          "type": "string",
+          "description": "Exchange name"
+        },
+        {
+          "name": "routing_key",
+          "type": "string",
+          "description": "Binding routing key"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "RabbitMQ CLI",
+      "type": "documentation",
+      "source": "https://www.rabbitmq.com/docs/cli",
+      "description": "rabbitmqctl, rabbitmqadmin, and rabbitmq-plugins"
+    },
+    {
+      "title": "RabbitMQ Exchanges",
+      "type": "documentation",
+      "source": "https://www.rabbitmq.com/docs/exchanges",
+      "description": "direct, topic, fanout, headers semantics"
+    },
+    {
+      "title": "RabbitMQ Queue Guide",
+      "type": "documentation",
+      "source": "https://www.rabbitmq.com/docs/queues",
+      "description": "Durable queues, DLX, and TTL"
+    }
+  ],
+  "instructions": "# RabbitMQ\n\nOperate RabbitMQ with the official admin tools.\n\n## When to Use\n\n- Work queues and routing topologies\n- Managing vhosts/users for multi-team isolation\n- DLQ and TTL design\n\n## Broker status\n\n```bash\nrabbitmqctl status\nrabbitmqctl list_queues name messages consumers --formatter table\n```\n\n## Multi-tenancy\n\n```bash\nrabbitmqctl add_vhost orders_vhost\nrabbitmqctl add_user svc_orders secret123\nrabbitmqctl set_permissions -p orders_vhost svc_orders '.*' '.*' '.*'\n```\n\nUse separate vhosts per team/environment.\n\n## Topology via rabbitmqadmin\n\n```bash\nrabbitmqadmin declare exchange name=order.events type=topic durable=true\nrabbitmqadmin declare queue name=orders durable=true\nrabbitmqadmin declare binding source=order.events destination=orders routing_key='orders.*'\n```\n\n## Consuming for debugging\n\n```bash\nrabbitmqadmin get queue=orders count=10 ackmode=ack_requeue_true --format=json\n```\n\n## DLQ pattern\n\nDeclare `dead.orders` with the same type, bind via DLX args:\n\n```bash\nrabbitmqadmin declare queue name=orders durable=true arguments='{\"x-dead-letter-exchange\":\"order.dlx\",\"x-message-ttl\":30000}'\n```\n\n## Best practices\n\n- Durable queues + persistent messages for critical flows.\n- Set prefetch to match consumer CPU profile.\n- Watch `messages_unacknowledged` for stuck consumers.\n- Rotate user credentials quarterly; least-privilege per vhost.\n\n## Testing\n\nPublish 1k messages to a topic exchange and verify binding fan-out with rabbitmqadmin get.",
+  "examples": [
+    {
+      "input": "Set up an order event topology with DLQ.",
+      "output": "Creates the topic exchange, durable queue with DLX and TTL, dead-letter queue, and binding, then publishes test messages."
+    },
+    {
+      "input": "Create a restricted user for the orders vhost.",
+      "output": "Adds the user, sets vhost permissions, and verifies with rabbitmqctl list_permissions."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rabbitmq.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rabbitmq"
+    },
+    "generic": {
+      "system_prompt": "You are the Rabbitmq specialist. You do it through rabbitmqctl: Administer the broker with rabbitmqctl. The commands are real, e.g. `rabbitmqctl status`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rabbitmq",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rabbitmqctl",
+        "name": "vhost",
+        "type": "string",
+        "description": "Virtual host name"
+      },
+      {
+        "capability": "rabbitmqctl",
+        "name": "user",
+        "type": "string",
+        "description": "RabbitMQ user"
+      },
+      {
+        "capability": "rabbitmqctl",
+        "name": "formatter",
+        "type": "string",
+        "description": "table, tsv, or json"
+      },
+      {
+        "capability": "rabbitmqadmin",
+        "name": "queue",
+        "type": "string",
+        "description": "Queue name"
+      },
+      {
+        "capability": "rabbitmqadmin",
+        "name": "exchange",
+        "type": "string",
+        "description": "Exchange name"
+      },
+      {
+        "capability": "rabbitmqadmin",
+        "name": "routing_key",
+        "type": "string",
+        "description": "Binding routing key"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "rabbitmqadmin",
+    "rabbitmqctl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "messaging/rabbitmq-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/messaging/rabbitmq-skill.yaml",
+    "checksum": "5553ad0816906673f27b4e9e06c136e91617452ef70f55dce24dd3db83953539"
+  }
+}

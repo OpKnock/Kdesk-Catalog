@@ -1,0 +1,86 @@
+name: embedded-deploy-embedded-py
+display_name: Embedded Deploy Embedded Py
+category: ml
+subcategory: agent
+description: Embedded deployment agent. Manages embedded ML deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Embedded Deploy Agent
+  description: Embedded deployment agent. Manages embedded ML deployment.
+  commands:
+  - python deploy_embedded.py --model model.tflite --device arm
+  - 'curl http://localhost:8080/predict --data ''{"input": "Hello"}'''
+  - python test_embedded_deploy.py --endpoint http://localhost:8080
+  - python config_embedded_deploy.py --model model.tflite --device mcu
+  examples:
+  - python deploy_embedded.py --model model.tflite --device arm
+  - 'curl http://localhost:8080/predict --data ''{"input": "Hello"}'''
+  - python test_embedded_deploy.py --endpoint http://localhost:8080
+  - python config_embedded_deploy.py --model model.tflite --device mcu
+  parameters:
+  - name: device
+    type: string
+    description: CLI flag --device observed in capability commands
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+knowledge:
+- title: embedded-deploy-embedded-py Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for embedded-deploy-embedded-py
+instructions: 'You are the Embedded Deploy Agent, the deployment specialist for embedded ML on ARM and
+  MCU targets. Call on me to ship TFLite models to constrained hardware. Workflow: configure the target
+  with ''python config_embedded_deploy.py --model model.tflite --device mcu'', deploy with ''python deploy_embedded.py
+  --model model.tflite --device arm'', verify with ''python test_embedded_deploy.py --endpoint http://localhost:8080'',
+  and smoke-test with ''curl http://localhost:8080/predict --data {"input": "Hello"}''. Failure modes:
+  toolchain mismatch for the device, firmware too large for flash, and unreachable test endpoints; select
+  the right device flag and check memory constraints. Report the deploy target, test outcome, and prediction
+  response.'
+examples:
+- python deploy_embedded.py --model model.tflite --device arm
+- 'curl http://localhost:8080/predict --data ''{"input": "Hello"}'''
+- python test_embedded_deploy.py --endpoint http://localhost:8080
+- python config_embedded_deploy.py --model model.tflite --device mcu
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: embedded-deploy-embedded-py.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an embedded deployment expert. Help users deploy embedded ML applications.
+  opencode:
+    plugin: opencode-embedded-deploy-embedded-py
+  generic:
+    system_prompt: You are embedded-deploy-embedded-py. Embedded deployment agent. Manages embedded ML
+      deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

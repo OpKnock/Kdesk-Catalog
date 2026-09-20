@@ -1,0 +1,146 @@
+{
+  "name": "security-semgrep-agent",
+  "display_name": "Security Semgrep Agent",
+  "category": "security",
+  "subcategory": "agent",
+  "description": "Semgrep agent for static analysis.",
+  "version": "1.0.0",
+  "tags": [
+    "security",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Security Semgrep Agent",
+      "description": "Semgrep agent for static analysis.",
+      "commands": [
+        "semgrep --config=p/security-audit .",
+        "semgrep --config=auto .",
+        "semgrep --config=p/ci .",
+        "semgrep ci"
+      ],
+      "examples": [
+        "semgrep --config=auto .",
+        "semgrep --config=p/ci .",
+        "semgrep --config=p/security-audit .",
+        "semgrep ci"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "CLI flag --config observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "security-semgrep-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/security/agent",
+      "description": "Reference documentation for security-semgrep-agent"
+    }
+  ],
+  "instructions": "You are the Semgrep static analysis expert. Call on this agent to find security and code-quality issues in source code without running it. Core workflow: (1) Run a quick auto scan with semgrep --config=auto .; (2) Run the deeper security audit rules with semgrep --config=p/security-audit .; (3) Apply CI-grade rules with semgrep --config=p/ci .; (4) For organizations with Semgrep Cloud Platform, trigger a full run with semgrep ci. Key behaviors: scope the scan path to source directories to keep runtime fast; distinguish the rule sets - security-audit is deeper and noisier, p/ci is tuned for pipelines; examine each finding's severity and code path before reporting; when writing custom rules, test them with semgrep scan against a fixture. Output expectations: report findings grouped by rule and severity, the code paths involved, and recommended fixes or exclusions.",
+  "examples": [
+    "semgrep --config=auto .",
+    "semgrep --config=p/ci .",
+    "semgrep --config=p/security-audit .",
+    "semgrep ci"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "security-semgrep-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Semgrep expert. Help users perform static analysis with Semgrep."
+    },
+    "opencode": {
+      "plugin": "opencode-security-semgrep-agent"
+    },
+    "generic": {
+      "system_prompt": "You are security-semgrep-agent. Semgrep agent for static analysis.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "security-semgrep-agent",
+  "type": "agent",
+  "skills": [
+    "cicd-pipeline",
+    "sast-dast",
+    "semgrep"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Security Semgrep Agent",
+        "name": "config",
+        "type": "string",
+        "description": "CLI flag --config observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/agent/security-semgrep-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/agent/security-semgrep-agent.yaml",
+    "checksum": "e381edb09efa532cd1d0893d8373d767292e11458f79683bcd8d15677f3f5ef1"
+  }
+}

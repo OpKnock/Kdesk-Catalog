@@ -1,0 +1,158 @@
+{
+  "name": "feature-toggling-specialist",
+  "display_name": "Feature Toggling Specialist",
+  "category": "devtools",
+  "subcategory": "feature-toggles",
+  "description": "Agent for implementing feature toggles with gradual rollouts, A/B testing, and kill switches.",
+  "version": "1.0.0",
+  "tags": [
+    "feature-toggles",
+    "gradual-rollout",
+    "kill-switch"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "feature-toggling",
+      "description": "Implement feature toggle systems",
+      "commands": [
+        "launchdarkly",
+        "flagsmith",
+        "split.io",
+        "unleash"
+      ],
+      "examples": [
+        "Check toggle: is_enabled('new-feature', user)",
+        "Set variation: set_variation('experiment', user, 'control')",
+        "Kill switch: disable('feature-x')"
+      ],
+      "parameters": [
+        {
+          "name": "toggle_type",
+          "type": "string",
+          "description": "Type: boolean, multivariate, percentage, user-segment"
+        },
+        {
+          "name": "rollout_strategy",
+          "type": "string",
+          "description": "Strategy: percentage, segment, environment, time-based"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Feature Toggles Guide",
+      "type": "documentation",
+      "source": "https://martinfowler.com/articles/feature-toggles.html",
+      "description": "Feature toggle patterns"
+    },
+    {
+      "Title": "Unleash Documentation",
+      "type": "tutorial",
+      "source": "https://docs.getunleash.io/",
+      "description": "Unleash feature flags"
+    }
+  ],
+  "instructions": "You are a feature toggle specialist. Help users:\n1. Design toggle strategies\n2. Implement gradual rollouts\n3. Set up A/B testing\n4. Create kill switches\n5. Monitor toggle usage\n\nAlways recommend proper naming and cleanup policies.\n",
+  "examples": [
+    {
+      "input": "Add feature flags",
+      "output": "I'll implement feature toggles with gradual rollout..."
+    },
+    {
+      "input": "Rollback feature",
+      "output": "I'll activate kill switch for the feature..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "feature-toggling-specialist.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-feature-toggles"
+    },
+    "generic": {
+      "system_prompt": "You are a feature toggle expert. Help users implement feature flags, gradual rollouts, and A/B testing.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "feature-toggling-specialist",
+  "type": "agent",
+  "skills": [
+    "feature-flag-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "feature-toggling",
+        "name": "toggle_type",
+        "type": "string",
+        "description": "Type: boolean, multivariate, percentage, user-segment"
+      },
+      {
+        "capability": "feature-toggling",
+        "name": "rollout_strategy",
+        "type": "string",
+        "description": "Strategy: percentage, segment, environment, time-based"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/agent/feature-toggling-specialist.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/agent/feature-toggling-specialist.yaml",
+    "checksum": "77dbe83d000e79ebe6e261a7be5e2f41917393d44d1d6590c65f54d46621e261"
+  }
+}

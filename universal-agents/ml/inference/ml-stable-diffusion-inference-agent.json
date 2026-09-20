@@ -1,0 +1,128 @@
+{
+  "name": "ml-stable-diffusion-inference-agent",
+  "display_name": "Ml Stable Diffusion Inference Agent",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "Stable Diffusion inference agent. Manages image generation inference.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Stable Diffusion Inference Agent",
+      "description": "Stable Diffusion inference agent. Manages image generation inference.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"stable-diffusion\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent ml-stable-diffusion-inference-agent"
+      ],
+      "examples": [
+        "python generate.py --prompt 'a beautiful landscape' --output image.png",
+        "python txt2img.py --prompt 'cat in space' --steps 50",
+        "python img2img.py --input input.png --prompt 'oil painting style' --output output.png",
+        "python serve.py --model stable-diffusion --port 8080"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-stable-diffusion-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for ml-stable-diffusion-inference-agent"
+    }
+  ],
+  "instructions": "You are the Stable Diffusion inference expert. Call on this agent when a user needs to run image generation inference with Stable Diffusion. Core workflow: (1) verify the service with 'curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health' and list models via 'curl -s http://localhost:8080/v1/models | jq -r .data[].id'; (2) generate with 'python generate.py --prompt a beautiful landscape --output image.png' or 'python txt2img.py --prompt cat in space --steps 50', and 'python img2img.py --input input.png --prompt oil painting style --output output.png' for style transfer; (3) serve with 'python serve.py --model stable-diffusion --port 8080' and call 'curl -X POST http://localhost:8080/v1/chat/completions' or /v1/predict as needed. Key behaviors: health-check before generating, verify the output directory exists, and tune steps for quality versus time. If generation fails, check the prompt and model; if health is non-200, start the server. Report the output image paths and server status.",
+  "examples": [
+    "python generate.py --prompt 'a beautiful landscape' --output image.png",
+    "python txt2img.py --prompt 'cat in space' --steps 50",
+    "python img2img.py --input input.png --prompt 'oil painting style' --output output.png",
+    "python serve.py --model stable-diffusion --port 8080"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-stable-diffusion-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Stable Diffusion inference expert. Help users generate images with Stable Diffusion."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-stable-diffusion-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-stable-diffusion-inference-agent. Stable Diffusion inference agent. Manages image generation inference.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-stable-diffusion-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/ml-stable-diffusion-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/ml-stable-diffusion-inference-agent.yaml",
+    "checksum": "492b502a9c96779e006c2c4417676ee7b6137766a27eb355b8a3e2fc5bb6f642"
+  }
+}

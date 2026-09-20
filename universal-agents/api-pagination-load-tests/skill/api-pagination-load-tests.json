@@ -1,0 +1,189 @@
+{
+  "name": "api-pagination-load-tests",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Load-tests pagination endpoints with k6 and autocannon: deep-page queries, worst-case limits, cursor stress, and performance regression detection in CI.",
+  "keywords": [
+    "pagination",
+    "cursor",
+    "offset"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-pagination-load-tests.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-pagination-load-tests"
+    },
+    "generic": {
+      "system_prompt": "You are the Api Pagination Load Tests specialist. You do it through pagination-load-tests: Run load scenarios targeting pagination endpoints. The commands are real, e.g. `k6 run pagination-test.js`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "pagination-load-tests",
+      "description": "Run load scenarios targeting pagination endpoints",
+      "commands": [
+        "k6 run pagination-test.js",
+        "npx autocannon -c 10 -d 30 'http://localhost:3000/users?page=1&limit=100'",
+        "ab -n 2000 -c 50 'http://localhost:3000/users?limit=50'",
+        "k6 run --vus 20 --duration 60s --summary-export=summary.json pagination-test.js",
+        "curl -s -o /dev/null -w '%{time_total} %{http_code}\\n' 'http://localhost:3000/users?cursor=deep&limit=100'"
+      ],
+      "examples": [
+        "k6 run pagination-test.js exercises cursor walks in a loop",
+        "autocannon -c 10 -d 30 floods the limit=100 endpoint",
+        "ab -n 2000 -c 50 measures throughput with offsets"
+      ],
+      "parameters": [
+        {
+          "name": "vus",
+          "type": "integer",
+          "description": "k6 virtual users"
+        },
+        {
+          "name": "duration",
+          "type": "string",
+          "description": "Test duration like 60s"
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "description": "Page size under test"
+        }
+      ]
+    },
+    {
+      "name": "deep-page-analysis",
+      "description": "Detect O(n) degradation on deep pagination",
+      "commands": [
+        "k6 run --iterations 200 deep-page.js",
+        "curl -s 'http://localhost:3000/api/timing?page=1' | jq '.serverTimeMs'",
+        "curl -s 'http://localhost:3000/api/timing?page=500' | jq '.serverTimeMs'",
+        "npx autocannon -c 5 -d 20 'http://localhost:3000/users?page=500'"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "postgresql"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "postgresql",
+    "redis",
+    "graphql"
+  ],
+  "examples": [
+    {
+      "input": "Compare cursor vs offset performance",
+      "output": "Runs identical k6 walks against both variants and compares p95 latency at depth 500"
+    },
+    {
+      "input": "Set a latency budget for /users",
+      "output": "Adds k6 thresholds and runs --summary-export in CI"
+    }
+  ],
+  "instructions": "# API Pagination v5 - Performance\n\nLoad testing pagination endpoints.\n\n## What This Skill Does\n- Scripts realistic pagination walk scenarios in k6\n- Benchmarks worst-case page sizes and deep pages\n- Sets thresholds to gate pagination regressions\n\n## When to Use\n- Before moving pagination to cursor mode\n- Tuning page size defaults\n- Catching O(n) OFFSET degradation\n\n## Real Commands\n\n```bash\nk6 run pagination-test.js\nnpx autocannon -c 10 -d 30 'http://localhost:3000/users?page=1&limit=100'\nab -n 2000 -c 50 'http://localhost:3000/users?limit=50'\n```\n\n## k6 Scenario\n\n```js\nimport http from 'k6/http';\nexport const options = {\n  thresholds: { http_req_duration: ['p(95)<250'] }\n};\nexport default function () {\n  const r = http.get('http://localhost:3000/users?page=1&limit=50');\n  const next = r.json().next;\n  if (next) http.get(next);\n}\n```\n\n## Testing\n- Compare p95 at page 1 vs page 500 to expose OFFSET cost\n- Test limit at the configured maximum\n- Break tests into categories: first page, middle page, last page\n\n## Best Practices\n- Keep thresholds aggressive on p95 not averages\n- Run against a seeded dataset, not an empty table\n- Assert page size caps prevent pathological queries",
+  "display_name": "Api Pagination Load Tests",
+  "knowledge": [
+    {
+      "title": "k6 Documentation",
+      "type": "documentation",
+      "source": "https://grafana.com/docs/k6/latest/",
+      "description": "Load testing with scripted scenarios and thresholds"
+    },
+    {
+      "title": "autocannon",
+      "type": "documentation",
+      "source": "https://github.com/mcollina/autocannon",
+      "description": "HTTP benchmarking with connection pipelining"
+    }
+  ],
+  "id": "api-pagination-load-tests",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pagination-load-tests",
+        "name": "vus",
+        "type": "integer",
+        "description": "k6 virtual users"
+      },
+      {
+        "capability": "pagination-load-tests",
+        "name": "duration",
+        "type": "string",
+        "description": "Test duration like 60s"
+      },
+      {
+        "capability": "pagination-load-tests",
+        "name": "limit",
+        "type": "integer",
+        "description": "Page size under test"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "postgresql"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-pagination-load-tests/skill/api-pagination-load-tests.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-pagination-load-tests/skill/api-pagination-load-tests.yaml",
+    "checksum": "c3a718e4672afe20a45581e235a3dedd0cf14264c25cba5d5673433b8e9755fc"
+  }
+}

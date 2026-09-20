@@ -1,0 +1,210 @@
+{
+  "name": "docker-swarm",
+  "display_name": "docker-swarm",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Deploys and manages Docker Swarm clusters: services, replicas, secrets, configs, stacks, and rolling updates.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker"
+  ],
+  "capabilities": [
+    {
+      "name": "swarm-cluster",
+      "description": "Initialize swarm, join workers and managers, and inspect cluster state.",
+      "commands": [
+        "docker swarm init --advertise-addr 10.0.0.5",
+        "docker swarm join-token worker",
+        "docker swarm join --token SWMTKN-1-xxx 10.0.0.5:2377",
+        "docker node ls",
+        "docker node update --availability drain node2",
+        "docker swarm leave --force"
+      ],
+      "examples": [
+        "docker swarm init --advertise-addr 10.0.0.5",
+        "docker node ls",
+        "docker node update --availability drain node2"
+      ],
+      "parameters": [
+        {
+          "name": "advertise-addr",
+          "type": "string",
+          "description": "IP to advertise for swarm communication"
+        },
+        {
+          "name": "node",
+          "type": "string",
+          "description": "Node hostname for availability changes"
+        }
+      ]
+    },
+    {
+      "name": "services-and-stacks",
+      "description": "Create and update services, deploy stacks, and roll out changes safely.",
+      "commands": [
+        "docker service create --name web --replicas 3 --publish 80:80 nginx:1.26",
+        "docker service scale web=6",
+        "docker service update --image nginx:1.27 web",
+        "docker service update --update-order start-first web",
+        "docker stack deploy -c docker-compose.yml prod",
+        "docker service ls",
+        "docker service ps web"
+      ],
+      "examples": [
+        "docker service create --name web --replicas 3 --publish 80:80 nginx:1.26",
+        "docker stack deploy -c docker-compose.yml prod",
+        "docker service update --image nginx:1.27 web"
+      ],
+      "parameters": [
+        {
+          "name": "service",
+          "type": "string",
+          "description": "Service name"
+        },
+        {
+          "name": "replicas",
+          "type": "integer",
+          "description": "Replica count"
+        },
+        {
+          "name": "stack-file",
+          "type": "string",
+          "description": "Compose file path for stack deploy"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Docker Swarm Mode",
+      "type": "documentation",
+      "source": "https://docs.docker.com/engine/swarm/",
+      "description": "Swarm concepts: managers, workers, Raft consensus, services"
+    },
+    {
+      "title": "Docker Service Reference",
+      "type": "documentation",
+      "source": "https://docs.docker.com/engine/reference/commandline/service/",
+      "description": "service create, update, scale, ps subcommands"
+    }
+  ],
+  "instructions": "# Docker Swarm Operations\n\nRun a production Docker cluster: services with replicated scheduling, secrets, and rolling updates.\n\n## What This Skill Does\n\n- Bootstraps a swarm (manager quorum + workers)\n- Creates services with replicas, publish ports, and constraints\n- Deploys entire stacks from compose files\n- Rolls out updates with zero-downtime settings\n- Manages node availability and drain for maintenance\n\n## When to Use\n\n- Single-host-to-cluster growth on one or few VMs\n- Deploying a compose stack without Kubernetes complexity\n- Scheduled maintenance on worker nodes\n\n## Real Commands\n\n```bash\n# Cluster setup\ndocker swarm init --advertise-addr 10.0.0.5\ndocker swarm join-token worker\ndocker node ls\ndocker node update --availability drain node2\n\n# Services\ndocker service create --name web --replicas 3 --publish 80:80 nginx:1.26\ndocker service scale web=6\ndocker service ls\ndocker service ps web\n\n# Updates (zero downtime)\ndocker service update --image nginx:1.27 web\ndocker service update --update-order start-first --update-delay 10s web\n\n# Stacks and secrets\ndocker secret create db_password secrets/db_password.txt\ndocker stack deploy -c docker-compose.yml prod\ndocker stack ps prod\n```\n\n## Rolling Update Flags\n\n```bash\ndocker service update   --image nginx:1.27   --update-order start-first   --update-delay 10s   --update-failure-action rollback   web\n```\n\n## Best Practices\n\n- Run 3 or 5 managers for Raft quorum; never an even number\n- Use `--update-order start-first` for stateful services\n- Store credentials with `docker secret create`, not env vars\n- Pin node labels and constraints for specialized workloads\n- Drain nodes before reboots: `docker node update --availability drain <node>`",
+  "examples": [
+    {
+      "input": "Deploy a 3-replica nginx service with zero downtime updates",
+      "output": "Agent creates the service, configures start-first ordering with delay, and demonstrates a rolling image update"
+    },
+    {
+      "input": "Add a worker to our swarm",
+      "output": "Agent retrieves the join token, runs the join command on the worker, and verifies with docker node ls"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "docker-swarm.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-docker-swarm"
+    },
+    "generic": {
+      "system_prompt": "You take the docker-swarm seat. You do it through swarm-cluster: Initialize swarm, join workers and managers, and inspect cluster state. The commands are real, e.g. `docker swarm init --advertise-addr 10.0.0.5`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "docker-swarm",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "swarm-cluster",
+        "name": "advertise-addr",
+        "type": "string",
+        "description": "IP to advertise for swarm communication"
+      },
+      {
+        "capability": "swarm-cluster",
+        "name": "node",
+        "type": "string",
+        "description": "Node hostname for availability changes"
+      },
+      {
+        "capability": "services-and-stacks",
+        "name": "service",
+        "type": "string",
+        "description": "Service name"
+      },
+      {
+        "capability": "services-and-stacks",
+        "name": "replicas",
+        "type": "integer",
+        "description": "Replica count"
+      },
+      {
+        "capability": "services-and-stacks",
+        "name": "stack-file",
+        "type": "string",
+        "description": "Compose file path for stack deploy"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/docker-swarm-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/docker-swarm-skill.yaml",
+    "checksum": "7041e5ac078b43b3c868f7ce1581878d28bfa44e1e5bca0b03b3f5e2e2d19a8e"
+  }
+}

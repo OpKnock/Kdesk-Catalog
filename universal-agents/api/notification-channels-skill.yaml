@@ -1,0 +1,104 @@
+name: notification-channels
+display_name: Notification Channels
+category: api
+subcategory: general
+description: 'Send alerts and notifications across channels: Slack webhooks, email, SMS via Twilio, and
+  ntfy self-hosted pushes.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- echo
+- ntfy
+capabilities:
+- name: notification-delivery
+  description: Deliver messages to Slack, email, Twilio SMS and ntfy topics using curl and CLI tools.
+  commands:
+  - 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":"Deploy complete"}'' https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX'
+  - echo "Body text" | mailx -s "Subject" -r alerts@example.com oncall@example.com
+  - 'curl -X POST https://api.twilio.com/2010-04-01/Accounts/$TWILIO_SID/Messages.json --data-urlencode
+    "To=+15551234567" --data-urlencode "From=+15559876543" --data-urlencode "Body=Alert: high latency"
+    -u "$TWILIO_SID:$TWILIO_TOKEN"'
+  - ntfy publish mytopic "Server down!"
+  - curl -d "pipeline failed" ntfy.sh/mytopic
+  examples:
+  - 'curl -X POST -H ''Content-type: application/json'' --data ''{"text":":warning: CPU at 95%"}'' https://hooks.slack.com/services/T000/B000/XXX'
+  - 'ntfy publish --title "CI" mytopic "build #42 passed"'
+  - curl -d "disk nearly full" https://ntfy.sh/ops-alerts
+  parameters:
+  - name: channel
+    type: string
+    description: slack, email, sms or ntfy
+  - name: message
+    type: string
+    description: Message body text
+  - name: recipient
+    type: string
+    description: Webhook URL, email address or phone number
+knowledge:
+- title: Slack Incoming Webhooks
+  type: documentation
+  source: https://api.slack.com/messaging/webhooks
+  description: Webhook format and message payloads
+- title: ntfy docs
+  type: documentation
+  source: https://docs.ntfy.sh/publish/
+  description: Self-hosted push notifications via curl or CLI
+- title: Twilio Messaging API
+  type: documentation
+  source: https://www.twilio.com/docs/messaging/api
+  description: Send SMS via the REST API
+instructions: "# Notification Channels\n\nRoute alerts to the right channel per severity: pages, chat,\
+  \ email and push.\n\n## What this skill does\n\n- Posts messages to Slack webhooks\n- Sends email via\
+  \ mailx\n- Sends SMS via Twilio and pushes via ntfy\n\n## When to use\n\n- Wiring alertmanager or cron\
+  \ alerts to humans\n- Choosing a channel for a given severity\n\n## Real commands\n\n```bash\n# Slack\
+  \ webhook\ncurl -X POST -H 'Content-type: application/json' \\\n  --data '{\"text\":\"Deploy complete\"\
+  }' \\\n  https://hooks.slack.com/services/T000/B000/XXX\n\n# Email\nprintf 'Body\\n' | mailx -s \"Subject\"\
+  \ -r alerts@example.com oncall@example.com\n\n# Twilio SMS\ncurl -X POST https://api.twilio.com/2010-04-01/Accounts/$TWILIO_SID/Messages.json\
+  \ \\\n  --data-urlencode \"To=+15551234567\" \\\n  --data-urlencode \"From=+15559876543\" \\\n  --data-urlencode\
+  \ \"Body=Alert: high latency\" \\\n  -u \"$TWILIO_SID:$TWILIO_TOKEN\"\n\n# ntfy push\nntfy publish mytopic\
+  \ \"Server down!\"\ncurl -d \"pipeline failed\" ntfy.sh/mytopic\n```\n\n## Channel guidance\n\n- Pager/critical:\
+  \ SMS or phone call\n- Normal ops: Slack or ntfy\n- Reports: email\n\n## Best practices\n\n- Include\
+  \ severity, service and runbook link in every alert\n- Rate-limit notifications to avoid alert storms\n\
+  - Test each channel with a canned message first"
+examples:
+- input: Notify the on-call team when a deploy finishes
+  output: The agent posts a Slack webhook message with the deploy summary and optionally an SMS for failures.
+- input: Alert me on my phone when disk usage crosses 90%
+  output: The agent creates a cron/alertmanager rule that calls the Twilio API or ntfy with the disk metric.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: notification-channels.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-notification-channels
+  generic:
+    system_prompt: 'You take the Notification Channels seat. You do it through notification-delivery:
+      Deliver messages to Slack, email, Twilio SMS and ntfy topics using curl and CLI tools. The commands
+      are real, e.g. `curl -X POST -H Content-type: application/json --data {text:Deploy complete}...`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

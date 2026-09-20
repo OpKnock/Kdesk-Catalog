@@ -1,0 +1,171 @@
+{
+  "name": "truffle",
+  "display_name": "Truffle",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Develops, compiles, tests, and deploys Ethereum smart contracts with the Truffle suite.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "truffle"
+  ],
+  "capabilities": [
+    {
+      "name": "truffle-workflow",
+      "description": "Compile, test, migrate, and interact with contracts via Truffle",
+      "commands": [
+        "truffle init",
+        "truffle compile",
+        "truffle test ./test/Token.test.js",
+        "truffle migrate --network development --reset",
+        "truffle console --network mainnet"
+      ],
+      "examples": [
+        "truffle develop",
+        "truffle migrate --network rinkeby --verbose-rpc",
+        "truffle exec scripts/seed.js"
+      ],
+      "parameters": [
+        {
+          "name": "network",
+          "type": "string",
+          "description": "Network name from truffle-config.js to target"
+        },
+        {
+          "name": "reset",
+          "type": "boolean",
+          "description": "Re-run all migrations from scratch"
+        },
+        {
+          "name": "verbose-rpc",
+          "type": "boolean",
+          "description": "Log every RPC request/response during migration"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Truffle suite docs",
+      "type": "documentation",
+      "source": "https://archive.trufflesuite.com/docs/",
+      "description": "Contract lifecycle, testing, and migrations guides"
+    },
+    {
+      "title": "Truffle networks guide",
+      "type": "documentation",
+      "source": "https://archive.trufflesuite.com/docs/truffle/reference/configuration/",
+      "description": "truffle-config.js networks and deployment config"
+    }
+  ],
+  "instructions": "# Truffle\n\nDevelopment environment, testing framework, and asset pipeline for Ethereum\ncontracts.\n\n## When to Use\n\n- Scaffolding a Solidity project with migrations\n- Running contract tests against Ganache\n- Deploying to test networks and mainnet\n\n## Real Commands\n\n```bash\n# Scaffold a project\ntruffle init\n\n# Compile contracts\nsudo truffle compile\n\n# Run tests\nsudo truffle test\nsudo truffle test ./test/Token.test.js\n\n# Start the built-in dev network and console\nsudo truffle develop\n\n# Migrate (deploy) to a configured network\nsudo truffle migrate --network development --reset\n\n# Deploy a specific migration\nsudo truffle migrate --f 2 --to 2 --network development\n\n# Interactive console on a network\nsudo truffle console --network mainnet\n\n# Run a script with Truffle artifacts\nsudo truffle exec scripts/seed.js\n```\n\n## Example Test (test/Token.test.js)\n\n```js\nconst Token = artifacts.require('Token');\n\ncontract('Token', (accounts) => {\n  it('mints to owner', async () => {\n    const t = await Token.deployed();\n    await t.mint(accounts[1], 1000);\n    assert.equal((await t.balanceOf(accounts[1])).toString(), '1000');\n  });\n});\n```\n\n## Best Practices\n\n- Use `--reset` only on disposable networks\n- Keep migrations idempotent; re-runs must not double-deploy\n- Test with `truffle develop`, deploy with a network that matches your target\n- Verify contracts on Etherscan after deployment\n\n## Example Response\n\nShows compile warnings, test pass/fail summary with gas usage, and migration\naddresses with transaction hashes.",
+  "examples": [
+    {
+      "input": "Set up a new smart contract project",
+      "output": "Runs truffle init, adds a simple Token contract and test, then runs truffle develop and truffle test"
+    },
+    {
+      "input": "Deploy to the test network",
+      "output": "Configures truffle-config.js with the network and mnemonic, then runs truffle migrate --network development --reset"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "truffle.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-truffle"
+    },
+    "generic": {
+      "system_prompt": "You work Truffle hands-on. You do it through truffle-workflow: Compile, test, migrate, and interact with contracts via Truffle. The commands are real, e.g. `truffle init`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "truffle",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "truffle-workflow",
+        "name": "network",
+        "type": "string",
+        "description": "Network name from truffle-config.js to target"
+      },
+      {
+        "capability": "truffle-workflow",
+        "name": "reset",
+        "type": "boolean",
+        "description": "Re-run all migrations from scratch"
+      },
+      {
+        "capability": "truffle-workflow",
+        "name": "verbose-rpc",
+        "type": "boolean",
+        "description": "Log every RPC request/response during migration"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "truffle"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/truffle-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/truffle-skill.yaml",
+    "checksum": "172ff0d1ca8178ddf841462bb5ad5279eb0d338b1832c239438b4edb465f3471"
+  }
+}

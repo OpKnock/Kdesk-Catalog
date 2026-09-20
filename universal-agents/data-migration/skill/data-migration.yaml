@@ -1,0 +1,184 @@
+name: data-migration
+version: 2.0.0
+type: skill
+category: data
+description: 'Plans and executes data migrations between databases: dumps, restores, validation, and cutover.'
+keywords:
+- data-migration
+- rollback
+- validation
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: data-migration.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-data-migration
+  generic:
+    system_prompt: 'You are the data-migration specialist. You do it through db-dump-restore: Backup,
+      transfer, and restore data between PostgreSQL, MySQL, and MongoDB. The commands are real, e.g. `pg_dump
+      -h oldhost -U app -Fc appdb > appdb.dump`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: db-dump-restore
+  description: Backup, transfer, and restore data between PostgreSQL, MySQL, and MongoDB
+  commands:
+  - pg_dump -h oldhost -U app -Fc appdb > appdb.dump
+  - pg_restore -h newhost -U app -d appdb -j4 --no-owner appdb.dump
+  - mysqldump -h oldhost -u root -p appdb > appdb.sql
+  - mysql -h newhost -u root -p appdb < appdb.sql
+  - mongodump --host oldhost --db app --out ./mongo-dump
+  examples:
+  - pg_dump -h oldhost -U app -Fc --table=orders appdb > orders.dump
+  - mongoimport --host newhost --db app --collection users users.json
+  - pg_dumpall -h oldhost -U postgres > all-dbs.sql
+  parameters:
+  - name: format
+    type: string
+    description: 'Dump format: -Fc custom, -Fp plain, -Ft tar'
+  - name: jobs
+    type: integer
+    description: Parallel restore worker count (-j)
+  - name: no-owner
+    type: boolean
+    description: Skip ownership clauses on restore
+prerequisites:
+- node.js
+- python
+- knex
+- alembic
+tools:
+- node.js
+- python
+- knex
+- alembic
+- flyway
+examples:
+- input: Migrate our Postgres DB to a new server
+  output: Dumps with pg_dump -Fc, transfers, restores with -j4 --no-owner, validates counts, and documents
+    rollback
+- input: Move Mongo users collection only
+  output: Exports with mongoexport, imports with mongoimport, and compares document counts
+instructions: '# Data Migration
+
+
+  Moves data between database systems safely: export, transfer, import, then
+
+  validation and cutover.
+
+
+  ## When to Use
+
+
+  - Upgrading database engines or versions
+
+  - Moving to a new hosting provider
+
+  - Consolidating databases
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # PostgreSQL custom-format dump
+
+  pg_dump -h oldhost -U app -Fc appdb > appdb.dump
+
+
+  # Parallel restore with ownership stripped
+
+  pg_restore -h newhost -U app -d appdb -j4 --no-owner --clean appdb.dump
+
+
+  # MySQL logical dump
+
+  mysqldump -h oldhost -u root -p --single-transaction appdb > appdb.sql
+
+  mysql -h newhost -u root -p appdb < appdb.sql
+
+
+  # MongoDB
+
+  mongodump --host oldhost --db app --out ./mongo-dump
+
+  mongorestore --host newhost --db app ./mongo-dump/app
+
+
+  # Table-level export
+
+  pg_dump -h oldhost -U app -Fc --table=public.orders appdb > orders.dump
+
+  ```
+
+
+  ## Validation Checklist
+
+
+  - Row counts match: `pg_restore -l appdb.dump | wc -l` vs restored table count
+
+  - Sample values spot check
+
+  - `pg_dump` with `--schema-only` on a test first
+
+  - Compare checksums: `pg_dump ... | md5sum` on both ends for small dbs
+
+
+  ## Best Practices
+
+
+  - Schedule a maintenance window; migrations lock writes
+
+  - Test restore on a staging instance first
+
+  - Keep the old system readable until validation passes
+
+  - Document rollback: keep the dump until the next full backup cycle
+
+  - Run `VACUUM ANALYZE` (PG) or `ANALYZE TABLE` (MySQL) after load
+
+
+  ## Example Response
+
+
+  Plans the migration with commands per phase, executes dump/transfer/restore,
+
+  validates counts, and reports the cutover steps with rollback plan.'
+display_name: data-migration
+knowledge:
+- title: PostgreSQL pg_dump docs
+  type: documentation
+  source: https://www.postgresql.org/docs/current/app-pgdump.html
+  description: Dump formats, flags, and usage
+- title: MySQL mysqldump docs
+  type: documentation
+  source: https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html
+  description: Logical backup tool reference
+- title: MongoDB backup docs
+  type: documentation
+  source: https://www.mongodb.com/docs/database-tools/mongodump-mongorestore/
+  description: mongodump/mongorestore usage

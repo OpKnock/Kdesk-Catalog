@@ -1,0 +1,130 @@
+name: artillery
+display_name: artillery
+category: testing
+subcategory: general
+description: Load-tests HTTP, WebSocket, and gRPC services with Artillery scripts, scenarios, and HTML
+  reports.
+version: 2.0.0
+tags:
+- testing
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+capabilities:
+- name: artillery-load-tests
+  description: Quick and scripted load tests with virtual users.
+  commands:
+  - npx artillery quick --count 100 -n 20 https://api.example.com/v1/users
+  - npx artillery run load-test.yml
+  - npx artillery run --environment staging load-test.yml
+  - npx artillery run -o report.json load-test.yml
+  - npx artillery run --record load-test.yml
+  examples:
+  - npx artillery quick --count 100 -n 20 https://api.example.com/v1/users
+  - npx artillery run load-test.yml
+  - npx artillery run -o report.json load-test.yml
+  parameters:
+  - name: script
+    type: string
+    description: YAML test script path
+  - name: environment
+    type: string
+    description: Named environment from config
+  - name: count
+    type: number
+    description: Virtual users for quick mode
+- name: reporting
+  description: Generate and inspect load-test reports.
+  commands:
+  - npx artillery report report.json
+  - npx artillery report --output perf-report.html report.json
+  - npx artillery run --output report.json load-test.yml && npx artillery report report.json
+  examples:
+  - npx artillery report report.json
+  - npx artillery report --output perf-report.html report.json
+  parameters:
+  - name: input
+    type: string
+    description: JSON results file
+  - name: output
+    type: string
+    description: HTML report output path
+- name: scenario-design
+  description: Design multi-step user flows with variables and phases.
+  commands:
+  - 'npx artillery run -e prod --vars ''{"api": "/v1/orders"}'' scenarios.yml'
+  - npx artillery run --payload users.csv scenarios.yml
+  - npx artillery run --config env.yml scenarios.yml
+  examples:
+  - npx artillery run --payload users.csv scenarios.yml
+  - npx artillery run -e prod scenarios.yml
+  parameters:
+  - name: payload
+    type: string
+    description: CSV data file for virtual users
+  - name: vars
+    type: object
+    description: Inline variables override
+knowledge:
+- title: Artillery Documentation
+  type: documentation
+  source: https://www.artillery.io/docs/
+  description: Test scripts, engines, and CLI reference
+- title: Artillery Quick Reference
+  type: documentation
+  source: https://www.artillery.io/docs/reference/cli
+  description: CLI commands and options
+instructions: "# Artillery\n\nLoad and performance testing for HTTP, WebSocket, and gRPC.\n\n## What This\
+  \ Skill Does\n\n- Runs quick ad-hoc load tests from the CLI\n- Executes scripted scenarios with phases\
+  \ and arrival rates\n- Uses CSV payloads for realistic user data\n- Generates HTML reports with latency\
+  \ percentiles\n\n## When to Use\n\n- Capacity checks before releases\n- SLO validation under load\n\
+  - Testing WebSocket and streaming endpoints\n\n## Real Commands\n\n```bash\n# Quick test\nnpx artillery\
+  \ quick --count 100 -n 20 https://api.example.com/v1/users\n\n# Scripted run\nnpx artillery run load-test.yml\n\
+  npx artillery run --environment staging load-test.yml\n\n# Reports\nnpx artillery run -o report.json\
+  \ load-test.yml\nnpx artillery report --output perf-report.html report.json\n\n# Payloads\nnpx artillery\
+  \ run --payload users.csv scenarios.yml\n```\n\n## Sample Script\n\n```yaml\nconfig:\n  target: https://api.example.com\n\
+  \  phases:\n    - duration: 60\n      arrivalRate: 10\n      rampTo: 50\nscenarios:\n  - name: browse\
+  \ catalog\n    flow:\n      - get:\n          url: /v1/products\n      - think: 2\n      - post:\n \
+  \         url: /v1/cart\n          json: { productId: \"{{ $randomNumber(1, 100) }}\" }\n```\n\n## Best\
+  \ Practices\n\n- Ramp arrival rate gradually; avoid instant max load\n- Test realistic user flows, not\
+  \ just one endpoint\n- Check percentiles (p95/p99) not just averages\n- Run against staging with production-like\
+  \ data volumes\n- Keep baseline reports to compare regressions"
+examples:
+- input: Smoke load-test the checkout endpoint
+  output: Agent runs npx artillery quick --count 50 -n 10 and reports response percentiles and error rates.
+- input: Simulate 1000 users browsing the catalog
+  output: Agent writes a phased scenario with arrival rates ramping to the target, runs it, and generates
+    an HTML report.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: artillery.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-artillery
+  generic:
+    system_prompt: 'You are the artillery specialist. You do it through artillery-load-tests: Quick and
+      scripted load tests with virtual users. The commands are real, e.g. `npx artillery quick --count
+      100 -n 20 https://api.example.com/v1/users`. You prefer the shortest safe path, and you reproduce
+      failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,221 @@
+{
+  "name": "data-validation",
+  "display_name": "Data Validation",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Implements schema validation across JSON Schema, Pydantic, and Joi to enforce request, config, and message contracts.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "ajv",
+    "npm",
+    "npx",
+    "python"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "ajv validate -s schema.json -d data.json",
+        "ajv compile -s schema.json",
+        "python -m jsonschema -i instance.json schema.json",
+        "npx ts-json-schema-generator --path src/types.ts --type User",
+        "ajv validate -s schema.json -d \"data/*.json\""
+      ],
+      "description": "Validate JSON documents against schemas from the CLI.",
+      "name": "json-schema-validation",
+      "examples": [
+        "ajv validate -s schema.json -d data.json --all-errors",
+        "python -m jsonschema -i data.json schema.json",
+        "ajv compile -s schema.json --strict=false"
+      ],
+      "parameters": [
+        {
+          "description": "Path to JSON schema file",
+          "name": "schema",
+          "type": "string"
+        },
+        {
+          "description": "Path to JSON instance file or glob",
+          "name": "data",
+          "type": "string"
+        },
+        {
+          "description": "Report all errors instead of the first",
+          "name": "all-errors",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "python -m pip install pydantic",
+        "python -c \"from pydantic import BaseModel; print(BaseModel.__module__)\"",
+        "npm install joi",
+        "npx ajv-cli validate -s schema.json -d data.json"
+      ],
+      "description": "Generate and use runtime validators in Python and Node.",
+      "name": "runtime-validation",
+      "examples": [
+        "python -c \"from pydantic import TypeAdapter; print(TypeAdapter(int).validate_python(1))\"",
+        "npx ajv-cli compile -s schema.json"
+      ],
+      "parameters": [
+        {
+          "description": "Target stack: python or node",
+          "name": "language",
+          "type": "string"
+        },
+        {
+          "name": "framework",
+          "type": "string",
+          "description": "Validation library: pydantic, joi, ajv"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "JSON Schema",
+      "description": "Specification for annotating and validating JSON documents",
+      "source": "https://json-schema.org/",
+      "type": "documentation"
+    },
+    {
+      "title": "Pydantic Docs",
+      "description": "Data validation library for Python",
+      "source": "https://docs.pydantic.dev",
+      "type": "documentation"
+    },
+    {
+      "title": "Ajv Docs",
+      "description": "JSON Schema validator for JavaScript",
+      "source": "https://ajv.js.org",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Data Validation\n\nEnforce data contracts at API boundaries, config load, and message ingestion.\n\n## When to Use\n\n- Validating HTTP request bodies and query params\n- Parsing environment variables and config files\n- Validating messages consumed from queues\n- Catching malformed data before it reaches business logic\n\n## Commands\n\n```bash\n# Validate one file with Ajv\najv validate -s schema.json -d data.json\n\n# Show all errors\najv validate -s schema.json -d data.json --all-errors\n\n# Compile a schema to check it is valid\najv compile -s schema.json\n\n# Python jsonschema CLI\npython -m jsonschema -i instance.json schema.json\n\n# Generate a schema from TypeScript types\nnpx ts-json-schema-generator --path src/types.ts --type User\n```\n\n## Schema Example\n\n```json\n{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"type\": \"object\",\n  \"required\": [\"email\", \"age\"],\n  \"properties\": {\n    \"email\": { \"type\": \"string\", \"format\": \"email\" },\n    \"age\": { \"type\": \"integer\", \"minimum\": 0 }\n  },\n  \"additionalProperties\": false\n}\n```\n\n## Pydantic Example\n\n```python\nfrom pydantic import BaseModel, EmailStr, Field\n\nclass User(BaseModel):\n    email: EmailStr\n    age: int = Field(ge=0, le=120)\n```\n\n## Best Practices\n\n- Validate at the boundary only; keep internal code assumption-free\n- Use additionalProperties: false to catch typos in payloads\n- Reject unknown enum values instead of defaulting silently\n- Add format validators for email, uri, and date-time\n- Test schemas with representative invalid samples in CI",
+  "examples": [
+    {
+      "input": "My API is silently accepting bad payloads",
+      "output": "Agent adds a Pydantic/Joi model with strict fields, wires it into the route handler, and validates against a sample with ajv validate or pytest."
+    },
+    {
+      "input": "Convert a TS interface to a JSON Schema",
+      "output": "Agent runs npx ts-json-schema-generator --type User and shows where to place the emitted schema."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "data-validation.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-data-validation"
+    },
+    "generic": {
+      "system_prompt": "You take the Data Validation seat. You do it through json-schema-validation: Validate JSON documents against schemas from the CLI. The commands are real, e.g. `ajv validate -s schema.json -d data.json`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "data-validation",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "json-schema-validation",
+        "name": "schema",
+        "type": "string",
+        "description": "Path to JSON schema file"
+      },
+      {
+        "capability": "json-schema-validation",
+        "name": "data",
+        "type": "string",
+        "description": "Path to JSON instance file or glob"
+      },
+      {
+        "capability": "json-schema-validation",
+        "name": "all-errors",
+        "type": "boolean",
+        "description": "Report all errors instead of the first"
+      },
+      {
+        "capability": "runtime-validation",
+        "name": "language",
+        "type": "string",
+        "description": "Target stack: python or node"
+      },
+      {
+        "capability": "runtime-validation",
+        "name": "framework",
+        "type": "string",
+        "description": "Validation library: pydantic, joi, ajv"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "ajv",
+    "npm",
+    "npx",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/data-validation-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/data-validation-skill.yaml",
+    "checksum": "5fa7907b1b4fe6b61cf0df2131c9dd69ef2e0ed01cef8233165f2f96d30df3a4"
+  }
+}

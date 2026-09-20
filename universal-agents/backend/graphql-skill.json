@@ -1,0 +1,198 @@
+{
+  "name": "graphql-backend",
+  "display_name": "Graphql",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Authors GraphQL clients and tooling: queries, mutations, fragments, variables, and codegen with GraphQL Code Generator.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npm",
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "npx graphql-codegen",
+        "npx graphql-query-complexity",
+        "curl -X POST http://localhost:4000/graphql -H \"Content-Type: application/json\" -d \"{\\\"query\\\":\\\"query($id: ID!){ user(id: $id) { name } }\\\",\\\"variables\\\":{\\\"id\\\":\\\"1\\\"}}\"",
+        "npm install @apollo/client"
+      ],
+      "description": "Write and execute queries, mutations, and fragments.",
+      "name": "graphql-client",
+      "examples": [
+        "curl -X POST localhost:4000/graphql -d \"{\\\"query\\\":\\\"mutation { addUser(name: \\\\\\\"Ann\\\\\\\") { id } }\\\"}\"",
+        "npx graphql-codegen --watch"
+      ],
+      "parameters": [
+        {
+          "description": "Query variables JSON",
+          "name": "variables",
+          "type": "object"
+        },
+        {
+          "description": "Query string",
+          "name": "query",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "npx @graphql-codegen/cli init",
+        "npx graphql-codegen --config codegen.yml",
+        "npx graphql-codegen --watch",
+        "npx graphql-tools load-documents \"src/**/*.graphql\""
+      ],
+      "description": "Generate TypeScript types and hooks from the schema.",
+      "name": "graphql-codegen",
+      "examples": [
+        "npx graphql-codegen --config codegen.ts",
+        "npx graphql-codegen --dry-run"
+      ],
+      "parameters": [
+        {
+          "description": "Codegen config path",
+          "name": "config",
+          "type": "string"
+        },
+        {
+          "name": "watch",
+          "type": "boolean",
+          "description": "Regenerate on file changes"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "GraphQL Learn",
+      "description": "Queries, mutations, schemas, and validation",
+      "source": "https://graphql.org/learn/",
+      "type": "documentation"
+    },
+    {
+      "title": "GraphQL Code Generator",
+      "description": "Typed client generation",
+      "source": "https://the-guild.dev/graphql/codegen",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# GraphQL (Client)\n\nAuthor GraphQL queries, mutations, and client tooling.\n\n## When to Use\n\n- Building frontend data layers against a GraphQL API\n- Maintaining a typed client from the schema\n- Validating queries before shipping them\n- Using fragments to share field selections\n\n## Query Example\n\n```graphql\nquery GetUser($id: ID!) {\n  user(id: $id) {\n    name\n    email\n    posts(first: 5) {\n      title\n    }\n  }\n}\n```\n\n```json\n{ \"variables\": { \"id\": \"1\" } }\n```\n\n## Commands\n\n```bash\n# Execute a query with variables\ncurl -X POST http://localhost:4000/graphql -H \"Content-Type: application/json\" \\\n  -d '{\"query\":\"query($id: ID!){ user(id: $id) { name } }\",\"variables\":{\"id\":\"1\"}}'\n\n# Codegen setup and run\nnpx @graphql-codegen/cli init\nnpx graphql-codegen --config codegen.yml\nnpx graphql-codegen --watch\n```\n\n## Codegen Config\n\n```yaml\nschema: http://localhost:4000/graphql\ndocuments: \"src/**/*.graphql\"\ngenerates:\n  src/gql/generated.ts:\n    plugins:\n      - typescript\n      - typescript-operations\n      - typed-document-node\n```\n\n## Best Practices\n\n- Use fragments for reusable field sets instead of repeating fields\n- Always send variables rather than interpolating values into queries\n- Enable codegen --watch in dev so types never drift\n- Ship generated types and fail CI if generation is dirty\n- Keep queries shallow unless depth is needed; watch complexity",
+  "examples": [
+    {
+      "input": "My client type no longer matches the API",
+      "output": "Agent runs npx graphql-codegen to regenerate types and adds --watch to dev workflows."
+    },
+    {
+      "input": "Fetch a user and their posts in one request",
+      "output": "Agent writes a nested query with a fragment and variables, then tests it with curl."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "graphql-backend.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-graphql"
+    },
+    "generic": {
+      "system_prompt": "You own Graphql end to end. You do it through graphql-client: Write and execute queries, mutations, and fragments. The commands are real, e.g. `npx graphql-codegen`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "graphql-backend",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "graphql-client",
+        "name": "variables",
+        "type": "object",
+        "description": "Query variables JSON"
+      },
+      {
+        "capability": "graphql-client",
+        "name": "query",
+        "type": "string",
+        "description": "Query string"
+      },
+      {
+        "capability": "graphql-codegen",
+        "name": "config",
+        "type": "string",
+        "description": "Codegen config path"
+      },
+      {
+        "capability": "graphql-codegen",
+        "name": "watch",
+        "type": "boolean",
+        "description": "Regenerate on file changes"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npm",
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/graphql-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/graphql-skill.yaml",
+    "checksum": "14bf4be64b7ff32dd84f25bd22e49b2ad944bea85af33c646eb6c51a6a0a8202"
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "name": "supertest",
+  "display_name": "Supertest",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Supertest skill: supertest + jest HTTP assertions for Express/Fastify apps, chained expectations, and targeted test running.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "node",
+    "npm",
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "supertest-http-tests",
+      "description": "Write and run HTTP API tests with supertest and jest",
+      "commands": [
+        "npm init -y && npm i -D supertest jest",
+        "npx jest --verbose",
+        "npx jest tests/api.test.js -t 'should return 200'",
+        "npx jest --coverage",
+        "node -e 'const request = require(\"supertest\"); const app = require(\"./app\"); request(app).get(\"/\").expect(200).end((err,res) => { if (err) throw err; console.log(res.status); })'"
+      ],
+      "examples": [
+        "npx jest tests/api.test.js -t 'should return 200'",
+        "npx jest --verbose",
+        "node -e 'const request = require(\"supertest\"); request(require(\"./app\")).get(\"/health\").expect(200).end(() => console.log(\"ok\"))'"
+      ],
+      "parameters": [
+        {
+          "name": "app",
+          "type": "string",
+          "description": "Express app export to attach supertest to"
+        },
+        {
+          "name": "test_file",
+          "type": "string",
+          "description": "Test file path for jest"
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Endpoint under test"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Supertest repo",
+      "type": "documentation",
+      "source": "https://github.com/ladjs/supertest",
+      "description": "API and assertion chaining"
+    },
+    {
+      "title": "Jest docs",
+      "type": "documentation",
+      "source": "https://jestjs.io/docs/getting-started",
+      "description": "Test structure and CLI options"
+    }
+  ],
+  "instructions": "# Supertest\n\nHand-crafted skill for HTTP-level API testing in Node with supertest.\n\n## What this skill does\n\n- Attaches supertest to an Express/Fastify app without a live server\n- Chains status, header, and body expectations\n- Runs targeted tests and coverage with jest\n\n## When to use\n\n- Testing Express routes in-process and fast\n- Verifying middleware behavior (auth, validation) at the HTTP layer\n- Filling the gap between unit tests and E2E suites\n\n## Real commands\n\n```bash\n# Setup\nnpm init -y && npm i -D supertest jest\n\n# Run the whole suite\nnpx jest --verbose\n\n# Run one test by name\nnpx jest tests/api.test.js -t 'should return 200'\n\n# Coverage\nnpx jest --coverage\n\n# One-liner smoke test\nnode -e 'const request = require(\"supertest\"); request(require(\"./app\")).get(\"/health\").expect(200).end(() => console.log(\"ok\"))'\n```\n\n## Test example\n\n```js\nconst request = require(\"supertest\");\nconst app = require(\"../app\");\n\ndescribe(\"GET /api/users\", () => {\n  it(\"should return 200 with JSON\", async () => {\n    await request(app)\n      .get(\"/api/users\")\n      .set(\"Accept\", \"application/json\")\n      .expect(\"Content-Type\", /json/)\n      .expect(200)\n      .expect((res) => {\n        expect(Array.isArray(res.body)).toBe(true);\n      });\n  });\n});\n```\n\n## Testing\n\n```bash\nnpx jest tests/api.test.js -t 'should return 200'\nnpx jest --verbose --watch\n```\n\n## Best practices\n\n- Test behaviors users hit, not implementation details\n- Use .set() for headers and .send() for bodies on mutating calls\n- Mock external services (DB, HTTP) so tests stay deterministic\n",
+  "examples": [
+    {
+      "input": "Test that POST /api/orders returns 201",
+      "output": "await request(app).post(\"/api/orders\").send({qty: 2}).expect(201).expect(\"Content-Type\", /json/); run with npx jest tests/api.test.js -t 'orders'."
+    },
+    {
+      "input": "Assert the response body shape",
+      "output": "Chain .expect((res) => { expect(res.body.id).toBeDefined(); }) after the status assertion."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "supertest.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-supertest"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Supertest. You do it through supertest-http-tests: Write and run HTTP API tests with supertest and jest. The commands are real, e.g. `npm init -y && npm i -D supertest jest`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "supertest",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "supertest-http-tests",
+        "name": "app",
+        "type": "string",
+        "description": "Express app export to attach supertest to"
+      },
+      {
+        "capability": "supertest-http-tests",
+        "name": "test_file",
+        "type": "string",
+        "description": "Test file path for jest"
+      },
+      {
+        "capability": "supertest-http-tests",
+        "name": "path",
+        "type": "string",
+        "description": "Endpoint under test"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node",
+    "npm",
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/supertest-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/supertest-skill.yaml",
+    "checksum": "4c8c4e959180c97b9fea3f678dcde882703c3f8ea6fdf528f860fb6c358cd5cb"
+  }
+}

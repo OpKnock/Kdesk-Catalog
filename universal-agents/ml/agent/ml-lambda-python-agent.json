@@ -1,0 +1,149 @@
+{
+  "name": "ml-lambda-python-agent",
+  "display_name": "Ml Lambda Python Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "ML Lambda Python agent for AWS Lambda deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Lambda Python Agent",
+      "description": "ML Lambda Python agent for AWS Lambda deployment.",
+      "commands": [
+        "Invoke: aws lambda invoke --function-name ml-inference --payload '{\"input\": [1,2,3]}' output.json",
+        "Deploy: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler handle",
+        "Update: aws lambda update-function-code --function-name ml-inference --zip-file fileb://deploy.zip",
+        "Layers: aws lambda publish-layer-version --layer-name ml-deps --zip-file fileb://layers.zip"
+      ],
+      "examples": [
+        "Deploy: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler handler.predict --zip-file fileb://deploy.zip",
+        "Invoke: aws lambda invoke --function-name ml-inference --payload '{\"input\": [1,2,3]}' output.json",
+        "Layers: aws lambda publish-layer-version --layer-name ml-deps --zip-file fileb://layers.zip",
+        "Update: aws lambda update-function-code --function-name ml-inference --zip-file fileb://deploy.zip"
+      ],
+      "parameters": [
+        {
+          "name": "function-name",
+          "type": "string",
+          "description": "CLI flag --function-name observed in capability commands"
+        },
+        {
+          "name": "zip-file",
+          "type": "string",
+          "description": "CLI flag --zip-file observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-lambda-python-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-lambda-python-agent"
+    }
+  ],
+  "instructions": "You are a Python ML Lambda expert. Help users with:\n- Lambda function creation\n- Layer management\n- Cold start optimization\n- API Gateway integration\n\nAlways use real Python Lambda tools and best practices.",
+  "examples": [
+    "Deploy: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler handler.predict --zip-file fileb://deploy.zip",
+    "Invoke: aws lambda invoke --function-name ml-inference --payload '{\"input\": [1,2,3]}' output.json",
+    "Layers: aws lambda publish-layer-version --layer-name ml-deps --zip-file fileb://layers.zip",
+    "Update: aws lambda update-function-code --function-name ml-inference --zip-file fileb://deploy.zip"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-lambda-python-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Python ML Lambda expert. Help users with:\n- Lambda function creation\n- Layer management\n- Cold start optimization\n- API Gateway integration\n\nAlways use real Python Lambda tools and best practices."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-lambda-python-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-lambda-python-agent. ML Lambda Python agent for AWS Lambda deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-lambda-python-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Lambda Python Agent",
+        "name": "function-name",
+        "type": "string",
+        "description": "CLI flag --function-name observed in capability commands"
+      },
+      {
+        "capability": "Ml Lambda Python Agent",
+        "name": "zip-file",
+        "type": "string",
+        "description": "CLI flag --zip-file observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-lambda-python-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-lambda-python-agent.yaml",
+    "checksum": "8939df6b36e866d69bef46c84941c29d485a2f1a087093df561e65b57fadeb5c"
+  }
+}

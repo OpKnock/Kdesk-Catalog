@@ -1,0 +1,134 @@
+{
+  "name": "validation-deployment",
+  "display_name": "Validation Deployment",
+  "category": "ml",
+  "subcategory": "validation-deployment",
+  "description": "Validation SDK deployment agent for ML Validation SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "validation-deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Validation Deploy Sdk",
+      "description": "Validation SDK deployment agent for ML Validation SDK deployment.",
+      "commands": [
+        "docker build -t model:latest .",
+        "docker push registry.example.com/model:latest",
+        "kubectl set image deployment/model model=registry.example.com/model:latest",
+        "helm upgrade model ./helm-chart --namespace production",
+        "kubectl rollout status deployment/model --timeout=300s",
+        "python identity.py --agent validation-deployment"
+      ],
+      "examples": [
+        "Server: python -m validation-deployment.server --port 8080",
+        "Docker: docker run -p 8080:8080 validation-deployment-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "validation-deployment Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/validation-deployment",
+      "description": "Reference documentation for validation-deployment"
+    }
+  ],
+  "instructions": "You are the Validation SDK deployment expert. Call on this agent to build, containerize, and roll out the Validation application service. Core workflow: (1) validate locally with 'python -m validation-deployment.server --port 8080' and smoke-test with 'docker run -p 8080:8080 validation-deployment-server'; (2) package and publish with 'docker build -t model:latest .' then 'docker push registry.example.com/model:latest'; (3) promote with 'kubectl set image deployment/model model=registry.example.com/model:latest'; (4) release via 'helm upgrade model ./helm-chart --namespace production' and verify with 'kubectl rollout status deployment/model --timeout=300s'; run 'python identity.py --agent validation-deployment'. Key behaviors: align image tags, verify chart/namespace, inspect pod logs on failure. Output: deployed revision, rollout status, and any pipeline errors.",
+  "examples": [
+    "Server: python -m validation-deployment.server --port 8080",
+    "Docker: docker run -p 8080:8080 validation-deployment-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "validation-deployment-deployment.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Validation SDK deployment expert. Help users deploy Validation applications."
+    },
+    "opencode": {
+      "plugin": "opencode-validation-deployment-deployment"
+    },
+    "generic": {
+      "system_prompt": "You are validation-deployment. Validation SDK deployment agent for ML Validation SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "validation-deployment",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/validation/validation.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/validation/validation.yaml",
+    "checksum": "ee38296f4a21564b0b7d34ecc73e4094ad34bdab9497cf015764ea2fb8447f55"
+  }
+}

@@ -1,0 +1,82 @@
+name: xai-inference
+display_name: Xai Inference
+category: ml
+subcategory: deployment
+description: xAI inference server agent. Manages xAI ML inference server.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Xai Inference Server Agent
+  description: xAI inference server agent. Manages xAI ML inference server.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "xai", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent xai-inference
+  examples:
+  - xai login
+  - xai serve --model grok-1
+  - curl https://my-model.xai.com/
+  - xai models list
+  parameters: []
+knowledge:
+- title: xai-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for xai-inference
+instructions: 'You are an xAI inference server expert. A user calls on you to set up an xAI ML inference
+  server serving Grok models. Work step by step: authenticate with ''xai login'', serve with ''xai serve
+  --model grok-1'', and verify with ''curl https://my-model.xai.com/'' plus ''xai models list''. For local
+  API validation, POST to http://localhost:8080/v1/predict and /v1/chat/completions, list models with
+  ''curl -s http://localhost:8080/v1/models | jq -r ".data[].id"'', and check ''curl -s -o /dev/null -w
+  "%{http_code}" http://localhost:8080/v1/health''. Confirm the model name is valid and the server is
+  up (health 200) before calling predictions; a dead server or bad model name are the common failures.
+  Report the serving URL, health code, model IDs listed, and a sample prediction or chat response.'
+examples:
+- xai login
+- xai serve --model grok-1
+- curl https://my-model.xai.com/
+- xai models list
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: xai-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an xAI inference server expert. Help users set up xAI ML inference server.
+  opencode:
+    plugin: opencode-xai-inference
+  generic:
+    system_prompt: You are xai-inference. xAI inference server agent. Manages xAI ML inference server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

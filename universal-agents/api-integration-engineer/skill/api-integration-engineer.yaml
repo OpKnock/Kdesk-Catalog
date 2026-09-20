@@ -1,0 +1,177 @@
+name: api-integration-engineer
+version: 2.0.0
+type: skill
+category: backend
+description: 'Implements third-party integrations with official SDKs and CLIs: Stripe payments, Twilio
+  messaging, and webhook verification.'
+keywords:
+- api-integration
+- third-party
+- webhooks
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-integration-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-integration-engineer
+  generic:
+    system_prompt: 'You are the api-integration-engineer specialist. You do it through stripe-integration:
+      Build payment flows with Stripe SDK and CLI. The commands are real, e.g. `npm install stripe`. You
+      work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: stripe-integration
+  description: Build payment flows with Stripe SDK and CLI
+  commands:
+  - npm install stripe
+  - stripe listen --forward-to localhost:3000/webhooks/stripe
+  - stripe trigger payment_intent.succeeded
+  - node -e "const s=require('stripe')('sk_test_x');s.products.create({name:'T-Shirt'}).then(p=>console.log(p.id))"
+  - stripe logs tail
+  examples:
+  - node -e "const s=require('stripe')('sk_test_x');s.products.create({name:'T-Shirt'}).then(p=>console.log(p.id))"
+  - stripe trigger payment_intent.succeeded
+  - stripe logs tail payment_intent
+  parameters:
+  - name: key
+    type: string
+    description: Stripe API key
+  - name: event
+    type: string
+    description: Event to trigger
+- name: twilio-integration
+  description: Send SMS and verify delivery with Twilio
+  commands:
+  - brew tap twilio/brew && brew install twilio
+  - twilio login
+  - twilio api:core:messages:create --from +15017122661 --to +15558675310 --text 'Your order shipped'
+  - twilio api:core:messages:list --limit 5
+  - twilio api:core:accounts:list
+  examples:
+  - twilio api:core:messages:create --from +15017122661 --to +15558675310 --text 'Your order shipped'
+  - twilio api:core:messages:list --limit 5
+  - twilio api:core:accounts:list
+  parameters:
+  - name: from
+    type: string
+    description: Sender number
+  - name: to
+    type: string
+    description: Recipient number
+  - name: text
+    type: string
+    description: Message body
+prerequisites:
+- node.js
+- python
+- ngrok
+- redis
+tools:
+- node.js
+- python
+- ngrok
+- redis
+- stripe-cli
+- twilio-cli
+examples:
+- input: Integrate Stripe payments
+  output: Creates products and payment intents, listens for webhooks locally, and verifies signature handling
+- input: Add Twilio SMS notifications
+  output: Sends order-shipped messages via the Twilio CLI and lists delivery status
+instructions: '# API Integration Engineer
+
+
+  Builds real third-party integrations with official tools.
+
+
+  ## When to Use
+
+  - Adding payment processing
+
+  - Adding SMS notifications
+
+  - Building connectors with official SDKs
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Stripe
+
+  npm install stripe
+
+  node -e "const s=require(''stripe'')(''sk_test_x'');s.products.create({name:''T-Shirt''}).then(p=>console.log(p.id))"
+
+  stripe listen --forward-to localhost:3000/webhooks/stripe
+
+  stripe trigger payment_intent.succeeded
+
+  stripe logs tail
+
+
+  # Twilio
+
+  brew tap twilio/brew && brew install twilio
+
+  twilio login
+
+  twilio api:core:messages:create --from +15017122661 --to +15558675310 --text ''Your order shipped''
+
+  ```
+
+
+  ## Webhook Verification
+
+  - Verify signatures on every event
+
+  - Reply 200 immediately
+
+  - Process in a queue
+
+
+  ## Testing
+
+  Use sandbox keys and trigger every event type before going live.
+
+
+  ## Best Practices
+
+  - Secrets in env/secret manager
+
+  - Idempotency keys on money paths'
+display_name: api-integration-engineer
+knowledge:
+- title: Stripe Node SDK
+  type: documentation
+  source: https://docs.stripe.com/api?lang=node
+  description: Payments, products, webhooks
+- title: Twilio CLI
+  type: documentation
+  source: https://www.twilio.com/docs/twilio-cli
+  description: Messaging commands

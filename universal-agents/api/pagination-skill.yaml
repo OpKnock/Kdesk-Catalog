@@ -1,0 +1,94 @@
+name: pagination
+display_name: Pagination
+category: api
+subcategory: general
+description: 'REST pagination design: page/limit, cursor-based, offset strategies, Link headers (RFC 8288),
+  and response shapes.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: pagination-design
+  description: 'Design and test paginated endpoints: query params, Link headers and cursor traversal.'
+  commands:
+  - curl -s "https://api.example.com/v1/items?page=2&per_page=20" | jq .
+  - curl -sI "https://api.example.com/v1/items?page=1&per_page=20"
+  - curl -s "https://api.example.com/v1/items?cursor=eyJpZCI6MTAwfQ" | jq '.data,.next_cursor'
+  - curl -s "https://api.example.com/v1/items?limit=50" | jq '.links'
+  - curl -sI "https://api.example.com/v1/items" | grep -i '^link:'
+  examples:
+  - curl -sI "https://api.example.com/v1/items?per_page=20" | grep -i '^link:' | tr ',' '\n'
+  - curl -s "https://api.example.com/v1/items?page=2&per_page=20" | jq '.pagination'
+  - curl -s "https://api.example.com/v1/items?cursor=eyJpZCI6MTAwfQ" | jq '.data[0].id'
+  parameters:
+  - name: page_size
+    type: integer
+    description: Items per page
+  - name: max_limit
+    type: integer
+    description: Maximum allowed per_page
+  - name: strategy
+    type: string
+    description: offset, cursor or keyset
+knowledge:
+- title: RFC 8288 Web Linking
+  type: documentation
+  source: https://www.rfc-editor.org/rfc/rfc8288
+  description: Link header format for next/prev pagination
+- title: REST API Pagination Guide
+  type: documentation
+  source: https://restfulapi.net/pagination/
+  description: Offset vs cursor pagination trade-offs
+instructions: "# Pagination\n\nPaginate large collections predictably so clients never have to fetch everything.\n\
+  \n## What this skill does\n\n- Designs page/limit and cursor APIs\n- Emits RFC 8288 Link headers\n-\
+  \ Tests pagination behavior with curl\n\n## When to use\n\n- New list endpoints\n- Fixing slow endpoints\
+  \ returning unbounded data\n\n## Real commands\n\n```bash\n# Offset pagination\ncurl -s \"https://api.example.com/v1/items?page=2&per_page=20\"\
+  \ | jq .\n\n# Link headers\ncurl -sI \"https://api.example.com/v1/items?per_page=20\" | grep -i '^link:'\n\
+  \n# Cursor pagination\ncurl -s \"https://api.example.com/v1/items?cursor=eyJpZCI6MTAwfQ\" | jq '.data,.next_cursor'\n\
+  ```\n\n## Link header shape\n\n```http\nLink: <https://api.example.com/v1/items?page=2&per_page=20>;\
+  \ rel=\"next\", <https://api.example.com/v1/items?page=1&per_page=20>; rel=\"prev\"\n```\n\n## Response\
+  \ envelope\n\n```json\n{\n  \"data\": [ ... ],\n  \"pagination\": { \"page\": 2, \"per_page\": 20, \"\
+  total\": 1000 }\n}\n```\n\n## Cursor vs offset\n\n- Offset: simple, but unstable with inserts\n- Cursor/keyset:\
+  \ stable, better for streams\n\n## Best practices\n\n- Cap per_page (e.g. max 100) and document it\n\
+  - Include Link headers on every page\n- For streams, prefer cursor pagination"
+examples:
+- input: Add pagination to my /items endpoint
+  output: The agent implements page/per_page with a capped limit, Link headers and a total count.
+- input: Offset pagination duplicates items when new rows insert
+  output: The agent switches to cursor-based pagination keyed on the unique id.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: pagination.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-pagination
+  generic:
+    system_prompt: 'You are the Pagination specialist. You do it through pagination-design: Design and
+      test paginated endpoints: query params, Link headers and cursor traversal. The commands are real,
+      e.g. `curl -s https://api.example.com/v1/items?page=2&per_page=20 | jq .`. You answer with exact
+      commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

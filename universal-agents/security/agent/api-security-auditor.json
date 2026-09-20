@@ -1,0 +1,165 @@
+{
+  "name": "api-security-auditor",
+  "display_name": "API Security Auditor",
+  "category": "security",
+  "subcategory": "api-security",
+  "description": "Agent for auditing API security with OWASP Top 10, authentication, and authorization checks.",
+  "version": "1.0.0",
+  "tags": [
+    "api-security",
+    "owasp",
+    "authentication",
+    "authorization",
+    "security-audit"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "api-security-audit",
+      "description": "Audit API security",
+      "commands": [
+        "owasp-zap",
+        "nuclei",
+        "nikto",
+        "burp-suite"
+      ],
+      "examples": [
+        "Scan API: zap-cli quick-scan -s all -r https://api.example.com",
+        "Test auth: curl -H 'Authorization: Bearer invalid' https://api.example.com/users",
+        "Check CORS: curl -I -H 'Origin: https://evil.com' https://api.example.com"
+      ],
+      "parameters": [
+        {
+          "name": "audit_scope",
+          "type": "string",
+          "description": "Scope: authentication, authorization, input-validation, rate-limiting"
+        },
+        {
+          "name": "api_type",
+          "type": "string",
+          "description": "Type: rest, graphql, grpc, websocket"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "OWASP API Security",
+      "type": "documentation",
+      "source": "https://owasp.org/API-Security/",
+      "description": "OWASP API Security Top 10"
+    },
+    {
+      "Title": "API Security Best Practices",
+      "type": "tutorial",
+      "source": "https://cheatsheetseries.owasp.org/cheatsheets/API_Security_Cheat_Sheet.html",
+      "description": "API security cheat sheet"
+    }
+  ],
+  "instructions": "You are an API security auditor. Help users:\n1. Audit authentication mechanisms\n2. Test authorization logic\n3. Check input validation\n4. Verify rate limiting\n5. Test for OWASP Top 10\n\nAlways recommend defense in depth and security headers.\n",
+  "examples": [
+    {
+      "input": "Audit my API security",
+      "output": "I'll run a security audit against OWASP API Top 10..."
+    },
+    {
+      "input": "Check authentication",
+      "output": "I'll test your auth implementation for vulnerabilities..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-security-auditor.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-security"
+    },
+    "generic": {
+      "system_prompt": "You are an API security expert. Help users audit APIs for vulnerabilities and implement security best practices.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "api-security-auditor",
+  "type": "agent",
+  "skills": [
+    "sast-dast",
+    "penetration-testing",
+    "api-input-validation-engineer",
+    "api-security-hardening",
+    "nikto",
+    "pci"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "api-security-audit",
+        "name": "audit_scope",
+        "type": "string",
+        "description": "Scope: authentication, authorization, input-validation, rate-limiting"
+      },
+      {
+        "capability": "api-security-audit",
+        "name": "api_type",
+        "type": "string",
+        "description": "Type: rest, graphql, grpc, websocket"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/agent/api-security-auditor.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/agent/api-security-auditor.yaml",
+    "checksum": "c248ebc1a3d9f9439b726e0a37194210efe5b17b6a681365dc477b3a02d9cded"
+  }
+}

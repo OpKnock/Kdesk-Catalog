@@ -1,0 +1,160 @@
+{
+  "name": "gitlab-ci-pipeline-builder",
+  "display_name": "GitLab CI Pipeline Builder",
+  "category": "devops",
+  "subcategory": "ci-cd",
+  "description": "Agent for building GitLab CI/CD pipelines with stages, caching, and deployment environments.",
+  "version": "1.0.0",
+  "tags": [
+    "gitlab",
+    "ci-cd",
+    "pipelines",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "pipeline-building",
+      "description": "Create GitLab CI/CD pipeline configurations",
+      "commands": [
+        "gitlab-ci",
+        "gitlab-runner",
+        "gitlab-runner register",
+        "gitlab-runner exec"
+      ],
+      "examples": [
+        "Test locally: gitlab-runner exec docker test",
+        "Register runner: gitlab-runner register --url https://gitlab.com",
+        "List pipelines: gitlab-ci-lint"
+      ],
+      "parameters": [
+        {
+          "name": "pipeline_stages",
+          "type": "array",
+          "description": "Pipeline stages: build, test, deploy, review"
+        },
+        {
+          "name": "runner_tags",
+          "type": "array",
+          "description": "Runner tags for job selection"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "GitLab CI Documentation",
+      "type": "documentation",
+      "source": "https://docs.gitlab.com/ee/ci/",
+      "description": "Complete GitLab CI/CD documentation"
+    },
+    {
+      "title": "GitLab CI Examples",
+      "type": "reference",
+      "source": "https://gitlab.com/gitlab-org/gitlab/-/tree/master/lib/gitlab/ci/templates",
+      "description": "Official GitLab CI template library"
+    }
+  ],
+  "instructions": "You are a GitLab CI/CD specialist. Help users:\n1. Design pipeline architectures\n2. Implement parallel jobs and matrix builds\n3. Configure caching and artifacts\n4. Set up deployment environments\n5. Implement review apps\n\nAlways recommend proper job dependencies and artifact management.\n",
+  "examples": [
+    {
+      "input": "Create a CI/CD pipeline for my project",
+      "output": "I'll design a GitLab CI pipeline with build, test, and deploy stages. Here's the .gitlab-ci.yml..."
+    },
+    {
+      "input": "My pipeline is failing on deploy",
+      "output": "Let me check the deployment job logs. I'll identify the failure and suggest fixes..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "gitlab-ci-pipeline-builder.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-gitlab-ci"
+    },
+    "generic": {
+      "system_prompt": "You are a GitLab CI/CD expert. Help users build pipelines, configure runners, and implement deployment strategies.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "gitlab-ci-pipeline-builder",
+  "type": "agent",
+  "skills": [
+    "ci-pipeline-optimizer",
+    "gitlab-ci"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pipeline-building",
+        "name": "pipeline_stages",
+        "type": "array",
+        "description": "Pipeline stages: build, test, deploy, review"
+      },
+      {
+        "capability": "pipeline-building",
+        "name": "runner_tags",
+        "type": "array",
+        "description": "Runner tags for job selection"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/agent/gitlab-ci-pipeline-builder.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/agent/gitlab-ci-pipeline-builder.yaml",
+    "checksum": "0c1e4b253709ba50a2bb26d9b04c21c7f399ca8d14b17ace24468f70457513ad"
+  }
+}

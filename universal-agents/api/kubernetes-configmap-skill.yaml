@@ -1,0 +1,122 @@
+name: kubernetes-configmap
+display_name: Kubernetes Configmap
+category: api
+subcategory: general
+description: 'Manage Kubernetes ConfigMaps: create from literals/files, mount into pods, update without
+  redeploying, and verify environment consumption.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kubectl
+capabilities:
+- name: configmap-create
+  description: Create ConfigMaps from literals, files, or env files.
+  commands:
+  - kubectl create configmap app-config --from-literal=APP_ENV=prod --from-literal=LOG_LEVEL=info
+  - kubectl create configmap app-config-file --from-file=app.properties
+  - kubectl create configmap app-config-env --from-env-file=config.env
+  - kubectl create configmap app-config --dry-run=client -o yaml > configmap.yaml
+  examples:
+  - kubectl create configmap app-config --from-literal=APP_ENV=prod --from-literal=LOG_LEVEL=info
+  - kubectl create configmap app-config-file --from-file=app.properties
+  - kubectl create configmap app-config --dry-run=client -o yaml > configmap.yaml
+  parameters:
+  - name: name
+    type: string
+    description: ConfigMap name.
+  - name: from_literal
+    type: string
+    description: key=value pairs.
+  - name: from_file
+    type: string
+    description: File(s) to embed.
+- name: configmap-ops
+  description: Inspect, update, and delete ConfigMaps.
+  commands:
+  - kubectl get configmaps
+  - kubectl describe configmap app-config
+  - kubectl edit configmap app-config
+  - kubectl delete configmap app-config
+  - kubectl get cm app-config -o yaml
+  examples:
+  - kubectl get configmaps
+  - kubectl describe configmap app-config
+  - kubectl get cm app-config -o yaml
+  parameters:
+  - name: name
+    type: string
+    description: ConfigMap name.
+  - name: namespace
+    type: string
+    description: 'Namespace (default: current context).'
+knowledge:
+- title: Kubernetes ConfigMaps
+  type: documentation
+  source: https://kubernetes.io/docs/concepts/configuration/configmap/
+  description: Official ConfigMap concept and usage documentation.
+- title: kubectl create configmap
+  type: documentation
+  source: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create_configmap/
+  description: kubectl reference for configmap creation.
+instructions: "# Kubernetes ConfigMaps\n\nManage configuration data decoupled from container images.\n\
+  \n## What this skill does\n\n- Creates ConfigMaps from literals, files, and env files.\n- Mounts config\
+  \ data as files or environment variables.\n- Updates configs and verifies pods pick them up.\n\n## When\
+  \ to use\n\n- Externalizing app settings across environments.\n- Sharing config between replicas of\
+  \ a workload.\n- Rotating config without rebuilding images.\n\n## Real commands\n\n```bash\n# From literals\n\
+  kubectl create configmap app-config \\\n  --from-literal=APP_ENV=prod --from-literal=LOG_LEVEL=info\n\
+  \n# From a file (key = filename)\nkubectl create configmap app-config-file --from-file=app.properties\n\
+  \n# From an env file\nkubectl create configmap app-config-env --from-env-file=config.env\n\n# Generate\
+  \ manifest without applying\nkubectl create configmap app-config \\\n  --dry-run=client -o yaml > configmap.yaml\n\
+  \n# Inspect\nkubectl get configmaps\nkubectl describe configmap app-config\nkubectl get cm app-config\
+  \ -o yaml\n\n# Update\nkubectl edit configmap app-config\n\n# Delete\nkubectl delete configmap app-config\n\
+  ```\n\n## Mount example\n\n```yaml\nspec:\n  containers:\n    - name: app\n      image: myapp:1.2\n\
+  \      envFrom:\n        - configMapRef:\n            name: app-config\n      volumeMounts:\n      \
+  \  - name: config\n          mountPath: /etc/app\n          readOnly: true\n  volumes:\n    - name:\
+  \ config\n      configMap:\n        name: app-config-file\n```\n\n## Testing\n\n```bash\n# Verify env\
+  \ vars inside the pod\nkubectl exec deploy/app -- env | grep APP_ENV\nkubectl exec deploy/app -- cat\
+  \ /etc/app/app.properties\n```\n\n## Best practices\n\n- Prefer mounted files for large configs; envFrom\
+  \ for small key/value sets.\n- ConfigMap updates don't restart pods; combine with a rollout restart.\n\
+  - Keep secrets out of ConfigMaps; use Secrets for sensitive data.\n"
+examples:
+- input: Give the app a prod config
+  output: kubectl create configmap app-config --from-literal=APP_ENV=prod, reference it with envFrom,
+    then kubectl rollout restart deploy/app.
+- input: Why hasn't my pod picked up the new config?
+  output: ConfigMap changes don't trigger restarts; run kubectl rollout restart deployment/app.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kubernetes-configmap.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kubernetes-configmap
+  generic:
+    system_prompt: 'You take the Kubernetes Configmap seat. You do it through configmap-create: Create
+      ConfigMaps from literals, files, or env files. The commands are real, e.g. `kubectl create configmap
+      app-config --from-literal=APP_ENV=prod --from-literal=LOG_LEVEL=info`. You run and verify the real
+      CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

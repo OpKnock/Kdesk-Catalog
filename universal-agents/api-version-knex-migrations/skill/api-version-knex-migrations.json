@@ -1,0 +1,187 @@
+{
+  "name": "api-version-knex-migrations",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Manages database migrations for versioned APIs: knex and Prisma migration workflows, rollback, and schema evolution alongside API versions.",
+  "keywords": [
+    "migration"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-version-knex-migrations.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-version-knex-migrations"
+    },
+    "generic": {
+      "system_prompt": "You work Api Version Knex Migrations hands-on. You do it through knex-migrations: Create and apply knex migrations. The commands are real, e.g. `npx knex migrate:make add_users_table`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "knex-migrations",
+      "description": "Create and apply knex migrations",
+      "commands": [
+        "npx knex migrate:make add_users_table",
+        "npx knex migrate:latest",
+        "npx knex migrate:rollback",
+        "npx knex migrate:status",
+        "npx knex seed:run"
+      ],
+      "examples": [
+        "knex migrate:make scaffolds a migration",
+        "knex migrate:latest applies pending migrations",
+        "knex migrate:rollback undoes the last batch"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Migration name"
+        },
+        {
+          "name": "directory",
+          "type": "string",
+          "description": "Migrations directory"
+        },
+        {
+          "name": "environment",
+          "type": "string",
+          "description": "Knex env config"
+        }
+      ]
+    },
+    {
+      "name": "prisma-migrate",
+      "description": "Manage Prisma schema migrations",
+      "commands": [
+        "npx prisma migrate dev --name add_users",
+        "npx prisma migrate deploy",
+        "npx prisma migrate status",
+        "npx prisma migrate resolve --applied 20240101000000_add_users",
+        "npx prisma generate"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "openapi"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "openapi",
+    "postman"
+  ],
+  "examples": [
+    {
+      "input": "Add a field for v2",
+      "output": "Creates a migration, applies it, and ships the v2 schema"
+    },
+    {
+      "input": "Fix a failed migration",
+      "output": "Resolves the state with prisma migrate resolve and redeploys"
+    }
+  ],
+  "instructions": "# API Version v3 - Migrations\n\nDatabase migrations for API versions.\n\n## What This Skill Does\n- Versions database schema changes\n- Applies and rolls back migrations\n- Keeps schema in sync with API versions\n\n## When to Use\n- Schema changes behind new API versions\n- Expanding or contracting data models\n- Reproducible environments\n\n## Real Commands\n\n```bash\nnpx knex migrate:make add_users_table\nnpx knex migrate:latest\nnpx prisma migrate dev --name add_users\nnpx prisma migrate deploy\n```\n\n## Migration Flow\n1. Create the migration\n2. Review the generated SQL\n3. Apply in staging\n4. Deploy schema before code\n5. Roll back on failure\n\n## Testing\n- Run migrations on a clean database\n- Verify rollback restores state\n- Test old queries against new schema\n\n\n## Best Practices\n- Deploy migrations before API code\n- Make migrations reversible\n- Lock migration files per version",
+  "display_name": "Api Version Knex Migrations",
+  "knowledge": [
+    {
+      "title": "Knex Migrations",
+      "type": "documentation",
+      "source": "https://knexjs.org/guide/migrations.html",
+      "description": "Knex migration API"
+    },
+    {
+      "title": "Prisma Migrate",
+      "type": "documentation",
+      "source": "https://www.prisma.io/docs/orm/prisma-migrate",
+      "description": "Prisma migration workflow"
+    }
+  ],
+  "id": "api-version-knex-migrations",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "knex-migrations",
+        "name": "name",
+        "type": "string",
+        "description": "Migration name"
+      },
+      {
+        "capability": "knex-migrations",
+        "name": "directory",
+        "type": "string",
+        "description": "Migrations directory"
+      },
+      {
+        "capability": "knex-migrations",
+        "name": "environment",
+        "type": "string",
+        "description": "Knex env config"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "openapi"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-version-knex-migrations/skill/api-version-knex-migrations.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-version-knex-migrations/skill/api-version-knex-migrations.yaml",
+    "checksum": "a129d243da750ea2aa7830195883e1b0b436249e83f30f18ac991497d9d9ea98"
+  }
+}

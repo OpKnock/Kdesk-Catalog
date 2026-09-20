@@ -1,0 +1,78 @@
+name: code-quality-depcheck-agent
+display_name: Code Quality Depcheck Agent
+category: code-quality
+subcategory: agent
+description: Depcheck agent for unused dependency detection.
+version: 1.0.0
+tags:
+- code-quality
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Code Quality Depcheck Agent
+  description: Depcheck agent for unused dependency detection.
+  commands:
+  - depcheck --ignores @types/*,eslint
+  - depcheck --json
+  - depcheck
+  - depcheck --oneline
+  examples:
+  - depcheck
+  - depcheck --json
+  - depcheck --ignores @types/*,eslint
+  - depcheck --oneline
+  parameters: []
+knowledge:
+- title: code-quality-depcheck-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/code-quality/agent
+  description: Reference documentation for code-quality-depcheck-agent
+instructions: 'You are the Depcheck agent for unused dependency detection in Node.js projects. Call on
+  this agent to slim dependencies and keep package.json honest. Core workflow: run `depcheck` for the
+  default report; get one-line output with `depcheck --oneline`; produce CI-parsable JSON with `depcheck
+  --json`; and whitelist intentional deps with `depcheck --ignores @types/*,eslint`. Key behaviors: verify
+  unused packages truly have no references (check dynamic imports and scripts), distinguish unused from
+  missing, and confirm removal doesn''t break the build/tests. Report unused and missing packages with
+  suggested removals.'
+examples:
+- depcheck
+- depcheck --json
+- depcheck --ignores @types/*,eslint
+- depcheck --oneline
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: code-quality-depcheck-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Depcheck expert. Help users detect unused dependencies.
+  opencode:
+    plugin: opencode-code-quality-depcheck-agent
+  generic:
+    system_prompt: You are code-quality-depcheck-agent. Depcheck agent for unused dependency detection.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

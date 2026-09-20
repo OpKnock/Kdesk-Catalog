@@ -1,0 +1,182 @@
+name: code-review
+display_name: code-review
+category: code-quality
+subcategory: general
+description: 'Performs systematic code reviews: diff analysis, security checks, test coverage review,
+  and actionable feedback.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- git
+- gitleaks
+- grep
+- trufflehog
+capabilities:
+- commands:
+  - git diff HEAD~1
+  - git diff --stat HEAD~1
+  - git diff --check
+  - git log --oneline -10
+  - git show HEAD
+  description: Analyze diffs and changed files.
+  name: diff-review
+  examples:
+  - git diff HEAD~3..HEAD -- src/
+  - git diff --check HEAD~1
+  - git diff -U20 HEAD~1 | less
+  parameters:
+  - description: Commit range
+    name: range
+    type: string
+  - description: Path filter
+    name: path
+    type: string
+- commands:
+  - gitleaks detect
+  - gitleaks detect --source .
+  - trufflehog filesystem .
+  - grep -rnE "api[_-]?key\s*=\s*[^[:space:]]{4,}" . --include="*.js" --include="*.ts"
+  - git log -p --all -S "password"
+  description: Scan for secrets and vulnerable patterns.
+  name: security-review
+  examples:
+  - gitleaks detect --log-opts="-20"
+  - trufflehog git --branch main
+  - git log -S "BEGIN RSA PRIVATE KEY" --all
+  parameters:
+  - description: Files or history to scan
+    name: scope
+    type: string
+  - name: range
+    type: string
+    description: Commit range to scan
+knowledge:
+- title: Google Code Review Guide
+  description: Review standards and etiquette
+  source: https://google.github.io/eng-practices/review/
+  type: documentation
+- title: Gitleaks Docs
+  description: Secret scanning CLI
+  source: https://github.com/gitleaks/gitleaks
+  type: documentation
+instructions: '# Code Review
+
+
+  Review code effectively and systematically.
+
+
+  ## When to Use
+
+
+  - Before merging any non-trivial change
+
+  - Auditing a commit range for security issues
+
+  - Giving feedback that improves the codebase
+
+  - Catching secrets and risky patterns early
+
+
+  ## Review Checklist
+
+
+  1. Understand the change intent (commit message, issue)
+
+  2. Diff analysis: logic, edge cases, error paths
+
+  3. Style and consistency with the codebase
+
+  4. Tests: do they cover the change and the failure modes?
+
+  5. Security: secrets, injection, authz, input validation
+
+  6. Performance: N+1, blocking I/O, memory leaks
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Diff analysis
+
+  git diff HEAD~1
+
+  git diff --stat HEAD~1
+
+  git diff --check
+
+  git log --oneline -10
+
+
+  # Secret scanning
+
+  gitleaks detect
+
+  trufflehog filesystem .
+
+  git log -p --all -S "password"
+
+
+  # History search for leaked material
+
+  git log -S "BEGIN RSA PRIVATE KEY" --all
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Review the diff, not the whole file, unless asked
+
+  - Ask questions over commands; suggest over demand
+
+  - Separate blocking issues from nits clearly
+
+  - Verify claims: run the tests, not just read them
+
+  - Check that secrets are never committed (gitleaks in CI)
+
+  - Approve only when tests pass and concerns are resolved'
+examples:
+- input: Review this commit range for me
+  output: Agent analyzes git diff HEAD~1, checks tests and edge cases, and lists blocking vs non-blocking
+    feedback.
+- input: Check if we leaked any secrets in git history
+  output: Agent runs gitleaks detect and git log -S for common secret patterns, then reports any hits.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: code-review.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-code-review
+  generic:
+    system_prompt: 'This is your domain: code-review. You do it through diff-review: Analyze diffs and
+      changed files. The commands are real, e.g. `git diff HEAD~1`. You verify each step you report and
+      stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

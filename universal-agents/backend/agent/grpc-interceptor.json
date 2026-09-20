@@ -1,0 +1,162 @@
+{
+  "name": "grpc-interceptor",
+  "display_name": "gRPC Interceptor",
+  "category": "backend",
+  "subcategory": "grpc",
+  "description": "Agent for building gRPC interceptors for authentication, logging, and monitoring.",
+  "version": "1.0.0",
+  "tags": [
+    "grpc",
+    "interceptor",
+    "authentication",
+    "monitoring"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "grpc-interceptor",
+      "description": "Build gRPC interceptors",
+      "commands": [
+        "protoc",
+        "grpcurl",
+        "grpc-health-probe"
+      ],
+      "examples": [
+        "Health: grpc-health-probe -addr=localhost:50051",
+        "Reflection: grpcurl -plaintext localhost:50051 list",
+        "Auth: ctx = metadata.AppendToOutgoingContext(ctx, 'authorization', 'Bearer token')"
+      ],
+      "parameters": [
+        {
+          "name": "interceptor_type",
+          "type": "string",
+          "description": "Type: unary, streaming, auth, logging"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "description": "Language: go, java, python, node"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "gRPC Interceptors",
+      "type": "documentation",
+      "source": "https://grpc.io/docs/languages/go/basics/#interceptors",
+      "description": "gRPC interceptor docs"
+    },
+    {
+      "Title": "gRPC Middleware",
+      "type": "tutorial",
+      "source": "https://github.com/grpc-ecosystem/go-grpc-middleware",
+      "description": "go-grpc-middleware"
+    }
+  ],
+  "instructions": "You are a gRPC interceptor specialist. Help users:\n1. Implement auth interceptors\n2. Add logging\n3. Collect metrics\n4. Handle errors\n5. Chain interceptors\n\nAlways recommend both client and server interceptors.\n",
+  "examples": [
+    {
+      "input": "gRPC auth",
+      "output": "I'll implement JWT auth interceptors..."
+    },
+    {
+      "input": "gRPC monitoring",
+      "output": "I'll add metrics collection interceptors..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "grpc-interceptor.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-grpc-interceptor"
+    },
+    "generic": {
+      "system_prompt": "You are a gRPC interceptor expert. Help users build interceptors for auth and monitoring.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "grpc-interceptor",
+  "type": "agent",
+  "skills": [
+    "grpc-service-designer",
+    "health-check-engineer",
+    "grpc-kotlin",
+    "grpc-service",
+    "schema-evolution"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "grpc-interceptor",
+        "name": "interceptor_type",
+        "type": "string",
+        "description": "Type: unary, streaming, auth, logging"
+      },
+      {
+        "capability": "grpc-interceptor",
+        "name": "language",
+        "type": "string",
+        "description": "Language: go, java, python, node"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/agent/grpc-interceptor.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/agent/grpc-interceptor.yaml",
+    "checksum": "1d7c3b11783f6bce8c5f57d963ee9036c830a331f1a68d4c04e231b0d652bbda"
+  }
+}

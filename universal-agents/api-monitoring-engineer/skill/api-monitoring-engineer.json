@@ -1,0 +1,191 @@
+{
+  "name": "api-monitoring-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "sre",
+  "description": "Instruments APIs with OpenTelemetry for distributed tracing: auto-instrumentation, OTLP export, otel-cli command injection, and Jaeger trace inspection.",
+  "keywords": [
+    "api-monitoring",
+    "observability"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-monitoring-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-monitoring-engineer"
+    },
+    "generic": {
+      "system_prompt": "You own api-monitoring-engineer end to end. You do it through otel-instrumentation: Add OpenTelemetry tracing to a Node.js API. The commands are real, e.g. `npm install @opentelemetry/sdk-node @opentelemetry/auto-instrumentations-node`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "otel-instrumentation",
+      "description": "Add OpenTelemetry tracing to a Node.js API",
+      "commands": [
+        "npm install @opentelemetry/sdk-node @opentelemetry/auto-instrumentations-node",
+        "node -r @opentelemetry/auto-instrumentations-node/register app.js",
+        "curl -s http://localhost:3000/api/users -o /dev/null -w '%{http_code}\\n'",
+        "npm install otel-cli",
+        "otel-cli exec --service my-api --name \"GET /api/users\" -- curl http://localhost:3000/api/users"
+      ],
+      "examples": [
+        "node -r @opentelemetry/auto-instrumentations-node/register app.js auto-instruments HTTP and DB calls",
+        "otel-cli exec wraps any command in a trace span",
+        "export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317 routes spans to the collector"
+      ],
+      "parameters": [
+        {
+          "name": "service-name",
+          "type": "string",
+          "description": "Name of the traced service in spans"
+        },
+        {
+          "name": "exporter-endpoint",
+          "type": "string",
+          "description": "OTLP endpoint (gRPC 4317 or HTTP 4318)"
+        },
+        {
+          "name": "sample-ratio",
+          "type": "number",
+          "description": "Fraction of requests to sample (0-1)"
+        }
+      ]
+    },
+    {
+      "name": "trace-inspection",
+      "description": "Query traces from Jaeger after export",
+      "commands": [
+        "docker run -d --name jaeger -p 16686:16686 -p 4317:4317 -p 4318:4318 jaegertracing/all-in-one:latest",
+        "curl -s 'http://localhost:16686/api/traces?service=my-api&limit=10' | jq '.data[0].spans | length'",
+        "curl -s 'http://localhost:16686/api/services' | jq '.data'",
+        "curl -s 'http://localhost:4318/v1/traces' -o /dev/null -w '%{http_code}\\n'"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "prometheus",
+    "grafana",
+    "node.js",
+    "python"
+  ],
+  "tools": [
+    "prometheus",
+    "grafana",
+    "node.js",
+    "python",
+    "new-relic",
+    "datadog"
+  ],
+  "examples": [
+    {
+      "input": "Trace a slow checkout flow across services",
+      "output": "Instruments both services with OTel, exports to Jaeger, and finds the slow span in the waterfall"
+    },
+    {
+      "input": "Trace a CLI job against the API",
+      "output": "Wraps the job command with otel-cli exec to create spans in the same trace"
+    }
+  ],
+  "instructions": "# API Monitoring Engineer\n\nDistributed tracing with OpenTelemetry.\n\n## What This Skill Does\n- Instruments APIs without code changes via auto-instrumentation\n- Exports spans over OTLP to Jaeger or a collector\n- Traces requests across services via context propagation\n\n## When to Use\n- Diagnosing latency across service boundaries\n- Building trace-based SLOs\n- Migrating to vendor-neutral observability\n\n## Real Commands\n\n```bash\nnpm install @opentelemetry/sdk-node @opentelemetry/auto-instrumentations-node\nnode -r @opentelemetry/auto-instrumentations-node/register app.js\ndocker run -d --name jaeger -p 16686:16686 -p 4317:4317 jaegertracing/all-in-one:latest\n```\n\n## Configuration\n\n```bash\nexport OTEL_SERVICE_NAME=my-api\nexport OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317\nexport OTEL_TRACES_SAMPLER=parentbased_traceidratio\nexport OTEL_TRACES_SAMPLER_ARG=0.1\n```\n\n## Testing\n- Generate traffic, then query /api/traces?service=my-api\n- Confirm parent-child span relationships across services\n- Validate collector endpoint health on 4318\n\n## Best Practices\n- Start with auto-instrumentation before manual spans\n- Propagate W3C traceparent headers at gateways\n- Sample 10-25% at high QPS, 100% on canaries",
+  "display_name": "api-monitoring-engineer",
+  "knowledge": [
+    {
+      "title": "OpenTelemetry Node.js Docs",
+      "type": "documentation",
+      "source": "https://opentelemetry.io/docs/languages/js/getting-started/nodejs/",
+      "description": "Getting started with Node.js instrumentation"
+    },
+    {
+      "title": "Jaeger Getting Started",
+      "type": "documentation",
+      "source": "https://www.jaegertracing.io/docs/latest/getting-started/",
+      "description": "Running Jaeger all-in-one and querying traces"
+    }
+  ],
+  "id": "api-monitoring-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "otel-instrumentation",
+        "name": "service-name",
+        "type": "string",
+        "description": "Name of the traced service in spans"
+      },
+      {
+        "capability": "otel-instrumentation",
+        "name": "exporter-endpoint",
+        "type": "string",
+        "description": "OTLP endpoint (gRPC 4317 or HTTP 4318)"
+      },
+      {
+        "capability": "otel-instrumentation",
+        "name": "sample-ratio",
+        "type": "number",
+        "description": "Fraction of requests to sample (0-1)"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "prometheus",
+    "grafana",
+    "node.js",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-monitoring-engineer/skill/api-monitoring-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-monitoring-engineer/skill/api-monitoring-engineer.yaml",
+    "checksum": "f26924d2de04c460c5ed7173afc2262d0bbebb2fa743fd14c38ce14ca3ef13d3"
+  }
+}

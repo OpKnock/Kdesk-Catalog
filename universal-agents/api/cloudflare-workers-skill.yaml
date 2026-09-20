@@ -1,0 +1,115 @@
+name: cloudflare-workers
+display_name: Cloudflare Workers
+category: api
+subcategory: general
+description: 'Build and deploy edge APIs with Cloudflare Workers using wrangler: init, dev, deploy, secrets,
+  and tail.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+capabilities:
+- name: wrangler-dev
+  description: Scaffold Workers projects, run locally, and deploy to the edge
+  commands:
+  - npx wrangler init my-worker
+  - npx wrangler dev
+  - npx wrangler deploy
+  - npx wrangler whoami
+  examples:
+  - npx wrangler init my-worker --yes && npx wrangler dev
+  - npx wrangler deploy --dry-run
+  - npx wrangler whoami
+  parameters:
+  - name: project_name
+    type: string
+    description: Worker project name
+  - name: entrypoint
+    type: string
+    description: Entry file such as src/index.ts
+- name: runtime-tools
+  description: Manage secrets, inspect live traffic, and check KV/Durable Object bindings
+  commands:
+  - npx wrangler secret put API_KEY
+  - npx wrangler tail
+  - npx wrangler kv key list --binding=MY_KV
+  - npx wrangler deployments list
+  examples:
+  - npx wrangler secret put API_KEY
+  - npx wrangler tail --format json
+  - npx wrangler kv key list --binding=MY_KV | jq '.keys[0].name'
+  parameters:
+  - name: secret_name
+    type: string
+    description: Secret variable name
+  - name: binding
+    type: string
+    description: KV binding name
+knowledge:
+- title: Cloudflare Workers Docs
+  type: documentation
+  source: https://developers.cloudflare.com/workers/
+  description: Workers runtime, wrangler CLI, and platform reference
+- title: Wrangler CLI Reference
+  type: documentation
+  source: https://developers.cloudflare.com/workers/wrangler/commands/
+  description: Full wrangler command list
+instructions: "# Cloudflare Workers\n\nBuild edge APIs with Cloudflare Workers.\n\n## When to Use\n\n\
+  - Global low-latency API endpoints\n- Auth, routing, and caching at the edge\n- Serverless functions\
+  \ near users\n\n## Scaffold\n\n```bash\nnpx wrangler init my-worker\ncd my-worker\nnpx wrangler dev\n\
+  ```\n\n## Handler\n\n```ts\nexport default {\n  async fetch(request: Request, env: Env, ctx: ExecutionContext):\
+  \ Promise<Response> {\n    const url = new URL(request.url);\n    if (url.pathname === \"/health\")\
+  \ {\n      return new Response(JSON.stringify({ ok: true }), {\n        headers: { \"Content-Type\"\
+  : \"application/json\" },\n      });\n    }\n    const key = url.pathname.slice(1);\n    return new\
+  \ Response(`Hello from edge: ${key}`);\n  },\n};\n```\n\n## Deploy\n\n```bash\nnpx wrangler deploy --dry-run\n\
+  npx wrangler deploy\nnpx wrangler deployments list\n```\n\n## Secrets and Bindings\n\n```bash\nnpx wrangler\
+  \ secret put API_KEY\nnpx wrangler tail\nnpx wrangler kv key list --binding=MY_KV\n```\n\n## wrangler.toml\n\
+  \n```toml\nname = \"my-worker\"\nmain = \"src/index.ts\"\ncompatibility_date = \"2025-01-01\"\n\n[[kv_namespaces]]\n\
+  binding = \"MY_KV\"\nid = \"xxxxxxxx\"\n```\n\n## Testing\n\n```bash\nnpx wrangler dev &\ncurl -s http://localhost:8787/health\
+  \ | jq\nnpx wrangler tail --format json\n```\n\n## Best Practices\n\n- Use --dry-run before real deploys\n\
+  - Keep secrets in wrangler secret put, never in code\n- Set compatibility dates explicitly\n- Test with\
+  \ Miniflare in CI\n- Cache aggressively with the Cache API\n- Use Durable Objects for stateful services\n\
+  - Watch usage with wrangler deployments and analytics"
+examples:
+- input: Create a Worker that returns JSON from a query param.
+  output: The agent runs npx wrangler init, writes a fetch handler parsing the URL, and tests locally
+    with npx wrangler dev and curl localhost:8787.
+- input: Deploy my worker to production.
+  output: The agent runs npx wrangler deploy --dry-run first, then npx wrangler deploy, and confirms with
+    npx wrangler deployments list.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: cloudflare-workers.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-cloudflare-workers
+  generic:
+    system_prompt: 'You are the Cloudflare Workers specialist. You do it through wrangler-dev: Scaffold
+      Workers projects, run locally, and deploy to the edge. The commands are real, e.g. `npx wrangler
+      init my-worker`. You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

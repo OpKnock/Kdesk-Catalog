@@ -1,0 +1,101 @@
+name: compliance-hipaa-compliance
+display_name: Compliance Hipaa
+category: compliance
+subcategory: compliance
+description: HIPAA compliance agent for BAA, risk analysis, encryption, audit logs.
+version: 1.0.0
+tags:
+- compliance
+- compliance
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Compliance Hipaa
+  description: HIPAA compliance agent for BAA, risk analysis, encryption, audit logs.
+  commands:
+  - 'IAM: aws iam create-policy --policy-name HIPAA-Access --policy-document file://hipaa-policy.json'
+  - 'Encryption: aws kms encrypt --key-id alias/phi --plaintext fileb://data'
+  - 'CloudTrail: aws cloudtrail create-trail --name hipaa-trail --is-multi-region-trail'
+  - 'AWS HIPAA: aws auditmanager create-assessment --framework-id HIPAA'
+  examples:
+  - 'AWS HIPAA: aws auditmanager create-assessment --framework-id HIPAA'
+  - 'Encryption: aws kms encrypt --key-id alias/phi --plaintext fileb://data'
+  - 'CloudTrail: aws cloudtrail create-trail --name hipaa-trail --is-multi-region-trail'
+  - 'IAM: aws iam create-policy --policy-name HIPAA-Access --policy-document file://hipaa-policy.json'
+  parameters: []
+knowledge:
+- title: compliance-hipaa Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/compliance/compliance
+  description: Reference documentation for compliance-hipaa
+instructions: 'You are a HIPAA compliance expert. Help users with:
+
+  - Business Associate Agreements
+
+  - Risk analysis
+
+  - Encryption at rest and in transit
+
+  - Audit logging
+
+  - Access controls
+
+  - Breach notification
+
+
+  Always use real HIPAA tools. Never suggest fictional tools.'
+examples:
+- 'AWS HIPAA: aws auditmanager create-assessment --framework-id HIPAA'
+- 'Encryption: aws kms encrypt --key-id alias/phi --plaintext fileb://data'
+- 'CloudTrail: aws cloudtrail create-trail --name hipaa-trail --is-multi-region-trail'
+- 'IAM: aws iam create-policy --policy-name HIPAA-Access --policy-document file://hipaa-policy.json'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: compliance-hipaa-compliance.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a HIPAA compliance expert. Help users with:
+
+      - Business Associate Agreements
+
+      - Risk analysis
+
+      - Encryption at rest and in transit
+
+      - Audit logging
+
+      - Access controls
+
+      - Breach notification
+
+
+      Always use real HIPAA tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-compliance-hipaa
+  generic:
+    system_prompt: You are compliance-hipaa. HIPAA compliance agent for BAA, risk analysis, encryption,
+      audit logs.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,241 @@
+{
+  "name": "load-testing-scenario-profiles",
+  "display_name": "Load Testing Scenario Profiles",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Advanced load testing scenarios: k6 executors, vegeta histograms, distributed locust, and Gatling simulations for realistic workload profiles.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "gatling.sh",
+    "locust",
+    "vegeta"
+  ],
+  "capabilities": [
+    {
+      "name": "scenario-profiles",
+      "description": "Run realistic profiles: spikes, soak, and arrival-rate tests.",
+      "commands": [
+        "k6 run --scenario spike scenarios.js",
+        "k6 run --scenario soak scenarios.js",
+        "vegeta attack -rate=50/1s -duration=2m -targets=targets.txt | vegeta report -type=hist[0,50ms,100ms,200ms,500ms]",
+        "gatling.sh -s simulations.SpikeSimulation"
+      ],
+      "examples": [
+        "k6 run --scenario spike scenarios.js",
+        "vegeta attack -rate=50/1s -duration=2m -targets=targets.txt | vegeta report -type=hist[0,50ms,100ms,200ms,500ms]",
+        "gatling.sh -s simulations.SpikeSimulation"
+      ],
+      "parameters": [
+        {
+          "name": "scenario",
+          "type": "string",
+          "description": "k6 scenario name (spike, soak, ramp)."
+        },
+        {
+          "name": "rate",
+          "type": "string",
+          "description": "Arrival rate like 50/1s."
+        },
+        {
+          "name": "simulation",
+          "type": "string",
+          "description": "Gatling simulation class."
+        }
+      ]
+    },
+    {
+      "name": "distributed-load",
+      "description": "Run distributed load with locust master/workers.",
+      "commands": [
+        "locust -f locustfile.py --headless -u 500 -r 50 -t 3m --host https://api.example.com",
+        "locust -f locustfile.py --master --master-bind-port=5557",
+        "locust -f locustfile.py --worker --master-host=10.0.0.5",
+        "k6 run --quiet --summary-trend-stats='avg,p(99.9)' soak.js"
+      ],
+      "examples": [
+        "locust -f locustfile.py --headless -u 500 -r 50 -t 3m --host https://api.example.com",
+        "locust -f locustfile.py --worker --master-host=10.0.0.5",
+        "k6 run --quiet --summary-trend-stats='avg,p(99.9)' soak.js"
+      ],
+      "parameters": [
+        {
+          "name": "users",
+          "type": "integer",
+          "description": "Total simulated users."
+        },
+        {
+          "name": "spawn_rate",
+          "type": "integer",
+          "description": "Users spawned per second."
+        },
+        {
+          "name": "time",
+          "type": "string",
+          "description": "Test duration, e.g. 3m."
+        },
+        {
+          "name": "master_host",
+          "type": "string",
+          "description": "Locust master address for workers."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "k6 Executors",
+      "type": "documentation",
+      "source": "https://grafana.com/docs/k6/using-k6/scenarios/executors/",
+      "description": "k6 executor reference for workload profiles."
+    },
+    {
+      "title": "Locust Docs",
+      "type": "documentation",
+      "source": "https://docs.locust.io/en/stable/",
+      "description": "Official Locust documentation."
+    },
+    {
+      "title": "Gatling Docs",
+      "type": "documentation",
+      "source": "https://docs.gatling.io/",
+      "description": "Gatling reference and simulation DSL."
+    }
+  ],
+  "instructions": "# Load Testing (Advanced Scenarios)\n\nRealistic workload profiles and distributed load generation.\n\n## What this skill does\n\n- Runs spike, soak, and arrival-rate scenarios with k6 executors.\n- Builds latency histograms with vegeta.\n- Distributes load across locust master/workers.\n\n## When to use\n\n- Validating autoscaling with spike patterns.\n- Finding memory leaks with soak tests.\n- Reproducing production traffic shapes.\n\n## Real commands\n\n```bash\n# k6 scenario runs\nk6 run --scenario spike scenarios.js\nk6 run --scenario soak scenarios.js\n\n# Vegeta histogram\nvegeta attack -rate=50/1s -duration=2m -targets=targets.txt \\\n  | vegeta report -type=hist[0,50ms,100ms,200ms,500ms]\n\n# Gatling simulation\ngatling.sh -s simulations.SpikeSimulation\n\n# Locust headless\nlocust -f locustfile.py --headless -u 500 -r 50 -t 3m \\\n  --host https://api.example.com\n\n# Distributed: master + workers\nlocust -f locustfile.py --master --master-bind-port=5557\nlocust -f locustfile.py --worker --master-host=10.0.0.5\n\n# k6 with tight trend stats\nk6 run --quiet --summary-trend-stats='avg,p(99.9)' soak.js\n```\n\n## k6 scenarios.js example\n\n```js\nexport const options = {\n  scenarios: {\n    spike: {\n      executor: 'constant-arrival-rate',\n      duration: '2m',\n      rate: 200,\n      preAllocatedVUs: 50,\n    },\n    soak: {\n      executor: 'ramping-vus',\n      stages: [\n        { duration: '5m', target: 100 },\n        { duration: '55m', target: 100 },\n        { duration: '5m', target: 0 },\n      ],\n    },\n  },\n  thresholds: { http_req_failed: ['rate<0.01'] },\n};\n```\n\n## Testing\n\n```bash\nlocust -f locustfile.py --headless -u 10 -r 2 -t 30s   # verify the file works\n```\n\n## Best practices\n\n- Keep soak tests close to production hours with monitoring attached.\n- Use arrival-rate executors when modeling real user concurrency.\n- Record the exact profile (rate, duration, stages) with every result.\n",
+  "examples": [
+    {
+      "input": "Spike test: 200 req/s for 2 minutes",
+      "output": "k6 run --scenario spike scenarios.js with a constant-arrival-rate executor at rate 200."
+    },
+    {
+      "input": "Distribute load across 5 machines",
+      "output": "Start one locust master and 5 workers with --master-host, then run --headless on the master."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "load-testing-scenario-profiles.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-load-testing-scenario-profiles"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Load Testing Scenario Profiles. You do it through scenario-profiles: Run realistic profiles: spikes, soak, and arrival-rate tests. The commands are real, e.g. `k6 run --scenario spike scenarios.js`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "load-testing-scenario-profiles",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "scenario-profiles",
+        "name": "scenario",
+        "type": "string",
+        "description": "k6 scenario name (spike, soak, ramp)."
+      },
+      {
+        "capability": "scenario-profiles",
+        "name": "rate",
+        "type": "string",
+        "description": "Arrival rate like 50/1s."
+      },
+      {
+        "capability": "scenario-profiles",
+        "name": "simulation",
+        "type": "string",
+        "description": "Gatling simulation class."
+      },
+      {
+        "capability": "distributed-load",
+        "name": "users",
+        "type": "integer",
+        "description": "Total simulated users."
+      },
+      {
+        "capability": "distributed-load",
+        "name": "spawn_rate",
+        "type": "integer",
+        "description": "Users spawned per second."
+      },
+      {
+        "capability": "distributed-load",
+        "name": "time",
+        "type": "string",
+        "description": "Test duration, e.g. 3m."
+      },
+      {
+        "capability": "distributed-load",
+        "name": "master_host",
+        "type": "string",
+        "description": "Locust master address for workers."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "gatling.sh",
+    "locust",
+    "vegeta"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/load-testing-scenario-profiles-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/load-testing-scenario-profiles-skill.yaml",
+    "checksum": "6931235c1ceac577c4c2eed054cad44182a99c55119fdba2d0acad0fbf349316"
+  }
+}

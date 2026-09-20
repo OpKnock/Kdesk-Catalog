@@ -1,0 +1,116 @@
+name: terragrunt
+display_name: terragrunt
+category: devops
+subcategory: general
+description: 'Wraps Terraform with Terragrunt: DRY configurations, remote state management, dependencies,
+  run-all, and input validation.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- terragrunt
+capabilities:
+- name: run-and-dependencies
+  description: Plan/apply modules and manage cross-module dependencies.
+  commands:
+  - terragrunt plan
+  - terragrunt apply -auto-approve
+  - terragrunt run-all plan
+  - terragrunt run-all apply --terragrunt-non-interactive
+  - terragrunt run-all destroy
+  - terragrunt validate-inputs
+  examples:
+  - terragrunt plan
+  - terragrunt run-all plan
+  - terragrunt validate-inputs
+  parameters:
+  - name: command
+    type: string
+    description: Terraform command to wrap
+  - name: run-all
+    type: boolean
+    description: Run across all modules in dependency order
+- name: config-and-state
+  description: Generate remote state configs and read outputs across modules.
+  commands:
+  - terragrunt state list
+  - terragrunt output
+  - terragrunt output -json
+  - terragrunt init --backend-config backend.tfvars
+  - terragrunt apply -target=module.vpc
+  - terragrunt hclfmt
+  examples:
+  - terragrunt output -json
+  - terragrunt init --backend-config backend.tfvars
+  - terragrunt hclfmt
+  parameters:
+  - name: backend-config
+    type: string
+    description: Backend config file
+  - name: target
+    type: string
+    description: Resource or module target
+knowledge:
+- title: Terragrunt Documentation
+  type: documentation
+  source: https://terragrunt.gruntwork.io/docs/
+  description: Terragrunt concepts, dependencies, and CLI
+- title: Terragrunt Configuration
+  type: documentation
+  source: https://terragrunt.gruntwork.io/docs/reference/config-blocks-and-attributes/
+  description: terragrunt.hcl blocks and attributes
+instructions: "# Terragrunt\n\nKeep Terraform DRY across environments: shared backend configs, module\
+  \ versions, and orchestrated runs.\n\n## What This Skill Does\n\n- Generates consistent remote state\
+  \ backends from terragrunt.hcl\n- Runs multiple modules in dependency order (run-all)\n- Reads outputs\
+  \ from one module into another\n- Validates inputs before apply\n- Formats terragrunt HCL\n\n## When\
+  \ to Use\n\n- Many environments (dev/staging/prod) with the same modules\n- Orchestrating multi-module\
+  \ applies in one command\n- Centralizing state and provider config\n\n## Real Commands\n\n```bash\n\
+  # Single module\nterragrunt plan\nterragrunt apply -auto-approve\nterragrunt destroy\nterragrunt validate-inputs\n\
+  \n# Multi-module orchestration\nterragrunt run-all plan\nterragrunt run-all apply --terragrunt-non-interactive\n\
+  terragrunt run-all destroy\n\n# State and outputs\nterragrunt state list\nterragrunt output -json\n\
+  terragrunt init --backend-config backend.tfvars\nterragrunt hclfmt\n\n# Targeting\nterragrunt apply\
+  \ -target=module.vpc\n```\n\n## terragrunt.hcl Example\n\n```hcl\nterraform {\n  source = \"git::git@github.com:acme/infra-modules.git//vpc?ref=v1.2.0\"\
+  \n}\nremote_state {\n  backend = \"s3\"\n  config = {\n    bucket = \"acme-tfstate\"\n    key    = \"\
+  ${path_relative_to_include()}/terraform.tfstate\"\n    region = \"us-east-1\"\n  }\n}\ninputs = {\n\
+  \  environment = local.environment\n}\n```\n\n## Best Practices\n\n- Use `run-all` for environment-wide\
+  \ operations in dependency order\n- Keep one root terragrunt.hcl with locals for paths and regions\n\
+  - Version module sources with git refs/tags\n- Validate inputs before big applies\n- Lock Terragrunt\
+  \ version in CI to match developer versions"
+examples:
+- input: Apply the entire staging environment
+  output: Agent runs terragrunt run-all apply in the staging dir, showing module execution order
+- input: Wire the DB outputs into the app module
+  output: Agent adds a dependency block with mock_outputs and passes outputs as inputs
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: terragrunt.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-terragrunt
+  generic:
+    system_prompt: 'You are the terragrunt specialist. You do it through run-and-dependencies: Plan/apply
+      modules and manage cross-module dependencies. The commands are real, e.g. `terragrunt plan`. You
+      verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

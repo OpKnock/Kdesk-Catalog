@@ -1,0 +1,179 @@
+name: ci-runner
+display_name: CI/CD Pipeline Runner
+category: devops
+subcategory: deployment
+description: Runs and debugs CI/CD pipelines across GitHub Actions, GitLab CI, Jenkins, and CircleCI with
+  real pipeline validation tools.
+version: 2.0.0
+tags:
+- ci-cd
+- github-actions
+- gitlab-ci
+- jenkins
+- validation
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: pipeline-validation
+  description: Validate pipeline configurations with actionlint, gitlab-ci-lint, and Jenkins pipeline
+    linter
+  commands:
+  - actionlint .github/workflows/*.yml
+  - 'curl --header "Content-Type: application/json" --data @pipeline.json https://gitlab.com/api/v4/ci/lint'
+  - 'curl -u admin:token -X POST -H "Content-Type: text/xml" -d @jenkinsfile.xml http://localhost:8080/pipeline-model-converter/validate'
+  - shellcheck .gitlab-ci.yml
+  examples:
+  - 'Validate all workflows: actionlint .github/workflows/*.yml'
+  - 'Check pipeline: curl --header "Content-Type: application/json" --data @pipeline.json https://gitlab.com/api/v4/ci/lint'
+  - 'Lint Jenkinsfile: curl -u admin:token -X POST http://localhost:8080/pipeline-model-converter/validate
+    -d @jenkinsfile.xml'
+  parameters:
+  - name: workflow_dir
+    type: string
+    description: Path to .github/workflows directory
+  - name: gitlab_ci_file
+    type: string
+    description: Path to .gitlab-ci.yml file
+- name: pipeline-execution
+  description: Trigger and monitor pipeline runs using gh, gitlab, jenkins-cli, and circleci CLIs
+  commands:
+  - gh workflow run deploy.yml --ref main
+  - gh run watch --exit-status
+  - glab ci status --live
+  - circleci local execute --job build
+  - jenkins build job-name -s
+  examples:
+  - 'Trigger deploy: gh workflow run deploy.yml --ref main'
+  - 'Watch status: gh run watch --exit-status'
+  - 'Local execute: circleci local execute --job build'
+  parameters:
+  - name: workflow
+    type: string
+    description: Workflow name or file
+  - name: ref
+    type: string
+    description: Branch or tag to run against
+- name: failure-diagnosis
+  description: Diagnose pipeline failures from logs with grep, jq, and rerun logic
+  commands:
+  - gh run view --log-failed
+  - gh run rerun --failed
+  - grep -E "ERROR|FAILED|fatal" pipeline.log | head -50
+  - jq -r '.jobs[] | select(.conclusion == "failure") | .name' run.json
+  examples:
+  - 'View failed steps: gh run view --log-failed'
+  - 'Rerun failures: gh run rerun --failed'
+  - 'Extract errors: grep -E ''ERROR|FAILED'' pipeline.log | head -50'
+  parameters:
+  - name: run_id
+    type: string
+    description: Pipeline run ID
+- name: caching-optimization
+  description: Optimize CI cache and artifacts for faster pipeline runs
+  commands:
+  - gh api repos/{owner}/{repo}/actions/caches
+  - actionlint -format json .github/workflows/*.yml | jq -r '.[].message'
+  - du -sh ~/.cache 2>/dev/null
+  examples:
+  - 'List caches: gh api repos/{owner}/{repo}/actions/caches'
+  - 'Detailed lint: actionlint -format json .github/workflows/*.yml'
+  parameters:
+  - name: repo
+    type: string
+    description: Owner/repo of the project
+knowledge:
+- title: actionlint Documentation
+  type: documentation
+  source: https://github.com/rhysd/actionlint
+  description: Static checker for GitHub Actions workflow files
+- title: GitLab CI Lint API
+  type: documentation
+  source: https://docs.gitlab.com/ee/api/lint.html
+  description: Validate .gitlab-ci.yml via REST API
+- title: Jenkins Pipeline Linter
+  type: documentation
+  source: https://www.jenkins.io/doc/book/pipeline/development/
+  description: Validate Jenkinsfile syntax locally
+instructions: 'You are a CI/CD pipeline specialist. Help users:
+
+  1. Validate pipeline configurations before pushing
+
+  2. Trigger and monitor pipeline runs
+
+  3. Diagnose and fix pipeline failures
+
+  4. Optimize build times with caching
+
+  5. Set up proper pipeline stages and gates
+
+
+  ALWAYS validate workflow files before committing:
+
+  - GitHub Actions: `actionlint .github/workflows/*.yml`
+
+  - GitLab CI: use the CI Lint API
+
+  - Jenkins: use the pipeline-model-converter validate endpoint
+
+
+  When diagnosing failures, always read the full failed step log before suggesting fixes.
+
+  Prefer rerunning only failed jobs over full pipeline reruns.
+
+  Use jq to extract structured data from JSON logs.
+
+
+  Common failure patterns:
+
+  - YAML indentation errors in workflows
+
+  - Missing permissions blocks for tokens
+
+  - Unpinned action versions (use SHA pinning)
+
+  - Secrets not passed between jobs
+
+  '
+examples:
+- input: My GitHub Actions workflow fails at the build step
+  output: 'Let me check the failed run log: gh run view --log-failed, then identify the actual error and
+    fix it...'
+- input: Validate my .gitlab-ci.yml before pushing
+  output: 'I''ll run the GitLab CI Lint API check: curl --header ''Content-Type: application/json'' --data
+    @.gitlab-ci.yml https://gitlab.com/api/v4/ci/lint'
+- input: Speed up my pipeline
+  output: I'll analyze caching strategy and suggest dependency caching with proper key invalidation...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ci-runner.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-ci-runner
+  generic:
+    system_prompt: You are a CI/CD Pipeline Runner agent. Run and debug CI/CD pipelines with real validation
+      and execution tools.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2025-01-15T00:00:00Z'

@@ -1,0 +1,173 @@
+{
+  "name": "redis-streams-python",
+  "display_name": "Redis Streams Python",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Python skill for Redis Streams with redis-py: xadd producers, xread/xreadgroup consumers, xack, and xtrim housekeeping.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "pip",
+    "python"
+  ],
+  "capabilities": [
+    {
+      "name": "redis-py-streams",
+      "description": "Work with Redis Streams from Python: add, read, group, ack, trim",
+      "commands": [
+        "pip install redis",
+        "python -c 'import redis; r=redis.Redis(); print(r.xadd(\"orders\", {\"sku\":\"A1\",\"qty\":2}))'",
+        "python -c 'import redis; r=redis.Redis(); print(r.xread({\"orders\": \"$\"}, count=1, block=5000))'",
+        "python -c 'import redis; r=redis.Redis(); print(r.xgroup_create(\"orders\", \"workers\", id=\"$\", mkstream=True))'",
+        "python -c 'import redis; r=redis.Redis(); print(r.xpending(\"orders\", \"workers\"))'"
+      ],
+      "examples": [
+        "python -c 'import redis; r=redis.Redis(); print(r.xrange(\"orders\", count=5))'",
+        "python -c 'import redis; r=redis.Redis(); print(r.xreadgroup(\"workers\", \"c1\", {\"orders\": \">\"}, count=2, block=5000))'",
+        "python -c 'import redis; r=redis.Redis(); print(r.xtrim(\"orders\", maxlen=1000))'"
+      ],
+      "parameters": [
+        {
+          "name": "block",
+          "type": "integer",
+          "description": "Milliseconds to block waiting for a new entry"
+        },
+        {
+          "name": "count",
+          "type": "integer",
+          "description": "Maximum entries returned per read"
+        },
+        {
+          "name": "maxlen",
+          "type": "integer",
+          "description": "Trim target for xtrim"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "redis-py streams examples",
+      "type": "documentation",
+      "source": "https://redis-py.readthedocs.io/en/stable/examples.html",
+      "description": "xadd, xread, xreadgroup, xack, xtrim usage"
+    },
+    {
+      "title": "Redis Streams docs",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/develop/data-types/streams/",
+      "description": "Stream semantics for groups and pending entries"
+    }
+  ],
+  "instructions": "# Redis Streams in Python\n\nHand-crafted skill for Redis Streams with redis-py.\n\n## What this skill does\n\n- Produces entries with xadd and lets Redis generate sequence IDs\n- Consumes with xreadgroup in blocking mode for at-least-once delivery\n- Acknowledges, inspects pending entries, and trims the stream\n\n## When to use\n\n- Python workers processing job queues stored in streams\n- Backfill pipelines that need replayable logs\n- Quick data-science reads of stream data\n\n## Real commands\n\n```bash\npip install redis\n\n# Add an entry, returns the new ID\npython -c 'import redis; r=redis.Redis(); print(r.xadd(\"orders\", {\"sku\":\"A1\",\"qty\":2}))'\n\n# Blocking read of new entries\npython -c 'import redis; r=redis.Redis(); print(r.xread({\"orders\": \"$\"}, count=1, block=5000))'\n\n# Create a consumer group\npython -c 'import redis; r=redis.Redis(); print(r.xgroup_create(\"orders\", \"workers\", id=\"$\", mkstream=True))'\n\n# Read from a group\npython -c 'import redis; r=redis.Redis(); print(r.xreadgroup(\"workers\", \"c1\", {\"orders\": \">\"}, count=2, block=5000))'\n\n# Pending list and trim\npython -c 'import redis; r=redis.Redis(); print(r.xpending(\"orders\", \"workers\"))'\npython -c 'import redis; r=redis.Redis(); print(r.xtrim(\"orders\", maxlen=1000))'\n```\n\n## Consumer loop\n\n```python\nimport redis, time\n\nr = redis.Redis()\nwhile True:\n    msgs = r.xreadgroup(\"workers\", \"c1\", {\"orders\": \">\"}, count=10, block=5000)\n    for _, entries in msgs:\n        for msg_id, fields in entries:\n            print(msg_id, fields)\n            r.xack(\"orders\", \"workers\", msg_id)\n```\n\n## Testing\n\n```bash\npython -c 'import redis; r=redis.Redis(); print(r.xlen(\"orders\"))'\npython -c 'import redis; r=redis.Redis(); print(r.xinfo_groups(\"orders\"))'\n```\n\n## Best practices\n\n- Always xack after handling to keep the pending list bounded\n- Use id=\"$\" only for new groups; use \"0\" to replay from the beginning\n- Keep the group name stable across deploys so consumption resumes cleanly\n",
+  "examples": [
+    {
+      "input": "Consume new order events in a Python worker",
+      "output": "Create the group with r.xgroup_create(\"orders\", \"workers\", id=\"$\", mkstream=True), then loop on r.xreadgroup(\"workers\", \"c1\", {\"orders\": \">\"}, block=5000) and xack each ID."
+    },
+    {
+      "input": "Replay the last 10 events",
+      "output": "python -c 'import redis; r=redis.Redis(); print(r.xrevrange(\"orders\", count=10))' returns the newest 10 entries in reverse order."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "redis-streams-python.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-redis-streams-python"
+    },
+    "generic": {
+      "system_prompt": "You work Redis Streams Python hands-on. You do it through redis-py-streams: Work with Redis Streams from Python: add, read, group, ack, trim. The commands are real, e.g. `pip install redis`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "redis-streams-python",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "redis-py-streams",
+        "name": "block",
+        "type": "integer",
+        "description": "Milliseconds to block waiting for a new entry"
+      },
+      {
+        "capability": "redis-py-streams",
+        "name": "count",
+        "type": "integer",
+        "description": "Maximum entries returned per read"
+      },
+      {
+        "capability": "redis-py-streams",
+        "name": "maxlen",
+        "type": "integer",
+        "description": "Trim target for xtrim"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pip",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/redis-streams-python-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/redis-streams-python-skill.yaml",
+    "checksum": "3113688fc273dca77fd83b17825a79b2675d4006303fbf4d0a37d50cc3d17578"
+  }
+}

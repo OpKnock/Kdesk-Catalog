@@ -1,0 +1,175 @@
+{
+  "name": "pulsar",
+  "display_name": "Pulsar",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Core Pulsar operations: standalone cluster, topics, admin APIs, producers/consumers and messaging concepts.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "bin/pulsar",
+    "bin/pulsar-admin",
+    "bin/pulsar-client"
+  ],
+  "capabilities": [
+    {
+      "name": "pulsar-core-operations",
+      "description": "Run a standalone Pulsar, manage topics, and produce/consume messages via the CLI tools.",
+      "commands": [
+        "bin/pulsar standalone",
+        "bin/pulsar-admin topics create persistent://public/default/my-topic",
+        "bin/pulsar-client produce my-topic --messages \"Hello World\"",
+        "bin/pulsar-client consume my-topic -s my-sub --num-messages 5",
+        "bin/pulsar-admin topics list public/default"
+      ],
+      "examples": [
+        "bin/pulsar standalone --num-brokers 2",
+        "bin/pulsar-admin topics create-partitioned-topic persistent://public/default/my-topic -p 3",
+        "bin/pulsar-client produce my-topic --messages \"one\" \"two\" \"three\" -n 1"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Persistent topic name"
+        },
+        {
+          "name": "subscription",
+          "type": "string",
+          "description": "Subscription name"
+        },
+        {
+          "name": "num_messages",
+          "type": "integer",
+          "description": "Messages to consume"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Apache Pulsar Docs",
+      "type": "documentation",
+      "source": "https://pulsar.apache.org/docs/",
+      "description": "Concepts, admin, client libraries and CLI tools"
+    },
+    {
+      "title": "Pulsar CLI tools",
+      "type": "documentation",
+      "source": "https://pulsar.apache.org/docs/3.0.x/reference-cli-tools/",
+      "description": "pulsar, pulsar-admin, pulsar-client and pulsar-perf"
+    }
+  ],
+  "instructions": "# Pulsar\n\nApache Pulsar is a multi-tenant pub/sub and streaming platform with per-topic backpressure and geo-replication.\n\n## What this skill does\n\n- Runs a standalone cluster for dev\n- Creates and inspects topics\n- Produces/consumes via CLI tools\n\n## When to use\n\n- Evaluating or adopting Pulsar\n- Day-to-day topic operations\n\n## Real commands\n\n```bash\n# Standalone cluster\nbin/pulsar standalone\n\n# Topic management\nbin/pulsar-admin topics create persistent://public/default/my-topic\nbin/pulsar-admin topics list public/default\nbin/pulsar-admin topics create-partitioned-topic persistent://public/default/my-topic -p 3\n\n# Produce / consume\nbin/pulsar-client produce my-topic --messages \"Hello World\"\nbin/pulsar-client consume my-topic -s my-sub --num-messages 5\n```\n\n## Concepts\n\n- Topic: persistent://tenant/namespace/topic\n- Subscription: cursor over a topic (Exclusive/Shared/Failover/Key_Shared)\n- Broker + BookKeeper: serving and storage split\n\n## Best practices\n\n- Use persistent topics for durable workloads\n- Partition topics before heavy traffic\n- Manage via pulsar-admin, not ad-hoc scripts",
+  "examples": [
+    {
+      "input": "Start Pulsar locally and send a test message",
+      "output": "The agent starts bin/pulsar standalone, creates a topic, and publishes/consumes via pulsar-client."
+    },
+    {
+      "input": "Check which topics exist",
+      "output": "The agent runs bin/pulsar-admin topics list for the namespace."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pulsar.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pulsar"
+    },
+    "generic": {
+      "system_prompt": "You take the Pulsar seat. You do it through pulsar-core-operations: Run a standalone Pulsar, manage topics, and produce/consume messages via the CLI tools. The commands are real, e.g. `bin/pulsar standalone`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "pulsar",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pulsar-core-operations",
+        "name": "topic",
+        "type": "string",
+        "description": "Persistent topic name"
+      },
+      {
+        "capability": "pulsar-core-operations",
+        "name": "subscription",
+        "type": "string",
+        "description": "Subscription name"
+      },
+      {
+        "capability": "pulsar-core-operations",
+        "name": "num_messages",
+        "type": "integer",
+        "description": "Messages to consume"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "bin/pulsar",
+    "bin/pulsar-admin",
+    "bin/pulsar-client"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/pulsar-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/pulsar-skill.yaml",
+    "checksum": "005f04447b16463b7a0ddc272cf022279c36291469c2e4d0d9c4b55d12786f57"
+  }
+}

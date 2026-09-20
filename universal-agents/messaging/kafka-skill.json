@@ -1,0 +1,234 @@
+{
+  "name": "kafka-messaging",
+  "display_name": "Kafka",
+  "category": "messaging",
+  "subcategory": "general",
+  "description": "Operates Apache Kafka clusters: topic lifecycle, producer/consumer tools, consumer groups, and performance benchmarking.",
+  "version": "2.0.0",
+  "tags": [
+    "messaging"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kafka-console-consumer.sh",
+    "kafka-console-producer.sh",
+    "kafka-consumer-groups.sh",
+    "kafka-topics.sh"
+  ],
+  "capabilities": [
+    {
+      "name": "topics",
+      "description": "Create, describe, and alter Kafka topics.",
+      "commands": [
+        "kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 12 --replication-factor 3",
+        "kafka-topics.sh --bootstrap-server localhost:9092 --list",
+        "kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic events",
+        "kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic events --partitions 24",
+        "kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic legacy_events"
+      ],
+      "examples": [
+        "kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic events --topics-with-overrides",
+        "kafka-topics.sh --bootstrap-server localhost:9092 --list | grep -v internal",
+        "kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic events --config retention.ms=604800000"
+      ],
+      "parameters": [
+        {
+          "name": "partitions",
+          "type": "number",
+          "description": "Partition count"
+        },
+        {
+          "name": "replication-factor",
+          "type": "number",
+          "description": "Replication factor"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Topic config like retention.ms"
+        }
+      ]
+    },
+    {
+      "name": "console",
+      "description": "Produce and consume messages from the CLI.",
+      "commands": [
+        "kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events",
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning",
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --group debug-group --property print.offset=true --max-messages 10",
+        "kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events --property parse.key=true --property key.separator=:",
+        "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group debug-group --describe"
+      ],
+      "examples": [
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning --max-messages 5",
+        "echo 'key1:value1' | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic events --property parse.key=true --property key.separator=:",
+        "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic to produce/consume"
+        },
+        {
+          "name": "group",
+          "type": "string",
+          "description": "Consumer group id"
+        },
+        {
+          "name": "max-messages",
+          "type": "number",
+          "description": "Consume N messages then exit"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kafka Quickstart",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/quickstart",
+      "description": "Local cluster and CLI tool usage"
+    },
+    {
+      "title": "Kafka Operations",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/#operations",
+      "description": "Topic admin, rebalancing, and monitoring"
+    },
+    {
+      "title": "Consumer Groups",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/#intro_consumers",
+      "description": "Group semantics, offsets, and rebalances"
+    }
+  ],
+  "instructions": "# Kafka\n\nOperate Kafka with the standard CLI toolchain.\n\n## When to Use\n\n- Event streaming pipelines\n- Consumer group debugging\n- Topic lifecycle management\n\n## Topics\n\n```bash\nkafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 12 --replication-factor 3\nkafka-topics.sh --bootstrap-server localhost:9092 --describe --topic events\n```\n\nPartitions bound parallelism; keep them stable unless growth requires more.\n\n## Produce and consume\n\n```bash\nkafka-console-producer.sh --bootstrap-server localhost:9092 --topic events\nkafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning\n```\n\n## Consumer groups\n\n```bash\nkafka-consumer-groups.sh --bootstrap-server localhost:9092 --group order-processor --describe\n```\n\nWatch LAG; a growing lag with healthy consumers means under-provisioning.\n\n## Offset reset (troubleshooting)\n\n```bash\nkafka-consumer-groups.sh --bootstrap-server localhost:9092 --group order-processor --reset-offsets --to-earliest --execute\n```\n\nOnly reset when a consumer bug caused data to be skipped - document first.\n\n## Config tuning\n\n```bash\nkafka-topics.sh --bootstrap-server localhost:9092 --alter --topic events --config retention.ms=604800000\n```\n\n## Best practices\n\n- Prefer `--describe` before any alter/delete.\n- Use keyed producers to preserve order per key.\n- Monitor ISR (in-sync replicas) - under-replicated partitions signal trouble.\n- Right-size consumer parallelism to partitions.\n\n## Testing\n\nProduce 10k keyed messages, consume with a group, and verify LAG reaches 0.",
+  "examples": [
+    {
+      "input": "Create the events topic with ordering support.",
+      "output": "Creates a 12-partition, RF-3 topic, produces keyed messages, and verifies partition ordering per key."
+    },
+    {
+      "input": "The consumer group is falling behind.",
+      "output": "Describes the group, checks LAG and active consumers, and recommends partition/consumer scaling."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kafka-messaging.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kafka"
+    },
+    "generic": {
+      "system_prompt": "You work Kafka hands-on. You do it through topics: Create, describe, and alter Kafka topics. The commands are real, e.g. `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 12...`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kafka-messaging",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "topics",
+        "name": "partitions",
+        "type": "number",
+        "description": "Partition count"
+      },
+      {
+        "capability": "topics",
+        "name": "replication-factor",
+        "type": "number",
+        "description": "Replication factor"
+      },
+      {
+        "capability": "topics",
+        "name": "config",
+        "type": "string",
+        "description": "Topic config like retention.ms"
+      },
+      {
+        "capability": "console",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic to produce/consume"
+      },
+      {
+        "capability": "console",
+        "name": "group",
+        "type": "string",
+        "description": "Consumer group id"
+      },
+      {
+        "capability": "console",
+        "name": "max-messages",
+        "type": "number",
+        "description": "Consume N messages then exit"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kafka-console-consumer.sh",
+    "kafka-console-producer.sh",
+    "kafka-consumer-groups.sh",
+    "kafka-topics.sh"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "messaging/kafka-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/messaging/kafka-skill.yaml",
+    "checksum": "7b5ea480a2221adeffe1ef3e9aaffda7a3783bdde7b41d7d8b6887eaed3b14f4"
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "name": "ml-explainability-gcp-deploy",
+  "display_name": "Ml Explainability Gcp Deploy",
+  "category": "ml",
+  "subcategory": "explainability",
+  "description": "GCP Explainability deployment agent for ML explainability on GCP.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "explainability"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Explainability Gcp Deploy",
+      "description": "GCP Explainability deployment agent for ML explainability on GCP.",
+      "commands": [
+        "Explain: gcloud ai explain-prediction --project my-project --region us-central1 --model my-model --j",
+        "Metadata: gcloud ai explain-metadata --project my-project --region us-central1 --metadata-schema sch"
+      ],
+      "examples": [
+        "Explain: gcloud ai explain-prediction --project my-project --region us-central1 --model my-model --json-instance instance.json",
+        "Metadata: gcloud ai explain-metadata --project my-project --region us-central1 --metadata-schema schema.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "project",
+          "type": "string",
+          "description": "CLI flag --project observed in capability commands"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "description": "CLI flag --region observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-explainability-gcp-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/explainability",
+      "description": "Reference documentation for ml-explainability-gcp-deploy"
+    }
+  ],
+  "instructions": "You are the GCP ML Explainability deployment expert. Call on this agent to run explainability on Vertex AI. Core workflow: (1) prepare the explanation metadata with `gcloud ai explain-metadata --project my-project --region us-central1 --metadata-schema schema.yaml`, validating the schema file; (2) run explanations with `gcloud ai explain-prediction --project my-project --region us-central1 --model my-model --json-instance instance.json`. Key behaviors: the model must be deployed with explanation settings enabled or explain-prediction fails; confirm the instance JSON matches the model's input signature; verify the region and project flags on every call; check IAM roles (aiplatform.user). Output expectations: report the metadata schema validation result, the attribution values returned per feature for the prediction, and any model/explanation configuration errors.",
+  "examples": [
+    "Explain: gcloud ai explain-prediction --project my-project --region us-central1 --model my-model --json-instance instance.json",
+    "Metadata: gcloud ai explain-metadata --project my-project --region us-central1 --metadata-schema schema.yaml"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-explainability-gcp-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a GCP ML Explainability deployment expert. Help users deploy ML explainability on Vertex AI."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-explainability-gcp-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-explainability-gcp-deploy. GCP Explainability deployment agent for ML explainability on GCP.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-explainability-gcp-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Explainability Gcp Deploy",
+        "name": "project",
+        "type": "string",
+        "description": "CLI flag --project observed in capability commands"
+      },
+      {
+        "capability": "Ml Explainability Gcp Deploy",
+        "name": "region",
+        "type": "string",
+        "description": "CLI flag --region observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/explainability/ml-explainability-gcp-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/explainability/ml-explainability-gcp-deploy.yaml",
+    "checksum": "c3e961c00ff66fa0aafc6e9b539386645499b5ad7a66625b6f3d506bd5a67810"
+  }
+}

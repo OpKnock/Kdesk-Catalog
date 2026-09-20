@@ -1,0 +1,173 @@
+name: etl-pipeline
+display_name: Etl Pipeline
+category: data
+subcategory: general
+description: 'Builds robust ETL pipelines: extraction, transformation, loading, with validation and scheduling.'
+version: 2.0.0
+tags:
+- data
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- psql
+- python
+- spark-submit
+capabilities:
+- name: etl-pipeline
+  description: Implement and run ETL jobs with Python, Spark, and CLI tools
+  commands:
+  - python -m etl_pkg run --env prod --date 2024-01-15
+  - spark-submit --master yarn --deploy-mode cluster jobs/extract.py --input s3://raw/ --output s3://curated/
+  - 'jq ''.items[] | {id: .id, value: .value}'' raw.json > clean.json'
+  - psql -d warehouse -c "\\copy staging.events FROM 'clean.csv' CSV HEADER"
+  - python -m pytest tests/ -q
+  examples:
+  - python -m etl_pkg run --env staging --date 2024-01-15 --incremental
+  - spark-submit --master local[4] jobs/transform.py
+  - 'airflow dags trigger etl_pipeline --conf ''{"date": "2024-01-15"}'''
+  parameters:
+  - name: env
+    type: string
+    description: 'Environment: dev, staging, prod'
+  - name: date
+    type: string
+    description: Logical execution date for the pipeline
+  - name: incremental
+    type: boolean
+    description: Process only the delta since the last run
+knowledge:
+- title: Apache Spark SQL guide
+  type: documentation
+  source: https://spark.apache.org/docs/latest/sql-programming-guide.html
+  description: DataFrames, SQL, and partitioning for transforms
+- title: Airflow ETL best practices
+  type: documentation
+  source: https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html
+  description: Idempotency and dependency management for pipelines
+instructions: '# ETL Pipeline
+
+
+  Designs and implements extract-transform-load pipelines that are idempotent,
+
+  validated, and monitored.
+
+
+  ## When to Use
+
+
+  - Moving data from sources into a warehouse
+
+  - Building repeatable, dated batch jobs
+
+  - Adding validation and observability to existing flows
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Run the pipeline for a date
+
+  python -m etl_pkg run --env prod --date 2024-01-15 --incremental
+
+
+  # Spark-based transforms
+
+  spark-submit --master yarn --deploy-mode cluster jobs/extract.py --input s3://raw/events/ --output s3://curated/events/
+
+
+  # Lightweight transform with jq
+
+  jq ''.items[] | select(.status == "ok") | {id, value}'' raw.json > clean.json
+
+
+  # Load into Postgres
+
+  psql -d warehouse -c "\copy staging.events FROM ''clean.csv'' CSV HEADER"
+
+
+  # Validate
+
+  python -m pytest tests/ -q
+
+  python -m etl_pkg validate --env prod --date 2024-01-15
+
+  ```
+
+
+  ## Pipeline Contract
+
+
+  1. Extract writes raw data untouched to a landing zone
+
+  2. Transform is pure SQL/DataFrame logic, versioned
+
+  3. Load uses upsert or partitioned overwrite (idempotent)
+
+  4. Validate row counts and nulls before promoting
+
+  5. Log metrics: rows in, rows out, duration
+
+
+  ## Best Practices
+
+
+  - Partition by date; delete+reload for reprocessing
+
+  - Test with fixtures, not production data
+
+  - Make every step idempotent so backfills are safe
+
+  - Alert on row-count anomalies
+
+  - Keep credentials out of code (env vars / secret manager)
+
+
+  ## Example Response
+
+
+  Runs the pipeline, reports rows extracted/transformed/loaded, validation results,
+
+  and duration; if a step fails, isolates the step and error from logs.'
+examples:
+- input: Build an ETL for our events data
+  output: Scaffolds extract/transform/load modules with CLI flags, adds pytest fixtures, and runs a dated
+    test execution
+- input: Backfill last month's data
+  output: Runs python -m etl_pkg run --env prod for each date, verifying idempotency on a re-run of one
+    day
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: etl-pipeline.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-etl-pipeline
+  generic:
+    system_prompt: 'You own Etl Pipeline end to end. You do it through etl-pipeline: Implement and run
+      ETL jobs with Python, Spark, and CLI tools. The commands are real, e.g. `python -m etl_pkg run --env
+      prod --date 2024-01-15`. You verify each step you report and stay honest about what you have not
+      run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

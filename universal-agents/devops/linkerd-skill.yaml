@@ -1,0 +1,202 @@
+name: linkerd
+display_name: linkerd
+category: devops
+subcategory: general
+description: 'Deploys and operates the Linkerd service mesh: install/upgrade, mesh injection, golden-metric
+  stats, tap traffic, and multicluster links.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kubectl
+- linkerd
+capabilities:
+- name: install-and-mesh
+  description: Install Linkerd, run preflight checks, and inject sidecars.
+  commands:
+  - linkerd check --pre
+  - linkerd install | kubectl apply -f -
+  - linkerd check
+  - kubectl get -n linkerd deploy
+  - linkerd inject deployment.yaml | kubectl apply -f -
+  - kubectl rollout restart deployment/web
+  examples:
+  - linkerd check --pre
+  - linkerd install | kubectl apply -f -
+  - linkerd inject deployment.yaml | kubectl apply -f -
+  parameters:
+  - name: manifest
+    type: string
+    description: Manifest to inject sidecars into
+  - name: namespace
+    type: string
+    description: Namespace to mesh/inject
+- name: observability-and-traffic
+  description: Inspect service metrics, top talkers, and live traffic with tap.
+  commands:
+  - linkerd viz install | kubectl apply -f -
+  - linkerd stat deploy -n app
+  - linkerd top deploy -n app
+  - linkerd tap deploy/web -n app --to deploy/api
+  - linkerd viz dashboard
+  - linkerd viz profiles -n app
+  examples:
+  - linkerd stat deploy -n app
+  - linkerd tap deploy/web -n app
+  - linkerd viz dashboard
+  parameters:
+  - name: namespace
+    type: string
+    description: Namespace to observe
+  - name: resource
+    type: string
+    description: Resource for stats, e.g. deploy/web
+knowledge:
+- title: Linkerd Documentation
+  type: documentation
+  source: https://linkerd.io/2.15/overview/
+  description: Linkerd concepts, install, and extensions
+- title: Linkerd CLI
+  type: documentation
+  source: https://linkerd.io/2.15/reference/cli/
+  description: linkerd check, inject, stat, top, tap reference
+- title: Linkerd Multicluster
+  type: documentation
+  source: https://linkerd.io/2.15/features/multicluster/
+  description: Linking clusters with gateway and service mirroring
+instructions: '# Linkerd Service Mesh
+
+
+  Add a lightweight ultralight mesh: sidecars, mTLS, golden metrics, and live tap.
+
+
+  ## What This Skill Does
+
+
+  - Installs the control plane and viz extension
+
+  - Injects linkerd-proxy sidecars into workloads
+
+  - Views golden metrics (success rate, RPS, latency) per resource
+
+  - Taps live traffic with zero instrumentation
+
+  - Links clusters with multicluster service mirroring
+
+
+  ## When to Use
+
+
+  - mTLS + per-service metrics without complex sidecar tuning
+
+  - Debugging latency or error rate on specific routes
+
+  - Progressive adoption: mesh a namespace at a time
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Install
+
+  linkerd check --pre
+
+  linkerd install | kubectl apply -f -
+
+  linkerd check
+
+  kubectl get -n linkerd deploy
+
+
+  # Inject
+
+  linkerd inject deployment.yaml | kubectl apply -f -
+
+  kubectl rollout restart deployment/web
+
+  kubectl get pods -l linkerd.io/proxy=deployment --field-selector=status.phase=Running
+
+
+  # Observability
+
+  linkerd viz install | kubectl apply -f -
+
+  linkerd stat deploy -n app
+
+  linkerd top deploy -n app
+
+  linkerd tap deploy/web -n app --to deploy/api
+
+  linkerd viz dashboard
+
+  ```
+
+
+  ## Multicluster
+
+
+  ```bash
+
+  linkerd multicluster install | kubectl apply -f -
+
+  linkerd multicluster link --cluster-name=prod
+
+  linkerd multicluster gateways
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Run `linkerd check --pre` before install and `linkerd check` after
+
+  - Validate proxy injection: pods must show 2 containers
+
+  - Use tap only briefly in production (it is live traffic)
+
+  - Enable mTLS by default; service-to-service trust is automatic
+
+  - Use `linkerd stat --to` to find which dependency has high latency'
+examples:
+- input: Mesh only the payments namespace
+  output: Agent installs linkerd, injects payments manifests, restarts deployments, and verifies sidecar
+    presence
+- input: Which service is slowing the checkout flow?
+  output: Agent runs linkerd stat deploy --to, then top, and taps the suspect route to identify the slow
+    dependency
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: linkerd.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-linkerd
+  generic:
+    system_prompt: 'You take the linkerd seat. You do it through install-and-mesh: Install Linkerd, run
+      preflight checks, and inject sidecars. The commands are real, e.g. `linkerd check --pre`. You run
+      and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

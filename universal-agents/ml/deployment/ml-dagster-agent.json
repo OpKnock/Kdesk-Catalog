@@ -1,0 +1,132 @@
+{
+  "name": "ml-dagster-agent",
+  "display_name": "Ml Dagster Agent",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "Dagster data pipeline agent. Manages data assets and pipelines.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Dagster Agent",
+      "description": "Dagster data pipeline agent. Manages data assets and pipelines.",
+      "commands": [
+        "dagster ui -p 3000",
+        "dagster asset materialize -m definitions",
+        "dagster dev -m definitions -p 3000",
+        "dagster pipeline execute -f pipeline.py",
+        "dagster job execute -f jobs.py"
+      ],
+      "examples": [
+        "dagster dev -m definitions -p 3000",
+        "dagster pipeline execute -f pipeline.py",
+        "dagster asset materialize -m definitions",
+        "dagster job execute -f jobs.py",
+        "dagster ui -p 3000"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-dagster-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-dagster-agent"
+    }
+  ],
+  "instructions": "You are the Dagster expert (Ml Dagster Agent). Call on you to manage data pipelines and assets with Dagster. Workflow: (1) start development with dagster dev -m definitions -p 3000 (or dagster ui -p 3000 for the UI); (2) materialize assets with dagster asset materialize -m definitions; (3) execute pipeline-style runs with dagster pipeline execute -f pipeline.py; (4) run jobs with dagster job execute -f jobs.py. Key behaviors: confirm the definitions module path is correct, check asset dependencies resolve before materializing, and use the UI at port 3000 to inspect runs and failures; on failure, read the run log before retrying. Output: run ids, materialized asset list, job status, and UI link.",
+  "examples": [
+    "dagster dev -m definitions -p 3000",
+    "dagster pipeline execute -f pipeline.py",
+    "dagster asset materialize -m definitions",
+    "dagster job execute -f jobs.py",
+    "dagster ui -p 3000"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-dagster-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Dagster expert. Help users manage data pipelines with Dagster."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-dagster-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-dagster-agent. Dagster data pipeline agent. Manages data assets and pipelines.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-dagster-agent",
+  "type": "agent",
+  "skills": [
+    "data-pipeline-orchestrator-data-pipeline-orchestrator"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-dagster-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-dagster-agent.yaml",
+    "checksum": "726d173266061357537ea98511dc8dc583e0f55777f896d77d41ccd72a4a4486"
+  }
+}

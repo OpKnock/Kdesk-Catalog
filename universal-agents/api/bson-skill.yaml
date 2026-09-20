@@ -1,0 +1,194 @@
+name: bson
+display_name: Bson
+category: api
+subcategory: general
+description: 'Works with BSON (binary JSON) data: conversion with bsondump, mongoexport/mongorestore round-trips,
+  and Python bson handling.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- bsondump
+- mongodump
+- mongoexport
+- mongorestore
+- pip
+- python
+capabilities:
+- name: bsondump
+  description: Convert BSON files to JSON for inspection.
+  commands:
+  - bsondump file.bson
+  - bsondump --pretty file.bson
+  - bsondump --type=json file.bson > file.json
+  - bsondump --quiet file.bson
+  examples:
+  - bsondump --pretty dump.bson | head -20
+  - bsondump --type=json collection.bson > collection.json
+  - bsondump file.bson | jq .
+  parameters:
+  - name: file
+    type: string
+    description: BSON file path
+  - name: type
+    type: string
+    description: 'Output type: json or debug'
+- name: mongo-tools
+  description: Export/import BSON with mongo tools.
+  commands:
+  - mongoexport --collection=users --out=users.bson --uri mongodb://localhost:27017/app
+  - mongoexport --collection=users --out=users.json --uri mongodb://localhost:27017/app
+  - mongorestore --archive=users.bson --uri mongodb://localhost:27017/app
+  - mongorestore --drop --archive=dump.bson --uri mongodb://localhost:27017/app
+  - mongodump --uri mongodb://localhost:27017/app --archive=dump.bson
+  examples:
+  - mongodump --uri mongodb://localhost:27017/app --archive=dump.bson
+  - mongoexport --collection=orders --out=orders.bson --uri mongodb://localhost:27017/app --query '{"status":"paid"}'
+  - mongorestore --drop --archive=dump.bson --uri mongodb://localhost:27017/app
+  parameters:
+  - name: collection
+    type: string
+    description: Collection name
+  - name: uri
+    type: string
+    description: MongoDB connection URI
+  - name: archive
+    type: string
+    description: Archive file
+- name: python-bson
+  description: Encode/decode BSON with pymongo's bson module.
+  commands:
+  - pip install pymongo
+  - 'python -c "from bson import BSON; d=BSON.encode({''a'': 1, ''b'': ''x''}); print(d.hex())"'
+  - 'python -c "from bson import BSON; d=BSON.encode({''a'': 1}); print(BSON.decode(d))"'
+  - 'python -c "from bson import encode; print(encode({''ts'': __import__(''datetime'').datetime.now()}).hex())"'
+  examples:
+  - 'python -c "from bson import BSON; d=BSON.encode({''hello'': ''world''}); print(d.hex()); print(BSON.decode(d))"'
+  - 'python -c "from bson import json_util; print(json_util.dumps({''ts'': __import__(''datetime'').datetime.utcnow()}))"'
+  - python -c "from bson import ObjectId; print(ObjectId())"
+  parameters:
+  - name: document
+    type: string
+    description: Python dict to encode
+knowledge:
+- title: bsondump Reference
+  type: documentation
+  source: https://www.mongodb.com/docs/database-tools/bsondump/
+  description: bsondump options
+- title: BSON Specification
+  type: documentation
+  source: https://bsonspec.org/
+  description: BSON binary format
+- title: MongoDB Database Tools
+  type: documentation
+  source: https://www.mongodb.com/docs/database-tools/
+  description: mongodump/mongoexport/mongorestore
+instructions: '# BSON
+
+
+  ## What this skill does
+
+
+  Works with BSON data: converting BSON files to JSON with bsondump, exporting/importing with mongo tools,
+  and encoding/decoding with Python''s bson module.
+
+
+  ## When to use
+
+
+  - Inspecting MongoDB dump files without a server
+
+  - Round-tripping data between clusters
+
+  - Handling BSON binary fields (ObjectId, dates) in scripts
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Inspect a BSON file
+
+  bsondump --pretty dump.bson | head -20
+
+
+  # Convert to JSON
+
+  bsondump --type=json collection.bson > collection.json
+
+
+  # Dump a database to archive
+
+  mongodump --uri mongodb://localhost:27017/app --archive=dump.bson
+
+
+  # Restore
+
+  mongorestore --drop --archive=dump.bson --uri mongodb://localhost:27017/app
+
+
+  # Python
+
+  python -c "from bson import BSON; d=BSON.encode({''hello'': ''world''}); print(d.hex()); print(BSON.decode(d))"
+
+  ```
+
+
+  ## Testing
+
+
+  - Round-trip: decode a file, re-encode, and diff documents
+
+  - Verify ObjectId and ISODate fields survive conversion
+
+
+  ## Best practices
+
+
+  - Use mongodump --archive for consistent snapshots
+
+  - Keep BSON sizes small: prefer compact field names
+
+  - Use json_util for JSON interop with extended types'
+examples:
+- input: Peek at the first records of a mongodump file
+  output: Runs `bsondump --pretty dump.bson | head -20` and explains the extended types (ObjectId, Date)
+    in the output.
+- input: Convert a BSON collection to JSON for analysis
+  output: Runs bsondump --type=json, then shows how dates serialize and how to post-process with jq.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: bson.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-bson
+  generic:
+    system_prompt: 'You work Bson hands-on. You do it through bsondump: Convert BSON files to JSON for
+      inspection. The commands are real, e.g. `bsondump file.bson`. You run and verify the real CLI commands
+      before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

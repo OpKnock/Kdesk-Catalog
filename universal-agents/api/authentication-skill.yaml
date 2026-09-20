@@ -1,0 +1,211 @@
+name: authentication
+display_name: Authentication
+category: api
+subcategory: general
+description: 'Implements authentication for APIs: OAuth2/OIDC token flows, JWT verification with openssl,
+  and Bearer token testing with curl.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- echo
+- openssl
+capabilities:
+- name: oauth-tokens
+  description: Acquire and validate OAuth2/OIDC tokens.
+  commands:
+  - curl -X POST https://auth.example.com/oauth2/token -d grant_type=client_credentials -d client_id=api
+    -d client_secret=secret -d scope=api:read
+  - curl -X POST https://auth.example.com/oauth2/token -d grant_type=authorization_code -d code=xyz -d
+    redirect_uri=https://app.example.com/callback -d client_id=api -d client_secret=secret
+  - curl -X POST https://auth.example.com/oauth2/introspect -d token=$TOKEN -u api:secret
+  - curl -X POST https://auth.example.com/oauth2/revoke -d token=$TOKEN -u api:secret
+  examples:
+  - TOKEN=$(curl -s -X POST https://auth.example.com/oauth2/token -d grant_type=client_credentials -d
+    client_id=api -d client_secret=secret -d scope=api:read | jq -r .access_token)
+  - curl -s -X POST https://auth.example.com/oauth2/introspect -d token=$TOKEN -u api:secret | jq '.active,
+    .exp'
+  - curl -s -X POST https://auth.example.com/oauth2/revoke -d token=$TOKEN -u api:secret
+  parameters:
+  - name: token_url
+    type: string
+    description: OAuth2 token endpoint
+  - name: grant_type
+    type: string
+    description: client_credentials, authorization_code, refresh_token
+  - name: scope
+    type: string
+    description: Requested scopes
+- name: jwt-verify
+  description: Inspect and verify JWTs with openssl and jq.
+  commands:
+  - openssl genrsa -out private.pem 2048
+  - openssl rsa -in private.pem -pubout -out public.pem
+  - echo $TOKEN | cut -d. -f2 | base64 -d 2>/dev/null | jq .
+  - echo $TOKEN | cut -d. -f1 | base64 -d 2>/dev/null | jq .
+  - openssl dgst -sha256 -verify public.pem -signature sig.bin payload.txt
+  examples:
+  - echo $TOKEN | cut -d. -f2 | base64 -d 2>/dev/null | jq '{sub, exp, scope}'
+  - openssl x509 -in cert.pem -noout -text | grep -A1 'Public Key'
+  - jq -R 'split(".")[1] | @base64d | fromjson' <<< $TOKEN
+  parameters:
+  - name: token
+    type: string
+    description: JWT to inspect
+  - name: key_file
+    type: string
+    description: Public key file for verification
+- name: bearer-testing
+  description: Test authenticated API calls with curl.
+  commands:
+  - 'curl -i -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/me'
+  - curl -i https://api.example.com/v1/me
+  - 'curl -i -H "Authorization: Bearer invalid-token" https://api.example.com/v1/me'
+  - 'curl -i -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d ''{}'' https://api.example.com/v1/orders'
+  examples:
+  - 'curl -s -o /dev/null -w "%{http_code}\n" -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/me'
+  - 'curl -i -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/me | head -20'
+  - 'curl -i -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/orders'
+  parameters:
+  - name: url
+    type: string
+    description: Protected endpoint
+  - name: method
+    type: string
+    description: HTTP method
+knowledge:
+- title: OAuth 2.0
+  type: documentation
+  source: https://oauth.net/2/
+  description: Flows and grant types
+- title: JWT Introduction
+  type: documentation
+  source: https://jwt.io/introduction
+  description: JWT structure and claims
+- title: OWASP Auth Cheat Sheet
+  type: documentation
+  source: https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html
+  description: AuthN best practices
+instructions: '# Authentication
+
+
+  ## What this skill does
+
+
+  Implements API authentication: OAuth2/OIDC token acquisition and introspection, JWT structure inspection
+  and signature verification with openssl, and Bearer-token testing with curl.
+
+
+  ## When to use
+
+
+  - Adding OAuth2 to an API or client
+
+  - Debugging why a token is rejected (expiry, signature, scope)
+
+  - Testing authenticated endpoints end to end
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Client credentials flow
+
+  TOKEN=$(curl -s -X POST https://auth.example.com/oauth2/token -d grant_type=client_credentials -d client_id=api
+  -d client_secret=secret -d scope=api:read | jq -r .access_token)
+
+
+  # Introspect
+
+  ecurl -s -X POST https://auth.example.com/oauth2/introspect -d token=$TOKEN -u api:secret | jq ''.active,
+  .exp''
+
+
+  # Decode JWT payload
+
+  jq -R ''split(".")[1] | @base64d | fromjson'' <<< $TOKEN
+
+
+  # Test the endpoint
+
+  curl -i -H "Authorization: Bearer $TOKEN" https://api.example.com/v1/me
+
+  ```
+
+
+  Note: `ecurl` above is a typo for `curl`; always use `curl` for HTTP requests.
+
+
+  ## Key generation for local verification
+
+
+  ```bash
+
+  openssl genrsa -out private.pem 2048
+
+  openssl rsa -in private.pem -pubout -out public.pem
+
+  ```
+
+
+  ## Testing
+
+
+  - Expect 401 without a token, 200 with a valid one
+
+  - Test expired tokens by decoding `exp` and comparing to `date +%s`
+
+
+  ## Best practices
+
+
+  - Keep client secrets out of code; use a secrets manager
+
+  - Validate exp, iss, aud, and signature on every request
+
+  - Use short-lived access tokens with refresh flows'
+examples:
+- input: Debug why our service rejects a valid-looking token
+  output: Decodes the JWT with jq, checks exp against `date +%s`, verifies iss/aud, then tests introspect
+    endpoint to confirm active state.
+- input: Add client-credentials auth to our API client
+  output: 'Writes the token-acquisition curl with jq extraction, then uses `curl -H "Authorization: Bearer
+    $TOKEN"` on protected routes.'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: authentication.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-authentication
+  generic:
+    system_prompt: 'You work Authentication hands-on. You do it through oauth-tokens: Acquire and validate
+      OAuth2/OIDC tokens. The commands are real, e.g. `curl -X POST https://auth.example.com/oauth2/token
+      -d grant_type=client_credentials -d...`. You run and verify the real CLI commands before you claim
+      anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

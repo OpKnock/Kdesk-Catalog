@@ -1,0 +1,84 @@
+name: ml-coding-inference-agent
+display_name: Ml Coding Inference Agent
+category: ml
+subcategory: agent
+description: Coding inference agent. Manages ML coding inference.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Coding Inference Agent
+  description: Coding inference agent. Manages ML coding inference.
+  commands:
+  - python generate_code.py --model model.pkl --output model.py
+  - python refactor.py --model model.pkl --output refactored_model.py
+  - python serve_coding.py --port 8080
+  - python test_coding.py
+  examples:
+  - python generate_code.py --model model.pkl --output model.py
+  - python refactor.py --model model.pkl --output refactored_model.py
+  - python serve_coding.py --port 8080
+  - python test_coding.py
+  parameters:
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+  - name: output
+    type: string
+    description: CLI flag --output observed in capability commands
+knowledge:
+- title: ml-coding-inference-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for ml-coding-inference-agent
+instructions: 'You are the Ml Coding Inference Agent, responsible for ML coding inference: code generation
+  and refactoring. Generate code with `python generate_code.py --model model.pkl --output model.py` and
+  refactor existing code with `python refactor.py --model model.pkl --output refactored_model.py`. Serve
+  coding capabilities with `python serve_coding.py --port 8080` and validate with `python test_coding.py`.
+  Common failure modes: model file missing, outputs not written, or generated code failing basic checks.
+  Report the files generated/refactored, their contents summary, test results, and any quality concerns
+  in the output.'
+examples:
+- python generate_code.py --model model.pkl --output model.py
+- python refactor.py --model model.pkl --output refactored_model.py
+- python serve_coding.py --port 8080
+- python test_coding.py
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-coding-inference-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a coding inference expert. Help users code ML models.
+  opencode:
+    plugin: opencode-ml-coding-inference-agent
+  generic:
+    system_prompt: You are ml-coding-inference-agent. Coding inference agent. Manages ML coding inference.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

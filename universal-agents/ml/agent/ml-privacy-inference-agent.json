@@ -1,0 +1,153 @@
+{
+  "name": "ml-privacy-inference-agent",
+  "display_name": "Ml Privacy Inference Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Privacy inference agent. Manages ML privacy inference.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Privacy Inference Agent",
+      "description": "Privacy inference agent. Manages ML privacy inference.",
+      "commands": [
+        "python privacy_check.py --model model.pkl --data data.csv --privacy-budget 1.0",
+        "python test_privacy.py",
+        "python serve_privacy.py --port 8080",
+        "python differential_privacy.py --model model.pkl --data data.csv --epsilon 0.1"
+      ],
+      "examples": [
+        "python privacy_check.py --model model.pkl --data data.csv --privacy-budget 1.0",
+        "python differential_privacy.py --model model.pkl --data data.csv --epsilon 0.1",
+        "python serve_privacy.py --port 8080",
+        "python test_privacy.py"
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "type": "string",
+          "description": "CLI flag --data observed in capability commands"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-privacy-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-privacy-inference-agent"
+    }
+  ],
+  "instructions": "You are the Privacy Inference Agent, the expert users call to run privacy checks and differential privacy during ML inference. Assess exposure with `python privacy_check.py --model model.pkl --data data.csv --privacy-budget 1.0`, and if the budget is exceeded, apply noise via `python differential_privacy.py --model model.pkl --data data.csv --epsilon 0.1`. Serve the protected model with `python serve_privacy.py --port 8080` and confirm nothing broke with `python test_privacy.py`. Watch for budget limits being exceeded, epsilon values that are too low (accuracy loss) or too high (weak privacy), and missing data files. Report the privacy budget consumption, epsilon applied, privacy check pass/fail, and any accuracy trade-offs observed.",
+  "examples": [
+    "python privacy_check.py --model model.pkl --data data.csv --privacy-budget 1.0",
+    "python differential_privacy.py --model model.pkl --data data.csv --epsilon 0.1",
+    "python serve_privacy.py --port 8080",
+    "python test_privacy.py"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-privacy-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a privacy inference expert. Help users manage ML privacy."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-privacy-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-privacy-inference-agent. Privacy inference agent. Manages ML privacy inference.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-privacy-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Privacy Inference Agent",
+        "name": "data",
+        "type": "string",
+        "description": "CLI flag --data observed in capability commands"
+      },
+      {
+        "capability": "Ml Privacy Inference Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-privacy-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-privacy-inference-agent.yaml",
+    "checksum": "39a5f576a4cda6b539ab87c20c1199a0f6c26d7c15733659b075295d9555d4eb"
+  }
+}

@@ -1,0 +1,120 @@
+name: fastapi-backend
+display_name: Fastapi
+category: backend
+subcategory: general
+description: 'Builds modern Python APIs with FastAPI: automatic OpenAPI docs, Pydantic models, async routes,
+  and deployment with uvicorn.'
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- fastapi
+- pip
+- python
+- uvicorn
+capabilities:
+- commands:
+  - pip install "fastapi[standard]"
+  - fastapi dev main.py
+  - fastapi run main.py
+  - uvicorn main:app --reload
+  - uvicorn main:app --host 0.0.0.0 --port 8000
+  description: Scaffold and run FastAPI applications with auto-reload.
+  name: fastapi-dev
+  examples:
+  - fastapi dev main.py --port 8080
+  - uvicorn main:app --reload --reload-dir app
+  - fastapi run main.py --workers 4
+  parameters:
+  - description: Bind address
+    name: host
+    type: string
+  - description: Port to listen on
+    name: port
+    type: integer
+  - description: Auto-reload on code changes
+    name: reload
+    type: boolean
+- commands:
+  - curl http://localhost:8000/openapi.json
+  - curl http://localhost:8000/docs
+  - 'curl -X POST http://localhost:8000/items -H "Content-Type: application/json" -d "{\"name\":\"widget\"}"'
+  - python -c "import json,urllib.request; print(json.load(urllib.request.urlopen(\"http://localhost:8000/openapi.json\"))[\"paths\"])"
+  description: Inspect generated OpenAPI schema and test endpoints.
+  name: fastapi-openapi
+  examples:
+  - curl -s http://localhost:8000/openapi.json | python -m json.tool | head -50
+  - curl -X GET "http://localhost:8000/items/1?verbose=true"
+  parameters:
+  - description: API path to call
+    name: path
+    type: string
+  - name: method
+    type: string
+    description: 'HTTP method: GET, POST, DELETE'
+knowledge:
+- title: FastAPI Docs
+  description: Tutorial, features, and deployment guides
+  source: https://fastapi.tiangolo.com
+  type: documentation
+- title: FastAPI Deployment
+  description: Running with uvicorn and containers
+  source: https://fastapi.tiangolo.com/deployment/
+  type: documentation
+instructions: "# FastAPI\n\nModern, fast Python API framework with automatic OpenAPI docs.\n\n## When\
+  \ to Use\n\n- REST APIs with automatic validation and interactive docs\n- Async and sync endpoints mixed\
+  \ in one service\n- Data-heavy services with Pydantic response models\n- Rapid prototyping that scales\
+  \ to production\n\n## Commands\n\n```bash\npip install \"fastapi[standard]\"\n\n# Dev server with reload\n\
+  fastapi dev main.py\n\n# Production server\nfastapi run main.py\nuvicorn main:app --host 0.0.0.0 --port\
+  \ 8000 --workers 4\n\n# Docs\ncurl http://localhost:8000/docs\ncurl -s http://localhost:8000/openapi.json\
+  \ | python -m json.tool\n```\n\n## App Example\n\n```python\nfrom fastapi import FastAPI, HTTPException\n\
+  from pydantic import BaseModel, Field\n\napp = FastAPI(title=\"Shop API\")\n\nclass Item(BaseModel):\n\
+  \    name: str = Field(min_length=1)\n    price: float = Field(gt=0)\n\n@app.get(\"/items/{item_id}\"\
+  )\nasync def get_item(item_id: int):\n    if item_id > 1000:\n        raise HTTPException(404, \"Item\
+  \ not found\")\n    return {\"id\": item_id}\n```\n\n## Best Practices\n\n- Use response_model to guarantee\
+  \ API output shape\n- Raise HTTPException instead of returning error dicts\n- Prefer async routes for\
+  \ I/O; sync routes run in a threadpool anyway\n- Validate with Pydantic constraints, not manual if-statements\n\
+  - Run with workers > 1 behind a load balancer in production\n- Check /openapi.json and /docs to confirm\
+  \ the contract"
+examples:
+- input: Why does FastAPI return 422 for my payload?
+  output: Agent reads the error details, maps them to the Pydantic model, and fixes field names/types
+    or constraint violations.
+- input: Deploy my FastAPI app to production
+  output: Agent switches from fastapi dev to fastapi run with multiple workers, adds a Dockerfile, and
+    checks the docs endpoint.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: fastapi-backend.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-fastapi
+  generic:
+    system_prompt: 'This is your domain: Fastapi. You do it through fastapi-dev: Scaffold and run FastAPI
+      applications with auto-reload. The commands are real, e.g. `pip install fastapi[standard]`. You
+      verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

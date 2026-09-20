@@ -1,0 +1,122 @@
+name: gatekeeper
+display_name: gatekeeper
+category: security
+subcategory: general
+description: Enforces OPA-based admission policies in Kubernetes with Gatekeeper ConstraintTemplates and
+  Constraints.
+version: 2.0.0
+tags:
+- security
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- helm
+- kubectl
+capabilities:
+- name: gatekeeper-install
+  description: Install Gatekeeper and check its operational status.
+  commands:
+  - kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/deploy/gatekeeper.yaml
+  - kubectl get pods -n gatekeeper-system
+  - kubectl get validatingwebhookconfigurations gatekeeper-validating-webhook-configuration
+  - helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper
+  examples:
+  - kubectl apply -f gatekeeper.yaml
+  - kubectl get pods -n gatekeeper-system
+  - kubectl logs -n gatekeeper-system deploy/gatekeeper-controller-manager --tail=50
+  parameters:
+  - name: namespace
+    type: string
+    description: Namespace to inspect, default gatekeeper-system
+  - default: stable
+    description: 'Gatekeeper release channel: stable, beta, or latest manifest.'
+    name: channel
+    type: string
+- name: constraint-management
+  description: Create, list, and debug ConstraintTemplates and Constraints.
+  commands:
+  - kubectl get constrainttemplates
+  - kubectl get constraints
+  - kubectl apply -f template.yaml
+  - kubectl apply -f constraint.yaml
+  - kubectl describe k8srequiredlabels
+  examples:
+  - kubectl get constrainttemplates
+  - kubectl get k8srequiredlabels
+  - kubectl describe k8srequiredlabels
+  parameters:
+  - name: template
+    type: string
+    description: ConstraintTemplate manifest path
+  - name: constraint
+    type: string
+    description: Constraint instance manifest path
+knowledge:
+- title: Gatekeeper Documentation
+  type: documentation
+  source: https://open-policy-agent.github.io/gatekeeper/website/docs/
+  description: Installation, ConstraintTemplates, and constraint authoring
+- title: OPA Policy Reference
+  type: documentation
+  source: https://www.openpolicyagent.org/docs/latest/policy-language/
+  description: Rego policy language for constraint logic
+instructions: "# Gatekeeper\n\nAdmission policy enforcement for Kubernetes with OPA ConstraintTemplates.\n\
+  \n## What This Skill Does\n\n- Installs Gatekeeper as a validating admission webhook\n- Authors ConstraintTemplates\
+  \ using Rego\n- Instantiates Constraints to enforce policies per label or namespace\n- Audits violations\
+  \ and enforces them in dry-run or deny mode\n\n## When to Use\n\n- Enforcing labels, limits, or security\
+  \ contexts cluster-wide\n- Requiring certain policies for namespace-scoped workloads\n- Auditing existing\
+  \ workloads for violations before enabling enforcement\n\n## Real Commands\n\n```bash\n# Install and\
+  \ verify\nkubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/deploy/gatekeeper.yaml\n\
+  kubectl get pods -n gatekeeper-system\nkubectl get validatingwebhookconfigurations gatekeeper-validating-webhook-configuration\n\
+  \n# Manage constraints\nkubectl get constrainttemplates\nkubectl get constraints\nkubectl apply -f template.yaml\n\
+  kubectl apply -f constraint.yaml\nkubectl describe k8srequiredlabels\n\n# Audit violations\nkubectl\
+  \ get k8srequiredlabels k8srequiredlabels --output=yaml | grep -A5 violations\n```\n\n## Sample ConstraintTemplate\n\
+  \n```yaml\napiVersion: templates.gatekeeper.sh/v1\nkind: ConstraintTemplate\nmetadata:\n  name: k8srequiredlabels\n\
+  spec:\n  crd:\n    spec:\n      names: { kind: K8sRequiredLabels }\n      validation:\n        openAPIV3Schema:\n\
+  \          properties:\n            labels: { type: array, items: { type: string } }\n  targets:\n \
+  \   - target: admission.k8s.gatekeeper.sh\n      rego: |\n        package k8srequiredlabels\n      \
+  \  violation[{\"msg\": msg}] {\n          provided := {label | input.review.object.metadata.labels[label]}\n\
+  \          required := {label | label := input.parameters.labels[_]}\n          missing := required\
+  \ - provided\n          count(missing) > 0\n          msg := sprintf(\"missing labels: %v\", [missing])\n\
+  \        }\n```\n\n## Best Practices\n\n- Ship templates with audit-only constraints first, then flip\
+  \ to deny\n- Version templates like code and review Rego carefully\n- Use parameters to keep one template\
+  \ for many constraints\n- Watch the webhook audit results before enforcing on namespaces\n- Combine\
+  \ with Gatekeeper's built-in mutation for default labels"
+examples:
+- input: Deny pods without resource limits in prod
+  output: Agent writes a ConstraintTemplate checking spec.containers resources.limits, applies it, and
+    instantiates a constraint for the prod namespace in audit mode first.
+- input: Why did my pod get rejected?
+  output: Agent inspects kubectl describe constraint and the audit output to show which label or field
+    violated the Rego policy.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: gatekeeper.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-gatekeeper
+  generic:
+    system_prompt: 'You own gatekeeper end to end. You do it through gatekeeper-install: Install Gatekeeper
+      and check its operational status. The commands are real, e.g. `kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/dep...`.
+      You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,232 @@
+{
+  "name": "adaptive-rate-limiting",
+  "display_name": "Adaptive Rate Limiting",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Implements adaptive rate limiting with nginx limit_req zones, Redis sliding-window counters, and load-test verification with ab.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "nginx",
+    "redis-cli",
+    "tail"
+  ],
+  "capabilities": [
+    {
+      "name": "nginx-limits",
+      "description": "Configure and hot-reload nginx request-rate and connection limits.",
+      "commands": [
+        "nginx -t",
+        "nginx -s reload",
+        "nginx -T | grep limit_req",
+        "ab -n 2000 -c 100 http://localhost:8080/api/users",
+        "tail -f /var/log/nginx/error.log"
+      ],
+      "examples": [
+        "nginx -t && nginx -s reload",
+        "ab -n 2000 -c 100 http://localhost:8080/api/users",
+        "curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:8080/api"
+      ],
+      "parameters": [
+        {
+          "name": "rate",
+          "type": "string",
+          "description": "Rate in nginx syntax, e.g. 10r/s"
+        },
+        {
+          "name": "burst",
+          "type": "number",
+          "description": "Burst capacity above the rate"
+        },
+        {
+          "name": "status_code",
+          "type": "number",
+          "description": "Rejection status, e.g. 429"
+        }
+      ]
+    },
+    {
+      "name": "redis-counters",
+      "description": "Use Redis fixed-window and Lua sliding-window counters to adapt limits per client.",
+      "commands": [
+        "redis-cli INCR rate:{userId}:{window}",
+        "redis-cli EXPIRE rate:{userId}:{window} 60",
+        "redis-cli --eval sliding_window.lua rate:{userId}:{window} 1 100 $(date +%s)",
+        "redis-cli GET rate:{userId}:{window}",
+        "redis-cli FLUSHDB"
+      ],
+      "examples": [
+        "redis-cli INCR rate:42:1736500000 && redis-cli EXPIRE rate:42:1736500000 60",
+        "redis-cli --eval sliding_window.lua rate:42:1736500000 1 60 100 1736500030",
+        "redis-cli GET rate:42:1736500000"
+      ],
+      "parameters": [
+        {
+          "name": "key_pattern",
+          "type": "string",
+          "description": "Redis key pattern, e.g. rate:{userId}:{window}"
+        },
+        {
+          "name": "window",
+          "type": "number",
+          "description": "Window size in seconds"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "description": "Max requests per window"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "nginx limit_req Module",
+      "type": "documentation",
+      "source": "https://nginx.org/en/docs/http/ngx_http_limit_req_module.html",
+      "description": "limit_req_zone/limit_req directives, burst semantics"
+    },
+    {
+      "title": "Redis Commands",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/commands/",
+      "description": "INCR, EXPIRE, Lua scripting"
+    },
+    {
+      "title": "AWS Rate Limiting Strategies",
+      "type": "documentation",
+      "source": "https://aws.amazon.com/blogs/architecture/rate-limiting-strategies-for-scalable-apis/",
+      "description": "Token bucket, fixed/sliding window trade-offs"
+    }
+  ],
+  "instructions": "# Adaptive Rate Limiting\n\n## What this skill does\n\nDesigns rate limits that adapt to traffic: nginx limit_req zones enforce per-IP limits, Redis counters implement per-user sliding windows, and load tests verify thresholds.\n\n## When to use\n\n- A public API is being hammered by a single client\n- Adding per-user or per-tenant quotas\n- Tuning burst allowance so legitimate spikes are not rejected\n\n## Real commands\n\n```bash\nnginx -t\nnginx -s reload\n\n# Verify configured zones\nnginx -T | grep -E \"limit_req|limit_conn\"\n\n# Watch rejections under load\nab -n 2000 -c 100 http://localhost:8080/api/users\n```\n\n## nginx config\n\n```nginx\nlimit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;\n\nserver {\n  location /api/ {\n    limit_req zone=api burst=20 nodelay;\n    limit_req_status 429;\n    proxy_pass http://backend;\n  }\n}\n```\n\n## Redis fixed window\n\n```bash\nredis-cli INCR rate:$USER:$(date +%s)\nredis-cli EXPIRE rate:$USER:$(date +%s) 60\n```\n\nRun a Lua script for atomic sliding-window decisions: `redis-cli --eval sliding_window.lua rate:$USER:60 1 100 $(date +%s)`.\n\n## Testing\n\n- Drive 2x the limit with ab and assert 429 share grows\n- Assert normal traffic never sees 429\n\n## Best practices\n\n- Return Retry-After with 429 so clients back off\n- Store limits in config, not code\n- Combine nginx (per-IP) with Redis (per-user) for defense in depth",
+  "examples": [
+    {
+      "input": "One IP is consuming our whole API budget",
+      "output": "Adds an nginx limit_req_zone for $binary_remote_addr at 10r/s with burst=20 nodelay, reloads, and validates with ab that excess requests return 429."
+    },
+    {
+      "input": "Add per-user rate limits with Redis",
+      "output": "Implements a Lua sliding-window script keyed rate:{userId}:{window}, run via redis-cli --eval, and shows the API reading counters to adapt limits."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "adaptive-rate-limiting.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-adaptive-rate-limiting"
+    },
+    "generic": {
+      "system_prompt": "You are the Adaptive Rate Limiting specialist. You do it through nginx-limits: Configure and hot-reload nginx request-rate and connection limits. The commands are real, e.g. `nginx -t`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "adaptive-rate-limiting",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "nginx-limits",
+        "name": "rate",
+        "type": "string",
+        "description": "Rate in nginx syntax, e.g. 10r/s"
+      },
+      {
+        "capability": "nginx-limits",
+        "name": "burst",
+        "type": "number",
+        "description": "Burst capacity above the rate"
+      },
+      {
+        "capability": "nginx-limits",
+        "name": "status_code",
+        "type": "number",
+        "description": "Rejection status, e.g. 429"
+      },
+      {
+        "capability": "redis-counters",
+        "name": "key_pattern",
+        "type": "string",
+        "description": "Redis key pattern, e.g. rate:{userId}:{window}"
+      },
+      {
+        "capability": "redis-counters",
+        "name": "window",
+        "type": "number",
+        "description": "Window size in seconds"
+      },
+      {
+        "capability": "redis-counters",
+        "name": "limit",
+        "type": "number",
+        "description": "Max requests per window"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "nginx",
+    "redis-cli",
+    "tail"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/adaptive-rate-limiting-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/adaptive-rate-limiting-skill.yaml",
+    "checksum": "0c6d2da500445cf29ea85c0a5f8a84222870d4f090578c2a7f596e86c136cee3"
+  }
+}

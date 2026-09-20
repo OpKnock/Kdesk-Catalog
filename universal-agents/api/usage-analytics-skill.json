@@ -1,0 +1,171 @@
+{
+  "name": "usage-analytics",
+  "display_name": "Usage Analytics",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted usage analytics skill: tracking events and pageviews with Plausible/Mixpanel APIs and SQL-style queries over clickstream data.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "python"
+  ],
+  "capabilities": [
+    {
+      "name": "analytics-events",
+      "description": "Collect and query product usage events",
+      "commands": [
+        "curl -X POST https://plausible.io/api/event -H 'Content-Type: application/json' -d '{\"domain\":\"app.example.com\",\"name\":\"signup\",\"url\":\"https://app.example.com/signup\",\"props\":{\"plan\":\"pro\"}}'",
+        "curl -s 'https://plausible.io/api/v1/stats/aggregate?site_id=app.example.com&period=30d&metrics=visitors,pageviews' -H 'Authorization: Bearer $PLAUSIBLE_API_KEY' | jq",
+        "curl -s 'https://api.mixpanel.com/import?strict=1' -H 'Authorization: Basic base64' -H 'Content-Type: application/json' -d '[{\"event\":\"signup\",\"properties\":{\"token\":\"$MIXPANEL_TOKEN\",\"distinct_id\":\"u1\",\"time\":1700000000}}]'",
+        "python -c \"import json,requests; print(json.dumps({'ok':True}))\"",
+        "curl -s 'https://plausible.io/api/v1/stats/timeseries?site_id=app.example.com&period=30d&metrics=pageviews' -H 'Authorization: Bearer KEY' | jq"
+      ],
+      "examples": [
+        "curl -X POST https://plausible.io/api/event -H 'Content-Type: application/json' -d '{\"domain\":\"app.example.com\",\"name\":\"signup\",\"url\":\"https://app.example.com/signup\"}'",
+        "curl -s 'https://plausible.io/api/v1/stats/aggregate?site_id=app.example.com&period=30d&metrics=visitors,pageviews' -H 'Authorization: Bearer KEY' | jq",
+        "curl -s 'https://plausible.io/api/v1/stats/timeseries?site_id=app.example.com&period=7d&metrics=pageviews' -H 'Authorization: Bearer KEY' | jq"
+      ],
+      "parameters": [
+        {
+          "name": "site_id",
+          "type": "string",
+          "description": "Domain for Plausible queries"
+        },
+        {
+          "name": "period",
+          "type": "string",
+          "description": "30d, 7d, or month"
+        },
+        {
+          "name": "metrics",
+          "type": "string",
+          "description": "visitors, pageviews, bounce_rate"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Plausible events API",
+      "type": "documentation",
+      "source": "https://plausible.io/docs/events-api",
+      "description": "Event ingestion endpoints"
+    },
+    {
+      "title": "Plausible stats API",
+      "type": "documentation",
+      "source": "https://plausible.io/docs/stats-api",
+      "description": "Aggregate and timeseries queries"
+    }
+  ],
+  "instructions": "# Usage Analytics\n\nHand-crafted skill for product usage analytics.\n\n## What this skill does\n\n- Ingests custom events (signups, upgrades, clicks)\n- Queries aggregates and time series over pageviews\n- Loads historical events into Mixpanel-style services\n\n## When to use\n\n- Instrumenting a feature with custom events\n- Answering \"how many X in the last 30 days?\"\n- Wiring analytics into CI or dashboards\n\n## Real commands\n\n```bash\n# Send a custom event to Plausible\ncurl -X POST https://plausible.io/api/event -H 'Content-Type: application/json' -d '{\"domain\":\"app.example.com\",\"name\":\"signup\",\"url\":\"https://app.example.com/signup\",\"props\":{\"plan\":\"pro\"}}'\n\n# Aggregate stats\ncurl -s 'https://plausible.io/api/v1/stats/aggregate?site_id=app.example.com&period=30d&metrics=visitors,pageviews' -H 'Authorization: Bearer YOUR_API_KEY' | jq\n\n# Time series for charts\ncurl -s 'https://plausible.io/api/v1/stats/timeseries?site_id=app.example.com&period=30d&metrics=pageviews' -H 'Authorization: Bearer KEY' | jq\n\n# Mixpanel import of historical events\ncurl -s 'https://api.mixpanel.com/import?strict=1' -H 'Authorization: Basic BASE64' -H 'Content-Type: application/json' -d '[{\"event\":\"signup\",\"properties\":{\"token\":\"TOKEN\",\"distinct_id\":\"u1\",\"time\":1700000000}}]'\n```\n\n## Event schema\n\n- name: action verb (signup, upgrade, invite_sent)\n- url: canonical page for the event\n- props: flat custom properties\n- user_id/distinct_id: stable per user\n\n## Testing\n\n```bash\ncurl -X POST https://plausible.io/api/event -H 'Content-Type: application/json' -d '{\"domain\":\"app.example.com\",\"name\":\"test_event\",\"url\":\"https://app.example.com/\"}'\n# then confirm it in the stats API timeseries\n```\n\n## Best practices\n\n- Keep event names a small controlled vocabulary\n- Never send PII in props\n- Use one canonical URL format to avoid dupes\n",
+  "examples": [
+    {
+      "input": "How many visitors in the last 30 days?",
+      "output": "curl -s 'https://plausible.io/api/v1/stats/aggregate?site_id=app.example.com&period=30d&metrics=visitors' -H 'Authorization: Bearer KEY' | jq."
+    },
+    {
+      "input": "Track a signup event",
+      "output": "POST to /api/event with name=signup and the current page URL; add props for plan type."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "usage-analytics.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-usage-analytics"
+    },
+    "generic": {
+      "system_prompt": "You work Usage Analytics hands-on. You do it through analytics-events: Collect and query product usage events. The commands are real, e.g. `curl -X POST https://plausible.io/api/event -H Content-Type: application/json -d...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "usage-analytics",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "analytics-events",
+        "name": "site_id",
+        "type": "string",
+        "description": "Domain for Plausible queries"
+      },
+      {
+        "capability": "analytics-events",
+        "name": "period",
+        "type": "string",
+        "description": "30d, 7d, or month"
+      },
+      {
+        "capability": "analytics-events",
+        "name": "metrics",
+        "type": "string",
+        "description": "visitors, pageviews, bounce_rate"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/usage-analytics-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/usage-analytics-skill.yaml",
+    "checksum": "a26aa2b4d088f70a1f322a65d38c9238928f0c13d783637a9daf8787b88f228d"
+  }
+}

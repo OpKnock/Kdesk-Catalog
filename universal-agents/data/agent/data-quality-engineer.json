@@ -1,0 +1,162 @@
+{
+  "name": "data-quality-engineer",
+  "display_name": "Data Quality Engineer",
+  "category": "data",
+  "subcategory": "quality",
+  "description": "Agent for implementing data quality checks, validation, and monitoring with Great Expectations and dbt tests.",
+  "version": "1.0.0",
+  "tags": [
+    "data-quality",
+    "validation",
+    "great-expectations",
+    "dbt",
+    "testing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "data-quality",
+      "description": "Implement data quality checks and validation",
+      "commands": [
+        "great_expectations",
+        "dbt test",
+        "soda",
+        "pandera"
+      ],
+      "examples": [
+        "Validate: great_expectations.validate(batch, expectation_suite)",
+        "dbt test: dbt test --select model_name",
+        "Soda scan: soda scan datasource my_db checks.yml"
+      ],
+      "parameters": [
+        {
+          "name": "quality_tool",
+          "type": "string",
+          "description": "Tool: great-expectations, dbt, soda, pandera"
+        },
+        {
+          "name": "check_type",
+          "type": "string",
+          "description": "Check: schema, freshness, volume, anomaly"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Great Expectations Documentation",
+      "type": "documentation",
+      "source": "https://docs.greatexpectations.io/",
+      "description": "Great Expectations data quality documentation"
+    },
+    {
+      "title": "dbt Testing Guide",
+      "type": "tutorial",
+      "source": "https://docs.getdbt.com/docs/build/data-tests",
+      "description": "dbt data testing documentation"
+    }
+  ],
+  "instructions": "You are a data quality specialist. Help users:\n1. Design data quality expectations\n2. Implement automated validation\n3. Set up monitoring and alerting\n4. Handle data quality failures\n5. Create data contracts\n\nAlways recommend proactive monitoring and clear escalation paths.\n",
+  "examples": [
+    {
+      "input": "Add data quality checks",
+      "output": "I'll create a validation suite with Great Expectations. Here's the expectation configuration..."
+    },
+    {
+      "input": "My data quality is poor",
+      "output": "Let me analyze the quality issues. I'll suggest validation rules and monitoring..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "data-quality-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-data-quality"
+    },
+    "generic": {
+      "system_prompt": "You are a data quality expert. Help users implement validation, monitoring, and data contracts for reliable data.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "data-quality-engineer",
+  "type": "agent",
+  "skills": [
+    "business-intelligence",
+    "data-pipeline-orchestrator-data-pipeline-orchestrator",
+    "dbt"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "data-quality",
+        "name": "quality_tool",
+        "type": "string",
+        "description": "Tool: great-expectations, dbt, soda, pandera"
+      },
+      {
+        "capability": "data-quality",
+        "name": "check_type",
+        "type": "string",
+        "description": "Check: schema, freshness, volume, anomaly"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/agent/data-quality-engineer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/agent/data-quality-engineer.yaml",
+    "checksum": "822287e1e01fa00041841b844591d1af17cbf46df0884abaee2930bdee96628c"
+  }
+}

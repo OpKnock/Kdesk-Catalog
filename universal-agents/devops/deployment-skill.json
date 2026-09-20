@@ -1,0 +1,219 @@
+{
+  "name": "deployment",
+  "display_name": "deployment",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Performs Kubernetes deployments and rollouts: create, update, rollback, scale, and canary traffic shifts with real kubectl commands.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kubectl"
+  ],
+  "capabilities": [
+    {
+      "name": "deployment-rollouts",
+      "description": "Create and manage Deployments with rollout control, updates, and rollbacks.",
+      "commands": [
+        "kubectl create deployment web --image=nginx:1.25",
+        "kubectl set image deployment/web web=nginx:1.26",
+        "kubectl rollout status deployment/web",
+        "kubectl rollout history deployment/web",
+        "kubectl rollout undo deployment/web",
+        "kubectl rollout restart deployment/web"
+      ],
+      "examples": [
+        "kubectl set image deployment/web web=nginx:1.26",
+        "kubectl rollout undo deployment/web --to-revision=2",
+        "kubectl rollout status deployment/web --timeout=120s"
+      ],
+      "parameters": [
+        {
+          "name": "deployment",
+          "type": "string",
+          "description": "Deployment name, e.g. web"
+        },
+        {
+          "name": "image",
+          "type": "string",
+          "description": "New container image reference"
+        },
+        {
+          "name": "revision",
+          "type": "integer",
+          "description": "Rollback target revision"
+        }
+      ]
+    },
+    {
+      "name": "scaling-and-exposure",
+      "description": "Scale replicas and expose deployments as services or ingress routes.",
+      "commands": [
+        "kubectl scale deployment/web --replicas=5",
+        "kubectl autoscale deployment/web --min=2 --max=10 --cpu-percent=70",
+        "kubectl expose deployment web --type=LoadBalancer --port=80 --target-port=8080",
+        "kubectl get svc -l app=web",
+        "kubectl get hpa"
+      ],
+      "examples": [
+        "kubectl scale deployment/web --replicas=5",
+        "kubectl autoscale deployment/web --min=2 --max=10 --cpu-percent=70",
+        "kubectl expose deployment web --type=LoadBalancer --port=80"
+      ],
+      "parameters": [
+        {
+          "name": "replicas",
+          "type": "integer",
+          "description": "Desired replica count"
+        },
+        {
+          "name": "min",
+          "type": "integer",
+          "description": "Minimum HPA replicas"
+        },
+        {
+          "name": "max",
+          "type": "integer",
+          "description": "Maximum HPA replicas"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kubernetes Deployments",
+      "type": "documentation",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "description": "Deployment semantics, rollout strategies, and history"
+    },
+    {
+      "title": "Kubectl Rollout Reference",
+      "type": "documentation",
+      "source": "https://kubernetes.io/docs/reference/kubectl/generated/kubectl_rollout/",
+      "description": "rollout status, history, undo, restart subcommands"
+    }
+  ],
+  "instructions": "# Kubernetes Deployment Operations\n\nShip code to Kubernetes safely: create, update, roll back, and scale Deployments.\n\n## What This Skill Does\n\n- Creates Deployments from images\n- Performs zero-downtime updates (RollingUpdate) and rollbacks\n- Scales manually or via HorizontalPodAutoscaler\n- Exposes workloads via Services\n- Diagnoses rollout stalls and CrashLoopBackOff\n\n## When to Use\n\n- Releasing a new image version\n- A deployment is failing and needs rollback or diagnosis\n- Adding autoscaling to handle load\n\n## Real Commands\n\n```bash\n# Create and update\nkubectl create deployment web --image=nginx:1.25\nkubectl set image deployment/web web=nginx:1.26\nkubectl annotate deployment/web kubernetes.io/change-cause=\"bump nginx 1.26\"\n\n# Rollout control\nkubectl rollout status deployment/web --timeout=120s\nkubectl rollout history deployment/web\nkubectl rollout undo deployment/web --to-revision=2\nkubectl rollout restart deployment/web\n\n# Scale and expose\nkubectl scale deployment/web --replicas=5\nkubectl autoscale deployment/web --min=2 --max=10 --cpu-percent=70\nkubectl expose deployment web --type=ClusterIP --port=80 --target-port=8080\nkubectl get hpa,svc,pods -l app=web\n```\n\n## Manifest Notes\n\n```yaml\nspec:\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxUnavailable: 1\n      maxSurge: 1\n```\n\n## Best Practices\n\n- Always add `kubernetes.io/change-cause` annotations for audit history\n- Use `kubectl rollout status` with a timeout so CI fails fast\n- Prefer `set image` over editing manifests in prod\n- Add liveness/readiness probes before doing rollouts\n- Set HPA with both CPU and custom metrics; test scale-up behavior\n- Keep old revisions: bump `spec.revisionHistoryLimit` when needed",
+  "examples": [
+    {
+      "input": "Roll back the web deployment to revision 3",
+      "output": "Agent checks rollout history, runs kubectl rollout undo deployment/web --to-revision=3, and watches status until Available"
+    },
+    {
+      "input": "Deploy nginx 1.26 and verify",
+      "output": "Agent sets the image, waits on rollout status, verifies pod ready counts and service endpoints"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "deployment.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-deployment"
+    },
+    "generic": {
+      "system_prompt": "You own deployment end to end. You do it through deployment-rollouts: Create and manage Deployments with rollout control, updates, and rollbacks. The commands are real, e.g. `kubectl create deployment web --image=nginx:1.25`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "deployment",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "deployment-rollouts",
+        "name": "deployment",
+        "type": "string",
+        "description": "Deployment name, e.g. web"
+      },
+      {
+        "capability": "deployment-rollouts",
+        "name": "image",
+        "type": "string",
+        "description": "New container image reference"
+      },
+      {
+        "capability": "deployment-rollouts",
+        "name": "revision",
+        "type": "integer",
+        "description": "Rollback target revision"
+      },
+      {
+        "capability": "scaling-and-exposure",
+        "name": "replicas",
+        "type": "integer",
+        "description": "Desired replica count"
+      },
+      {
+        "capability": "scaling-and-exposure",
+        "name": "min",
+        "type": "integer",
+        "description": "Minimum HPA replicas"
+      },
+      {
+        "capability": "scaling-and-exposure",
+        "name": "max",
+        "type": "integer",
+        "description": "Maximum HPA replicas"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kubectl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/deployment-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/deployment-skill.yaml",
+    "checksum": "c4595e0b6c3fcfd7c853e6ae9b308a5a1ec445c0a249ba7624d23539966fa5ec"
+  }
+}

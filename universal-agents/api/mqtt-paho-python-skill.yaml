@@ -1,0 +1,101 @@
+name: mqtt-paho-python
+display_name: Mqtt Paho Python
+category: api
+subcategory: general
+description: 'Write MQTT clients in Python with paho-mqtt: connect, publish, subscribe with callbacks,
+  and TLS settings.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- pip
+- python3
+capabilities:
+- name: paho-python-client
+  description: Install paho-mqtt and build pub/sub clients with the callback-based Python API.
+  commands:
+  - pip install paho-mqtt
+  - python3 -m pip show paho-mqtt
+  - python3 pub.py -h localhost -t sensors/temp -m 21.5
+  - python3 sub.py -h localhost -t sensors/#
+  - python3 -c "import paho.mqtt.client as mqtt; print(mqtt.__version__ if hasattr(mqtt,'__version__')
+    else 'ok')"
+  examples:
+  - python3 sub.py -h broker.example.com -p 8883 --cafile ca.crt -t '#'
+  - python3 pub.py -t orders/new -m '{"id":1}' -q 1
+  - python3 -c "import paho.mqtt.client as mqtt; c=mqtt.Client(); c.connect('localhost',1883); c.publish('t','m');
+    c.disconnect()"
+  parameters:
+  - name: host
+    type: string
+    description: Broker hostname
+  - name: port
+    type: integer
+    description: Broker port
+  - name: qos
+    type: integer
+    description: QoS level for publish
+knowledge:
+- title: Paho Python docs
+  type: documentation
+  source: https://www.eclipse.org/paho/index.php?page=clients/python/docs/index.php
+  description: Official paho-mqtt Python API documentation
+- title: paho-mqtt on PyPI
+  type: documentation
+  source: https://pypi.org/project/paho-mqtt/
+  description: Installation and version history
+instructions: "# Paho MQTT Python\n\npaho-mqtt is the standard Python MQTT client, used in IoT scripts\
+  \ and backend services alike.\n\n## What this skill does\n\n- Installs paho-mqtt and verifies the import\n\
+  - Writes publish/subscribe scripts with the callback model\n- Configures TLS and retained messages\n\
+  \n## When to use\n\n- Quick IoT prototypes and data pipelines\n- Python services that emit or consume\
+  \ events\n\n## Real commands\n\n```bash\n# Install\npip install paho-mqtt\npython3 -m pip show paho-mqtt\n\
+  \n# Run scripts (write pub.py / sub.py)\npython3 pub.py -h localhost -t sensors/temp -m 21.5\npython3\
+  \ sub.py -h localhost -t sensors/#\n```\n\n## Publisher\n\n```python\nimport paho.mqtt.client as mqtt\n\
+  c = mqtt.Client()\nc.connect(\"localhost\", 1883)\nc.publish(\"sensors/temp\", \"21.5\", qos=1)\nc.disconnect()\n\
+  ```\n\n## Subscriber with callbacks\n\n```python\ndef on_message(client, userdata, msg):\n    print(f\"\
+  {msg.topic}: {msg.payload.decode()}\")\n\nc = mqtt.Client()\nc.on_message = on_message\nc.connect(\"\
+  localhost\", 1883)\nc.subscribe(\"sensors/#\", qos=0)\nc.loop_forever()\n```\n\n## TLS\n\n```python\n\
+  c.tls_set(ca_certs=\"ca.crt\", certfile=\"client.crt\", keyfile=\"client.key\")\nc.connect(\"broker.example.com\"\
+  , 8883)\n```\n\n## Best practices\n\n- Call `loop_start()`/`loop_forever()` consistently\n- Set a Client\
+  \ ID for persistent sessions\n- Keep QoS 0 for telemetry, QoS 1 for events that matter"
+examples:
+- input: Send device telemetry to my broker every 10 seconds
+  output: The agent writes a loop script using paho-mqtt with a retained QoS 1 publish and verifies it
+    with a mosquitto_sub listener.
+- input: My Python subscriber stops receiving after a network blip
+  output: The agent adds reconnect logic via `client.on_disconnect` + `loop_forever(retry_first_connection=True)`.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: mqtt-paho-python.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-mqtt-paho-python
+  generic:
+    system_prompt: 'Your lane is Mqtt Paho Python. You do it through paho-python-client: Install paho-mqtt
+      and build pub/sub clients with the callback-based Python API. The commands are real, e.g. `pip install
+      paho-mqtt`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

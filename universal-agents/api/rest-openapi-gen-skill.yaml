@@ -1,0 +1,182 @@
+name: rest-openapi-gen
+display_name: Rest Openapi Gen
+category: api
+subcategory: general
+description: 'Hand-crafted OpenAPI generation skill: validate specs, lint with Redocly, and generate typed
+  clients/server stubs with openapi-generator for any language.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+capabilities:
+- name: openapi-generate
+  description: Validate, lint, and generate code from OpenAPI specifications
+  commands:
+  - npx @openapitools/openapi-generator-cli version
+  - npx @openapitools/openapi-generator-cli validate -i openapi.yaml
+  - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g python -o out/python
+  - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-axios -o out/ts --additional-properties=withInterfaces=true
+  - npx @redocly/cli lint openapi.yaml
+  examples:
+  - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g go -o out/go
+  - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g java -o out/java --library=webclient
+  - npx @redocly/cli lint openapi.yaml --config redocly.yaml
+  parameters:
+  - name: input
+    type: string
+    description: Path to the OpenAPI spec (-i flag)
+  - name: generator
+    type: string
+    description: Target generator, e.g. python, go, java, typescript-axios
+  - name: output
+    type: string
+    description: Output directory for generated code
+knowledge:
+- title: OpenAPI Generator usage
+  type: documentation
+  source: https://openapi-generator.tech/docs/usage
+  description: CLI flags, generators list, and templates
+- title: OpenAPI Specification
+  type: documentation
+  source: https://spec.openapis.org/oas/v3.1.0
+  description: 'Spec structure: paths, schemas, security schemes'
+instructions: '# OpenAPI Code Generation
+
+
+  Hand-crafted skill for generating clients and servers from OpenAPI specs.
+
+
+  ## What this skill does
+
+
+  - Validates specs so generation does not fail halfway
+
+  - Lints for spec quality with Redocly rules
+
+  - Generates typed SDKs and server stubs in many languages
+
+
+  ## When to use
+
+
+  - Contract-first development: spec drives all consumers
+
+  - Producing versioned client SDKs for each release
+
+  - Keeping server stubs in sync with the documented API
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Check the CLI
+
+  npx @openapitools/openapi-generator-cli version
+
+
+  # Validate the spec first
+
+  npx @openapitools/openapi-generator-cli validate -i openapi.yaml
+
+
+  # Python client
+
+  npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g python -o out/python
+
+
+  # TypeScript axios client with interfaces
+
+  npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-axios -o out/ts --additional-properties=withInterfaces=true
+
+
+  # Go client
+
+  npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g go -o out/go
+
+
+  # Lint the spec before merging
+
+  npx @redocly/cli lint openapi.yaml
+
+  ```
+
+
+  ## Spec quality gates
+
+
+  ```bash
+
+  # Redocly config to fail CI on errors
+
+  npx @redocly/cli lint openapi.yaml --config redocly.yaml
+
+  ```
+
+
+  ## Testing generated code
+
+
+  ```bash
+
+  cd out/python && pip install -e .
+
+  python -c ''from openapi_client import Configuration, ApiClient, OrdersApi; print(OrdersApi(ApiClient(Configuration(host="http://localhost:8080"))))''
+
+  ```
+
+
+  ## Best practices
+
+
+  - Always validate before generate to get clean error messages
+
+  - Commit the spec, regenerate SDKs per release tag
+
+  - Pin the CLI version in package.json to keep output deterministic
+
+  '
+examples:
+- input: Generate a Python client from openapi.yaml
+  output: npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g python -o out/python, then
+    pip install -e out/python and use the openapi_client package.
+- input: My spec fails validation
+  output: Run npx @openapitools/openapi-generator-cli validate -i openapi.yaml and fix the reported line,
+    then rerun generation.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: rest-openapi-gen.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-rest-openapi-gen
+  generic:
+    system_prompt: 'You take the Rest Openapi Gen seat. You do it through openapi-generate: Validate,
+      lint, and generate code from OpenAPI specifications. The commands are real, e.g. `npx @openapitools/openapi-generator-cli
+      version`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

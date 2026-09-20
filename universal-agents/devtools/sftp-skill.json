@@ -1,0 +1,208 @@
+{
+  "name": "sftp",
+  "display_name": "sftp",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Interacts with remote filesystems over SFTP: interactive sessions, batch mode, uploads/downloads, and permission management.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "bye",
+    "get",
+    "ls,",
+    "mkdir",
+    "put",
+    "sftp"
+  ],
+  "capabilities": [
+    {
+      "name": "interactive-session",
+      "description": "Navigate remote directories, upload, and download files interactively.",
+      "commands": [
+        "sftp user@host",
+        "sftp -oPort=2222 user@host",
+        "sftp -i ~/.ssh/id_ed25519 user@host",
+        "ls, cd, pwd, lcd, lls",
+        "get -r /srv/logs/ ./logs/",
+        "put -P report.pdf /tmp/"
+      ],
+      "examples": [
+        "sftp user@host",
+        "get -r /srv/logs/ ./logs/",
+        "put -P report.pdf /tmp/"
+      ],
+      "parameters": [
+        {
+          "name": "host",
+          "type": "string",
+          "description": "Remote host"
+        },
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "SSH port"
+        }
+      ]
+    },
+    {
+      "name": "batch-and-management",
+      "description": "Run scripted transfers and manage remote files.",
+      "commands": [
+        "sftp -b batch.txt user@host",
+        "sftp -b - user@host <<< $'put f.txt\\nbye'",
+        "sftp user@host <<< $'mget /data/*.csv'",
+        "mkdir /backups/new && chmod 700 /backups",
+        "rm /tmp/old.log",
+        "bye"
+      ],
+      "examples": [
+        "sftp -b batch.txt user@host",
+        "sftp user@host <<< $'mget /data/*.csv'",
+        "mkdir /backups/new"
+      ],
+      "parameters": [
+        {
+          "name": "batch-file",
+          "type": "string",
+          "description": "File with sftp commands"
+        },
+        {
+          "name": "remote-path",
+          "type": "string",
+          "description": "Remote path for operations"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "sftp Manual (OpenBSD)",
+      "type": "documentation",
+      "source": "https://man.openbsd.org/sftp",
+      "description": "sftp commands and options"
+    },
+    {
+      "title": "sftp Linux Manual",
+      "type": "documentation",
+      "source": "https://man7.org/linux/man-pages/man1/sftp.1.html",
+      "description": "Linux sftp reference"
+    }
+  ],
+  "instructions": "# SFTP Operations\n\nWork with remote files over secure FTP.\n\n## What This Skill Does\n\n- Starts interactive SFTP sessions with custom ports/keys\n- Uploads (put) and downloads (get) files and trees\n- Navigates remote and local dirs (cd, lcd, ls, lls)\n- Manages remote files: mkdir, rm, chmod, rename\n- Runs scripted batch transfers non-interactively\n\n## When to Use\n\n- Interactive remote file management\n- Scripted nightly uploads/downloads\n- When rsync is unavailable on the remote\n\n## Real Commands\n\n```bash\n# Session\nsftp user@host\nsftp -oPort=2222 user@host\nsftp -i ~/.ssh/id_ed25519 user@host\n\n# Interactive commands (inside sftp)\nls, pwd\nlcd ./downloads, lls\nget file.txt\nget -r /srv/logs/ ./logs/\nput report.pdf /tmp/\nput -P report.pdf /tmp/          # preserve times\nmkdir /backups/new\nchmod 700 /backups\nrm /tmp/old.log\nbye\n\n# Batch mode\nsftp -b batch.txt user@host\nsftp -b - user@host <<< $'put f.txt\nbye'\nsftp user@host <<< $'mget /data/*.csv'\n```\n\n## batch.txt Example\n\n```\nlcd ./out\nput build.tar.gz /srv/app/\nchmod 644 /srv/app/build.tar.gz\nbye\n```\n\n## Best Practices\n\n- Use -P flag on put to preserve modification times\n- Test batch files with a dry list-only first\n- Use get -r for recursive pulls\n- Prefer rsync when you need delta sync or delete mirroring\n- Always end batch files with bye to close cleanly",
+  "examples": [
+    {
+      "input": "Pull all CSVs from /data on the remote",
+      "output": "Agent runs an sftp batch with mget, local cd, and bye"
+    },
+    {
+      "input": "Upload a release artifact with correct perms",
+      "output": "Agent puts the tar with -P and chmods it to 755 in one batch"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "sftp.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-sftp"
+    },
+    "generic": {
+      "system_prompt": "You own sftp end to end. You do it through interactive-session: Navigate remote directories, upload, and download files interactively. The commands are real, e.g. `sftp user@host`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "sftp",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "interactive-session",
+        "name": "host",
+        "type": "string",
+        "description": "Remote host"
+      },
+      {
+        "capability": "interactive-session",
+        "name": "port",
+        "type": "integer",
+        "description": "SSH port"
+      },
+      {
+        "capability": "batch-and-management",
+        "name": "batch-file",
+        "type": "string",
+        "description": "File with sftp commands"
+      },
+      {
+        "capability": "batch-and-management",
+        "name": "remote-path",
+        "type": "string",
+        "description": "Remote path for operations"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "bye",
+    "get",
+    "ls,",
+    "mkdir",
+    "put",
+    "sftp"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/sftp-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/sftp-skill.yaml",
+    "checksum": "badd4e92987333297d62ae5434072a9c296c912e5031ae7d9591f5cfc1c6a6f0"
+  }
+}

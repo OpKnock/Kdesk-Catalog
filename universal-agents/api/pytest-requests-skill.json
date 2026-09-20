@@ -1,0 +1,173 @@
+{
+  "name": "pytest-requests",
+  "display_name": "Pytest Requests",
+  "category": "api",
+  "subcategory": "general",
+  "description": "API testing with pytest and requests: fixtures, session reuse, assertions, and coverage-driven test suites.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "pip",
+    "pytest"
+  ],
+  "capabilities": [
+    {
+      "name": "pytest-api-testing",
+      "description": "Write and run pytest suites for HTTP APIs using the requests library with fixtures and coverage.",
+      "commands": [
+        "pip install pytest requests pytest-cov",
+        "pytest tests/ -v",
+        "pytest tests/ -k \"api\"",
+        "pytest --cov=src tests/",
+        "pytest tests/test_orders.py -x --tb=short"
+      ],
+      "examples": [
+        "pytest tests/test_orders.py -v",
+        "pytest --cov=src --cov-report=term-missing tests/",
+        "pytest -k \"auth and not slow\""
+      ],
+      "parameters": [
+        {
+          "name": "test_path",
+          "type": "string",
+          "description": "Path to tests directory or file"
+        },
+        {
+          "name": "marker",
+          "type": "string",
+          "description": "pytest -k expression or marker"
+        },
+        {
+          "name": "coverage",
+          "type": "boolean",
+          "description": "Enable coverage reporting"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "pytest Documentation",
+      "type": "documentation",
+      "source": "https://docs.pytest.org/en/stable/",
+      "description": "Fixtures, parametrize, marks and assertions"
+    },
+    {
+      "title": "requests Documentation",
+      "type": "documentation",
+      "source": "https://requests.readthedocs.io/",
+      "description": "HTTP client API for tests"
+    }
+  ],
+  "instructions": "# pytest + requests\n\nTest HTTP APIs with pytest fixtures and the requests library for readable, maintainable suites.\n\n## What this skill does\n\n- Sets up session fixtures and clients\n- Writes API assertions\n- Reports coverage\n\n## When to use\n\n- Contract/regression tests for REST APIs\n- Validating API behavior after changes\n\n## Real commands\n\n```bash\npip install pytest requests pytest-cov\n\n# Run\npytest tests/ -v\npytest tests/test_orders.py -x --tb=short\npytest -k \"auth\"\n\n# Coverage\npytest --cov=src tests/\npytest --cov=src --cov-report=term-missing tests/\n```\n\n## Test example\n\n```python\nimport requests\n\nBASE = \"http://localhost:8080/api\"\n\ndef test_create_order():\n    r = requests.post(f\"{BASE}/orders\", json={\"item\": \"lamp\"})\n    assert r.status_code == 201\n    assert r.json()[\"id\"]\n```\n\n## Session fixture\n\n```python\nimport pytest, requests\n\n@pytest.fixture(scope=\"session\")\ndef client():\n    s = requests.Session()\n    s.headers.update({\"Authorization\": f\"Bearer {TOKEN}\"})\n    return s\n```\n\n## Best practices\n\n- One test per behavior; use pytest.raises for errors\n- Keep tests independent with fixture scopes\n- Run with -x in CI and coverage thresholds",
+  "examples": [
+    {
+      "input": "Add API tests for my orders endpoints",
+      "output": "The agent writes pytest tests using requests with a session fixture and runs them with coverage."
+    },
+    {
+      "input": "Only run the auth tests",
+      "output": "The agent uses pytest -k auth to filter the suite."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pytest-requests.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pytest-requests"
+    },
+    "generic": {
+      "system_prompt": "You own Pytest Requests end to end. You do it through pytest-api-testing: Write and run pytest suites for HTTP APIs using the requests library with fixtures and coverage. The commands are real, e.g. `pip install pytest requests pytest-cov`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "pytest-requests",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pytest-api-testing",
+        "name": "test_path",
+        "type": "string",
+        "description": "Path to tests directory or file"
+      },
+      {
+        "capability": "pytest-api-testing",
+        "name": "marker",
+        "type": "string",
+        "description": "pytest -k expression or marker"
+      },
+      {
+        "capability": "pytest-api-testing",
+        "name": "coverage",
+        "type": "boolean",
+        "description": "Enable coverage reporting"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pip",
+    "pytest"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/pytest-requests-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/pytest-requests-skill.yaml",
+    "checksum": "739f3cddf4ef3867cd64f90f7dab45b5c4651bb5c11108f69a473c1255b71307"
+  }
+}

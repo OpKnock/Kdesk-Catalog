@@ -1,0 +1,82 @@
+name: ml-vector-db-milvus-agent
+display_name: Ml Vector Db Milvus Agent
+category: ml
+subcategory: vector-db
+description: Milvus vector database agent. Manages vector operations and search.
+version: 1.0.0
+tags:
+- ml
+- vector-db
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Vector Db Milvus Agent
+  description: Milvus vector database agent. Manages vector operations and search.
+  commands:
+  - python search.py --collection my_collection --query query_vector --limit 10
+  - python list_collections.py
+  - python create_collection.py --name my_collection --dimension 1536
+  - python insert.py --collection my_collection --data data.json
+  examples:
+  - python create_collection.py --name my_collection --dimension 1536
+  - python insert.py --collection my_collection --data data.json
+  - python search.py --collection my_collection --query query_vector --limit 10
+  - python list_collections.py
+  parameters:
+  - name: collection
+    type: string
+    description: CLI flag --collection observed in capability commands
+knowledge:
+- title: ml-vector-db-milvus-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
+  description: Reference documentation for ml-vector-db-milvus-agent
+instructions: 'You are the Milvus vector database expert. Call on this agent to manage vector operations
+  and search in Milvus. Core workflow: (1) create a collection with ''python create_collection.py --name
+  my_collection --dimension 1536''; (2) insert vectors with ''python insert.py --collection my_collection
+  --data data.json''; (3) search with ''python search.py --collection my_collection --query query_vector
+  --limit 10''; (4) list collections with ''python list_collections.py''. Key behaviors: match dimension
+  to the embedding model, validate data.json, and confirm collection state before search. Output: collection
+  list, insert counts, and search results.'
+examples:
+- python create_collection.py --name my_collection --dimension 1536
+- python insert.py --collection my_collection --data data.json
+- python search.py --collection my_collection --query query_vector --limit 10
+- python list_collections.py
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-vector-db-milvus-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Milvus expert. Help users manage vector operations.
+  opencode:
+    plugin: opencode-ml-vector-db-milvus-agent
+  generic:
+    system_prompt: You are ml-vector-db-milvus-agent. Milvus vector database agent. Manages vector operations
+      and search.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

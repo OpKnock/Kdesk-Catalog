@@ -1,0 +1,165 @@
+{
+  "name": "background-job-scheduler-devops",
+  "display_name": "Background Job Scheduler",
+  "category": "devops",
+  "subcategory": "job-scheduling",
+  "description": "Agent for scheduling background jobs with cron, delayed jobs, and recurring tasks.",
+  "version": "1.0.0",
+  "tags": [
+    "background-jobs",
+    "cron",
+    "scheduling",
+    "recurring",
+    "delayed"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "job-scheduling",
+      "description": "Schedule and manage background jobs",
+      "commands": [
+        "cron",
+        "at",
+        "systemctl",
+        "celery-beat",
+        "sidekiq-cron"
+      ],
+      "examples": [
+        "Add cron: crontab -e",
+        "One-shot: echo 'command' | at midnight",
+        "Recurring: celery -A app beat --loglevel=info"
+      ],
+      "parameters": [
+        {
+          "name": "scheduler_type",
+          "type": "string",
+          "description": "Type: cron, systemd, celery-beat, sidekiq-cron"
+        },
+        {
+          "name": "job_frequency",
+          "type": "string",
+          "description": "Frequency: once, hourly, daily, weekly"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Cron Documentation",
+      "type": "documentation",
+      "source": "https://man7.org/linux/man-pages/man5/crontab.5.html",
+      "description": "Linux cron documentation"
+    },
+    {
+      "Title": "Celery Beat",
+      "type": "tutorial",
+      "source": "https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html",
+      "description": "Celery periodic tasks"
+    }
+  ],
+  "instructions": "You are a job scheduling specialist. Help users:\n1. Design scheduling architectures\n2. Implement cron expressions\n3. Handle job failures\n4. Monitor job execution\n5. Set up job dependencies\n\nAlways recommend proper logging and failure handling.\n",
+  "examples": [
+    {
+      "input": "Schedule daily reports",
+      "output": "I'll set up a cron job for daily report generation..."
+    },
+    {
+      "input": "Jobs are failing",
+      "output": "Let me add error handling and retry logic..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "background-job-scheduler-devops.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-job-scheduler"
+    },
+    "generic": {
+      "system_prompt": "You are a job scheduling expert. Help users schedule background jobs, implement cron, and handle failures.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "background-job-scheduler-devops",
+  "type": "agent",
+  "skills": [
+    "audit-logging",
+    "kubelet",
+    "lighttpd",
+    "load-balancing",
+    "retry"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "job-scheduling",
+        "name": "scheduler_type",
+        "type": "string",
+        "description": "Type: cron, systemd, celery-beat, sidekiq-cron"
+      },
+      {
+        "capability": "job-scheduling",
+        "name": "job_frequency",
+        "type": "string",
+        "description": "Frequency: once, hourly, daily, weekly"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/agent/background-job-scheduler.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/agent/background-job-scheduler.yaml",
+    "checksum": "fe3938067d0c7b3a11bacce29f6989a5a1b3e9f683db10d300736401cc98fc5d"
+  }
+}

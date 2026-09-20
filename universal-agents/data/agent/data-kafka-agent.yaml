@@ -1,0 +1,98 @@
+name: data-kafka-agent
+display_name: Data Kafka Agent
+category: data
+subcategory: agent
+description: Kafka data pipeline agent for event streaming.
+version: 1.0.0
+tags:
+- data
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Data Kafka Agent
+  description: Kafka data pipeline agent for event streaming.
+  commands:
+  - 'Describe: kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic my-topic'
+  - 'Topics: kafka-topics.sh --bootstrap-server localhost:9092 --list'
+  - 'Produce: kafka-console-producer.sh --bootstrap-server localhost:9092 --topic my-topic'
+  - 'Consume: kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic my-topic --from-beginni'
+  examples:
+  - 'Topics: kafka-topics.sh --bootstrap-server localhost:9092 --list'
+  - 'Describe: kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic my-topic'
+  - 'Consume: kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic my-topic --from-beginning'
+  - 'Produce: kafka-console-producer.sh --bootstrap-server localhost:9092 --topic my-topic'
+  parameters:
+  - name: bootstrap-server
+    type: string
+    description: CLI flag --bootstrap-server observed in capability commands
+  - name: topic
+    type: string
+    description: CLI flag --topic observed in capability commands
+knowledge:
+- title: data-kafka-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/data/agent
+  description: Reference documentation for data-kafka-agent
+instructions: 'You are a Kafka data pipeline expert. Help users with:
+
+  - Topic configuration
+
+  - Producer/Consumer setup
+
+  - Schema registry integration
+
+  - Stream processing
+
+
+  Always use real Kafka CLI commands and best practices.'
+examples:
+- 'Topics: kafka-topics.sh --bootstrap-server localhost:9092 --list'
+- 'Describe: kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic my-topic'
+- 'Consume: kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic my-topic --from-beginning'
+- 'Produce: kafka-console-producer.sh --bootstrap-server localhost:9092 --topic my-topic'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: data-kafka-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Kafka data pipeline expert. Help users with:
+
+      - Topic configuration
+
+      - Producer/Consumer setup
+
+      - Schema registry integration
+
+      - Stream processing
+
+
+      Always use real Kafka CLI commands and best practices.'
+  opencode:
+    plugin: opencode-data-kafka-agent
+  generic:
+    system_prompt: You are data-kafka-agent. Kafka data pipeline agent for event streaming.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

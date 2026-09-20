@@ -1,0 +1,168 @@
+{
+  "name": "fallback",
+  "display_name": "Fallback",
+  "category": "api",
+  "subcategory": "general",
+  "description": "HTTP and DNS fallback strategies: server failover with nginx upstreams, DNS round-robin and failover records, and CDN origin fallback for static content.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "dig",
+    "nginx"
+  ],
+  "capabilities": [
+    {
+      "name": "infra-failover",
+      "description": "Configure nginx upstream failover, test DNS fallback, and verify origin fallback behavior.",
+      "commands": [
+        "nginx -t -c /etc/nginx/nginx.conf",
+        "nginx -s reload",
+        "curl -sI https://api.example.com | grep -iE 'HTTP|x-cache'",
+        "dig +short api.example.com A",
+        "dig +short api.example.com @8.8.8.8 | head -3",
+        "curl -s -o /dev/null -w '%{http_code} %{time_total}s\\n' https://api.example.com/health"
+      ],
+      "examples": [
+        "nginx -t -c /etc/nginx/nginx.conf && nginx -s reload",
+        "dig +short api.example.com A",
+        "curl -sI https://api.example.com | grep -iE 'HTTP|x-cache'"
+      ],
+      "parameters": [
+        {
+          "name": "primary-host",
+          "type": "string",
+          "description": "Primary backend hostname"
+        },
+        {
+          "name": "fallback-host",
+          "type": "string",
+          "description": "Backup backend for failover"
+        },
+        {
+          "name": "health-path",
+          "type": "string",
+          "description": "Path used by nginx health checks"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "nginx upstream module",
+      "type": "documentation",
+      "source": "https://nginx.org/en/docs/http/ngx_http_upstream_module.html",
+      "description": "Server groups, failover, backup servers, and passive health checks"
+    }
+  ],
+  "instructions": "# Fallback\n\n## What this skill does\n\nInfrastructure-level fallback routes traffic away from dead endpoints: nginx upstream failover (with backup servers), DNS-based fallback, and CDN origin failover so users still get content when a server dies.\n\n## When to use\n\n- A single backend host fails and the gateway 502s\n- Adding multi-AZ or multi-region failover\n- Checking which origin a CDN is serving\n\n## Real commands\n\n```bash\n# Validate and reload nginx\nnginx -t -c /etc/nginx/nginx.conf\nnginx -s reload\n\n# What does DNS actually return?\ndig +short api.example.com A\n\n# Where is the CDN serving from?\ncurl -sI https://api.example.com | grep -iE 'HTTP|x-cache'\n\n# Health timing\ncurl -s -o /dev/null -w '%{http_code} %{time_total}s\\n' https://api.example.com/health\n```\n\n## nginx upstream failover example\n\n```nginx\nupstream api {\n  server api-1.example.com:8080 max_fails=3 fail_timeout=30s;\n  server api-2.example.com:8080 max_fails=3 fail_timeout=30s;\n  server api-backup.example.com:8080 backup;\n}\n\nserver {\n  listen 443 ssl;\n  location / {\n    proxy_pass http://api;\n    proxy_next_upstream error timeout http_502 http_503;\n  }\n}\n```\n\n## DNS fallback\n\n```dns\napi.example.com. 300 IN A 10.0.1.10   ; primary\napi.example.com. 300 IN A 10.0.2.10   ; failover region\n```\n\n## Testing failover\n\n```bash\n# Stop primary, confirm the gateway still answers\nsystemctl stop api-1\nsleep 5\ncurl -s -o /dev/null -w '%{http_code}' https://api.example.com/health\n# expect 200 from api-2 or the backup\n```\n\n## Best practices\n\n- Use `backup` servers for cheap disaster-standby instead of parallel traffic.\n- Set `proxy_next_upstream` to the exact conditions that justify failover.\n- Keep DNS TTL low (60-300s) for fast failover, but not so low it thrashes.\n- Monitor 502/503 rates and upstream health checks, not just DNS.\n",
+  "examples": [
+    {
+      "input": "Gateway returns 502 when the primary dies",
+      "output": "Add a second upstream server and a backup server, set proxy_next_upstream error timeout http_502, reload, and test by stopping the primary."
+    },
+    {
+      "input": "Check which backend is serving right now",
+      "output": "Compare dig +short output with the nginx upstream list and check access logs on each host for recent requests."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "fallback.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-fallback"
+    },
+    "generic": {
+      "system_prompt": "You take the Fallback seat. You do it through infra-failover: Configure nginx upstream failover, test DNS fallback, and verify origin fallback behavior. The commands are real, e.g. `nginx -t -c /etc/nginx/nginx.conf`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "fallback",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "infra-failover",
+        "name": "primary-host",
+        "type": "string",
+        "description": "Primary backend hostname"
+      },
+      {
+        "capability": "infra-failover",
+        "name": "fallback-host",
+        "type": "string",
+        "description": "Backup backend for failover"
+      },
+      {
+        "capability": "infra-failover",
+        "name": "health-path",
+        "type": "string",
+        "description": "Path used by nginx health checks"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "dig",
+    "nginx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/fallback-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/fallback-skill.yaml",
+    "checksum": "f6dc4e13231991d8c0f916a231ae79e720d5d82379134405d8148fee2b277466"
+  }
+}

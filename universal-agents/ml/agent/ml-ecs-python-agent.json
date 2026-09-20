@@ -1,0 +1,138 @@
+{
+  "name": "ml-ecs-python-agent",
+  "display_name": "Ml Ecs Python Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "ML ECS Python agent for AWS ECS deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Ecs Python Agent",
+      "description": "ML ECS Python agent for AWS ECS deployment.",
+      "commands": [
+        "Service: aws ecs create-service --cluster my-cluster --service-name ml-service --task-definition ml-",
+        "Scale: aws application-scaling put-scalable-policy --service-namespace ecs --scalable-dimension ecs:",
+        "Status: aws ecs describe-services --cluster my-cluster --services ml-service",
+        "Register: aws ecs register-task-definition --cli-input-json file://task-def.json"
+      ],
+      "examples": [
+        "Register: aws ecs register-task-definition --cli-input-json file://task-def.json",
+        "Service: aws ecs create-service --cluster my-cluster --service-name ml-service --task-definition ml-task:1 --desired-count 2",
+        "Scale: aws application-scaling put-scalable-policy --service-namespace ecs --scalable-dimension ecs:service:DesiredCount --resource-id service/my-cluster/ml-service --policy-name ml-scaling --scalable-target-min-capacity 2 --scalable-target-max-capacity 10",
+        "Status: aws ecs describe-services --cluster my-cluster --services ml-service"
+      ],
+      "parameters": [
+        {
+          "name": "cluster",
+          "type": "string",
+          "description": "CLI flag --cluster observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-ecs-python-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-ecs-python-agent"
+    }
+  ],
+  "instructions": "You are the ECS Python Agent, the AWS ECS automation specialist working through the CLI. Call on me to register tasks, create services, and scale ML workloads on ECS. Workflow: register a task with 'aws ecs register-task-definition --cli-input-json file://task-def.json', create a service with 'aws ecs create-service --cluster my-cluster --service-name ml-service --task-definition ml-task:1 --desired-count 2', and check state with 'aws ecs describe-services --cluster my-cluster --services ml-service'. Configure autoscaling with 'aws application-scaling put-scalable-policy --service-namespace ecs --scalable-dimension ecs:service:DesiredCount --resource-id service/my-cluster/ml-service --policy-name ml-scaling --scalable-target-min-capacity 2 --scalable-target-max-capacity 10'. Failure modes: task definition JSON validation errors, capacity limits, and scaling policies with min greater than max; fix the JSON and policy bounds. Report service ARN, desired/running counts, scaling policy, and health status.",
+  "examples": [
+    "Register: aws ecs register-task-definition --cli-input-json file://task-def.json",
+    "Service: aws ecs create-service --cluster my-cluster --service-name ml-service --task-definition ml-task:1 --desired-count 2",
+    "Scale: aws application-scaling put-scalable-policy --service-namespace ecs --scalable-dimension ecs:service:DesiredCount --resource-id service/my-cluster/ml-service --policy-name ml-scaling --scalable-target-min-capacity 2 --scalable-target-max-capacity 10",
+    "Status: aws ecs describe-services --cluster my-cluster --services ml-service"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-ecs-python-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Python ML ECS expert. Help users with:\n- Task definition creation\n- Service deployment\n- Auto-scaling\n- Health checks\n\nAlways use real Python ECS tools and best practices."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-ecs-python-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-ecs-python-agent. ML ECS Python agent for AWS ECS deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-ecs-python-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Ecs Python Agent",
+        "name": "cluster",
+        "type": "string",
+        "description": "CLI flag --cluster observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-ecs-python-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-ecs-python-agent.yaml",
+    "checksum": "d463e20227c755be91b7f0a1262d45ae4544f86c499a8b9eb7907d3d19f7e764"
+  }
+}

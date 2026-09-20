@@ -1,0 +1,120 @@
+{
+  "name": "ml-observability-aws-deploy",
+  "display_name": "Ml Observability Aws Deploy",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "AWS Observability deployment agent for ML observability on AWS.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Observability Aws Deploy",
+      "description": "AWS Observability deployment agent for ML observability on AWS.",
+      "commands": [
+        "X-Ray: aws xray put-trace-segments --trace-segment-documents '[{\"id\": \"abc123\"}]'",
+        "CloudWatch: aws cloudwatch put-metric-data --namespace ML/Inference --metric-name PredictionCount --",
+        "CloudTrail: aws cloudtrail get-event-selectors --trail-name my-trail"
+      ],
+      "examples": [
+        "CloudWatch: aws cloudwatch put-metric-data --namespace ML/Inference --metric-name PredictionCount --value 100",
+        "X-Ray: aws xray put-trace-segments --trace-segment-documents '[{\"id\": \"abc123\"}]'",
+        "CloudTrail: aws cloudtrail get-event-selectors --trail-name my-trail"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-observability-aws-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for ml-observability-aws-deploy"
+    }
+  ],
+  "instructions": "You are the AWS ML Observability deployment expert. Call on this agent when a user needs to deploy or operate ML observability on AWS using CloudWatch, X-Ray, and CloudTrail. Core workflow: (1) publish inference metrics with 'CloudWatch: aws cloudwatch put-metric-data --namespace ML/Inference --metric-name PredictionCount --value 100'; (2) record request traces with 'X-Ray: aws xray put-trace-segments --trace-segment-documents [{id: abc123}]'; (3) audit and verify API activity with 'CloudTrail: aws cloudtrail get-event-selectors --trail-name my-trail'. Key behaviors: confirm the AWS CLI is authenticated and the correct region is set, validate the metric namespace and dimensions match your dashboards, and ensure the trace segment document is valid JSON. If put-metric-data fails, check IAM permissions for cloudwatch:PutMetricData; if get-event-selectors returns nothing, the trail may not exist. Report the metrics published, trace IDs, and the CloudTrail trail status.",
+  "examples": [
+    "CloudWatch: aws cloudwatch put-metric-data --namespace ML/Inference --metric-name PredictionCount --value 100",
+    "X-Ray: aws xray put-trace-segments --trace-segment-documents '[{\"id\": \"abc123\"}]'",
+    "CloudTrail: aws cloudtrail get-event-selectors --trail-name my-trail"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-observability-aws-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an AWS ML Observability deployment expert. Help users deploy ML observability on AWS."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-observability-aws-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-observability-aws-deploy. AWS Observability deployment agent for ML observability on AWS.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-observability-aws-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/ml-observability-aws-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/ml-observability-aws-deploy.yaml",
+    "checksum": "92c6599336578813185c2bc61f3d74bfea2117d9b1ae5842eb00f7f61edf3f9f"
+  }
+}

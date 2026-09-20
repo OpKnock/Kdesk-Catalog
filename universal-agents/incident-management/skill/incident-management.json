@@ -1,0 +1,235 @@
+{
+  "name": "incident-management",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "sre",
+  "description": "Runs incident response with PagerDuty CLI: declare, acknowledge, communicate, and resolve incidents with timeline notes.",
+  "keywords": [
+    "incident-management",
+    "response"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "incident-management.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-incident-management"
+    },
+    "generic": {
+      "system_prompt": "You work incident-management hands-on. You do it through pagerduty: Manage incidents end-to-end with the PagerDuty CLI. The commands are real, e.g. `pd incident:list --status=triggered`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "pagerduty",
+      "description": "Manage incidents end-to-end with the PagerDuty CLI.",
+      "commands": [
+        "pd incident:list --status=triggered",
+        "pd incident:acknowledge INCIDENT_ID",
+        "pd incident:resolve INCIDENT_ID",
+        "pd incident:create --service-name 'Checkout' --title 'Checkout 500s' --urgency high",
+        "pd note:create INCIDENT_ID --content 'Root cause: DB replica lag; mitigation in progress'"
+      ],
+      "examples": [
+        "pd incident:list --status=triggered --status=acknowledged --format=json | jq '.incidents[].id'",
+        "pd incident:acknowledge PXXXXX",
+        "pd incident:resolve PXXXXX --note 'Resolved by autoscaler recovery'"
+      ],
+      "parameters": [
+        {
+          "name": "status",
+          "type": "string",
+          "description": "triggered, acknowledged, or resolved"
+        },
+        {
+          "name": "service-name",
+          "type": "string",
+          "description": "Service to attach the incident to"
+        },
+        {
+          "name": "urgency",
+          "type": "string",
+          "description": "high or low severity"
+        }
+      ]
+    },
+    {
+      "name": "timeline",
+      "description": "Keep an auditable incident timeline with notes and comms.",
+      "commands": [
+        "pd note:list INCIDENT_ID",
+        "pd incident:update INCIDENT_ID --status=acknowledged",
+        "pd incident:list --team='Platform' --since=$(date -I) --until=$(date -I -d '+7 days')",
+        "pd schedule:oncall --time=$(date -I)",
+        "pd escalation_policy:list"
+      ],
+      "examples": [
+        "pd note:list PXXXXX --format=json | jq '.notes[].content'",
+        "pd incident:update PXXXXX --status=acknowledged",
+        "pd schedule:oncall --time=2026-08-10T14:00:00Z"
+      ],
+      "parameters": [
+        {
+          "name": "incident",
+          "type": "string",
+          "description": "Incident id like PXXXXX"
+        },
+        {
+          "name": "note",
+          "type": "string",
+          "description": "Timeline note content"
+        },
+        {
+          "name": "team",
+          "type": "string",
+          "description": "Team name filter for incident queries"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "pagerduty",
+    "opsgenie",
+    "slack",
+    "jira"
+  ],
+  "tools": [
+    "pagerduty",
+    "opsgenie",
+    "slack",
+    "jira",
+    "statuspage"
+  ],
+  "examples": [
+    {
+      "input": "Checkout is erroring at 30% - handle the incident.",
+      "output": "Creates a high-urgency incident on the Checkout service, acknowledges it, adds mitigation notes as the rollback proceeds, and resolves with evidence."
+    },
+    {
+      "input": "Who is on call this week for Platform?",
+      "output": "Queries pd schedule:oncall for the current time and pd escalation_policy:list to map the escalation chain."
+    }
+  ],
+  "instructions": "# Incident Management\n\nRespond to production incidents with a clear, auditable lifecycle.\n\n## When to Use\n\n- A service is down or degraded in production\n- Coordinating on-call response and escalation\n- Post-incident review with full timeline data\n\n## Lifecycle\n\nDeclare -> Acknowledge -> Mitigate -> Resolve -> Review.\n\n## Declare\n\n```bash\npd incident:create --service-name 'Checkout' --title 'Checkout 500s' --urgency high\n```\n\nInclude severity, affected scope, and the paging path in the title.\n\n## Acknowledge and communicate\n\n```bash\npd incident:acknowledge PXXXXX\npd note:create PXXXXX --content 'Mitigation: rolled back deploy to v2.14.3'\n```\n\nPost every material fact as a note - the timeline is the incident record.\n\n## Resolve\n\n```bash\npd incident:resolve PXXXXX --note 'Verified 10 min of 0% error rate; resolved by rollback'\n```\n\n## On-call context\n\n```bash\npd schedule:oncall --time=$(date -I)\npd escalation_policy:list\n```\n\n## Post-incident review\n\n- Timeline integrity: every mitigation step has a note.\n- Classify severity and trigger conditions accurately.\n- Create action items and track them as issues.\n- Run blameless review: fix process, not people.\n\n## Best practices\n\n- Never resolve without a note describing the fix evidence.\n- Keep incident titles prefixed by severity for search.\n- Automate the alert route: alert -> incident creation.\n- Rehearse with Game Days so the flow is muscle memory.\n\n## Testing\n\nUse the sandbox environment to practice the full declare-acknowledge-resolve loop.",
+  "display_name": "incident-management",
+  "knowledge": [
+    {
+      "title": "PagerDuty CLI",
+      "type": "documentation",
+      "source": "https://github.com/PagerDuty/pagerduty-cli",
+      "description": "pd incident, note, schedule, and escalation commands"
+    },
+    {
+      "title": "PagerDuty Incident Management",
+      "type": "documentation",
+      "source": "https://support.pagerduty.com/docs/incidents",
+      "description": "Incident lifecycle and response playbooks"
+    },
+    {
+      "title": "PagerDuty API",
+      "type": "documentation",
+      "source": "https://developer.pagerduty.com/api-reference",
+      "description": "REST API for incidents, notes, and schedules"
+    }
+  ],
+  "id": "incident-management",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pagerduty",
+        "name": "status",
+        "type": "string",
+        "description": "triggered, acknowledged, or resolved"
+      },
+      {
+        "capability": "pagerduty",
+        "name": "service-name",
+        "type": "string",
+        "description": "Service to attach the incident to"
+      },
+      {
+        "capability": "pagerduty",
+        "name": "urgency",
+        "type": "string",
+        "description": "high or low severity"
+      },
+      {
+        "capability": "timeline",
+        "name": "incident",
+        "type": "string",
+        "description": "Incident id like PXXXXX"
+      },
+      {
+        "capability": "timeline",
+        "name": "note",
+        "type": "string",
+        "description": "Timeline note content"
+      },
+      {
+        "capability": "timeline",
+        "name": "team",
+        "type": "string",
+        "description": "Team name filter for incident queries"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pagerduty",
+    "opsgenie",
+    "slack",
+    "jira"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "incident-management/skill/incident-management.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/incident-management/skill/incident-management.yaml",
+    "checksum": "82719651759a0aa5bfca5d28086b80c322496c5405de89445b0c1ff1b5e2cffd"
+  }
+}

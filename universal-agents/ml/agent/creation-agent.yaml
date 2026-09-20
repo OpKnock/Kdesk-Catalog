@@ -1,0 +1,86 @@
+name: creation-agent
+display_name: Creation Agent
+category: ml
+subcategory: agent
+description: Creation inference server agent. Manages Creation ML inference server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Creation Inference Server Agent
+  description: Creation inference server agent. Manages Creation ML inference server.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "model", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent creation-agent
+  examples:
+  - python serve_creation.py --port 8080
+  - 'curl http://localhost:8080/create --data ''{"architecture": "transformer"}'''
+  - python create.py --architecture 'transformer' --output model.py
+  - python generate.py --config config.json --output model.pkl
+  parameters: []
+knowledge:
+- title: creation-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for creation-agent
+instructions: 'You are the Creation Inference Server Agent, owner of the Creation ML inference server
+  exposing the v1 API. Call on me to run and health-check the Creation serving stack. Workflow: start
+  the serving app with ''python serve_creation.py --port 8080'', then verify the API: health via ''curl
+  -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health'', model registry via ''curl -s http://localhost:8080/v1/models
+  | jq -r .data[].id'', prediction via ''curl -X POST http://localhost:8080/v1/predict'' with JSON inputs,
+  and chat via ''curl -X POST http://localhost:8080/v1/chat/completions'' with model "model". Also generate
+  models with ''python create.py --architecture transformer --output model.py'' and artifacts with ''python
+  generate.py --config config.json --output model.pkl'' as needed. Non-200 health means the server did
+  not start or the model failed to load; read the server logs. Report health code, registered model ids,
+  and prediction output.'
+examples:
+- python serve_creation.py --port 8080
+- 'curl http://localhost:8080/create --data ''{"architecture": "transformer"}'''
+- python create.py --architecture 'transformer' --output model.py
+- python generate.py --config config.json --output model.pkl
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: creation-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Creation inference server expert. Help users set up Creation ML inference
+      server.
+  opencode:
+    plugin: opencode-creation-agent
+  generic:
+    system_prompt: You are creation-agent. Creation inference server agent. Manages Creation ML inference
+      server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,172 @@
+name: nats
+display_name: Nats
+category: api
+subcategory: general
+description: 'Core NATS messaging: pub/sub, wildcards, request-reply, queue groups, and the nats CLI workflow.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- nats
+capabilities:
+- name: nats-core-messaging
+  description: Publish, subscribe, request-reply and queue-group with the nats CLI against a running server.
+  commands:
+  - nats pub orders.created '{"id":1}'
+  - nats sub 'orders.>' --all
+  - nats req service.echo 'ping'
+  - nats subscribe 'tasks' --queue workers
+  - nats server info
+  examples:
+  - nats pub sensors.temp 21.5
+  - nats sub 'orders.*' --raw
+  - nats req service.echo 'hello' --timeout 3s
+  parameters:
+  - name: subject
+    type: string
+    description: Subject with optional wildcards
+  - name: payload
+    type: string
+    description: Message payload string
+  - name: queue
+    type: string
+    description: Queue group name for load balancing
+knowledge:
+- title: NATS Documentation
+  type: documentation
+  source: https://docs.nats.io/
+  description: 'Core concepts: subjects, wildcards, request-reply, queue groups'
+- title: NATS CLI Docs
+  type: documentation
+  source: https://docs.nats.io/using-nats/command-line/
+  description: nats pub/sub/req/stream command reference
+instructions: '# NATS
+
+
+  NATS is a lightweight, high-performance messaging system built around subjects and pub/sub.
+
+
+  ## What this skill does
+
+
+  - Publishes and subscribes with subject wildcards
+
+  - Implements request-reply and queue groups
+
+  - Verifies server state and message flow
+
+
+  ## When to use
+
+
+  - Service-to-service messaging without heavy brokers
+
+  - Fan-out events to many subscribers
+
+  - Simple RPC with request-reply
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Publish
+
+  nats pub orders.created ''{"id":1}''
+
+  nats pub sensors.temp 21.5
+
+
+  # Subscribe with wildcards
+
+  nats sub ''orders.>'' --all
+
+  nats sub ''orders.*'' --raw
+
+
+  # Request-reply
+
+  nats req service.echo ''ping'' --timeout 3s
+
+
+  # Queue group
+
+  nats subscribe ''tasks'' --queue workers
+
+
+  # Server info
+
+  nats server info
+
+  ```
+
+
+  ## Subject rules
+
+
+  - `*` matches one token; `>` matches one or more at the end
+
+  - Publish permissions and queue groups are per-subject
+
+
+  ## Patterns
+
+
+  - Fan-out: one publisher, many subscribers
+
+  - Load-balance: publisher + queue group of N workers
+
+  - RPC: request on subject, responders reply on inbox
+
+
+  ## Best practices
+
+
+  - Design subject hierarchies before coding
+
+  - Use queue groups for competing consumers
+
+  - Set timeouts on all request-reply calls'
+examples:
+- input: Send a message and verify it arrives
+  output: The agent runs `nats sub 'orders.>'` in one terminal and `nats pub orders.created '{}'` in another
+    to demonstrate delivery.
+- input: Implement an RPC call with NATS
+  output: The agent shows `nats req` for the client and a responder using the nats CLI or a language client.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: nats.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-nats
+  generic:
+    system_prompt: 'You work Nats hands-on. You do it through nats-core-messaging: Publish, subscribe,
+      request-reply and queue-group with the nats CLI against a running server. The commands are real,
+      e.g. `nats pub orders.created {id:1}`. You verify each step you report and stay honest about what
+      you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

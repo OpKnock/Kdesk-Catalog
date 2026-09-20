@@ -1,0 +1,173 @@
+{
+  "name": "etcd-config",
+  "display_name": "Etcd Config",
+  "category": "api",
+  "subcategory": "general",
+  "description": "etcd cluster configuration and operations: read and write keys, inspect member health, and manage leases and snapshots.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "etcdctl"
+  ],
+  "capabilities": [
+    {
+      "name": "etcd-ops",
+      "description": "Manage keys, leases, members, and snapshots of an etcd cluster with etcdctl.",
+      "commands": [
+        "etcdctl put /config/database/url postgres://db:5432/app --endpoints=https://etcd-1:2379",
+        "etcdctl get /config --prefix --keys-only",
+        "etcdctl endpoint health --endpoints=https://etcd-1:2379,https://etcd-2:2379",
+        "etcdctl endpoint status --write-out=table --endpoints=https://etcd-1:2379",
+        "etcdctl member list --write-out=table",
+        "etcdctl snapshot save backup.db",
+        "etcdctl lease grant 300"
+      ],
+      "examples": [
+        "etcdctl get /config --prefix --keys-only",
+        "etcdctl endpoint health --endpoints=https://etcd-1:2379,https://etcd-2:2379",
+        "etcdctl snapshot save backup.db && etcdctl snapshot status backup.db"
+      ],
+      "parameters": [
+        {
+          "name": "endpoints",
+          "type": "array",
+          "description": "Comma-separated etcd endpoints"
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Key path to read or write"
+        },
+        {
+          "name": "prefix",
+          "type": "string",
+          "description": "Prefix for range operations"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "etcdctl documentation",
+      "type": "documentation",
+      "source": "https://etcd.io/docs/v3.5/dev-guide/interacting_v3/",
+      "description": "etcdctl v3 commands: put, get, watch, lease, member, snapshot"
+    },
+    {
+      "title": "etcd Operations Guide",
+      "type": "documentation",
+      "source": "https://etcd.io/docs/v3.5/op-guide/maintenance/",
+      "description": "Snapshots, defragmentation, alarms, and cluster maintenance"
+    }
+  ],
+  "instructions": "# etcd Config\n\n## What this skill does\n\netcd is a distributed key-value store used for service discovery and shared config. This skill covers reading/writing keys, checking member health, managing leases, and taking snapshots.\n\n## When to use\n\n- Debugging why a service reads stale config\n- Checking cluster quorum after member changes\n- Taking a backup before an upgrade\n\n## Real commands\n\n```bash\n# Write and read config keys\netcdctl put /config/database/url postgres://db:5432/app --endpoints=https://etcd-1:2379\netcdctl get /config --prefix --keys-only\n\n# Health and status\netcdctl endpoint health --endpoints=https://etcd-1:2379,https://etcd-2:2379\netcdctl endpoint status --write-out=table --endpoints=https://etcd-1:2379\n\n# Members and leadership\netcdctl member list --write-out=table\n\n# Backup and lease\netcdctl snapshot save backup.db\netcdctl snapshot status backup.db\netcdctl lease grant 300\n```\n\n## Cluster size guidance\n\n- Odd member counts: 3 or 5.\n- 3 members tolerate 1 failure; 5 tolerate 2.\n- Never run 2 members; split-brain risk.\n\n## Maintenance commands\n\n```bash\n# Check alarms (e.g. NOSPACE)\netcdctl alarm list\n# Defragment a member\netcdctl defrag --endpoints=https://etcd-1:2379\n```\n\n## Best practices\n\n- Always use TLS for production endpoints; verify with --cacert.\n- Snapshot before any etcd upgrade and test restore on staging.\n- Keep keys small; etcd is not a blob store.\n- Use leases for ephemeral registration keys (service discovery).\n- Add `--command-timeout` in scripts so hangs don't block deploys.\n",
+  "examples": [
+    {
+      "input": "A service reads an old config value",
+      "output": "etcdctl get /config --prefix to see current values, then etcdctl put to correct, and verify with a watch: etcdctl watch /config --prefix."
+    },
+    {
+      "input": "Take a backup before upgrade",
+      "output": "etcdctl snapshot save backup.db --endpoints=<quorum members> then etcdctl snapshot status backup.db to verify the hash and revision."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "etcd-config.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-etcd-config"
+    },
+    "generic": {
+      "system_prompt": "You are the Etcd Config specialist. You do it through etcd-ops: Manage keys, leases, members, and snapshots of an etcd cluster with etcdctl. The commands are real, e.g. `etcdctl put /config/database/url postgres://db:5432/app --endpoints=https://etcd-1:2379`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "etcd-config",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "etcd-ops",
+        "name": "endpoints",
+        "type": "array",
+        "description": "Comma-separated etcd endpoints"
+      },
+      {
+        "capability": "etcd-ops",
+        "name": "key",
+        "type": "string",
+        "description": "Key path to read or write"
+      },
+      {
+        "capability": "etcd-ops",
+        "name": "prefix",
+        "type": "string",
+        "description": "Prefix for range operations"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "etcdctl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/etcd-config-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/etcd-config-skill.yaml",
+    "checksum": "d7f462e0ee416b51a7073e4281a8608e9e07f44a0c58bec820f848981f9d7ed6"
+  }
+}

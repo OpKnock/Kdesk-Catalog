@@ -1,0 +1,102 @@
+name: sops-kms-pgp
+display_name: Sops Kms Pgp
+category: api
+subcategory: general
+description: 'Hand-crafted SOPS (KMS/PGP) skill: encrypt with AWS KMS and PGP recipients, edit/decrypt
+  in place, verify master keys, and scale to many files with creation rules.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- sops
+capabilities:
+- name: sops-kms-pgp
+  description: Encrypt files with SOPS using AWS KMS and PGP keys
+  commands:
+  - sops --kms arn:aws:kms:us-east-1:123456789012:key/abc --encrypt config/prod.yaml > config/prod.enc.yaml
+  - sops --pgp 8D7B6F2D4A1C9E3F --encrypt config/prod.yaml
+  - sops --decrypt config/prod.enc.yaml
+  - sops --edit config/prod.enc.yaml
+  - sops --set '["database"]["host"] "db.internal"' config/prod.enc.yaml
+  - sops -e config/staging.yaml > config/staging.enc.yaml
+  examples:
+  - sops --kms arn:aws:kms:us-east-1:123456789012:key/abc --encrypt config/prod.yaml
+  - sops --decrypt config/prod.enc.yaml | jq '.database'
+  - sops --edit config/prod.enc.yaml
+  parameters:
+  - name: kms_arn
+    type: string
+    description: AWS KMS key ARN
+  - name: pgp_fingerprint
+    type: string
+    description: PGP recipient fingerprint
+  - name: file
+    type: string
+    description: Config file to encrypt or decrypt
+knowledge:
+- title: SOPS documentation
+  type: documentation
+  source: https://getsops.io/docs/
+  description: KMS, PGP, age encryption and creation rules
+- title: SOPS README
+  type: documentation
+  source: https://github.com/getsops/sops
+  description: Examples of .sops.yaml and CLI usage
+instructions: "# SOPS (KMS / PGP)\n\nHand-crafted skill for SOPS encryption with AWS KMS and PGP recipients.\n\
+  \n## What this skill does\n\n- Encrypts files with AWS KMS-managed data keys\n- Encrypts with PGP fingerprints\
+  \ for team access\n- Edits and decrypts in place, and scales via .sops.yaml creation rules\n\n## When\
+  \ to use\n\n- Teams already on AWS KMS wanting key rotation for free\n- Mixing recipients: some KMS,\
+  \ some PGP\n- Many config files with one policy, driven by creation rules\n\n## Real commands\n\n```bash\n\
+  # Encrypt with an AWS KMS key\nsops --kms arn:aws:kms:us-east-1:123456789012:key/abc --encrypt config/prod.yaml\
+  \ > config/prod.enc.yaml\n\n# Encrypt with a PGP fingerprint\nsops --pgp 8D7B6F2D4A1C9E3F --encrypt\
+  \ config/prod.yaml\n\n# Decrypt\nsops --decrypt config/prod.enc.yaml\n\n# Edit in place (decrypt, open\
+  \ editor, re-encrypt)\nsops --edit config/prod.enc.yaml\n\n# Patch a single value\nsops --set '[\"database\"\
+  ][\"host\"] \"db.internal\"' config/prod.enc.yaml\n\n# Short flags with a rule set\nsops -e config/staging.yaml\
+  \ > config/staging.enc.yaml\n```\n\n## .sops.yaml\n\n```yaml\ncreation_rules:\n  - path_regex: config/prod.*\\\
+  .yaml\n    kms: arn:aws:kms:us-east-1:123456789012:key/abc\n  - path_regex: config/dev.*\\.yaml\n  \
+  \  pgp: 8D7B6F2D4A1C9E3F\n```\n\n## Testing\n\n```bash\nsops --decrypt config/prod.enc.yaml | jq '.database.host'\n\
+  sops --decrypt config/prod.enc.yaml > /dev/null && echo 'decrypt ok'\n```\n\n## Best practices\n\n-\
+  \ Use KMS for cloud teams, PGP for hybrid teams; rotate recipients quarterly\n- Grant KMS usage (kms:Decrypt)\
+  \ only to deployers\n- Keep .sops.yaml committed so `sops -e` needs no flags\n"
+examples:
+- input: Encrypt prod config with the team KMS key
+  output: sops --kms arn:aws:kms:us-east-1:123456789012:key/abc --encrypt config/prod.yaml > config/prod.enc.yaml;
+    add a creation rule so future runs need no flags.
+- input: Someone left; remove their PGP access
+  output: Drop their fingerprint from .sops.yaml and each file's sops.pgp list, then sops --decrypt &&
+    sops --encrypt (or --rotate-keys with --pgp flags).
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: sops-kms-pgp.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-sops-kms-pgp
+  generic:
+    system_prompt: 'This is your domain: Sops Kms Pgp. You do it through sops-kms-pgp: Encrypt files with
+      SOPS using AWS KMS and PGP keys. The commands are real, e.g. `sops --kms arn:aws:kms:us-east-1:123456789012:key/abc
+      --encrypt config/prod.yaml >...`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

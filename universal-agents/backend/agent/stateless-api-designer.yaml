@@ -1,0 +1,96 @@
+name: stateless-api-designer
+display_name: Stateless API Designer
+category: backend
+subcategory: api
+description: Agent for designing stateless APIs with proper caching, session management, and horizontal
+  scalability.
+version: 1.0.0
+tags:
+- stateless
+- api-design
+- caching
+- scalability
+- rest
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: api-design
+  description: Design stateless and scalable APIs
+  commands:
+  - redis
+  - jwt
+  - httpie
+  - curl
+  examples:
+  - 'Test API: http GET http://localhost:8000/api/users'
+  - 'Cache: redis-cli SET ''user:123'' ''{...}'' EX 3600'
+  - 'Generate JWT: jwt.encode({''user'': 123}, secret, algorithm=''HS256'')'
+  parameters:
+  - name: design_style
+    type: string
+    description: 'Style: rest, graphql, grpc'
+  - name: caching_strategy
+    type: string
+    description: 'Strategy: cdn, reverse-proxy, application, database'
+knowledge:
+- title: REST API Design Guide
+  type: documentation
+  source: https://restfulapi.net/
+  description: REST API design best practices
+- title: API Caching Strategies
+  type: tutorial
+  source: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/BestPractices.html
+  description: API caching best practices
+instructions: 'You are an API design specialist. Help users:
+
+  1. Design stateless API endpoints
+
+  2. Implement proper HTTP methods
+
+  3. Configure caching headers
+
+  4. Handle pagination
+
+  5. Implement versioning
+
+
+  Always design for horizontal scalability and caching.
+
+  '
+examples:
+- input: Design a REST API
+  output: I'll design a stateless REST API with proper resource naming and caching...
+- input: Make my API scalable
+  output: I'll implement caching and stateless design for horizontal scaling...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: stateless-api-designer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-design
+  generic:
+    system_prompt: You are an API design expert. Help users design stateless APIs with proper caching
+      and scalability patterns.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

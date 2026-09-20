@@ -1,0 +1,214 @@
+{
+  "name": "api-graphql-specialist",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Deep GraphQL expertise: query planning, cost analysis, persisted queries, caching, and advanced security hardening.",
+  "keywords": [
+    "graphql",
+    "schema",
+    "resolvers",
+    "dataloader"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-graphql-specialist.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-graphql-specialist"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: api-graphql-specialist. You do it through query-security: Protect GraphQL APIs with complexity limits, depth limits, and persisted queries. The commands are real, e.g. `npm install graphql-cost-analysis`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "query-security",
+      "description": "Protect GraphQL APIs with complexity limits, depth limits, and persisted queries",
+      "commands": [
+        "npm install graphql-cost-analysis",
+        "node -e \"const {costAnalysisPlugin}=require('@graphql-community/graphql-query-cost');console.log(typeof costAnalysisPlugin)\"",
+        "npm install @escape.tech/graphql-armor",
+        "node -e \"const a=require('@escape.tech/graphql-armor');console.log(Object.keys(a))\"",
+        "npm install graphql-query-complexity"
+      ],
+      "examples": [
+        "npm install graphql-query-complexity && node -e \"const c=require('graphql-query-complexity');console.log(typeof c)\"",
+        "npm install @escape.tech/graphql-armor",
+        "node -e \"const a=require('@escape.tech/graphql-armor');const s=a.enableGraphQLArmor();console.log(Object.keys(s))\""
+      ],
+      "parameters": [
+        {
+          "name": "maxCost",
+          "type": "string",
+          "description": "Maximum query cost"
+        },
+        {
+          "name": "maxDepth",
+          "type": "string",
+          "description": "Maximum query depth"
+        }
+      ]
+    },
+    {
+      "name": "performance-debugging",
+      "description": "Profile and fix N+1 queries, slow resolvers, and cache misses",
+      "commands": [
+        "npx @apollo/server-plugin-response-cache --help || true",
+        "node --trace-gc server.js 2>&1 | grep -i 'gc ' | head",
+        "curl -s -X POST http://localhost:4001/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ products { id name } }\"}' -w '\\n%{time_total}s'",
+        "graphql-inspector audit docs/query.graphql schema.graphql",
+        "npx apollo --version"
+      ],
+      "examples": [
+        "curl -s -X POST http://localhost:4001/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ products { id name } }\"}' -w '\\n%{time_total}s'",
+        "graphql-inspector audit docs/query.graphql schema.graphql",
+        "node --trace-gc server.js 2>&1 | grep -i 'GC' | head -20"
+      ],
+      "parameters": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "GraphQL query to benchmark"
+        },
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "GraphQL endpoint URL"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "apollo-server",
+    "graphql-codegen",
+    "dataloader"
+  ],
+  "tools": [
+    "apollo-server",
+    "graphql-codegen",
+    "dataloader",
+    "node.js",
+    "python",
+    "strawberry"
+  ],
+  "examples": [
+    {
+      "input": "Optimize GraphQL N+1 queries",
+      "output": "Applies DataLoader batching across field resolvers and verifies query timing drops with curl benchmarks"
+    },
+    {
+      "input": "Stop abusive GraphQL queries",
+      "output": "Enables GraphQL Armor with depth and cost limits and moves hot clients to persisted queries"
+    }
+  ],
+  "instructions": "# API GraphQL Specialist\n\nDeep expertise in running GraphQL at scale: security, performance, and client efficiency.\n\n## When to Use\n- Expensive or abusive queries\n- N+1 and slow-resolver issues\n- Hardening GraphQL in production\n\n## Real Commands\n\n```bash\n# Cost analysis\nnpm install graphql-query-complexity\n\n# Hardening bundle\nnpm install @escape.tech/graphql-armor\n\n# Benchmark a query\ncurl -s -X POST http://localhost:4001/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ products { id name } }\"}' -w '\\n%{time_total}s'\n\n# Schema audits\ngraphql-inspector audit docs/query.graphql schema.graphql\n```\n\n## Security Config\n- `maxDepth: 10` — reject deep nesting\n- `maxCost: 1000` — reject expensive queries\n- Persisted queries to shrink attack surface\n\n## Performance Playbook\n1. Reproduce with curl timing\n2. Add DataLoader for batch reads\n3. Cache resolvers by field and TTL\n4. Re-benchmark and compare\n\n## Best Practices\n- Reject unknown queries in production\n- Log slow queries above a threshold\n- Run schema audit in CI",
+  "display_name": "api-graphql-specialist",
+  "knowledge": [
+    {
+      "title": "GraphQL Armor",
+      "type": "documentation",
+      "source": "https://escape.tech/blog/graphql-armor/",
+      "description": "Security plugins for GraphQL servers"
+    },
+    {
+      "title": "Apollo Server Docs",
+      "type": "documentation",
+      "source": "https://www.apollographql.com/docs/apollo-server/",
+      "description": "Plugins, caching, performance"
+    },
+    {
+      "title": "GraphQL Inspector",
+      "type": "documentation",
+      "source": "https://the-guild.dev/graphql/inspector/docs",
+      "description": "Schema validation and audit tooling"
+    }
+  ],
+  "id": "api-graphql-specialist",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "query-security",
+        "name": "maxCost",
+        "type": "string",
+        "description": "Maximum query cost"
+      },
+      {
+        "capability": "query-security",
+        "name": "maxDepth",
+        "type": "string",
+        "description": "Maximum query depth"
+      },
+      {
+        "capability": "performance-debugging",
+        "name": "query",
+        "type": "string",
+        "description": "GraphQL query to benchmark"
+      },
+      {
+        "capability": "performance-debugging",
+        "name": "endpoint",
+        "type": "string",
+        "description": "GraphQL endpoint URL"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "apollo-server",
+    "graphql-codegen",
+    "dataloader"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-graphql-specialist/skill/api-graphql-specialist.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-graphql-specialist/skill/api-graphql-specialist.yaml",
+    "checksum": "ba6ec6f2faf99c84404e578c799da52ca75bd4231d25cf5dee5d327d68a86a6a"
+  }
+}

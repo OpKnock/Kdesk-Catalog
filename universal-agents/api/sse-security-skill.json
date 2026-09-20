@@ -1,0 +1,166 @@
+{
+  "name": "sse-security",
+  "display_name": "Sse Security",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted SSE security skill: authenticate event-stream connections, validate origins, resume after reconnects with Last-Event-ID, and bound stream duration.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "sse-hardening",
+      "description": "Secure Server-Sent Events streams: auth, origin, resume, timeouts",
+      "commands": [
+        "curl -N -H \"Authorization: Bearer $TOKEN\" -H 'Accept: text/event-stream' https://events.example.com/stream",
+        "curl -sI https://events.example.com/stream | grep -iE 'content-type|access-control-allow-origin'",
+        "curl -N --max-time 30 https://events.example.com/stream | head -20",
+        "curl -N -H 'Last-Event-ID: 42' -H 'Accept: text/event-stream' https://events.example.com/stream",
+        "curl -s -o /dev/null -w '%{http_code}\\n' https://events.example.com/stream"
+      ],
+      "examples": [
+        "curl -N -H \"Authorization: Bearer $TOKEN\" -H 'Accept: text/event-stream' https://events.example.com/stream",
+        "curl -N -H 'Last-Event-ID: 42' https://events.example.com/stream",
+        "curl -sI https://events.example.com/stream | grep -i content-type"
+      ],
+      "parameters": [
+        {
+          "name": "token",
+          "type": "string",
+          "description": "Bearer token required on the stream connection"
+        },
+        {
+          "name": "last_event_id",
+          "type": "string",
+          "description": "Resume cursor for reconnects"
+        },
+        {
+          "name": "max_time",
+          "type": "integer",
+          "description": "Bound for curl reads on the stream"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "MDN Using SSE",
+      "type": "documentation",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events",
+      "description": "Event stream protocol and Last-Event-ID"
+    },
+    {
+      "title": "OWASP HTML5 Security Cheat Sheet (SSE)",
+      "type": "documentation",
+      "source": "https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html",
+      "description": "SSE injection and CORS guidance"
+    }
+  ],
+  "instructions": "# SSE Security\n\nHand-crafted skill for securing Server-Sent Events endpoints.\n\n## What this skill does\n\n- Requires auth on the event stream connection itself\n- Checks CORS and Content-Type on stream responses\n- Uses Last-Event-ID to resume securely after reconnects\n\n## When to use\n\n- Exposing event streams to browser or mobile clients\n- Auditing who can open long-lived connections\n- Adding reconnection safety to push notifications\n\n## Real commands\n\n```bash\n# Unauthenticated probe: must be rejected\ncurl -s -o /dev/null -w '%{http_code}\\n' https://events.example.com/stream\n\n# Authenticated stream\ncurl -N -H \"Authorization: Bearer $TOKEN\" -H 'Accept: text/event-stream' https://events.example.com/stream\n\n# Response headers: content-type + CORS\ncurl -sI https://events.example.com/stream | grep -iE 'content-type|access-control-allow-origin'\n\n# Resume from an event ID after a reconnect\ncurl -N -H 'Last-Event-ID: 42' -H 'Accept: text/event-stream' https://events.example.com/stream\n\n# Bound reads for probes\ncurl -N --max-time 30 https://events.example.com/stream | head -20\n```\n\n## Server rules\n\n- Validate the token before opening the stream (401 otherwise)\n- Set Content-Type: text/event-stream and Cache-Control: no-cache\n- Emit id: lines so clients can resume with Last-Event-ID\n- Never echo untrusted input into event data without escaping newlines\n\n## Testing\n\n```bash\ncurl -s -o /dev/null -w '%{http_code}\\n' https://events.example.com/stream            # expect 401\ncurl -N -H \"Authorization: Bearer $TOKEN\" https://events.example.com/stream | head -5   # expect events\n```\n\n## Best practices\n\n- Token in a header, never in the URL (logs leak URLs)\n- Set a server-side keepalive/comment every 15-30s\n- Cap per-client connections and enforce re-auth on reconnect\n",
+  "examples": [
+    {
+      "input": "Clients can open my stream without login",
+      "output": "Enforce auth before writing the response: return 401 unless a valid Bearer token is present, and verify with the curl probe."
+    },
+    {
+      "input": "Make reconnects lossless",
+      "output": "Emit id: lines per event and honor the Last-Event-ID header to replay missed events from that point."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "sse-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-sse-security"
+    },
+    "generic": {
+      "system_prompt": "You are the Sse Security specialist. You do it through sse-hardening: Secure Server-Sent Events streams: auth, origin, resume, timeouts. The commands are real, e.g. `curl -N -H Authorization: Bearer $TOKEN -H Accept: text/event-stream...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "sse-security",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "sse-hardening",
+        "name": "token",
+        "type": "string",
+        "description": "Bearer token required on the stream connection"
+      },
+      {
+        "capability": "sse-hardening",
+        "name": "last_event_id",
+        "type": "string",
+        "description": "Resume cursor for reconnects"
+      },
+      {
+        "capability": "sse-hardening",
+        "name": "max_time",
+        "type": "integer",
+        "description": "Bound for curl reads on the stream"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/sse-security-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/sse-security-skill.yaml",
+    "checksum": "2cb449815d1b14887927012be96b02d5e64b56ff9b7ba2278fb6ba0e860f8038"
+  }
+}

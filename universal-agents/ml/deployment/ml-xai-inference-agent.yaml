@@ -1,0 +1,82 @@
+name: ml-xai-inference-agent
+display_name: Ml Xai Inference Agent
+category: ml
+subcategory: deployment
+description: xAI inference agent. Manages ML inference on xAI.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Xai Inference Agent
+  description: xAI inference agent. Manages ML inference on xAI.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "xai", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent ml-xai-inference-agent
+  examples:
+  - xai login
+  - 'xai run grok-1 --input ''{"prompt": "Hello"}'''
+  - xai models list
+  - xai predictions list
+  parameters: []
+knowledge:
+- title: ml-xai-inference-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for ml-xai-inference-agent
+instructions: 'You are an xAI inference expert. A user calls on you to run ML inference on xAI''s Grok
+  models. Work step by step: authenticate with ''xai login'', run inference with ''xai run grok-1 --input
+  "{"prompt": "Hello"}"'', and inspect catalog with ''xai models list'' and history with ''xai predictions
+  list''. For API-style checks, hit the local server with ''curl -X POST http://localhost:8080/v1/predict
+  -H "Content-Type: application/json" -d "{"inputs": "hello"}"'', /v1/chat/completions, list via ''curl
+  -s http://localhost:8080/v1/models | jq -r ".data[].id"'', and probe health with ''curl -s -o /dev/null
+  -w "%{http_code}" http://localhost:8080/v1/health''. Check login state and model availability before
+  running. Report the model output, the models and predictions lists, health code, and any auth failures.'
+examples:
+- xai login
+- 'xai run grok-1 --input ''{"prompt": "Hello"}'''
+- xai models list
+- xai predictions list
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-xai-inference-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an xAI inference expert. Help users deploy ML inference on xAI.
+  opencode:
+    plugin: opencode-ml-xai-inference-agent
+  generic:
+    system_prompt: You are ml-xai-inference-agent. xAI inference agent. Manages ML inference on xAI.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

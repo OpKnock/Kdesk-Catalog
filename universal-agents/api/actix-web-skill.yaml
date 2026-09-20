@@ -1,0 +1,121 @@
+name: actix-web
+display_name: Actix Web
+category: api
+subcategory: general
+description: 'Builds high-performance HTTP APIs in Rust with Actix Web: scaffolding, routing, JSON extractors,
+  middleware, and release builds.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- cargo
+capabilities:
+- name: project-scaffold
+  description: Create and configure a new Actix Web project with Cargo.
+  commands:
+  - cargo new my-api
+  - cargo add actix-web
+  - cargo add serde --features derive
+  - cargo build
+  - cargo run
+  examples:
+  - cargo new my-api && cargo add actix-web@4
+  - cargo add actix-web --features openssl
+  - cargo add actix-cors
+  parameters:
+  - name: features
+    type: string
+    description: Cargo features for actix-web (openssl, client)
+  - name: crate
+    type: string
+    description: Additional crate, e.g. actix-cors or serde_json
+- name: serve-and-test
+  description: Build, run, lint, and test the Actix server.
+  commands:
+  - cargo build --release
+  - cargo clippy -- -D warnings
+  - cargo test
+  - cargo run --release
+  - curl -s http://localhost:8080/health
+  examples:
+  - cargo clippy --all-targets -- -D warnings
+  - cargo test -- --nocapture
+  - cargo build --release && ./target/release/my-api
+  parameters:
+  - name: port
+    type: number
+    description: Bind port (default 8080)
+  - name: workers
+    type: number
+    description: Actix worker threads via ACTIX_WORKERS env
+knowledge:
+- title: Actix Web Docs
+  type: documentation
+  source: https://actix.rs/docs
+  description: Getting started, routers, extractors, middleware
+- title: Actix Web API Reference
+  type: documentation
+  source: https://docs.rs/actix-web
+  description: Crate API docs
+- title: Actix Examples
+  type: documentation
+  source: https://github.com/actix/examples
+  description: WebSockets, auth, CORS, streaming examples
+instructions: "# Actix Web\n\n## What this skill does\n\nDevelops HTTP services in Rust with Actix Web:\
+  \ scaffolding projects, defining routes and state, extracting typed JSON payloads, adding middleware,\
+  \ and producing release binaries.\n\n## When to use\n\n- Building a new Rust REST API\n- Adding JSON\
+  \ endpoints, middleware, or WebSockets to an Actix app\n- Tuning a server build for production\n\n##\
+  \ Real commands\n\n```bash\ncargo new my-api\ncargo add actix-web serde --features serde/derive\n\n\
+  cargo run\ncurl http://localhost:8080/health\n\n# Production build\ncargo build --release\nACTIX_WORKERS=4\
+  \ ./target/release/my-api\n\n# Lint and test\ncargo clippy -- -D warnings\ncargo test\n```\n\n## Minimal\
+  \ server\n\n```rust\nuse actix_web::{get, App, HttpServer, Responder};\n\n#[get(\"/health\")]\nasync\
+  \ fn health() -> impl Responder { \"ok\" }\n\n#[actix_web::main]\nasync fn main() -> std::io::Result<()>\
+  \ {\n    HttpServer::new(|| App::new().service(health))\n        .bind((\"127.0.0.1\", 8080))?\n   \
+  \     .run()\n        .await\n}\n```\n\n## JSON endpoint\n\n```rust\n#[derive(Deserialize)]\nstruct\
+  \ User { name: String }\n\n#[post(\"/users\")]\nasync fn create(user: web::Json<User>) -> HttpResponse\
+  \ {\n    HttpResponse::Created().json(user.0)\n}\n```\n\n## Testing\n\n- Unit-test handlers with actix_web::test::init_service\
+  \ + TestRequest\n- Run `cargo test` for handlers and `cargo clippy` in CI\n\n## Best practices\n\n-\
+  \ Put app state behind web::Data<T> instead of statics\n- Use --release builds in production; debug\
+  \ builds are much slower\n- Set ACTIX_WORKERS to the number of cores"
+examples:
+- input: Scaffold an Actix Web API with a health endpoint
+  output: Runs `cargo new my-api`, `cargo add actix-web`, writes main.rs with an /health handler on 127.0.0.1:8080,
+    verifies with `cargo run` + curl.
+- input: Make the production build faster
+  output: Explains cargo build --release, profile overrides (lto, codegen-units=1), and ACTIX_WORKERS
+    sizing.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: actix-web.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-actix-web
+  generic:
+    system_prompt: 'You are the Actix Web specialist. You do it through project-scaffold: Create and configure
+      a new Actix Web project with Cargo. The commands are real, e.g. `cargo new my-api`. You run and
+      verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

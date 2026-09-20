@@ -1,0 +1,146 @@
+{
+  "name": "ml-innovation-aws-deploy",
+  "display_name": "Ml Innovation Aws Deploy",
+  "category": "ml",
+  "subcategory": "innovation",
+  "description": "AWS Innovation deployment agent for ML innovation on AWS.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "innovation"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Innovation Aws Deploy",
+      "description": "AWS Innovation deployment agent for ML innovation on AWS.",
+      "commands": [
+        "Studio: aws sagemaker create-user-profile --user-profile-name my-user --domain-id d-abc123",
+        "Canvas: aws sagemaker create-app --domain-id d-abc123 --user-profile-name my-user --app-type Canvas",
+        "SageMaker Experiments: aws sagemaker create-experiment --experiment-name my-experiment"
+      ],
+      "examples": [
+        "SageMaker Experiments: aws sagemaker create-experiment --experiment-name my-experiment",
+        "Canvas: aws sagemaker create-app --domain-id d-abc123 --user-profile-name my-user --app-type Canvas",
+        "Studio: aws sagemaker create-user-profile --user-profile-name my-user --domain-id d-abc123"
+      ],
+      "parameters": [
+        {
+          "name": "domain-id",
+          "type": "string",
+          "description": "CLI flag --domain-id observed in capability commands"
+        },
+        {
+          "name": "user-profile-name",
+          "type": "string",
+          "description": "CLI flag --user-profile-name observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-innovation-aws-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/innovation",
+      "description": "Reference documentation for ml-innovation-aws-deploy"
+    }
+  ],
+  "instructions": "You are the AWS ML Innovation deployment expert. Call on this agent when a user needs to set up ML innovation tooling on AWS, including SageMaker Studio, Canvas, and Experiments. Core workflow: (1) provision a Studio profile with 'Studio: aws sagemaker create-user-profile --user-profile-name my-user --domain-id d-abc123'; (2) create a Canvas app with 'Canvas: aws sagemaker create-app --domain-id d-abc123 --user-profile-name my-user --app-type Canvas'; (3) track experiments with 'SageMaker Experiments: aws sagemaker create-experiment --experiment-name my-experiment'. Key behaviors: confirm the domain id is valid before creating profiles and apps, verify the user profile exists before creating the app, and use unique experiment names. If create-user-profile fails, check the domain and IAM role; if create-app fails, verify the profile. Report the profile name, app type, and experiment name created.",
+  "examples": [
+    "SageMaker Experiments: aws sagemaker create-experiment --experiment-name my-experiment",
+    "Canvas: aws sagemaker create-app --domain-id d-abc123 --user-profile-name my-user --app-type Canvas",
+    "Studio: aws sagemaker create-user-profile --user-profile-name my-user --domain-id d-abc123"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-innovation-aws-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an AWS ML Innovation deployment expert. Help users deploy ML innovation on AWS."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-innovation-aws-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-innovation-aws-deploy. AWS Innovation deployment agent for ML innovation on AWS.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-innovation-aws-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Innovation Aws Deploy",
+        "name": "domain-id",
+        "type": "string",
+        "description": "CLI flag --domain-id observed in capability commands"
+      },
+      {
+        "capability": "Ml Innovation Aws Deploy",
+        "name": "user-profile-name",
+        "type": "string",
+        "description": "CLI flag --user-profile-name observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/innovation/ml-innovation-aws-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/innovation/ml-innovation-aws-deploy.yaml",
+    "checksum": "44b64b3043310963dec0a3bc0f581113b90afb10f5ad44ea2e27d04664c065a9"
+  }
+}

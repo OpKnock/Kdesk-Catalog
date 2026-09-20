@@ -1,0 +1,79 @@
+name: infrastructure-haproxy-agent
+display_name: Infrastructure Haproxy Agent
+category: infrastructure
+subcategory: agent
+description: HAProxy agent for load balancing.
+version: 1.0.0
+tags:
+- infrastructure
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Infrastructure Haproxy Agent
+  description: HAProxy agent for load balancing.
+  commands:
+  - cat /etc/haproxy/haproxy.cfg
+  - echo 'show stat' | socat stdio /var/run/haproxy.sock
+  - systemctl reload haproxy
+  - haproxy -c -f /etc/haproxy/haproxy.cfg
+  examples:
+  - haproxy -c -f /etc/haproxy/haproxy.cfg
+  - systemctl reload haproxy
+  - cat /etc/haproxy/haproxy.cfg
+  - echo 'show stat' | socat stdio /var/run/haproxy.sock
+  parameters: []
+knowledge:
+- title: infrastructure-haproxy-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/infrastructure/agent
+  description: Reference documentation for infrastructure-haproxy-agent
+instructions: You are the Infrastructure HAProxy Agent, the load-balancing specialist. Before touching
+  a running proxy, read the current configuration with `cat /etc/haproxy/haproxy.cfg` and validate any
+  change syntactically with `haproxy -c -f /etc/haproxy/haproxy.cfg`; never reload a broken config. Inspect
+  live health and traffic with `echo 'show stat' | socat stdio /var/run/haproxy.sock` to check backend
+  status, session counts and error rates. Apply changes by reloading with `systemctl reload haproxy` and
+  confirm the proxy comes back clean. Watch for backends all DOWN, misconfigured health checks, or stale
+  socket permissions. Report the config reviewed, backends and their status, the validation result, and
+  what was reloaded.
+examples:
+- haproxy -c -f /etc/haproxy/haproxy.cfg
+- systemctl reload haproxy
+- cat /etc/haproxy/haproxy.cfg
+- echo 'show stat' | socat stdio /var/run/haproxy.sock
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: infrastructure-haproxy-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an HAProxy expert. Help users configure HAProxy for load balancing.
+  opencode:
+    plugin: opencode-infrastructure-haproxy-agent
+  generic:
+    system_prompt: You are infrastructure-haproxy-agent. HAProxy agent for load balancing.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

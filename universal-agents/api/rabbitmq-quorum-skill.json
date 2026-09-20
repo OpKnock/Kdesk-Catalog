@@ -1,0 +1,173 @@
+{
+  "name": "rabbitmq-quorum",
+  "display_name": "Rabbitmq Quorum",
+  "category": "api",
+  "subcategory": "general",
+  "description": "RabbitMQ quorum queues: declaration, policies, durability, and replication behavior across nodes.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "rabbitmqadmin",
+    "rabbitmqctl"
+  ],
+  "capabilities": [
+    {
+      "name": "quorum-queue-operations",
+      "description": "Declare quorum queues, apply HA policies and inspect queue type and replication state.",
+      "commands": [
+        "rabbitmqadmin declare queue name=q durable=true arguments='{\"x-queue-type\":\"quorum\"}'",
+        "rabbitmqctl list_queues name type messages",
+        "rabbitmqctl list_queues name policy node state",
+        "rabbitmqctl set_policy quorum-ha \"^q\\.\" '{\"ha-mode\":\"all\"}' --apply-to queues",
+        "rabbitmqadmin list queues name type --format=table"
+      ],
+      "examples": [
+        "rabbitmqadmin declare queue name=orders durable=true arguments='{\"x-queue-type\":\"quorum\",\"x-delivery-limit\":5}'",
+        "rabbitmqctl list_queues name type messages ready",
+        "rabbitmqctl set_policy q-2 \"^q\\.\" '{\"ha-mode\":\"exactly\",\"ha-params\":2}' --apply-to queues"
+      ],
+      "parameters": [
+        {
+          "name": "queue",
+          "type": "string",
+          "description": "Queue name"
+        },
+        {
+          "name": "delivery_limit",
+          "type": "integer",
+          "description": "Max redeliveries for quorum queues"
+        },
+        {
+          "name": "policy",
+          "type": "string",
+          "description": "HA policy JSON"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Quorum Queues Docs",
+      "type": "documentation",
+      "source": "https://www.rabbitmq.com/quorum-queues.html",
+      "description": "Quorum queue semantics, durability and use cases"
+    },
+    {
+      "title": "Ha Policies",
+      "type": "documentation",
+      "source": "https://www.rabbitmq.com/ha.html",
+      "description": "Policy-based queue replication"
+    }
+  ],
+  "instructions": "# RabbitMQ Quorum Queues\n\nQuorum queues replicate to multiple nodes with Raft consensus, replacing classic mirrored queues.\n\n## What this skill does\n\n- Declares quorum queues with arguments\n- Sets HA policies\n- Inspects replication and leader state\n\n## When to use\n\n- Durable, exactly-safe messaging\n- Migrating from mirrored classic queues\n\n## Real commands\n\n```bash\n# Declare a quorum queue\nrabbitmqadmin declare queue name=orders durable=true \\\n  arguments='{\"x-queue-type\":\"quorum\",\"x-delivery-limit\":5}'\n\n# Inspect\nrabbitmqctl list_queues name type messages\nrabbitmqctl list_queues name node state\n\n# Policy for quorum replication\nrabbitmqctl set_policy quorum-ha \"^q\\.\" '{\"ha-mode\":\"all\"}' --apply-to queues\n```\n\n## Key facts\n\n- Durable by design; survive broker restarts\n- Leader election per queue via Raft\n- Poison messages bounded by x-delivery-limit\n\n## Best practices\n\n- Prefer quorum queues over classic mirrored\n- Set x-delivery-limit to avoid poison loops\n- Use at least 3 nodes for quorum durability",
+  "examples": [
+    {
+      "input": "Make my orders queue survive node failures",
+      "output": "The agent declares a quorum queue and applies a HA policy across nodes."
+    },
+    {
+      "input": "A message keeps redelivering forever",
+      "output": "The agent adds x-delivery-limit to move poison messages to dead-lettering."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rabbitmq-quorum.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rabbitmq-quorum"
+    },
+    "generic": {
+      "system_prompt": "You are the Rabbitmq Quorum specialist. You do it through quorum-queue-operations: Declare quorum queues, apply HA policies and inspect queue type and replication state. The commands are real, e.g. `rabbitmqadmin declare queue name=q durable=true arguments={x-queue-type:quorum}`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rabbitmq-quorum",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "quorum-queue-operations",
+        "name": "queue",
+        "type": "string",
+        "description": "Queue name"
+      },
+      {
+        "capability": "quorum-queue-operations",
+        "name": "delivery_limit",
+        "type": "integer",
+        "description": "Max redeliveries for quorum queues"
+      },
+      {
+        "capability": "quorum-queue-operations",
+        "name": "policy",
+        "type": "string",
+        "description": "HA policy JSON"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "rabbitmqadmin",
+    "rabbitmqctl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/rabbitmq-quorum-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/rabbitmq-quorum-skill.yaml",
+    "checksum": "01e60a93f292a636425484bc588217b62b55ab8722047ab29fc51233888f8bc0"
+  }
+}

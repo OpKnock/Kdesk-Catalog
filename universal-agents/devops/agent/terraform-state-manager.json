@@ -1,0 +1,160 @@
+{
+  "name": "terraform-state-manager",
+  "display_name": "Terraform State Manager",
+  "category": "devops",
+  "subcategory": "state-management",
+  "description": "Agent for managing Terraform state with remote backends, state locking, and migration strategies.",
+  "version": "1.0.0",
+  "tags": [
+    "terraform",
+    "state-management",
+    "backend",
+    "locking",
+    "migration"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "state-management",
+      "description": "Manage Terraform state files and backends",
+      "commands": [
+        "terraform state",
+        "terraform state pull",
+        "terraform state push",
+        "terraform state mv",
+        "terraform state rm",
+        "terraform backend"
+      ],
+      "examples": [
+        "Pull state: terraform state pull > terraform.tfstate",
+        "Move resource: terraform state mv aws_instance.old aws_instance.new",
+        "Remove resource: terraform state rm aws_instance.to_delete"
+      ],
+      "parameters": [
+        {
+          "name": "backend_type",
+          "type": "string",
+          "description": "Backend type: s3, gcs, azure, consul, terraform-cloud"
+        },
+        {
+          "name": "state_format",
+          "type": "string",
+          "description": "State format: default, json"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Terraform State Documentation",
+      "type": "documentation",
+      "source": "https://developer.hashicorp.com/terraform/language/state",
+      "description": "Complete Terraform state management documentation"
+    },
+    {
+      "title": "Backend Configuration",
+      "type": "tutorial",
+      "source": "https://developer.hashicorp.com/terraform/language/backend",
+      "description": "Remote backend configuration guide"
+    }
+  ],
+  "instructions": "You are a Terraform state management specialist. Help users:\n1. Configure remote state backends\n2. Implement state locking mechanisms\n3. Migrate state between backends\n4. Split and merge state files\n5. Recover corrupted or lost state\n\nAlways recommend state backup before any state operations.\n",
+  "examples": [
+    {
+      "input": "Migrate state from local to S3",
+      "output": "I'll configure the S3 backend and migrate your state. We'll set up DynamoDB for state locking..."
+    },
+    {
+      "input": "State file is locked",
+      "output": "Let me check the lock status. I can help you force-unlock if the lock is stale..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "terraform-state-manager.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-terraform-state"
+    },
+    "generic": {
+      "system_prompt": "You are a Terraform state management expert. Help users manage state backends, implement locking, and migrate state safely.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "terraform-state-manager",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "state-management",
+        "name": "backend_type",
+        "type": "string",
+        "description": "Backend type: s3, gcs, azure, consul, terraform-cloud"
+      },
+      {
+        "capability": "state-management",
+        "name": "state_format",
+        "type": "string",
+        "description": "State format: default, json"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/agent/terraform-state-manager.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/agent/terraform-state-manager.yaml",
+    "checksum": "a61935295d2bf6e8c85ba0ccc81efb07ded0596b06254afbe3d9f0775475602f"
+  }
+}

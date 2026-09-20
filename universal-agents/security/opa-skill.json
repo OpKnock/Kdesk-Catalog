@@ -1,0 +1,246 @@
+{
+  "name": "opa",
+  "display_name": "opa",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Evaluates and tests Rego policies with OPA: eval, test, format, build, and serve for policy-as-code workflows.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "opa"
+  ],
+  "capabilities": [
+    {
+      "name": "policy-evaluation",
+      "description": "Evaluate Rego queries against data and inputs.",
+      "commands": [
+        "opa eval 'data.policies.allow'",
+        "opa eval -i input.json -d policies.rego 'data.example.allow'",
+        "opa eval --format pretty 'data.servers[i].id' -d example.rego",
+        "opa eval -b bundle.tar.gz 'data.main.allow'"
+      ],
+      "examples": [
+        "opa eval -i input.json -d policy.rego 'data.example.allow'",
+        "opa eval --format raw 'data.example.msg' -d policy.rego",
+        "opa eval 'x := 5; y := x * 2'"
+      ],
+      "parameters": [
+        {
+          "name": "input",
+          "type": "string",
+          "description": "Path to input JSON file"
+        },
+        {
+          "name": "data",
+          "type": "string",
+          "description": "Path to Rego file or data JSON (can repeat)"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Output format: pretty, raw, json"
+        }
+      ]
+    },
+    {
+      "name": "testing-and-linting",
+      "description": "Run Rego unit tests, format code, and build bundles.",
+      "commands": [
+        "opa test policy_test.rego policy.rego",
+        "opa test -v ./policies",
+        "opa fmt -w policy.rego",
+        "opa fmt --diff policy.rego",
+        "opa check policy.rego",
+        "opa build -b policies/ -o bundle.tar.gz"
+      ],
+      "examples": [
+        "opa test -v ./policies",
+        "opa fmt -w policies/",
+        "opa build -b policies/ -o bundle.tar.gz"
+      ],
+      "parameters": [
+        {
+          "name": "files",
+          "type": "array",
+          "description": "Rego and data files to test"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Bundle output path"
+        }
+      ]
+    },
+    {
+      "name": "server-mode",
+      "description": "Serve policies over HTTP for live decisions.",
+      "commands": [
+        "opa run --server",
+        "opa run -s -w -b bundle.tar.gz",
+        "curl -s -X POST -H 'Content-Type: application/json' -d '{\"input\": {\"user\": \"alice\"}}' http://localhost:8181/v1/data/example/allow",
+        "opa run --server --addr 127.0.0.1:9191"
+      ],
+      "examples": [
+        "opa run -s -w -b bundle.tar.gz",
+        "curl -s -X POST http://localhost:8181/v1/data/example/allow -d '{\"input\":{}}'",
+        "opa run --server --addr 127.0.0.1:9191"
+      ],
+      "parameters": [
+        {
+          "name": "watch",
+          "type": "boolean",
+          "description": "Reload policies on file changes (-w)"
+        },
+        {
+          "name": "addr",
+          "type": "string",
+          "description": "Bind address for the server"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OPA Documentation",
+      "type": "documentation",
+      "source": "https://www.openpolicyagent.org/docs/latest/",
+      "description": "Rego language, CLI, and policy authoring"
+    },
+    {
+      "title": "Rego Playground",
+      "type": "documentation",
+      "source": "https://play.openpolicyagent.org/",
+      "description": "Interactive Rego evaluation and examples"
+    }
+  ],
+  "instructions": "# OPA\n\nPolicy-as-code with the Open Policy Agent and Rego.\n\n## What This Skill Does\n\n- Evaluates Rego queries against JSON data and inputs\n- Writes and runs unit tests for policies\n- Formats and validates Rego with canonical style\n- Builds deployable bundles and serves decisions over HTTP\n\n## When to Use\n\n- Authorization decisions for APIs or infrastructure\n- Validating configs before deployment\n- Building policy bundles for Gatekeeper, Envoy, or custom agents\n\n## Real Commands\n\n```bash\n# Evaluate\nopa eval -i input.json -d policy.rego 'data.example.allow'\nopa eval --format raw -d policy.rego 'data.example.msg'\n\n# Test\nopa test -v ./policies\nopa test policy_test.rego policy.rego\n\n# Format and validate\nopa fmt -w policies/\nopa fmt --diff policy.rego\nopa check policy.rego\n\n# Build and serve\nopa build -b policies/ -o bundle.tar.gz\nopa run -s -w -b bundle.tar.gz\ncurl -s -X POST -H 'Content-Type: application/json' \\\n  -d '{\"input\": {\"user\": \"alice\", \"action\": \"read\"}}' \\\n  http://localhost:8181/v1/data/example/allow\n```\n\n## Sample Policy\n\n```rego\npackage example\n\nimport rego.v1\n\ndefault allow := false\n\nallow if {\n  input.action == \"read\"\n  input.user in data.authorized_users\n}\n```\n\n## Best Practices\n\n- Format with opa fmt before merging\n- Cover every rule with test_* cases and run opa test in CI\n- Keep bundles small; watch mode for local dev only\n- Version bundles and pin hashes at deploy time\n- Use data-driven configs rather than many hardcoded rules",
+  "examples": [
+    {
+      "input": "Write an authorization policy that only lets admins delete",
+      "output": "Agent writes a Rego policy with default deny and role checks, tests it with opa test, and demonstrates an eval against sample input."
+    },
+    {
+      "input": "Why does my policy fail to evaluate in production?",
+      "output": "Agent runs opa eval with the production input and bundle, compares against opa test, and isolates missing data or import errors."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "opa.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-opa"
+    },
+    "generic": {
+      "system_prompt": "You own opa end to end. You do it through policy-evaluation: Evaluate Rego queries against data and inputs. The commands are real, e.g. `opa eval data.policies.allow`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "opa",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "policy-evaluation",
+        "name": "input",
+        "type": "string",
+        "description": "Path to input JSON file"
+      },
+      {
+        "capability": "policy-evaluation",
+        "name": "data",
+        "type": "string",
+        "description": "Path to Rego file or data JSON (can repeat)"
+      },
+      {
+        "capability": "policy-evaluation",
+        "name": "format",
+        "type": "string",
+        "description": "Output format: pretty, raw, json"
+      },
+      {
+        "capability": "testing-and-linting",
+        "name": "files",
+        "type": "array",
+        "description": "Rego and data files to test"
+      },
+      {
+        "capability": "testing-and-linting",
+        "name": "output",
+        "type": "string",
+        "description": "Bundle output path"
+      },
+      {
+        "capability": "server-mode",
+        "name": "watch",
+        "type": "boolean",
+        "description": "Reload policies on file changes (-w)"
+      },
+      {
+        "capability": "server-mode",
+        "name": "addr",
+        "type": "string",
+        "description": "Bind address for the server"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "opa"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/opa-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/opa-skill.yaml",
+    "checksum": "bdb5f348c840e27af8b964670bd2cc726ca8bbd7bbc9cea3ff41d454d334c0ac"
+  }
+}

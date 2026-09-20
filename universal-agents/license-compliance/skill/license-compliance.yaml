@@ -1,0 +1,224 @@
+name: license-compliance
+version: 2.0.0
+type: skill
+category: legal
+description: Audits dependency licenses across ecosystems with licensee, license-checker, and go-licenses,
+  enforcing allowlists in CI.
+keywords:
+- license-compliance
+- policy
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: license-compliance.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-license-compliance
+  generic:
+    system_prompt: 'You own license-compliance end to end. You do it through audit: Detect licenses for
+      codebases and packages. The commands are real, e.g. `licensee detect .`. You run and verify the
+      real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: audit
+  description: Detect licenses for codebases and packages.
+  commands:
+  - licensee detect .
+  - licensee detect --json
+  - npx license-checker --summary
+  - npx license-checker --production --json > licenses.json
+  - go-licenses csv ./...
+  examples:
+  - licensee detect --json | jq '.licenses[] | .key'
+  - npx license-checker --summary --exclude 'MIT'
+  - go-licenses check ./... --allowed_licenses=MIT,Apache-2.0
+  parameters:
+  - name: exclude
+    type: string
+    description: Licenses to exclude from report
+  - name: production
+    type: string
+    description: Only production dependencies
+  - name: allowed_licenses
+    type: string
+    description: Comma-separated allowlist (go-licenses)
+- name: enforce
+  description: Gate builds on license policy.
+  commands:
+  - license-checker --failOn 'GPL;LGPL' --summary
+  - licensee detect --unlicensed --no-remote
+  - go-licenses check ./... --disallowed_types=forbidden
+  - npx license-checker --onlyAllow 'MIT;Apache-2.0;BSD-3-Clause'
+  - npm audit --omit=dev
+  examples:
+  - license-checker --failOn GPL --summary
+  - npx license-checker --onlyAllow 'MIT;Apache-2.0;ISC;BSD-2-Clause;BSD-3-Clause'
+  - go-licenses csv ./... | grep -i 'gpl'
+  parameters:
+  - name: failOn
+    type: string
+    description: Licenses that fail the check
+  - name: onlyAllow
+    type: string
+    description: Allowed license list
+  - name: unlicensed
+    type: string
+    description: Report unlicensed code
+prerequisites:
+- fossa
+- license-finder
+- scancode
+- sbom
+tools:
+- fossa
+- license-finder
+- scancode
+- sbom
+- black-duck
+examples:
+- input: Audit all npm licenses before a customer vendor review.
+  output: Generates licenses.json with license-checker, runs licensee for repo-level detection, and produces
+    a summary report.
+- input: Block GPL dependencies from being added.
+  output: Adds license-checker --failOn 'GPL;LGPL' to the CI job for lockfile changes.
+instructions: '# License Compliance
+
+
+  Know every dependency''s license and enforce policy in CI.
+
+
+  ## When to Use
+
+
+  - Open-sourcing a component or product
+
+  - Vendor reviews and legal audits
+
+  - Adding a new dependency to a gated repo
+
+
+  ## Detect licenses
+
+
+  ```bash
+
+  licensee detect .
+
+  licensee detect --json | jq ''.licenses[] | .key''
+
+  ```
+
+
+  ## npm inventory
+
+
+  ```bash
+
+  npx license-checker --summary
+
+  npx license-checker --production --json > licenses.json
+
+  ```
+
+
+  ## Go inventory
+
+
+  ```bash
+
+  go-licenses csv ./...
+
+  go-licenses check ./... --allowed_licenses=MIT,Apache-2.0
+
+  ```
+
+
+  ## Enforce policy
+
+
+  ```bash
+
+  npx license-checker --onlyAllow ''MIT;Apache-2.0;ISC;BSD-2-Clause;BSD-3-Clause''
+
+  license-checker --failOn ''GPL;LGPL'' --summary
+
+  ```
+
+
+  Run the policy in CI on every PR that changes lockfiles.
+
+
+  ## When a violation appears
+
+
+  1. Identify the package and version.
+
+  2. Check the license text, not just SPDX id.
+
+  3. Evaluate: replace, relicense (with author), or legal review.
+
+  4. Record the decision in the audit report.
+
+
+  ## Best practices
+
+
+  - Keep a licenses.json artifact per release.
+
+  - Include attribution files with vendored code.
+
+  - Prefer permissive stacks (MIT/Apache) for libraries.
+
+  - Review license changes when upgrading major versions.
+
+
+  ## Testing
+
+
+  ```bash
+
+  licensee detect . --unlicensed
+
+  npx license-checker --failOn GPL --summary
+
+  ```
+
+
+  Both should pass on main; fail on known-bad branches.'
+display_name: license-compliance
+knowledge:
+- title: licensee
+  type: documentation
+  source: https://github.com/licensee/licensee
+  description: Detect licenses from SPDX metadata and files
+- title: license-checker
+  type: documentation
+  source: https://github.com/davglass/license-checker
+  description: npm dependency license inventory
+- title: SPDX License List
+  type: documentation
+  source: https://spdx.org/licenses/
+  description: Standard license identifiers

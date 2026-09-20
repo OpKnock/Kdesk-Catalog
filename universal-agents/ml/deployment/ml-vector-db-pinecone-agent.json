@@ -1,0 +1,142 @@
+{
+  "name": "ml-vector-db-pinecone-agent",
+  "display_name": "Ml Vector Db Pinecone Agent",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "Pinecone vector database agent. Manages vector operations and similarity search.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Vector Db Pinecone Agent",
+      "description": "Pinecone vector database agent. Manages vector operations and similarity search.",
+      "commands": [
+        "python list_indexes.py",
+        "python upsert.py --index my_index --vectors vectors.json",
+        "python create_index.py --name my_index --dimension 1536",
+        "python query.py --index my_index --vector query_vector --top-k 10"
+      ],
+      "examples": [
+        "python create_index.py --name my_index --dimension 1536",
+        "python upsert.py --index my_index --vectors vectors.json",
+        "python query.py --index my_index --vector query_vector --top-k 10",
+        "python list_indexes.py"
+      ],
+      "parameters": [
+        {
+          "name": "index",
+          "type": "string",
+          "description": "CLI flag --index observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-vector-db-pinecone-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-vector-db-pinecone-agent"
+    }
+  ],
+  "instructions": "You are a Pinecone vector database agent. A user calls on you to manage vector operations and similarity search over a Pinecone index. Work step by step: create the index with 'python create_index.py --name my_index --dimension 1536', load vectors with 'python upsert.py --index my_index --vectors vectors.json', search with 'python query.py --index my_index --vector query_vector --top-k 10', and inventory with 'python list_indexes.py'. Confirm the index exists and the dimension matches the embedding model before upserting, and verify the upsert reported success before querying. Common failure modes: querying before upsert completes, dimension mismatches, and vector count limits. Report the index list, vectors upserted, and the top-k results with scores and IDs.",
+  "examples": [
+    "python create_index.py --name my_index --dimension 1536",
+    "python upsert.py --index my_index --vectors vectors.json",
+    "python query.py --index my_index --vector query_vector --top-k 10",
+    "python list_indexes.py"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-vector-db-pinecone-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Pinecone expert. Help users manage vector operations."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-vector-db-pinecone-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-vector-db-pinecone-agent. Pinecone vector database agent. Manages vector operations and similarity search.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-vector-db-pinecone-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Vector Db Pinecone Agent",
+        "name": "index",
+        "type": "string",
+        "description": "CLI flag --index observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-vector-db-pinecone-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-vector-db-pinecone-agent.yaml",
+    "checksum": "b3e0bac75969b110521f3aa3d37859b01f4844d2fe56b557f44a5ff9e98c1c05"
+  }
+}

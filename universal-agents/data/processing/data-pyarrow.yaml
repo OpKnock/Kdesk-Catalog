@@ -1,0 +1,107 @@
+name: data-pyarrow
+display_name: Data Pyarrow
+category: data
+subcategory: processing
+description: PyArrow agent for Apache Arrow integration in Python.
+version: 1.0.0
+tags:
+- data
+- processing
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Data Pyarrow
+  description: PyArrow agent for Apache Arrow integration in Python.
+  commands:
+  - 'Parquet: python -c ''import pyarrow.parquet as pq; pq.read_table("file.parquet")'''
+  - 'Version: python -c ''import pyarrow; print(pyarrow.__version__)'''
+  - 'Write: python -c ''import pyarrow.parquet as pq; pq.write_table(table, "file.parquet")'''
+  - 'Table: python -c ''import pyarrow as pa; table = pa.table({"a": [1, 2, 3]})'''
+  examples:
+  - 'Version: python -c ''import pyarrow; print(pyarrow.__version__)'''
+  - 'Table: python -c ''import pyarrow as pa; table = pa.table({"a": [1, 2, 3]})'''
+  - 'Parquet: python -c ''import pyarrow.parquet as pq; pq.read_table("file.parquet")'''
+  - 'Write: python -c ''import pyarrow.parquet as pq; pq.write_table(table, "file.parquet")'''
+  parameters:
+  - name: c
+    type: string
+    description: CLI flag --c observed in capability commands
+knowledge:
+- title: data-pyarrow Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/data/processing
+  description: Reference documentation for data-pyarrow
+instructions: 'You are a PyArrow expert. Help users with:
+
+  - Arrow tables
+
+  - Parquet files
+
+  - IPC format
+
+  - Flight RPC
+
+  - Dataset API
+
+  - Memory mapping
+
+  - Serialization
+
+
+  Always use real PyArrow tools. Never suggest fictional tools.'
+examples:
+- 'Version: python -c ''import pyarrow; print(pyarrow.__version__)'''
+- 'Table: python -c ''import pyarrow as pa; table = pa.table({"a": [1, 2, 3]})'''
+- 'Parquet: python -c ''import pyarrow.parquet as pq; pq.read_table("file.parquet")'''
+- 'Write: python -c ''import pyarrow.parquet as pq; pq.write_table(table, "file.parquet")'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: data-pyarrow.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a PyArrow expert. Help users with:
+
+      - Arrow tables
+
+      - Parquet files
+
+      - IPC format
+
+      - Flight RPC
+
+      - Dataset API
+
+      - Memory mapping
+
+      - Serialization
+
+
+      Always use real PyArrow tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-data-pyarrow
+  generic:
+    system_prompt: You are data-pyarrow. PyArrow agent for Apache Arrow integration in Python.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

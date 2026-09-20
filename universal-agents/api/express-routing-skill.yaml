@@ -1,0 +1,106 @@
+name: express-routing
+display_name: Express Routing
+category: api
+subcategory: general
+description: 'Build REST APIs with Express: scaffold projects, run the dev server, add middleware, and
+  test routes with supertest.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npm
+- npx
+capabilities:
+- name: express-routing
+  description: Scaffold, run, extend, and test Express applications.
+  commands:
+  - npx express-generator --view=ejs myapp
+  - npm install express morgan cors helmet
+  - npm start
+  - npm run dev
+  - npx nodemon src/app.js
+  - npm test
+  examples:
+  - npx express-generator --view=ejs myapp && cd myapp && npm install && npm start
+  - npm install express morgan cors helmet && npm run dev
+  - curl -s localhost:3000/api/orders | jq
+  parameters:
+  - name: port
+    type: integer
+    description: Port for the Express server
+  - name: view-engine
+    type: string
+    description: ejs, pug, or none for API-only
+  - name: dev-tool
+    type: string
+    description: nodemon or node --watch for dev restarts
+knowledge:
+- title: Express Documentation
+  type: documentation
+  source: https://expressjs.com/
+  description: Routing, middleware, error handling, and best practices
+- title: Supertest
+  type: documentation
+  source: https://github.com/ladjs/supertest
+  description: HTTP assertions for testing Express routes
+instructions: "# Express v2\n\n## What this skill does\n\nExpress is the classic Node.js web framework.\
+  \ This skill covers modern Express practice: generators, middleware chains (morgan, cors, helmet), JSON\
+  \ APIs, and route testing with supertest.\n\n## When to use\n\n- Scaffolding a new REST service quickly\n\
+  - Adding logging, CORS, and security headers to an existing app\n- Writing integration tests for routes\n\
+  \n## Real commands\n\n```bash\n# Scaffold\nnpx express-generator --view=ejs myapp\ncd myapp && npm install\n\
+  \n# Run (with dev reload)\nnpm start\nnpx nodemon src/app.js\n\n# Common middleware\ngnpm install express\
+  \ morgan cors helmet\n\n# Test\nnpm test\n```\n\n## Route + middleware example\n\n```javascript\nconst\
+  \ express = require('express')\nconst app = express()\n\napp.use(express.json())\napp.use(require('morgan')('combined'))\n\
+  app.use(require('helmet')())\n\napp.get('/api/orders/:id', (req, res, next) => {\n  try {\n    const\
+  \ order = db.find(req.params.id)\n    if (!order) {\n      const err = new Error('Not found')\n    \
+  \  err.status = 404\n      throw err\n    }\n    res.json(order)\n  } catch (e) {\n    next(e)\n  }\n\
+  })\n\napp.use((err, req, res, next) => {\n  res.status(err.status || 500).json({ error: err.message\
+  \ })\n})\n\napp.listen(3000)\n```\n\n## Testing with supertest\n\n```javascript\nconst request = require('supertest')\n\
+  const app = require('../src/app')\n\ntest('returns 404 for missing order', async () => {\n  const res\
+  \ = await request(app).get('/api/orders/999')\n  expect(res.status).toBe(404)\n})\n```\n\n## Best practices\n\
+  \n- Put `app` in its own module so supertest can import it without listening.\n- Order middleware correctly:\
+  \ security headers -> logging -> json -> routes.\n- Use the four-arg error handler; never send stacks\
+  \ to clients.\n- Prefer `express.json()` over body-parser directly.\n- Pin `engines` in package.json\
+  \ to the Node version in prod.\n"
+examples:
+- input: Scaffold an API-only Express service
+  output: Use npx express-generator --view=none or hand-roll, add morgan/helmet/cors middleware, and run
+    with nodemon.
+- input: Add integration tests for routes
+  output: Export app from a module, install supertest, and write tests that assert status and JSON bodies
+    without binding a port.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: express-routing.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-express-routing
+  generic:
+    system_prompt: 'This is your domain: Express Routing. You do it through express-routing: Scaffold,
+      run, extend, and test Express applications. The commands are real, e.g. `npx express-generator --view=ejs
+      myapp`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

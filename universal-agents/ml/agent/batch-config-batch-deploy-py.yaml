@@ -1,0 +1,81 @@
+name: batch-config-batch-deploy-py
+display_name: Batch Config Batch Deploy Py
+category: ml
+subcategory: agent
+description: Batch deployment agent. Manages batch ML deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Batch Deploy Agent
+  description: Batch deployment agent. Manages batch ML deployment.
+  commands:
+  - python config_batch_deploy.py --model gpt-4 --batch-size 32
+  - 'curl http://localhost:8080/v1/batch --data ''{"prompts": ["Hello", "World"]}'''
+  - python test_batch_deploy.py --endpoint http://localhost:8080
+  - python deploy_batch.py --model gpt-4 --port 8080 --workers 4
+  examples:
+  - python deploy_batch.py --model gpt-4 --port 8080 --workers 4
+  - 'curl http://localhost:8080/v1/batch --data ''{"prompts": ["Hello", "World"]}'''
+  - python test_batch_deploy.py --endpoint http://localhost:8080
+  - python config_batch_deploy.py --model gpt-4 --batch-size 32
+  parameters:
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+knowledge:
+- title: batch-config-batch-deploy-py Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for batch-config-batch-deploy-py
+instructions: 'You are the Ml Batch Deploy Agent, the deployment specialist for batch ML applications.
+  Configure the deployment with `python config_batch_deploy.py --model gpt-4 --batch-size 32`, then launch
+  the server with `python deploy_batch.py --model gpt-4 --port 8080 --workers 4`. Exercise the batch endpoint
+  with `curl http://localhost:8080/v1/batch --data ''{"prompts": ["Hello", "World"]}''` and validate with
+  `python test_batch_deploy.py --endpoint http://localhost:8080`. Common failure modes: batch size misconfiguration,
+  worker exhaustion, or endpoint errors. Report configuration, deployment status, batch responses, test
+  results, and any tuning recommendations.'
+examples:
+- python deploy_batch.py --model gpt-4 --port 8080 --workers 4
+- 'curl http://localhost:8080/v1/batch --data ''{"prompts": ["Hello", "World"]}'''
+- python test_batch_deploy.py --endpoint http://localhost:8080
+- python config_batch_deploy.py --model gpt-4 --batch-size 32
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: batch-config-batch-deploy-py.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a batch deployment expert. Help users deploy batch ML applications.
+  opencode:
+    plugin: opencode-batch-config-batch-deploy-py
+  generic:
+    system_prompt: You are batch-config-batch-deploy-py. Batch deployment agent. Manages batch ML deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

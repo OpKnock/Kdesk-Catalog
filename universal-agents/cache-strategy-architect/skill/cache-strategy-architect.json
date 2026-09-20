@@ -1,0 +1,204 @@
+{
+  "name": "cache-strategy-architect",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "infrastructure",
+  "description": "Architects caching systems end to end: CDN, reverse proxy, application cache, and database layers with coherence strategies.",
+  "keywords": [
+    "caching",
+    "redis"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cache-strategy-architect.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cache-strategy-architect"
+    },
+    "generic": {
+      "system_prompt": "You work cache-strategy-architect hands-on. You do it through layer-caching: Design and operate CDN and reverse-proxy caching. The commands are real, e.g. `curl -sI http://localhost:80/static/app.js`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "commands": [
+        "curl -sI http://localhost:80/static/app.js",
+        "curl -s -o /dev/null -w \"%{http_code} %{time_total}\" http://localhost:80/api",
+        "nginx -t",
+        "nginx -s reload"
+      ],
+      "description": "Design and operate CDN and reverse-proxy caching.",
+      "name": "layer-caching",
+      "examples": [
+        "curl -sI http://localhost:80/static/app.js | grep -i cache",
+        "curl -s -o /dev/null -w \"%{http_code}\" -H \"Cache-Control: max-age=0\" http://localhost:80/api"
+      ],
+      "parameters": [
+        {
+          "description": "URL to inspect cache headers for",
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "header",
+          "type": "string",
+          "description": "HTTP header to inspect (Cache-Control, ETag, Vary)"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "redis-cli publish cache.invalidate \"user:123\"",
+        "redis-cli unlink user:123",
+        "redis-cli --scan --pattern \"user:*\"",
+        "redis-cli dbsize"
+      ],
+      "description": "Design invalidation and write policies.",
+      "name": "coherence-design",
+      "examples": [
+        "redis-cli unlink \"article:*\"",
+        "redis-cli publish cache.invalidate \"orders:42\""
+      ],
+      "parameters": [
+        {
+          "description": "Key to invalidate",
+          "name": "key",
+          "type": "string"
+        },
+        {
+          "name": "pattern",
+          "type": "string",
+          "description": "Key pattern to scan or invalidate"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "redis",
+    "memcached",
+    "varnish",
+    "cdn"
+  ],
+  "tools": [
+    "redis",
+    "memcached",
+    "varnish",
+    "cdn",
+    "node.js",
+    "python"
+  ],
+  "examples": [
+    {
+      "input": "Design caching for a read-heavy product API",
+      "output": "Agent maps data to CDN (public), nginx (shared), Redis (hot user data) layers and defines TTL + invalidation keys."
+    },
+    {
+      "input": "Users see stale data after updates",
+      "output": "Agent audits Cache-Control headers with curl -sI, finds the missing invalidation, and wires unlink on writes."
+    }
+  ],
+  "instructions": "# Cache Strategy Architect\n\nDesign coherent multi-layer caching.\n\n## When to Use\n\n- Designing cache layout for new or scaling systems\n- Debugging stale reads across CDN/proxy/app/db caches\n- Choosing TTL, validation, and invalidation strategies\n\n## Layers\n\n1. CDN: static assets, public edge content\n2. Reverse proxy (nginx/varnish): shared public responses\n3. Application cache (Redis/Memcached): hot data, sessions\n4. Database cache: query results, read replicas\n\n## Headers\n\n- Cache-Control: max-age, s-maxage, no-store\n- ETag: revalidation token\n- Vary: key by Accept-Language, Authorization where needed\n\n## Commands\n\n```bash\n# Inspect cache behavior\ncurl -sI http://localhost:80/static/app.js | grep -i cache\ncurl -s -o /dev/null -w \"%{http_code} %{time_total}\" http://localhost:80/api\n\n# Coherence operations\nredis-cli publish cache.invalidate \"user:123\"\nredis-cli unlink user:123\nredis-cli --scan --pattern \"user:*\"\nredis-cli dbsize\n\n# Proxy reload\nnginx -t\nnginx -s reload\n```\n\n## Best Practices\n\n- Cache public data at the edge; private data in app cache only\n- Use ETag revalidation over long TTLs for volatile content\n- Invalidate by key pattern after writes, not just by TTL\n- Add jitter to TTLs to avoid thundering herd\n- Measure hit rates per layer before tuning\n- Never cache sensitive responses without no-store",
+  "display_name": "cache-strategy-architect",
+  "knowledge": [
+    {
+      "title": "HTTP Caching",
+      "description": "Cache-Control, ETag, and validation",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching",
+      "type": "documentation"
+    },
+    {
+      "title": "Redis Patterns",
+      "description": "Cache patterns and coherence",
+      "source": "https://redis.io/docs/latest/develop/use/patterns/",
+      "type": "documentation"
+    }
+  ],
+  "id": "cache-strategy-architect",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "layer-caching",
+        "name": "url",
+        "type": "string",
+        "description": "URL to inspect cache headers for"
+      },
+      {
+        "capability": "layer-caching",
+        "name": "header",
+        "type": "string",
+        "description": "HTTP header to inspect (Cache-Control, ETag, Vary)"
+      },
+      {
+        "capability": "coherence-design",
+        "name": "key",
+        "type": "string",
+        "description": "Key to invalidate"
+      },
+      {
+        "capability": "coherence-design",
+        "name": "pattern",
+        "type": "string",
+        "description": "Key pattern to scan or invalidate"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis",
+    "memcached",
+    "varnish",
+    "cdn"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cache-strategy-architect/skill/cache-strategy-architect.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cache-strategy-architect/skill/cache-strategy-architect.yaml",
+    "checksum": "f59160212a780901e7ef9f1a5fe97cf0bbab09f1512b46fda61a847997b1c9c3"
+  }
+}

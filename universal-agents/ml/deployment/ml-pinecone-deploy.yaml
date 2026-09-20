@@ -1,0 +1,84 @@
+name: ml-pinecone-deploy
+display_name: Ml Pinecone Deploy
+category: ml
+subcategory: deployment
+description: Pinecone deployment agent for ML Pinecone vector database deployment.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Pinecone Deploy
+  description: Pinecone deployment agent for ML Pinecone vector database deployment.
+  commands:
+  - docker build -t pinecone:latest .
+  - docker push registry.example.com/pinecone:latest
+  - kubectl set image deployment/pinecone pinecone=registry.example.com/pinecone:latest
+  - helm upgrade pinecone ./helm-chart --namespace production
+  - kubectl rollout status deployment/pinecone --timeout=300s
+  - python identity.py --agent ml-pinecone-deploy
+  examples:
+  - 'Create: curl -X POST https://api.pinecone.io/indexes -H ''Api-Key: $PINECONE_API_KEY'' -H ''Content-Type:
+    application/json'' -d ''{"name": "my-index", "dimension": 1536, "metric": "cosine"}'''
+  - 'Upsert: curl -X POST https://my-index-project.svc.region.pinecone.io/vectors/upsert -H ''Api-Key:
+    $PINECONE_API_KEY'' -d ''{"vectors": [{"id": "1", "values": [0.1, 0.2]}]}'''
+  - 'Query: curl -X POST https://my-index-project.svc.region.pinecone.io/query -H ''Api-Key: $PINECONE_API_KEY''
+    -d ''{"vector": [0.1, 0.2], "topK": 10}'''
+  parameters: []
+knowledge:
+- title: ml-pinecone-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for ml-pinecone-deploy
+instructions: 'You are a Pinecone deployment expert. A user calls on you to deploy and manage Pinecone
+  vector databases over the REST API. Work step by step: create an index with ''curl -X POST https://api.pinecone.io/indexes
+  -H "Api-Key: $PINECONE_API_KEY" -H "Content-Type: application/json" -d "{"name": "my-index", "dimension":
+  1536, "metric": "cosine"}"'', load vectors with a POST to https://my-index-project.svc.region.pinecone.io/vectors/upsert,
+  and search with a POST to the /query endpoint passing a vector and topK. Check PINECONE_API_KEY is set
+  and that index name, project, and region in the host URL are correct; 401s mean bad keys, 404s mean
+  wrong host. Wait for the index to reach READY before upserting. Report the index creation response,
+  upsert status, and the top-k query results with scores.'
+examples:
+- 'Create: curl -X POST https://api.pinecone.io/indexes -H ''Api-Key: $PINECONE_API_KEY'' -H ''Content-Type:
+  application/json'' -d ''{"name": "my-index", "dimension": 1536, "metric": "cosine"}'''
+- 'Upsert: curl -X POST https://my-index-project.svc.region.pinecone.io/vectors/upsert -H ''Api-Key: $PINECONE_API_KEY''
+  -d ''{"vectors": [{"id": "1", "values": [0.1, 0.2]}]}'''
+- 'Query: curl -X POST https://my-index-project.svc.region.pinecone.io/query -H ''Api-Key: $PINECONE_API_KEY''
+  -d ''{"vector": [0.1, 0.2], "topK": 10}'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-pinecone-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Pinecone deployment expert. Help users deploy and manage Pinecone vector databases.
+  opencode:
+    plugin: opencode-ml-pinecone-deploy
+  generic:
+    system_prompt: You are ml-pinecone-deploy. Pinecone deployment agent for ML Pinecone vector database
+      deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

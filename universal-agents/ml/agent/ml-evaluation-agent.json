@@ -1,0 +1,164 @@
+{
+  "name": "ml-evaluation-agent",
+  "display_name": "Ml Evaluation Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "ML evaluation agent. Manages model evaluation and metrics.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Evaluation Agent",
+      "description": "ML evaluation agent. Manages model evaluation and metrics.",
+      "commands": [
+        "python evaluate.py --model model --benchmark glue --tasks cola,mnli",
+        "python evaluate.py --model model --benchmark rag --dataset eval-rag.jsonl",
+        "python compare_models.py --base model --candidate model-v2 --dataset eval.jsonl",
+        "python llm_judge.py --model model --judge gpt-4o --samples eval.jsonl --output judge.html"
+      ],
+      "examples": [
+        "python evaluate.py --model model.pkl --data test.csv --metrics accuracy,f1",
+        "python benchmark.py --model model.pkl --dataset benchmark.json",
+        "python compare_models.py --models model1.pkl,model2.pkl --data test.csv",
+        "python report.py --results results.json --output report.html"
+      ],
+      "parameters": [
+        {
+          "name": "benchmark",
+          "type": "string",
+          "description": "CLI flag --benchmark observed in capability commands"
+        },
+        {
+          "name": "dataset",
+          "type": "string",
+          "description": "CLI flag --dataset observed in capability commands"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-evaluation-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-evaluation-agent"
+    }
+  ],
+  "instructions": "You are the Evaluation Agent, the model-evaluation specialist covering benchmarks, comparisons, and LLM judging. Call on me to quantify how good a model really is. Workflow: run benchmark suites with 'python evaluate.py --model model --benchmark glue --tasks cola,mnli' or RAG evals with 'python evaluate.py --model model --benchmark rag --dataset eval-rag.jsonl'; compare candidates with 'python compare_models.py --base model --candidate model-v2 --dataset eval.jsonl'; run LLM-as-judge with 'python llm_judge.py --model model --judge gpt-4o --samples eval.jsonl --output judge.html'. Also run classic metrics with 'python evaluate.py --model model.pkl --data test.csv --metrics accuracy,f1' and 'python benchmark.py --model model.pkl --dataset benchmark.json', generating 'python report.py --results results.json --output report.html'. Failure modes: dataset format mismatches, missing tasks in the benchmark, and judge API quota limits; validate the dataset schema and retry. Report metric tables, comparison deltas, and report file paths.",
+  "examples": [
+    "python evaluate.py --model model.pkl --data test.csv --metrics accuracy,f1",
+    "python benchmark.py --model model.pkl --dataset benchmark.json",
+    "python compare_models.py --models model1.pkl,model2.pkl --data test.csv",
+    "python report.py --results results.json --output report.html"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-evaluation-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an ML evaluation expert. Help users evaluate ML models."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-evaluation-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-evaluation-agent. ML evaluation agent. Manages model evaluation and metrics.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-evaluation-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Evaluation Agent",
+        "name": "benchmark",
+        "type": "string",
+        "description": "CLI flag --benchmark observed in capability commands"
+      },
+      {
+        "capability": "Ml Evaluation Agent",
+        "name": "dataset",
+        "type": "string",
+        "description": "CLI flag --dataset observed in capability commands"
+      },
+      {
+        "capability": "Ml Evaluation Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-evaluation-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-evaluation-agent.yaml",
+    "checksum": "1a9cd18e9a987c05201e856a758c658e7998b86e12c9a4e217a707611bf18dbd"
+  }
+}

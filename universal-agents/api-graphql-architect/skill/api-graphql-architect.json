@@ -1,0 +1,212 @@
+{
+  "name": "api-graphql-architect",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Architects enterprise GraphQL: federated graphs, schema registry governance, and supergraph operations with Rover and GraphOS.",
+  "keywords": [
+    "graphql",
+    "federation"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-graphql-architect.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-graphql-architect"
+    },
+    "generic": {
+      "system_prompt": "You are the api-graphql-architect specialist. You do it through supergraph-ops: Compose, publish, and check supergraphs with Rover. The commands are real, e.g. `rover supergraph compose --config supergraph.yaml --output supergraph.graphql`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "supergraph-ops",
+      "description": "Compose, publish, and check supergraphs with Rover",
+      "commands": [
+        "rover supergraph compose --config supergraph.yaml --output supergraph.graphql",
+        "rover subgraph publish mygraph@prod --name products --schema ./products.graphql --routing-url http://products:4001",
+        "rover subgraph check mygraph@prod --name products --schema ./products.graphql",
+        "rover graph introspect http://localhost:4001/graphql > products.graphql",
+        "rover supergraph fetch mygraph@prod --output current.graphql"
+      ],
+      "examples": [
+        "rover supergraph compose --config supergraph.yaml --output supergraph.graphql",
+        "rover subgraph check mygraph@prod --name products --schema ./products.graphql",
+        "rover supergraph fetch mygraph@prod --output current.graphql"
+      ],
+      "parameters": [
+        {
+          "name": "graphRef",
+          "type": "string",
+          "description": "Apollo graph ref"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Supergraph config path"
+        }
+      ]
+    },
+    {
+      "name": "schema-governance",
+      "description": "Guard the schema against breaking changes with checks and linting",
+      "commands": [
+        "rover subgraph check mygraph@prod --name products --schema ./products.graphql --compare prod",
+        "npx graphql-inspector diff old.graphql new.graphql",
+        "graphql-inspector validate documents/**/*.graphql schema.graphql",
+        "npx @graphql-inspector/cli coverage schema.graphql docs/**/*.graphql",
+        "graphql-inspector simulate-client requests.json schema.graphql"
+      ],
+      "examples": [
+        "npx graphql-inspector diff old.graphql new.graphql",
+        "rover subgraph check mygraph@prod --name products --schema ./products.graphql",
+        "graphql-inspector validate docs/**/*.graphql schema.graphql"
+      ],
+      "parameters": [
+        {
+          "name": "oldSchema",
+          "type": "string",
+          "description": "Previous schema"
+        },
+        {
+          "name": "newSchema",
+          "type": "string",
+          "description": "Candidate schema"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "apollo-server",
+    "graphql-codegen",
+    "rover"
+  ],
+  "tools": [
+    "apollo-server",
+    "graphql-codegen",
+    "rover",
+    "node.js",
+    "python",
+    "strawberry"
+  ],
+  "examples": [
+    {
+      "input": "Design GraphQL architecture for an enterprise",
+      "output": "Designs a federated graph with per-team subgraphs, schema registry, and check-based release gates"
+    },
+    {
+      "input": "Implement a GraphQL gateway",
+      "output": "Composes the supergraph with Rover and routes subgraph traffic with monitoring"
+    }
+  ],
+  "instructions": "# API GraphQL Architect\n\nDesigns and operates enterprise GraphQL platforms.\n\n## When to Use\n- Multiple teams share one graph\n- Schema changes must be safe\n- Standardizing subgraph patterns\n\n## Real Commands\n\n```bash\n# Introspect a subgraph\nrover graph introspect http://localhost:4001/graphql > products.graphql\n\n# Publish\nrover subgraph publish mygraph@prod --name products --schema ./products.graphql --routing-url http://products:4001\n\n# Check for breaking changes\nrover subgraph check mygraph@prod --name products --schema ./products.graphql\n\n# Compose supergraph\nrover supergraph compose --config supergraph.yaml --output supergraph.graphql\n\n# Diff schemas locally\nnpx graphql-inspector diff old.graphql new.graphql\n```\n\n## Federation Principles\n- One subgraph per team boundary\n- Entities with @key for shared types\n- Checks run on every subgraph PR\n\n## Testing\nCompose the supergraph locally and smoke-test queries across subgraphs.\n\n## Best Practices\n- Never publish unchecked subgraphs\n- Keep supergraph artifacts in version control",
+  "display_name": "api-graphql-architect",
+  "knowledge": [
+    {
+      "title": "Rover CLI",
+      "type": "documentation",
+      "source": "https://www.apollographql.com/docs/rover/",
+      "description": "Supergraph commands and subgraph checks"
+    },
+    {
+      "title": "Apollo Federation",
+      "type": "documentation",
+      "source": "https://www.apollographql.com/docs/federation/",
+      "description": "Subgraph contracts and composition"
+    },
+    {
+      "title": "GraphQL Inspector",
+      "type": "documentation",
+      "source": "https://the-guild.dev/graphql/inspector/docs",
+      "description": "Schema diffing and validation"
+    }
+  ],
+  "id": "api-graphql-architect",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "supergraph-ops",
+        "name": "graphRef",
+        "type": "string",
+        "description": "Apollo graph ref"
+      },
+      {
+        "capability": "supergraph-ops",
+        "name": "config",
+        "type": "string",
+        "description": "Supergraph config path"
+      },
+      {
+        "capability": "schema-governance",
+        "name": "oldSchema",
+        "type": "string",
+        "description": "Previous schema"
+      },
+      {
+        "capability": "schema-governance",
+        "name": "newSchema",
+        "type": "string",
+        "description": "Candidate schema"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "apollo-server",
+    "graphql-codegen",
+    "rover"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-graphql-architect/skill/api-graphql-architect.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-graphql-architect/skill/api-graphql-architect.yaml",
+    "checksum": "0ab321c228b9f2e3e649bfeeac6eb21af8b4520be2df3d59b1c7f6a4c712cb2d"
+  }
+}

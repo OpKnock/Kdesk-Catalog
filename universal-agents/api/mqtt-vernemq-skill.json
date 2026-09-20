@@ -1,0 +1,173 @@
+{
+  "name": "mqtt-vernemq",
+  "display_name": "Mqtt Vernemq",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Operate VerneMQ brokers: start/stop, vmq-admin inspection, clustering, and session/retainer management.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "vernemq",
+    "vmq-admin"
+  ],
+  "capabilities": [
+    {
+      "name": "vernemq-operations",
+      "description": "Control the VerneMQ daemon and inspect nodes, listeners, sessions, and retained messages via vmq-admin.",
+      "commands": [
+        "vernemq start",
+        "vernemq console",
+        "vmq-admin status",
+        "vmq-admin listener show",
+        "vmq-admin session show --client-id test-client"
+      ],
+      "examples": [
+        "vmq-admin cluster show",
+        "vmq-admin topic subscription add --client-id cli --topic sensors/#",
+        "vmq-admin retainer show"
+      ],
+      "parameters": [
+        {
+          "name": "client_id",
+          "type": "string",
+          "description": "Client identifier for session inspection"
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic filter for subscriptions"
+        },
+        {
+          "name": "node",
+          "type": "string",
+          "description": "Node name for cluster commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "VerneMQ Documentation",
+      "type": "documentation",
+      "source": "https://docs.vernemq.com/",
+      "description": "Installation, configuration, clustering and vmq-admin reference"
+    },
+    {
+      "title": "VerneMQ GitHub",
+      "type": "documentation",
+      "source": "https://github.com/vernemq/vernemq",
+      "description": "Source and release information"
+    }
+  ],
+  "instructions": "# VerneMQ\n\nVerneMQ is a high-performance MQTT broker written in Erlang, built for clustering and scale.\n\n## What this skill does\n\n- Starts/stops the broker and runs the interactive console\n- Inspects listeners, sessions, subscriptions and retained messages\n- Manages clusters with vmq-admin\n\n## When to use\n\n- High-throughput MQTT workloads\n- Multi-node MQTT clusters\n- Brokers that must handle millions of retained messages\n\n## Real commands\n\n```bash\n# Daemon lifecycle\nvernemq start\nvernemq stop\nvernemq console   # foreground Erlang console\n\n# Status and listeners\nvmq-admin status\nvmq-admin listener show\n\n# Sessions and subscriptions\nvmq-admin session show --client-id test-client\nvmq-admin topic subscription add --client-id cli --topic sensors/#\n\n# Retained messages\nvmq-admin retainer show\n\n# Cluster\nvmq-admin cluster show\n```\n\n## Configuration\n\n- `/etc/vernemq/vernemq.conf` - listeners, allow_anonymous, plugins\n- Listener ports: 1883 plain, 8883 TLS, 8080 websockets\n\n## Best practices\n\n- Check `vmq-admin status` before and after restarts\n- Monitor session counts for leaked persistent sessions\n- Configure `allow_anonymous=off` for production",
+  "examples": [
+    {
+      "input": "Start VerneMQ and verify it's listening",
+      "output": "The agent runs `vernemq start`, checks `vmq-admin status` and `vmq-admin listener show`, then publishes with mosquitto_pub."
+    },
+    {
+      "input": "Which clients are currently connected?",
+      "output": "The agent runs `vmq-admin session show` to list live sessions and explains how to filter by client-id."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "mqtt-vernemq.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-mqtt-vernemq"
+    },
+    "generic": {
+      "system_prompt": "You take the Mqtt Vernemq seat. You do it through vernemq-operations: Control the VerneMQ daemon and inspect nodes, listeners, sessions, and retained messages via vmq-admin. The commands are real, e.g. `vernemq start`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "mqtt-vernemq",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "vernemq-operations",
+        "name": "client_id",
+        "type": "string",
+        "description": "Client identifier for session inspection"
+      },
+      {
+        "capability": "vernemq-operations",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic filter for subscriptions"
+      },
+      {
+        "capability": "vernemq-operations",
+        "name": "node",
+        "type": "string",
+        "description": "Node name for cluster commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "vernemq",
+    "vmq-admin"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/mqtt-vernemq-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/mqtt-vernemq-skill.yaml",
+    "checksum": "92b859662e1de4c4e2b91723c7efc09aa2f2ddac91165d96ecc7caed8c6e00d2"
+  }
+}

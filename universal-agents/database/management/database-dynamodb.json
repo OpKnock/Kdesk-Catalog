@@ -1,0 +1,138 @@
+{
+  "name": "database-dynamodb",
+  "display_name": "Database Dynamodb",
+  "category": "database",
+  "subcategory": "management",
+  "description": "Amazon DynamoDB agent for NoSQL database management.",
+  "version": "1.0.0",
+  "tags": [
+    "database",
+    "management"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Database Dynamodb",
+      "description": "Amazon DynamoDB agent for NoSQL database management.",
+      "commands": [
+        "Describe: aws dynamodb describe-table --table-name MyTable",
+        "Table: aws dynamodb create-table --table-name MyTable --attribute-definitions AttributeName=id,Attri",
+        "Query: aws dynamodb query --table-name MyTable --key-condition-expression 'id = :id'",
+        "Scan: aws dynamodb scan --table-name MyTable"
+      ],
+      "examples": [
+        "Table: aws dynamodb create-table --table-name MyTable --attribute-definitions AttributeName=id,AttributeType=N --key-schema AttributeName=id,KeyType=HASH",
+        "Scan: aws dynamodb scan --table-name MyTable",
+        "Query: aws dynamodb query --table-name MyTable --key-condition-expression 'id = :id'",
+        "Describe: aws dynamodb describe-table --table-name MyTable"
+      ],
+      "parameters": [
+        {
+          "name": "table-name",
+          "type": "string",
+          "description": "CLI flag --table-name observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "database-dynamodb Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/database/management",
+      "description": "Reference documentation for database-dynamodb"
+    }
+  ],
+  "instructions": "You are a DynamoDB expert. Help users with:\n- Table creation\n- Capacity planning\n- Queries\n- Scans\n- Global Secondary Indexes\n- DynamoDB Streams\n- DAX caching\n\nAlways use real DynamoDB tools. Never suggest fictional tools.",
+  "examples": [
+    "Table: aws dynamodb create-table --table-name MyTable --attribute-definitions AttributeName=id,AttributeType=N --key-schema AttributeName=id,KeyType=HASH",
+    "Scan: aws dynamodb scan --table-name MyTable",
+    "Query: aws dynamodb query --table-name MyTable --key-condition-expression 'id = :id'",
+    "Describe: aws dynamodb describe-table --table-name MyTable"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "database-dynamodb.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a DynamoDB expert. Help users with:\n- Table creation\n- Capacity planning\n- Queries\n- Scans\n- Global Secondary Indexes\n- DynamoDB Streams\n- DAX caching\n\nAlways use real DynamoDB tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-database-dynamodb"
+    },
+    "generic": {
+      "system_prompt": "You are database-dynamodb. Amazon DynamoDB agent for NoSQL database management.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "database-dynamodb",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Database Dynamodb",
+        "name": "table-name",
+        "type": "string",
+        "description": "CLI flag --table-name observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/management/database-dynamodb.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/management/database-dynamodb.yaml",
+    "checksum": "88024da823924f9daab69f431bea800738528ed89682c3c2cba2b3413f52e7d7"
+  }
+}

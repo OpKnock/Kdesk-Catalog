@@ -1,0 +1,159 @@
+{
+  "name": "model-registry",
+  "display_name": "Model Registry",
+  "category": "ml",
+  "subcategory": "mlops",
+  "description": "Agent for managing ML model registries with versioning, staging, and deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "model-registry",
+    "versioning",
+    "staging",
+    "deployment",
+    "mlflow"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "model-registry",
+      "description": "Manage model registry",
+      "commands": [
+        "mlflow",
+        "wandb",
+        "vertex"
+      ],
+      "examples": [
+        "MLflow: mlflow models register-version -n my-model -m models:/my-model/1",
+        "W&B: wandb.log_model(path='model.pkl', name='my-model')",
+        "Vertex: gcloud ai models upload"
+      ],
+      "parameters": [
+        {
+          "name": "registry_type",
+          "type": "string",
+          "description": "Type: mlflow, wandb, vertex, custom"
+        },
+        {
+          "name": "feature",
+          "type": "string",
+          "description": "Feature: versioning, staging, approval, rollback"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "MLflow Model Registry",
+      "type": "documentation",
+      "source": "https://mlflow.org/docs/latest/model-registry.html",
+      "description": "MLflow model registry"
+    },
+    {
+      "Title": "Model Versioning",
+      "type": "tutorial",
+      "source": "https://docs.wandb.ai/guides/model-registry",
+      "description": "W&B model registry"
+    }
+  ],
+  "instructions": "You are the model registry specialist (Model Registry). Call on you when users need to set up an ML model registry, version models, manage staging, approve transitions, or roll back safely. Workflow: (1) determine registry type from the registry_type parameter (mlflow, wandb, vertex, custom) and stand it up - for MLflow use 'mlflow models register-version -n my-model -m models:/my-model/1', for W&B use wandb.log_model(path='model.pkl', name='my-model'), for Vertex use gcloud ai models upload; (2) register and version each candidate artifact; (3) drive the lifecycle (versioning, staging, approval, rollback per the feature parameter) using stage transitions, always with explicit approval gates before production; (4) validate the promoted version serves correctly before declaring success. Key behaviors: always recommend proper staging gates (staging -> approval -> production), never overwrite a production version silently, and keep a rollback plan with the previous version promoted on failure. Output: registry layout, registered versions, stage status, approval steps taken, and rollback instructions.",
+  "examples": [
+    {
+      "input": "Model registry",
+      "output": "I'll set up MLflow model registry..."
+    },
+    {
+      "input": "Model versioning",
+      "output": "I'll implement model versioning and staging..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "model-registry.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-model-registry"
+    },
+    "generic": {
+      "system_prompt": "You are a model registry expert. Help users manage ML model registries with versioning and staging.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "model-registry",
+  "type": "agent",
+  "skills": [
+    "ai-ml-pipeline"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "model-registry",
+        "name": "registry_type",
+        "type": "string",
+        "description": "Type: mlflow, wandb, vertex, custom"
+      },
+      {
+        "capability": "model-registry",
+        "name": "feature",
+        "type": "string",
+        "description": "Feature: versioning, staging, approval, rollback"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/model-registry.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/model-registry.yaml",
+    "checksum": "58cb07e99d47522744cea87b47611ee21f8c93024ecdba50524229becd2b6dcd"
+  }
+}

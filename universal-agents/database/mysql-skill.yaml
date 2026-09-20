@@ -1,0 +1,166 @@
+name: mysql
+display_name: mysql
+category: database
+subcategory: general
+description: 'Operates MySQL: interactive queries, scripted DDL/DML, dumps, and performance status.'
+version: 2.0.0
+tags:
+- database
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- mysql
+- mysqladmin
+- mysqldump
+capabilities:
+- name: mysql-cli
+  description: Query, import/export, and inspect MySQL servers
+  commands:
+  - mysql -u root -p
+  - mysql -u root -p appdb -e "SHOW TABLES;"
+  - mysql -u root -p appdb < schema.sql
+  - mysqldump -u root -p --single-transaction appdb > backup.sql
+  - mysqladmin -u root status
+  examples:
+  - mysql -h db.example.com -P 3306 -u app -p appdb -e "SELECT count(*) FROM orders;"
+  - mysql -u root -p -e "SHOW GLOBAL STATUS LIKE 'Threads_connected';"
+  - mysqldump -u root -p --no-data --routines appdb > schema-only.sql
+  parameters:
+  - name: execute
+    type: string
+    description: SQL to execute in one-shot mode (-e)
+  - name: single-transaction
+    type: boolean
+    description: Consistent snapshot for InnoDB dumps
+  - name: host
+    type: string
+    description: Server hostname (-h)
+knowledge:
+- title: MySQL reference manual
+  type: documentation
+  source: https://dev.mysql.com/doc/refman/8.0/en/
+  description: SQL syntax, client tools, and administration
+- title: mysqldump reference
+  type: documentation
+  source: https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html
+  description: Backup flags and options
+instructions: '# MySQL
+
+
+  Relational database operations: queries, schema scripts, dumps, and server status
+
+  via the mysql client.
+
+
+  ## When to Use
+
+
+  - Running queries and admin statements
+
+  - Applying schema changes
+
+  - Backing up and restoring databases
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Interactive
+
+  sudo mysql -u root -p
+
+
+  # One-shot queries
+
+  sudo mysql -u root -p appdb -e "SHOW TABLES;"
+
+  sudo mysql -u root -p -e "SELECT VERSION(), CURRENT_TIMESTAMP;"
+
+
+  # Run a script
+
+  sudo mysql -u root -p appdb < schema.sql
+
+
+  # Backup with consistent snapshot
+
+  sudo mysqldump -u root -p --single-transaction --routines appdb > backup.sql
+
+
+  # Restore
+
+  sudo mysql -u root -p appdb < backup.sql
+
+
+  # Server status
+
+  sudo mysqladmin -u root status
+
+  sudo mysql -u root -p -e "SHOW GLOBAL STATUS LIKE ''Threads_connected'';"
+
+
+  # Remote host
+
+  sudo mysql -h db.example.com -P 3306 -u app -p appdb
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use `--single-transaction` for InnoDB backups without locking
+
+  - Never put passwords in command history (`-p` prompts)
+
+  - Test restores in staging
+
+  - Check slow query log for performance issues
+
+  - Use `EXPLAIN` before optimizing queries
+
+
+  ## Example Response
+
+
+  For a slow query: runs EXPLAIN, reports the access type and index usage, and
+
+  recommends an index or query rewrite.'
+examples:
+- input: Apply the new schema
+  output: Runs the schema script, verifies tables with SHOW TABLES, and checks for errors
+- input: Backup before the deploy
+  output: Dumps with --single-transaction --routines, verifies file size, and stores the backup path
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: mysql.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-mysql
+  generic:
+    system_prompt: 'Your lane is mysql. You do it through mysql-cli: Query, import/export, and inspect
+      MySQL servers. The commands are real, e.g. `mysql -u root -p`. You run and verify the real CLI commands
+      before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

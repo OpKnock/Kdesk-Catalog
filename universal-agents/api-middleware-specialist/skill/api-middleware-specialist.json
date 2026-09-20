@@ -1,0 +1,189 @@
+{
+  "name": "api-middleware-specialist",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Authors and publishes reusable Node.js middleware packages: factory functions, options handling, npm packaging, and consumer-facing API design.",
+  "keywords": [
+    "api-middleware"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-middleware-specialist.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-middleware-specialist"
+    },
+    "generic": {
+      "system_prompt": "You work api-middleware-specialist hands-on. You do it through package-authoring: Create a publishable middleware package with a factory function and options object. The commands are real, e.g. `npm init -y`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "package-authoring",
+      "description": "Create a publishable middleware package with a factory function and options object",
+      "commands": [
+        "npm init -y",
+        "npm pack --dry-run",
+        "npm publish",
+        "node -e \"const mw = require('./index.js'); console.log(typeof mw)\"",
+        "npx npm-check-updates -u"
+      ],
+      "examples": [
+        "npm pack --dry-run lists files before publishing",
+        "module.exports = (options = {}) => (req, res, next) => next()",
+        "npm publish --access public publishes to the npm registry"
+      ],
+      "parameters": [
+        {
+          "name": "options",
+          "type": "object",
+          "description": "Middleware factory options with defaults and validation"
+        },
+        {
+          "name": "main",
+          "type": "string",
+          "description": "Entry point in package.json consumed by require()"
+        },
+        {
+          "name": "peerDependencies",
+          "type": "object",
+          "description": "Express/Fastify version ranges the middleware supports"
+        }
+      ]
+    },
+    {
+      "name": "consumer-validation",
+      "description": "Validate the packaged artifact works when installed in a consumer project",
+      "commands": [
+        "npm link",
+        "npm install ../my-middleware --save",
+        "node -e \"const mw = require('my-middleware'); console.log(mw().length)\"",
+        "npm ls --depth=0"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "express",
+    "fastify"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "express",
+    "fastify",
+    "koa"
+  ],
+  "examples": [
+    {
+      "input": "Publish my logging middleware",
+      "output": "Runs npm pack --dry-run to verify contents, then npm publish with a semver bump"
+    },
+    {
+      "input": "Make middleware configurable",
+      "output": "Refactors to a factory function taking options and exposes defaults in README"
+    }
+  ],
+  "instructions": "# API Middleware Specialist\n\nAuthors reusable middleware libraries for the npm ecosystem.\n\n## What This Skill Does\n- Designs middleware as factory functions taking an options object\n- Publishes middleware as standalone npm packages\n- Validates artifacts with npm pack and consumer-project smoke tests\n\n## When to Use\n- Building a middleware library shared across multiple services\n- Refactoring duplicated middleware into a package\n- Releasing a middleware module to npm\n\n## Real Commands\n\n```bash\nnpm init -y\nnpm pack --dry-run   # preview tarball contents\nnpm link             # link locally for testing\nnode -e \"const mw = require('./index.js'); console.log(typeof mw)\"\nnpm publish --access public\n```\n\n## Package Structure\n- index.js exports the factory function\n- README.md documents options and ordering requirements\n- engines field pins supported Node.js versions\n\n## Testing\n- Smoke-test the packed tarball in a scratch consumer project\n- Assert the factory returns a function of arity 3 (req, res, next)\n- Run npm ls to confirm no extraneous dependencies\n\n## Best Practices\n- Validate options at factory creation time, fail fast\n- Never mutate req/res globals without opt-in flags\n- Mark Express and Fastify as peerDependencies",
+  "display_name": "api-middleware-specialist",
+  "knowledge": [
+    {
+      "title": "npm Publishing Docs",
+      "type": "documentation",
+      "source": "https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry",
+      "description": "How to prepare and publish packages to npm"
+    },
+    {
+      "title": "npm-check-updates",
+      "type": "documentation",
+      "source": "https://github.com/raineorshine/npm-check-updates",
+      "description": "Update package.json dependency versions safely"
+    }
+  ],
+  "id": "api-middleware-specialist",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "package-authoring",
+        "name": "options",
+        "type": "object",
+        "description": "Middleware factory options with defaults and validation"
+      },
+      {
+        "capability": "package-authoring",
+        "name": "main",
+        "type": "string",
+        "description": "Entry point in package.json consumed by require()"
+      },
+      {
+        "capability": "package-authoring",
+        "name": "peerDependencies",
+        "type": "object",
+        "description": "Express/Fastify version ranges the middleware supports"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "express",
+    "fastify"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-middleware-specialist/skill/api-middleware-specialist.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-middleware-specialist/skill/api-middleware-specialist.yaml",
+    "checksum": "0c095ecfc91c3fce4ed08e9a46640c5f1e236e03c842edaa18df70d0b4beb998"
+  }
+}

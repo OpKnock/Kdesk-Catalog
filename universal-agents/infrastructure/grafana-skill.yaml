@@ -1,0 +1,130 @@
+name: grafana
+display_name: grafana
+category: infrastructure
+subcategory: general
+description: 'Operates Grafana: plugin management, admin tasks, dashboard provisioning, and API-driven
+  configuration.'
+version: 2.0.0
+tags:
+- infrastructure
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- grafana-cli
+capabilities:
+- name: grafana-cli
+  description: Manage plugins and admin access from the command line.
+  commands:
+  - grafana-cli plugins install grafana-clock-panel
+  - grafana-cli plugins update-all
+  - grafana-cli plugins list
+  - grafana-cli admin reset-admin-password new-secret-pass
+  - grafana-cli --homepath /usr/share/grafana admin reset-admin-password
+  examples:
+  - grafana-cli plugins install grafana-piechart-panel --pluginsDir /var/lib/grafana/plugins
+  - grafana-cli plugins list --config /etc/grafana/grafana.ini
+  - grafana-cli admin reset-admin-password admin
+  parameters:
+  - name: pluginsDir
+    type: string
+    description: Custom plugin install directory
+  - name: config
+    type: string
+    description: grafana.ini path for CLI context
+  - name: homepath
+    type: string
+    description: Grafana install directory
+- name: api
+  description: Drive Grafana configuration via the HTTP API.
+  commands:
+  - 'curl -s -H ''Authorization: Bearer $GRAFANA_API_KEY'' http://localhost:3000/api/org'
+  - 'curl -s -H ''Authorization: Bearer $GRAFANA_API_KEY'' http://localhost:3000/api/search?type=dash-db
+    | jq ''.[].title'''
+  - 'curl -s -X POST -H ''Authorization: Bearer $GRAFANA_API_KEY'' -H ''Content-Type: application/json''
+    http://localhost:3000/api/dashboards/db -d @dashboard.json'
+  - 'curl -s -H ''Authorization: Bearer $GRAFANA_API_KEY'' http://localhost:3000/api/datasources'
+  - 'curl -s -X POST -H ''Authorization: Bearer $GRAFANA_API_KEY'' -H ''Content-Type: application/json''
+    -d ''{"text":"deploy v2.14.3"}'' http://localhost:3000/api/annotations'
+  examples:
+  - 'curl -s -H ''Authorization: Bearer $KEY'' http://localhost:3000/api/dashboards/uid/cQx8-abc | jq
+    ''.dashboard.title'''
+  - 'curl -s -H ''Authorization: Bearer $KEY'' ''http://localhost:3000/api/datasources'' | jq ''.[] |
+    {name, type}'''
+  - 'curl -s -X DELETE -H ''Authorization: Bearer $KEY'' http://localhost:3000/api/datasources/uid/$DS_UID'
+  parameters:
+  - name: api-key
+    type: string
+    description: Grafana service account token
+  - name: payload
+    type: string
+    description: JSON body for dashboard/annotation posts
+  - name: uid
+    type: string
+    description: Dashboard or datasource uid
+knowledge:
+- title: Grafana CLI
+  type: documentation
+  source: https://grafana.com/docs/grafana/latest/administration/cli/
+  description: grafana-cli plugins and admin commands
+- title: Grafana HTTP API
+  type: documentation
+  source: https://grafana.com/docs/grafana/latest/developers/http_api/
+  description: Dashboards, datasources, annotations, and org API
+- title: Grafana Provisioning
+  type: documentation
+  source: https://grafana.com/docs/grafana/latest/administration/provisioning/
+  description: File-based provisioning for dashboards and datasources
+instructions: "# Grafana\n\nRun Grafana reliably: plugins, admin recovery, and automation.\n\n## When\
+  \ to Use\n\n- Installing and updating Grafana plugins\n- Recovering admin access\n- Managing dashboards\
+  \ and datasources programmatically\n\n## Plugin management\n\n```bash\ngrafana-cli plugins install grafana-clock-panel\n\
+  grafana-cli plugins update-all\ngrafana-cli plugins list\n```\n\n## Admin recovery\n\n```bash\ngrafana-cli\
+  \ --homepath /usr/share/grafana admin reset-admin-password 'new-secret-pass'\n```\n\nReset passwords\
+  \ only via the CLI on the server; never share the admin account.\n\n## Provisioning (recommended)\n\n\
+  ```yaml\n# /etc/grafana/provisioning/datasources/prometheus.yaml\napiVersion: 1\ndatasources:\n  - name:\
+  \ Prometheus\n    type: prometheus\n    access: proxy\n    url: http://prometheus:9090\n    isDefault:\
+  \ true\n```\n\nDashboards and datasources in provisioning folders are versioned and reloaded automatically.\n\
+  \n## API automation\n\n```bash\ncurl -s -H 'Authorization: Bearer $GRAFANA_API_KEY' http://localhost:3000/api/datasources\n\
+  curl -s -X POST -H 'Authorization: Bearer $GRAFANA_API_KEY' -H 'Content-Type: application/json' http://localhost:3000/api/dashboards/db\
+  \ -d @dashboard.json\n```\n\nCreate service accounts with scoped tokens instead of admin API keys.\n\
+  \n## Annotations for deploys\n\n```bash\ncurl -s -X POST -H 'Authorization: Bearer $KEY' -H 'Content-Type:\
+  \ application/json' -d '{\"text\":\"deploy v2.14.3\"}' http://localhost:3000/api/annotations\n```\n\n\
+  ## Best practices\n\n- Provision everything as code; manual UI changes drift.\n- Keep plugin versions\
+  \ pinned in the image.\n- Alert on datasource health via blackbox probes.\n\n## Testing\n\n```bash\n\
+  curl -s -H 'Authorization: Bearer $KEY' http://localhost:3000/api/search?type=dash-db | jq length\n\
+  ```\n\nVerify dashboards count after provisioning."
+examples:
+- input: Add the pie chart panel plugin to Grafana.
+  output: Installs grafana-piechart-panel via grafana-cli and verifies with grafana-cli plugins list.
+- input: Import a dashboard JSON into Grafana programmatically.
+  output: Posts dashboard.json to /api/dashboards/db with a service account token and confirms via /api/search.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: grafana.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-grafana
+  generic:
+    system_prompt: 'Your lane is grafana. You do it through grafana-cli: Manage plugins and admin access
+      from the command line. The commands are real, e.g. `grafana-cli plugins install grafana-clock-panel`.
+      You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

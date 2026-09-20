@@ -1,0 +1,172 @@
+{
+  "name": "tc-netem",
+  "display_name": "Tc Netem",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted tc netem skill: inject latency, loss, duplication, and corruption into network paths for chaos testing of API clients and databases.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "ping"
+  ],
+  "capabilities": [
+    {
+      "name": "netem-injection",
+      "description": "Simulate network faults with tc netem qdiscs",
+      "commands": [
+        "tc qdisc add dev eth0 root netem delay 100ms 20ms distribution normal",
+        "tc qdisc change dev eth0 root netem loss 10%",
+        "tc qdisc add dev eth0 root netem duplicate 2% corrupt 1%",
+        "tc qdisc show dev eth0",
+        "tc qdisc del dev eth0 root",
+        "ping -c 10 192.168.1.1"
+      ],
+      "examples": [
+        "tc qdisc change dev eth0 root netem loss 25%",
+        "tc qdisc add dev eth0 root netem delay 200ms",
+        "tc qdisc del dev eth0 root"
+      ],
+      "parameters": [
+        {
+          "name": "delay_ms",
+          "type": "integer",
+          "description": "Base latency in milliseconds"
+        },
+        {
+          "name": "loss_percent",
+          "type": "float",
+          "description": "Packet loss percentage"
+        },
+        {
+          "name": "jitter_ms",
+          "type": "integer",
+          "description": "Delay variation around the base"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "tc-netem man page",
+      "type": "documentation",
+      "source": "https://man7.org/linux/man-pages/man8/tc-netem.8.html",
+      "description": "Netem parameters: delay, loss, duplicate, corrupt, reorder"
+    },
+    {
+      "title": "Linux tc man page",
+      "type": "documentation",
+      "source": "https://man7.org/linux/man-pages/man8/tc.8.html",
+      "description": "Qdisc operations add/change/del/show"
+    }
+  ],
+  "instructions": "# tc netem\n\nHand-crafted skill for network fault injection with the netem qdisc.\n\n## What this skill does\n\n- Adds latency with jitter to a network interface\n- Drops, duplicates, and corrupts packets at a configurable rate\n- Removes the fault instantly to restore normal traffic\n\n## When to use\n\n- Testing timeouts in API clients under delay\n- Verifying retry logic when packets drop\n- Chaos drills: does the app survive a flaky network?\n\n## Real commands\n\n```bash\n# 100ms latency with 20ms jitter (normal distribution)\ntc qdisc add dev eth0 root netem delay 100ms 20ms distribution normal\n\n# Drop 10% of packets\ntc qdisc change dev eth0 root netem loss 10%\n\n# Duplicate and corrupt\ntc qdisc add dev eth0 root netem duplicate 2% corrupt 1%\n\n# Reorder with delay\ntc qdisc add dev eth0 root netem delay 50ms reorder 25% gap 3\n\n# Inspect the active qdisc\ntc qdisc show dev eth0\n\n# Measure the impact\nping -c 10 192.168.1.1\n\n# Remove all netem rules\ntc qdisc del dev eth0 root\n```\n\n## Test recipe\n\n```bash\ntc qdisc add dev eth0 root netem delay 200ms\ncurl -s -o /dev/null -w 'total: %{time_total}s\\n' https://api.example.com/health\ntc qdisc del dev eth0 root\n```\n\n## Best practices\n\n- Always pair tests with ping or curl timing to measure the injection\n- Remove the qdisc after the test: del dev eth0 root\n- Prefer a dedicated test VM; netem affects all traffic on the host\n",
+  "examples": [
+    {
+      "input": "Simulate a slow network to test client timeouts",
+      "output": "tc qdisc add dev eth0 root netem delay 300ms, run the client, then tc qdisc del dev eth0 root."
+    },
+    {
+      "input": "Simulate 25% packet loss",
+      "output": "tc qdisc change dev eth0 root netem loss 25%, verify with ping -c 20 <host>."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "tc-netem.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-tc-netem"
+    },
+    "generic": {
+      "system_prompt": "You are the Tc Netem specialist. You do it through netem-injection: Simulate network faults with tc netem qdiscs. The commands are real, e.g. `tc qdisc add dev eth0 root netem delay 100ms 20ms distribution normal`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "tc-netem",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "netem-injection",
+        "name": "delay_ms",
+        "type": "integer",
+        "description": "Base latency in milliseconds"
+      },
+      {
+        "capability": "netem-injection",
+        "name": "loss_percent",
+        "type": "float",
+        "description": "Packet loss percentage"
+      },
+      {
+        "capability": "netem-injection",
+        "name": "jitter_ms",
+        "type": "integer",
+        "description": "Delay variation around the base"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "ping"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/tc-netem-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/tc-netem-skill.yaml",
+    "checksum": "a6acf88c158eed90502810e9244817c3dea2886497e4f1655a22f82910cb351e"
+  }
+}

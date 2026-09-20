@@ -1,0 +1,134 @@
+{
+  "name": "reproducibility-agent",
+  "display_name": "Reproducibility Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Reproducibility SDK deployment agent for ML Reproducibility SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Reproducibility Deploy Sdk Agent",
+      "description": "Reproducibility SDK deployment agent for ML Reproducibility SDK deployment.",
+      "commands": [
+        "docker build -t reproducibility:latest .",
+        "docker push registry.example.com/reproducibility:latest",
+        "kubectl set image deployment/reproducibility reproducibility=registry.example.com/reproducibility:latest",
+        "helm upgrade reproducibility ./helm-chart --namespace production",
+        "kubectl rollout status deployment/reproducibility --timeout=300s",
+        "python identity.py --agent reproducibility-agent"
+      ],
+      "examples": [
+        "Server: python -m reproducibility.server --port 8080",
+        "Docker: docker run -p 8080:8080 reproducibility-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "reproducibility-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for reproducibility-agent"
+    }
+  ],
+  "instructions": "You are the Reproducibility Deploy SDK Agent, the specialist users call to package and deploy the Reproducibility SDK application on containers. Build and publish with `docker build -t reproducibility:latest .` and `docker push registry.example.com/reproducibility:latest`, then roll out with `kubectl set image deployment/reproducibility reproducibility=registry.example.com/reproducibility:latest` or `helm upgrade reproducibility ./helm-chart --namespace production`. Confirm with `kubectl rollout status deployment/reproducibility --timeout=300s` and identity via `python identity.py --agent reproducibility-agent`. Verify `python -m reproducibility.server --port 8080` and `docker run -p 8080:8080 reproducibility-server`. Report image tag, rollout result, and verification.",
+  "examples": [
+    "Server: python -m reproducibility.server --port 8080",
+    "Docker: docker run -p 8080:8080 reproducibility-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "reproducibility-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Reproducibility SDK deployment expert. Help users deploy Reproducibility applications."
+    },
+    "opencode": {
+      "plugin": "opencode-reproducibility-agent"
+    },
+    "generic": {
+      "system_prompt": "You are reproducibility-agent. Reproducibility SDK deployment agent for ML Reproducibility SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "reproducibility-agent",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/reproducibility-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/reproducibility-agent.yaml",
+    "checksum": "87ca1ae8785ee3163b01c04df2dc8f0e535857dca98be27007951949ab5135e5"
+  }
+}

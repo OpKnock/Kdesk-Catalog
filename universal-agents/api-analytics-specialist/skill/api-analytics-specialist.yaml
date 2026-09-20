@@ -1,0 +1,118 @@
+name: api-analytics-specialist
+version: 2.0.0
+type: skill
+category: sre
+description: 'Deep API analytics: PromQL expertise, query range analysis, log-based analytics with Elasticsearch,
+  and correlating metrics with deployments.'
+keywords:
+- api-analytics
+- metrics
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-analytics-specialist.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-analytics-specialist
+  generic:
+    system_prompt: 'This is your domain: api-analytics-specialist. You do it through analytics-deep: Advanced
+      analytics queries and log correlation. The commands are real, e.g. `curl -G http://localhost:9090/api/v1/query_range
+      --data-urlencode...`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: analytics-deep
+  description: Advanced analytics queries and log correlation
+  commands:
+  - curl -G 'http://localhost:9090/api/v1/query_range' --data-urlencode 'query=rate(http_requests_total[5m])'
+    --data-urlencode 'start=2024-06-01T00:00:00Z' --data-urlencode 'end=2024-06-01T01:00:00Z' --data-urlencode
+    'step=60' | jq '.data.result[0].values | length'
+  - curl -s -X PUT localhost:9200/api-logs-2024.06.01 | jq '.acknowledged'
+  - curl -s 'http://localhost:9200/api-logs-*/_search?q=status:500&size=10' | jq '.hits.total.value'
+  - promtool query range 'rate(http_requests_total[1m])' --start=2024-06-01T00:00:00Z --end=2024-06-01T01:00:00Z
+    --step=60s http://localhost:9090
+  - curl -s 'http://localhost:9090/api/v1/query?query=topk(5,%20sum%20by%20(path)(rate(http_requests_total[1h])))'
+    | jq '.data.result[].metric.path'
+  examples:
+  - curl -s 'http://localhost:9090/api/v1/query?query=changes(http_up[1h])' | jq '.data.result'
+  - curl -s 'http://localhost:9200/api-logs-*/_search?q=method:POST%20AND%20status:[400%20TO%20499]&size=5'
+    | jq '.hits.hits[]._source'
+  - promtool query instant 'avg_over_time(http_request_duration_seconds_sum[1d])/avg_over_time(http_request_duration_seconds_count[1d])'
+    http://localhost:9090
+  parameters:
+  - name: index
+    type: string
+    description: Elasticsearch index pattern, e.g. api-logs-*
+  - name: query
+    type: string
+    description: PromQL or ES query string
+  - name: range
+    type: string
+    description: Time range for analysis
+prerequisites:
+- prometheus
+- grafana
+- elasticsearch
+tools:
+- prometheus
+- grafana
+- elasticsearch
+- node.js
+- python
+- kibana
+examples:
+- input: Latency spiked at 14:00 yesterday
+  output: Runs a range query over the window, compares with deployment times, and cross-checks error logs.
+- input: Build a 5xx alert rule
+  output: Writes the ratio rule, validates with promtool, and tests the firing state.
+instructions: "# API Analytics Specialist\n\n## What this skill does\nExpert-level API analytics: range\
+  \ queries, alert rules, log-based analysis with Elasticsearch, and correlating metric anomalies with\
+  \ deployments and releases.\n\n## When to use\n- Investigating performance regressions\n- Building alert\
+  \ rules that don't false-positive\n- Correlating logs and metrics\n\n## Real commands\n```bash\n# Range\
+  \ query over one hour\ncurl -G 'http://localhost:9090/api/v1/query_range' \\\n  --data-urlencode 'query=rate(http_requests_total[5m])'\
+  \ \\\n  --data-urlencode 'start=2024-06-01T00:00:00Z' \\\n  --data-urlencode 'end=2024-06-01T01:00:00Z'\
+  \ \\\n  --data-urlencode 'step=60' | jq '.data.result[0].values | length'\n\n# Same via promtool\npromtool\
+  \ query range 'rate(http_requests_total[1m])' \\\n  --start=2024-06-01T00:00:00Z --end=2024-06-01T01:00:00Z\
+  \ --step=60s http://localhost:9090\n\n# Top 5 busiest paths last hour\ncurl -s 'http://localhost:9090/api/v1/query?query=topk(5,%20sum%20by%20(path)(rate(http_requests_total[1h])))'\
+  \ | jq '.data.result[].metric.path'\n\n# Deployment churn detection\ncurl -s 'http://localhost:9090/api/v1/query?query=changes(http_up[1h])'\
+  \ | jq '.data.result'\n\n# Create a daily log index\ncurl -s -X PUT localhost:9200/api-logs-2024.06.01\
+  \ | jq '.acknowledged'\n\n# Count 500s in logs\ncurl -s 'http://localhost:9200/api-logs-*/_search?q=status:500&size=10'\
+  \ | jq '.hits.total.value'\n```\n\n## Alert rule example (rules.yml)\n```yaml\ngroups:\n  - name: api\n\
+  \    rules:\n      - alert: HighErrorRate\n        expr: |\n          sum(rate(http_requests_total{status=~\"\
+  5..\"}[5m])) /\n          sum(rate(http_requests_total[5m])) > 0.05\n        for: 10m\n```\n\n## Best\
+  \ practices\n- Validate rules with promtool before deploying\n- Use changes()/predict_linear for anomaly\
+  \ correlation\n- Keep log indices date-based for retention\n\n## Testing\n```bash\npromtool check rules\
+  \ rules.yml\ncurl -s 'http://localhost:9090/api/v1/alerts' | jq '.data.alerts[] | {name: .labels.alertname,\
+  \ state}'\n```"
+display_name: api-analytics-specialist
+knowledge:
+- title: PromQL Documentation
+  type: documentation
+  source: https://prometheus.io/docs/prometheus/latest/querying/functions/
+  description: 'All PromQL functions: rate, topk, changes, predict_linear'
+- title: Elasticsearch Query DSL
+  type: documentation
+  source: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html
+  description: Full-text and structured queries

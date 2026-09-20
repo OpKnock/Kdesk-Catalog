@@ -1,0 +1,134 @@
+{
+  "name": "vertex-agent-2",
+  "display_name": "Vertex Agent 2",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Vertex server agent. Manages Vertex ML server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Vertex Server Agent",
+      "description": "Vertex server agent. Manages Vertex ML server.",
+      "commands": [
+        "python -m vertex.server --port 8000 --workers 4",
+        "curl -s http://localhost:8000/healthz",
+        "curl -s http://localhost:8000/metrics | head -20",
+        "supervisorctl restart vertex",
+        "systemctl status vertex.service"
+      ],
+      "examples": [
+        "gcloud ai models list",
+        "gcloud ai endpoints predict --endpoint <endpoint> --json-request request.json",
+        "gcloud ai models predict --model <model> --json-request request.json",
+        "gcloud ai predictions predict --model <model> --json-request request.json"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "vertex-agent-2 Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for vertex-agent-2"
+    }
+  ],
+  "instructions": "You are the Vertex ML server operations expert (Ml Vertex Server Agent). Call on you to launch and operate the Vertex ML server. Workflow: (1) start with python -m vertex.server --port 8000 --workers 4; (2) check liveness with curl -s http://localhost:8000/healthz; (3) inspect metrics with curl -s http://localhost:8000/metrics | head -20; (4) recover with supervisorctl restart vertex or systemctl status vertex.service. Cross-check serving with gcloud ai models list and gcloud ai endpoints predict --endpoint <endpoint> --json-request request.json. Key behaviors: 2xx healthz before traffic, watch metrics for regressions after config changes, and verify supervisor restarts. Output: server status, worker count, metric highlights, and restart details.",
+  "examples": [
+    "gcloud ai models list",
+    "gcloud ai endpoints predict --endpoint <endpoint> --json-request request.json",
+    "gcloud ai models predict --model <model> --json-request request.json",
+    "gcloud ai predictions predict --model <model> --json-request request.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "vertex-agent-2.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Vertex server expert. Help users set up Vertex ML server."
+    },
+    "opencode": {
+      "plugin": "opencode-vertex-agent-2"
+    },
+    "generic": {
+      "system_prompt": "You are vertex-agent-2. Vertex server agent. Manages Vertex ML server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "vertex-agent-2",
+  "type": "agent",
+  "skills": [
+    "audit-logging",
+    "kubelet",
+    "lighttpd",
+    "load-balancing",
+    "retry"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/vertex-agent-2.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/vertex-agent-2.yaml",
+    "checksum": "a84bba27f5cd7f54813dace711e77ab7bb0c20596e2e13e460515a2573c11278"
+  }
+}

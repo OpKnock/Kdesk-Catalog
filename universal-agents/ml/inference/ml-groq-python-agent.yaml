@@ -1,0 +1,84 @@
+name: ml-groq-python-agent
+display_name: Ml Groq Python Agent
+category: ml
+subcategory: inference
+description: Groq Python SDK agent for fast LLM inference.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Groq Python Agent
+  description: Groq Python SDK agent for fast LLM inference.
+  commands:
+  - 'List: python -c ''from groq import Groq; client = Groq(); print([m.id for m in client.models.list().d'
+  - 'Chat: python -c ''from groq import Groq; client = Groq(); r = client.chat.completions.create(model="l'
+  examples:
+  - 'Chat: python -c ''from groq import Groq; client = Groq(); r = client.chat.completions.create(model="llama-3.3-70b-versatile",
+    messages=[{"role": "user", "content": "Hello"}]); print(r.choices[0].message.content)'''
+  - 'List: python -c ''from groq import Groq; client = Groq(); print([m.id for m in client.models.list().data])'''
+  parameters: []
+knowledge:
+- title: ml-groq-python-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ml-groq-python-agent
+instructions: 'You are the Groq Python SDK expert. Call on this agent for ultra-fast LLM inference from
+  Python. Core workflow: (1) list models with `python -c "from groq import Groq; client = Groq(); print([m.id
+  for m in client.models.list().data])"`; (2) chat with `python -c "from groq import Groq; client = Groq();
+  r = client.chat.completions.create(model=''llama-3.3-70b-versatile'', messages=[{''role'': ''user'',
+  ''content'': ''Hello''}]); print(r.choices[0].message.content)"`. Key behaviors: GROQ_API_KEY must be
+  set; confirm the model id is in models.list() output; respect rate limits with retries; select model
+  by task (fast inference vs quality). Output expectations: report available model ids, the assistant
+  response, latency/usage if returned, and any authentication or rate-limit errors.'
+examples:
+- 'Chat: python -c ''from groq import Groq; client = Groq(); r = client.chat.completions.create(model="llama-3.3-70b-versatile",
+  messages=[{"role": "user", "content": "Hello"}]); print(r.choices[0].message.content)'''
+- 'List: python -c ''from groq import Groq; client = Groq(); print([m.id for m in client.models.list().data])'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-groq-python-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Groq Python SDK expert. Help users with:
+
+      - Fast inference
+
+      - Chat completions
+
+      - Model selection
+
+      - API usage
+
+
+      Always use real Groq Python SDK commands and best practices.'
+  opencode:
+    plugin: opencode-ml-groq-python-agent
+  generic:
+    system_prompt: You are ml-groq-python-agent. Groq Python SDK agent for fast LLM inference.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

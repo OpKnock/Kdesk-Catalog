@@ -1,0 +1,102 @@
+name: webhook-retry
+display_name: Webhook Retry
+category: api
+subcategory: general
+description: 'Webhook retry policies: exponential backoff, jitter, idempotency keys, dead-lettering, and
+  replay semantics for resilient event delivery.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: retry-policy
+  description: Configure and test webhook retry and backoff behavior
+  commands:
+  - curl --retry 3 --retry-delay 2 --retry-all-errors -X POST -d '{"event":"order.created"}' http://localhost:8080/webhooks/orders
+  - curl -s -X POST http://localhost:8080/webhooks/deliveries/DELIVERY_ID/retry | jq '.next_retry_at'
+  - curl -s http://localhost:8080/webhooks/deliveries?status=dead-letter | jq 'length'
+  - 'curl -s -X POST http://localhost:8080/webhooks/events -H ''Idempotency-Key: evt_42'' -d ''{"event":"payment.succeeded"}'''
+  - curl -s http://localhost:8080/webhooks/events/evt_42 | jq '.deliveries | length'
+  examples:
+  - curl --retry 5 --retry-delay 30 --retry-connrefused http://localhost:8080/health
+  - curl -s -X POST http://localhost:8080/webhooks/deliveries/DELIVERY_ID/requeue | jq '.attempts'
+  - 'curl -s http://localhost:8080/webhooks/deliveries?status=dead-letter -X POST -H ''Content-Type: application/json''
+    -d ''{}'' | jq ''.requeued'''
+  parameters:
+  - name: retry
+    type: integer
+    description: Max curl retries
+  - name: retry_delay
+    type: integer
+    description: Seconds between retries
+  - name: backoff_base
+    type: integer
+    description: Base multiplier for exponential backoff
+knowledge:
+- title: AWS EventBridge Retry Policy
+  type: documentation
+  source: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-rule-dlq.html
+  description: Retry policy and dead-letter queue configuration
+- title: Stripe Webhook Best Practices
+  type: documentation
+  source: https://docs.stripe.com/webhooks/best-practices
+  description: Idempotency and delivery semantics guidance
+instructions: "# Webhook Retry\n\n## What this skill does\nDesign retry policies for webhook delivery:\
+  \ exponential backoff with jitter, idempotency keys to make replays safe, dead-letter queues, and per-delivery\
+  \ retry/replay APIs.\n\n## When to use\n- Subscribers are flaky or rate-limited\n- Making webhook replays\
+  \ safe for consumers\n- Auditing why events are stuck\n\n## Real commands\n```bash\n# curl-level retry\
+  \ for testing\ncurl --retry 3 --retry-delay 2 --retry-all-errors \\\n  -X POST -d '{\"event\":\"order.created\"\
+  }' http://localhost:8080/webhooks/orders\n\n# Retry a delivery through the API\ncurl -s -X POST http://localhost:8080/webhooks/deliveries/DELIVERY_ID/retry\
+  \ | jq '.next_retry_at'\n\n# Dead-letter inspection\ncurl -s 'http://localhost:8080/webhooks/deliveries?status=dead-letter'\
+  \ | jq 'length'\n\n# Idempotent event creation\ncurl -s -X POST http://localhost:8080/webhooks/events\
+  \ \\\n  -H 'Idempotency-Key: evt_42' -d '{\"event\":\"payment.succeeded\"}'\n\n# Same key returns the\
+  \ same event, no duplicate deliveries\ncurl -s -X POST http://localhost:8080/webhooks/events \\\n  -H\
+  \ 'Idempotency-Key: evt_42' -d '{\"event\":\"payment.succeeded\"}' | jq '.deliveries | length'\n\n#\
+  \ Requeue dead letters\ncurl -s -X POST http://localhost:8080/webhooks/deliveries?status=dead-letter\
+  \ | jq '.requeued'\n```\n\n## Backoff schedule\n```\nattempt 1: 1s\nattempt 2: 5s\nattempt 3: 25s\n\
+  attempt 4: 125s\nattempt 5: 625s  -> dead-letter\n```\nAdd jitter (+/- 20%) to avoid thundering herd.\n\
+  \n## Best practices\n- Cap retries at 5-7 attempts, then dead-letter\n- Always require idempotency keys\
+  \ for mutable events\n- Store per-delivery attempt history\n- Requeue dead letters in small batches\n\
+  \n## Testing\n```bash\n# Force failures then verify backoff\ncurl -s http://localhost:8080/webhooks/deliveries\
+  \ | jq '.[0] | {attempts, next_retry_at, status}'\n```"
+examples:
+- input: Set up retries for flaky subscribers
+  output: Configures exponential backoff with jitter, caps at 5 attempts, and routes failures to a dead-letter
+    queue.
+- input: Why is this event stuck retrying?
+  output: Inspects the delivery's attempt history and last_error, then decides whether to retry or dead-letter.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: webhook-retry.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-webhook-retry
+  generic:
+    system_prompt: 'This is your domain: Webhook Retry. You do it through retry-policy: Configure and
+      test webhook retry and backoff behavior. The commands are real, e.g. `curl --retry 3 --retry-delay
+      2 --retry-all-errors -X POST -d {event:order.created}...`. You verify each step you report and stay
+      honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

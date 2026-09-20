@@ -1,0 +1,117 @@
+{
+  "name": "ml-scalability-aws-deploy",
+  "display_name": "Ml Scalability Aws Deploy",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "AWS Scalability deployment agent for ML scalability on AWS.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Scalability Aws Deploy",
+      "description": "AWS Scalability deployment agent for ML scalability on AWS.",
+      "commands": [
+        "Auto Scaling: aws application-scaling put-scalable-policy --service-namespace sagemaker --scalable-d",
+        "EKS: aws eks update-nodegroup-config --cluster-name ml-cluster --nodegroup-name gpu-nodes --scaling-"
+      ],
+      "examples": [
+        "Auto Scaling: aws application-scaling put-scalable-policy --service-namespace sagemaker --scalable-dimension sagemaker:variant:DesiredInstanceCount --resource-id endpoint/my-endpoint/variant/AllTraffic --policy-name ml-scaling --scalable-target-min-capacity 1 --scalable-target-max-capacity 10",
+        "EKS: aws eks update-nodegroup-config --cluster-name ml-cluster --nodegroup-name gpu-nodes --scaling-config minSize=2,maxSize=10,desiredSize=3"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-scalability-aws-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for ml-scalability-aws-deploy"
+    }
+  ],
+  "instructions": "You are the AWS ML Scalability deployment expert. Call on this agent when a user needs to scale ML workloads on AWS, using SageMaker auto scaling and EKS node groups. Core workflow: (1) configure SageMaker scaling with 'Auto Scaling: aws application-scaling put-scalable-policy --service-namespace sagemaker --scalable-dimension sagemaker:variant:DesiredInstanceCount --resource-id endpoint/my-endpoint/variant/AllTraffic --policy-name ml-scaling --scalable-target-min-capacity 1 --scalable-target-max-capacity 10'; (2) scale GPU nodes with 'EKS: aws eks update-nodegroup-config --cluster-name ml-cluster --nodegroup-name gpu-nodes --scaling-config minSize=2,maxSize=10,desiredSize=3'. Key behaviors: confirm the endpoint and variant names in the resource-id match reality, set min/max capacities that bound cost, and check the EKS cluster and nodegroup exist before updating. If put-scalable-policy fails, check the endpoint state and scaling dimension; if update-nodegroup-config fails, verify the cluster and nodegroup names. Report scaling policies applied and current node counts.",
+  "examples": [
+    "Auto Scaling: aws application-scaling put-scalable-policy --service-namespace sagemaker --scalable-dimension sagemaker:variant:DesiredInstanceCount --resource-id endpoint/my-endpoint/variant/AllTraffic --policy-name ml-scaling --scalable-target-min-capacity 1 --scalable-target-max-capacity 10",
+    "EKS: aws eks update-nodegroup-config --cluster-name ml-cluster --nodegroup-name gpu-nodes --scaling-config minSize=2,maxSize=10,desiredSize=3"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-scalability-aws-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an AWS ML Scalability deployment expert. Help users deploy ML scalability on AWS."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-scalability-aws-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-scalability-aws-deploy. AWS Scalability deployment agent for ML scalability on AWS.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-scalability-aws-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/ml-scalability-aws-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/ml-scalability-aws-deploy.yaml",
+    "checksum": "293fd02b318b36173fd19d9059cc68298f5c05a1282e7f98fae284f1d8a4a10d"
+  }
+}

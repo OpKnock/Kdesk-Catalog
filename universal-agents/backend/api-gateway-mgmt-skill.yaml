@@ -1,0 +1,162 @@
+name: api-gateway-mgmt
+display_name: Api Gateway Mgmt
+category: backend
+subcategory: general
+description: 'Manages API gateways with Kong and decK: service/route registration, plugin policies, consumer
+  credentials, and declarative configuration as code.'
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- deck
+- docker
+capabilities:
+- name: kong-admin
+  description: Manage Kong services, routes, and plugins
+  commands:
+  - docker run -d --name kong -p 8000:8000 -p 8001:8001 kong/kong-gateway
+  - curl -s -X POST http://localhost:8001/services -d 'name=users' -d 'url=http://users-svc:8080'
+  - curl -s -X POST http://localhost:8001/services/users/routes -d 'paths[]=/users'
+  - curl -s -X POST http://localhost:8001/plugins -d 'name=rate-limiting' -d 'config.minute=60'
+  - curl -s http://localhost:8001/services | jq '.data[].name'
+  examples:
+  - POST /services registers an upstream
+  - POST /services/:name/routes maps paths
+  - POST /plugins applies gateway policies
+  parameters:
+  - name: service-name
+    type: string
+    description: Upstream service name
+  - name: upstream-url
+    type: string
+    description: Backend URL
+  - name: paths
+    type: array
+    description: Route path patterns
+- name: deck-config
+  description: Manage Kong configuration as code
+  commands:
+  - deck ping
+  - deck gateway dump -o kong.yaml
+  - deck gateway diff kong.yaml
+  - deck gateway sync kong.yaml
+  - deck gateway validate kong.yaml
+  examples: []
+  parameters: []
+knowledge:
+- title: Kong Gateway Docs
+  type: documentation
+  source: https://docs.konghq.com/gateway/latest/
+  description: Kong Gateway administration
+- title: decK Docs
+  type: documentation
+  source: https://docs.konghq.com/deck/
+  description: Declarative Kong configuration
+instructions: '# API Gateway Management
+
+
+  Gateway administration with Kong/decK.
+
+
+  ## What This Skill Does
+
+  - Registers services, routes, and plugins
+
+  - Manages config as code with decK
+
+  - Applies gateway policies centrally
+
+
+  ## When to Use
+
+  - Central API routing
+
+  - Gateway-level auth and rate limits
+
+  - Reproducible gateway configs
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  docker run -d --name kong -p 8000:8000 -p 8001:8001 kong/kong-gateway
+
+  curl -s -X POST http://localhost:8001/services -d ''name=users'' -d ''url=http://users-svc:8080''
+
+  curl -s -X POST http://localhost:8001/services/users/routes -d ''paths[]=/users''
+
+  curl -s -X POST http://localhost:8001/plugins -d ''name=rate-limiting'' -d ''config.minute=60''
+
+  ```
+
+
+  ## Declarative Flow
+
+  1. deck gateway dump to capture current state
+
+  2. Edit kong.yaml in version control
+
+  3. deck gateway diff to preview changes
+
+  4. deck gateway sync to apply
+
+
+  ## Testing
+
+  - Verify routes resolve through the gateway
+
+  - Test plugin enforcement
+
+  - Validate YAML before sync
+
+
+
+  ## Best Practices
+
+  - Prefer declarative config over ad-hoc API calls
+
+  - Scope plugins to routes or services
+
+  - Version gateway configs with the codebase'
+examples:
+- input: Route /users through the gateway
+  output: Registers the service and route, then verifies via the proxy
+- input: Enforce rate limits centrally
+  output: Adds the rate-limiting plugin and syncs with deck
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-gateway-mgmt.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-gateway-mgmt
+  generic:
+    system_prompt: 'You take the Api Gateway Mgmt seat. You do it through kong-admin: Manage Kong services,
+      routes, and plugins. The commands are real, e.g. `docker run -d --name kong -p 8000:8000 -p 8001:8001
+      kong/kong-gateway`. You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

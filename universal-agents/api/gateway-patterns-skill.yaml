@@ -1,0 +1,182 @@
+name: gateway-patterns
+display_name: Gateway Patterns
+category: api
+subcategory: general
+description: 'API gateway design patterns: routing, aggregation, authentication, rate limiting, and versioning
+  with Kong, nginx, and Envoy.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- nginx
+capabilities:
+- name: kong-gateway
+  description: Manage Kong routes, services, and plugins; test gateway behavior.
+  commands:
+  - curl -s -X POST http://localhost:8001/services -d 'name=orders' -d 'url=http://orders-service:8080'
+    | jq '.id'
+  - curl -s -X POST http://localhost:8001/services/orders/routes -d 'paths[]=/api/orders' -d 'name=orders-route'
+    | jq '.paths'
+  - curl -s -X POST http://localhost:8001/services/orders/plugins -d 'name=rate-limiting' -d 'config.minute=100'
+    | jq '.name'
+  - curl -s http://localhost:8001/services | jq '.data[] | {name, host}'
+  - nginx -t && curl -sI http://localhost:8000/api/orders | head -5
+  examples:
+  - curl -s -X POST http://localhost:8001/services/orders/routes -d 'paths[]=/api/orders' -d 'name=orders-route'
+    | jq '.paths'
+  - curl -s -X POST http://localhost:8001/services/orders/plugins -d 'name=rate-limiting' -d 'config.minute=100'
+    | jq '.name'
+  - curl -s http://localhost:8001/services | jq '.data[] | {name, host}'
+  parameters:
+  - name: service-name
+    type: string
+    description: Gateway service name
+  - name: path-prefix
+    type: string
+    description: Route path prefix like /api/orders
+  - name: plugin
+    type: string
+    description: 'Plugin: rate-limiting, key-auth, cors, proxy-cache'
+knowledge:
+- title: Kong Admin API
+  type: documentation
+  source: https://developer.konghq.com/gateway/latest/admin-api/
+  description: Services, routes, and plugins administration
+- title: API Gateway patterns
+  type: documentation
+  source: https://microservices.io/patterns/apigateway.html
+  description: Gateway routing, aggregation, and offloading patterns
+instructions: '# Gateway Patterns
+
+
+  ## What this skill does
+
+
+  API gateways sit in front of services handling routing, auth, rate limits, aggregation, and versioning.
+  This skill covers the common patterns using Kong as the reference gateway.
+
+
+  ## When to use
+
+
+  - Placing a single entry point in front of microservices
+
+  - Enforcing auth and rate limits in one place
+
+  - Versioning APIs via paths or headers
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Register a service and route
+
+  curl -s -X POST http://localhost:8001/services -d ''name=orders'' -d ''url=http://orders-service:8080''
+  | jq ''.id''
+
+  curl -s -X POST http://localhost:8001/services/orders/routes -d ''paths[]=/api/orders'' -d ''name=orders-route''
+  | jq ''.paths''
+
+
+  # Attach a rate limit plugin
+
+  curl -s -X POST http://localhost:8001/services/orders/plugins -d ''name=rate-limiting'' -d ''config.minute=100''
+  | jq ''.name''
+
+
+  # Verify through the gateway
+
+  curl -s http://localhost:8000/api/orders | jq
+
+  ```
+
+
+  ## Pattern: versioned routing
+
+
+  ```bash
+
+  # v1 and v2 map to different upstreams
+
+  curl -s -X POST http://localhost:8001/services/orders-v1/routes -d ''paths[]=/v1/orders'' | jq ''.id''
+
+  curl -s -X POST http://localhost:8001/services/orders-v2/routes -d ''paths[]=/v2/orders'' | jq ''.id''
+
+  ```
+
+
+  ## Pattern: auth offloading
+
+
+  ```bash
+
+  # key-auth plugin turns the gateway into the token checkpoint
+
+  curl -s -X POST http://localhost:8001/services/orders/plugins -d ''name=key-auth'' | jq ''.name''
+
+  curl -s -X POST http://localhost:8001/consumers -d ''username=svc'' -d ''custom_id=svc-1'' | jq ''.id''
+
+  curl -s -X POST http://localhost:8001/consumers/svc/key-auth -d ''key=secret123'' | jq ''.key''
+
+  ```
+
+
+  ## Best practices
+
+
+  - Keep gateway routing declarative (Kong decK or nginx config in git).
+
+  - Offload cross-cutting concerns: auth, TLS, rate limits, CORS.
+
+  - Avoid business logic in the gateway; that is the aggregation service''s job.
+
+  - Monitor gateway error codes and plugin latency separately from services.
+
+  - Version early; renaming paths later breaks every client.
+
+  '
+examples:
+- input: Add rate limiting at the gateway
+  output: Create the service/route in Kong, attach the rate-limiting plugin with a minute config, and
+    verify 429s past the limit.
+- input: Expose v2 while keeping v1 alive
+  output: Register separate routes for /v1/orders and /v2/orders pointing at different services; keep
+    both plugins in sync.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: gateway-patterns.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-gateway-patterns
+  generic:
+    system_prompt: 'This is your domain: Gateway Patterns. You do it through kong-gateway: Manage Kong
+      routes, services, and plugins; test gateway behavior. The commands are real, e.g. `curl -s -X POST
+      http://localhost:8001/services -d name=orders -d...`. You prefer the shortest safe path, and you
+      reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

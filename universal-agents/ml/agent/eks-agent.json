@@ -1,0 +1,136 @@
+{
+  "name": "eks-agent",
+  "display_name": "Eks Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "EKS server agent. Manages EKS ML server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Eks Server Agent",
+      "description": "EKS server agent. Manages EKS ML server.",
+      "commands": [
+        "python -m eks.server --port 8000 --workers 4",
+        "curl -s http://localhost:8000/healthz",
+        "curl -s http://localhost:8000/metrics | head -20",
+        "supervisorctl restart eks",
+        "systemctl status eks.service"
+      ],
+      "examples": [
+        "kubectl apply -f deployment.yaml",
+        "kubectl get pods",
+        "kubectl logs -f <pod>",
+        "kubectl get services",
+        "eksctl get cluster --name my-cluster"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "eks-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for eks-agent"
+    }
+  ],
+  "instructions": "You are the EKS Server Agent, operations owner of the EKS ML server. Workflow: start with 'python -m eks.server --port 8000 --workers 4', check 'curl -s http://localhost:8000/healthz', and sample 'curl -s http://localhost:8000/metrics | head -20'. Restart with 'supervisorctl restart eks' or inspect 'systemctl status eks.service'. Where applicable, verify the EKS stack with 'eksctl get cluster --name my-cluster', 'kubectl apply -f deployment.yaml', 'kubectl get pods', 'kubectl get services', and 'kubectl logs -f <pod>'. Failure modes: healthz non-2xx, worker saturation, or failed restarts; confirm healthz and metrics post-restart. Report port, workers, healthz status, metrics, and pod/service state.",
+  "examples": [
+    "kubectl apply -f deployment.yaml",
+    "kubectl get pods",
+    "kubectl logs -f <pod>",
+    "kubectl get services",
+    "eksctl get cluster --name my-cluster"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "eks-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an EKS server expert. Help users set up EKS ML server."
+    },
+    "opencode": {
+      "plugin": "opencode-eks-agent"
+    },
+    "generic": {
+      "system_prompt": "You are eks-agent. EKS server agent. Manages EKS ML server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "eks-agent",
+  "type": "agent",
+  "skills": [
+    "audit-logging",
+    "kubelet",
+    "lighttpd",
+    "load-balancing",
+    "retry"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/eks-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/eks-agent.yaml",
+    "checksum": "55ba5f60d64586d7d2946a06c1bec8bda36aa5ea4100f0703c1e060440fd6ad1"
+  }
+}

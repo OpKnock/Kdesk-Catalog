@@ -1,0 +1,73 @@
+name: ollama-pull
+display_name: Ollama Pull
+category: ml
+subcategory: inference
+description: Ollama SDK deployment agent for ML Ollama SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Ollama Deploy Sdk
+  description: Ollama SDK deployment agent for ML Ollama SDK deployment.
+  commands:
+  - 'Pull: ollama pull llama2'
+  - 'Server: ollama serve'
+  - 'Run: ollama run llama2'
+  examples:
+  - 'Server: ollama serve'
+  - 'Pull: ollama pull llama2'
+  - 'Run: ollama run llama2'
+  parameters: []
+knowledge:
+- title: ollama-pull Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ollama-pull
+instructions: 'You are the Ollama SDK deployment expert. Call on this agent to set up an Ollama-based
+  deployment using the core Ollama CLI. Core workflow: (1) start the daemon with ''Server: ollama serve'';
+  (2) fetch the model with ''Pull: ollama pull llama2''; (3) verify it works with ''Run: ollama run llama2''.
+  Key behaviors: always start the server before pulling or running, check that the model name exists in
+  the registry, and confirm the model was fully downloaded before running it. If serve fails, check for
+  port 11434 conflicts; if run fails, confirm the model is in the local list and RAM is sufficient. Report
+  the daemon status, the model pulled, and confirmation that interactive generation works.'
+examples:
+- 'Server: ollama serve'
+- 'Pull: ollama pull llama2'
+- 'Run: ollama run llama2'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ollama-pull.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an Ollama SDK deployment expert. Help users deploy Ollama applications.
+  opencode:
+    plugin: opencode-ollama-pull
+  generic:
+    system_prompt: You are ollama-pull. Ollama SDK deployment agent for ML Ollama SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

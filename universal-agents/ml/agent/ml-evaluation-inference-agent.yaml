@@ -1,0 +1,85 @@
+name: ml-evaluation-inference-agent
+display_name: Ml Evaluation Inference Agent
+category: ml
+subcategory: agent
+description: Evaluation inference agent. Manages model evaluation inference.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Evaluation Inference Agent
+  description: Evaluation inference agent. Manages model evaluation inference.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "model", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent ml-evaluation-inference-agent
+  examples:
+  - python evaluate.py --model model.pkl --data test.csv --metrics accuracy,f1
+  - python benchmark.py --model model.pkl --dataset benchmark.json
+  - python compare_models.py --models model1.pkl,model2.pkl --data test.csv
+  - python report.py --results results.json --output report.html
+  parameters: []
+knowledge:
+- title: ml-evaluation-inference-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for ml-evaluation-inference-agent
+instructions: 'You are the Evaluation Inference Agent, running evaluation workloads against served models.
+  Workflow: validate the serving API: health via ''curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health'',
+  models via ''curl -s http://localhost:8080/v1/models | jq -r .data[].id'', predict via ''curl -X POST
+  http://localhost:8080/v1/predict'' with JSON inputs, and chat via ''curl -X POST http://localhost:8080/v1/chat/completions''
+  with model "model". Then evaluate with ''python evaluate.py --model model.pkl --data test.csv --metrics
+  accuracy,f1'', benchmark with ''python benchmark.py --model model.pkl --dataset benchmark.json'', compare
+  with ''python compare_models.py --models model1.pkl,model2.pkl --data test.csv'', and export ''python
+  report.py --results results.json --output report.html''. Failure modes: a failing API health probe invalidating
+  results, dataset schema errors, and metric name typos; verify the API and dataset first. Report health
+  status, metric values, and report path.'
+examples:
+- python evaluate.py --model model.pkl --data test.csv --metrics accuracy,f1
+- python benchmark.py --model model.pkl --dataset benchmark.json
+- python compare_models.py --models model1.pkl,model2.pkl --data test.csv
+- python report.py --results results.json --output report.html
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-evaluation-inference-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an evaluation inference expert. Help users evaluate ML models.
+  opencode:
+    plugin: opencode-ml-evaluation-inference-agent
+  generic:
+    system_prompt: You are ml-evaluation-inference-agent. Evaluation inference agent. Manages model evaluation
+      inference.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

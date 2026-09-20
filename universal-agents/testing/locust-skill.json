@@ -1,0 +1,243 @@
+{
+  "name": "locust",
+  "display_name": "locust",
+  "category": "testing",
+  "subcategory": "general",
+  "description": "Runs distributed load tests with Locust user classes, headless mode, HTML reports, and master/worker clusters.",
+  "version": "2.0.0",
+  "tags": [
+    "testing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "locust"
+  ],
+  "capabilities": [
+    {
+      "name": "locust-runs",
+      "description": "Run Locust locally and headless.",
+      "commands": [
+        "locust -f locustfile.py",
+        "locust --headless -u 100 -r 10 -t 30s -f locustfile.py",
+        "locust -f locustfile.py --web-port 8090",
+        "locust --headless -u 100 -r 10 --host https://api.example.com",
+        "locust --headless --users 50 --spawn-rate 5 --run-time 5m -f locustfile.py"
+      ],
+      "examples": [
+        "locust --headless -u 100 -r 10 -t 30s -f locustfile.py",
+        "locust -f locustfile.py --web-port 8090",
+        "locust --headless -u 50 -r 5 --run-time 5m -f locustfile.py"
+      ],
+      "parameters": [
+        {
+          "name": "file",
+          "type": "string",
+          "description": "Locustfile path"
+        },
+        {
+          "name": "users",
+          "type": "number",
+          "description": "Peak number of users (-u)"
+        },
+        {
+          "name": "spawnRate",
+          "type": "number",
+          "description": "Users spawned per second (-r)"
+        }
+      ]
+    },
+    {
+      "name": "reporting",
+      "description": "Export HTML reports and stats.",
+      "commands": [
+        "locust --headless -u 100 -r 10 -t 1m --html report.html -f locustfile.py",
+        "locust --headless -u 100 -r 10 --csv stats -t 1m -f locustfile.py",
+        "locust --headless -u 100 -r 10 --csv-full-history --csv stats -t 2m -f locustfile.py"
+      ],
+      "examples": [
+        "locust --headless -u 100 -r 10 -t 1m --html report.html -f locustfile.py",
+        "locust --headless -u 100 -r 10 --csv stats -t 1m -f locustfile.py"
+      ],
+      "parameters": [
+        {
+          "name": "html",
+          "type": "string",
+          "description": "HTML report output path"
+        },
+        {
+          "name": "csv",
+          "type": "string",
+          "description": "CSV stats prefix"
+        }
+      ]
+    },
+    {
+      "name": "distributed-mode",
+      "description": "Run master/worker clusters.",
+      "commands": [
+        "locust --master -f locustfile.py",
+        "locust --worker --master-host=localhost -f locustfile.py",
+        "locust --worker --master-host=10.0.0.5 --master-port=5557 -f locustfile.py",
+        "locust --master --expect-workers=4 -u 400 -r 40 -t 5m -f locustfile.py"
+      ],
+      "examples": [
+        "locust --master -f locustfile.py",
+        "locust --worker --master-host=localhost -f locustfile.py",
+        "locust --master --expect-workers=4 -u 400 -r 40 -t 5m"
+      ],
+      "parameters": [
+        {
+          "name": "masterHost",
+          "type": "string",
+          "description": "Master host for workers"
+        },
+        {
+          "name": "expectWorkers",
+          "type": "number",
+          "description": "Workers to wait for before starting"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Locust Documentation",
+      "type": "documentation",
+      "source": "https://docs.locust.io/en/stable/",
+      "description": "User classes, running modes, and reporting"
+    },
+    {
+      "title": "Locust Quickstart",
+      "type": "documentation",
+      "source": "https://docs.locust.io/en/stable/quickstart.html",
+      "description": "First locustfile and run"
+    }
+  ],
+  "instructions": "# Locust\n\nPython-based load testing with realistic user scenarios.\n\n## What This Skill Does\n\n- Defines user behaviors with HttpUser classes\n- Runs headless with user ramps and durations\n- Generates HTML and CSV reports\n- Scales with master/worker clusters\n\n## When to Use\n\n- Scenario-based load tests with complex flows\n- Distributed load generation\n- Long-running soak tests\n\n## Real Commands\n\n```bash\n# Local UI\nlocust -f locustfile.py\n\n# Headless\nlocust --headless -u 100 -r 10 -t 30s -f locustfile.py\nlocust --headless -u 50 -r 5 --run-time 5m --host https://api.example.com\n\n# Reports\nlocust --headless -u 100 -r 10 -t 1m --html report.html -f locustfile.py\nlocust --headless -u 100 -r 10 --csv stats -t 1m -f locustfile.py\n\n# Distributed\nlocust --master -f locustfile.py\nlocust --worker --master-host=localhost -f locustfile.py\nlocust --master --expect-workers=4 -u 400 -r 40 -t 5m\n```\n\n## Sample Locustfile\n\n```python\nfrom locust import HttpUser, task, between\n\nclass CatalogUser(HttpUser):\n    wait_time = between(1, 3)\n\n    @task\n    def browse(self):\n        self.client.get(\"/v1/products\")\n\n    @task(3)\n    def view_product(self):\n        self.client.get(\"/v1/products/42\")\n```\n\n## Best Practices\n\n- Weight tasks by real user frequency\n- Ramp spawn rate gradually to observe degradation\n- Keep scenarios deterministic for reproducibility\n- Use distributed mode beyond a single machine's limits\n- Export CSV/HTML for every run and archive them",
+  "examples": [
+    {
+      "input": "Simulate 100 users browsing the store",
+      "output": "Agent writes a locustfile with weighted tasks and runs headless with an HTML report."
+    },
+    {
+      "input": "Scale the load test across machines",
+      "output": "Agent starts a master with --expect-workers and worker processes, distributing 400 users."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "locust.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-locust"
+    },
+    "generic": {
+      "system_prompt": "You own locust end to end. You do it through locust-runs: Run Locust locally and headless. The commands are real, e.g. `locust -f locustfile.py`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "locust",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "locust-runs",
+        "name": "file",
+        "type": "string",
+        "description": "Locustfile path"
+      },
+      {
+        "capability": "locust-runs",
+        "name": "users",
+        "type": "number",
+        "description": "Peak number of users (-u)"
+      },
+      {
+        "capability": "locust-runs",
+        "name": "spawnRate",
+        "type": "number",
+        "description": "Users spawned per second (-r)"
+      },
+      {
+        "capability": "reporting",
+        "name": "html",
+        "type": "string",
+        "description": "HTML report output path"
+      },
+      {
+        "capability": "reporting",
+        "name": "csv",
+        "type": "string",
+        "description": "CSV stats prefix"
+      },
+      {
+        "capability": "distributed-mode",
+        "name": "masterHost",
+        "type": "string",
+        "description": "Master host for workers"
+      },
+      {
+        "capability": "distributed-mode",
+        "name": "expectWorkers",
+        "type": "number",
+        "description": "Workers to wait for before starting"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "locust"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/locust-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/locust-skill.yaml",
+    "checksum": "31bc58cbed16c0b58b97a1c623642d90a5709acac451628ac1888edb6551ea26"
+  }
+}

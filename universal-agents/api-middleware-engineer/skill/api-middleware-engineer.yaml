@@ -1,0 +1,208 @@
+name: api-middleware-engineer
+version: 2.0.0
+type: skill
+category: backend
+description: 'Designs and builds Node.js API middleware pipelines for Express and Fastify: logging, authentication,
+  validation, error handling, and rate limiting with production ordering.'
+keywords:
+- api-middleware
+- logging
+- authentication
+- validation
+- error-handling
+- rate-limiting
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-middleware-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-middleware-engineer
+  generic:
+    system_prompt: 'You are the api-middleware-engineer specialist. You do it through express-pipeline:
+      Assemble a layered Express middleware pipeline (logging -> security headers -> body parsing -> auth
+      -> validation -> routes -> errors). The commands are real, e.g. `npm init -y && npm install express
+      morgan helmet cors express-rate-limit`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: express-pipeline
+  description: Assemble a layered Express middleware pipeline (logging -> security headers -> body parsing
+    -> auth -> validation -> routes -> errors)
+  commands:
+  - npm init -y && npm install express morgan helmet cors express-rate-limit
+  - node app.js
+  - curl -i http://localhost:3000/api/health
+  - npx eslint . --ext .js
+  - npm test
+  examples:
+  - npm install morgan; app.use(morgan('combined')) for request logging
+  - app.use(helmet()) to set security headers before routes
+  - 'app.use(''/api'', rateLimit({ windowMs: 60000, limit: 60 }))'
+  parameters:
+  - name: middleware-order
+    type: string
+    description: Execution order of middleware in app.use() calls
+  - name: rate-limit-config
+    type: object
+    description: windowMs, limit, and skip options for express-rate-limit
+  - name: error-strategy
+    type: string
+    description: Centralized error handler placement (last in pipeline)
+- name: pipeline-testing
+  description: Verify middleware behavior with supertest against a mounted app instance
+  commands:
+  - npm install supertest jest
+  - npx jest --coverage
+  - 'curl -s -X POST http://localhost:3000/api/items -d ''{}'' -H ''Content-Type: application/json'''
+  - curl -s http://localhost:3000/api/protected
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- express
+- fastify
+tools:
+- node.js
+- python
+- express
+- fastify
+- koa
+- hapi
+examples:
+- input: Build logging middleware
+  output: Creates morgan/pino request logging with correlation IDs injected from X-Request-Id headers
+- input: Add validation middleware
+  output: Adds schema validation middleware that formats 400 errors consistently before routes run
+instructions: '# API Middleware Engineer
+
+
+  Builds layered middleware pipelines for Express and Fastify APIs.
+
+
+  ## What This Skill Does
+
+  - Writes logging, authentication, validation, error-handling, and rate-limiting middleware
+
+  - Orders middleware correctly so early layers (logs, security headers, body parsing) run before business
+  logic
+
+  - Provides centralized error handlers and async error propagation
+
+
+  ## When to Use
+
+  - Adding cross-cutting concerns to an existing API
+
+  - Standardizing request/response logging across services
+
+  - Enforcing auth and rate limits on selected route prefixes
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Scaffold and install
+
+  npm init -y
+
+  npm install express morgan helmet cors express-rate-limit
+
+
+  # Run and probe the pipeline
+
+  node app.js
+
+  curl -i http://localhost:3000/api/health
+
+
+  # Verify middleware ordering with lint and tests
+
+  npx eslint . --ext .js
+
+  npm test
+
+  ```
+
+
+  ## Pipeline Example
+
+
+  ```js
+
+  const express = require(''express'');
+
+  const morgan = require(''morgan'');
+
+  const helmet = require(''helmet'');
+
+  const rateLimit = require(''express-rate-limit'');
+
+  const app = express();
+
+  app.use(helmet());
+
+  app.use(morgan(''combined''));
+
+  app.use(express.json());
+
+  app.use(''/api'', rateLimit({ windowMs: 60 * 1000, limit: 60 }));
+
+  app.use((err, req, res, next) => res.status(500).json({ error: err.message }));
+
+  app.listen(3000);
+
+  ```
+
+
+  ## Testing
+
+  - Use supertest to mount the app and assert status codes, headers, and error bodies
+
+  - Test that the rate limiter returns 429 after the configured limit
+
+  - Verify error middleware runs for both sync and async handlers
+
+
+  ## Best Practices
+
+  - Auth middleware must run before route handlers, never after
+
+  - Always call next() in non-terminating middleware or the pipeline stalls
+
+  - Wrap async handlers so rejected promises reach the error handler'
+display_name: api-middleware-engineer
+knowledge:
+- title: Express Writing Middleware
+  type: documentation
+  source: https://expressjs.com/en/guide/writing-middleware.html
+  description: Official guide on writing and ordering Express middleware
+- title: Fastify Plugins Guide
+  type: documentation
+  source: https://fastify.dev/docs/latest/Guides/Plugins-Guide/
+  description: How to structure Fastify plugins as composable middleware

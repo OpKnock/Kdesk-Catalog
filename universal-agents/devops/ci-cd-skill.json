@@ -1,0 +1,219 @@
+{
+  "name": "ci-cd",
+  "display_name": "ci-cd",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Sets up and maintains CI/CD pipelines with GitHub Actions and GitLab CI, including workflow authoring, secrets handling, and run debugging.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "actionlint",
+    "glab"
+  ],
+  "capabilities": [
+    {
+      "name": "github-actions",
+      "description": "Create, trigger, and inspect GitHub Actions workflows via the gh CLI and YAML configs.",
+      "commands": [
+        "gh workflow list",
+        "gh workflow run deploy.yml -f environment=staging",
+        "gh run list --limit 10",
+        "gh run watch 1234567890",
+        "gh run view 1234567890 --log-failed",
+        "actionlint .github/workflows/deploy.yml"
+      ],
+      "examples": [
+        "gh workflow run release.yml -f version=1.2.3",
+        "gh run view 4473148674 --log-failed",
+        "actionlint .github/workflows/*.yml"
+      ],
+      "parameters": [
+        {
+          "name": "workflow",
+          "type": "string",
+          "description": "Workflow file name or ID to run, e.g. deploy.yml"
+        },
+        {
+          "name": "run-id",
+          "type": "string",
+          "description": "Workflow run ID for inspection (gh run view)"
+        },
+        {
+          "name": "inputs",
+          "type": "object",
+          "description": "Key-value inputs passed with -f, e.g. environment=staging"
+        }
+      ]
+    },
+    {
+      "name": "gitlab-ci",
+      "description": "Manage GitLab CI pipelines, runners, and pipeline schedules.",
+      "commands": [
+        "glab ci status",
+        "glab ci lint .gitlab-ci.yml",
+        "glab pipeline run",
+        "glab ci trace 1234567",
+        "glab runner list",
+        "glab ci retry 1234567"
+      ],
+      "examples": [
+        "glab ci lint .gitlab-ci.yml",
+        "glab pipeline run -b main",
+        "glab ci trace 2846210"
+      ],
+      "parameters": [
+        {
+          "name": "pipeline-id",
+          "type": "string",
+          "description": "Pipeline ID to trace, retry, or inspect"
+        },
+        {
+          "name": "branch",
+          "type": "string",
+          "description": "Branch to run the pipeline on"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "GitHub Actions Documentation",
+      "type": "documentation",
+      "source": "https://docs.github.com/en/actions",
+      "description": "Workflow syntax, events, expressions, and runners reference"
+    },
+    {
+      "title": "GitLab CI/CD Documentation",
+      "type": "documentation",
+      "source": "https://docs.gitlab.com/ci/",
+      "description": "GitLab CI pipeline configuration, jobs, stages, and caching"
+    },
+    {
+      "title": "actionlint",
+      "type": "documentation",
+      "source": "https://github.com/rhysd/actionlint",
+      "description": "Static checker for GitHub Actions workflow files"
+    }
+  ],
+  "instructions": "# CI/CD Pipeline Engineering\n\nDesign, author, and debug continuous integration and delivery pipelines for GitHub Actions and GitLab CI.\n\n## What This Skill Does\n\n- Writes valid `.github/workflows/*.yml` and `.gitlab-ci.yml` configs\n- Validates pipeline syntax locally before pushing\n- Debugs failing runs using the gh and glab CLIs\n- Manages environment secrets, caches, and artifact passing between jobs\n- Implements caching, matrix builds, and deployment gates\n\n## When to Use\n\n- A user asks to set up CI for a repository\n- A pipeline run fails and needs diagnosis\n- Adding deploy steps, artifact publishing, or test coverage gates\n\n## Real Commands\n\n```bash\n# Validate workflows before pushing (GitHub)\nactionlint .github/workflows/deploy.yml\nactionlint -shellcheck= /usr/bin/shellcheck -pyflakes= /usr/bin/pyflakes .github/workflows/*.yml\n\n# Trigger and watch runs (GitHub)\ngh workflow run deploy.yml -f environment=staging --ref main\ngh run list --workflow=deploy.yml --limit 5\ngh run watch 4473148674\ngh run view 4473148674 --log-failed\n\n# Validate and run (GitLab)\nglab ci lint .gitlab-ci.yml\nglab pipeline run -b main\nglab ci trace 2846210\nglab ci retry 2846210\n```\n\n## Sample Workflow\n\n```yaml\nname: deploy\non:\n  push:\n    branches: [main]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with: { node-version: 20, cache: npm }\n      - run: npm ci && npm test\n      - uses: actions/upload-artifact@v4\n        with: { name: dist, path: dist/ }\n  deploy:\n    needs: test\n    runs-on: ubuntu-latest\n    environment: staging\n    env:\n      STAGING_TOKEN: ${{ secrets.STAGING_TOKEN }}\n    steps:\n      - run: ./deploy.sh\n```\n\n## Best Practices\n\n- Pin action versions to full SHAs in security-sensitive repos\n- Use `needs` for job ordering and `if:` guards for conditional steps\n- Pass artifacts between jobs with upload/download-artifact\n- Cache package managers (npm, pip, maven) with `cache` inputs\n- Put long-lived credentials in repository secrets, never in workflow YAML\n- Fail fast: keep each job under ~10 minutes and parallelize with matrix",
+  "examples": [
+    {
+      "input": "My GitHub Actions deploy job fails at the npm ci step",
+      "output": "Agent runs gh run view <id> --log-failed, diagnoses npm cache or registry auth error, suggests locking package-lock.json and adding cache: npm, then validates with actionlint"
+    },
+    {
+      "input": "Set up CI for this Node.js repo",
+      "output": "Agent writes .github/workflows/ci.yml with checkout, setup-node, npm ci, lint, test, and coverage upload; validates with actionlint and triggers gh workflow run"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ci-cd.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ci-cd"
+    },
+    "generic": {
+      "system_prompt": "You take the ci-cd seat. You do it through github-actions: Create, trigger, and inspect GitHub Actions workflows via the gh CLI and YAML configs. The commands are real, e.g. `gh workflow list`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ci-cd",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "github-actions",
+        "name": "workflow",
+        "type": "string",
+        "description": "Workflow file name or ID to run, e.g. deploy.yml"
+      },
+      {
+        "capability": "github-actions",
+        "name": "run-id",
+        "type": "string",
+        "description": "Workflow run ID for inspection (gh run view)"
+      },
+      {
+        "capability": "github-actions",
+        "name": "inputs",
+        "type": "object",
+        "description": "Key-value inputs passed with -f, e.g. environment=staging"
+      },
+      {
+        "capability": "gitlab-ci",
+        "name": "pipeline-id",
+        "type": "string",
+        "description": "Pipeline ID to trace, retry, or inspect"
+      },
+      {
+        "capability": "gitlab-ci",
+        "name": "branch",
+        "type": "string",
+        "description": "Branch to run the pipeline on"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "actionlint",
+    "glab"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/ci-cd-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/ci-cd-skill.yaml",
+    "checksum": "91e14bb7fcac8e9f72968c556790febfea25efac9d4663f7a544e01a31de6904"
+  }
+}

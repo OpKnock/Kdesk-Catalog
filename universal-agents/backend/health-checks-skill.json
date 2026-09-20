@@ -1,0 +1,198 @@
+{
+  "name": "health-checks",
+  "display_name": "Health Checks",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Implements liveness, readiness, and startup probes across Kubernetes, Docker, and HTTP endpoints with proper semantics.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kubectl",
+    "python"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/health",
+        "curl -s http://localhost:8000/ready",
+        "curl -s http://localhost:8000/live",
+        "python -m http.server 8080"
+      ],
+      "description": "Create and test HTTP health endpoints.",
+      "name": "http-health",
+      "examples": [
+        "curl -s -o /dev/null -w \"%{http_code} %{time_total}\" http://localhost:8000/health",
+        "curl -sf http://localhost:8000/ready && echo OK"
+      ],
+      "parameters": [
+        {
+          "description": "Health endpoint path",
+          "name": "path",
+          "type": "string"
+        },
+        {
+          "name": "method",
+          "type": "string",
+          "description": "HTTP method to request with"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "kubectl apply -f deployment.yaml",
+        "kubectl get pods -w",
+        "kubectl describe pod myapp-abc123",
+        "kubectl rollout status deployment/myapp"
+      ],
+      "description": "Define liveness, readiness, and startup probes in Kubernetes manifests.",
+      "name": "k8s-probes",
+      "examples": [
+        "kubectl get deploy myapp -o jsonpath=\"{.spec.template.spec.containers[0].readinessProbe}\"",
+        "kubectl describe pod -l app=myapp | grep -A5 Probes"
+      ],
+      "parameters": [
+        {
+          "description": "liveness, readiness, or startup",
+          "name": "probe-type",
+          "type": "string"
+        },
+        {
+          "description": "Seconds before first probe",
+          "name": "initial-delay",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kubernetes Probes",
+      "description": "Probe configuration reference",
+      "source": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+      "type": "documentation"
+    },
+    {
+      "title": "Health Checks Best Practices",
+      "description": "Microservice health check pattern",
+      "source": "https://microservices.io/patterns/observability/health-check-api.html",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Health Checks\n\nImplement liveness, readiness, and startup probes correctly.\n\n## When to Use\n\n- Every deployed service should expose health endpoints\n- Kubernetes orchestration for restart and traffic decisions\n- Load balancers deciding when to take instances out of rotation\n- Distributed systems that need dependency status visibility\n\n## Endpoint Semantics\n\n- /health/live (liveness): process is alive; restart if failing\n- /health/ready (readiness): can serve traffic; drop from LB if failing\n- /health/startup: slow-starting apps; gates the other probes\n\n## Commands\n\n```bash\n# Test endpoints\ncurl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/health\ncurl -sf http://localhost:8000/ready && echo OK\n\n# Kubernetes\nkubectl apply -f deployment.yaml\nkubectl rollout status deployment/myapp\nkubectl describe pod -l app=myapp\nkubectl get pods -w\n```\n\n## Probe Example\n\n```yaml\n# deployment.yaml (excerpt)\ncontainers:\n  - name: myapp\n    image: myapp:1.2.3\n    livenessProbe:\n      httpGet:\n        path: /health/live\n        port: 8080\n      periodSeconds: 10\n    readinessProbe:\n      httpGet:\n        path: /health/ready\n        port: 8080\n      initialDelaySeconds: 5\n    startupProbe:\n      httpGet:\n        path: /health/startup\n        port: 8080\n      failureThreshold: 30\n```\n\n## Best Practices\n\n- Readiness should check real dependencies with timeouts and caching\n- Never let a health check take longer than the probe timeout\n- Return 503 with a body describing which dependency is down\n- Keep health endpoints cheap; do not run full DB queries every probe\n- Use startup probes for apps that need >10s to boot\n- Alert on readiness failures separately from liveness restarts",
+  "examples": [
+    {
+      "input": "My pod keeps restarting in Kubernetes",
+      "output": "Agent checks kubectl describe pod for probe failures, tunes initialDelaySeconds/failureThreshold, and fixes the /health/live endpoint."
+    },
+    {
+      "input": "Should my health check verify the database?",
+      "output": "Agent explains readiness vs liveness and shows a DB ping with a short timeout in the readiness handler only."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "health-checks.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-health-checks"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Health Checks. You do it through http-health: Create and test HTTP health endpoints. The commands are real, e.g. `curl -s -o /dev/null -w %{http_code} http://localhost:8000/health`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "health-checks",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "http-health",
+        "name": "path",
+        "type": "string",
+        "description": "Health endpoint path"
+      },
+      {
+        "capability": "http-health",
+        "name": "method",
+        "type": "string",
+        "description": "HTTP method to request with"
+      },
+      {
+        "capability": "k8s-probes",
+        "name": "probe-type",
+        "type": "string",
+        "description": "liveness, readiness, or startup"
+      },
+      {
+        "capability": "k8s-probes",
+        "name": "initial-delay",
+        "type": "integer",
+        "description": "Seconds before first probe"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kubectl",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/health-checks-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/health-checks-skill.yaml",
+    "checksum": "1d0e05c96b48c18556514ea651c180932b9b902604ca3fcb4b1da70fddb96343"
+  }
+}

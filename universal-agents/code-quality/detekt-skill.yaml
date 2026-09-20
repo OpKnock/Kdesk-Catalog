@@ -1,0 +1,115 @@
+name: detekt
+display_name: Detekt
+category: code-quality
+subcategory: general
+description: 'Static analysis for Kotlin with detekt: rule sets, complexity metrics, baseline management,
+  and Gradle integration.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- detekt
+- gradle
+capabilities:
+- commands:
+  - detekt --input src/main/kotlin
+  - detekt --config detekt.yml --input src/
+  - gradle detekt
+  - gradle detektMain detektTest
+  - detekt --version
+  description: Run detekt from the command line or Gradle.
+  name: detekt-cli
+  examples:
+  - detekt --input src/ --report xml:detekt-report.xml
+  - detekt --baseline detekt-baseline.xml
+  - gradle detekt --continue
+  parameters:
+  - description: Source directory
+    name: input
+    type: string
+  - description: Config yaml path
+    name: config
+    type: string
+  - description: Baseline xml path
+    name: baseline
+    type: string
+- commands:
+  - detekt --baseline detekt-baseline.xml --input src/
+  - detekt --build-upon-default-config
+  - gradle detektBaseline
+  - detekt --generate-config
+  description: Manage existing debt with baselines.
+  name: detekt-baseline
+  examples:
+  - gradle detektBaseline && gradle detekt
+  - detekt --generate-config --config detekt.yml
+  parameters:
+  - description: Generate default config
+    name: generate-config
+    type: boolean
+  - name: input
+    type: string
+    description: Source directory to scan
+knowledge:
+- title: detekt Docs
+  description: Rules, config, and CLI usage
+  source: https://detekt.dev
+  type: documentation
+- title: detekt on GitHub
+  description: Source and release notes
+  source: https://github.com/detekt/detekt
+  type: documentation
+instructions: "# detekt\n\nStatic analysis for Kotlin.\n\n## When to Use\n\n- Enforcing Kotlin style and\
+  \ complexity budgets\n- Catching smells (long methods, magic numbers, duplicates)\n- Kotlin codebases\
+  \ using Gradle\n- CI quality gates\n\n## Commands\n\n```bash\n# CLI\ndetekt --input src/main/kotlin\n\
+  detekt --config detekt.yml --input src/\n\n# Reports\ndetekt --report xml:detekt-report.xml\ndetekt\
+  \ --report sarif:detekt-report.sarif\n\n# Gradle\ngradle detekt\ngradle detektMain detektTest\n\n# Baseline\
+  \ (accept existing findings)\ngradle detektBaseline\ndetekt --baseline detekt-baseline.xml\n\n# Generate\
+  \ default config\ndetekt --generate-config --config detekt.yml\n```\n\n## Config Example\n\n```yaml\n\
+  # detekt.yml\ncomplexity:\n  LongMethod:\n    threshold: 60\n  TooManyFunctions:\n    thresholdInFiles:\
+  \ 12\n\nstyle:\n  MagicNumber:\n    ignoreNumbers: ['-1', '0', '1', '2']\n```\n\n## Best Practices\n\
+  \n- Keep the default rule set; enable extensions deliberately\n- Use baselines to adopt detekt on legacy\
+  \ code\n- Regenerate baseline only on reviewed improvements\n- Fail CI on new violations, allow old\
+  \ baselined ones\n- Integrate with Gradle: gradle detekt --continue\n- Pair with ktlint for formatting\
+  \ concerns"
+examples:
+- input: Run detekt on my Kotlin module
+  output: Agent runs gradle detekt, reviews findings by severity, and fixes blocking style issues.
+- input: Adopt detekt on a legacy codebase
+  output: Agent generates a baseline with gradle detektBaseline and adds a CI gate that fails only on
+    new findings.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: detekt.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-detekt
+  generic:
+    system_prompt: 'This is your domain: Detekt. You do it through detekt-cli: Run detekt from the command
+      line or Gradle. The commands are real, e.g. `detekt --input src/main/kotlin`. You verify each step
+      you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

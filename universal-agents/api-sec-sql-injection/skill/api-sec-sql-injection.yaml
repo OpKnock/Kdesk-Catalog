@@ -1,0 +1,166 @@
+name: api-sec-sql-injection
+version: 2.0.0
+type: skill
+category: security
+description: 'Tests APIs for injection and parameter tampering: sqlmap for SQLi, manual payload probes,
+  fuzzing inputs, and HTTP method abuse checks.'
+keywords:
+- api-security
+- owasp
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-sec-sql-injection.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-sec-sql-injection
+  generic:
+    system_prompt: 'This is your domain: Api Sec Sql Injection. You do it through sql-injection: Detect
+      SQL injection in API parameters. The commands are real, e.g. `sqlmap -u https://api.example.com/search?q=1
+      --batch --level=2`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: sql-injection
+  description: Detect SQL injection in API parameters
+  commands:
+  - sqlmap -u "https://api.example.com/search?q=1" --batch --level=2
+  - sqlmap -u "https://api.example.com/login" --data "email=a&pass=b" --batch
+  - curl -s "https://api.example.com/search?q=1'" | head -5
+  - curl -s "https://api.example.com/search?q=1%20OR%201=1" -o /dev/null -w '%{http_code}\n'
+  examples:
+  - sqlmap --batch automates detection non-interactively
+  - --level=2 deepens payload testing
+  - curl with quotes probes for raw SQL errors
+  parameters:
+  - name: url
+    type: string
+    description: Target URL with parameters
+  - name: level
+    type: integer
+    description: sqlmap test level 1-5
+  - name: data
+    type: string
+    description: POST body for parameter testing
+- name: method-abuse
+  description: Test HTTP method handling and fuzzing
+  commands:
+  - curl -s -X OPTIONS https://api.example.com/users -D- -o /dev/null | grep -i allow
+  - curl -s -X TRACE https://api.example.com/ -o /dev/null -w '%{http_code}\n'
+  - 'curl -s -X PATCH https://api.example.com/users/1 -H ''Content-Type: application/json'' -d ''{"role":"admin"}''
+    -w ''\n%{http_code}\n'''
+  - npx fuzzapi --target https://api.example.com/users
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- owasp-zap
+tools:
+- node.js
+- python
+- owasp-zap
+- helmet
+- cors
+examples:
+- input: Test /search for SQLi
+  output: Runs sqlmap at level 2 and confirms parameter-based injection
+- input: Check method restrictions
+  output: Probes OPTIONS/TRACE and checks the Allow header
+instructions: '# API Security v3 - Injection Testing
+
+
+  Injection and tampering tests.
+
+
+  ## What This Skill Does
+
+  - Automates SQLi detection with sqlmap
+
+  - Probes parameters manually
+
+  - Tests HTTP method and mass-assignment abuse
+
+
+  ## When to Use
+
+  - Pentest-style API reviews
+
+  - New endpoint security checks
+
+  - Bug bounty triage
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  sqlmap -u "https://api.example.com/search?q=1" --batch --level=2
+
+  curl -s "https://api.example.com/search?q=1''" | head -5
+
+  curl -s -X OPTIONS https://api.example.com/users -D- -o /dev/null | grep -i allow
+
+  ```
+
+
+  ## Test Checklist
+
+  - SQL injection on all query params
+
+  - Mass assignment on PUT/PATCH bodies
+
+  - Disallowed methods returning 200
+
+  - CRLF injection in headers
+
+
+  ## Testing
+
+  - Use a disposable test database
+
+  - Limit payloads to non-destructive probes
+
+  - Document every finding with evidence
+
+
+  ## Best Practices
+
+  - Only scan authorized environments
+
+  - Combine static review with dynamic probes
+
+  - Verify fixes with the same payloads'
+display_name: Api Sec Sql Injection
+knowledge:
+- title: sqlmap Docs
+  type: documentation
+  source: https://sqlmap.org/usage.html
+  description: sqlmap usage and options
+- title: OWASP Injection Cheat Sheet
+  type: documentation
+  source: https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html
+  description: Injection prevention guidance

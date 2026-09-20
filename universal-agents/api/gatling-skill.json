@@ -1,0 +1,173 @@
+{
+  "name": "gatling",
+  "display_name": "Gatling",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Load and performance testing with Gatling: write Scala simulations, run scenarios with the CLI, and parse HTML/JSON reports.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "gatling.sh",
+    "tail"
+  ],
+  "capabilities": [
+    {
+      "name": "gatling-simulations",
+      "description": "Author and run Gatling simulations, and inspect results.",
+      "commands": [
+        "gatling.sh --simulation orders.Simulation --results-folder ./results",
+        "gatling.sh --list",
+        "gatling.sh --run-description 'smoke v1.2.3' --simulation orders.Simulation",
+        "gatling.sh --results-folder results --reports-only results/orderapi-20240101",
+        "tail -20 results/orderapi-20240101/simulation.log | grep -E 'request|assert'"
+      ],
+      "examples": [
+        "gatling.sh --simulation orders.Simulation --results-folder ./results",
+        "gatling.sh --list",
+        "gatling.sh --results-folder results --reports-only results/orderapi-20240101"
+      ],
+      "parameters": [
+        {
+          "name": "simulation-class",
+          "type": "string",
+          "description": "Fully qualified simulation class"
+        },
+        {
+          "name": "users",
+          "type": "integer",
+          "description": "Number of virtual users"
+        },
+        {
+          "name": "duration",
+          "type": "string",
+          "description": "Ramp/steady duration in the scenario"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Gatling documentation",
+      "type": "documentation",
+      "source": "https://docs.gatling.io/",
+      "description": "Simulation DSL, protocols, assertions, and reporting"
+    },
+    {
+      "title": "Gatling CLI reference",
+      "type": "documentation",
+      "source": "https://docs.gatling.io/reference/script/cli/",
+      "description": "gatling.sh flags: --simulation, --reports-only, --results-folder"
+    }
+  ],
+  "instructions": "# Gatling\n\n## What this skill does\n\nGatling is a Scala-based load testing tool with a code-first DSL. Simulations describe scenarios (users ramping, injecting, asserting); the CLI runs them and renders HTML and JSON reports.\n\n## When to use\n\n- Scripted load tests with assertions in CI\n- Ramp/steady-state soak testing\n- Comparing build-to-build performance\n\n## Real commands\n\n```bash\n# List available simulations\ngatling.sh --list\n\n# Run one\n gatling.sh --simulation orders.Simulation --results-folder ./results\n\n# Annotate the run\ngatling.sh --run-description 'smoke v1.2.3' --simulation orders.Simulation\n\n# Rebuild a report from a previous run\n gatling.sh --results-folder results --reports-only results/orderapi-20240101\n```\n\n## Simulation example\n\n```scala\nimport io.gatling.core.Predef._\nimport io.gatling.http.Predef._\n\nclass OrdersSimulation extends Simulation {\n  val httpConf = http.baseUrl(\"http://localhost:8080\")\n  val scn = scenario(\"Get orders\")\n    .exec(http(\"list orders\").get(\"/api/orders\").check(status.is(200)))\n  setUp(scn.inject(rampUsers(50).during(30.seconds)))\n    .assertions(global.responseTime.percentile3.lt(300))\n    .protocols(httpConf)\n}\n```\n\n## Inspecting results\n\n```bash\n# Tail the simulation log for request stats\n tail -20 results/orderapi-20240101/simulation.log | grep -E 'request|assert'\n# Global stats JSON\njq '.stats' results/orderapi-20240101/js/global_stats.json\n```\n\n## Best practices\n\n- Run with assertions so CI fails on regressions.\n- Reuse the same base URL via protocol config; vary per environment.\n- Use `--run-description` to tag builds for report comparison.\n- Keep simulations short in smoke runs; soak separately.\n- Store simulation.log and global_stats.json for trend dashboards.\n",
+  "examples": [
+    {
+      "input": "Run the orders load simulation",
+      "output": "Compile the simulation, run gatling.sh --simulation orders.Simulation --results-folder ./results, and check the HTML report percentiles."
+    },
+    {
+      "input": "Compare today's run with yesterday",
+      "output": "Rebuild yesterday's report with --reports-only and compare global_stats.json percentile values."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "gatling.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-gatling"
+    },
+    "generic": {
+      "system_prompt": "You take the Gatling seat. You do it through gatling-simulations: Author and run Gatling simulations, and inspect results. The commands are real, e.g. `gatling.sh --simulation orders.Simulation --results-folder ./results`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "gatling",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "gatling-simulations",
+        "name": "simulation-class",
+        "type": "string",
+        "description": "Fully qualified simulation class"
+      },
+      {
+        "capability": "gatling-simulations",
+        "name": "users",
+        "type": "integer",
+        "description": "Number of virtual users"
+      },
+      {
+        "capability": "gatling-simulations",
+        "name": "duration",
+        "type": "string",
+        "description": "Ramp/steady duration in the scenario"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "gatling.sh",
+    "tail"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/gatling-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/gatling-skill.yaml",
+    "checksum": "f2b4992942403f969bee21d758f31339c339ce6e104c5ea9348739020ed5edd5"
+  }
+}

@@ -1,0 +1,137 @@
+name: robot-framework
+display_name: Robot Framework
+category: testing
+subcategory: general
+description: Writes keyword-driven acceptance tests with Robot Framework, using tags, variables, data-driven
+  tables, and reports.
+version: 2.0.0
+tags:
+- testing
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- python
+- rebot
+- robot
+capabilities:
+- name: robot-runs
+  description: Run Robot test suites with tags and outputs.
+  commands:
+  - robot tests.robot
+  - robot --outputdir results tests/
+  - robot -t "User Login" tests.robot
+  - robot -i smoke -e slow tests/
+  - robot -v HOST:localhost:8000 tests.robot
+  examples:
+  - robot --outputdir results tests/
+  - robot -t "User Login" tests.robot
+  - robot -i smoke -e slow tests/
+  parameters:
+  - name: testName
+    type: string
+    description: Test name filter (-t)
+  - name: include
+    type: string
+    description: Tag to include (-i)
+  - name: variable
+    type: string
+    description: Variable override (-v)
+- name: data-driven-tests
+  description: Write table-driven test cases.
+  commands:
+  - robot --dryrun tests.robot
+  - robot --listener RobotMongo?db=mongotest.robot
+  - robot --metadata version:1.2 tests/
+  - robot --logtitle "Release tests" tests.robot
+  examples:
+  - robot --dryrun tests.robot
+  - robot --metadata version:1.2 tests/
+  - robot --logtitle "Release tests" tests.robot
+  parameters:
+  - name: dryrun
+    type: boolean
+    description: Validate without executing
+  - name: metadata
+    type: string
+    description: Metadata key:value
+- name: reports-and-tools
+  description: Rebuild logs and run postprocessing tools.
+  commands:
+  - rebot --outputdir results/rebot output.xml
+  - rebot --merge output1.xml output2.xml
+  - robot --console verbose tests.robot
+  - python -m robot.tidy --format robot tests.robot
+  examples:
+  - rebot --merge output1.xml output2.xml
+  - rebot --outputdir merged results/output.xml
+  - robot --console verbose tests.robot
+  parameters:
+  - name: outputXml
+    type: string
+    description: output.xml path for rebot
+  - default: 'false'
+    description: Merge multiple output.xml files with rebot --merge.
+    name: merge
+    type: boolean
+knowledge:
+- title: Robot Framework User Guide
+  type: documentation
+  source: https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html
+  description: Test data syntax, keywords, and running
+- title: Robot Framework GitHub
+  type: documentation
+  source: https://github.com/robotframework/robotframework
+  description: CLI options and library docs
+instructions: "# Robot Framework\n\nKeyword-driven acceptance testing with readable tables.\n\n## What\
+  \ This Skill Does\n\n- Writes tests in the Robot data table syntax\n- Filters by tags and test names\n\
+  - Overrides variables per environment\n- Merges and rebuilds logs with rebot\n\n## When to Use\n\n-\
+  \ Acceptance and BDD-style test suites\n- UI/API keyword libraries with SeleniumLibrary/RequestsLibrary\n\
+  - Non-developer-friendly readable tests\n\n## Real Commands\n\n```bash\n# Run\nrobot tests.robot\nrobot\
+  \ --outputdir results tests/\nrobot -t \"User Login\" tests.robot\nrobot -i smoke -e slow tests/\nrobot\
+  \ -v HOST:localhost:8000 tests.robot\n\n# Validate\nrobot --dryrun tests.robot\n\n# Reports\nrebot --merge\
+  \ output1.xml output2.xml\nrebot --outputdir merged output.xml\n```\n\n## Sample Suite\n\n```robot\n\
+  *** Settings ***\nLibrary    SeleniumLibrary\nSuite Setup    Open Browser    https://example.com   \
+  \ chrome\n\n*** Test Cases ***\nUser Login\n    [Tags]    smoke\n    Input Text    id=email    alice@example.com\n\
+  \    Input Password    id=password    secret\n    Click Button    id=submit\n    Page Should Contain\
+  \    Welcome\n\n*** Test Cases ***\nCalculator\n    [Template]    Multiply\n    2    3    6\n    -1\
+  \    5    -5\n```\n\n## Best Practices\n\n- Write custom keywords for reusable steps\n- Use [Template]\
+  \ for data-driven cases\n- Tag suites (smoke, slow, broken) and run subsets\n- Keep variables in variable\
+  \ files per environment\n- Archive output.xml/log.html for audit trails"
+examples:
+- input: Write an acceptance test for user login
+  output: Agent writes a Robot suite with SeleniumLibrary, tags it smoke, and runs it with an output report.
+- input: Run only the fast tests
+  output: Agent runs robot -i smoke -e slow tests/ and merges results with rebot.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: robot-framework.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-robot-framework
+  generic:
+    system_prompt: 'You work Robot Framework hands-on. You do it through robot-runs: Run Robot test suites
+      with tags and outputs. The commands are real, e.g. `robot tests.robot`. You answer with exact commands,
+      not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,104 @@
+name: ml-gke
+display_name: Ml Gke
+category: ml
+subcategory: deployment
+description: ML GKE agent for Google Kubernetes Engine ML deployments.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Gke
+  description: ML GKE agent for Google Kubernetes Engine ML deployments.
+  commands:
+  - 'GPU: kubectl apply -f gpu-scheduler.yaml'
+  - 'Pod: kubectl apply -f pod.yaml'
+  - 'Node: gcloud container node-pools create my-pool --cluster my-cluster'
+  - 'Cluster: gcloud container clusters create my-cluster'
+  examples:
+  - 'Cluster: gcloud container clusters create my-cluster'
+  - 'Node: gcloud container node-pools create my-pool --cluster my-cluster'
+  - 'Pod: kubectl apply -f pod.yaml'
+  - 'GPU: kubectl apply -f gpu-scheduler.yaml'
+  parameters: []
+knowledge:
+- title: ml-gke Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for ml-gke
+instructions: 'You are an ML GKE expert. Help users with:
+
+  - GKE cluster setup
+
+  - Node pools
+
+  - GPU support
+
+  - TPU support
+
+  - Auto scaling
+
+  - Monitoring
+
+  - Security
+
+
+  Always use real GKE tools. Never suggest fictional tools.'
+examples:
+- 'Cluster: gcloud container clusters create my-cluster'
+- 'Node: gcloud container node-pools create my-pool --cluster my-cluster'
+- 'Pod: kubectl apply -f pod.yaml'
+- 'GPU: kubectl apply -f gpu-scheduler.yaml'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-gke.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are an ML GKE expert. Help users with:
+
+      - GKE cluster setup
+
+      - Node pools
+
+      - GPU support
+
+      - TPU support
+
+      - Auto scaling
+
+      - Monitoring
+
+      - Security
+
+
+      Always use real GKE tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-ml-gke
+  generic:
+    system_prompt: You are ml-gke. ML GKE agent for Google Kubernetes Engine ML deployments.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

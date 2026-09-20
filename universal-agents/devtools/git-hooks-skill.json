@@ -1,0 +1,216 @@
+{
+  "name": "git-hooks",
+  "display_name": "git-hooks",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Automates git hooks with pre-commit, Husky, and core.hooksPath: linting, formatting, secret scanning, and commit message checks.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "git",
+    "npx",
+    "pre-commit"
+  ],
+  "capabilities": [
+    {
+      "name": "pre-commit-framework",
+      "description": "Install and configure pre-commit hooks for Python/any-repo workflows.",
+      "commands": [
+        "pre-commit install",
+        "pre-commit install --hook-type pre-push",
+        "pre-commit run --all-files",
+        "pre-commit run ruff",
+        "pre-commit autoupdate",
+        "pre-commit uninstall"
+      ],
+      "examples": [
+        "pre-commit install",
+        "pre-commit run --all-files",
+        "pre-commit autoupdate"
+      ],
+      "parameters": [
+        {
+          "name": "hook",
+          "type": "string",
+          "description": "Hook ID to run"
+        },
+        {
+          "name": "hook-type",
+          "type": "string",
+          "description": "Hook type to install, e.g. pre-push"
+        }
+      ]
+    },
+    {
+      "name": "husky-and-custom-hooks",
+      "description": "Set up Husky hooks and custom scripts for Node projects.",
+      "commands": [
+        "npx husky init",
+        "npx husky add .husky/pre-commit 'npx lint-staged'",
+        "npx husky add .husky/commit-msg 'npx commitlint --edit $1'",
+        "git config core.hooksPath .husky",
+        "npx lint-staged",
+        "git commit -m 'chore: trigger hooks'"
+      ],
+      "examples": [
+        "npx husky add .husky/pre-commit 'npx lint-staged'",
+        "npx husky add .husky/commit-msg 'npx commitlint --edit $1'",
+        "git config core.hooksPath .husky"
+      ],
+      "parameters": [
+        {
+          "name": "hook-file",
+          "type": "string",
+          "description": "Hook file path, e.g. .husky/pre-commit"
+        },
+        {
+          "name": "command",
+          "type": "string",
+          "description": "Command the hook runs"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "pre-commit Documentation",
+      "type": "documentation",
+      "source": "https://pre-commit.com/",
+      "description": "Framework docs, hook config, and hook catalog"
+    },
+    {
+      "title": "Git Hooks (git-scm)",
+      "type": "documentation",
+      "source": "https://git-scm.com/docs/githooks",
+      "description": "All built-in git hook types"
+    },
+    {
+      "title": "Husky",
+      "type": "documentation",
+      "source": "https://typicode.github.io/husky/",
+      "description": "Modern git hooks for Node projects"
+    },
+    {
+      "title": "commitlint",
+      "type": "documentation",
+      "source": "https://commitlint.js.org/",
+      "description": "Lint commit messages with conventional rules"
+    }
+  ],
+  "instructions": "# Git Hooks Automation\n\nEnforce code quality at commit time with git hooks.\n\n## What This Skill Does\n\n- Installs pre-commit framework hooks (lint, format, secrets)\n- Configures Husky hooks for Node projects\n- Adds commit-msg linting (conventional commits)\n- Sets core.hooksPath for team-wide hooks\n- Runs hooks across all files or changed files only\n\n## When to Use\n\n- Enforcing lint/format on every commit\n- Blocking secrets and large files from entering history\n- Standardizing commit message formats\n\n## Real Commands\n\n```bash\n# pre-commit\npre-commit install\npre-commit install --hook-type pre-push\npre-commit run --all-files\npre-commit run ruff\npre-commit autoupdate\npre-commit uninstall\n\n# Husky (Node)\nnpx husky init\nnpx husky add .husky/pre-commit 'npx lint-staged'\nnpx husky add .husky/commit-msg 'npx commitlint --edit $1'\ngit config core.hooksPath .husky\n```\n\n## .pre-commit-config.yaml Sketch\n\n```yaml\nrepos:\n  - repo: https://github.com/pre-commit/pre-commit-hooks\n    rev: v4.6.0\n    hooks:\n      - id: trailing-whitespace\n      - id: check-added-large-files\n  - repo: https://github.com/astral-sh/ruff-pre-commit\n    rev: v0.6.0\n    hooks:\n      - id: ruff\n      - id: ruff-format\n```\n\n## Best Practices\n\n- Keep hooks fast (<10s); slow hooks get bypassed\n- Use pre-commit.ci to enforce on PRs without local installs\n- Add secret scanning (gitleaks/trufflehog) as a hook\n- Never use hooks for secrets or processes that belong in CI\n- Version hook repos with rev pins, run autoupdate monthly",
+  "examples": [
+    {
+      "input": "Block secrets from ever being committed",
+      "output": "Agent adds gitleaks to pre-commit hooks, runs --all-files to clean history, and installs hooks"
+    },
+    {
+      "input": "Enforce conventional commits for the team",
+      "output": "Agent configures commitlint with husky commit-msg hook and validates message formats"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "git-hooks.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-git-hooks"
+    },
+    "generic": {
+      "system_prompt": "You are the git-hooks specialist. You do it through pre-commit-framework: Install and configure pre-commit hooks for Python/any-repo workflows. The commands are real, e.g. `pre-commit install`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "git-hooks",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pre-commit-framework",
+        "name": "hook",
+        "type": "string",
+        "description": "Hook ID to run"
+      },
+      {
+        "capability": "pre-commit-framework",
+        "name": "hook-type",
+        "type": "string",
+        "description": "Hook type to install, e.g. pre-push"
+      },
+      {
+        "capability": "husky-and-custom-hooks",
+        "name": "hook-file",
+        "type": "string",
+        "description": "Hook file path, e.g. .husky/pre-commit"
+      },
+      {
+        "capability": "husky-and-custom-hooks",
+        "name": "command",
+        "type": "string",
+        "description": "Command the hook runs"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "git",
+    "npx",
+    "pre-commit"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/git-hooks-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/git-hooks-skill.yaml",
+    "checksum": "92424056bc8f10356ac1398de1738260b6b6461d33307e56e3d8ff9fc7d6f1e3"
+  }
+}

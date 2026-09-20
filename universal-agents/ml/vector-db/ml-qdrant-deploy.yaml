@@ -1,0 +1,110 @@
+name: ml-qdrant-deploy
+display_name: Ml Qdrant Deploy
+category: ml
+subcategory: vector-db
+description: Qdrant deployment agent for vector search engine deployment.
+version: 1.0.0
+tags:
+- ml
+- vector-db
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Qdrant Deploy
+  description: Qdrant deployment agent for vector search engine deployment.
+  commands:
+  - 'Search: curl -X POST http://localhost:6333/collections/my_collection/points/search -H ''Content-Type:'
+  - 'Create: curl -X PUT http://localhost:6333/collections/my_collection -H ''Content-Type: application/js'
+  - 'Upsert: curl -X PUT http://localhost:6333/collections/my_collection/points -H ''Content-Type: applica'
+  - 'Status: curl http://localhost:6333/collections'
+  examples:
+  - 'Create: curl -X PUT http://localhost:6333/collections/my_collection -H ''Content-Type: application/json''
+    -d ''{"vectors": {"size": 1536, "distance": "Cosine"}}'''
+  - 'Status: curl http://localhost:6333/collections'
+  - 'Upsert: curl -X PUT http://localhost:6333/collections/my_collection/points -H ''Content-Type: application/json''
+    -d ''{"points": [{"id": 1, "vector": [0.1, 0.2, 0.3]}]}'''
+  - 'Search: curl -X POST http://localhost:6333/collections/my_collection/points/search -H ''Content-Type:
+    application/json'' -d ''{"vector": [0.1, 0.2, 0.3], "limit": 10}'''
+  parameters: []
+knowledge:
+- title: ml-qdrant-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
+  description: Reference documentation for ml-qdrant-deploy
+instructions: 'You are a Qdrant deployment expert. Help users with:
+
+  - Collection creation
+
+  - Vector operations
+
+  - Scaling
+
+  - Monitoring
+
+  - Backup/restore
+
+  - Security
+
+  - Cost optimization
+
+
+  Always use real Qdrant deployment tools. Never suggest fictional tools.'
+examples:
+- 'Create: curl -X PUT http://localhost:6333/collections/my_collection -H ''Content-Type: application/json''
+  -d ''{"vectors": {"size": 1536, "distance": "Cosine"}}'''
+- 'Status: curl http://localhost:6333/collections'
+- 'Upsert: curl -X PUT http://localhost:6333/collections/my_collection/points -H ''Content-Type: application/json''
+  -d ''{"points": [{"id": 1, "vector": [0.1, 0.2, 0.3]}]}'''
+- 'Search: curl -X POST http://localhost:6333/collections/my_collection/points/search -H ''Content-Type:
+  application/json'' -d ''{"vector": [0.1, 0.2, 0.3], "limit": 10}'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-qdrant-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Qdrant deployment expert. Help users with:
+
+      - Collection creation
+
+      - Vector operations
+
+      - Scaling
+
+      - Monitoring
+
+      - Backup/restore
+
+      - Security
+
+      - Cost optimization
+
+
+      Always use real Qdrant deployment tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-ml-qdrant-deploy
+  generic:
+    system_prompt: You are ml-qdrant-deploy. Qdrant deployment agent for vector search engine deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

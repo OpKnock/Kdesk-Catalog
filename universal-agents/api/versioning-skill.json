@@ -1,0 +1,155 @@
+{
+  "name": "versioning",
+  "display_name": "Versioning",
+  "category": "api",
+  "subcategory": "general",
+  "description": "API versioning fundamentals: URI, query, header, and media-type schemes plus deprecation and Sunset header handling for smooth migrations.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "versioning-schemes",
+      "description": "Apply and verify the four standard API versioning schemes",
+      "commands": [
+        "curl -s https://api.example.com/v2/users",
+        "curl -s -H 'X-Api-Version: 2024-01-15' https://api.example.com/users",
+        "curl -s -H 'Accept: application/vnd.example.v2+json' https://api.example.com/users",
+        "curl -s 'https://api.example.com/users?api-version=2'",
+        "curl -sI https://api.example.com/v1/users | grep -iE 'deprecation|sunset'"
+      ],
+      "examples": [
+        "curl -s -H 'Accept: application/vnd.example+json;version=2' https://api.example.com/users | jq '.schema'",
+        "curl -sI https://api.example.com/v2/users | grep -i 'sunset'",
+        "curl -s 'https://api.example.com/users?api-version=1' -o /dev/null -w '%{http_code}'"
+      ],
+      "parameters": [
+        {
+          "name": "version",
+          "type": "string",
+          "description": "Version value used in path, query, or header"
+        },
+        {
+          "name": "media_type",
+          "type": "string",
+          "description": "Custom media type for content negotiation versioning"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Azure API Design Best Practices",
+      "type": "documentation",
+      "source": "https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design",
+      "description": "Versioning strategies and trade-offs for REST APIs"
+    },
+    {
+      "title": "RFC 8594 - Sunset Header",
+      "type": "documentation",
+      "source": "https://datatracker.ietf.org/doc/html/rfc8594",
+      "description": "Standard for announcing API version retirement"
+    }
+  ],
+  "instructions": "# API Versioning\n\n## What this skill does\nDesign versioning for APIs. Covers the four main schemes - URI path, query string, custom header, and media type negotiation - plus deprecation signaling with Deprecation and Sunset headers.\n\n## When to use\n- Adding breaking changes to an existing API\n- Migrating consumers to a new endpoint shape\n- Choosing a scheme for a greenfield API\n\n## Real commands\n```bash\n# URI path versioning\ncurl -s https://api.example.com/v2/users\n\n# Custom header versioning\ncurl -s -H 'X-Api-Version: 2024-01-15' https://api.example.com/users\n\n# Media type (content negotiation) versioning\ncurl -s -H 'Accept: application/vnd.example.v2+json' https://api.example.com/users\ncurl -s -H 'Accept: application/vnd.example+json;version=2' https://api.example.com/users\n\n# Query string versioning\ncurl -s 'https://api.example.com/users?api-version=2'\n\n# Verify deprecation signaling\ncurl -sI https://api.example.com/v1/users | grep -iE 'deprecation|sunset'\n\n# Compare versions side by side\ndiff <(curl -s https://api.example.com/v1/users | jq -S .) <(curl -s https://api.example.com/v2/users | jq -S .)\n```\n\n## Header conventions\n```http\nDeprecation: true\nSunset: Fri, 31 Jan 2025 23:59:59 GMT\n```\n\n## Best practices\n- Never remove a version without a published Sunset date\n- Keep at least 6 months between deprecation and sunset\n- Route versions at the gateway, not inside controllers\n- Document the versioning policy in the API reference\n\n## Testing\n```bash\ncurl -s https://api.example.com/v1/users -o /dev/null -w '%{http_code}\\n'\ncurl -s -H 'X-Api-Version: 9999-01-01' https://api.example.com/users -o /dev/null -w '%{http_code}\\n'\n```",
+  "examples": [
+    {
+      "input": "Add v2 while keeping v1 alive",
+      "output": "Adds the v2 routes behind the gateway, verifies both respond, and sets a Sunset header on v1."
+    },
+    {
+      "input": "Is v1 deprecated?",
+      "output": "Checks the Deprecation and Sunset headers on v1 and reports the retirement date."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "versioning.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-versioning"
+    },
+    "generic": {
+      "system_prompt": "You own Versioning end to end. You do it through versioning-schemes: Apply and verify the four standard API versioning schemes. The commands are real, e.g. `curl -s https://api.example.com/v2/users`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "versioning",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "versioning-schemes",
+        "name": "version",
+        "type": "string",
+        "description": "Version value used in path, query, or header"
+      },
+      {
+        "capability": "versioning-schemes",
+        "name": "media_type",
+        "type": "string",
+        "description": "Custom media type for content negotiation versioning"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/versioning-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/versioning-skill.yaml",
+    "checksum": "f281c6226ade3f414c1a364c5ac786f84d1113efa5f4115b678d49f3ad6e19cd"
+  }
+}

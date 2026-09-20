@@ -1,0 +1,201 @@
+{
+  "name": "kafka-producer-go",
+  "display_name": "Kafka Producer Go",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Build Kafka producers in Go with segmentio/kafka-go and IBM/sarama: async writes, batching, acks tuning, and delivery verification.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kafka-console-consumer.sh",
+    "kafka-consumer-groups.sh",
+    "kafka-run-class.sh"
+  ],
+  "capabilities": [
+    {
+      "name": "go-producer-app",
+      "description": "Scaffold and run Go producers using kafka-go Writer or sarama AsyncProducer.",
+      "commands": [
+        "go get github.com/segmentio/kafka-go",
+        "go get github.com/IBM/sarama",
+        "go run ./cmd/producer -topic orders -count 1000 -brokers localhost:9092",
+        "go build -o bin/producer ./cmd/producer",
+        "go test ./..."
+      ],
+      "examples": [
+        "go run ./cmd/producer -topic orders -count 1000 -brokers localhost:9092",
+        "go build -o bin/producer ./cmd/producer && ./bin/producer",
+        "go vet ./..."
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic to produce to."
+        },
+        {
+          "name": "count",
+          "type": "integer",
+          "description": "Number of messages to send."
+        },
+        {
+          "name": "brokers",
+          "type": "string",
+          "description": "Bootstrap brokers."
+        }
+      ]
+    },
+    {
+      "name": "delivery-verify",
+      "description": "Verify produced records landed correctly with consumers and offsets.",
+      "commands": [
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages 5",
+        "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group verify",
+        "kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic orders --time -1"
+      ],
+      "examples": [
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages 5",
+        "kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic orders --time -1"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic to verify."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "segmentio/kafka-go Writer",
+      "type": "documentation",
+      "source": "https://pkg.go.dev/github.com/segmentio/kafka-go",
+      "description": "Writer API docs for batching, acks, and compression."
+    },
+    {
+      "title": "IBM/sarama",
+      "type": "documentation",
+      "source": "https://github.com/IBM/sarama",
+      "description": "Sarama producer config and AsyncProducer reference."
+    }
+  ],
+  "instructions": "# Kafka Producer (Go)\n\nWrite high-throughput Go producers with segmentio/kafka-go or sarama.\n\n## What this skill does\n\n- Builds batch writers with kafka-go and async producers with sarama.\n- Tunes acks, batching, and retries for throughput vs. durability.\n- Verifies deliveries against the broker.\n\n## When to use\n\n- Go services publishing domain events.\n- High-volume pipelines needing async, batched writes.\n- Migrating from kafka-console-producer to app-managed producers.\n\n## Real commands\n\n```bash\n# Dependencies\ngo get github.com/segmentio/kafka-go\ngo get github.com/IBM/sarama\n\n# Run producer (1000 messages)\ngo run ./cmd/producer -topic orders -count 1000 -brokers localhost:9092\n\n# Build\ngo build -o bin/producer ./cmd/producer\n\n# Verify delivery\nkafka-console-consumer.sh --bootstrap-server localhost:9092 \\\n  --topic orders --from-beginning --max-messages 5\nkafka-run-class.sh kafka.tools.GetOffsetShell \\\n  --broker-list localhost:9092 --topic orders --time -1\n```\n\n## Producer example (kafka-go)\n\n```go\nw := &kafka.Writer{\n  Addr:         kafka.TCP(\"localhost:9092\"),\n  Topic:        \"orders\",\n  Balancer:     &kafka.LeastBytes{},\n  RequiredAcks: kafka.RequireAll,\n  Async:        true,\n}\nfor i := 0; i < 1000; i++ {\n  w.WriteMessages(context.Background(), kafka.Message{\n    Key:   []byte(fmt.Sprintf(\"order-%d\", i)),\n    Value: []byte(fmt.Sprintf(\"{\"qty\":%d}\", i)),\n  })\n}\nw.Close()\n```\n\n## Testing\n\n```bash\ngo test ./... \n```\n\n## Best practices\n\n- Use Async writers for fire-and-forget at high volume; sync for critical paths.\n- Set RequiredAcks to RequireAll with idempotent producers in production.\n- Close the writer on shutdown so buffered messages flush.\n",
+  "examples": [
+    {
+      "input": "Publish 10k order events from Go",
+      "output": "Write a kafka-go Writer with Async:true, batching defaults, then go run ./cmd/producer -topic orders -count 10000 -brokers localhost:9092"
+    },
+    {
+      "input": "Check nothing was dropped",
+      "output": "Compare GetOffsetShell -1 offsets before/after and consume a sample with kafka-console-consumer.sh."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kafka-producer-go.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kafka-producer-go"
+    },
+    "generic": {
+      "system_prompt": "You take the Kafka Producer Go seat. You do it through go-producer-app: Scaffold and run Go producers using kafka-go Writer or sarama AsyncProducer. The commands are real, e.g. `go get github.com/segmentio/kafka-go`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kafka-producer-go",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "go-producer-app",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic to produce to."
+      },
+      {
+        "capability": "go-producer-app",
+        "name": "count",
+        "type": "integer",
+        "description": "Number of messages to send."
+      },
+      {
+        "capability": "go-producer-app",
+        "name": "brokers",
+        "type": "string",
+        "description": "Bootstrap brokers."
+      },
+      {
+        "capability": "delivery-verify",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic to verify."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kafka-console-consumer.sh",
+    "kafka-consumer-groups.sh",
+    "kafka-run-class.sh"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/kafka-producer-go-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/kafka-producer-go-skill.yaml",
+    "checksum": "3feea0b64bcf8bb03b4477d56b89775d337b2dec8a9183ab11339f55fc7140b1"
+  }
+}

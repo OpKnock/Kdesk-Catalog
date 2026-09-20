@@ -1,0 +1,205 @@
+{
+  "name": "api-cache-key-ttl",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "infrastructure",
+  "description": "Designs cache architecture: TTL sizing, cache-key design, invalidation patterns, and multi-layer caching decisions.",
+  "keywords": [
+    "redis",
+    "cache-invalidation"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-cache-key-ttl.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-cache-key-ttl"
+    },
+    "generic": {
+      "system_prompt": "You own Api Cache Key Ttl end to end. You do it through key-and-ttl-design: Design cache keys and TTLs that match data volatility. The commands are real, e.g. `node -e const key=[api,products,v2,42].join(:);console.log(key)`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "key-and-ttl-design",
+      "description": "Design cache keys and TTLs that match data volatility",
+      "commands": [
+        "node -e \"const key=['api','products','v2','42'].join(':');console.log(key)\"",
+        "node -e \"const tiers={hot:{ttl:60},warm:{ttl:300},cold:{ttl:3600}};console.log(JSON.stringify(tiers,null,2))\"",
+        "redis-cli SET api:products:v2:42 '{}' EX 60",
+        "redis-cli --scan --pattern 'api:products:*'",
+        "node -e \"console.log('key parts: resource:version:id')\""
+      ],
+      "examples": [
+        "node -e \"const key=['api','products','v2','42'].join(':');console.log(key)\"",
+        "node -e \"const tiers={hot:{ttl:60},warm:{ttl:300},cold:{ttl:3600}};console.log(JSON.stringify(tiers,null,2))\"",
+        "redis-cli SET api:products:v2:42 '{}' EX 60"
+      ],
+      "parameters": [
+        {
+          "name": "resource",
+          "type": "string",
+          "description": "Resource name"
+        },
+        {
+          "name": "ttl",
+          "type": "string",
+          "description": "TTL design"
+        }
+      ]
+    },
+    {
+      "name": "invalidation-design",
+      "description": "Choose invalidation strategies: TTL, write-through, versioning, events",
+      "commands": [
+        "redis-cli DEL api:products:v2:42",
+        "redis-cli --scan --pattern 'api:products:v2:*' | xargs -r redis-cli DEL",
+        "redis-cli SET api:products:v2:42 '{}' EX 60 NX",
+        "redis-cli PUBLISH cache.invalidate '{\"pattern\":\"api:products:*\"}'",
+        "node -e \"console.log('strategies: ttl | write-through | version | event')\""
+      ],
+      "examples": [
+        "redis-cli --scan --pattern 'api:products:v2:*' | xargs -r redis-cli DEL",
+        "redis-cli SET api:products:v2:42 '{}' EX 60 NX",
+        "redis-cli PUBLISH cache.invalidate '{\"pattern\":\"api:products:*\"}'"
+      ],
+      "parameters": [
+        {
+          "name": "pattern",
+          "type": "string",
+          "description": "Invalidation pattern"
+        },
+        {
+          "name": "strategy",
+          "type": "string",
+          "description": "Invalidation strategy"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "redis",
+    "node.js",
+    "python"
+  ],
+  "tools": [
+    "redis",
+    "node.js",
+    "python",
+    "varnish",
+    "express"
+  ],
+  "examples": [
+    {
+      "input": "Design the cache key scheme for products",
+      "output": "Defines resource:version:id keys with hot/warm/cold TTL tiers"
+    },
+    {
+      "input": "Choose an invalidation strategy",
+      "output": "Selects event-driven invalidation with versioned keys for the catalog service"
+    }
+  ],
+  "instructions": "# API Cache (Design)\n\nDesigns cache architecture before writing cache code.\n\n## When to Use\n- Planning caching for a new service\n- Fixing stale-data incidents\n- Deciding invalidation strategy\n\n## Real Commands\n\n```bash\n# Key design\nnode -e \"const key=['api','products','v2','42'].join(':');console.log(key)\"\n\n# TTL tiers\nnode -e \"const tiers={hot:{ttl:60},warm:{ttl:300},cold:{ttl:3600}};console.log(JSON.stringify(tiers,null,2))\"\n\n# Version invalidation\nredis-cli SET api:products:v2:42 '{}' EX 60 NX\nredis-cli --scan --pattern 'api:products:v2:*' | xargs -r redis-cli DEL\n\n# Event invalidation\nredis-cli PUBLISH cache.invalidate '{\"pattern\":\"api:products:*\"}'\n```\n\n## Strategy Selection\n- Volatile data: short TTL + events\n- Stable data: long TTL, version keys\n- Writes heavy: write-through\n\n## Testing\nSimulate an update and verify all affected keys are invalidated.\n\n## Best Practices\n- Version keys on schema changes\n- Design invalidation before TTLs",
+  "display_name": "Api Cache Key Ttl",
+  "knowledge": [
+    {
+      "title": "Cache Invalidation",
+      "type": "documentation",
+      "source": "https://martinfowler.com/bliki/CacheInvalidation.html",
+      "description": "Invalidation strategies from Fowler"
+    },
+    {
+      "title": "Redis NX Options",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/commands/set/",
+      "description": "SET options for lock and cache"
+    }
+  ],
+  "id": "api-cache-key-ttl",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "key-and-ttl-design",
+        "name": "resource",
+        "type": "string",
+        "description": "Resource name"
+      },
+      {
+        "capability": "key-and-ttl-design",
+        "name": "ttl",
+        "type": "string",
+        "description": "TTL design"
+      },
+      {
+        "capability": "invalidation-design",
+        "name": "pattern",
+        "type": "string",
+        "description": "Invalidation pattern"
+      },
+      {
+        "capability": "invalidation-design",
+        "name": "strategy",
+        "type": "string",
+        "description": "Invalidation strategy"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis",
+    "node.js",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-cache-key-ttl/skill/api-cache-key-ttl.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-cache-key-ttl/skill/api-cache-key-ttl.yaml",
+    "checksum": "d4baeb052d4e030f249abebad618a23c487f5ed123e3bdc246db857925d55a2b"
+  }
+}

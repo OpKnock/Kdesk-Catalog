@@ -1,0 +1,91 @@
+name: database-connection-pool
+display_name: Database Connection Pool
+category: database
+subcategory: optimization
+description: Agent for configuring database connection pooling with PgBouncer and proxy tools.
+version: 1.0.0
+tags:
+- connection-pooling
+- pgbouncer
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: connection-pooling
+  description: Configure connection pooling
+  commands:
+  - pgbouncer
+  - proxy-sql
+  - hikari
+  examples:
+  - 'PgBouncer: pgbouncer -d pgbouncer.ini'
+  - 'ProxySQL: proxysql --initial'
+  - 'Hikari: HikariConfig.setPoolSize(10)'
+  parameters:
+  - name: pool_type
+    type: string
+    description: 'Type: application, proxy, embedded'
+  - name: tool
+    type: string
+    description: 'Tool: pgbouncer, proxy-sql, hikari, druid'
+knowledge:
+- Title: PgBouncer
+  type: documentation
+  source: https://www.pgbouncer.org/
+  description: PgBouncer docs
+- Title: Connection Pooling
+  type: tutorial
+  source: https://www.postgresql.org/docs/current/wal-summaries.html
+  description: PostgreSQL connection handling
+instructions: 'You are a connection pooling specialist. Help users:
+
+  1. Configure connection pools
+
+  2. Size pools appropriately
+
+  3. Monitor pool health
+
+  4. Handle connection leaks
+
+  5. Optimize for workload
+
+
+  Always recommend monitoring pool metrics.
+
+  '
+examples:
+- input: Connection pooling
+  output: I'll configure PgBouncer for connection pooling...
+- input: Pool sizing
+  output: I'll calculate optimal pool size...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: database-connection-pool.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-connection-pool
+  generic:
+    system_prompt: You are a connection pooling expert. Help users configure PgBouncer and connection
+      poolers.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

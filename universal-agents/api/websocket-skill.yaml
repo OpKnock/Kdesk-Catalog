@@ -1,0 +1,100 @@
+name: websocket
+display_name: websocket
+category: api
+subcategory: general
+description: 'WebSocket development: connect with wscat, implement a ws server in Node, broadcast messages,
+  handle binary frames, and test heartbeats.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- node
+- npm
+- wscat
+capabilities:
+- name: ws-implementation
+  description: Build and test WebSocket servers and clients
+  commands:
+  - npm install ws
+  - node server.js
+  - wscat -c ws://localhost:8080
+  - wscat -c ws://localhost:8080 -x '{"type":"ping"}'
+  - curl -s http://localhost:8080/status | jq '.clients'
+  examples:
+  - npm install ws uws
+  - node server.js --port 8080 --path /socket
+  - wscat -c ws://localhost:8080 --wait 5
+  parameters:
+  - name: port
+    type: integer
+    description: Listen port for the ws server
+  - name: path
+    type: string
+    description: URL path the server accepts
+  - name: protocol
+    type: string
+    description: Subprotocol negotiation
+knowledge:
+- title: ws on GitHub
+  type: documentation
+  source: https://github.com/websockets/ws
+  description: Node.js WebSocket server/client library with examples
+- title: wscat npm
+  type: documentation
+  source: https://www.npmjs.com/package/wscat
+  description: Command line WebSocket testing client
+instructions: "# WebSocket\n\n## What this skill does\nBuild and test WebSocket endpoints: run a Node\
+  \ `ws` server with broadcasting and heartbeats, connect with wscat, exchange JSON and binary frames,\
+  \ and monitor connected clients.\n\n## When to use\n- Adding realtime push to an API\n- Writing WebSocket\
+  \ clients\n- Debugging connection drops\n\n## Real commands\n```bash\n# Install and start a server\n\
+  npm install ws\nnode server.js\n\n# Interactive client\nwscat -c ws://localhost:8080\n\n# One-shot message\n\
+  wscat -c ws://localhost:8080 -x '{\"type\":\"ping\"}'\n\n# Connection count\ncurl -s http://localhost:8080/status\
+  \ | jq '.clients'\n```\n\n## Minimal server (server.js)\n```js\nconst { WebSocketServer } = require('ws');\n\
+  const wss = new WebSocketServer({ port: 8080, path: '/socket' });\nwss.on('connection', (ws) => {\n\
+  \  ws.on('message', (data, isBinary) => {\n    wss.clients.forEach((c) => { if (c !== ws && c.readyState\
+  \ === 1) c.send(data, { binary: isBinary }); });\n  });\n  ws.send(JSON.stringify({ type: 'welcome'\
+  \ }));\n});\nsetInterval(() => {\n  wss.clients.forEach((c) => { if (c.readyState === 1) c.ping(); });\n\
+  }, 30000);\n```\n\n## Heartbeats\n```js\nws.on('pong', () => { ws.isAlive = true; });\n// Terminate\
+  \ connections with no pong after 2 intervals\n```\n\n## Best practices\n- Terminate stale connections\
+  \ via ping/pong\n- Use `{ binary: isBinary }` when forwarding frames\n- Close code 1000 for normal,\
+  \ 1008 for policy violations\n- Compress frames only when clients negotiate permessage-deflate\n\n##\
+  \ Testing\n```bash\nnode server.js &\nwscat -c ws://localhost:8080 -x '{\"type\":\"ping\"}'\ncurl -s\
+  \ http://localhost:8080/status | jq '.clients'\n```"
+examples:
+- input: Broadcast an order update to all clients
+  output: Sends the JSON event to every open connection and verifies with two wscat sessions.
+- input: Clients are never cleaned up
+  output: Adds a ping/pong heartbeat that terminates dead connections after two missed pongs.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: websocket.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-websocket
+  generic:
+    system_prompt: 'This is your domain: websocket. You do it through ws-implementation: Build and test
+      WebSocket servers and clients. The commands are real, e.g. `npm install ws`. You verify each step
+      you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

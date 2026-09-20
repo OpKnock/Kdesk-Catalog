@@ -1,0 +1,171 @@
+{
+  "name": "nessus",
+  "display_name": "Nessus",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Manages Tenable Nessus scans from the CLI: creating, launching, and reporting vulnerability scans.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "nessuscli"
+  ],
+  "capabilities": [
+    {
+      "name": "nessus-cli",
+      "description": "Manage Nessus scans, users, and reports via nessuscli",
+      "commands": [
+        "nessuscli scan list",
+        "nessuscli scan new --name web-scan --targets 10.0.0.10 --policy Basic Network Scan",
+        "nessuscli scan start --scan-id 42",
+        "nessuscli scan stop --scan-id 42",
+        "nessuscli report download --scan-id 42 --format nessus --output /tmp/scan.nessus"
+      ],
+      "examples": [
+        "nessuscli scan new --name prod-scan --targets 10.1.2.0/24 --policy 'Advanced Scan'",
+        "nessuscli scan list | grep -i prod",
+        "nessuscli report download --scan-id 7 --format html --output scan-report.html"
+      ],
+      "parameters": [
+        {
+          "name": "scan-id",
+          "type": "integer",
+          "description": "Numeric ID of the scan to start, stop, or report on"
+        },
+        {
+          "name": "targets",
+          "type": "string",
+          "description": "IP addresses, CIDRs, or hostnames to scan"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "description": "Report format: nessus, html, pdf, csv, or db"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Tenable Nessus docs",
+      "type": "documentation",
+      "source": "https://docs.tenable.com/nessus/",
+      "description": "CLI reference, scan policies, and report formats"
+    },
+    {
+      "title": "Nessus CLI commands",
+      "type": "documentation",
+      "source": "https://docs.tenable.com/nessus/Content/CLICommands.htm",
+      "description": "Full list of nessuscli subcommands for scans, users, and plugins"
+    }
+  ],
+  "instructions": "# Nessus\n\nTenable Nessus is a commercial vulnerability scanner. This skill covers driving it\nfrom the CLI on the scan server.\n\n## When to Use\n\n- Launching credentialed or uncredentialed scans from a terminal\n- Downloading reports in Nessus, HTML, or CSV formats\n- Managing scan schedules and users on the server\n\n## Real Commands\n\n```bash\n# List existing scans\nnessuscli scan list\n\n# Create a new scan\nnessuscli scan new --name web-scan --targets 10.0.0.10 --policy \"Basic Network Scan\"\n\n# Launch it (use the ID from scan list)\nnessuscli scan start --scan-id 42\n\n# Check status / stop\nnessuscli scan status --scan-id 42\nnessuscli scan stop --scan-id 42\n\n# Download results\nnessuscli report download --scan-id 42 --format nessus --output /tmp/web-scan.nessus\n\n# Manage users\nnessuscli lsuser\nnessuscli user add --username auditor --password <pw> --role basic\n```\n\n## Workflow\n\n```bash\n# Create, start, wait, export in one flow\nnessuscli scan new --name ci-scan --targets 172.16.0.5 --policy \"Basic Network Scan\"\nnessuscli scan list | grep ci-scan\nnessuscli scan start --scan-id $(nessuscli scan list | awk -F'|' '/ci-scan/{print $1}')\nnessuscli report download --scan-id <id> --format html --output report.html\n```\n\n## Best Practices\n\n- Always scan with credentials for accurate results\n- Use `--policy \"Basic Network Scan\"` for quick checks, \"Advanced Scan\" for full tests\n- Store reports in `.nessus` for Nessus UI import\n- Limit targets to scoped assets; scanning outside scope has legal implications\n\n## Example Response\n\nThe agent returns the scan ID, status transitions, and a summary of findings grouped\nby severity (Critical/High/Medium/Low) parsed from the downloaded report.",
+  "examples": [
+    {
+      "input": "Scan the production web server",
+      "output": "Creates a scan with nessuscli scan new, starts it, polls nessuscli scan status until complete, then downloads an HTML report"
+    },
+    {
+      "input": "Export last week's scan as CSV",
+      "output": "Finds the scan via nessuscli scan list, then runs nessuscli report download --format csv --output results.csv"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "nessus.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-nessus"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Nessus. You do it through nessus-cli: Manage Nessus scans, users, and reports via nessuscli. The commands are real, e.g. `nessuscli scan list`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "nessus",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "nessus-cli",
+        "name": "scan-id",
+        "type": "integer",
+        "description": "Numeric ID of the scan to start, stop, or report on"
+      },
+      {
+        "capability": "nessus-cli",
+        "name": "targets",
+        "type": "string",
+        "description": "IP addresses, CIDRs, or hostnames to scan"
+      },
+      {
+        "capability": "nessus-cli",
+        "name": "format",
+        "type": "string",
+        "description": "Report format: nessus, html, pdf, csv, or db"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "nessuscli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/nessus-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/nessus-skill.yaml",
+    "checksum": "cd5d2f9b81b326c552c4d94d94a00a659fbd63c8c781244cb6a55e1243e2999b"
+  }
+}

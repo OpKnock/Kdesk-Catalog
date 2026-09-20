@@ -1,0 +1,125 @@
+name: istio
+display_name: istio
+category: devops
+subcategory: general
+description: 'Installs and operates Istio service mesh: sidecar injection, VirtualService/DestinationRule
+  traffic routing, mTLS, and traffic observation.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- istioctl
+- kubectl
+capabilities:
+- name: install-and-verify
+  description: Install the mesh, verify control plane health, and configure sidecar injection.
+  commands:
+  - istioctl install --set profile=demo
+  - istioctl verify-install
+  - istioctl analyze
+  - kubectl label namespace default istio-injection=enabled
+  - istioctl proxy-status
+  - istioctl dashboard kiali
+  examples:
+  - istioctl install --set profile=demo -y
+  - istioctl analyze
+  - istioctl proxy-status
+  parameters:
+  - name: profile
+    type: string
+    description: 'Install profile: default, demo, minimal, external'
+  - name: namespace
+    type: string
+    description: Namespace to enable injection on
+- name: traffic-management
+  description: Configure VirtualService, DestinationRule, and Gateway resources for canary and weighted
+    routing.
+  commands:
+  - kubectl apply -f virtualservice.yaml
+  - kubectl apply -f destinationrule.yaml
+  - istioctl proxy-config route <pod>
+  - istioctl proxy-config cluster <pod>
+  - istioctl experimental describe pod <pod>
+  - kubectl get virtualservices,destinationrules
+  examples:
+  - kubectl apply -f virtualservice.yaml
+  - istioctl proxy-config route reviews-v1-abc
+  - istioctl experimental describe pod reviews-v1-abc
+  parameters:
+  - name: pod
+    type: string
+    description: Pod name for proxy-config inspection
+  - name: manifest
+    type: string
+    description: CR manifest file
+knowledge:
+- title: Istio Documentation
+  type: documentation
+  source: https://istio.io/latest/docs/
+  description: Installation, traffic management, security, observability
+- title: Istio Traffic Management
+  type: documentation
+  source: https://istio.io/latest/docs/concepts/traffic-management/
+  description: VirtualService, DestinationRule, Gateway concepts
+- title: Istio Security
+  type: documentation
+  source: https://istio.io/latest/docs/concepts/security/
+  description: mTLS, PeerAuthentication, AuthorizationPolicy
+instructions: "# Istio Service Mesh\n\nDeploy and manage Istio: sidecars, smart routing, mTLS, and mesh\
+  \ observability.\n\n## What This Skill Does\n\n- Installs Istio with profile-based operator manifests\n\
+  - Enables namespace-wide or pod-level sidecar injection\n- Routes traffic with VirtualService and DestinationRule\
+  \ (canary, weighted)\n- Enforces mTLS with PeerAuthentication and AuthorizationPolicy\n- Inspects Envoy\
+  \ proxy config via istioctl\n\n## When to Use\n\n- Rolling out a service mesh for mTLS and advanced\
+  \ routing\n- Implementing canary releases with percentage splits\n- Debugging routing mismatches (why\
+  \ traffic hits the wrong pod)\n\n## Real Commands\n\n```bash\n# Install\nistioctl install --set profile=demo\
+  \ -y\nistioctl verify-install\nistioctl analyze\n\n# Injection\nkubectl label namespace default istio-injection=enabled\n\
+  kubectl rollout restart deployment/web\n\n# Status\nistioctl proxy-status\nistioctl dashboard kiali\n\
+  istioctl proxy-config route reviews-v1-abc | jq .name\n\n# Traffic rules\nkubectl apply -f virtualservice.yaml\n\
+  kubectl apply -f destinationrule.yaml\nkubectl apply -f gateway.yaml\n```\n\n## Canary VirtualService\n\
+  \n```yaml\napiVersion: networking.istio.io/v1\nkind: VirtualService\nmetadata:\n  name: reviews\nspec:\n\
+  \  hosts: [reviews]\n  http:\n    - route:\n        - destination: { host: reviews, subset: v1, weight:\
+  \ 90 }\n        - destination: { host: reviews, subset: v2, weight: 10 }\n```\n\n## Best Practices\n\
+  \n- Run `istioctl analyze` before and after every mesh change\n- Prefer PeerAuthentication STRICT in\
+  \ production after rollout\n- Use `istioctl experimental describe pod` as first debug step\n- Verify\
+  \ injection: two containers per pod (istio-proxy sidecar)\n- Keep Istio operator and CRD versions in\
+  \ sync with the CLI"
+examples:
+- input: Set up a 10% canary for reviews v2
+  output: Agent creates VirtualService with weighted routes, DestinationRule subsets, and verifies traffic
+    split via proxy-config route output
+- input: Traffic is not reaching the new version
+  output: Agent runs istioctl experimental describe pod, checks VirtualService matches and labels, and
+    fixes subset selector mismatch
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: istio.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-istio
+  generic:
+    system_prompt: 'Your lane is istio. You do it through install-and-verify: Install the mesh, verify
+      control plane health, and configure sidecar injection. The commands are real, e.g. `istioctl install
+      --set profile=demo`. You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

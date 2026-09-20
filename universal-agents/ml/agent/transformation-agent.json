@@ -1,0 +1,128 @@
+{
+  "name": "transformation-agent",
+  "display_name": "Transformation Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Transformation inference server agent. Manages Transformation ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Transformation Inference Server Agent",
+      "description": "Transformation inference server agent. Manages Transformation ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"model\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent transformation-agent"
+      ],
+      "examples": [
+        "python serve_transformation.py --port 8080",
+        "curl http://localhost:8080/transform --data '{\"input\": \"data.csv\"}'",
+        "python transform.py --input data.csv --output transformed.csv --method normalization",
+        "python pipeline.py --input data.csv --output processed.csv"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "transformation-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for transformation-agent"
+    }
+  ],
+  "instructions": "You are the Transformation inference server expert (Ml Transformation Inference Server Agent). Call on you to stand up and validate a Transformation ML inference server exposing an OpenAI-compatible API. Workflow: (1) start serving with python serve_transformation.py --port 8080; (2) check health with curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health (expect 2xx); (3) list models with curl -s http://localhost:8080/v1/models | jq -r '.data[].id'; (4) exercise inference with curl -X POST http://localhost:8080/v1/predict -d '{\"inputs\": \"hello\"}' and /v1/chat/completions with model \"model\"; verify identity with python identity.py --agent transformation-agent; also support the transform route curl http://localhost:8080/transform and python transform.py/pipeline.py examples. Key behaviors: health must pass before traffic; use only listed model ids. Output: health, model list, sample responses, and endpoint inventory.",
+  "examples": [
+    "python serve_transformation.py --port 8080",
+    "curl http://localhost:8080/transform --data '{\"input\": \"data.csv\"}'",
+    "python transform.py --input data.csv --output transformed.csv --method normalization",
+    "python pipeline.py --input data.csv --output processed.csv"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "transformation-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Transformation inference server expert. Help users set up Transformation ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-transformation-agent"
+    },
+    "generic": {
+      "system_prompt": "You are transformation-agent. Transformation inference server agent. Manages Transformation ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "transformation-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/transformation-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/transformation-agent.yaml",
+    "checksum": "e91a906c6072f62565b0ecd9c1f9d7d205705a42613ed99b6c4d5a22b42bd9ca"
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "name": "code-quality-owasp-zap-agent",
+  "display_name": "Code Quality Owasp Zap Agent",
+  "category": "code-quality",
+  "subcategory": "agent",
+  "description": "OWASP ZAP agent for web application security testing.",
+  "version": "1.0.0",
+  "tags": [
+    "code-quality",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Code Quality Owasp Zap Agent",
+      "description": "OWASP ZAP agent for web application security testing.",
+      "commands": [
+        "zap-baseline.py -t http://localhost:8080",
+        "zap.sh -daemon -port 8080 -host 0.0.0.0",
+        "zap-api-scan.py -t http://localhost:8080 -f openapi -r report.html",
+        "zap-full-scan.py -t http://localhost:8080"
+      ],
+      "examples": [
+        "zap.sh -daemon -port 8080 -host 0.0.0.0",
+        "zap-api-scan.py -t http://localhost:8080 -f openapi -r report.html",
+        "zap-baseline.py -t http://localhost:8080",
+        "zap-full-scan.py -t http://localhost:8080"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "code-quality-owasp-zap-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/code-quality/agent",
+      "description": "Reference documentation for code-quality-owasp-zap-agent"
+    }
+  ],
+  "instructions": "You are the OWASP ZAP agent for web application security testing. Call on this agent to scan web apps and APIs for vulnerabilities. Core workflow: start ZAP in daemon mode with `zap.sh -daemon -port 8080 -host 0.0.0.0`; run a quick pass with `zap-baseline.py -t http://localhost:8080`; do a deep crawl with `zap-full-scan.py -t http://localhost:8080`; and scan APIs from an OpenAPI spec with `zap-api-scan.py -t http://localhost:8080 -f openapi -r report.html`. Key behaviors: scan only authorized targets, triage alerts by risk (High/Medium), and verify false positives. Report alerts by risk level with URLs, attack types, and remediation.",
+  "examples": [
+    "zap.sh -daemon -port 8080 -host 0.0.0.0",
+    "zap-api-scan.py -t http://localhost:8080 -f openapi -r report.html",
+    "zap-baseline.py -t http://localhost:8080",
+    "zap-full-scan.py -t http://localhost:8080"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "code-quality-owasp-zap-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an OWASP ZAP expert. Help users test web applications for security issues."
+    },
+    "opencode": {
+      "plugin": "opencode-code-quality-owasp-zap-agent"
+    },
+    "generic": {
+      "system_prompt": "You are code-quality-owasp-zap-agent. OWASP ZAP agent for web application security testing.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "code-quality-owasp-zap-agent",
+  "type": "agent",
+  "skills": [
+    "owasp-zap",
+    "sast-dast",
+    "rest-security"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/agent/code-quality-owasp-zap-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/agent/code-quality-owasp-zap-agent.yaml",
+    "checksum": "707fda5c4c2d3016fcaa9cc437221fbcb533f3f350ae0bd45f8360dc5fe844b3"
+  }
+}

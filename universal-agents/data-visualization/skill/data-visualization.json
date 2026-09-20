@@ -1,0 +1,185 @@
+{
+  "name": "data-visualization",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "data",
+  "description": "Creates data visualizations: matplotlib/seaborn charts, interactive notebooks, and export.",
+  "keywords": [
+    "data-visualization",
+    "plotly",
+    "charts"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "data-visualization.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-data-visualization"
+    },
+    "generic": {
+      "system_prompt": "You are the data-visualization specialist. You do it through plotting: Generate charts with matplotlib/seaborn and manage notebooks. The commands are real, e.g. `python -m pip install matplotlib seaborn plotly pandas`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "plotting",
+      "description": "Generate charts with matplotlib/seaborn and manage notebooks",
+      "commands": [
+        "python -m pip install matplotlib seaborn plotly pandas",
+        "python charts/sales.py --output charts/sales.png",
+        "jupyter lab --no-browser --port 8888",
+        "jupyter nbconvert --to html analysis.ipynb --output-dir reports/",
+        "jupyter nbconvert --to slides analysis.ipynb --SlidesExporter.reveal_theme=serif"
+      ],
+      "examples": [
+        "python -c \"import matplotlib.pyplot as plt; plt.plot([1,2,3],[1,4,9]); plt.savefig('p.png')\"",
+        "jupyter nbconvert --execute --inplace analysis.ipynb",
+        "python charts/dashboard.py --style darkgrid --size 16x9"
+      ],
+      "parameters": [
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output file path for the chart"
+        },
+        {
+          "name": "execute",
+          "type": "boolean",
+          "description": "Execute the notebook during conversion"
+        },
+        {
+          "name": "output-dir",
+          "type": "string",
+          "description": "Directory for converted notebooks"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "d3",
+    "plotly",
+    "recharts",
+    "chart.js"
+  ],
+  "tools": [
+    "d3",
+    "plotly",
+    "recharts",
+    "chart.js",
+    "echarts"
+  ],
+  "examples": [
+    {
+      "input": "Visualize monthly revenue",
+      "output": "Writes a matplotlib script, runs it, and reports the chart path plus the trend interpretation"
+    },
+    {
+      "input": "Turn analysis into a stakeholder report",
+      "output": "Executes the notebook and converts to HTML and slides in reports/"
+    }
+  ],
+  "instructions": "# Data Visualization\n\nTurns data into clear charts: matplotlib/seaborn for static figures, Jupyter for\ninteractive exploration and reports.\n\n## When to Use\n\n- Explaining metrics to stakeholders\n- Exploring datasets interactively\n- Producing exportable report figures\n\n## Real Commands\n\n```bash\n# Install\nsudo python -m pip install matplotlib seaborn plotly pandas\n\n# Static chart from a script\npython charts/sales.py --output charts/sales.png\n\n# Quick inline chart\npython -c \"import matplotlib.pyplot as plt; plt.plot([1,2,3],[1,4,9]); plt.savefig('trend.png')\"\n\n# Interactive notebooks\nsudo jupyter lab --no-browser --port 8888\n\n# Execute and export\nsudo jupyter nbconvert --execute --inplace analysis.ipynb\nsudo jupyter nbconvert --to html analysis.ipynb --output-dir reports/\n\n# Slides export\nsudo jupyter nbconvert --to slides analysis.ipynb\n```\n\n## Chart Choice Guide\n\n- Time series: line chart\n- Distribution: histogram / KDE\n- Categories: bar chart\n- Relationship: scatter with trend line\n- Parts of a whole: stacked bar or donut (rarely pie)\n\n## Best Practices\n\n- Label axes and units; title charts with context\n- Use consistent colors; check colorblind-safe palettes\n- Keep the chart honest: start axes at zero for bars\n- Save at high DPI: `plt.savefig('x.png', dpi=200)`\n- Put the takeaway in the caption\n\n## Example Response\n\nProduces the requested charts, saves them to files, and explains the pattern the\nvisualization reveals with interpretation notes.",
+  "display_name": "data-visualization",
+  "knowledge": [
+    {
+      "title": "matplotlib docs",
+      "type": "documentation",
+      "source": "https://matplotlib.org/",
+      "description": "Pyplot API and styling guide"
+    },
+    {
+      "title": "seaborn docs",
+      "type": "documentation",
+      "source": "https://seaborn.pydata.org/",
+      "description": "Statistical plotting functions"
+    },
+    {
+      "title": "Jupyter nbconvert docs",
+      "type": "documentation",
+      "source": "https://nbconvert.readthedocs.io/",
+      "description": "Notebook conversion formats and options"
+    }
+  ],
+  "id": "data-visualization",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "plotting",
+        "name": "output",
+        "type": "string",
+        "description": "Output file path for the chart"
+      },
+      {
+        "capability": "plotting",
+        "name": "execute",
+        "type": "boolean",
+        "description": "Execute the notebook during conversion"
+      },
+      {
+        "capability": "plotting",
+        "name": "output-dir",
+        "type": "string",
+        "description": "Directory for converted notebooks"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "d3",
+    "plotly",
+    "recharts",
+    "chart.js"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data-visualization/skill/data-visualization.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data-visualization/skill/data-visualization.yaml",
+    "checksum": "b1999edede8d7ff08939bc73c081fd444b46b7c540790a02bdcd76e6740ba1d4"
+  }
+}

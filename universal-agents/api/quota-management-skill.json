@@ -1,0 +1,171 @@
+{
+  "name": "quota-management",
+  "display_name": "Quota Management",
+  "category": "api",
+  "subcategory": "general",
+  "description": "API quota management: per-key quotas, Redis counters, quota check middleware, and 429 handling.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "redis-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "quota-enforcement",
+      "description": "Implement per-consumer quotas with Redis counters and enforce them at the API layer.",
+      "commands": [
+        "redis-cli INCR user:42:requests",
+        "redis-cli EXPIRE user:42:requests 60",
+        "redis-cli GET user:42:requests",
+        "redis-cli -n 3 SET quota:user:42 1000",
+        "curl -s -o /dev/null -w \"%{http_code}\\n\" -H \"X-Api-Key: key-42\" http://localhost:8080/api"
+      ],
+      "examples": [
+        "redis-cli INCR user:42:requests; redis-cli EXPIRE user:42:requests 60",
+        "redis-cli GET user:42:requests",
+        "curl -s -o /dev/null -w \"%{http_code}\\n\" -H \"X-Api-Key: key-42\" http://localhost:8080/api"
+      ],
+      "parameters": [
+        {
+          "name": "quota_key",
+          "type": "string",
+          "description": "Redis key for the consumer's counter"
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "description": "Quota limit per window"
+        },
+        {
+          "name": "window",
+          "type": "integer",
+          "description": "Window seconds for expiry"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Redis INCR/EXPIRE",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/commands/incr/",
+      "description": "Atomic counters for quota windows"
+    },
+    {
+      "title": "API Quotas Guide",
+      "type": "documentation",
+      "source": "https://swagger.io/resources/articles/what-is-api-quota/",
+      "description": "Quota concepts and enforcement patterns"
+    }
+  ],
+  "instructions": "# Quota Management\n\nQuotas cap how many requests each consumer may make, enforced at the API layer.\n\n## What this skill does\n\n- Counts requests per key with Redis\n- Checks quota before serving\n- Returns 429 with retry info\n\n## When to use\n\n- Per-plan limits for API consumers\n- Fairness across tenants\n\n## Real commands\n\n```bash\n# Count per user per window\nredis-cli INCR user:42:requests\nredis-cli EXPIRE user:42:requests 60\nredis-cli GET user:42:requests\n\n# Store quota config\nredis-cli -n 3 SET quota:user:42 1000\n\n# Verify enforcement\ncurl -s -o /dev/null -w \"%{http_code}\\n\" -H \"X-Api-Key: key-42\" http://localhost:8080/api\n```\n\n## Check logic (pseudo)\n\n```python\nused = redis.incr(f\"user:{key}:requests\")\nif used == 1:\n    redis.expire(f\"user:{key}:requests\", window)\nif used > quota(key):\n    return 429, {\"retry_after\": window}\n```\n\n## Response headers\n\n- `Retry-After: 60`\n- `X-RateLimit-Limit`, `X-RateLimit-Remaining`\n\n## Best practices\n\n- Make INCR+EXPIRE atomic or use the INCR+EXPIRE pattern with care\n- Read quotas from a config store, not code\n- Expose remaining quota in headers",
+  "examples": [
+    {
+      "input": "Enforce a 100 req/min quota per API key",
+      "output": "The agent shows the Redis counter middleware and 429 handling with Retry-After."
+    },
+    {
+      "input": "Raise the quota for one customer",
+      "output": "The agent updates the quota config and verifies with a curl test."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "quota-management.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-quota-management"
+    },
+    "generic": {
+      "system_prompt": "You are the Quota Management specialist. You do it through quota-enforcement: Implement per-consumer quotas with Redis counters and enforce them at the API layer. The commands are real, e.g. `redis-cli INCR user:42:requests`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "quota-management",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "quota-enforcement",
+        "name": "quota_key",
+        "type": "string",
+        "description": "Redis key for the consumer's counter"
+      },
+      {
+        "capability": "quota-enforcement",
+        "name": "limit",
+        "type": "integer",
+        "description": "Quota limit per window"
+      },
+      {
+        "capability": "quota-enforcement",
+        "name": "window",
+        "type": "integer",
+        "description": "Window seconds for expiry"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/quota-management-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/quota-management-skill.yaml",
+    "checksum": "3aa0324b570288581c910a5b855bb7c776fdedd086a1e6c8c56fba67d4d7b15f"
+  }
+}

@@ -1,0 +1,111 @@
+name: commitlint
+display_name: commitlint
+category: code-quality
+subcategory: general
+description: 'Enforces conventional commit message standards with commitlint: configs, hooks, and CI validation.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- echo
+- npm
+- npx
+capabilities:
+- commands:
+  - npx commitlint --from HEAD~1 --to HEAD
+  - npx commitlint --from HEAD~10
+  - 'echo "feat: add login" | npx commitlint'
+  - echo "add stuff" | npx commitlint
+  description: Lint commit messages from stdin or files.
+  name: commitlint-cli
+  examples:
+  - npx commitlint --from HEAD~1 --to HEAD --verbose
+  - npx commitlint --edit "$1"
+  - 'echo "fix(api): handle timeout" | npx commitlint --verbose'
+  parameters:
+  - description: Lower commit boundary
+    name: from
+    type: string
+  - description: Upper commit boundary
+    name: to
+    type: string
+- commands:
+  - npm install --save-dev @commitlint/cli @commitlint/config-conventional
+  - npx commitlint --init
+  - npx commitlint --print-config
+  - npm install --save-dev @commitlint/cz-commitlint
+  description: Configure rules and plugins.
+  name: commitlint-config
+  examples:
+  - npx commitlint --print-config | head -40
+  - 'echo "module.exports = {extends: [\"@commitlint/config-conventional\"]}" > commitlint.config.cjs'
+  parameters:
+  - description: Config file path
+    name: config
+    type: string
+  - name: rule
+    type: string
+    description: Rule name to override
+knowledge:
+- title: commitlint Docs
+  description: Rules, config, and hooks
+  source: https://commitlint.js.org
+  type: documentation
+- title: Conventional Commits
+  description: Commit message specification
+  source: https://www.conventionalcommits.org
+  type: documentation
+instructions: "# commitlint\n\nValidate commit message conventions.\n\n## When to Use\n\n- Enforcing Conventional\
+  \ Commits in a repo\n- Generating changelogs from message structure\n- Keeping git history greppable\
+  \ and machine-readable\n- Standardizing scope and type usage across teams\n\n## Format\n\n```\ntype(scope):\
+  \ subject\n\nbody\n\nfooter\n```\n\nTypes: feat, fix, docs, style, refactor, perf, test, build, ci,\
+  \ chore, revert\n\n## Commands\n\n```bash\n# Install\nnpm install --save-dev @commitlint/cli @commitlint/config-conventional\n\
+  \n# Lint a commit range\nnpx commitlint --from HEAD~1 --to HEAD\n\n# Lint stdin\necho \"feat: add login\"\
+  \ | npx commitlint\necho \"add stuff\" | npx commitlint   # fails\n\n# Edit hook (pre-commit in hooks\
+  \ scripts)\nnpx commitlint --edit \"$1\"\n\n# Inspect config\nnpx commitlint --print-config\n```\n\n\
+  ## Config Example\n\n```javascript\n// commitlint.config.cjs\nmodule.exports = {\n  extends: [\"@commitlint/config-conventional\"\
+  ],\n  rules: {\n    \"subject-case\": [2, \"never\", [\"sentence-case\", \"start-case\"]],\n    \"type-enum\"\
+  : [2, \"always\", [\"feat\", \"fix\", \"docs\", \"chore\", \"test\"]],\n  },\n};\n```\n\n## Best Practices\n\
+  \n- Run commitlint --edit in the commit-msg hook\n- Use the conventional preset unless rules are justified\n\
+  - Keep subjects under 100 chars and imperative tense\n- Add scope for the affected module: fix(api):\n\
+  - Run --from HEAD~1 in CI for all pushed commits"
+examples:
+- input: Set up commit message linting
+  output: Agent installs commitlint, adds the config, wires the commit-msg hook, and shows passing/failing
+    examples.
+- input: Why does my commit fail lint?
+  output: Agent runs echo "<message>" | npx commitlint to reproduce, points to the violated rule, and
+    shows the fix.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: commitlint.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-commitlint
+  generic:
+    system_prompt: 'This is your domain: commitlint. You do it through commitlint-cli: Lint commit messages
+      from stdin or files. The commands are real, e.g. `npx commitlint --from HEAD~1 --to HEAD`. You work
+      hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

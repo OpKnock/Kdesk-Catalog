@@ -1,0 +1,163 @@
+{
+  "name": "message-broker",
+  "display_name": "Message Broker",
+  "category": "backend",
+  "subcategory": "messaging",
+  "description": "Agent for configuring message brokers with RabbitMQ, NATS, and message routing.",
+  "version": "1.0.0",
+  "tags": [
+    "message-broker",
+    "rabbitmq",
+    "nats",
+    "pub-sub",
+    "routing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "messaging",
+      "description": "Configure message brokers",
+      "commands": [
+        "rabbitmq",
+        "nats",
+        "redis"
+      ],
+      "examples": [
+        "RabbitMQ: rabbitmqctl list_queues",
+        "NATS: nats sub 'orders.>'",
+        "Redis: redis-cli PUBSUB CHANNELS"
+      ],
+      "parameters": [
+        {
+          "name": "broker",
+          "type": "string",
+          "description": "Broker: rabbitmq, nats, redis, kafka"
+        },
+        {
+          "name": "pattern",
+          "type": "string",
+          "description": "Pattern: pub-sub, work-queue, request-reply"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "RabbitMQ",
+      "type": "documentation",
+      "source": "https://www.rabbitmq.com/docs",
+      "description": "RabbitMQ documentation"
+    },
+    {
+      "Title": "NATS",
+      "type": "tutorial",
+      "source": "https://docs.nats.io/",
+      "description": "NATS documentation"
+    }
+  ],
+  "instructions": "You are the message broker specialist for RabbitMQ, NATS, Redis, or Kafka. Call on this agent when configuring brokers, designing message patterns (pub-sub, work-queue, request-reply), or managing acknowledgments. Core workflow: set up the broker and verify operational state, e.g. `rabbitmqctl list_queues` to inspect RabbitMQ queues or `nats sub 'orders.>'` to subscribe to NATS subjects; check channel activity with `redis-cli PUBSUB CHANNELS`. Implement the requested pattern with proper ack semantics, and always route failures to a dead letter queue. Key behaviors: confirm consumers ack messages correctly to avoid redelivery loops, monitor queue depth, and scale consumers before queues back up. Report broker config, pattern implemented, and queue/channel status.",
+  "examples": [
+    {
+      "input": "Message broker",
+      "output": "I'll set up RabbitMQ for message routing..."
+    },
+    {
+      "input": "Pub-sub",
+      "output": "I'll implement pub-sub with NATS..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "message-broker.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-message-broker"
+    },
+    "generic": {
+      "system_prompt": "You are a message broker expert. Help users configure RabbitMQ and NATS for messaging.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "message-broker",
+  "type": "agent",
+  "skills": [
+    "async-task-engineer",
+    "background-job-scheduler",
+    "queue-based-architecture",
+    "message-broker-architect",
+    "message-queue-administrator"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "messaging",
+        "name": "broker",
+        "type": "string",
+        "description": "Broker: rabbitmq, nats, redis, kafka"
+      },
+      {
+        "capability": "messaging",
+        "name": "pattern",
+        "type": "string",
+        "description": "Pattern: pub-sub, work-queue, request-reply"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/agent/message-broker.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/agent/message-broker.yaml",
+    "checksum": "0befeb7d6812897c27705f5901ef736f72602a1e7c284b9092b5b42758c3c0a0"
+  }
+}

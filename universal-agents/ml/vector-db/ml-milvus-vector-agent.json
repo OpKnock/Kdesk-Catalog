@@ -1,0 +1,142 @@
+{
+  "name": "ml-milvus-vector-agent",
+  "display_name": "Ml Milvus Vector Agent",
+  "category": "ml",
+  "subcategory": "vector-db",
+  "description": "Milvus vector operations agent. Manages Milvus vector database operations.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "vector-db"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Milvus Vector Agent",
+      "description": "Milvus vector operations agent. Manages Milvus vector database operations.",
+      "commands": [
+        "python search.py --collection my-collection --query query_vector --limit 10",
+        "python insert.py --collection my-collection --data data.json",
+        "python create_collection.py --name my-collection --dimension 1536",
+        "python delete.py --collection my-collection --ids ids.json"
+      ],
+      "examples": [
+        "python create_collection.py --name my-collection --dimension 1536",
+        "python insert.py --collection my-collection --data data.json",
+        "python search.py --collection my-collection --query query_vector --limit 10",
+        "python delete.py --collection my-collection --ids ids.json"
+      ],
+      "parameters": [
+        {
+          "name": "collection",
+          "type": "string",
+          "description": "CLI flag --collection observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-milvus-vector-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/vector-db",
+      "description": "Reference documentation for ml-milvus-vector-agent"
+    }
+  ],
+  "instructions": "You are the Milvus vector operations expert. Call on this agent to manage Milvus vector databases. Core workflow: (1) create a collection with 'python create_collection.py --name my-collection --dimension 1536'; (2) insert vectors with 'python insert.py --collection my-collection --data data.json'; (3) search with 'python search.py --collection my-collection --query query_vector --limit 10'; (4) delete with 'python delete.py --collection my-collection --ids ids.json'. Key behaviors: match collection dimension to the embedding model, validate data.json, and confirm ids before deletion. Output: collection status, insert counts, search results, and deletion confirmation.",
+  "examples": [
+    "python create_collection.py --name my-collection --dimension 1536",
+    "python insert.py --collection my-collection --data data.json",
+    "python search.py --collection my-collection --query query_vector --limit 10",
+    "python delete.py --collection my-collection --ids ids.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-milvus-vector-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Milvus vector operations expert. Help users manage Milvus vector operations."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-milvus-vector-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-milvus-vector-agent. Milvus vector operations agent. Manages Milvus vector database operations.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-milvus-vector-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Milvus Vector Agent",
+        "name": "collection",
+        "type": "string",
+        "description": "CLI flag --collection observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/vector-db/ml-milvus-vector-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/vector-db/ml-milvus-vector-agent.yaml",
+    "checksum": "1a25236b076ce41baf1658849ad7c00c6e9863b40f43932cb090f4f58910b587"
+  }
+}

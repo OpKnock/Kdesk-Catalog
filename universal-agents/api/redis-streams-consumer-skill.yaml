@@ -1,0 +1,185 @@
+name: redis-streams-consumer
+display_name: Redis Streams Consumer
+category: api
+subcategory: general
+description: 'Hand-crafted Redis Streams consumer skill: consumer groups, XREADGROUP delivery, XACK acknowledgement,
+  XPENDING inspection, and XCLAIM recovery.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- redis-cli
+capabilities:
+- name: stream-consumer-groups
+  description: 'Consume streams with consumer groups: read, ack, inspect pending, claim'
+  commands:
+  - redis-cli XREADGROUP GROUP pay-group c1 COUNT 5 STREAMS orders:pay >
+  - redis-cli XACK orders:pay pay-group 1699999999999-0
+  - redis-cli XPENDING orders:pay pay-group
+  - redis-cli XCLAIM orders:pay pay-group c2 60000 1699999999999-0
+  - redis-cli XREADGROUP GROUP pay-group c1 COUNT 10 STREAMS orders:pay 0
+  examples:
+  - redis-cli XREADGROUP GROUP pay-group c1 COUNT 5 STREAMS orders:pay >
+  - redis-cli XPENDING orders:pay pay-group - + 10 c2
+  - redis-cli XAUTOCLAIM orders:pay pay-group c2 60000 0-0
+  parameters:
+  - name: group
+    type: string
+    description: Consumer group name to read from
+  - name: consumer
+    type: string
+    description: Consumer name within the group
+  - name: count
+    type: integer
+    description: Maximum number of entries to read
+knowledge:
+- title: Redis Streams intro
+  type: documentation
+  source: https://redis.io/docs/latest/develop/data-types/streams/
+  description: Consumer groups, pending entries, and delivery semantics
+- title: XREADGROUP command
+  type: documentation
+  source: https://redis.io/docs/latest/commands/xreadgroup/
+  description: Reading with the > special ID and per-consumer history
+instructions: '# Redis Streams - Consumer Groups
+
+
+  Hand-crafted skill for reliable stream consumption with Redis consumer groups.
+
+
+  ## What this skill does
+
+
+  - Reads new entries with XREADGROUP and the > special ID
+
+  - Acknowledges processed entries so they leave the PEL (pending list)
+
+  - Inspects pending entries and reclaims stale work with XCLAIM/ XAUTOCLAIM
+
+
+  ## When to use
+
+
+  - Building at-least-once processing on top of Redis Streams
+
+  - Debugging unacked messages after a consumer crash
+
+  - Rebalancing work between consumers
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Read up to 5 new entries for consumer c1
+
+  redis-cli XREADGROUP GROUP pay-group c1 COUNT 5 STREAMS orders:pay >
+
+
+  # Acknowledge processed IDs
+
+  redis-cli XACK orders:pay pay-group 1699999999999-0
+
+
+  # Show pending entries per consumer
+
+  redis-cli XPENDING orders:pay pay-group
+
+  redis-cli XPENDING orders:pay pay-group - + 10 c2
+
+
+  # Claim entries idle > 60s for consumer c2
+
+  redis-cli XCLAIM orders:pay pay-group c2 60000 1699999999999-0
+
+
+  # Auto-claim loop (idle > 60s, start from 0-0)
+
+  redis-cli XAUTOCLAIM orders:pay pay-group c2 60000 0-0
+
+
+  # Read a consumer''s own history
+
+  redis-cli XREADGROUP GROUP pay-group c1 COUNT 10 STREAMS orders:pay 0
+
+  ```
+
+
+  ## Delivery semantics
+
+
+  - Entries are handed to one group member only; unacked IDs stay pending
+
+  - A crashed consumer leaves pending entries that XCLAIM reassigns
+
+  - Always XACK after processing, otherwise the PEL grows forever
+
+
+  ## Testing
+
+
+  ```bash
+
+  redis-cli XADD orders:pay * amount 10
+
+  redis-cli XREADGROUP GROUP pay-group c1 COUNT 1 STREAMS orders:pay >
+
+  redis-cli XPENDING orders:pay pay-group
+
+  ```
+
+
+  ## Best practices
+
+
+  - Read with the > ID for new work, with 0 for replaying your own history
+
+  - Set an idle threshold based on your processing SLA before claiming
+
+  - Make the claim operation idempotent: process only if you still own the entry
+
+  '
+examples:
+- input: My consumer crashed and 50 messages are stuck pending
+  output: Run redis-cli XPENDING orders:pay pay-group - + 50 to inspect, then XCLAIM or XAUTOCLAIM them
+    for a live consumer, or XACK if they were already processed.
+- input: How do I consume new entries only?
+  output: Use redis-cli XREADGROUP GROUP pay-group c1 COUNT 5 STREAMS orders:pay > and XACK each ID after
+    processing.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: redis-streams-consumer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-redis-streams-consumer
+  generic:
+    system_prompt: 'You take the Redis Streams Consumer seat. You do it through stream-consumer-groups:
+      Consume streams with consumer groups: read, ack, inspect pending, claim. The commands are real,
+      e.g. `redis-cli XREADGROUP GROUP pay-group c1 COUNT 5 STREAMS orders:pay >`. You run and verify
+      the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

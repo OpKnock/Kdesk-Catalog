@@ -1,0 +1,157 @@
+{
+  "name": "feature-flag-manager",
+  "display_name": "Feature Flag Manager",
+  "category": "devtools",
+  "subcategory": "feature-flags",
+  "description": "Agent for implementing feature flags with A/B testing, gradual rollouts, and kill switches.",
+  "version": "1.0.0",
+  "tags": [
+    "feature-flags",
+    "a-b-testing",
+    "gradual-rollout",
+    "kill-switch"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "feature-flags",
+      "description": "Implement feature flag management",
+      "commands": [
+        "launchdarkly",
+        "flagsmith",
+        "unfurl",
+        "toggles"
+      ],
+      "examples": [
+        "Check flag: launchdarkly get 'new-feature' user-123",
+        "Enable flag: flagsmith update-feature new-feature true",
+        "Kill switch: toggles disable critical-feature"
+      ],
+      "parameters": [
+        {
+          "name": "flag_type",
+          "type": "string",
+          "description": "Type: boolean, multivariate, percentage"
+        },
+        {
+          "name": "rollout_strategy",
+          "type": "string",
+          "description": "Strategy: percentage, user-segment, environment"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "LaunchDarkly Documentation",
+      "type": "documentation",
+      "source": "https://docs.launchdarkly.com/",
+      "description": "LaunchDarkly feature flag documentation"
+    },
+    {
+      "title": "Feature Flag Best Practices",
+      "type": "tutorial",
+      "source": "https://featureflags.io/feature-flag-best-practices/",
+      "description": "Feature flag best practices guide"
+    }
+  ],
+  "instructions": "You are a feature flag specialist. Help users:\n1. Design feature flag strategies\n2. Implement gradual rollouts\n3. Set up A/B testing\n4. Create kill switches\n5. Monitor feature performance\n\nAlways recommend proper naming conventions and cleanup.\n",
+  "examples": [
+    {
+      "input": "Add feature flags",
+      "output": "I'll implement feature flags with gradual rollout. Here's the configuration..."
+    },
+    {
+      "input": "Rollback a feature",
+      "output": "I'll activate the kill switch. Here's the rollback procedure..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "feature-flag-manager.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-feature-flags"
+    },
+    "generic": {
+      "system_prompt": "You are a feature flag expert. Help users implement feature flags, A/B testing, and gradual rollouts.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "feature-flag-manager",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "feature-flags",
+        "name": "flag_type",
+        "type": "string",
+        "description": "Type: boolean, multivariate, percentage"
+      },
+      {
+        "capability": "feature-flags",
+        "name": "rollout_strategy",
+        "type": "string",
+        "description": "Strategy: percentage, user-segment, environment"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/agent/feature-flag-manager.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/agent/feature-flag-manager.yaml",
+    "checksum": "a747c256964e701d8e8c42197574c2a9e2d1a2411593792e5c3e6fda4ba01b8c"
+  }
+}

@@ -1,0 +1,110 @@
+name: hadolint
+display_name: hadolint
+category: code-quality
+subcategory: general
+description: 'Lints Dockerfiles with hadolint: best-practice rules, shellcheck integration, and CI enforcement.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- docker
+- hadolint
+capabilities:
+- commands:
+  - hadolint Dockerfile
+  - hadolint Dockerfile --ignore DL3007
+  - hadolint Dockerfile --failure-threshold warning
+  - docker run --rm -i hadolint/hadolint < Dockerfile
+  - hadolint Dockerfile -f json
+  description: Lint Dockerfiles from CLI or stdin.
+  name: hadolint-lint
+  examples:
+  - hadolint Dockerfile.prod
+  - cat Dockerfile | hadolint -
+  - hadolint Dockerfile --trusted-registry docker.io --ignore DL3002
+  parameters:
+  - description: Dockerfile path
+    name: file
+    type: string
+  - description: Rules to ignore
+    name: ignore
+    type: string
+  - description: error, warning, info, style
+    name: failure-threshold
+    type: string
+- commands:
+  - hadolint --version
+  - hadolint Dockerfile --format sarif
+  - hadolint Dockerfile --no-color
+  - hadolint Dockerfile --config .hadolint.yaml
+  description: Manage rules and formats.
+  name: hadolint-config
+  examples:
+  - hadolint Dockerfile -f sarif -o hadolint.sarif
+  - hadolint Dockerfile --verbose
+  parameters:
+  - description: tty, json, sarif, checkstyle
+    name: format
+    type: string
+  - name: output
+    type: string
+    description: Report output file path
+knowledge:
+- title: Hadolint Docs
+  description: Rules, usage, and CI examples
+  source: https://github.com/hadolint/hadolint
+  type: documentation
+- title: Dockerfile Best Practices
+  description: Official Dockerfile guidance
+  source: https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+  type: documentation
+instructions: "# Hadolint\n\nLint Dockerfiles for best practices.\n\n## When to Use\n\n- Enforcing minimal,\
+  \ safe images\n- Catching apt-pin/apk-add without cleanup (DL30xx)\n- CI gates on every Dockerfile change\n\
+  - Checking for pinned versions and non-root users\n\n## Commands\n\n```bash\n# Lint\nhadolint Dockerfile\n\
+  \n# Via docker (no local install)\ndocker run --rm -i hadolint/hadolint < Dockerfile\n\n# Ignore rules\n\
+  hadolint Dockerfile --ignore DL3007\n\n# Failure threshold\nhadolint Dockerfile --failure-threshold\
+  \ warning\n\n# Formats\nhadolint Dockerfile -f json\nhadolint Dockerfile -f sarif -o hadolint.sarif\n\
+  \n# Config file\nhadolint Dockerfile --config .hadolint.yaml\n```\n\n## Config Example\n\n```yaml\n\
+  # .hadolint.yaml\nfailure-threshold: warning\nignored:\n  - DL3007\ntrustedRegistries:\n  - docker.io\n\
+  ```\n\n## Best Practices\n\n- Pin base image tags (DL3007 is untagged latest)\n- Add --no-install-recommends\
+  \ and cleanup for apt\n- Run as non-root (USER directive)\n- Multi-stage builds for smaller images\n\
+  - Run hadolint in CI with a JSON report\n- Review rules before ignoring them; keep the list short"
+examples:
+- input: Lint my Dockerfile before shipping
+  output: Agent runs hadolint Dockerfile, explains DL and SC findings, and applies fixes like cleanup
+    and USER.
+- input: Hadolint flags my apt install
+  output: Agent adds --no-install-recommends, removes apt-get lists, and re-checks until the file is clean.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: hadolint.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-hadolint
+  generic:
+    system_prompt: 'You take the hadolint seat. You do it through hadolint-lint: Lint Dockerfiles from
+      CLI or stdin. The commands are real, e.g. `hadolint Dockerfile`. You work hands-on and only report
+      outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

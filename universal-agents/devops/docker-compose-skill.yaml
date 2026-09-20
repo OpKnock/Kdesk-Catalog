@@ -1,0 +1,125 @@
+name: docker-compose-devops
+display_name: docker-compose-devops
+category: devops
+subcategory: general
+description: 'Authors and operates multi-container applications with Docker Compose: services, networks,
+  volumes, healthchecks, and profiles.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- docker
+capabilities:
+- name: compose-lifecycle
+  description: Build, start, stop, and tear down multi-service stacks defined in compose.yaml.
+  commands:
+  - docker compose up -d
+  - docker compose up --build
+  - docker compose down
+  - docker compose down -v
+  - docker compose restart api
+  - docker compose stop
+  examples:
+  - docker compose up -d --build
+  - docker compose down -v
+  - docker compose restart api
+  parameters:
+  - name: services
+    type: string
+    description: Service names to target, e.g. api db
+  - name: volume-cleanup
+    type: boolean
+    description: Remove named volumes with -v on down
+- name: inspect-and-interact
+  description: Tail logs, exec into services, and validate the compose file.
+  commands:
+  - docker compose logs -f api
+  - docker compose ps
+  - docker compose exec api sh
+  - docker compose config
+  - docker compose top
+  - docker compose events
+  examples:
+  - docker compose logs -f api
+  - docker compose exec api sh -c 'npm test'
+  - docker compose config --services
+  parameters:
+  - name: service
+    type: string
+    description: Service to exec into or tail logs for
+  - name: follow
+    type: boolean
+    description: Stream logs with -f
+knowledge:
+- title: Docker Compose Overview
+  type: documentation
+  source: https://docs.docker.com/compose/
+  description: Compose model, CLI, and lifecycle
+- title: Compose Specification
+  type: documentation
+  source: https://compose-spec.io/
+  description: 'Canonical compose file specification: services, networks, volumes, healthchecks'
+- title: Compose CLI Reference
+  type: documentation
+  source: https://docs.docker.com/reference/cli/docker/compose/
+  description: docker compose subcommands and flags
+instructions: "# Docker Compose Applications\n\nRun local dev environments and single-host multi-container\
+  \ apps with compose.yaml.\n\n## What This Skill Does\n\n- Writes service definitions with images, builds,\
+  \ env, volumes, and healthchecks\n- Manages the full lifecycle: up, build, restart, down\n- Interacts\
+  \ with running services: logs, exec, top\n- Validates compose files before deployment\n- Uses profiles\
+  \ and overlays for dev/staging/prod variants\n\n## When to Use\n\n- Local development with DB + cache\
+  \ + API sidecars\n- CI service containers\n- Small single-host production stacks\n\n## Real Commands\n\
+  \n```bash\n# Lifecycle\ndocker compose up -d\ndocker compose up -d --build --force-recreate\ndocker\
+  \ compose down -v            # remove volumes too\ndocker compose restart api\ndocker compose stop\n\
+  \n# Interact\ndocker compose ps\ndocker compose logs -f api\ndocker compose exec api sh\ndocker compose\
+  \ top\ndocker compose events\n\n# Validate\ndocker compose config\ndocker compose config --services\n\
+  docker compose config --quiet     # exit code only\n```\n\n## Sample compose.yaml\n\n```yaml\nservices:\n\
+  \  api:\n    build: ./api\n    ports: [\"8080:8080\"]\n    environment:\n      DB_URL: postgres://db:5432/app\n\
+  \    depends_on:\n      db:\n        condition: service_healthy\n    healthcheck:\n      test: [\"CMD\"\
+  , \"curl\", \"-f\", \"http://localhost:8080/health\"]\n      interval: 30s\n  db:\n    image: postgres:16\n\
+  \    volumes: [pgdata:/var/lib/postgresql/data]\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready\
+  \ -U app\"]\nvolumes:\n  pgdata:\n```\n\n## Best Practices\n\n- Always pin image tags; avoid `latest`\
+  \ in compose files\n- Use healthchecks with `depends_on.condition` instead of restart loops\n- Keep\
+  \ secrets via env_file or Docker secrets, not inline env\n- Use profiles (`profiles: [\"debug\"]`) for\
+  \ optional services\n- Test `docker compose config --quiet` in CI to fail invalid files early"
+examples:
+- input: Write a compose stack for a Node API + Postgres
+  output: Agent creates compose.yaml with api build context, healthchecks, depends_on condition, and named
+    volume; validates with docker compose config
+- input: Why is the db service unhealthy?
+  output: Agent runs docker compose ps and docker compose logs db, checks healthcheck exit codes, and
+    fixes the pg_isready user or port
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: docker-compose-devops.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-docker-compose
+  generic:
+    system_prompt: 'You work docker-compose-devops hands-on. You do it through compose-lifecycle: Build,
+      start, stop, and tear down multi-service stacks defined in compose.yaml. The commands are real,
+      e.g. `docker compose up -d`. You answer with exact commands, not abstractions, and flag anything
+      you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,238 @@
+{
+  "name": "message-queue-administrator",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "infrastructure",
+  "description": "Operates RabbitMQ and Redis Streams in production: node status, queue health, purges, and consumer troubleshooting.",
+  "keywords": [
+    "rabbitmq",
+    "message-queue",
+    "consumer-groups",
+    "dead-letter-queue"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "message-queue-administrator.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-message-queue-administrator"
+    },
+    "generic": {
+      "system_prompt": "You work message-queue-administrator hands-on. You do it through rabbitmq: Administer RabbitMQ nodes and queues. The commands are real, e.g. `rabbitmqctl status`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "rabbitmq",
+      "description": "Administer RabbitMQ nodes and queues.",
+      "commands": [
+        "rabbitmqctl status",
+        "rabbitmqctl list_queues name messages messages_ready messages_unacknowledged --formatter table",
+        "rabbitmqctl purge_queue orders",
+        "rabbitmqctl list_connections name state connected_at",
+        "rabbitmq-plugins enable rabbitmq_management"
+      ],
+      "examples": [
+        "rabbitmqctl list_queues name messages | sort -k2 -rn | head -10",
+        "rabbitmqctl purge_queue dead.orders",
+        "rabbitmq-diagnostics status --silent"
+      ],
+      "parameters": [
+        {
+          "name": "queue",
+          "type": "string",
+          "description": "Queue name for purge/list"
+        },
+        {
+          "name": "formatter",
+          "type": "string",
+          "description": "table, tsv, or json output"
+        },
+        {
+          "name": "plugin",
+          "type": "string",
+          "description": "rabbitmq plugin to enable"
+        }
+      ]
+    },
+    {
+      "name": "redis-streams",
+      "description": "Inspect and manage Redis Stream consumer groups.",
+      "commands": [
+        "redis-cli XLEN orders:stream",
+        "redis-cli XADD orders:stream '*' order 1 sku A1",
+        "redis-cli XRANGE orders:stream - + COUNT 10",
+        "redis-cli XGROUP INFO orders:stream workers",
+        "redis-cli XINFO STREAM orders:stream"
+      ],
+      "examples": [
+        "redis-cli XLEN orders:stream && redis-cli XINFO GROUPS orders:stream",
+        "redis-cli XRANGE orders:stream - + | head -20",
+        "redis-cli XGROUP CREATECONSUMER orders:stream workers w3"
+      ],
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "string",
+          "description": "Stream key name"
+        },
+        {
+          "name": "group",
+          "type": "string",
+          "description": "Consumer group name"
+        },
+        {
+          "name": "count",
+          "type": "number",
+          "description": "Number of entries to return"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "kafka",
+    "rabbitmq",
+    "kcat",
+    "kafka-ui"
+  ],
+  "tools": [
+    "kafka",
+    "rabbitmq",
+    "kcat",
+    "kafka-ui",
+    "rabbitmqctl",
+    "nats-cli"
+  ],
+  "examples": [
+    {
+      "input": "Queue depth exploded overnight - what happened?",
+      "output": "Checks unacknowledged counts, finds a stuck consumer, restarts it, and verifies drain via list_queues."
+    },
+    {
+      "input": "Clear the dead-letter queue after review.",
+      "output": "Verifies DLQ contents, tickets the purge, runs rabbitmqctl purge_queue, and confirms depth is zero."
+    }
+  ],
+  "instructions": "# Message Queue Administration\n\nKeep queues healthy: monitor, diagnose, and recover.\n\n## When to Use\n\n- Queue depth alerts and stuck consumers\n- Scheduled maintenance of brokers\n- Debugging message loss or duplication\n\n## RabbitMQ health\n\n```bash\nrabbitmq-diagnostics ping\nrabbitmqctl status\nrabbitmqctl list_connections name state\n```\n\n## Queue health\n\n```bash\nrabbitmqctl list_queues name messages messages_ready messages_unacknowledged --formatter table\n```\n\n- `messages` = total backlog\n- `messages_ready` = awaiting delivery\n- `messages_unacknowledged` = in-flight; if high, consumers are stuck\n\n## Purge and reset\n\n```bash\nrabbitmqctl purge_queue dead.orders\n```\n\nPurge only after confirming the DLQ is reviewed - this is destructive.\n\n## Redis Streams\n\n```bash\nredis-cli XLEN orders:stream\nredis-cli XRANGE orders:stream - + COUNT 10\nredis-cli XINFO STREAM orders:stream\nredis-cli XGROUP INFO orders:stream workers\n```\n\n`pending` + `lag` in XINFO GROUPS show consumer backlog and idle time.\n\n## Recovery playbook\n\n1. Confirm broker is up (`rabbitmq-diagnostics ping`).\n2. Check connection/consumer counts.\n3. Inspect unacknowledged messages - restart stuck consumers.\n4. Purge dead-letter queues only after triage.\n5. Watch queue depth trend for 10 minutes after action.\n\n## Best practices\n\n- Alert on queue depth > threshold for > 5 minutes.\n- Never purge a queue without a ticket and backup.\n- Enable management plugin and lock down its network path.\n- Document every queue's consumer and owner.\n\n## Testing\n\n```bash\nrabbitmqctl list_queues name messages | wc -l\nredis-cli XLEN orders:stream\n```\n\nAssert queue counts return to baseline after load tests.",
+  "display_name": "message-queue-administrator",
+  "knowledge": [
+    {
+      "title": "RabbitMQ CLI",
+      "type": "documentation",
+      "source": "https://www.rabbitmq.com/docs/cli",
+      "description": "rabbitmqctl and rabbitmq-diagnostics references"
+    },
+    {
+      "title": "RabbitMQ Management",
+      "type": "documentation",
+      "source": "https://www.rabbitmq.com/docs/management",
+      "description": "Management plugin and HTTP API"
+    },
+    {
+      "title": "Redis Streams",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/develop/data-types/streams/",
+      "description": "Streams, consumer groups, and XINFO"
+    }
+  ],
+  "id": "message-queue-administrator",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rabbitmq",
+        "name": "queue",
+        "type": "string",
+        "description": "Queue name for purge/list"
+      },
+      {
+        "capability": "rabbitmq",
+        "name": "formatter",
+        "type": "string",
+        "description": "table, tsv, or json output"
+      },
+      {
+        "capability": "rabbitmq",
+        "name": "plugin",
+        "type": "string",
+        "description": "rabbitmq plugin to enable"
+      },
+      {
+        "capability": "redis-streams",
+        "name": "stream",
+        "type": "string",
+        "description": "Stream key name"
+      },
+      {
+        "capability": "redis-streams",
+        "name": "group",
+        "type": "string",
+        "description": "Consumer group name"
+      },
+      {
+        "capability": "redis-streams",
+        "name": "count",
+        "type": "number",
+        "description": "Number of entries to return"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kafka",
+    "rabbitmq",
+    "kcat",
+    "kafka-ui"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "message-queue-administrator/skill/message-queue-administrator.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/message-queue-administrator/skill/message-queue-administrator.yaml",
+    "checksum": "4cdf53effbdbbe0c9619de41db4990e58e3379cc12e5c64f434b767adc9fb629"
+  }
+}

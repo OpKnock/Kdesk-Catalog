@@ -1,0 +1,217 @@
+{
+  "name": "kafka-python",
+  "display_name": "Kafka Python",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Build Kafka producers and consumers in Python with confluent-kafka: SerializingProducer, Consumer groups, and end-to-end event pipelines.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kafka-console-consumer.sh",
+    "kafka-consumer-groups.sh",
+    "kafka-topics.sh",
+    "pip",
+    "python"
+  ],
+  "capabilities": [
+    {
+      "name": "python-pipeline",
+      "description": "Write Python producers/consumers with confluent-kafka and verify against the broker.",
+      "commands": [
+        "pip install confluent-kafka",
+        "python producer.py --topic events --count 500",
+        "python consumer.py --topic events --group analytics",
+        "kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 6 --replication-factor 1",
+        "python -m pytest tests/"
+      ],
+      "examples": [
+        "python producer.py --topic events --count 500",
+        "python consumer.py --topic events --group analytics",
+        "kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events --partitions 6 --replication-factor 1"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic name."
+        },
+        {
+          "name": "group",
+          "type": "string",
+          "description": "Consumer group id."
+        },
+        {
+          "name": "count",
+          "type": "integer",
+          "description": "Messages to produce."
+        }
+      ]
+    },
+    {
+      "name": "consume-check",
+      "description": "Inspect consumed data and group state from the CLI.",
+      "commands": [
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning --max-messages 3",
+        "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group analytics",
+        "python consumer.py --topic events --group analytics --reset earliest --poll 5000"
+      ],
+      "examples": [
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning --max-messages 3",
+        "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group analytics",
+        "python consumer.py --topic events --group analytics --reset earliest --poll 5000"
+      ],
+      "parameters": [
+        {
+          "name": "reset",
+          "type": "string",
+          "description": "auto.offset.reset: earliest or latest."
+        },
+        {
+          "name": "poll",
+          "type": "integer",
+          "description": "Poll timeout in milliseconds."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "confluent-kafka-python",
+      "type": "documentation",
+      "source": "https://docs.confluent.io/platform/current/clients/confluent-kafka-python/",
+      "description": "Official Python client documentation."
+    },
+    {
+      "title": "confluent_kafka on PyPI",
+      "type": "documentation",
+      "source": "https://pypi.org/project/confluent-kafka/",
+      "description": "Package page with installation and quickstart."
+    }
+  ],
+  "instructions": "# Kafka (Python)\n\nStream events with the confluent-kafka Python client.\n\n## What this skill does\n\n- Produces records with SerializingProducer.\n- Consumes in groups with on_assign/on_revoke callbacks.\n- Verifies end-to-end delivery with the Kafka CLI.\n\n## When to use\n\n- Python services publishing/consuming events.\n- Data pipelines feeding analytics.\n- ML feature streams from Kafka topics.\n\n## Real commands\n\n```bash\n# Install\npip install confluent-kafka\n\n# Create topic\nkafka-topics.sh --bootstrap-server localhost:9092 \\\n  --create --topic events --partitions 6 --replication-factor 1\n\n# Produce\npython producer.py --topic events --count 500\n\n# Consume\npython consumer.py --topic events --group analytics\n\n# CLI verification\nkafka-console-consumer.sh --bootstrap-server localhost:9092 \\\n  --topic events --from-beginning --max-messages 3\nkafka-consumer-groups.sh --bootstrap-server localhost:9092 \\\n  --describe --group analytics\n```\n\n## Producer example\n\n```python\nfrom confluent_kafka import SerializingProducer\nfrom confluent_kafka.serialization import StringSerializer\n\nproducer = SerializingProducer({\n    'bootstrap.servers': 'localhost:9092',\n    'key.serializer': StringSerializer('utf_8'),\n    'value.serializer': StringSerializer('utf_8'),\n    'acks': 'all',\n})\n\nproducer.produce('events', key='user-1', value='{\"action\":\"click\"}')\nproducer.flush()\n```\n\n## Testing\n\n```bash\npython -m pytest tests/\n```\n\n## Best practices\n\n- Always flush() before exiting to avoid losing buffered messages.\n- Set enable.auto.offset.store=false when committing offsets after processing.\n- Use librdkafka config keys exactly; unknown keys raise errors.\n",
+  "examples": [
+    {
+      "input": "Stream click events from Python",
+      "output": "pip install confluent-kafka, create the events topic, then python producer.py --topic events --count 500"
+    },
+    {
+      "input": "Consume with a named group",
+      "output": "python consumer.py --topic events --group analytics, then check lag with kafka-consumer-groups.sh --describe --group analytics."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kafka-python.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kafka-python"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Kafka Python. You do it through python-pipeline: Write Python producers/consumers with confluent-kafka and verify against the broker. The commands are real, e.g. `pip install confluent-kafka`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kafka-python",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "python-pipeline",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic name."
+      },
+      {
+        "capability": "python-pipeline",
+        "name": "group",
+        "type": "string",
+        "description": "Consumer group id."
+      },
+      {
+        "capability": "python-pipeline",
+        "name": "count",
+        "type": "integer",
+        "description": "Messages to produce."
+      },
+      {
+        "capability": "consume-check",
+        "name": "reset",
+        "type": "string",
+        "description": "auto.offset.reset: earliest or latest."
+      },
+      {
+        "capability": "consume-check",
+        "name": "poll",
+        "type": "integer",
+        "description": "Poll timeout in milliseconds."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kafka-console-consumer.sh",
+    "kafka-consumer-groups.sh",
+    "kafka-topics.sh",
+    "pip",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/kafka-python-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/kafka-python-skill.yaml",
+    "checksum": "6527c25b00b085d5680b4077f91a9f74fb2549ac8a2c79658a46837bb947dfee"
+  }
+}

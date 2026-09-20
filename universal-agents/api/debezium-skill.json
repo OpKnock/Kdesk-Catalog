@@ -1,0 +1,160 @@
+{
+  "name": "debezium",
+  "display_name": "Debezium",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Change data capture (CDC) with Debezium: register, inspect, and troubleshoot Kafka Connect connectors that stream row-level changes from MySQL, PostgreSQL, and MongoDB.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "connector-management",
+      "description": "Register, list, inspect status, and restart Debezium Kafka Connect connectors via the Connect REST API.",
+      "commands": [
+        "curl -X POST http://localhost:8083/connectors -H 'Content-Type: application/json' -d @mysql-source.json",
+        "curl -s http://localhost:8083/connectors | jq",
+        "curl -s http://localhost:8083/connectors/mysql-source/status | jq '.connector.state, .tasks'",
+        "curl -X POST http://localhost:8083/connectors/mysql-source/tasks/0/restart",
+        "curl -X DELETE http://localhost:8083/connectors/mysql-source"
+      ],
+      "examples": [
+        "curl -X POST http://localhost:8083/connectors -H 'Content-Type: application/json' -d @mysql-source.json",
+        "curl -s http://localhost:8083/connectors/mysql-source/status | jq '.connector.state, .tasks'",
+        "curl -s http://localhost:8083/connectors/mysql-source/config | jq"
+      ],
+      "parameters": [
+        {
+          "name": "connector-name",
+          "type": "string",
+          "description": "Name of the connector to inspect or restart (e.g. mysql-source)"
+        },
+        {
+          "name": "connect-url",
+          "type": "string",
+          "description": "Kafka Connect REST endpoint, default http://localhost:8083"
+        },
+        {
+          "name": "task-id",
+          "type": "integer",
+          "description": "Zero-based index of the failing task to restart"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Debezium Documentation",
+      "type": "documentation",
+      "source": "https://debezium.io/documentation/reference/stable/index.html",
+      "description": "Connector configuration, snapshot modes, and CDC semantics for all supported databases"
+    }
+  ],
+  "instructions": "# Debezium\n\n## What this skill does\n\nDebezium is a CDC platform built on Kafka Connect that captures row-level changes from databases and publishes them as events to Kafka. This skill covers connector registration, status inspection, task restart, and snapshot handling.\n\n## When to use\n\n- Streaming database changes into Kafka for event-driven systems\n- Building change-data pipelines (audit, search indexing, cache invalidation)\n- Investigating connectors stuck in FAILED or UNASSIGNED state\n\n## Real commands\n\n```bash\n# Register a connector from a JSON config file\ncurl -X POST http://localhost:8083/connectors -H 'Content-Type: application/json' -d @mysql-source.json\n\n# List all connectors and their status\ncurl -s http://localhost:8083/connectors | jq\ncurl -s http://localhost:8083/connectors/mysql-source/status | jq '.connector.state, .tasks'\n\n# Restart a failed task\ncurl -X POST http://localhost:8083/connectors/mysql-source/tasks/0/restart\n\n# Remove a connector and its Kafka topics are kept\ncurl -X DELETE http://localhost:8083/connectors/mysql-source\n```\n\n## Connector configuration example\n\n```json\n{\n  \"name\": \"mysql-source\",\n  \"config\": {\n    \"connector.class\": \"io.debezium.connector.mysql.MySqlConnector\",\n    \"database.hostname\": \"db.internal\",\n    \"database.port\": \"3306\",\n    \"database.user\": \"debezium\",\n    \"database.password\": \"secret\",\n    \"database.server.id\": \"5400\",\n    \"database.include.list\": \"orders\",\n    \"topic.prefix\": \"cdc\"\n  }\n}\n```\n\n## Testing\n\n```bash\n# Verify the connector picked up and read the binlog\nkafka-console-consumer --bootstrap-server localhost:9092 --topic cdc.orders.orders --from-beginning\n\n# Trigger a snapshot rerun without losing the offsets\ncurl -X POST http://localhost:8083/connectors/mysql-source/stop\ncurl -X POST http://localhost:8083/connectors/mysql-source/resume\n```\n\n## Best practices\n\n- Use a dedicated DB user with only SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, and REPLICATION CLIENT privileges for MySQL.\n- Give each connector a unique `database.server.id` to avoid master/slave id conflicts.\n- Monitor `binlog` retention on the source DB; Debezium cannot catch up once the binlog position is purged.\n- Prefer `snapshot.mode: when_needed` or incremental snapshots for large tables.\n- Use offset storage topics with enough partitions and a sane retention.\n",
+  "examples": [
+    {
+      "input": "My MySQL connector shows FAILED state",
+      "output": "Check curl -s http://localhost:8083/connectors/mysql-source/status | jq '.tasks' for the error trace, verify DB credentials and binlog position, then restart the failed task with curl -X POST .../tasks/0/restart."
+    },
+    {
+      "input": "Set up CDC from PostgreSQL to Kafka",
+      "output": "Register a PostgresConnector with plugin.name=pgoutput and publication.autocreate.mode=all, then verify with the connector status endpoint and a kafka-console-consumer on the change topic."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "debezium.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-debezium"
+    },
+    "generic": {
+      "system_prompt": "You take the Debezium seat. You do it through connector-management: Register, list, inspect status, and restart Debezium Kafka Connect connectors via the Connect REST API. The commands are real, e.g. `curl -X POST http://localhost:8083/connectors -H Content-Type: application/json -d...`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "debezium",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "connector-management",
+        "name": "connector-name",
+        "type": "string",
+        "description": "Name of the connector to inspect or restart (e.g. mysql-source)"
+      },
+      {
+        "capability": "connector-management",
+        "name": "connect-url",
+        "type": "string",
+        "description": "Kafka Connect REST endpoint, default http://localhost:8083"
+      },
+      {
+        "capability": "connector-management",
+        "name": "task-id",
+        "type": "integer",
+        "description": "Zero-based index of the failing task to restart"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/debezium-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/debezium-skill.yaml",
+    "checksum": "68e34f08be60e4b48881a9c1b8618107acd22f4844bfd96cce64203197910756"
+  }
+}

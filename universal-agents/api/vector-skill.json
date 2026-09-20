@@ -1,0 +1,171 @@
+{
+  "name": "vector",
+  "display_name": "Vector",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Vector skill: pipeline config with sources/transforms/sinks, file and docker source ingestion, and topology validation via vector validate.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "vector"
+  ],
+  "capabilities": [
+    {
+      "name": "vector-pipelines",
+      "description": "Build and run Vector observability pipelines",
+      "commands": [
+        "vector validate /etc/vector/vector.toml",
+        "vector --config /etc/vector/vector.toml",
+        "vector top --config /etc/vector/vector.toml",
+        "vector tap file_logs --config /etc/vector/vector.toml",
+        "vector generate --encoding toml file_nginx_logs/console"
+      ],
+      "examples": [
+        "vector validate /etc/vector/vector.toml",
+        "vector --config /etc/vector/vector.toml",
+        "vector generate --encoding toml file_nginx_logs/console"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Path to vector config file"
+        },
+        {
+          "name": "component",
+          "type": "string",
+          "description": "Component id for tap/top"
+        },
+        {
+          "name": "encoding",
+          "type": "string",
+          "description": "toml or yaml for generated config"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Vector config reference",
+      "type": "documentation",
+      "source": "https://vector.dev/docs/reference/configuration/",
+      "description": "Sources, transforms, sinks"
+    },
+    {
+      "title": "Vector CLI commands",
+      "type": "documentation",
+      "source": "https://vector.dev/docs/reference/cli/",
+      "description": "validate, top, tap, generate"
+    }
+  ],
+  "instructions": "# Vector\n\nHand-crafted skill for Vector observability pipelines.\n\n## What this skill does\n\n- Defines sources -> transforms -> sinks in TOML\n- Validates pipeline topology before running\n- Inspects live events with tap and top\n\n## When to use\n\n- Shipping logs from files or Docker to Loki/S3\n- Transforming fields in transit\n- Replacing agent chains (filebeat -> logstash -> ...)\n\n## Real commands\n\n```bash\n# Validate the config without running\nvector validate /etc/vector/vector.toml\n\n# Run the agent\nvector --config /etc/vector/vector.toml\n\n# Live topology health\nvector top --config /etc/vector/vector.toml\n\n# Tail events through a source/component\nvector tap file_logs --config /etc/vector/vector.toml\n\n# Scaffold a config\nvector generate --encoding toml file_nginx_logs/console\n```\n\n## Minimal pipeline\n\n```toml\n[sources.file_logs]\ntype = \"file\"\ninclude = [\"/var/log/nginx/access.log\"]\n\n[transforms.parse_json]\ntype = \"remap\"\ninputs = [\"file_logs\"]\nsource = '''\n. = parse_json!(.message)\n'''\n\n[sinks.console]\ntype = \"console\"\ninputs = [\"parse_json\"]\nencoding.codec = \"json\"\n```\n\n## Testing\n\n```bash\nvector validate /etc/vector/vector.toml\nvector tap file_logs --config /etc/vector/vector.toml\n```\n\n## Best practices\n\n- Validate configs in CI before deploying the agent\n- Name components clearly: file_logs, parse_json, sink_loki\n- Use remap transforms for all parsing, not jq in sinks\n",
+  "examples": [
+    {
+      "input": "Is my pipeline config valid?",
+      "output": "vector validate /etc/vector/vector.toml checks the topology and reports component errors."
+    },
+    {
+      "input": "What is flowing through the pipeline?",
+      "output": "vector tap file_logs --config /etc/vector/vector.toml streams live events through that component."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "vector.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-vector"
+    },
+    "generic": {
+      "system_prompt": "You are the Vector specialist. You do it through vector-pipelines: Build and run Vector observability pipelines. The commands are real, e.g. `vector validate /etc/vector/vector.toml`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "vector",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "vector-pipelines",
+        "name": "config",
+        "type": "string",
+        "description": "Path to vector config file"
+      },
+      {
+        "capability": "vector-pipelines",
+        "name": "component",
+        "type": "string",
+        "description": "Component id for tap/top"
+      },
+      {
+        "capability": "vector-pipelines",
+        "name": "encoding",
+        "type": "string",
+        "description": "toml or yaml for generated config"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "vector"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/vector-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/vector-skill.yaml",
+    "checksum": "a1d6d2363d923f496f8c6d7b02c43e313af859e73424fdc0343f680a70c6d338"
+  }
+}

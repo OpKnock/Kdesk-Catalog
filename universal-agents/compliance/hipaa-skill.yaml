@@ -1,0 +1,175 @@
+name: hipaa
+display_name: Hipaa
+category: compliance
+subcategory: general
+description: 'Ensures HIPAA compliance for systems handling PHI: access controls, audit logs, encryption,
+  and BAAs.'
+version: 2.0.0
+tags:
+- compliance
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- gitleaks
+- openssl
+- trufflehog
+capabilities:
+- name: hipaa-controls
+  description: Verify security controls required for PHI systems
+  commands:
+  - openssl s_client -connect app.example.com:443 -tls1_2 -brief
+  - curl -sI https://app.example.com | grep -i strict-transport-security
+  - trufflehog filesystem . --no-update
+  - gitleaks detect --source . --verbose
+  - curl -s https://app.example.com/api/audit-logs -o /dev/null -w '%{http_code}\n'
+  examples:
+  - rg -i "phi|medical|health|diagnosis" src/ | wc -l
+  - curl -s -o /dev/null -w '%{http_code}' -u $SA_TOKEN https://app.example.com/api/audit-logs
+  - nmap -Pn -p443 --script ssl-enum-ciphers app.example.com
+  parameters:
+  - name: tls1_2
+    type: boolean
+    description: Require TLS 1.2 or higher for the connection test
+  - name: no-update
+    type: boolean
+    description: Run trufflehog without checking for updates
+  - name: verbose
+    type: boolean
+    description: Show full secret-scan details
+knowledge:
+- title: HHS HIPAA official site
+  type: documentation
+  source: https://www.hhs.gov/hipaa/
+  description: HIPAA Privacy, Security, and Breach Notification rules
+- title: HIPAA Security Rule
+  type: documentation
+  source: https://www.hhs.gov/hipaa/for-professionals/security/index.html
+  description: Administrative, physical, and technical safeguards
+instructions: '# HIPAA
+
+
+  Health Insurance Portability and Accountability Act compliance for systems that
+
+  create, receive, or transmit protected health information (PHI).
+
+
+  ## When to Use
+
+
+  - Pre-launch security review of a health app
+
+  - Verifying encryption, audit logging, and access controls
+
+  - Preparing for a Security Risk Assessment (SRA)
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Verify encryption in transit
+
+  openssl s_client -connect app.example.com:443 -tls1_2 -brief
+
+  curl -sI https://app.example.com | grep -i strict-transport-security
+
+
+  # Check encryption at rest posture (via config review)
+
+  rg -i "encrypt|kms|aes" config/ docker-compose.yml
+
+
+  # Scan for secrets that could expose PHI databases
+
+  trufflehog filesystem .
+
+  gitleaks detect --source .
+
+
+  # Verify audit log endpoint requires auth
+
+  curl -s -o /dev/null -w ''%{http_code}'' https://app.example.com/api/audit-logs
+
+
+  # Minimum necessary access: review roles
+
+  rg -i -n "role|scope|permission" src/auth/ | head -30
+
+  ```
+
+
+  ## Key Safeguards Checklist
+
+
+  - Access: unique user IDs, role-based access, automatic logoff
+
+  - Audit: record who accessed PHI, when, and why
+
+  - Integrity: mechanisms to verify PHI isn''t altered
+
+  - Transmission: encryption in transit (TLS 1.2+)
+
+  - Breach: notification procedures and BAA on file with vendors
+
+
+  ## Best Practices
+
+
+  - Never log PHI fields; log IDs only
+
+  - Encrypt databases and backups (AES-256) and rotate keys
+
+  - Sign Business Associate Agreements with every vendor touching PHI
+
+  - Run the SRA annually and after major changes
+
+  - Restrict PHI access to minimum necessary role scope
+
+
+  ## Example Response
+
+
+  The agent produces a controls matrix (encryption, audit, access) with evidence
+
+  from the commands run, flags gaps, and lists the exact remediation steps.'
+examples:
+- input: Is our app ready for HIPAA?
+  output: Runs TLS, HSTS, secret-scan, and access-control checks, then returns a safeguards matrix with
+    gaps prioritized
+- input: Where could PHI leak?
+  output: Searches code for PHI field handling, checks logs and secrets, and lists exposure points with
+    fixes
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: hipaa.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-hipaa
+  generic:
+    system_prompt: 'You own Hipaa end to end. You do it through hipaa-controls: Verify security controls
+      required for PHI systems. The commands are real, e.g. `openssl s_client -connect app.example.com:443
+      -tls1_2 -brief`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

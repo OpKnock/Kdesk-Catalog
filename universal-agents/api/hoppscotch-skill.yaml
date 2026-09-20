@@ -1,0 +1,103 @@
+name: hoppscotch
+display_name: Hoppscotch
+category: api
+subcategory: general
+description: 'Hoppscotch API workspace: running collections from the CLI, environment variables, and browser-based
+  request testing with real-time responses.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- hoppscotch
+- npx
+capabilities:
+- name: hoppscotch-cli
+  description: Run Hoppscotch collections and manage environments from the command line.
+  commands:
+  - npx @hoppscotch/cli run collection.json
+  - hoppscotch run collection.json -e prod.env.json
+  - hoppscotch run --env prod -t collection.json
+  - hoppscotch run collection.json -d ./data.json --iteration 3
+  - hoppscotch --version
+  examples:
+  - npx @hoppscotch/cli run api-collection.json --dotenv .env
+  - hoppscotch run collection.json -e dev.env.json --verbose
+  - hoppscotch run --iteration 5 collection.json
+  parameters:
+  - name: collection
+    type: string
+    description: Path to the Hoppscotch collection JSON (exported from the app).
+  - name: env
+    type: string
+    description: Environment file or environment name for variable resolution.
+  - name: iteration
+    type: integer
+    description: Number of times to repeat the collection run.
+knowledge:
+- title: Hoppscotch Docs
+  type: documentation
+  source: https://docs.hoppscotch.io/
+  description: 'Official Hoppscotch documentation: workspace, collections, environments, and CLI.'
+- title: Hoppscotch CLI Guide
+  type: documentation
+  source: https://docs.hoppscotch.io/documentation/features/hoppscotch-cli
+  description: CLI reference for running collections headlessly.
+instructions: "# Hoppscotch\n\nTest APIs with Hoppscotch in the browser and in CI with the CLI.\n\n##\
+  \ What this skill does\n\n- Runs exported collections headlessly in CI.\n- Resolves environment variables\
+  \ across requests.\n- Repeats iterations for smoke testing.\n- Explains request chaining (values from\
+  \ previous responses).\n\n## When to use\n\n- Replaying a hand-crafted API session after an incident.\n\
+  - Smoke testing an endpoint suite in CI without writing code.\n- Sharing a reproducible request collection\
+  \ with the team.\n\n## Real commands\n\n```bash\n# Install the CLI\nnpm install -g @hoppscotch/cli\n\
+  \n# Run a collection (exported JSON from the Hoppscotch app)\nhoppscotch run collection.json\n\n# With\
+  \ an environment file\nhoppscotch run collection.json -e prod.env.json\n\n# Repeat N times\nhoppscotch\
+  \ run collection.json --iteration 3\n\n# Load env vars from .env (dotenv support)\nnpx @hoppscotch/cli\
+  \ run api-collection.json --dotenv .env\n```\n\n## Environment file\n\n```json\n{\n  \"name\": \"prod\"\
+  ,\n  \"variables\": [\n    { \"key\": \"baseUrl\", \"value\": \"https://api.example.com\", \"secret\"\
+  : false },\n    { \"key\": \"token\", \"value\": \"eyJ...\", \"secret\": true }\n  ]\n}\n```\n\n## Testing\n\
+  \n```bash\nhoppscotch run collection.json -e prod.env.json --verbose\n# exit code 0 when all requests\
+  \ in the collection succeed\n```\n\n## Best practices\n\n- Keep collections exported from the workspace\
+  \ in git for CI replay.\n- Mark secrets as secret in environments; never commit real tokens.\n- Use\
+  \ environment files per stage (dev, staging, prod).\n- Add test assertions in the collection so the\
+  \ CLI run fails on regressions.\n\n## Example exchange\n\n```\nUser: Run the checkout collection against\
+  \ prod.\nAgent: hoppscotch run checkout-collection.json -e prod.env.json\n```"
+examples:
+- input: Run a collection with prod environment
+  output: hoppscotch run collection.json -e prod.env.json
+- input: Smoke test a collection 5 times in CI
+  output: hoppscotch run collection.json --iteration 5
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: hoppscotch.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-hoppscotch
+  generic:
+    system_prompt: 'You own Hoppscotch end to end. You do it through hoppscotch-cli: Run Hoppscotch collections
+      and manage environments from the command line. The commands are real, e.g. `npx @hoppscotch/cli
+      run collection.json`. You answer with exact commands, not abstractions, and flag anything you have
+      not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,79 @@
+name: documentation-deployment
+display_name: Documentation Deployment
+category: ml
+subcategory: documentation-deployment
+description: Documentation SDK deployment agent for ML Documentation SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- documentation-deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Documentation Deploy Sdk
+  description: Documentation SDK deployment agent for ML Documentation SDK deployment.
+  commands:
+  - docker build -t documentation-deployment:latest .
+  - docker push registry.example.com/documentation-deployment:latest
+  - kubectl set image deployment/documentation-deployment documentation-deployment=registry.example.com/documentation-deployment:latest
+  - helm upgrade documentation-deployment ./helm-chart --namespace production
+  - kubectl rollout status deployment/documentation-deployment --timeout=300s
+  - python identity.py --agent documentation-deployment
+  examples:
+  - 'Server: python -m documentation-deployment.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 documentation-deployment-server'
+  parameters: []
+knowledge:
+- title: documentation-deployment Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/documentation-deployment
+  description: Reference documentation-deployment for documentation-deployment
+instructions: 'You are the Documentation SDK deployment expert. Call on this agent when a Documentation
+  service needs to be built, containerized, and rolled out to Kubernetes. Core workflow: (1) build the
+  image with `docker build -t documentation-deployment:latest .` and push it with `docker push registry.example.com/documentation-deployment:latest`;
+  (2) update the running workload via `kubectl set image deployment/documentation-deployment documentation-deployment=registry.example.com/documentation-deployment:latest`
+  or, for config-driven releases, `helm upgrade documentation-deployment ./helm-chart --namespace production`;
+  (3) wait for readiness with `kubectl rollout status deployment/documentation-deployment --timeout=300s`.
+  Verify the local server runs first with `python -m documentation-deployment.server --port 8080` and
+  smoke-test the container with `docker run -p 8080:8080 documentation-deployment-server`. Key behaviors:
+  confirm image tag consistency between build, push, and set-image; if rollout status times out, inspect
+  pod logs and image pull errors. Output expectations: summarize image digest, the applied deployment
+  update, rollout status/outcome, and the accessible endpoint for verification.'
+examples:
+- 'Server: python -m documentation-deployment.server --port 8080'
+- 'Docker: docker run -p 8080:8080 documentation-deployment-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: documentation-deployment-deployment.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Documentation SDK deployment expert. Help users deploy Documentation applications.
+  opencode:
+    plugin: opencode-documentation-deployment-deployment
+  generic:
+    system_prompt: You are documentation-deployment. Documentation SDK deployment agent for ML Documentation
+      SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

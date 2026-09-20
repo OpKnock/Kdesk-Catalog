@@ -1,0 +1,175 @@
+{
+  "name": "grpc-kotlin",
+  "display_name": "Grpc Kotlin",
+  "category": "api",
+  "subcategory": "general",
+  "description": "gRPC services and clients in Kotlin using grpc-kotlin coroutines stubs: suspend RPCs, Flow-based streaming, and Gradle codegen wiring.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "./gradlew",
+    "grpcurl",
+    "protoc"
+  ],
+  "capabilities": [
+    {
+      "name": "kotlin-grpc",
+      "description": "Generate Kotlin gRPC stubs with protoc-gen-grpc-kotlin and write coroutine-based RPC services.",
+      "commands": [
+        "protoc --plugin=protoc-gen-grpckt=$(which protoc-gen-grpc-kotlin) --grpckt_out=build/generated --proto_path src/main/proto greet.proto",
+        "./gradlew generateProto",
+        "./gradlew run",
+        "./gradlew build",
+        "grpcurl -plaintext localhost:50051 helloworld.Greeter/SayHello"
+      ],
+      "examples": [
+        "protoc --plugin=protoc-gen-grpckt=$(which protoc-gen-grpc-kotlin) --grpckt_out=build/generated --proto_path src/main/proto greet.proto",
+        "./gradlew test --tests '*GreeterTest'",
+        "grpcurl -plaintext -d '{\"name\":\"Kotlin\"}' localhost:50051 helloworld.Greeter/SayHello"
+      ],
+      "parameters": [
+        {
+          "name": "grpc_kotlin_version",
+          "type": "string",
+          "description": "grpc-kotlin library version, e.g. 1.4.1."
+        },
+        {
+          "name": "plugin_path",
+          "type": "string",
+          "description": "Path to the protoc-gen-grpc-kotlin executable."
+        },
+        {
+          "name": "proto_dir",
+          "type": "string",
+          "description": "Directory containing .proto files."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "gRPC Kotlin Docs",
+      "type": "documentation",
+      "source": "https://grpc.io/docs/languages/kotlin/",
+      "description": "Official gRPC Kotlin quickstart with coroutines and Flow streaming."
+    },
+    {
+      "title": "grpc-kotlin GitHub",
+      "type": "documentation",
+      "source": "https://github.com/grpc/grpc-kotlin",
+      "description": "grpc-kotlin repository with the Kotlin codegen plugin."
+    }
+  ],
+  "instructions": "# gRPC Kotlin\n\nSuspend-based gRPC services and clients with grpc-kotlin coroutines.\n\n## What this skill does\n\n- Generates Kotlin stubs (suspend functions and Flow streams) from protos.\n- Implements servers without blocking: suspend RPC handlers run on coroutines.\n- Consumes server-streaming RPCs as Kotlin Flow.\n- Wires the Gradle build for both java and kotlin stub codegen.\n\n## When to use\n\n- A Kotlin backend wants idiomatic coroutine RPC handling.\n- Streaming responses should map directly to Flow for reactive clients.\n- Replacing hand-rolled retrofit calls with typed gRPC contracts.\n\n## Real commands\n\n```bash\n# Download the codegen plugin from grpc-kotlin releases\ncurl -L -o protoc-gen-grpc-kotlin https://github.com/grpc/grpc-kotlin/releases/download/1.4.1/protoc-gen-grpc-kotlin\nchmod +x protoc-gen-grpc-kotlin\n\nprotoc --plugin=protoc-gen-grpckt=$(pwd)/protoc-gen-grpc-kotlin \\\n  --grpckt_out=build/generated --proto_path src/main/proto greet.proto\n\n# Build and run via Gradle\n./gradlew generateProto\n./gradlew run\n\n# Verify\ngrpcurl -plaintext -d '{\"name\":\"Kotlin\"}' localhost:50051 helloworld.Greeter/SayHello\n```\n\n## Gradle deps\n\n```kotlin\nimplementation(\"io.grpc:grpc-kotlin-stub:1.4.1\")\nimplementation(\"io.grpc:grpc-netty-shaded:1.64.0\")\nimplementation(\"com.google.protobuf:protobuf-kotlin:3.25.3\")\n```\n\n## Server skeleton\n\n```kotlin\nobject GreeterService : GreeterGrpcKt.GreeterCoroutineImplBase() {\n  override suspend fun sayHello(request: HelloRequest): HelloReply =\n    HelloReply.newBuilder().setMessage(\"Hello ${request.name}\").build()\n}\n```\n\n## Streaming via Flow\n\n```kotlin\noverride fun streamMessages(request: HelloRequest): Flow<HelloReply> =\n  flow { emit(HelloReply.newBuilder().setMessage(\"one\").build())\n         emit(HelloReply.newBuilder().setMessage(\"two\").build()) }\n```\n\n## Testing\n\n```bash\n./gradlew test\n```\n\nUse `GrpcCleanupRule` with InProcessServerBuilder for unit tests.\n\n## Best practices\n\n- Prefer the coroutine stubs (`*CoroutineImplBase`, `*CoroutineStub`) over blocking stubs.\n- Return `flow { }` lazily; never pre-buffer infinite streams.\n- Cancel client Flows to cancel the underlying call.\n- Keep protoc and grpc-kotlin versions aligned with grpc-java.\n\n## Example exchange\n\n```\nUser: My streaming handler buffers the whole list before returning.\nAgent: Return a cold flow and emit as data arrives:\n       override fun streamMessages(request: HelloRequest) = flow { ... }\n```",
+  "examples": [
+    {
+      "input": "Generate Kotlin coroutine stubs from greet.proto",
+      "output": "protoc --plugin=protoc-gen-grpckt=$(which protoc-gen-grpc-kotlin) --grpckt_out=build/generated --proto_path src/main/proto greet.proto"
+    },
+    {
+      "input": "Run the Kotlin server and probe it",
+      "output": "./gradlew run & grpcurl -plaintext -d '{\"name\":\"Kotlin\"}' localhost:50051 helloworld.Greeter/SayHello"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "grpc-kotlin.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-grpc-kotlin"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Grpc Kotlin. You do it through kotlin-grpc: Generate Kotlin gRPC stubs with protoc-gen-grpc-kotlin and write coroutine-based RPC services. The commands are real, e.g. `protoc --plugin=protoc-gen-grpckt=$(which protoc-gen-grpc-kotlin)...`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "grpc-kotlin",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "kotlin-grpc",
+        "name": "grpc_kotlin_version",
+        "type": "string",
+        "description": "grpc-kotlin library version, e.g. 1.4.1."
+      },
+      {
+        "capability": "kotlin-grpc",
+        "name": "plugin_path",
+        "type": "string",
+        "description": "Path to the protoc-gen-grpc-kotlin executable."
+      },
+      {
+        "capability": "kotlin-grpc",
+        "name": "proto_dir",
+        "type": "string",
+        "description": "Directory containing .proto files."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "./gradlew",
+    "grpcurl",
+    "protoc"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/grpc-kotlin-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/grpc-kotlin-skill.yaml",
+    "checksum": "656302a766cf86eff1ce95fc4d1e805ba7478d8b303e430b07dfb212cf1fea23"
+  }
+}

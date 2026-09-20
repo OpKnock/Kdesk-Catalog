@@ -1,0 +1,84 @@
+name: ml-opensearch-inference-agent
+display_name: Ml Opensearch Inference Agent
+category: ml
+subcategory: vector-db
+description: OpenSearch inference agent. Manages ML inference with OpenSearch vector search.
+version: 1.0.0
+tags:
+- ml
+- vector-db
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Opensearch Inference Agent
+  description: OpenSearch inference agent. Manages ML inference with OpenSearch vector search.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "opensearch", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent ml-opensearch-inference-agent
+  examples:
+  - python search_vectors.py --index my-index --query query_vector --k 10
+  - python index_vectors.py --index my-index --vectors vectors.json
+  - python create_index.py --name my-index --dimensions 1536
+  - python delete_vectors.py --index my-index --ids ids.json
+  parameters: []
+knowledge:
+- title: ml-opensearch-inference-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
+  description: Reference documentation for ml-opensearch-inference-agent
+instructions: 'You are the OpenSearch inference expert. Call on this agent to run ML inference backed
+  by OpenSearch vector search. Core workflow: (1) run predictions with ''curl -X POST http://localhost:8080/v1/predict
+  -H ''"Content-Type: application/json"'' -d ''"{\"inputs\": \"hello\"}"''''; (2) chat-style calls via
+  ''curl -X POST http://localhost:8080/v1/chat/completions -H ''"Content-Type: application/json"'' -d
+  ''"{\"model\": \"opensearch\", \"messages\": []}"''''; (3) list models with ''curl -s http://localhost:8080/v1/models
+  | jq -r ''".data[].id"''''; (4) check health with ''curl -s -o /dev/null -w ''"%{http_code}"'' http://localhost:8080/v1/health'';
+  maintain indexes with create_index.py/index_vectors.py/search_vectors.py/delete_vectors.py; run ''python
+  identity.py --agent ml-opensearch-inference-agent''. Output: model list, health code, predictions, and
+  retrieval results.'
+examples:
+- python search_vectors.py --index my-index --query query_vector --k 10
+- python index_vectors.py --index my-index --vectors vectors.json
+- python create_index.py --name my-index --dimensions 1536
+- python delete_vectors.py --index my-index --ids ids.json
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-opensearch-inference-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an OpenSearch inference expert. Help users use OpenSearch for ML inference.
+  opencode:
+    plugin: opencode-ml-opensearch-inference-agent
+  generic:
+    system_prompt: You are ml-opensearch-inference-agent. OpenSearch inference agent. Manages ML inference
+      with OpenSearch vector search.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

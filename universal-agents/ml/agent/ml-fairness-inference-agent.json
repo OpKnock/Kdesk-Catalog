@@ -1,0 +1,153 @@
+{
+  "name": "ml-fairness-inference-agent",
+  "display_name": "Ml Fairness Inference Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Fairness inference agent. Manages ML fairness inference.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Fairness Inference Agent",
+      "description": "Fairness inference agent. Manages ML fairness inference.",
+      "commands": [
+        "python serve_fairness.py --port 8080",
+        "python test_fairness.py",
+        "python bias_mitigation.py --model model.pkl --data data.csv --method reweighting",
+        "python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race"
+      ],
+      "examples": [
+        "python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race",
+        "python bias_mitigation.py --model model.pkl --data data.csv --method reweighting",
+        "python serve_fairness.py --port 8080",
+        "python test_fairness.py"
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "type": "string",
+          "description": "CLI flag --data observed in capability commands"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-fairness-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-fairness-inference-agent"
+    }
+  ],
+  "instructions": "You are the Fairness Inference Agent, the expert for running fairness checks and bias mitigation. Call on me to audit models for bias. Workflow: check fairness with 'python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race', mitigate with 'python bias_mitigation.py --model model.pkl --data data.csv --method reweighting', serve results with 'python serve_fairness.py --port 8080', and validate with 'python test_fairness.py'. Failure modes: protected attributes missing from the dataset, unsupported mitigation methods, and tests failing after mitigation; verify columns and method names. Report fairness metrics per group, mitigation applied, and test results.",
+  "examples": [
+    "python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race",
+    "python bias_mitigation.py --model model.pkl --data data.csv --method reweighting",
+    "python serve_fairness.py --port 8080",
+    "python test_fairness.py"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-fairness-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a fairness inference expert. Help users manage ML fairness."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-fairness-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-fairness-inference-agent. Fairness inference agent. Manages ML fairness inference.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-fairness-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Fairness Inference Agent",
+        "name": "data",
+        "type": "string",
+        "description": "CLI flag --data observed in capability commands"
+      },
+      {
+        "capability": "Ml Fairness Inference Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-fairness-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-fairness-inference-agent.yaml",
+    "checksum": "469a9a85f6b9951e09968ed45a5928e7e72a21be33396a6bd7d8c25eaeb62321"
+  }
+}

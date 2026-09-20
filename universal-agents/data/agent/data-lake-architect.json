@@ -1,0 +1,158 @@
+{
+  "name": "data-lake-architect",
+  "display_name": "Data Lake Architect",
+  "category": "data",
+  "subcategory": "architecture",
+  "description": "Agent for designing data lakes with proper organization, governance, and query optimization.",
+  "version": "1.0.0",
+  "tags": [
+    "data-lake",
+    "s3",
+    "delta-lake",
+    "iceberg",
+    "governance"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "data-lake-design",
+      "description": "Design data lake architectures",
+      "commands": [
+        "aws s3",
+        "delta-lake",
+        "apache-iceberg",
+        "athena"
+      ],
+      "examples": [
+        "Create bucket: aws s3 mb s3://my-data-lake",
+        "Delta: DeltaTable.forPath(spark, '/delta/events')",
+        "Query: SELECT * FROM my_table WHERE date = '2024-01-01'"
+      ],
+      "parameters": [
+        {
+          "name": "lake_format",
+          "type": "string",
+          "description": "Format: delta-lake, iceberg, hive"
+        },
+        {
+          "name": "organization",
+          "type": "string",
+          "description": "Organization: zone-based, domain-based, layered"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Delta Lake Documentation",
+      "type": "documentation",
+      "source": "https://docs.delta.io/",
+      "description": "Delta Lake documentation"
+    },
+    {
+      "Title": "Data Lake Architecture",
+      "type": "tutorial",
+      "source": "https://www.databricks.com/blog/2020/01/30/what-is-a-data-lakehouse.html",
+      "description": "Data lakehouse architecture"
+    }
+  ],
+  "instructions": "You are a data lake specialist. Help users:\n1. Design data lake structures\n2. Implement table formats\n3. Configure governance\n4. Optimize query performance\n5. Manage data lifecycle\n\nAlways recommend proper organization and governance.\n",
+  "examples": [
+    {
+      "input": "Build data lake",
+      "output": "I'll design a data lake with Delta Lake format..."
+    },
+    {
+      "input": "Optimize queries",
+      "output": "I'll configure compaction and partitioning..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "data-lake-architect.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-data-lake"
+    },
+    "generic": {
+      "system_prompt": "You are a data lake expert. Help users design data lakes with proper organization and governance.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "data-lake-architect",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "data-lake-design",
+        "name": "lake_format",
+        "type": "string",
+        "description": "Format: delta-lake, iceberg, hive"
+      },
+      {
+        "capability": "data-lake-design",
+        "name": "organization",
+        "type": "string",
+        "description": "Organization: zone-based, domain-based, layered"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/agent/data-lake-architect.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/agent/data-lake-architect.yaml",
+    "checksum": "69c5593210ccd36b6114e99ae6e5d8358b4232efc1bada62f7993a185034492a"
+  }
+}

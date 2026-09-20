@@ -1,0 +1,188 @@
+name: asyncapi-python
+display_name: Asyncapi Python
+category: api
+subcategory: general
+description: Generates Python MQTT applications and dataclass models from AsyncAPI documents with the
+  python-paho-template and Modelina.
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+- pip
+- python
+capabilities:
+- name: python-generation
+  description: Generate a Python MQTT app from an AsyncAPI spec.
+  commands:
+  - npx @asyncapi/generator asyncapi.yaml @asyncapi/python-paho-template -o ./generated
+  - pip install -r generated/requirements.txt
+  - python generated/publisher.py
+  - python generated/subscriber.py
+  - python -m unittest discover -s generated/tests
+  examples:
+  - npx @asyncapi/generator asyncapi.yaml @asyncapi/python-paho-template -o ./generated --force-write
+  - pip install -r generated/requirements.txt && python generated/subscriber.py
+  - python -m unittest discover -s generated/tests -v
+  parameters:
+  - name: output
+    type: string
+    description: Output directory
+  - name: broker
+    type: string
+    description: MQTT broker host/port in generated config
+- name: python-models
+  description: Generate Python dataclasses from the spec schema with Modelina.
+  commands:
+  - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./generated/src/models --language Python
+  - python -c "from generated.src.models import OrderCreated; print(OrderCreated)"
+  - python -m py_compile generated/src/models/*.py
+  examples:
+  - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language Python --generate-optional
+  - python -c "from models import OrderCreated; o=OrderCreated(id='x', amount=1.0); print(o)"
+  - python -m py_compile models/*.py
+  parameters:
+  - name: output
+    type: string
+    description: Models output directory
+  - name: generate_optional
+    type: boolean
+    description: Generate Optional[...] fields from nullable schemas
+knowledge:
+- title: Python Paho Template
+  type: documentation
+  source: https://github.com/asyncapi/python-paho-template
+  description: MQTT template features and params
+- title: Modelina Python
+  type: documentation
+  source: https://www.asyncapi.com/docs/tools/modelina/languages/Python
+  description: Dataclass generation options
+- title: paho-mqtt
+  type: documentation
+  source: https://eclipse.dev/paho/files/paho.mqtt.python/html/
+  description: Python MQTT client API
+instructions: '# AsyncAPI Python
+
+
+  ## What this skill does
+
+
+  Generates Python MQTT applications from AsyncAPI documents with the python-paho-template: publishers,
+  subscribers, requirements, and tests, plus dataclass models from Modelina.
+
+
+  ## When to use
+
+
+  - Bootstrapping a Python MQTT worker from a spec
+
+  - Generating dataclasses for event payloads
+
+  - Keeping Python consumers in sync with an evolving spec
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Generate the MQTT app
+
+  npx @asyncapi/generator asyncapi.yaml @asyncapi/python-paho-template -o ./generated --force-write
+
+
+  # Install and run
+
+  pip install -r generated/requirements.txt
+
+  python generated/subscriber.py
+
+
+  # Publish a test message
+
+  python generated/publisher.py
+
+
+  # Run generated tests
+
+  python -m unittest discover -s generated/tests -v
+
+
+  # Generate dataclass models
+
+  npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language Python
+
+  python -c "from models import OrderCreated; print(OrderCreated(id=''a1'', amount=12.5))"
+
+  ```
+
+
+  ## Generated files
+
+
+  - publisher.py / subscriber.py - MQTT entry points
+
+  - requirements.txt - pinned paho-mqtt
+
+  - config.ini - broker host/port/topic settings
+
+
+  ## Testing
+
+
+  - Start mosquitto (or docker eclipse-mosquitto), run subscriber, run publisher, assert the message arrives
+
+  - Unit-test payload parsing with the generated dataclasses
+
+
+  ## Best practices
+
+
+  - Edit broker settings in config, not generated code
+
+  - Pin paho-mqtt in requirements.txt
+
+  - Regenerate in CI and diff to catch schema drift'
+examples:
+- input: Generate a Python MQTT subscriber for our telemetry topic
+  output: Runs the python-paho-template, installs requirements, starts mosquitto, runs subscriber + publisher,
+    and verifies the message flows end to end.
+- input: Typed Python models for our event schema
+  output: Runs Modelina --language Python --generate-optional, imports the dataclass, and shows construction
+    in a one-liner.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: asyncapi-python.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-asyncapi-python
+  generic:
+    system_prompt: 'You take the Asyncapi Python seat. You do it through python-generation: Generate a
+      Python MQTT app from an AsyncAPI spec. The commands are real, e.g. `npx @asyncapi/generator asyncapi.yaml
+      @asyncapi/python-paho-template -o ./generated`. You verify each step you report and stay honest
+      about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

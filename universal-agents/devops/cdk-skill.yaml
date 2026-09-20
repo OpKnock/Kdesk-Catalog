@@ -1,0 +1,96 @@
+name: cdk
+display_name: cdk
+category: devops
+subcategory: general
+description: 'Defines AWS infrastructure as code with the AWS CDK: init, synth, diff, deploy, and destroy.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- cdk
+capabilities:
+- name: aws-cdk
+  description: Manage CDK apps across their full lifecycle
+  commands:
+  - cdk init app --language typescript
+  - cdk bootstrap aws://ACCOUNT_ID/eu-west-1
+  - cdk synth
+  - cdk diff
+  - cdk deploy --all --require-approval never
+  examples:
+  - cdk list
+  - cdk deploy MyStack --context env=prod
+  - cdk destroy --all --force
+  parameters:
+  - name: language
+    type: string
+    description: 'App language: typescript, python, java, go'
+  - name: require-approval
+    type: string
+    description: 'Deploy approval: never, any-change, broadening'
+  - name: context
+    type: string
+    description: Context values, e.g. env=prod
+knowledge:
+- title: AWS CDK docs
+  type: documentation
+  source: https://docs.aws.amazon.com/cdk/v2/guide/home.html
+  description: Getting started, constructs, and CLI reference
+- title: CDK CLI reference
+  type: documentation
+  source: https://docs.aws.amazon.com/cdk/v2/guide/cli.html
+  description: All cdk commands and options
+instructions: "# AWS CDK\n\nInfrastructure as code with real programming languages: construct stacks,\
+  \ synth\nCloudFormation, deploy with diff verification.\n\n## When to Use\n\n- Building infrastructure\
+  \ as versioned code\n- Reusable stack patterns across environments\n- Reviewable, testable infra changes\n\
+  \n## Real Commands\n\n```bash\n# Scaffold\nsudo cdk init app --language typescript\n\n# Bootstrap the\
+  \ account/region (once)\nsudo cdk bootstrap aws://ACCOUNT_ID/eu-west-1\n\n# Synthesize CloudFormation\n\
+  sudo cdk synth\nsudo cdk synth MyStack\n\n# Preview changes\nsudo cdk diff\n\n# Deploy\nsudo cdk deploy\
+  \ --all --require-approval never\nsudo cdk deploy MyStack --context env=prod\n\n# Lists stacks\nsudo\
+  \ cdk list\n\n# Destroy\nsudo cdk destroy --all --force\n```\n\n## Example Stack (lib/my-stack.ts)\n\
+  \n```ts\nimport * as s3 from 'aws-cdk-lib/aws-s3';\n\nexport class MyStack extends Stack {\n  constructor(scope:\
+  \ Construct, id: string, props: StackProps) {\n    super(scope, id, props);\n    new s3.Bucket(this,\
+  \ 'Bucket', {\n      bucketName: `app-assets-${this.account}`,\n      versioned: true,\n    });\n  }\n\
+  }\n```\n\n## Best Practices\n\n- Use environments (accounts/regions) as context per stack\n- Review\
+  \ `cdk diff` in PRs, not just deploy\n- Prefer L2 constructs and escape hatches for customization\n\
+  - Add tests with assertions on the synthesized template\n- Bootstrap once per account/region with a\
+  \ dedicated role\n\n## Example Response\n\nSynthesizes the app, diffs against the live account, deploys,\
+  \ and reports the\ncreated resources with their ARNs."
+examples:
+- input: Deploy our infra from code
+  output: Inits the app, writes stacks, bootstraps if needed, diffs, and deploys with approval policy
+- input: What would change if I deploy?
+  output: Runs cdk diff and summarizes additions/modifications/deletions per stack
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: cdk.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-cdk
+  generic:
+    system_prompt: 'You work cdk hands-on. You do it through aws-cdk: Manage CDK apps across their full
+      lifecycle. The commands are real, e.g. `cdk init app --language typescript`. You answer with exact
+      commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

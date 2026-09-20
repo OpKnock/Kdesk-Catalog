@@ -1,0 +1,152 @@
+name: profiling
+display_name: Profiling
+category: api
+subcategory: general
+description: 'CPU and memory profiling: perf record/report, Go pprof, and flamegraph generation.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- perf
+capabilities:
+- name: profiling-analysis
+  description: Capture CPU profiles with perf, analyze Go profiles with pprof, and visualize as flamegraphs.
+  commands:
+  - perf record -g ./myapp
+  - perf report --stdio
+  - perf top
+  - go tool pprof -top http://localhost:6060/debug/pprof/heap
+  - go tool pprof -http=:8081 http://localhost:6060/debug/pprof/profile
+  examples:
+  - perf record -g -p 1234 -- sleep 60
+  - go tool pprof -top http://localhost:6060/debug/pprof/cpu
+  - go tool pprof -http=:8081 http://localhost:6060/debug/pprof/goroutine
+  parameters:
+  - name: pid
+    type: integer
+    description: Process ID to profile
+  - name: profile_source
+    type: string
+    description: pprof URL or profile file
+  - name: duration
+    type: string
+    description: Capture duration
+knowledge:
+- title: perf wiki
+  type: documentation
+  source: https://perf.wiki.kernel.org/index.php/Main_Page
+  description: perf record, report, top documentation
+- title: pprof docs
+  type: documentation
+  source: https://pkg.go.dev/net/http/pprof
+  description: Go runtime profiling endpoints and go tool pprof
+instructions: '# Profiling
+
+
+  Find where CPU time and memory actually go with sampling profilers.
+
+
+  ## What this skill does
+
+
+  - Records CPU profiles with perf
+
+  - Reads Go pprof endpoints
+
+  - Visualizes results
+
+
+  ## When to use
+
+
+  - High CPU usage or latency mysteries
+
+  - Memory growth investigations
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # perf
+
+  perf record -g ./myapp
+
+  perf record -g -p 1234 -- sleep 60
+
+  perf report --stdio
+
+  perf top
+
+
+  # Go pprof (app must import net/http/pprof)
+
+  go tool pprof -top http://localhost:6060/debug/pprof/heap
+
+  go tool pprof -top http://localhost:6060/debug/pprof/cpu
+
+  go tool pprof -http=:8081 http://localhost:6060/debug/pprof/profile
+
+  go tool pprof -http=:8081 http://localhost:6060/debug/pprof/goroutine
+
+  ```
+
+
+  ## Reading results
+
+
+  - Flat: time in this function; Cum: including callees
+
+  - Look for hot call chains, not just hot functions
+
+
+  ## Best practices
+
+
+  - Profile under production-like load
+
+  - Capture 30-60s windows
+
+  - Compare profiles before/after optimizations'
+examples:
+- input: My Go service burns 100% CPU, where?
+  output: The agent captures the CPU profile and runs go tool pprof -top to find the hot functions.
+- input: Profile this native binary without rebuilding
+  output: The agent runs perf record -g against the process and summarizes with perf report.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: profiling.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-profiling
+  generic:
+    system_prompt: 'This is your domain: Profiling. You do it through profiling-analysis: Capture CPU
+      profiles with perf, analyze Go profiles with pprof, and visualize as flamegraphs. The commands are
+      real, e.g. `perf record -g ./myapp`. You verify each step you report and stay honest about what
+      you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

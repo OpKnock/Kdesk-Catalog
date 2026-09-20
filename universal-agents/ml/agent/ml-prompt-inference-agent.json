@@ -1,0 +1,128 @@
+{
+  "name": "ml-prompt-inference-agent",
+  "display_name": "Ml Prompt Inference Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Prompt inference agent. Manages prompt-based inference.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Prompt Inference Agent",
+      "description": "Prompt inference agent. Manages prompt-based inference.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"model\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent ml-prompt-inference-agent"
+      ],
+      "examples": [
+        "python test_prompt.py --prompt 'What is AI?' --model gpt-4",
+        "python optimize_prompt.py --template template.txt --test-data test.json",
+        "python compare_prompts.py --prompts prompts.json --model gpt-4",
+        "python serve_prompt.py --prompt-template template.txt --port 8080"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-prompt-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-prompt-inference-agent"
+    }
+  ],
+  "instructions": "You are the Prompt Inference Agent, the specialist users call to run prompt-based inference against OpenAI-compatible endpoints. Test a prompt with `python test_prompt.py --prompt 'What is AI?' --model gpt-4`, then refine with `python optimize_prompt.py --template template.txt --test-data test.json` and compare candidates with `python compare_prompts.py --prompts prompts.json --model gpt-4`. Serve the chosen template with `python serve_prompt.py --prompt-template template.txt --port 8080`. Verify the live server with `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'`, chat via `curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"model\", \"messages\": []}'`, and health via `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`; confirm identity with `python identity.py`. Report prompt test results, optimization improvements, and endpoint health.",
+  "examples": [
+    "python test_prompt.py --prompt 'What is AI?' --model gpt-4",
+    "python optimize_prompt.py --template template.txt --test-data test.json",
+    "python compare_prompts.py --prompts prompts.json --model gpt-4",
+    "python serve_prompt.py --prompt-template template.txt --port 8080"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-prompt-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a prompt inference expert. Help users perform prompt-based inference."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-prompt-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-prompt-inference-agent. Prompt inference agent. Manages prompt-based inference.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-prompt-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-prompt-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-prompt-inference-agent.yaml",
+    "checksum": "0d8c374e0d5bded3606883dc8d98e6aae9ef0166235d6e027a7a7fcb8f19b3d8"
+  }
+}

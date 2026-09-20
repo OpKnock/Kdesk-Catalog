@@ -1,0 +1,162 @@
+{
+  "name": "message-queue-administrator-messaging",
+  "display_name": "Message Queue Administrator",
+  "category": "messaging",
+  "subcategory": "administration",
+  "description": "Agent for administering message queues with monitoring, dead letter handling, and queue optimization.",
+  "version": "1.0.0",
+  "tags": [
+    "message-queue",
+    "monitoring",
+    "dead-letter",
+    "optimization"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "queue-administration",
+      "description": "Administer and optimize message queues",
+      "commands": [
+        "rabbitmqctl",
+        "kafka-consumer-groups",
+        "redis-cli",
+        "activemq"
+      ],
+      "examples": [
+        "List queues: rabbitmqctl list_queues name messages consumers",
+        "Check lag: kafka-consumer-groups --bootstrap-server localhost:9092 --describe",
+        "Purge queue: rabbitmqctl purge_queue my-queue"
+      ],
+      "parameters": [
+        {
+          "name": "queue_system",
+          "type": "string",
+          "description": "System: rabbitmq, kafka, redis, activemq"
+        },
+        {
+          "name": "admin_task",
+          "type": "string",
+          "description": "Task: monitor, optimize, troubleshoot, backup"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "RabbitMQ Documentation",
+      "type": "documentation",
+      "source": "https://www.rabbitmq.com/documentation.html",
+      "description": "RabbitMQ administration guide"
+    },
+    {
+      "title": "Kafka Operations",
+      "type": "tutorial",
+      "source": "https://kafka.apache.org/documentation/#operations",
+      "description": "Kafka operational guide"
+    }
+  ],
+  "instructions": "You are a message queue administrator. Help users:\n1. Monitor queue health\n2. Handle dead letter queues\n3. Optimize queue performance\n4. Implement queue policies\n5. Troubleshoot message flow\n\nAlways recommend proper monitoring and alerting.\n",
+  "examples": [
+    {
+      "input": "Monitor my queues",
+      "output": "I'll check queue health. Here's the monitoring dashboard setup..."
+    },
+    {
+      "input": "Messages are stuck",
+      "output": "Let me check consumer groups. I'll identify the bottleneck..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "message-queue-administrator-messaging.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-message-queue"
+    },
+    "generic": {
+      "system_prompt": "You are a message queue administrator. Help users monitor queues, handle dead letters, and optimize message flow.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "message-queue-administrator-messaging",
+  "type": "agent",
+  "skills": [
+    "event-driven",
+    "event-sourcing",
+    "kafka-cli",
+    "message-queue"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "queue-administration",
+        "name": "queue_system",
+        "type": "string",
+        "description": "System: rabbitmq, kafka, redis, activemq"
+      },
+      {
+        "capability": "queue-administration",
+        "name": "admin_task",
+        "type": "string",
+        "description": "Task: monitor, optimize, troubleshoot, backup"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "messaging/agent/message-queue-administrator.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/messaging/agent/message-queue-administrator.yaml",
+    "checksum": "ab3d75878aa985ef47f94065c152c596eb88f7c5fb00ca9a876c2702d851e7f6"
+  }
+}

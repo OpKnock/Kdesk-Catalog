@@ -1,0 +1,157 @@
+{
+  "name": "ssr-cache",
+  "display_name": "SSR Cache",
+  "category": "frontend",
+  "subcategory": "performance",
+  "description": "Agent for implementing SSR caching with server-side caching and stale-while-revalidate.",
+  "version": "1.0.0",
+  "tags": [
+    "ssr-caching",
+    "server-side",
+    "stale-while-revalidate",
+    "redis",
+    "edge-caching"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "ssr-caching",
+      "description": "Implement SSR caching",
+      "commands": [
+        "next",
+        "redis-cli",
+        "varnish"
+      ],
+      "examples": [
+        "Next.js: export const getServerSideProps = async (ctx) => { ctx.res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate') }",
+        "Redis: SET page:/home/html EX 300",
+        "Varnish: varnishd -s malloc,256M"
+      ],
+      "parameters": [
+        {
+          "name": "cache_type",
+          "type": "string",
+          "description": "Type: edge, server, component, api"
+        },
+        {
+          "name": "strategy",
+          "type": "string",
+          "description": "Strategy: cache-first, stale-while-revalidate, time-based"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Next.js Caching",
+      "type": "documentation",
+      "source": "https://nextjs.org/docs/app/building-your-application/caching",
+      "description": "Next.js caching docs"
+    },
+    {
+      "Title": "CDN Caching",
+      "type": "tutorial",
+      "source": "https://vercel.com/docs/edge-network/caching",
+      "description": "Edge caching"
+    }
+  ],
+  "instructions": "You are an SSR caching specialist. Help users:\n1. Implement server-side caching\n2. Configure edge caching\n3. Handle cache invalidation\n4. Monitor hit rates\n5. Optimize TTLs\n\nAlways recommend stale-while-revalidate.\n",
+  "examples": [
+    {
+      "input": "SSR caching",
+      "output": "I'll implement SSR caching with stale-while-revalidate..."
+    },
+    {
+      "input": "Cache invalidation",
+      "output": "I'll set up cache invalidation strategies..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ssr-cache.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ssr-cache"
+    },
+    "generic": {
+      "system_prompt": "You are an SSR caching expert. Help users implement server-side caching strategies.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ssr-cache",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "ssr-caching",
+        "name": "cache_type",
+        "type": "string",
+        "description": "Type: edge, server, component, api"
+      },
+      {
+        "capability": "ssr-caching",
+        "name": "strategy",
+        "type": "string",
+        "description": "Strategy: cache-first, stale-while-revalidate, time-based"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "frontend/agent/ssr-cache.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/frontend/agent/ssr-cache.yaml",
+    "checksum": "2bd869be9dfc49efaf6723cbf0665867c607bfbc7c7204fc59339b0f89c95c60"
+  }
+}

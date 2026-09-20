@@ -1,0 +1,225 @@
+{
+  "name": "flux-devops",
+  "display_name": "flux-devops",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Implements GitOps with Flux CD: bootstrap clusters from git, manage Kustomizations and HelmReleases, and reconcile on demand.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "flux"
+  ],
+  "capabilities": [
+    {
+      "name": "flux-bootstrap",
+      "description": "Bootstrap Flux into a cluster and create Git sources for repositories.",
+      "commands": [
+        "flux check --pre",
+        "flux bootstrap github --owner=myorg --repository=fleet --branch=main --path=./clusters/prod",
+        "flux install",
+        "flux create source git app --url=https://github.com/myorg/app --branch=main",
+        "flux get sources git"
+      ],
+      "examples": [
+        "flux bootstrap github --owner=myorg --repository=fleet --branch=main --path=./clusters/prod",
+        "flux create source git app --url=https://github.com/myorg/app",
+        "flux check --pre"
+      ],
+      "parameters": [
+        {
+          "name": "owner",
+          "type": "string",
+          "description": "GitHub org/user for bootstrap"
+        },
+        {
+          "name": "repository",
+          "type": "string",
+          "description": "Git repository name"
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Cluster config path in the repo"
+        }
+      ]
+    },
+    {
+      "name": "kustomizations-and-helm",
+      "description": "Define Kustomizations and HelmReleases, and trigger reconciliations.",
+      "commands": [
+        "flux create kustomization apps --source=GitRepository/app --path=./apps --prune=true --interval=5m",
+        "flux create helmrelease nginx --source=HelmRepository/bitnami --chart=nginx --target-namespace=web",
+        "flux reconcile kustomization apps",
+        "flux reconcile source git app",
+        "flux get kustomizations",
+        "flux get helmreleases -A"
+      ],
+      "examples": [
+        "flux create kustomization apps --source=GitRepository/app --path=./apps --prune=true",
+        "flux reconcile kustomization apps",
+        "flux get helmreleases -A"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Resource name"
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Path in git repo to watch"
+        },
+        {
+          "name": "interval",
+          "type": "string",
+          "description": "Reconciliation interval, e.g. 5m"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Flux Documentation",
+      "type": "documentation",
+      "source": "https://fluxcd.io/flux/",
+      "description": "Bootstrap, GitRepository, Kustomization, HelmRelease guides"
+    },
+    {
+      "title": "Flux CLI Reference",
+      "type": "documentation",
+      "source": "https://fluxcd.io/flux/cmd/",
+      "description": "flux command reference and flags"
+    },
+    {
+      "title": "Flux GitHub Provider",
+      "type": "documentation",
+      "source": "https://fluxcd.io/flux/installation/",
+      "description": "Bootstrap with GitHub, GitLab, and generic git servers"
+    }
+  ],
+  "instructions": "# Flux CD GitOps\n\nDrive cluster state from git using Flux: sources, Kustomizations, and Helm releases.\n\n## What This Skill Does\n\n- Bootstraps Flux into a cluster (kustomization controller + source controller + Helm)\n- Connects GitRepository sources and watches branches\n- Applies Kustomizations with pruning (drift removal)\n- Manages HelmReleases through charts\n- Triggers manual reconciliation and shows sync state\n\n## When to Use\n\n- Moving from kubectl apply to GitOps\n- Multi-cluster config management from one repo\n- Auditable deployments with automatic drift correction\n\n## Real Commands\n\n```bash\n# Preflight + bootstrap\nflux check --pre\nflux bootstrap github --owner=myorg --repository=fleet   --branch=main --path=./clusters/prod --personal\n\n# Sources\nflux create source git app --url=https://github.com/myorg/app --branch=main\nflux get sources git\nflux reconcile source git app\n\n# Kustomizations\nflux create kustomization apps --source=GitRepository/app   --path=./apps --prune=true --interval=5m --wait\nflux reconcile kustomization apps\n\n# Helm\nflux create helmrelease nginx --source=HelmRepository/bitnami   --chart=nginx --target-namespace=web\nflux get helmreleases -A\n\n# Debug\nflux events -A\nkubectl get kustomization apps -o yaml | yq .status\n```\n\n## Best Practices\n\n- Use `--prune=true` so deleted git files are removed from the cluster\n- Set `--wait` in CI to fail on drifted applies\n- Separate app config from cluster config with path prefixes\n- Use `flux events -A` for near-real-time sync issues\n- Enable image automation (ImagePolicy) for tag-based delivery",
+  "examples": [
+    {
+      "input": "Set up GitOps for our cluster",
+      "output": "Agent runs flux check --pre, bootstraps from the fleet repo, creates a kustomization for apps, and verifies flux get kustomizations"
+    },
+    {
+      "input": "Force Flux to pick up a new commit now",
+      "output": "Agent runs flux reconcile source git app, then flux reconcile kustomization apps, and tails flux events -A to confirm"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "flux-devops.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-flux"
+    },
+    "generic": {
+      "system_prompt": "You take the flux-devops seat. You do it through flux-bootstrap: Bootstrap Flux into a cluster and create Git sources for repositories. The commands are real, e.g. `flux check --pre`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "flux-devops",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "flux-bootstrap",
+        "name": "owner",
+        "type": "string",
+        "description": "GitHub org/user for bootstrap"
+      },
+      {
+        "capability": "flux-bootstrap",
+        "name": "repository",
+        "type": "string",
+        "description": "Git repository name"
+      },
+      {
+        "capability": "flux-bootstrap",
+        "name": "path",
+        "type": "string",
+        "description": "Cluster config path in the repo"
+      },
+      {
+        "capability": "kustomizations-and-helm",
+        "name": "name",
+        "type": "string",
+        "description": "Resource name"
+      },
+      {
+        "capability": "kustomizations-and-helm",
+        "name": "path",
+        "type": "string",
+        "description": "Path in git repo to watch"
+      },
+      {
+        "capability": "kustomizations-and-helm",
+        "name": "interval",
+        "type": "string",
+        "description": "Reconciliation interval, e.g. 5m"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "flux"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/flux-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/flux-skill.yaml",
+    "checksum": "b6a20e159d284767220b4d240e1b8fef3fc5f76c8ffbdcc619953641e2115d73"
+  }
+}

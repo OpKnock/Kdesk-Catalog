@@ -1,0 +1,171 @@
+{
+  "name": "lynx",
+  "display_name": "Lynx",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "End-to-end and unit testing with the Lynx test framework, writing assertions in plain JavaScript with instant watch mode.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "lynx-tests",
+      "description": "Run, watch, and snapshot-test with the Lynx framework for browser and Node tests",
+      "commands": [
+        "npx lynx --watch",
+        "npx lynx --headed",
+        "npx lynx run tests/e2e/",
+        "npx lynx --update-snapshots",
+        "npx lynx --browser=webkit"
+      ],
+      "examples": [
+        "npx lynx --headed tests/auth.spec.js",
+        "npx lynx --watch --filter login",
+        "npx lynx --update-snapshots tests/snapshots/"
+      ],
+      "parameters": [
+        {
+          "name": "headed",
+          "type": "boolean",
+          "description": "Run browser tests with a visible UI window"
+        },
+        {
+          "name": "filter",
+          "type": "string",
+          "description": "Run only tests whose names match the pattern"
+        },
+        {
+          "name": "browser",
+          "type": "string",
+          "description": "Browser engine: chromium, firefox, or webkit"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Lynx E2E framework docs",
+      "type": "documentation",
+      "source": "https://github.com/stackblitz/lynx",
+      "description": "Setup, assertions, browser automation, and snapshot testing reference"
+    },
+    {
+      "title": "Lynx CLI reference",
+      "type": "documentation",
+      "source": "https://github.com/stackblitz/lynx/blob/main/README.md",
+      "description": "All CLI flags including --watch, --headed, --update-snapshots"
+    }
+  ],
+  "instructions": "# Lynx\n\nLynx is a fast end-to-end and unit test framework for JavaScript that runs in watch\nmode by default and needs zero config for most projects.\n\n## When to Use\n\n- End-to-end tests that drive a real browser\n- Unit tests with instant reload during development\n- Snapshot testing of UI output\n\n## Real Commands\n\n```bash\n# Install\nnpm install --save-dev @lynx-js/lynx\n\n# Run all tests once\nnpx lynx\n\n# Watch mode (default during development)\nnpx lynx --watch\n\n# Visible browser for E2E debugging\nnpx lynx --headed\n\n# Run a specific file\nnpx lynx run tests/e2e/auth.spec.js\n\n# Refresh snapshots after an intentional change\nnpx lynx --update-snapshots\n\n# Different browser engine\nnpx lynx --browser=webkit\n```\n\n## Example Test\n\n```js\nimport { test, expect, browser } from '@lynx-js/lynx';\n\ntest('adds a todo', async () => {\n  const page = await browser.open('https://example.com/todos');\n  await page.fill('[data-testid=new-todo]', 'write tests');\n  await page.click('button[type=submit]');\n  await expect(page).toHaveText('.todo-item', 'write tests');\n});\n```\n\n## CI\n\n```yaml\n- name: E2E\n  run: npx lynx --browser=chromium\n```\n\n## Best Practices\n\n- Use `--headed` only for debugging; CI runs headless\n- Keep E2E tests in `tests/e2e/` and unit tests in `tests/unit/`\n- Prefer stable data-testid selectors over CSS classes\n- Update snapshots deliberately, then review the diff",
+  "examples": [
+    {
+      "input": "Write an E2E test for the login flow",
+      "output": "Creates tests/e2e/auth.spec.js using browser.open and page.fill/click, then runs npx lynx --headed to verify it passes"
+    },
+    {
+      "input": "A snapshot changed unexpectedly",
+      "output": "Runs npx lynx --filter snapshot-name to see the diff, and only runs npx lynx --update-snapshots after confirming the change is intended"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "lynx.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-lynx"
+    },
+    "generic": {
+      "system_prompt": "You are the Lynx specialist. You do it through lynx-tests: Run, watch, and snapshot-test with the Lynx framework for browser and Node tests. The commands are real, e.g. `npx lynx --watch`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "lynx",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "lynx-tests",
+        "name": "headed",
+        "type": "boolean",
+        "description": "Run browser tests with a visible UI window"
+      },
+      {
+        "capability": "lynx-tests",
+        "name": "filter",
+        "type": "string",
+        "description": "Run only tests whose names match the pattern"
+      },
+      {
+        "capability": "lynx-tests",
+        "name": "browser",
+        "type": "string",
+        "description": "Browser engine: chromium, firefox, or webkit"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/lynx-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/lynx-skill.yaml",
+    "checksum": "9b8d3e235d4ebdd2c9cb2dd5437e70901e3662d8ff1b9e3a85793b26e8a5844c"
+  }
+}

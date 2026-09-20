@@ -1,0 +1,201 @@
+{
+  "name": "kubernetes-deployment-advanced-rollouts",
+  "display_name": "Kubernetes Deployment Advanced Rollouts",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Advanced Kubernetes deployment strategies: canary and blue/green rollouts, rollbacks to revisions, and rollout pausing/resuming.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kubectl"
+  ],
+  "capabilities": [
+    {
+      "name": "advanced-rollouts",
+      "description": "Manage revisions: history, rollback, pause, and resume.",
+      "commands": [
+        "kubectl rollout history deployment/nginx",
+        "kubectl rollout history deployment/nginx --revision=3",
+        "kubectl rollout undo deployment/nginx",
+        "kubectl rollout undo deployment/nginx --to-revision=2",
+        "kubectl rollout pause deployment/nginx",
+        "kubectl rollout resume deployment/nginx"
+      ],
+      "examples": [
+        "kubectl rollout history deployment/nginx",
+        "kubectl rollout undo deployment/nginx --to-revision=2",
+        "kubectl rollout pause deployment/nginx"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Deployment name."
+        },
+        {
+          "name": "revision",
+          "type": "integer",
+          "description": "Revision number for history/undo."
+        }
+      ]
+    },
+    {
+      "name": "canary-bluegreen",
+      "description": "Implement canary and blue/green release patterns with labels and services.",
+      "commands": [
+        "kubectl apply -f canary-deployment.yaml",
+        "kubectl get deployments -l app=nginx --show-labels",
+        "kubectl scale deployment nginx-canary --replicas=1",
+        "kubectl apply -f blue-deployment.yaml && kubectl apply -f green-deployment.yaml",
+        "kubectl patch service nginx -p '{\"spec\":{\"selector\":{\"track\":\"green\"}}}'"
+      ],
+      "examples": [
+        "kubectl apply -f canary-deployment.yaml",
+        "kubectl scale deployment nginx-canary --replicas=1",
+        "kubectl patch service nginx -p '{\"spec\":{\"selector\":{\"track\":\"green\"}}}'"
+      ],
+      "parameters": [
+        {
+          "name": "canary_replicas",
+          "type": "integer",
+          "description": "Replica count for the canary."
+        },
+        {
+          "name": "track",
+          "type": "string",
+          "description": "Service selector track: blue or green."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Deployment Strategies",
+      "type": "documentation",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy",
+      "description": "RollingUpdate vs Recreate strategies."
+    },
+    {
+      "title": "Canary Deployments",
+      "type": "documentation",
+      "source": "https://kubernetes.io/blog/2020/01/22/managed-canary-deployments-with-argo-rollouts/",
+      "description": "Canary deployment patterns and tools."
+    }
+  ],
+  "instructions": "# Kubernetes Deployments (Advanced)\n\nProgressive delivery: canaries, blue/green, and controlled rollbacks.\n\n## What this skill does\n\n- Inspects rollout history and rolls back to prior revisions.\n- Pauses/resumes rollouts for manual verification gates.\n- Runs canary and blue/green patterns with services.\n\n## When to use\n\n- Gradual feature rollouts with traffic shaping.\n- Instant rollback on regression without image rebuilds.\n- Zero-downtime upgrades across versions.\n\n## Real commands\n\n```bash\n# History\nkubectl rollout history deployment/nginx\nkubectl rollout history deployment/nginx --revision=3\n\n# Rollback\nkubectl rollout undo deployment/nginx\nkubectl rollout undo deployment/nginx --to-revision=2\n\n# Pause/resume (canary verification window)\nkubectl rollout pause deployment/nginx\nkubectl rollout resume deployment/nginx\n\n# Canary: separate deployment with track label\nkubectl apply -f canary-deployment.yaml\nkubectl scale deployment nginx-canary --replicas=1\n\n# Blue/green: flip service selector\nkubectl apply -f green-deployment.yaml\nkubectl patch service nginx -p '{\"spec\":{\"selector\":{\"track\":\"green\"}}}'\n```\n\n## Canary YAML example\n\n```yaml\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: nginx-canary\nspec:\n  replicas: 1\n  selector:\n    matchLabels:\n      app: nginx\n      track: canary\n  template:\n    metadata:\n      labels:\n        app: nginx\n        track: canary\n    spec:\n      containers:\n        - name: nginx\n          image: nginx:1.29\n```\n\n## Testing\n\n```bash\n# Route 10% via an ingress weight, or a second service:\nkubectl get svc nginx-canary\ncurl -H 'Host: nginx-canary' http://<ingress>/ | grep Server\n```\n\n## Best practices\n\n- Use rollout undo --to-revision=N instead of manual image reverts.\n- Keep a few old revisions (revisionHistoryLimit) for quick rollbacks.\n- Combine canaries with metrics gates (Argo Rollouts) for automation.\n",
+  "examples": [
+    {
+      "input": "My new image is broken; roll back",
+      "output": "kubectl rollout undo deployment/nginx --to-revision=2 and kubectl rollout status deployment/nginx"
+    },
+    {
+      "input": "Roll out 1 canary replica of v2",
+      "output": "kubectl apply -f canary-deployment.yaml && kubectl scale deployment nginx-canary --replicas=1"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kubernetes-deployment-advanced-rollouts.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kubernetes-deployment-advanced-rollouts"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Kubernetes Deployment Advanced Rollouts. You do it through advanced-rollouts: Manage revisions: history, rollback, pause, and resume. The commands are real, e.g. `kubectl rollout history deployment/nginx`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kubernetes-deployment-advanced-rollouts",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "advanced-rollouts",
+        "name": "name",
+        "type": "string",
+        "description": "Deployment name."
+      },
+      {
+        "capability": "advanced-rollouts",
+        "name": "revision",
+        "type": "integer",
+        "description": "Revision number for history/undo."
+      },
+      {
+        "capability": "canary-bluegreen",
+        "name": "canary_replicas",
+        "type": "integer",
+        "description": "Replica count for the canary."
+      },
+      {
+        "capability": "canary-bluegreen",
+        "name": "track",
+        "type": "string",
+        "description": "Service selector track: blue or green."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kubectl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/kubernetes-deployment-advanced-rollouts-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/kubernetes-deployment-advanced-rollouts-skill.yaml",
+    "checksum": "fa118c37b3a6ecc922360ed5b81ce811946d59edd60b60c807be441f31c4ebe8"
+  }
+}

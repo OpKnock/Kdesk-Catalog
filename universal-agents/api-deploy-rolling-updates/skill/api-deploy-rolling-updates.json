@@ -1,0 +1,204 @@
+{
+  "name": "api-deploy-rolling-updates",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "devops",
+  "description": "Implements standard deployment pipelines: rolling updates with health gates, versioned releases, and staged rollouts.",
+  "keywords": [
+    "rolling-update"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-deploy-rolling-updates.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-deploy-rolling-updates"
+    },
+    "generic": {
+      "system_prompt": "You are the Api Deploy Rolling Updates specialist. You do it through rolling-updates: Configure rolling updates with readiness and liveness gates. The commands are real, e.g. `kubectl rollout restart deployment/api -n prod`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "rolling-updates",
+      "description": "Configure rolling updates with readiness and liveness gates",
+      "commands": [
+        "kubectl rollout restart deployment/api -n prod",
+        "kubectl rollout status deployment/api -n prod --watch",
+        "kubectl set resources deployment/api -n prod --limits=cpu=500m,memory=512Mi",
+        "kubectl get deployment api -n prod -o yaml | grep -A5 strategy",
+        "kubectl rollout undo deployment/api -n prod"
+      ],
+      "examples": [
+        "kubectl rollout restart deployment/api -n prod && kubectl rollout status deployment/api -n prod --watch",
+        "kubectl get deployment api -n prod -o yaml | grep -A5 strategy",
+        "kubectl rollout undo deployment/api -n prod"
+      ],
+      "parameters": [
+        {
+          "name": "deployment",
+          "type": "string",
+          "description": "Deployment name"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace"
+        }
+      ]
+    },
+    {
+      "name": "staged-rollout",
+      "description": "Roll out through dev, staging, then production with promotion checks",
+      "commands": [
+        "kubectl apply -f deploy/dev/api.yaml --record",
+        "kubectl apply -f deploy/staging/api.yaml --record",
+        "kubectl apply -f deploy/prod/api.yaml --record",
+        "kubectl rollout status deployment/api -n staging --timeout 120s",
+        "kubectl describe deployment api -n staging | grep -E 'Replicas|Conditions'"
+      ],
+      "examples": [
+        "kubectl apply -f deploy/dev/api.yaml --record && kubectl apply -f deploy/staging/api.yaml --record",
+        "kubectl rollout status deployment/api -n staging --timeout 120s",
+        "kubectl describe deployment api -n staging | grep -E 'Replicas|Conditions'"
+      ],
+      "parameters": [
+        {
+          "name": "environment",
+          "type": "string",
+          "description": "Target environment"
+        },
+        {
+          "name": "manifest",
+          "type": "string",
+          "description": "Manifest path"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "kubernetes",
+    "argocd",
+    "istio"
+  ],
+  "tools": [
+    "kubernetes",
+    "argocd",
+    "istio",
+    "helm",
+    "terraform"
+  ],
+  "examples": [
+    {
+      "input": "Set up a rolling deployment pipeline",
+      "output": "Configures rolling updates with health gates and staged env-by-env promotion"
+    },
+    {
+      "input": "Standardize API release steps",
+      "output": "Documents apply-record-verify-promote steps shared across teams"
+    }
+  ],
+  "instructions": "# API Deploy (Implementation)\n\nImplements standard, repeatable deployment pipelines for APIs.\n\n## When to Use\n- Standardizing deploy steps\n- Adding health-gated updates\n- Rolling out environment-by-environment\n\n## Real Commands\n\n```bash\n# Rolling update\nkubectl rollout restart deployment/api -n prod\nkubectl rollout status deployment/api -n prod --watch\n\n# Check strategy\nkubectl get deployment api -n prod -o yaml | grep -A5 strategy\n\n# Staged rollout\nkubectl apply -f deploy/dev/api.yaml --record\nkubectl apply -f deploy/staging/api.yaml --record\nkubectl rollout status deployment/api -n staging --timeout 120s\nkubectl apply -f deploy/prod/api.yaml --record\n\n# Rollback\nkubectl rollout undo deployment/api -n prod\n```\n\n## Health Gates\n- readinessProbe: /health endpoint\n- livenessProbe: /healthz\n- maxUnavailable: 25%\n\n## Testing\nWatch rollout status during a deploy and verify old pods drain before new ones serve.\n\n## Best Practices\n- Record every apply (`--record`)\n- Promote only after staging gates pass",
+  "display_name": "Api Deploy Rolling Updates",
+  "knowledge": [
+    {
+      "title": "Kubernetes Deployments",
+      "type": "documentation",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "description": "Update strategies and probes"
+    },
+    {
+      "title": "Rollout Strategies",
+      "type": "documentation",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment",
+      "description": "Rolling update parameters"
+    }
+  ],
+  "id": "api-deploy-rolling-updates",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rolling-updates",
+        "name": "deployment",
+        "type": "string",
+        "description": "Deployment name"
+      },
+      {
+        "capability": "rolling-updates",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace"
+      },
+      {
+        "capability": "staged-rollout",
+        "name": "environment",
+        "type": "string",
+        "description": "Target environment"
+      },
+      {
+        "capability": "staged-rollout",
+        "name": "manifest",
+        "type": "string",
+        "description": "Manifest path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kubernetes",
+    "argocd",
+    "istio"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-deploy-rolling-updates/skill/api-deploy-rolling-updates.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-deploy-rolling-updates/skill/api-deploy-rolling-updates.yaml",
+    "checksum": "20c997f3a73c431c7e2013c93e4d3b9d3a49f04dfd5b39d2c94e4e04b3bbcc25"
+  }
+}

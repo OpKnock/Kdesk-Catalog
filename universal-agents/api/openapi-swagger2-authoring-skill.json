@@ -1,0 +1,175 @@
+{
+  "name": "openapi-swagger2-authoring",
+  "display_name": "Openapi Swagger2 Authoring",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Swagger 2.0 (OpenAPI v2) authoring and tooling: validation, bundling, and conversion between v2 and v3.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx",
+    "openapi-generator-cli",
+    "swagger-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "swagger2-authoring",
+      "description": "Validate and bundle Swagger 2.0 specs and convert them to OpenAPI 3.x.",
+      "commands": [
+        "swagger-cli validate swagger.yaml",
+        "npx swagger-cli bundle swagger.yaml -o bundle.yaml",
+        "openapi-generator-cli generate -g go -i swagger.yaml -o out/",
+        "npx @redocly/cli lint swagger.yaml",
+        "npx @redocly/cli bundle swagger.yaml --upgrade"
+      ],
+      "examples": [
+        "swagger-cli validate swagger.yaml",
+        "openapi-generator-cli generate -g spring -i swagger.yaml -o out/",
+        "npx @redocly/cli bundle swagger.yaml --upgrade -o openapi.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "spec",
+          "type": "string",
+          "description": "Path to the Swagger 2.0 file"
+        },
+        {
+          "name": "generator",
+          "type": "string",
+          "description": "Code generation target"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output file or directory"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Swagger 2.0 Specification",
+      "type": "documentation",
+      "source": "https://swagger.io/specification/v2/",
+      "description": "Swagger 2.0 spec reference"
+    },
+    {
+      "title": "swagger-cli",
+      "type": "documentation",
+      "source": "https://github.com/APIDevTools/swagger-cli",
+      "description": "Validate and bundle CLI for v2 specs"
+    }
+  ],
+  "instructions": "# OpenAPI v2 (Swagger 2.0)\n\nLegacy APIs still run on Swagger 2.0; know how to validate, bundle and upgrade them.\n\n## What this skill does\n\n- Validates v2 documents\n- Bundles multi-file v2 specs\n- Upgrades v2 to OpenAPI 3.x\n\n## When to use\n\n- Maintaining legacy swagger files\n- Migrating tooling to OpenAPI 3\n\n## Real commands\n\n```bash\n# Validate\nswagger-cli validate swagger.yaml\n\n# Bundle\nnpx swagger-cli bundle swagger.yaml -o bundle.yaml\n\n# Lint\nnpx @redocly/cli lint swagger.yaml\n\n# Generate\nopenapi-generator-cli generate -g go -i swagger.yaml -o out/\n\n# Upgrade to v3\nnpx @redocly/cli bundle swagger.yaml --upgrade -o openapi.yaml\n```\n\n## Key v2 differences\n\n- `swagger: \"2.0\"` instead of openapi version key\n- `host`, `basePath`, `schemes` at root\n- `securityDefinitions` instead of components/securitySchemes\n\n## Example\n\n```yaml\nswagger: \"2.0\"\ninfo: { title: Legacy API, version: \"1.0\" }\nhost: api.example.com\nbasePath: /v1\nschemes: [https]\npaths:\n  /ping:\n    get:\n      responses:\n        '200': { description: OK }\nsecurityDefinitions:\n  api_key:\n    type: apiKey\n    in: header\n    name: X-Api-Key\n```\n\n## Best practices\n\n- Validate before upgrading to catch schema issues\n- Upgrade one spec at a time and diff generated clients\n- Keep v2 tooling pinned while migrating",
+  "examples": [
+    {
+      "input": "My old swagger.yaml won't validate, find the issue",
+      "output": "The agent runs swagger-cli validate and fixes the reported structural errors."
+    },
+    {
+      "input": "Convert my Swagger 2.0 spec to OpenAPI 3",
+      "output": "The agent runs redocly bundle --upgrade and reviews the conversion warnings."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "openapi-swagger2-authoring.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-openapi-swagger2-authoring"
+    },
+    "generic": {
+      "system_prompt": "You are the Openapi Swagger2 Authoring specialist. You do it through swagger2-authoring: Validate and bundle Swagger 2.0 specs and convert them to OpenAPI 3.x. The commands are real, e.g. `swagger-cli validate swagger.yaml`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "openapi-swagger2-authoring",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "swagger2-authoring",
+        "name": "spec",
+        "type": "string",
+        "description": "Path to the Swagger 2.0 file"
+      },
+      {
+        "capability": "swagger2-authoring",
+        "name": "generator",
+        "type": "string",
+        "description": "Code generation target"
+      },
+      {
+        "capability": "swagger2-authoring",
+        "name": "output",
+        "type": "string",
+        "description": "Output file or directory"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx",
+    "openapi-generator-cli",
+    "swagger-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/openapi-swagger2-authoring-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/openapi-swagger2-authoring-skill.yaml",
+    "checksum": "d3c50f5eaff4875739ed375a03c41fab1ab6cb491a8d2011a98542d9edf7f0bf"
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "name": "event-sourcing-event-sourcing",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Implements event sourcing with EventStoreDB, Kafka, projections, and CQRS read models using real CLI tooling.",
+  "keywords": [
+    "event-sourcing",
+    "cqrs",
+    "projections"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "event-sourcing-event-sourcing.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-event-sourcing"
+    },
+    "generic": {
+      "system_prompt": "You own event-sourcing-event-sourcing end to end. You do it through event-store-operations: Run and interact with EventStoreDB streams. The commands are real, e.g. `docker run -d -p 2113:2113 -p 1113:1113 eventstore/eventstore:latest --insecure`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "event-store-operations",
+      "description": "Run and interact with EventStoreDB streams.",
+      "commands": [
+        "docker run -d -p 2113:2113 -p 1113:1113 eventstore/eventstore:latest --insecure",
+        "curl -s http://localhost:2113/streams/orders | jq '.entries[0].title'",
+        "curl -s -X POST http://localhost:2113/streams/orders -H 'Content-Type: application/vnd.eventstore.events+json'",
+        "curl -s http://localhost:2113/streams/orders/0 -H 'Accept: application/json' | jq '.data'",
+        "curl -s http://localhost:2113/projections/any -H 'Accept: application/json' | jq '.projections[].name'"
+      ],
+      "examples": [
+        "docker run -d -p 2113:2113 eventstore/eventstore:latest --insecure",
+        "curl -s http://localhost:2113/streams/orders | jq '.entries[0].title'",
+        "curl -s http://localhost:2113/streams/orders/0 | jq '.data'"
+      ],
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "string",
+          "description": "Stream name"
+        },
+        {
+          "name": "event",
+          "type": "string",
+          "description": "Event type"
+        }
+      ]
+    },
+    {
+      "name": "kafka-event-pipeline",
+      "description": "Produce, consume, and replay events through Kafka.",
+      "commands": [
+        "kafka-topics.sh --bootstrap-server localhost:9092 --create --topic account.events --partitions 4",
+        "kafka-console-producer.sh --bootstrap-server localhost:9092 --topic account.events",
+        "kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic account.events --from-beginning",
+        "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --group projection --to-earliest --topic account.events --execute",
+        "redis-cli GET account:42:balance"
+      ],
+      "examples": [
+        "kafka-topics.sh --bootstrap-server localhost:9092 --create --topic account.events --partitions 4",
+        "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --group projection --to-earliest --execute",
+        "redis-cli GET account:42:balance"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Event topic name"
+        },
+        {
+          "name": "group",
+          "type": "string",
+          "description": "Consumer group for replay"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "typescript",
+    "postgresql",
+    "redis"
+  ],
+  "tools": [
+    "node.js",
+    "typescript",
+    "postgresql",
+    "redis",
+    "eventstoredb"
+  ],
+  "examples": [
+    {
+      "input": "Audit trail for a banking ledger",
+      "output": "Agent designs event types, runs EventStoreDB, writes and reads the ledger stream"
+    },
+    {
+      "input": "Rebuild our projections after a schema change",
+      "output": "Agent replays events from earliest offsets into a new projection version and verifies read model"
+    }
+  ],
+  "instructions": "# Event Sourcing Implementation\n\nBuild systems where the event log is the source of truth.\n\n## What This Skill Does\n\n- Runs EventStoreDB and writes/reads streams\n- Implements projections and read models (CQRS)\n- Produces/replays events on Kafka\n- Rebuilds read models from scratch\n- Advises on event schema and versioning\n\n## When to Use\n\n- An audit-required domain (finance, compliance)\n- Complex state transitions needing full history\n- Rebuilding projections after schema changes\n\n## Real Commands\n\n```bash\n# EventStoreDB\ndocker run -d -p 2113:2113 -p 1113:1113 eventstore/eventstore:latest --insecure\ncurl -s http://localhost:2113/streams/orders -H 'Accept: application/json' | jq '.entries[0].title'\ncurl -s -X POST http://localhost:2113/streams/orders   -H 'Content-Type: application/vnd.eventstore.events+json'   -d '[{\"eventId\":\"...\",\"eventType\":\"OrderCreated\",\"data\":{\"id\":\"1\",\"total\":99}}]'\ncurl -s http://localhost:2113/projections/any -H 'Accept: application/json' | jq '.projections[].name'\n\n# Kafka pipeline\nkafka-topics.sh --bootstrap-server localhost:9092 --create --topic account.events --partitions 4\nkafka-console-producer.sh --bootstrap-server localhost:9092 --topic account.events\nkafka-console-consumer.sh --bootstrap-server localhost:9092 --topic account.events --from-beginning\n\n# Rebuild projections\nkafka-consumer-groups.sh --bootstrap-server localhost:9092   --reset-offsets --group projection --to-earliest --topic account.events --execute\nredis-cli GET account:42:balance\n```\n\n## Core Rules\n\n- Events are immutable facts, never edited or deleted\n- Rebuild any read model by replaying the log\n- Commands validate, events record outcomes\n- Version events; consumers tolerate old versions\n- Projections are disposable: store only the log permanently\n\n## Best Practices\n\n- Write the event schema before the code\n- Test replay determinism in CI\n- Idempotent projections for safe rebuilds\n- Snapshot long streams for performance\n- Use CDC (Debezium) to migrate legacy tables into events",
+  "display_name": "event-sourcing-event-sourcing",
+  "knowledge": [
+    {
+      "title": "EventStoreDB Documentation",
+      "type": "documentation",
+      "source": "https://developers.eventstore.com/",
+      "description": "Streams, projections, and HTTP API"
+    },
+    {
+      "title": "Debezium",
+      "type": "documentation",
+      "source": "https://debezium.io/documentation/",
+      "description": "CDC connectors producing events"
+    },
+    {
+      "title": "CQRS by Fowler",
+      "type": "documentation",
+      "source": "https://martinfowler.com/bliki/CQRS.html",
+      "description": "CQRS concept reference"
+    }
+  ],
+  "id": "event-sourcing-event-sourcing",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "event-store-operations",
+        "name": "stream",
+        "type": "string",
+        "description": "Stream name"
+      },
+      {
+        "capability": "event-store-operations",
+        "name": "event",
+        "type": "string",
+        "description": "Event type"
+      },
+      {
+        "capability": "kafka-event-pipeline",
+        "name": "topic",
+        "type": "string",
+        "description": "Event topic name"
+      },
+      {
+        "capability": "kafka-event-pipeline",
+        "name": "group",
+        "type": "string",
+        "description": "Consumer group for replay"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "typescript",
+    "postgresql",
+    "redis"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "event-sourcing/skill/event-sourcing.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/event-sourcing/skill/event-sourcing.yaml",
+    "checksum": "6b9d1cdd457d0a38e9071bc36c5695ff17142d7c76abc8e204d0e8da4831e57a"
+  }
+}

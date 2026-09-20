@@ -1,0 +1,185 @@
+{
+  "name": "replication",
+  "display_name": "Replication",
+  "category": "database",
+  "subcategory": "general",
+  "description": "Sets up and monitors database replication: PostgreSQL streaming, MySQL binlog, Redis replicas, and failover checks.",
+  "version": "2.0.0",
+  "tags": [
+    "database"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "mongosh",
+    "mysql",
+    "pg_basebackup",
+    "psql",
+    "redis-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "replication-setup",
+      "description": "Configure, monitor, and promote replication across database engines",
+      "commands": [
+        "psql -h primary -U replicator -c \"SELECT * FROM pg_stat_replication;\"",
+        "pg_basebackup -h primary -D /var/lib/postgresql/replica -R -U replicator",
+        "mysql -e \"SHOW SLAVE STATUS\\G\" | grep -E 'Slave_IO_Running|Slave_SQL_Running'",
+        "redis-cli INFO replication",
+        "mongosh --quiet --eval \"rs.status().members.forEach(m => print(m.name, m.stateStr))\""
+      ],
+      "examples": [
+        "psql -h replica -U app -c \"SELECT pg_is_in_recovery();\"",
+        "mysql -e \"START SLAVE;\"",
+        "redis-cli -p 6380 SLAVEOF 10.0.0.5 6379"
+      ],
+      "parameters": [
+        {
+          "name": "host",
+          "type": "string",
+          "description": "Primary or replica host to connect to"
+        },
+        {
+          "name": "user",
+          "type": "string",
+          "description": "Replication user for basebackup/queries"
+        },
+        {
+          "name": "method",
+          "type": "string",
+          "description": "Basebackup method: -R creates standby.signal and config"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "PostgreSQL streaming replication",
+      "type": "documentation",
+      "source": "https://www.postgresql.org/docs/current/warm-standby.html",
+      "description": "Standby setup, WAL shipping, and promotion"
+    },
+    {
+      "title": "MySQL replication docs",
+      "type": "documentation",
+      "source": "https://dev.mysql.com/doc/refman/8.0/en/replication.html",
+      "description": "Binlog-based replication and failover"
+    },
+    {
+      "title": "Redis replication docs",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/operate/oss_and_stack/management/replication/",
+      "description": "Replica setup and failover with sentinel"
+    }
+  ],
+  "instructions": "# Replication\n\nConfigures and verifies database replication so standby systems stay current for\nHA and read scaling.\n\n## When to Use\n\n- Adding a read replica for scale-out\n- Setting up warm standbys for failover\n- Verifying replication health after changes\n\n## Real Commands\n\n```bash\n# PostgreSQL: create replica from base backup\nsudo pg_basebackup -h primary -D /var/lib/postgresql/16/replica -R -U replicator\n\n# Verify replica is catching up\npsql -h replica -U app -c \"SELECT pg_is_in_recovery();\"\npsql -h primary -U postgres -c \"SELECT client_addr, state, replay_lag FROM pg_stat_replication;\"\n\n# Promote on failover\nsudo pg_ctlcluster 16 replica promote\n\n# MySQL: check replication\nmysql -e \"SHOW SLAVE STATUS\\G\" | grep -E 'Slave_IO_Running|Slave_SQL_Running|Seconds_Behind_Master'\n\n# Redis: info and promote\nredis-cli INFO replication\nredis-cli -p 6380 SLAVEOF NO ONE\n\n# MongoDB replica set status\nsudo mongosh --quiet --eval \"rs.status().members.forEach(m => print(m.name, m.stateStr))\"\n```\n\n## Health Checklist\n\n- PostgreSQL: `state = streaming`, `replay_lag` small, `pg_is_in_recovery()` true\n- MySQL: `Slave_IO_Running: Yes`, `Slave_SQL_Running: Yes`, low lag\n- Redis: `role:slave`, `master_link_status:up`\n- MongoDB: `SECONDARY` with no stale votes\n\n## Best Practices\n\n- Test promotion in staging; never first-learn it in an outage\n- Alert on lag, not just connectivity\n- Use synchronous replication for zero-loss workloads\n- Monitor replication slots / binlog retention\n- Document the failover runbook\n\n## Example Response\n\nReports replication state per engine, lag values, and any stopped/catching-up\nstates, then executes the promotion or re-sync steps needed.",
+  "examples": [
+    {
+      "input": "Add a read replica to Postgres",
+      "output": "Runs pg_basebackup -R, verifies pg_is_in_recovery and replay_lag, and adds monitoring"
+    },
+    {
+      "input": "Replication stopped on MySQL",
+      "output": "Checks SHOW SLAVE STATUS, identifies the failing thread, and runs START SLAVE or re-syncs from the master"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "replication.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-replication"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Replication. You do it through replication-setup: Configure, monitor, and promote replication across database engines. The commands are real, e.g. `psql -h primary -U replicator -c SELECT * FROM pg_stat_replication;`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "replication",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "replication-setup",
+        "name": "host",
+        "type": "string",
+        "description": "Primary or replica host to connect to"
+      },
+      {
+        "capability": "replication-setup",
+        "name": "user",
+        "type": "string",
+        "description": "Replication user for basebackup/queries"
+      },
+      {
+        "capability": "replication-setup",
+        "name": "method",
+        "type": "string",
+        "description": "Basebackup method: -R creates standby.signal and config"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "mongosh",
+    "mysql",
+    "pg_basebackup",
+    "psql",
+    "redis-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/replication-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/replication-skill.yaml",
+    "checksum": "2539a78bd47fde68a09b35ecb1ac60cf2cac387b9ba5ca17426689610b08c25c"
+  }
+}

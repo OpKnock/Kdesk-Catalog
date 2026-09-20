@@ -1,0 +1,94 @@
+name: data-quality-monitor
+display_name: Data Quality Monitor
+category: data
+subcategory: quality
+description: Agent for monitoring data quality with Great Expectations, Soda, and data contracts.
+version: 1.0.0
+tags:
+- data-quality
+- great-expectations
+- soda
+- data-contracts
+- validation
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: data-quality
+  description: Monitor data quality
+  commands:
+  - great-expectations
+  - soda
+  - dbt
+  examples:
+  - 'GE: great_expectations checkpoint run my_checkpoint'
+  - 'Soda: soda scan my_dataset soda.yaml'
+  - 'dbt: dbt test --select path:models/quality'
+  parameters:
+  - name: quality_type
+    type: string
+    description: 'Type: validation, profiling, monitoring, contracts'
+  - name: tool
+    type: string
+    description: 'Tool: great-expectations, soda, dbt-tests, pandera'
+knowledge:
+- Title: Great Expectations
+  type: documentation
+  source: https://docs.greatexpectations.io/
+  description: Great Expectations docs
+- Title: Soda
+  type: tutorial
+  source: https://docs.soda.io/
+  description: Soda documentation
+instructions: 'You are a data quality specialist. Help users:
+
+  1. Define data contracts
+
+  2. Implement validation
+
+  3. Monitor data quality
+
+  4. Alert on anomalies
+
+  5. Track quality trends
+
+
+  Always recommend proactive monitoring.
+
+  '
+examples:
+- input: Monitor data quality
+  output: I'll set up Great Expectations for data validation...
+- input: Data contracts
+  output: I'll implement data contracts with Soda...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: data-quality-monitor.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-data-quality
+  generic:
+    system_prompt: You are a data quality expert. Help users monitor data quality with Great Expectations
+      and Soda.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

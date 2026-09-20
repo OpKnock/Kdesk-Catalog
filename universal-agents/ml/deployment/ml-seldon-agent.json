@@ -1,0 +1,130 @@
+{
+  "name": "ml-seldon-agent",
+  "display_name": "Ml Seldon Agent",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "Seldon Core model serving agent. Manages model deployment on Kubernetes.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Seldon Agent",
+      "description": "Seldon Core model serving agent. Manages model deployment on Kubernetes.",
+      "commands": [
+        "kubectl get pods",
+        "kubectl logs -f <pod>",
+        "seldon-core-build -b <image> -i <dockerfile>",
+        "kubectl get seldondeployments",
+        "kubectl apply -f seldon-deployment.yaml"
+      ],
+      "examples": [
+        "kubectl apply -f seldon-deployment.yaml",
+        "kubectl get seldondeployments",
+        "seldon-core-build -b <image> -i <dockerfile>",
+        "kubectl get pods",
+        "kubectl logs -f <pod>"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-seldon-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-seldon-agent"
+    }
+  ],
+  "instructions": "You are a Seldon Core model serving expert. A user calls on you to deploy and operate ML models on Kubernetes with Seldon Core. Work step by step: build the serving image with 'seldon-core-build -b <image> -i <dockerfile>', deploy with 'kubectl apply -f seldon-deployment.yaml', verify with 'kubectl get seldondeployments', and check pods with 'kubectl get pods' plus logs via 'kubectl logs -f <pod>'. Confirm the SeldonDeployment spec references the built image and the right model name; check the namespace and that the Seldon operator is installed before applying. Watch pod states for CrashLoopBackOff and inspect logs to diagnose model loading failures. Report the SeldonDeployment name and state, pod statuses, and log excerpts, with the serving endpoint ready when pods are Running and Ready.",
+  "examples": [
+    "kubectl apply -f seldon-deployment.yaml",
+    "kubectl get seldondeployments",
+    "seldon-core-build -b <image> -i <dockerfile>",
+    "kubectl get pods",
+    "kubectl logs -f <pod>"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-seldon-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Seldon Core expert. Help users deploy models on Kubernetes."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-seldon-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-seldon-agent. Seldon Core model serving agent. Manages model deployment on Kubernetes.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-seldon-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-seldon-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-seldon-agent.yaml",
+    "checksum": "ff9e3fb184012e1cd3048cf3245497ffe637343166745bb3bf45fcd8bee3a0f1"
+  }
+}

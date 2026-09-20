@@ -1,0 +1,196 @@
+{
+  "name": "github-copilot",
+  "display_name": "Github Copilot",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Uses GitHub Copilot in the terminal: suggest and explain commands with gh copilot, manage auth, and configure Copilot extensions.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "copilot-cli",
+      "description": "Get command suggestions and explanations from the Copilot CLI.",
+      "commands": [
+        "gh copilot suggest 'Deploy to production'",
+        "gh copilot explain 'git reset --hard HEAD~2'",
+        "gh copilot suggest --target git 'rebase 3 commits'",
+        "gh copilot explain 'kubectl drain node1 --ignore-daemonsets'",
+        "gh copilot prompts list"
+      ],
+      "examples": [
+        "gh copilot suggest 'Find large files in git history'",
+        "gh copilot explain 'ssh -L 8080:localhost:80 prod'",
+        "gh copilot suggest --target gh 'list open PRs'"
+      ],
+      "parameters": [
+        {
+          "name": "target",
+          "type": "string",
+          "description": "Command target: git, gh, shell"
+        },
+        {
+          "name": "prompt",
+          "type": "string",
+          "description": "Natural language request"
+        }
+      ]
+    },
+    {
+      "name": "auth-and-config",
+      "description": "Authenticate and configure the Copilot CLI.",
+      "commands": [
+        "gh auth login",
+        "gh auth status",
+        "gh copilot config",
+        "gh auth refresh -s read:copilot",
+        "gh extension list",
+        "gh copilot version"
+      ],
+      "examples": [
+        "gh auth login",
+        "gh copilot config",
+        "gh auth refresh -s read:copilot"
+      ],
+      "parameters": [
+        {
+          "name": "scopes",
+          "type": "string",
+          "description": "OAuth scopes to refresh, e.g. read:copilot"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "description": "Copilot model preference for gh copilot config"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "GitHub Copilot CLI Docs",
+      "type": "documentation",
+      "source": "https://docs.github.com/en/copilot/using-github-copilot/using-github-copilot-cli",
+      "description": "Copilot CLI setup, suggest/explain usage, and targets"
+    },
+    {
+      "title": "gh-copilot Extension",
+      "type": "documentation",
+      "source": "https://github.com/github/gh-copilot",
+      "description": "Extension source and configuration options"
+    }
+  ],
+  "instructions": "# GitHub Copilot CLI\n\nGet shell command suggestions and explanations from Copilot inside the terminal.\n\n## What This Skill Does\n\n- Suggests shell/git/gh commands from natural language\n- Explains complex commands step by step\n- Works with a targets: shell, git, gh\n- Manages GitHub auth for Copilot access\n- Configures model and output preferences\n\n## When to Use\n\n- Unsure how to accomplish a shell task\n- Deciphering cryptic commands found in docs\n- Quick command generation without leaving the terminal\n\n## Real Commands\n\n```bash\n# Auth (first time)\ngh auth login\ngh auth status\ngh auth refresh -s read:copilot\n\n# Suggest\ngh copilot suggest 'Deploy to production'\ngh copilot suggest --target git 'squash last 3 commits'\ngh copilot suggest --target gh 'list open PRs assigned to me'\ngh copilot suggest --target shell 'find files larger than 100MB'\n\n# Explain\ngh copilot explain 'git reset --hard HEAD~2'\ngh copilot explain 'kubectl drain node1 --ignore-daemonsets'\ngh copilot explain 'rsync -avz --delete src/ dest/'\n\n# Config\ngh copilot config\ngh copilot prompts list\ngh copilot version\n```\n\n## Best Practices\n\n- Always read the suggested command before running it\n- Combine suggest + explain to learn unfamiliar tooling\n- Keep gh updated; Copilot CLI ships with the gh extension\n- Use --target to constrain scope (git vs shell)\n- Review outputs; Copilot suggestions may need adjustments",
+  "examples": [
+    {
+      "input": "What command moves the last 3 commits to a new branch?",
+      "output": "Agent uses gh copilot suggest --target git to produce the branch + reset sequence"
+    },
+    {
+      "input": "Explain this scary kubectl drain command",
+      "output": "Agent runs gh copilot explain and walks through each flag's effect"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "github-copilot.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-github-copilot"
+    },
+    "generic": {
+      "system_prompt": "You work Github Copilot hands-on. You do it through copilot-cli: Get command suggestions and explanations from the Copilot CLI. The commands are real, e.g. `gh copilot suggest Deploy to production`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "github-copilot",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "copilot-cli",
+        "name": "target",
+        "type": "string",
+        "description": "Command target: git, gh, shell"
+      },
+      {
+        "capability": "copilot-cli",
+        "name": "prompt",
+        "type": "string",
+        "description": "Natural language request"
+      },
+      {
+        "capability": "auth-and-config",
+        "name": "scopes",
+        "type": "string",
+        "description": "OAuth scopes to refresh, e.g. read:copilot"
+      },
+      {
+        "capability": "auth-and-config",
+        "name": "model",
+        "type": "string",
+        "description": "Copilot model preference for gh copilot config"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/github-copilot-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/github-copilot-skill.yaml",
+    "checksum": "bada15924496c2aaea7d81edf8d37c342edabb2e2858397044e313e84124790d"
+  }
+}

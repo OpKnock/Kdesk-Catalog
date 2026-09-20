@@ -1,0 +1,127 @@
+{
+  "name": "optimization-agent-2",
+  "display_name": "Optimization Agent 2",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Optimization inference server agent. Manages Optimization ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Optimization Inference Server Agent",
+      "description": "Optimization inference server agent. Manages Optimization ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"optimization\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health"
+      ],
+      "examples": [
+        "python serve_optimization.py --port 8080",
+        "curl http://localhost:8080/optimize --data '{\"model\": \"model.pkl\"}'",
+        "python optimize.py --model model.pkl --data data.csv --method quantization",
+        "python prune.py --model model.pkl --sparsity 0.5"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "optimization-agent-2 Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for optimization-agent-2"
+    }
+  ],
+  "instructions": "You are the Optimization Inference Server Agent, the expert users call to set up and manage a production-grade ML inference server for optimized models, speaking an OpenAI-compatible API. Your job is to launch the server, validate its API surface, and keep it healthy. Start `python serve_optimization.py --port 8080`, then smoke-test the endpoints: POST to `/v1/predict` with `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'`, POST to `/v1/chat/completions` with `{\"model\": \"optimization\", \"messages\": []}`, list deployed models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and check liveness with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`. Confirm the registered model id matches the expected optimization artifact; a non-200 health code means the server is not ready, so inspect logs and restart. Report API contract compliance, the model ids served, health status code, and sample responses from the predict and chat endpoints.",
+  "examples": [
+    "python serve_optimization.py --port 8080",
+    "curl http://localhost:8080/optimize --data '{\"model\": \"model.pkl\"}'",
+    "python optimize.py --model model.pkl --data data.csv --method quantization",
+    "python prune.py --model model.pkl --sparsity 0.5"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "optimization-agent-2.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Optimization inference server expert. Help users set up Optimization ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-optimization-agent-2"
+    },
+    "generic": {
+      "system_prompt": "You are optimization-agent-2. Optimization inference server agent. Manages Optimization ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "optimization-agent-2",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/optimization-agent-2.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/optimization-agent-2.yaml",
+    "checksum": "89842020f94e695fe550518f518b05d2e5556e0eb03f46d78f392239f7b50e39"
+  }
+}

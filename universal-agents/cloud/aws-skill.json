@@ -1,0 +1,247 @@
+{
+  "name": "aws",
+  "display_name": "aws",
+  "category": "cloud",
+  "subcategory": "general",
+  "description": "Operates AWS services with the AWS CLI: EC2, S3, IAM, Lambda, EKS, and CloudWatch across accounts and regions.",
+  "version": "2.0.0",
+  "tags": [
+    "cloud"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "aws",
+    "kubectl"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "aws s3 ls",
+        "aws s3 cp file.txt s3://my-bucket/",
+        "aws ec2 describe-instances --query \"Reservations[*].Instances[*].[InstanceId,State.Name]\"",
+        "aws ec2 describe-regions",
+        "aws sts get-caller-identity"
+      ],
+      "description": "Manage core AWS resources from the CLI.",
+      "name": "aws-core",
+      "examples": [
+        "aws s3 sync ./dist s3://my-bucket/ --delete",
+        "aws ec2 describe-instances --filters Name=instance-state-name,Values=running --query \"Reservations[*].Instances[*].PublicIpAddress\"",
+        "aws iam list-users --output table"
+      ],
+      "parameters": [
+        {
+          "description": "AWS region",
+          "name": "region",
+          "type": "string"
+        },
+        {
+          "description": "Named profile",
+          "name": "profile",
+          "type": "string"
+        },
+        {
+          "description": "JMESPath query",
+          "name": "query",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "aws lambda list-functions --region us-east-1",
+        "aws lambda invoke --function-name myfunc --payload \"{}\" out.json",
+        "aws lambda update-function-code --function-name myfunc --zip-file fileb://func.zip",
+        "aws logs tail /aws/lambda/myfunc",
+        "aws logs describe-log-groups"
+      ],
+      "description": "Deploy and manage Lambda functions.",
+      "name": "aws-serverless",
+      "examples": [
+        "aws lambda invoke --cli-binary-format raw-in-base64-out --function-name myfunc --payload \"{\\\"key\\\":\\\"v\\\"}\" out.json",
+        "aws logs tail /aws/lambda/myfunc --follow",
+        "aws lambda get-function-configuration --function-name myfunc"
+      ],
+      "parameters": [
+        {
+          "description": "Lambda function name",
+          "name": "function",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "description": "AWS region"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "aws eks update-kubeconfig --name my-cluster --region us-east-1",
+        "aws eks list-clusters",
+        "aws eks describe-cluster --name my-cluster --query \"cluster.status\"",
+        "kubectl get nodes"
+      ],
+      "description": "Manage EKS clusters and kubeconfigs.",
+      "name": "aws-kubernetes",
+      "examples": [
+        "aws eks update-kubeconfig --name my-cluster --alias prod",
+        "aws eks list-nodegroups --cluster-name my-cluster"
+      ],
+      "parameters": [
+        {
+          "description": "EKS cluster name",
+          "name": "cluster",
+          "type": "string"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "description": "AWS region"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "AWS CLI Reference",
+      "description": "Full CLI command reference",
+      "source": "https://awscli.amazonaws.com/v2/documentation/api/latest/index.html",
+      "type": "documentation"
+    },
+    {
+      "title": "AWS SDK and Tools",
+      "description": "CLI user guide and configuration",
+      "source": "https://docs.aws.amazon.com/cli/latest/userguide/",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# AWS\n\nOperate AWS with the official CLI.\n\n## When to Use\n\n- Managing S3, EC2, Lambda, EKS, and IAM\n- Deploying and debugging serverless functions\n- Cluster access for EKS\n- Automation and scripted infrastructure checks\n\n## Configuration\n\n```bash\naws configure\naws configure --profile prod\nexport AWS_PROFILE=prod\naws sts get-caller-identity\n```\n\n## Commands\n\n```bash\n# S3\naws s3 ls\naws s3 cp file.txt s3://my-bucket/\naws s3 sync ./dist s3://my-bucket/ --delete\n\n# EC2\naws ec2 describe-instances --query \"Reservations[*].Instances[*].[InstanceId,State.Name]\"\naws ec2 describe-instances --filters Name=instance-state-name,Values=running\n\n# Lambda\naws lambda list-functions\naws lambda invoke --function-name myfunc --payload \"{}\" out.json\naws lambda update-function-code --function-name myfunc --zip-file fileb://func.zip\naws logs tail /aws/lambda/myfunc --follow\n\n# EKS\naws eks update-kubeconfig --name my-cluster --region us-east-1\naws eks list-clusters\nkubectl get nodes\n```\n\n## Best Practices\n\n- Use named profiles and never hardcode credentials\n- Prefer IAM roles over long-lived keys (instance profiles, OIDC)\n- Add --query and --output table for readable scripts\n- Pin the CLI version in CI and test with --dryrun\n- Enable CloudTrail to audit CLI and SDK actions\n- Always scope S3 policies and IAM policies to least privilege",
+  "examples": [
+    {
+      "input": "Upload a build to S3 for static hosting",
+      "output": "Agent runs aws s3 sync ./dist s3://bucket/ --delete and confirms the public URL and cache headers."
+    },
+    {
+      "input": "Why can I not reach my EKS cluster?",
+      "output": "Agent re-runs aws eks update-kubeconfig, checks sts identity, and validates IAM principal with the cluster config map."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "aws.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-aws"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: aws. You do it through aws-core: Manage core AWS resources from the CLI. The commands are real, e.g. `aws s3 ls`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "aws",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "aws-core",
+        "name": "region",
+        "type": "string",
+        "description": "AWS region"
+      },
+      {
+        "capability": "aws-core",
+        "name": "profile",
+        "type": "string",
+        "description": "Named profile"
+      },
+      {
+        "capability": "aws-core",
+        "name": "query",
+        "type": "string",
+        "description": "JMESPath query"
+      },
+      {
+        "capability": "aws-serverless",
+        "name": "function",
+        "type": "string",
+        "description": "Lambda function name"
+      },
+      {
+        "capability": "aws-serverless",
+        "name": "region",
+        "type": "string",
+        "description": "AWS region"
+      },
+      {
+        "capability": "aws-kubernetes",
+        "name": "cluster",
+        "type": "string",
+        "description": "EKS cluster name"
+      },
+      {
+        "capability": "aws-kubernetes",
+        "name": "region",
+        "type": "string",
+        "description": "AWS region"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "aws",
+    "kubectl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/aws-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/aws-skill.yaml",
+    "checksum": "d74508a217b535cbd623c6dc6ac74e24e8364088304863e285a0df104ba04aed"
+  }
+}

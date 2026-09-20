@@ -1,0 +1,109 @@
+name: api-test-artillery-scenarios
+version: 2.0.0
+type: skill
+category: testing
+description: 'Runs performance and soak tests with Artillery: YAML scenarios, ramp loads, response time
+  assertions, and HTML/JSON reports.'
+keywords:
+- api-test-artillery-scenarios
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-test-artillery-scenarios.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-test-artillery-scenarios
+  generic:
+    system_prompt: 'You work Api Test Artillery Scenarios hands-on. You do it through artillery-scenarios:
+      Define and run load test scenarios. The commands are real, e.g. `npx artillery run config.yml`.
+      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: artillery-scenarios
+  description: Define and run load test scenarios
+  commands:
+  - npx artillery run config.yml
+  - npx artillery quick --count 50 --num 20 https://api.example.com/users
+  - npx artillery run --output report.json config.yml
+  - npx artillery run --environment staging config.yml
+  - npx artillery report report.json
+  examples:
+  - artillery quick runs ad-hoc load
+  - --output exports JSON results
+  - artillery report generates an HTML dashboard
+  parameters:
+  - name: config
+    type: string
+    description: YAML test config
+  - name: environment
+    type: string
+    description: Environment profile
+  - name: output
+    type: string
+    description: Results file
+- name: ramp-scenarios
+  description: Ramp virtual users over time
+  commands:
+  - npx artillery run --record --key $ARTILLERY_KEY soak.yml
+  - npx artillery run soak.yml
+  - curl -s -o /dev/null -w '%{http_code} %{time_total}s\n' https://api.example.com/health
+  examples: []
+  parameters: []
+prerequisites:
+- jest
+- pytest
+- postman
+tools:
+- jest
+- pytest
+- postman
+- newman
+- supertest
+examples:
+- input: Soak test the API for an hour
+  output: Writes a soak config and runs artillery with JSON output
+- input: Quick load check
+  output: Uses artillery quick at 20 concurrent requests
+instructions: "# API Test v4 - Performance Tests\n\nPerformance testing with Artillery.\n\n## What This\
+  \ Skill Does\n- Simulates user flows under load\n- Ramps and soaks traffic\n- Asserts latency thresholds\n\
+  \n## When to Use\n- Release performance validation\n- Soak testing memory leaks\n- Capacity estimation\n\
+  \n## Real Commands\n\n```bash\nnpx artillery quick --count 50 --num 20 https://api.example.com/users\n\
+  npx artillery run config.yml\nnpx artillery run --output report.json config.yml\nnpx artillery report\
+  \ report.json\n```\n\n## Scenario Example\n\n```yaml\nconfig:\n  target: https://api.example.com\n \
+  \ phases:\n    - duration: 60\n      arrivalRate: 10\n      rampTo: 50\nscenarios:\n  - flow:\n    \
+  \  - get:\n          url: /api/users\n      - think: 1\n```\n\n## Testing\n- Run ramp and soak phases\n\
+  - Assert p95 thresholds\n- Export and compare reports\n\n\n## Best Practices\n- Separate soak from spike\
+  \ scenarios\n- Monitor server metrics during runs\n- Randomize data per iteration"
+display_name: Api Test Artillery Scenarios
+knowledge:
+- title: Artillery Docs
+  type: documentation
+  source: https://www.artillery.io/docs
+  description: Load testing with Artillery
+- title: Artillery YAML Reference
+  type: documentation
+  source: https://www.artillery.io/docs/reference/test-script
+  description: Test script configuration

@@ -1,0 +1,194 @@
+name: azure-monitor-logs
+display_name: Azure Monitor Logs
+category: api
+subcategory: general
+description: 'Queries and manages Azure Monitor Logs (Log Analytics): workspaces, KQL queries, diagnostic
+  settings, and log ingestion.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: workspaces
+  description: Create and manage Log Analytics workspaces.
+  commands:
+  - az monitor log-analytics workspace create -g rg -n myworkspace
+  - az monitor log-analytics workspace list
+  - az monitor log-analytics workspace show -g rg -n myworkspace --query 'customerId' -o tsv
+  - az monitor log-analytics workspace delete -g rg -n myworkspace --yes
+  - az monitor log-analytics workspace update -g rg -n myworkspace --retention-time 90
+  examples:
+  - az monitor log-analytics workspace create -g rg -n myworkspace --sku PerGB2018
+  - az monitor log-analytics workspace show -g rg -n myworkspace --query 'id' -o tsv
+  - az monitor log-analytics workspace update -g rg -n myworkspace --retention-time 180
+  parameters:
+  - name: workspace_name
+    type: string
+    description: Workspace name
+  - name: retention
+    type: number
+    description: Retention in days
+- name: kql-queries
+  description: Run Kusto queries against workspaces.
+  commands:
+  - az monitor log-analytics query -w <workspace-id> --analytics-query "AzureDiagnostics | where OperationName
+    contains 'error' | take 10"
+  - az monitor log-analytics query -w <workspace-id> --analytics-query "AppRequests | where Success ==
+    false | summarize count() by bin(TimeGenerated, 1h)"
+  - az monitor log-analytics query -w <workspace-id> --analytics-query "AzureActivity | where OperationName
+    == 'Microsoft.Compute/virtualMachines/write' | take 20"
+  - az monitor log-analytics query -w <workspace-id> --analytics-query "Heartbeat | summarize count()
+    by Computer"
+  examples:
+  - az monitor log-analytics query -w <workspace-id> --analytics-query "AppRequests | where ResultCode
+    == 500 | summarize count() by bin(TimeGenerated, 1h) | order by TimeGenerated desc"
+  - az monitor log-analytics query -w <workspace-id> --analytics-query "AzureDiagnostics | where Category
+    == 'AuditLogs' | take 5"
+  - az monitor log-analytics query -w <workspace-id> --analytics-query "AppExceptions | project TimeGenerated,
+    Message | take 20"
+  parameters:
+  - name: workspace_id
+    type: string
+    description: Workspace customerId/ID
+  - name: query
+    type: string
+    description: KQL query text
+- name: diagnostic-settings
+  description: Route resource logs to workspaces.
+  commands:
+  - az monitor diagnostic-settings create --resource <resource-id> --workspace <workspace-id> --logs '[{"category":"AuditLogs","enabled":true}]'
+  - az monitor diagnostic-settings list --resource <resource-id>
+  - az monitor diagnostic-settings update --resource <resource-id> --name settings --logs '[{"category":"AuditLogs","enabled":false}]'
+  - az monitor diagnostic-settings delete --resource <resource-id> --name settings
+  examples:
+  - az monitor diagnostic-settings create --resource /subscriptions/<sub>/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/mykv
+    --workspace <ws-id> --logs '[{"category":"AuditEvent","enabled":true}]'
+  - az monitor diagnostic-settings list --resource <resource-id> --query '[].{name:name,workspaceId:workspaceId}'
+    -o table
+  - az monitor diagnostic-settings create --resource <api-id> --workspace <ws-id> --metrics '[{"category":"AllMetrics","enabled":true}]'
+  parameters:
+  - name: resource_id
+    type: string
+    description: Azure resource ID
+  - name: categories
+    type: string
+    description: Log categories JSON
+knowledge:
+- title: Azure Monitor Logs Docs
+  type: documentation
+  source: https://learn.microsoft.com/en-us/azure/azure-monitor/logs/
+  description: Workspaces, KQL, ingestion
+- title: Kusto Query Language
+  type: documentation
+  source: https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/
+  description: KQL operators and functions
+- title: Azure CLI monitor Reference
+  type: documentation
+  source: https://learn.microsoft.com/en-us/cli/azure/monitor/log-analytics
+  description: az monitor log-analytics commands
+instructions: '# Azure Monitor Logs
+
+
+  ## What this skill does
+
+
+  Queries and manages Azure Monitor Logs (Log Analytics): workspace lifecycle, Kusto (KQL) queries for
+  diagnostics and app logs, and diagnostic settings to route resource logs.
+
+
+  ## When to use
+
+
+  - Investigating 500s across an app with AppRequests/AppExceptions
+
+  - Auditing activity via AzureActivity queries
+
+  - Enabling log collection for a resource
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Create a workspace
+
+  az monitor log-analytics workspace create -g rg -n myworkspace
+
+
+  # Query app errors
+
+  az monitor log-analytics query -w <workspace-id> --analytics-query "AppRequests | where Success == false
+  | summarize count() by bin(TimeGenerated, 1h)"
+
+
+  # Query activity log
+
+  az monitor log-analytics query -w <workspace-id> --analytics-query "AzureActivity | where OperationName
+  contains ''write'' | take 20"
+
+
+  # Enable diagnostics for Key Vault
+
+  az monitor diagnostic-settings create --resource <kv-id> --workspace <ws-id> --logs ''[{"category":"AuditEvent","enabled":true}]''
+
+  ```
+
+
+  ## Testing
+
+
+  - Run a small KQL query first, then expand filters
+
+  - Verify diagnostic settings with az monitor diagnostic-settings list
+
+
+  ## Best practices
+
+
+  - Set retention to match compliance needs
+
+  - Use summarize by bin(TimeGenerated, 1h) to reduce noise
+
+  - Send only required categories to control cost'
+examples:
+- input: How many 500s did our API return yesterday?
+  output: Runs a KQL query on AppRequests filtering ResultCode == 500 with bin(TimeGenerated, 1h) and
+    renders the hourly counts.
+- input: Enable Key Vault audit logging
+  output: Creates a diagnostic setting for AuditEvent category into the workspace and verifies with diagnostic-settings
+    list.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: azure-monitor-logs.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-azure-monitor-logs
+  generic:
+    system_prompt: 'This is your domain: Azure Monitor Logs. You do it through workspaces: Create and
+      manage Log Analytics workspaces. The commands are real, e.g. `az monitor log-analytics workspace
+      create -g rg -n myworkspace`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,209 @@
+{
+  "name": "golangci-lint",
+  "display_name": "Golangci Lint",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Runs aggregated Go linting with golangci-lint: dozens of linters, fast parallel runs, config, and CI integration.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "golangci-lint"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "golangci-lint run",
+        "golangci-lint run ./...",
+        "golangci-lint run --fix",
+        "golangci-lint run --enable-all --max-issues-per-linter 0",
+        "golangci-lint run --fast"
+      ],
+      "description": "Run golangci-lint with linter selection.",
+      "name": "golangci-run",
+      "examples": [
+        "golangci-lint run --timeout 5m ./...",
+        "golangci-lint run --new-from-rev HEAD~1",
+        "golangci-lint run --out-format github-actions"
+      ],
+      "parameters": [
+        {
+          "description": "Packages to lint",
+          "name": "paths",
+          "type": "string"
+        },
+        {
+          "description": "Apply fixes",
+          "name": "fix",
+          "type": "boolean"
+        },
+        {
+          "description": "colored-line-number, github-actions, json",
+          "name": "out-format",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "golangci-lint linters",
+        "golangci-lint version",
+        "golangci-lint run --print-resources-usage",
+        "golangci-lint cache clean"
+      ],
+      "description": "Manage linter configuration.",
+      "name": "golangci-config",
+      "examples": [
+        "golangci-lint linters | grep enabled",
+        "golangci-lint run --disable errcheck"
+      ],
+      "parameters": [
+        {
+          "description": "Linters to enable",
+          "name": "enable",
+          "type": "string"
+        },
+        {
+          "description": "Linters to disable",
+          "name": "disable",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "golangci-lint Docs",
+      "description": "Linters, config, and usage",
+      "source": "https://golangci-lint.run",
+      "type": "documentation"
+    },
+    {
+      "title": "golangci-lint on GitHub",
+      "description": "Install and release notes",
+      "source": "https://github.com/golangci/golangci-lint",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# golangci-lint\n\nFast aggregated Go linting.\n\n## When to Use\n\n- Enforcing multiple linters with one command\n- CI lint gates that stay fast\n- Catching style, bugs, and security issues together\n- Diff-only linting on PRs\n\n## Commands\n\n```bash\n# Install\ngo install github.com/golangci/golangci-lint/cmd/golangci-lint@latest\n\n# Run\ngolangci-lint run\ngolangci-lint run ./...\ngolangci-lint run --fix\n\n# Only new issues on a PR\ngolangci-lint run --new-from-rev HEAD~1\n\n# GitHub Actions output\ngolangci-lint run --out-format github-actions\n\n# Fast mode (skip slower linters)\ngolangci-lint run --fast\n\n# Inspect\ngolangci-lint linters\ngolangci-lint version\n```\n\n## Config Example\n\n```yaml\n# .golangci.yml\nrun:\n  timeout: 5m\nlinters:\n  enable:\n    - errcheck\n    - govet\n    - staticcheck\n    - gosec\n    - revive\nissues:\n  exclude-rules:\n    - path: _test\\.go\n      linters: [gosec]\n```\n\n## Best Practices\n\n- Enable errcheck, govet, staticcheck, gosec at minimum\n- Use --new-from-rev for PR-only findings\n- Cache builds; golangci-lint caches by default\n- Run --fix locally, verify-only in CI\n- Keep the config in the repo for consistent runs\n- Pin the golangci-lint version in CI",
+  "examples": [
+    {
+      "input": "Lint my Go service in CI",
+      "output": "Agent adds golangci-lint run --new-from-rev HEAD~1 with github-actions output and the repo config."
+    },
+    {
+      "input": "Too many findings from a new linter",
+      "output": "Agent disables the linter, files a follow-up, and re-runs golangci-lint run to confirm the gate is green."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "golangci-lint.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-golangci-lint"
+    },
+    "generic": {
+      "system_prompt": "You take the Golangci Lint seat. You do it through golangci-run: Run golangci-lint with linter selection. The commands are real, e.g. `golangci-lint run`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "golangci-lint",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "golangci-run",
+        "name": "paths",
+        "type": "string",
+        "description": "Packages to lint"
+      },
+      {
+        "capability": "golangci-run",
+        "name": "fix",
+        "type": "boolean",
+        "description": "Apply fixes"
+      },
+      {
+        "capability": "golangci-run",
+        "name": "out-format",
+        "type": "string",
+        "description": "colored-line-number, github-actions, json"
+      },
+      {
+        "capability": "golangci-config",
+        "name": "enable",
+        "type": "string",
+        "description": "Linters to enable"
+      },
+      {
+        "capability": "golangci-config",
+        "name": "disable",
+        "type": "string",
+        "description": "Linters to disable"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "golangci-lint"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/golangci-lint-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/golangci-lint-skill.yaml",
+    "checksum": "bcd4da6e77b8f523f0a903bb200d3b6a8f0c9aa9da708c19596af9671c234382"
+  }
+}

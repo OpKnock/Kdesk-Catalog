@@ -1,0 +1,212 @@
+{
+  "name": "api-cache-middleware-implementation",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "infrastructure",
+  "description": "Implements API caching end to end: HTTP caching headers, Express/FastAPI middleware, and Redis cache-aside.",
+  "keywords": [
+    "api-caching",
+    "http-caching",
+    "redis"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-cache-middleware-implementation.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-cache-middleware-implementation"
+    },
+    "generic": {
+      "system_prompt": "You take the Api Cache Middleware Implementation seat. You do it through middleware-implementation: Add caching middleware to Node and Python APIs. The commands are real, e.g. `npm install apicache`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "middleware-implementation",
+      "description": "Add caching middleware to Node and Python APIs",
+      "commands": [
+        "npm install apicache",
+        "npm install express-cache-middleware",
+        "pip install cachetools",
+        "pip install fastapi-cache2",
+        "npm install memory-cache"
+      ],
+      "examples": [
+        "npm install apicache && node -e \"const ac=require('apicache');const mw=ac.middleware('5 minutes');console.log(typeof mw)\"",
+        "pip install fastapi-cache2 && python -c \"from fastapi_cache import FastAPICache; print('ok')\"",
+        "npm install express-cache-middleware && node -e \"const C=require('express-cache-middleware');const c=new C();console.log(typeof c.attach)\""
+      ],
+      "parameters": [
+        {
+          "name": "ttl",
+          "type": "string",
+          "description": "Cache TTL string"
+        },
+        {
+          "name": "store",
+          "type": "string",
+          "description": "Backing store: memory or redis"
+        }
+      ]
+    },
+    {
+      "name": "redis-cache-aside",
+      "description": "Implement cache-aside with TTL and explicit invalidation on writes",
+      "commands": [
+        "redis-cli SET api:products:42 '{\"id\":42}' EX 300",
+        "redis-cli GET api:products:42",
+        "redis-cli TTL api:products:42",
+        "redis-cli DEL api:products:42",
+        "redis-cli EXISTS api:products:42"
+      ],
+      "examples": [
+        "redis-cli SET api:products:42 '{\"id\":42}' EX 300 && redis-cli TTL api:products:42",
+        "redis-cli GET api:products:42 || curl -s http://localhost:3000/api/products/42",
+        "redis-cli DEL api:products:42 && redis-cli EXISTS api:products:42"
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Cache key"
+        },
+        {
+          "name": "ttlSeconds",
+          "type": "string",
+          "description": "TTL in seconds"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "redis",
+    "node.js",
+    "python"
+  ],
+  "tools": [
+    "redis",
+    "node.js",
+    "python",
+    "varnish",
+    "express"
+  ],
+  "examples": [
+    {
+      "input": "Add HTTP caching to the products endpoint",
+      "output": "Adds Cache-Control/ETag headers plus apicache middleware with a 5-minute TTL"
+    },
+    {
+      "input": "Implement Redis caching for expensive queries",
+      "output": "Implements cache-aside with Redis keys, TTLs, and write-through invalidation"
+    }
+  ],
+  "instructions": "# API Cache (Implementation)\n\nImplements caching layers in the API stack with minimal code changes.\n\n## When to Use\n- Adding caching to an existing API quickly\n- Protecting the database from repeated reads\n- Getting HTTP caching right the first time\n\n## Real Commands\n\n```bash\n# Node caching\nnpm install apicache\nnode -e \"const ac=require('apicache');const mw=ac.middleware('5 minutes');console.log(typeof mw)\"\n\n# Python caching\npip install fastapi-cache2\n\n# Cache-aside store\nredis-cli SET api:products:42 '{\"id\":42}' EX 300\nredis-cli TTL api:products:42\nredis-cli DEL api:products:42\n```\n\n## Cache-aside Flow\n1. Check Redis: `redis-cli GET api:products:42`\n2. On miss, read DB, then `SET ... EX 300`\n3. On write, `DEL api:products:42`\n\n## Testing\nHit the endpoint twice and confirm the second read skips the DB (check query logs).\n\n## Best Practices\n- Start with 5-10 minute TTLs\n- Always set Cache-Control on responses\n- Never cache writes or 4xx responses",
+  "display_name": "Api Cache Middleware Implementation",
+  "knowledge": [
+    {
+      "title": "apicache",
+      "type": "documentation",
+      "source": "https://github.com/kwhitley/apicache",
+      "description": "Express caching middleware"
+    },
+    {
+      "title": "fastapi-cache2",
+      "type": "documentation",
+      "source": "https://github.com/long2ice/fastapi-cache",
+      "description": "Python FastAPI caching"
+    },
+    {
+      "title": "Redis Commands",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/commands/",
+      "description": "SET, GET, TTL, DEL reference"
+    }
+  ],
+  "id": "api-cache-middleware-implementation",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "middleware-implementation",
+        "name": "ttl",
+        "type": "string",
+        "description": "Cache TTL string"
+      },
+      {
+        "capability": "middleware-implementation",
+        "name": "store",
+        "type": "string",
+        "description": "Backing store: memory or redis"
+      },
+      {
+        "capability": "redis-cache-aside",
+        "name": "key",
+        "type": "string",
+        "description": "Cache key"
+      },
+      {
+        "capability": "redis-cache-aside",
+        "name": "ttlSeconds",
+        "type": "string",
+        "description": "TTL in seconds"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis",
+    "node.js",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-cache-middleware-implementation/skill/api-cache-middleware-implementation.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-cache-middleware-implementation/skill/api-cache-middleware-implementation.yaml",
+    "checksum": "bad63a0f07b5389ff064bed3526ec7114ebbd18c05e14d035053d82b93bdb42e"
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "name": "dynamodb-global-tables",
+  "display_name": "Dynamodb Global Tables",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Multi-region DynamoDB replication with Global Tables: create replication groups, add regions, and verify replica status and latency.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "aws"
+  ],
+  "capabilities": [
+    {
+      "name": "global-tables",
+      "description": "Create and manage DynamoDB global tables and their replication regions.",
+      "commands": [
+        "aws dynamodb create-global-table --global-table-name Orders --replication-group 'RegionNames=us-east-1,eu-west-1'",
+        "aws dynamodb update-global-table --global-table-name Orders --replication-group-updates '[{\"Create\":{\"RegionName\":\"ap-southeast-1\"}}]'",
+        "aws dynamodb describe-global-table --global-table-name Orders --region us-east-1",
+        "aws dynamodb describe-global-table-settings --global-table-name Orders --region eu-west-1",
+        "aws dynamodb list-global-tables"
+      ],
+      "examples": [
+        "aws dynamodb create-global-table --global-table-name Orders --replication-group 'RegionNames=us-east-1,eu-west-1'",
+        "aws dynamodb describe-global-table --global-table-name Orders | jq '.GlobalTableDescription.ReplicationGroup'",
+        "aws dynamodb update-global-table --global-table-name Orders --replication-group-updates '[{\"Create\":{\"RegionName\":\"ap-southeast-1\"}}]'"
+      ],
+      "parameters": [
+        {
+          "name": "table-name",
+          "type": "string",
+          "description": "Name of the DynamoDB table to replicate globally"
+        },
+        {
+          "name": "regions",
+          "type": "array",
+          "description": "List of AWS regions for the replication group"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "description": "Region to run describe/update commands against"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "DynamoDB Global Tables Docs",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GlobalTables.html",
+      "description": "How global tables replicate writes across regions, multi-region strong consistency, and replication settings"
+    }
+  ],
+  "instructions": "# DynamoDB Global Tables\n\n## What this skill does\n\nGlobal Tables replicate DynamoDB tables across AWS regions with multi-region read/write access. Writes are propagated within seconds; the service handles conflict resolution with last-writer-wins.\n\n## When to use\n\n- Serving users from multiple regions with low write latency\n- Building disaster recovery that survives a region failure\n- Migrating an existing single-region table to multi-region\n\n## Real commands\n\n```bash\n# Create a global table (all regions must already have an identical replica)\naws dynamodb create-global-table --global-table-name Orders --replication-group 'RegionNames=us-east-1,eu-west-1'\n\n# Add a region to an existing global table\naws dynamodb update-global-table --global-table-name Orders --replication-group-updates '[{\"Create\":{\"RegionName\":\"ap-southeast-1\"}}]'\n\n# Inspect replication status\naws dynamodb describe-global-table --global-table-name Orders | jq '.GlobalTableDescription.ReplicationGroup'\n\n# Replication settings per region\naws dynamodb describe-global-table-settings --global-table-name Orders --region eu-west-1\n```\n\n## Prerequisites checklist\n\n- Each region must already have the table with the same name, key schema, and point-in-time recovery.\n- Both tables must have streams enabled or not, consistently.\n- The replica tables must not have any pre-existing data differences for the feature to work cleanly.\n\n## Testing\n\n```bash\n# Write in one region, read in another\naws dynamodb put-item --table-name Orders --item '{\"orderId\":{\"S\":\"o-1\"}}' --region us-east-1\nsleep 5\naws dynamodb get-item --table-name Orders --key '{\"orderId\":{\"S\":\"o-1\"}}' --region eu-west-1\n```\n\n## Best practices\n\n- Enable point-in-time recovery on every replica before creating the global table.\n- Set `ReplicationStatus` monitoring via describe-global-table to catch stuck replicas.\n- Use `--query` filters on large replication groups instead of parsing full JSON.\n- Remember DDL (create-global-table) is free; ongoing replication costs per region for writes.\n",
+  "examples": [
+    {
+      "input": "Replicate Orders to two regions",
+      "output": "Create identical tables in us-east-1 and eu-west-1, then aws dynamodb create-global-table --global-table-name Orders --replication-group 'RegionNames=us-east-1,eu-west-1' and verify status."
+    },
+    {
+      "input": "Add Singapore to the replication group",
+      "output": "Create the replica table in ap-southeast-1 with the same schema, then run update-global-table with {\"Create\":{\"RegionName\":\"ap-southeast-1\"}}."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "dynamodb-global-tables.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-dynamodb-global-tables"
+    },
+    "generic": {
+      "system_prompt": "You take the Dynamodb Global Tables seat. You do it through global-tables: Create and manage DynamoDB global tables and their replication regions. The commands are real, e.g. `aws dynamodb create-global-table --global-table-name Orders --replication-group...`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "dynamodb-global-tables",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "global-tables",
+        "name": "table-name",
+        "type": "string",
+        "description": "Name of the DynamoDB table to replicate globally"
+      },
+      {
+        "capability": "global-tables",
+        "name": "regions",
+        "type": "array",
+        "description": "List of AWS regions for the replication group"
+      },
+      {
+        "capability": "global-tables",
+        "name": "region",
+        "type": "string",
+        "description": "Region to run describe/update commands against"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "aws"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/dynamodb-global-tables-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/dynamodb-global-tables-skill.yaml",
+    "checksum": "27aa2241555d49dbca94a2cbd1c1eb735cc3aafe621be450a5c9c04d4b327372"
+  }
+}

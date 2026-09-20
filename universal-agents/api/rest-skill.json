@@ -1,0 +1,166 @@
+{
+  "name": "rest",
+  "display_name": "Rest",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted core REST skill: resource modeling, curl CRUD flows, status code semantics, and JSON handling with jq for daily API work.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "rest-crud",
+      "description": "Execute and debug REST CRUD flows with curl and jq",
+      "commands": [
+        "curl -s -X POST https://api.example.com/v1/orders -H 'Content-Type: application/json' -d '{\"customer\":7,\"total\":199}'",
+        "curl -s -X PUT https://api.example.com/v1/orders/7 -H 'Content-Type: application/json' -d '{\"status\":\"shipped\"}'",
+        "curl -s https://api.example.com/v1/orders/7 | jq '.total'",
+        "curl -s -o /dev/null -w '%{http_code}\\n' -X DELETE https://api.example.com/v1/orders/7",
+        "curl -i https://api.example.com/v1/orders?page=2"
+      ],
+      "examples": [
+        "curl -s https://api.example.com/v1/orders | jq '.items[] | {id, total}'",
+        "curl -s -X PATCH https://api.example.com/v1/orders/7 -d '{\"status\":\"canceled\"}'",
+        "curl -s -o /dev/null -w '%{http_code}\\n' https://api.example.com/v1/orders/999"
+      ],
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Endpoint URL including path and query"
+        },
+        {
+          "name": "method",
+          "type": "string",
+          "description": "HTTP verb: GET, POST, PUT, PATCH, DELETE"
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "description": "JSON request body for mutating requests"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "MDN HTTP methods",
+      "type": "documentation",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods",
+      "description": "Semantics of GET, POST, PUT, PATCH, DELETE"
+    },
+    {
+      "title": "curl man page",
+      "type": "documentation",
+      "source": "https://curl.se/docs/manpage.html",
+      "description": "All curl flags used for API debugging"
+    }
+  ],
+  "instructions": "# REST APIs\n\nHand-crafted skill for building and debugging REST APIs.\n\n## What this skill does\n\n- Models resources and picks the right verb per operation\n- Exercises CRUD flows end-to-end with curl\n- Reads and asserts on JSON responses with jq\n\n## When to use\n\n- Designing a new resource endpoint\n- Reproducing a bug report against a running API\n- Verifying behavior before writing tests\n\n## Real commands\n\n```bash\n# Create (expect 201)\ncurl -s -X POST https://api.example.com/v1/orders -H 'Content-Type: application/json' -d '{\"customer\":7,\"total\":199}'\n\n# Read one (expect 200)\ncurl -s https://api.example.com/v1/orders/7 | jq '.total'\n\n# List with query params\ncurl -i https://api.example.com/v1/orders?page=2\n\n# Full update vs partial update\ncurl -s -X PUT https://api.example.com/v1/orders/7 -H 'Content-Type: application/json' -d '{\"customer\":7,\"total\":199,\"status\":\"shipped\"}'\ncurl -s -X PATCH https://api.example.com/v1/orders/7 -d '{\"status\":\"canceled\"}'\n\n# Delete (expect 204)\ncurl -s -o /dev/null -w '%{http_code}\\n' -X DELETE https://api.example.com/v1/orders/7\n\n# Not found check\ncurl -s -o /dev/null -w '%{http_code}\\n' https://api.example.com/v1/orders/999\n```\n\n## Status code semantics\n\n- 200 success, 201 created, 204 no content\n- 400 client error, 401 unauthenticated, 403 forbidden, 404 not found\n- 409 conflict, 422 validation, 429 rate limited, 500 server error\n\n## Testing\n\n```bash\ncurl -s https://api.example.com/v1/orders | jq '.items | length'\n```\n\n## Best practices\n\n- Use nouns for resources, not verbs: /orders not /getOrders\n- Return 201 + Location header on create, 204 on delete\n- Keep GET endpoints side-effect free\n",
+  "examples": [
+    {
+      "input": "Create an order and confirm it was stored",
+      "output": "curl -s -X POST https://api.example.com/v1/orders -H 'Content-Type: application/json' -d '{\"customer\":7,\"total\":199}' expecting 201, then curl -s https://api.example.com/v1/orders/7 | jq '.total'."
+    },
+    {
+      "input": "Why do I get 404 on a valid-looking URL?",
+      "output": "Verify the resource id and route prefix; curl -i shows the path; check /v1 exists and the id is numeric."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rest.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rest"
+    },
+    "generic": {
+      "system_prompt": "You work Rest hands-on. You do it through rest-crud: Execute and debug REST CRUD flows with curl and jq. The commands are real, e.g. `curl -s -X POST https://api.example.com/v1/orders -H Content-Type: application/json -d...`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rest",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rest-crud",
+        "name": "url",
+        "type": "string",
+        "description": "Endpoint URL including path and query"
+      },
+      {
+        "capability": "rest-crud",
+        "name": "method",
+        "type": "string",
+        "description": "HTTP verb: GET, POST, PUT, PATCH, DELETE"
+      },
+      {
+        "capability": "rest-crud",
+        "name": "body",
+        "type": "string",
+        "description": "JSON request body for mutating requests"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/rest-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/rest-skill.yaml",
+    "checksum": "63203ddee6fbdb06263df4a238646da7497d864bc3ceb69b6d320630c51426ad"
+  }
+}

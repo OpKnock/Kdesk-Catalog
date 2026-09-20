@@ -1,0 +1,172 @@
+{
+  "name": "firebase-functions",
+  "display_name": "Firebase Functions",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Cloud Functions for Firebase: develop and deploy functions, manage runtimes and environment config, and test locally with the emulator.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "firebase"
+  ],
+  "capabilities": [
+    {
+      "name": "functions-lifecycle",
+      "description": "Scaffold, run, deploy, and configure Cloud Functions for Firebase.",
+      "commands": [
+        "firebase init functions",
+        "firebase emulators:start --only functions",
+        "firebase deploy --only functions",
+        "firebase functions:config:set stripe.key=sk_live_123",
+        "firebase functions:list",
+        "firebase functions:delete myFunction --region us-central1"
+      ],
+      "examples": [
+        "firebase init functions && firebase emulators:start --only functions",
+        "firebase functions:config:set stripe.key=sk_live_123 && firebase deploy --only functions",
+        "firebase functions:list"
+      ],
+      "parameters": [
+        {
+          "name": "function-name",
+          "type": "string",
+          "description": "Function to deploy or delete"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "description": "Deployment region, e.g. us-central1"
+        },
+        {
+          "name": "runtime",
+          "type": "string",
+          "description": "Node version for the functions runtime"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Cloud Functions docs",
+      "type": "documentation",
+      "source": "https://firebase.google.com/docs/functions",
+      "description": "Function types, triggers, deployment, and environment config"
+    },
+    {
+      "title": "Firebase Emulator Suite",
+      "type": "documentation",
+      "source": "https://firebase.google.com/docs/emulator-suite",
+      "description": "Local emulation of functions, Firestore, and auth"
+    }
+  ],
+  "instructions": "# Firebase Functions\n\n## What this skill does\n\nCloud Functions for Firebase runs backend code on Firebase triggers (auth, Firestore, HTTPS, schedule). This skill covers scaffolding, local emulation, deployment, and config.\n\n## When to use\n\n- Building serverless backends triggered by Firebase events\n- Deploying a new version of a function safely\n- Testing functions locally before deploy\n\n## Real commands\n\n```bash\n# Scaffold and emulate\nfirebase init functions\nfirebase emulators:start --only functions\n\n# Deploy (all or specific)\nfirebase deploy --only functions\nfirebase deploy --only functions:processOrder\n\n# Runtime config (v1-style config)\nfirebase functions:config:set stripe.key=sk_live_123\nfirebase functions:config:get\n\n# List and delete\nfirebase functions:list\nfirebase functions:delete processOrder --region us-central1\n```\n\n## Function example\n\n```typescript\nimport { onDocumentCreated } from 'firebase-functions/v2/firestore'\n\nexport const onOrderCreated = onDocumentCreated('orders/{orderId}', async (event) => {\n  const order = event.data?.data()\n  await stripe.charges.create({ amount: order.amount })\n  await event.data.ref.update({ charged: true })\n})\n```\n\n## Testing locally\n\n```bash\nfirebase emulators:start --only functions,firestore\n# trigger a function by writing a document in the emulated Firestore\nfirebase emulators:exec 'firebase deploy --only functions --dry-run'\n```\n\n## Best practices\n\n- Prefer v2 functions (`onDocumentCreated`) with explicit regions.\n- Keep functions idempotent; retries mean duplicate invocations.\n- Use runtime env vars (v2) over config:set (v1).\n- Test with the emulator locally; keep emulator-only endpoints out of prod.\n- Set `maxInstances` to avoid runaway billing from hot functions.\n",
+  "examples": [
+    {
+      "input": "Deploy the new order processor",
+      "output": "firebase deploy --only functions:processOrder, check the deploy output for the URL/region, then fire a test event to the emulator or prod."
+    },
+    {
+      "input": "Function fails with config error in prod",
+      "output": "Compare firebase functions:config:get output in prod with the emulator env, and migrate secrets to runtime env vars."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "firebase-functions.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-firebase-functions"
+    },
+    "generic": {
+      "system_prompt": "You are the Firebase Functions specialist. You do it through functions-lifecycle: Scaffold, run, deploy, and configure Cloud Functions for Firebase. The commands are real, e.g. `firebase init functions`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "firebase-functions",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "functions-lifecycle",
+        "name": "function-name",
+        "type": "string",
+        "description": "Function to deploy or delete"
+      },
+      {
+        "capability": "functions-lifecycle",
+        "name": "region",
+        "type": "string",
+        "description": "Deployment region, e.g. us-central1"
+      },
+      {
+        "capability": "functions-lifecycle",
+        "name": "runtime",
+        "type": "string",
+        "description": "Node version for the functions runtime"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "firebase"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/firebase-functions-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/firebase-functions-skill.yaml",
+    "checksum": "964816e33c4c426e2ff33d845a31b33609371ef45c36032791f1957319ddf920"
+  }
+}

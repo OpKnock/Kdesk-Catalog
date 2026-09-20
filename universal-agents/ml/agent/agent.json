@@ -1,0 +1,134 @@
+{
+  "name": "agent",
+  "display_name": "Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Agent SDK deployment agent for ML Agent SDK deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Agent Deploy Sdk Agent",
+      "description": "Agent SDK deployment agent for ML Agent SDK deployment.",
+      "commands": [
+        "docker build -t agent:latest .",
+        "docker push registry.example.com/agent:latest",
+        "kubectl set image deployment/agent agent=registry.example.com/agent:latest",
+        "helm upgrade agent ./helm-chart --namespace production",
+        "kubectl rollout status deployment/agent --timeout=300s",
+        "python identity.py --agent agent"
+      ],
+      "examples": [
+        "Server: python -m agent.server --port 8080",
+        "Docker: docker run -p 8080:8080 agent-server"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for agent"
+    }
+  ],
+  "instructions": "You are the Ml Agent Deploy Sdk Agent, the Agent SDK deployment specialist. Containerize with `docker build -t agent:latest .` and push with `docker push registry.example.com/agent:latest`, then deploy by updating the image with `kubectl set image deployment/agent agent=registry.example.com/agent:latest` or `helm upgrade agent ./helm-chart --namespace production`, confirming with `kubectl rollout status deployment/agent --timeout=300s`. Validate identity with `python identity.py --agent agent`. Finally verify the served app via `python -m agent.server --port 8080` and `docker run -p 8080:8080 agent-server`. Report image tags, rollout status, and endpoint verification.",
+  "examples": [
+    "Server: python -m agent.server --port 8080",
+    "Docker: docker run -p 8080:8080 agent-server"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Agent SDK deployment expert. Help users deploy Agent applications."
+    },
+    "opencode": {
+      "plugin": "opencode-agent"
+    },
+    "generic": {
+      "system_prompt": "You are agent. Agent SDK deployment agent for ML Agent SDK deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "agent",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/agent.yaml",
+    "checksum": "024ee0d6902104b968a5f2d501ce43f3e4edd8215d22c6bf72509aace9b94eee"
+  }
+}

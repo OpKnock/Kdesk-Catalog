@@ -1,0 +1,177 @@
+name: token-revocation
+display_name: Token Revocation
+category: api
+subcategory: general
+description: 'Hand-crafted token revocation skill: OAuth2 revocation endpoint, Redis jti blacklists, and
+  expiry verification for emergency token invalidation.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- redis-cli
+capabilities:
+- name: token-revoke
+  description: Revoke access and refresh tokens, and enforce blacklists
+  commands:
+  - curl -X POST https://idp.example.com/revoke -d "token=$ACCESS_TOKEN&token_type_hint=access_token&client_id=app1&client_secret=$CLIENT_SECRET"
+    -o /dev/null -w '%{http_code}\n'
+  - curl -X POST https://idp.example.com/revoke -d "token=$REFRESH_TOKEN&token_type_hint=refresh_token&client_id=app1"
+    -o /dev/null -w '%{http_code}\n'
+  - redis-cli SET blacklist:abc-jti revoked EX 3600
+  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer revoked-token" https://api.example.com/me'
+  examples:
+  - curl -X POST https://idp.example.com/revoke -d "token=$ACCESS_TOKEN&token_type_hint=access_token&client_id=app1"
+    -o /dev/null -w '%{http_code}\n'
+  - redis-cli SET blacklist:$(echo -n $JWT | cut -d. -f2 | base64 -d 2>/dev/null | jq -r .jti) revoked
+    EX 3600
+  - 'curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer stale-token" https://api.example.com/me'
+  parameters:
+  - name: token
+    type: string
+    description: Token value to revoke
+  - name: token_type_hint
+    type: string
+    description: access_token or refresh_token
+  - name: ttl_seconds
+    type: integer
+    description: Blacklist entry lifetime
+knowledge:
+- title: RFC 7009 token revocation
+  type: documentation
+  source: https://www.rfc-editor.org/rfc/rfc7009
+  description: Revocation endpoint semantics
+- title: JWT claims (RFC 7519)
+  type: documentation
+  source: https://www.rfc-editor.org/rfc/rfc7519#section-4.1.7
+  description: jti claim for blacklisting
+instructions: '# Token Revocation
+
+
+  Hand-crafted skill for invalidating tokens on demand.
+
+
+  ## What this skill does
+
+
+  - Calls the OAuth2 revocation endpoint for access and refresh tokens
+
+  - Blacklists JWT jti claims in Redis for immediate rejection
+
+  - Verifies revoked tokens stop working
+
+
+  ## When to use
+
+
+  - A session is compromised and must die now
+
+  - Logout should invalidate all devices
+
+  - Emergency freeze during an incident
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Revoke via the IdP
+
+  curl -X POST https://idp.example.com/revoke -d "token=$ACCESS_TOKEN&token_type_hint=access_token&client_id=app1&client_secret=$CLIENT_SECRET"
+  -o /dev/null -w ''%{http_code}\n''
+
+
+  # Revoke a refresh token too
+
+  curl -X POST https://idp.example.com/revoke -d "token=$REFRESH_TOKEN&token_type_hint=refresh_token&client_id=app1"
+  -o /dev/null -w ''%{http_code}\n''
+
+
+  # Self-managed blacklist: extract jti from the JWT and expire it
+
+  JTI=$(echo -n $JWT | cut -d. -f2 | base64 -d 2>/dev/null | jq -r .jti)
+
+  redis-cli SET blacklist:$JTI revoked EX 3600
+
+
+  # Verify rejection (expect 401)
+
+  curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer revoked-token" https://api.example.com/me
+
+  ```
+
+
+  ## Blacklist check on every request
+
+
+  - If token is a JWT, look up blacklist:<jti>; 401 when present
+
+  - TTL the blacklist at the access token''s remaining lifetime
+
+
+  ## Testing
+
+
+  ```bash
+
+  curl -X POST https://idp.example.com/revoke -d "token=$ACCESS_TOKEN&client_id=app1" -o /dev/null -w
+  ''%{http_code}\n''   # 200
+
+  curl -s -o /dev/null -w ''%{http_code}\n'' -H "Authorization: Bearer $ACCESS_TOKEN" https://api.example.com/me            #
+  401
+
+  ```
+
+
+  ## Best practices
+
+
+  - Revoke refresh tokens whenever an access token is revoked
+
+  - Use jti-based blacklists when you cannot query the IdP on every request
+
+  - Keep blacklist TTLs short to bound memory
+
+  '
+examples:
+- input: Kill a stolen session immediately
+  output: POST the access token to /revoke, blacklist its jti with redis-cli SET blacklist:<jti> revoked
+    EX <ttl>, then confirm 401.
+- input: Revoke every device for a user
+  output: 'Issue a global token reset: revoke all refresh tokens for the user and bump a user-level revoked_at
+    claim the API checks.'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: token-revocation.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-token-revocation
+  generic:
+    system_prompt: 'You work Token Revocation hands-on. You do it through token-revoke: Revoke access
+      and refresh tokens, and enforce blacklists. The commands are real, e.g. `curl -X POST https://idp.example.com/revoke
+      -d...`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,175 @@
+{
+  "name": "mongodb-sharding",
+  "display_name": "Mongodb Sharding",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Deploy and manage MongoDB sharded clusters: config servers, mongos routers, shard collections and balanced data.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "mongod",
+    "mongos",
+    "mongosh"
+  ],
+  "capabilities": [
+    {
+      "name": "sharded-cluster-operations",
+      "description": "Configure shardsvr mongods, start mongos, enable sharding and manage chunk distribution.",
+      "commands": [
+        "mongod --shardsvr --replSet shard1 --dbpath /data/shard1 --port 27018",
+        "mongos --configdb cfgReplSet/cfg1:27019,cfg2:27019,cfg3:27019 --bind_ip 0.0.0.0 --port 27017",
+        "mongosh --eval \"sh.enableSharding('appdb')\"",
+        "mongosh --eval \"sh.shardCollection('appdb.orders', {customer_id: 'hashed'})\"",
+        "mongosh --eval \"sh.status()\""
+      ],
+      "examples": [
+        "mongosh --eval \"sh.shardCollection('appdb.orders', {_id: 'hashed'})\"",
+        "mongosh --eval \"sh.moveChunk('appdb.orders', {customer_id: MinKey}, 'shard1')\"",
+        "mongosh --eval \"sh.addShard('shard1/mongo1:27018,mongo2:27018')\""
+      ],
+      "parameters": [
+        {
+          "name": "shardKey",
+          "type": "string",
+          "description": "Field(s) used as the shard key, e.g. _id or customer_id"
+        },
+        {
+          "name": "shard",
+          "type": "string",
+          "description": "Shard name or connection string for addShard"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "database.collection to enable sharding on"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "MongoDB Sharding Docs",
+      "type": "documentation",
+      "source": "https://www.mongodb.com/docs/manual/sharding/",
+      "description": "Sharded cluster architecture, shard keys and chunk balancing"
+    },
+    {
+      "title": "sh helper methods",
+      "type": "documentation",
+      "source": "https://www.mongodb.com/docs/manual/reference/method/js-sharding-administration/",
+      "description": "sh.enableSharding, sh.shardCollection, sh.status reference"
+    }
+  ],
+  "instructions": "# MongoDB Sharding\n\nSharding distributes data across multiple machines so write-heavy collections scale horizontally.\n\n## What this skill does\n\n- Starts shardsvr mongods behind a replica set name\n- Runs mongos routers against the config server replica set\n- Enables sharding and chooses shard keys\n\n## When to use\n\n- A collection outgrows a single server\n- Write throughput needs horizontal scaling\n- Building out a new sharded cluster\n\n## Real commands\n\n```bash\n# Shard member (needs --shardsvr and a replSet)\nmongod --shardsvr --replSet shard1 --dbpath /data/shard1 --port 27018\n\n# Config server (--configsvr, replica set cfgReplSet)\nmongod --configsvr --replSet cfgReplSet --dbpath /data/cfg --port 27019\n\n# mongos router\nmongos --configdb cfgReplSet/cfg1:27019,cfg2:27019,cfg3:27019 --port 27017\n\n# Through mongos:\nsh.addShard('shard1/mongo1:27018,mongo2:27018')\nsh.enableSharding('appdb')\nsh.shardCollection('appdb.orders', {customer_id: 'hashed'})\nsh.status()\n```\n\n## Shard key guidance\n\n- Hashed keys give even distribution; ranged keys allow locality\n- Never choose a low-cardinality or monotonically increasing key\n\n## Best practices\n\n- Always run shards as replica sets\n- Monitor `sh.status()` for chunk imbalance\n- Use `balancerStart/Stop` during maintenance windows",
+  "examples": [
+    {
+      "input": "Design a sharded cluster for a multi-tenant orders collection",
+      "output": "The agent selects a hashed customer_id shard key, provides the mongod/mongos startup commands and the sh.shardCollection call."
+    },
+    {
+      "input": "My chunks are unevenly balanced",
+      "output": "The agent checks sh.status(), explains balancer settings and shows sh.moveChunk usage to rebalance manually."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "mongodb-sharding.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-mongodb-sharding"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Mongodb Sharding. You do it through sharded-cluster-operations: Configure shardsvr mongods, start mongos, enable sharding and manage chunk distribution. The commands are real, e.g. `mongod --shardsvr --replSet shard1 --dbpath /data/shard1 --port 27018`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "mongodb-sharding",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "sharded-cluster-operations",
+        "name": "shardKey",
+        "type": "string",
+        "description": "Field(s) used as the shard key, e.g. _id or customer_id"
+      },
+      {
+        "capability": "sharded-cluster-operations",
+        "name": "shard",
+        "type": "string",
+        "description": "Shard name or connection string for addShard"
+      },
+      {
+        "capability": "sharded-cluster-operations",
+        "name": "namespace",
+        "type": "string",
+        "description": "database.collection to enable sharding on"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "mongod",
+    "mongos",
+    "mongosh"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/mongodb-sharding-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/mongodb-sharding-skill.yaml",
+    "checksum": "f59040252c38da52e07f7c985f51ab455bb6798a9a94f7f75d2e0a5090e56287"
+  }
+}

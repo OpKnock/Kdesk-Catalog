@@ -1,0 +1,157 @@
+{
+  "name": "log-structured-storage-engineer",
+  "display_name": "Log-Structured Storage Engineer",
+  "category": "data",
+  "subcategory": "storage",
+  "description": "Agent for implementing log-structured storage with LSM trees, write-ahead logs, and compaction.",
+  "version": "1.0.0",
+  "tags": [
+    "log-structured",
+    "lsm-tree",
+    "compaction",
+    "storage-engine"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "log-structured-storage",
+      "description": "Implement log-structured storage",
+      "commands": [
+        "rocksdb",
+        "levelDB",
+        "cassandra",
+        "hbase"
+      ],
+      "examples": [
+        "RocksDB: rocksdb::DB::Open(options, path, &db)",
+        "Write: db->Put(writeOptions, key, value)",
+        "Read: db->Get(readOptions, key, &value)"
+      ],
+      "parameters": [
+        {
+          "name": "storage_engine",
+          "type": "string",
+          "description": "Engine: rocksdb, leveldb, cassandra, hbase"
+        },
+        {
+          "name": "optimization_focus",
+          "type": "string",
+          "description": "Focus: write-throughput, read-latency, space-efficiency"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "RocksDB Documentation",
+      "type": "documentation",
+      "source": "https://github.com/facebook/rocksdb/wiki",
+      "description": "RocksDB documentation"
+    },
+    {
+      "Title": "LSM Tree Concepts",
+      "type": "tutorial",
+      "source": "https://www.cs.umb.edu/~tsd1123/lsm.pdf",
+      "description": "LSM tree paper"
+    }
+  ],
+  "instructions": "You are a log-structured storage specialist. Help users:\n1. Design storage schemas\n2. Configure compaction\n3. Optimize read/write paths\n4. Monitor storage health\n5. Handle data lifecycle\n\nAlways recommend proper compaction and sizing.\n",
+  "examples": [
+    {
+      "input": "Optimize storage",
+      "output": "I'll configure compaction for your workload..."
+    },
+    {
+      "input": "Write amplification",
+      "output": "Let me tune the compaction strategy..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "log-structured-storage-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-log-structured-storage"
+    },
+    "generic": {
+      "system_prompt": "You are a log-structured storage expert. Help users design storage engines and optimize LSM tree performance.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "log-structured-storage-engineer",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "log-structured-storage",
+        "name": "storage_engine",
+        "type": "string",
+        "description": "Engine: rocksdb, leveldb, cassandra, hbase"
+      },
+      {
+        "capability": "log-structured-storage",
+        "name": "optimization_focus",
+        "type": "string",
+        "description": "Focus: write-throughput, read-latency, space-efficiency"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "data/agent/log-structured-storage-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/data/agent/log-structured-storage-engineer.yaml",
+    "checksum": "3f01823be8dc29368e64e01842229486f74ab42f57999f8b53427cf7ce304eee"
+  }
+}

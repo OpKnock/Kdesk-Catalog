@@ -1,0 +1,228 @@
+{
+  "name": "datadog",
+  "display_name": "Datadog",
+  "category": "monitoring",
+  "subcategory": "general",
+  "description": "Operates the Datadog Agent and dashboards: agent status, live checks, monitors, and diagnostics via the CLI and API.",
+  "version": "2.0.0",
+  "tags": [
+    "datadog"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "datadog-agent"
+  ],
+  "capabilities": [
+    {
+      "name": "agent",
+      "description": "Manage the Datadog agent locally.",
+      "commands": [
+        "datadog-agent status",
+        "datadog-agent check nginx",
+        "datadog-agent flare --send",
+        "datadog-agent config show | grep -E 'api_key|hostname'",
+        "datadog-agent restart"
+      ],
+      "examples": [
+        "datadog-agent status | grep -E 'Running|Total Events'",
+        "datadog-agent check disk -r 3",
+        "datadog-agent flare --send --local-timeout 30"
+      ],
+      "parameters": [
+        {
+          "name": "check",
+          "type": "string",
+          "description": "Integrations check name like nginx, disk"
+        },
+        {
+          "name": "flare",
+          "type": "string",
+          "description": "Bundle diagnostics for support"
+        },
+        {
+          "name": "restart",
+          "type": "string",
+          "description": "Restart the agent service"
+        }
+      ]
+    },
+    {
+      "name": "monitors",
+      "description": "Manage monitors and metrics via the Datadog API.",
+      "commands": [
+        "curl -s -H 'DD-API-KEY: $DD_API_KEY' -H 'DD-APPLICATION-KEY: $DD_APP_KEY' 'https://api.datadoghq.com/api/v1/monitor' | jq '.[] | {id, name, status}'",
+        "curl -s -X POST -H 'DD-API-KEY: $DD_API_KEY' -H 'DD-APPLICATION-KEY: $DD_APP_KEY' -H 'Content-Type: application/json' -d '{\"type\":\"metric alert\",\"query\":\"avg(last_5m):avg:system.cpu.user{*} > 80\",\"name\":\"High CPU\",\"message\":\"CPU above 80%\"}' https://api.datadoghq.com/api/v1/monitor",
+        "curl -s -X POST -H 'DD-API-KEY: $DD_API_KEY' -H 'DD-APPLICATION-KEY: $DD_APP_KEY' -H 'Content-Type: application/json' -d '{\"query\":\"system.cpu.user\"}' 'https://api.datadoghq.com/api/v1/query?from=1750000000&to=1750086400'",
+        "curl -s -X PUT -H 'DD-API-KEY: $DD_API_KEY' -H 'DD-APPLICATION-KEY: $DD_APP_KEY' -H 'Content-Type: application/json' -d '{\"status\":\"Muted\"}' https://api.datadoghq.com/api/v1/monitor/12345/mute",
+        "curl -s -H 'DD-API-KEY: $DD_API_KEY' -H 'DD-APPLICATION-KEY: $DD_APP_KEY' 'https://api.datadoghq.com/api/v1/monitor' | jq '[.[].status] | group_by(.) | map({status: .[0], count: length})'"
+      ],
+      "examples": [
+        "curl -s -H 'DD-API-KEY: $K' -H 'DD-APPLICATION-KEY: $A' 'https://api.datadoghq.com/api/v1/monitor' | jq '.[] | select(.status != \"OK\") | {name, status}'",
+        "curl -s -X POST -H 'DD-API-KEY: $K' -H 'DD-APPLICATION-KEY: $A' -H 'Content-Type: application/json' -d '{\"type\":\"service check\",\"query\":\"\\\"api.up\\\".over(\\\"last_5m\\\").last(5).count_by_status()\",\"name\":\"API up check\"}' https://api.datadoghq.com/api/v1/monitor",
+        "curl -s -H 'DD-API-KEY: $K' -H 'DD-APPLICATION-KEY: $A' 'https://api.datadoghq.com/api/v1/monitor' | jq 'length'"
+      ],
+      "parameters": [
+        {
+          "name": "api-key",
+          "type": "string",
+          "description": "Datadog API key"
+        },
+        {
+          "name": "app-key",
+          "type": "string",
+          "description": "Datadog application key"
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "description": "Metric or event query"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Datadog Agent",
+      "type": "documentation",
+      "source": "https://docs.datadoghq.com/agent/basic_agent_usage/",
+      "description": "Agent commands: status, check, flare, config"
+    },
+    {
+      "title": "Datadog API",
+      "type": "documentation",
+      "source": "https://docs.datadoghq.com/api/latest/monitors/",
+      "description": "Monitors and query API reference"
+    },
+    {
+      "title": "Datadog Integrations",
+      "type": "documentation",
+      "source": "https://docs.datadoghq.com/integrations/",
+      "description": "Agent checks for common services"
+    }
+  ],
+  "instructions": "# Datadog\n\nOperate the Datadog agent and monitors from the terminal.\n\n## When to Use\n\n- Agent health and integration debugging\n- Creating monitors without the UI\n- Correlating metrics with incidents\n\n## Agent operations\n\n```bash\ndatadog-agent status\ndatadog-agent check nginx\ndatadog-agent flare --send\ndatadog-agent restart\n```\n\nFlare bundles logs + configs for support - redact secrets before sending.\n\n## Monitors via API\n\n```bash\ncurl -s -X POST -H 'DD-API-KEY: $DD_API_KEY' -H 'DD-APPLICATION-KEY: $DD_APP_KEY' -H 'Content-Type: application/json' -d '{\"type\":\"metric alert\",\"query\":\"avg(last_5m):avg:system.cpu.user{*} > 80\",\"name\":\"High CPU\",\"message\":\"CPU above 80%\"}' https://api.datadoghq.com/api/v1/monitor\n```\n\n## Monitor hygiene\n\n- Alert on SLOs and error budgets, not every metric.\n- Mute with a reason and an expiry: mute then unmute in the incident timeline.\n- Review monitor inventory quarterly; delete orphans.\n\n## Metric queries\n\n```bash\ncurl -s -X POST -H 'DD-API-KEY: $DD_API_KEY' -H 'DD-APPLICATION-KEY: $DD_APP_KEY' -H 'Content-Type: application/json' -d '{\"query\":\"system.cpu.user\"}' 'https://api.datadoghq.com/api/v1/query?from=...&to=...'\n```\n\n## Best practices\n\n- Use service accounts for API keys, rotated regularly.\n- Keep agent tags consistent across the fleet.\n- Export monitor configs to IaC where possible.\n- Verify agent version pinning across hosts.\n\n## Testing\n\n```bash\ndatadog-agent status | grep -E 'Running|Errors'\ndatadog-agent check disk\n```\n\nConfirm checks pass after config changes.",
+  "examples": [
+    {
+      "input": "The nginx integration isn't reporting metrics.",
+      "output": "Runs datadog-agent check nginx, inspects the check config and permissions, and restarts the agent."
+    },
+    {
+      "input": "Create a CPU alert for the API fleet.",
+      "output": "Posts a metric alert monitor via the API and mutes it during the maintenance window."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "datadog.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-datadog"
+    },
+    "generic": {
+      "system_prompt": "You own Datadog end to end. You do it through agent: Manage the Datadog agent locally. The commands are real, e.g. `datadog-agent status`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "datadog",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "agent",
+        "name": "check",
+        "type": "string",
+        "description": "Integrations check name like nginx, disk"
+      },
+      {
+        "capability": "agent",
+        "name": "flare",
+        "type": "string",
+        "description": "Bundle diagnostics for support"
+      },
+      {
+        "capability": "agent",
+        "name": "restart",
+        "type": "string",
+        "description": "Restart the agent service"
+      },
+      {
+        "capability": "monitors",
+        "name": "api-key",
+        "type": "string",
+        "description": "Datadog API key"
+      },
+      {
+        "capability": "monitors",
+        "name": "app-key",
+        "type": "string",
+        "description": "Datadog application key"
+      },
+      {
+        "capability": "monitors",
+        "name": "query",
+        "type": "string",
+        "description": "Metric or event query"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "datadog-agent"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "monitoring/datadog-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/monitoring/datadog-skill.yaml",
+    "checksum": "31134f3a83116b90908771105f280fb01bebda9b59a11090a1c0d0181ab24648"
+  }
+}

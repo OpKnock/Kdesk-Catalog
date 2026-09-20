@@ -1,0 +1,95 @@
+name: backpressure-handler
+display_name: Backpressure Handler
+category: data
+subcategory: flow-control
+description: Agent for implementing backpressure in data pipelines with buffering, throttling, and flow
+  control.
+version: 1.0.0
+tags:
+- backpressure
+- flow-control
+- buffering
+- throttling
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: backpressure-handling
+  description: Implement backpressure mechanisms
+  commands:
+  - kafka
+  - redis-streams
+  - rabbitmq
+  - rxjava
+  examples:
+  - 'Buffer: redis-cli XADD stream * field value'
+  - 'Read buffer: redis-cli XREAD COUNT 10 STREAMS stream 0'
+  - 'Check lag: kafka-consumer-groups --describe --group my-group'
+  parameters:
+  - name: backpressure_type
+    type: string
+    description: 'Type: buffering, throttling, dropping, sampling'
+  - name: buffer_strategy
+    type: string
+    description: 'Strategy: bounded, unbounded, sliding-window'
+knowledge:
+- Title: Reactive Streams
+  type: documentation
+  source: https://www.reactive-streams.org/
+  description: Reactive Streams specification
+- Title: Backpressure in Kafka
+  type: tutorial
+  source: https://kafka.apache.org/documentation/#design_batching
+  description: Kafka batching and flow control
+instructions: 'You are a backpressure specialist. Help users:
+
+  1. Detect backpressure conditions
+
+  2. Implement buffering strategies
+
+  3. Configure flow control
+
+  4. Handle overflow gracefully
+
+  5. Monitor pipeline health
+
+
+  Always recommend proper monitoring and alerting.
+
+  '
+examples:
+- input: Handle backpressure
+  output: I'll implement buffering with bounded queues. Here's the flow control...
+- input: Pipeline is overwhelmed
+  output: I'll add throttling and overflow handling...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: backpressure-handler.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-backpressure
+  generic:
+    system_prompt: You are a backpressure expert. Help users implement flow control, configure buffers,
+      and handle pipeline overflow.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

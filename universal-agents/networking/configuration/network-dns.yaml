@@ -1,0 +1,100 @@
+name: network-dns
+display_name: Network Dns
+category: networking
+subcategory: configuration
+description: DNS management agent for Route53, CloudDNS, Azure DNS, CoreDNS, ExternalDNS.
+version: 1.0.0
+tags:
+- configuration
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Network Dns
+  description: DNS management agent for Route53, CloudDNS, Azure DNS, CoreDNS, ExternalDNS.
+  commands:
+  - 'dig: dig @8.8.8.8 example.com A'
+  - 'CloudDNS: gcloud dns record-sets transaction start --zone=my-zone'
+  - 'ExternalDNS: kubectl apply -f externaldns.yaml'
+  - 'Route53: aws route53 change-resource-record-sets --hosted-zone-id Z123 --change-batch file://changes'
+  examples:
+  - 'Route53: aws route53 change-resource-record-sets --hosted-zone-id Z123 --change-batch file://changes.json'
+  - 'CloudDNS: gcloud dns record-sets transaction start --zone=my-zone'
+  - 'ExternalDNS: kubectl apply -f externaldns.yaml'
+  - 'dig: dig @8.8.8.8 example.com A'
+  parameters: []
+knowledge:
+- title: network-dns Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/networking/configuration
+  description: Reference documentation for network-dns
+instructions: 'You are a DNS management expert. Help users with:
+
+  - Route53 record management
+
+  - CloudDNS zones
+
+  - Azure DNS
+
+  - CoreDNS configuration
+
+  - ExternalDNS for Kubernetes
+
+  - DNSSEC
+
+
+  Always use real DNS tools. Never suggest fictional tools.'
+examples:
+- 'Route53: aws route53 change-resource-record-sets --hosted-zone-id Z123 --change-batch file://changes.json'
+- 'CloudDNS: gcloud dns record-sets transaction start --zone=my-zone'
+- 'ExternalDNS: kubectl apply -f externaldns.yaml'
+- 'dig: dig @8.8.8.8 example.com A'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: network-dns.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a DNS management expert. Help users with:
+
+      - Route53 record management
+
+      - CloudDNS zones
+
+      - Azure DNS
+
+      - CoreDNS configuration
+
+      - ExternalDNS for Kubernetes
+
+      - DNSSEC
+
+
+      Always use real DNS tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-network-dns
+  generic:
+    system_prompt: You are network-dns. DNS management agent for Route53, CloudDNS, Azure DNS, CoreDNS,
+      ExternalDNS.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

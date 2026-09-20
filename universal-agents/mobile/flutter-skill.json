@@ -1,0 +1,121 @@
+{
+  "name": "flutter",
+  "display_name": "flutter",
+  "category": "mobile",
+  "subcategory": "general",
+  "description": "Flutter mobile development. Real flutter CLI.",
+  "version": "1.0.0",
+  "tags": [
+    "mobile"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "flutter"
+  ],
+  "capabilities": [
+    {
+      "name": "flutter",
+      "description": "Flutter mobile development. Real flutter CLI.",
+      "commands": [
+        "flutter create my_app",
+        "flutter run",
+        "flutter run -d <device_id>",
+        "flutter devices",
+        "flutter build apk",
+        "flutter build ios",
+        "flutter test",
+        "flutter analyze",
+        "flutter clean",
+        "flutter pub get",
+        "flutter pub upgrade"
+      ],
+      "examples": [
+        "flutter create my_app",
+        "flutter run",
+        "flutter run -d <device_id>"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "flutter Skill Documentation",
+      "type": "documentation",
+      "source": "skills/mobile/flutter.md",
+      "description": "Complete guide for flutter"
+    }
+  ],
+  "instructions": "# Flutter\n\nFlutter mobile development using real CLI.\n\n## When to Use\n\n- Cross-platform mobile apps\n- Beautiful UIs\n- High-performance apps\n\n## Commands\n\n```bash\n# Create project\nflutter create my_app\n\n# Run on device\nflutter run\n\n# Run on specific device\nflutter run -d <device_id>\n\n# List devices\nflutter devices\n\n# Build APK\nflutter build apk\n\n# Build iOS\nflutter build ios\n\n# Run tests\nflutter test\n\n# Analyze\nflutter analyze\n\n# Clean\nflutter clean\n\n# Get packages\nflutter pub get\n\n# Upgrade packages\nflutter pub upgrade\n```\n\n## Widget\n\n```dart\n// lib/widgets/user_card.dart\nimport 'package:flutter/material.dart';\n\nclass UserCard extends StatelessWidget {\n  final String name;\n  final String email;\n  \n  const UserCard({\n    Key? key,\n    required this.name,\n    required this.email,\n  }) : super(key: key);\n  \n  @override\n  Widget build(BuildContext context) {\n    return Card(\n      child: Padding(\n        padding: const EdgeInsets.all(16.0),\n        child: Column(\n          crossAxisAlignment: CrossAxisAlignment.start,\n          children: [\n            Text(\n              name,\n              style: const TextStyle(\n                fontSize: 18,\n                fontWeight: FontWeight.bold,\n              ),\n            ),\n            const SizedBox(height: 8),\n            Text(\n              email,\n              style: const TextStyle(color: Colors.grey),\n            ),\n          ],\n        ),\n      ),\n    );\n  }\n}\n```\n\n## State Management\n\n```dart\n// lib/providers/user_provider.dart\nimport 'package:flutter/foundation.dart';\n\nclass UserProvider extends ChangeNotifier {\n  List<User> _users = [];\n  bool _loading = false;\n  \n  List<User> get users => _users;\n  bool get loading => _loading;\n  \n  Future<void> fetchUsers() async {\n    _loading = true;\n    notifyListeners();\n    \n    final response = await http.get(Uri.parse('https://api.example.com/users'));\n    _users = (jsonDecode(response.body) as List)\n        .map((json) => User.fromJson(json))\n        .toList();\n    \n    _loading = false;\n    notifyListeners();\n  }\n}\n```\n\n## Navigation\n\n```dart\n// lib/main.dart\nimport 'package:flutter/material.dart';\n\nvoid main() => runApp(MyApp());\n\nclass MyApp extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'My App',\n      theme: ThemeData(primarySwatch: Colors.blue),\n      home: HomeScreen(),\n    );\n  }\n}\n\nclass HomeScreen extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(\n      appBar: AppBar(title: const Text('Home')),\n      body: Center(\n        child: ElevatedButton(\n          onPressed: () {\n            Navigator.push(\n              context,\n              MaterialPageRoute(builder: (context) => DetailScreen()),\n            );\n          },\n          child: const Text('Go to Detail'),\n        ),\n      ),\n    );\n  }\n}\n```\n\n## pubspec.yaml\n\n```yaml\nname: my_app\ndescription: A new Flutter project.\nversion: 1.0.0+1\n\nenvironment:\n  sdk: '>=3.0.0 <4.0.0'\n\ndependencies:\n  flutter:\n    sdk: flutter\n  http: ^1.1.0\n  provider: ^6.0.0\n  \ndev_dependencies:\n  flutter_test:\n    sdk: flutter\n  flutter_lints: ^3.0.0\n```",
+  "examples": [],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "flutter.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-flutter"
+    },
+    "generic": {
+      "system_prompt": "Your lane is flutter. You do it through flutter: Flutter mobile development. Real flutter CLI. The commands are real, e.g. `flutter create my_app`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "flutter",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [
+    "flutter"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "mobile/flutter-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/mobile/flutter-skill.yaml",
+    "checksum": "21dd49b02108dbc67a092645ea6d12bbe7b092cfb0fba8e000557e746020a818"
+  }
+}

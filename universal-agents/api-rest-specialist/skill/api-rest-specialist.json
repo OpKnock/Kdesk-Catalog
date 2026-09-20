@@ -1,0 +1,189 @@
+{
+  "name": "api-rest-specialist",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Applies REST design standards: JSON:API style envelopes, problem+json errors, HATEOAS links, and idempotency handling for robust consumers.",
+  "keywords": [
+    "rest",
+    "hateoas"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-rest-specialist.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-rest-specialist"
+    },
+    "generic": {
+      "system_prompt": "You are the api-rest-specialist specialist. You do it through json-api-style: Shape responses with data envelopes and links. The commands are real, e.g. `curl -s http://localhost:3000/api/orders | jq .data[0], .links`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "json-api-style",
+      "description": "Shape responses with data envelopes and links",
+      "commands": [
+        "curl -s http://localhost:3000/api/orders | jq '.data[0], .links'",
+        "curl -s -X POST http://localhost:3000/api/orders -H 'Content-Type: application/json' -H 'Idempotency-Key: abc-123' -d '{\"total\":50}' | jq '.data.id'",
+        "curl -s -D- -o /dev/null http://localhost:3000/api/orders | grep -i '^link:'",
+        "curl -s -o /dev/null -w '%{http_code}\\n' -X POST http://localhost:3000/api/orders -H 'Content-Type: application/json' -H 'Idempotency-Key: abc-123' -d '{\"total\":50}'"
+      ],
+      "examples": [
+        "Idempotency-Key deduplicates retried POSTs",
+        "Link headers advertise related resources",
+        "jq .data extracts the JSON:API envelope"
+      ],
+      "parameters": [
+        {
+          "name": "idempotency-key",
+          "type": "string",
+          "description": "Client-supplied retry key"
+        },
+        {
+          "name": "envelope",
+          "type": "string",
+          "description": "Response envelope: data/links shape"
+        },
+        {
+          "name": "resource",
+          "type": "string",
+          "description": "Resource collection"
+        }
+      ]
+    },
+    {
+      "name": "problem-errors",
+      "description": "Return RFC 7807 problem details for errors",
+      "commands": [
+        "curl -s -X POST http://localhost:3000/api/orders -H 'Content-Type: application/json' -d '{}' | jq '.type, .status, .title'",
+        "curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/api/orders/404",
+        "curl -s http://localhost:3000/api/orders/404 | jq '.detail'"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "express",
+    "fastapi"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "express",
+    "fastapi",
+    "openapi",
+    "postman"
+  ],
+  "examples": [
+    {
+      "input": "Make POST /orders retry-safe",
+      "output": "Adds Idempotency-Key storage and returns the original response on replay"
+    },
+    {
+      "input": "Standardize API errors",
+      "output": "Adopts RFC 7807 problem details across all endpoints"
+    }
+  ],
+  "instructions": "# API REST Specialist\n\nREST standards and conventions.\n\n## What This Skill Does\n- Applies consistent envelope and error formats\n- Adds HATEOAS links and idempotency\n- Makes APIs predictable for consumers\n\n## When to Use\n- Designing public APIs\n- Standardizing internal service contracts\n- Hardening retry behavior\n\n## Real Commands\n\n```bash\ncurl -s http://localhost:3000/api/orders | jq '.data[0], .links'\ncurl -s -X POST http://localhost:3000/api/orders -H 'Content-Type: application/json' -H 'Idempotency-Key: abc-123' -d '{\"total\":50}'\ncurl -s -X POST http://localhost:3000/api/orders -H 'Content-Type: application/json' -d '{}' | jq '.type, .status, .title'\n```\n\n## Problem Response\n\n```json\n{\n  \"type\": \"https://api.example.com/problems/validation\",\n  \"title\": \"Validation failed\",\n  \"status\": 400,\n  \"detail\": \"total is required\"\n}\n```\n\n## Testing\n- Repeat the same Idempotency-Key and expect the same response\n- Validate error bodies match the problem format\n- Check Link headers expose navigation\n\n## Best Practices\n- Document the envelope format in OpenAPI\n- Store idempotency keys with TTL and status\n- Keep error details machine-readable",
+  "display_name": "api-rest-specialist",
+  "knowledge": [
+    {
+      "title": "RFC 7807 Problem Details",
+      "type": "documentation",
+      "source": "https://www.rfc-editor.org/rfc/rfc7807",
+      "description": "HTTP API error format standard"
+    },
+    {
+      "title": "JSON:API Spec",
+      "type": "documentation",
+      "source": "https://jsonapi.org/format/",
+      "description": "JSON:API response format"
+    }
+  ],
+  "id": "api-rest-specialist",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "json-api-style",
+        "name": "idempotency-key",
+        "type": "string",
+        "description": "Client-supplied retry key"
+      },
+      {
+        "capability": "json-api-style",
+        "name": "envelope",
+        "type": "string",
+        "description": "Response envelope: data/links shape"
+      },
+      {
+        "capability": "json-api-style",
+        "name": "resource",
+        "type": "string",
+        "description": "Resource collection"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "express",
+    "fastapi"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-rest-specialist/skill/api-rest-specialist.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-rest-specialist/skill/api-rest-specialist.yaml",
+    "checksum": "b0f69f6f3b9757a769ff9488f771b6294f0845714563ecf1d61d39bc80156d18"
+  }
+}

@@ -1,0 +1,103 @@
+name: firestore-realtime
+display_name: Firestore Realtime
+category: api
+subcategory: general
+description: 'Firestore realtime updates: subscribe to document and collection snapshots, handle listener
+  lifecycle, and debug sync lag.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- firebase
+- grep
+- node
+capabilities:
+- name: realtime-listeners
+  description: Attach, manage, and debug Firestore snapshot listeners.
+  commands:
+  - node -e "const {onSnapshot,doc}=require('firebase/firestore');onSnapshot(doc(db,'orders','o1'),s=>console.log(s.data()));setTimeout(()=>{},10000)"
+  - node -e "const {onSnapshot,collection,query,where}=require('firebase/firestore');onSnapshot(query(collection(db,'orders'),where('status','==','paid')),s=>console.log('size',s.size))"
+  - grep -rn 'onSnapshot' src/ | head -10
+  - firebase emulators:start --only firestore
+  - node -e "const unsub=onSnapshot(doc(db,'orders','o1'),()=>{});setTimeout(unsub,5000);console.log('unsubscribed')"
+  examples:
+  - node -e "const {onSnapshot,doc}=require('firebase/firestore');onSnapshot(doc(db,'orders','o1'),s=>console.log(s.data()));setTimeout(()=>{},10000)"
+  - node -e "const {onSnapshot,collection,query,where}=require('firebase/firestore');onSnapshot(query(collection(db,'orders'),where('status','==','paid')),s=>console.log('size',s.size))"
+  - grep -rn 'onSnapshot' src/ | head -10
+  parameters:
+  - name: document-path
+    type: string
+    description: Document to listen to
+  - name: query-filter
+    type: string
+    description: Where clause for collection listeners
+  - name: listener-name
+    type: string
+    description: Label used in logs to identify the listener
+knowledge:
+- title: Listen to realtime updates
+  type: documentation
+  source: https://firebase.google.com/docs/firestore/query-data/listen
+  description: onSnapshot semantics, metadata, and listener errors
+- title: Get realtime updates (web SDK)
+  type: documentation
+  source: https://firebase.google.com/docs/firestore/query-data/listen#web_2
+  description: Web SDK listener API and includeMetadataChanges
+instructions: "# Firestore Realtime\n\n## What this skill does\n\nFirestore pushes document changes to\
+  \ subscribed clients via snapshot listeners. `onSnapshot` fires on server updates, local writes, and\
+  \ cache events; listeners auto-reconnect and dedupe.\n\n## When to use\n\n- Chat, presence, or collaborative\
+  \ screens\n- Dashboards that must reflect DB state instantly\n- Any screen that should update without\
+  \ polling\n\n## Real commands\n\n```bash\n# Document listener\nnode -e \"const {onSnapshot,doc}=require('firebase/firestore');onSnapshot(doc(db,'orders','o1'),s=>console.log(s.data()));setTimeout(()=>{},10000)\"\
+  \n\n# Query listener with filter\nnode -e \"const {onSnapshot,collection,query,where}=require('firebase/firestore');onSnapshot(query(collection(db,'orders'),where('status','==','paid')),s=>console.log('size',s.size))\"\
+  \n\n# Unsubscribe properly\nnode -e \"const unsub=onSnapshot(doc(db,'orders','o1'),()=>{});setTimeout(unsub,5000);console.log('unsubscribed')\"\
+  \n\n# Find all listeners in code\n grep -rn 'onSnapshot' src/ | head -10\n```\n\n## Metadata handling\n\
+  \n```javascript\nonSnapshot(docRef, { includeMetadataChanges: true }, (snap) => {\n  if (snap.metadata.hasPendingWrites)\
+  \ console.log('local write, not yet on server')\n  if (!snap.metadata.isFromCache) console.log('fresh\
+  \ from server')\n})\n```\n\n## Testing\n\n```bash\nfirebase emulators:start --only firestore\n# write\
+  \ a doc via the emulator UI and watch the listener fire\nnode -e \"const {setDoc,doc}=require('firebase/firestore');setDoc(doc(db,'orders','o1'),{status:'paid'})\"\
+  \n```\n\n## Best practices\n\n- Always store the unsubscribe function and call it on screen teardown.\n\
+  - Prefer filtered queries over listening to whole collections.\n- Use `includeMetadataChanges` to distinguish\
+  \ cache vs server events.\n- Cap concurrent listeners; each one is a connection/session on the backend.\n\
+  - Handle listener errors: log, retry, and surface offline state.\n"
+examples:
+- input: Live-update the order board
+  output: Attach onSnapshot on the orders query with a status filter, update the UI on each snapshot,
+    and unsubscribe on component unmount.
+- input: Listener fires twice for one write
+  output: The first event is the local cache (hasPendingWrites) and the second is the server ack; use
+    metadata or debounce UI updates.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: firestore-realtime.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-firestore-realtime
+  generic:
+    system_prompt: 'You work Firestore Realtime hands-on. You do it through realtime-listeners: Attach,
+      manage, and debug Firestore snapshot listeners. The commands are real, e.g. `node -e const {onSnapshot,doc}=require(firebase/firestore);onSnapshot(doc(db,orders,o1),s=...`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

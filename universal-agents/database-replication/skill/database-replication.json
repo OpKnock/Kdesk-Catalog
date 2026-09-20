@@ -1,0 +1,184 @@
+{
+  "name": "database-replication",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "data",
+  "description": "Architects replication topologies: streaming replicas, failover with Patroni, and lag monitoring.",
+  "keywords": [
+    "database-replication",
+    "failover"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "database-replication.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-database-replication"
+    },
+    "generic": {
+      "system_prompt": "You take the database-replication seat. You do it through replication-topology: Build and operate replicated topologies with failover. The commands are real, e.g. `patronictl -c patroni.yml list`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "replication-topology",
+      "description": "Build and operate replicated topologies with failover",
+      "commands": [
+        "patronictl -c patroni.yml list",
+        "patronictl -c patroni.yml failover postgres --master node1 --candidate node2",
+        "psql -h node1 -c \"SELECT client_addr, state, replay_lag FROM pg_stat_replication;\"",
+        "redis-cli -a $PASS INFO replication",
+        "mongosh --quiet --eval \"rs.printReplicationInfo()\""
+      ],
+      "examples": [
+        "patronictl -c patroni.yml switchover postgres --master node1 --candidate node2 --force",
+        "psql -h node2 -c \"SELECT pg_is_in_recovery();\"",
+        "kafka-consumer-groups.sh --bootstrap-server kafka:9092 --describe --all-groups"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Patroni config file (-c)"
+        },
+        {
+          "name": "master",
+          "type": "string",
+          "description": "Current master node name"
+        },
+        {
+          "name": "candidate",
+          "type": "string",
+          "description": "Node to promote"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "postgresql",
+    "mysql",
+    "redis",
+    "patroni"
+  ],
+  "tools": [
+    "postgresql",
+    "mysql",
+    "redis",
+    "patroni",
+    "repmgr"
+  ],
+  "examples": [
+    {
+      "input": "Do a planned switchover",
+      "output": "Runs patronictl list, executes switchover to the candidate, and verifies the new leader and lag"
+    },
+    {
+      "input": "Replicas are lagging badly",
+      "output": "Checks pg_stat_replication lag per node, identifies the bottleneck, and re-syncs the slowest replica"
+    }
+  ],
+  "instructions": "# Database Replication\n\nDesigns and operates multi-node replication: streaming standbys, leader\nelection/failover, and lag monitoring.\n\n## When to Use\n\n- Building HA topologies (primary + standby)\n- Performing controlled failovers/switchovers\n- Investigating lag or split-brain risks\n\n## Real Commands\n\n```bash\n# Patroni cluster status\nsudo patronictl -c patroni.yml list\n\n# Controlled switchover\nsudo patronictl -c patroni.yml switchover postgres --master node1 --candidate node2 --force\n\n# Emergency failover\nsudo patronictl -c patroni.yml failover postgres --master node1 --candidate node2\n\n# Lag monitoring\npsql -h node1 -c \"SELECT client_addr, state, replay_lag FROM pg_stat_replication;\"\n\n# Replica confirmation\npsql -h node2 -c \"SELECT pg_is_in_recovery();\"\n\n# Redis / Mongo\nredis-cli INFO replication\nsudo mongosh --quiet --eval \"rs.printReplicationInfo()\"\nsudo mongosh --quiet --eval \"rs.status().members.forEach(m=>print(m.name, m.stateStr))\"\n```\n\n## Failover Runbook\n\n1. Confirm the master is truly down (quorum, not partition)\n2. Promote the most current standby (`patronictl failover`)\n3. Repoint applications to the new leader\n4. Re-attach the old node as a follower\n5. Verify lag is draining on all followers\n\n## Best Practices\n\n- Use quorum-based leader election (Patroni/etcd), not manual scripting\n- Alert on `replay_lag` exceeding the RPO target\n- Test switchovers quarterly\n- Keep synchronous options only where latency allows\n- Read-only traffic must not hit a lagging replica blindly\n\n## Example Response\n\nReports the cluster topology, current leader, per-replica lag, and executes a\nplanned switchover with verification of the new leader.",
+  "display_name": "database-replication",
+  "knowledge": [
+    {
+      "title": "Patroni docs",
+      "type": "documentation",
+      "source": "https://patroni.readthedocs.io/",
+      "description": "HA topologies, failover, and CLI reference"
+    },
+    {
+      "title": "PostgreSQL replication docs",
+      "type": "documentation",
+      "source": "https://www.postgresql.org/docs/current/high-availability.html",
+      "description": "Streaming replication and hot standby"
+    },
+    {
+      "title": "MongoDB replica sets",
+      "type": "documentation",
+      "source": "https://www.mongodb.com/docs/manual/replication/",
+      "description": "Replica set architecture and elections"
+    }
+  ],
+  "id": "database-replication",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "replication-topology",
+        "name": "config",
+        "type": "string",
+        "description": "Patroni config file (-c)"
+      },
+      {
+        "capability": "replication-topology",
+        "name": "master",
+        "type": "string",
+        "description": "Current master node name"
+      },
+      {
+        "capability": "replication-topology",
+        "name": "candidate",
+        "type": "string",
+        "description": "Node to promote"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "postgresql",
+    "mysql",
+    "redis",
+    "patroni"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database-replication/skill/database-replication.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database-replication/skill/database-replication.yaml",
+    "checksum": "887875d22df61464bbc03b1f37e9b988c4e2294a92e0ec760904bfb612ffde49"
+  }
+}

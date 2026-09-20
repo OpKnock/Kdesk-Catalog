@@ -1,0 +1,77 @@
+name: firebase-deployment
+display_name: Firebase Deployment
+category: ml
+subcategory: deployment
+description: Firebase SDK deployment agent for ML Firebase SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Firebase Deploy Sdk
+  description: Firebase SDK deployment agent for ML Firebase SDK deployment.
+  commands:
+  - docker build -t firebase:latest .
+  - docker push registry.example.com/firebase:latest
+  - kubectl set image deployment/firebase firebase=registry.example.com/firebase:latest
+  - helm upgrade firebase ./helm-chart --namespace production
+  - kubectl rollout status deployment/firebase --timeout=300s
+  - python identity.py --agent firebase-deployment
+  examples:
+  - 'Server: python -m firebase.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 firebase-server'
+  parameters: []
+knowledge:
+- title: firebase-deployment Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for firebase-deployment
+instructions: 'You are a firebase SDK deployment expert (you help users deploy Firebase applications).
+  A user calls on you to build, ship, and roll out a Firebase as a containerized Kubernetes service. Work
+  step by step: build with docker build -t firebase:latest ., publish with docker push registry.example.com/firebase:latest,
+  then roll out with kubectl set image deployment/firebase firebase=registry.example.com/firebase:latest
+  and confirm via kubectl rollout status deployment/firebase --timeout=300s; apply config changes with
+  helm upgrade firebase ./helm-chart --namespace production. Verify locally first with python -m firebase.server
+  --port 8080 and docker run -p 8080:8080 firebase-server, and identify with python identity.py --agent
+  firebase-deployment. Confirm the cluster context and namespace before acting. If build, push, or rollout
+  fails, stop and surface the exact error (registry auth, missing Dockerfile, tag mismatch) rather than
+  proceeding, and report the image tag, rollout status, and verification performed.'
+examples:
+- 'Server: python -m firebase.server --port 8080'
+- 'Docker: docker run -p 8080:8080 firebase-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: firebase-deployment.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Firebase SDK deployment expert. Help users deploy Firebase applications.
+  opencode:
+    plugin: opencode-firebase-deployment
+  generic:
+    system_prompt: You are firebase-deployment. Firebase SDK deployment agent for ML Firebase SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

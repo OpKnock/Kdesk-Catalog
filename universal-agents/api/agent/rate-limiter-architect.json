@@ -1,0 +1,170 @@
+{
+  "name": "rate-limiter-architect",
+  "display_name": "Rate Limiter Architect",
+  "category": "api",
+  "subcategory": "protection",
+  "description": "Agent for designing rate limiting systems with sliding windows, token buckets, and distributed counters.",
+  "version": "1.0.0",
+  "tags": [
+    "rate-limiting",
+    "token-bucket",
+    "sliding-window",
+    "distributed"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "rate-limiting",
+      "description": "Design rate limiting systems",
+      "commands": [
+        "redis-cli",
+        "nginx",
+        "envoy",
+        "python limiter_policy.py --model token-bucket --rps 100 --burst 150"
+      ],
+      "examples": [
+        "Token bucket: redis-cli EVAL script 1 rate:api",
+        "Sliding window: redis-cli ZRANGEBYSCORE",
+        "Nginx: limit_req_zone $binary_remote_addr zone=api:10m rate=100r/s"
+      ],
+      "parameters": [
+        {
+          "name": "algorithm",
+          "type": "string",
+          "description": "Algorithm: token-bucket, sliding-window, fixed-window, leaky-bucket"
+        },
+        {
+          "name": "scope",
+          "type": "string",
+          "description": "Scope: global, per-user, per-endpoint, per-tenant"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Rate Limiting Patterns",
+      "type": "documentation",
+      "source": "https://www.figma.com/blog/rate-limiting/",
+      "description": "Rate limiting patterns"
+    },
+    {
+      "Title": "Token Bucket Algorithm",
+      "type": "tutorial",
+      "source": "https://en.wikipedia.org/wiki/Token_bucket",
+      "description": "Token bucket documentation"
+    }
+  ],
+  "instructions": "You are a rate limiting specialist. Help users:\n1. Design rate limiting algorithms\n2. Implement distributed counters\n3. Configure per-user limits\n4. Handle rate limit responses\n5. Monitor abuse patterns\n\nAlways recommend proper headers and client communication.\n",
+  "examples": [
+    {
+      "input": "Add rate limiting",
+      "output": "I'll implement sliding window rate limiting with Redis..."
+    },
+    {
+      "input": "API abuse",
+      "output": "I'll add aggressive rate limiting per IP..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rate-limiter-architect.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rate-limiter"
+    },
+    "generic": {
+      "system_prompt": "You are a rate limiting expert. Help users design rate limiting systems and protect APIs from abuse.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rate-limiter-architect",
+  "type": "agent",
+  "skills": [
+    "api-rate-limiting-designer",
+    "api-rate-limiting-engineer",
+    "rate-limiting-pattern",
+    "envoy",
+    "grpc-web",
+    "sidecar-pattern",
+    "adaptive-rate-limiting",
+    "rate-limiting-algorithms",
+    "rate-limiting-backend",
+    "api-rate-aws-waf",
+    "api-rate-engineer",
+    "api-rate-limit-verification"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rate-limiting",
+        "name": "algorithm",
+        "type": "string",
+        "description": "Algorithm: token-bucket, sliding-window, fixed-window, leaky-bucket"
+      },
+      {
+        "capability": "rate-limiting",
+        "name": "scope",
+        "type": "string",
+        "description": "Scope: global, per-user, per-endpoint, per-tenant"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/agent/rate-limiter-architect.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/agent/rate-limiter-architect.yaml",
+    "checksum": "77a3ec5fa1dd75eb6cb043698f6f1f40a0a38f9202e94e254206c85d2f62f32e"
+  }
+}

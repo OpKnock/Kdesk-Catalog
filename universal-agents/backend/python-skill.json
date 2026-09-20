@@ -1,0 +1,208 @@
+{
+  "name": "python",
+  "display_name": "python",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Develops Python backends: virtual environments, packaging, dependency management, debugging, and testing with pytest.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    ".venv\\\\scripts\\\\activate",
+    "pip",
+    "pytest",
+    "python"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "python -m venv .venv",
+        ".venv\\\\Scripts\\\\activate",
+        "pip install -r requirements.txt",
+        "pip freeze > requirements.txt",
+        "pip install -e ."
+      ],
+      "description": "Manage virtual environments and dependencies.",
+      "name": "python-env",
+      "examples": [
+        "python -m venv --upgrade-deps .venv",
+        "pip install --upgrade pip setuptools wheel",
+        "python -m pip cache info"
+      ],
+      "parameters": [
+        {
+          "description": "Virtual env path",
+          "name": "env-path",
+          "type": "string"
+        },
+        {
+          "name": "requirements",
+          "type": "string",
+          "description": "Requirements file path"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "python -m pdb app.py",
+        "python -c \"import urllib.request; print(urllib.request.urlopen(\\\"http://localhost:8000/health\\\").status)\"",
+        "pytest -q",
+        "pytest --cov=src tests/",
+        "python -m compileall src/"
+      ],
+      "description": "Run, debug, and test Python code.",
+      "name": "python-dev",
+      "examples": [
+        "python -m pdb -c continue app.py",
+        "pytest tests/test_api.py -k \"login\" -v",
+        "python -m trace --count app.py"
+      ],
+      "parameters": [
+        {
+          "description": "Module path or test selector",
+          "name": "target",
+          "type": "string"
+        },
+        {
+          "description": "Collect coverage",
+          "name": "cov",
+          "type": "boolean"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Python Docs",
+      "description": "Language and stdlib reference",
+      "source": "https://docs.python.org/3/",
+      "type": "documentation"
+    },
+    {
+      "title": "Python Packaging Guide",
+      "description": "venv, pip, and distribution guidance",
+      "source": "https://packaging.python.org",
+      "type": "documentation"
+    },
+    {
+      "title": "pytest Docs",
+      "description": "Testing framework reference",
+      "source": "https://docs.pytest.org",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Python\n\nBackend development with Python.\n\n## When to Use\n\n- APIs, data pipelines, automation, and ML services\n- Rapid iteration with rich stdlib and ecosystem\n- Teams working in data-heavy domains\n\n## Commands\n\n```bash\n# Environment\npython -m venv .venv\n# Windows: .venv\\Scripts\\activate | Unix: source .venv/bin/activate\npip install -r requirements.txt\npip freeze > requirements.txt\n\n# Debug\npython -m pdb app.py\npython -m pdb -c continue app.py\n\n# Tests\npytest -q\npytest --cov=src tests/\npytest tests/test_api.py -k \"login\" -v\n\n# Compile check\npython -m compileall src/\n```\n\n## Example\n\n```python\n# app.py\nfrom http.server import HTTPServer, BaseHTTPRequestHandler\n\nclass H(BaseHTTPRequestHandler):\n    def do_GET(self):\n        self.send_response(200)\n        self.send_header(\"Content-Type\", \"application/json\")\n        self.end_headers()\n        self.wfile.write(b'{\"status\":\"ok\"}')\n\nHTTPServer((\"\", 8000), H).serve_forever()\n```\n\n## Best Practices\n\n- Always work inside a virtualenv; never pip install globally\n- Pin versions with pip freeze or a lockfile in CI\n- Add type hints and run mypy where practical\n- Run pytest with coverage in CI and enforce a threshold\n- Use python -m pdb for quick diagnosis before adding logging\n- Keep requirements and pyproject metadata in sync",
+  "examples": [
+    {
+      "input": "Reproduce a bug in my script",
+      "output": "Agent runs python -m pdb with breakpoints, walks frames, and identifies the failing data path."
+    },
+    {
+      "input": "Set up a clean dev environment",
+      "output": "Agent creates a venv, installs requirements, and freezes current pins with pip freeze."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "python.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-python"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: python. You do it through python-env: Manage virtual environments and dependencies. The commands are real, e.g. `python -m venv .venv`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "python",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "python-env",
+        "name": "env-path",
+        "type": "string",
+        "description": "Virtual env path"
+      },
+      {
+        "capability": "python-env",
+        "name": "requirements",
+        "type": "string",
+        "description": "Requirements file path"
+      },
+      {
+        "capability": "python-dev",
+        "name": "target",
+        "type": "string",
+        "description": "Module path or test selector"
+      },
+      {
+        "capability": "python-dev",
+        "name": "cov",
+        "type": "boolean",
+        "description": "Collect coverage"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    ".venv\\\\scripts\\\\activate",
+    "pip",
+    "pytest",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/python-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/python-skill.yaml",
+    "checksum": "0f60765d140a1099c22ab9ad78e4b56d73e710783bcf2acfa6c84f7a054f7fde"
+  }
+}

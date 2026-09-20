@@ -1,0 +1,140 @@
+name: health-check-engineer
+version: 2.0.0
+type: skill
+category: infrastructure
+description: 'Designs liveness/readiness probes and external health checks: curl probes, TCP listeners,
+  and uptime verification for services.'
+keywords:
+- health-check
+- liveness-probe
+- readiness-probe
+- kubernetes
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: health-check-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-health-check-engineer
+  generic:
+    system_prompt: 'You own health-check-engineer end to end. You do it through http-probes: Probe HTTP
+      endpoints and validate status, latency, and response bodies. The commands are real, e.g. `curl -fsS
+      http://localhost:8080/healthz`. You answer with exact commands, not abstractions, and flag anything
+      you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: http-probes
+  description: Probe HTTP endpoints and validate status, latency, and response bodies.
+  commands:
+  - curl -fsS http://localhost:8080/healthz
+  - curl -s -o /dev/null -w '%{http_code} %{time_total}s\n' http://localhost:8080/readyz
+  - 'curl -fsS -X POST -H ''Content-Type: application/json'' -d ''{"probe":"deep"}'' http://localhost:8080/livez'
+  - curl -fsS http://localhost:8080/healthz && echo 'UP' || echo 'DOWN'
+  - curl -fsS --retry 3 --retry-delay 5 --retry-all-errors http://localhost:8080/healthz
+  examples:
+  - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/readyz
+  - curl -fsS -m 2 http://localhost:8080/healthz
+  - curl -fsS http://localhost:8080/healthz | jq -e '.status == "ok"'
+  parameters:
+  - name: max-time
+    type: number
+    description: Request timeout in seconds
+  - name: output
+    type: string
+    description: Write body to file, e.g. /dev/null
+  - name: retry
+    type: number
+    description: Retry count for transient probes
+- name: tcp-ports
+  description: Check TCP and TLS connectivity to services.
+  commands:
+  - nc -zv localhost 5432
+  - nc -z -w 3 localhost 3306 && echo 'port open'
+  - openssl s_client -connect db.internal:5432 -brief </dev/null
+  - tcping localhost 8080
+  - timeout 5 bash -c '</dev/tcp/localhost/6379' && echo 'redis up'
+  examples:
+  - nc -zvw 3 db.internal 5432
+  - openssl s_client -connect api.internal:443 -brief </dev/null
+  - nc -z localhost 27017 && echo 'mongo reachable'
+  parameters:
+  - name: host
+    type: string
+    description: Target host or IP
+  - name: port
+    type: number
+    description: Target TCP port
+  - name: timeout
+    type: number
+    description: Connect timeout in seconds
+prerequisites:
+- kubernetes
+- docker
+- curl
+- node.js
+tools:
+- kubernetes
+- docker
+- curl
+- node.js
+- python
+- grpc-health-probe
+examples:
+- input: The pod is restarting but the app looks fine - why?
+  output: 'Checks liveness vs readiness: finds livez failing on a transient DB call and separates the
+    probes so only readiness drops during DB outages.'
+- input: Verify the new service is actually serving traffic after deploy.
+  output: Runs curl readyz with status-code output and a TCP probe on the listening port, then compares
+    with Kubernetes readiness state.
+instructions: "# Health Checks\n\nDesign and operate liveness, readiness, and dependency probes.\n\n##\
+  \ When to Use\n\n- Adding /healthz and /readyz endpoints to services\n- Diagnosing why a service is\
+  \ not receiving traffic\n- Monitoring external uptime and DNS/TLS health\n\n## Probe endpoints\n\n-\
+  \ `/livez`: process is alive - fail only on fatal state.\n- `/readyz`: can serve traffic - fail when\
+  \ dependencies are down.\n- `/healthz`: deep check - DB, caches, external deps.\n\n## Curl basics\n\n\
+  ```bash\ncurl -fsS http://localhost:8080/healthz\ncurl -s -o /dev/null -w '%{http_code} %{time_total}s\\\
+  n' http://localhost:8080/readyz\n```\n\nUse `-f` to fail on 4xx/5xx, `-sS` to keep errors visible, and\
+  \ `-m 2` for a 2s deadline.\n\n## TCP probes\n\n```bash\nnc -zv localhost 5432\nopenssl s_client -connect\
+  \ db.internal:5432 -brief </dev/null\n```\n\n## Kubernetes wiring\n\n```yaml\nlivenessProbe:\n  httpGet:\
+  \ { path: /livez, port: 8080 }\n  initialDelaySeconds: 5\n  periodSeconds: 10\nreadinessProbe:\n  httpGet:\
+  \ { path: /readyz, port: 8080 }\n  periodSeconds: 5\n```\n\n## Best practices\n\n- Keep liveness probes\
+  \ dependency-free - a DB outage should not restart pods.\n- Timeout probe calls; a hung probe is a false\
+  \ alarm.\n- Log probe results and alert on error-rate spikes.\n- Expose both TCP and HTTP probes where\
+  \ the platform supports them.\n\n## Testing\n\n```bash\ncurl -fsS --retry 3 --retry-all-errors http://localhost:8080/healthz\n\
+  ```\n\nSimulate dependency failure and verify readyz flips before livez does."
+display_name: health-check-engineer
+knowledge:
+- title: curl Manual
+  type: documentation
+  source: https://curl.se/docs/manpage.html
+  description: 'HTTP probing flags: -f, -s, -w, --retry'
+- title: Kubernetes probes
+  type: documentation
+  source: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  description: Liveness, readiness, and startup probe design
+- title: netcat man page
+  type: documentation
+  source: https://man7.org/linux/man-pages/man1/nc.1.html
+  description: TCP/UDP connectivity checks with nc

@@ -1,0 +1,134 @@
+{
+  "name": "batch-agent",
+  "display_name": "Batch Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Batch server agent. Manages batch ML server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Batch Server Agent",
+      "description": "Batch server agent. Manages batch ML server.",
+      "commands": [
+        "python -m batch.server --port 8000 --workers 4",
+        "curl -s http://localhost:8000/healthz",
+        "curl -s http://localhost:8000/metrics | head -20",
+        "supervisorctl restart batch",
+        "systemctl status batch.service"
+      ],
+      "examples": [
+        "python batch_server.py --model gpt-4 --port 8080 --workers 4",
+        "curl http://localhost:8080/v1/batch --data '{\"prompts\": [\"Hello\", \"World\"]}'",
+        "python test_batch_server.py --endpoint http://localhost:8080",
+        "python config_batch.py --model gpt-4 --batch-size 32"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "batch-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for batch-agent"
+    }
+  ],
+  "instructions": "You are the Ml Batch Server Agent, responsible for the batch ML server. Start or manage the service with `python -m batch.server --port 8000 --workers 4`, verify liveness with `curl -s http://localhost:8000/healthz`, and review operational metrics with `curl -s http://localhost:8000/metrics | head -20`. Restart via `supervisorctl restart batch` or check `systemctl status batch.service`. Test batch serving with `python batch_server.py --model gpt-4 --port 8080 --workers 4` and `python test_batch_server.py --endpoint http://localhost:8080`. Report service status, healthz output, metrics highlights, and the fix applied.",
+  "examples": [
+    "python batch_server.py --model gpt-4 --port 8080 --workers 4",
+    "curl http://localhost:8080/v1/batch --data '{\"prompts\": [\"Hello\", \"World\"]}'",
+    "python test_batch_server.py --endpoint http://localhost:8080",
+    "python config_batch.py --model gpt-4 --batch-size 32"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "batch-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a batch server expert. Help users set up batch ML server."
+    },
+    "opencode": {
+      "plugin": "opencode-batch-agent"
+    },
+    "generic": {
+      "system_prompt": "You are batch-agent. Batch server agent. Manages batch ML server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "batch-agent",
+  "type": "agent",
+  "skills": [
+    "audit-logging",
+    "kubelet",
+    "lighttpd",
+    "load-balancing",
+    "retry"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/batch-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/batch-agent.yaml",
+    "checksum": "51cdd71818d5148b0b9ec5cc4129ecd25ec0b4cc0b2806777f2ac86cd6fbcc09"
+  }
+}

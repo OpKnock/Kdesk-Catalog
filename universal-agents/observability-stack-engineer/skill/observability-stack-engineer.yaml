@@ -1,0 +1,145 @@
+name: observability-stack-engineer
+version: 2.0.0
+type: skill
+category: infrastructure
+description: 'Deploys the OpenTelemetry stack: collector pipelines, trace generation, and metrics/logs/traces
+  correlation.'
+keywords:
+- observability
+- opentelemetry
+- prometheus
+- metrics
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: observability-stack-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-observability-stack-engineer
+  generic:
+    system_prompt: 'Your lane is observability-stack-engineer. You do it through collector: Run and validate
+      OpenTelemetry collectors. The commands are real, e.g. `otelcol --config otel.yaml`. You prefer the
+      shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: collector
+  description: Run and validate OpenTelemetry collectors.
+  commands:
+  - otelcol --config otel.yaml
+  - otelcol --config otel.yaml --validate
+  - otelcol-contrib --config otel.yaml
+  - curl -s http://localhost:13133/health | jq
+  - docker run -v $(pwd)/otel.yaml:/otel.yaml otel/opentelemetry-collector-contrib --config /otel.yaml
+  examples:
+  - otelcol --config otel.yaml --validate --feature-gates=exporter.otlp.retry.enabled
+  - curl -s http://localhost:8888/metrics | head -20
+  - docker run --rm -p 4317:4317 -p 13133:13133 otel/opentelemetry-collector --config otel.yaml
+  parameters:
+  - name: config
+    type: string
+    description: Collector config file
+  - name: validate
+    type: string
+    description: Validate config and exit
+  - name: metrics-port
+    type: number
+    description: Collector self-metrics port
+- name: tracegen
+  description: Generate load and verify the pipeline.
+  commands:
+  - tracegen -service checkout -trace 100 -duration 30s -otlp-endpoint localhost:4317
+  - tracegen -service checkout -trace 100 -duration 30s
+  - otel-cli exec --service demo -- curl -s http://localhost:8080/healthz
+  - 'curl -s -X POST -H ''Content-Type: application/json'' -d ''{"resourceSpans":[{"resource":{}}]}''
+    http://localhost:4318/v1/traces'
+  - curl -G -s 'http://localhost:3200/api/search' --data-urlencode 'tags=service.name=checkout' | jq '.traces
+    | length'
+  examples:
+  - tracegen -service checkout -trace 50 -duration 15s -otlp-attributes service.version=3.2.0
+  - otel-cli exec --service demo -- sleep 1
+  - curl -G -s 'http://localhost:3200/api/search' --data-urlencode 'tags=service.name=demo' --data-urlencode
+    'limit=5' | jq '.traces | length'
+  parameters:
+  - name: service
+    type: string
+    description: Service name for generated traces
+  - name: trace
+    type: number
+    description: Traces per second
+  - name: duration
+    type: string
+    description: Generation duration
+prerequisites:
+- prometheus
+- grafana
+- opentelemetry-collector
+- jaeger
+- loki
+tools:
+- prometheus
+- grafana
+- opentelemetry-collector
+- jaeger
+- loki
+- tempo
+examples:
+- input: Stand up a full OTLP pipeline to Tempo/Loki/Prometheus.
+  output: Writes the collector config with three pipelines, validates, starts it, and confirms traces
+    via Tempo search.
+- input: Generate synthetic traffic to test the stack.
+  output: Runs tracegen for the checkout service and verifies trace counts in Tempo and metrics in Prometheus.
+instructions: "# Observability Stack\n\nBuild one pipeline for metrics, logs, and traces.\n\n## When to\
+  \ Use\n\n- Standing up the telemetry backbone\n- Migrating agents to OTLP\n- Correlating logs, metrics,\
+  \ and traces\n\n## Collector config\n\n```yaml\nreceivers:\n  otlp:\n    protocols: { grpc: { endpoint:\
+  \ 0.0.0.0:4317 }, http: { endpoint: 0.0.0.0:4318 } }\nprocessors:\n  batch: {}\nexporters:\n  otlphttp/prometheus:\n\
+  \    endpoint: http://prometheus:9090/api/v1/otlp\n  otlp/loki:\n    endpoint: http://loki:3100/otlp\n\
+  \  otlp/tempo:\n    endpoint: http://tempo:4317\n    tls: { insecure: true }\nservice:\n  pipelines:\n\
+  \    traces:\n      receivers: [otlp]\n      processors: [batch]\n      exporters: [otlp/tempo]\n  \
+  \  metrics:\n      receivers: [otlp]\n      processors: [batch]\n      exporters: [otlphttp/prometheus]\n\
+  \    logs:\n      receivers: [otlp]\n      processors: [batch]\n      exporters: [otlp/loki]\n```\n\n\
+  ## Validate and run\n\n```bash\notelcol --config otel.yaml --validate\notelcol --config otel.yaml\n\
+  curl -s http://localhost:13133/health\n```\n\n## Verify with load\n\n```bash\ntracegen -service checkout\
+  \ -trace 100 -duration 30s\notel-cli exec --service demo -- curl -s http://localhost:8080/healthz\n\
+  ```\n\n## Golden signals\n\n- Traces: latency per operation, error spans.\n- Metrics: RED/USE dashboards.\n\
+  - Logs: correlation via trace_id.\n\n## Best practices\n\n- Instrument with SDKs; collectors are for\
+  \ transport, not magic.\n- Batch and queue exporters to avoid data loss.\n- Set sampling policy centrally\
+  \ (head/tail).\n- Validate configs in CI before rollout.\n\n## Testing\n\n```bash\notelcol --config\
+  \ otel.yaml --validate\ntracegen -service checkout -trace 50 -duration 15s\ncurl -G -s 'http://localhost:3200/api/search'\
+  \ --data-urlencode 'tags=service.name=checkout'\n```\n\nTraces must appear in Tempo within seconds."
+display_name: observability-stack-engineer
+knowledge:
+- title: OpenTelemetry Collector
+  type: documentation
+  source: https://opentelemetry.io/docs/collector/
+  description: Pipelines, receivers, processors, exporters
+- title: otel-cli
+  type: documentation
+  source: https://github.com/equinix-labs/otel-cli
+  description: Generate traces from shell commands
+- title: tracegen
+  type: documentation
+  source: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/cmd/tracegen
+  description: Trace load generator

@@ -1,0 +1,130 @@
+{
+  "name": "cloud-aws-agent",
+  "display_name": "Cloud Aws Agent",
+  "category": "cloud",
+  "subcategory": "agent",
+  "description": "AWS agent for cloud services management.",
+  "version": "1.0.0",
+  "tags": [
+    "cloud",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Cloud Aws Agent",
+      "description": "AWS agent for cloud services management.",
+      "commands": [
+        "aws s3 ls",
+        "aws ec2 describe-instances",
+        "aws rds describe-db-instances",
+        "aws lambda list-functions",
+        "aws cloudformation list-stacks"
+      ],
+      "examples": [
+        "aws ec2 describe-instances",
+        "aws s3 ls",
+        "aws lambda list-functions",
+        "aws rds describe-db-instances",
+        "aws cloudformation list-stacks"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "cloud-aws-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/cloud/agent",
+      "description": "Reference documentation for cloud-aws-agent"
+    }
+  ],
+  "instructions": "You are the AWS expert for cloud services management. Call on this agent whenever the user needs to inspect or manage AWS resources. Core workflow: start by orienting on the account, e.g. `aws ec2 describe-instances` for compute, `aws s3 ls` for storage, `aws rds describe-db-instances` for databases, `aws lambda list-functions` for serverless, and `aws cloudformation list-stacks` for IaC state. Use read-only describe/list commands first, then propose changes. Key behaviors: verify credentials and region are configured (`aws configure list`), check instance states and stack statuses, and never run mutating commands without explicit confirmation. Report resource inventories, statuses, and any drift or cost-relevant findings.",
+  "examples": [
+    "aws ec2 describe-instances",
+    "aws s3 ls",
+    "aws lambda list-functions",
+    "aws rds describe-db-instances",
+    "aws cloudformation list-stacks"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cloud-aws-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an AWS expert. Help users manage AWS cloud services."
+    },
+    "opencode": {
+      "plugin": "opencode-cloud-aws-agent"
+    },
+    "generic": {
+      "system_prompt": "You are cloud-aws-agent. AWS agent for cloud services management.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cloud-aws-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/agent/cloud-aws-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/agent/cloud-aws-agent.yaml",
+    "checksum": "739486d89d6f9ac57ef6b64da87a4256e8c01802014f54daf801c810326eb306"
+  }
+}

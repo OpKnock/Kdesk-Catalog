@@ -1,0 +1,108 @@
+name: license-checker
+display_name: License Checker
+category: code-quality
+subcategory: general
+description: Audits npm dependency licenses with license-checker, detecting incompatible, missing, or
+  unknown licenses before release.
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- license-checker
+- npx
+capabilities:
+- name: audit-licenses
+  description: Generate license inventories and enforce allowed-license policies for npm projects
+  commands:
+  - npx license-checker --summary
+  - license-checker --csv --out /tmp/licenses.csv
+  - license-checker --onlyAllow "MIT;Apache-2.0;ISC;BSD-3-Clause"
+  - license-checker --production --json --out license-audit.json
+  - license-checker --excludePackages "lodash@4.17.21" --failOn "GPL"
+  examples:
+  - npx license-checker --onlyAllow 'MIT;Apache-2.0'
+  - license-checker --start --production --csv > licenses.csv
+  - license-checker --summary | head -40
+  parameters:
+  - name: onlyAllow
+    type: string
+    description: Semicolon-separated list of SPDX licenses allowed; exits non-zero on any other license
+  - name: failOn
+    type: string
+    description: License ID that fails the audit if found (e.g. GPL, AGPL)
+  - name: out
+    type: string
+    description: File path to write the license report
+knowledge:
+- title: license-checker npm package
+  type: documentation
+  source: https://www.npmjs.com/package/license-checker
+  description: 'CLI reference for all flags: --summary, --csv, --onlyAllow, --excludePackages'
+- title: SPDX License List
+  type: documentation
+  source: https://spdx.org/licenses/
+  description: Canonical license identifiers used by --onlyAllow and --failOn
+instructions: "# License Checker\n\nAudits every transitive npm dependency and reports its SPDX license\
+  \ so you can enforce\nlegal compliance in CI.\n\n## When to Use\n\n- Before shipping a package or SaaS\
+  \ product to check license compatibility\n- Enforcing an allow-list (MIT/Apache/BSD only) on a monorepo\n\
+  - Detecting copyleft (GPL/AGPL) or unknown licenses sneaking in via transitive deps\n- Generating a\
+  \ license report for legal or compliance review\n\n## Real Commands\n\n```bash\n# Install\nnpm install\
+  \ --save-dev license-checker\n\n# Human-readable tree of every package and its license\nnpx license-checker\
+  \ --start\n\n# Summary counts per license type\nnpx license-checker --summary\n\n# Fail the build if\
+  \ any license is outside the allow-list\nnpx license-checker --onlyAllow \"MIT;Apache-2.0;ISC;BSD-2-Clause;BSD-3-Clause\"\
+  \n\n# Fail on copyleft regardless of allow-list\nnpx license-checker --failOn \"GPL;AGPL;LGPL\"\n\n\
+  # Production-only JSON report for legal\nnpx license-checker --production --json --out license-audit.json\n\
+  \n# CSV report suitable for spreadsheets\nnpx license-checker --csv --out licenses.csv\n```\n\n## CI\
+  \ Integration\n\n```yaml\n# GitHub Actions\n- name: License audit\n  run: npx license-checker --onlyAllow\
+  \ \"MIT;Apache-2.0;ISC;BSD-3-Clause\"\n\n# GitLab CI\nlicense-audit:\n  stage: security\n  script:\n\
+  \    - npx license-checker --summary\n    - npx license-checker --onlyAllow \"MIT;Apache-2.0;ISC\"\n\
+  ```\n\n## Best Practices\n\n- Pin the checker version; license data changes as packages publish\n- Run\
+  \ against `--production` for releases and full tree for dev tooling\n- Review `--excludePackages` carefully;\
+  \ it bypasses the allow-list entirely\n- Treat packages with `UNKNOWN` licenses as a review task, not\
+  \ an auto-pass\n- Re-run after every dependency bump; a new transitive dep can add a copyleft license\n\
+  \n## Example Response\n\nWhen a copyleft license is found the exit code is non-zero and stdout lists\
+  \ the offending\npackages with `license-checker --summary` style counts, so the agent reports the exact\n\
+  package name and version to remove or replace."
+examples:
+- input: Check if we can ship with this dependency tree
+  output: Runs npx license-checker --production --summary, then npx license-checker --onlyAllow "MIT;Apache-2.0;ISC;BSD-3-Clause"
+    and reports the failing packages
+- input: Generate a license report for legal
+  output: Runs license-checker --production --csv --out licenses.csv and license-checker --production
+    --json --out license-audit.json, then summarizes counts
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: license-checker.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-license-checker
+  generic:
+    system_prompt: 'You are the License Checker specialist. You do it through audit-licenses: Generate
+      license inventories and enforce allowed-license policies for npm projects. The commands are real,
+      e.g. `npx license-checker --summary`. You answer with exact commands, not abstractions, and flag
+      anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

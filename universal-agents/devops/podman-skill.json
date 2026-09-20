@@ -1,0 +1,215 @@
+{
+  "name": "podman",
+  "display_name": "podman",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Runs daemonless containers with Podman: build, run, pods, quadlets, compose, and Kubernetes YAML generation without root.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "podman"
+  ],
+  "capabilities": [
+    {
+      "name": "container-lifecycle",
+      "description": "Run and manage rootless containers with podman.",
+      "commands": [
+        "podman pull nginx:alpine",
+        "podman run -d --name web -p 8080:80 nginx:alpine",
+        "podman ps -a",
+        "podman exec -it web sh",
+        "podman logs -f web",
+        "podman rm -f web"
+      ],
+      "examples": [
+        "podman run -d --name web -p 8080:80 nginx:alpine",
+        "podman ps -a",
+        "podman logs -f web"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Container name"
+        },
+        {
+          "name": "image",
+          "type": "string",
+          "description": "Image reference"
+        },
+        {
+          "name": "ports",
+          "type": "string",
+          "description": "Port mapping"
+        }
+      ]
+    },
+    {
+      "name": "pods-and-kubernetes",
+      "description": "Create pods, run compose stacks, and generate Kubernetes YAML.",
+      "commands": [
+        "podman pod create --name webpod -p 8080:80",
+        "podman run -d --pod webpod nginx",
+        "podman generate kube webpod > webpod.yaml",
+        "podman play kube webpod.yaml",
+        "podman compose -f compose.yaml up -d",
+        "podman machine init --cpus 4 --memory 4096"
+      ],
+      "examples": [
+        "podman pod create --name webpod -p 8080:80",
+        "podman generate kube webpod > webpod.yaml",
+        "podman play kube webpod.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "pod",
+          "type": "string",
+          "description": "Pod name"
+        },
+        {
+          "name": "yaml",
+          "type": "string",
+          "description": "Kubernetes YAML file"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Podman Documentation",
+      "type": "documentation",
+      "source": "https://docs.podman.io/",
+      "description": "Rootless containers, pods, quadlets, and networking"
+    },
+    {
+      "title": "Podman Machine",
+      "type": "documentation",
+      "source": "https://docs.podman.io/en/latest/markdown/podman-machine.1.html",
+      "description": "VM-based podman on macOS/Windows"
+    },
+    {
+      "title": "Podman Compose",
+      "type": "documentation",
+      "source": "https://github.com/containers/podman-compose",
+      "description": "Compose-compatible workflow for podman"
+    }
+  ],
+  "instructions": "# Podman Containers\n\nRun containers daemonlessly with Podman — Docker-compatible but rootless by default.\n\n## What This Skill Does\n\n- Runs containers/pods without a daemon (fork-exec model)\n- Builds images with buildah-compatible frontend\n- Generates Kubernetes YAML from running pods\n- Runs compose files via podman-compose or podman play\n- Manages macOS/Windows VMs with podman machine\n\n## When to Use\n\n- Rootless container workflows on Linux workstations/servers\n- RHEL/Fedora environments where Docker is replaced\n- Generating Kubernetes manifests from running containers\n\n## Real Commands\n\n```bash\n# Lifecycle\npodman pull nginx:alpine\npodman run -d --name web -p 8080:80 nginx:alpine\npodman ps -a\npodman exec -it web sh\npodman logs -f web\npodman rm -f web\n\n# Build and images\npodman build -t myapp:1.0 .\npodman images\npodman push registry.example.com/myapp:1.0\n\n# Pods and Kubernetes\npodman pod create --name webpod -p 8080:80\npodman run -d --pod webpod nginx\npodman generate kube webpod > webpod.yaml\npodman play kube webpod.yaml\n\n# Compose + machine\npodman compose -f compose.yaml up -d\npodman machine init --cpus 4 --memory 4096\npodman machine start\n```\n\n## Best Practices\n\n- Run rootless unless bind-mounting privileged devices\n- Use pods for sidecar groupings that must share localhost\n- Prefer podman play kube to standardize on Kubernetes YAML\n- Add `--userns=keep-id` for clean bind-mount permissions\n- For Docker parity, alias docker=podman and test with docker compose v1 projects",
+  "examples": [
+    {
+      "input": "Run our compose stack rootless on a workstation",
+      "output": "Agent uses podman compose up -d, validates containers are running with ps, and checks logs"
+    },
+    {
+      "input": "Turn a running container into Kubernetes manifests",
+      "output": "Agent creates a pod, generates kube YAML, and reviews the deployment/service before play kube"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "podman.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-podman"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: podman. You do it through container-lifecycle: Run and manage rootless containers with podman. The commands are real, e.g. `podman pull nginx:alpine`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "podman",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "container-lifecycle",
+        "name": "name",
+        "type": "string",
+        "description": "Container name"
+      },
+      {
+        "capability": "container-lifecycle",
+        "name": "image",
+        "type": "string",
+        "description": "Image reference"
+      },
+      {
+        "capability": "container-lifecycle",
+        "name": "ports",
+        "type": "string",
+        "description": "Port mapping"
+      },
+      {
+        "capability": "pods-and-kubernetes",
+        "name": "pod",
+        "type": "string",
+        "description": "Pod name"
+      },
+      {
+        "capability": "pods-and-kubernetes",
+        "name": "yaml",
+        "type": "string",
+        "description": "Kubernetes YAML file"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "podman"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/podman-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/podman-skill.yaml",
+    "checksum": "7ff47eeea64c19f55988655d587da056fc549cbabf20c1765a0b514db865e6d8"
+  }
+}

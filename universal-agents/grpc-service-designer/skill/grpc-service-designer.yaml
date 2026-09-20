@@ -1,0 +1,138 @@
+name: grpc-service-designer
+version: 2.0.0
+type: skill
+category: backend
+description: 'Designs gRPC services with protobuf and buf: linting conventions, breaking-change checks,
+  and live server probing with grpcurl.'
+keywords:
+- grpc
+- protobuf
+- api
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: grpc-service-designer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-grpc-service-designer
+  generic:
+    system_prompt: 'You own grpc-service-designer end to end. You do it through buf: Lint, format, and
+      check protobuf definitions for breaking changes. The commands are real, e.g. `buf lint`. You work
+      hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: buf
+  description: Lint, format, and check protobuf definitions for breaking changes.
+  commands:
+  - buf lint
+  - buf breaking --against '.git#branch=main,subdir=proto'
+  - buf format -w
+  - buf generate
+  - buf dep update
+  examples:
+  - buf lint proto/ --path proto/acme/v1/order.proto
+  - buf breaking --against 'https://github.com/acme/api.git#branch=main,subdir=proto' --exclude-imports
+  - buf generate --template buf.gen.yaml proto/acme/v1
+  parameters:
+  - name: against
+    type: string
+    description: Baseline source to diff for breaking changes
+  - name: path
+    type: string
+    description: Subset of files to lint/generate
+  - name: template
+    type: string
+    description: buf.gen.yaml generation template
+- name: grpcurl
+  description: Probe gRPC servers, list services, and call methods.
+  commands:
+  - grpcurl -plaintext localhost:50051 list
+  - grpcurl -plaintext localhost:50051 describe acme.orders.v1.OrderService
+  - grpcurl -plaintext -d '{"id":"42"}' localhost:50051 acme.orders.v1.OrderService/GetOrder
+  - grpcurl -plaintext -import-path proto -proto acme/orders/v1/order.proto localhost:50051 acme.orders.v1.OrderService/ListOrders
+  - grpcurl -plaintext -d '{}' localhost:50051 acme.orders.v1.OrderService/StreamOrders
+  examples:
+  - grpcurl -plaintext localhost:50051 list | grep acme
+  - grpcurl -plaintext -d '{"id":"42","fields":{"name":true}}' localhost:50051 acme.orders.v1.OrderService/GetOrder
+  - 'grpcurl -plaintext -rpc-header ''authorization: Bearer eyJ...'' localhost:50051 acme.orders.v1.OrderService/GetOrder
+    -d ''{}'''
+  parameters:
+  - name: plaintext
+    type: string
+    description: Skip TLS for local development
+  - name: import-path
+    type: string
+    description: Proto import roots for reflection fallback
+  - name: d
+    type: string
+    description: JSON request message
+prerequisites:
+- protoc
+- grpcurl
+- grpc-health-probe
+tools:
+- protoc
+- grpcurl
+- grpc-health-probe
+- buf
+- postman
+- bloomrpc
+examples:
+- input: Add a new GetOrder method without breaking existing clients.
+  output: Adds the RPC and message, runs buf lint, verifies buf breaking against main, and generates stubs.
+- input: Debug why the gRPC call fails in staging.
+  output: Lists services with grpcurl, describes the method, and replays the failing request with verbose
+    output.
+instructions: "# gRPC Service Design\n\nDesign robust gRPC services: proto contracts, conventions, and\
+  \ live testing.\n\n## When to Use\n\n- Defining new service APIs between teams\n- Reviewing protobuf\
+  \ changes for compatibility\n- Debugging services during development\n\n## Service definition\n\n```proto\n\
+  syntax = \"proto3\";\npackage acme.orders.v1;\n\nservice OrderService {\n  rpc GetOrder(GetOrderRequest)\
+  \ returns (Order);\n  rpc ListOrders(ListOrdersRequest) returns (stream Order);\n}\n\nmessage GetOrderRequest\
+  \ {\n  string id = 1;\n}\n\nmessage Order {\n  string id = 1;\n  string sku = 2;\n  int64 price_cents\
+  \ = 3;\n}\n```\n\n## Lint and check\n\n```bash\nbuf lint\nbuf breaking --against '.git#branch=main,subdir=proto'\n\
+  ```\n\nNever reuse field numbers, never change types in place, and never remove deprecated fields.\n\
+  \n## Generate stubs\n\n```yaml\n# buf.gen.yaml\nversion: v2\nplugins:\n  - local: protoc-gen-go\n  \
+  \  out: gen\n    opt: paths=source_relative\n  - local: protoc-gen-go-grpc\n    out: gen\n    opt: paths=source_relative\n\
+  ```\n\n```bash\nbuf generate\n```\n\n## Live probing\n\n```bash\ngrpcurl -plaintext localhost:50051\
+  \ list\ngrpcurl -plaintext -d '{\"id\":\"42\"}' localhost:50051 acme.orders.v1.OrderService/GetOrder\n\
+  ```\n\n## Best practices\n\n- Version packages in the proto package name (v1, v2).\n- Use wrappers/nullable\
+  \ via google.protobuf where truly optional.\n- Keep request messages flat; avoid deeply nested option\
+  \ bundles.\n- Add comments to every field - they become documentation.\n\n## Testing\n\nAdd buf lint\
+  \ and buf breaking to CI, plus grpcurl smoke calls in staging."
+display_name: grpc-service-designer
+knowledge:
+- title: Protobuf Docs
+  type: documentation
+  source: https://protobuf.dev/
+  description: Language guide, style guide, and versioning
+- title: Buf Docs
+  type: documentation
+  source: https://buf.build/docs/
+  description: 'buf CLI: lint, breaking, format, generate'
+- title: grpcurl
+  type: documentation
+  source: https://github.com/fullstorydev/grpcurl
+  description: gRPC command-line client for probing servers

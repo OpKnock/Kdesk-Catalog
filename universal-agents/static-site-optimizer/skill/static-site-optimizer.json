@@ -1,0 +1,254 @@
+{
+  "name": "static-site-optimizer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "frontend",
+  "description": "Optimizes static sites for Core Web Vitals with Lighthouse CI, image compression, CSS purging, and asset minification.",
+  "keywords": [
+    "static-site",
+    "caching",
+    "core-web-vitals",
+    "performance"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "static-site-optimizer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-static-site-optimizer"
+    },
+    "generic": {
+      "system_prompt": "You take the static-site-optimizer seat. You do it through performance-audit: Measure and gate performance with Lighthouse. The commands are real, e.g. `npx lhci autorun`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "performance-audit",
+      "description": "Measure and gate performance with Lighthouse.",
+      "commands": [
+        "npx lhci autorun",
+        "npx lighthouse https://example.com --only-categories=performance --output=json --output-path=lh.json",
+        "npx lhci collect --url=https://example.com --numberOfRuns=3",
+        "npx lhci assert --preset=lighthouse:recommended"
+      ],
+      "examples": [
+        "npx lhci autorun",
+        "npx lighthouse https://example.com --only-categories=performance --output=json --output-path=lh.json",
+        "npx lhci collect --url=https://example.com --numberOfRuns=3"
+      ],
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Page URL to audit"
+        },
+        {
+          "name": "numberOfRuns",
+          "type": "number",
+          "description": "Runs per URL for median scoring"
+        }
+      ]
+    },
+    {
+      "name": "asset-optimization",
+      "description": "Compress images, purge CSS, and minify bundles.",
+      "commands": [
+        "npx imagemin images/**/*.png --out-dir=optimized",
+        "npx purgecss --css dist/styles.css --content dist/**/*.html --output dist/",
+        "npx terser src/app.js -c -m -o dist/app.min.js",
+        "npx critters dist/index.html -o dist/index.html",
+        "npx webpack-bundle-analyzer dist/stats.json"
+      ],
+      "examples": [
+        "npx imagemin images/hero.png --out-dir=optimized",
+        "npx purgecss --css dist/styles.css --content dist/**/*.html --output dist/",
+        "npx terser src/app.js -c -m -o dist/app.min.js"
+      ],
+      "parameters": [
+        {
+          "name": "source",
+          "type": "string",
+          "description": "Source files to optimize"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output directory"
+        }
+      ]
+    },
+    {
+      "name": "delivery-optimization",
+      "description": "Compress responses and inspect headers.",
+      "commands": [
+        "gzip -9 -k dist/index.html",
+        "brotli -9 -k dist/index.html",
+        "curl -sI -H 'Accept-Encoding: br' https://example.com | grep -i 'content-encoding\\|cache-control'",
+        "npx http-server -c-1 dist"
+      ],
+      "examples": [
+        "brotli -9 -k dist/index.html",
+        "curl -sI -H 'Accept-Encoding: br' https://example.com | grep -i content-encoding",
+        "gzip -9 -k dist/app.js"
+      ],
+      "parameters": [
+        {
+          "name": "file",
+          "type": "string",
+          "description": "File to compress"
+        },
+        {
+          "name": "quality",
+          "type": "number",
+          "description": "Compression level 1-9"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "next.js",
+    "astro",
+    "node.js",
+    "sharp"
+  ],
+  "tools": [
+    "next.js",
+    "astro",
+    "node.js",
+    "sharp",
+    "lighthouse",
+    "webpagetest"
+  ],
+  "examples": [
+    {
+      "input": "My site LCP is 6s. Fix it",
+      "output": "Agent runs Lighthouse, identifies the LCP element, compresses the hero image with imagemin, adds preload, and re-measures."
+    },
+    {
+      "input": "Enforce a 90 performance score in CI",
+      "output": "Agent writes a lighthouserc.json with budget assertions and wires npx lhci autorun into the pipeline."
+    }
+  ],
+  "instructions": "# Static Site Optimization\n\nMake static sites fast: measure, optimize, and enforce budgets.\n\n## What This Skill Does\n\n- Audits Core Web Vitals with Lighthouse in CI\n- Compresses images and minifies JS/CSS\n- Purges unused CSS and inlines critical CSS\n- Sets compression and caching headers\n\n## When to Use\n\n- Lighthouse scores regress and need diagnosis\n- Setting performance budgets for a redesign\n- Reducing first-load bytes of a marketing site\n\n## Real Commands\n\n```bash\n# Measure\nnpx lhci autorun\nnpx lighthouse https://example.com --only-categories=performance --output=json --output-path=lh.json\n\n# Optimize assets\nnpx imagemin images/**/*.png --out-dir=optimized\nnpx purgecss --css dist/styles.css --content dist/**/*.html --output dist/\nnpx terser src/app.js -c -m -o dist/app.min.js\n\n# Delivery\nbrotli -9 -k dist/index.html\ngzip -9 -k dist/app.js\ncurl -sI -H 'Accept-Encoding: br' https://example.com | grep -i content-encoding\n```\n\n## Budgets (lighthouserc.json)\n\n```json\n{\n  \"ci\": {\n    \"assert\": {\n      \"assertions\": {\n        \"categories:performance\": [\"error\", { \"minScore\": 0.9 }],\n        \"largest-contentful-paint\": [\"error\", { \"maxNumericValue\": 2500 }]\n      }\n    }\n  }\n}\n```\n\n## Best Practices\n\n- Audit on a warmed cache and a cold cache\n- Serve AVIF/WebP with responsive sizes\n- Preload fonts and critical images; lazy-load below the fold\n- Enable brotli at the CDN; set long cache headers on hashed assets\n- Fail CI on LCP > 2.5s to prevent regressions",
+  "display_name": "static-site-optimizer",
+  "knowledge": [
+    {
+      "title": "Lighthouse Documentation",
+      "type": "documentation",
+      "source": "https://developer.chrome.com/docs/lighthouse/overview",
+      "description": "Performance scoring and audits"
+    },
+    {
+      "title": "Lighthouse CI",
+      "type": "documentation",
+      "source": "https://github.com/GoogleChrome/lighthouse-ci",
+      "description": "CI budget assertions and uploads"
+    },
+    {
+      "title": "web.dev Performance",
+      "type": "documentation",
+      "source": "https://web.dev/explore/learn-core-web-vitals",
+      "description": "Core Web Vitals guidance"
+    }
+  ],
+  "id": "static-site-optimizer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "performance-audit",
+        "name": "url",
+        "type": "string",
+        "description": "Page URL to audit"
+      },
+      {
+        "capability": "performance-audit",
+        "name": "numberOfRuns",
+        "type": "number",
+        "description": "Runs per URL for median scoring"
+      },
+      {
+        "capability": "asset-optimization",
+        "name": "source",
+        "type": "string",
+        "description": "Source files to optimize"
+      },
+      {
+        "capability": "asset-optimization",
+        "name": "output",
+        "type": "string",
+        "description": "Output directory"
+      },
+      {
+        "capability": "delivery-optimization",
+        "name": "file",
+        "type": "string",
+        "description": "File to compress"
+      },
+      {
+        "capability": "delivery-optimization",
+        "name": "quality",
+        "type": "number",
+        "description": "Compression level 1-9"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "next.js",
+    "astro",
+    "node.js",
+    "sharp"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "static-site-optimizer/skill/static-site-optimizer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/static-site-optimizer/skill/static-site-optimizer.yaml",
+    "checksum": "c5531d2c4309574448a6906d069bea38f933d66f5b4ff945fc5226b84c2a6d74"
+  }
+}

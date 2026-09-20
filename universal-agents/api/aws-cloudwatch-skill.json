@@ -1,0 +1,228 @@
+{
+  "name": "aws-cloudwatch",
+  "display_name": "Aws Cloudwatch",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Manages CloudWatch metrics and alarms: metric retrieval, alarm creation, anomaly detection, and dashboard publishing.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "aws"
+  ],
+  "capabilities": [
+    {
+      "name": "metrics",
+      "description": "List, query, and publish metrics.",
+      "commands": [
+        "aws cloudwatch list-metrics --namespace AWS/ApiGateway",
+        "aws cloudwatch get-metric-statistics --namespace AWS/ApiGateway --metric-name 4XXError --start-time $(date -u -d '1 hour ago' +%Y-%m-%dT%H:%M:%SZ) --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) --period 300 --statistics Sum",
+        "aws cloudwatch put-metric-data --namespace Custom --metric-name latency --value 120 --unit Milliseconds",
+        "aws cloudwatch list-metrics --metric-name CPUUtilization --dimensions Name=InstanceId,Value=i-12345",
+        "aws cloudwatch get-metric-data --metric-data-queries file://queries.json --start-time ... --end-time ..."
+      ],
+      "examples": [
+        "aws cloudwatch get-metric-statistics --namespace AWS/ApiGateway --metric-name 5XXError --period 60 --statistics Sum --start-time $(date -u -d '1h ago' +%Y-%m-%dT%H:%M:%SZ) --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ)",
+        "aws cloudwatch put-metric-data --namespace Custom --metric-name order.count --value 42 --timestamp $(date -u +%Y-%m-%dT%H:%M:%SZ)",
+        "aws cloudwatch list-metrics --namespace AWS/Lambda --query 'Metrics[].MetricName' | sort -u"
+      ],
+      "parameters": [
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Metric namespace (AWS/... or Custom)"
+        },
+        {
+          "name": "metric_name",
+          "type": "string",
+          "description": "Metric name"
+        },
+        {
+          "name": "statistics",
+          "type": "string",
+          "description": "Sum, Average, Maximum, Minimum, SampleCount"
+        }
+      ]
+    },
+    {
+      "name": "alarms",
+      "description": "Create and manage CloudWatch alarms.",
+      "commands": [
+        "aws cloudwatch put-metric-alarm --alarm-name api-5xx --alarm-description \"API 5xx errors\" --metric-name 5XXError --namespace AWS/ApiGateway --statistic Sum --period 60 --evaluation-periods 3 --threshold 10 --comparison-operator GreaterThanOrEqualToThreshold",
+        "aws cloudwatch describe-alarms --state-value ALARM",
+        "aws cloudwatch describe-alarms --alarm-names api-5xx",
+        "aws cloudwatch set-alarm-state --alarm-name api-5xx --state-value ALARM --state-reason \"test\"",
+        "aws cloudwatch delete-alarms --alarm-names api-5xx"
+      ],
+      "examples": [
+        "aws cloudwatch put-metric-alarm --alarm-name api-5xx --metric-name 5XXError --namespace AWS/ApiGateway --statistic Sum --period 60 --evaluation-periods 3 --threshold 10 --comparison-operator GreaterThanOrEqualToThreshold --alarm-actions arn:aws:sns:us-east-1:123456789012:oncall",
+        "aws cloudwatch describe-alarms --state-value ALARM --query 'MetricAlarms[].AlarmName'",
+        "aws cloudwatch describe-alarms-for-metric --metric-name 5XXError --namespace AWS/ApiGateway"
+      ],
+      "parameters": [
+        {
+          "name": "threshold",
+          "type": "number",
+          "description": "Alarm threshold"
+        },
+        {
+          "name": "period",
+          "type": "number",
+          "description": "Evaluation period in seconds"
+        },
+        {
+          "name": "evaluation_periods",
+          "type": "number",
+          "description": "Consecutive periods before firing"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "CloudWatch Monitoring Docs",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/",
+      "description": "Metrics, alarms, dashboards"
+    },
+    {
+      "title": "AWS CLI cloudwatch Reference",
+      "type": "documentation",
+      "source": "https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudwatch/index.html",
+      "description": "CLI commands"
+    },
+    {
+      "title": "API Gateway Metrics",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-metrics-and-dimensions.html",
+      "description": "Available API Gateway metrics"
+    }
+  ],
+  "instructions": "# AWS CloudWatch\n\n## What this skill does\n\nManages CloudWatch metrics and alarms: listing/querying metric namespaces, computing statistics over time windows, publishing custom metrics, and creating/test alarms.\n\n## When to use\n\n- Verifying an API's error rate or latency trend\n- Creating an alarm for a new service\n- Publishing custom application metrics\n\n## Real commands\n\n```bash\n# Available metrics\naws cloudwatch list-metrics --namespace AWS/ApiGateway\n\n# Query a metric over the last hour\naws cloudwatch get-metric-statistics --namespace AWS/ApiGateway --metric-name 4XXError --start-time $(date -u -d '1 hour ago' +%Y-%m-%dT%H:%M:%SZ) --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) --period 300 --statistics Sum\n\n# Publish a custom metric\naws cloudwatch put-metric-data --namespace Custom --metric-name latency --value 120 --unit Milliseconds\n\n# Create an alarm\naws cloudwatch put-metric-alarm --alarm-name api-5xx --metric-name 5XXError --namespace AWS/ApiGateway --statistic Sum --period 60 --evaluation-periods 3 --threshold 10 --comparison-operator GreaterThanOrEqualToThreshold\n\n# Check alarm state\neaws cloudwatch describe-alarms --state-value ALARM\n```\n\nNote: `eaws` is a typo for `aws`; always use `aws cloudwatch ...`.\n\n## Testing\n\n- Trigger an alarm intentionally with set-alarm-state, then reset to OK\n- Verify period and evaluation-periods match your SLO window\n\n## Best practices\n\n- Use Sum for error counts, Average for utilization\n- Attach SNS actions for actionable alerts\n- Publish custom metrics with consistent units",
+  "examples": [
+    {
+      "input": "Did we get 5xx errors in the last hour?",
+      "output": "Runs get-metric-statistics for 5XXError with 60s period over the last hour and sums the datapoints."
+    },
+    {
+      "input": "Alert me when API 5xx exceeds 10 in 3 minutes",
+      "output": "Creates the alarm with period 60, evaluation-periods 3, threshold 10, and an SNS action, then verifies with describe-alarms."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "aws-cloudwatch.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-aws-cloudwatch"
+    },
+    "generic": {
+      "system_prompt": "You are the Aws Cloudwatch specialist. You do it through metrics: List, query, and publish metrics. The commands are real, e.g. `aws cloudwatch list-metrics --namespace AWS/ApiGateway`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "aws-cloudwatch",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "metrics",
+        "name": "namespace",
+        "type": "string",
+        "description": "Metric namespace (AWS/... or Custom)"
+      },
+      {
+        "capability": "metrics",
+        "name": "metric_name",
+        "type": "string",
+        "description": "Metric name"
+      },
+      {
+        "capability": "metrics",
+        "name": "statistics",
+        "type": "string",
+        "description": "Sum, Average, Maximum, Minimum, SampleCount"
+      },
+      {
+        "capability": "alarms",
+        "name": "threshold",
+        "type": "number",
+        "description": "Alarm threshold"
+      },
+      {
+        "capability": "alarms",
+        "name": "period",
+        "type": "number",
+        "description": "Evaluation period in seconds"
+      },
+      {
+        "capability": "alarms",
+        "name": "evaluation_periods",
+        "type": "number",
+        "description": "Consecutive periods before firing"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "aws"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/aws-cloudwatch-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/aws-cloudwatch-skill.yaml",
+    "checksum": "8846d63260e3364fc88f021a15e9ee21d3f59fa0783d72792d31f37be7e491aa"
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "name": "skaffold",
+  "display_name": "skaffold",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Develops Kubernetes applications with Skaffold: continuous build/sync/deploy loop, profiles, debugging, and CI render pipelines.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "skaffold"
+  ],
+  "capabilities": [
+    {
+      "name": "dev-loop",
+      "description": "Run the watch-loop: auto build, sync, and deploy on file changes.",
+      "commands": [
+        "skaffold dev",
+        "skaffold dev --port-forward",
+        "skaffold dev --profile dev",
+        "skaffold dev --trigger notify",
+        "skaffold debug"
+      ],
+      "examples": [
+        "skaffold dev --port-forward",
+        "skaffold dev --profile dev",
+        "skaffold debug"
+      ],
+      "parameters": [
+        {
+          "name": "profile",
+          "type": "string",
+          "description": "Skaffold profile to activate"
+        },
+        {
+          "name": "trigger",
+          "type": "string",
+          "description": "Change trigger: notify, polling, manual"
+        }
+      ]
+    },
+    {
+      "name": "build-and-deploy",
+      "description": "One-shot build, render, and deploy for CI pipelines.",
+      "commands": [
+        "skaffold build",
+        "skaffold build --file-output artifacts.json",
+        "skaffold deploy -a artifacts.json",
+        "skaffold run",
+        "skaffold render --digest-source=remote > rendered.yaml",
+        "skaffold delete"
+      ],
+      "examples": [
+        "skaffold build --file-output artifacts.json",
+        "skaffold deploy -a artifacts.json",
+        "skaffold render --digest-source=remote"
+      ],
+      "parameters": [
+        {
+          "name": "artifacts",
+          "type": "string",
+          "description": "Artifacts file for staged CI builds"
+        },
+        {
+          "name": "file",
+          "type": "string",
+          "description": "skaffold.yaml path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Skaffold Documentation",
+      "type": "documentation",
+      "source": "https://skaffold.dev/docs/",
+      "description": "Concepts, pipeline config, profiles, and debug"
+    },
+    {
+      "title": "Skaffold YAML Reference",
+      "type": "documentation",
+      "source": "https://skaffold.dev/docs/references/yaml/",
+      "description": "skaffold.yaml schema"
+    }
+  ],
+  "instructions": "# Skaffold Development Loop\n\nIterate on Kubernetes apps locally: watch files, rebuild images, redeploy automatically.\n\n## What This Skill Does\n\n- Runs the dev loop: build, push, deploy, watch\n- Syncs changed files into running containers without rebuilds\n- Port-forwards services for local testing\n- Runs interactive debuggers with skaffold debug\n- Renders final manifests for CI deploy stages\n\n## When to Use\n\n- Local Kubernetes development against a cluster\n- Fast inner loop without writing deploy scripts\n- CI: build artifacts in one stage, deploy in another\n\n## Real Commands\n\n```bash\n# Dev loop\nskaffold dev\nskaffold dev --port-forward\nskaffold dev --profile dev --trigger notify\nskaffold debug\n\n# CI\nskaffold build --file-output artifacts.json\nskaffold deploy -a artifacts.json\nskaffold run\nskaffold render --digest-source=remote > rendered.yaml\nskaffold delete\n```\n\n## skaffold.yaml Sketch\n\n```yaml\napiVersion: skaffold/v4beta11\nkind: Config\nbuild:\n  artifacts:\n    - image: myapp\n      context: .\n  tagPolicy:\n    sha256: {}\ndeploy:\n  kubectl:\n    manifests:\n      - k8s/*.yaml\n```\n\n## Best Practices\n\n- Use file sync for interpreted languages (Node, Python) to skip rebuilds\n- Keep skaffold.yaml versioned in repo; profiles per env\n- Use build/deploy split in CI for artifact reuse\n- Use `skaffold debug` for Node/Java/Python debugger integration\n- Add `--kube-context` in multi-cluster environments",
+  "examples": [
+    {
+      "input": "Speed up local dev against our cluster",
+      "output": "Agent configures skaffold dev with file sync, port-forward, and verifies the hot-reload flow"
+    },
+    {
+      "input": "CI deploy with cached artifacts",
+      "output": "Agent splits pipeline: skaffold build --file-output, then skaffold deploy -a in the deploy stage"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "skaffold.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-skaffold"
+    },
+    "generic": {
+      "system_prompt": "You are the skaffold specialist. You do it through dev-loop: Run the watch-loop: auto build, sync, and deploy on file changes. The commands are real, e.g. `skaffold dev`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "skaffold",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "dev-loop",
+        "name": "profile",
+        "type": "string",
+        "description": "Skaffold profile to activate"
+      },
+      {
+        "capability": "dev-loop",
+        "name": "trigger",
+        "type": "string",
+        "description": "Change trigger: notify, polling, manual"
+      },
+      {
+        "capability": "build-and-deploy",
+        "name": "artifacts",
+        "type": "string",
+        "description": "Artifacts file for staged CI builds"
+      },
+      {
+        "capability": "build-and-deploy",
+        "name": "file",
+        "type": "string",
+        "description": "skaffold.yaml path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "skaffold"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/skaffold-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/skaffold-skill.yaml",
+    "checksum": "fc936a1a09285bb13bcaa1c189fe0a26a0188215dca6846aa3dc6e70c3f98a86"
+  }
+}

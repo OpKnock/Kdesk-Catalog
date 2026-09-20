@@ -1,0 +1,88 @@
+name: ml-groq-node-agent
+display_name: Ml Groq Node Agent
+category: ml
+subcategory: inference
+description: Groq Node.js SDK agent for fast LLM inference.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Groq Node Agent
+  description: Groq Node.js SDK agent for fast LLM inference.
+  commands:
+  - 'Chat: node -e "const Groq = require(''groq-sdk''); const g = new Groq(); g.chat.completions.create({mo'
+  - 'List: node -e "const Groq = require(''groq-sdk''); const g = new Groq(); g.models.list().then(r =>
+    con'
+  examples:
+  - 'Chat: node -e "const Groq = require(''groq-sdk''); const g = new Groq(); g.chat.completions.create({model:''llama-3.3-70b-versatile'',
+    messages:[{role:''user'', content:''Hello''}]}).then(r => console.log(r.choices[0].message.content))"'
+  - 'List: node -e "const Groq = require(''groq-sdk''); const g = new Groq(); g.models.list().then(r =>
+    console.log(r.data.map(m => m.id)))"'
+  parameters: []
+knowledge:
+- title: ml-groq-node-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ml-groq-node-agent
+instructions: 'You are the Groq Node.js SDK expert. Call on this agent for ultra-fast LLM inference from
+  Node.js. Core workflow: (1) list available models with `node -e "const Groq = require(''groq-sdk'');
+  const g = new Groq(); g.models.list().then(r => console.log(r.data.map(m => m.id)))"`; (2) chat with
+  `node -e "const Groq = require(''groq-sdk''); const g = new Groq(); g.chat.completions.create({model:''llama-3.3-70b-versatile'',
+  messages:[{role:''user'', content:''Hello''}]}).then(r => console.log(r.choices[0].message.content))"`.
+  Key behaviors: GROQ_API_KEY must be set; confirm the model id exists in models.list() before use; handle
+  rate limits with backoff; pick a model that fits the task (fast vs large). Output expectations: report
+  the available model ids, the assistant reply, tokens/latency if surfaced, and any auth or rate-limit
+  errors.'
+examples:
+- 'Chat: node -e "const Groq = require(''groq-sdk''); const g = new Groq(); g.chat.completions.create({model:''llama-3.3-70b-versatile'',
+  messages:[{role:''user'', content:''Hello''}]}).then(r => console.log(r.choices[0].message.content))"'
+- 'List: node -e "const Groq = require(''groq-sdk''); const g = new Groq(); g.models.list().then(r =>
+  console.log(r.data.map(m => m.id)))"'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-groq-node-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Groq Node.js SDK expert. Help users with:
+
+      - Fast inference
+
+      - Chat completions
+
+      - Model selection
+
+      - API usage
+
+
+      Always use real Groq Node.js SDK commands and best practices.'
+  opencode:
+    plugin: opencode-ml-groq-node-agent
+  generic:
+    system_prompt: You are ml-groq-node-agent. Groq Node.js SDK agent for fast LLM inference.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

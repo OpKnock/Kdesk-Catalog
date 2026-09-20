@@ -1,0 +1,124 @@
+name: documentation-devtools
+display_name: documentation-devtools
+category: devtools
+subcategory: general
+description: 'Builds project documentation sites with MkDocs, Sphinx, and Docusaurus: setup, build, serve,
+  deploy, and API docs generation.'
+version: 2.0.0
+tags:
+- devtools
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- make
+- mkdocs
+- npm
+- npx
+- sphinx-build
+- sphinx-quickstart
+capabilities:
+- name: mkdocs
+  description: Create and build Python-based documentation sites from Markdown.
+  commands:
+  - mkdocs new mydocs
+  - mkdocs serve
+  - mkdocs build
+  - mkdocs gh-deploy
+  - mkdocs build --strict
+  - mkdocs build --clean
+  examples:
+  - mkdocs new mydocs
+  - mkdocs serve --dev-addr 127.0.0.1:8000
+  - mkdocs gh-deploy
+  parameters:
+  - name: project
+    type: string
+    description: Project directory name
+  - name: strict
+    type: boolean
+    description: Fail on warnings
+- name: sphinx-and-docusaurus
+  description: Generate API docs with Sphinx and JS sites with Docusaurus.
+  commands:
+  - sphinx-quickstart docs
+  - sphinx-build -b html docs docs/_build
+  - make -C docs html
+  - npx create-docusaurus@latest site classic
+  - npm run build --prefix site
+  - npx docusaurus deploy
+  examples:
+  - sphinx-quickstart docs
+  - sphinx-build -b html docs docs/_build
+  - npm run build --prefix site
+  parameters:
+  - name: source-dir
+    type: string
+    description: Docs source directory
+  - name: build-dir
+    type: string
+    description: HTML output directory
+knowledge:
+- title: MkDocs Documentation
+  type: documentation
+  source: https://www.mkdocs.org/
+  description: MkDocs user guide and theme config
+- title: Sphinx Documentation
+  type: documentation
+  source: https://www.sphinx-doc.org/en/master/
+  description: Sphinx setup, extensions, and autodoc
+- title: Docusaurus
+  type: documentation
+  source: https://docusaurus.io/docs
+  description: React-based documentation site framework
+instructions: "# Documentation Engineering\n\nBuild and maintain documentation sites for projects.\n\n\
+  ## What This Skill Does\n\n- Scaffolds MkDocs, Sphinx, and Docusaurus sites\n- Builds static HTML from\
+  \ Markdown/reStructuredText\n- Generates API references from code (Sphinx autodoc)\n- Serves locally\
+  \ and deploys to GitHub Pages\n- Enforces strict builds in CI\n\n## When to Use\n\n- A project needs\
+  \ a docs site, not just a README\n- Automating API documentation generation\n- Setting up docs CI with\
+  \ broken-link and strict checks\n\n## Real Commands\n\n```bash\n# MkDocs\nmkdocs new mydocs\ncd mydocs\
+  \ && mkdocs serve\nmkdocs build\nmkdocs build --strict\nmkdocs gh-deploy\nmkdocs build --clean\n\n#\
+  \ Sphinx\nsphinx-quickstart docs\nsphinx-build -b html docs docs/_build\nmake -C docs html\nmake -C\
+  \ docs doctest\n\n# Docusaurus\nnpx create-docusaurus@latest site classic\nnpm run start --prefix site\n\
+  npm run build --prefix site\nnpx docusaurus deploy\n```\n\n## mkdocs.yml Sketch\n\n```yaml\nsite_name:\
+  \ My Project\nnav:\n  - Home: index.md\n  - Guide: guide.md\ntheme: readthedocs\nplugins:\n  - search\n\
+  ```\n\n## Best Practices\n\n- Use --strict in CI so broken anchors fail builds\n- Keep docs in-repo\
+  \ and version-tagged with releases\n- Auto-generate API docs with autodoc/typedoc\n- Add a docs contribution\
+  \ section to the main README\n- Deploy from CI on main branch only"
+examples:
+- input: Give our Python library a docs site
+  output: Agent scaffolds Sphinx with autodoc, configures the theme and nav, builds, and sets up a Pages
+    deploy
+- input: Quick Markdown docs with a searchable theme
+  output: Agent creates an MkDocs project, adds search plugin, builds strictly, and deploys
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: documentation-devtools.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-documentation
+  generic:
+    system_prompt: 'Your lane is documentation-devtools. You do it through mkdocs: Create and build Python-based
+      documentation sites from Markdown. The commands are real, e.g. `mkdocs new mydocs`. You run and
+      verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

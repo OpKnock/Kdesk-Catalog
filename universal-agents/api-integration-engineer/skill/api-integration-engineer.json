@@ -1,0 +1,220 @@
+{
+  "name": "api-integration-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Implements third-party integrations with official SDKs and CLIs: Stripe payments, Twilio messaging, and webhook verification.",
+  "keywords": [
+    "api-integration",
+    "third-party",
+    "webhooks"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-integration-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-integration-engineer"
+    },
+    "generic": {
+      "system_prompt": "You are the api-integration-engineer specialist. You do it through stripe-integration: Build payment flows with Stripe SDK and CLI. The commands are real, e.g. `npm install stripe`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "stripe-integration",
+      "description": "Build payment flows with Stripe SDK and CLI",
+      "commands": [
+        "npm install stripe",
+        "stripe listen --forward-to localhost:3000/webhooks/stripe",
+        "stripe trigger payment_intent.succeeded",
+        "node -e \"const s=require('stripe')('sk_test_x');s.products.create({name:'T-Shirt'}).then(p=>console.log(p.id))\"",
+        "stripe logs tail"
+      ],
+      "examples": [
+        "node -e \"const s=require('stripe')('sk_test_x');s.products.create({name:'T-Shirt'}).then(p=>console.log(p.id))\"",
+        "stripe trigger payment_intent.succeeded",
+        "stripe logs tail payment_intent"
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Stripe API key"
+        },
+        {
+          "name": "event",
+          "type": "string",
+          "description": "Event to trigger"
+        }
+      ]
+    },
+    {
+      "name": "twilio-integration",
+      "description": "Send SMS and verify delivery with Twilio",
+      "commands": [
+        "brew tap twilio/brew && brew install twilio",
+        "twilio login",
+        "twilio api:core:messages:create --from +15017122661 --to +15558675310 --text 'Your order shipped'",
+        "twilio api:core:messages:list --limit 5",
+        "twilio api:core:accounts:list"
+      ],
+      "examples": [
+        "twilio api:core:messages:create --from +15017122661 --to +15558675310 --text 'Your order shipped'",
+        "twilio api:core:messages:list --limit 5",
+        "twilio api:core:accounts:list"
+      ],
+      "parameters": [
+        {
+          "name": "from",
+          "type": "string",
+          "description": "Sender number"
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "description": "Recipient number"
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "description": "Message body"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "ngrok",
+    "redis"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "ngrok",
+    "redis",
+    "stripe-cli",
+    "twilio-cli"
+  ],
+  "examples": [
+    {
+      "input": "Integrate Stripe payments",
+      "output": "Creates products and payment intents, listens for webhooks locally, and verifies signature handling"
+    },
+    {
+      "input": "Add Twilio SMS notifications",
+      "output": "Sends order-shipped messages via the Twilio CLI and lists delivery status"
+    }
+  ],
+  "instructions": "# API Integration Engineer\n\nBuilds real third-party integrations with official tools.\n\n## When to Use\n- Adding payment processing\n- Adding SMS notifications\n- Building connectors with official SDKs\n\n## Real Commands\n\n```bash\n# Stripe\nnpm install stripe\nnode -e \"const s=require('stripe')('sk_test_x');s.products.create({name:'T-Shirt'}).then(p=>console.log(p.id))\"\nstripe listen --forward-to localhost:3000/webhooks/stripe\nstripe trigger payment_intent.succeeded\nstripe logs tail\n\n# Twilio\nbrew tap twilio/brew && brew install twilio\ntwilio login\ntwilio api:core:messages:create --from +15017122661 --to +15558675310 --text 'Your order shipped'\n```\n\n## Webhook Verification\n- Verify signatures on every event\n- Reply 200 immediately\n- Process in a queue\n\n## Testing\nUse sandbox keys and trigger every event type before going live.\n\n## Best Practices\n- Secrets in env/secret manager\n- Idempotency keys on money paths",
+  "display_name": "api-integration-engineer",
+  "knowledge": [
+    {
+      "title": "Stripe Node SDK",
+      "type": "documentation",
+      "source": "https://docs.stripe.com/api?lang=node",
+      "description": "Payments, products, webhooks"
+    },
+    {
+      "title": "Twilio CLI",
+      "type": "documentation",
+      "source": "https://www.twilio.com/docs/twilio-cli",
+      "description": "Messaging commands"
+    }
+  ],
+  "id": "api-integration-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "stripe-integration",
+        "name": "key",
+        "type": "string",
+        "description": "Stripe API key"
+      },
+      {
+        "capability": "stripe-integration",
+        "name": "event",
+        "type": "string",
+        "description": "Event to trigger"
+      },
+      {
+        "capability": "twilio-integration",
+        "name": "from",
+        "type": "string",
+        "description": "Sender number"
+      },
+      {
+        "capability": "twilio-integration",
+        "name": "to",
+        "type": "string",
+        "description": "Recipient number"
+      },
+      {
+        "capability": "twilio-integration",
+        "name": "text",
+        "type": "string",
+        "description": "Message body"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "ngrok",
+    "redis"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-integration-engineer/skill/api-integration-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-integration-engineer/skill/api-integration-engineer.yaml",
+    "checksum": "a91ed4ce5fe69fa5355fe1fb309e81129eb82abccf28ad7b14c4376269f3eed3"
+  }
+}

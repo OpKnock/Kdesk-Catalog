@@ -1,0 +1,153 @@
+{
+  "name": "webhook-engineer",
+  "display_name": "Webhook Engineer",
+  "category": "backend",
+  "subcategory": "integration",
+  "description": "Agent for building webhook systems with retry logic, validation, and monitoring.",
+  "version": "1.0.0",
+  "tags": [
+    "webhook-engineer"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "webhook-system",
+      "description": "Build webhook systems",
+      "commands": [
+        "svix",
+        "webhook.site",
+        "ngrok"
+      ],
+      "examples": [
+        "Svix: svix message create --app-id xxx --content '{\"event\":\"user.created\"}'",
+        "Test: curl -X POST -H 'Content-Type: application/json' https://webhook.site/xxx",
+        "Verify: openssl dgst -sha256 -hmac 'secret' -verify signature.txt payload.txt"
+      ],
+      "parameters": [
+        {
+          "name": "feature",
+          "type": "string",
+          "description": "Feature: delivery, retry, validation, logging"
+        },
+        {
+          "name": "pattern",
+          "type": "string",
+          "description": "Pattern: fan-out, routing, filtering"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Webhooks Best Practices",
+      "type": "documentation",
+      "source": "https://docs.svix.com/",
+      "description": "Webhook delivery best practices"
+    },
+    {
+      "Title": "Stripe Webhooks",
+      "type": "tutorial",
+      "source": "https://docs.stripe.com/webhooks",
+      "description": "Stripe webhook implementation"
+    }
+  ],
+  "instructions": "You are a webhook specialist. Help users:\n1. Build webhook delivery\n2. Implement retry logic\n3. Validate payloads\n4. Monitor delivery\n5. Handle failures\n\nAlways recommend idempotency and signature verification.\n",
+  "examples": [
+    {
+      "input": "Build webhooks",
+      "output": "I'll build a webhook system with retries and validation..."
+    },
+    {
+      "input": "Webhook security",
+      "output": "I'll implement HMAC signature verification..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "webhook-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-webhooks"
+    },
+    "generic": {
+      "system_prompt": "You are a webhook expert. Help users build robust webhook systems with retry logic and validation.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "webhook-engineer",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "webhook-system",
+        "name": "feature",
+        "type": "string",
+        "description": "Feature: delivery, retry, validation, logging"
+      },
+      {
+        "capability": "webhook-system",
+        "name": "pattern",
+        "type": "string",
+        "description": "Pattern: fan-out, routing, filtering"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/agent/webhook-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/agent/webhook-engineer.yaml",
+    "checksum": "1af316631092b7f1ffb9617f9d4df60323c3a4e1db3aa60fa0978b3866dd87cb"
+  }
+}

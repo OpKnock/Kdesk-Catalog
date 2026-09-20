@@ -1,0 +1,164 @@
+name: api-version-specialist
+version: 2.0.0
+type: skill
+category: backend
+description: 'Applies Semantic Versioning to API releases: semver range evaluation, npm versioning, git
+  tags, and breaking-change classification.'
+keywords:
+- semver
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-version-specialist.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-version-specialist
+  generic:
+    system_prompt: 'You take the api-version-specialist seat. You do it through semver-tools: Evaluate
+      and apply semver versions. The commands are real, e.g. `npx semver 1.2.3 major`. You work hands-on
+      and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: semver-tools
+  description: Evaluate and apply semver versions
+  commands:
+  - npx semver 1.2.3 major
+  - npx semver "1.2.3" -r ">=1.0.0 <2.0.0"
+  - npm version patch
+  - 'npm version minor -m "chore: release %s"'
+  - git tag -l 'v*' --sort=-v:refname | head
+  examples:
+  - npx semver 1.2.3 major returns 2.0.0
+  - -r evaluates range membership
+  - npm version patch tags and bumps
+  parameters:
+  - name: version
+    type: string
+    description: Current version
+  - name: bump
+    type: string
+    description: major, minor, or patch
+  - name: range
+    type: string
+    description: Semver range expression
+- name: breaking-classification
+  description: Classify changes as breaking or non-breaking
+  commands:
+  - 'npm version major -m "chore: release v%s"'
+  - 'git tag -a v2.0.0 -m ''Breaking: remove legacy fields'''
+  - npm view my-api versions --json
+  - git log --oneline v1.0.0..HEAD
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- openapi
+tools:
+- node.js
+- python
+- openapi
+- postman
+- stoplight-studio
+examples:
+- input: Bump for a breaking release
+  output: Runs npm version major and creates the release tag
+- input: Check a client's version range
+  output: Evaluates the range with npx semver -r
+instructions: '# API Version Specialist
+
+
+  SemVer discipline for API releases.
+
+
+  ## What This Skill Does
+
+  - Applies semver rules to version numbers
+
+  - Automates version bumps and tags
+
+  - Classifies breaking changes correctly
+
+
+  ## When to Use
+
+  - Planning major version releases
+
+  - Automating release versioning
+
+  - Auditing version histories
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  npx semver 1.2.3 major
+
+  npm version minor -m "chore: release %s"
+
+  git tag -l ''v*'' --sort=-v:refname | head
+
+  ```
+
+
+  ## SemVer Rules
+
+  - MAJOR: breaking changes
+
+  - MINOR: backward-compatible features
+
+  - PATCH: backward-compatible fixes
+
+
+  ## Testing
+
+  - Verify range evaluations with npx semver
+
+  - Check tags match npm versions
+
+  - Review changelogs against bump type
+
+
+
+  ## Best Practices
+
+  - Never break compatibility in minor releases
+
+  - Document breaking changes prominently
+
+  - Automate tagging in release pipelines'
+display_name: api-version-specialist
+knowledge:
+- title: Semantic Versioning Spec
+  type: documentation
+  source: https://semver.org/
+  description: SemVer specification
+- title: npm version Command
+  type: documentation
+  source: https://docs.npmjs.com/cli/v10/commands/npm-version
+  description: npm version and tagging

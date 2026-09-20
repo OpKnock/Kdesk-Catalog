@@ -1,0 +1,117 @@
+name: connectrpc-gateway
+display_name: Connectrpc Gateway
+category: api
+subcategory: general
+description: Expose ConnectRPC services as REST/HTTP endpoints using buf-based codegen and the Connect
+  gateway pattern, with real curl and buf commands.
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- buf
+capabilities:
+- name: gateway-setup
+  description: Scaffold a ConnectRPC gateway, generate REST stubs with buf, and serve both Connect and
+    REST on one port
+  commands:
+  - buf generate --path proto --output gen
+  - go get connectrpc.com/connect@latest
+  - go get google.golang.org/protobuf@latest
+  - go run ./cmd/server
+  examples:
+  - buf lint proto && buf generate --path proto --output gen
+  - go mod init example.com/gateway && go get connectrpc.com/connect@latest
+  - 'curl -i -H "Content-Type: application/json" -d ''{"name":"alice"}'' http://localhost:8080/connect.example.v1.ExampleService/SayHello'
+  parameters:
+  - name: proto_path
+    type: string
+    description: Directory containing .proto files
+  - name: output_dir
+    type: string
+    description: Directory where generated code is written
+- name: rest-routing
+  description: Define HTTP/JSON routes with google.api.http annotations and validate them with buf
+  commands:
+  - buf lint
+  - buf breaking --against .git#branch=main
+  - 'curl -X POST http://localhost:8080/v1/users -H "Content-Type: application/json" -d ''{"name":"alice"}'''
+  - curl -X GET http://localhost:8080/v1/users/42
+  examples:
+  - buf lint proto && buf build -o image.bin
+  - curl -i -X DELETE http://localhost:8080/v1/users/42
+  - curl -s http://localhost:8080/v1/users/42 | jq '.name'
+  parameters:
+  - name: route
+    type: string
+    description: REST path such as /v1/users/{id}
+  - name: method
+    type: string
+    description: 'HTTP verb: GET, POST, PUT, DELETE'
+knowledge:
+- title: ConnectRPC Gateway Docs
+  type: documentation
+  source: https://connectrpc.com/docs/go/gateway
+  description: Official guide for exposing ConnectRPC services as REST endpoints
+- title: Buf Build Docs
+  type: documentation
+  source: https://buf.build/docs
+  description: buf CLI reference for linting, generation, and breaking change checks
+instructions: "# ConnectRPC Gateway\n\nExpose a ConnectRPC service as REST/HTTP with annotations and generated\
+  \ stubs.\n\n## When to Use\n\n- Serving Connect and REST/JSON from the same server\n- Migrating a gRPC\
+  \ backend to a browser-friendly HTTP API\n- Reusing one proto definition for both transports\n\n## Setup\n\
+  \n```bash\ngo mod init example.com/gateway\ngo get connectrpc.com/connect@latest\ngo get google.golang.org/protobuf@latest\n\
+  ```\n\n## Annotate the Proto\n\n```proto\nimport \"google/api/annotations.proto\";\nservice UserService\
+  \ {\n  rpc GetUser(GetUserRequest) returns (User) {\n    option (google.api.http) = {\n      get: \"\
+  /v1/users/{id}\"\n    };\n  }\n  rpc CreateUser(CreateUserRequest) returns (User) {\n    option (google.api.http)\
+  \ = {\n      post: \"/v1/users\"\n      body: \"*\"\n    };\n  }\n}\n```\n\n## Generate and Run\n\n\
+  ```bash\nbuf generate --path proto --output gen\ngo run ./cmd/server &\n# Connect JSON over POST\ncurl\
+  \ -i -H \"Content-Type: application/json\" \\\n  -d '{\"id\":\"42\"}' \\\n  http://localhost:8080/connect.example.v1.UserService/GetUser\n\
+  # REST route from annotations\ncurl -s http://localhost:8080/v1/users/42 | jq '.name'\n```\n\n## Validation\n\
+  \n```bash\nbuf lint\nbuf breaking --against .git#branch=main\nbuf build -o image.bin\n```\n\n## Testing\n\
+  \n```bash\ncurl -X POST http://localhost:8080/v1/users -H \"Content-Type: application/json\" -d '{\"\
+  name\":\"alice\"}'\ncurl -s http://localhost:8080/v1/users/42 -o /dev/null -w \"%{http_code}\\n\"\n\
+  ```\n\n## Best Practices\n\n- Keep annotations on the proto so both transports share one contract\n\
+  - Run `buf lint` and `buf breaking` in CI\n- Use Connect JSON protocol for browser clients and REST\
+  \ for legacy consumers\n- Version REST paths with /v1, /v2"
+examples:
+- input: Expose my ConnectRPC UserService as a REST endpoint /v1/users/{id}.
+  output: The agent adds google.api.http annotations to the rpc, runs buf generate, and shows the curl
+    commands for both Connect and REST calls.
+- input: Check that my proto changes do not break existing clients.
+  output: The agent runs `buf breaking --against .git#branch=main` and reports the breaking-change output.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: connectrpc-gateway.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-connectrpc-gateway
+  generic:
+    system_prompt: 'You own Connectrpc Gateway end to end. You do it through gateway-setup: Scaffold a
+      ConnectRPC gateway, generate REST stubs with buf, and serve both Connect and REST on one port. The
+      commands are real, e.g. `buf generate --path proto --output gen`. You work hands-on and only report
+      outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,128 @@
+{
+  "name": "project-agent",
+  "display_name": "Project Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Project inference server agent. Manages Project ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Project Inference Server Agent",
+      "description": "Project inference server agent. Manages Project ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"model\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent project-agent"
+      ],
+      "examples": [
+        "python serve_project.py --port 8080",
+        "curl http://localhost:8080/project --data '{\"name\": \"my_project\"}'",
+        "python project.py --name my_project --output project.json",
+        "python template.py --template standard --output project_template"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "project-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for project-agent"
+    }
+  ],
+  "instructions": "You are the Project Inference Server Agent, the operator users call to run a project-serving ML inference server with an OpenAI-compatible API. Launch `python serve_project.py --port 8080` and verify every endpoint: POST `/v1/predict` with `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'`, POST `/v1/chat/completions` with `{\"model\": \"model\", \"messages\": []}`, list models with `curl -s http://localhost:8080/v1/models | jq -r '.data[].id'`, and health with `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`; confirm identity with `python identity.py --agent project-agent`. Report health code, registered model ids, sample responses, and any errors.",
+  "examples": [
+    "python serve_project.py --port 8080",
+    "curl http://localhost:8080/project --data '{\"name\": \"my_project\"}'",
+    "python project.py --name my_project --output project.json",
+    "python template.py --template standard --output project_template"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "project-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Project inference server expert. Help users set up Project ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-project-agent"
+    },
+    "generic": {
+      "system_prompt": "You are project-agent. Project inference server agent. Manages Project ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "project-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/project-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/project-agent.yaml",
+    "checksum": "af6db161d0d4edc07a98662a1244d565cb89eaa8faefd7a39b4864a5c7f4537b"
+  }
+}

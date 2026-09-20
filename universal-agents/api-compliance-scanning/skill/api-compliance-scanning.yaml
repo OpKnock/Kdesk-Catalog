@@ -1,0 +1,186 @@
+name: api-compliance-scanning
+version: 2.0.0
+type: skill
+category: security
+description: 'Prepares APIs for audits: scans infrastructure and code for GDPR and SOC 2 gaps, prioritizes
+  findings, and drives remediation.'
+keywords:
+- api-compliance
+- gdpr
+- security
+- compliance-scanning
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-compliance-scanning.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-compliance-scanning
+  generic:
+    system_prompt: 'You own Api Compliance Scanning end to end. You do it through compliance-scanning:
+      Run infrastructure and IaC scanners for compliance benchmarks. The commands are real, e.g. `checkov
+      -d . --framework terraform --quiet`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: compliance-scanning
+  description: Run infrastructure and IaC scanners for compliance benchmarks
+  commands:
+  - checkov -d . --framework terraform --quiet
+  - tfsec . --format json --out tfsec.json
+  - prowler aws -M csv -o reports/
+  - scout aws --report-dir reports/scout
+  - checkov -d . --check CKV_AWS_115 --compact
+  examples:
+  - checkov -d . --framework terraform --quiet --baseline .checkov.baseline
+  - prowler aws -M csv -o reports/ && head -5 reports/*.csv
+  - tfsec . --format json --out tfsec.json && jq '.results[0:3]' tfsec.json
+  parameters:
+  - name: framework
+    type: string
+    description: IaC framework to scan
+  - name: output
+    type: string
+    description: Report directory or file
+- name: remediation
+  description: Prioritize findings by severity and fix the highest-risk compliance gaps
+  commands:
+  - checkov -d . --quiet | grep -E 'FAILED|PASSED' | awk '{print $3}' | sort | uniq -c
+  - tfsec . --format csv --out tfsec.csv && sort -t, -k4 -r tfsec.csv | head
+  - prowler aws -M html -o reports/
+  - scout aws --report-dir reports/scout --rebase
+  - checkov -d . --download-external-modules --quiet
+  examples:
+  - tfsec . --format csv --out tfsec.csv && sort -t, -k4 -r tfsec.csv | head -20
+  - prowler aws -M html -o reports/ && open reports/report.html
+  - checkov -d . --quiet | grep FAILED | wc -l
+  parameters:
+  - name: severity
+    type: string
+    description: Severity filter
+  - name: reportFormat
+    type: string
+    description: csv, html, json
+prerequisites:
+- scout-suite
+- prowler
+- checkov
+tools:
+- scout-suite
+- prowler
+- checkov
+- tfsec
+- node.js
+- python
+examples:
+- input: Scan our API infrastructure for GDPR compliance
+  output: Runs checkov, tfsec, prowler, and scout; produces a prioritized findings report with remediation
+    steps
+- input: Prepare evidence for SOC 2 audit
+  output: Collects scanner reports, maps each control, and tracks remediation of critical gaps to zero
+instructions: '# API Compliance (Audit & Remediation)
+
+
+  Runs compliance scanners, builds evidence packages, and drives remediation to close GDPR/SOC 2 gaps.
+
+
+  ## When to Use
+
+  - Pre-audit evidence collection
+
+  - Detecting security misconfigurations
+
+  - Continuous compliance in CI
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Install scanners
+
+  pip install checkov
+
+  brew install tfsec
+
+  pip install prowler
+
+  pip install scoutsuite
+
+
+  # Scan everything
+
+  checkov -d . --framework terraform --quiet
+
+  prowler aws -M csv -o reports/
+
+  scout aws --report-dir reports/scout
+
+
+  # Rank findings
+
+  tfsec . --format csv --out tfsec.csv && sort -t, -k4 -r tfsec.csv | head -20
+
+  ```
+
+
+  ## Audit Checklist
+
+  - Encryption in transit (TLS 1.2+)
+
+  - Logging and access records retained
+
+  - Data minimization in API responses
+
+  - Subprocessor contracts documented
+
+
+  ## Testing
+
+  Re-run scanners after each remediation and track FAILED counts down to zero for critical checks.
+
+
+  ## Best Practices
+
+  - Scan in CI on every change
+
+  - Keep a baseline for known-accepted risks
+
+  - Produce HTML reports for auditors'
+display_name: Api Compliance Scanning
+knowledge:
+- title: Checkov Docs
+  type: documentation
+  source: https://www.checkov.io/documentation
+  description: IaC scanning, frameworks, policies
+- title: Prowler Docs
+  type: documentation
+  source: https://docs.prowler.com/
+  description: AWS security assessments
+- title: tfsec
+  type: documentation
+  source: https://github.com/aquasecurity/tfsec
+  description: Terraform security scanner

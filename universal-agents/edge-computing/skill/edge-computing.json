@@ -1,0 +1,218 @@
+{
+  "name": "edge-computing",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "infrastructure",
+  "description": "Deploys edge computing environments with K3s, k3d, and KubeEdge: lightweight clusters, offline agents, and edge device management.",
+  "keywords": [
+    "edge-computing"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "edge-computing.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-edge-computing"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: edge-computing. You do it through lightweight-clusters: Stand up K3s servers/agents and k3d dev clusters. The commands are real, e.g. `curl -sfL https://get.k3s.io | sh -`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "lightweight-clusters",
+      "description": "Stand up K3s servers/agents and k3d dev clusters.",
+      "commands": [
+        "curl -sfL https://get.k3s.io | sh -",
+        "curl -sfL https://get.k3s.io | K3S_URL=https://edge-master:6443 K3S_TOKEN=secret sh -",
+        "k3s kubectl get nodes",
+        "k3d cluster create edge --servers 1 --agents 2",
+        "k3d cluster list",
+        "k3s ctr images ls"
+      ],
+      "examples": [
+        "curl -sfL https://get.k3s.io | sh -",
+        "k3d cluster create edge --servers 1 --agents 2",
+        "k3s kubectl get nodes"
+      ],
+      "parameters": [
+        {
+          "name": "server-url",
+          "type": "string",
+          "description": "K3s server URL for agents"
+        },
+        {
+          "name": "token",
+          "type": "string",
+          "description": "K3s join token"
+        }
+      ]
+    },
+    {
+      "name": "edge-devices",
+      "description": "Manage edge devices with balena and KubeEdge.",
+      "commands": [
+        "balena login",
+        "balena push myfleet",
+        "balena logs myfleet --tail 100",
+        "balena ssh 27a3f1",
+        "kubeedge edgecore --config edgecore.yaml",
+        "keadm join --cloudcore-ipport=10.0.0.5:10000"
+      ],
+      "examples": [
+        "balena push myfleet",
+        "balena logs myfleet --tail 100",
+        "keadm join --cloudcore-ipport=10.0.0.5:10000"
+      ],
+      "parameters": [
+        {
+          "name": "fleet",
+          "type": "string",
+          "description": "Balena fleet name"
+        },
+        {
+          "name": "device",
+          "type": "string",
+          "description": "Balena device uuid"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "deno",
+    "wrangler"
+  ],
+  "tools": [
+    "node.js",
+    "deno",
+    "wrangler",
+    "netlify",
+    "vercel"
+  ],
+  "examples": [
+    {
+      "input": "Set up edge clusters for 3 stores",
+      "output": "Agent installs K3s per store, joins agents, and verifies node registration"
+    },
+    {
+      "input": "Deploy an app update to the fleet",
+      "output": "Agent pushes a release via balena and monitors rollout logs"
+    }
+  ],
+  "instructions": "# Edge Computing Operations\n\nRun Kubernetes and workloads at the edge: lightweight clusters and device fleets.\n\n## What This Skill Does\n\n- Installs K3s single-node and multi-node edge clusters\n- Creates k3d clusters for edge development\n- Joins edge agents to a K3s server\n- Manages device fleets with balena\n- Bridges cloud-edge with KubeEdge\n\n## When to Use\n\n- On-prem/shop-floor/field deployments with limited resources\n- Developing against edge-shaped clusters\n- Fleet management of many small devices\n\n## Real Commands\n\n```bash\n# K3s single node\ncurl -sfL https://get.k3s.io | sh -\nk3s kubectl get nodes\nk3s ctr images ls\nsudo k3s kubectl get pods -A\n\n# K3s agent join\ncurl -sfL https://get.k3s.io |   K3S_URL=https://edge-master:6443 K3S_TOKEN=secret sh -\n\n# k3d dev clusters\nk3d cluster create edge --servers 1 --agents 2\nk3d cluster list\nk3d node list\n\n# Balena fleet\nbalena login\nbalena push myfleet\nbalena logs myfleet --tail 100\nbalena ssh 27a3f1\n\n# KubeEdge\nkeadm join --cloudcore-ipport=10.0.0.5:10000\nkubeedge edgecore --config edgecore.yaml\n```\n\n## Best Practices\n\n- Use K3s for constrained nodes; set ResourceQuota per edge device\n- Keep K3s storage (local-path) tuned for SD cards (write frequency)\n- Use k3d for CI-safe edge development\n- Use balena for long-lived fleet updates and rollbacks\n- For KubeEdge, pair cloudcore HA with edgecore retries",
+  "display_name": "edge-computing",
+  "knowledge": [
+    {
+      "title": "K3s Documentation",
+      "type": "documentation",
+      "source": "https://docs.k3s.io/",
+      "description": "Installation, configuration, and edge patterns"
+    },
+    {
+      "title": "k3d",
+      "type": "documentation",
+      "source": "https://k3d.io/",
+      "description": "K3s in Docker for dev clusters"
+    },
+    {
+      "title": "KubeEdge",
+      "type": "documentation",
+      "source": "https://kubeedge.io/en/docs/",
+      "description": "Edge computing framework docs"
+    },
+    {
+      "title": "balena CLI",
+      "type": "documentation",
+      "source": "https://www.balena.io/docs/reference/cli/",
+      "description": "balena device fleet management"
+    }
+  ],
+  "id": "edge-computing",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "lightweight-clusters",
+        "name": "server-url",
+        "type": "string",
+        "description": "K3s server URL for agents"
+      },
+      {
+        "capability": "lightweight-clusters",
+        "name": "token",
+        "type": "string",
+        "description": "K3s join token"
+      },
+      {
+        "capability": "edge-devices",
+        "name": "fleet",
+        "type": "string",
+        "description": "Balena fleet name"
+      },
+      {
+        "capability": "edge-devices",
+        "name": "device",
+        "type": "string",
+        "description": "Balena device uuid"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "deno",
+    "wrangler"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "edge-computing/skill/edge-computing.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/edge-computing/skill/edge-computing.yaml",
+    "checksum": "c456252eaedb91d03f8f36902f503c3e6126cb13969bb2a38e83b290bc176e1b"
+  }
+}

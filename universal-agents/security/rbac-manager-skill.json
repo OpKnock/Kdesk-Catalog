@@ -1,0 +1,199 @@
+{
+  "name": "rbac-manager",
+  "display_name": "rbac-manager",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Declaratively manages Kubernetes RBAC with RBACManager RbacDefinitions, generating Roles, RoleBindings, and ClusterRoles.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "helm",
+    "kubectl"
+  ],
+  "capabilities": [
+    {
+      "name": "rbacdefinition-management",
+      "description": "Install RBACManager and manage RbacDefinition resources.",
+      "commands": [
+        "helm repo add fairwinds-stable https://charts.fairwinds.com/stable",
+        "helm install rbac-manager fairwinds-stable/rbac-manager -n rbac-manager --create-namespace",
+        "kubectl get rbacdefinitions.rbacmanager.reactiveops.io -A",
+        "kubectl apply -f rbacdefinition.yaml",
+        "kubectl describe rbacdefinition team-dev"
+      ],
+      "examples": [
+        "helm install rbac-manager fairwinds-stable/rbac-manager",
+        "kubectl get rbacdefinitions.rbacmanager.reactiveops.io -A",
+        "kubectl apply -f rbacdefinition.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "RbacDefinition name"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Operator namespace"
+        }
+      ]
+    },
+    {
+      "name": "rbac-inspection",
+      "description": "Inspect generated roles and bindings for verification.",
+      "commands": [
+        "kubectl get roles -A | grep -i team-dev",
+        "kubectl get rolebindings.rbacmanager.reactiveops.io -A",
+        "kubectl get clusterrolebindings.rbacmanager.reactiveops.io",
+        "kubectl auth can-i --list --as=system:serviceaccount:default:team-dev",
+        "kubectl get clusterroles | grep rbac-manager"
+      ],
+      "examples": [
+        "kubectl get rolebindings.rbacmanager.reactiveops.io -A",
+        "kubectl auth can-i create deployments --as=system:serviceaccount:prod:deployer",
+        "kubectl get clusterroles | grep team"
+      ],
+      "parameters": [
+        {
+          "name": "serviceAccount",
+          "type": "string",
+          "description": "SA identity for auth can-i checks"
+        },
+        {
+          "default": "default",
+          "description": "Namespace scope for RBAC and auth can-i checks.",
+          "name": "namespace",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "RBAC Manager Documentation",
+      "type": "documentation",
+      "source": "https://rbac-manager.docs.fairwinds.com/",
+      "description": "RbacDefinition spec and usage patterns"
+    },
+    {
+      "title": "Fairwinds RBAC Manager GitHub",
+      "type": "documentation",
+      "source": "https://github.com/FairwindsOps/rbac-manager",
+      "description": "Installation and CRD reference"
+    }
+  ],
+  "instructions": "# RBAC Manager\n\nDeclarative Kubernetes RBAC with RbacDefinitions.\n\n## What This Skill Does\n\n- Installs the RBAC Manager operator\n- Defines per-team RbacDefinitions with rules and subject matchers\n- Generates and reconciles Roles, RoleBindings, and ClusterRoles\n- Inspects the resulting bindings and effective permissions\n\n## When to Use\n\n- Managing team namespaces with self-service access\n- Enforcing least-privilege service accounts at scale\n- Auditing who can do what across clusters\n\n## Real Commands\n\n```bash\n# Install\nhelm repo add fairwinds-stable https://charts.fairwinds.com/stable\nhelm install rbac-manager fairwinds-stable/rbac-manager -n rbac-manager --create-namespace\n\n# Define and apply\nkubectl apply -f rbacdefinition.yaml\nkubectl get rbacdefinitions.rbacmanager.reactiveops.io -A\nkubectl describe rbacdefinition team-dev\n\n# Verify generated RBAC\nkubectl get rolebindings.rbacmanager.reactiveops.io -A\nkubectl get clusterrolebindings.rbacmanager.reactiveops.io\nkubectl auth can-i create deployments --as=system:serviceaccount:dev:team-dev\n```\n\n## Sample RbacDefinition\n\n```yaml\napiVersion: rbacmanager.reactiveops.io/v1beta1\nkind: RbacDefinition\nmetadata:\n  name: team-dev\nspec:\n  rbacBindings:\n    - name: team-dev-edit\n      subjects:\n        - kind: User\n          name: alice@example.com\n      clusterRole: edit\n      clusterWide: false\n      namespaces:\n        - dev\n```\n\n## Best Practices\n\n- Scope bindings with clusterWide: false unless truly needed\n- Model access by team, not by individual ad-hoc edits\n- Verify with kubectl auth can-i, not by assumption\n- Review generated resources in dry-run gitops diffs\n- Rotate subject matchers carefully: they trigger wide regeneration",
+  "examples": [
+    {
+      "input": "Give my dev team edit access to the dev namespace",
+      "output": "Agent writes a RbacDefinition with clusterRole edit scoped to dev, applies it, and verifies with kubectl auth can-i checks."
+    },
+    {
+      "input": "Why can't the deployer SA create deployments?",
+      "output": "Agent lists rolebindings, inspects the RbacDefinition, and checks with kubectl auth can-i --as to pinpoint the missing rule."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rbac-manager.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rbac-manager"
+    },
+    "generic": {
+      "system_prompt": "You take the rbac-manager seat. You do it through rbacdefinition-management: Install RBACManager and manage RbacDefinition resources. The commands are real, e.g. `helm repo add fairwinds-stable https://charts.fairwinds.com/stable`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rbac-manager",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rbacdefinition-management",
+        "name": "name",
+        "type": "string",
+        "description": "RbacDefinition name"
+      },
+      {
+        "capability": "rbacdefinition-management",
+        "name": "namespace",
+        "type": "string",
+        "description": "Operator namespace"
+      },
+      {
+        "capability": "rbac-inspection",
+        "name": "serviceAccount",
+        "type": "string",
+        "description": "SA identity for auth can-i checks"
+      },
+      {
+        "capability": "rbac-inspection",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace scope for RBAC and auth can-i checks."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "helm",
+    "kubectl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/rbac-manager-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/rbac-manager-skill.yaml",
+    "checksum": "350c8aaba775f464f0a9c501444e1d6ce04b4f5e0b3f3037aa370574586700c6"
+  }
+}

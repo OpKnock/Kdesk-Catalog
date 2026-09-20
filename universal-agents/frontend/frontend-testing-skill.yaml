@@ -1,0 +1,127 @@
+name: frontend-testing
+display_name: Frontend Testing
+category: frontend
+subcategory: general
+description: Tests frontend applications end-to-end and at the component level with Playwright, Cypress,
+  and Vitest.
+version: 2.0.0
+tags:
+- frontend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+capabilities:
+- name: playwright
+  description: Write and run browser end-to-end tests with Playwright.
+  commands:
+  - npx playwright install --with-deps
+  - npx playwright test
+  - npx playwright test --project=chromium --headed
+  - npx playwright codegen https://example.com
+  - npx playwright show-report
+  examples:
+  - npx playwright test tests/e2e/checkout.spec.ts --grep 'checkout'
+  - npx playwright test --project=firefox --workers=4
+  - npx playwright codegen --viewport-size '390,844' https://example.com
+  parameters:
+  - name: project
+    type: string
+    description: 'Browser project: chromium, firefox, webkit'
+  - name: grep
+    type: string
+    description: Run only tests matching a pattern
+  - name: workers
+    type: number
+    description: Parallel worker count
+- name: vitest
+  description: Run fast component and unit tests with Vitest.
+  commands:
+  - npx vitest run
+  - npx vitest run --coverage
+  - npx vitest --ui
+  - npx vitest run tests/unit/button.test.tsx
+  - npx vitest watch
+  examples:
+  - npx vitest run --coverage --reporter=json --outputFile=coverage.json
+  - npx vitest run --changed main
+  - npx vitest watch --exclude '**/e2e/**'
+  parameters:
+  - name: coverage
+    type: string
+    description: Enable coverage collection
+  - name: reporter
+    type: string
+    description: default, json, junit, dot
+  - name: changed
+    type: string
+    description: Test only files changed vs branch
+knowledge:
+- title: Playwright Docs
+  type: documentation
+  source: https://playwright.dev/docs/intro
+  description: E2E testing, trace viewer, codegen, and reporters
+- title: Cypress Docs
+  type: documentation
+  source: https://docs.cypress.io/
+  description: Component and E2E testing with Cypress
+- title: Vitest Docs
+  type: documentation
+  source: https://vitest.dev/guide/
+  description: Fast unit test runner with Vite-native HMR
+instructions: "# Frontend Testing\n\nLayer unit, component, and end-to-end tests to catch regressions\
+  \ at every level.\n\n## When to Use\n\n- Verifying critical user journeys (login, checkout)\n- Regression\
+  \ testing across browsers and viewports\n- Locking down component behavior before refactors\n\n## E2E\
+  \ with Playwright\n\n```bash\nnpx playwright install --with-deps\nnpx playwright test\nnpx playwright\
+  \ codegen https://example.com\nnpx playwright show-report\n```\n\nWrite tests with user-visible queries:\n\
+  \n```typescript\nawait page.goto('/checkout');\nawait page.getByRole('button', { name: 'Place order'\
+  \ }).click();\nawait expect(page.getByText('Order confirmed')).toBeVisible();\n```\n\n## Component tests\
+  \ with Vitest + Testing Library\n\n```typescript\nimport { render, screen } from '@testing-library/react';\n\
+  import { expect, test } from 'vitest';\n\ntest('shows error when email invalid', async () => {\n  render(<SignupForm\
+  \ />);\n  await screen.getByLabelText('Email').then(el => {\n    // fireEvent.change, expect error message\n\
+  \  });\n});\n```\n\n```bash\nnpx vitest run --coverage\n```\n\n## Parallelism and flakiness\n\n- Prefer\
+  \ `getByRole`/`getByLabel` over selectors on CSS classes.\n- Use `expect(...).toPass()` for slow async\
+  \ assertions in Cypress.\n- Run unit tests on every commit; E2E on PRs and nightly.\n\n## Best practices\n\
+  \n- Keep E2E suites small and business-critical only.\n- Test mobile viewport at least for the top 3\
+  \ journeys.\n- Record videos/traces on failure only, to save CI time.\n- Aim for > 80% coverage on logic-heavy\
+  \ utilities and state reducers."
+examples:
+- input: Add E2E coverage for the login flow across browsers.
+  output: Installs Playwright browsers, writes login.spec.ts with role-based queries, and runs the suite
+    on chromium/firefox/webkit in CI.
+- input: Get unit coverage on the cart reducer.
+  output: Adds Vitest tests for add/remove/apply-discount actions and runs npx vitest run --coverage to
+    verify thresholds.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: frontend-testing.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-frontend-testing
+  generic:
+    system_prompt: 'You are the Frontend Testing specialist. You do it through playwright: Write and run
+      browser end-to-end tests with Playwright. The commands are real, e.g. `npx playwright install --with-deps`.
+      You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,171 @@
+{
+  "name": "kubernetes-cluster-manager",
+  "display_name": "Kubernetes Cluster Manager",
+  "category": "devops",
+  "subcategory": "orchestration",
+  "description": "Agent for managing Kubernetes clusters, deploying applications, and implementing GitOps workflows.",
+  "version": "1.0.0",
+  "tags": [
+    "kubernetes",
+    "k8s",
+    "gitops",
+    "helm"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "cluster-management",
+      "description": "Manage K8s resources, deployments, and services",
+      "commands": [
+        "kubectl",
+        "helm",
+        "kustomize",
+        "stern",
+        "k9s"
+      ],
+      "examples": [
+        "Deploy app: kubectl apply -f deployment.yaml",
+        "Check pods: kubectl get pods -n production",
+        "Helm install: helm install myapp ./chart --values values.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "cluster_name",
+          "type": "string",
+          "description": "Kubernetes cluster name"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Target namespace for operations"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kubernetes Documentation",
+      "type": "documentation",
+      "source": "https://kubernetes.io/docs/home/",
+      "description": "Complete Kubernetes documentation"
+    },
+    {
+      "title": "Helm Chart Development",
+      "type": "tutorial",
+      "source": "https://helm.sh/docs/chart_best_practices/",
+      "description": "Best practices for Helm chart development"
+    }
+  ],
+  "instructions": "You are a Kubernetes cluster management specialist. Help users:\n1. Deploy and manage applications on K8s\n2. Create Helm charts and Kustomize overlays\n3. Implement GitOps with ArgoCD/Flux\n4. Debug pod issues, OOMKills, and networking problems\n5. Configure RBAC, NetworkPolicies, and resource quotas\n\nAlways recommend best practices for resource limits and health checks.\n",
+  "examples": [
+    {
+      "input": "Deploy my microservices to Kubernetes",
+      "output": "I'll create Kubernetes manifests for your microservices. Here's the deployment with proper resource limits, health checks, and service mesh configuration..."
+    },
+    {
+      "input": "My pods keep crashing",
+      "output": "Let me debug. I'll check pod logs, events, and resource usage to identify the root cause..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kubernetes-cluster-manager.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kubernetes"
+    },
+    "generic": {
+      "system_prompt": "You are a Kubernetes expert. Help users deploy applications, manage clusters, implement GitOps, and debug production issues.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kubernetes-cluster-manager",
+  "type": "agent",
+  "skills": [
+    "stern",
+    "container-orchestration-specialist",
+    "k9s",
+    "kubernetes-network-policy-engineer",
+    "kustomize",
+    "kustomize-devops",
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "crossplane",
+    "external-secrets",
+    "external-secrets-security"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cluster-management",
+        "name": "cluster_name",
+        "type": "string",
+        "description": "Kubernetes cluster name"
+      },
+      {
+        "capability": "cluster-management",
+        "name": "namespace",
+        "type": "string",
+        "description": "Target namespace for operations"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/agent/kubernetes-cluster-manager.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/agent/kubernetes-cluster-manager.yaml",
+    "checksum": "c7e2efba20784e16cf662b21765cf97389d1fc43d6baed9670bb4c22f03a6de9"
+  }
+}

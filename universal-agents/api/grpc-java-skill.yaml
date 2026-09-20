@@ -1,0 +1,108 @@
+name: grpc-java
+display_name: Grpc Java
+category: api
+subcategory: general
+description: 'gRPC services and clients in Java with the Gradle protobuf plugin: proto codegen, ManagedChannel
+  clients, and ServerBuilder-based servers.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- ./gradlew
+- grpcurl
+- java
+capabilities:
+- name: java-grpc
+  description: Configure Gradle protobuf codegen, implement Java gRPC servers, and run clients.
+  commands:
+  - ./gradlew generateProto
+  - ./gradlew build
+  - ./gradlew run
+  - java -cp build/libs/app.jar com.example.GreeterServer
+  - grpcurl -plaintext localhost:50051 helloworld.Greeter/SayHello -d '{"name":"Java"}'
+  examples:
+  - ./gradlew clean generateProto build
+  - java -cp build/libs/app.jar com.example.GreeterClient
+  - ./gradlew test --tests '*.GreeterServiceTest'
+  parameters:
+  - name: main_class
+    type: string
+    description: Java main class to run the server or client.
+  - name: grpc_version
+    type: string
+    description: gRPC Java version, e.g. 1.64.0.
+  - name: port
+    type: integer
+    description: Server listen port, default 50051.
+knowledge:
+- title: gRPC Java Docs
+  type: documentation
+  source: https://grpc.io/docs/languages/java/
+  description: Official gRPC Java quickstart, basics, and streaming guide.
+- title: grpc-java GitHub
+  type: documentation
+  source: https://github.com/grpc/grpc-java
+  description: 'grpc-java repository: examples and protobuf gradle plugin setup.'
+instructions: "# gRPC Java\n\nWrite gRPC services and clients in Java with the protobuf Gradle plugin.\n\
+  \n## What this skill does\n\n- Generates Java gRPC stubs from proto files during the Gradle build.\n\
+  - Implements servers with ServerBuilder and clients with ManagedChannel.\n- Probes generated stubs with\
+  \ grpcurl for verification.\n- Writes service unit tests with in-process channels.\n\n## When to use\n\
+  \n- A JVM microservice team adopts gRPC contracts.\n- Backend clients need typed RPC calls.\n- Migrating\
+  \ REST endpoints to gRPC in an existing Gradle repo.\n\n## Real commands\n\n```bash\n# Generate stubs\
+  \ and build\n./gradlew generateProto\n./gradlew build\n\n# Run server and client\n./gradlew run\njava\
+  \ -cp build/libs/app.jar com.example.GreeterServer &\njava -cp build/libs/app.jar com.example.GreeterClient\n\
+  \n# Probe from outside\ngrpcurl -plaintext -d '{\"name\":\"Java\"}' localhost:50051 helloworld.Greeter/SayHello\n\
+  ```\n\n## Gradle config\n\n```groovy\nplugins {\n  id 'com.google.protobuf' version '0.9.4'\n  id 'java'\n\
+  }\n\ndependencies {\n  implementation 'io.grpc:grpc-netty-shaded:1.64.0'\n  implementation 'io.grpc:grpc-protobuf:1.64.0'\n\
+  \  implementation 'io.grpc:grpc-stub:1.64.0'\n  compileOnly 'org.apache.tomcat:annotations-api:6.0.53'\n\
+  }\n\nprotobuf {\n  protoc { artifact = 'com.google.protobuf:protoc:3.25.3' }\n  plugins { grpc { artifact\
+  \ = 'io.grpc:protoc-gen-grpc-java:1.64.0' } }\n  generateProtoTasks { all()*.plugins { grpc {} } }\n\
+  }\n```\n\n## Server skeleton\n\n```java\nServer server = ServerBuilder.forPort(50051)\n  .addService(new\
+  \ GreeterServiceImpl())\n  .build();\nserver.start();\nserver.awaitTermination();\n```\n\n## Testing\n\
+  \n```java\nGrpcCleanupRule cleanupRule = new GrpcCleanupRule();\nInProcessServerBuilder.forName(\"test\"\
+  ).directExecutor().addService(new GreeterServiceImpl()).build();\n```\n\n## Best practices\n\n- Use\
+  \ grpc-netty-shaded to avoid Netty version conflicts.\n- Add the tomcat annotations-api compileOnly\
+  \ dep or javax.annotation is unresolved.\n- Set `deadline = 10, TimeUnit.SECONDS` on blocking stubs.\n\
+  - Pin protoc and protoc-gen-grpc-java to matching versions.\n\n## Example exchange\n\n```\nUser: Gradle\
+  \ fails: package javax.annotation does not exist.\nAgent: Add compileOnly 'org.apache.tomcat:annotations-api:6.0.53'\
+  \ to dependencies.\n```"
+examples:
+- input: Generate Java stubs for the greet proto and build
+  output: ./gradlew generateProto build
+- input: Probe the running Java server
+  output: grpcurl -plaintext -d '{"name":"Java"}' localhost:50051 helloworld.Greeter/SayHello
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: grpc-java.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-grpc-java
+  generic:
+    system_prompt: 'You take the Grpc Java seat. You do it through java-grpc: Configure Gradle protobuf
+      codegen, implement Java gRPC servers, and run clients. The commands are real, e.g. `./gradlew generateProto`.
+      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,165 @@
+{
+  "name": "api-management",
+  "display_name": "API Management",
+  "category": "cloud",
+  "subcategory": "api",
+  "description": "Agent for implementing API management with developer portals, analytics, and governance.",
+  "version": "1.0.0",
+  "tags": [
+    "api-management",
+    "developer-portal",
+    "analytics",
+    "governance",
+    "api-gateway"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "api-management",
+      "description": "Implement API management",
+      "commands": [
+        "kong",
+        "tyk",
+        "aws-api-gateway",
+        "python api_product.py --plan pro --quota 10000 --throttle 100/min"
+      ],
+      "examples": [
+        "Kong: kong api create --name my-api --upstream http://backend:8080",
+        "Tyk: tyk api create",
+        "AWS: aws apigateway create-rest-api --name my-api"
+      ],
+      "parameters": [
+        {
+          "name": "management_type",
+          "type": "string",
+          "description": "Type: gateway, portal, analytics, lifecycle"
+        },
+        {
+          "name": "tool",
+          "type": "string",
+          "description": "Tool: kong, tyk, aws-api-gateway, azure-api-management"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Kong",
+      "type": "documentation",
+      "source": "https://docs.konghq.com/",
+      "description": "Kong documentation"
+    },
+    {
+      "Title": "API Management",
+      "type": "tutorial",
+      "source": "https://konghq.com/learning-center/",
+      "description": "Kong learning center"
+    }
+  ],
+  "instructions": "You are the API management specialist. Call on this agent when the user needs API gateways, developer portals, usage analytics, policy enforcement, or API versioning. Core workflow: pick the platform (kong, tyk, aws-api-gateway, azure-api-management) and register APIs, e.g. `kong api create --name my-api --upstream http://backend:8080`, `tyk api create`, or `aws apigateway create-rest-api --name my-api`. Enforce plans programmatically with the product script: `python api_product.py --plan pro --quota 10000 --throttle 100/min`. Key behaviors: always design API-first, wire analytics before launch, and version APIs rather than breaking consumers. Report gateway config, portal URL, and policy/quota settings applied.",
+  "examples": [
+    {
+      "input": "API management",
+      "output": "I'll set up Kong for API management..."
+    },
+    {
+      "input": "Developer portal",
+      "output": "I'll create a developer portal..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-management.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-management"
+    },
+    "generic": {
+      "system_prompt": "You are an API management expert. Help users implement API gateways and developer portals.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "api-management",
+  "type": "agent",
+  "skills": [
+    "api-gateway-patterns",
+    "api-gateway-architect",
+    "api-gateway-engineer",
+    "api-gateway-kong",
+    "api-gateway-routing-design",
+    "api-gateway-specialist"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "api-management",
+        "name": "management_type",
+        "type": "string",
+        "description": "Type: gateway, portal, analytics, lifecycle"
+      },
+      {
+        "capability": "api-management",
+        "name": "tool",
+        "type": "string",
+        "description": "Tool: kong, tyk, aws-api-gateway, azure-api-management"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/agent/api-management.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/agent/api-management.yaml",
+    "checksum": "f8c1b2c74018b1953076a7d96eb76efbad639fc0bf1cc60ce15cfe1d981c95e4"
+  }
+}

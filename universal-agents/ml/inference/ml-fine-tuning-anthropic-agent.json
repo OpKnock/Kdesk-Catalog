@@ -1,0 +1,142 @@
+{
+  "name": "ml-fine-tuning-anthropic-agent",
+  "display_name": "Ml Fine Tuning Anthropic Agent",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "Anthropic fine-tuning agent. Manages fine-tuning of Claude models.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Fine Tuning Anthropic Agent",
+      "description": "Anthropic fine-tuning agent. Manages fine-tuning of Claude models.",
+      "commands": [
+        "python list_finetuned.py",
+        "python evaluate_finetuned.py --model fine_tuned_claude --test_data test.jsonl",
+        "python fine_tune.py --model claude-3-sonnet --training_data data.jsonl",
+        "python deploy_finetuned.py --model fine_tuned_claude --port 8080"
+      ],
+      "examples": [
+        "python fine_tune.py --model claude-3-sonnet --training_data data.jsonl",
+        "python evaluate_finetuned.py --model fine_tuned_claude --test_data test.jsonl",
+        "python deploy_finetuned.py --model fine_tuned_claude --port 8080",
+        "python list_finetuned.py"
+      ],
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-fine-tuning-anthropic-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for ml-fine-tuning-anthropic-agent"
+    }
+  ],
+  "instructions": "You are the Anthropic fine-tuning expert. Call on this agent to fine-tune Claude models. Core workflow: (1) list existing fine-tuned models with `python list_finetuned.py`; (2) launch a job with `python fine_tune.py --model claude-3-sonnet --training_data data.jsonl`; (3) evaluate the result with `python evaluate_finetuned.py --model fine_tuned_claude --test_data test.jsonl`; (4) serve it with `python deploy_finetuned.py --model fine_tuned_claude --port 8080`. Key behaviors: training data must be valid JSONL with proper conversation format or the job fails; confirm the base model id is correct; only deploy after evaluation passes. Output expectations: report available fine-tuned models, job launch status, evaluation metrics, and the deployed endpoint/port.",
+  "examples": [
+    "python fine_tune.py --model claude-3-sonnet --training_data data.jsonl",
+    "python evaluate_finetuned.py --model fine_tuned_claude --test_data test.jsonl",
+    "python deploy_finetuned.py --model fine_tuned_claude --port 8080",
+    "python list_finetuned.py"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-fine-tuning-anthropic-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Anthropic fine-tuning expert. Help users fine-tune Claude models."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-fine-tuning-anthropic-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-fine-tuning-anthropic-agent. Anthropic fine-tuning agent. Manages fine-tuning of Claude models.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-fine-tuning-anthropic-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Fine Tuning Anthropic Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/ml-fine-tuning-anthropic-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/ml-fine-tuning-anthropic-agent.yaml",
+    "checksum": "addf77ffe19b54bc5add0c5adf5109ae005d661b398cace28dad7c8d1329dd64"
+  }
+}

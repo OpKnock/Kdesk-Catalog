@@ -1,0 +1,202 @@
+name: blue-green-deployment
+display_name: Blue Green Deployment
+category: api
+subcategory: general
+description: 'Implements blue-green deployments on Kubernetes: parallel deployments, service cutover,
+  rollback, and verification.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kubectl
+capabilities:
+- name: deploy-flow
+  description: Deploy blue/green versions and switch traffic.
+  commands:
+  - kubectl apply -f app-blue.yaml
+  - kubectl apply -f app-green.yaml
+  - kubectl rollout status deployment/my-api-blue
+  - kubectl get deployments -l app=my-api
+  - kubectl get pods -l version=green
+  examples:
+  - kubectl apply -f app-blue.yaml && kubectl rollout status deployment/my-api-blue --timeout=300s
+  - kubectl get pods -l version=green -o wide
+  - kubectl describe deployment my-api-green | grep -E 'Replicas|Ready'
+  parameters:
+  - name: version
+    type: string
+    description: blue or green
+  - name: manifest
+    type: string
+    description: Deployment manifest path
+- name: traffic-switch
+  description: Point the service selector at the active version.
+  commands:
+  - kubectl patch service my-api -p '{"spec":{"selector":{"version":"green"}}}'
+  - kubectl get endpoints my-api
+  - kubectl get svc my-api -o wide
+  - kubectl rollout undo deployment/my-api-blue
+  - curl -s http://localhost:8080/version
+  examples:
+  - kubectl patch service my-api -p '{"spec":{"selector":{"version":"green"}}}' && kubectl get endpoints
+    my-api
+  - kubectl patch service my-api -p '{"spec":{"selector":{"version":"blue"}}}'
+  - kubectl get endpoints my-api -o jsonpath='{.subsets[*].addresses[*].ip}'
+  parameters:
+  - name: service
+    type: string
+    description: Service name
+  - name: selector
+    type: string
+    description: Label selector value, e.g. version=green
+- name: rollback-verify
+  description: Roll back to the previous color and verify.
+  commands:
+  - kubectl rollout status deployment/my-api-green
+  - kubectl logs -l version=green --tail=50
+  - kubectl get events --sort-by=.lastTimestamp | tail -20
+  - kubectl scale deployment my-api-blue --replicas=0
+  - kubectl get pods -l version=green -o wide --field-selector status.phase=Running
+  examples:
+  - kubectl rollout status deployment/my-api-green && kubectl logs -l version=green --tail=50
+  - kubectl scale deployment my-api-blue --replicas=0
+  - kubectl get pods -l version=blue -o wide
+  parameters:
+  - name: deployment
+    type: string
+    description: Deployment name
+  - name: replicas
+    type: number
+    description: Scale count
+knowledge:
+- title: Blue Green Deployment (Martin Fowler)
+  type: documentation
+  source: https://martinfowler.com/bliki/BlueGreenDeployment.html
+  description: Pattern rationale
+- title: Kubernetes Services
+  type: documentation
+  source: https://kubernetes.io/docs/concepts/services-networking/service/
+  description: Selectors and endpoints
+instructions: '# Blue-Green Deployment
+
+
+  ## What this skill does
+
+
+  Implements blue-green deployments on Kubernetes: running two full deployments (blue/green), switching
+  the service selector to cut traffic, verifying the active color, and rolling back by flipping the selector
+  again.
+
+
+  ## When to use
+
+
+  - Zero-downtime releases with instant rollback
+
+  - Deploying versions that cannot be mixed
+
+  - Compliance-driven ''keep old version ready until verified''
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Deploy both colors
+
+  kubectl apply -f app-blue.yaml
+
+  kubectl apply -f app-green.yaml
+
+  kubectl rollout status deployment/my-api-blue
+
+
+  # Switch traffic to green
+
+  kubectl patch service my-api -p ''{"spec":{"selector":{"version":"green"}}}''
+
+
+  # Verify endpoints flipped
+
+  kubectl get endpoints my-api
+
+  kubectl get svc my-api -o wide
+
+
+  # Smoke test
+
+  curl -s http://localhost:8080/version
+
+
+  # Rollback: flip back to blue
+
+  kubectl patch service my-api -p ''{"spec":{"selector":{"version":"blue"}}}''
+
+  ```
+
+
+  ## Manifests
+
+
+  Deployments differ only by `version: blue` vs `version: green` labels; the Service selector points at
+  the active one.
+
+
+  ## Testing
+
+
+  - After switch, assert endpoints contain only green pod IPs
+
+  - Run smoke tests against the service during the switch window
+
+
+  ## Best practices
+
+
+  - Keep both colors resource-budgeted so switchover is instant
+
+  - Automate the selector patch in the release pipeline
+
+  - After a soak period, scale down the old color or delete it'
+examples:
+- input: Release v2 without downtime and be able to roll back
+  output: Deploys green alongside blue, patches the service selector to green, verifies endpoints, and
+    documents the rollback flip.
+- input: v2 is broken, roll back to v1
+  output: Patches the service back to version=blue, verifies endpoints, then scales green to 0.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: blue-green-deployment.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-blue-green-deployment
+  generic:
+    system_prompt: 'You own Blue Green Deployment end to end. You do it through deploy-flow: Deploy blue/green
+      versions and switch traffic. The commands are real, e.g. `kubectl apply -f app-blue.yaml`. You work
+      hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

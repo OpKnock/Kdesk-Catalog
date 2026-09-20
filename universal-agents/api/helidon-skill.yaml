@@ -1,0 +1,104 @@
+name: helidon
+display_name: Helidon
+category: api
+subcategory: general
+description: 'Oracle Helidon microservices: helidon init project scaffolding, Maven builds, running SE/NT
+  applications, and live reload development.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- helidon
+- java
+- mvn
+capabilities:
+- name: helidon-lifecycle
+  description: Scaffold, build, and run Helidon SE and Helidon MP applications.
+  commands:
+  - helidon init --flavor se --archetype quickstart --project-name myapp
+  - mvn package
+  - java -jar target/myapp.jar
+  - mvn exec:java
+  - curl http://localhost:8080/greet
+  examples:
+  - helidon init --flavor mp --archetype quickstart --project-name mymp
+  - mvn package && java -jar target/myapp.jar
+  - mvn -DskipTests package
+  parameters:
+  - name: flavor
+    type: string
+    description: se (functional) or mp (MicroProfile) flavor.
+  - name: archetype
+    type: string
+    description: quickstart, database, or oci archetype.
+  - name: project_name
+    type: string
+    description: Generated project directory name.
+knowledge:
+- title: Helidon Docs
+  type: documentation
+  source: https://helidon.io/docs/latest/
+  description: 'Official Helidon documentation: SE and MP guides.'
+- title: Helidon CLI
+  type: documentation
+  source: https://helidon.io/docs/latest/about/cli
+  description: Helidon CLI reference for init, dev, and build commands.
+instructions: "# Helidon\n\nBuild microservices with Oracle Helidon SE and MP.\n\n## What this skill does\n\
+  \n- Scaffolds projects with the helidon CLI.\n- Builds runnable jars with Maven.\n- Runs SE (functional\
+  \ style) and MP (MicroProfile) apps.\n- Uses dev-mode live reload for fast iteration.\n\n## When to\
+  \ use\n\n- A JVM team wants a lightweight microservice framework with native-image support.\n- Migrating\
+  \ a JAX-RS app to MicroProfile (Helidon MP).\n- Building low-footprint services for containers.\n\n\
+  ## Real commands\n\n```bash\n# Scaffold a Helidon SE project\nhelidon init --flavor se --archetype quickstart\
+  \ --project-name myapp\ncd myapp\n\n# Build and run\nmvn package\njava -jar target/myapp.jar\n\n# Or\
+  \ run without packaging\nmvn exec:java\n\n# Dev mode with live reload\nmvn helidon:dev\n\n# Check the\
+  \ greeting endpoint\ncurl http://localhost:8080/greet\n```\n\n## Helidon SE skeleton\n\n```java\npublic\
+  \ static void main(String[] args) {\n    WebServer server = WebServer.builder()\n        .port(8080)\n\
+  \        .addRouting(Routing.builder()\n            .get(\"/greet\", (req, res) -> res.send(\"Hello\
+  \ World\"))\n            .build())\n        .build();\n    server.start();\n}\n```\n\n## Testing\n\n\
+  ```bash\ncurl -s http://localhost:8080/greet\ncurl -s http://localhost:8080/greet/World\n```\n\n## Best\
+  \ practices\n\n- Use `helidon:dev` during development; package only for deploy.\n- For native images,\
+  \ run `mvn package -Pnative-image` and test startup.\n- Keep port 8080 configurable via `server.port`\
+  \ in application.yaml.\n- Prefer SE for greenfield functional apps, MP for MicroProfile-compatible stacks.\n\
+  \n## Example exchange\n\n```\nUser: Create a new Helidon SE quickstart project called cart.\nAgent:\
+  \ helidon init --flavor se --archetype quickstart --project-name cart && cd cart && mvn package\n```"
+examples:
+- input: Create a Helidon SE project named cart
+  output: helidon init --flavor se --archetype quickstart --project-name cart
+- input: Build and run the Helidon app
+  output: mvn package && java -jar target/cart.jar
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: helidon.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-helidon
+  generic:
+    system_prompt: 'This is your domain: Helidon. You do it through helidon-lifecycle: Scaffold, build,
+      and run Helidon SE and Helidon MP applications. The commands are real, e.g. `helidon init --flavor
+      se --archetype quickstart --project-name myapp`. You prefer the shortest safe path, and you reproduce
+      failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

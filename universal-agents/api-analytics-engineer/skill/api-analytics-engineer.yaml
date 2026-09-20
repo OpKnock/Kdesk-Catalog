@@ -1,0 +1,118 @@
+name: api-analytics-engineer
+version: 2.0.0
+type: skill
+category: sre
+description: 'Implement API analytics with usage tracking, performance metrics, and developer dashboards:
+  instrument endpoints, store metrics, and build dashboards.'
+keywords:
+- api-analytics
+- usage-tracking
+- performance-metrics
+- developer-dashboard
+- analytics
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-analytics-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-analytics-engineer
+  generic:
+    system_prompt: 'This is your domain: api-analytics-engineer. You do it through analytics-pipeline:
+      Instrument APIs and build analytics dashboards. The commands are real, e.g. `promtool check config
+      prometheus.yml`. You prefer the shortest safe path, and you reproduce failures before diagnosing
+      them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: analytics-pipeline
+  description: Instrument APIs and build analytics dashboards
+  commands:
+  - promtool check config prometheus.yml
+  - curl -X POST http://localhost:9090/-/reload
+  - curl -s 'http://localhost:9090/api/v1/query?query=rate(http_requests_total[5m])' | jq '.data.result[0].value'
+  - docker run -d -p 3000:3000 grafana/grafana
+  - curl -s -X POST http://localhost:8080/api/metrics | jq '.counters'
+  examples:
+  - curl -s 'http://localhost:9090/api/v1/query?query=histogram_quantile(0.99,%20sum(rate(http_request_duration_seconds_bucket[5m]))%20by%20(le))'
+    | jq '.data.result'
+  - curl -s 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total{status=~"5.."}[5m]))'
+    | jq '.data.result[0].value[1]'
+  - promtool query instant 'http_requests_total' http://localhost:9090
+  parameters:
+  - name: query
+    type: string
+    description: PromQL expression
+  - name: start
+    type: string
+    description: RFC3339 start time for range queries
+  - name: step
+    type: string
+    description: Resolution step, e.g. 30s
+prerequisites:
+- prometheus
+- grafana
+- elasticsearch
+- node.js
+tools:
+- prometheus
+- grafana
+- elasticsearch
+- node.js
+- python
+- kibana
+examples:
+- input: Add usage analytics to our API
+  output: Adds Prometheus counters/histograms, validates the config, and provisions a Grafana dashboard.
+- input: Which endpoint is slowest?
+  output: Queries histogram_quantile per route and ranks by p99.
+instructions: "# API Analytics Engineer\n\n## What this skill does\nImplement API analytics: instrument\
+  \ endpoints with Prometheus counters/histograms, track usage and error rates, expose a metrics endpoint,\
+  \ and build Grafana dashboards for developers.\n\n## When to use\n- Adding usage/performance tracking\
+  \ to an API\n- Building developer dashboards\n- Alerting on error rates and latency\n\n## Real commands\n\
+  ```bash\n# Validate config and reload Prometheus\npromtool check config prometheus.yml\ncurl -X POST\
+  \ http://localhost:9090/-/reload\n\n# Requests per second over 5m\ncurl -s 'http://localhost:9090/api/v1/query?query=rate(http_requests_total[5m])'\
+  \ | jq '.data.result[0].value'\n\n# p99 latency\ncurl -s 'http://localhost:9090/api/v1/query?query=histogram_quantile(0.99,%20sum(rate(http_request_duration_seconds_bucket[5m]))%20by%20(le))'\
+  \ | jq '.data.result'\n\n# 5xx rate\ncurl -s 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total{status=~\"\
+  5..\"}[5m]))' | jq '.data.result[0].value[1]'\n\n# Start Grafana\ndocker run -d -p 3000:3000 grafana/grafana\n\
+  \n# App metrics endpoint\ncurl -s http://localhost:8080/api/metrics | jq '.counters'\n```\n\n## Instrumentation\
+  \ example (Prometheus client)\n```js\nconst counter = new promClient.Counter({\n  name: 'http_requests_total',\n\
+  \  help: 'Total API requests',\n  labelNames: ['method', 'path', 'status']\n});\ncounter.inc({ method:\
+  \ req.method, path: req.path, status: res.statusCode });\n```\n\n## Dashboard panels\n- RPS per endpoint\n\
+  - p50/p95/p99 latency\n- Error rate by status class\n- Top consumers by API key\n\n## Best practices\n\
+  - Label cardinality discipline: use templated paths, never raw paths\n- Use histograms with pre-bounded\
+  \ buckets\n- Expose /metrics on a separate port in production\n\n## Testing\n```bash\npromtool check\
+  \ config prometheus.yml\ncurl -s 'http://localhost:9090/api/v1/query?query=up' | jq '.data.result'\n\
+  ```"
+display_name: api-analytics-engineer
+knowledge:
+- title: Prometheus Querying
+  type: documentation
+  source: https://prometheus.io/docs/prometheus/latest/querying/basics/
+  description: 'PromQL basics: selectors, rate, histogram_quantile'
+- title: Grafana Docs
+  type: documentation
+  source: https://grafana.com/docs/grafana/latest/
+  description: Dashboards, panels, and alerting

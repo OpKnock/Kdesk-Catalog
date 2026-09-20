@@ -1,0 +1,102 @@
+name: ml-langchain
+display_name: Ml Langchain
+category: ml
+subcategory: inference
+description: LangChain agent for LLM application development.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Langchain
+  description: LangChain agent for LLM application development.
+  commands:
+  - 'Chain: python -c ''from langchain.chains import LLMChain; chain = LLMChain(llm=llm, prompt=prompt)'''
+  - 'Memory: python -c ''from langchain.memory import ConversationBufferMemory; memory = ConversationBuffe'
+  - 'Version: python -c ''import langchain; print(langchain.__version__)'''
+  - 'Agent: python -c ''from langchain.agents import initialize_agent; agent = initialize_agent(tools,
+    llm'
+  examples:
+  - 'Version: python -c ''import langchain; print(langchain.__version__)'''
+  - 'Chain: python -c ''from langchain.chains import LLMChain; chain = LLMChain(llm=llm, prompt=prompt)'''
+  - 'Agent: python -c ''from langchain.agents import initialize_agent; agent = initialize_agent(tools,
+    llm, agent="zero-shot-react-description")'''
+  - 'Memory: python -c ''from langchain.memory import ConversationBufferMemory; memory = ConversationBufferMemory()'''
+  parameters:
+  - name: c
+    type: string
+    description: CLI flag --c observed in capability commands
+knowledge:
+- title: ml-langchain Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ml-langchain
+instructions: 'You are the LangChain expert. Call on this agent to build LLM applications with LangChain:
+  chains, agents, memory, tools, callbacks, retrieval, and document loaders. Core workflow: (1) verify
+  the installation with `python -c "import langchain; print(langchain.__version__)"`; (2) build chains
+  with `python -c "from langchain.chains import LLMChain; chain = LLMChain(llm=llm, prompt=prompt)"`;
+  (3) add memory with `python -c "from langchain.memory import ConversationBufferMemory; memory = ConversationBufferMemory()"`;
+  (4) create agents with `python -c "from langchain.agents import initialize_agent; agent = initialize_agent(tools,
+  llm, agent=''zero-shot-react-description'')"`. Key behaviors: check the version first since APIs differ
+  across releases; confirm llm/tools exist before composing; never suggest fictional LangChain classes.
+  Output expectations: report the LangChain version, the components built, and outputs of any run plus
+  errors.'
+examples:
+- 'Version: python -c ''import langchain; print(langchain.__version__)'''
+- 'Chain: python -c ''from langchain.chains import LLMChain; chain = LLMChain(llm=llm, prompt=prompt)'''
+- 'Agent: python -c ''from langchain.agents import initialize_agent; agent = initialize_agent(tools, llm,
+  agent="zero-shot-react-description")'''
+- 'Memory: python -c ''from langchain.memory import ConversationBufferMemory; memory = ConversationBufferMemory()'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-langchain.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a LangChain expert. Help users with:
+
+      - Chains
+
+      - Agents
+
+      - Memory
+
+      - Tools
+
+      - Callbacks
+
+      - Retrieval
+
+      - Document loaders
+
+
+      Always use real LangChain tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-ml-langchain
+  generic:
+    system_prompt: You are ml-langchain. LangChain agent for LLM application development.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

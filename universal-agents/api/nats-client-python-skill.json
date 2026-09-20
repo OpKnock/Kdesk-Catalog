@@ -1,0 +1,173 @@
+{
+  "name": "nats-client-python",
+  "display_name": "Nats Client Python",
+  "category": "api",
+  "subcategory": "general",
+  "description": "NATS clients in Python with nats-py: async connect, pub/sub, JetStream consumers, and request-reply.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "pip",
+    "python3"
+  ],
+  "capabilities": [
+    {
+      "name": "nats-python-client",
+      "description": "Install nats-py and write async Python clients for core NATS and JetStream.",
+      "commands": [
+        "pip install nats-py",
+        "python3 -m pip show nats-py",
+        "python3 pub.py",
+        "python3 sub.py",
+        "python3 -c \"import nats; print(nats.__version__)\""
+      ],
+      "examples": [
+        "python3 sub.py",
+        "python3 -m asyncio",
+        "python3 req.py"
+      ],
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Server URL including user/pass if needed"
+        },
+        {
+          "name": "subject",
+          "type": "string",
+          "description": "Subject or wildcard filter"
+        },
+        {
+          "name": "queue",
+          "type": "string",
+          "description": "Queue group name"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "nats.py GitHub",
+      "type": "documentation",
+      "source": "https://github.com/nats-io/nats.py",
+      "description": "Installation, examples and API reference"
+    },
+    {
+      "title": "nats-py on PyPI",
+      "type": "documentation",
+      "source": "https://pypi.org/project/nats-py/",
+      "description": "Package metadata and version history"
+    }
+  ],
+  "instructions": "# NATS Python Client\n\nnats-py is the official asyncio-based NATS client for Python.\n\n## What this skill does\n\n- Connects asynchronously with reconnect policies\n- Publishes/subscribes and does request-reply\n- Consumes from JetStream streams\n\n## When to use\n\n- Python data pipelines and workers\n- Async services in the NATS ecosystem\n\n## Real commands\n\n```bash\npip install nats-py\npython3 -m pip show nats-py\npython3 pub.py\npython3 sub.py\n```\n\n## Subscribe\n\n```python\nimport asyncio, nats\n\nasync def main():\n    nc = await nats.connect(\"nats://localhost:4222\")\n    sub = await nc.subscribe(\"orders.*\")\n    async for msg in sub:\n        print(f\"{msg.subject}: {msg.data.decode()}\")\n        await msg.ack()\n\nasyncio.run(main())\n```\n\n## Publish + request\n\n```python\nawait nc.publish(\"orders.created\", b\"{\\\"id\\\":1}\")\nresp = await nc.request(\"service.echo\", b\"ping\", timeout=2)\nprint(resp.data)\n```\n\n## JetStream consumer\n\n```python\njs = nc.jetstream()\npull = await js.pull_subscribe(\"orders\", \"worker\")\nmsgs = await pull.fetch(10)\n```\n\n## Best practices\n\n- Use `await nc.drain()` on shutdown to flush pending\n- Prefer async contexts; avoid blocking calls in the loop\n- Use queue groups for competing consumers",
+  "examples": [
+    {
+      "input": "Write a Python worker that processes order events",
+      "output": "The agent writes an asyncio subscriber on orders.* with ack handling and a queue group for scaling."
+    },
+    {
+      "input": "Send a request to a NATS service from Python",
+      "output": "The agent uses nc.request with a timeout and shows the reply handler."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "nats-client-python.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-nats-client-python"
+    },
+    "generic": {
+      "system_prompt": "You take the Nats Client Python seat. You do it through nats-python-client: Install nats-py and write async Python clients for core NATS and JetStream. The commands are real, e.g. `pip install nats-py`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "nats-client-python",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "nats-python-client",
+        "name": "url",
+        "type": "string",
+        "description": "Server URL including user/pass if needed"
+      },
+      {
+        "capability": "nats-python-client",
+        "name": "subject",
+        "type": "string",
+        "description": "Subject or wildcard filter"
+      },
+      {
+        "capability": "nats-python-client",
+        "name": "queue",
+        "type": "string",
+        "description": "Queue group name"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pip",
+    "python3"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/nats-client-python-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/nats-client-python-skill.yaml",
+    "checksum": "b0330ff750d5613735679c633eba7dd3810308354a0583d6ed239cc299268d1b"
+  }
+}

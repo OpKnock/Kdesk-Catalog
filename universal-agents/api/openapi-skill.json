@@ -1,0 +1,183 @@
+{
+  "name": "openapi",
+  "display_name": "Openapi",
+  "category": "api",
+  "subcategory": "general",
+  "description": "OpenAPI 3.x authoring: spec structure, tooling (lint/bundle/validate), and client/server code generation.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx",
+    "openapi-generator-cli",
+    "redocly",
+    "swagger-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "openapi-authoring",
+      "description": "Validate, lint, bundle and generate code from OpenAPI 3.x specifications.",
+      "commands": [
+        "openapi-generator-cli validate -i openapi.yaml",
+        "redocly lint openapi.yaml",
+        "npx @redocly/cli bundle openapi.yaml -o bundle.yaml",
+        "openapi-generator-cli generate -g python -i openapi.yaml -o generated/",
+        "swagger-cli validate openapi.yaml"
+      ],
+      "examples": [
+        "redocly lint openapi.yaml --extends recommended",
+        "openapi-generator-cli generate -g typescript-axios -i openapi.yaml -o out/",
+        "npx @redocly/cli bundle openapi.yaml --ext json"
+      ],
+      "parameters": [
+        {
+          "name": "spec",
+          "type": "string",
+          "description": "Path to the OpenAPI file"
+        },
+        {
+          "name": "generator",
+          "type": "string",
+          "description": "Code generation language/target"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output directory for generated code"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OpenAPI Specification",
+      "type": "documentation",
+      "source": "https://spec.openapis.org/oas/v3.1.0.html",
+      "description": "Official 3.1 specification"
+    },
+    {
+      "title": "Redocly CLI Docs",
+      "type": "documentation",
+      "source": "https://redocly.com/docs/cli/",
+      "description": "Lint, bundle, split and code generation commands"
+    },
+    {
+      "title": "OpenAPI Generator",
+      "type": "documentation",
+      "source": "https://github.com/OpenAPITools/openapi-generator",
+      "description": "Client/server generation from specs"
+    }
+  ],
+  "instructions": "# OpenAPI\n\nOpenAPI 3.x is the standard for describing REST APIs: paths, schemas, parameters and security.\n\n## What this skill does\n\n- Validates and lints specs\n- Bundles multi-file specs into one\n- Generates clients and servers\n\n## When to use\n\n- Starting a new API contract\n- Keeping docs in sync with implementation\n\n## Real commands\n\n```bash\n# Validate\nopenapi-generator-cli validate -i openapi.yaml\nswagger-cli validate openapi.yaml\n\n# Lint\nredocly lint openapi.yaml --extends recommended\n\n# Bundle\nnpx @redocly/cli bundle openapi.yaml -o bundle.yaml\n\n# Generate clients\nopenapi-generator-cli generate -g python -i openapi.yaml -o generated/\nopenapi-generator-cli generate -g typescript-axios -i openapi.yaml -o out/\n```\n\n## Minimal spec\n\n```yaml\nopenapi: 3.0.3\ninfo:\n  title: Example API\n  version: 1.0.0\npaths:\n  /health:\n    get:\n      responses:\n        '200':\n          description: OK\n```\n\n## Best practices\n\n- Write the spec before the code (contract-first)\n- Keep one spec file per API, reference external $refs\n- Run lint + validate in CI",
+  "examples": [
+    {
+      "input": "Validate my API spec before the release",
+      "output": "The agent runs openapi-generator-cli validate and redocly lint, fixing any errors found."
+    },
+    {
+      "input": "Generate a Python client from my spec",
+      "output": "The agent generates the client with openapi-generator-cli and shows how to use it."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "openapi.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-openapi"
+    },
+    "generic": {
+      "system_prompt": "You own Openapi end to end. You do it through openapi-authoring: Validate, lint, bundle and generate code from OpenAPI 3.x specifications. The commands are real, e.g. `openapi-generator-cli validate -i openapi.yaml`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "openapi",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "openapi-authoring",
+        "name": "spec",
+        "type": "string",
+        "description": "Path to the OpenAPI file"
+      },
+      {
+        "capability": "openapi-authoring",
+        "name": "generator",
+        "type": "string",
+        "description": "Code generation language/target"
+      },
+      {
+        "capability": "openapi-authoring",
+        "name": "output",
+        "type": "string",
+        "description": "Output directory for generated code"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx",
+    "openapi-generator-cli",
+    "redocly",
+    "swagger-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/openapi-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/openapi-skill.yaml",
+    "checksum": "da9b01c4c6450e6700ce329b6c89337040967163d8cf49b8ca1b94fdc17b5e09"
+  }
+}

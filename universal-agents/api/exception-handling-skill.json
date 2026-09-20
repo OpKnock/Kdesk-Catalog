@@ -1,0 +1,167 @@
+{
+  "name": "exception-handling",
+  "display_name": "Exception Handling",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Exception handling patterns for APIs: structured error responses, middleware-based handling, logging with context, and testing error paths.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "grep",
+    "node"
+  ],
+  "capabilities": [
+    {
+      "name": "error-response-design",
+      "description": "Define, emit, log, and test consistent error responses across API layers.",
+      "commands": [
+        "curl -s http://localhost:8080/api/orders/999999 | jq",
+        "curl -s -w '\\nHTTP %{http_code}\\n' http://localhost:8080/api/orders/999999",
+        "grep -rn 'NotFoundException' src/ | head -20",
+        "node -e \"try { throw Object.assign(new Error('boom'), {status: 422, code: 'VALIDATION'}) } catch (e) { console.log(JSON.stringify({error: e.message, code: e.code, status: e.status})) }\"",
+        "curl -s -X POST http://localhost:8080/api/orders -H 'Content-Type: application/json' -d '{\"invalid\":true}' | jq '.error.code'"
+      ],
+      "examples": [
+        "curl -s -w '\\nHTTP %{http_code}\\n' http://localhost:8080/api/orders/999999",
+        "curl -s -X POST http://localhost:8080/api/orders -H 'Content-Type: application/json' -d '{\"invalid\":true}' | jq '.error.code'",
+        "grep -rn 'NotFoundException' src/ | head -20"
+      ],
+      "parameters": [
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "API path to exercise"
+        },
+        {
+          "name": "error-code",
+          "type": "string",
+          "description": "Machine-readable error code like VALIDATION"
+        },
+        {
+          "name": "status",
+          "type": "integer",
+          "description": "HTTP status for the error class"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "RFC 7807 Problem Details",
+      "type": "documentation",
+      "source": "https://www.rfc-editor.org/rfc/rfc7807.html",
+      "description": "Standard format for machine-readable API error responses"
+    }
+  ],
+  "instructions": "# Exception Handling\n\n## What this skill does\n\nGood exception handling turns crashes into structured, debuggable error responses: a consistent JSON problem format, correct status codes, contextual logs, and tested error paths.\n\n## When to use\n\n- Auditing an API for raw stack traces leaking to clients\n- Standardizing 400/404/422/500 responses across services\n- Adding error-path tests before a launch\n\n## Real commands\n\n```bash\n# What does the API actually return on errors?\ncurl -s -w '\\nHTTP %{http_code}\\n' http://localhost:8080/api/orders/999999\ncurl -s http://localhost:8080/api/orders/999999 | jq\n\n# POST with invalid body\ncurl -s -X POST http://localhost:8080/api/orders -H 'Content-Type: application/json' -d '{\"invalid\":true}' | jq '.error.code'\n\n# Find exception classes in the codebase\n grep -rn 'NotFoundException' src/ | head -20\n```\n\n## Problem details example (RFC 7807)\n\n```json\n{\n  \"type\": \"https://api.example.com/errors/not-found\",\n  \"title\": \"Order not found\",\n  \"status\": 404,\n  \"detail\": \"No order with id 999999\",\n  \"instance\": \"/api/orders/999999\"\n}\n```\n\n## Middleware example (Node/Express)\n\n```javascript\napp.use((err, req, res, next) => {\n  const status = err.status || 500\n  if (status >= 500) console.error('[unhandled]', err.stack)\n  res.status(status).json({\n    type: err.type || 'about:blank',\n    title: err.title || err.message,\n    status,\n    detail: status >= 500 ? 'Internal error' : err.message\n  })\n})\n```\n\n## Testing error paths\n\n```bash\n# Verify a 404 shape\ncurl -s http://localhost:8080/api/orders/999999 | jq -e '.status == 404 and .title != null'\n# Verify 500s never leak internals\ncurl -s -w '%{http_code}' http://localhost:8080/api/crash | grep -q 500\n```\n\n## Best practices\n\n- Use RFC 7807 problem details; keep `type` as a documented URI.\n- Log the full stack server-side, but return generic messages for 5xx.\n- Never return internal exception messages to clients.\n- Map domain exceptions to status codes in one place (middleware).\n- Test every error path, not just the happy path.\n",
+  "examples": [
+    {
+      "input": "Clients see raw stack traces on 500s",
+      "output": "Replace the default error handler with a middleware that logs err.stack server-side and returns a generic RFC 7807 response for 5xx."
+    },
+    {
+      "input": "Standardize 404 responses",
+      "output": "Throw a NotFoundException with status 404 and let the central error middleware emit the problem-details JSON shape."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "exception-handling.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-exception-handling"
+    },
+    "generic": {
+      "system_prompt": "You work Exception Handling hands-on. You do it through error-response-design: Define, emit, log, and test consistent error responses across API layers. The commands are real, e.g. `curl -s http://localhost:8080/api/orders/999999 | jq`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "exception-handling",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "error-response-design",
+        "name": "endpoint",
+        "type": "string",
+        "description": "API path to exercise"
+      },
+      {
+        "capability": "error-response-design",
+        "name": "error-code",
+        "type": "string",
+        "description": "Machine-readable error code like VALIDATION"
+      },
+      {
+        "capability": "error-response-design",
+        "name": "status",
+        "type": "integer",
+        "description": "HTTP status for the error class"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "grep",
+    "node"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/exception-handling-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/exception-handling-skill.yaml",
+    "checksum": "2488d920c10de3a50e5bc0d6a738049ca50e38c45c9f7b5163f97d152a2a44e9"
+  }
+}

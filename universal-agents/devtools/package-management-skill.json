@@ -1,0 +1,221 @@
+{
+  "name": "package-management",
+  "display_name": "package-management",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Manages dependencies across ecosystems: npm/pnpm/yarn, pip/uv, cargo, and go modules — install, update, audit, and CI strategies.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "cargo",
+    "npm",
+    "pip",
+    "pip-audit",
+    "pnpm",
+    "yarn"
+  ],
+  "capabilities": [
+    {
+      "name": "js-package-managers",
+      "description": "Install and audit JavaScript dependencies with npm/pnpm/yarn.",
+      "commands": [
+        "npm install",
+        "npm ci",
+        "npm audit --audit-level=high",
+        "npm outdated",
+        "pnpm dlx create-vite@latest myapp",
+        "yarn upgrade-interactive"
+      ],
+      "examples": [
+        "npm ci",
+        "npm audit --audit-level=high",
+        "pnpm dlx create-vite@latest myapp"
+      ],
+      "parameters": [
+        {
+          "name": "package",
+          "type": "string",
+          "description": "Package name"
+        },
+        {
+          "name": "audit-level",
+          "type": "string",
+          "description": "Audit severity threshold"
+        }
+      ]
+    },
+    {
+      "name": "python-and-system",
+      "description": "Manage Python, Rust, and Go dependencies.",
+      "commands": [
+        "pip install -r requirements.txt",
+        "pip-audit -r requirements.txt",
+        "uv pip install -r pyproject.toml",
+        "cargo add serde --features derive",
+        "cargo audit",
+        "go mod tidy",
+        "go get -u ./..."
+      ],
+      "examples": [
+        "pip-audit -r requirements.txt",
+        "cargo audit",
+        "go mod tidy"
+      ],
+      "parameters": [
+        {
+          "name": "file",
+          "type": "string",
+          "description": "Requirements/manifest file"
+        },
+        {
+          "name": "crate",
+          "type": "string",
+          "description": "Crate name for cargo add"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "npm CLI",
+      "type": "documentation",
+      "source": "https://docs.npmjs.com/cli/",
+      "description": "npm install, ci, audit, outdated reference"
+    },
+    {
+      "title": "pip-audit",
+      "type": "documentation",
+      "source": "https://github.com/pypa/pip-audit",
+      "description": "Python dependency vulnerability scanner"
+    },
+    {
+      "title": "cargo-audit",
+      "type": "documentation",
+      "source": "https://rustsec.org/",
+      "description": "RustSec advisory database and cargo audit"
+    },
+    {
+      "title": "uv",
+      "type": "documentation",
+      "source": "https://docs.astral.sh/uv/",
+      "description": "Fast Python package manager"
+    }
+  ],
+  "instructions": "# Cross-Ecosystem Package Management\n\nInstall, update, and audit dependencies across languages.\n\n## What This Skill Does\n\n- Manages JS deps (npm/pnpm/yarn) with lockfiles\n- Manages Python deps (pip/uv) and virtualenvs\n- Manages Rust (cargo) and Go modules\n- Audits all ecosystems for vulnerabilities\n- Advises on lockfile and CI strategies\n\n## When to Use\n\n- Setting up dependency management for a project\n- Responding to vulnerability advisories\n- Standardizing package manager workflows\n\n## Real Commands\n\n```bash\n# JavaScript\nnpm install\nnpm ci                          # clean lockfile install\nnpm audit --audit-level=high\nnpm outdated\npnpm dlx create-vite@latest myapp\nyarn upgrade-interactive\n\n# Python\npython -m venv .venv\npip install -r requirements.txt\npip-audit -r requirements.txt\nuv pip install -e \".[dev]\"\n\n# Rust / Go\ncargo add serde --features derive\ncargo audit\ncargo update\ngo mod tidy\ngo get -u ./...\n```\n\n## Best Practices\n\n- Commit lockfiles and use npm ci / pnpm install --frozen-lockfile in CI\n- Run audits on every merge (npm audit, pip-audit, cargo audit)\n- Prefer one package manager per repo; do not mix\n- Pin direct deps, let transitive resolve from lockfile\n- Use uv for speed on large Python projects\n- Add `dependabot` or Renovate for automated update PRs",
+  "examples": [
+    {
+      "input": "A high-severity advisory hit our JS deps",
+      "output": "Agent runs npm audit --audit-level=high, identifies the chain, updates the package, and re-audits"
+    },
+    {
+      "input": "Set up Python deps with reproducible installs",
+      "output": "Agent creates requirements with pinned versions, tests pip-audit, and adds a CI audit step"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "package-management.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-package-management"
+    },
+    "generic": {
+      "system_prompt": "You own package-management end to end. You do it through js-package-managers: Install and audit JavaScript dependencies with npm/pnpm/yarn. The commands are real, e.g. `npm install`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "package-management",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "js-package-managers",
+        "name": "package",
+        "type": "string",
+        "description": "Package name"
+      },
+      {
+        "capability": "js-package-managers",
+        "name": "audit-level",
+        "type": "string",
+        "description": "Audit severity threshold"
+      },
+      {
+        "capability": "python-and-system",
+        "name": "file",
+        "type": "string",
+        "description": "Requirements/manifest file"
+      },
+      {
+        "capability": "python-and-system",
+        "name": "crate",
+        "type": "string",
+        "description": "Crate name for cargo add"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cargo",
+    "npm",
+    "pip",
+    "pip-audit",
+    "pnpm",
+    "yarn"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/package-management-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/package-management-skill.yaml",
+    "checksum": "d5b58726d1831bc76a63c431cbc213439d68eb734b318ec327948bc85416e458"
+  }
+}

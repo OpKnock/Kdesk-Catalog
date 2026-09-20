@@ -1,0 +1,177 @@
+name: confluent-cli
+display_name: confluent-cli
+category: database
+subcategory: general
+description: 'Manages Confluent Cloud/Platform Kafka clusters via the confluent CLI: topics, schemas,
+  and connectors.'
+version: 2.0.0
+tags:
+- database
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- confluent
+capabilities:
+- name: confluent-cli
+  description: Authenticate and manage Kafka clusters, topics, and schema registry
+  commands:
+  - confluent login --prompt
+  - confluent kafka cluster list
+  - confluent kafka cluster use lkc-xxxxx
+  - confluent kafka topic create orders --partitions 6
+  - confluent kafka topic consume orders --from-beginning --max-messages 10
+  examples:
+  - confluent kafka topic list
+  - 'confluent kafka topic produce orders --parse-key --delimiter :'
+  - confluent schema-registry schema create --subject orders-value --schema orders.avsc
+  parameters:
+  - name: partitions
+    type: integer
+    description: Partition count for topic creation
+  - name: from-beginning
+    type: boolean
+    description: Consume from the earliest offset
+  - name: schema
+    type: string
+    description: Schema file path for schema create
+knowledge:
+- title: Confluent CLI docs
+  type: documentation
+  source: https://docs.confluent.io/confluent-cli/
+  description: Installation, authentication, and command reference
+- title: Schema Registry docs
+  type: documentation
+  source: https://docs.confluent.io/cloud/current/sr/
+  description: Schema lifecycle and compatibility modes
+instructions: '# Confluent CLI
+
+
+  Manages Confluent Cloud (SaaS) and Confluent Platform Kafka clusters: topics,
+
+  schema registry, and cluster selection.
+
+
+  ## When to Use
+
+
+  - Managing Confluent Cloud environments
+
+  - Creating topics and testing produce/consume
+
+  - Registering and checking Avro/JSON schemas
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Login
+
+  sudo confluent login --prompt
+
+  sudo confluent environment list
+
+  sudo confluent environment use env-abc123
+
+
+  # Clusters
+
+  sudo confluent kafka cluster list
+
+  sudo confluent kafka cluster use lkc-xxxxx
+
+
+  # Topics
+
+  sudo confluent kafka topic create orders --partitions 6
+
+  sudo confluent kafka topic list
+
+  sudo confluent kafka topic describe orders
+
+
+  # Produce/consume
+
+  sudo confluent kafka topic produce orders --parse-key --delimiter :
+
+  sudo confluent kafka topic consume orders --from-beginning --max-messages 10
+
+
+  # Schema Registry
+
+  sudo confluent schema-registry schema create --subject orders-value --schema orders.avsc --type AVRO
+
+  sudo confluent schema-registry schema list --subject orders-value
+
+  ```
+
+
+  ## Avro Schema Example
+
+
+  ```json
+
+  {"type": "record", "name": "Order", "fields": [{"name": "order_id", "type": "string"}, {"name": "amount",
+  "type": "double"}]}
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use dedicated service accounts + API keys in CI, never personal login
+
+  - Register schemas before producing data
+
+  - Keep Avro schemas backward compatible
+
+  - Use `--max-messages` in tests to avoid endless consume
+
+  - Scope permissions per environment
+
+
+  ## Example Response
+
+
+  Creates the cluster resource, registers the schema, and verifies the end-to-end
+
+  produce/consume roundtrip with the CLI.'
+examples:
+- input: Set up the orders topic in Confluent Cloud
+  output: Logs in, selects the environment/cluster, creates the topic with 6 partitions, and verifies
+    with describe
+- input: Register the orders Avro schema
+  output: Writes orders.avsc, registers it under orders-value, and lists schema versions
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: confluent-cli.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-confluent-cli
+  generic:
+    system_prompt: 'You work confluent-cli hands-on. You do it through confluent-cli: Authenticate and
+      manage Kafka clusters, topics, and schema registry. The commands are real, e.g. `confluent login
+      --prompt`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

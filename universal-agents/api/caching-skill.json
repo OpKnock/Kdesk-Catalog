@@ -1,0 +1,235 @@
+{
+  "name": "caching",
+  "display_name": "Caching",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Implements caching for APIs: HTTP cache headers, Redis TTL caches, invalidation patterns, and hit-rate verification.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "redis-cli",
+    "varnishstat"
+  ],
+  "capabilities": [
+    {
+      "name": "redis-cache",
+      "description": "Cache values in Redis with TTLs.",
+      "commands": [
+        "redis-cli SET mykey \"hello\" EX 60",
+        "redis-cli GET mykey",
+        "redis-cli TTL mykey",
+        "redis-cli DEL mykey",
+        "redis-cli MSET user:1 '{\"id\":1}' user:2 '{\"id\":2}'"
+      ],
+      "examples": [
+        "redis-cli SET cache:users:page:1 '[...]' EX 300",
+        "redis-cli GET cache:users:page:1",
+        "redis-cli -3 SETNX cache:lock:order:42 1 EX 30"
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Cache key"
+        },
+        {
+          "name": "ttl",
+          "type": "number",
+          "description": "TTL seconds"
+        }
+      ]
+    },
+    {
+      "name": "http-caching",
+      "description": "Control browser/proxy caching with headers.",
+      "commands": [
+        "curl -sI https://example.com/static/app.js | grep -i cache-control",
+        "curl -s -H \"Cache-Control: max-age=0\" -o /dev/null -w \"%{http_code} %{time_total}\\n\" https://example.com/static/app.js",
+        "curl -s -H \"If-Modified-Since: $(date -R -d '1 day ago')\" -o /dev/null -w \"%{http_code}\\n\" https://example.com/static/app.js",
+        "curl -s -I -H \"Cache-Control: no-cache\" https://example.com/api/users"
+      ],
+      "examples": [
+        "curl -sI https://example.com/static/app.js | grep -iE 'cache-control|etag|age'",
+        "curl -s -H \"If-None-Match: \\\"abc123\\\"\" -o /dev/null -w \"%{http_code}\\n\" https://example.com/static/app.js",
+        "curl -s -o /dev/null -w \"%{http_code} %{time_total}\\n\" https://example.com/static/app.js"
+      ],
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Cached resource URL"
+        },
+        {
+          "name": "headers",
+          "type": "string",
+          "description": "Validation headers"
+        }
+      ]
+    },
+    {
+      "name": "cache-stats",
+      "description": "Measure hit rates and invalidate selectively.",
+      "commands": [
+        "redis-cli INFO stats | grep -E 'keyspace_hits|keyspace_misses'",
+        "redis-cli --scan --pattern 'cache:users:*' | wc -l",
+        "varnishstat | grep -E 'MAIN.cache_hit|MAIN.cache_miss'",
+        "curl -s https://example.com/static/app.js -o /dev/null -w \"%{http_code}\\n\" -H \"Cache-Control: max-age=0\""
+      ],
+      "examples": [
+        "redis-cli INFO stats | grep -E 'keyspace_hits|keyspace_misses'",
+        "redis-cli --scan --pattern 'cache:users:*' | head -20",
+        "varnishstat | grep -E 'hit_ratio|MAIN.cache_hit'"
+      ],
+      "parameters": [
+        {
+          "name": "pattern",
+          "type": "string",
+          "description": "Key pattern to scan"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Redis Commands",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/commands/",
+      "description": "SET/GET/TTL commands"
+    },
+    {
+      "title": "HTTP Caching (RFC 9111)",
+      "type": "documentation",
+      "source": "https://httpwg.org/specs/rfc9111.html",
+      "description": "Cache-Control, ETag, validation"
+    },
+    {
+      "title": "Caching Best Practices",
+      "type": "documentation",
+      "source": "https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching",
+      "description": "Header strategy guide"
+    }
+  ],
+  "instructions": "# Caching\n\n## What this skill does\n\nImplements API caching: Redis TTL caches for computed data, HTTP cache-control/ETag headers for clients and proxies, and hit-rate measurement.\n\n## When to use\n\n- An endpoint returns the same data repeatedly\n- Reducing latency for static assets\n- Caching expensive queries or third-party calls\n\n## Real commands\n\n```bash\n# Redis TTL cache\nredis-cli SET cache:users:page:1 '[...]' EX 300\nredis-cli GET cache:users:page:1\nredis-cli TTL cache:users:page:1\nredis-cli DEL cache:users:page:1\n\n# HTTP caching headers\ncurl -sI https://example.com/static/app.js | grep -iE 'cache-control|etag'\n\n# Validation request (304 expected)\ncurl -s -H \"If-None-Match: \\\"abc123\\\"\" -o /dev/null -w \"%{http_code}\\n\" https://example.com/static/app.js\n\n# Hit rate\nredis-cli INFO stats | grep -E 'keyspace_hits|keyspace_misses'\n```\n\n## Invalidation patterns\n\n- Cache-aside: write-through on read, DEL on write\n- Versioned keys: key = data:users:v2 (avoids invalidation)\n- Time-based: short TTL for hot data, long TTL for cold\n\n## Testing\n\n- Run the same request twice; second should be faster\n- Verify 304 responses for conditional requests\n\n## Best practices\n\n- Always set TTL; unbounded caches grow forever\n- Cache by canonical key (normalized URL/query)\n- Measure hit ratio; < 70% may mean poor key design\n- Never cache user-specific responses without private/no-store",
+  "examples": [
+    {
+      "input": "Our user list endpoint is slow, cache it",
+      "output": "Adds Redis cache-aside with 5-minute TTL, shows SET/GET/DEL flow, and measures latency before/after with curl."
+    },
+    {
+      "input": "Browser cache keeps serving stale JS",
+      "output": "Sets Cache-Control and ETag headers, verifies with curl -sI, and shows the 304 flow with If-None-Match."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "caching.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-caching"
+    },
+    "generic": {
+      "system_prompt": "You work Caching hands-on. You do it through redis-cache: Cache values in Redis with TTLs. The commands are real, e.g. `redis-cli SET mykey hello EX 60`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "caching",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "redis-cache",
+        "name": "key",
+        "type": "string",
+        "description": "Cache key"
+      },
+      {
+        "capability": "redis-cache",
+        "name": "ttl",
+        "type": "number",
+        "description": "TTL seconds"
+      },
+      {
+        "capability": "http-caching",
+        "name": "url",
+        "type": "string",
+        "description": "Cached resource URL"
+      },
+      {
+        "capability": "http-caching",
+        "name": "headers",
+        "type": "string",
+        "description": "Validation headers"
+      },
+      {
+        "capability": "cache-stats",
+        "name": "pattern",
+        "type": "string",
+        "description": "Key pattern to scan"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis-cli",
+    "varnishstat"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/caching-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/caching-skill.yaml",
+    "checksum": "0da95e136d02137254a8b5f9451b7326abe6c717fd45af59c8232a932ead693e"
+  }
+}

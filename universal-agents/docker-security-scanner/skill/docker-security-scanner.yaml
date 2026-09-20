@@ -1,0 +1,221 @@
+name: docker-security-scanner
+version: 2.0.0
+type: skill
+category: security
+description: Scans container images, filesystems, IaC, and clusters for vulnerabilities with Trivy, Grype,
+  Syft, and Docker Scout.
+keywords:
+- docker
+- container-security
+- trivy
+- grype
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: docker-security-scanner.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-docker-security-scanner
+  generic:
+    system_prompt: 'You are the docker-security-scanner specialist. You do it through image-scanning:
+      Scan container images for CVEs and misconfigurations. The commands are real, e.g. `trivy image nginx:latest`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: image-scanning
+  description: Scan container images for CVEs and misconfigurations.
+  commands:
+  - trivy image nginx:latest
+  - trivy image --severity CRITICAL,HIGH --ignore-unfixed nginx:1.26
+  - trivy image --format sarif -o results.sarif nginx:latest
+  - docker scout cves nginx:latest
+  - docker scout quickview nginx:latest
+  - grype nginx:latest -o table
+  examples:
+  - trivy image --severity CRITICAL,HIGH --ignore-unfixed nginx:1.26
+  - docker scout cves nginx:latest
+  - trivy image --format sarif -o results.sarif nginx:latest
+  parameters:
+  - name: image
+    type: string
+    description: Image reference
+  - name: severity
+    type: string
+    description: Severity filter, e.g. CRITICAL,HIGH
+  - name: output
+    type: string
+    description: Report format/file
+- name: filesystem-and-ci
+  description: Scan repos, IaC, and Kubernetes clusters in pipelines.
+  commands:
+  - trivy fs --severity HIGH,CRITICAL .
+  - trivy config --severity CRITICAL .
+  - trivy repo --scanners vuln,secret git@github.com:org/app.git
+  - trivy k8s --report summary cluster
+  - syft nginx:latest -o spdx-json > sbom.json
+  - trivy sbom sbom.json
+  examples:
+  - trivy fs --severity HIGH,CRITICAL .
+  - trivy k8s --report summary cluster
+  - syft nginx:latest -o spdx-json > sbom.json
+  parameters:
+  - name: dir
+    type: string
+    description: Directory to scan
+  - name: scanners
+    type: string
+    description: 'Scanner types: vuln, secret, config, license'
+prerequisites:
+- trivy
+- grype
+- hadolint
+- snyk
+- docker
+tools:
+- trivy
+- grype
+- hadolint
+- snyk
+- docker
+- docker-slim
+examples:
+- input: Is our production image safe to ship?
+  output: Agent scans with severity filter, reviews fixable vs unfixed, and issues a ship/hold recommendation
+- input: Add scanning to CI
+  output: Agent adds trivy image with exit-code gates and SARIF upload to the pipeline
+instructions: '# Container Security Scanning
+
+
+  Find vulnerabilities in images, code, and clusters before attackers do.
+
+
+  ## What This Skill Does
+
+
+  - Scans images for OS and language CVEs (Trivy/Grype)
+
+  - Generates SBOMs with Syft
+
+  - Scans IaC, filesystems, and git repos
+
+  - Scans clusters with trivy k8s
+
+  - Emits SARIF/JSON for CI gates
+
+
+  ## When to Use
+
+
+  - CI gate before image push
+
+  - Auditing running clusters
+
+  - Checking base image upgrades
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Images
+
+  trivy image nginx:latest
+
+  trivy image --severity CRITICAL,HIGH --ignore-unfixed nginx:1.26
+
+  trivy image --format sarif -o results.sarif nginx:latest
+
+  docker scout cves nginx:latest
+
+  docker scout quickview nginx:latest
+
+  grype nginx:latest -o table
+
+
+  # Code and config
+
+  trivy fs --severity HIGH,CRITICAL .
+
+  trivy config --severity CRITICAL .
+
+  trivy repo --scanners vuln,secret git@github.com:org/app.git
+
+
+  # Clusters
+
+  trivy k8s --report summary cluster
+
+
+  # SBOM
+
+  syft nginx:latest -o spdx-json > sbom.json
+
+  trivy sbom sbom.json
+
+  ```
+
+
+  ## CI Gate Pattern
+
+
+  ```bash
+
+  trivy image --exit-code 1 --severity CRITICAL --ignore-unfixed $IMAGE
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Fail on CRITICAL with --ignore-unfixed to focus on fixable
+
+  - Track SBOMs per release for provenance
+
+  - Scan at build time and in nightly regressions
+
+  - Combine image scans with trivy k8s for runtime context
+
+  - Pin base images and rebuild on advisory updates'
+display_name: docker-security-scanner
+knowledge:
+- title: Trivy Documentation
+  type: documentation
+  source: https://aquasecurity.github.io/trivy/
+  description: Trivy scanners, filters, and CI integration
+- title: Docker Scout
+  type: documentation
+  source: https://docs.docker.com/scout/
+  description: Docker image vulnerability analysis
+- title: Grype
+  type: documentation
+  source: https://github.com/anchore/grype
+  description: Anchore vulnerability scanner
+- title: Syft SBOM
+  type: documentation
+  source: https://github.com/anchore/syft
+  description: SBOM generation for containers

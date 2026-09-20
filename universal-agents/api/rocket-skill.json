@@ -1,0 +1,171 @@
+{
+  "name": "rocket",
+  "display_name": "Rocket",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Rocket (Rust) skill: routing with route attributes, state and guards, Rocket.toml config, and cargo build/run workflows for web APIs.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "cargo"
+  ],
+  "capabilities": [
+    {
+      "name": "rocket-web",
+      "description": "Build Rust web APIs with Rocket: routes, state, config",
+      "commands": [
+        "cargo new hello-rocket && cd hello-rocket && cargo add rocket",
+        "cargo run",
+        "curl -s http://localhost:8000/hello/Ada",
+        "curl -X POST http://localhost:8000/submit -H 'Content-Type: application/json' -d '{\"title\":\"hi\"}'",
+        "cargo build --release"
+      ],
+      "examples": [
+        "cargo run",
+        "curl -s http://localhost:8000/hello/Ada",
+        "curl -s -X POST http://localhost:8000/submit -H 'Content-Type: application/json' -d '{\"title\":\"hi\"}'"
+      ],
+      "parameters": [
+        {
+          "name": "route_path",
+          "type": "string",
+          "description": "Path expression like /hello/<name>"
+        },
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Port from Rocket.toml or ROCKET_PORT"
+        },
+        {
+          "name": "profile",
+          "type": "string",
+          "description": "Rocket profile: default, release, debug"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Rocket guide",
+      "type": "documentation",
+      "source": "https://rocket.rs/v0.5/guide/",
+      "description": "Routes, guards, state, and configuration"
+    },
+    {
+      "title": "Rocket API reference",
+      "type": "documentation",
+      "source": "https://api.rocket.rs/v0.5/rocket/",
+      "description": "rocket::build, route macros, and Request types"
+    }
+  ],
+  "instructions": "# Rocket (Rust)\n\nHand-crafted skill for building web APIs with the Rocket framework.\n\n## What this skill does\n\n- Defines typed routes with the get/post macro attributes\n- Shares mutable state via State<T> and protects routes with guards\n- Configures ports, limits, and profiles through Rocket.toml\n\n## When to use\n\n- Greenfield Rust HTTP APIs with minimal boilerplate\n- Services that want compile-time route and request typing\n- Prototyping an endpoint before hardening it\n\n## Real commands\n\n```bash\n# Scaffold\ncargo new hello-rocket && cd hello-rocket && cargo add rocket\n\n# Run with the dev profile\ncargo run\n\n# Exercise routes\ncurl -s http://localhost:8000/hello/Ada\ncurl -X POST http://localhost:8000/submit -H 'Content-Type: application/json' -d '{\"title\":\"hi\"}'\n\n# Production build\ncargo build --release\n```\n\n## Routes example\n\n```rust\nuse rocket::{get, post, State};\nuse std::sync::atomic::{AtomicU64, Ordering};\n\n#[get(\"/hello/<name>\")]\nfn hello(name: &str) -> String {\n    format!(\"Hello, {}!\", name)\n}\n\n#[post(\"/submit\", data = \"<form>\")]\nfn submit(form: Form<Title>) -> String {\n    form.into_inner().title\n}\n\n#[launch]\nfn rocket() -> _ {\n    rocket::build()\n        .mount(\"/\", routes![hello, submit])\n        .manage(AtomicU64::new(0))\n}\n```\n\n## Rocket.toml\n\n```toml\n[default]\nport = 8000\n\n[release]\nport = 8080\nworkers = 16\n```\n\n## Testing\n\n```bash\ncargo run\ncurl -s http://localhost:8000/hello/Ada\ncurl -s -o /dev/null -w '%{http_code}\\n' -X POST http://localhost:8000/submit -d 'title=test'\n```\n\n## Best practices\n\n- Keep routes in a routes module mounted once in rocket()\n- Use managed state for shared counters/caches, not statics\n- Build release for deployment; dev profile compiles faster\n",
+  "examples": [
+    {
+      "input": "Start a Rocket API and test it",
+      "output": "cargo run, then curl -s http://localhost:8000/hello/Ada and POST to /submit to verify the handlers."
+    },
+    {
+      "input": "Run Rocket on port 8080 in production",
+      "output": "Put port = 8080 under the [release] profile in Rocket.toml and start with cargo build --release && ./target/release/hello-rocket."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rocket.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rocket"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Rocket. You do it through rocket-web: Build Rust web APIs with Rocket: routes, state, config. The commands are real, e.g. `cargo new hello-rocket && cd hello-rocket && cargo add rocket`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rocket",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rocket-web",
+        "name": "route_path",
+        "type": "string",
+        "description": "Path expression like /hello/<name>"
+      },
+      {
+        "capability": "rocket-web",
+        "name": "port",
+        "type": "integer",
+        "description": "Port from Rocket.toml or ROCKET_PORT"
+      },
+      {
+        "capability": "rocket-web",
+        "name": "profile",
+        "type": "string",
+        "description": "Rocket profile: default, release, debug"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cargo"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/rocket-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/rocket-skill.yaml",
+    "checksum": "0b270b1d15b6317be6d0572847fd07ab21ab7662fcaa8b7e487be86efa037c0d"
+  }
+}

@@ -1,0 +1,81 @@
+name: finops-cost-aws-agent
+display_name: Finops Cost Aws Agent
+category: finops
+subcategory: agent
+description: AWS cost optimization agent. Manages AWS spending, budgets, and cost-saving recommendations.
+version: 1.0.0
+tags:
+- finops
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Finops Cost Aws Agent
+  description: AWS cost optimization agent. Manages AWS spending, budgets, and cost-saving recommendations.
+  commands:
+  - aws ce get-cost-and-usage --time-period Start=2024-01-01,End=2024-01-31 --granularity MONTHLY
+  - aws budgets describe-budgets --account-id <id>
+  - aws ce get-reserved-purchase-recommendation --service EC2
+  - aws ce get-cost-category-definitions
+  examples:
+  - aws ce get-cost-and-usage --time-period Start=2024-01-01,End=2024-01-31 --granularity MONTHLY
+  - aws budgets describe-budgets --account-id <id>
+  - aws ce get-reserved-purchase-recommendation --service EC2
+  - aws ce get-cost-category-definitions
+  parameters: []
+knowledge:
+- title: finops-cost-aws-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/finops/agent
+  description: Reference documentation for finops-cost-aws-agent
+instructions: 'You are an AWS cost optimization expert. Call on you to reduce AWS spending, manage budgets,
+  and act on cost-saving recommendations. Core workflow: 1) Pull spend for a period with `aws ce get-cost-and-usage
+  --time-period Start=2024-01-01,End=2024-01-31 --granularity MONTHLY`; 2) Review budget posture with
+  `aws budgets describe-budgets --account-id <id>`; 3) Get savings opportunities with `aws ce get-reserved-purchase-recommendation
+  --service EC2`; 4) Understand cost categories with `aws ce get-cost-category-definitions`. Key behaviors:
+  verify account ID and IAM permissions; compare spend trends before recommending; sanity-check commitment
+  recommendations against real utilization; flag services with runaway spend. Output: spend summary, budget
+  status, savings recommendations with estimated impact, and a prioritized cost-reduction plan.'
+examples:
+- aws ce get-cost-and-usage --time-period Start=2024-01-01,End=2024-01-31 --granularity MONTHLY
+- aws budgets describe-budgets --account-id <id>
+- aws ce get-reserved-purchase-recommendation --service EC2
+- aws ce get-cost-category-definitions
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: finops-cost-aws-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an AWS cost optimization expert. Help users reduce AWS spending and optimize
+      costs.
+  opencode:
+    plugin: opencode-finops-cost-aws-agent
+  generic:
+    system_prompt: You are finops-cost-aws-agent. AWS cost optimization agent. Manages AWS spending, budgets,
+      and cost-saving recommendations.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

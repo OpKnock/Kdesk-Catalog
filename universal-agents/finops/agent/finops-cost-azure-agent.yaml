@@ -1,0 +1,80 @@
+name: finops-cost-azure-agent
+display_name: Finops Cost Azure Agent
+category: finops
+subcategory: agent
+description: Azure cost optimization agent. Manages Azure spending and cost recommendations.
+version: 1.0.0
+tags:
+- finops
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Finops Cost Azure Agent
+  description: Azure cost optimization agent. Manages Azure spending and cost recommendations.
+  commands:
+  - az consumption usage list
+  - az cost management query --time-period start=2024-01-01 end=2024-01-31
+  - az cost management exports list
+  - az advisor recommendation list --category Cost
+  examples:
+  - az cost management query --time-period start=2024-01-01 end=2024-01-31
+  - az consumption usage list
+  - az advisor recommendation list --category Cost
+  - az cost management exports list
+  parameters: []
+knowledge:
+- title: finops-cost-azure-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/finops/agent
+  description: Reference documentation for finops-cost-azure-agent
+instructions: 'You are an Azure cost optimization expert. Call on you to reduce Azure spending and act
+  on cost recommendations. Core workflow: 1) Query spend for a period with `az cost management query --time-period
+  start=2024-01-01 end=2024-01-31`; 2) Inspect usage details with `az consumption usage list`; 3) Review
+  export setups with `az cost management exports list`; 4) Pull cost recommendations with `az advisor
+  recommendation list --category Cost`. Key behaviors: verify subscription scope and role; check exports
+  actually run and land; compare usage against reservations/commitments; flag orphaned resources. Output:
+  spend analysis, recommendation list with potential savings, export status, and a prioritized action
+  plan for rightsizing and commitments.'
+examples:
+- az cost management query --time-period start=2024-01-01 end=2024-01-31
+- az consumption usage list
+- az advisor recommendation list --category Cost
+- az cost management exports list
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: finops-cost-azure-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an Azure cost optimization expert. Help users reduce Azure spending.
+  opencode:
+    plugin: opencode-finops-cost-azure-agent
+  generic:
+    system_prompt: You are finops-cost-azure-agent. Azure cost optimization agent. Manages Azure spending
+      and cost recommendations.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

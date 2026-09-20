@@ -1,0 +1,200 @@
+{
+  "name": "fly",
+  "display_name": "Fly",
+  "category": "cloud",
+  "subcategory": "general",
+  "description": "Deploys applications to Fly.io with the flyctl CLI: app creation, scaling machines, volumes, secrets, and wireguard VPN.",
+  "version": "2.0.0",
+  "tags": [
+    "cloud"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "fly"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "fly launch",
+        "fly deploy",
+        "fly status",
+        "fly apps create myapp",
+        "fly scale count app=3"
+      ],
+      "description": "Create apps, launch machines, and deploy.",
+      "name": "fly-deploy",
+      "examples": [
+        "fly launch --name myapp --region lhr --no-deploy",
+        "fly deploy --image nginx:alpine",
+        "fly scale count app=5 --max-per-region 2"
+      ],
+      "parameters": [
+        {
+          "description": "Fly app name",
+          "name": "app",
+          "type": "string"
+        },
+        {
+          "description": "Fly region code",
+          "name": "region",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "fly machines list -a myapp",
+        "fly volume create data -a myapp --region lhr --size 5",
+        "fly secrets set DATABASE_URL=postgres://...",
+        "fly secrets list -a myapp",
+        "fly ssh console -a myapp"
+      ],
+      "description": "Manage machines, volumes, and secrets.",
+      "name": "fly-ops",
+      "examples": [
+        "fly machines destroy 123abc -a myapp --force",
+        "fly volumes list -a myapp",
+        "fly secrets set --detach AUTH_TOKEN=abc123"
+      ],
+      "parameters": [
+        {
+          "description": "Machine id",
+          "name": "machine-id",
+          "type": "string"
+        },
+        {
+          "description": "KEY=VALUE pair",
+          "name": "secret",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Fly.io Docs",
+      "description": "Deployment, machines, and volumes reference",
+      "source": "https://fly.io/docs/",
+      "type": "documentation"
+    },
+    {
+      "title": "flyctl Reference",
+      "description": "CLI command reference",
+      "source": "https://fly.io/docs/flyctl/",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Fly.io\n\nDeploy apps to edge infrastructure with flyctl.\n\n## When to Use\n\n- Quick global deploys for Dockerized apps\n- Stateful services with volumes\n- Regional scaling (machines per region)\n- Replacement for Heroku-style workflows\n\n## Commands\n\n```bash\n# Launch a new app\nfly launch\nfly launch --name myapp --region lhr --no-deploy\n\n# Deploy\nfly deploy\nfly deploy --image nginx:alpine\n\n# Status\nfly status\n\n# Scale\nfly scale count app=3\nfly scale count app=5 --max-per-region 2\n\n# Machines\nfly machines list -a myapp\nfly machines destroy 123abc -a myapp --force\n\n# Volumes\nfly volume create data -a myapp --region lhr --size 5\nfly volumes list -a myapp\n\n# Secrets\nfly secrets set DATABASE_URL=postgres://...\nfly secrets list -a myapp\n\n# Shell access\nfly ssh console -a myapp\n```\n\n## Best Practices\n\n- Set fly.toml app name, internal_port, and min_machines_running\n- Use volumes only for stateful data; keep apps stateless\n- Manage secrets with fly secrets, never in code\n- Test with fly deploy --no-cache for clean builds\n- Monitor with fly status and the dashboard metrics\n- Pin the primary region; place dependent services together",
+  "examples": [
+    {
+      "input": "Deploy my Node app to Fly.io",
+      "output": "Agent runs fly launch, reviews fly.toml, deploys with fly deploy, and verifies with fly status."
+    },
+    {
+      "input": "Add persistent storage to my Fly app",
+      "output": "Agent creates a volume with fly volume create, mounts it in fly.toml, and redeploys."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "fly.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-fly"
+    },
+    "generic": {
+      "system_prompt": "You take the Fly seat. You do it through fly-deploy: Create apps, launch machines, and deploy. The commands are real, e.g. `fly launch`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "fly",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "fly-deploy",
+        "name": "app",
+        "type": "string",
+        "description": "Fly app name"
+      },
+      {
+        "capability": "fly-deploy",
+        "name": "region",
+        "type": "string",
+        "description": "Fly region code"
+      },
+      {
+        "capability": "fly-ops",
+        "name": "machine-id",
+        "type": "string",
+        "description": "Machine id"
+      },
+      {
+        "capability": "fly-ops",
+        "name": "secret",
+        "type": "string",
+        "description": "KEY=VALUE pair"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "fly"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/fly-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/fly-skill.yaml",
+    "checksum": "71a365f20c162919c36b3ea69263311817b6f823887c5f7cf79e0b2410ba818a"
+  }
+}

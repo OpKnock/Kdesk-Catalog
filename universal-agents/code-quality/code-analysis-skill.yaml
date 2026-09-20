@@ -1,0 +1,194 @@
+name: code-analysis
+display_name: code-analysis
+category: code-quality
+subcategory: general
+description: 'Performs static and dynamic code analysis: complexity metrics, duplicate detection, profiling,
+  and cross-language analyzers.'
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- node
+- pprof
+- python
+- radon
+- vulture
+capabilities:
+- commands:
+  - python -m pip install radon
+  - radon cc src/ -s
+  - radon mi src/ -s
+  - python -m pip install vulture
+  - vulture src/
+  description: Measure code complexity and duplication.
+  name: complexity-analysis
+  examples:
+  - radon cc src/ -s -a
+  - radon mi src/ -s -j
+  - vulture src/ --min-confidence 100
+  parameters:
+  - description: Source directory
+    name: path
+    type: string
+  - description: Complexity threshold
+    name: threshold
+    type: integer
+- commands:
+  - python -m cProfile -o out.prof app.py
+  - python -m pstats
+  - node --cpu-prof --cpu-prof-dir=./prof app.js
+  - go test -cpuprofile=cpu.out ./...
+  - pprof -top cpu.out
+  description: Profile CPU, memory, and hot paths.
+  name: runtime-analysis
+  examples:
+  - python -m cProfile -s cumtime app.py | head -30
+  - node --heap-prof --heap-prof-dir=./prof app.js
+  - pprof -web cpu.out
+  parameters:
+  - description: Profiler output path
+    name: profile-file
+    type: string
+  - name: method
+    type: string
+    description: cpu or heap profiling
+knowledge:
+- title: Radon Docs
+  description: Python complexity metrics
+  source: https://radon.readthedocs.io
+  type: documentation
+- title: Vulture Docs
+  description: Dead code finder
+  source: https://github.com/jendrikseipp/vulture
+  type: documentation
+- title: pprof Docs
+  description: Go profiling visualizer
+  source: https://github.com/google/pprof
+  type: documentation
+instructions: '# Code Analysis
+
+
+  Analyze code quality and runtime behavior.
+
+
+  ## When to Use
+
+
+  - Finding dead code and overly complex modules
+
+  - Profiling hot paths before optimization
+
+  - Measuring maintainability index in CI
+
+  - Comparing refactors with before/after metrics
+
+
+  ## Static Analysis
+
+
+  ```bash
+
+  # Cyclomatic complexity
+
+  pip install radon
+
+  radon cc src/ -s -a
+
+
+  # Maintainability index
+
+  radon mi src/ -s
+
+
+  # Dead code
+
+  pip install vulture
+
+  vulture src/ --min-confidence 100
+
+  ```
+
+
+  ## Runtime Profiling
+
+
+  ```bash
+
+  # Python
+
+  python -m cProfile -o out.prof app.py
+
+  python -m cProfile -s cumtime app.py | head -30
+
+
+  # Node
+
+  node --cpu-prof --cpu-prof-dir=./prof app.js
+
+  node --heap-prof --heap-prof-dir=./prof app.js
+
+
+  # Go
+
+  go test -cpuprofile=cpu.out ./...
+
+  pprof -top cpu.out
+
+  pprof -web cpu.out
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Set complexity budgets per module and enforce in CI
+
+  - Profile with realistic workloads, not synthetic ones
+
+  - Check both CPU and heap profiles for leaks
+
+  - Measure before/after every refactor
+
+  - Focus on the top 5 hot functions, not everything
+
+  - Combine with tests to ensure behavior is unchanged'
+examples:
+- input: Find the most complex module in my codebase
+  output: Agent runs radon cc -s to rank modules by complexity and highlights A/F grades for refactoring.
+- input: Why is my API slow on one endpoint?
+  output: Agent profiles with cProfile or --cpu-prof, identifies the hot function, and proposes targeted
+    fixes.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: code-analysis.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-code-analysis
+  generic:
+    system_prompt: 'You work code-analysis hands-on. You do it through complexity-analysis: Measure code
+      complexity and duplication. The commands are real, e.g. `python -m pip install radon`. You answer
+      with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,171 @@
+{
+  "name": "spring-boot-kotlin",
+  "display_name": "Spring Boot Kotlin",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Spring Boot + Kotlin skill: start.spring.io scaffolding with Gradle, bootRun, actuator health checks, and Kotlin test runs.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "./gradlew"
+  ],
+  "capabilities": [
+    {
+      "name": "spring-kotlin-workflow",
+      "description": "Scaffold, run, and test Spring Boot applications in Kotlin",
+      "commands": [
+        "curl -s https://start.spring.io/starter.zip -d language=kotlin -d type=gradle-project -d dependencies=web,data-jpa,actuator -o demo.zip && unzip demo.zip",
+        "./gradlew bootRun",
+        "curl -s localhost:8080/actuator/health | jq .status",
+        "./gradlew test --tests 'com.example.demo.DemoApplicationTests'",
+        "./gradlew build && java -jar build/libs/demo-0.0.1-SNAPSHOT.jar"
+      ],
+      "examples": [
+        "curl -s https://start.spring.io/starter.zip -d language=kotlin -d type=gradle-project -d dependencies=web,data-jpa,actuator -o demo.zip && unzip demo.zip",
+        "./gradlew bootRun",
+        "curl -s localhost:8080/actuator/health | jq .status"
+      ],
+      "parameters": [
+        {
+          "name": "language",
+          "type": "string",
+          "description": "kotlin or java for scaffolding"
+        },
+        {
+          "name": "dependencies",
+          "type": "string",
+          "description": "Comma-separated starter ids, e.g. web,data-jpa"
+        },
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Server port (default 8080)"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Spring Boot docs",
+      "type": "documentation",
+      "source": "https://docs.spring.io/spring-boot/index.html",
+      "description": "Quickstart, starters, and configuration"
+    },
+    {
+      "title": "start.spring.io API",
+      "type": "documentation",
+      "source": "https://start.spring.io/",
+      "description": "Project generator endpoints and options"
+    }
+  ],
+  "instructions": "# Spring Boot with Kotlin\n\nHand-crafted skill for Spring Boot applications written in Kotlin.\n\n## What this skill does\n\n- Generates a Kotlin + Gradle project from start.spring.io\n- Runs the app with bootRun and checks actuator health\n- Runs Kotlin test classes and builds the jar\n\n## When to use\n\n- Starting a new Kotlin service on Spring Boot\n- Verifying a generated project boots before writing code\n- Running the suite in CI with Gradle\n\n## Real commands\n\n```bash\n# Scaffold: Kotlin + Gradle + web/data-jpa/actuator\ncurl -s https://start.spring.io/starter.zip -d language=kotlin -d type=gradle-project -d dependencies=web,data-jpa,actuator -o demo.zip && unzip demo.zip\n\n# Run the app\n./gradlew bootRun\n\n# Health check\ncurl -s localhost:8080/actuator/health | jq .status\n\n# Run tests\n./gradlew test --tests 'com.example.demo.DemoApplicationTests'\n\n# Build and run the jar\n./gradlew build && java -jar build/libs/demo-0.0.1-SNAPSHOT.jar\n```\n\n## Controller example\n\n```kotlin\npackage com.example.demo\n\nimport org.springframework.web.bind.annotation.GetMapping\nimport org.springframework.web.bind.annotation.RestController\n\n@RestController\nclass HelloController {\n    @GetMapping(\"/hello\")\n    fun hello() = mapOf(\"message\" to \"Hello from Kotlin\")\n}\n```\n\n## Testing\n\n```bash\n./gradlew bootRun &\ncurl -s localhost:8080/hello | jq .message\ncurl -s localhost:8080/actuator/health | jq .status\n./gradlew test\n```\n\n## Best practices\n\n- Keep controller code in Kotlin but services testable via interfaces\n- Use application.yaml for per-environment profiles\n- Let Gradle handle the Spring plugin version via the wrapper\n",
+  "examples": [
+    {
+      "input": "Bootstrap a Kotlin Spring Boot API",
+      "output": "curl the start.spring.io starter.zip endpoint with language=kotlin and dependencies=web,actuator, unzip, then ./gradlew bootRun and curl localhost:8080/actuator/health."
+    },
+    {
+      "input": "Run just my unit tests",
+      "output": "./gradlew test --tests 'com.example.demo.*' runs only the project's own test classes."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "spring-boot-kotlin.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-spring-boot-kotlin"
+    },
+    "generic": {
+      "system_prompt": "You own Spring Boot Kotlin end to end. You do it through spring-kotlin-workflow: Scaffold, run, and test Spring Boot applications in Kotlin. The commands are real, e.g. `curl -s https://start.spring.io/starter.zip -d language=kotlin -d type=gradle-project -d...`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "spring-boot-kotlin",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "spring-kotlin-workflow",
+        "name": "language",
+        "type": "string",
+        "description": "kotlin or java for scaffolding"
+      },
+      {
+        "capability": "spring-kotlin-workflow",
+        "name": "dependencies",
+        "type": "string",
+        "description": "Comma-separated starter ids, e.g. web,data-jpa"
+      },
+      {
+        "capability": "spring-kotlin-workflow",
+        "name": "port",
+        "type": "integer",
+        "description": "Server port (default 8080)"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "./gradlew"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/spring-boot-kotlin-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/spring-boot-kotlin-skill.yaml",
+    "checksum": "7632e1b8e4896c01217bcd1c2146061ebffa85957920083ed2608688c4eea1d4"
+  }
+}

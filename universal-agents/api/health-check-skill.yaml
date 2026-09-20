@@ -1,0 +1,102 @@
+name: health-check
+display_name: Health Check
+category: api
+subcategory: general
+description: 'Endpoint health checking from the CLI: curl -f probes, TCP checks with nc, HTTP status verification,
+  and Kubernetes readiness waits.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kubectl
+- wget
+capabilities:
+- name: endpoint-probing
+  description: Probe HTTP and TCP endpoints for availability from scripts and CI.
+  commands:
+  - curl -f -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/healthz
+  - curl -fsS http://localhost:8080/health && echo OK
+  - nc -zv localhost 8080
+  - wget --spider -S http://localhost:8080/health 2>&1 | grep HTTP
+  - kubectl wait --for=condition=Available deployment/web -n default --timeout=60s
+  examples:
+  - curl -fsS --max-time 3 http://localhost:8080/health || exit 1
+  - nc -zv -w 3 localhost 5432
+  - curl -s -o /dev/null -w '%{time_total}\n' http://localhost:8080/health
+  parameters:
+  - name: url
+    type: string
+    description: Health endpoint URL.
+  - name: timeout
+    type: integer
+    description: Probe timeout in seconds.
+  - name: expected_code
+    type: integer
+    description: Expected HTTP status, default 200.
+knowledge:
+- title: curl manual
+  type: documentation
+  source: https://curl.se/docs/manpage.html
+  description: 'curl reference: -f, -s, -w, --max-time flags.'
+- title: kubectl wait reference
+  type: documentation
+  source: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_wait/
+  description: kubectl wait for conditions on resources.
+instructions: "# Health Check\n\nProbe service health from the command line.\n\n## What this skill does\n\
+  \n- Checks HTTP health endpoints with curl and wget.\n- Tests TCP reachability with nc.\n- Waits for\
+  \ Kubernetes deployment readiness.\n- Reports latency and status codes for alerting scripts.\n\n## When\
+  \ to use\n\n- Before restarting a service, confirm it is unhealthy.\n- In CI, gate deploys on health\
+  \ endpoints.\n- Debugging why a load balancer removed a backend.\n\n## Real commands\n\n```bash\n# HTTP\
+  \ probe, fail on non-2xx, print code\ncurl -f -s -o /dev/null -w '%{http_code}\\n' http://localhost:8080/healthz\n\
+  \n# Simple OK check\ncurl -fsS http://localhost:8080/health && echo OK\n\n# TCP reachability\nnc -zv\
+  \ localhost 8080\nnc -zv -w 3 localhost 5432\n\n# Header inspection\nwget --spider -S http://localhost:8080/health\
+  \ 2>&1 | grep HTTP\n\n# Kubernetes readiness\nkubectl wait --for=condition=Available deployment/web\
+  \ -n default --timeout=60s\n```\n\n## CI gate\n\n```bash\nif curl -fsS --max-time 5 http://localhost:8080/health\
+  \ > /dev/null; then\n  echo \"healthy\"\nelse\n  echo \"unhealthy\"; exit 1\nfi\n```\n\n## Testing\n\
+  \n```bash\n# Latency check\ncurl -s -o /dev/null -w 'dns=%{time_namelookup} connect=%{time_connect}\
+  \ total=%{time_total}\\n' http://localhost:8080/health\n```\n\n## Best practices\n\n- Always set `--max-time`;\
+  \ never let probes hang.\n- Use `-f` so non-2xx exits non-zero for scripts.\n- Probe the health endpoint,\
+  \ not the homepage.\n- Distinguish liveness (process up) from readiness (deps ready) in Kubernetes.\n\
+  \n## Example exchange\n\n```\nUser: Is the web service up?\nAgent: curl -fsS http://localhost:8080/health\
+  \ && echo OK\n       # prints OK when the service responds 2xx\n```"
+examples:
+- input: Check the health endpoint returns 200
+  output: curl -f -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/healthz
+- input: Wait for the web deployment to be ready
+  output: kubectl wait --for=condition=Available deployment/web -n default --timeout=60s
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: health-check.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-health-check
+  generic:
+    system_prompt: 'This is your domain: Health Check. You do it through endpoint-probing: Probe HTTP
+      and TCP endpoints for availability from scripts and CI. The commands are real, e.g. `curl -f -s
+      -o /dev/null -w %{http_code}\n http://localhost:8080/healthz`. You prefer the shortest safe path,
+      and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

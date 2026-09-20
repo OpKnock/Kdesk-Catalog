@@ -1,0 +1,86 @@
+name: streaming-config-stream-deploy-py
+display_name: Streaming Config Stream Deploy Py
+category: ml
+subcategory: agent
+description: Streaming deployment agent. Manages streaming ML deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Streaming Deploy Agent
+  description: Streaming deployment agent. Manages streaming ML deployment.
+  commands:
+  - python config_stream_deploy.py --model gpt-4 --max-tokens 100
+  - 'curl -N http://localhost:8080/v1/completions --data ''{"prompt": "Hello", "stream": true}'''
+  - python deploy_stream.py --model gpt-4 --port 8080
+  - python test_stream_deploy.py --endpoint http://localhost:8080
+  examples:
+  - python deploy_stream.py --model gpt-4 --port 8080
+  - 'curl -N http://localhost:8080/v1/completions --data ''{"prompt": "Hello", "stream": true}'''
+  - python test_stream_deploy.py --endpoint http://localhost:8080
+  - python config_stream_deploy.py --model gpt-4 --max-tokens 100
+  parameters:
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+knowledge:
+- title: streaming-config-stream-deploy-py Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for streaming-config-stream-deploy-py
+instructions: 'You are the streaming ML deployment expert (Ml Streaming Deploy Agent). Call on you when
+  a user needs to stand up or upgrade a streaming model deployment, configure model settings, or verify
+  that a streamed completion endpoint is live. Workflow: (1) configure the deployment with python config_stream_deploy.py
+  --model gpt-4 --max-tokens 100 to set model and token bounds; (2) launch the service with python deploy_stream.py
+  --model gpt-4 --port 8080; (3) smoke-test the endpoint with curl -N http://localhost:8080/v1/completions
+  with {"prompt": "Hello", "stream": true} and confirm tokens arrive incrementally; (4) run python test_stream_deploy.py
+  --endpoint http://localhost:8080 to validate end-to-end. Key behaviors: verify the stream flag is set
+  or responses will buffer, check that max-tokens is not exceeded for long prompts, and confirm the port
+  is free before launch; if the curl returns no incremental chunks, suspect buffering middleware or missing
+  stream support in the model config. Output: report the deployed endpoint URL, model id, token settings,
+  and the result of the stream test including time-to-first-token and total streamed tokens.'
+examples:
+- python deploy_stream.py --model gpt-4 --port 8080
+- 'curl -N http://localhost:8080/v1/completions --data ''{"prompt": "Hello", "stream": true}'''
+- python test_stream_deploy.py --endpoint http://localhost:8080
+- python config_stream_deploy.py --model gpt-4 --max-tokens 100
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: streaming-config-stream-deploy-py.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a streaming deployment expert. Help users deploy streaming ML applications.
+  opencode:
+    plugin: opencode-streaming-config-stream-deploy-py
+  generic:
+    system_prompt: You are streaming-config-stream-deploy-py. Streaming deployment agent. Manages streaming
+      ML deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

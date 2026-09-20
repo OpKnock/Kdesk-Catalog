@@ -1,0 +1,247 @@
+{
+  "name": "avro-rpc",
+  "display_name": "Avro Rpc",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Implements RPC services with Apache Avro: schema compilation, avro-tools operations, and Java RPC server/client testing.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "java",
+    "mvn"
+  ],
+  "capabilities": [
+    {
+      "name": "schema-tools",
+      "description": "Compile schemas and convert data with avro-tools.",
+      "commands": [
+        "java -jar avro-tools.jar compile schema user.avsc .",
+        "java -jar avro-tools.jar tojson user.avro",
+        "java -jar avro-tools.jar fromjson user.json --schema-file user.avsc",
+        "java -jar avro-tools.jar getmeta user.avro",
+        "java -jar avro-tools.jar cat user.avro"
+      ],
+      "examples": [
+        "java -jar avro-tools.jar compile schema user.avsc src/main/java",
+        "java -jar avro-tools.jar tojson user.avro > user.json",
+        "java -jar avro-tools.jar fromjson user.json --schema-file user.avsc > out.avro"
+      ],
+      "parameters": [
+        {
+          "name": "schema_file",
+          "type": "string",
+          "description": "Avro schema .avsc file"
+        },
+        {
+          "name": "output_dir",
+          "type": "string",
+          "description": "Directory for compiled classes"
+        }
+      ]
+    },
+    {
+      "name": "rpc-protocol",
+      "description": "Define and compile RPC protocols with avro-tools.",
+      "commands": [
+        "java -jar avro-tools.jar compile protocol chat.avpr .",
+        "java -jar avro-tools.jar idl src/main/avro/chat.avdl chat.avpr",
+        "java -jar avro-tools.jar idl2schemata chat.avdl",
+        "java -jar avro-tools.jar jsonschema chat.avsc"
+      ],
+      "examples": [
+        "java -jar avro-tools.jar idl src/main/avro/chat.avdl chat.avpr",
+        "java -jar avro-tools.jar compile protocol chat.avpr src/main/java",
+        "java -jar avro-tools.jar idl2schemata chat.avdl"
+      ],
+      "parameters": [
+        {
+          "name": "protocol_file",
+          "type": "string",
+          "description": ".avpr protocol file or .avdl IDL"
+        },
+        {
+          "name": "output_dir",
+          "type": "string",
+          "description": "Output for generated stubs"
+        }
+      ]
+    },
+    {
+      "name": "java-server",
+      "description": "Build and test a Java Avro RPC server.",
+      "commands": [
+        "mvn package",
+        "mvn exec:java -Dexec.mainClass=com.example.ChatServer",
+        "mvn exec:java -Dexec.mainClass=com.example.ChatClient",
+        "curl -s http://localhost:8080/health",
+        "mvn test"
+      ],
+      "examples": [
+        "mvn package && java -jar target/chat-rpc-1.0.jar server",
+        "mvn exec:java -Dexec.mainClass=com.example.ChatClient -Dexec.args=localhost",
+        "mvn test -Dtest=ChatRpcTest"
+      ],
+      "parameters": [
+        {
+          "name": "main_class",
+          "type": "string",
+          "description": "Server/client main class"
+        },
+        {
+          "name": "port",
+          "type": "number",
+          "description": "RPC server port (default 8080)"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Apache Avro Docs",
+      "type": "documentation",
+      "source": "https://avro.apache.org/docs/current/",
+      "description": "Schemas, IDL, RPC, avro-tools"
+    },
+    {
+      "title": "Avro Spec",
+      "type": "documentation",
+      "source": "https://avro.apache.org/docs/current/specification/",
+      "description": "Schema types and RPC protocol"
+    },
+    {
+      "title": "avro-tools Reference",
+      "type": "documentation",
+      "source": "https://avro.apache.org/docs/current/getting-started-java/",
+      "description": "Getting started with Java"
+    }
+  ],
+  "instructions": "# Avro RPC\n\n## What this skill does\n\nImplements RPC services with Apache Avro: writing schemas and IDL, compiling them with avro-tools, generating Java stubs, and running/test the server and client.\n\n## When to use\n\n- A typed, schema-driven RPC layer instead of raw JSON\n- Generating stubs from .avsc/.avpr for Java services\n- Evolving message formats safely (Avro schema resolution)\n\n## Real commands\n\n```bash\n# Compile a schema to Java\njava -jar avro-tools.jar compile schema user.avsc src/main/java\n\n# Generate a protocol from IDL\njava -jar avro-tools.jar idl src/main/avro/chat.avdl chat.avpr\njava -jar avro-tools.jar compile protocol chat.avpr src/main/java\n\n# Convert data\njava -jar avro-tools.jar tojson user.avro\njava -jar avro-tools.jar fromjson user.json --schema-file user.avsc\n\n# Run the RPC server\nmvn exec:java -Dexec.mainClass=com.example.ChatServer\n```\n\n## IDL example (chat.avdl)\n\n```avdl\n@namespace(\"com.example\")\nprotocol Chat {\n  string send(string message);\n}\n```\n\n## Testing\n\n- Start the server, run the client with mvn exec:java, assert the echo returns\n- Round-trip JSON: fromjson then tojson must match the input\n\n## Best practices\n\n- Keep .avsc/.avdl in src/main/avro and regenerate on build\n- Use schema evolution rules (defaults, unions) for backward compat\n- Prefer the Avro RPC handshake over ad-hoc endpoints for typed services",
+  "examples": [
+    {
+      "input": "Set up a typed RPC service for chat",
+      "output": "Writes chat.avdl, generates chat.avpr via avro-tools idl, compiles Java stubs, runs the server with mvn exec:java, and tests with the client."
+    },
+    {
+      "input": "Convert our JSON log lines to Avro",
+      "output": "Writes a matching .avsc, then `java -jar avro-tools.jar fromjson lines.json --schema-file log.avsc > logs.avro` and verifies with tojson."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "avro-rpc.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-avro-rpc"
+    },
+    "generic": {
+      "system_prompt": "You work Avro Rpc hands-on. You do it through schema-tools: Compile schemas and convert data with avro-tools. The commands are real, e.g. `java -jar avro-tools.jar compile schema user.avsc .`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "avro-rpc",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "schema-tools",
+        "name": "schema_file",
+        "type": "string",
+        "description": "Avro schema .avsc file"
+      },
+      {
+        "capability": "schema-tools",
+        "name": "output_dir",
+        "type": "string",
+        "description": "Directory for compiled classes"
+      },
+      {
+        "capability": "rpc-protocol",
+        "name": "protocol_file",
+        "type": "string",
+        "description": ".avpr protocol file or .avdl IDL"
+      },
+      {
+        "capability": "rpc-protocol",
+        "name": "output_dir",
+        "type": "string",
+        "description": "Output for generated stubs"
+      },
+      {
+        "capability": "java-server",
+        "name": "main_class",
+        "type": "string",
+        "description": "Server/client main class"
+      },
+      {
+        "capability": "java-server",
+        "name": "port",
+        "type": "number",
+        "description": "RPC server port (default 8080)"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "java",
+    "mvn"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/avro-rpc-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/avro-rpc-skill.yaml",
+    "checksum": "b4a6d5ffcd5aca9506ded2bc52e189c6ebe8ac48d345d121eae69ef96917d749"
+  }
+}

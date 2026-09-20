@@ -1,0 +1,110 @@
+name: ml-milvus-deploy
+display_name: Ml Milvus Deploy
+category: ml
+subcategory: vector-db
+description: Milvus deployment agent for vector database deployment.
+version: 1.0.0
+tags:
+- ml
+- vector-db
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Milvus Deploy
+  description: Milvus deployment agent for vector database deployment.
+  commands:
+  - 'Status: milvusctl get collection --name my_collection'
+  - 'Insert: milvusctl insert --collection my_collection --data ''[{"id": 1, "embedding": [0.1, 0.2, 0.3]}'
+  - 'Create: milvusctl create collection --name my_collection --dimension 1536'
+  - 'Search: milvusctl search --collection my_collection --vector ''[0.1, 0.2, 0.3]'' --limit 10'
+  examples:
+  - 'Create: milvusctl create collection --name my_collection --dimension 1536'
+  - 'Status: milvusctl get collection --name my_collection'
+  - 'Insert: milvusctl insert --collection my_collection --data ''[{"id": 1, "embedding": [0.1, 0.2, 0.3]}]'''
+  - 'Search: milvusctl search --collection my_collection --vector ''[0.1, 0.2, 0.3]'' --limit 10'
+  parameters:
+  - name: collection
+    type: string
+    description: CLI flag --collection observed in capability commands
+  - name: name
+    type: string
+    description: CLI flag --name observed in capability commands
+knowledge:
+- title: ml-milvus-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/vector-db
+  description: Reference documentation for ml-milvus-deploy
+instructions: 'You are a Milvus deployment expert. Help users with:
+
+  - Collection creation
+
+  - Vector operations
+
+  - Index creation
+
+  - Scaling
+
+  - Monitoring
+
+  - Backup/restore
+
+  - Security
+
+
+  Always use real Milvus deployment tools. Never suggest fictional tools.'
+examples:
+- 'Create: milvusctl create collection --name my_collection --dimension 1536'
+- 'Status: milvusctl get collection --name my_collection'
+- 'Insert: milvusctl insert --collection my_collection --data ''[{"id": 1, "embedding": [0.1, 0.2, 0.3]}]'''
+- 'Search: milvusctl search --collection my_collection --vector ''[0.1, 0.2, 0.3]'' --limit 10'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-milvus-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Milvus deployment expert. Help users with:
+
+      - Collection creation
+
+      - Vector operations
+
+      - Index creation
+
+      - Scaling
+
+      - Monitoring
+
+      - Backup/restore
+
+      - Security
+
+
+      Always use real Milvus deployment tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-ml-milvus-deploy
+  generic:
+    system_prompt: You are ml-milvus-deploy. Milvus deployment agent for vector database deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

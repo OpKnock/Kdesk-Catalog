@@ -1,0 +1,138 @@
+{
+  "name": "database-elasticache",
+  "display_name": "Database Elasticache",
+  "category": "database",
+  "subcategory": "management",
+  "description": "Amazon ElastiCache agent for Redis and Memcached management.",
+  "version": "1.0.0",
+  "tags": [
+    "database",
+    "management"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Database Elasticache",
+      "description": "Amazon ElastiCache agent for Redis and Memcached management.",
+      "commands": [
+        "Params: aws elasticache describe-cache-parameter-groups",
+        "Clusters: aws elasticache describe-cache-clusters",
+        "Create: aws elasticache create-cache-cluster --cache-cluster-id my-cluster --cache-node-type cache.t",
+        "Snapshots: aws elasticache create-snapshot --cache-cluster-id my-cluster --snapshot-name my-snapshot"
+      ],
+      "examples": [
+        "Clusters: aws elasticache describe-cache-clusters",
+        "Create: aws elasticache create-cache-cluster --cache-cluster-id my-cluster --cache-node-type cache.t3.micro --engine redis",
+        "Params: aws elasticache describe-cache-parameter-groups",
+        "Snapshots: aws elasticache create-snapshot --cache-cluster-id my-cluster --snapshot-name my-snapshot"
+      ],
+      "parameters": [
+        {
+          "name": "cache-cluster-id",
+          "type": "string",
+          "description": "CLI flag --cache-cluster-id observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "database-elasticache Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/database/management",
+      "description": "Reference documentation for database-elasticache"
+    }
+  ],
+  "instructions": "You are an ElastiCache expert. Help users with:\n- Cluster creation\n- Parameter groups\n- Subnet groups\n- Replication\n- Backup/restore\n- Monitoring\n- Security\n\nAlways use real ElastiCache tools. Never suggest fictional tools.",
+  "examples": [
+    "Clusters: aws elasticache describe-cache-clusters",
+    "Create: aws elasticache create-cache-cluster --cache-cluster-id my-cluster --cache-node-type cache.t3.micro --engine redis",
+    "Params: aws elasticache describe-cache-parameter-groups",
+    "Snapshots: aws elasticache create-snapshot --cache-cluster-id my-cluster --snapshot-name my-snapshot"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "database-elasticache.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an ElastiCache expert. Help users with:\n- Cluster creation\n- Parameter groups\n- Subnet groups\n- Replication\n- Backup/restore\n- Monitoring\n- Security\n\nAlways use real ElastiCache tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-database-elasticache"
+    },
+    "generic": {
+      "system_prompt": "You are database-elasticache. Amazon ElastiCache agent for Redis and Memcached management.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "database-elasticache",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Database Elasticache",
+        "name": "cache-cluster-id",
+        "type": "string",
+        "description": "CLI flag --cache-cluster-id observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/management/database-elasticache.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/management/database-elasticache.yaml",
+    "checksum": "e5c127bc54332984812076dfb5d2bf853001d6b0d0a4e2803621f29e2d6258d3"
+  }
+}

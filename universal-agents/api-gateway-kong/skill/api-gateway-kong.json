@@ -1,0 +1,206 @@
+{
+  "name": "api-gateway-kong",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "infrastructure",
+  "description": "Implements API gateways hands-on: deploy Kong with deck, configure routes/services, and enable auth and rate-limit plugins.",
+  "keywords": [
+    "api-gateway",
+    "kong",
+    "routing"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-gateway-kong.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-gateway-kong"
+    },
+    "generic": {
+      "system_prompt": "You are the Api Gateway Kong specialist. You do it through kong-operations: Deploy and configure Kong gateway with declarative configuration. The commands are real, e.g. `docker run -d --name kong-gateway -p 8000:8000 -p 8001:8001 kong/kong-gateway`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "kong-operations",
+      "description": "Deploy and configure Kong gateway with declarative configuration",
+      "commands": [
+        "docker run -d --name kong-gateway -p 8000:8000 -p 8001:8001 kong/kong-gateway",
+        "deck ping",
+        "deck dump --output-file kong.yaml",
+        "deck sync --state kong.yaml",
+        "curl -s http://localhost:8001/status"
+      ],
+      "examples": [
+        "deck ping && deck dump --output-file kong.yaml",
+        "deck sync --state kong.yaml",
+        "curl -s http://localhost:8001/services | python -m json.tool"
+      ],
+      "parameters": [
+        {
+          "name": "service",
+          "type": "string",
+          "description": "Upstream service name"
+        },
+        {
+          "name": "route",
+          "type": "string",
+          "description": "Route path or host"
+        }
+      ]
+    },
+    {
+      "name": "plugin-configuration",
+      "description": "Enable auth, rate limiting, and logging plugins on routes",
+      "commands": [
+        "curl -s -X POST http://localhost:8001/services/orders/routes -H 'Content-Type: application/json' -d '{\"paths\":[\"/orders\"]}'",
+        "curl -s -X POST http://localhost:8001/services/orders/plugins -H 'Content-Type: application/json' -d '{\"name\":\"rate-limiting\",\"config\":{\"minute\":60}}'",
+        "curl -s -X POST http://localhost:8001/services/orders/plugins -H 'Content-Type: application/json' -d '{\"name\":\"jwt\"}'",
+        "curl -s -X POST http://localhost:8001/services/orders/plugins -H 'Content-Type: application/json' -d '{\"name\":\"http-log\",\"config\":{\"http_endpoint\":\"http://logs:8080\"}}'",
+        "curl -s http://localhost:8001/services/orders/plugins | python -m json.tool"
+      ],
+      "examples": [
+        "curl -s -X POST http://localhost:8001/services/orders/plugins -H 'Content-Type: application/json' -d '{\"name\":\"rate-limiting\",\"config\":{\"minute\":60}}'",
+        "curl -s -X POST http://localhost:8001/services/orders/plugins -H 'Content-Type: application/json' -d '{\"name\":\"jwt\"}'",
+        "curl -s http://localhost:8001/services/orders/plugins | python -m json.tool"
+      ],
+      "parameters": [
+        {
+          "name": "plugin",
+          "type": "string",
+          "description": "Plugin name"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Plugin configuration JSON"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "kong",
+    "traefik",
+    "aws-cli"
+  ],
+  "tools": [
+    "kong",
+    "traefik",
+    "aws-cli",
+    "docker",
+    "kubernetes"
+  ],
+  "examples": [
+    {
+      "input": "Set up a Kong gateway for our services",
+      "output": "Deploys Kong, adds routes for orders and payments, and enables JWT auth plus rate limiting"
+    },
+    {
+      "input": "Add rate limiting per consumer",
+      "output": "Creates consumers, issues API keys, and applies rate-limiting plugins per consumer"
+    }
+  ],
+  "instructions": "# API Gateway (Implementation)\n\nDeploys and operates Kong API gateways with declarative config.\n\n## When to Use\n- Centralizing API entry points\n- Adding auth and rate limits without app changes\n- Multi-service routing\n\n## Real Commands\n\n```bash\n# Run Kong\nkong migrations bootstrap\nkong start\ndocker run -d --name kong-gateway -p 8000:8000 -p 8001:8001 kong/kong-gateway\n\n# Declarative config\ndeck ping\nkong config -c kong.yaml\n\n# Add a route\ncurl -s -X POST http://localhost:8001/services/orders/routes -H 'Content-Type: application/json' -d '{\"paths\":[\"/orders\"]}'\n\n# Plugins\ncurl -s -X POST http://localhost:8001/services/orders/plugins -H 'Content-Type: application/json' -d '{\"name\":\"rate-limiting\",\"config\":{\"minute\":60}}'\n```\n\n## Testing\nSend requests through the gateway and verify 401/429 behavior after enabling plugins.\n\n## Best Practices\n- Keep config in Git via deck sync\n- Enable rate limiting before going public\n- Use health checks on upstreams",
+  "display_name": "Api Gateway Kong",
+  "knowledge": [
+    {
+      "title": "Kong Gateway Docs",
+      "type": "documentation",
+      "source": "https://docs.konghq.com/gateway/",
+      "description": "Routes, services, plugins"
+    },
+    {
+      "title": "deck CLI",
+      "type": "documentation",
+      "source": "https://docs.konghq.com/deck/",
+      "description": "Declarative Kong configuration"
+    }
+  ],
+  "id": "api-gateway-kong",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "kong-operations",
+        "name": "service",
+        "type": "string",
+        "description": "Upstream service name"
+      },
+      {
+        "capability": "kong-operations",
+        "name": "route",
+        "type": "string",
+        "description": "Route path or host"
+      },
+      {
+        "capability": "plugin-configuration",
+        "name": "plugin",
+        "type": "string",
+        "description": "Plugin name"
+      },
+      {
+        "capability": "plugin-configuration",
+        "name": "config",
+        "type": "string",
+        "description": "Plugin configuration JSON"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kong",
+    "traefik",
+    "aws-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-gateway-kong/skill/api-gateway-kong.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-gateway-kong/skill/api-gateway-kong.yaml",
+    "checksum": "03d79b4901550735ceda5631530c268ec1f5147fd1f8e584bcbd9604394216fc"
+  }
+}

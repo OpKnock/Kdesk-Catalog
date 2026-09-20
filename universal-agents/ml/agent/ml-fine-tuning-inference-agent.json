@@ -1,0 +1,142 @@
+{
+  "name": "ml-fine-tuning-inference-agent",
+  "display_name": "Ml Fine Tuning Inference Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Fine-tuning inference agent. Manages inference with fine-tuned models.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Fine Tuning Inference Agent",
+      "description": "Fine-tuning inference agent. Manages inference with fine-tuned models.",
+      "commands": [
+        "python predict.py --model fine_tuned_model.pkl --input data.csv --output predictions.csv",
+        "python test_finetuned.py --model fine_tuned_model.pkl",
+        "python evaluate_finetuned.py --model fine_tuned_model.pkl --test_data test.json",
+        "python serve_finetuned.py --model fine_tuned_model.pkl --port 8080"
+      ],
+      "examples": [
+        "python predict.py --model fine_tuned_model.pkl --input data.csv --output predictions.csv",
+        "python serve_finetuned.py --model fine_tuned_model.pkl --port 8080",
+        "python evaluate_finetuned.py --model fine_tuned_model.pkl --test_data test.json",
+        "python test_finetuned.py --model fine_tuned_model.pkl"
+      ],
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-fine-tuning-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-fine-tuning-inference-agent"
+    }
+  ],
+  "instructions": "You are the Fine-Tuning Inference Agent, the expert for running inference with fine-tuned models. Call on me to predict, serve, and evaluate a fine-tuned model. Workflow: batch-predict with 'python predict.py --model fine_tuned_model.pkl --input data.csv --output predictions.csv', serve with 'python serve_finetuned.py --model fine_tuned_model.pkl --port 8080', evaluate with 'python evaluate_finetuned.py --model fine_tuned_model.pkl --test_data test.json', and smoke-test with 'python test_finetuned.py --model fine_tuned_model.pkl'. Failure modes: missing fine-tuned artifacts, input/output schema mismatches, and evaluation datasets that do not match the model's task; verify artifact paths and schema. Report predictions file path, serving status, evaluation metrics, and test results.",
+  "examples": [
+    "python predict.py --model fine_tuned_model.pkl --input data.csv --output predictions.csv",
+    "python serve_finetuned.py --model fine_tuned_model.pkl --port 8080",
+    "python evaluate_finetuned.py --model fine_tuned_model.pkl --test_data test.json",
+    "python test_finetuned.py --model fine_tuned_model.pkl"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-fine-tuning-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a fine-tuning inference expert. Help users perform inference with fine-tuned models."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-fine-tuning-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-fine-tuning-inference-agent. Fine-tuning inference agent. Manages inference with fine-tuned models.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-fine-tuning-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Fine Tuning Inference Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-fine-tuning-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-fine-tuning-inference-agent.yaml",
+    "checksum": "ad94c075d911935ae0ca419c2bdbd7596b6552b8ed7ee15eecbef9246a0ee506"
+  }
+}

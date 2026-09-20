@@ -1,0 +1,166 @@
+{
+  "name": "user-provisioning",
+  "display_name": "User Provisioning",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted user provisioning skill: SCIM 2.0 /users and /groups endpoints, user lifecycle (create, activate, suspend, deactivate), and directory sync.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "scim-lifecycle",
+      "description": "Manage user and group lifecycle over SCIM 2.0",
+      "commands": [
+        "curl -s -X POST 'https://scim.example.com/v2/Users' -H 'Content-Type: application/json' -H 'Authorization: Bearer TOKEN' -d '{\"schemas\":[\"urn:ietf:params:scim:schemas:core:2.0:User\"],\"userName\":\"jdoe@example.com\",\"active\":true,\"name\":{\"givenName\":\"Jane\",\"familyName\":\"Doe\"}}' | jq",
+        "curl -s -X PATCH 'https://scim.example.com/v2/Users/123' -H 'Content-Type: application/json' -H 'Authorization: Bearer TOKEN' -d '{\"schemas\":[\"urn:ietf:params:scim:api:messages:2.0:PatchOp\"],\"Operations\":[{\"op\":\"replace\",\"path\":\"active\",\"value\":false}]}' | jq",
+        "curl -s 'https://scim.example.com/v2/Users?filter=userName+eq+%22jdoe%40example.com%22&startIndex=1&count=10' -H 'Authorization: Bearer TOKEN' | jq",
+        "curl -s -X POST 'https://scim.example.com/v2/Groups' -H 'Content-Type: application/json' -H 'Authorization: Bearer TOKEN' -d '{\"schemas\":[\"urn:ietf:params:scim:schemas:core:2.0:Group\"],\"displayName\":\"eng\",\"members\":[{\"value\":\"123\"}]}' | jq",
+        "curl -s -X DELETE 'https://scim.example.com/v2/Users/123' -H 'Authorization: Bearer TOKEN' -o /dev/null -w '%{http_code}'"
+      ],
+      "examples": [
+        "curl -s 'https://scim.example.com/v2/Users?filter=userName+eq+%22jdoe%40example.com%22' -H 'Authorization: Bearer TOKEN' | jq",
+        "curl -s -X PATCH 'https://scim.example.com/v2/Users/123' -H 'Content-Type: application/json' -d '{\"Operations\":[{\"op\":\"replace\",\"value\":{\"active\":true}}]}' | jq",
+        "curl -s -X POST 'https://scim.example.com/v2/Groups' -H 'Content-Type: application/json' -d '{\"displayName\":\"eng\"}' | jq"
+      ],
+      "parameters": [
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "SCIM base URL, e.g. /v2/Users"
+        },
+        {
+          "name": "userId",
+          "type": "string",
+          "description": "SCIM resource id"
+        },
+        {
+          "name": "filter",
+          "type": "string",
+          "description": "SCIM filter like userName eq \"x\""
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "SCIM 2.0 RFC 7643",
+      "type": "documentation",
+      "source": "https://www.rfc-editor.org/rfc/rfc7643",
+      "description": "User and group schemas"
+    },
+    {
+      "title": "SCIM 2.0 protocol RFC 7644",
+      "type": "documentation",
+      "source": "https://www.rfc-editor.org/rfc/rfc7644",
+      "description": "CRUD, filter, and patch semantics"
+    }
+  ],
+  "instructions": "# User Provisioning\n\nHand-crafted skill for SCIM 2.0 user provisioning.\n\n## What this skill does\n\n- Creates, reads, updates, and deletes users via SCIM\n- Manages group membership for access control\n- Supports the deactivation lifecycle (active flag)\n- Lists and filters users with SCIM filter syntax\n\n## When to use\n\n- Wiring IdP-to-app provisioning (Okta, Azure AD)\n- Building an internal directory sync client\n- Auditing what a SCIM provider stores\n\n## Real commands\n\n```bash\n# Create a user\ncurl -s -X POST 'https://scim.example.com/v2/Users' -H 'Content-Type: application/json' -H 'Authorization: Bearer TOKEN' -d '{\"schemas\":[\"urn:ietf:params:scim:schemas:core:2.0:User\"],\"userName\":\"jdoe@example.com\",\"active\":true,\"name\":{\"givenName\":\"Jane\",\"familyName\":\"Doe\"}}' | jq\n\n# Deactivate (never delete)\ncurl -s -X PATCH 'https://scim.example.com/v2/Users/123' -H 'Content-Type: application/json' -d '{\"schemas\":[\"urn:ietf:params:scim:api:messages:2.0:PatchOp\"],\"Operations\":[{\"op\":\"replace\",\"path\":\"active\",\"value\":false}]}' | jq\n\n# Filter users\ncurl -s 'https://scim.example.com/v2/Users?filter=userName+eq+%22jdoe%40example.com%22&startIndex=1&count=10' -H 'Authorization: Bearer TOKEN' | jq\n\n# Group with members\ncurl -s -X POST 'https://scim.example.com/v2/Groups' -H 'Content-Type: application/json' -d '{\"schemas\":[\"urn:ietf:params:scim:schemas:core:2.0:Group\"],\"displayName\":\"eng\",\"members\":[{\"value\":\"123\"}]}' | jq\n\n# Delete (terminal)\ncurl -s -X DELETE 'https://scim.example.com/v2/Users/123' -H 'Authorization: Bearer TOKEN' -o /dev/null -w '%{http_code}'\n```\n\n## Lifecycle\n\n- create -> active=true\n- suspend/deprovision -> active=false\n- delete only for forgotten-account cleanup\n\n## Testing\n\n```bash\ncurl -s 'https://scim.example.com/v2/Users?filter=userName+eq+%22jdoe%40example.com%22' -H 'Authorization: Bearer TOKEN' | jq '.totalResults'\ncurl -s 'https://scim.example.com/v2/ServiceProviderConfig' -H 'Authorization: Bearer TOKEN' | jq\n```\n\n## Best practices\n\n- Deactivate instead of delete for compliance history\n- URL-encode filters; use startIndex/count for pagination\n- Test against ServiceProviderConfig before CRUD\n",
+  "examples": [
+    {
+      "input": "Deactivate a departing employee",
+      "output": "PATCH /v2/Users/{id} with Operations replace active=false; keep the account for audit."
+    },
+    {
+      "input": "Is this user in the eng group?",
+      "output": "GET /v2/Groups?filter=displayName eq \"eng\" and check members, or GET /v2/Users?filter=userName eq ..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "user-provisioning.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-user-provisioning"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: User Provisioning. You do it through scim-lifecycle: Manage user and group lifecycle over SCIM 2.0. The commands are real, e.g. `curl -s -X POST https://scim.example.com/v2/Users -H Content-Type: application/json -H...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "user-provisioning",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "scim-lifecycle",
+        "name": "endpoint",
+        "type": "string",
+        "description": "SCIM base URL, e.g. /v2/Users"
+      },
+      {
+        "capability": "scim-lifecycle",
+        "name": "userId",
+        "type": "string",
+        "description": "SCIM resource id"
+      },
+      {
+        "capability": "scim-lifecycle",
+        "name": "filter",
+        "type": "string",
+        "description": "SCIM filter like userName eq \"x\""
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/user-provisioning-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/user-provisioning-skill.yaml",
+    "checksum": "5f2f0ed4819304b5589e9d95cae864eb86cd1f4223f4cc7bba1c3f3eee6bd2bb"
+  }
+}

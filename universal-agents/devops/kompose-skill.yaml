@@ -1,0 +1,194 @@
+name: kompose
+display_name: kompose
+category: devops
+subcategory: general
+description: 'Converts docker-compose files to Kubernetes manifests with kompose: conversion, direct deployment,
+  and reverse tooling.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kompose
+capabilities:
+- name: compose-to-kubernetes
+  description: Translate compose services into Deployment/Service manifests with options for volumes and
+    networks.
+  commands:
+  - kompose convert -f docker-compose.yml
+  - kompose convert -f docker-compose.yml -c
+  - kompose convert --volumes hostPath
+  - kompose convert -o k8s-manifests/
+  - kompose convert --replicas 3
+  - kompose convert --chart
+  examples:
+  - kompose convert -f docker-compose.yml
+  - kompose convert --volumes hostPath
+  - kompose convert --chart
+  parameters:
+  - name: file
+    type: string
+    description: Compose file path
+  - name: volumes
+    type: string
+    description: 'Volume strategy: hostPath, persistentVolumeClaim, emptyDir'
+  - name: out
+    type: string
+    description: Output directory
+- name: deploy-and-rollback
+  description: Deploy compose stacks directly to Kubernetes and tear them down.
+  commands:
+  - kompose up -f docker-compose.yml
+  - kompose down -f docker-compose.yml
+  - kompose convert -f docker-compose.yml --controller deployment
+  - kompose convert --service-group-mode
+  - kompose convert --env-file .env
+  examples:
+  - kompose up -f docker-compose.yml
+  - kompose down -f docker-compose.yml
+  - kompose convert --controller deployment
+  parameters:
+  - name: controller
+    type: string
+    description: 'Workload type: deployment, daemonset, statefulset'
+  - name: env-file
+    type: string
+    description: Environment file
+knowledge:
+- title: Kompose User Guide
+  type: documentation
+  source: https://kubernetes.io/docs/tasks/configure-pod-container/translate-compose-kubernetes/
+  description: Official kompose conversion guide on kubernetes.io
+- title: Kompose GitHub
+  type: documentation
+  source: https://github.com/kubernetes/kompose
+  description: Flags, conversion rules, and compatibility matrix
+instructions: '# Kompose Conversion
+
+
+  Move from docker-compose to Kubernetes by translating compose files into manifests.
+
+
+  ## What This Skill Does
+
+
+  - Converts compose services to Deployment + Service YAML
+
+  - Handles volumes (hostPath, PVC, emptyDir), networks, and ports
+
+  - Deploys stacks directly with kompose up
+
+  - Generates Helm charts from compose files
+
+  - Applies replica counts, env files, and group mode
+
+
+  ## When to Use
+
+
+  - Migrating a local compose app to Kubernetes
+
+  - Bootstrapping manifests quickly before refining
+
+  - Teaching the mapping compose-service -> Deployment
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Basic conversion
+
+  kompose convert -f docker-compose.yml
+
+  kompose convert -f docker-compose.yml -c          # to stdout
+
+  kompose convert -o k8s-manifests/
+
+  kompose convert --volumes persistentVolumeClaim
+
+
+  # Direct deploy
+
+  kompose up -f docker-compose.yml
+
+  kompose down -f docker-compose.yml
+
+
+  # Advanced
+
+  kompose convert --controller statefulset
+
+  kompose convert --replicas 3
+
+  kompose convert --chart                            # Helm chart output
+
+  kompose convert --env-file .env
+
+  ```
+
+
+  ## Conversion Notes
+
+
+  - `ports:` become Service + targetPort
+
+  - `volumes:` default to emptyDir; use `--volumes persistentVolumeClaim` for data
+
+  - `networks:` map to multi-service exposure; `--service-group-mode` groups services
+
+  - build: context becomes image; `--image` pins registry target
+
+
+  ## Best Practices
+
+
+  - Review generated YAML: kompose output is a starting point, not production
+
+  - Add probes and resource limits after conversion
+
+  - Prefer PVC strategy for databases and stateful workloads
+
+  - Validate converted manifests with `kubectl apply --dry-run=client -f .`
+
+  - Use --controller statefulset for apps with stable identity'
+examples:
+- input: Convert our compose dev stack to Kubernetes
+  output: Agent converts with PVC volumes, splits output to a directory, reviews and annotates the generated
+    manifests
+- input: Deploy the compose stack to the cluster for testing
+  output: Agent runs kompose up, waits for pods, and demonstrates kompose down for cleanup
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kompose.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kompose
+  generic:
+    system_prompt: 'You work kompose hands-on. You do it through compose-to-kubernetes: Translate compose
+      services into Deployment/Service manifests with options for volumes and networks. The commands are
+      real, e.g. `kompose convert -f docker-compose.yml`. You answer with exact commands, not abstractions,
+      and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

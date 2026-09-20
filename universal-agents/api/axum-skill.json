@@ -1,0 +1,195 @@
+{
+  "name": "axum",
+  "display_name": "Axum",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Builds HTTP APIs in Rust with Axum: routing, extractors, shared state, middleware, and testing with tower.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "cargo"
+  ],
+  "capabilities": [
+    {
+      "name": "project-setup",
+      "description": "Create an Axum project and add dependencies.",
+      "commands": [
+        "cargo new axum-api",
+        "cargo add axum tokio --features tokio/full",
+        "cargo add serde --features derive",
+        "cargo add tower-http --features cors",
+        "cargo build"
+      ],
+      "examples": [
+        "cargo new axum-api && cargo add axum tokio --features tokio/full",
+        "cargo add axum --features multipart,ws",
+        "cargo add tower-http --features trace,cors"
+      ],
+      "parameters": [
+        {
+          "name": "features",
+          "type": "string",
+          "description": "Cargo features for axum or tower-http"
+        }
+      ]
+    },
+    {
+      "name": "serve-and-test",
+      "description": "Run the server and test routes with tower ServiceExt.",
+      "commands": [
+        "cargo run",
+        "curl -s http://localhost:3000/health",
+        "cargo test",
+        "cargo clippy -- -D warnings",
+        "cargo build --release"
+      ],
+      "examples": [
+        "cargo run && curl -s http://localhost:3000/health",
+        "cargo test -- --nocapture",
+        "cargo clippy --all-targets -- -D warnings"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "number",
+          "description": "Bind port (default 3000)"
+        },
+        {
+          "name": "addr",
+          "type": "string",
+          "description": "Bind address"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Axum Docs (docs.rs)",
+      "type": "documentation",
+      "source": "https://docs.rs/axum/latest/axum/",
+      "description": "API reference for axum"
+    },
+    {
+      "title": "Axum README",
+      "type": "documentation",
+      "source": "https://github.com/tokio-rs/axum",
+      "description": "Getting started and examples"
+    },
+    {
+      "title": "tower-http",
+      "type": "documentation",
+      "source": "https://docs.rs/tower-http",
+      "description": "Middleware: CORS, tracing, compression"
+    }
+  ],
+  "instructions": "# Axum\n\n## What this skill does\n\nBuilds HTTP APIs in Rust with Axum: routing, extractors, shared state, middleware (CORS/tracing), and route testing with tower.\n\n## When to use\n\n- A new Rust REST API with tokio\n- Adding extractors, state, or middleware to an existing app\n- Fast, compile-time-safe routing\n\n## Real commands\n\n```bash\ncargo new axum-api\ncargo add axum tokio --features tokio/full\ncargo add serde --features derive\ncargo add tower-http --features cors,trace\n\ncargo run\ncurl -s http://localhost:3000/health\n\ncargo test\ncargo clippy -- -D warnings\ncargo build --release\n```\n\n## Minimal server\n\n```rust\nuse axum::{routing::get, Router};\n\n#[tokio::main]\nasync fn main() {\n    let app = Router::new().route(\"/health\", get(|| async { \"ok\" }));\n    let listener = tokio::net::TcpListener::bind(\"0.0.0.0:3000\").await.unwrap();\n    axum::serve(listener, app).await.unwrap();\n}\n```\n\n## State + extractors\n\n```rust\n#[derive(Clone)]\nstruct Db { pool: String }\n\nlet app = Router::new()\n    .route(\"/users/:id\", get(get_user))\n    .with_state(Db { pool: \"postgres://db\".into() });\n\nasync fn get_user(State(db): State<Db>, Path(id): Path<u64>) -> String {\n    format!(\"user {id} via {}\", db.pool)\n}\n```\n\n## Testing\n\n- Test routers with tower::ServiceExt::oneshot\n- Use `cargo test` and clippy in CI\n\n## Best practices\n\n- Share dependencies via state, not globals\n- Use path parameters and typed extractors instead of manual parsing\n- Layer CORS via tower-http, not hand-rolled middleware",
+  "examples": [
+    {
+      "input": "Scaffold an Axum API with a /health endpoint",
+      "output": "Runs cargo new + cargo add, writes the minimal server, verifies with cargo run and curl."
+    },
+    {
+      "input": "Add shared state and a user route",
+      "output": "Adds State<Db>, a /users/:id handler with Path extractor, and shows a tower oneshot test."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "axum.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-axum"
+    },
+    "generic": {
+      "system_prompt": "You own Axum end to end. You do it through project-setup: Create an Axum project and add dependencies. The commands are real, e.g. `cargo new axum-api`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "axum",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "project-setup",
+        "name": "features",
+        "type": "string",
+        "description": "Cargo features for axum or tower-http"
+      },
+      {
+        "capability": "serve-and-test",
+        "name": "port",
+        "type": "number",
+        "description": "Bind port (default 3000)"
+      },
+      {
+        "capability": "serve-and-test",
+        "name": "addr",
+        "type": "string",
+        "description": "Bind address"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cargo"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/axum-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/axum-skill.yaml",
+    "checksum": "a762591cadde842a353892f2e23bcb9dc36a2a2b3cf631897eaad28e684db94a"
+  }
+}

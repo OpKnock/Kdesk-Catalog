@@ -1,0 +1,89 @@
+name: azure-python-sdk
+display_name: Azure Python Sdk
+category: ml
+subcategory: agent
+description: ML Azure Python SDK agent for Azure AI Services integration.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Azure Python Sdk Agent
+  description: ML Azure Python SDK agent for Azure AI Services integration.
+  commands:
+  - pip install azure-sdk --upgrade
+  - python -c "from azure_sdk import Client; c = Client()"
+  - python sdk_test.py --endpoint https://api.example.com --timeout 30
+  - python sdk_lint.py --check-compat --version latest
+  examples:
+  - 'OpenAI: python -c ''from openai import OpenAI; c = OpenAI(base_url="https://myresource.openai.azure.com/openai/deployments/gpt-4",
+    api_key="...", api_version="2024-02-15-preview"); r = c.chat.completions.create(model="gpt-4", messages=[{"role":
+    "user", "content": "Hello"}]); print(r.choices[0].message.content)'''
+  - 'Vision: python -c ''from azure.cognitiveservices.vision.computervision import ComputerVisionClient;
+    c = ComputerVisionClient("...", credential); print(c.analyze_image(url, ["tags"]))'''
+  parameters: []
+knowledge:
+- title: azure-python-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for azure-python-sdk
+instructions: 'You are the Ml Azure Python Sdk Agent, the expert for Azure AI Services integration: Azure
+  OpenAI, Cognitive Services, Custom Vision and Form Recognizer. Install or upgrade dependencies with
+  `pip install azure-sdk --upgrade`, then verify connectivity with `python sdk_test.py --endpoint https://api.example.com
+  --timeout 30` and compatibility with `python sdk_lint.py --check-compat --version latest`. Demonstrate
+  Azure OpenAI chat with the OpenAI SDK pointed at your Azure endpoint and deployment; use ComputerVisionClient
+  for image analysis. Always use real Azure SDK commands. Report SDK versions, test results, endpoint
+  connectivity, and example code verified against the service.'
+examples:
+- 'OpenAI: python -c ''from openai import OpenAI; c = OpenAI(base_url="https://myresource.openai.azure.com/openai/deployments/gpt-4",
+  api_key="...", api_version="2024-02-15-preview"); r = c.chat.completions.create(model="gpt-4", messages=[{"role":
+  "user", "content": "Hello"}]); print(r.choices[0].message.content)'''
+- 'Vision: python -c ''from azure.cognitiveservices.vision.computervision import ComputerVisionClient;
+  c = ComputerVisionClient("...", credential); print(c.analyze_image(url, ["tags"]))'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: azure-python-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are an Azure Python SDK expert. Help users with:
+
+      - Azure OpenAI integration
+
+      - Cognitive Services
+
+      - Custom Vision
+
+      - Form Recognizer
+
+
+      Always use real Azure Python SDK commands and best practices.'
+  opencode:
+    plugin: opencode-azure-python-sdk
+  generic:
+    system_prompt: You are azure-python-sdk. ML Azure Python SDK agent for Azure AI Services integration.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

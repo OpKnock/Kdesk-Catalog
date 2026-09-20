@@ -1,0 +1,238 @@
+{
+  "name": "desktop-application",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "desktop",
+  "description": "Builds cross-platform desktop apps with Electron and Tauri: scaffolding, dev loops, and packaging.",
+  "keywords": [
+    "desktop-application",
+    "electron",
+    "tauri",
+    "native",
+    "cross-platform"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "desktop-application.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-desktop-application"
+    },
+    "generic": {
+      "system_prompt": "You take the desktop-application seat. You do it through electron-app: Scaffold, run, and package Electron desktop applications. The commands are real, e.g. `npm create electron-vite@latest my-app -- --template react`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "electron-app",
+      "description": "Scaffold, run, and package Electron desktop applications",
+      "commands": [
+        "npm create electron-vite@latest my-app -- --template react",
+        "npm run dev",
+        "npx electron-builder --win nsis",
+        "npx electron-builder --mac dmg --arm64",
+        "npm run build && npx electron-builder --linux AppImage"
+      ],
+      "examples": [
+        "npm run dev -- --host 0.0.0.0",
+        "npx electron-builder --publish never --config electron-builder.yml",
+        "npm run build:win"
+      ],
+      "parameters": [
+        {
+          "name": "template",
+          "type": "string",
+          "description": "Scaffold template: react, vue, svelte, vanilla"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "electron-builder config file"
+        },
+        {
+          "name": "platform",
+          "type": "string",
+          "description": "Target: --win, --mac, --linux"
+        }
+      ]
+    },
+    {
+      "name": "tauri-app",
+      "description": "Develop and build Tauri apps with a small footprint",
+      "commands": [
+        "npm create tauri-app@latest",
+        "npm run tauri dev",
+        "npm run tauri build",
+        "npx tauri info",
+        "npm run tauri build -- --bundles msi"
+      ],
+      "examples": [
+        "npm run tauri dev -- --port 1420",
+        "npm run tauri build -- --bundles nsis",
+        "npx tauri icon app-icon.png"
+      ],
+      "parameters": [
+        {
+          "name": "bundles",
+          "type": "string",
+          "description": "Installer bundles: msi, nsis, appimage, deb, dmg"
+        },
+        {
+          "name": "debug",
+          "type": "boolean",
+          "description": "Build debug or release mode"
+        },
+        {
+          "name": "runner",
+          "type": "string",
+          "description": "Custom runner script for tauri"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "electron",
+    "tauri",
+    "node.js",
+    "rust"
+  ],
+  "tools": [
+    "electron",
+    "tauri",
+    "node.js",
+    "rust",
+    "auto-update"
+  ],
+  "examples": [
+    {
+      "input": "Create a desktop app from our web app",
+      "output": "Scaffolds with electron-vite, wires the web app, runs dev, and packages with electron-builder for the current OS"
+    },
+    {
+      "input": "Ship a lightweight alternative",
+      "output": "Scaffolds with Tauri, ports the UI, builds with npm run tauri build, and reports bundle size"
+    }
+  ],
+  "instructions": "# Desktop Application\n\nBuilds cross-platform desktop apps: Electron for web-stack teams, Tauri for\nsmall binaries.\n\n## When to Use\n\n- Creating a native-feeling app from web tech\n- Packaging installers for Windows/macOS/Linux\n- Debugging main/renderer process issues\n\n## Real Commands\n\n```bash\n# Electron (electron-vite)\nsudo npm create electron-vite@latest my-app -- --template react\nsudo npm run dev\nsudo npm run build\n\n# Package\nsudo npx electron-builder --win nsis\nsudo npx electron-builder --mac dmg --arm64\nsudo npx electron-builder --linux AppImage\n\n# Tauri\nsudo npm create tauri-app@latest\nsudo npm run tauri dev\nsudo npm run tauri build\nsudo npm run tauri build -- --bundles msi\nsudo npx tauri info\n```\n\n## electron-builder Config (electron-builder.yml)\n\n```yaml\nappId: com.example.app\nproductName: MyApp\nfiles:\n  - dist/**/*\nwin:\n  target: nsis\nmac:\n  target: [dmg]\nlinux:\n  target: [AppImage]\n```\n\n## Best Practices\n\n- Keep the main process minimal; heavy work in renderer/workers\n- Sign builds for distribution (notarization on macOS)\n- Use contextIsolation and no nodeIntegration in renderers\n- Set appId and version before first release\n- Test installers on clean VMs/containers\n\n## Example Response\n\nScaffolds the app, runs the dev loop, and packages the installer for the target\nplatform, reporting artifact paths and sizes.",
+  "display_name": "desktop-application",
+  "knowledge": [
+    {
+      "title": "Electron docs",
+      "type": "documentation",
+      "source": "https://www.electronjs.org/docs/latest/",
+      "description": "Process model, APIs, and distribution"
+    },
+    {
+      "title": "Tauri docs",
+      "type": "documentation",
+      "source": "https://tauri.app/",
+      "description": "Core concepts, CLI, and bundling"
+    },
+    {
+      "title": "electron-builder docs",
+      "type": "documentation",
+      "source": "https://www.electron.build/",
+      "description": "Packaging config and targets"
+    }
+  ],
+  "id": "desktop-application",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "electron-app",
+        "name": "template",
+        "type": "string",
+        "description": "Scaffold template: react, vue, svelte, vanilla"
+      },
+      {
+        "capability": "electron-app",
+        "name": "config",
+        "type": "string",
+        "description": "electron-builder config file"
+      },
+      {
+        "capability": "electron-app",
+        "name": "platform",
+        "type": "string",
+        "description": "Target: --win, --mac, --linux"
+      },
+      {
+        "capability": "tauri-app",
+        "name": "bundles",
+        "type": "string",
+        "description": "Installer bundles: msi, nsis, appimage, deb, dmg"
+      },
+      {
+        "capability": "tauri-app",
+        "name": "debug",
+        "type": "boolean",
+        "description": "Build debug or release mode"
+      },
+      {
+        "capability": "tauri-app",
+        "name": "runner",
+        "type": "string",
+        "description": "Custom runner script for tauri"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "electron",
+    "tauri",
+    "node.js",
+    "rust"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "desktop-application/skill/desktop-application.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/desktop-application/skill/desktop-application.yaml",
+    "checksum": "5976f78e12a38f7fcf52c687b061f1412ae03d25f49e56ec01ee68d527c593ec"
+  }
+}

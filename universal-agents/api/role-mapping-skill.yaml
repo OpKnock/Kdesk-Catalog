@@ -1,0 +1,175 @@
+name: role-mapping
+display_name: Role Mapping
+category: api
+subcategory: general
+description: 'Hand-crafted role mapping skill: K8s RBAC bindings, kubectl auth checks, and AWS IAM role/policy
+  inspection to trace who can do what.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- aws
+- kubectl
+capabilities:
+- name: rbac-iam-mapping
+  description: Map users to roles in Kubernetes RBAC and AWS IAM
+  commands:
+  - kubectl get rolebindings -A -o wide
+  - kubectl auth can-i --list -n backend
+  - kubectl get clusterrolebinding -A -o wide | head -20
+  - aws iam list-roles --query 'Roles[].RoleName' --output table
+  - aws iam list-attached-role-policies --role-name app-prod-role --output table
+  examples:
+  - kubectl auth can-i create deployments -n backend
+  - kubectl get rolebindings -n backend -o yaml
+  - aws iam list-role-policies --role-name app-prod-role
+  parameters:
+  - name: namespace
+    type: string
+    description: Namespace to scope RBAC queries
+  - name: role_name
+    type: string
+    description: AWS IAM role name
+  - name: verb_resource
+    type: string
+    description: Check like create deployments
+knowledge:
+- title: K8s RBAC reference
+  type: documentation
+  source: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+  description: Roles, ClusterRoles, bindings, and aggregation
+- title: AWS IAM roles docs
+  type: documentation
+  source: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html
+  description: Roles, policies, and trust relationships
+instructions: '# Role Mapping
+
+
+  Hand-crafted skill for mapping users to roles across Kubernetes RBAC and AWS IAM.
+
+
+  ## What this skill does
+
+
+  - Lists role and clusterrole bindings to see who has which role
+
+  - Checks effective permissions with kubectl auth can-i
+
+  - Inspects AWS IAM roles and their attached policies
+
+
+  ## When to use
+
+
+  - Auditing who can deploy to a namespace after an incident
+
+  - Removing stale permissions during an offboarding
+
+  - Verifying least-privilege for CI service accounts
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # All role bindings cluster-wide
+
+  kubectl get rolebindings -A -o wide
+
+
+  # What can the current user do in a namespace?
+
+  kubectl auth can-i --list -n backend
+
+  kubectl auth can-i create deployments -n backend
+
+
+  # Cluster-level bindings
+
+  kubectl get clusterrolebinding -A -o wide | head -20
+
+
+  # AWS IAM roles and their policies
+
+  aws iam list-roles --query ''Roles[].RoleName'' --output table
+
+  aws iam list-attached-role-policies --role-name app-prod-role --output table
+
+  aws iam list-role-policies --role-name app-prod-role
+
+  ```
+
+
+  ## Mapping workflow
+
+
+  1. Find the subject: kubectl get rolebindings -n backend -o yaml
+
+  2. Check effective access: kubectl auth can-i --list -n backend
+
+  3. For cloud roles: list IAM policies and the trust policy
+
+
+  ## Testing
+
+
+  ```bash
+
+  kubectl auth can-i delete secrets -n backend   # should be no for CI accounts
+
+  ```
+
+
+  ## Best practices
+
+
+  - Prefer namespaced Roles over ClusterRoles where possible
+
+  - Re-audit bindings after every team change
+
+  - Use aws iam simulate-principal-policy to test role access before granting
+
+  '
+examples:
+- input: Who can modify deployments in backend?
+  output: kubectl get rolebindings -n backend -o yaml to find subjects, then kubectl auth can-i create
+    deployments -n backend to verify a specific user.
+- input: What does the CI role allow on AWS?
+  output: aws iam list-attached-role-policies --role-name app-prod-role, then review each managed policy
+    with aws iam get-policy-version.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: role-mapping.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-role-mapping
+  generic:
+    system_prompt: 'Your lane is Role Mapping. You do it through rbac-iam-mapping: Map users to roles
+      in Kubernetes RBAC and AWS IAM. The commands are real, e.g. `kubectl get rolebindings -A -o wide`.
+      You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

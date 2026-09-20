@@ -1,0 +1,125 @@
+name: cilium
+display_name: cilium
+category: devops
+subcategory: general
+description: Installs, verifies, and debugs the Cilium CNI with eBPF data plane, CiliumNetworkPolicy,
+  and Hubble observability.
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- cilium
+- hubble
+capabilities:
+- name: cilium-install-and-verify
+  description: Install Cilium into a Kubernetes cluster and run connectivity and upgrade verification.
+  commands:
+  - cilium install --version v1.16.4
+  - cilium status --wait
+  - cilium connectivity test
+  - cilium upgrade
+  - cilium uninstall
+  examples:
+  - cilium install --version v1.16.4
+  - cilium status --wait
+  - cilium connectivity test --timeout 10m
+  parameters:
+  - name: version
+    type: string
+    description: Cilium version to install or upgrade to
+  - name: kubeconfig
+    type: string
+    description: Path to kubeconfig when outside the cluster
+- name: hubble-observability
+  description: Inspect service-to-service traffic flows with Hubble CLI and troubleshoot connectivity
+    issues.
+  commands:
+  - hubble status
+  - hubble observe --pod default/web-0
+  - hubble observe --verdict DROPPED
+  - hubble observe --from-pod default/curl-0 --to-namespace kube-system
+  - hubble flow
+  examples:
+  - hubble observe --verdict DROPPED --last 100
+  - hubble observe --to-pod kube-system/coredns-*
+  - hubble status
+  parameters:
+  - name: verdict
+    type: string
+    description: 'Filter flows by verdict: FORWARDED, DROPPED, ERROR'
+  - name: namespace
+    type: string
+    description: Filter flows by namespace
+knowledge:
+- title: Cilium Documentation
+  type: documentation
+  source: https://docs.cilium.io/en/stable/
+  description: Installation, CiliumNetworkPolicy, eBPF data plane, and Hubble docs
+- title: Cilium CLI GitHub
+  type: documentation
+  source: https://github.com/cilium/cilium-cli
+  description: cilium CLI install, status, connectivity test reference
+- title: Hubble UI
+  type: documentation
+  source: https://github.com/cilium/hubble
+  description: Service map and flow observability tooling
+instructions: "# Cilium Networking\n\nDeploy and troubleshoot the Cilium CNI: eBPF data plane, network\
+  \ policies, and Hubble observability.\n\n## What This Skill Does\n\n- Installs Cilium with the cilium\
+  \ CLI and Helm\n- Verifies the data plane with `cilium status` and `cilium connectivity test`\n- Author\
+  \ CiliumNetworkPolicy (L3/L4/L7) policies\n- Observes and filters traffic with Hubble\n- Diagnoses dropped\
+  \ packets, DNS failures, and identity issues\n\n## When to Use\n\n- Installing a CNI with eBPF, kube-proxy\
+  \ replacement, or BGP\n- Pods cannot reach each other and you need flow-level answers\n- Enforcing zero-trust\
+  \ east-west policies\n\n## Real Commands\n\n```bash\n# Install and verify\ncilium install --version\
+  \ v1.16.4\ncilium status --wait\ncilium connectivity test --timeout 10m\n\n# Inspect state\ncilium identity\
+  \ list\ncilium endpoint list\ncilium policy get default/allow-all\ncilium monitor --type drop\n\n# Hubble\
+  \ traffic flows\nhubble status\nhubble observe --pod default/web-0 --last 200\nhubble observe --verdict\
+  \ DROPPED --last 100\nhubble observe --to-namespace kube-system --type to-endpoint\n```\n\n## CiliumNetworkPolicy\
+  \ Example\n\n```yaml\napiVersion: cilium.io/v2\nkind: CiliumNetworkPolicy\nmetadata:\n  name: allow-nginx-ingress\n\
+  \  namespace: default\nspec:\n  endpointSelector:\n    matchLabels: { app: nginx }\n  ingress:\n   \
+  \ - fromEndpoints:\n        - matchLabels: { app: frontend }\n      toPorts:\n        - ports:\n   \
+  \         - port: \"80\"\n              protocol: TCP\n```\n\n## Best Practices\n\n- Run `cilium connectivity\
+  \ test` after every upgrade\n- Set `kubeProxyReplacement: strict` and verify with `cilium status | grep\
+  \ KubeProxyReplacement`\n- Use CiliumNetworkPolicy namespaces to segment tenants\n- Monitor drops with\
+  \ `cilium monitor --type drop` before changing policies\n- Keep Hubble relay storage sized for your\
+  \ flow volume"
+examples:
+- input: Pods in two namespaces cannot communicate
+  output: Agent runs cilium status, hubble observe --verdict DROPPED, checks CiliumNetworkPolicy selectors
+    and identity labels, proposes an L3/L7 allow policy
+- input: Install Cilium in our cluster
+  output: Agent runs cilium install, waits on status, then runs the full connectivity test suite and reports
+    any failures
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: cilium.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-cilium
+  generic:
+    system_prompt: 'You are the cilium specialist. You do it through cilium-install-and-verify: Install
+      Cilium into a Kubernetes cluster and run connectivity and upgrade verification. The commands are
+      real, e.g. `cilium install --version v1.16.4`. You prefer the shortest safe path, and you reproduce
+      failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

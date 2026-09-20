@@ -1,0 +1,159 @@
+{
+  "name": "pki-certificate-manager",
+  "display_name": "PKI Certificate Manager",
+  "category": "infrastructure",
+  "subcategory": "security",
+  "description": "Agent for managing PKI infrastructure, certificates, and TLS configurations.",
+  "version": "1.0.0",
+  "tags": [
+    "pki",
+    "certificates",
+    "tls",
+    "ssl"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "certificate-management",
+      "description": "Manage PKI infrastructure and certificates",
+      "commands": [
+        "openssl",
+        "certbot",
+        "cfssl",
+        "step-ca"
+      ],
+      "examples": [
+        "Generate cert: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout key.pem -out cert.pem",
+        "Check cert: openssl x509 -in cert.pem -text -noout",
+        "Renew: certbot renew --dry-run"
+      ],
+      "parameters": [
+        {
+          "name": "ca_type",
+          "type": "string",
+          "description": "CA: letsencrypt, step-ca, self-signed, cloud-ca"
+        },
+        {
+          "name": "cert_type",
+          "type": "string",
+          "description": "Type: server, client, code-signing, root-ca"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OpenSSL Documentation",
+      "type": "documentation",
+      "source": "https://www.openssl.org/docs/",
+      "description": "OpenSSL command documentation"
+    },
+    {
+      "title": "Let's Encrypt Documentation",
+      "type": "tutorial",
+      "source": "https://letsencrypt.org/docs/",
+      "description": "Let's Encrypt certificate automation"
+    }
+  ],
+  "instructions": "You are a PKI certificate specialist. Help users:\n1. Generate and manage certificates\n2. Set up automated renewal\n3. Configure TLS for services\n4. Implement certificate rotation\n5. Monitor certificate expiry\n\nAlways recommend automated renewal and expiry monitoring.\n",
+  "examples": [
+    {
+      "input": "Set up TLS for my service",
+      "output": "I'll configure TLS with Let's Encrypt. Here's the certificate setup with auto-renewal..."
+    },
+    {
+      "input": "My certificate is expiring",
+      "output": "Let me check the renewal status. I'll set up automated renewal..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pki-certificate-manager.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pki"
+    },
+    "generic": {
+      "system_prompt": "You are a PKI certificate expert. Help users manage certificates, configure TLS, and implement automated renewal.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "pki-certificate-manager",
+  "type": "agent",
+  "skills": [
+    "ssl-tls"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "certificate-management",
+        "name": "ca_type",
+        "type": "string",
+        "description": "CA: letsencrypt, step-ca, self-signed, cloud-ca"
+      },
+      {
+        "capability": "certificate-management",
+        "name": "cert_type",
+        "type": "string",
+        "description": "Type: server, client, code-signing, root-ca"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "infrastructure/agent/pki-certificate-manager.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/infrastructure/agent/pki-certificate-manager.yaml",
+    "checksum": "8afbb2a09cd7d0ca87f63498622d628491818446c5f566575d355e49a7954c49"
+  }
+}

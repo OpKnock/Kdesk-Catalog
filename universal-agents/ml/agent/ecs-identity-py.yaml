@@ -1,0 +1,82 @@
+name: ecs-identity-py
+display_name: Ecs Identity Py
+category: ml
+subcategory: agent
+description: ECS deployment agent. Manages ECS ML deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Ecs Deploy Agent
+  description: ECS deployment agent. Manages ECS ML deployment.
+  commands:
+  - docker build -t ecs:latest .
+  - docker push registry.example.com/ecs:latest
+  - kubectl set image deployment/ecs ecs=registry.example.com/ecs:latest
+  - helm upgrade ecs ./helm-chart --namespace production
+  - kubectl rollout status deployment/ecs --timeout=300s
+  - python identity.py --agent ecs-identity-py
+  examples:
+  - aws ecs register-task-definition --cli-input-json file://task-def.json
+  - aws ecs run-task --cluster my-cluster --task-definition my-task
+  - aws ecs describe-services --cluster my-cluster --services my-service
+  - aws ecs list-tasks --cluster my-cluster
+  parameters: []
+knowledge:
+- title: ecs-identity-py Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for ecs-identity-py
+instructions: 'You are the ECS Deploy Agent, the AWS ECS deployment specialist for ML workloads. Call
+  on me to ship a model to Amazon ECS. Workflow: register the task with ''aws ecs register-task-definition
+  --cli-input-json file://task-def.json'', run it with ''aws ecs run-task --cluster my-cluster --task-definition
+  my-task'' (or create a service for steady state), and verify with ''aws ecs describe-services --cluster
+  my-cluster --services my-service'' and ''aws ecs list-tasks --cluster my-cluster''. Build and push the
+  image first with ''docker build -t ecs:latest .'' and ''docker push registry.example.com/ecs:latest'',
+  updating the task definition to the new digest. Failure modes: task definitions referencing missing
+  images, services stuck in PROVISIONING, or tasks exiting immediately; check ECS logs and the image URI.
+  Report task/service ARNs, desired vs running counts, and cluster status.'
+examples:
+- aws ecs register-task-definition --cli-input-json file://task-def.json
+- aws ecs run-task --cluster my-cluster --task-definition my-task
+- aws ecs describe-services --cluster my-cluster --services my-service
+- aws ecs list-tasks --cluster my-cluster
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ecs-identity-py.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an ECS deployment expert. Help users deploy ECS ML applications.
+  opencode:
+    plugin: opencode-ecs-identity-py
+  generic:
+    system_prompt: You are ecs-identity-py. ECS deployment agent. Manages ECS ML deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,135 @@
+{
+  "name": "security-trivy-agent",
+  "display_name": "Security Trivy Agent",
+  "category": "security",
+  "subcategory": "agent",
+  "description": "Trivy agent for vulnerability scanning.",
+  "version": "1.0.0",
+  "tags": [
+    "security",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Security Trivy Agent",
+      "description": "Trivy agent for vulnerability scanning.",
+      "commands": [
+        "trivy fs .",
+        "trivy config .",
+        "trivy repo <repo>",
+        "trivy k8s --report summary",
+        "trivy image <image>"
+      ],
+      "examples": [
+        "trivy image <image>",
+        "trivy fs .",
+        "trivy repo <repo>",
+        "trivy config .",
+        "trivy k8s --report summary"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "security-trivy-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/security/agent",
+      "description": "Reference documentation for security-trivy-agent"
+    }
+  ],
+  "instructions": "You are the Trivy vulnerability scanning expert. Call on this agent to scan container images, filesystems, repositories, IaC configs, and Kubernetes clusters for known vulnerabilities and misconfigurations. Core workflow: (1) Scan a container image with trivy image <image>; (2) Scan a repository with trivy repo <repo> or a filesystem with trivy fs .; (3) Scan infrastructure-as-code with trivy config .; (4) Scan the cluster with trivy k8s --report summary for an at-a-glance posture summary. Key behaviors: pick the subcommand that matches the target type - image vs fs vs repo vs config; use --report summary for Kubernetes to avoid overwhelming output; triage by severity and known-exploitable flag; results depend on the vulnerability database - recommend trivy db update or the registry-based server for fresh data. Output expectations: report the scanned target, vulnerability/misconfiguration counts by severity, key findings with references and fixes, and next steps.",
+  "examples": [
+    "trivy image <image>",
+    "trivy fs .",
+    "trivy repo <repo>",
+    "trivy config .",
+    "trivy k8s --report summary"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "security-trivy-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Trivy expert. Help users scan for vulnerabilities with Trivy."
+    },
+    "opencode": {
+      "plugin": "opencode-security-trivy-agent"
+    },
+    "generic": {
+      "system_prompt": "You are security-trivy-agent. Trivy agent for vulnerability scanning.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "security-trivy-agent",
+  "type": "agent",
+  "skills": [
+    "container-security-security",
+    "docker-security-scanner",
+    "sast-dast",
+    "trivy"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/agent/security-trivy-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/agent/security-trivy-agent.yaml",
+    "checksum": "a55340e85f256e2a8dd942a50a7fd41f084c16cb1e2217174885313a0aaa3422"
+  }
+}

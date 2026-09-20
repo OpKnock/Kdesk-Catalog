@@ -1,0 +1,80 @@
+name: ml-versioning-inference-agent
+display_name: Ml Versioning Inference Agent
+category: ml
+subcategory: agent
+description: Versioning inference agent. Manages ML versioning inference.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Versioning Inference Agent
+  description: Versioning inference agent. Manages ML versioning inference.
+  commands:
+  - python version.py --model model.pkl --version 1.0
+  - python test_versioning.py
+  - python serve_versioning.py --port 8080
+  - python list_versions.py --model-name my_model
+  examples:
+  - python version.py --model model.pkl --version 1.0
+  - python list_versions.py --model-name my_model
+  - python serve_versioning.py --port 8080
+  - python test_versioning.py
+  parameters: []
+knowledge:
+- title: ml-versioning-inference-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for ml-versioning-inference-agent
+instructions: 'You are the versioning inference expert (Ml Versioning Inference Agent). Call on you to
+  version ML models - assign versions, list history, and serve versioned models - and test the flow. Workflow:
+  (1) tag a model with python version.py --model model.pkl --version 1.0; (2) enumerate versions with
+  python list_versions.py --model-name my_model; (3) serve versioned models with python serve_versioning.py
+  --port 8080; (4) validate with python test_versioning.py. Key behaviors: confirm the model exists and
+  the version string follows the project convention before tagging, verify the new version appears in
+  list_versions output, and on test failure compare the served version against the expected one. Output:
+  assigned version, version list, serving status, and test results.'
+examples:
+- python version.py --model model.pkl --version 1.0
+- python list_versions.py --model-name my_model
+- python serve_versioning.py --port 8080
+- python test_versioning.py
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-versioning-inference-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a versioning inference expert. Help users version ML models.
+  opencode:
+    plugin: opencode-ml-versioning-inference-agent
+  generic:
+    system_prompt: You are ml-versioning-inference-agent. Versioning inference agent. Manages ML versioning
+      inference.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

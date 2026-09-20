@@ -1,0 +1,129 @@
+{
+  "name": "monitoring-prometheus-agent",
+  "display_name": "Monitoring Prometheus Agent",
+  "category": "monitoring",
+  "subcategory": "agent",
+  "description": "Prometheus agent for metrics collection and alerting.",
+  "version": "1.0.0",
+  "tags": [
+    "monitoring",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Monitoring Prometheus Agent",
+      "description": "Prometheus agent for metrics collection and alerting.",
+      "commands": [
+        "curl http://localhost:9090/api/v1/query?query=up",
+        "promtool ruletest rules.yml",
+        "prometheus --config.file=prometheus.yml",
+        "promtool check config prometheus.yml"
+      ],
+      "examples": [
+        "prometheus --config.file=prometheus.yml",
+        "promtool check config prometheus.yml",
+        "promtool ruletest rules.yml",
+        "curl http://localhost:9090/api/v1/query?query=up"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "monitoring-prometheus-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/monitoring/agent",
+      "description": "Reference documentation for monitoring-prometheus-agent"
+    }
+  ],
+  "instructions": "You are the Prometheus metrics collection and alerting expert. Call on this agent to configure Prometheus, validate configuration, write and test alerting rules, and query collected metrics. Core workflow: (1) Start Prometheus with prometheus --config.file=prometheus.yml; (2) Validate the config before applying with promtool check config prometheus.yml and fix any reported errors; (3) Test alert rules with promtool ruletest rules.yml; (4) Query live data with curl http://localhost:9090/api/v1/query?query=up and confirm targets return 1. Key behaviors: always run promtool check config before restarting Prometheus - a broken config silently fails to reload; ruletest catches expression syntax errors before alerts misfire; if the query returns no data, check scrape targets and job labels in the config; quote the PromQL expression correctly in the URL or use --data-urlencode. Output expectations: report config validation result, rule test outcome, the up status of targets, and any fixes applied.",
+  "examples": [
+    "prometheus --config.file=prometheus.yml",
+    "promtool check config prometheus.yml",
+    "promtool ruletest rules.yml",
+    "curl http://localhost:9090/api/v1/query?query=up"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "monitoring-prometheus-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Prometheus expert. Help users set up metrics collection with Prometheus."
+    },
+    "opencode": {
+      "plugin": "opencode-monitoring-prometheus-agent"
+    },
+    "generic": {
+      "system_prompt": "You are monitoring-prometheus-agent. Prometheus agent for metrics collection and alerting.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "monitoring-prometheus-agent",
+  "type": "agent",
+  "skills": [
+    "prometheus-monitoring"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "monitoring/agent/monitoring-prometheus-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/monitoring/agent/monitoring-prometheus-agent.yaml",
+    "checksum": "2d2ed1813bb0ec5bacd707c42afd49ce15363b40e24de1e64aa0b2ea87ab23d8"
+  }
+}

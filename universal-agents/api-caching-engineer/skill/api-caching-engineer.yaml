@@ -1,0 +1,178 @@
+name: api-caching-engineer
+version: 2.0.0
+type: skill
+category: infrastructure
+description: 'Implements API caching with invalidation strategies: HTTP headers, Redis cache-aside with
+  TTL, and event-driven invalidation.'
+keywords:
+- api-caching
+- http-caching
+- etag
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-caching-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-caching-engineer
+  generic:
+    system_prompt: 'You are the api-caching-engineer specialist. You do it through http-header-caching:
+      Apply Cache-Control, ETag, and Vary for safe HTTP caching. The commands are real, e.g. `curl -s
+      -D - http://localhost:3000/api/products | grep -i -E cache-control|etag|vary`. You run and verify
+      the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: http-header-caching
+  description: Apply Cache-Control, ETag, and Vary for safe HTTP caching
+  commands:
+  - curl -s -D - http://localhost:3000/api/products | grep -i -E 'cache-control|etag|vary'
+  - 'curl -s -H ''If-None-Match: W/"etag1"'' -o /dev/null -w ''%{http_code}'' http://localhost:3000/api/products'
+  - 'curl -s -H ''If-Modified-Since: Mon, 10 Aug 2026 00:00:00 GMT'' -o /dev/null -w ''%{http_code}''
+    http://localhost:3000/api/products'
+  - 'curl -s -X POST http://localhost:3000/api/products -H ''Content-Type: application/json'' -d ''{}''
+    -D - | grep -i cache-control'
+  - 'curl -s -o /dev/null -w ''%{http_code}'' -H ''Cache-Control: no-cache'' http://localhost:3000/api/products'
+  examples:
+  - curl -s -D - http://localhost:3000/api/products | grep -i -E 'cache-control|etag|vary'
+  - 'curl -s -H ''If-None-Match: W/"etag1"'' -o /dev/null -w ''%{http_code}'' http://localhost:3000/api/products'
+  - 'curl -s -X POST http://localhost:3000/api/products -H ''Content-Type: application/json'' -d ''{}''
+    -D - | grep -i cache-control'
+  parameters:
+  - name: url
+    type: string
+    description: Endpoint URL
+  - name: ttl
+    type: string
+    description: Cache-Control max-age
+- name: event-invalidation
+  description: Invalidate cache entries on domain events with pub/sub
+  commands:
+  - redis-cli PUBLISH product.updated '{"id":42}'
+  - redis-cli SUBSCRIBE product.updated
+  - redis-cli DEL api:products:42
+  - redis-cli --scan --pattern 'api:products:*' | xargs -r redis-cli DEL
+  - redis-cli SET api:products:42 '{}' EX 60 NX
+  examples:
+  - redis-cli PUBLISH product.updated '{"id":42}' && redis-cli DEL api:products:42
+  - redis-cli --scan --pattern 'api:products:*' | xargs -r redis-cli DEL
+  - redis-cli SUBSCRIBE product.updated
+  parameters:
+  - name: channel
+    type: string
+    description: Redis pub/sub channel
+  - name: keyPattern
+    type: string
+    description: Keys to invalidate
+prerequisites:
+- redis
+- node.js
+- python
+- varnish
+tools:
+- redis
+- node.js
+- python
+- varnish
+- express
+- fastify
+examples:
+- input: Add HTTP caching to product listings
+  output: Sets Cache-Control with ETag validation and confirms 304 responses for unchanged payloads
+- input: Implement Redis caching with event invalidation
+  output: Cache-aside reads plus product.updated pub/sub events that delete affected keys immediately
+instructions: '# API Caching Engineer
+
+
+  Implements caching with disciplined invalidation so data stays fresh.
+
+
+  ## When to Use
+
+  - Repeated reads hammer the database
+
+  - Stale data incidents from bad TTLs
+
+  - Adding caching to specific endpoints
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Verify headers
+
+  curl -s -D - http://localhost:3000/api/products | grep -i -E ''cache-control|etag|vary''
+
+
+  # Conditional requests
+
+  curl -s -H ''If-None-Match: W/"etag1"'' -o /dev/null -w ''%{http_code}'' http://localhost:3000/api/products
+
+
+  # Event-driven invalidation
+
+  redis-cli PUBLISH product.updated ''{"id":42}''
+
+  redis-cli DEL api:products:42
+
+
+  # Namespace flush
+
+  redis-cli --scan --pattern ''api:products:*'' | xargs -r redis-cli DEL
+
+  ```
+
+
+  ## Invalidation Rules
+
+  - Writes delete the affected keys
+
+  - Domain events drive scoped deletion
+
+  - Never wait for TTL for correctness
+
+
+  ## Testing
+
+  Write a test that updates a resource and asserts the next read misses.
+
+
+  ## Best Practices
+
+  - Invalidate by namespace patterns, not single keys
+
+  - Keep TTLs generous but never load-bearing'
+display_name: api-caching-engineer
+knowledge:
+- title: Redis Pub/Sub
+  type: documentation
+  source: https://redis.io/docs/latest/develop/use/pubsub/
+  description: Publish and subscribe patterns
+- title: HTTP Caching Semantics
+  type: documentation
+  source: https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching
+  description: Headers and conditional requests

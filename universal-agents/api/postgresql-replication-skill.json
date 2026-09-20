@@ -1,0 +1,175 @@
+{
+  "name": "postgresql-replication",
+  "display_name": "Postgresql Replication",
+  "category": "api",
+  "subcategory": "general",
+  "description": "PostgreSQL streaming replication: pg_basebackup, replication slots, WAL shipping, and failover.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "pg_basebackup",
+    "pg_ctl",
+    "psql"
+  ],
+  "capabilities": [
+    {
+      "name": "postgres-streaming-replication",
+      "description": "Set up streaming replicas with pg_basebackup, manage replication slots, and monitor replication status.",
+      "commands": [
+        "pg_basebackup -h primary -D /var/lib/postgresql/standby -U replicator -R -X stream",
+        "psql -c \"SELECT * FROM pg_replication_slots;\"",
+        "psql -c \"SELECT * FROM pg_stat_replication;\"",
+        "psql -c \"SELECT pg_current_wal_lsn();\"",
+        "pg_ctl promote -D /var/lib/postgresql/standby"
+      ],
+      "examples": [
+        "pg_basebackup -h primary -D /var/lib/postgresql/replica -U replicator -R -X stream -P",
+        "psql -c \"SELECT client_addr, state, write_lag, replay_lag FROM pg_stat_replication;\"",
+        "psql -c \"SELECT pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn) AS lag FROM pg_stat_replication;\""
+      ],
+      "parameters": [
+        {
+          "name": "primary_host",
+          "type": "string",
+          "description": "Primary server hostname"
+        },
+        {
+          "name": "replication_user",
+          "type": "string",
+          "description": "User with REPLICATION privilege"
+        },
+        {
+          "name": "data_dir",
+          "type": "string",
+          "description": "Replica data directory"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "PostgreSQL Replication Docs",
+      "type": "documentation",
+      "source": "https://www.postgresql.org/docs/current/warm-standby.html",
+      "description": "WAL shipping and streaming replication setup"
+    },
+    {
+      "title": "pg_basebackup reference",
+      "type": "documentation",
+      "source": "https://www.postgresql.org/docs/current/app-pgbasebackup.html",
+      "description": "pg_basebackup options and usage"
+    }
+  ],
+  "instructions": "# PostgreSQL Replication\n\nStreaming replication keeps a hot standby in near-real-time sync with the primary.\n\n## What this skill does\n\n- Creates replicas with pg_basebackup\n- Manages replication slots\n- Monitors lag and promotes on failover\n\n## When to use\n\n- HA and read scaling\n- Fast disaster recovery\n\n## Real commands\n\n```bash\n# Primary config (postgresql.conf)\n# wal_level = replica, max_wal_senders = 10\n\n# Create replication user\npsql -c \"CREATE USER replicator REPLICATION LOGIN PASSWORD 'secret';\"\n\n# Base backup + standby config (-R writes standby.signal)\npg_basebackup -h primary -D /var/lib/postgresql/standby -U replicator -R -X stream -P\n\n# Start the standby\npg_ctl start -D /var/lib/postgresql/standby\n\n# Monitor\npsql -c \"SELECT * FROM pg_stat_replication;\"\npsql -c \"SELECT * FROM pg_replication_slots;\"\npsql -c \"SELECT pg_current_wal_lsn();\"\n\n# Failover\npg_ctl promote -D /var/lib/postgresql/standby\n```\n\n## Lag check\n\n```sql\nSELECT client_addr, state, replay_lag\nFROM pg_stat_replication;\n```\n\n## Best practices\n\n- Enable replication slots to avoid WAL loss\n- Alert on replay_lag growth\n- Test failover on staging regularly",
+  "examples": [
+    {
+      "input": "Set up a hot standby for my primary database",
+      "output": "The agent configures wal_level, creates the replicator user, runs pg_basebackup -R, and verifies pg_stat_replication."
+    },
+    {
+      "input": "My replica is falling behind",
+      "output": "The agent checks replay_lag, slot state, and network/IO issues."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "postgresql-replication.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-postgresql-replication"
+    },
+    "generic": {
+      "system_prompt": "You are the Postgresql Replication specialist. You do it through postgres-streaming-replication: Set up streaming replicas with pg_basebackup, manage replication slots, and monitor replication status. The commands are real, e.g. `pg_basebackup -h primary -D /var/lib/postgresql/standby -U replicator -R -X stream`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "postgresql-replication",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "postgres-streaming-replication",
+        "name": "primary_host",
+        "type": "string",
+        "description": "Primary server hostname"
+      },
+      {
+        "capability": "postgres-streaming-replication",
+        "name": "replication_user",
+        "type": "string",
+        "description": "User with REPLICATION privilege"
+      },
+      {
+        "capability": "postgres-streaming-replication",
+        "name": "data_dir",
+        "type": "string",
+        "description": "Replica data directory"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pg_basebackup",
+    "pg_ctl",
+    "psql"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/postgresql-replication-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/postgresql-replication-skill.yaml",
+    "checksum": "b010fee36b9b2da0c51ad60eea42d0cc73d86589ca5c10bd1d3355b228d0118d"
+  }
+}

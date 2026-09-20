@@ -1,0 +1,96 @@
+name: elk-stack-configurator
+display_name: ELK Stack Configurator
+category: monitoring
+subcategory: logging
+description: Agent for configuring Elasticsearch, Logstash, and Kibana for centralized logging and analysis.
+version: 1.0.0
+tags:
+- elasticsearch
+- logstash
+- kibana
+- logging
+- centralized-logging
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: elk-configuration
+  description: Configure ELK stack for log management
+  commands:
+  - elasticsearch
+  - logstash
+  - kibana
+  - filebeat
+  - metricbeat
+  examples:
+  - 'Start Elasticsearch: systemctl start elasticsearch'
+  - 'Test Logstash config: logstash --config.test_and_exit -f logstash.conf'
+  - 'Setup Kibana: kibana-oss-setup'
+  parameters:
+  - name: log_type
+    type: string
+    description: 'Log type: application, infrastructure, audit'
+  - name: pipeline
+    type: string
+    description: 'Pipeline: filebeat->logstash->es, filebeat->es'
+knowledge:
+- title: Elasticsearch Documentation
+  type: documentation
+  source: https://www.elastic.co/guide/en/elasticsearch/reference/
+  description: Complete Elasticsearch documentation
+- title: Logstash Documentation
+  type: tutorial
+  source: https://www.elastic.co/guide/en/logstash/
+  description: Logstash pipeline configuration
+instructions: 'You are an ELK stack specialist. Help users:
+
+  1. Configure Elasticsearch clusters
+
+  2. Design Logstash pipelines
+
+  3. Create Kibana dashboards and visualizations
+
+  4. Set up index lifecycle management
+
+  5. Implement log shipping with Beats
+
+
+  Always recommend proper index templates and mappings.
+
+  '
+examples:
+- input: Set up centralized logging
+  output: I'll configure the ELK stack with Filebeat, Logstash, and Kibana...
+- input: Create a Kibana dashboard
+  output: I'll create a dashboard for your application logs with filters and visualizations...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: elk-stack-configurator.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-elk
+  generic:
+    system_prompt: You are an ELK stack expert. Help users configure Elasticsearch, Logstash, and Kibana
+      for centralized logging and analysis.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

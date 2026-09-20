@@ -1,0 +1,216 @@
+{
+  "name": "api-contract-pact-workflow",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "testing",
+  "description": "Designs consumer-driven contract testing setups: Pact workflows, contract publishing, and provider verification pipelines.",
+  "keywords": [
+    "contract-testing",
+    "pact",
+    "openapi",
+    "schema-validation",
+    "consumer-driven"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-contract-pact-workflow.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-contract-pact-workflow"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Api Contract Pact Workflow. You do it through pact-workflow: Write consumer tests, publish contracts, and verify providers against them. The commands are real, e.g. `npm install @pact-foundation/pact`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "pact-workflow",
+      "description": "Write consumer tests, publish contracts, and verify providers against them",
+      "commands": [
+        "npm install @pact-foundation/pact",
+        "npx pact-broker publish ./pacts -a 1.0.0 -b http://localhost:9292",
+        "npx pact-broker can-i-deploy --pacticipant consumer -a 1.0.0 --to prod -b http://localhost:9292",
+        "npm install @pact-foundation/pact-node",
+        "npx pact-broker list-latest-pacticipant-versions consumer -b http://localhost:9292"
+      ],
+      "examples": [
+        "npx pact-broker publish ./pacts -a 1.0.0 -b http://localhost:9292",
+        "npx pact-broker can-i-deploy --pacticipant consumer -a 1.0.0 --to prod -b http://localhost:9292",
+        "npx pact-broker list-latest-pacticipant-versions consumer -b http://localhost:9292"
+      ],
+      "parameters": [
+        {
+          "name": "broker",
+          "type": "string",
+          "description": "Pact Broker URL"
+        },
+        {
+          "name": "participant",
+          "type": "string",
+          "description": "Consumer or provider name"
+        }
+      ]
+    },
+    {
+      "name": "schema-validation",
+      "description": "Validate API responses against JSON Schema from OpenAPI",
+      "commands": [
+        "npm install ajv",
+        "node -e \"const Ajv=require('ajv');const a=new Ajv();console.log(a.validate({type:'object',required:['id']},{id:1}))\"",
+        "npm install @apidevtools/json-schema-ref-parser",
+        "python -m pip install jsonschema && python -c \"import jsonschema;print(jsonschema.validate({'id':1},{'type':'object','required':['id']}))\"",
+        "node -e \"const Ajv=require('ajv');const a=new Ajv();const v=a.compile({type:'object',required:['id']});try{v({x:1})}catch(e){console.log(e.message)}\""
+      ],
+      "examples": [
+        "node -e \"const Ajv=require('ajv');const a=new Ajv();console.log(a.validate({type:'object',required:['id']},{id:1}))\"",
+        "python -c \"import jsonschema;jsonschema.validate({'x':1},{'type':'object','required':['id']})\" 2>&1 | tail -1",
+        "node -e \"const Ajv=require('ajv');const a=new Ajv();console.log(a.validate({type:'number',minimum:0},-1)===false?'rejected':'passed')\""
+      ],
+      "parameters": [
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "JSON Schema to validate against"
+        },
+        {
+          "name": "data",
+          "type": "string",
+          "description": "Response data"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "pact",
+    "openapi",
+    "node.js",
+    "python"
+  ],
+  "tools": [
+    "pact",
+    "openapi",
+    "node.js",
+    "python",
+    "postman"
+  ],
+  "examples": [
+    {
+      "input": "Implement contract testing between orders and payments",
+      "output": "Designs the Pact workflow: consumer expectations, broker publishing, and provider verification in both pipelines"
+    },
+    {
+      "input": "Validate API responses against the spec",
+      "output": "Wires AJV schema validation from OpenAPI-derived JSON Schema into the test suite"
+    }
+  ],
+  "instructions": "# API Contract (Design)\n\nDesigns consumer-driven contract testing: who writes what, where contracts live, and how verification gates releases.\n\n## When to Use\n- Microservices with many consumers\n- Preventing breaking changes between teams\n- Contract-first development\n\n## Real Commands\n\n```bash\n# Start a local Pact Broker\nbrew install pact_broker\n\n# Publish contracts\nnpx pact-broker publish ./pacts -a 1.0.0 -b http://localhost:9292\n\n# Gate deploys\nnpx pact-broker can-i-deploy --pacticipant consumer -a 1.0.0 --to prod -b http://localhost:9292\n\n# Schema validation\nnpm install ajv\nnode -e \"const Ajv=require('ajv');const a=new Ajv();console.log(a.validate({type:'object',required:['id']},{id:1}))\"\n```\n\n## Design Decisions\n- Consumer tests define the contract\n- Provider verifies all consumer contracts in CI\n- Broker is the integration point\n\n## Testing\nRun `can-i-deploy` as the final gate in every release pipeline.\n\n## Best Practices\n- One contract version per app version\n- Tag prod versions in the broker\n- Keep contracts small and focused",
+  "display_name": "Api Contract Pact Workflow",
+  "knowledge": [
+    {
+      "title": "Pact Docs",
+      "type": "documentation",
+      "source": "https://docs.pact.io/",
+      "description": "Consumer-driven contract testing"
+    },
+    {
+      "title": "Pact Broker CLI",
+      "type": "documentation",
+      "source": "https://docs.pact.io/pact_broker/client_cli",
+      "description": "publish, can-i-deploy, tagging"
+    },
+    {
+      "title": "AJV",
+      "type": "documentation",
+      "source": "https://ajv.js.org/",
+      "description": "JSON Schema validation in JavaScript"
+    }
+  ],
+  "id": "api-contract-pact-workflow",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pact-workflow",
+        "name": "broker",
+        "type": "string",
+        "description": "Pact Broker URL"
+      },
+      {
+        "capability": "pact-workflow",
+        "name": "participant",
+        "type": "string",
+        "description": "Consumer or provider name"
+      },
+      {
+        "capability": "schema-validation",
+        "name": "schema",
+        "type": "string",
+        "description": "JSON Schema to validate against"
+      },
+      {
+        "capability": "schema-validation",
+        "name": "data",
+        "type": "string",
+        "description": "Response data"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pact",
+    "openapi",
+    "node.js",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-contract-pact-workflow/skill/api-contract-pact-workflow.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-contract-pact-workflow/skill/api-contract-pact-workflow.yaml",
+    "checksum": "710dc671b8669c664afe27d2be8a3080ecc430231d282b6262f19b78b11bfaaa"
+  }
+}

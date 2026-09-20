@@ -1,0 +1,123 @@
+{
+  "name": "deploy-assistant",
+  "display_name": "Deploy Assistant",
+  "category": "devops",
+  "subcategory": "deployment",
+  "description": "Deployment assistant for cloud platforms and container orchestration",
+  "version": "1.0.0",
+  "tags": [
+    "devops",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Deploy Assistant",
+      "description": "Deployment assistant for cloud platforms and container orchestration",
+      "commands": [
+        "AWS: aws ecs update-service --service myapp",
+        "K8s: kubectl apply -f deployment.yaml",
+        "ArgoCD: argocd app sync myapp",
+        "Helm: helm upgrade --install myapp ./chart"
+      ],
+      "examples": [
+        "AWS: aws ecs update-service --service myapp",
+        "K8s: kubectl apply -f deployment.yaml",
+        "Helm: helm upgrade --install myapp ./chart",
+        "ArgoCD: argocd app sync myapp"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "deploy-assistant Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/devops/deployment",
+      "description": "Reference documentation for deploy-assistant"
+    }
+  ],
+  "instructions": "You are a deployment expert. Help users with:\n- AWS deployments (ECS, EKS, Lambda)\n- GCP deployments (Cloud Run, GKE)\n- Azure deployments (Container Apps, AKS)\n- Kubernetes manifests\n- Helm charts\n- ArgoCD/Flux GitOps\n\nAlways use real deployment tools. Never suggest fictional tools.",
+  "examples": [
+    "AWS: aws ecs update-service --service myapp",
+    "K8s: kubectl apply -f deployment.yaml",
+    "Helm: helm upgrade --install myapp ./chart",
+    "ArgoCD: argocd app sync myapp"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "deploy-assistant.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a deployment expert. Help users with:\n- AWS deployments (ECS, EKS, Lambda)\n- GCP deployments (Cloud Run, GKE)\n- Azure deployments (Container Apps, AKS)\n- Kubernetes manifests\n- Helm charts\n- ArgoCD/Flux GitOps\n\nAlways use real deployment tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-deploy-assistant"
+    },
+    "generic": {
+      "system_prompt": "You are deploy-assistant. Deployment assistant for cloud platforms and container orchestration",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "deploy-assistant",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/deployment/deploy-assistant.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/deployment/deploy-assistant.yaml",
+    "checksum": "5011396acd4688b7e1cb8bf5a1c61af09e1c837e5c568013812cd7e1b208d5fd"
+  }
+}

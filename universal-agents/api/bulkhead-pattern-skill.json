@@ -1,0 +1,258 @@
+{
+  "name": "bulkhead-pattern",
+  "display_name": "Bulkhead Pattern",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Designs bulkhead isolation for services: resource partitioning, thread pool sizing, connection limits, and failure containment.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker",
+    "java",
+    "jcmd",
+    "jstack",
+    "top",
+    "ulimit",
+    "vmstat",
+    "watch"
+  ],
+  "capabilities": [
+    {
+      "name": "capacity-planning",
+      "description": "Measure and size bulkhead partitions.",
+      "commands": [
+        "ps -o nlwp,pcpu,pmem,rss -p <pid>",
+        "ulimit -n",
+        "ss -s",
+        "docker stats --no-stream",
+        "vmstat 1 5"
+      ],
+      "examples": [
+        "ps -o nlwp,pcpu,pmem -p $(pgrep -f my-api)",
+        "ss -s | grep -E 'estab|total'",
+        "docker stats --no-stream $(docker ps -q) | column -t"
+      ],
+      "parameters": [
+        {
+          "name": "pid",
+          "type": "string",
+          "description": "Process ID or pgrep pattern"
+        },
+        {
+          "name": "fd_limit",
+          "type": "number",
+          "description": "File descriptor limit"
+        }
+      ]
+    },
+    {
+      "name": "pool-isolation",
+      "description": "Configure isolated thread pools and connection pools.",
+      "commands": [
+        "java -XX:+PrintFlagsFinal -version | grep -i threads",
+        "jstack <pid> | grep -c 'pool-'",
+        "jcmd <pid> Thread.print | grep -A2 'pool-'",
+        "curl -s http://localhost:8080/actuator/metrics/executor.active"
+      ],
+      "examples": [
+        "jstack $(pgrep -f app.jar) | grep -c '\"pool-'",
+        "curl -s http://localhost:8080/actuator/metrics/executor.active | jq '.measurements'",
+        "jcmd $(pgrep -f app.jar) Thread.print > threads.txt"
+      ],
+      "parameters": [
+        {
+          "name": "pool_name",
+          "type": "string",
+          "description": "Thread pool name"
+        },
+        {
+          "name": "pool_size",
+          "type": "number",
+          "description": "Pool size"
+        }
+      ]
+    },
+    {
+      "name": "failure-test",
+      "description": "Verify a partition failure does not exhaust shared resources.",
+      "commands": [
+        "ab -n 5000 -c 200 http://localhost:8080/api/slow",
+        "curl -s -o /dev/null -w \"%{http_code} %{time_total}\\n\" http://localhost:8080/api/fast",
+        "watch -n1 'curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:8080/api/fast'",
+        "top -b -n 3 -p <pid>"
+      ],
+      "examples": [
+        "ab -n 5000 -c 200 http://localhost:8080/api/slow; curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:8080/api/fast",
+        "watch -n1 'curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:8080/api/fast'",
+        "top -b -n 3 -p $(pgrep -f app.jar) | tail -12"
+      ],
+      "parameters": [
+        {
+          "name": "slow_endpoint",
+          "type": "string",
+          "description": "Endpoint under failure"
+        },
+        {
+          "name": "fast_endpoint",
+          "type": "string",
+          "description": "Endpoint that must stay healthy"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Bulkhead Pattern (Microsoft)",
+      "type": "documentation",
+      "source": "https://learn.microsoft.com/en-us/azure/architecture/patterns/bulkhead",
+      "description": "Isolation design guidance"
+    },
+    {
+      "title": "Resilience4j Bulkhead",
+      "type": "documentation",
+      "source": "https://resilience4j.readme.io/docs/bulkhead",
+      "description": "Implementation with thread pools"
+    },
+    {
+      "title": "Isolation (Istio)",
+      "type": "documentation",
+      "source": "https://istio.io/latest/docs/tasks/traffic-management/circuit-breaking/",
+      "description": "Connection pool limits in mesh"
+    }
+  ],
+  "instructions": "# Bulkhead Pattern\n\n## What this skill does\n\nDesigns bulkhead isolation so one service partition cannot exhaust shared resources: sizing thread/connection pools, partitioning by dependency or tenant, and verifying failure containment with load tests.\n\n## When to use\n\n- One slow dependency is starving the whole service\n- Multi-tenant APIs need isolated quotas\n- Adding capacity planning for thread pools\n\n## Real commands\n\n```bash\n# Measure current capacity\nps -o nlwp,pcpu,pmem,rss -p $(pgrep -f my-api)\nss -s\nulimit -n\n\n# Inspect pool usage (JVM)\njstack $(pgrep -f app.jar) | grep -c '\"pool-'\ncurl -s http://localhost:8080/actuator/metrics/executor.active\n\n# Failure containment test\nab -n 5000 -c 200 http://localhost:8080/api/slow\ncurl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:8080/api/fast\n```\n\n## Design rules\n\n- One pool per dependency/tenant group: pool-a, pool-b\n- Pool size = max concurrent calls the dependency can serve\n- Queue lengths bounded; overflow rejects fast (503)\n\n## Testing\n\n- Saturate one partition with ab; assert the other partition stays healthy\n- Watch thread counts with top/jstack during the test\n\n## Best practices\n\n- Separate pools for CPU vs I/O work\n- Set short queue timeouts so rejection is immediate\n- Monitor pool utilization and size alerts on saturation",
+  "examples": [
+    {
+      "input": "One slow DB call blocks all API requests",
+      "output": "Partitions the DB pool from the HTTP pool, sizes it to the DB's concurrency, and proves with ab against a slow endpoint that fast endpoints still return 200."
+    },
+    {
+      "input": "Size our thread pool correctly",
+      "output": "Measures concurrency with load tests, applies the pool sizing formula, and validates with actuator executor metrics."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "bulkhead-pattern.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-bulkhead-pattern"
+    },
+    "generic": {
+      "system_prompt": "You own Bulkhead Pattern end to end. You do it through capacity-planning: Measure and size bulkhead partitions. The commands are real, e.g. `ps -o nlwp,pcpu,pmem,rss -p <pid>`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "bulkhead-pattern",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "capacity-planning",
+        "name": "pid",
+        "type": "string",
+        "description": "Process ID or pgrep pattern"
+      },
+      {
+        "capability": "capacity-planning",
+        "name": "fd_limit",
+        "type": "number",
+        "description": "File descriptor limit"
+      },
+      {
+        "capability": "pool-isolation",
+        "name": "pool_name",
+        "type": "string",
+        "description": "Thread pool name"
+      },
+      {
+        "capability": "pool-isolation",
+        "name": "pool_size",
+        "type": "number",
+        "description": "Pool size"
+      },
+      {
+        "capability": "failure-test",
+        "name": "slow_endpoint",
+        "type": "string",
+        "description": "Endpoint under failure"
+      },
+      {
+        "capability": "failure-test",
+        "name": "fast_endpoint",
+        "type": "string",
+        "description": "Endpoint that must stay healthy"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker",
+    "java",
+    "jcmd",
+    "jstack",
+    "top",
+    "ulimit",
+    "vmstat",
+    "watch"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/bulkhead-pattern-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/bulkhead-pattern-skill.yaml",
+    "checksum": "62813a88ed70f82fce752e05d7ae0f5a1a0ca16cc91fc4bef05b7433384b14f4"
+  }
+}

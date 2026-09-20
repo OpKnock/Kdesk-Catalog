@@ -1,0 +1,202 @@
+{
+  "name": "netlify",
+  "display_name": "Netlify",
+  "category": "cloud",
+  "subcategory": "general",
+  "description": "Deploys frontend apps with Netlify: CLI deploys, build configuration, environment variables, and edge functions.",
+  "version": "2.0.0",
+  "tags": [
+    "cloud"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "netlify",
+    "npm"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "npm install -g netlify-cli",
+        "netlify init",
+        "netlify deploy",
+        "netlify deploy --prod",
+        "netlify dev"
+      ],
+      "description": "Build, deploy, and manage Netlify sites.",
+      "name": "netlify-cli",
+      "examples": [
+        "netlify deploy --dir dist --prod",
+        "netlify deploy --build --prod",
+        "netlify open"
+      ],
+      "parameters": [
+        {
+          "description": "Publish directory",
+          "name": "dir",
+          "type": "string"
+        },
+        {
+          "description": "Deploy to production",
+          "name": "prod",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "netlify env:set API_KEY abc123",
+        "netlify env:list",
+        "netlify env:unset API_KEY",
+        "netlify status",
+        "netlify functions:list"
+      ],
+      "description": "Manage environment variables and site settings.",
+      "name": "netlify-config",
+      "examples": [
+        "netlify env:set --context production API_URL https://api.example.com",
+        "netlify functions:serve",
+        "netlify status"
+      ],
+      "parameters": [
+        {
+          "description": "Env var name",
+          "name": "key",
+          "type": "string"
+        },
+        {
+          "description": "Env var value",
+          "name": "value",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Netlify Docs",
+      "description": "Deploy config, env vars, and functions",
+      "source": "https://docs.netlify.com",
+      "type": "documentation"
+    },
+    {
+      "title": "Netlify CLI",
+      "description": "netlify command reference",
+      "source": "https://cli.netlify.com",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Netlify\n\nDeploy frontend apps with the Netlify CLI.\n\n## When to Use\n\n- Static sites and SPAs with CDN delivery\n- JAMstack deploys with preview deployments\n- Serverless functions (Netlify Functions)\n- Managed forms and identity without a backend\n\n## Commands\n\n```bash\n# Setup\nnpm install -g netlify-cli\nnetlify init\n\n# Deploy\nnetlify deploy --dir dist\nnetlify deploy --prod\nnetlify deploy --dir dist --prod\n\n# Local dev\nnetlify dev\n\n# Env vars\nnetlify env:set API_KEY abc123\nnetlify env:set --context production API_URL https://api.example.com\nnetlify env:list\nnetlify env:unset API_KEY\n\n# Status and functions\nnetlify status\nnetlify functions:list\nnetlify functions:serve\n```\n\n## netlify.toml Example\n\n```toml\n[build]\n  command = \"npm run build\"\n  publish = \"dist\"\n\n[build.environment]\n  NODE_VERSION = \"20\"\n\n[redirects]\n  from = \"/*\"\n  to = \"/index.html\"\n  status = 200\n```\n\n## Best Practices\n\n- Use deploy previews for PR review environments\n- Set context-specific env vars (production vs preview)\n- Keep redirects and headers in netlify.toml for versioning\n- Run netlify deploy --build in CI with a pinned CLI version\n- Test functions locally with netlify functions:serve\n- Use deploy contexts to gate production promotions",
+  "examples": [
+    {
+      "input": "Deploy my Vite app to production",
+      "output": "Agent runs npm run build, netlify deploy --dir dist --prod, and opens the live URL."
+    },
+    {
+      "input": "Set up PR preview deploys",
+      "output": "Agent adds the Netlify GitHub action and explains deploy contexts and env var scoping."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "netlify.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-netlify"
+    },
+    "generic": {
+      "system_prompt": "You take the Netlify seat. You do it through netlify-cli: Build, deploy, and manage Netlify sites. The commands are real, e.g. `npm install -g netlify-cli`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "netlify",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "netlify-cli",
+        "name": "dir",
+        "type": "string",
+        "description": "Publish directory"
+      },
+      {
+        "capability": "netlify-cli",
+        "name": "prod",
+        "type": "boolean",
+        "description": "Deploy to production"
+      },
+      {
+        "capability": "netlify-config",
+        "name": "key",
+        "type": "string",
+        "description": "Env var name"
+      },
+      {
+        "capability": "netlify-config",
+        "name": "value",
+        "type": "string",
+        "description": "Env var value"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "netlify",
+    "npm"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/netlify-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/netlify-skill.yaml",
+    "checksum": "aeeb3aaeb3b2bc1c6282cee4133f6d83f6d514a2803d34147f1b650ea8c297ab"
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "name": "ml-openai-python-agent",
+  "display_name": "Ml Openai Python Agent",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "OpenAI Python SDK agent for GPT model usage.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Openai Python Agent",
+      "description": "OpenAI Python SDK agent for GPT model usage.",
+      "commands": [
+        "Chat: python -c 'from openai import OpenAI; client = OpenAI(); r = client.chat.completions.create(mo",
+        "Image: python -c 'from openai import OpenAI; client = OpenAI(); r = client.images.generate(model=\"da",
+        "Embed: python -c 'from openai import OpenAI; client = OpenAI(); r = client.embeddings.create(model=\""
+      ],
+      "examples": [
+        "Chat: python -c 'from openai import OpenAI; client = OpenAI(); r = client.chat.completions.create(model=\"gpt-4\", messages=[{\"role\": \"user\", \"content\": \"Hello\"}]); print(r.choices[0].message.content)'",
+        "Embed: python -c 'from openai import OpenAI; client = OpenAI(); r = client.embeddings.create(model=\"text-embedding-ada-002\", input=\"Hello\"); print(r.data[0].embedding)'",
+        "Image: python -c 'from openai import OpenAI; client = OpenAI(); r = client.images.generate(model=\"dall-e-3\", prompt=\"A sunset\"); print(r.data[0].url)'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-openai-python-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for ml-openai-python-agent"
+    }
+  ],
+  "instructions": "You are the OpenAI Python SDK expert. Call on this agent when a user needs to use GPT models from Python, covering chat completions, embeddings, image generation, and the Assistants API. Core workflow: (1) chat with 'Chat: python -c \"from openai import OpenAI; client = OpenAI(); r = client.chat.completions.create(model=gpt-4, messages=[{role: user, content: Hello}]); print(r.choices[0].message.content)\"'; (2) embed with 'Embed: python -c \"from openai import OpenAI; client = OpenAI(); r = client.embeddings.create(model=text-embedding-ada-002, input=Hello); print(r.data[0].embedding)\"'; (3) generate images with 'Image: python -c \"from openai import OpenAI; client = OpenAI(); r = client.images.generate(model=dall-e-3, prompt=A sunset); print(r.data[0].url)\"'. Key behaviors: always instantiate the OpenAI client before calling methods, rely on environment variables for the API key, and select the right model per task (gpt-4 chat, text-embedding-ada-002 embeddings, dall-e-3 images). If a call fails, verify the key, model id, and request parameters. Report the working snippet and the response content or URL.",
+  "examples": [
+    "Chat: python -c 'from openai import OpenAI; client = OpenAI(); r = client.chat.completions.create(model=\"gpt-4\", messages=[{\"role\": \"user\", \"content\": \"Hello\"}]); print(r.choices[0].message.content)'",
+    "Embed: python -c 'from openai import OpenAI; client = OpenAI(); r = client.embeddings.create(model=\"text-embedding-ada-002\", input=\"Hello\"); print(r.data[0].embedding)'",
+    "Image: python -c 'from openai import OpenAI; client = OpenAI(); r = client.images.generate(model=\"dall-e-3\", prompt=\"A sunset\"); print(r.data[0].url)'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-openai-python-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an OpenAI Python SDK expert. Help users with:\n- Chat completions\n- Embeddings\n- Image generation\n- Assistants API\n\nAlways use real OpenAI Python SDK commands and best practices."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-openai-python-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-openai-python-agent. OpenAI Python SDK agent for GPT model usage.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-openai-python-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/ml-openai-python-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/ml-openai-python-agent.yaml",
+    "checksum": "ea3a37026939975135e52aa927c64db524833e5b5d2be00fe3e7a046d5e4c0a5"
+  }
+}

@@ -1,0 +1,208 @@
+{
+  "name": "k9s",
+  "display_name": "k9s",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Navigates Kubernetes clusters with the k9s terminal UI: pod inspection, log streaming, resource editing, and context switching.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "k9s"
+  ],
+  "capabilities": [
+    {
+      "name": "terminal-ui-navigation",
+      "description": "Launch k9s scoped to namespaces, resources, or contexts, and use hotkeys for views.",
+      "commands": [
+        "k9s",
+        "k9s -n production",
+        "k9s -A",
+        "k9s -c deployments",
+        "k9s --context staging",
+        "k9s --headless -c pods"
+      ],
+      "examples": [
+        "k9s -n production",
+        "k9s -A -c secrets",
+        "k9s --context staging"
+      ],
+      "parameters": [
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace to scope to"
+        },
+        {
+          "name": "context",
+          "type": "string",
+          "description": "Kubeconfig context"
+        },
+        {
+          "name": "resource",
+          "type": "string",
+          "description": "Initial resource view, e.g. deployments"
+        }
+      ]
+    },
+    {
+      "name": "live-observability",
+      "description": "Stream logs, exec shells, and drill into resource details from the UI (keybindings).",
+      "commands": [
+        "k9s --logoless",
+        "k9s --readonly",
+        "k9s --command deploy/web",
+        "k9s --kubeconfig ~/.kube/config2",
+        "k9s --plugins myplugin.yaml"
+      ],
+      "examples": [
+        "k9s --readonly",
+        "k9s --command deploy/web",
+        "k9s --plugins myplugin.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "command",
+          "type": "string",
+          "description": "Initial view command like deploy/web"
+        },
+        {
+          "name": "kubeconfig",
+          "type": "string",
+          "description": "Alternate kubeconfig path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "k9s CLI Documentation",
+      "type": "documentation",
+      "source": "https://k9scli.io/",
+      "description": "Install, keybindings, skins, and plugin docs"
+    },
+    {
+      "title": "k9s GitHub",
+      "type": "documentation",
+      "source": "https://github.com/derailed/k9s",
+      "description": "Source, releases, and configuration examples"
+    }
+  ],
+  "instructions": "# k9s Terminal UI\n\nOperate Kubernetes from a fast terminal dashboard instead of long kubectl pipelines.\n\n## What This Skill Does\n\n- Views resources per namespace or all namespaces\n- Streams pod logs live and exec into containers\n- Edits manifests inline and watches rollouts\n- Switches contexts/clusters and uses custom skins\n- Extends behavior with plugins and hotkeys\n\n## When to Use\n\n- Rapid triage across many namespaces\n- Following a deployment rollout in real time\n- Terminal-only environments (SSH boxes, bastion hosts)\n\n## Real Commands\n\n```bash\n# Launch variants\nk9s\nk9s -n production\nk9s -A\nk9s -c deployments\nk9s --context staging\nk9s --readonly\nk9s --command deploy/web\nk9s --kubeconfig ~/.kube/config2\n```\n\n## Key Bindings (in-app)\n\n- `0-9` switch resource views (pods, deploys, svc, ...)\n- `l` logs, `s` shell/exec, `d` describe, `e` edit\n- `ctrl-d` delete, `ctrl-k` kill\n- `:ctx` switch context, `:ns` switch namespace\n- `?` full keymap reference\n\n## Best Practices\n\n- Use `--readonly` in production sessions to avoid fat-finger deletes\n- Alias it: `alias k=k9s -n` in daily shells\n- Use skins (config/skins/) for high-contrast terminals\n- Combine with kubectx contexts for multi-cluster hops\n- Prefer k9s for triage, kubectl for scripting and automation",
+  "examples": [
+    {
+      "input": "Watch the new release rollout live",
+      "output": "Agent launches k9s -c deployments, selects the deployment, and follows the rollout with the describe/pods drill-down"
+    },
+    {
+      "input": "Check errors across all namespaces",
+      "output": "Agent runs k9s -A -c events and filters by Warning severity in the UI"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "k9s.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-k9s"
+    },
+    "generic": {
+      "system_prompt": "You take the k9s seat. You do it through terminal-ui-navigation: Launch k9s scoped to namespaces, resources, or contexts, and use hotkeys for views. The commands are real, e.g. `k9s`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "k9s",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "terminal-ui-navigation",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace to scope to"
+      },
+      {
+        "capability": "terminal-ui-navigation",
+        "name": "context",
+        "type": "string",
+        "description": "Kubeconfig context"
+      },
+      {
+        "capability": "terminal-ui-navigation",
+        "name": "resource",
+        "type": "string",
+        "description": "Initial resource view, e.g. deployments"
+      },
+      {
+        "capability": "live-observability",
+        "name": "command",
+        "type": "string",
+        "description": "Initial view command like deploy/web"
+      },
+      {
+        "capability": "live-observability",
+        "name": "kubeconfig",
+        "type": "string",
+        "description": "Alternate kubeconfig path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "k9s"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/k9s-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/k9s-skill.yaml",
+    "checksum": "0daab873c04fa2fcffa9a1ae2d5cd7f85dd1909fb64b2486fdd53bfbe6511eea"
+  }
+}

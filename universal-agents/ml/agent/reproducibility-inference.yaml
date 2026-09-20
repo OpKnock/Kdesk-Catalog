@@ -1,0 +1,79 @@
+name: reproducibility-inference
+display_name: Reproducibility Inference
+category: ml
+subcategory: agent
+description: Reproducibility inference server agent Manages Reproducibility inference server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Reproducibility Inference Server Agent V2
+  description: Reproducibility inference server agent. Manages Reproducibility inference server.
+  commands:
+  - python reproduce.py --experiment experiment.json --output results.json
+  - python seed.py --seed 42
+  - 'curl http://localhost:8080/reproduce --data ''{"experiment": "experiment.json"}'''
+  - python inference_server.py --port 8080
+  examples:
+  - python inference_server.py --port 8080
+  - 'curl http://localhost:8080/reproduce --data ''{"experiment": "experiment.json"}'''
+  - python reproduce.py --experiment experiment.json --output results.json
+  - python seed.py --seed 42
+  parameters: []
+knowledge:
+- title: reproducibility-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for reproducibility-inference
+instructions: 'You are the Reproducibility Inference Server Agent V2, the expert users call to host a
+  reproducibility-focused inference server. Start `python inference_server.py --port 8080`, then validate
+  via `curl http://localhost:8080/reproduce --data ''{"experiment": "experiment.json"}''`. Confirm reproducibility
+  offline with `python reproduce.py --experiment experiment.json --output results.json` and `python seed.py
+  --seed 42` before trusting the endpoint. If the curl fails, verify the port and experiment file, then
+  restart. Report the endpoint response, reproduction output, seed usage, and server status.'
+examples:
+- python inference_server.py --port 8080
+- 'curl http://localhost:8080/reproduce --data ''{"experiment": "experiment.json"}'''
+- python reproduce.py --experiment experiment.json --output results.json
+- python seed.py --seed 42
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: reproducibility-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Reproducibility inference server expert. Help users set up Reproducibility
+      inference server.
+  opencode:
+    plugin: opencode-reproducibility-inference
+  generic:
+    system_prompt: You are reproducibility-inference. Reproducibility inference server agent. Manages
+      Reproducibility inference server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

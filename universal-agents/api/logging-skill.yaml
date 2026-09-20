@@ -1,0 +1,200 @@
+name: logging
+display_name: Logging
+category: api
+subcategory: general
+description: 'System and application logging basics: tail/grep log files, journald queries, syslog emission,
+  and kernel message checks.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- dmesg
+- grep
+- journalctl
+- logger
+- tail
+capabilities:
+- name: file-logs
+  description: Tail, filter, and analyze application log files.
+  commands:
+  - tail -n 200 /var/log/nginx/access.log
+  - tail -f /var/log/nginx/access.log
+  - grep -i 'error\|exception' /var/log/app/app.log | tail -50
+  - grep -c 'ERROR' /var/log/app/app.log
+  examples:
+  - tail -f /var/log/nginx/access.log
+  - grep -i 'error\|exception' /var/log/app/app.log | tail -50
+  - grep -c 'ERROR' /var/log/app/app.log
+  parameters:
+  - name: file
+    type: string
+    description: Log file path.
+  - name: pattern
+    type: string
+    description: Grep pattern.
+  - name: lines
+    type: integer
+    description: Number of tail lines.
+- name: journald-syslog
+  description: Query journald and emit syslog messages.
+  commands:
+  - journalctl -u myapp --since yesterday
+  - journalctl -u myapp -f
+  - journalctl -p err -b
+  - logger -p user.err 'disk usage over 90%' -t cron-check
+  - dmesg --level=err,warn | tail -20
+  examples:
+  - journalctl -u myapp --since yesterday
+  - journalctl -p err -b
+  - logger -p user.err 'disk usage over 90%' -t cron-check
+  parameters:
+  - name: unit
+    type: string
+    description: systemd unit name.
+  - name: priority
+    type: string
+    description: 'Log priority: err, warn, info.'
+  - name: since
+    type: string
+    description: Time window, e.g. yesterday, 1 hour ago.
+knowledge:
+- title: journalctl man page
+  type: documentation
+  source: https://man7.org/linux/man-pages/man1/journalctl.1.html
+  description: journalctl reference.
+- title: rsyslog documentation
+  type: documentation
+  source: https://www.rsyslog.com/doc/
+  description: rsyslog configuration docs.
+instructions: '# Logging (Basics)
+
+
+  Inspect and manage system and application logs on Linux.
+
+
+  ## What this skill does
+
+
+  - Tails and greps application log files.
+
+  - Queries journald with filters and live following.
+
+  - Emits syslog messages and reads kernel logs.
+
+
+  ## When to use
+
+
+  - First-line debugging of app failures.
+
+  - Auditing what a service logged over time.
+
+  - Emitting structured alerts into syslog from scripts.
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Tail application logs
+
+  tail -n 200 /var/log/nginx/access.log
+
+  tail -f /var/log/nginx/access.log
+
+
+  # Filter errors
+
+  grep -i ''error\|exception'' /var/log/app/app.log | tail -50
+
+  grep -c ''ERROR'' /var/log/app/app.log
+
+
+  # journald: service logs since yesterday
+
+  journalctl -u myapp --since yesterday
+
+
+  # journald: follow live
+
+  journalctl -u myapp -f
+
+
+  # journald: errors this boot
+
+  journalctl -p err -b
+
+
+  # Emit a syslog message
+
+  logger -p user.err ''disk usage over 90%'' -t cron-check
+
+
+  # Kernel messages
+
+  dmesg --level=err,warn | tail -20
+
+  ```
+
+
+  ## Testing
+
+
+  ```bash
+
+  logger -p user.notice ''test message'' && journalctl -t  -n 1
+
+  ```
+
+
+  ## Best practices
+
+
+  - Log to stderr/stdout in apps; let journald/systemd collect it.
+
+  - Use logger -t tags so scripts are greppable.
+
+  - Rotate large files; journalctl --vacuum-size to bound journal disk use.
+
+  '
+examples:
+- input: Find the last errors in my app log
+  output: grep -i 'error\|exception' /var/log/app/app.log | tail -50
+- input: Watch my service's logs live
+  output: journalctl -u myapp -f
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: logging.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-logging
+  generic:
+    system_prompt: 'You take the Logging seat. You do it through file-logs: Tail, filter, and analyze
+      application log files. The commands are real, e.g. `tail -n 200 /var/log/nginx/access.log`. You
+      prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

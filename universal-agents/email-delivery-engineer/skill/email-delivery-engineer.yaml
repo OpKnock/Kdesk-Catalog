@@ -1,0 +1,217 @@
+name: email-delivery-engineer
+version: 2.0.0
+type: skill
+category: backend
+description: 'Troubleshoots email delivery: SPF/DKIM/DMARC verification, SMTP testing with swaks, Postfix
+  queue management, and deliverability audits.'
+keywords:
+- email
+- deliverability
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: email-delivery-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-email-delivery-engineer
+  generic:
+    system_prompt: 'You are the email-delivery-engineer specialist. You do it through authentication-diagnostics:
+      Verify SPF, DKIM, and DMARC records for a domain. The commands are real, e.g. `dig +short TXT example.com
+      | grep spf`. You answer with exact commands, not abstractions, and flag anything you have not verified
+      yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: authentication-diagnostics
+  description: Verify SPF, DKIM, and DMARC records for a domain.
+  commands:
+  - dig +short TXT example.com | grep spf
+  - dig +short TXT selector._domainkey.example.com
+  - dig +short TXT _dmarc.example.com
+  - opendkim-testkey -d example.com -s default -vvv
+  - spfquery -sender=jane@example.com -ip=203.0.113.9
+  - dig +short MX example.com
+  examples:
+  - dig +short TXT example.com | grep spf
+  - dig +short TXT _dmarc.example.com
+  - opendkim-testkey -d example.com -s default -vvv
+  parameters:
+  - name: domain
+    type: string
+    description: Sending domain
+  - name: selector
+    type: string
+    description: DKIM selector
+- name: smtp-and-queue
+  description: Test SMTP paths and manage the Postfix queue.
+  commands:
+  - swaks --to user@example.com --server smtp.example.com --from alerts@example.com
+  - swaks --to user@example.com --tls --auth LOGIN --auth-user apikey --auth-password secret
+  - postqueue -p
+  - postqueue -f
+  - postsuper -d ALL
+  - mailq | tail -5
+  examples:
+  - swaks --to user@example.com --server smtp.example.com
+  - postqueue -p
+  - postsuper -d ALL
+  parameters:
+  - name: to
+    type: string
+    description: Recipient address
+  - name: server
+    type: string
+    description: SMTP server
+prerequisites:
+- sendgrid-cli
+- aws-cli
+- postmark-cli
+- node.js
+tools:
+- sendgrid-cli
+- aws-cli
+- postmark-cli
+- node.js
+- python
+- mailhog
+examples:
+- input: Our transactional emails go to spam
+  output: Agent checks SPF/DKIM/DMARC, runs swaks, reads auth-results, and proposes record fixes
+- input: Mail queue is growing
+  output: Agent inspects postqueue, checks deferral reasons in mail logs, and flushes or deletes accordingly
+instructions: '# Email Delivery Engineering
+
+
+  Diagnose and fix email deliverability: auth records, SMTP paths, and queues.
+
+
+  ## What This Skill Does
+
+
+  - Verifies SPF/DKIM/DMARC DNS records
+
+  - Tests SMTP delivery with swaks (auth, TLS, content)
+
+  - Manages the Postfix queue (inspect, flush, delete)
+
+  - Validates DKIM signatures locally
+
+  - Audits headers for auth results
+
+
+  ## When to Use
+
+
+  - Emails landing in spam or bouncing
+
+  - Setting up a new sending domain
+
+  - Investigating queue buildup or deferred mail
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # DNS auth records
+
+  dig +short TXT example.com | grep -i spf
+
+  dig +short TXT selector._domainkey.example.com
+
+  dig +short TXT _dmarc.example.com
+
+  dig +short MX example.com
+
+
+  # DKIM verification
+
+  opendkim-testkey -d example.com -s default -vvv
+
+
+  # SMTP path testing
+
+  swaks --to user@example.com --server smtp.example.com   --from alerts@example.com --body ''test message''
+
+  swaks --to user@example.com --tls --auth LOGIN   --auth-user apikey --auth-password secret --server
+  smtp.example.com
+
+
+  # Postfix queue
+
+  postqueue -p
+
+  postqueue -f              # flush
+
+  postsuper -d ALL          # delete all (careful)
+
+  mailq | tail -5
+
+  postconf -d myhostname
+
+  ```
+
+
+  ## Deliverability Checklist
+
+
+  1. SPF covers all senders (no hardfail conflicts)
+
+  2. DKIM signs with a valid selector
+
+  3. DMARC policy published with monitoring (p=none first)
+
+  4. MX/MTA accepts and forwards correctly
+
+  5. Spam score and content header audits pass
+
+
+  ## Best Practices
+
+
+  - Read auth-results headers in the test mailbox after swaks
+
+  - Keep DMARC at p=quarantine after two weeks of p=none
+
+  - Monitor bounces via the queue, not just the inbox
+
+  - Use TLS everywhere: port 587 submission, STARTTLS relay
+
+  - Rotate DKIM keys on a schedule and re-test'
+display_name: email-delivery-engineer
+knowledge:
+- title: swaks Documentation
+  type: documentation
+  source: https://www.swaks.org/
+  description: SMTP testing tool reference
+- title: Postfix Documentation
+  type: documentation
+  source: https://www.postfix.org/documentation.html
+  description: Postfix manual and queue management
+- title: RFC 7489 DMARC
+  type: documentation
+  source: https://datatracker.ietf.org/doc/html/rfc7489
+  description: DMARC specification

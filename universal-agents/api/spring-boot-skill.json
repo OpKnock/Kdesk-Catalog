@@ -1,0 +1,171 @@
+{
+  "name": "spring-boot",
+  "display_name": "Spring Boot",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted core Spring Boot skill: Maven scaffolding from start.spring.io, spring-boot:run, actuator endpoints, packaged jar execution, and test filters.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "./mvnw"
+  ],
+  "capabilities": [
+    {
+      "name": "spring-boot-lifecycle",
+      "description": "Scaffold, run, test, and package Spring Boot apps with Maven",
+      "commands": [
+        "curl -s https://start.spring.io/starter.zip -d type=maven-project -d dependencies=web,actuator -d javaVersion=21 -o demo.zip && unzip -q demo.zip -d demo",
+        "./mvnw spring-boot:run",
+        "curl -s localhost:8080/actuator/health",
+        "./mvnw test",
+        "./mvnw package -DskipTests && java -jar target/demo-0.0.1-SNAPSHOT.jar"
+      ],
+      "examples": [
+        "./mvnw spring-boot:run",
+        "curl -s localhost:8080/actuator/health",
+        "./mvnw test -Dtest=HelloControllerTest"
+      ],
+      "parameters": [
+        {
+          "name": "dependencies",
+          "type": "string",
+          "description": "Starter ids for scaffolding"
+        },
+        {
+          "name": "javaVersion",
+          "type": "string",
+          "description": "Java version for the project"
+        },
+        {
+          "name": "jar_path",
+          "type": "string",
+          "description": "Built jar location, e.g. target/demo-0.0.1-SNAPSHOT.jar"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Spring Boot reference",
+      "type": "documentation",
+      "source": "https://docs.spring.io/spring-boot/index.html",
+      "description": "Quickstart, actuator, and packaging"
+    },
+    {
+      "title": "Spring Boot Maven plugin",
+      "type": "documentation",
+      "source": "https://docs.spring.io/spring-boot/maven-plugin/index.html",
+      "description": "spring-boot:run and repackage goals"
+    }
+  ],
+  "instructions": "# Spring Boot\n\nHand-crafted skill for the Spring Boot application lifecycle with Maven.\n\n## What this skill does\n\n- Generates Maven projects from start.spring.io with selected starters\n- Runs the app in dev mode and probes actuator endpoints\n- Packages an executable jar and runs the test suite\n\n## When to use\n\n- Starting or onboarding a Spring Boot service\n- Local development loop: run, hit actuator, iterate\n- Building a release artifact for deployment\n\n## Real commands\n\n```bash\n# Scaffold a Maven project with web + actuator on Java 21\ncurl -s https://start.spring.io/starter.zip -d type=maven-project -d dependencies=web,actuator -d javaVersion=21 -o demo.zip && unzip -q demo.zip -d demo\n\n# Dev run\n./mvnw spring-boot:run\n\n# Actuator health\ncurl -s localhost:8080/actuator/health\n\n# Tests\n./mvnw test\n./mvnw test -Dtest=HelloControllerTest\n\n# Package and run the jar\n./mvnw package -DskipTests && java -jar target/demo-0.0.1-SNAPSHOT.jar\n```\n\n## application.yaml\n\n```yaml\nserver:\n  port: 8080\nspring:\n  application:\n    name: demo\nmanagement:\n  endpoints:\n    web:\n      exposure:\n        include: health,info,metrics\n```\n\n## Testing\n\n```bash\n./mvnw spring-boot:run &\ncurl -s localhost:8080/actuator/health | jq .status\n./mvnw test\n```\n\n## Best practices\n\n- Use the mvnw wrapper so builds are reproducible\n- Expose only safe actuator endpoints in production\n- Prefer the packaged jar over spring-boot:run in prod\n",
+  "examples": [
+    {
+      "input": "Create a Spring Boot service with health endpoint",
+      "output": "Scaffold with dependencies=web,actuator, then ./mvnw spring-boot:run and curl localhost:8080/actuator/health."
+    },
+    {
+      "input": "Build a deployable jar",
+      "output": "./mvnw package -DskipTests builds target/demo-0.0.1-SNAPSHOT.jar; run with java -jar."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "spring-boot.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-spring-boot"
+    },
+    "generic": {
+      "system_prompt": "You take the Spring Boot seat. You do it through spring-boot-lifecycle: Scaffold, run, test, and package Spring Boot apps with Maven. The commands are real, e.g. `curl -s https://start.spring.io/starter.zip -d type=maven-project -d...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "spring-boot",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "spring-boot-lifecycle",
+        "name": "dependencies",
+        "type": "string",
+        "description": "Starter ids for scaffolding"
+      },
+      {
+        "capability": "spring-boot-lifecycle",
+        "name": "javaVersion",
+        "type": "string",
+        "description": "Java version for the project"
+      },
+      {
+        "capability": "spring-boot-lifecycle",
+        "name": "jar_path",
+        "type": "string",
+        "description": "Built jar location, e.g. target/demo-0.0.1-SNAPSHOT.jar"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "./mvnw"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/spring-boot-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/spring-boot-skill.yaml",
+    "checksum": "2af8b77984d448358463070dbb5a0c902aa0f1d35e594af0cef0d8644e5e8957"
+  }
+}

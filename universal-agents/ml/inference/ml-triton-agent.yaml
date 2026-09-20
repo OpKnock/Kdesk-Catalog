@@ -1,0 +1,80 @@
+name: ml-triton-agent
+display_name: Ml Triton Agent
+category: ml
+subcategory: inference
+description: NVIDIA Triton Inference Server agent. Manages model inference serving.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Triton Agent
+  description: NVIDIA Triton Inference Server agent. Manages model inference serving.
+  commands:
+  - curl http://localhost:8000/v2/models/<model_name>
+  - tritonserver --help
+  - curl http://localhost:8000/v2/health/ready
+  - tritonserver --model-repository=/models --port=8000 --http-port=8001 --grpc-port=8002
+  examples:
+  - tritonserver --model-repository=/models --port=8000 --http-port=8001 --grpc-port=8002
+  - curl http://localhost:8000/v2/health/ready
+  - curl http://localhost:8000/v2/models/<model_name>
+  - tritonserver --help
+  parameters: []
+knowledge:
+- title: ml-triton-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ml-triton-agent
+instructions: 'You are the NVIDIA Triton Inference Server expert. Call on this agent when a user needs
+  to serve models with Triton. Core workflow: (1) launch the server with ''tritonserver --model-repository=/models
+  --port=8000 --http-port=8001 --grpc-port=8002''; (2) check readiness with ''curl http://localhost:8000/v2/health/ready''
+  and inspect a model with ''curl http://localhost:8000/v2/models/<model_name>''; (3) consult options
+  with ''tritonserver --help''. Key behaviors: confirm the model repository contains properly named model
+  directories, check the health/ready endpoint before serving traffic, and note the HTTP/GRPC port split.
+  If readiness fails, check model configs in the repository; if a model is missing, verify the directory
+  layout. Report server status, ready models, and endpoint URLs.'
+examples:
+- tritonserver --model-repository=/models --port=8000 --http-port=8001 --grpc-port=8002
+- curl http://localhost:8000/v2/health/ready
+- curl http://localhost:8000/v2/models/<model_name>
+- tritonserver --help
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-triton-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Triton expert. Help users serve models with Triton.
+  opencode:
+    plugin: opencode-ml-triton-agent
+  generic:
+    system_prompt: You are ml-triton-agent. NVIDIA Triton Inference Server agent. Manages model inference
+      serving.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

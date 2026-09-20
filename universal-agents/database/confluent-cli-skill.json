@@ -1,0 +1,167 @@
+{
+  "name": "confluent-cli",
+  "display_name": "confluent-cli",
+  "category": "database",
+  "subcategory": "general",
+  "description": "Manages Confluent Cloud/Platform Kafka clusters via the confluent CLI: topics, schemas, and connectors.",
+  "version": "2.0.0",
+  "tags": [
+    "database"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "confluent"
+  ],
+  "capabilities": [
+    {
+      "name": "confluent-cli",
+      "description": "Authenticate and manage Kafka clusters, topics, and schema registry",
+      "commands": [
+        "confluent login --prompt",
+        "confluent kafka cluster list",
+        "confluent kafka cluster use lkc-xxxxx",
+        "confluent kafka topic create orders --partitions 6",
+        "confluent kafka topic consume orders --from-beginning --max-messages 10"
+      ],
+      "examples": [
+        "confluent kafka topic list",
+        "confluent kafka topic produce orders --parse-key --delimiter :",
+        "confluent schema-registry schema create --subject orders-value --schema orders.avsc"
+      ],
+      "parameters": [
+        {
+          "name": "partitions",
+          "type": "integer",
+          "description": "Partition count for topic creation"
+        },
+        {
+          "name": "from-beginning",
+          "type": "boolean",
+          "description": "Consume from the earliest offset"
+        },
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Schema file path for schema create"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Confluent CLI docs",
+      "type": "documentation",
+      "source": "https://docs.confluent.io/confluent-cli/",
+      "description": "Installation, authentication, and command reference"
+    },
+    {
+      "title": "Schema Registry docs",
+      "type": "documentation",
+      "source": "https://docs.confluent.io/cloud/current/sr/",
+      "description": "Schema lifecycle and compatibility modes"
+    }
+  ],
+  "instructions": "# Confluent CLI\n\nManages Confluent Cloud (SaaS) and Confluent Platform Kafka clusters: topics,\nschema registry, and cluster selection.\n\n## When to Use\n\n- Managing Confluent Cloud environments\n- Creating topics and testing produce/consume\n- Registering and checking Avro/JSON schemas\n\n## Real Commands\n\n```bash\n# Login\nsudo confluent login --prompt\nsudo confluent environment list\nsudo confluent environment use env-abc123\n\n# Clusters\nsudo confluent kafka cluster list\nsudo confluent kafka cluster use lkc-xxxxx\n\n# Topics\nsudo confluent kafka topic create orders --partitions 6\nsudo confluent kafka topic list\nsudo confluent kafka topic describe orders\n\n# Produce/consume\nsudo confluent kafka topic produce orders --parse-key --delimiter :\nsudo confluent kafka topic consume orders --from-beginning --max-messages 10\n\n# Schema Registry\nsudo confluent schema-registry schema create --subject orders-value --schema orders.avsc --type AVRO\nsudo confluent schema-registry schema list --subject orders-value\n```\n\n## Avro Schema Example\n\n```json\n{\"type\": \"record\", \"name\": \"Order\", \"fields\": [{\"name\": \"order_id\", \"type\": \"string\"}, {\"name\": \"amount\", \"type\": \"double\"}]}\n```\n\n## Best Practices\n\n- Use dedicated service accounts + API keys in CI, never personal login\n- Register schemas before producing data\n- Keep Avro schemas backward compatible\n- Use `--max-messages` in tests to avoid endless consume\n- Scope permissions per environment\n\n## Example Response\n\nCreates the cluster resource, registers the schema, and verifies the end-to-end\nproduce/consume roundtrip with the CLI.",
+  "examples": [
+    {
+      "input": "Set up the orders topic in Confluent Cloud",
+      "output": "Logs in, selects the environment/cluster, creates the topic with 6 partitions, and verifies with describe"
+    },
+    {
+      "input": "Register the orders Avro schema",
+      "output": "Writes orders.avsc, registers it under orders-value, and lists schema versions"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "confluent-cli.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-confluent-cli"
+    },
+    "generic": {
+      "system_prompt": "You work confluent-cli hands-on. You do it through confluent-cli: Authenticate and manage Kafka clusters, topics, and schema registry. The commands are real, e.g. `confluent login --prompt`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "confluent-cli",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "confluent-cli",
+        "name": "partitions",
+        "type": "integer",
+        "description": "Partition count for topic creation"
+      },
+      {
+        "capability": "confluent-cli",
+        "name": "from-beginning",
+        "type": "boolean",
+        "description": "Consume from the earliest offset"
+      },
+      {
+        "capability": "confluent-cli",
+        "name": "schema",
+        "type": "string",
+        "description": "Schema file path for schema create"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "confluent"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/confluent-cli-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/confluent-cli-skill.yaml",
+    "checksum": "8fbfb76701e08ca2ef6e4c5a7df88d7daf7d361a874188b0bddb26f2f8f83cb9"
+  }
+}

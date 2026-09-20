@@ -1,0 +1,207 @@
+{
+  "name": "crossplane",
+  "display_name": "crossplane",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Builds control planes with Crossplane: install providers, create composite resources (XRs), manage resource claims, and trace reconciliation.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "crossplane",
+    "helm",
+    "kubectl"
+  ],
+  "capabilities": [
+    {
+      "name": "provider-and-config",
+      "description": "Install providers and configure cloud credentials for Crossplane.",
+      "commands": [
+        "helm install crossplane crossplane-stable/crossplane -n crossplane-system --create-namespace",
+        "kubectl apply -f provider-aws.yaml",
+        "kubectl get providers",
+        "kubectl apply -f providerconfig-aws.yaml",
+        "kubectl get providerconfigs"
+      ],
+      "examples": [
+        "helm install crossplane crossplane-stable/crossplane -n crossplane-system --create-namespace",
+        "kubectl apply -f provider-aws.yaml",
+        "kubectl get providers"
+      ],
+      "parameters": [
+        {
+          "name": "provider",
+          "type": "string",
+          "description": "Provider package name, e.g. upbound/provider-aws"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace to install control plane into"
+        }
+      ]
+    },
+    {
+      "name": "composites-and-claims",
+      "description": "Author and manage CompositeResourceDefinitions, Compositions, and Claims.",
+      "commands": [
+        "kubectl apply -f xrd.yaml",
+        "kubectl apply -f composition.yaml",
+        "kubectl apply -f claim.yaml",
+        "kubectl get composite",
+        "kubectl get claims",
+        "crossplane alpha trace vpcclaim my-vpc"
+      ],
+      "examples": [
+        "kubectl apply -f xrd.yaml && kubectl apply -f composition.yaml",
+        "kubectl get claims",
+        "crossplane alpha trace vpc my-vpc"
+      ],
+      "parameters": [
+        {
+          "name": "claim-kind",
+          "type": "string",
+          "description": "Kind of claim, e.g. VPCClaim"
+        },
+        {
+          "name": "claim-name",
+          "type": "string",
+          "description": "Name of the claim instance"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Crossplane Documentation",
+      "type": "documentation",
+      "source": "https://docs.crossplane.io/",
+      "description": "Control plane concepts, XRD, Composition, and provider guides"
+    },
+    {
+      "title": "Crossplane CLI",
+      "type": "documentation",
+      "source": "https://github.com/crossplane/crossplane/blob/main/docs/cli.md",
+      "description": "crossplane alpha trace and other CLI commands"
+    },
+    {
+      "title": "Upbound Registry",
+      "type": "documentation",
+      "source": "https://marketplace.upbound.io/",
+      "description": "Official providers and configuration packages"
+    }
+  ],
+  "instructions": "# Crossplane Control Planes\n\nProvision cloud infrastructure through Kubernetes APIs using Crossplane providers and compositions.\n\n## What This Skill Does\n\n- Installs Crossplane and cloud providers via Helm and provider packages\n- Stores cloud credentials in ProviderConfig secrets\n- Defines CompositeResourceDefinitions (XRDs) and Compositions\n- Exposes platform APIs to teams through Claims\n- Traces reconciliation failures with the crossplane CLI\n\n## When to Use\n\n- Platform teams that want infrastructure provisioned like Kubernetes objects\n- Standardizing multi-cloud resource templates\n- Self-service infrastructure for app teams\n\n## Real Commands\n\n```bash\n# Install control plane\nhelm install crossplane crossplane-stable/crossplane -n crossplane-system --create-namespace\nkubectl apply -f provider-aws.yaml\nkubectl get providers\n\n# Configure credentials\nkubectl apply -f providerconfig-aws.yaml\nkubectl get providerconfigs\n\n# Define and apply compositions\nkubectl apply -f xrd.yaml\nkubectl apply -f composition.yaml\nkubectl apply -f claim.yaml\n\n# Observe and debug\nkubectl get composite\nkubectl get claims\ncrossplane alpha trace vpc my-vpc\nkubectl get events --sort-by=.lastTimestamp | tail -30\n```\n\n## XRD + Composition Sketch\n\n```yaml\napiVersion: apiextensions.crossplane.io/v1\nkind: CompositeResourceDefinition\nmetadata:\n  name: vpcs.example.org\nspec:\n  group: example.org\n  names:\n    kind: VPC\n    plural: vpcs\n  claimNames:\n    kind: VPCClaim\n    plural: vpcclaims\n```\n\n## Best Practices\n\n- Version XRDs (`apiVersion: v1beta1`) before exposing to teams\n- Keep credentials in crossplane-system secrets referenced by ProviderConfig\n- Use `crossplane alpha trace` as the first debugging step\n- Enforce `compositions` immutability with review; test on a sandbox account first\n- Monitor provider health: `kubectl get providers -o jsonpath='{.items[*].status.conditions}'`",
+  "examples": [
+    {
+      "input": "Our teams need self-service VPCs",
+      "output": "Agent installs crossplane + provider-aws, writes XRD/Composition, applies a claim, and verifies with kubectl get claims and trace"
+    },
+    {
+      "input": "A claim is stuck in Syncing",
+      "output": "Agent runs crossplane alpha trace, inspects composite events and ProviderConfig, checks cloud credentials validity"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "crossplane.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-crossplane"
+    },
+    "generic": {
+      "system_prompt": "Your lane is crossplane. You do it through provider-and-config: Install providers and configure cloud credentials for Crossplane. The commands are real, e.g. `helm install crossplane crossplane-stable/crossplane -n crossplane-system --create-namespace`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "crossplane",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "provider-and-config",
+        "name": "provider",
+        "type": "string",
+        "description": "Provider package name, e.g. upbound/provider-aws"
+      },
+      {
+        "capability": "provider-and-config",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace to install control plane into"
+      },
+      {
+        "capability": "composites-and-claims",
+        "name": "claim-kind",
+        "type": "string",
+        "description": "Kind of claim, e.g. VPCClaim"
+      },
+      {
+        "capability": "composites-and-claims",
+        "name": "claim-name",
+        "type": "string",
+        "description": "Name of the claim instance"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "crossplane",
+    "helm",
+    "kubectl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/crossplane-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/crossplane-skill.yaml",
+    "checksum": "da487a1b3995ceb41c001a0c7fcd4a855c6d267b7e3ba5d2d4316ff483729187"
+  }
+}

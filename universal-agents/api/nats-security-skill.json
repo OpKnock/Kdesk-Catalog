@@ -1,0 +1,173 @@
+{
+  "name": "nats-security",
+  "display_name": "Nats Security",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Secure NATS deployments: operators/accounts/users with nsc, credentials files, TLS, and authorization permissions.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "nats",
+    "nsc"
+  ],
+  "capabilities": [
+    {
+      "name": "nats-security-identity",
+      "description": "Create NATS operator/account/user hierarchies with nsc and connect using credentials files.",
+      "commands": [
+        "nsc add operator --generate-signing-key --sys",
+        "nsc add account prod",
+        "nsc add user api --allow-pub 'orders.*' --allow-sub 'orders.>'",
+        "nats context save --server nats://localhost:4222 --creds ~/.nsc/creds/prod/api/user.creds prod",
+        "nsc list accounts"
+      ],
+      "examples": [
+        "nsc edit user api --allow-pub-sub 'orders.*'",
+        "nsc add user svc --allow-pub 'reply.*' --allow-sub 'req.*'",
+        "nats --creds user.creds pub orders.created '{\"id\":1}'"
+      ],
+      "parameters": [
+        {
+          "name": "operator",
+          "type": "string",
+          "description": "Operator name"
+        },
+        {
+          "name": "account",
+          "type": "string",
+          "description": "Account name the user belongs to"
+        },
+        {
+          "name": "permissions",
+          "type": "array",
+          "description": "Pub/sub allow-deny rules for the user"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "NATS Security Docs",
+      "type": "documentation",
+      "source": "https://docs.nats.io/running-a-nats-service/configuration/securing_nats",
+      "description": "TLS, authentication, authorization and nsc workflow"
+    },
+    {
+      "title": "NATS CLI Security Tutorial",
+      "type": "documentation",
+      "source": "https://docs.nats.io/running-a-nats-service/nats_admin/security",
+      "description": "JWT-based operator/account/user setup with nsc"
+    }
+  ],
+  "instructions": "# NATS Security\n\nNATS uses JWT-based identity: an operator owns accounts, accounts contain users, users hold credentials.\n\n## What this skill does\n\n- Bootstraps the nsc operator/account/user hierarchy\n- Grants pub/sub permissions per user\n- Connects clients with .creds files and nats context\n\n## When to use\n\n- Multi-tenant NATS deployments\n- Enforcing least-privilege per service\n- TLS-encrypted NATS traffic\n\n## Real commands\n\n```bash\n# Operator and account\nnsc add operator --generate-signing-key --sys\nnsc add account prod\n\n# User with permissions\nnsc add user api --allow-pub 'orders.*' --allow-sub 'orders.>'\n\n# Export creds and create a context\nnsc describe user api\nnats context save prod --server nats://localhost:4222 --creds ~/.nsc/creds/prod/api/user.creds\n\n# Use it\nnats --creds user.creds pub orders.created '{\"id\":1}'\n```\n\n## Server config with JWT\n\n```conf\noperator: /etc/nats/op.jwt\nsystem_account: SYS\nresolver: {\n  type: full\n  dir: /var/lib/nats/jwt\n}\n```\n\n## Best practices\n\n- Never share operator keys; keep them offline\n- Grant narrow subject permissions per service\n- Rotate user credentials by creating new users in nsc",
+  "examples": [
+    {
+      "input": "Create a service account that can only publish to orders.*",
+      "output": "The agent scaffolds operator/account, adds the user with --allow-pub, and tests with a .creds publish."
+    },
+    {
+      "input": "Is my NATS connection encrypted?",
+      "output": "The agent shows TLS server config and verifies with `nats server info` and openssl s_client."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "nats-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-nats-security"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Nats Security. You do it through nats-security-identity: Create NATS operator/account/user hierarchies with nsc and connect using credentials files. The commands are real, e.g. `nsc add operator --generate-signing-key --sys`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "nats-security",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "nats-security-identity",
+        "name": "operator",
+        "type": "string",
+        "description": "Operator name"
+      },
+      {
+        "capability": "nats-security-identity",
+        "name": "account",
+        "type": "string",
+        "description": "Account name the user belongs to"
+      },
+      {
+        "capability": "nats-security-identity",
+        "name": "permissions",
+        "type": "array",
+        "description": "Pub/sub allow-deny rules for the user"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "nats",
+    "nsc"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/nats-security-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/nats-security-skill.yaml",
+    "checksum": "d5572e3ce3e0fd5db876667c1ab982d67a65102290cdbf3a38375b726cba5740"
+  }
+}

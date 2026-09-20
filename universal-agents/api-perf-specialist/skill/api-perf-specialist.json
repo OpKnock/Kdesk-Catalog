@@ -1,0 +1,189 @@
+{
+  "name": "api-perf-specialist",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Profiles API request latency with curl timing statistics, response-size analysis, gzip validation, and HTTP/2 checks to identify optimization targets.",
+  "keywords": [
+    "api-perf-specialist"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-perf-specialist.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-perf-specialist"
+    },
+    "generic": {
+      "system_prompt": "You take the api-perf-specialist seat. You do it through curl-profiling: Measure DNS, TCP, TLS, TTFB, and total time per request. The commands are real, e.g. `curl -w dns:%{time_namelookup}s connect:%{time_connect}s tls:%{time_appconnect}s...`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "curl-profiling",
+      "description": "Measure DNS, TCP, TLS, TTFB, and total time per request",
+      "commands": [
+        "curl -w \"dns:%{time_namelookup}s connect:%{time_connect}s tls:%{time_appconnect}s ttfb:%{time_starttransfer}s total:%{time_total}s size:%{size_download}\\n\" -o /dev/null -s https://api.example.com/v1/items",
+        "curl -s -o /dev/null -w '%{http_code} %{time_total} %{speed_download} bytes/s\\n' https://api.example.com/",
+        "curl -s -H 'Accept-Encoding: gzip' -o /dev/null -w 'compressed:%{size_download} raw:%{size_download}_of_%{size_upload}\\n' https://api.example.com/v1/items",
+        "curl -sI --http2 https://api.example.com/ | head -1",
+        "curl -s -o /dev/null -w '%{time_starttransfer}\\n' https://api.example.com/v1/items?limit=1000"
+      ],
+      "examples": [
+        "curl -w with time_appconnect isolates TLS handshake cost",
+        "TTFB over total shows server processing vs transfer time",
+        "gzip header comparison shows compression savings"
+      ],
+      "parameters": [
+        {
+          "name": "write-out-format",
+          "type": "string",
+          "description": "curl -w format string with timing variables"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Endpoint under test"
+        },
+        {
+          "name": "headers",
+          "type": "array",
+          "description": "Extra headers like Accept-Encoding or Authorization"
+        }
+      ]
+    },
+    {
+      "name": "bottleneck-identification",
+      "description": "Compare endpoints and payloads to rank bottlenecks",
+      "commands": [
+        "curl -s -o /dev/null -w '%{time_total}\\n' https://api.example.com/v1/items/1",
+        "curl -s -o /dev/null -w '%{time_total}\\n' https://api.example.com/v2/items/1",
+        "curl -s https://api.example.com/v1/items | jq '.data | length'",
+        "curl -s https://api.example.com/v1/items | wc -c"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "redis",
+    "k6"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "redis",
+    "k6",
+    "new-relic"
+  ],
+  "examples": [
+    {
+      "input": "Why is /v1/items slow?",
+      "output": "Runs phase timing, finds TTFB dominance, and flags server-side processing as the bottleneck"
+    },
+    {
+      "input": "Did compression help?",
+      "output": "Compares size_download with and without Accept-Encoding: gzip"
+    }
+  ],
+  "instructions": "# API Perf Specialist\n\nProfiling API latency with curl.\n\n## What This Skill Does\n- Measures every network phase of a request\n- Compares endpoints, versions, and payload sizes\n- Produces reproducible perf evidence for changes\n\n## When to Use\n- Triaging slow-endpoint reports\n- Comparing a fix before/after\n- Building a baseline latency map of the API\n\n## Real Commands\n\n```bash\ncurl -w \"dns:%{time_namelookup}s connect:%{time_connect}s tls:%{time_appconnect}s ttfb:%{time_starttransfer}s total:%{time_total}s\\n\" -o /dev/null -s https://api.example.com/v1/items\n```\n\n## Reading the Phases\n- time_namelookup: DNS resolution\n- time_connect: TCP handshake\n- time_appconnect: TLS handshake\n- time_starttransfer: server time to first byte\n- time_total: end-to-end including body download\n\n## Testing\n- Run 5-10 samples and take the median\n- Test from multiple regions for network variance\n- Compare gzip vs raw body sizes for payload wins\n\n## Best Practices\n- Always use -o /dev/null to isolate server time\n- Vary the query params to catch expensive filters\n- Save curl -w outputs to a CSV for trend tracking",
+  "display_name": "api-perf-specialist",
+  "knowledge": [
+    {
+      "title": "curl -w Variables",
+      "type": "documentation",
+      "source": "https://curl.se/docs/manpage.html#-w",
+      "description": "Output format variables for request timing"
+    },
+    {
+      "title": "WebPageTest Docs",
+      "type": "documentation",
+      "source": "https://docs.webpagetest.org/",
+      "description": "Browser-level performance testing"
+    }
+  ],
+  "id": "api-perf-specialist",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "curl-profiling",
+        "name": "write-out-format",
+        "type": "string",
+        "description": "curl -w format string with timing variables"
+      },
+      {
+        "capability": "curl-profiling",
+        "name": "url",
+        "type": "string",
+        "description": "Endpoint under test"
+      },
+      {
+        "capability": "curl-profiling",
+        "name": "headers",
+        "type": "array",
+        "description": "Extra headers like Accept-Encoding or Authorization"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "redis",
+    "k6"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-perf-specialist/skill/api-perf-specialist.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-perf-specialist/skill/api-perf-specialist.yaml",
+    "checksum": "649cc885cd16c355514967c7f39ed84c6bbdee1f4dadc03d7cc294b82ff8ffd6"
+  }
+}

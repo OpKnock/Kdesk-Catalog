@@ -1,0 +1,166 @@
+{
+  "name": "oauth2-revocation",
+  "display_name": "Oauth2 Revocation",
+  "category": "api",
+  "subcategory": "general",
+  "description": "OAuth2 token revocation (RFC 7009): revoke access and refresh tokens, handle revocation responses, and Keycloak flows.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "token-revocation",
+      "description": "Revoke OAuth2 tokens against RFC 7009 endpoints and verify revoked state.",
+      "commands": [
+        "curl -X POST https://auth.example.com/revoke -d \"token=eyJhbGciOi...\" -u client-id:client-secret",
+        "curl -X POST https://auth.example.com/revoke -d \"token=eyJhbGciOi...\" -d \"token_type_hint=refresh_token\" -u client-id:client-secret",
+        "curl -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/revoke -d \"token=xyz\" -u svc:svcsecret",
+        "curl -i -X POST https://auth.example.com/revoke -d \"token=xyz\" -u client:secret",
+        "curl -s -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token -d \"grant_type=refresh_token\" -d \"refresh_token=xyz\" -d \"client_id=svc\" | jq ."
+      ],
+      "examples": [
+        "curl -X POST https://auth.example.com/revoke -d \"token=xyz\" -d \"token_type_hint=refresh_token\" -u client:secret",
+        "curl -i -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/revoke -d \"token=xyz\" -u svc:svcsecret",
+        "curl -X POST https://auth.example.com/revoke -d \"token=xyz\" -u client:secret -w \"%{http_code}\\n\""
+      ],
+      "parameters": [
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "Revocation endpoint URL"
+        },
+        {
+          "name": "token",
+          "type": "string",
+          "description": "Token to revoke"
+        },
+        {
+          "name": "token_type_hint",
+          "type": "string",
+          "description": "access_token or refresh_token"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "RFC 7009 Token Revocation",
+      "type": "documentation",
+      "source": "https://datatracker.ietf.org/doc/html/rfc7009",
+      "description": "Specification of the revocation endpoint"
+    },
+    {
+      "title": "Keycloak Revocation",
+      "type": "documentation",
+      "source": "https://www.keycloak.org/docs/latest/securing_apps/",
+      "description": "Keycloak revoke endpoint usage"
+    }
+  ],
+  "instructions": "# OAuth2 Token Revocation\n\nRevocation (RFC 7009) invalidates a token so it can no longer be used.\n\n## What this skill does\n\n- Revokes access and refresh tokens\n- Handles 200 responses (even for unknown tokens)\n- Verifies revocation by attempting refresh\n\n## When to use\n\n- Logout flows that must kill server-side sessions\n- Suspending a compromised client's tokens\n\n## Real commands\n\n```bash\n# Revoke access token\ncurl -X POST https://auth.example.com/revoke \\\n  -d \"token=eyJhbGciOi...\" -u client-id:client-secret\n\n# Revoke refresh token (common for logout)\ncurl -X POST https://auth.example.com/revoke \\\n  -d \"token=eyJhbGciOi...\" -d \"token_type_hint=refresh_token\" -u client-id:client-secret\n\n# Keycloak\ncurl -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/revoke \\\n  -d \"token=xyz\" -u svc:svcsecret\n\n# Verify: refresh should now fail\ncurl -s -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token \\\n  -d \"grant_type=refresh_token\" -d \"refresh_token=xyz\" -d \"client_id=svc\"\n```\n\n## Response semantics\n\n- 200 means processed (even if token was invalid or already revoked)\n- `token_type_hint` is a hint; servers may ignore it\n\n## Best practices\n\n- Always revoke the refresh token on logout\n- Treat any non-2xx as a failure to retry\n- Combine with introspection to confirm state",
+  "examples": [
+    {
+      "input": "Implement logout so tokens stop working immediately",
+      "output": "The agent revokes the refresh token with token_type_hint=refresh_token and confirms the next refresh attempt fails."
+    },
+    {
+      "input": "Revoke a stolen token",
+      "output": "The agent revokes both the access and refresh tokens and verifies with introspection."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "oauth2-revocation.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-oauth2-revocation"
+    },
+    "generic": {
+      "system_prompt": "You take the Oauth2 Revocation seat. You do it through token-revocation: Revoke OAuth2 tokens against RFC 7009 endpoints and verify revoked state. The commands are real, e.g. `curl -X POST https://auth.example.com/revoke -d token=eyJhbGciOi... -u...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "oauth2-revocation",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "token-revocation",
+        "name": "endpoint",
+        "type": "string",
+        "description": "Revocation endpoint URL"
+      },
+      {
+        "capability": "token-revocation",
+        "name": "token",
+        "type": "string",
+        "description": "Token to revoke"
+      },
+      {
+        "capability": "token-revocation",
+        "name": "token_type_hint",
+        "type": "string",
+        "description": "access_token or refresh_token"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/oauth2-revocation-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/oauth2-revocation-skill.yaml",
+    "checksum": "3dfa350eb4dad0bc134917719f589dc559577cdc394937e2e27e442e9ab87e89"
+  }
+}

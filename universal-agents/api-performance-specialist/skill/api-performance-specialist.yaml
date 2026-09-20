@@ -1,0 +1,112 @@
+name: api-performance-specialist
+version: 2.0.0
+type: skill
+category: backend
+description: 'Defines and enforces API performance budgets: Lighthouse CI assertions, k6 thresholds in
+  pipelines, and trend tracking so latency regressions fail the build.'
+keywords:
+- api-performance
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-performance-specialist.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-performance-specialist
+  generic:
+    system_prompt: 'Your lane is api-performance-specialist. You do it through lighthouse-budgets: Run
+      Lighthouse performance audits with budget assertions. The commands are real, e.g. `npx lighthouse
+      http://localhost:3000 --only-categories=performance --output=json...`. You verify each step you
+      report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: lighthouse-budgets
+  description: Run Lighthouse performance audits with budget assertions
+  commands:
+  - npx lighthouse http://localhost:3000 --only-categories=performance --output=json --output-path=lhr.json
+  - npx lighthouse-ci --budget-config=budget.json --collect.url=https://api.example.com --assert.preset=lighthouse:recommended
+  - jq '.audits["network-requests"].details.items | length' lhr.json
+  - npx lighthouse --only-audits=server-response-time --quiet http://localhost:3000
+  examples:
+  - lighthouse --only-categories=performance audits the page performance
+  - lighthouse-ci --assert.preset fails CI when budgets breach
+  - jq on lhr.json extracts the network request count
+  parameters:
+  - name: budget-config
+    type: string
+    description: Budget JSON with resource counts and sizes
+  - name: url
+    type: string
+    description: Target URL for the audit
+  - name: assertions
+    type: object
+    description: Assertion presets or custom thresholds
+- name: ci-performance-gates
+  description: Gate merges on k6 and web performance results
+  commands:
+  - k6 run --summary-export=summary.json --threshold 'http_req_duration:p(95)<300' perf.js
+  - npx lighthouse-ci --budget-config=budget.json https://api.example.com
+  - curl -s -o /dev/null -w '%{time_total}\n' https://api.example.com/health
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- redis
+- k6
+tools:
+- node.js
+- python
+- redis
+- k6
+- new-relic
+- artillery
+examples:
+- input: Stop perf regressions in CI
+  output: Adds lighthouse-ci with budgets and k6 thresholds as required status checks
+- input: Set an API latency SLO
+  output: Configures a 300ms p95 budget and alerts when the trend crosses it
+instructions: "# API Performance Specialist\n\nPerformance budgets and CI gates.\n\n## What This Skill\
+  \ Does\n- Defines numeric budgets for latency and payload size\n- Runs audits automatically on every\
+  \ merge\n- Blocks releases that breach thresholds\n\n## When to Use\n- Preventing performance regressions\
+  \ permanently\n- Setting SLOs for user-facing API pages\n- Communicating perf expectations to teams\n\
+  \n## Real Commands\n\n```bash\nnpx lighthouse http://localhost:3000 --only-categories=performance --output=json\
+  \ --output-path=lhr.json\nnpx lighthouse-ci --budget-config=budget.json https://api.example.com --assert.preset=lighthouse:recommended\n\
+  k6 run --threshold 'http_req_duration:p(95)<300' perf.js\n```\n\n## Budget File\n\n```json\n{\n  \"\
+  performance\": 90,\n  \"resourceSizes\": [{ \"resourceType\": \"total\", \"budget\": 2500000 }]\n}\n\
+  ```\n\n## Testing\n- Run audits against staging and production\n- Compare summary.json trends across\
+  \ builds\n- Fail PRs when p95 exceeds the SLO\n\n## Best Practices\n- Budget for p95, not mean latency\n\
+  - Review and re-baseline budgets quarterly\n- Surface perf gate results as PR status checks"
+display_name: api-performance-specialist
+knowledge:
+- title: Lighthouse CI Docs
+  type: documentation
+  source: https://github.com/GoogleChrome/lighthouse-ci
+  description: Running Lighthouse audits with assertions in CI
+- title: Lighthouse Budgets
+  type: documentation
+  source: https://developer.chrome.com/docs/lighthouse/performance/performance-budgets/
+  description: Performance budget configuration reference

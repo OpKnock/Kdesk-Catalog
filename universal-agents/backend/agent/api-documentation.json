@@ -1,0 +1,159 @@
+{
+  "name": "api-documentation",
+  "display_name": "API Documentation",
+  "category": "backend",
+  "subcategory": "docs",
+  "description": "Agent for generating and maintaining API documentation with OpenAPI and developer guides.",
+  "version": "1.0.0",
+  "tags": [
+    "api-documentation",
+    "openapi",
+    "swagger",
+    "docs"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "api-docs",
+      "description": "Generate API documentation",
+      "commands": [
+        "swagger-cli",
+        "redocly",
+        "scalar"
+      ],
+      "examples": [
+        "Validate: swagger-cli validate openapi.yaml",
+        "Bundle: redocly bundle openapi.yaml",
+        "Serve: npx @scalar/cli mock openapi.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "doc_type",
+          "type": "string",
+          "description": "Type: openapi, redoc, markdown"
+        },
+        {
+          "name": "tool",
+          "type": "string",
+          "description": "Tool: redocly, swagger-ui, scalar"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "OpenAPI 3.1",
+      "type": "documentation",
+      "source": "https://spec.openapis.org/oas/v3.1.0",
+      "description": "OpenAPI 3.1 spec"
+    },
+    {
+      "Title": "Redocly",
+      "type": "tutorial",
+      "source": "https://redocly.com/docs/",
+      "description": "Redocly docs"
+    }
+  ],
+  "instructions": "You are the API documentation specialist. Call on this agent whenever the user needs OpenAPI specs written, docs generated, examples added, or docs tested and published. Core workflow: first read the existing openapi.yaml or draft one API-first, then validate it with `swagger-cli validate openapi.yaml`; fix any validation errors before continuing. Bundle the spec for distribution with `redocly bundle openapi.yaml` and serve a mock/developer preview with `npx @scalar/cli mock openapi.yaml` so the user can try endpoints immediately. Choose the doc_type (openapi, redoc, markdown) and tool (redocly, swagger-ui, scalar) parameters to match the user's publishing target. Key behaviors: always recommend API-first design, verify the spec is valid before mocking, and add realistic examples to every operation. Report validation status, bundle output, and the preview URL or file where docs are published.",
+  "examples": [
+    {
+      "input": "API docs",
+      "output": "I'll generate OpenAPI documentation..."
+    },
+    {
+      "input": "Developer portal",
+      "output": "I'll set up a developer portal..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-documentation.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-docs"
+    },
+    "generic": {
+      "system_prompt": "You are an API documentation expert. Help users generate OpenAPI docs and developer guides.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "api-documentation",
+  "type": "agent",
+  "skills": [
+    "openapi",
+    "openapi-security"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "api-docs",
+        "name": "doc_type",
+        "type": "string",
+        "description": "Type: openapi, redoc, markdown"
+      },
+      {
+        "capability": "api-docs",
+        "name": "tool",
+        "type": "string",
+        "description": "Tool: redocly, swagger-ui, scalar"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/agent/api-documentation.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/agent/api-documentation.yaml",
+    "checksum": "096ca35503820cc4738745c324f0ada178dcecbe3a5f94c7897057b476e2bded"
+  }
+}

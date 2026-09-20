@@ -1,0 +1,187 @@
+{
+  "name": "api-versioning-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Implements versioning in Java/Spring Boot: versioned controllers, request mapping constraints, media-type versioning, and endpoint tests.",
+  "keywords": [
+    "api-versioning",
+    "content-negotiation"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-versioning-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-versioning-engineer"
+    },
+    "generic": {
+      "system_prompt": "You take the api-versioning-engineer seat. You do it through spring-versioning: Version Spring REST controllers. The commands are real, e.g. `curl -s https://start.spring.io/starter.zip -d dependencies=web,validation -d...`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "spring-versioning",
+      "description": "Version Spring REST controllers",
+      "commands": [
+        "curl -s https://start.spring.io/starter.zip -d dependencies=web,validation -d packageName=com.example -o ver.zip && unzip -o ver.zip -d ver",
+        "curl -s -H 'Accept: application/vnd.example.v1+json' http://localhost:8080/api/users | jq '.version'",
+        "curl -s -H 'Accept: application/vnd.example.v2+json' http://localhost:8080/api/users | jq '.version'",
+        "./mvnw clean test",
+        "./mvnw spring-boot:run"
+      ],
+      "examples": [
+        "produces/consumes media types version routes",
+        "Accept: application/vnd.example.v2+json selects v2",
+        "Controller-level @RequestMapping versioning"
+      ],
+      "parameters": [
+        {
+          "name": "media-type",
+          "type": "string",
+          "description": "Vendor media type"
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "description": "Version in the media type"
+        },
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "Controller endpoint"
+        }
+      ]
+    },
+    {
+      "name": "version-tests",
+      "description": "Test versioned endpoints",
+      "commands": [
+        "./mvnw test -Dtest=UserControllerTest",
+        "curl -s -D- -H 'Accept: application/vnd.example.v1+json' http://localhost:8080/api/users | grep -i '^vary:'",
+        "curl -s -H 'Accept: application/json' http://localhost:8080/api/users -o /dev/null -w '%{http_code}\\n'"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "openapi-generator"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "openapi-generator",
+    "postman",
+    "stoplight-studio"
+  ],
+  "examples": [
+    {
+      "input": "Add media-type versioning",
+      "output": "Splits controllers by produces and verifies content negotiation"
+    },
+    {
+      "input": "Test version selection",
+      "output": "Writes controller tests for v1 and v2 Accept headers"
+    }
+  ],
+  "instructions": "# API Versioning Engineer\n\nSpring Boot API versioning.\n\n## What This Skill Does\n- Versions endpoints with media types\n- Controls content negotiation\n- Tests version selection\n\n## When to Use\n- Java/Spring APIs with external clients\n- Media-type versioning strategies\n- Backward-compatible evolution\n\n## Real Commands\n\n```bash\ncurl -s -H 'Accept: application/vnd.example.v1+json' http://localhost:8080/api/users | jq '.version'\ncurl -s -H 'Accept: application/vnd.example.v2+json' http://localhost:8080/api/users | jq '.version'\n```\n\n## Controller Example\n\n```java\n@RestController\n@RequestMapping(value = \"/api/users\", produces = \"application/vnd.example.v2+json\")\npublic class UserV2Controller { }\n```\n\n## Testing\n- Test each version media type\n- Verify Vary header includes Accept\n- Confirm 406 for unsupported versions\n\n\n## Best Practices\n- Register media types explicitly\n- Document versions in OpenAPI\n- Keep version-specific logic separated",
+  "display_name": "api-versioning-engineer",
+  "knowledge": [
+    {
+      "title": "Spring MVC Media Types",
+      "type": "documentation",
+      "source": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-requestmapping-media-types.html",
+      "description": "produces/consumes versioning"
+    },
+    {
+      "title": "Spring Boot Docs",
+      "type": "documentation",
+      "source": "https://docs.spring.io/spring-boot/index.html",
+      "description": "Spring Boot reference"
+    }
+  ],
+  "id": "api-versioning-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "spring-versioning",
+        "name": "media-type",
+        "type": "string",
+        "description": "Vendor media type"
+      },
+      {
+        "capability": "spring-versioning",
+        "name": "version",
+        "type": "string",
+        "description": "Version in the media type"
+      },
+      {
+        "capability": "spring-versioning",
+        "name": "endpoint",
+        "type": "string",
+        "description": "Controller endpoint"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "openapi-generator"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-versioning-engineer/skill/api-versioning-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-versioning-engineer/skill/api-versioning-engineer.yaml",
+    "checksum": "8f04f556707b8ba472874506c07891e73dcfca82617eaa6b4bcf57644450b0d7"
+  }
+}

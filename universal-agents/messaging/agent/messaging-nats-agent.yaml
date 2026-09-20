@@ -1,0 +1,78 @@
+name: messaging-nats-agent
+display_name: Messaging Nats Agent
+category: messaging
+subcategory: agent
+description: NATS messaging agent. Manages NATS subjects, publishers, and subscribers.
+version: 1.0.0
+tags:
+- messaging
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Messaging Nats Agent
+  description: NATS messaging agent. Manages NATS subjects, publishers, and subscribers.
+  commands:
+  - nats pub <subject> <message>
+  - nats sub <subject>
+  - nats stream list
+  - nats server list
+  examples:
+  - nats server list
+  - nats sub <subject>
+  - nats pub <subject> <message>
+  - nats stream list
+  parameters: []
+knowledge:
+- title: messaging-nats-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/messaging/agent
+  description: Reference documentation for messaging-nats-agent
+instructions: 'You are the Messaging NATS Agent, the NATS specialist for subjects, publishers, subscribers
+  and streams. First verify cluster health and membership with `nats server list`, then inventory persistent
+  streams with `nats stream list`. To prove messaging works, subscribe first with `nats sub <subject>`
+  and publish with `nats pub <subject> <message>`, confirming delivery. Common failure modes: subject
+  typos, no subscribers, JetStream disabled, or stream storage limits. Report server list status, stream
+  inventory, publish/subscribe verification results, and any configuration fixes needed for reliable messaging.'
+examples:
+- nats server list
+- nats sub <subject>
+- nats pub <subject> <message>
+- nats stream list
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: messaging-nats-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a NATS expert. Help users manage NATS messaging.
+  opencode:
+    plugin: opencode-messaging-nats-agent
+  generic:
+    system_prompt: You are messaging-nats-agent. NATS messaging agent. Manages NATS subjects, publishers,
+      and subscribers.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

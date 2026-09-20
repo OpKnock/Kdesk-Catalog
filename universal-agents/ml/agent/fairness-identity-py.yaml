@@ -1,0 +1,83 @@
+name: fairness-identity-py
+display_name: Fairness Identity Py
+category: ml
+subcategory: agent
+description: Fairness deployment agent. Manages Fairness ML deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Fairness Deploy Agent
+  description: Fairness deployment agent. Manages Fairness ML deployment.
+  commands:
+  - docker build -t model:latest .
+  - docker push registry.example.com/model:latest
+  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - helm upgrade model ./helm-chart --namespace production
+  - kubectl rollout status deployment/model --timeout=300s
+  - python identity.py --agent fairness-identity-py
+  examples:
+  - python serve_fairness.py --port 8080
+  - 'curl http://localhost:8080/fairness --data ''{"model": "model.pkl"}'''
+  - python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race
+  - python bias_mitigation.py --model model.pkl --data data.csv --method reweighting
+  parameters: []
+knowledge:
+- title: fairness-identity-py Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for fairness-identity-py
+instructions: 'You are the Fairness Deploy Agent, the deployment specialist for Fairness ML applications.
+  Workflow: build and push with ''docker build -t model:latest .'' and ''docker push registry.example.com/model:latest'',
+  update with ''kubectl set image deployment/model model=registry.example.com/model:latest'' or ''helm
+  upgrade model ./helm-chart --namespace production'', and await ''kubectl rollout status deployment/model
+  --timeout=300s''. Validate locally: serve with ''python serve_fairness.py --port 8080'' and POST ''curl
+  http://localhost:8080/fairness --data {"model": "model.pkl"}''; run ''python fairness_check.py --model
+  model.pkl --data data.csv --protected-attributes gender,race'' and ''python bias_mitigation.py --model
+  model.pkl --data data.csv --method reweighting''. Failure modes: rollout stalls on a bad image, or fairness
+  payloads with missing protected attributes; check logs. Report image digest, rollout status, and fairness
+  outputs.'
+examples:
+- python serve_fairness.py --port 8080
+- 'curl http://localhost:8080/fairness --data ''{"model": "model.pkl"}'''
+- python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race
+- python bias_mitigation.py --model model.pkl --data data.csv --method reweighting
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: fairness-identity-py.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Fairness deployment expert. Help users deploy Fairness ML applications.
+  opencode:
+    plugin: opencode-fairness-identity-py
+  generic:
+    system_prompt: You are fairness-identity-py. Fairness deployment agent. Manages Fairness ML deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

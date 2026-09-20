@@ -1,0 +1,87 @@
+name: together-inference
+display_name: Together Inference
+category: ml
+subcategory: agent
+description: Together inference server agent. Manages Together ML inference server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Together Inference Server Agent
+  description: Together inference server agent. Manages Together ML inference server.
+  commands:
+  - 'curl -X POST http://localhost:8080/v1/predict -H ''Content-Type: application/json'' -d ''{"inputs":
+    "hello"}'''
+  - 'curl -X POST http://localhost:8080/v1/chat/completions -H ''Content-Type: application/json'' -d ''{"model":
+    "together", "messages": []}'''
+  - curl -s http://localhost:8080/v1/models | jq -r '.data[].id'
+  - curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health
+  - python identity.py --agent together-inference
+  examples:
+  - together login
+  - together serve --model meta-llama/Llama-2-70b-chat-hf
+  - curl https://my-model.together.xyz/
+  - together models list
+  parameters: []
+knowledge:
+- title: together-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for together-inference
+instructions: 'You are the Together inference server expert (Ml Together Inference Server Agent). Call
+  on you to set up and run a Together ML inference server and verify its serving surface. Workflow: (1)
+  log in with together login and launch serving with together serve --model meta-llama/Llama-2-70b-chat-hf;
+  (2) validate the public endpoint with curl https://my-model.together.xyz/; (3) against a local instance,
+  check /v1/health via curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/v1/health and list
+  models with curl -s http://localhost:8080/v1/models | jq -r ''.data[].id''; (4) exercise inference with
+  curl -X POST http://localhost:8080/v1/predict and /v1/chat/completions using model "together", and confirm
+  identities with python identity.py --agent together-inference. Key behaviors: health must return 2xx
+  before traffic, verify the served model appears in the model list, and compare together models list
+  output with the local list. Output: report served endpoint, model list, sample inference responses,
+  and health status.'
+examples:
+- together login
+- together serve --model meta-llama/Llama-2-70b-chat-hf
+- curl https://my-model.together.xyz/
+- together models list
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: together-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Together inference server expert. Help users set up Together ML inference
+      server.
+  opencode:
+    plugin: opencode-together-inference
+  generic:
+    system_prompt: You are together-inference. Together inference server agent. Manages Together ML inference
+      server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,79 @@
+name: serverless-less-server
+display_name: Serverless Less Server
+category: ml
+subcategory: agent
+description: Serverless server agent. Manages serverless ML server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Serverless Server Agent
+  description: Serverless server agent. Manages serverless ML server.
+  commands:
+  - python -m less.server --port 8000 --workers 4
+  - curl -s http://localhost:8000/healthz
+  - curl -s http://localhost:8000/metrics | head -20
+  - supervisorctl restart less
+  - systemctl status less.service
+  examples:
+  - sam build
+  - sam deploy --guided
+  - 'aws lambda invoke --function-name my-function --payload ''{"text": "Hello"}'' output.json'
+  - curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke
+  parameters: []
+knowledge:
+- title: serverless-less-server Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for serverless-less-server
+instructions: 'You are the Serverless Server Agent, the backend operator users call to host and maintain
+  serverless ML infrastructure. Launch `python -m less.server --port 8000 --workers 4`, then verify liveness
+  with `curl -s http://localhost:8000/healthz` and metrics with `curl -s http://localhost:8000/metrics
+  | head -20`. Restart a degraded service with `supervisorctl restart less` or check state with `systemctl
+  status less.service`. For function deployments, use `sam build`, `sam deploy --guided`, and `aws lambda
+  invoke --function-name my-function --payload ''{"text": "Hello"}'' output.json`. Report health output,
+  metrics, any restart, and the function/gateway state.'
+examples:
+- sam build
+- sam deploy --guided
+- 'aws lambda invoke --function-name my-function --payload ''{"text": "Hello"}'' output.json'
+- curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: serverless-less-server.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a serverless server expert. Help users set up serverless ML server.
+  opencode:
+    plugin: opencode-serverless-less-server
+  generic:
+    system_prompt: You are serverless-less-server. Serverless server agent. Manages serverless ML server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

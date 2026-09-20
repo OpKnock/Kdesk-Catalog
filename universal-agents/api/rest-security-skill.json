@@ -1,0 +1,173 @@
+{
+  "name": "rest-security",
+  "display_name": "Rest Security",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted REST API security skill: authenticated curl flows, TLS certificate verification, OWASP ZAP baseline scans, and rate-limit/authorization probing.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "openssl",
+    "zap-baseline.py"
+  ],
+  "capabilities": [
+    {
+      "name": "rest-api-hardening",
+      "description": "Probe and harden REST APIs: auth, TLS, scanning, rate limits",
+      "commands": [
+        "curl -s -H \"Authorization: Bearer $TOKEN\" https://api.example.com/v1/users",
+        "curl -skI https://api.example.com/ -o /dev/null -w '%{http_code} %{ssl_verify_result}\\n'",
+        "openssl s_client -connect api.example.com:443 -servername api.example.com </dev/null 2>/dev/null | openssl x509 -noout -dates",
+        "zap-baseline.py -t https://staging.example.com -r zap-report.html",
+        "curl -s -o /dev/null -w '%{http_code}\\n' -X DELETE https://api.example.com/v1/orders/1 -H \"Authorization: Bearer $TOKEN\""
+      ],
+      "examples": [
+        "curl -s -o /dev/null -w '%{http_code} %{time_total}s\\n' -X POST https://api.example.com/v1/login -d '{\"user\":\"admin\",\"pass\":\"wrong\"}'",
+        "curl -s -o /dev/null -w '%{http_code}\\n' https://api.example.com/v1/users",
+        "zap-baseline.py -t https://staging.example.com -r zap-report.html"
+      ],
+      "parameters": [
+        {
+          "name": "token",
+          "type": "string",
+          "description": "Bearer token for authenticated requests"
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "description": "Base URL to scan or probe"
+        },
+        {
+          "name": "report",
+          "type": "string",
+          "description": "Output file for the ZAP scan report"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OWASP REST Security Cheat Sheet",
+      "type": "documentation",
+      "source": "https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html",
+      "description": "AuthN/Z, headers, input validation for REST APIs"
+    },
+    {
+      "title": "ZAP Baseline Scan",
+      "type": "documentation",
+      "source": "https://www.zaproxy.org/docs/docker/baseline-scan/",
+      "description": "Automated passive scanning with zap-baseline.py"
+    }
+  ],
+  "instructions": "# REST API Security\n\nHand-crafted skill for securing and auditing REST APIs.\n\n## What this skill does\n\n- Verifies auth enforcement: unauthenticated requests must be rejected\n- Checks TLS configuration and certificate expiry\n- Runs automated baseline scans with OWASP ZAP\n\n## When to use\n\n- Before exposing a new endpoint to production traffic\n- After an incident involving leaked credentials\n- Periodic compliance checks of API posture\n\n## Real commands\n\n```bash\n# Does the endpoint require auth? (expect 401/403)\ncurl -s -o /dev/null -w '%{http_code}\\n' https://api.example.com/v1/users\n\n# Authenticated call\ncurl -s -H \"Authorization: Bearer $TOKEN\" https://api.example.com/v1/users\n\n# TLS: protocol, cipher, certificate dates\ncurl -skI https://api.example.com/ -o /dev/null -w '%{ssl_protocol} %{ssl_verify_result}\\n'\nopenssl s_client -connect api.example.com:443 -servername api.example.com </dev/null 2>/dev/null | openssl x509 -noout -dates\n\n# Automated passive scan\nzap-baseline.py -t https://staging.example.com -r zap-report.html\n\n# Verify authorization: low-privilege token must not delete resources\ncurl -s -o /dev/null -w '%{http_code}\\n' -X DELETE https://api.example.com/v1/orders/1 -H \"Authorization: Bearer $LOW_PRIV_TOKEN\"\n```\n\n## Rate limit check\n\n```bash\nfor i in $(seq 1 60); do curl -s -o /dev/null -w '%{http_code} ' http://localhost:8080/api; done\n# Expect 429s after the configured burst\n```\n\n## Testing\n\n```bash\ncurl -s -o /dev/null -w '%{http_code}\\n' https://staging.example.com/healthz\n```\n\n## Best practices\n\n- Never ship endpoints that succeed without auth; test it explicitly\n- Require TLS 1.2+ and rotate certs before expiry\n- Run the ZAP baseline in CI on every staging deploy\n",
+  "examples": [
+    {
+      "input": "Check if an endpoint leaks data without a token",
+      "output": "curl -s -o /dev/null -w '%{http_code}' https://api.example.com/v1/users must return 401/403; if 200, the auth filter is broken."
+    },
+    {
+      "input": "Verify my TLS certificate is current",
+      "output": "openssl s_client -connect api.example.com:443 -servername api.example.com </dev/null 2>/dev/null | openssl x509 -noout -dates shows notBefore/notAfter."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rest-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rest-security"
+    },
+    "generic": {
+      "system_prompt": "You own Rest Security end to end. You do it through rest-api-hardening: Probe and harden REST APIs: auth, TLS, scanning, rate limits. The commands are real, e.g. `curl -s -H Authorization: Bearer $TOKEN https://api.example.com/v1/users`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rest-security",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rest-api-hardening",
+        "name": "token",
+        "type": "string",
+        "description": "Bearer token for authenticated requests"
+      },
+      {
+        "capability": "rest-api-hardening",
+        "name": "target",
+        "type": "string",
+        "description": "Base URL to scan or probe"
+      },
+      {
+        "capability": "rest-api-hardening",
+        "name": "report",
+        "type": "string",
+        "description": "Output file for the ZAP scan report"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "openssl",
+    "zap-baseline.py"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/rest-security-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/rest-security-skill.yaml",
+    "checksum": "1b9a61b45c577a04ff56fc12d973daee817190c29f8a7f09551c2a07e3152944"
+  }
+}

@@ -1,0 +1,124 @@
+name: svelte
+display_name: svelte
+category: frontend
+subcategory: general
+description: 'Builds reactive Svelte 5 apps with runes, SvelteKit routing, and the sv CLI: dev, check,
+  and build workflows.'
+version: 2.0.0
+tags:
+- frontend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npm
+- npx
+capabilities:
+- name: sv-cli
+  description: Create and manage Svelte projects with the sv CLI.
+  commands:
+  - npx sv create my-app --template minimal --types ts
+  - npm run dev
+  - npx sv add tailwindcss
+  - npx sv add eslint
+  - npm run preview
+  examples:
+  - npx sv create blog --template demo --no-install
+  - npx sv add adapter-node
+  - npx sv add --check
+  parameters:
+  - name: template
+    type: string
+    description: minimal, demo, or skeleton starter
+  - name: types
+    type: string
+    description: ts or js type setup
+  - name: add
+    type: string
+    description: Package/adapter to add via sv add
+- name: check-build
+  description: Type-check and build SvelteKit applications.
+  commands:
+  - npx svelte-check --tsconfig ./tsconfig.json
+  - npm run check
+  - npm run build
+  - npx svelte-kit sync
+  - npm run build && npx svelte-check
+  examples:
+  - npx svelte-check --tsconfig ./tsconfig.json --fail-on-warnings
+  - npx svelte-kit sync
+  - npm run check && npm run build
+  parameters:
+  - name: tsconfig
+    type: string
+    description: Path to tsconfig for svelte-check
+  - name: fail-on-warnings
+    type: string
+    description: Exit non-zero on warnings
+  - name: adapter
+    type: string
+    description: 'Deployment adapter: node, vercel, netlify, static'
+knowledge:
+- title: Svelte Docs
+  type: documentation
+  source: https://svelte.dev/docs
+  description: Runes, components, and reactivity model
+- title: SvelteKit Docs
+  type: documentation
+  source: https://svelte.dev/docs/kit
+  description: Routing, adapters, and server functions
+- title: sv CLI
+  type: documentation
+  source: https://svelte.dev/docs/cli
+  description: sv create, add, check, and kit commands
+instructions: "# Svelte\n\nBuild reactive Svelte 5 apps with runes and SvelteKit.\n\n## When to Use\n\n\
+  - Small-to-medium apps wanting minimal framework weight\n- Strong compile-time reactivity with tiny\
+  \ bundles\n- Transitioning from React with a simpler mental model\n\n## Scaffold\n\n```bash\nnpx sv\
+  \ create my-app --template minimal --types ts\nnpm run dev\n```\n\n## Runes (Svelte 5)\n\n```svelte\n\
+  <script lang=\"ts\">\n  let count = $state(0);\n  const doubled = $derived(count * 2);\n  $effect(()\
+  \ => {\n    console.log('count is', count);\n  });\n</script>\n\n<button onclick={() => count++}>Count:\
+  \ {count}</button>\n<p>Doubled: {doubled}</p>\n```\n\n## SvelteKit routing\n\n```svelte\n<!-- src/routes/+page.svelte\
+  \ -->\n<h1>Home</h1>\n\n<!-- src/routes/about/+page.svelte -->\n<h1>About</h1>\n```\n\n```ts\n// src/routes/+page.server.ts\n\
+  export async function load({ fetch }) {\n  const res = await fetch('/api/featured');\n  return { featured:\
+  \ await res.json() };\n}\n```\n\n## Check and build\n\n```bash\nnpx svelte-check --tsconfig ./tsconfig.json\
+  \ --fail-on-warnings\nnpm run build\n```\n\nChoose an adapter via `npx sv add adapter-node` for Node\
+  \ deployment.\n\n## Best practices\n\n- Use runes consistently; avoid legacy `let x = reactive` patterns.\n\
+  - Keep page server loads lean and streaming for slow APIs.\n- Gate CI on svelte-check with --fail-on-warnings.\n\
+  - Use `$derived` for anything computed from state.\n\n## Testing\n\n```bash\nnpm run check\nnpm run\
+  \ build\n```\n\nRun both before release; build failures here are usually adapter config."
+examples:
+- input: Create a Svelte 5 app with TypeScript and a counter.
+  output: Scaffolds via sv create with the minimal ts template and implements the counter with $state/$derived
+    runes.
+- input: Add Tailwind and prepare a production build.
+  output: Runs npx sv add tailwindcss, then npx svelte-check and npm run build with the node adapter.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: svelte.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-svelte
+  generic:
+    system_prompt: 'You work svelte hands-on. You do it through sv-cli: Create and manage Svelte projects
+      with the sv CLI. The commands are real, e.g. `npx sv create my-app --template minimal --types ts`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

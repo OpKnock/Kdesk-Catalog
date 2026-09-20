@@ -1,0 +1,173 @@
+{
+  "name": "pulsar-subscriptions",
+  "display_name": "Pulsar Subscriptions",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Pulsar subscription types and management: Exclusive, Shared, Failover, Key_Shared plus cursor operations.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "bin/pulsar-admin",
+    "bin/pulsar-client"
+  ],
+  "capabilities": [
+    {
+      "name": "pulsar-subscription-mgmt",
+      "description": "Create consumers with subscription types, list/peek/unsubscribe subscriptions, and manage cursors.",
+      "commands": [
+        "bin/pulsar-admin topics subscriptions list my-topic",
+        "bin/pulsar-admin topics peek-messages --subscription my-sub --count 5 my-topic",
+        "bin/pulsar-admin topics unsubscribe my-topic -s my-sub",
+        "bin/pulsar-client consume my-topic -s my-sub --subscription-type Shared --num-messages 5",
+        "bin/pulsar-admin topics subscriptions update my-topic -s my-sub -m 100"
+      ],
+      "examples": [
+        "bin/pulsar-client consume my-topic -s sub-a --subscription-type Exclusive --num-messages 3",
+        "bin/pulsar-admin topics peek-messages --subscription sub-a --count 2 my-topic",
+        "bin/pulsar-client consume my-topic -s sub-k --subscription-type Key_Shared --num-messages 4"
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "Topic name"
+        },
+        {
+          "name": "subscription",
+          "type": "string",
+          "description": "Subscription name"
+        },
+        {
+          "name": "sub_type",
+          "type": "string",
+          "description": "Exclusive, Shared, Failover or Key_Shared"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Pulsar Subscription Types",
+      "type": "documentation",
+      "source": "https://pulsar.apache.org/docs/3.0.x/concepts-messaging/#subscription-types",
+      "description": "Exclusive, Shared, Failover, Key_Shared semantics"
+    },
+    {
+      "title": "pulsar-admin topics",
+      "type": "documentation",
+      "source": "https://pulsar.apache.org/docs/3.0.x/reference-pulsar-admin-topics/",
+      "description": "Subscription list/peek/unsubscribe commands"
+    }
+  ],
+  "instructions": "# Pulsar Subscriptions\n\nSubscriptions are named cursors on a topic; the type determines message distribution.\n\n## What this skill does\n\n- Explains and creates each subscription type\n- Manages subscription cursors\n- Peeks and clears messages\n\n## When to use\n\n- Choosing the right consumption model\n- Debugging consumption lag\n\n## Real commands\n\n```bash\n# Create consumers per type\nbin/pulsar-client consume my-topic -s sub-a --subscription-type Exclusive --num-messages 5\nbin/pulsar-client consume my-topic -s sub-s --subscription-type Shared --num-messages 5\nbin/pulsar-client consume my-topic -s sub-k --subscription-type Key_Shared --num-messages 5\n\n# List subscriptions\nbin/pulsar-admin topics subscriptions list my-topic\n\n# Peek messages without consuming\nbin/pulsar-admin topics peek-messages --subscription my-sub --count 5 my-topic\n\n# Skip / unsubscribe\nbin/pulsar-admin topics subscriptions update my-topic -s my-sub -m 100\nbin/pulsar-admin topics unsubscribe my-topic -s my-sub\n```\n\n## Type cheat sheet\n\n- Exclusive: one consumer; others error\n- Shared: round-robin across consumers\n- Failover: one active, others standby in order\n- Key_Shared: messages with same key go to the same consumer\n\n## Best practices\n\n- Shared for parallel workers; Failover for ordered failover\n- Key_Shared for per-entity ordering (e.g. per order_id)\n- Monitor backlog per subscription",
+  "examples": [
+    {
+      "input": "Which subscription type keeps per-user ordering with parallelism?",
+      "output": "The agent explains Key_Shared with a key-based partitioning example."
+    },
+    {
+      "input": "My Shared subscription stops receiving messages",
+      "output": "The agent checks consumer count, backlog and paused cursors with pulsar-admin."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pulsar-subscriptions.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pulsar-subscriptions"
+    },
+    "generic": {
+      "system_prompt": "You own Pulsar Subscriptions end to end. You do it through pulsar-subscription-mgmt: Create consumers with subscription types, list/peek/unsubscribe subscriptions, and manage cursors. The commands are real, e.g. `bin/pulsar-admin topics subscriptions list my-topic`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "pulsar-subscriptions",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pulsar-subscription-mgmt",
+        "name": "topic",
+        "type": "string",
+        "description": "Topic name"
+      },
+      {
+        "capability": "pulsar-subscription-mgmt",
+        "name": "subscription",
+        "type": "string",
+        "description": "Subscription name"
+      },
+      {
+        "capability": "pulsar-subscription-mgmt",
+        "name": "sub_type",
+        "type": "string",
+        "description": "Exclusive, Shared, Failover or Key_Shared"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "bin/pulsar-admin",
+    "bin/pulsar-client"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/pulsar-subscriptions-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/pulsar-subscriptions-skill.yaml",
+    "checksum": "6eb6172bb3423ed6db71255cf0680c0e2d483ae0aea4389d3aab4f33f3c2cf7a"
+  }
+}

@@ -1,0 +1,82 @@
+name: ml-safety-aws-agent
+display_name: Ml Safety Aws Agent
+category: ml
+subcategory: agent
+description: AWS ML safety agent. Manages ML safety and responsible AI on AWS.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Safety Aws Agent
+  description: AWS ML safety agent. Manages ML safety and responsible AI on AWS.
+  commands:
+  - aws sagemaker clarify bias-detection --model <name>
+  - aws aiplatform list-model-evaluations
+  - aws sagemaker model-monitor
+  - aws sagemaker clarify explainability --model <name>
+  examples:
+  - aws sagemaker clarify explainability --model <name>
+  - aws sagemaker clarify bias-detection --model <name>
+  - aws aiplatform list-model-evaluations
+  - aws sagemaker model-monitor
+  parameters:
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+knowledge:
+- title: ml-safety-aws-agent Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for ml-safety-aws-agent
+instructions: You are the AWS ML Safety Agent, the specialist users call to enforce ML safety and responsible
+  AI practices on AWS. Explain model decisions with `aws sagemaker clarify explainability --model <name>`
+  and detect bias with `aws sagemaker clarify bias-detection --model <name>`. Monitor production behavior
+  with `aws sagemaker model-monitor` and review evaluation history with `aws aiplatform list-model-evaluations`.
+  Confirm the model name is correct and the SageMaker endpoints are configured; if a command errors, check
+  region and role permissions. Report explainability and bias findings, model-monitor status, evaluation
+  history summary, and any flagged safety issues.
+examples:
+- aws sagemaker clarify explainability --model <name>
+- aws sagemaker clarify bias-detection --model <name>
+- aws aiplatform list-model-evaluations
+- aws sagemaker model-monitor
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-safety-aws-agent.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an AWS ML safety expert. Help users manage ML safety on AWS.
+  opencode:
+    plugin: opencode-ml-safety-aws-agent
+  generic:
+    system_prompt: You are ml-safety-aws-agent. AWS ML safety agent. Manages ML safety and responsible
+      AI on AWS.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

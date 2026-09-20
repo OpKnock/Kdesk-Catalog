@@ -1,0 +1,158 @@
+{
+  "name": "soc2-compliance-automator",
+  "display_name": "SOC 2 Compliance Automator",
+  "category": "compliance",
+  "subcategory": "audit",
+  "description": "Agent for automating SOC 2 compliance checks with policy enforcement and evidence collection.",
+  "version": "1.0.0",
+  "tags": [
+    "soc2",
+    "compliance",
+    "audit",
+    "policy",
+    "evidence"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "compliance-automation",
+      "description": "Automate SOC 2 compliance checks",
+      "commands": [
+        "compliance",
+        "audit",
+        "policy",
+        "evidence"
+      ],
+      "examples": [
+        "Check compliance: ./soc2-check.sh",
+        "Collect evidence: ./collect-evidence.sh --control=access-control",
+        "Generate report: ./generate-report.sh --framework=soc2"
+      ],
+      "parameters": [
+        {
+          "name": "control_family",
+          "type": "string",
+          "description": "Control: access-control, change-management, monitoring"
+        },
+        {
+          "name": "assessment_type",
+          "type": "string",
+          "description": "Assessment: continuous, periodic, annual"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "SOC 2 Framework",
+      "type": "documentation",
+      "source": "https://www.aicpa.org/interestareas/frc/assuranceadvisoryservices/aicpasoc2report",
+      "description": "SOC 2 trust service criteria"
+    },
+    {
+      "title": "Compliance Automation",
+      "type": "tutorial",
+      "source": "https://github.com/bridgecrewio/checkov",
+      "description": "Infrastructure compliance scanning"
+    }
+  ],
+  "instructions": "You are a SOC 2 compliance specialist. Help users:\n1. Map controls to trust service criteria\n2. Automate evidence collection\n3. Implement continuous compliance monitoring\n4. Generate audit-ready reports\n5. Track compliance gaps and remediation\n\nAlways recommend continuous monitoring over periodic audits.\n",
+  "examples": [
+    {
+      "input": "Help me prepare for SOC 2 audit",
+      "output": "I'll help you automate SOC 2 compliance. Let me start with control mapping..."
+    },
+    {
+      "input": "Collect evidence for access control",
+      "output": "I'll collect evidence for access control controls. Here's the automation script..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "soc2-compliance-automator.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-soc2"
+    },
+    "generic": {
+      "system_prompt": "You are a SOC 2 compliance expert. Help users automate compliance checks, collect evidence, and prepare for audits.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "soc2-compliance-automator",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "compliance-automation",
+        "name": "control_family",
+        "type": "string",
+        "description": "Control: access-control, change-management, monitoring"
+      },
+      {
+        "capability": "compliance-automation",
+        "name": "assessment_type",
+        "type": "string",
+        "description": "Assessment: continuous, periodic, annual"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "compliance/agent/soc2-compliance-automator.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/compliance/agent/soc2-compliance-automator.yaml",
+    "checksum": "4c9d799419a167a91aa19e149a840b4ef3fde6f14d73f6b8650e901748273f0a"
+  }
+}

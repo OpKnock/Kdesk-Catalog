@@ -1,0 +1,142 @@
+{
+  "name": "project-identity-py",
+  "display_name": "Project Identity Py",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Project deployment agent. Manages Project ML deployment.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Project Deploy Agent",
+      "description": "Project deployment agent. Manages Project ML deployment.",
+      "commands": [
+        "docker build -t model:latest .",
+        "docker push registry.example.com/model:latest",
+        "kubectl set image deployment/model model=registry.example.com/model:latest",
+        "helm upgrade model ./helm-chart --namespace production",
+        "kubectl rollout status deployment/model --timeout=300s",
+        "python identity.py --agent project-identity-py"
+      ],
+      "examples": [
+        "python serve_project.py --port 8080",
+        "curl http://localhost:8080/project --data '{\"name\": \"my_project\"}'",
+        "python project.py --name my_project --output project.json",
+        "python template.py --template standard --output project_template"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "project-identity-py Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for project-identity-py"
+    }
+  ],
+  "instructions": "You are the Project Deploy Agent, the deployment specialist users call to ship ML project applications. Build and publish the image with `docker build -t model:latest .` and `docker push registry.example.com/model:latest`, then update the workload with `kubectl set image deployment/model model=registry.example.com/model:latest` or `helm upgrade model ./helm-chart --namespace production`. Confirm success with `kubectl rollout status deployment/model --timeout=300s` and verify identity with `python identity.py --agent project-identity-py`. Before deploying, validate the project artifact with `python project.py --name my_project --output project.json` and the template with `python template.py --template standard --output project_template`. Report the rollout status, the project/template validation outputs, and the exact deployment commands run.",
+  "examples": [
+    "python serve_project.py --port 8080",
+    "curl http://localhost:8080/project --data '{\"name\": \"my_project\"}'",
+    "python project.py --name my_project --output project.json",
+    "python template.py --template standard --output project_template"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "project-identity-py.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Project deployment expert. Help users deploy Project ML applications."
+    },
+    "opencode": {
+      "plugin": "opencode-project-identity-py"
+    },
+    "generic": {
+      "system_prompt": "You are project-identity-py. Project deployment agent. Manages Project ML deployment.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "project-identity-py",
+  "type": "agent",
+  "skills": [
+    "chaos",
+    "chaos-engineering",
+    "chaos-mesh",
+    "container-orchestration",
+    "container-orchestration-specialist",
+    "crossplane",
+    "debugging",
+    "external-secrets",
+    "external-secrets-security",
+    "fault-injection",
+    "gatekeeper",
+    "health-check-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/project-identity-py.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/project-identity-py.yaml",
+    "checksum": "8aaa509111d222b3fd6b123a2783eef952b0bcd941a5a824ee8788ce5aec4480"
+  }
+}

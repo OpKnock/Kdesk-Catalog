@@ -1,0 +1,128 @@
+{
+  "name": "serverless-inference",
+  "display_name": "Serverless Inference",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Serverless inference server agent. Manages serverless ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Serverless Inference Server Agent",
+      "description": "Serverless inference server agent. Manages serverless ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"less\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent serverless-inference"
+      ],
+      "examples": [
+        "sam build",
+        "sam deploy --guided",
+        "aws lambda invoke --function-name my-function --payload '{\"text\": \"Hello\"}' output.json",
+        "curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "serverless-inference Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for serverless-inference"
+    }
+  ],
+  "instructions": "You are the Serverless Inference Server Agent, the expert users call to set up inference serving in serverless environments. Package with `sam build` and `sam deploy --guided`, then invoke with `aws lambda invoke --function-name my-function --payload '{\"text\": \"Hello\"}' output.json` and `curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke`. Validate the API surface with `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'`, `curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"less\", \"messages\": []}'`, and health via `curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health`; confirm identity with `python identity.py`. Report the deployed endpoint, invocation output, and health status.",
+  "examples": [
+    "sam build",
+    "sam deploy --guided",
+    "aws lambda invoke --function-name my-function --payload '{\"text\": \"Hello\"}' output.json",
+    "curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "serverless-inference.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a serverless inference server expert. Help users set up serverless ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-serverless-inference"
+    },
+    "generic": {
+      "system_prompt": "You are serverless-inference. Serverless inference server agent. Manages serverless ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "serverless-inference",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/serverless-inference.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/serverless-inference.yaml",
+    "checksum": "8891ac074ec928d4da30ed3c7659c8c17548c79178c6361e878e21579a74f559"
+  }
+}

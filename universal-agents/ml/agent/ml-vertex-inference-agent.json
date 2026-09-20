@@ -1,0 +1,128 @@
+{
+  "name": "ml-vertex-inference-agent",
+  "display_name": "Ml Vertex Inference Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Vertex AI inference agent. Manages ML inference on Google Vertex AI.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Vertex Inference Agent",
+      "description": "Vertex AI inference agent. Manages ML inference on Google Vertex AI.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"vertex\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent ml-vertex-inference-agent"
+      ],
+      "examples": [
+        "gcloud ai models list",
+        "gcloud ai endpoints predict --endpoint <endpoint> --json-request request.json",
+        "gcloud ai models predict --model <model> --json-request request.json",
+        "gcloud ai predictions predict --model <model> --json-request request.json"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-vertex-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-vertex-inference-agent"
+    }
+  ],
+  "instructions": "You are the Vertex AI inference expert (Ml Vertex Inference Agent). Call on you to run and manage ML inference on Google Vertex AI and against local OpenAI-compatible endpoints. Workflow: (1) list available Vertex models with gcloud ai models list; (2) run predictions with gcloud ai endpoints predict --endpoint <endpoint> --json-request request.json or gcloud ai models predict --model <model> --json-request request.json; (3) for local serving, health-check with curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health and list models via curl -s http://localhost:8080/v1/models | jq -r '.data[].id'; (4) exercise with curl -X POST http://localhost:8080/v1/predict and /v1/chat/completions (model \"vertex\"); confirm identity with python identity.py --agent ml-vertex-inference-agent. Key behaviors: ensure request.json matches the endpoint input schema and the model id exists; 2xx health before traffic. Output: model list, prediction results, health code, and endpoint inventory.",
+  "examples": [
+    "gcloud ai models list",
+    "gcloud ai endpoints predict --endpoint <endpoint> --json-request request.json",
+    "gcloud ai models predict --model <model> --json-request request.json",
+    "gcloud ai predictions predict --model <model> --json-request request.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-vertex-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Vertex AI inference expert. Help users deploy ML inference on Google Vertex AI."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-vertex-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-vertex-inference-agent. Vertex AI inference agent. Manages ML inference on Google Vertex AI.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-vertex-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-vertex-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-vertex-inference-agent.yaml",
+    "checksum": "d8605ddafdc63be252672f19fe92f4c678ab0873eb508d5e6c9892bac88c14ab"
+  }
+}

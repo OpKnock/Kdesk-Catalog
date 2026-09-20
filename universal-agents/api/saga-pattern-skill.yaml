@@ -1,0 +1,106 @@
+name: saga-pattern
+display_name: Saga Pattern
+category: api
+subcategory: general
+description: 'Hand-crafted saga pattern skill: choreographed and orchestrated sagas with Temporal CLI,
+  workflow inspection, compensation design, and failure injection.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kubectl
+- temporal
+capabilities:
+- name: temporal-saga
+  description: Model distributed transactions as sagas and drive them with Temporal
+  commands:
+  - temporal server start-dev
+  - temporal workflow start --workflow-id order-42 --type OrderSaga --task-queue orders
+  - temporal workflow show --workflow-id order-42
+  - temporal workflow terminate --workflow-id order-42 --reason 'manual cleanup'
+  - kubectl get pods -n temporal
+  examples:
+  - temporal workflow start --workflow-id order-42 --type OrderSaga --task-queue orders
+  - temporal workflow show --workflow-id order-42
+  - temporal workflow describe --workflow-id order-42
+  parameters:
+  - name: workflow_id
+    type: string
+    description: Unique workflow identifier for the saga run
+  - name: workflow_type
+    type: string
+    description: Workflow class/function name
+  - name: task_queue
+    type: string
+    description: Temporal task queue the workers poll
+knowledge:
+- title: Microsoft saga pattern
+  type: documentation
+  source: https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/saga/saga
+  description: Choreography vs orchestration and compensation design
+- title: Temporal CLI reference
+  type: documentation
+  source: https://docs.temporal.io/cli/
+  description: temporal workflow commands and flags
+instructions: "# Saga Pattern\n\nHand-crafted skill for distributed transactions using the saga pattern.\n\
+  \n## What this skill does\n\n- Breaks a distributed transaction into local steps with compensations\n\
+  - Orchestrates steps with Temporal workflows and worker task queues\n- Inspects and terminates sagas\
+  \ with the Temporal CLI\n\n## When to use\n\n- An operation spans services (order, payment, inventory,\
+  \ shipping)\n- Distributed 2PC is not viable and eventual consistency is acceptable\n- You need retries,\
+  \ timeouts, and audit trails for the transaction\n\n## Real commands\n\n```bash\n# Local Temporal server\
+  \ for development\ntemporal server start-dev\n\n# Start a saga workflow\ntemporal workflow start --workflow-id\
+  \ order-42 --type OrderSaga --task-queue orders\n\n# Inspect progress and history\ntemporal workflow\
+  \ show --workflow-id order-42\ntemporal workflow describe --workflow-id order-42\n\n# Clean up a stuck\
+  \ saga\ntemporal workflow terminate --workflow-id order-42 --reason 'manual cleanup'\n\n# If running\
+  \ Temporal in k8s\nkubectl get pods -n temporal\n```\n\n## Saga sketch (Go)\n\n```go\nfunc OrderSaga(ctx\
+  \ workflow.Context, o Order) error {\n    if err := workflow.ExecuteActivity(ctx, ReservePayment, o).Get(ctx,\
+  \ nil); err != nil {\n        return err\n    }\n    if err := workflow.ExecuteActivity(ctx, ReserveInventory,\
+  \ o).Get(ctx, nil); err != nil {\n        workflow.ExecuteActivity(ctx, CancelPayment, o) // compensation\n\
+  \        return err\n    }\n    return workflow.ExecuteActivity(ctx, ConfirmOrder, o).Get(ctx, nil)\n\
+  }\n```\n\n## Failure testing\n\n```bash\ntemporal workflow start --workflow-id order-43 --type OrderSaga\
+  \ --task-queue orders\ntemporal workflow terminate --workflow-id order-43 --reason 'fail'\ntemporal\
+  \ workflow show --workflow-id order-43   # verify compensation ran\n```\n\n## Best practices\n\n- Write\
+  \ a compensation for every step that reserves or mutates state\n- Make compensations idempotent; they\
+  \ may run twice\n- Prefer orchestrated sagas when steps change often\n"
+examples:
+- input: Order placement touches payment and inventory
+  output: Model one Temporal workflow per order; reserve payment, reserve inventory, and on any failure
+    execute the reverse activities as compensations.
+- input: A saga is stuck mid-flight
+  output: temporal workflow show --workflow-id order-42 to find the pending activity, then terminate if
+    needed.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: saga-pattern.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-saga-pattern
+  generic:
+    system_prompt: 'Your lane is Saga Pattern. You do it through temporal-saga: Model distributed transactions
+      as sagas and drive them with Temporal. The commands are real, e.g. `temporal server start-dev`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

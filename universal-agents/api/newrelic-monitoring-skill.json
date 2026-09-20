@@ -1,0 +1,171 @@
+{
+  "name": "newrelic-monitoring",
+  "display_name": "Newrelic Monitoring",
+  "category": "api",
+  "subcategory": "general",
+  "description": "New Relic monitoring: APM agents, NRQL queries, entity search, dashboards and alert conditions.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "newrelic"
+  ],
+  "capabilities": [
+    {
+      "name": "newrelic-apm-operations",
+      "description": "Install APM agents, query telemetry with NRQL, and inspect entities via the New Relic CLI.",
+      "commands": [
+        "newrelic entity search --name \"my-app\"",
+        "newrelic nrql \"SELECT count(*) FROM Transaction SINCE 1 hour ago\"",
+        "newrelic nerdgraph query --apiKey $NR_API_KEY --query '{ actor { account(id: 1) { name } } }'",
+        "newrelic diagnostics run",
+        "curl -s 'https://api.newrelic.com/v2/applications.json' -H 'Api-Key: $NR_API_KEY'"
+      ],
+      "examples": [
+        "newrelic nrql \"SELECT average(duration) FROM Transaction WHERE appName = 'my-app' SINCE 1 day ago\"",
+        "newrelic entity search --domain APM --type APPLICATION",
+        "newrelic diagnostics run"
+      ],
+      "parameters": [
+        {
+          "name": "nrql",
+          "type": "string",
+          "description": "NRQL query string"
+        },
+        {
+          "name": "app_name",
+          "type": "string",
+          "description": "APM application name"
+        },
+        {
+          "name": "api_key",
+          "type": "string",
+          "description": "New Relic API key"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "New Relic Documentation",
+      "type": "documentation",
+      "source": "https://docs.newrelic.com/",
+      "description": "APM agents, NRQL, dashboards and alerts"
+    },
+    {
+      "title": "New Relic CLI GitHub",
+      "type": "documentation",
+      "source": "https://github.com/newrelic/newrelic-cli",
+      "description": "newrelic entity/nrql/nerdgraph command reference"
+    }
+  ],
+  "instructions": "# New Relic Monitoring\n\nInstrument apps with New Relic APM and drive it from the CLI for instant answers.\n\n## What this skill does\n\n- Installs and configures APM agents\n- Runs NRQL queries against telemetry\n- Manages entities and dashboards\n\n## When to use\n\n- Debugging slow transactions\n- Verifying agent health after deployment\n\n## Real commands\n\n```bash\n# Entity search\nnewrelic entity search --name \"my-app\"\nnewrelic entity search --domain APM --type APPLICATION\n\n# NRQL queries\nnewrelic nrql \"SELECT count(*) FROM Transaction SINCE 1 hour ago\"\nnewrelic nrql \"SELECT average(duration) FROM Transaction WHERE appName = 'my-app' SINCE 1 day ago\"\n\n# GraphQL access\nnewrelic nerdgraph query --apiKey $NR_API_KEY \\\n  --query '{ actor { account(id: 1) { name } } }'\n\n# Agent diagnostics\nnewrelic diagnostics run\n```\n\n## APM agent config (Node example)\n\n```env\nNEW_RELIC_LICENSE_KEY=xxxx\nNEW_RELIC_APP_NAME=my-app\nNEW_RELIC_LOG_LEVEL=info\n```\n\n```js\nrequire('newrelic');\n```\n\n## Best practices\n\n- Use the same app name across all instances\n- Query with explicit SINCE windows to bound cost\n- Alert on NRQL conditions, not static thresholds",
+  "examples": [
+    {
+      "input": "Which transactions are slow in the last hour?",
+      "output": "The agent runs a NRQL query for slow Transaction segments and drills into the worst ones."
+    },
+    {
+      "input": "My app stopped reporting to New Relic",
+      "output": "The agent runs newrelic diagnostics run and checks license key and app name config."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "newrelic-monitoring.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-newrelic-monitoring"
+    },
+    "generic": {
+      "system_prompt": "You are the Newrelic Monitoring specialist. You do it through newrelic-apm-operations: Install APM agents, query telemetry with NRQL, and inspect entities via the New Relic CLI. The commands are real, e.g. `newrelic entity search --name my-app`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "newrelic-monitoring",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "newrelic-apm-operations",
+        "name": "nrql",
+        "type": "string",
+        "description": "NRQL query string"
+      },
+      {
+        "capability": "newrelic-apm-operations",
+        "name": "app_name",
+        "type": "string",
+        "description": "APM application name"
+      },
+      {
+        "capability": "newrelic-apm-operations",
+        "name": "api_key",
+        "type": "string",
+        "description": "New Relic API key"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "newrelic"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/newrelic-monitoring-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/newrelic-monitoring-skill.yaml",
+    "checksum": "25b547899684e635590c2ac00becdd7d41e903439a9c837202a626bbf0be44c0"
+  }
+}

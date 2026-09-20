@@ -1,0 +1,103 @@
+name: soak-testing
+display_name: Soak Testing
+category: api
+subcategory: general
+description: 'Hand-crafted soak testing skill: 24h k6 endurance runs, resource trend watching with kubectl
+  top/free/vmstat, and memory-leak detection for long-running services.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- dstat
+- free
+- kubectl
+capabilities:
+- name: soak-run
+  description: Run long-duration load tests and watch resource trends
+  commands:
+  - k6 run --vus 10 --duration 24h soak.js
+  - kubectl top pods -n prod
+  - free -h && vmstat 1 10
+  - dstat -tcdmn 10
+  - kubectl get hpa api
+  examples:
+  - k6 run --vus 10 --duration 24h soak.js --out json=soak.json
+  - kubectl top pods -l app=api -n prod
+  - vmstat 1 10
+  parameters:
+  - name: vus
+    type: integer
+    description: Virtual users sustained for the whole run
+  - name: duration
+    type: string
+    description: Run length, e.g. 24h or 48h
+  - name: ramp
+    type: string
+    description: Ramp-up stage before the plateau
+knowledge:
+- title: k6 soak testing guide
+  type: documentation
+  source: https://grafana.com/docs/k6/latest/testing-guides/test-types/soak-testing/
+  description: Soak test design and thresholds
+- title: k6 options reference
+  type: documentation
+  source: https://grafana.com/docs/k6/latest/using-k6/k6-options/reference/
+  description: vus, duration, stages options
+instructions: "# Soak Testing\n\nHand-crafted skill for endurance testing long-running services.\n\n##\
+  \ What this skill does\n\n- Sustains moderate load for hours to days with k6\n- Watches memory, CPU,\
+  \ and connection trends\n- Catches leaks and drift that short tests miss\n\n## When to use\n\n- Before\
+  \ a launch where the service will run 24/7\n- Investigating memory growth after a release\n- Verifying\
+  \ HPA can hold steady state under constant load\n\n## Real commands\n\n```bash\n# 24-hour endurance\
+  \ run with 10 sustained users\nk6 run --vus 10 --duration 24h soak.js\n\n# Save results for trend analysis\n\
+  k6 run --vus 10 --duration 24h soak.js --out json=soak.json\n\n# Kubernetes resource trend\nkubectl\
+  \ top pods -l app=api -n prod\n\n# Host-level watch\nfree -h && vmstat 1 10\ndstat -tcdmn 10\n\n# Autoscaling\
+  \ behavior\nkubectl get hpa api\n```\n\n## k6 script\n\n```javascript\nexport const options = {\n  stages:\
+  \ [\n    { duration: \"1h\", target: 10 },   // ramp\n    { duration: \"22h\", target: 10 },  // plateau\n\
+  \    { duration: \"1h\", target: 0 },    // ramp down\n  ],\n  thresholds: {\n    http_req_failed: [\"\
+  rate<0.01\"],\n    http_req_duration: [\"p(95)<500\"],\n  },\n};\n\nexport default function () {\n \
+  \ http.get(\"http://localhost:8080/api/v1/users\");\n}\n```\n\n## Testing\n\n```bash\nk6 run --vus 10\
+  \ --duration 30m soak.js --out json=short-soak.json\nkubectl top pods -n prod | sort -k2 -h\n```\n\n\
+  ## Best practices\n\n- Check memory growth: RSS should plateau, never climb linearly\n- Capture k6 JSON\
+  \ output and pod metrics at the same interval\n- A 24h run is the minimum for leak confidence\n"
+examples:
+- input: Is my API leaking memory over 48 hours?
+  output: Run k6 with sustained users while sampling kubectl top pods every 10 minutes; a steady climb
+    in MEM without plateau means a leak.
+- input: How long should the soak run be?
+  output: At least 24h with a constant load at 50-70% of expected peak, plus 30-60 minute ramps at both
+    ends.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: soak-testing.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-soak-testing
+  generic:
+    system_prompt: 'You own Soak Testing end to end. You do it through soak-run: Run long-duration load
+      tests and watch resource trends. The commands are real, e.g. `k6 run --vus 10 --duration 24h soak.js`.
+      You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

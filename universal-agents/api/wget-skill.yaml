@@ -1,0 +1,178 @@
+name: wget
+display_name: Wget
+category: api
+subcategory: general
+description: 'Download and mirror resources with wget: recursive crawling, resume, authentication, rate
+  limiting, and scripted batch downloads.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- wget
+capabilities:
+- name: wget-downloads
+  description: Fetch, resume, and mirror HTTP resources
+  commands:
+  - wget -c https://downloads.example.com/release.tar.gz
+  - wget -r -l 2 -np https://docs.example.com/api/
+  - wget --mirror -p --convert-links -P ./mirror https://example.com
+  - wget -i urls.txt --limit-rate=1m -q
+  - 'wget --header=''Authorization: Bearer token123'' -O data.json https://api.example.com/v1/export'
+  examples:
+  - wget -c -t 10 --timeout=30 https://downloads.example.com/big-file.iso
+  - wget -r -A '*.pdf' -np -l 3 https://example.com/docs
+  - wget --user=ci --password=secret https://repo.example.com/artifact.zip
+  parameters:
+  - name: recursive
+    type: boolean
+    description: Follow links recursively (-r)
+  - name: level
+    type: integer
+    description: Maximum recursion depth (-l)
+  - name: rate
+    type: string
+    description: Bandwidth limit, e.g. 1m, 500k (--limit-rate)
+knowledge:
+- title: GNU Wget Manual
+  type: documentation
+  source: https://www.gnu.org/software/wget/manual/wget.html
+  description: 'All wget options: recursion, mirroring, auth, scripting'
+- title: Wget WARC Guide
+  type: documentation
+  source: https://www.gnu.org/software/wget/manual/wget.html#WARC
+  description: Archiving web content as WARC files
+instructions: '# wget
+
+
+  ## What this skill does
+
+  Download files and mirror websites with GNU wget: single-file downloads with resume, recursive site
+  crawling, full mirroring with link conversion, authenticated requests, and batch downloads from URL
+  lists.
+
+
+  ## When to use
+
+  - Downloading large artifacts reliably
+
+  - Mirroring documentation for offline use
+
+  - Scripting downloads in CI
+
+
+  ## Real commands
+
+  ```bash
+
+  # Resume an interrupted download
+
+  wget -c https://downloads.example.com/release.tar.gz
+
+
+  # Recursive crawl (2 levels, no parent)
+
+  wget -r -l 2 -np https://docs.example.com/api/
+
+
+  # Full mirror with assets and converted links
+
+  wget --mirror -p --convert-links -P ./mirror https://example.com
+
+
+  # Batch download with bandwidth cap
+
+  wget -i urls.txt --limit-rate=1m -q
+
+
+  # Authenticated API export
+
+  wget --header=''Authorization: Bearer token123'' -O data.json https://api.example.com/v1/export
+
+
+  # Basic auth
+
+  wget --user=ci --password=secret https://repo.example.com/artifact.zip
+
+
+  # Retry-tolerant download
+
+  wget -c -t 10 --timeout=30 https://downloads.example.com/big-file.iso
+
+  ```
+
+
+  ## Common flags
+
+  - `-c` continue/resume
+
+  - `-r -l N -np` recursive, depth, no parent
+
+  - `-p` page requisites (css/js/img)
+
+  - `--convert-links` rewrite links for offline use
+
+  - `-P DIR` output directory
+
+  - `-q` quiet for scripts
+
+
+  ## Best practices
+
+  - Use `-c` for large downloads
+
+  - Cap recursion depth before mirroring big sites
+
+  - Prefer `--header` over `--user` for token auth
+
+  - Never mirror sites that forbid it in robots.txt
+
+
+  ## Testing
+
+  ```bash
+
+  wget --spider -S https://example.com 2>&1 | grep -E ''HTTP|Content-Length''
+
+  wget -q -O /dev/null -w ''%{http_code}'' https://example.com
+
+  ```'
+examples:
+- input: Mirror the API docs for offline use
+  output: Runs --mirror -p --convert-links into ./mirror and confirms index.html loads without network.
+- input: My download keeps dying at 90%
+  output: Resumes with wget -c and adds retries and timeout settings.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: wget.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-wget
+  generic:
+    system_prompt: 'You work Wget hands-on. You do it through wget-downloads: Fetch, resume, and mirror
+      HTTP resources. The commands are real, e.g. `wget -c https://downloads.example.com/release.tar.gz`.
+      You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

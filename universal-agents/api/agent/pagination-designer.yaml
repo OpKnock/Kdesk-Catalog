@@ -1,0 +1,93 @@
+name: pagination-designer
+display_name: Pagination Designer
+category: api
+subcategory: ux
+description: Agent for implementing pagination strategies with cursor-based, offset, and keyset pagination.
+version: 1.0.0
+tags:
+- pagination
+- cursor
+- offset
+- keyset
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: pagination
+  description: Implement pagination strategies
+  commands:
+  - curl
+  - httpie
+  - postman
+  examples:
+  - 'Offset: GET /items?offset=0&limit=20'
+  - 'Cursor: GET /items?cursor=abc123&limit=20'
+  - 'Keyset: GET /items?created_after=2024-01-01&limit=20'
+  parameters:
+  - name: pagination_type
+    type: string
+    description: 'Type: offset, cursor, keyset, time-based'
+  - name: default_page_size
+    type: integer
+    description: Default items per page
+knowledge:
+- Title: Pagination Patterns
+  type: documentation
+  source: https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design#paginate-the-data
+  description: API pagination best practices
+- Title: Cursor Pagination
+  type: tutorial
+  source: https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api
+  description: GitHub cursor pagination guide
+instructions: 'You are a pagination specialist. Help users:
+
+  1. Choose pagination strategy
+
+  2. Implement cursor-based pagination
+
+  3. Handle large datasets
+
+  4. Optimize database queries
+
+  5. Document pagination APIs
+
+
+  Always recommend cursor-based for real-time data.
+
+  '
+examples:
+- input: Add pagination
+  output: I'll implement cursor-based pagination for efficient traversal...
+- input: Slow pagination
+  output: I'll optimize with keyset pagination and proper indexing...
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: pagination-designer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-pagination
+  generic:
+    system_prompt: You are a pagination expert. Help users implement efficient pagination strategies for
+      APIs and databases.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

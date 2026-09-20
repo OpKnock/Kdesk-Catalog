@@ -1,0 +1,120 @@
+name: log-aggregation
+display_name: Log Aggregation
+category: api
+subcategory: general
+description: 'Collect logs from many sources into one place: Fluent Bit pipelines, journald/tail forwarding,
+  and Kubernetes pod log collection.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- docker
+- fluent-bit
+- journalctl
+- kubectl
+- tail
+capabilities:
+- name: fluent-bit
+  description: Run Fluent Bit with input/output pipelines.
+  commands:
+  - fluent-bit -c fluent-bit.conf
+  - fluent-bit -i tail -p path=/var/log/app.log -o stdout
+  - fluent-bit -i tail -p path=/var/log/nginx/access.log -o forward -p host=10.0.0.5 -p port=24224
+  - fluent-bit -i systemd -p systemd_filter=_SYSTEMD_UNIT=myapp.service -o stdout
+  examples:
+  - fluent-bit -i tail -p path=/var/log/app.log -o stdout
+  - fluent-bit -i tail -p path=/var/log/nginx/access.log -o forward -p host=10.0.0.5 -p port=24224
+  - fluent-bit -i systemd -p systemd_filter=_SYSTEMD_UNIT=myapp.service -o stdout
+  parameters:
+  - name: input
+    type: string
+    description: 'Input plugin: tail, systemd, docker, kube.'
+  - name: path
+    type: string
+    description: Log file path for tail input.
+  - name: output
+    type: string
+    description: 'Output plugin: stdout, forward, elasticsearch, loki.'
+- name: source-forwarding
+  description: Forward logs from journald, docker, and Kubernetes.
+  commands:
+  - journalctl -u myapp --since '30 min ago' -f
+  - docker logs --tail 100 -f nginx
+  - kubectl logs --all-containers=true --since=1h deploy/api
+  - tail -f /var/log/app/app.log | logger -t app -p user.info
+  examples:
+  - journalctl -u myapp --since '30 min ago' -f
+  - kubectl logs --all-containers=true --since=1h deploy/api
+  - docker logs --tail 100 -f nginx
+  parameters:
+  - name: unit
+    type: string
+    description: systemd unit name.
+  - name: pod
+    type: string
+    description: Kubernetes workload selector.
+knowledge:
+- title: Fluent Bit Docs
+  type: documentation
+  source: https://docs.fluentbit.io/manual/
+  description: 'Official Fluent Bit manual: inputs, outputs, parsers.'
+- title: journalctl man page
+  type: documentation
+  source: https://man7.org/linux/man-pages/man1/journalctl.1.html
+  description: journalctl reference.
+instructions: "# Log Aggregation\n\nCentralize logs from hosts, containers, and clusters.\n\n## What this\
+  \ skill does\n\n- Runs Fluent Bit pipelines for tail/systemd/docker inputs.\n- Forwards logs to central\
+  \ sinks (forward, elasticsearch, loki).\n- Streams journald, docker, and k8s logs for debugging.\n\n\
+  ## When to use\n\n- Building a central log store for audit and debugging.\n- Routing app logs to observability\
+  \ platforms.\n- Standardizing log collection across hosts.\n\n## Real commands\n\n```bash\n# Fluent\
+  \ Bit: file -> stdout\nfluent-bit -i tail -p path=/var/log/app.log -o stdout\n\n# Fluent Bit: nginx\
+  \ access log -> fluent forward\nfluent-bit -i tail -p path=/var/log/nginx/access.log \\\n  -o forward\
+  \ -p host=10.0.0.5 -p port=24224\n\n# Fluent Bit: systemd unit\nfluent-bit -i systemd -p systemd_filter=_SYSTEMD_UNIT=myapp.service\
+  \ -o stdout\n\n# Config-file mode\nfluent-bit -c fluent-bit.conf\n\n# Direct streams\njournalctl -u\
+  \ myapp --since '30 min ago' -f\ndocker logs --tail 100 -f nginx\nkubectl logs --all-containers=true\
+  \ --since=1h deploy/api\ntail -f /var/log/app/app.log | logger -t app -p user.info\n```\n\n## fluent-bit.conf\
+  \ example\n\n```ini\n[INPUT]\n    Name tail\n    Path /var/log/app/*.log\n    Tag app.*\n\n[OUTPUT]\n\
+  \    Name forward\n    Match app.*\n    Host 10.0.0.5\n    Port 24224\n```\n\n## Testing\n\n```bash\n\
+  fluent-bit -i tail -p path=/var/log/app.log -o stdout --dry-run\n```\n\n## Best practices\n\n- Tag logs\
+  \ by source so routing rules stay clean.\n- Add parsers (nginx, json) at ingestion for structured fields.\n\
+  - Buffer locally (file buffer) so outages don't drop logs.\n"
+examples:
+- input: Ship nginx access logs to the central collector
+  output: fluent-bit -i tail -p path=/var/log/nginx/access.log -o forward -p host=10.0.0.5 -p port=24224
+- input: Watch my service logs live
+  output: journalctl -u myapp --since '30 min ago' -f
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: log-aggregation.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-log-aggregation
+  generic:
+    system_prompt: 'You own Log Aggregation end to end. You do it through fluent-bit: Run Fluent Bit with
+      input/output pipelines. The commands are real, e.g. `fluent-bit -c fluent-bit.conf`. You work hands-on
+      and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

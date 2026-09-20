@@ -1,0 +1,173 @@
+{
+  "name": "rollbar-error-tracking",
+  "display_name": "Rollbar Error Tracking",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Rollbar skill: Python SDK reporting, deploy tracking, item and deploy REST API calls, and querying recent errors for triage.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "pip",
+    "python"
+  ],
+  "capabilities": [
+    {
+      "name": "rollbar-reporting",
+      "description": "Report errors and deploys to Rollbar and query items",
+      "commands": [
+        "pip install rollbar",
+        "python -c 'import rollbar; rollbar.init(\"POST_SERVER_ITEM_ACCESS_TOKEN\", \"prod\"); rollbar.report_message(\"booted\", \"info\")'",
+        "curl -X POST https://api.rollbar.com/api/1/item/ -H 'Content-Type: application/json' -d '{\"access_token\":\"POST_SERVER_ITEM_ACCESS_TOKEN\",\"data\":{\"environment\":\"prod\",\"body\":{\"message\":{\"body\":\"test\"}}}}'",
+        "curl -X POST https://api.rollbar.com/api/1/deploy/ -H 'Content-Type: application/json' -d '{\"access_token\":\"POST_SERVER_ITEM_ACCESS_TOKEN\",\"environment\":\"prod\",\"revision\":\"abc123\"}'",
+        "curl -s 'https://api.rollbar.com/api/1/items/?access_token=READ_TOKEN&environment=prod' | jq -r '.result.items[0].title'"
+      ],
+      "examples": [
+        "curl -s 'https://api.rollbar.com/api/1/items/?access_token=READ_TOKEN&environment=prod&level=error' | jq '.result.items | length'",
+        "python -c 'import rollbar; rollbar.report_exc_info()'",
+        "curl -X POST https://api.rollbar.com/api/1/deploy/ -H 'Content-Type: application/json' -d '{\"access_token\":\"POST_SERVER_ITEM_ACCESS_TOKEN\",\"environment\":\"prod\",\"revision\":\"abc123\"}'"
+      ],
+      "parameters": [
+        {
+          "name": "access_token",
+          "type": "string",
+          "description": "Server or read access token"
+        },
+        {
+          "name": "environment",
+          "type": "string",
+          "description": "Environment name, e.g. prod or staging"
+        },
+        {
+          "name": "revision",
+          "type": "string",
+          "description": "Git SHA associated with a deploy"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Rollbar Python SDK",
+      "type": "documentation",
+      "source": "https://docs.rollbar.com/docs/python",
+      "description": "init, report_message, report_exc_info, and deploy tracking"
+    },
+    {
+      "title": "Rollbar API reference",
+      "type": "documentation",
+      "source": "https://docs.rollbar.com/reference",
+      "description": "Item, deploy, and occurrence endpoints"
+    }
+  ],
+  "instructions": "# Rollbar Error Tracking\n\nHand-crafted skill for error monitoring with Rollbar.\n\n## What this skill does\n\n- Initializes the Python SDK and reports messages and exceptions\n- Posts items and deploys directly through the REST API\n- Queries items for triage and release correlation\n\n## When to use\n\n- Wiring a new service into error monitoring\n- Marking a release so errors can be attributed to it\n- Checking whether an incident has fresh errors\n\n## Real commands\n\n```bash\n# SDK\npip install rollbar\n\n# Report a message\npython -c 'import rollbar; rollbar.init(\"POST_SERVER_ITEM_ACCESS_TOKEN\", \"prod\"); rollbar.report_message(\"booted\", \"info\")'\n\n# Report the current exception in a handler\npython -c 'import rollbar; rollbar.report_exc_info()'\n\n# POST an item directly\ncurl -X POST https://api.rollbar.com/api/1/item/ -H 'Content-Type: application/json' -d '{\"access_token\":\"POST_SERVER_ITEM_ACCESS_TOKEN\",\"data\":{\"environment\":\"prod\",\"body\":{\"message\":{\"body\":\"test\"}}}}'\n\n# Track a deploy\ncurl -X POST https://api.rollbar.com/api/1/deploy/ -H 'Content-Type: application/json' -d '{\"access_token\":\"POST_SERVER_ITEM_ACCESS_TOKEN\",\"environment\":\"prod\",\"revision\":\"abc123\"}'\n\n# Query recent items\ncurl -s 'https://api.rollbar.com/api/1/items/?access_token=READ_TOKEN&environment=prod' | jq -r '.result.items[0].title'\n```\n\n## SDK config\n\n```python\nimport rollbar\nrollbar.init(\"POST_SERVER_ITEM_ACCESS_TOKEN\", \"prod\")\ntry:\n    risky_call()\nexcept Exception:\n    rollbar.report_exc_info()\n    raise\n```\n\n## Testing\n\n```bash\ncurl -X POST https://api.rollbar.com/api/1/item/ -H 'Content-Type: application/json' -d '{\"access_token\":\"POST_SERVER_ITEM_ACCESS_TOKEN\",\"data\":{\"environment\":\"test\",\"body\":{\"message\":{\"body\":\"smoke\"}}}}'\n```\n\n## Best practices\n\n- Call rollbar.init once at startup with the environment name\n- Send deploys after every release for blame attribution\n- Use read tokens for dashboards, never for writes\n",
+  "examples": [
+    {
+      "input": "Report an exception from Python",
+      "output": "Wrap the call in try/except with rollbar.report_exc_info() after rollbar.init(token, \"prod\")."
+    },
+    {
+      "input": "Tag a release in Rollbar",
+      "output": "curl -X POST https://api.rollbar.com/api/1/deploy/ -H 'Content-Type: application/json' -d '{\"access_token\":\"POST_SERVER_ITEM_ACCESS_TOKEN\",\"environment\":\"prod\",\"revision\":\"abc123\"}'."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rollbar-error-tracking.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rollbar-error-tracking"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Rollbar Error Tracking. You do it through rollbar-reporting: Report errors and deploys to Rollbar and query items. The commands are real, e.g. `pip install rollbar`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rollbar-error-tracking",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rollbar-reporting",
+        "name": "access_token",
+        "type": "string",
+        "description": "Server or read access token"
+      },
+      {
+        "capability": "rollbar-reporting",
+        "name": "environment",
+        "type": "string",
+        "description": "Environment name, e.g. prod or staging"
+      },
+      {
+        "capability": "rollbar-reporting",
+        "name": "revision",
+        "type": "string",
+        "description": "Git SHA associated with a deploy"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "pip",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/rollbar-error-tracking-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/rollbar-error-tracking-skill.yaml",
+    "checksum": "8f73128a93c87933eedac537fd7ecd2119088adbc8704ab52bf4323b58dc0b4c"
+  }
+}

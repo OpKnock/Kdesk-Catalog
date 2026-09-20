@@ -1,0 +1,172 @@
+name: api-deploy-specialist
+version: 2.0.0
+type: skill
+category: devops
+description: 'Deep expertise in API deployment: GitOps with Argo CD, progressive delivery with Flagger,
+  and rollback strategy design.'
+keywords:
+- api-deployment
+- canary
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-deploy-specialist.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-deploy-specialist
+  generic:
+    system_prompt: 'You work api-deploy-specialist hands-on. You do it through gitops-deploys: Drive deployments
+      through GitOps with Argo CD. The commands are real, e.g. `argocd login argocd.example.com`. You
+      answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: gitops-deploys
+  description: Drive deployments through GitOps with Argo CD
+  commands:
+  - argocd login argocd.example.com
+  - argocd app create api --repo https://git.example.com/api-config --path deploy --dest-namespace prod
+    --dest-server https://kubernetes.default.svc
+  - argocd app sync api
+  - argocd app get api
+  - argocd app rollback api 5
+  examples:
+  - argocd app create api --repo https://git.example.com/api-config --path deploy --dest-namespace prod
+    --dest-server https://kubernetes.default.svc
+  - argocd app sync api && argocd app get api
+  - argocd app rollback api 5
+  parameters:
+  - name: app
+    type: string
+    description: Argo CD app name
+  - name: revision
+    type: string
+    description: Rollback revision
+- name: progressive-delivery
+  description: Analyze canary metrics and promote or abort automatically
+  commands:
+  - kubectl argo rollouts get rollout api --watch
+  - kubectl argo rollouts promote api
+  - kubectl argo rollouts abort api
+  - kubectl argo rollouts list rollouts -n prod
+  - kubectl argo rollouts status api -n prod
+  examples:
+  - kubectl argo rollouts get rollout api --watch -n prod
+  - kubectl argo rollouts promote api -n prod
+  - kubectl argo rollouts status api -n prod --timeout 300
+  parameters:
+  - name: rollout
+    type: string
+    description: Rollout name
+  - name: namespace
+    type: string
+    description: Namespace
+prerequisites:
+- kubernetes
+- argocd
+- istio
+tools:
+- kubernetes
+- argocd
+- istio
+- helm
+- terraform
+examples:
+- input: Move API deploys to GitOps with Argo CD
+  output: Creates the Argo CD app, syncs from Git, and enables one-command rollbacks
+- input: Set up metric-driven canary releases
+  output: Configures Argo Rollouts with analysis templates that auto-promote or abort on error rate
+instructions: '# API Deploy Specialist
+
+
+  Operates advanced deployment pipelines: GitOps and progressive delivery.
+
+
+  ## When to Use
+
+  - Git-as-source-of-truth deployments
+
+  - Metric-driven canary releases
+
+  - Auditable rollbacks
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # GitOps
+
+  argocd login argocd.example.com
+
+  argocd app create api --repo https://git.example.com/api-config --path deploy --dest-namespace prod
+  --dest-server https://kubernetes.default.svc
+
+  argocd app sync api
+
+  argocd app rollback api 5
+
+
+  # Progressive delivery
+
+  kubectl argo rollouts get rollout api --watch
+
+  kubectl argo rollouts promote api
+
+  kubectl argo rollouts abort api
+
+  ```
+
+
+  ## Analysis Design
+
+  - Define success metrics (error rate, latency)
+
+  - Auto-abort on threshold breach
+
+  - Manual promote for big changes
+
+
+  ## Testing
+
+  Simulate a bad canary and verify the analysis step aborts automatically.
+
+
+  ## Best Practices
+
+  - Every state is in Git
+
+  - Rollbacks are one command, not a project'
+display_name: api-deploy-specialist
+knowledge:
+- title: Argo CD Docs
+  type: documentation
+  source: https://argo-cd.readthedocs.io/en/stable/
+  description: Apps, syncs, rollbacks
+- title: Argo Rollouts
+  type: documentation
+  source: https://argo-rollouts.readthedocs.io/en/stable/
+  description: Canary analysis and promotion

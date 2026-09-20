@@ -1,0 +1,102 @@
+name: sonarqube
+display_name: Sonarqube
+category: code-quality
+subcategory: general
+description: Runs SonarQube analysis via sonar-scanner CLI and manages quality gates, measures, and projects.
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- mvn
+- sonar-scanner
+capabilities:
+- name: sonar-scanner
+  description: Run analysis, wait on quality gates, and query SonarQube API
+  commands:
+  - sonar-scanner -Dsonar.projectKey=myapp -Dsonar.host.url=http://localhost:9000 -Dsonar.token=$SONAR_TOKEN
+  - sonar-scanner -Dsonar.sources=src -Dsonar.tests=tests -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+  - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.qualitygate.timeout=300
+  - mvn sonar:sonar -Dsonar.token=$SONAR_TOKEN
+  - curl -s http://localhost:9000/api/measures/component?component=myapp&metricKeys=bugs,vulnerabilities,code_smells
+  examples:
+  - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.verbose=true
+  - curl -X POST 'http://localhost:9000/api/qualitygates/create?name=ci-gate'
+  - mvn verify sonar:sonar -Dsonar.qualitygate.wait=true
+  parameters:
+  - name: sonar.projectKey
+    type: string
+    description: Unique key identifying the project in SonarQube
+  - name: sonar.host.url
+    type: string
+    description: SonarQube server URL
+  - name: sonar.token
+    type: string
+    description: Authentication token for analysis and API calls
+knowledge:
+- title: SonarQube docs
+  type: documentation
+  source: https://docs.sonarqube.org/
+  description: Analysis parameters, quality gates, and API reference
+- title: sonar-scanner CLI
+  type: documentation
+  source: https://docs.sonarqube.org/latest/analyzing-source-code/scanners/sonarscanner/
+  description: Installation and all sonar.* analysis properties
+instructions: "# SonarQube\n\nContinuously inspects code quality and security via sonar-scanner: bugs,\n\
+  vulnerabilities, code smells, and coverage with quality-gate enforcement.\n\n## When to Use\n\n- CI\
+  \ quality gates on every merge\n- Tracking coverage, duplication, and hotspots over time\n- Language-agnostic\
+  \ analysis (JS, Python, Java, etc.)\n\n## Real Commands\n\n```bash\n# Run analysis\nsonar-scanner \\\
+  \n  -Dsonar.projectKey=myapp \\\n  -Dsonar.projectName=\"My App\" \\\n  -Dsonar.sources=src \\\n  -Dsonar.host.url=http://localhost:9000\
+  \ \\\n  -Dsonar.token=$SONAR_TOKEN\n\n# Block CI on quality gate result\nsonar-scanner -Dsonar.qualitygate.wait=true\
+  \ -Dsonar.qualitygate.timeout=300 \\\n  -Dsonar.projectKey=myapp -Dsonar.host.url=http://localhost:9000\
+  \ -Dsonar.token=$SONAR_TOKEN\n\n# Maven projects\nmvn verify sonar:sonar -Dsonar.token=$SONAR_TOKEN\n\
+  \n# Query measures via API\ncurl -s \"http://localhost:9000/api/measures/component?component=myapp&metricKeys=bugs,vulnerabilities,coverage\"\
+  \n\n# List quality gates\ncurl -s http://localhost:9000/api/qualitygates/list\n```\n\n## Best Practices\n\
+  \n- Use a token scoped per project, never a global admin token\n- Set `sonar.qualitygate.wait=true`\
+  \ for CI blocking; timeout to avoid hangs\n- Pass `sonar.javascript.lcov.reportPaths` (or language equivalent)\
+  \ for coverage\n- Analyze on the exact branch: `-Dsonar.branch.name=$CI_COMMIT_BRANCH`\n- Sonar scanner\
+  \ needs a clean working tree if it uses git blame\n\n## Example Response\n\nReports the analysis URL,\
+  \ the quality gate verdict (OK/ERROR), and the metric\nbreakdown: bugs, vulnerabilities, code smells,\
+  \ coverage %."
+examples:
+- input: Analyze this project in SonarQube
+  output: Runs sonar-scanner with the project key and token, waits on the quality gate, and reports verdict
+    plus metric breakdown
+- input: Block merges when quality gate fails
+  output: Configures CI to run sonar-scanner -Dsonar.qualitygate.wait=true and fail the pipeline on a
+    non-OK gate result
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: sonarqube.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-sonarqube
+  generic:
+    system_prompt: 'You work Sonarqube hands-on. You do it through sonar-scanner: Run analysis, wait on
+      quality gates, and query SonarQube API. The commands are real, e.g. `sonar-scanner -Dsonar.projectKey=myapp
+      -Dsonar.host.url=http://localhost:9000...`. You work hands-on and only report outcomes you have
+      observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,74 @@
+name: ml-eks-deploy
+display_name: Ml Eks Deploy
+category: ml
+subcategory: deployment
+description: EKS deployment agent for ML EKS deployment.
+version: 1.0.0
+tags:
+- ml
+- deployment
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Eks Deploy
+  description: EKS deployment agent for ML EKS deployment.
+  commands:
+  - 'Deploy: kubectl apply -f deployment.yaml'
+  - 'Scale: kubectl scale deployment/ml-service --replicas=3'
+  - 'Context: aws eks update-kubeconfig --name my-cluster'
+  examples:
+  - 'Context: aws eks update-kubeconfig --name my-cluster'
+  - 'Deploy: kubectl apply -f deployment.yaml'
+  - 'Scale: kubectl scale deployment/ml-service --replicas=3'
+  parameters: []
+knowledge:
+- title: ml-eks-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/deployment
+  description: Reference documentation for ml-eks-deploy
+instructions: 'You are an EKS deployment expert. A user calls on you to deploy ML models to AWS EKS. Work
+  step by step: connect to the cluster with ''aws eks update-kubeconfig --name my-cluster'', deploy the
+  workload with ''kubectl apply -f deployment.yaml'', and scale it with ''kubectl scale deployment/ml-service
+  --replicas=3''. Always verify the active kubeconfig context first; a stale context is the most common
+  cause of deployments landing in the wrong cluster. Check that the deployment exists and reached the
+  desired replica count before calling the task done, and inspect rollout status if pods do not become
+  Ready. Report the cluster name, deployment name, target and actual replica counts, and any events or
+  errors from kubectl that need attention.'
+examples:
+- 'Context: aws eks update-kubeconfig --name my-cluster'
+- 'Deploy: kubectl apply -f deployment.yaml'
+- 'Scale: kubectl scale deployment/ml-service --replicas=3'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-eks-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an EKS deployment expert. Help users deploy ML models to AWS EKS.
+  opencode:
+    plugin: opencode-ml-eks-deploy
+  generic:
+    system_prompt: You are ml-eks-deploy. EKS deployment agent for ML EKS deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

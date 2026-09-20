@@ -1,0 +1,171 @@
+{
+  "name": "nats-consumers",
+  "display_name": "Nats Consumers",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Manage NATS JetStream consumers: create push/pull consumers, inspect delivery, and handle ack policies.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "nats"
+  ],
+  "capabilities": [
+    {
+      "name": "jetstream-consumers",
+      "description": "Create and manage JetStream consumers with the nats CLI: pull/push modes, ack policies, and inspection.",
+      "commands": [
+        "nats consumer add ORDERS NEW --pull --deliver all --max-deliver 5 --ack explicit",
+        "nats consumer add ORDERS PUSH --push --deliver subject ords.push",
+        "nats consumer ls ORDERS",
+        "nats consumer info ORDERS NEW",
+        "nats consumer rm ORDERS NEW"
+      ],
+      "examples": [
+        "nats consumer add ORDERS WORKER --pull --ack explicit --max-deliver 3 --backoff 5s",
+        "nats consumer info ORDERS WORKER",
+        "nats consumer ls ORDERS --names"
+      ],
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "string",
+          "description": "Stream name the consumer belongs to"
+        },
+        {
+          "name": "consumer",
+          "type": "string",
+          "description": "Consumer durable name"
+        },
+        {
+          "name": "ack_policy",
+          "type": "string",
+          "description": "explicit, all, none or at-least-once"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "NATS JetStream Consumers",
+      "type": "documentation",
+      "source": "https://docs.nats.io/using-nats/developer/develop_jetstream/consumers",
+      "description": "Push vs pull consumers, ack policies, delivery semantics"
+    },
+    {
+      "title": "nats CLI consumer docs",
+      "type": "documentation",
+      "source": "https://docs.nats.io/using-nats/command-line/",
+      "description": "nats consumer add/info/ls/pause reference"
+    }
+  ],
+  "instructions": "# NATS Consumers\n\nJetStream consumers read messages from a stream, tracking delivery and acknowledgements per consumer.\n\n## What this skill does\n\n- Creates push and pull consumers\n- Configures ack policies, max-deliver and backoff\n- Inspects delivery stats and errors\n\n## When to use\n\n- Reliable event processing with redelivery\n- Worker pools pulling batches of messages\n\n## Real commands\n\n```bash\n# Pull consumer with explicit acks and redelivery\nnats consumer add ORDERS NEW --pull --deliver all --ack explicit --max-deliver 5\n\n# Push consumer to a delivery subject\nnats consumer add ORDERS PUSH --push --deliver subject ords.push\n\n# List and inspect\nnats consumer ls ORDERS\nnats consumer info ORDERS NEW\n\n# Delete\nnats consumer rm ORDERS NEW\n```\n\n## Ack policies\n\n- `--ack explicit`: ack each message (default for pull)\n- `--ack all`: ack all up to sequence number\n- `--ack none`: fire-and-forget\n- `--ack at-least-once`: auto-ack on receipt\n\n## Best practices\n\n- Name consumers for their workload (e.g. `email-sender`)\n- Set `--max-deliver` to bound poison messages\n- Monitor `num_ack_pending` and `num_redelivered` in consumer info",
+  "examples": [
+    {
+      "input": "Create a worker consumer that retries failures 3 times",
+      "output": "The agent runs `nats consumer add ORDERS WORKER --pull --ack explicit --max-deliver 3` and explains redelivery."
+    },
+    {
+      "input": "Why is my consumer stuck with pending messages?",
+      "output": "The agent checks `nats consumer info` for num_ack_pending and inactive delivery, and shows pause/resume commands."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "nats-consumers.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-nats-consumers"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Nats Consumers. You do it through jetstream-consumers: Create and manage JetStream consumers with the nats CLI: pull/push modes, ack policies, and inspection. The commands are real, e.g. `nats consumer add ORDERS NEW --pull --deliver all --max-deliver 5 --ack explicit`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "nats-consumers",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "jetstream-consumers",
+        "name": "stream",
+        "type": "string",
+        "description": "Stream name the consumer belongs to"
+      },
+      {
+        "capability": "jetstream-consumers",
+        "name": "consumer",
+        "type": "string",
+        "description": "Consumer durable name"
+      },
+      {
+        "capability": "jetstream-consumers",
+        "name": "ack_policy",
+        "type": "string",
+        "description": "explicit, all, none or at-least-once"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "nats"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/nats-consumers-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/nats-consumers-skill.yaml",
+    "checksum": "f089d3d44f89d6394ced06c005563e350c6f20d59f4a039aba54a761a380361b"
+  }
+}

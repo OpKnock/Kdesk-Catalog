@@ -1,0 +1,101 @@
+name: fly-io
+display_name: Fly Io
+category: api
+subcategory: general
+description: 'Deploy applications to Fly.io edge infrastructure with flyctl: launch apps, scale machines,
+  manage volumes, and wire secrets.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- fly
+capabilities:
+- name: flyctl-deploy
+  description: Launch, deploy, scale, and monitor apps on Fly.io.
+  commands:
+  - fly launch --name myapp --region ams
+  - fly deploy
+  - fly status
+  - fly scale count 3 --region ams
+  - fly secrets set DATABASE_URL=postgres://...
+  - fly volumes create data --size 10 --region ams
+  - fly logs
+  examples:
+  - fly launch --name myapp --region ams && fly deploy
+  - fly scale count 3 --region ams && fly status
+  - fly secrets set DATABASE_URL=postgres://... && fly deploy
+  parameters:
+  - name: app-name
+    type: string
+    description: Fly app name
+  - name: region
+    type: string
+    description: Deployment region like ams or iad
+  - name: count
+    type: integer
+    description: Number of machines/instances
+knowledge:
+- title: Fly.io docs
+  type: documentation
+  source: https://fly.io/docs/
+  description: flyctl reference, machines, volumes, and regions
+- title: flyctl reference
+  type: documentation
+  source: https://fly.io/docs/flyctl/
+  description: Complete flyctl command reference
+instructions: "# Fly.io\n\n## What this skill does\n\nFly.io runs containerized apps on micro-VMs distributed\
+  \ across regions. flyctl launches apps, deploys from Dockerfiles, scales machines, attaches volumes,\
+  \ and manages secrets.\n\n## When to use\n\n- Deploying an app close to users in multiple regions\n\
+  - Attaching persistent volumes to stateful services\n- Simple single-command deploys from CI\n\n## Real\
+  \ commands\n\n```bash\n# Launch and deploy\nfly launch --name myapp --region ams\nfly deploy\n\n# Status\
+  \ and logs\nfly status\nfly logs\n\n# Scale\nfly scale count 3 --region ams\nfly scale show\n\n# Secrets\
+  \ and volumes\nfly secrets set DATABASE_URL=postgres://user:pass@host/db\nfly volumes create data --size\
+  \ 10 --region ams\n```\n\n## fly.toml example\n\n```toml\napp = \"myapp\"\nprimary_region = \"ams\"\n\
+  \n[build]\n  dockerfile = \"Dockerfile\"\n\n[mounts]\n  source = \"data\"\n  destination = \"/data\"\
+  \n\n[[services]]\n  internal_port = 8080\n  protocol = \"tcp\"\n  [[services.ports]]\n    handlers =\
+  \ [\"http\"]\n    port = 80\n```\n\n## Testing\n\n```bash\n# Deploy a preview environment\nfly deploy\
+  \ --image myapp:preview\nfly curl myapp.fly.dev/health\n```\n\n## Best practices\n\n- Mount volumes\
+  \ only where state lives; keep app machines stateless.\n- Use `fly secrets` for config, not env in fly.toml.\n\
+  - Pin regions for latency-sensitive workloads.\n- Test `fly launch --ha=false` for single-node dev,\
+  \ then enable HA.\n- Watch `fly status` machine states before and after deploys.\n"
+examples:
+- input: Deploy our app to Europe
+  output: fly launch --name myapp --region ams, add the volume mount, then fly deploy and verify with
+    fly status.
+- input: App needs a database connection string
+  output: fly secrets set DATABASE_URL=... followed by fly deploy to restart machines with the new secret.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: fly-io.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-fly-io
+  generic:
+    system_prompt: 'You are the Fly Io specialist. You do it through flyctl-deploy: Launch, deploy, scale,
+      and monitor apps on Fly.io. The commands are real, e.g. `fly launch --name myapp --region ams`.
+      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,234 @@
+{
+  "name": "real-time-systems",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "embedded",
+  "description": "Builds real-time features: WebSockets with wscat/websocat, SSE streams, and gRPC bidirectional streaming.",
+  "keywords": [
+    "real-time"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "real-time-systems.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-real-time-systems"
+    },
+    "generic": {
+      "system_prompt": "Your lane is real-time-systems. You do it through websocket: Test and debug WebSocket endpoints. The commands are real, e.g. `wscat -c ws://localhost:8080/ws`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "websocket",
+      "description": "Test and debug WebSocket endpoints.",
+      "commands": [
+        "wscat -c ws://localhost:8080/ws",
+        "websocat ws://localhost:8080/ws",
+        "wscat -c wss://api.example.com/ws -H 'Authorization: Bearer $TOKEN'",
+        "websocat -n ws://localhost:8080/ws --protocol json",
+        "curl -N http://localhost:8080/events"
+      ],
+      "examples": [
+        "wscat -c ws://localhost:8080/ws --wait 10",
+        "echo '{\"type\":\"ping\"}' | websocat -n ws://localhost:8080/ws",
+        "curl -N -H 'Accept: text/event-stream' http://localhost:8080/events"
+      ],
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "ws/wss endpoint"
+        },
+        {
+          "name": "protocol",
+          "type": "string",
+          "description": "Subprotocol header"
+        },
+        {
+          "name": "header",
+          "type": "string",
+          "description": "Extra HTTP headers"
+        }
+      ]
+    },
+    {
+      "name": "grpc-streams",
+      "description": "Exercise streaming gRPC services.",
+      "commands": [
+        "grpcurl -plaintext localhost:50051 list",
+        "grpcurl -plaintext -d '{\"message\":\"hello\"}' localhost:50051 chat.ChatService/Chat",
+        "grpcurl -plaintext -d '{\"query\":\"tail\"}' localhost:50051 logs.LogService/Stream",
+        "grpcurl -plaintext -import-path proto -proto chat/chat.proto localhost:50051 chat.ChatService/Chat",
+        "curl -N -G http://localhost:8080/api/events"
+      ],
+      "examples": [
+        "grpcurl -plaintext -d '{\"message\":\"hi\"}' localhost:50051 chat.ChatService/Chat | head -20",
+        "grpcurl -plaintext -d '{}' localhost:50051 logs.LogService/Stream --max-msg-sz 10000000",
+        "curl -N -H 'Accept: text/event-stream' http://localhost:8080/stream"
+      ],
+      "parameters": [
+        {
+          "name": "service",
+          "type": "string",
+          "description": "Service/Method name"
+        },
+        {
+          "name": "data",
+          "type": "string",
+          "description": "Request JSON"
+        },
+        {
+          "name": "max-msg-sz",
+          "type": "number",
+          "description": "Max message size"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "c",
+    "rust",
+    "rtos",
+    "linux"
+  ],
+  "tools": [
+    "c",
+    "rust",
+    "rtos",
+    "linux",
+    "gdb"
+  ],
+  "examples": [
+    {
+      "input": "Test the chat WebSocket before release.",
+      "output": "Connects with wscat, exchanges ping/pong frames, and verifies the auth header path."
+    },
+    {
+      "input": "Debug why the gRPC event stream disconnects.",
+      "output": "Streams with grpcurl, raises the message size limit, and checks server logs for idle timeouts."
+    }
+  ],
+  "instructions": "# Real-Time Systems\n\nBuild and verify live-updating systems.\n\n## When to Use\n\n- Chat, notifications, live dashboards\n- Streaming logs and metrics\n- Bidirectional sync between clients\n\n## WebSocket testing\n\n```bash\nwscat -c ws://localhost:8080/ws\necho '{\"type\":\"ping\"}' | websocat -n ws://localhost:8080/ws\n```\n\n## SSE (server-sent events)\n\n```bash\ncurl -N -H 'Accept: text/event-stream' http://localhost:8080/events\n```\n\nSSE is one-way and auto-reconnects - simpler than WebSockets for feeds.\n\n## gRPC streams\n\n```bash\ngrpcurl -plaintext -d '{\"message\":\"hello\"}' localhost:50051 chat.ChatService/Chat\n```\n\n## Architecture decisions\n\n- WebSocket: full-duplex, persistent connections.\n- SSE: server push only, HTTP-native, automatic reconnect.\n- gRPC streaming: typed, efficient, for internal services.\n- Protocol choice drives load balancer config (sticky vs plain HTTP).\n\n## Reliability\n\n- Heartbeats/pings to detect dead connections.\n- Reconnect with exponential backoff and jitter.\n- Buffer/ack server-side for unreliable clients.\n- Scale: keep-alive connections need LB support and idle timeouts.\n\n## Testing\n\n```bash\nwscat -c ws://localhost:8080/ws --wait 10\ncurl -N http://localhost:8080/events | head -5\n```\n\nVerify reconnect behavior by killing the client mid-stream.",
+  "display_name": "real-time-systems",
+  "knowledge": [
+    {
+      "title": "MDN WebSockets",
+      "type": "documentation",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API",
+      "description": "WebSocket protocol and client API"
+    },
+    {
+      "title": "websocat",
+      "type": "documentation",
+      "source": "https://github.com/vi/websocat",
+      "description": "netcat-style WebSocket client"
+    },
+    {
+      "title": "gRPC streaming",
+      "type": "documentation",
+      "source": "https://grpc.io/docs/what-is-grpc/core-concepts/",
+      "description": "Unary, server, client, and bidirectional streaming"
+    }
+  ],
+  "id": "real-time-systems",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "websocket",
+        "name": "url",
+        "type": "string",
+        "description": "ws/wss endpoint"
+      },
+      {
+        "capability": "websocket",
+        "name": "protocol",
+        "type": "string",
+        "description": "Subprotocol header"
+      },
+      {
+        "capability": "websocket",
+        "name": "header",
+        "type": "string",
+        "description": "Extra HTTP headers"
+      },
+      {
+        "capability": "grpc-streams",
+        "name": "service",
+        "type": "string",
+        "description": "Service/Method name"
+      },
+      {
+        "capability": "grpc-streams",
+        "name": "data",
+        "type": "string",
+        "description": "Request JSON"
+      },
+      {
+        "capability": "grpc-streams",
+        "name": "max-msg-sz",
+        "type": "number",
+        "description": "Max message size"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "c",
+    "rust",
+    "rtos",
+    "linux"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "real-time-systems/skill/real-time-systems.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/real-time-systems/skill/real-time-systems.yaml",
+    "checksum": "401186d53cbda03f8ad63f952055fe83cc2bef04977ed4a346b7512b828eed32"
+  }
+}

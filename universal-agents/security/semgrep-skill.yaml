@@ -1,0 +1,134 @@
+name: semgrep
+display_name: semgrep
+category: security
+subcategory: general
+description: Finds bugs and security issues with Semgrep's pattern-based SAST across 30+ languages, including
+  custom rules and CI integration.
+version: 2.0.0
+tags:
+- security
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- semgrep
+capabilities:
+- name: semgrep-scan
+  description: Scan code with built-in or custom rule packs.
+  commands:
+  - semgrep scan --config auto .
+  - semgrep scan --config p/owasp-top-ten .
+  - semgrep scan --config p/python .
+  - semgrep scan --config rules.yml src/
+  - semgrep scan --config auto --severity ERROR --json -o results.json
+  examples:
+  - semgrep scan --config auto .
+  - semgrep scan --config p/owasp-top-ten .
+  - semgrep scan --config p/python --severity ERROR src/
+  parameters:
+  - name: config
+    type: string
+    description: 'Ruleset: auto, p/..., local YAML file'
+  - name: severity
+    type: string
+    description: 'Minimum severity: ERROR, WARNING, INFO'
+  - name: jsonOutput
+    type: string
+    description: Path to write JSON results
+- name: custom-rules
+  description: Write and test custom pattern rules.
+  commands:
+  - semgrep scan --config custom.yml .
+  - semgrep scan --validate --config custom.yml
+  - semgrep scan --config semgrep-rules/ --dry-run
+  - semgrep scan --pattern 'eval($X)' --lang python .
+  examples:
+  - semgrep scan --validate --config custom.yml
+  - semgrep scan --pattern 'exec($X)' --lang python .
+  - semgrep scan --config semgrep-rules/ .
+  parameters:
+  - name: pattern
+    type: string
+    description: Inline match pattern
+  - name: lang
+    type: string
+    description: Language for inline patterns
+- name: ci-integration
+  description: Run Semgrep CI with findings management.
+  commands:
+  - semgrep login
+  - semgrep ci
+  - semgrep ci --json -o results.sarif --sarif
+  - semgrep ci --supply-chain
+  examples:
+  - semgrep ci
+  - semgrep ci --sarif -o results.sarif
+  - semgrep ci --supply-chain
+  parameters:
+  - name: sarif
+    type: boolean
+    description: Output SARIF format
+  - name: supplyChain
+    type: boolean
+    description: Enable supply-chain dependency scanning
+knowledge:
+- title: Semgrep Documentation
+  type: documentation
+  source: https://semgrep.dev/docs/
+  description: Rule writing, CLI reference, and CI setup
+- title: Semgrep Registry
+  type: documentation
+  source: https://semgrep.dev/r
+  description: Community and Pro rule packs
+instructions: "# Semgrep\n\nFast, pattern-based static analysis with first-class custom rule support.\n\
+  \n## What This Skill Does\n\n- Scans 30+ languages with rules matching code structure, not just regex\n\
+  - Runs OWASP Top 10 and language-specific rule packs\n- Authors custom rules with metavariables and\
+  \ pattern composition\n- Emits SARIF/JSON for CI and code scanning\n\n## When to Use\n\n- Finding security\
+  \ bugs in large monorepos fast\n- Enforcing team-specific code patterns\n- Replacing regex greps with\
+  \ maintainable rules\n\n## Real Commands\n\n```bash\n# Standard scans\nsemgrep scan --config auto .\n\
+  semgrep scan --config p/owasp-top-ten .\nsemgrep scan --config p/python --severity ERROR src/\n\n# Inline\
+  \ pattern\nsemgrep scan --pattern 'eval($X)' --lang python .\n\n# Custom rules\nsemgrep scan --config\
+  \ custom.yml .\nsemgrep scan --validate --config custom.yml\n\n# CI\nsemgrep login\nsemgrep ci --sarif\
+  \ -o results.sarif\nsemgrep ci --supply-chain\n```\n\n## Custom Rule\n\n```yaml\nrules:\n  - id: no-exec-user-input\n\
+  \    patterns:\n      - pattern: exec($CODE)\n      - pattern-not: exec(\"fixed-command\")\n    message:\
+  \ Avoid exec with dynamic input\n    languages: [python]\n    severity: ERROR\n```\n\n## Best Practices\n\
+  \n- Run --config auto locally, p/ rules for language depth\n- Validate custom rules in CI with --validate\n\
+  - Use SARIF for inline GitHub annotations\n- Fix findings at the source; track false positives with\
+  \ nosemgrep\n- Run semgrep ci to correlate findings across PRs"
+examples:
+- input: Find command injection in my Python code
+  output: Agent runs semgrep scan --config p/python --severity ERROR and reports injection matches with
+    line numbers and fix suggestions.
+- input: Enforce no raw SQL interpolation
+  output: Agent writes a custom rule matching f-strings in SQL calls, validates it, and runs semgrep scan
+    --config rules.yml .
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: semgrep.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-semgrep
+  generic:
+    system_prompt: 'You take the semgrep seat. You do it through semgrep-scan: Scan code with built-in
+      or custom rule packs. The commands are real, e.g. `semgrep scan --config auto .`. You work hands-on
+      and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

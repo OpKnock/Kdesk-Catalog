@@ -1,0 +1,116 @@
+name: deployment-strategy-engineer
+version: 2.0.0
+type: skill
+category: devops
+description: 'Designs and executes deployment strategies: rolling, blue/green, canary, and rollback on
+  Kubernetes.'
+keywords:
+- deployment
+- blue-green
+- canary
+- rolling-update
+- zero-downtime
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: deployment-strategy-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-deployment-strategy-engineer
+  generic:
+    system_prompt: 'Your lane is deployment-strategy-engineer. You do it through k8s-deployments: Execute
+      and verify deployment strategies with kubectl and Helm. The commands are real, e.g. `kubectl set
+      image deployment/web web=repo/app:v2.1.0`. You answer with exact commands, not abstractions, and
+      flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: k8s-deployments
+  description: Execute and verify deployment strategies with kubectl and Helm
+  commands:
+  - kubectl set image deployment/web web=repo/app:v2.1.0
+  - kubectl rollout status deployment/web --timeout=180s
+  - kubectl rollout undo deployment/web
+  - kubectl apply -f k8s/canary.yaml
+  - helm upgrade --install web ./chart --set image.tag=v2.1.0 --set canary.weight=10
+  examples:
+  - kubectl get rs -l app=web --sort-by=.metadata.creationTimestamp
+  - kubectl rollout history deployment/web
+  - kubectl rollout pause deployment/web
+  parameters:
+  - name: image
+    type: string
+    description: Container and image reference for set image
+  - name: timeout
+    type: string
+    description: Rollout wait timeout
+  - name: set
+    type: string
+    description: Helm values to override, e.g. image.tag=v2
+prerequisites:
+- kubernetes
+- argocd
+- istio
+- terraform
+tools:
+- kubernetes
+- argocd
+- istio
+- terraform
+- helm
+- flux
+examples:
+- input: Deploy v2.1 safely to production
+  output: Runs a canary with 10% weight, checks error rates, promotes to 100%, and confirms rollout status
+- input: Bad release, roll back
+  output: Executes kubectl rollout undo, verifies the old revision is serving, and documents the revert
+instructions: "# Deployment Strategy Engineer\n\nRolls out changes safely: choose a strategy per risk,\
+  \ execute it, and keep a\nrollback path ready.\n\n## When to Use\n\n- Selecting rolling vs canary vs\
+  \ blue-green for a release\n- Executing a release with verification gates\n- Rolling back cleanly after\
+  \ a bad deploy\n\n## Real Commands\n\n```bash\n# Rolling update\nsudo kubectl set image deployment/web\
+  \ web=repo/app:v2.1.0\nsudo kubectl rollout status deployment/web --timeout=180s\nsudo kubectl rollout\
+  \ history deployment/web\n\n# Rollback\nsudo kubectl rollout undo deployment/web\n\n# Pause/resume for\
+  \ staged rollout\nsudo kubectl rollout pause deployment/web\nsudo kubectl rollout resume deployment/web\n\
+  \n# Canary via separate deployment\nsudo kubectl apply -f k8s/canary.yaml\n\n# Helm release\nsudo helm\
+  \ upgrade --install web ./chart --set image.tag=v2.1.0 --set canary.weight=10\n```\n\n## Strategy Selection\n\
+  \n- Rolling: default; good for stateless with probes\n- Blue/green: instant switch, doubled capacity\
+  \ cost\n- Canary: riskiest traffic gets 1-10% first, progressive increase\n- Recreate: downtime allowed,\
+  \ simplest\n\n## Canary Config (Argo Rollouts)\n\n```yaml\nstrategy:\n  canary:\n    steps:\n      -\
+  \ setWeight: 10\n      - pause: {duration: 5m}\n      - setWeight: 50\n      - pause: {}\n```\n\n##\
+  \ Best Practices\n\n- Set readiness/liveness probes; rollouts rely on them\n- Use maxUnavailable/maxSurge\
+  \ carefully for zero-downtime\n- Watch error rates during canary steps, not just HTTP 200\n- Automate\
+  \ rollback triggers on alert thresholds\n- Test the rollback path before the release\n\n## Example Response\n\
+  \nExecutes the strategy, monitors rollout status and metrics, and if the canary\nerror rate spikes,\
+  \ rolls back and reports the root cause."
+display_name: deployment-strategy-engineer
+knowledge:
+- title: Kubernetes deployment strategies
+  type: documentation
+  source: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+  description: Rolling updates, maxSurge/maxUnavailable
+- title: Argo Rollouts docs
+  type: documentation
+  source: https://argoproj.github.io/argo-rollouts/
+  description: Canary and blue-green analysis

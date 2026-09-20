@@ -1,0 +1,173 @@
+{
+  "name": "tsung",
+  "display_name": "Tsung",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Tsung load testing skill: XML scenario config, distributed load generation, and results aggregation for HTTP/WebSocket/AMQP workload testing.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "grep",
+    "tsung"
+  ],
+  "capabilities": [
+    {
+      "name": "load-test",
+      "description": "Define and run Tsung load scenarios",
+      "commands": [
+        "tsung -f tsung.xml start",
+        "tsung -f tsung.xml -l /tmp/tsung-reports start",
+        "tsung status",
+        "grep -E 'count.*mean' ~/.tsung/log/tsung.log | tail -20",
+        "grep -E 'http_rc|http_mean' ~/.tsung/log/tsung.log | tail -40"
+      ],
+      "examples": [
+        "tsung -f tsung.xml start",
+        "tsung -f tsung.xml -l /tmp/tsung-reports start",
+        "grep 'session average' ~/.tsung/log/tsung.log | tail -5"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Path to tsung.xml scenario"
+        },
+        {
+          "name": "logdir",
+          "type": "string",
+          "description": "Report output directory"
+        },
+        {
+          "name": "servers",
+          "type": "integer",
+          "description": "Number of load generator nodes"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Tsung user's manual",
+      "type": "documentation",
+      "source": "https://tsung.erlang-projects.org/user_manual/",
+      "description": "Scenario XML syntax and phases"
+    },
+    {
+      "title": "Tsung benchmark examples",
+      "type": "documentation",
+      "source": "https://tsung.erlang-projects.org/examples/",
+      "description": "HTTP and WebSocket scenarios"
+    }
+  ],
+  "instructions": "# Tsung\n\nHand-crafted skill for distributed load testing with Tsung.\n\n## What this skill does\n\n- Runs XML-defined load scenarios against services\n- Simulates ramping phases and multiple request types\n- Aggregates stats into CSV and HTML reports\n- Scales across multiple load-generator nodes\n\n## When to use\n\n- Load testing HTTP APIs from the CLI\n- WebSocket or AMQP stress scenarios\n- Soak runs with scheduled phases\n\n## Real commands\n\n```bash\n# Run a scenario\ntsung -f tsung.xml start\n\n# With an explicit log directory\ntsung -f tsung.xml -l /tmp/tsung-reports start\n\n# Check running status\ntsung status\n\n# After the run, inspect the generated report\ngrep -E 'count.*mean' ~/.tsung/log/tsung.log | tail -20\ngrep -E 'http_rc|http_mean' ~/.tsung/log/tsung.log | tail -40\nls ~/.tsung/log/*/report.html\n```\n\n## Minimal scenario\n\n```xml\n<tsung loglevel=\"notice\">\n  <clients>\n    <client host=\"localhost\" use_controller_vm=\"true\"/>\n  </clients>\n  <servers>\n    <server host=\"api.example.com\" port=\"80\" type=\"tcp\"/>\n  </servers>\n  <load>\n    <arrivalphase phase=\"1\" duration=\"60\" unit=\"second\">\n      <users arrivalrate=\"100\" unit=\"second\"/>\n    </arrivalphase>\n  </load>\n  <sessions>\n    <session name=\"health\" probability=\"100\">\n      <request><http url=\"/healthz\" method=\"GET\"/></request>\n    </session>\n  </sessions>\n</tsung>\n```\n\n## Best practices\n\n- Start with one controller node, then add clients for scale\n- Use separate sessions per user flow (login, search, checkout)\n- Keep arrivalrate below failure onset; that is your ceiling\n- Collect report.html into CI artifacts\n",
+  "examples": [
+    {
+      "input": "Load test /healthz for 5 minutes",
+      "output": "Set arrivalphase duration 300, one session hitting /healthz, then tsung -f tsung.xml start."
+    },
+    {
+      "input": "Where is the HTML report?",
+      "output": "ls ~/.tsung/log/*/report.html gives the latest run's dashboard."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "tsung.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-tsung"
+    },
+    "generic": {
+      "system_prompt": "You work Tsung hands-on. You do it through load-test: Define and run Tsung load scenarios. The commands are real, e.g. `tsung -f tsung.xml start`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "tsung",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "load-test",
+        "name": "config",
+        "type": "string",
+        "description": "Path to tsung.xml scenario"
+      },
+      {
+        "capability": "load-test",
+        "name": "logdir",
+        "type": "string",
+        "description": "Report output directory"
+      },
+      {
+        "capability": "load-test",
+        "name": "servers",
+        "type": "integer",
+        "description": "Number of load generator nodes"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "grep",
+    "tsung"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/tsung-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/tsung-skill.yaml",
+    "checksum": "ee88d1ee4f3966b82677d62f13922d6c5a95b682357af08210c6a555ec05109c"
+  }
+}

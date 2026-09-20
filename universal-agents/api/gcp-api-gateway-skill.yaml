@@ -1,0 +1,105 @@
+name: gcp-api-gateway
+display_name: Gcp Api Gateway
+category: api
+subcategory: general
+description: 'Manage GCP API Gateway: create API configs from OpenAPI specs, deploy gateways, and attach
+  API keys for access control.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- gcloud
+capabilities:
+- name: gcp-api-gateway
+  description: Create API configs, deploy gateways, and manage keys via gcloud.
+  commands:
+  - gcloud api-gateway apis create orders-api
+  - gcloud api-gateway api-configs create orders-v1 --api=orders-api --openapi-spec=openapi.yaml --display-name=orders-v1
+  - gcloud api-gateway gateways create orders-gw --api=orders-api --api-config=orders-v1 --location=us-central1
+  - gcloud api-gateway gateways describe orders-gw --location=us-central1 --format='value(defaultHostname)'
+  - gcloud services api-keys create --display-name=orders-key --api-target=service=orders-gw
+  examples:
+  - gcloud api-gateway apis create orders-api && gcloud api-gateway api-configs create orders-v1 --api=orders-api
+    --openapi-spec=openapi.yaml
+  - gcloud api-gateway gateways create orders-gw --api=orders-api --api-config=orders-v1 --location=us-central1
+  - gcloud api-gateway gateways describe orders-gw --location=us-central1 --format='value(defaultHostname)'
+  parameters:
+  - name: api-name
+    type: string
+    description: API Gateway API name
+  - name: config-name
+    type: string
+    description: API config version name
+  - name: region
+    type: string
+    description: Gateway location like us-central1
+knowledge:
+- title: API Gateway overview
+  type: documentation
+  source: https://cloud.google.com/api-gateway/docs
+  description: API configs, gateways, and OpenAPI requirements
+- title: API Gateway gcloud reference
+  type: documentation
+  source: https://cloud.google.com/sdk/gcloud/reference/api-gateway
+  description: gcloud api-gateway commands
+instructions: "# GCP API Gateway\n\n## What this skill does\n\nGCP API Gateway exposes backend services\
+  \ behind a managed gateway driven by OpenAPI specs. You create an API config from the spec, deploy a\
+  \ gateway, and secure it with API keys.\n\n## When to use\n\n- Publishing internal Cloud Run/Cloud Functions\
+  \ behind one front door\n- Applying quota and API-key auth without code changes\n- Versioning backends\
+  \ per config\n\n## Real commands\n\n```bash\n# Create the API\n gcloud api-gateway apis create orders-api\n\
+  \n# Create a config from the OpenAPI spec\ngcloud api-gateway api-configs create orders-v1 --api=orders-api\
+  \ --openapi-spec=openapi.yaml --display-name=orders-v1\n\n# Deploy the gateway\n gcloud api-gateway\
+  \ gateways create orders-gw --api=orders-api --api-config=orders-v1 --location=us-central1\n\n# Get\
+  \ the hostname\n gcloud api-gateway gateways describe orders-gw --location=us-central1 --format='value(defaultHostname)'\n\
+  \n# Create an API key\n gcloud services api-keys create --display-name=orders-key --api-target=service=orders-gw\n\
+  ```\n\n## OpenAPI snippet for gateway\n\n```yaml\nopenapi: 3.0.1\ninfo:\n  title: Orders API\n  version:\
+  \ v1\nsecurityDefinitions:\n  api_key:\n    type: apiKey\n    name: key\n    in: query\nx-google-backend:\n\
+  \  address: https://orders-backend-abc-uc.a.run.app\n```\n\n## Testing\n\n```bash\nHOST=$(gcloud api-gateway\
+  \ gateways describe orders-gw --location=us-central1 --format='value(defaultHostname)')\ncurl -s \"\
+  https://$HOST/v1/orders?key=$API_KEY\" | jq\n```\n\n## Best practices\n\n- Name configs by version (orders-v1,\
+  \ orders-v2) and deploy gateways per environment.\n- Use the `x-google-backend` extension to wire Cloud\
+  \ Run/Functions.\n- Protect the key: query param keys are visible in logs; prefer headers.\n- Set quota\
+  \ per config in the OpenAPI `x-google-quota` extension.\n- Pin the gateway location near your backend.\n"
+examples:
+- input: Expose our Cloud Run backend behind a gateway
+  output: Write the OpenAPI spec with x-google-backend pointing at the Cloud Run URL, create api-config,
+    deploy the gateway, and curl the hostname with a key.
+- input: Add API key auth
+  output: Create the key with gcloud services api-keys create and test that requests without a key get
+    401.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: gcp-api-gateway.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-gcp-api-gateway
+  generic:
+    system_prompt: 'You work Gcp Api Gateway hands-on. You do it through gcp-api-gateway: Create API configs,
+      deploy gateways, and manage keys via gcloud. The commands are real, e.g. `gcloud api-gateway apis
+      create orders-api`. You prefer the shortest safe path, and you reproduce failures before diagnosing
+      them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

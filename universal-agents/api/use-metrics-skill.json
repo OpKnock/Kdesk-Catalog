@@ -1,0 +1,166 @@
+{
+  "name": "use-metrics",
+  "display_name": "Use Metrics",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted metrics usage skill: Prometheus exposition, counters/gauges/histograms, and PromQL queries for operational use of metrics.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "prometheus-metrics",
+      "description": "Expose, scrape, and query metrics",
+      "commands": [
+        "curl -s localhost:9090/metrics | head -30",
+        "curl -s 'localhost:9090/api/v1/query?query=up' | jq",
+        "curl -s 'localhost:9090/api/v1/query_range?query=rate(http_requests_total[5m])&start=1700000000&end=1700003600&step=60' | jq",
+        "curl -X POST localhost:9090/-/reload",
+        "curl -s 'localhost:9090/api/v1/targets' | jq '.data.activeTargets | length'"
+      ],
+      "examples": [
+        "curl -s 'localhost:9090/api/v1/query?query=rate(http_requests_total[5m])' | jq",
+        "curl -s localhost:9090/metrics | head -30",
+        "curl -X POST localhost:9090/-/reload"
+      ],
+      "parameters": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "PromQL expression"
+        },
+        {
+          "name": "start",
+          "type": "integer",
+          "description": "Start unix time for range queries"
+        },
+        {
+          "name": "end",
+          "type": "integer",
+          "description": "End unix time for range queries"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Prometheus HTTP API",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/querying/api/",
+      "description": "Query and query_range endpoints"
+    },
+    {
+      "title": "PromQL basics",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/querying/basics/",
+      "description": "Selectors, functions, and aggregation"
+    }
+  ],
+  "instructions": "# Use Metrics\n\nHand-crafted skill for using Prometheus metrics day to day.\n\n## What this skill does\n\n- Reads the exposition format off a metrics endpoint\n- Queries live and historical data via the HTTP API\n- Reloads Prometheus config and checks targets\n\n## When to use\n\n- \"Is the service up?\" from the CLI\n- Computing error rates and latencies on demand\n- Checking scrape health of exporters\n\n## Real commands\n\n```bash\n# Exposition format\ncurl -s localhost:9090/metrics | head -30\n\n# Instant query\ncurl -s 'localhost:9090/api/v1/query?query=up' | jq\ncurl -s 'localhost:9090/api/v1/query?query=rate(http_requests_total[5m])' | jq\n\n# Range query for charts\ncurl -s 'localhost:9090/api/v1/query_range?query=rate(http_requests_total[5m])&start=1700000000&end=1700003600&step=60' | jq\n\n# Ops\ncurl -X POST localhost:9090/-/reload\ncurl -s 'localhost:9090/api/v1/targets' | jq '.data.activeTargets | length'\n```\n\n## Metric types\n\n- counter: http_requests_total, only increases\n- gauge: current queue depth, can go either way\n- histogram: _bucket/_sum/_count for latency distributions\n\n## Useful PromQL\n\n- up == 0 (down targets)\n- 100 * (1 - sum(rate(http_requests_total{code=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m])))\n- histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))\n\n## Testing\n\n```bash\ncurl -s 'localhost:9090/api/v1/query?query=up' | jq '.data.result | length'\ncurl -X POST localhost:9090/-/reload\n```\n\n## Best practices\n\n- Always apply rate() to counters; never raw\n- Use sum by (label) for multi-instance aggregates\n- Check targets before debugging queries\n",
+  "examples": [
+    {
+      "input": "Is every target scraping?",
+      "output": "curl -s localhost:9090/api/v1/query?query=up | jq '.data.result' lists each target and its 1/0 state."
+    },
+    {
+      "input": "What is the 99th percentile latency?",
+      "output": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) against the histogram metric."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "use-metrics.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-use-metrics"
+    },
+    "generic": {
+      "system_prompt": "You take the Use Metrics seat. You do it through prometheus-metrics: Expose, scrape, and query metrics. The commands are real, e.g. `curl -s localhost:9090/metrics | head -30`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "use-metrics",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "prometheus-metrics",
+        "name": "query",
+        "type": "string",
+        "description": "PromQL expression"
+      },
+      {
+        "capability": "prometheus-metrics",
+        "name": "start",
+        "type": "integer",
+        "description": "Start unix time for range queries"
+      },
+      {
+        "capability": "prometheus-metrics",
+        "name": "end",
+        "type": "integer",
+        "description": "End unix time for range queries"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/use-metrics-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/use-metrics-skill.yaml",
+    "checksum": "c06ea7f9a3ee3d9694e57c8de17efb9652d0394feb5f62be403680595014692e"
+  }
+}

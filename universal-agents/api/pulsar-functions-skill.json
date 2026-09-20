@@ -1,0 +1,171 @@
+{
+  "name": "pulsar-functions",
+  "display_name": "Pulsar Functions",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Pulsar Functions: create, deploy, trigger and manage lightweight stream processors.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "bin/pulsar-admin"
+  ],
+  "capabilities": [
+    {
+      "name": "pulsar-functions-operations",
+      "description": "Deploy and manage Pulsar Functions with pulsar-admin, and trigger them with test inputs.",
+      "commands": [
+        "bin/pulsar-admin functions create --tenant public --namespace default --name double-echo --classname org.example.DoubleEcho --jar target/my-fn.jar --inputs my-topic",
+        "bin/pulsar-admin functions list --tenant public --namespace default",
+        "bin/pulsar-admin functions trigger --name double-echo --trigger-value \"hello\"",
+        "bin/pulsar-admin functions status --name double-echo",
+        "bin/pulsar-admin functions delete --tenant public --namespace default --name double-echo"
+      ],
+      "examples": [
+        "bin/pulsar-admin functions create --name counter --classname org.example.Counter --jar counter.jar --inputs events --output counts",
+        "bin/pulsar-admin functions trigger --name counter --trigger-value '{\"n\":1}'",
+        "bin/pulsar-admin functions status --name counter | jq '.instances[0].status'"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Function name"
+        },
+        {
+          "name": "jar",
+          "type": "string",
+          "description": "Function package file"
+        },
+        {
+          "name": "inputs",
+          "type": "array",
+          "description": "Input topics"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Pulsar Functions Overview",
+      "type": "documentation",
+      "source": "https://pulsar.apache.org/docs/3.0.x/functions-overview/",
+      "description": "Functions concepts and deployment options"
+    },
+    {
+      "title": "pulsar-admin functions",
+      "type": "documentation",
+      "source": "https://pulsar.apache.org/docs/3.0.x/reference-pulsar-admin-functions/",
+      "description": "Functions CLI reference"
+    }
+  ],
+  "instructions": "# Pulsar Functions\n\nPulsar Functions are lightweight stream processors that consume from topics and emit to topics.\n\n## What this skill does\n\n- Packages and deploys functions\n- Triggers functions with test data\n- Monitors instance health\n\n## When to use\n\n- Simple transformations in the stream\n- Replacing ad-hoc consumers\n\n## Real commands\n\n```bash\n# Deploy\nbin/pulsar-admin functions create --tenant public --namespace default \\\n  --name double-echo --classname org.example.DoubleEcho --jar target/my-fn.jar --inputs my-topic\n\n# List / inspect\nbin/pulsar-admin functions list --tenant public --namespace default\nbin/pulsar-admin functions status --name double-echo\n\n# Trigger with test value\nbin/pulsar-admin functions trigger --name double-echo --trigger-value \"hello\"\n\n# Remove\nbin/pulsar-admin functions delete --tenant public --namespace default --name double-echo\n```\n\n## Function skeleton (Java)\n\n```java\npublic class DoubleEcho implements Function<String, String> {\n    public String process(String input, Context ctx) {\n        return input + input;\n    }\n}\n```\n\n## Best practices\n\n- Keep functions stateless (or use state storage)\n- Use --output for downstream topics\n- Trigger with sample payloads before wiring producers",
+  "examples": [
+    {
+      "input": "Deploy a function that uppercases messages",
+      "output": "The agent creates the function class, packages the jar, and deploys with pulsar-admin functions create."
+    },
+    {
+      "input": "Test my function without a real producer",
+      "output": "The agent runs pulsar-admin functions trigger with a sample value and checks the output topic."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pulsar-functions.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-pulsar-functions"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Pulsar Functions. You do it through pulsar-functions-operations: Deploy and manage Pulsar Functions with pulsar-admin, and trigger them with test inputs. The commands are real, e.g. `bin/pulsar-admin functions create --tenant public --namespace default --name double-echo...`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "pulsar-functions",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pulsar-functions-operations",
+        "name": "name",
+        "type": "string",
+        "description": "Function name"
+      },
+      {
+        "capability": "pulsar-functions-operations",
+        "name": "jar",
+        "type": "string",
+        "description": "Function package file"
+      },
+      {
+        "capability": "pulsar-functions-operations",
+        "name": "inputs",
+        "type": "array",
+        "description": "Input topics"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "bin/pulsar-admin"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/pulsar-functions-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/pulsar-functions-skill.yaml",
+    "checksum": "4b6d682d7e96f1d7a4c533e67acd83415c5165d4adabddac87cad3fa991f8035"
+  }
+}

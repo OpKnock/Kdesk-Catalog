@@ -1,0 +1,100 @@
+name: rate-limiting-algorithms
+display_name: Rate Limiting Algorithms
+category: api
+subcategory: general
+description: 'Rate limiting algorithms: token bucket, leaky bucket, fixed window, sliding window — implementation
+  and tuning.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- nginx
+- redis-cli
+capabilities:
+- name: rate-limit-algorithms
+  description: Implement token bucket and sliding window algorithms, and configure nginx burst handling.
+  commands:
+  - redis-cli --eval token_bucket.lua mykey, , 10 1 5
+  - redis-cli EVALSHA $(redis-cli SCRIPT LOAD "$(cat token_bucket.lua)") 1 mykey 10 1 5
+  - nginx -t
+  - nginx -s reload
+  - curl -s -o /dev/null -w "%{http_code}\n" -X POST http://localhost:8080/api
+  examples:
+  - redis-cli --eval token_bucket.lua user:7 , 10 1 5
+  - ab -n 200 -c 20 http://localhost:8080/api
+  - curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/api
+  parameters:
+  - name: rate
+    type: integer
+    description: Token refill rate per second
+  - name: burst
+    type: integer
+    description: Bucket capacity
+  - name: key
+    type: string
+    description: Rate limit key
+knowledge:
+- title: nginx limit_req module
+  type: documentation
+  source: https://nginx.org/en/docs/http/ngx_http_limit_req_module.html
+  description: Leaky-bucket behavior with burst and nodelay
+- title: Rate limiting algorithms overview
+  type: documentation
+  source: https://konghq.com/blog/how-to-design-a-scalable-rate-limiting-algorithm
+  description: Token bucket, sliding window comparisons
+instructions: "# Rate Limiting Algorithms\n\nChoose and implement the right algorithm: token bucket, leaky\
+  \ bucket, or sliding window.\n\n## What this skill does\n\n- Implements token bucket in Lua/Redis\n\
+  - Configures nginx leaky-bucket limiting\n- Tunes burst and refill\n\n## When to use\n\n- Designing\
+  \ a rate limiter from scratch\n- Explaining bursts and smoothness trade-offs\n\n## Real commands\n\n\
+  ```bash\n# Token bucket via Redis Lua\nredis-cli --eval token_bucket.lua mykey , 10 1 5\n\n# nginx leaky\
+  \ bucket\nnginx -t && nginx -s reload\n\n# Verify status codes\ncurl -s -o /dev/null -w \"%{http_code}\\\
+  n\" http://localhost:8080/api\nab -n 200 -c 20 http://localhost:8080/api\n```\n\n## nginx config\n\n\
+  ```nginx\nlimit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;\nlocation /api {\n    limit_req\
+  \ zone=api burst=20 nodelay;\n}\n```\n\n## Token bucket Lua sketch\n\n```lua\nlocal key, rate, burst,\
+  \ cost = KEYS[1], tonumber(ARGV[1]), tonumber(ARGV[2]), tonumber(ARGV[3])\nlocal t = redis.call('GET',\
+  \ key..':t') or 0\nlocal tokens = tonumber(redis.call('GET', key..':n') or burst)\n-- refill per elapsed\
+  \ time, then spend\n```\n\n## Algorithm cheat sheet\n\n- Token bucket: allows bursts up to capacity\n\
+  - Leaky bucket: smooths rate, no bursts\n- Fixed window: simple, bursty at boundaries\n- Sliding window:\
+  \ smooth, memory-heavy\n\n## Best practices\n\n- Use Lua in Redis for atomicity\n- Prefer burst + nodelay\
+  \ for APIs with spikes\n- Test boundaries with ab/curl status codes"
+examples:
+- input: Allow bursts of 20 requests at 10 r/s in nginx
+  output: The agent sets rate=10r/s with burst=20 nodelay and verifies with ab.
+- input: Explain the trade-off between token bucket and leaky bucket
+  output: The agent contrasts burst handling and shows when to pick each.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: rate-limiting-algorithms.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-rate-limiting-algorithms
+  generic:
+    system_prompt: 'This is your domain: Rate Limiting Algorithms. You do it through rate-limit-algorithms:
+      Implement token bucket and sliding window algorithms, and configure nginx burst handling. The commands
+      are real, e.g. `redis-cli --eval token_bucket.lua mykey, , 10 1 5`. You verify each step you report
+      and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

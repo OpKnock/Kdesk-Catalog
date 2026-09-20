@@ -1,0 +1,171 @@
+{
+  "name": "graphql-juniper",
+  "display_name": "Graphql Juniper",
+  "category": "api",
+  "subcategory": "general",
+  "description": "GraphQL in Rust with Juniper: define schemas with Rust types and macros, run the server, and test queries.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "cargo"
+  ],
+  "capabilities": [
+    {
+      "name": "juniper-development",
+      "description": "Build Juniper schemas, integrate with Actix/Axum, and run queries.",
+      "commands": [
+        "cargo add juniper actix-web juniper_actix",
+        "cargo run",
+        "cargo build --release",
+        "cargo test",
+        "curl -s -X POST http://localhost:8080/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ hero { name } }\"}' | jq"
+      ],
+      "examples": [
+        "cargo add juniper actix-web juniper_actix && cargo run",
+        "curl -s -X POST http://localhost:8080/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ hero { name } }\"}' | jq",
+        "cargo test"
+      ],
+      "parameters": [
+        {
+          "name": "crate",
+          "type": "string",
+          "description": "juniper integration crate"
+        },
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "GraphQL endpoint path"
+        },
+        {
+          "name": "context-type",
+          "type": "string",
+          "description": "Rust context type passed to resolvers"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Juniper docs",
+      "type": "documentation",
+      "source": "https://graphql-rust.github.io/juniper/",
+      "description": "Schema macros, types, context, and integrations"
+    },
+    {
+      "title": "Juniper GitHub",
+      "type": "documentation",
+      "source": "https://github.com/graphql-rust/juniper",
+      "description": "Actix/Axum integrations and examples"
+    }
+  ],
+  "instructions": "# GraphQL Juniper\n\n## What this skill does\n\nJuniper brings GraphQL to Rust with derive macros: `#[derive(GraphQLObject)]`, `graphql_object!`, and `graphql_schema!`. Context passes shared state to resolvers; integrations cover Actix and Axum.\n\n## When to use\n\n- Rust services needing typed GraphQL\n- High-throughput backends that want zero-copy serialization\n- Rust teams already using Actix or Axum\n\n## Real commands\n\n```bash\n# Dependencies\ncargo add juniper actix-web juniper_actix\n\n# Run, build, test\ncargo run\ncargo build --release\ncargo test\n\n# Query the server\ncurl -s -X POST http://localhost:8080/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ hero { name } }\"}' | jq\n```\n\n## Schema example\n\n```rust\nuse juniper::{graphql_object, EmptyMutation, RootNode};\n\nstruct Hero { name: String }\n\n#[graphql_object]\nimpl Hero {\n    fn name(&self) -> &str { &self.name }\n}\n\nstruct Query;\n\n#[graphql_object]\nimpl Query {\n    fn hero() -> Hero {\n        Hero { name: \"R2-D2\".into() }\n    }\n}\n\ntype Schema = RootNode<'static, Query, EmptyMutation>;\n```\n\n## Testing\n\n```bash\n# Execute a query in a unit test\ncargo test -- --nocapture\n# curl the playground\ncurl -s -X POST http://localhost:8080/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ __typename }\"}' | jq\n```\n\n## Best practices\n\n- Keep resolvers thin; call service layers.\n- Pass DB pools via Context, not statics.\n- Derive GraphQLObject for pure data types only.\n- Test schema construction at compile time; it fails loudly.\n- Pin juniper_actix to the same minor as actix-web.\n",
+  "examples": [
+    {
+      "input": "Add GraphQL to an Actix service",
+      "output": "cargo add juniper juniper_actix, define the RootNode, mount it in the actix route, and curl the endpoint."
+    },
+    {
+      "input": "Share the DB pool with resolvers",
+      "output": "Implement Context with the pool and access it via the executor in graphql_object resolver impls."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "graphql-juniper.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-graphql-juniper"
+    },
+    "generic": {
+      "system_prompt": "You work Graphql Juniper hands-on. You do it through juniper-development: Build Juniper schemas, integrate with Actix/Axum, and run queries. The commands are real, e.g. `cargo add juniper actix-web juniper_actix`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "graphql-juniper",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "juniper-development",
+        "name": "crate",
+        "type": "string",
+        "description": "juniper integration crate"
+      },
+      {
+        "capability": "juniper-development",
+        "name": "endpoint",
+        "type": "string",
+        "description": "GraphQL endpoint path"
+      },
+      {
+        "capability": "juniper-development",
+        "name": "context-type",
+        "type": "string",
+        "description": "Rust context type passed to resolvers"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cargo"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/graphql-juniper-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/graphql-juniper-skill.yaml",
+    "checksum": "7bc7f70db1cb812036c397736ba6eef45f4f6ed92e16094bc5b9291603cf0653"
+  }
+}

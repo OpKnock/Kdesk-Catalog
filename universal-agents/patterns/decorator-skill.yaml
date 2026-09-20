@@ -1,0 +1,101 @@
+name: decorator
+display_name: Decorator
+category: patterns
+subcategory: general
+description: 'Implements the Decorator pattern in Python with unittest: adding behavior to objects at
+  runtime without subclass explosion.'
+version: 2.0.0
+tags:
+- decorator
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- python
+capabilities:
+- name: python-unittest
+  description: Implement and test Decorator pattern examples.
+  commands:
+  - python -m unittest discover -s tests
+  - python -m unittest tests.test_decorators -v
+  - python -m unittest tests.test_decorators.DecoratorTest.test_logging_wrapper
+  - python -m compileall decorators.py
+  - python -m unittest discover -s tests -p '*_test.py'
+  examples:
+  - python -m unittest discover -s tests -v
+  - python -m unittest tests.test_decorators -k log
+  - python -m unittest tests.test_decorators.DecoratorTest -v
+  parameters:
+  - name: discover
+    type: string
+    description: Auto-discover tests in a directory
+  - name: pattern
+    type: string
+    description: Test file glob pattern
+  - name: k
+    type: string
+    description: Test name filter
+knowledge:
+- title: 'Refactoring Guru: Decorator'
+  type: documentation
+  source: https://refactoring.guru/design-patterns/decorator
+  description: Decorator intent, structure, and alternatives
+- title: Python unittest
+  type: documentation
+  source: https://docs.python.org/3/library/unittest.html
+  description: unittest runner and assertions
+instructions: "# Decorator Pattern\n\nWrap objects with behavior without changing their contract.\n\n\
+  ## When to Use\n\n- Adding logging, caching, retries to operations\n- Layering behavior without subclass\
+  \ explosion\n- Compose combinations at runtime\n\n## Example (Python)\n\n```python\nfrom abc import\
+  \ ABC, abstractmethod\n\nclass Notifier(ABC):\n    @abstractmethod\n    def send(self, message: str)\
+  \ -> str: ...\n\nclass EmailNotifier(Notifier):\n    def send(self, message: str) -> str:\n        return\
+  \ f\"email: {message}\"\n\nclass LoggingDecorator(Notifier):\n    def __init__(self, inner: Notifier)\
+  \ -> None:\n        self._inner = inner\n\n    def send(self, message: str) -> str:\n        result\
+  \ = self._inner.send(message)\n        return f\"[logged] {result}\"\n\nclass RetryDecorator(Notifier):\n\
+  \    def __init__(self, inner: Notifier, tries: int = 3) -> None:\n        self._inner = inner\n   \
+  \     self._tries = tries\n\n    def send(self, message: str) -> str:\n        last = None\n       \
+  \ for _ in range(self._tries):\n            last = self._inner.send(message)\n        return f\"[retried]\
+  \ {last}\"\n```\n\n## Test\n\n```python\nimport unittest\n\ndef test_logging_wrapper(self):\n    n =\
+  \ LoggingDecorator(EmailNotifier())\n    self.assertIn(\"logged\", n.send(\"hi\"))\n```\n\n```bash\n\
+  python -m unittest discover -s tests -v\n```\n\n## Best practices\n\n- Decorators implement the same\
+  \ interface as the wrapped object.\n- Keep decorators stateless and order-independent where possible.\n\
+  - Prefer composition (decorators) over inheritance trees.\n- Document wrapper order - it matters.\n\n\
+  ## Testing\n\nTest each decorator in isolation and in combination."
+examples:
+- input: Add retries and logging to the payment notifier.
+  output: Wraps EmailNotifier with RetryDecorator and LoggingDecorator, and tests each layer plus the
+    combination.
+- input: Refactor a class hierarchy of notifier variants.
+  output: Replaces NotifierEmailRetryLogging subclasses with composed decorators at the composition root.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: decorator.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-decorator
+  generic:
+    system_prompt: 'You take the Decorator seat. You do it through python-unittest: Implement and test
+      Decorator pattern examples. The commands are real, e.g. `python -m unittest discover -s tests`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

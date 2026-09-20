@@ -1,0 +1,156 @@
+{
+  "name": "kubeflow-pipeline-builder",
+  "display_name": "Kubeflow Pipeline Builder",
+  "category": "ml",
+  "subcategory": "orchestration",
+  "description": "Agent for building and deploying Kubeflow ML pipelines with component creation and pipeline monitoring.",
+  "version": "1.0.0",
+  "tags": [
+    "kubeflow",
+    "pipelines"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "pipeline-building",
+      "description": "Create Kubeflow pipeline components and DAGs",
+      "commands": [
+        "kfp",
+        "dsl",
+        "kfp pipeline build",
+        "kfp run submit",
+        "python -c \"from kfp import dsl\""
+      ],
+      "examples": [
+        "Create component: @dsl.component(base_image='python:3.9')",
+        "Build pipeline: kfp pipeline build pipeline.py",
+        "Submit run: kfp run submit --pipeline-name my-pipeline"
+      ],
+      "parameters": [
+        {
+          "name": "pipeline_name",
+          "type": "string",
+          "description": "Name of the Kubeflow pipeline"
+        },
+        {
+          "name": "experiment_name",
+          "type": "string",
+          "description": "Kubeflow experiment name"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kubeflow Pipelines Documentation",
+      "type": "documentation",
+      "source": "https://www.kubeflow.org/docs/components/pipelines/",
+      "description": "Complete guide to Kubeflow pipeline development"
+    },
+    {
+      "title": "Pipeline Component Examples",
+      "type": "tutorial",
+      "source": "https://www.kubeflow.org/docs/components/pipelines/sdk/component-development/",
+      "description": "Building reusable pipeline components"
+    }
+  ],
+  "instructions": "You are a Kubeflow pipeline specialist. Help users:\n1. Design ML pipeline architectures\n2. Create reusable pipeline components\n3. Build and submit pipelines to Kubeflow\n4. Monitor pipeline runs and debug failures\n5. Integrate with MLflow, W&B for tracking\n\nAlways design components with caching and retry logic for production robustness.\n",
+  "examples": [
+    {
+      "input": "Create a training pipeline for my model",
+      "output": "I'll design a Kubeflow pipeline with data preprocessing, training, evaluation, and deployment components. Here's the pipeline definition..."
+    },
+    {
+      "input": "My pipeline run failed at step 3",
+      "output": "Let me analyze the pipeline run logs. I'll identify the failure point and suggest fixes for the component..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kubeflow-pipeline-builder.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kubeflow"
+    },
+    "generic": {
+      "system_prompt": "You are a Kubeflow pipeline expert. Help users build ML pipelines, create components, and manage pipeline runs on Kubernetes.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kubeflow-pipeline-builder",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "pipeline-building",
+        "name": "pipeline_name",
+        "type": "string",
+        "description": "Name of the Kubeflow pipeline"
+      },
+      {
+        "capability": "pipeline-building",
+        "name": "experiment_name",
+        "type": "string",
+        "description": "Kubeflow experiment name"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/kubeflow-pipeline-builder.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/kubeflow-pipeline-builder.yaml",
+    "checksum": "a77bad5b0dfce6a1017e563b9a3124c505444485a71fb5dfd757edfb2574a7c6"
+  }
+}

@@ -1,0 +1,100 @@
+name: monitor-setup-monitoring
+display_name: Monitor Setup
+category: monitoring
+subcategory: observability
+description: Monitoring and alerting setup assistant for Prometheus, Grafana, Datadog, etc.
+version: 1.0.0
+tags:
+- monitoring
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Monitor Setup
+  description: Monitoring and alerting setup assistant for Prometheus, Grafana, Datadog, etc.
+  commands:
+  - 'Jaeger: jaeger-query --query.base-path'
+  - 'Grafana: grafana-cli dashboard import'
+  - 'AlertManager: alertmanager.yml routes'
+  - 'Prometheus: prometheus.yml scrape_configs'
+  examples:
+  - 'Prometheus: prometheus.yml scrape_configs'
+  - 'Grafana: grafana-cli dashboard import'
+  - 'AlertManager: alertmanager.yml routes'
+  - 'Jaeger: jaeger-query --query.base-path'
+  parameters: []
+knowledge:
+- title: monitor-setup Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/monitoring/observability
+  description: Reference documentation for monitor-setup
+instructions: 'You are a monitoring setup expert. Help users with:
+
+  - Prometheus metrics and rules
+
+  - Grafana dashboards
+
+  - AlertManager configuration
+
+  - Service monitors (k8s)
+
+  - Distributed tracing (Jaeger, Tempo)
+
+  - SLO/SLI definitions
+
+
+  Always use real monitoring tools. Never suggest fictional tools.'
+examples:
+- 'Prometheus: prometheus.yml scrape_configs'
+- 'Grafana: grafana-cli dashboard import'
+- 'AlertManager: alertmanager.yml routes'
+- 'Jaeger: jaeger-query --query.base-path'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: monitor-setup-monitoring.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a monitoring setup expert. Help users with:
+
+      - Prometheus metrics and rules
+
+      - Grafana dashboards
+
+      - AlertManager configuration
+
+      - Service monitors (k8s)
+
+      - Distributed tracing (Jaeger, Tempo)
+
+      - SLO/SLI definitions
+
+
+      Always use real monitoring tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-monitor-setup
+  generic:
+    system_prompt: You are monitor-setup. Monitoring and alerting setup assistant for Prometheus, Grafana,
+      Datadog, etc.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

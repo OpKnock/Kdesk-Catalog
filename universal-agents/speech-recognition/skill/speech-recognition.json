@@ -1,0 +1,262 @@
+{
+  "name": "speech-recognition",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "ai",
+  "description": "Transcribes audio to text with OpenAI Whisper and Vosk, converting formats, tuning models, and producing SRT/VTT subtitles.",
+  "keywords": [
+    "speech-recognition",
+    "whisper"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "speech-recognition.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-speech-recognition"
+    },
+    "generic": {
+      "system_prompt": "You own speech-recognition end to end. You do it through whisper-transcription: Transcribe audio files with Whisper models and options. The commands are real, e.g. `whisper audio.mp3 --model small`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "whisper-transcription",
+      "description": "Transcribe audio files with Whisper models and options.",
+      "commands": [
+        "whisper audio.mp3 --model small",
+        "whisper audio.mp3 --language en --task transcribe",
+        "whisper meeting.wav --model large-v3 --output_format srt",
+        "whisper podcast.m4a --model medium --language de --fp16 False",
+        "whisper audio.mp3 --model base --output_dir ./transcripts --output_format vtt"
+      ],
+      "examples": [
+        "whisper audio.mp3 --model small",
+        "whisper meeting.wav --model large-v3 --output_format srt",
+        "whisper podcast.m4a --model medium --language de"
+      ],
+      "parameters": [
+        {
+          "name": "model",
+          "type": "string",
+          "description": "Model size: tiny, base, small, medium, large, large-v3"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "description": "Source language code, e.g. en, de, zh"
+        },
+        {
+          "name": "outputFormat",
+          "type": "string",
+          "description": "Output: txt, vtt, srt, json"
+        }
+      ]
+    },
+    {
+      "name": "vosk-offline",
+      "description": "Stream and transcribe with the lightweight Vosk models.",
+      "commands": [
+        "vosk-transcriber -i audio.wav -o transcript.txt",
+        "vosk-transcriber -i audio.wav --model en-us --lang en",
+        "vosk-transcriber --list-models",
+        "python -m vosk-transcribe audio.wav"
+      ],
+      "examples": [
+        "vosk-transcriber -i audio.wav -o transcript.txt",
+        "vosk-transcriber -i audio.wav --lang de",
+        "vosk-transcriber --list-models"
+      ],
+      "parameters": [
+        {
+          "name": "input",
+          "type": "string",
+          "description": "Input audio file"
+        },
+        {
+          "name": "lang",
+          "type": "string",
+          "description": "Language model, e.g. en-us, de, zh-cn"
+        }
+      ]
+    },
+    {
+      "name": "audio-preparation",
+      "description": "Convert and inspect audio before transcription.",
+      "commands": [
+        "ffmpeg -i input.m4a -ar 16000 -ac 1 output.wav",
+        "ffprobe -show_format input.mp3",
+        "ffmpeg -i long.mp3 -ss 00:10:00 -t 600 chunk.mp3",
+        "ffmpeg -i video.mp4 -vn audio.wav"
+      ],
+      "examples": [
+        "ffmpeg -i input.m4a -ar 16000 -ac 1 output.wav",
+        "ffprobe -show_format input.mp3",
+        "ffmpeg -i video.mp4 -vn audio.wav"
+      ],
+      "parameters": [
+        {
+          "name": "input",
+          "type": "string",
+          "description": "Source media file"
+        },
+        {
+          "name": "sampleRate",
+          "type": "number",
+          "description": "Target sample rate, e.g. 16000"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "python",
+    "whisper",
+    "pyttsx3",
+    "vosk"
+  ],
+  "tools": [
+    "python",
+    "whisper",
+    "pyttsx3",
+    "vosk",
+    "deepgram"
+  ],
+  "examples": [
+    {
+      "input": "Add subtitles to this meeting recording",
+      "output": "Agent converts with ffmpeg to mono 16kHz, runs whisper --model large-v3 --output_format srt, and returns the subtitle file."
+    },
+    {
+      "input": "Transcribe a German podcast",
+      "output": "Agent runs whisper podcast.m4a --model medium --language de and produces a German text transcript with timestamps."
+    }
+  ],
+  "instructions": "# Speech Recognition\n\nTranscribe and subtitle audio with open-source speech-to-text tools.\n\n## What This Skill Does\n\n- Transcribes audio with Whisper in multiple languages\n- Produces SRT, VTT, and JSON subtitles\n- Uses Vosk for lightweight offline streaming\n- Prepares audio (format, rate, chunking) with ffmpeg\n\n## When to Use\n\n- Generating subtitles for media\n- Searchable transcripts for meetings and podcasts\n- Voice-driven QA or dataset preparation\n\n## Real Commands\n\n```bash\n# Whisper\nwhisper audio.mp3 --model small\nwhisper meeting.wav --model large-v3 --output_format srt\nwhisper podcast.m4a --model medium --language de\nwhisper audio.mp3 --model base --output_dir ./transcripts --output_format vtt\n\n# Preprocess for accuracy\nffmpeg -i input.m4a -ar 16000 -ac 1 output.wav\nffmpeg -i long.mp3 -ss 00:10:00 -t 600 chunk.mp3\n\n# Vosk\nvosk-transcriber -i audio.wav -o transcript.txt\nvosk-transcriber -i audio.wav --lang de\n```\n\n## Best Practices\n\n- Downmix to mono 16kHz before transcription for best accuracy\n- Pick model size by accuracy vs speed; large-v3 for demanding output\n- Specify --language when known to avoid auto-detection errors\n- Chunk long recordings to limit context drift\n- Review automated transcripts against the source audio for critical use",
+  "display_name": "speech-recognition",
+  "knowledge": [
+    {
+      "title": "Whisper GitHub",
+      "type": "documentation",
+      "source": "https://github.com/openai/whisper",
+      "description": "Model options, CLI, and transcription modes"
+    },
+    {
+      "title": "Vosk Documentation",
+      "type": "documentation",
+      "source": "https://alphacephei.com/vosk/",
+      "description": "Offline speech recognition models and APIs"
+    },
+    {
+      "title": "ffmpeg Documentation",
+      "type": "documentation",
+      "source": "https://ffmpeg.org/documentation.html",
+      "description": "Audio conversion and preprocessing"
+    }
+  ],
+  "id": "speech-recognition",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "whisper-transcription",
+        "name": "model",
+        "type": "string",
+        "description": "Model size: tiny, base, small, medium, large, large-v3"
+      },
+      {
+        "capability": "whisper-transcription",
+        "name": "language",
+        "type": "string",
+        "description": "Source language code, e.g. en, de, zh"
+      },
+      {
+        "capability": "whisper-transcription",
+        "name": "outputFormat",
+        "type": "string",
+        "description": "Output: txt, vtt, srt, json"
+      },
+      {
+        "capability": "vosk-offline",
+        "name": "input",
+        "type": "string",
+        "description": "Input audio file"
+      },
+      {
+        "capability": "vosk-offline",
+        "name": "lang",
+        "type": "string",
+        "description": "Language model, e.g. en-us, de, zh-cn"
+      },
+      {
+        "capability": "audio-preparation",
+        "name": "input",
+        "type": "string",
+        "description": "Source media file"
+      },
+      {
+        "capability": "audio-preparation",
+        "name": "sampleRate",
+        "type": "number",
+        "description": "Target sample rate, e.g. 16000"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "python",
+    "whisper",
+    "pyttsx3",
+    "vosk"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "speech-recognition/skill/speech-recognition.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/speech-recognition/skill/speech-recognition.yaml",
+    "checksum": "09bf647715c67b39948a92694942eaf7dabc50cbf7a0deb584d8d316bb87a03c"
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "name": "windsurf",
+  "display_name": "Windsurf",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Operates the Windsurf editor with Cascade AI: global rules, memories, CLI launch flags, and project configuration.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "windsurf"
+  ],
+  "capabilities": [
+    {
+      "name": "editor-launch",
+      "description": "Launch Windsurf with project paths and window options.",
+      "commands": [
+        "windsurf .",
+        "windsurf ~/projects/app",
+        "windsurf --multifolder ~/projects/a ~/projects/b",
+        "windsurf --diff src/main.ts",
+        "windsurf --help"
+      ],
+      "examples": [
+        "windsurf .",
+        "windsurf --diff src/main.ts",
+        "windsurf --multifolder ~/projects/a ~/projects/b"
+      ],
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Project directory or file"
+        },
+        {
+          "name": "multifolder",
+          "type": "boolean",
+          "description": "Open multiple folders"
+        }
+      ]
+    },
+    {
+      "name": "cascade-configuration",
+      "description": "Configure Cascade AI rules, memories, and model settings.",
+      "commands": [
+        "windsurf --rules ~/.windsurf/rules",
+        "windsurf --memories ~/.windsurf/memories",
+        "windsurf --global-rules",
+        "windsurf --dev",
+        "windsurf --no-session-restore"
+      ],
+      "examples": [
+        "windsurf --rules ~/.windsurf/rules",
+        "windsurf --memories ~/.windsurf/memories",
+        "windsurf --dev"
+      ],
+      "parameters": [
+        {
+          "name": "rules-dir",
+          "type": "string",
+          "description": "Directory with Cascade rule files"
+        },
+        {
+          "name": "memories-dir",
+          "type": "string",
+          "description": "Directory with Cascade memories"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Windsurf Documentation",
+      "type": "documentation",
+      "source": "https://docs.windsurf.com/",
+      "description": "Cascade AI, rules, memories, and configuration"
+    },
+    {
+      "title": "Windsurf Blog",
+      "type": "documentation",
+      "source": "https://windsurf.com/blog",
+      "description": "Features and workflow guides"
+    }
+  ],
+  "instructions": "# Windsurf Editor Operations\n\nWork with the Windsurf editor and its Cascade AI assistant.\n\n## What This Skill Does\n\n- Launches the editor at projects and files\n- Opens multifolder workspaces\n- Configures Cascade rules and memories\n- Manages global vs project rules\n- Uses diff/CLI flags for focused sessions\n\n## When to Use\n\n- Setting up Windsurf for a repository\n- Configuring Cascade behavior for a team\n- CLI-driven editor workflows\n\n## Real Commands\n\n```bash\n# Launch\nwindsurf .\nwindsurf ~/projects/app\nwindsurf --multifolder ~/projects/a ~/projects/b\nwindsurf --diff src/main.ts\nwindsurf --help\n\n# Cascade config\nwindsurf --rules ~/.windsurf/rules\nwindsurf --memories ~/.windsurf/memories\nwindsurf --global-rules\nwindsurf --dev\nwindsurf --no-session-restore\n```\n\n## Cascade Rules Layout\n\n```\n.windsurf/\n  rules/\n    global_rules.md      # always-on guidance\n    project_rules.md     # repo-specific guidance\n  memories/              # persisted context\n```\n\n## Best Practices\n\n- Commit .windsurf/rules to the repo for team consistency\n- Keep global rules for personal preferences, project rules for standards\n- Use memories for frequently reused context\n- Pair --diff with staged files for review workflows\n- Test rule changes with a fresh session (--no-session-restore)",
+  "examples": [
+    {
+      "input": "Set up Cascade rules for our repo",
+      "output": "Agent creates .windsurf/rules with global and project rules and validates a session"
+    },
+    {
+      "input": "Open two related projects together",
+      "output": "Agent launches with --multifolder and suggests rule placement"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "windsurf.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-windsurf"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Windsurf. You do it through editor-launch: Launch Windsurf with project paths and window options. The commands are real, e.g. `windsurf .`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "windsurf",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "editor-launch",
+        "name": "path",
+        "type": "string",
+        "description": "Project directory or file"
+      },
+      {
+        "capability": "editor-launch",
+        "name": "multifolder",
+        "type": "boolean",
+        "description": "Open multiple folders"
+      },
+      {
+        "capability": "cascade-configuration",
+        "name": "rules-dir",
+        "type": "string",
+        "description": "Directory with Cascade rule files"
+      },
+      {
+        "capability": "cascade-configuration",
+        "name": "memories-dir",
+        "type": "string",
+        "description": "Directory with Cascade memories"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "windsurf"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/windsurf-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/windsurf-skill.yaml",
+    "checksum": "4330a6e1f80a48bbaf6d7b94e8298cf92264b89c34e94b727e7f2f1124c3022e"
+  }
+}

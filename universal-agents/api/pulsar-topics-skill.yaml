@@ -1,0 +1,155 @@
+name: pulsar-topics
+display_name: Pulsar Topics
+category: api
+subcategory: general
+description: 'Pulsar topic lifecycle: create partitioned/non-partitioned topics, stats, TTL/retention,
+  and deletion.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- bin/pulsar-admin
+capabilities:
+- name: pulsar-topic-lifecycle
+  description: 'Manage topics: create, partition, apply retention/TTL, inspect stats and delete.'
+  commands:
+  - bin/pulsar-admin topics create persistent://public/default/my-topic
+  - bin/pulsar-admin topics create-partitioned-topic persistent://public/default/my-topic -p 3
+  - bin/pulsar-admin topics stats persistent://public/default/my-topic
+  - bin/pulsar-admin namespaces set-retention public/default --size 10G --time 7d
+  - bin/pulsar-admin topics delete persistent://public/default/my-topic
+  examples:
+  - bin/pulsar-admin topics create-partitioned-topic persistent://public/default/events -p 6
+  - bin/pulsar-admin topics stats persistent://public/default/events | jq '.msgRateIn,.storageSize'
+  - bin/pulsar-admin topics truncate persistent://public/default/events
+  parameters:
+  - name: topic
+    type: string
+    description: Persistent topic name
+  - name: partitions
+    type: integer
+    description: Partition count
+  - name: retention
+    type: string
+    description: Retention window like 7d or size like 10G
+knowledge:
+- title: Pulsar Topics Concepts
+  type: documentation
+  source: https://pulsar.apache.org/docs/3.0.x/concepts-messaging/#topics
+  description: Topic naming, partitioning, retention semantics
+- title: pulsar-admin topics reference
+  type: documentation
+  source: https://pulsar.apache.org/docs/3.0.x/reference-pulsar-admin-topics/
+  description: All topics subcommands
+instructions: '# Pulsar Topics
+
+
+  Topics are the messaging unit in Pulsar; partitions scale them across brokers.
+
+
+  ## What this skill does
+
+
+  - Creates partitioned and non-partitioned topics
+
+  - Applies retention and TTL
+
+  - Inspects stats and cleans up
+
+
+  ## When to use
+
+
+  - Provisioning topics for a service
+
+  - Right-sizing partitions and retention
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Create
+
+  bin/pulsar-admin topics create persistent://public/default/my-topic
+
+  bin/pulsar-admin topics create-partitioned-topic persistent://public/default/my-topic -p 3
+
+
+  # Retention (namespace level)
+
+  bin/pulsar-admin namespaces set-retention public/default --size 10G --time 7d
+
+
+  # Stats
+
+  bin/pulsar-admin topics stats persistent://public/default/my-topic | jq ''.msgRateIn,.storageSize''
+
+
+  # Truncate / delete
+
+  bin/pulsar-admin topics truncate persistent://public/default/my-topic
+
+  bin/pulsar-admin topics delete persistent://public/default/my-topic
+
+  ```
+
+
+  ## Partition sizing
+
+
+  - Throughput per partition ~ tens of MB/s
+
+  - Plan partitions from peak write rate and key skew
+
+
+  ## Best practices
+
+
+  - Set retention before production traffic
+
+  - Monitor per-partition backlog and storage
+
+  - Use truncate for test cleanup, delete when done'
+examples:
+- input: Create a partitioned topic for high-volume events
+  output: The agent creates a 6-partition topic and sets namespace retention with pulsar-admin.
+- input: How big is my topic and is it growing?
+  output: The agent runs topics stats and interprets storageSize and msgRateIn.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: pulsar-topics.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-pulsar-topics
+  generic:
+    system_prompt: 'Your lane is Pulsar Topics. You do it through pulsar-topic-lifecycle: Manage topics:
+      create, partition, apply retention/TTL, inspect stats and delete. The commands are real, e.g. `bin/pulsar-admin
+      topics create persistent://public/default/my-topic`. You run and verify the real CLI commands before
+      you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

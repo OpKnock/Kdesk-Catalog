@@ -1,0 +1,251 @@
+{
+  "name": "snyk",
+  "display_name": "Snyk",
+  "category": "security",
+  "subcategory": "general",
+  "description": "Scans dependencies, code, IaC, and containers with Snyk, monitoring projects and enforcing policies from the CLI.",
+  "version": "2.0.0",
+  "tags": [
+    "security"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "snyk"
+  ],
+  "capabilities": [
+    {
+      "name": "dependency-testing",
+      "description": "Test projects for vulnerable dependencies.",
+      "commands": [
+        "snyk auth",
+        "snyk test",
+        "snyk test --all-projects",
+        "snyk test --severity-threshold=high",
+        "snyk test --json -o snyk-results.json"
+      ],
+      "examples": [
+        "snyk test",
+        "snyk test --all-projects --severity-threshold=high",
+        "snyk test --org=my-org --json"
+      ],
+      "parameters": [
+        {
+          "name": "severityThreshold",
+          "type": "string",
+          "description": "Minimum severity: low, medium, high, critical"
+        },
+        {
+          "name": "allProjects",
+          "type": "boolean",
+          "description": "Scan all projects in the directory"
+        },
+        {
+          "name": "org",
+          "type": "string",
+          "description": "Snyk organization slug"
+        }
+      ]
+    },
+    {
+      "name": "code-iac-container",
+      "description": "Scan source code, IaC files, and container images.",
+      "commands": [
+        "snyk code test",
+        "snyk iac test",
+        "snyk iac test --report",
+        "snyk container test ubuntu:latest",
+        "snyk iac test --sarif"
+      ],
+      "examples": [
+        "snyk code test",
+        "snyk iac test --report",
+        "snyk container test nginx:1.25 --severity-threshold=high"
+      ],
+      "parameters": [
+        {
+          "name": "severityThreshold",
+          "type": "string",
+          "description": "Minimum severity to report"
+        },
+        {
+          "name": "report",
+          "type": "boolean",
+          "description": "Upload IaC results to Snyk"
+        }
+      ]
+    },
+    {
+      "name": "monitoring",
+      "description": "Monitor projects and get alerts for new vulns.",
+      "commands": [
+        "snyk monitor",
+        "snyk monitor --all-projects",
+        "snyk monitor --project-name=api",
+        "snyk test --all-projects --prune-repeated-subdependencies"
+      ],
+      "examples": [
+        "snyk monitor",
+        "snyk monitor --all-projects",
+        "snyk monitor --project-name=my-api"
+      ],
+      "parameters": [
+        {
+          "name": "projectName",
+          "type": "string",
+          "description": "Custom project name in the Snyk dashboard"
+        },
+        {
+          "default": "none",
+          "description": "Snyk org slug or ID to associate monitored projects with.",
+          "name": "org",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Snyk Documentation",
+      "type": "documentation",
+      "source": "https://docs.snyk.io/",
+      "description": "CLI reference, severity thresholds, and project monitoring"
+    },
+    {
+      "title": "Snyk CLI GitHub",
+      "type": "documentation",
+      "source": "https://github.com/snyk/cli",
+      "description": "Installation and command reference"
+    }
+  ],
+  "instructions": "# Snyk\n\nDeveloper-first security scanning for dependencies, code, IaC, and containers.\n\n## What This Skill Does\n\n- Tests lockfiles for known vulnerabilities and fix paths\n- Scans source code with Snyk Code SAST\n- Scans Terraform/CloudFormation/K8s with Snyk IaC\n- Monitors projects so new vulns surface without rescanning\n\n## When to Use\n\n- Pre-merge dependency checks in CI\n- Continuous monitoring of long-lived projects\n- Full-stack scan (code + deps + IaC + images)\n\n## Real Commands\n\n```bash\n# Authenticate (once)\nsnyk auth\n\n# Dependencies\nsnyk test\nsnyk test --all-projects --severity-threshold=high\nsnyk test --json -o snyk-results.json\n\n# Code and IaC\nsnyk code test\nsnyk iac test --report\nsnyk container test nginx:1.25 --severity-threshold=high\n\n# Monitor\nsnyk monitor --all-projects\nsnyk monitor --project-name=my-api\n```\n\n## CI Gate\n\n```yaml\n- name: Snyk test\n  run: snyk test --all-projects --severity-threshold=high --fail-on=upgradable\n```\n\n## Best Practices\n\n- Set --severity-threshold=high in CI to start; tighten later\n- Use --fail-on=upgradable to only fail when a fix exists\n- Monitor every release so regressions alert automatically\n- Keep SNYK_TOKEN in CI secrets, never in the repo\n- Triage with the dashboard's priority score, not raw counts",
+  "examples": [
+    {
+      "input": "Are my npm dependencies safe?",
+      "output": "Agent runs snyk test --json, lists HIGH/CRITICAL findings with fix versions, and shows which are upgradable."
+    },
+    {
+      "input": "Monitor this project for new vulnerabilities",
+      "output": "Agent runs snyk monitor --project-name=api and explains the dashboard alert flow and CI gating."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "snyk.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-snyk"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Snyk. You do it through dependency-testing: Test projects for vulnerable dependencies. The commands are real, e.g. `snyk auth`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "snyk",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "dependency-testing",
+        "name": "severityThreshold",
+        "type": "string",
+        "description": "Minimum severity: low, medium, high, critical"
+      },
+      {
+        "capability": "dependency-testing",
+        "name": "allProjects",
+        "type": "boolean",
+        "description": "Scan all projects in the directory"
+      },
+      {
+        "capability": "dependency-testing",
+        "name": "org",
+        "type": "string",
+        "description": "Snyk organization slug"
+      },
+      {
+        "capability": "code-iac-container",
+        "name": "severityThreshold",
+        "type": "string",
+        "description": "Minimum severity to report"
+      },
+      {
+        "capability": "code-iac-container",
+        "name": "report",
+        "type": "boolean",
+        "description": "Upload IaC results to Snyk"
+      },
+      {
+        "capability": "monitoring",
+        "name": "projectName",
+        "type": "string",
+        "description": "Custom project name in the Snyk dashboard"
+      },
+      {
+        "capability": "monitoring",
+        "name": "org",
+        "type": "string",
+        "description": "Snyk org slug or ID to associate monitored projects with."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "snyk"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/snyk-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/snyk-skill.yaml",
+    "checksum": "a00b1d638627fab81cb278178cf41c1fd8badfb8be52808cc1f1ff16fd6a166b"
+  }
+}

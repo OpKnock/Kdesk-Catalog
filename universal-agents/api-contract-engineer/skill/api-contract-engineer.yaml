@@ -1,0 +1,183 @@
+name: api-contract-engineer
+version: 2.0.0
+type: skill
+category: testing
+description: 'Hands-on implementation of contract testing: Pact consumer tests, provider verification,
+  and schema validation wired into CI.'
+keywords:
+- contract-testing
+- pact
+- openapi
+- schema-validation
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-contract-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-contract-engineer
+  generic:
+    system_prompt: 'You take the api-contract-engineer seat. You do it through pact-implementation: Write
+      and run Pact consumer and provider tests in Node and Python. The commands are real, e.g. `npm install
+      @pact-foundation/pact`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: pact-implementation
+  description: Write and run Pact consumer and provider tests in Node and Python
+  commands:
+  - npm install @pact-foundation/pact
+  - npx jest --testMatch '**/pact/*.test.js'
+  - npm run test:provider
+  - npx pact-mock-service start --port 1234
+  - npx pact-broker publish ./pacts --consumer-version 1.0.0 --broker-base-url http://localhost:9292
+  examples:
+  - npx jest --testMatch '**/pact/*.test.js' --runInBand
+  - npm run test:provider && npx pact-broker publish ./pacts --consumer-version 1.0.0
+  - npx pact-mock-service start --port 1234 --pact-dir ./pacts
+  parameters:
+  - name: consumer
+    type: string
+    description: Consumer app name
+  - name: provider
+    type: string
+    description: Provider app name
+  - name: version
+    type: string
+    description: Consumer version
+- name: schema-validation
+  description: Validate live API responses against OpenAPI-derived JSON Schemas in tests
+  commands:
+  - npm install ajv
+  - npm install @apidevtools/swagger-parser
+  - node -e "const P=require('@apidevtools/swagger-parser');P.validate('openapi.yaml').then(()=>console.log('valid')).catch(e=>console.log(e.message))"
+  - node -e "const Ajv=require('ajv');const a=new Ajv();console.log(a.validate({type:'object',additionalProperties:false,required:['id']},{id:1,x:2})===false?'rejected':'passed')"
+  - pip install openapi-schema-validator && python -c "from openapi_schema_validator import validate;print('ok')"
+  examples:
+  - node -e "const P=require('@apidevtools/swagger-parser');P.validate('openapi.yaml').then(()=>console.log('valid'))"
+  - node -e "const Ajv=require('ajv');const a=new Ajv();console.log(a.validate({type:'object',required:['id']},{id:1}))"
+  - python -c "from openapi_schema_validator import validate;validate({'id':1},{'type':'object','required':['id']});print('ok')"
+  parameters:
+  - name: spec
+    type: string
+    description: OpenAPI spec path
+  - name: response
+    type: string
+    description: Response JSON to validate
+prerequisites:
+- pact
+- openapi
+- node.js
+- python
+tools:
+- pact
+- openapi
+- node.js
+- python
+- postman
+examples:
+- input: Implement consumer-driven contract testing
+  output: Builds Pact consumer tests for the orders API, publishes contracts, and adds provider verification
+    with states
+- input: Validate API responses against the OpenAPI spec
+  output: Wires AJV schema validation into integration tests so spec drift fails CI
+instructions: '# API Contract Engineer
+
+
+  Implements contract tests that catch breaking API changes before they reach production.
+
+
+  ## When to Use
+
+  - Consumer and provider teams move fast
+
+  - Breaking changes keep slipping through
+
+  - Third-party APIs need guards
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Install
+
+  npm install @pact-foundation/pact
+
+
+  # Run consumer tests
+
+  npx jest --testMatch ''**/pact/*.test.js''
+
+
+  # Publish contracts
+
+  npx pact-broker publish ./pacts --consumer-version 1.0.0 --broker-base-url http://localhost:9292
+
+
+  # Provider verification
+
+  npm run test:provider
+
+
+  # Validate spec parses
+
+  node -e "const P=require(''@apidevtools/swagger-parser'');P.validate(''openapi.yaml'').then(()=>console.log(''valid''))"
+
+  ```
+
+
+  ## Provider State
+
+  Set up provider states so verification runs against known fixtures.
+
+
+  ## Testing
+
+  Run consumer tests on every PR; verification in the provider pipeline.
+
+
+  ## Best Practices
+
+  - Publish contracts with unique versions
+
+  - Gate deploys with can-i-deploy
+
+  - Keep pacts small and readable'
+display_name: api-contract-engineer
+knowledge:
+- title: Pact JS
+  type: documentation
+  source: https://docs.pact.io/implementation_guides/javascript/
+  description: Consumer and provider APIs in Node
+- title: Pact Broker
+  type: documentation
+  source: https://docs.pact.io/pact_broker/
+  description: Contract publishing and can-i-deploy
+- title: swagger-parser
+  type: documentation
+  source: https://apitools.dev/swagger-parser/
+  description: OpenAPI parsing and validation

@@ -1,0 +1,198 @@
+{
+  "name": "husky",
+  "display_name": "husky",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Configures Git hooks with husky: pre-commit, commit-msg, pre-push gates, and lint-staged integration.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "git",
+    "npm",
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "npx husky init",
+        "npx husky add .husky/pre-commit \"npm test\"",
+        "npx husky add .husky/commit-msg \"npx commitlint --edit \\\\\"$1\\\\\"\"",
+        "git config core.hooksPath",
+        "npx husky set .husky/pre-push \"npm run build\""
+      ],
+      "description": "Initialize and manage husky hooks.",
+      "name": "husky-setup",
+      "examples": [
+        "npx husky add .husky/pre-commit \"npx lint-staged\"",
+        "npx husky add .husky/pre-push \"npm test\"",
+        "git config core.hooksPath .husky"
+      ],
+      "parameters": [
+        {
+          "description": "Hook name: pre-commit, commit-msg, pre-push",
+          "name": "hook",
+          "type": "string"
+        },
+        {
+          "description": "Command to run",
+          "name": "command",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "npm install --save-dev lint-staged",
+        "npx lint-staged",
+        "npx lint-staged --diff \"src/**/*.ts\"",
+        "npx lint-staged --allow-empty"
+      ],
+      "description": "Run staged-file checks with lint-staged.",
+      "name": "husky-lint-staged",
+      "examples": [
+        "npx lint-staged --concurrent 4",
+        "npx lint-staged --no-stash"
+      ],
+      "parameters": [
+        {
+          "description": "File pattern",
+          "name": "glob",
+          "type": "string"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "lint-staged config path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Husky Docs",
+      "description": "Setup, hooks, and CI handling",
+      "source": "https://typicode.github.io/husky/",
+      "type": "documentation"
+    },
+    {
+      "title": "lint-staged Docs",
+      "description": "Staged-file linting",
+      "source": "https://github.com/lint-staged/lint-staged",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Husky\n\nGit hooks made easy.\n\n## When to Use\n\n- Running tests and lint before commits\n- Validating commit messages with commitlint\n- Pre-push builds and checks\n- Keeping CI from being the first line of defense\n\n## Commands\n\n```bash\n# Init\nnpx husky init\n\n# Add hooks\nnpx husky add .husky/pre-commit \"npm test\"\nnpx husky add .husky/pre-commit \"npx lint-staged\"\nnpx husky add .husky/commit-msg \"npx commitlint --edit \\\"$1\\\"\"\nnpx husky add .husky/pre-push \"npm run build\"\n\n# Verify hooks path\ngit config core.hooksPath\n```\n\n## lint-staged Config\n\n```json\n// package.json\n{\n  \"lint-staged\": {\n    \"*.{js,ts}\": [\"eslint --fix\", \"prettier --write\"],\n    \"*.py\": [\"black\", \"flake8\"]\n  }\n}\n```\n\n## Best Practices\n\n- Run fast checks in pre-commit (lint + format)\n- Use lint-staged so only changed files are checked\n- Keep commit-msg validation strict with commitlint\n- Make pre-push run tests and builds\n- In CI, skip hooks: set HUSKY=0 for checkout steps\n- Commit .husky/ so all developers share the hooks",
+  "examples": [
+    {
+      "input": "Add pre-commit linting with husky",
+      "output": "Agent runs npx husky init, adds lint-staged with eslint+prettier, and tests the hook with a real commit."
+    },
+    {
+      "input": "My hooks run in CI and slow it down",
+      "output": "Agent sets HUSKY=0 in CI checkout steps and explains why hooks are a local-dev concern."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "husky.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-husky"
+    },
+    "generic": {
+      "system_prompt": "You take the husky seat. You do it through husky-setup: Initialize and manage husky hooks. The commands are real, e.g. `npx husky init`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "husky",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "husky-setup",
+        "name": "hook",
+        "type": "string",
+        "description": "Hook name: pre-commit, commit-msg, pre-push"
+      },
+      {
+        "capability": "husky-setup",
+        "name": "command",
+        "type": "string",
+        "description": "Command to run"
+      },
+      {
+        "capability": "husky-lint-staged",
+        "name": "glob",
+        "type": "string",
+        "description": "File pattern"
+      },
+      {
+        "capability": "husky-lint-staged",
+        "name": "config",
+        "type": "string",
+        "description": "lint-staged config path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "git",
+    "npm",
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/husky-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/husky-skill.yaml",
+    "checksum": "6cfa9316a8006edd45b63dd1d41ffa500510764485a00283bba76b0904b07a4d"
+  }
+}

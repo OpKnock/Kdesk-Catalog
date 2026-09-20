@@ -1,0 +1,202 @@
+{
+  "name": "compliance-logging",
+  "display_name": "Compliance Logging",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Implement compliance-grade logging: audit trails with auditd, systemd journal capture, logrotate policies, and immutable log shipping.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "auditctl",
+    "ausearch",
+    "journalctl"
+  ],
+  "capabilities": [
+    {
+      "name": "auditd",
+      "description": "Configure Linux audit rules for file, syscall, and identity monitoring",
+      "commands": [
+        "auditctl -l",
+        "auditctl -w /etc/passwd -p wa -k identity",
+        "auditctl -a always,exit -F arch=b64 -S execve -k process-exec",
+        "ausearch -k identity -i"
+      ],
+      "examples": [
+        "auditctl -w /etc/nginx/nginx.conf -p wa -k api-config",
+        "ausearch -k process-exec -i | tail -20",
+        "auditctl -l | grep identity"
+      ],
+      "parameters": [
+        {
+          "name": "watch_path",
+          "type": "string",
+          "description": "File or directory to audit"
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Audit rule key such as identity or api-config"
+        }
+      ]
+    },
+    {
+      "name": "journal-rotation",
+      "description": "Capture service logs in systemd journal and enforce rotation policies",
+      "commands": [
+        "journalctl -u api.service",
+        "journalctl -u api.service --since \"1 hour ago\"",
+        "journalctl --disk-usage",
+        "journalctl --vacuum-size=500M"
+      ],
+      "examples": [
+        "journalctl -u api.service -f",
+        "journalctl -u api.service --since today -o json | jq '.MESSAGE'",
+        "journalctl --disk-usage && journalctl --vacuum-size=500M"
+      ],
+      "parameters": [
+        {
+          "name": "unit",
+          "type": "string",
+          "description": "Systemd unit name such as api.service"
+        },
+        {
+          "name": "vacuum_size",
+          "type": "string",
+          "description": "Journal size limit such as 500M"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Linux auditd documentation",
+      "type": "documentation",
+      "source": "https://linux-audit.com/",
+      "description": "auditctl rules, ausearch queries, and best practices"
+    },
+    {
+      "title": "logrotate man page",
+      "type": "documentation",
+      "source": "https://man7.org/linux/man-pages/man5/logrotate.conf.5.html",
+      "description": "logrotate configuration directives"
+    }
+  ],
+  "instructions": "# Compliance Logging\n\nBuild audit-grade logging for APIs: who did what, when, with what.\n\n## When to Use\n\n- SOC 2, PCI DSS, and GDPR audit requirements\n- Tracking admin and config changes\n- Proving log integrity and retention\n\n## auditd File Watches\n\n```bash\nauditctl -w /etc/passwd -p wa -k identity\nauditctl -w /etc/nginx/nginx.conf -p wa -k api-config\nauditctl -a always,exit -F arch=b64 -S execve -k process-exec\nauditctl -l\n```\n\n## Query Audits\n\n```bash\nausearch -k identity -i\nausearch -ts today -k api-config -i | tail -20\n```\n\n## systemd Journal\n\n```bash\njournalctl -u api.service -f\njournalctl -u api.service --since \"1 hour ago\"\njournalctl -u api.service -o json | jq '.MESSAGE'\njournalctl --disk-usage\njournalctl --vacuum-size=500M\n```\n\n## logrotate\n\n```\n/var/log/api/*.log {\n  daily\n  rotate 365\n  compress\n  delaycompress\n  missingok\n  notifempty\n  create 0640 api api\n  sharedscripts\n  postrotate\n    systemctl reload api\n  endscript\n}\n```\n\n```bash\nlogrotate -d /etc/logrotate.d/api\n```\n\n## Testing\n\n```bash\n# Trigger a change and find it\nausearch -k identity -i | tail -5\njournalctl -u api.service --since \"10 min ago\" | wc -l\n```\n\n## Best Practices\n\n- Ship logs to append-only storage (WORM) or SIEM\n- Add correlation IDs to all log entries\n- Rotate logs and enforce disk budgets\n- Restrict log file permissions to 0640\n- Persist audit rules via /etc/audit/rules.d\n- Test restoration from log archives",
+  "examples": [
+    {
+      "input": "Audit all changes to my API config file.",
+      "output": "The agent adds an auditctl watch on /etc/nginx/nginx.conf with key api-config and shows how to query with ausearch -k api-config -i."
+    },
+    {
+      "input": "Keep API logs for a year with rotation.",
+      "output": "The agent writes a logrotate config with daily rotation, rotate 365, and compress, then validates with logrotate -d."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "compliance-logging.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-compliance-logging"
+    },
+    "generic": {
+      "system_prompt": "Your lane is Compliance Logging. You do it through auditd: Configure Linux audit rules for file, syscall, and identity monitoring. The commands are real, e.g. `auditctl -l`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "compliance-logging",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "auditd",
+        "name": "watch_path",
+        "type": "string",
+        "description": "File or directory to audit"
+      },
+      {
+        "capability": "auditd",
+        "name": "key",
+        "type": "string",
+        "description": "Audit rule key such as identity or api-config"
+      },
+      {
+        "capability": "journal-rotation",
+        "name": "unit",
+        "type": "string",
+        "description": "Systemd unit name such as api.service"
+      },
+      {
+        "capability": "journal-rotation",
+        "name": "vacuum_size",
+        "type": "string",
+        "description": "Journal size limit such as 500M"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "auditctl",
+    "ausearch",
+    "journalctl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/compliance-logging-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/compliance-logging-skill.yaml",
+    "checksum": "5dc8b88187df8d27c765f35c49bfc8876141533121a3a8dd622e0f3d09c7329b"
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "name": "nats-streams",
+  "display_name": "Nats Streams",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Deep JetStream stream management: subjects coverage, limits, backups, views, and replication config.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "nats"
+  ],
+  "capabilities": [
+    {
+      "name": "jetstream-stream-admin",
+      "description": "Administer JetStream streams: coverage checks, limits, views, backups and replication.",
+      "commands": [
+        "nats stream add ORDERS --subjects 'orders.*' --replicas 3",
+        "nats stream check coverage ORDERS 'orders.>'",
+        "nats stream view ORDERS --reverse",
+        "nats stream report",
+        "nats stream backup ORDERS /backup/orders"
+      ],
+      "examples": [
+        "nats stream check coverage ORDERS 'orders.*' --detail",
+        "nats stream view ORDERS 10",
+        "nats stream report"
+      ],
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "string",
+          "description": "Stream name"
+        },
+        {
+          "name": "replicas",
+          "type": "integer",
+          "description": "Replication factor 1-5"
+        },
+        {
+          "name": "max_age",
+          "type": "string",
+          "description": "Retention window e.g. 72h"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "JetStream Streams Concepts",
+      "type": "documentation",
+      "source": "https://docs.nats.io/nats-concepts/jetstream/streams",
+      "description": "Subjects, retention, storage, limits and replication"
+    },
+    {
+      "title": "nats stream CLI",
+      "type": "documentation",
+      "source": "https://docs.nats.io/using-nats/command-line/",
+      "description": "stream add/info/view/backup/report commands"
+    }
+  ],
+  "instructions": "# NATS Streams\n\nStreams are the durable storage layer of JetStream, capturing subject traffic with configurable retention.\n\n## What this skill does\n\n- Creates streams with subject coverage and limits\n- Verifies subject coverage and message retention\n- Backs up and restores stream data\n\n## When to use\n\n- Event sourcing and replay workloads\n- Scaling streams across a cluster\n\n## Real commands\n\n```bash\n# Create replicated stream\nnats stream add ORDERS --subjects 'orders.*' --replicas 3 --max-age 72h\n\n# Verify coverage\nnats stream check coverage ORDERS 'orders.>'\n\n# View messages\nnats stream view ORDERS --reverse\nnats stream view ORDERS 10\n\n# Storage report\nnats stream report\n\n# Backup\nnats stream backup ORDERS /backup/orders\n```\n\n## Config file for streams\n\n```yaml\nname: ORDERS\nsubjects: [orders.*]\nretention: limits\nstorage: file\nmax_age: 72h\nreplicas: 3\n```\n\n## Limits to set\n\n- `--max-msgs`, `--max-bytes`, `--max-age` bound the store\n- `--discard new` drops new messages when full (instead of oldest)\n\n## Best practices\n\n- Run `nats stream check coverage` when adding subjects\n- Replicas 3 for durable critical streams\n- Schedule backups for disaster recovery",
+  "examples": [
+    {
+      "input": "Make sure every orders.* message is captured",
+      "output": "The agent runs `nats stream check coverage ORDERS 'orders.*' --detail` and shows gaps in subject matching."
+    },
+    {
+      "input": "Back up my ORDERS stream",
+      "output": "The agent runs `nats stream backup ORDERS /backup/orders` and explains restore with `nats stream restore`."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "nats-streams.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-nats-streams"
+    },
+    "generic": {
+      "system_prompt": "You work Nats Streams hands-on. You do it through jetstream-stream-admin: Administer JetStream streams: coverage checks, limits, views, backups and replication. The commands are real, e.g. `nats stream add ORDERS --subjects orders.* --replicas 3`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "nats-streams",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "jetstream-stream-admin",
+        "name": "stream",
+        "type": "string",
+        "description": "Stream name"
+      },
+      {
+        "capability": "jetstream-stream-admin",
+        "name": "replicas",
+        "type": "integer",
+        "description": "Replication factor 1-5"
+      },
+      {
+        "capability": "jetstream-stream-admin",
+        "name": "max_age",
+        "type": "string",
+        "description": "Retention window e.g. 72h"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "nats"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/nats-streams-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/nats-streams-skill.yaml",
+    "checksum": "73240f369a2e2c9b920ca657a873eeb9a43d772dfff2addfa58f0849ee071ac5"
+  }
+}

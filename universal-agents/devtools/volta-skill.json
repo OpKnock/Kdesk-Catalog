@@ -1,0 +1,202 @@
+{
+  "name": "volta",
+  "display_name": "Volta",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Manages Node.js toolchains with Volta: install and pin node/npm/yarn per project, automatic version switching, and speed.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "volta"
+  ],
+  "capabilities": [
+    {
+      "name": "toolchain-install",
+      "description": "Install Node.js versions and package managers.",
+      "commands": [
+        "volta install node",
+        "volta install node@20",
+        "volta install node@lts npm@latest",
+        "volta install yarn@1.22.22",
+        "volta list-all node",
+        "volta setup"
+      ],
+      "examples": [
+        "volta install node@20",
+        "volta install node@lts npm@latest",
+        "volta list-all node"
+      ],
+      "parameters": [
+        {
+          "name": "tool",
+          "type": "string",
+          "description": "Tool: node, npm, yarn, pnpm"
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "description": "Version or channel: 20, lts, latest"
+        }
+      ]
+    },
+    {
+      "name": "pinning-and-switching",
+      "description": "Pin tool versions per project and switch automatically.",
+      "commands": [
+        "volta pin node@20",
+        "volta pin node@20.11.0 yarn@1.22.22",
+        "volta list",
+        "volta which node",
+        "volta current",
+        "volta uninstall node@16"
+      ],
+      "examples": [
+        "volta pin node@20",
+        "volta pin node@20.11.0 yarn@1.22.22",
+        "volta which node"
+      ],
+      "parameters": [
+        {
+          "name": "version",
+          "type": "string",
+          "description": "Version to pin"
+        },
+        {
+          "name": "tool",
+          "type": "string",
+          "description": "Tool to manage"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Volta Documentation",
+      "type": "documentation",
+      "source": "https://docs.volta.sh/",
+      "description": "Install, commands, and concepts"
+    },
+    {
+      "title": "Volta GitHub",
+      "type": "documentation",
+      "source": "https://github.com/volta-cli/volta",
+      "description": "Source and release notes"
+    }
+  ],
+  "instructions": "# Volta Node Toolchain\n\nPin Node.js and package manager versions per project, switched automatically.\n\n## What This Skill Does\n\n- Installs Node versions and npm/yarn/pnpm\n- Pins versions in package.json (volta key)\n- Switches toolchains automatically on cd\n- Runs commands with the pinned tool (volta run)\n- Fast, no shell hooks needed after setup\n\n## When to Use\n\n- Teams with mixed Node versions across projects\n- Reproducible CI that matches local toolchains\n- Replacing nvm churn in monorepos\n\n## Real Commands\n\n```bash\n# Setup (once)\nvolta setup\n\n# Install\nvolta install node\nvolta install node@20\nvolta install node@lts\nvolta install yarn@1.22.22\nvolta list-all node\n\n# Pin per project\nvolta pin node@20\nvolta pin node@20.11.0 yarn@1.22.22\n\n# Inspect\nvolta list\nvolta current\nvolta which node\nvolta run node --version\n\n# Uninstall\nvolta uninstall node@16\n```\n\n## What Pinning Writes\n\n```json\n{\n  \"volta\": {\n    \"node\": \"20.11.0\",\n    \"yarn\": \"1.22.22\"\n  }\n}\n```\n\n## Best Practices\n\n- Pin exact versions, commit package.json changes\n- Use volta run in CI to match local behavior\n- Install npm/yarn alongside node with one command\n- Use volta list-all before choosing versions\n- Let CI install via volta install from pinned package.json",
+  "examples": [
+    {
+      "input": "Repo needs Node 20 with yarn 1",
+      "output": "Agent installs both via volta, pins them in package.json, and verifies automatic switching"
+    },
+    {
+      "input": "CI should match local versions",
+      "output": "Agent adds volta install && volta run to CI steps, reading pins from package.json"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "volta.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-volta"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Volta. You do it through toolchain-install: Install Node.js versions and package managers. The commands are real, e.g. `volta install node`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "volta",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "toolchain-install",
+        "name": "tool",
+        "type": "string",
+        "description": "Tool: node, npm, yarn, pnpm"
+      },
+      {
+        "capability": "toolchain-install",
+        "name": "version",
+        "type": "string",
+        "description": "Version or channel: 20, lts, latest"
+      },
+      {
+        "capability": "pinning-and-switching",
+        "name": "version",
+        "type": "string",
+        "description": "Version to pin"
+      },
+      {
+        "capability": "pinning-and-switching",
+        "name": "tool",
+        "type": "string",
+        "description": "Tool to manage"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "volta"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/volta-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/volta-skill.yaml",
+    "checksum": "8f076df5008d0746013221cece57307b158486ba34984a7c6dec9d20e663e993"
+  }
+}

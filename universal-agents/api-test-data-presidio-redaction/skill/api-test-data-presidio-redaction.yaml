@@ -1,0 +1,165 @@
+name: api-test-data-presidio-redaction
+version: 2.0.0
+type: skill
+category: testing
+description: 'Anonymizes and masks test data for safe environments: Presidio PII redaction, jq field masking,
+  and synthetic data generation for compliance.'
+keywords:
+- test-data
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-test-data-presidio-redaction.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-test-data-presidio-redaction
+  generic:
+    system_prompt: 'You work Api Test Data Presidio Redaction hands-on. You do it through presidio-redaction:
+      Redact PII with Microsoft Presidio. The commands are real, e.g. `pip install presidio-analyzer presidio-anonymizer`.
+      You prefer the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: presidio-redaction
+  description: Redact PII with Microsoft Presidio
+  commands:
+  - pip install presidio-analyzer presidio-anonymizer
+  - presidio-anonymizer --text "Contact alice@example.com or 555-1234" --language en
+  - 'python -c "from presidio_anonymizer import AnonymizerEngine; from presidio_analyzer import AnalyzerEngine;
+    a=AnalyzerEngine(); res=a.analyze(text=''email: a@b.co'', language=''en''); print([str(r) for r in
+    res])"'
+  - python -c "from presidio_anonymizer import AnonymizerEngine; e=AnonymizerEngine(); print(e.anonymize(text='call
+    555-1234', analyzer_results=[]))"
+  examples:
+  - presidio-anonymizer redacts emails and phones
+  - AnalyzerEngine detects PII entities
+  - AnonymizerEngine replaces entities with placeholders
+  parameters:
+  - name: text
+    type: string
+    description: Input text to process
+  - name: language
+    type: string
+    description: Language of the input
+  - name: entities
+    type: array
+    description: PII entity types to detect
+- name: field-masking
+  description: Mask fields with jq transformations
+  commands:
+  - curl -s http://localhost:3000/api/users | jq 'map(.email |= sub("(?<=.{3}).*(?=@)"; "***"))'
+  - curl -s http://localhost:3000/api/users | jq 'map(.phone = "***-***-0000")'
+  - curl -s http://localhost:3000/api/users | jq 'del(.[].ssn)'
+  examples: []
+  parameters: []
+prerequisites:
+- faker
+- node.js
+- python
+tools:
+- faker
+- node.js
+- python
+- factory-boy
+- json-schema-faker
+examples:
+- input: Prepare a staging dataset
+  output: Runs Presidio anonymization over the export and verifies zero PII remains
+- input: Mask emails in an API response
+  output: Pipes the response through jq with a sub() regex
+instructions: '# API Test Data v4 - Masking
+
+
+  PII masking and anonymization.
+
+
+  ## What This Skill Does
+
+  - Detects PII with Presidio
+
+  - Anonymizes data for non-prod environments
+
+  - Masks fields with jq
+
+
+  ## When to Use
+
+  - Copying prod data to staging
+
+  - Compliance with GDPR/HIPAA
+
+  - Safe shareable datasets
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  pip install presidio-analyzer presidio-anonymizer
+
+  presidio-anonymizer --text "Contact alice@example.com or 555-1234" --language en
+
+  curl -s http://localhost:3000/api/users | jq ''map(.email |= sub("(?<=.{3}).*(?=@)"; "***"))''
+
+  ```
+
+
+  ## Masking Strategy
+
+  - Detect entities: email, phone, SSN, credit card
+
+  - Anonymize with placeholder operators
+
+  - Mask with regex sub in jq pipelines
+
+
+  ## Testing
+
+  - Verify no original PII survives
+
+  - Confirm formats remain valid
+
+  - Test locale-specific entities
+
+
+
+  ## Best Practices
+
+  - Mask before writing to disk
+
+  - Keep mapping tables encrypted
+
+  - Log anonymization transformations'
+display_name: Api Test Data Presidio Redaction
+knowledge:
+- title: Presidio Docs
+  type: documentation
+  source: https://microsoft.github.io/presidio/
+  description: PII detection and anonymization
+- title: jq Manual
+  type: documentation
+  source: https://jqlang.github.io/jq/manual/
+  description: JSON transformations with jq

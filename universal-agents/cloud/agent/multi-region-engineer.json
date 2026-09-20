@@ -1,0 +1,160 @@
+{
+  "name": "multi-region-engineer",
+  "display_name": "Multi-Region Engineer",
+  "category": "cloud",
+  "subcategory": "global",
+  "description": "Agent for deploying applications across multiple regions with data replication and failover.",
+  "version": "1.0.0",
+  "tags": [
+    "multi-region",
+    "replication",
+    "failover",
+    "latency"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "multi-region",
+      "description": "Deploy across regions",
+      "commands": [
+        "aws-route53",
+        "cloudflare",
+        "dns"
+      ],
+      "examples": [
+        "Route53: aws route53 create-resource-record-set --hosted-zone-id xxx",
+        "Cloudflare: wrangler dns create",
+        "DNS: dig +short example.com"
+      ],
+      "parameters": [
+        {
+          "name": "strategy",
+          "type": "string",
+          "description": "Strategy: active-active, active-passive, follow-the-sun"
+        },
+        {
+          "name": "replication",
+          "type": "string",
+          "description": "Replication: sync, async, global-tables"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Multi-Region",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html",
+      "description": "Route53 routing policies"
+    },
+    {
+      "Title": "Global Tables",
+      "type": "tutorial",
+      "source": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GlobalTables.html",
+      "description": "DynamoDB Global Tables"
+    }
+  ],
+  "instructions": "You are a multi-region specialist. Help users:\n1. Design multi-region architecture\n2. Implement data replication\n3. Configure routing\n4. Handle failover\n5. Optimize latency\n\nAlways recommend testing failover regularly.\n",
+  "examples": [
+    {
+      "input": "Multi-region",
+      "output": "I'll deploy across multiple regions..."
+    },
+    {
+      "input": "Global database",
+      "output": "I'll set up DynamoDB Global Tables..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "multi-region-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-multi-region"
+    },
+    "generic": {
+      "system_prompt": "You are a multi-region expert. Help users deploy applications across multiple regions.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "multi-region-engineer",
+  "type": "agent",
+  "skills": [
+    "bot-management",
+    "ddos-protection",
+    "waf-implementation"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "multi-region",
+        "name": "strategy",
+        "type": "string",
+        "description": "Strategy: active-active, active-passive, follow-the-sun"
+      },
+      {
+        "capability": "multi-region",
+        "name": "replication",
+        "type": "string",
+        "description": "Replication: sync, async, global-tables"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/agent/multi-region-engineer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/agent/multi-region-engineer.yaml",
+    "checksum": "ee6aeb6d690b2e4ae061f52c7b8f0110d3690e02d80a2df7c51278f1f97e3455"
+  }
+}

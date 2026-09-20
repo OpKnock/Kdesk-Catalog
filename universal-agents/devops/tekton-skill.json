@@ -1,0 +1,217 @@
+{
+  "name": "tekton-devops",
+  "display_name": "tekton-devops",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Builds CI/CD pipelines on Kubernetes with Tekton: Tasks, Pipelines, Triggers, and the tkn CLI for runs and logs.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kubectl",
+    "tkn"
+  ],
+  "capabilities": [
+    {
+      "name": "tasks-and-pipelines",
+      "description": "Create Tasks/Pipelines and start runs with parameters.",
+      "commands": [
+        "kubectl apply -f task-build.yaml",
+        "tkn task create -f task-build.yaml",
+        "tkn task list",
+        "kubectl apply -f pipeline-ci.yaml",
+        "tkn pipeline start ci -p revision=main -w name=workspace,claimName=build-pvc",
+        "tkn pipeline list"
+      ],
+      "examples": [
+        "tkn pipeline start ci -p revision=main",
+        "kubectl apply -f pipeline-ci.yaml",
+        "tkn task list"
+      ],
+      "parameters": [
+        {
+          "name": "pipeline",
+          "type": "string",
+          "description": "Pipeline name"
+        },
+        {
+          "name": "params",
+          "type": "object",
+          "description": "Parameters passed with -p"
+        },
+        {
+          "name": "workspace",
+          "type": "string",
+          "description": "Workspace binding"
+        }
+      ]
+    },
+    {
+      "name": "runs-and-logs",
+      "description": "Monitor, inspect, and cancel pipeline runs.",
+      "commands": [
+        "tkn pipelinerun list",
+        "tkn pipelinerun logs ci-run-123 -f",
+        "tkn pipelinerun describe ci-run-123",
+        "tkn pipelinerun cancel ci-run-123",
+        "tkn taskrun logs taskrun-abc --follow",
+        "kubectl get pipelineruns --sort-by=.metadata.creationTimestamp"
+      ],
+      "examples": [
+        "tkn pipelinerun logs ci-run-123 -f",
+        "tkn pipelinerun describe ci-run-123",
+        "tkn pipelinerun cancel ci-run-123"
+      ],
+      "parameters": [
+        {
+          "name": "run",
+          "type": "string",
+          "description": "PipelineRun name"
+        },
+        {
+          "name": "follow",
+          "type": "boolean",
+          "description": "Stream logs"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Tekton Documentation",
+      "type": "documentation",
+      "source": "https://tekton.dev/docs/",
+      "description": "Tasks, Pipelines, Triggers, and best practices"
+    },
+    {
+      "title": "tkn CLI",
+      "type": "documentation",
+      "source": "https://tekton.dev/docs/cli/",
+      "description": "tkn command reference"
+    },
+    {
+      "title": "Tekton Catalog",
+      "type": "documentation",
+      "source": "https://github.com/tektoncd/catalog",
+      "description": "Reusable community Tasks"
+    }
+  ],
+  "instructions": "# Tekton Pipelines\n\nRun Kubernetes-native CI/CD: Tasks and Pipelines as CRDs, driven by the tkn CLI.\n\n## What This Skill Does\n\n- Defines Tasks and Pipelines with steps, params, and workspaces\n- Starts runs with parameter and workspace bindings\n- Streams logs and describes run status\n- Cancels stuck runs and lists history\n- Reuses community Tasks from the Tekton catalog\n\n## When to Use\n\n- CI/CD inside Kubernetes without external services\n- Cluster-adjacent build pipelines (in-cluster builds, privileged steps)\n- GitOps-friendly pipeline definitions in git\n\n## Real Commands\n\n```bash\n# Define and install\nkubectl apply -f task-build.yaml\nkubectl apply -f pipeline-ci.yaml\ntkn task list\ntkn pipeline list\n\n# Start runs\ntkn pipeline start ci -p revision=main   -w name=workspace,claimName=build-pvc\ntkn pipeline start ci --use-param-defaults\n\n# Observe\ntkn pipelinerun list\ntkn pipelinerun logs ci-run-123 -f\ntkn pipelinerun describe ci-run-123\ntkn pipelinerun cancel ci-run-123\nkubectl get pipelineruns --sort-by=.metadata.creationTimestamp\n```\n\n## Pipeline Sketch\n\n```yaml\napiVersion: tekton.dev/v1\nkind: Pipeline\nmetadata: { name: ci }\nspec:\n  workspaces: [{ name: workspace }]\n  tasks:\n    - name: build\n      taskRef: { name: build-image }\n      workspaces: [{ name: source, workspace: workspace }]\n```\n\n## Best Practices\n\n- Keep Tasks small and reusable; compose with Pipeline params\n- Use workspaces (PVC/emptyDir) for shared state between tasks\n- Add timeouts and retries on flaky steps\n- Run the Tekton dashboard or use tkn for day-2 ops\n- Version pipelines in git and apply with kubectl apply for auditability",
+  "examples": [
+    {
+      "input": "Run our CI pipeline with a specific git revision",
+      "output": "Agent starts the pipeline with -p revision=... and workspace binding, then streams logs with pipelinerun logs"
+    },
+    {
+      "input": "A run is stuck; investigate",
+      "output": "Agent describes the run, checks taskrun status and events, cancels if stuck, and fixes the failing step"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "tekton-devops.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-tekton"
+    },
+    "generic": {
+      "system_prompt": "You are the tekton-devops specialist. You do it through tasks-and-pipelines: Create Tasks/Pipelines and start runs with parameters. The commands are real, e.g. `kubectl apply -f task-build.yaml`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "tekton-devops",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "tasks-and-pipelines",
+        "name": "pipeline",
+        "type": "string",
+        "description": "Pipeline name"
+      },
+      {
+        "capability": "tasks-and-pipelines",
+        "name": "params",
+        "type": "object",
+        "description": "Parameters passed with -p"
+      },
+      {
+        "capability": "tasks-and-pipelines",
+        "name": "workspace",
+        "type": "string",
+        "description": "Workspace binding"
+      },
+      {
+        "capability": "runs-and-logs",
+        "name": "run",
+        "type": "string",
+        "description": "PipelineRun name"
+      },
+      {
+        "capability": "runs-and-logs",
+        "name": "follow",
+        "type": "boolean",
+        "description": "Stream logs"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kubectl",
+    "tkn"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/tekton-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/tekton-skill.yaml",
+    "checksum": "87cc696d7f5fda03730855733465bc2679c2d8beb68c844a55ed3ef74a28563f"
+  }
+}

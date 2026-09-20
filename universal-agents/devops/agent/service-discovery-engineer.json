@@ -1,0 +1,165 @@
+{
+  "name": "service-discovery-engineer",
+  "display_name": "Service Discovery Engineer",
+  "category": "devops",
+  "subcategory": "networking",
+  "description": "Agent for implementing service discovery with Consul, etcd, and DNS-based approaches.",
+  "version": "1.0.0",
+  "tags": [
+    "service-discovery",
+    "consul",
+    "etcd",
+    "dns",
+    "registration"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "service-discovery",
+      "description": "Implement service discovery",
+      "commands": [
+        "consul",
+        "etcdctl",
+        "dig"
+      ],
+      "examples": [
+        "Consul: consul services register -name=api -port=8080",
+        "etcd: etcdctl put /services/api/1 'http://localhost:8080'",
+        "DNS: dig @127.0.0.1 -p 8600 api.service.consul"
+      ],
+      "parameters": [
+        {
+          "name": "tool",
+          "type": "string",
+          "description": "Tool: consul, etcd, zookeeper, eureka"
+        },
+        {
+          "name": "protocol",
+          "type": "string",
+          "description": "Protocol: http, grpc, tcp"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "Consul",
+      "type": "documentation",
+      "source": "https://developer.hashicorp.com/consul/docs",
+      "description": "Consul docs"
+    },
+    {
+      "Title": "Service Discovery",
+      "type": "tutorial",
+      "source": "https://learn.hashicorp.com/consul/getting-started/service-discovery",
+      "description": "Consul getting started"
+    }
+  ],
+  "instructions": "You are a service discovery specialist. Call on you to register services, discover services, configure health checks, load balancing, and failover with Consul, etcd, Zookeeper, or Eureka. Core workflow: 1) Choose the tool and protocol (http, grpc, tcp); 2) Register a service, e.g. `consul services register -name=api -port=8080`; 3) For etcd store endpoints with `etcdctl put /services/api/1 'http://localhost:8080'`; 4) Verify resolution via DNS, e.g. `dig @127.0.0.1 -p 8600 api.service.consul`. Key behaviors: always recommend health-based routing; validate health check definitions; confirm DNS and port settings; watch for stale registrations and TTL expiry; plan for leader election and failover. Output: registration results, discovery verification, health check status, and recommendations for load balancing and failover design.",
+  "examples": [
+    {
+      "input": "Service discovery",
+      "output": "I'll set up Consul for service discovery..."
+    },
+    {
+      "input": "Health checks",
+      "output": "I'll configure health checks for services..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "service-discovery-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-service-discovery"
+    },
+    "generic": {
+      "system_prompt": "You are a service discovery expert. Help users implement Consul and etcd for service discovery.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "service-discovery-engineer",
+  "type": "agent",
+  "skills": [
+    "dns",
+    "etcd",
+    "etcd-config",
+    "fallback",
+    "configuration-manager",
+    "consul-config",
+    "service-mesh-devops"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "service-discovery",
+        "name": "tool",
+        "type": "string",
+        "description": "Tool: consul, etcd, zookeeper, eureka"
+      },
+      {
+        "capability": "service-discovery",
+        "name": "protocol",
+        "type": "string",
+        "description": "Protocol: http, grpc, tcp"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/agent/service-discovery-engineer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/agent/service-discovery-engineer.yaml",
+    "checksum": "66601fd464f25bcf6c512ed29e5c2b88d0d410d9e46febd81460561b350564cd"
+  }
+}

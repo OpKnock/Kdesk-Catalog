@@ -1,0 +1,111 @@
+name: api-test-specialist
+version: 2.0.0
+type: skill
+category: testing
+description: 'Builds API test suites with Postman and Newman: collections, environments, assertions, data-driven
+  iterations, and CI execution with reporters.'
+keywords:
+- api-testing
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-test-specialist.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-test-specialist
+  generic:
+    system_prompt: 'You take the api-test-specialist seat. You do it through newman-execution: Run Postman
+      collections in CI. The commands are real, e.g. `npm install -g newman`. You answer with exact commands,
+      not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: newman-execution
+  description: Run Postman collections in CI
+  commands:
+  - npm install -g newman
+  - newman run collection.json -e production.postman_environment.json -r cli,json --reporter-json-export
+    results.json
+  - newman run collection.json --folder "auth" --iteration-data data.csv --reporters cli
+  - newman run collection.json -n 3 --delay-request 100
+  - newman run collection.json --env-var baseUrl=http://localhost:3000
+  examples:
+  - newman -e production selects environment variables
+  - --folder runs a subset of requests
+  - --iteration-data drives data-driven tests
+  parameters:
+  - name: collection
+    type: string
+    description: Collection file path
+  - name: environment
+    type: string
+    description: Environment JSON
+  - name: reporters
+    type: string
+    description: cli, json, html, junit
+- name: postman-assertions
+  description: Write response assertions in collections
+  commands:
+  - node -e "const c=require('./collection.json'); const t=c.item[0].event[0].script.exec.join('\n');
+    console.log(t.includes('pm.test'))"
+  - curl -s https://postman-echo.com/get?q=1 -o /dev/null -w '%{http_code}\n'
+  - npx postman-to-openapi collection.json -o openapi.yaml
+  examples: []
+  parameters: []
+prerequisites:
+- jest
+- pytest
+- postman
+tools:
+- jest
+- pytest
+- postman
+- newman
+- supertest
+examples:
+- input: Run the API suite in CI
+  output: Executes newman with JSON export and fails the build on failures
+- input: Test the auth folder
+  output: Runs only the auth folder with a data file of users
+instructions: "# API Test Specialist\n\nPostman/Newman API testing.\n\n## What This Skill Does\n- Organizes\
+  \ tests into collections\n- Runs them in CI with newman\n- Reports results as JSON/HTML\n\n## When to\
+  \ Use\n- Quick API smoke suites\n- Team testing without code\n- Data-driven endpoint checks\n\n## Real\
+  \ Commands\n\n```bash\nnpm install -g newman\nnewman run collection.json -e production.postman_environment.json\
+  \ -r cli,json --reporter-json-export results.json\nnewman run collection.json --folder \"auth\" --iteration-data\
+  \ data.csv\n```\n\n## Assertion Pattern\n\n```js\npm.test(\"status is 200\", () => {\n  pm.response.to.have.status(200);\n\
+  });\npm.test(\"has data\", () => {\n  const json = pm.response.json();\n  pm.expect(json.data).to.be.an(\"\
+  array\");\n});\n```\n\n## Testing\n- Run the full suite pre-merge\n- Use data files for parameterized\
+  \ cases\n- Publish JSON results to dashboards\n\n\n## Best Practices\n- Version collections in git\n\
+  - Store secrets in environments\n- Keep assertions granular"
+display_name: api-test-specialist
+knowledge:
+- title: Newman CLI
+  type: documentation
+  source: https://learning.postman.com/docs/collections/running-collections/using-newman-cli/
+  description: Running collections from the CLI
+- title: Postman Tests
+  type: documentation
+  source: https://learning.postman.com/docs/writing-scripts/test-scripts/
+  description: Writing pm.test assertions

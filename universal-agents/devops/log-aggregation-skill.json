@@ -1,0 +1,216 @@
+{
+  "name": "log-aggregation-devops",
+  "display_name": "Log Aggregation",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Aggregates logs across infrastructure with Loki, Elasticsearch, and Fluent Bit: collection pipelines, queries, and retention.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker",
+    "filebeat",
+    "helm",
+    "kubectl",
+    "logcli"
+  ],
+  "capabilities": [
+    {
+      "name": "loki-stack",
+      "description": "Deploy Loki + Promtail and query aggregated logs with LogQL.",
+      "commands": [
+        "helm repo add grafana https://grafana.github.io/helm-charts",
+        "helm upgrade --install loki grafana/loki-stack --namespace observability --create-namespace",
+        "kubectl get pods -n observability -l app=loki",
+        "curl -s 'http://loki:3100/loki/api/v1/query_range?query={namespace=\"app\"}'",
+        "logcli query '{app=\"web\"} |= \"ERROR\"' --limit 50",
+        "logcli labels"
+      ],
+      "examples": [
+        "helm upgrade --install loki grafana/loki-stack",
+        "logcli query '{app=\"web\"} |= \"ERROR\"' --limit 50",
+        "logcli labels"
+      ],
+      "parameters": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "LogQL stream selector and filter"
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "description": "Max log entries to return"
+        }
+      ]
+    },
+    {
+      "name": "elk-pipeline",
+      "description": "Run Elasticsearch, Logstash, and Filebeat pipelines for index-based aggregation.",
+      "commands": [
+        "docker run -d -p 9200:9200 -e discovery.type=single-node docker.elastic.co/elasticsearch/elasticsearch:8.13.0",
+        "docker run -d -v logstash.conf:/usr/share/logstash/pipeline -p 5044:5044 docker.elastic.co/logstash/logstash:8.13.0",
+        "filebeat modules list",
+        "filebeat -e -c filebeat.yml",
+        "curl -s localhost:9200/_cat/indices?v",
+        "curl -s localhost:9200/_search?q=level:error"
+      ],
+      "examples": [
+        "docker run -d -p 9200:9200 elasticsearch:8.13.0",
+        "filebeat -e -c filebeat.yml",
+        "curl -s localhost:9200/_cat/indices?v"
+      ],
+      "parameters": [
+        {
+          "name": "index",
+          "type": "string",
+          "description": "Elasticsearch index pattern"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Beat/Logstash config path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Loki Documentation",
+      "type": "documentation",
+      "source": "https://grafana.com/docs/loki/latest/",
+      "description": "Loki, Promtail, LogQL query language"
+    },
+    {
+      "title": "Elasticsearch Reference",
+      "type": "documentation",
+      "source": "https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html",
+      "description": "Elasticsearch indices, mappings, search API"
+    },
+    {
+      "title": "Fluent Bit",
+      "type": "documentation",
+      "source": "https://docs.fluentbit.io/manual/",
+      "description": "Lightweight log processor and forwarder"
+    }
+  ],
+  "instructions": "# Log Aggregation\n\nCentralize logs from containers, nodes, and apps into searchable stores.\n\n## What This Skill Does\n\n- Deploys Loki + Promtail for label-based log storage\n- Runs ELK stacks (Elasticsearch + Logstash/Filebeat) for full-text search\n- Queries aggregated logs (LogQL, _search)\n- Configures parsers, pipelines, and retention policies\n- Routes Fluent Bit outputs between stores\n\n## When to Use\n\n- You need to search logs across many pods/hosts\n- Correlating errors across microservices\n- Building dashboards and alerting on log trends\n\n## Real Commands\n\n```bash\n# Loki stack\nhelm repo add grafana https://grafana.github.io/helm-charts\nhelm upgrade --install loki grafana/loki-stack --namespace observability\nkubectl get pods -n observability -l app=loki\nlogcli query '{app=\"web\"} |= \"ERROR\" | json' --limit 50\nlogcli labels\n\n# ELK\ndocker run -d -p 9200:9200 -e discovery.type=single-node   docker.elastic.co/elasticsearch/elasticsearch:8.13.0\nfilebeat -e -c filebeat.yml\ncurl -s localhost:9200/_cat/indices?v\ncurl -s 'localhost:9200/_search?q=level:error&size=10'\n\n# Fluent Bit pipeline\nfluent-bit -c fluent-bit.conf\n```\n\n## Best Practices\n\n- Use labels sparingly in Loki (high-cardinality labels hurt performance)\n- Ship logs over a sidecar or daemonset, never from inside app code paths\n- Set retention per environment; log storage is expensive\n- Normalize timestamps and levels in the pipeline (parsers)\n- Alert on log volume anomalies before alerting on message content",
+  "examples": [
+    {
+      "input": "Search all ERROR logs from web pods in the last hour",
+      "output": "Agent runs logcli query with stream selector and time range, summarizes unique error signatures"
+    },
+    {
+      "input": "Set up centralized logging for a 20-node cluster",
+      "output": "Agent deploys Loki + Promtail via helm, configures selectors per namespace, and validates sample queries"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "log-aggregation-devops.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-log-aggregation"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Log Aggregation. You do it through loki-stack: Deploy Loki + Promtail and query aggregated logs with LogQL. The commands are real, e.g. `helm repo add grafana https://grafana.github.io/helm-charts`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "log-aggregation-devops",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "loki-stack",
+        "name": "query",
+        "type": "string",
+        "description": "LogQL stream selector and filter"
+      },
+      {
+        "capability": "loki-stack",
+        "name": "limit",
+        "type": "integer",
+        "description": "Max log entries to return"
+      },
+      {
+        "capability": "elk-pipeline",
+        "name": "index",
+        "type": "string",
+        "description": "Elasticsearch index pattern"
+      },
+      {
+        "capability": "elk-pipeline",
+        "name": "config",
+        "type": "string",
+        "description": "Beat/Logstash config path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker",
+    "filebeat",
+    "helm",
+    "kubectl",
+    "logcli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/log-aggregation-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/log-aggregation-skill.yaml",
+    "checksum": "b0f882bc3a12e039276c33908d221e67bf3780c70f224ebee4afe0cc738cc69b"
+  }
+}

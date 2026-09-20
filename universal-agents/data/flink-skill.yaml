@@ -1,0 +1,100 @@
+name: flink
+display_name: Flink
+category: data
+subcategory: general
+description: 'Runs and manages Apache Flink streaming jobs: submission, monitoring, savepoints, and SQL
+  clients.'
+version: 2.0.0
+tags:
+- flink
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- flink
+- sql-client.sh
+capabilities:
+- name: flink-cli
+  description: Submit, list, cancel, and snapshot Flink jobs
+  commands:
+  - flink run -d -p 4 ./target/streaming-job.jar --input kafka://orders --output clickhouse://events
+  - flink list -m localhost:8081
+  - flink cancel -m localhost:8081 <jobid>
+  - flink savepoint <jobid> /tmp/savepoints --yarn -yid <appid>
+  - sql-client.sh -f queries.sql
+  examples:
+  - flink run -d -c com.example.StreamingJob ./job.jar --parallelism 8
+  - flink stop -p /tmp/savepoints <jobid>
+  - flink cancel -m localhost:8081 <jobid> -s /tmp/savepoints
+  parameters:
+  - name: parallelism
+    type: integer
+    description: Parallelism for the job (-p)
+  - name: main-class
+    type: string
+    description: Main class for jobs with multiple entry points (-c)
+  - name: detached
+    type: boolean
+    description: Submit in detached mode (-d), return immediately
+knowledge:
+- title: Flink docs
+  type: documentation
+  source: https://nightlies.apache.org/flink/flink-docs-stable/
+  description: CLI reference, streaming concepts, and SQL client
+- title: Flink operations
+  type: documentation
+  source: https://nightlies.apache.org/flink/flink-docs-stable/docs/ops/
+  description: Checkpoints, savepoints, and state management
+instructions: "# Flink\n\nStream processing with Apache Flink: submit jobs, monitor the cluster, manage\n\
+  state via savepoints, and run SQL.\n\n## When to Use\n\n- Running real-time event processing jobs\n\
+  - Managing checkpoints and savepoints for stateful jobs\n- Developing queries with the SQL client\n\n\
+  ## Real Commands\n\n```bash\n# Submit a job in detached mode\nflink run -d -p 4 ./target/streaming-job.jar\
+  \ \\\n  --input kafka://orders --output clickhouse://events\n\n# With explicit main class\nflink run\
+  \ -d -c com.example.StreamingJob ./job.jar --parallelism 8\n\n# List running jobs\nflink list -m localhost:8081\n\
+  \n# Take a savepoint, then stop cleanly\nflink stop -p /tmp/savepoints <jobid>\n\n# Cancel (kill) with\
+  \ a savepoint\nflink cancel -m localhost:8081 <jobid> -s /tmp/savepoints\n\n# Restore from savepoint\n\
+  flink run -d -s /tmp/savepoints/savepoint-xxxx ./streaming-job.jar\n\n# SQL client\nsql-client.sh -f\
+  \ queries.sql\n```\n\n## Best Practices\n\n- Always take a savepoint before upgrading a stateful job\n\
+  - Use `flink stop` (graceful) over `flink cancel` for production\n- Align checkpoint intervals with\
+  \ throughput needs\n- Monitor the JobManager UI at the REST port (8081)\n- Version schemas in Kafka\
+  \ to avoid state deserialization failures\n\n## Example Response\n\nFor a job upgrade: takes a savepoint,\
+  \ verifies it completed, submits the new jar\nwith -s restore, and checks the job restarted in RUNNING\
+  \ state."
+examples:
+- input: Deploy the streaming job
+  output: Builds the jar, submits with flink run -d -p 4, verifies with flink list, and reports the job
+    ID and status
+- input: Upgrade a running job without data loss
+  output: Takes a savepoint with flink stop -p, deploys the new jar with -s, and confirms state restoration
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: flink.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-flink
+  generic:
+    system_prompt: 'You own Flink end to end. You do it through flink-cli: Submit, list, cancel, and snapshot
+      Flink jobs. The commands are real, e.g. `flink run -d -p 4 ./target/streaming-job.jar --input kafka://orders
+      --output...`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

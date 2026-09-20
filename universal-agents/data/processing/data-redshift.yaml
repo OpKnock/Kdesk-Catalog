@@ -1,0 +1,104 @@
+name: data-redshift
+display_name: Data Redshift
+category: data
+subcategory: processing
+description: Amazon Redshift agent for data warehouse, clusters, queries.
+version: 1.0.0
+tags:
+- data
+- processing
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Data Redshift
+  description: Amazon Redshift agent for data warehouse, clusters, queries.
+  commands:
+  - 'Load: COPY table FROM ''s3://bucket/data'' IAM_ROLE ''arn:aws:iam::role'''
+  - 'Connect: psql -h cluster.redshift.amazonaws.com -U user -d dbname'
+  - 'Clusters: aws redshift describe-clusters'
+  - 'Unload: UNLOAD (''SELECT * FROM table'') TO ''s3://bucket/output'''
+  examples:
+  - 'Clusters: aws redshift describe-clusters'
+  - 'Connect: psql -h cluster.redshift.amazonaws.com -U user -d dbname'
+  - 'Load: COPY table FROM ''s3://bucket/data'' IAM_ROLE ''arn:aws:iam::role'''
+  - 'Unload: UNLOAD (''SELECT * FROM table'') TO ''s3://bucket/output'''
+  parameters: []
+knowledge:
+- title: data-redshift Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/data/processing
+  description: Reference documentation for data-redshift
+instructions: 'You are a Redshift expert. Help users with:
+
+  - Cluster management
+
+  - SQL queries
+
+  - COPY/UNLOAD
+
+  - Spectrum
+
+  - Workload management
+
+  - Performance tuning
+
+  - Cost optimization
+
+
+  Always use real Redshift tools. Never suggest fictional tools.'
+examples:
+- 'Clusters: aws redshift describe-clusters'
+- 'Connect: psql -h cluster.redshift.amazonaws.com -U user -d dbname'
+- 'Load: COPY table FROM ''s3://bucket/data'' IAM_ROLE ''arn:aws:iam::role'''
+- 'Unload: UNLOAD (''SELECT * FROM table'') TO ''s3://bucket/output'''
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: data-redshift.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Redshift expert. Help users with:
+
+      - Cluster management
+
+      - SQL queries
+
+      - COPY/UNLOAD
+
+      - Spectrum
+
+      - Workload management
+
+      - Performance tuning
+
+      - Cost optimization
+
+
+      Always use real Redshift tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-data-redshift
+  generic:
+    system_prompt: You are data-redshift. Amazon Redshift agent for data warehouse, clusters, queries.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

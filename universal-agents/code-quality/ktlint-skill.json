@@ -1,0 +1,211 @@
+{
+  "name": "ktlint",
+  "display_name": "Ktlint",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Formats and lints Kotlin with ktlint: style enforcement, experimental rules, Gradle integration, and IDE setup.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "gradle",
+    "ktlint"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "ktlint src/",
+        "ktlint --format src/",
+        "ktlint --experimental src/",
+        "ktlint \"src/**/*.kt\"",
+        "ktlint --verbose src/Main.kt"
+      ],
+      "description": "Lint and format Kotlin files.",
+      "name": "ktlint-run",
+      "examples": [
+        "ktlint --format --experimental src/",
+        "ktlint --reporter=json --output=report.json",
+        "ktlint --android src/"
+      ],
+      "parameters": [
+        {
+          "description": "Files or directories",
+          "name": "paths",
+          "type": "string"
+        },
+        {
+          "description": "Auto-format",
+          "name": "format",
+          "type": "boolean"
+        },
+        {
+          "description": "Enable experimental rules",
+          "name": "experimental",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "gradle ktlintCheck",
+        "gradle ktlintFormat",
+        "gradle ktlintGenerateBaseline",
+        "gradle ktlintApplyToIDEA"
+      ],
+      "description": "Run ktlint through Gradle.",
+      "name": "ktlint-gradle",
+      "examples": [
+        "gradle ktlintCheck --continue",
+        "gradle ktlintFormat -PktlintExperimental=true"
+      ],
+      "parameters": [
+        {
+          "description": "Baseline file path",
+          "name": "baseline",
+          "type": "string"
+        },
+        {
+          "name": "android",
+          "type": "boolean",
+          "description": "Apply Android-specific conventions"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ktlint Docs",
+      "description": "Rules, CLI, and Gradle plugin",
+      "source": "https://pinterest.github.io/ktlint/",
+      "type": "documentation"
+    },
+    {
+      "title": "Kotlin Official Style Guide",
+      "description": "Kotlin conventions",
+      "source": "https://kotlinlang.org/docs/coding-conventions.html",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# ktlint\n\nKotlin linter and formatter.\n\n## When to Use\n\n- Enforcing the official Kotlin style guide\n- Auto-formatting Kotlin in pre-commit\n- CI checks for style drift\n- Android and multiplatform projects\n\n## Commands\n\n```bash\n# Lint\nktlint src/\nktlint \"src/**/*.kt\"\n\n# Auto-format\nktlint --format src/\n\n# Experimental rules\nktlint --experimental src/\nktlint --format --experimental src/\n\n# Android conventions\nktlint --android src/\n\n# Reports\nktlint --reporter=json --output=report.json\n\n# Gradle\ngradle ktlintCheck\ngradle ktlintFormat\ngradle ktlintGenerateBaseline\n```\n\n## Config Example\n\n```yaml\n# .editorconfig\n[*.{kt,kts}]\nktlint_standard_max-line-length = 120\nktlint_experimental = enabled\n```\n\n## Best Practices\n\n- Run ktlint --format locally, ktlintCheck in CI\n- Generate a baseline when adopting on legacy code\n- Enable experimental rules only when team-agreed\n- Keep editorconfig as the single source of settings\n- Pair with detekt for deeper analysis\n- Format before linting for stable results",
+  "examples": [
+    {
+      "input": "Format my Kotlin codebase",
+      "output": "Agent runs ktlint --format src/, reviews the diff, and adds ktlintCheck to CI."
+    },
+    {
+      "input": "ktlint is too noisy on an old codebase",
+      "output": "Agent generates a baseline with gradle ktlintGenerateBaseline and sets the max-line-length in editorconfig."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ktlint.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ktlint"
+    },
+    "generic": {
+      "system_prompt": "You work Ktlint hands-on. You do it through ktlint-run: Lint and format Kotlin files. The commands are real, e.g. `ktlint src/`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ktlint",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "ktlint-run",
+        "name": "paths",
+        "type": "string",
+        "description": "Files or directories"
+      },
+      {
+        "capability": "ktlint-run",
+        "name": "format",
+        "type": "boolean",
+        "description": "Auto-format"
+      },
+      {
+        "capability": "ktlint-run",
+        "name": "experimental",
+        "type": "boolean",
+        "description": "Enable experimental rules"
+      },
+      {
+        "capability": "ktlint-gradle",
+        "name": "baseline",
+        "type": "string",
+        "description": "Baseline file path"
+      },
+      {
+        "capability": "ktlint-gradle",
+        "name": "android",
+        "type": "boolean",
+        "description": "Apply Android-specific conventions"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "gradle",
+    "ktlint"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/ktlint-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/ktlint-skill.yaml",
+    "checksum": "95be9e515969b7848dc6fc42332199ba0d1cec94e823ba8f0e855a8b0ccd3662"
+  }
+}

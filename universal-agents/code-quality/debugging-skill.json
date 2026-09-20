@@ -1,0 +1,214 @@
+{
+  "name": "debugging",
+  "display_name": "debugging",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Debug applications systematically with interactive debuggers, logging, tracing, and profilers across runtimes.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "dlv",
+    "kubectl",
+    "ngrep",
+    "node",
+    "python",
+    "tail",
+    "tcpdump"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "node --inspect-brk server.js",
+        "python -m pdb app.py",
+        "python -m pdb -c continue app.py",
+        "dlv debug ./cmd/app",
+        "dlv test ./..."
+      ],
+      "description": "Attach interactive debuggers in Node, Python, and Go.",
+      "name": "runtime-debuggers",
+      "examples": [
+        "node --inspect-brk=0.0.0.0:9229 server.js",
+        "dlv exec ./app -- --config prod.yaml",
+        "python -m pdb -c \"break app.py:42\" app.py"
+      ],
+      "parameters": [
+        {
+          "description": "Entry point",
+          "name": "entry",
+          "type": "string"
+        },
+        {
+          "description": "file:line breakpoint",
+          "name": "breakpoint",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "tail -f logs/app.log",
+        "kubectl logs -f deploy/myapp --tail=100",
+        "tcpdump -i any port 8080 -nn",
+        "curl -sv http://localhost:8080/api",
+        "ngrep -d any \"POST /api\""
+      ],
+      "description": "Use logs and traces to isolate faults.",
+      "name": "tracing-observability",
+      "examples": [
+        "kubectl logs deploy/myapp -c sidecar --since=10m",
+        "tcpdump -i any -w traffic.pcap port 8080",
+        "curl -sv -X POST http://localhost:8080/api -d \"{}\""
+      ],
+      "parameters": [
+        {
+          "description": "Service or pod to inspect",
+          "name": "target",
+          "type": "string"
+        },
+        {
+          "name": "since",
+          "type": "string",
+          "description": "Log window, e.g. 10m"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Node Debugger Docs",
+      "description": "CLI debugger and inspector",
+      "source": "https://nodejs.org/api/debugger.html",
+      "type": "documentation"
+    },
+    {
+      "title": "pdb Docs",
+      "description": "Python debugger",
+      "source": "https://docs.python.org/3/library/pdb.html",
+      "type": "documentation"
+    },
+    {
+      "title": "Delve Docs",
+      "description": "Go debugger",
+      "source": "https://github.com/go-delve/delve",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Debugging\n\nFind root causes systematically.\n\n## When to Use\n\n- Unexplained errors, hangs, and crashes\n- Timing and race condition investigation\n- Attaching to a running process without restarting\n- Confirming network-level behavior\n\n## Method\n\n1. Reproduce with the smallest input\n2. Bisect: recent change, code path, data slice\n3. Inspect state at the failure point\n4. Form a hypothesis and verify\n5. Fix, then add a regression test\n\n## Commands\n\n```bash\n# Node\nnode --inspect-brk server.js\n\n# Python\npython -m pdb app.py\npython -m pdb -c \"break app.py:42\" app.py\n\n# Go\ndlv debug ./cmd/app\ndlv exec ./app -- --config prod.yaml\n\n# Logs and network\ntail -f logs/app.log\nkubectl logs -f deploy/myapp --tail=100\ntcpdump -i any port 8080 -nn\ncurl -sv http://localhost:8080/api\n```\n\n## Best Practices\n\n- Add logging at entry/exit of suspicious functions\n- Capture the stack trace before guessing\n- Reproduce on the smallest dataset that fails\n- Check logs, then network, then state, in that order\n- Use -c continue with pdb to reach a breakpoint fast\n- Never ship debug prints; replace with proper logging\n- Turn every fix into a regression test",
+  "examples": [
+    {
+      "input": "My service hangs on one request",
+      "output": "Agent attaches a debugger with --inspect-brk or dlv, inspects goroutine/stack state, and bisects the handler."
+    },
+    {
+      "input": "500 errors with no stack trace in logs",
+      "output": "Agent checks log levels, reproduces with curl -sv, and adds tracing around the failing middleware."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "debugging.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-debugging"
+    },
+    "generic": {
+      "system_prompt": "You take the debugging seat. You do it through runtime-debuggers: Attach interactive debuggers in Node, Python, and Go. The commands are real, e.g. `node --inspect-brk server.js`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "debugging",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "runtime-debuggers",
+        "name": "entry",
+        "type": "string",
+        "description": "Entry point"
+      },
+      {
+        "capability": "runtime-debuggers",
+        "name": "breakpoint",
+        "type": "string",
+        "description": "file:line breakpoint"
+      },
+      {
+        "capability": "tracing-observability",
+        "name": "target",
+        "type": "string",
+        "description": "Service or pod to inspect"
+      },
+      {
+        "capability": "tracing-observability",
+        "name": "since",
+        "type": "string",
+        "description": "Log window, e.g. 10m"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "dlv",
+    "kubectl",
+    "ngrep",
+    "node",
+    "python",
+    "tail",
+    "tcpdump"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/debugging-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/debugging-skill.yaml",
+    "checksum": "e1473aaf4d98ea8fc66c463c91982fd1da5eaebc0609780ea00c9a3575fbfe38"
+  }
+}

@@ -1,0 +1,179 @@
+name: api-deploy-engineer
+version: 2.0.0
+type: skill
+category: devops
+description: 'Hands-on API deployment: kubectl rollouts, Helm upgrades, rollbacks, and Kubernetes deployment
+  strategy operations.'
+keywords:
+- api-deployment
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-deploy-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-deploy-engineer
+  generic:
+    system_prompt: 'You own api-deploy-engineer end to end. You do it through kubectl-deploys: Roll out
+      and roll back Kubernetes deployments safely. The commands are real, e.g. `kubectl rollout status
+      deployment/api -n prod`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: kubectl-deploys
+  description: Roll out and roll back Kubernetes deployments safely
+  commands:
+  - kubectl rollout status deployment/api -n prod
+  - kubectl set image deployment/api api=registry.example/api:v2.0.0 -n prod
+  - kubectl rollout undo deployment/api -n prod
+  - kubectl rollout history deployment/api -n prod
+  - kubectl rollout pause deployment/api -n prod
+  examples:
+  - kubectl set image deployment/api api=registry.example/api:v2.0.0 -n prod && kubectl rollout status
+    deployment/api -n prod
+  - kubectl rollout history deployment/api -n prod | head -10
+  - kubectl rollout undo deployment/api -n prod --to-revision=2
+  parameters:
+  - name: deployment
+    type: string
+    description: Deployment name
+  - name: image
+    type: string
+    description: Image tag to deploy
+  - name: namespace
+    type: string
+    description: Kubernetes namespace
+- name: helm-ops
+  description: Install, upgrade, and roll back API charts
+  commands:
+  - helm install api ./charts/api -n prod
+  - helm upgrade api ./charts/api -n prod --set image.tag=v2.0.0
+  - helm rollback api 3 -n prod
+  - helm history api -n prod
+  - helm list -n prod
+  examples:
+  - helm upgrade api ./charts/api -n prod --set image.tag=v2.0.0
+  - helm rollback api 3 -n prod
+  - helm history api -n prod
+  parameters:
+  - name: chart
+    type: string
+    description: Chart path
+  - name: release
+    type: string
+    description: Release name
+  - name: revision
+    type: string
+    description: Rollback revision
+prerequisites:
+- kubernetes
+- argocd
+- istio
+tools:
+- kubernetes
+- argocd
+- istio
+- helm
+- terraform
+examples:
+- input: Deploy v2 of the API without downtime
+  output: Runs a rolling update with readiness checks and watches rollout status to completion
+- input: Roll back a bad API release
+  output: Identifies the revision from history and executes rollout undo with verification
+instructions: '# API Deploy Engineer
+
+
+  Operates Kubernetes deployments for APIs with rollback discipline.
+
+
+  ## When to Use
+
+  - Daily API deploys on Kubernetes
+
+  - Recovering from bad releases
+
+  - Standardizing upgrade commands
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Update image
+
+  kubectl set image deployment/api api=registry.example/api:v2.0.0 -n prod
+
+  kubectl rollout status deployment/api -n prod
+
+
+  # Inspect history
+
+  kubectl rollout history deployment/api -n prod
+
+
+  # Roll back
+
+  kubectl rollout undo deployment/api -n prod --to-revision=2
+
+
+  # Helm path
+
+  helm upgrade api ./charts/api -n prod --set image.tag=v2.0.0
+
+  helm rollback api 3 -n prod
+
+  ```
+
+
+  ## Safe Deploy Checklist
+
+  - Readiness probe passes before traffic
+
+  - Rollout status watched to completion
+
+  - Rollback tested in staging first
+
+
+  ## Testing
+
+  Use `kubectl rollout status` with `--watch` and verify zero errors during the window.
+
+
+  ## Best Practices
+
+  - One image tag per release
+
+  - Keep at least 10 rollout revisions'
+display_name: api-deploy-engineer
+knowledge:
+- title: kubectl Rollout
+  type: documentation
+  source: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+  description: Rolling updates and rollbacks
+- title: Helm Docs
+  type: documentation
+  source: https://helm.sh/docs/
+  description: Install, upgrade, rollback

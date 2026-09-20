@@ -1,0 +1,88 @@
+name: compliance-inference
+display_name: Compliance Inference
+category: ml
+subcategory: agent
+description: Compliance inference server agent Manages Compliance inference server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Compliance Inference Server Agent V2
+  description: Compliance inference server agent. Manages Compliance inference server.
+  commands:
+  - 'curl http://localhost:8080/compliance --data ''{"model": "model.pkl"}'''
+  - python compliance_check.py --model model.pkl --rules rules.json --output compliance.json
+  - python audit.py --model model.pkl --data data.csv --output audit.json
+  - python inference_server.py --port 8080
+  examples:
+  - python inference_server.py --port 8080
+  - 'curl http://localhost:8080/compliance --data ''{"model": "model.pkl"}'''
+  - python compliance_check.py --model model.pkl --rules rules.json --output compliance.json
+  - python audit.py --model model.pkl --data data.csv --output audit.json
+  parameters:
+  - name: data
+    type: string
+    description: CLI flag --data observed in capability commands
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+  - name: output
+    type: string
+    description: CLI flag --output observed in capability commands
+knowledge:
+- title: compliance-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for compliance-inference
+instructions: 'You are the Ml Compliance Inference Server Agent V2, the specialist for running a Compliance
+  inference server. Start the server with `python inference_server.py --port 8080`, then exercise the
+  compliance endpoint with `curl http://localhost:8080/compliance --data ''{"model": "model.pkl"}''`.
+  Cross-check with `python compliance_check.py --model model.pkl --rules rules.json --output compliance.json`
+  and `python audit.py --model model.pkl --data data.csv --output audit.json`. Watch for bind failures
+  or malformed payloads. Report server status, endpoint responses, compliance results, and any fixes applied.'
+examples:
+- python inference_server.py --port 8080
+- 'curl http://localhost:8080/compliance --data ''{"model": "model.pkl"}'''
+- python compliance_check.py --model model.pkl --rules rules.json --output compliance.json
+- python audit.py --model model.pkl --data data.csv --output audit.json
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: compliance-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Compliance inference server expert. Help users set up Compliance inference
+      server.
+  opencode:
+    plugin: opencode-compliance-inference
+  generic:
+    system_prompt: You are compliance-inference. Compliance inference server agent v2. Manages Compliance
+      inference server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,181 @@
+name: token-refresh
+display_name: Token Refresh
+category: api
+subcategory: general
+description: 'Hand-crafted token refresh skill: OAuth2 refresh grant exchange, token rotation behavior,
+  reuse detection, and automated refresh in CLIs and services.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- oauth2l
+capabilities:
+- name: oauth-refresh
+  description: Refresh access tokens with the OAuth2 refresh grant
+  commands:
+  - curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
+    | jq -r .access_token
+  - curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
+    -o /dev/null -w '%{http_code}\n'
+  - oauth2l header cloud-platform
+  - 'curl -s -H "Authorization: Bearer $NEW_ACCESS_TOKEN" https://api.example.com/me'
+  examples:
+  - curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
+    | jq -r .access_token
+  - curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1"
+    -o /dev/null -w '%{http_code}\n'
+  - oauth2l header cloud-platform
+  parameters:
+  - name: refresh_token
+    type: string
+    description: Long-lived token from the original grant
+  - name: client_id
+    type: string
+    description: OAuth client identifier
+  - name: rotation
+    type: boolean
+    description: Server returns a new refresh token per exchange
+knowledge:
+- title: OAuth2 refresh grant (RFC 6749 sec 6)
+  type: documentation
+  source: https://www.rfc-editor.org/rfc/rfc6749#section-6
+  description: Refresh token request/response and errors
+- title: oauth2l repo
+  type: documentation
+  source: https://github.com/google/oauth2l
+  description: CLI for fetching and refreshing tokens
+instructions: '# Token Refresh
+
+
+  Hand-crafted skill for keeping OAuth2 access tokens fresh.
+
+
+  ## What this skill does
+
+
+  - Exchanges refresh tokens for new access tokens
+
+  - Detects rotation and reuse-rejection behavior
+
+  - Automates refreshes for CLIs and background services
+
+
+  ## When to use
+
+
+  - Access tokens expire in minutes; refresh tokens last longer
+
+  - A service needs to stay authenticated without user interaction
+
+  - Debugging invalid_grant errors from stale refresh tokens
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Exchange the refresh token for a new access token
+
+  curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
+  | jq -r .access_token
+
+
+  # With rotation, the response also contains a new refresh_token:
+
+  #   curl ... | jq -r .refresh_token   (store it)
+
+
+  # Reuse detection: second use of a rotated token should 400
+
+  curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1"
+  -o /dev/null -w ''%{http_code}\n''
+
+
+  # Convenience CLI (Google APIs)
+
+  oauth2l header cloud-platform
+
+
+  # Use the fresh token
+
+  curl -s -H "Authorization: Bearer $NEW_ACCESS_TOKEN" https://api.example.com/me
+
+  ```
+
+
+  ## Refresh loop
+
+
+  - Store the latest refresh_token after every exchange
+
+  - Refresh when access token has <10% TTL left
+
+  - On invalid_grant: force a full re-login
+
+
+  ## Testing
+
+
+  ```bash
+
+  TOKEN=$(curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$RT&client_id=app1&client_secret=$S"
+  | jq -r .access_token)
+
+  curl -s -H "Authorization: Bearer $TOKEN" https://api.example.com/me
+
+  ```
+
+
+  ## Best practices
+
+
+  - Treat refresh tokens as sensitive: store encrypted, rotate on use
+
+  - Persist the newest refresh token atomically with the exchange
+
+  - Never put refresh tokens in URLs or logs
+
+  '
+examples:
+- input: My access token expired, renew it
+  output: curl -s -X POST https://idp.example.com/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET"
+    | jq -r .access_token.
+- input: Refresh suddenly returns invalid_grant
+  output: With rotation, a reused token fails; use the latest stored refresh_token or re-run the interactive
+    login.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: token-refresh.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-token-refresh
+  generic:
+    system_prompt: 'This is your domain: Token Refresh. You do it through oauth-refresh: Refresh access
+      tokens with the OAuth2 refresh grant. The commands are real, e.g. `curl -s -X POST https://idp.example.com/token
+      -d...`. You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

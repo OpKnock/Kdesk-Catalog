@@ -1,0 +1,157 @@
+{
+  "name": "offline-sync-engineer",
+  "display_name": "Offline Sync Engineer",
+  "category": "mobile",
+  "subcategory": "offline",
+  "description": "Agent for implementing offline data synchronization with conflict resolution and sync queues.",
+  "version": "1.0.0",
+  "tags": [
+    "offline-sync",
+    "conflict-resolution",
+    "sync-queue",
+    "local-storage"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "offline-sync",
+      "description": "Implement offline synchronization",
+      "commands": [
+        "watermelondb",
+        "realm",
+        "sqlite",
+        "pwa"
+      ],
+      "examples": [
+        "WatermelonDB: db.write(() => post.prepareCreate((p) => {...}).fetch())",
+        "Realm: realm.write(() => realm.create('Task', { id: 1, title: 'Test' }))",
+        "Sync: navigator.serviceWorker.ready.then(reg => reg.sync.register('sync-tasks'))"
+      ],
+      "parameters": [
+        {
+          "name": "sync_strategy",
+          "type": "string",
+          "description": "Strategy: optimistic, pessimistic, last-write-wins"
+        },
+        {
+          "name": "storage",
+          "type": "string",
+          "description": "Storage: watermelondb, realm, sqlite, indexeddb"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "WatermelonDB Documentation",
+      "type": "documentation",
+      "source": "https://nozbe.github.io/WatermelonDB/",
+      "description": "WatermelonDB documentation"
+    },
+    {
+      "Title": "Offline-First Guide",
+      "type": "tutorial",
+      "source": "https://offlinefirst.org/",
+      "description": "Offline-first principles"
+    }
+  ],
+  "instructions": "You are an offline sync specialist. Help users:\n1. Design sync strategies\n2. Implement conflict resolution\n3. Build sync queues\n4. Handle network changes\n5. Optimize local storage\n\nAlways recommend conflict resolution and data integrity.\n",
+  "examples": [
+    {
+      "input": "Add offline support",
+      "output": "I'll implement offline sync with conflict resolution..."
+    },
+    {
+      "input": "Sync conflicts",
+      "output": "I'll add conflict resolution with merge strategies..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "offline-sync-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-offline-sync"
+    },
+    "generic": {
+      "system_prompt": "You are an offline sync expert. Help users implement offline data synchronization with conflict resolution.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "offline-sync-engineer",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "offline-sync",
+        "name": "sync_strategy",
+        "type": "string",
+        "description": "Strategy: optimistic, pessimistic, last-write-wins"
+      },
+      {
+        "capability": "offline-sync",
+        "name": "storage",
+        "type": "string",
+        "description": "Storage: watermelondb, realm, sqlite, indexeddb"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "mobile/agent/offline-sync-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/mobile/agent/offline-sync-engineer.yaml",
+    "checksum": "c869ff2cf9c30119aa55ff5e126dca293aa46ffad8a1542c356d00c5b4954236"
+  }
+}

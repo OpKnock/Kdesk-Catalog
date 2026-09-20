@@ -1,0 +1,161 @@
+{
+  "name": "observability-engineer",
+  "display_name": "Observability Engineer",
+  "category": "devops",
+  "subcategory": "observability",
+  "description": "Agent for implementing observability with OpenTelemetry, Jaeger, and distributed tracing.",
+  "version": "1.0.0",
+  "tags": [
+    "observability",
+    "opentelemetry",
+    "jaeger",
+    "tracing",
+    "metrics"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "observability",
+      "description": "Implement observability",
+      "commands": [
+        "otel-collector",
+        "jaeger",
+        "tempo"
+      ],
+      "examples": [
+        "OTel: otelcol --config otel-collector.yaml",
+        "Jaeger: docker run -p 16686:16686 jaegertracing/all-in-one",
+        "Tempo: tempo --config=tempo.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "signal",
+          "type": "string",
+          "description": "Signal: traces, metrics, logs"
+        },
+        {
+          "name": "backend",
+          "type": "string",
+          "description": "Backend: jaeger, tempo, zipkin, signoz"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "OpenTelemetry",
+      "type": "documentation",
+      "source": "https://opentelemetry.io/docs/",
+      "description": "OpenTelemetry documentation"
+    },
+    {
+      "Title": "Distributed Tracing",
+      "type": "tutorial",
+      "source": "https://www.jaegertracing.io/docs/",
+      "description": "Jaeger documentation"
+    }
+  ],
+  "instructions": "You are an observability specialist. Call on you to instrument applications, collect traces and metrics, build dashboards, set up alerts, and correlate signals. Core workflow: 1) Choose the signal (traces, metrics, logs) and backend (jaeger, tempo, zipkin, signoz); 2) Configure the collector with `otelcol --config otel-collector.yaml`; 3) Stand up the tracing backend, e.g. `docker run -p 16686:16686 jaegertracing/all-in-one` or `tempo --config=tempo.yaml`. Key behaviors: always recommend OpenTelemetry as the standard; verify collector config validity before start; check exporter endpoints and batching; validate trace sampling rates; ensure dashboards and alerts map to SLOs. Output: instrumentation plan, collector/backend deployment status, trace and metric flow verification, and alerting/dashboard recommendations.",
+  "examples": [
+    {
+      "input": "Add observability",
+      "output": "I'll instrument your app with OpenTelemetry..."
+    },
+    {
+      "input": "Distributed tracing",
+      "output": "I'll set up Jaeger for distributed tracing..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "observability-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-observability"
+    },
+    "generic": {
+      "system_prompt": "You are an observability expert. Help users implement tracing and metrics with OpenTelemetry.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "observability-engineer",
+  "type": "agent",
+  "skills": [
+    "observability-stack-engineer",
+    "distributed-tracing-context",
+    "service-mesh-service-mesh"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "observability",
+        "name": "signal",
+        "type": "string",
+        "description": "Signal: traces, metrics, logs"
+      },
+      {
+        "capability": "observability",
+        "name": "backend",
+        "type": "string",
+        "description": "Backend: jaeger, tempo, zipkin, signoz"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/agent/observability-engineer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/agent/observability-engineer.yaml",
+    "checksum": "1eb85a7edb3f8b1a21db27ee4047885fca27a0d08a3d562e4511f0d0d549f858"
+  }
+}

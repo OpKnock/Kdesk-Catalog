@@ -1,0 +1,193 @@
+name: event-driven
+display_name: Event Driven
+category: backend
+subcategory: general
+description: 'Architects event-driven systems with Kafka/Redpanda: topics, producers, consumers, consumer
+  groups, and dead-letter handling.'
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kafka-console-consumer
+- kafka-console-producer
+- kafka-consumer-groups
+- kafka-get-offsets
+- kafka-topics
+capabilities:
+- commands:
+  - kafka-topics --bootstrap-server localhost:9092 --create --topic orders --partitions 6 --replication-factor
+    1
+  - kafka-topics --bootstrap-server localhost:9092 --list
+  - kafka-topics --describe --topic orders
+  - kafka-topics --alter --topic orders --partitions 12
+  - kafka-topics --delete --topic legacy_orders
+  description: Create, list, and describe Kafka topics.
+  name: kafka-topics
+  examples:
+  - kafka-topics --bootstrap-server localhost:9092 --create --topic orders --partitions 6
+  - kafka-topics --describe --topic orders --under-replicated-partitions
+  - kafka-configs --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --alter
+    --add-config retention.ms=604800000
+  parameters:
+  - description: Topic name
+    name: topic
+    type: string
+  - description: Partition count
+    name: partitions
+    type: integer
+- commands:
+  - kafka-console-producer --bootstrap-server localhost:9092 --topic orders
+  - kafka-console-consumer --bootstrap-server localhost:9092 --topic orders --from-beginning
+  - kafka-consumer-groups --bootstrap-server localhost:9092 --group order-svc --describe
+  - kafka-consumer-groups --list --bootstrap-server localhost:9092
+  - kafka-get-offsets --bootstrap-server localhost:9092 --topic orders
+  description: Produce and consume messages, inspect consumer groups.
+  name: kafka-streams
+  examples:
+  - kafka-console-consumer --topic orders --group debug-consumer --from-beginning
+  - kafka-consumer-groups --group order-svc --reset-offsets --to-earliest --execute
+  - 'kafka-console-producer --topic orders --property parse.key=true --property key.separator=:'
+  parameters:
+  - description: Consumer group id
+    name: group
+    type: string
+  - description: Read all messages from the start
+    name: from-beginning
+    type: boolean
+knowledge:
+- title: Kafka Documentation
+  description: Topics, producers, consumers, and consumer groups
+  source: https://kafka.apache.org/documentation/
+  type: documentation
+- title: Redpanda Docs
+  description: Kafka-compatible streaming platform
+  source: https://docs.redpanda.com
+  type: documentation
+instructions: '# Event-Driven Architecture
+
+
+  Design systems that communicate through events.
+
+
+  ## When to Use
+
+
+  - Decoupling services so producers and consumers evolve independently
+
+  - Capturing facts (order placed, user signed up) as immutable events
+
+  - Fanning out to many consumers from one source of truth
+
+  - Replaying history for analytics or recovery
+
+
+  ## Core Concepts
+
+
+  - Topic: named channel of events, partitioned for parallelism
+
+  - Partition: ordered, append-only log of messages
+
+  - Consumer group: cooperating consumers that split partitions
+
+  - Offset: position of a consumer within a partition
+
+  - Dead-letter topic: destination for undeliverable events
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Create a topic
+
+  kafka-topics --bootstrap-server localhost:9092 --create --topic orders --partitions 6 --replication-factor
+  1
+
+
+  # List and describe
+
+  kafka-topics --bootstrap-server localhost:9092 --list
+
+  kafka-topics --describe --topic orders
+
+
+  # Produce
+
+  kafka-console-producer --bootstrap-server localhost:9092 --topic orders
+
+
+  # Consume from beginning
+
+  kafka-console-consumer --bootstrap-server localhost:9092 --topic orders --from-beginning
+
+
+  # Consumer group inspection
+
+  kafka-consumer-groups --bootstrap-server localhost:9092 --group order-svc --describe
+
+
+  # Reset offsets
+
+  kafka-consumer-groups --group order-svc --reset-offsets --to-earliest --execute
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Partition by the entity key so per-entity ordering is preserved
+
+  - Make consumers idempotent; at-least-once delivery means replays
+
+  - Size partitions for the peak write rate, not today''s load
+
+  - Forward poison messages to a dead-letter topic with headers
+
+  - Define schema (Avro/JSON Schema) and enforce compatibility
+
+  - Never couple consumers to producer implementation details'
+examples:
+- input: My consumer group is lagging badly
+  output: Agent checks kafka-consumer-groups --describe for LAG, checks consumer count vs partitions,
+    and recommends scaling consumers or rebalancing partitions.
+- input: How do I replay events to recover state?
+  output: Agent resets offsets with kafka-consumer-groups --reset-offsets --to-earliest and walks through
+    a state-rebuild consumer.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: event-driven.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-event-driven
+  generic:
+    system_prompt: 'Your lane is Event Driven. You do it through kafka-topics: Create, list, and describe
+      Kafka topics. The commands are real, e.g. `kafka-topics --bootstrap-server localhost:9092 --create
+      --topic orders --partitions 6...`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

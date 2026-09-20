@@ -1,0 +1,194 @@
+name: age
+display_name: Age
+category: api
+subcategory: general
+description: 'Encrypts and decrypts files with age: key generation, recipient-based encryption, passphrase
+  files, piping, and SSH-key conversion.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- age
+- age-keygen
+- chmod
+- ssh-to-age
+- tar
+capabilities:
+- name: key-management
+  description: Generate age keypairs, derive public keys, and convert SSH keys.
+  commands:
+  - age-keygen -o key.txt
+  - age-keygen -y -i key.txt
+  - chmod 600 key.txt
+  - ssh-to-age -private-key -i ~/.ssh/id_ed25519 > key.txt
+  - age-keygen -o ~/.config/age/keys.txt
+  examples:
+  - age-keygen -y -i key.txt | tee recipient.txt
+  - ssh-to-age -private-key -i ~/.ssh/id_ed25519 > age-key.txt
+  - age-keygen -o key.txt && chmod 600 key.txt
+  parameters:
+  - name: output
+    type: string
+    description: Path to write the generated key file
+  - name: identity
+    type: string
+    description: Private key file to derive the public key from
+- name: encrypt-decrypt
+  description: Encrypt and decrypt files and streams with recipients or passphrases.
+  commands:
+  - age -r age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p -o secret.age secret.txt
+  - age -d -i key.txt -o secret.txt secret.age
+  - age -p -o secret.age secret.txt
+  - age -d secret.age
+  - tar czf - ./data | age -r $(cat recipient.txt) > data.tar.gz.age
+  examples:
+  - age -r age1... -o secret.age secret.txt
+  - age -d -i key.txt secret.age
+  - age -p -o kubeconfig.age kubeconfig
+  parameters:
+  - name: recipient
+    type: string
+    description: age1... recipient public key or --recipients-file
+  - name: identity
+    type: string
+    description: Key file to decrypt with (-d -i)
+  - name: passphrase
+    type: boolean
+    description: -p uses an interactive passphrase instead of keys
+knowledge:
+- title: age Specification
+  type: documentation
+  source: https://age-encryption.org/v1
+  description: Format spec and recipients
+- title: age GitHub
+  type: documentation
+  source: https://github.com/FiloSottile/age
+  description: Installation and usage
+- title: ssh-to-age
+  type: documentation
+  source: https://github.com/FiloSottile/age/tree/main/ssh-to-age
+  description: Convert OpenSSH keys to age identities
+instructions: '# age
+
+
+  ## What this skill does
+
+
+  Encrypts and decrypts files with age: key generation, recipient-based encryption, passphrase mode, streaming/pipe
+  usage, and converting SSH keys into age identities.
+
+
+  ## When to use
+
+
+  - Sealing env files, kubeconfigs, or backups before storing them
+
+  - Sharing encrypted files with a team without a KMS
+
+  - Reusing existing SSH keys for encryption
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Generate a keypair
+
+  age-keygen -o key.txt
+
+  chmod 600 key.txt
+
+
+  # Encrypt to a recipient
+
+  age -r age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p -o secret.age secret.txt
+
+
+  # Decrypt with the identity file
+
+  age -d -i key.txt -o secret.txt secret.age
+
+
+  # Passphrase-protected file
+
+  age -p -o secret.age secret.txt
+
+
+  # Pipe archives through age
+
+  tar czf - ./data | age -r $(cat recipient.txt) > data.tar.gz.age
+
+  ```
+
+
+  ## SSH key conversion
+
+
+  ```bash
+
+  ssh-to-age -private-key -i ~/.ssh/id_ed25519 > key.txt
+
+  age-keygen -y -i key.txt   # derive the recipient
+
+  ```
+
+
+  ## Testing
+
+
+  - Round-trip: encrypt then decrypt and compare with sha256sum
+
+  - Test recipient mode with a freshly generated keypair
+
+
+  ## Best practices
+
+
+  - Always chmod 600 key files
+
+  - Prefer recipient files over pasting long keys in shell history
+
+  - Store recipient (public) keys in the repo, identity files outside'
+examples:
+- input: Encrypt our .env file before committing it
+  output: Runs `age-keygen -o key.txt` (if needed), `age -r $(cat recipient.txt) -o .env.age .env`, and
+    removes plaintext .env from the repo while keeping recipient.txt public.
+- input: Decrypt a file a colleague sent me
+  output: Uses `age -d -i key.txt -o out.txt file.age`, noting the identity must match the recipient used
+    at encryption time.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: age.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-age
+  generic:
+    system_prompt: 'You work Age hands-on. You do it through key-management: Generate age keypairs, derive
+      public keys, and convert SSH keys. The commands are real, e.g. `age-keygen -o key.txt`. You prefer
+      the shortest safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

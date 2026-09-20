@@ -1,0 +1,165 @@
+name: agent-orchestration
+display_name: Agent Orchestration
+category: backend
+subcategory: general
+description: 'Orchestrates backend agent and workflow pipelines with Temporal and Apache Airflow: workflow
+  registration, task queues, scheduling, and DAG management.'
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- airflow
+- pip
+- temporal
+capabilities:
+- name: temporal
+  description: Run and manage Temporal workflows
+  commands:
+  - temporal server start-dev
+  - temporal workflow start --task-queue my-queue --type OrderWorkflow --input '{"orderId":"o-1"}'
+  - temporal workflow list --query "WorkflowType='OrderWorkflow'"
+  - temporal workflow show --workflow-id o-1-workflow
+  - temporal workflow terminate --workflow-id o-1-workflow --reason 'manual stop'
+  examples:
+  - temporal server start-dev runs a local stack
+  - workflow start dispatches a workflow
+  - workflow show displays event history
+  parameters:
+  - name: task-queue
+    type: string
+    description: Task queue name
+  - name: workflow-type
+    type: string
+    description: Registered workflow type
+  - name: input
+    type: string
+    description: JSON workflow input
+- name: airflow
+  description: Author and schedule Airflow DAGs
+  commands:
+  - pip install apache-airflow
+  - airflow db migrate
+  - airflow users create --username admin --password admin --role Admin --email admin@example.com
+  - airflow scheduler
+  - airflow dags list
+  examples: []
+  parameters: []
+knowledge:
+- title: Temporal Docs
+  type: documentation
+  source: https://docs.temporal.io/
+  description: Temporal workflow engine documentation
+- title: Airflow Docs
+  type: documentation
+  source: https://airflow.apache.org/docs/
+  description: Apache Airflow reference
+instructions: '# Agent Orchestration
+
+
+  Workflow orchestration for backend agents.
+
+
+  ## What This Skill Does
+
+  - Orchestrates multi-step workflows
+
+  - Schedules DAGs and cron pipelines
+
+  - Manages retries and state
+
+
+  ## When to Use
+
+  - Multi-step agent pipelines
+
+  - Scheduled data jobs
+
+  - Long-running orchestrations
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  temporal server start-dev
+
+  temporal workflow start --task-queue my-queue --type OrderWorkflow --input ''{"orderId":"o-1"}''
+
+  temporal workflow list --query "WorkflowType=''OrderWorkflow''"
+
+  airflow db migrate
+
+  airflow scheduler
+
+  ```
+
+
+  ## Workflow Pattern
+
+  1. Start workflow with typed input
+
+  2. Worker executes activity steps
+
+  3. Engine retries failures
+
+  4. Workflow completes with history
+
+
+  ## Testing
+
+  - Run workflows against the dev server
+
+  - Test failure and retry paths
+
+  - Validate DAG schedules in Airflow
+
+
+
+  ## Best Practices
+
+  - Keep activities idempotent
+
+  - Model business state in workflow history
+
+  - Use signals for human-in-the-loop steps'
+examples:
+- input: Orchestrate an order pipeline
+  output: Starts a Temporal workflow and follows its event history
+- input: Schedule nightly jobs
+  output: Defines an Airflow DAG and starts the scheduler
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: agent-orchestration.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-agent-orchestration
+  generic:
+    system_prompt: 'You are the Agent Orchestration specialist. You do it through temporal: Run and manage
+      Temporal workflows. The commands are real, e.g. `temporal server start-dev`. You answer with exact
+      commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

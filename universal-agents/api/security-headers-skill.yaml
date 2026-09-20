@@ -1,0 +1,177 @@
+name: security-headers
+display_name: Security Headers
+category: api
+subcategory: general
+description: 'Hand-crafted security headers skill: CSP, HSTS, X-Frame-Options and friends — verify with
+  curl, configure in nginx, and score with Mozilla Observatory.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- npx
+capabilities:
+- name: http-header-hardening
+  description: Configure and verify HTTP security headers
+  commands:
+  - curl -sI https://app.example.com/ | grep -iE 'strict-transport-security|content-security-policy|x-frame-options|referrer-policy|x-content-type-options'
+  - 'curl -sI -H ''Origin: https://evil.example.com'' https://app.example.com/ | grep -i ''access-control-allow-origin'''
+  - npx @mozilla/observatory-cli --host app.example.com --rescan
+  - curl -s -o /dev/null -w '%{ssl_protocol}\n' https://app.example.com/
+  examples:
+  - curl -sI https://app.example.com/ | grep -i x-frame-options
+  - curl -sI https://app.example.com/ | grep -i content-security-policy
+  - npx @mozilla/observatory-cli --host app.example.com
+  parameters:
+  - name: host
+    type: string
+    description: Target hostname for header checks
+  - name: csp_directive
+    type: string
+    description: CSP directive set, e.g. default-src 'self'
+  - name: hsts_max_age
+    type: integer
+    description: HSTS max-age in seconds
+knowledge:
+- title: OWASP Secure Headers Project
+  type: documentation
+  source: https://owasp.org/www-project-secure-headers/
+  description: Header inventory and recommended values
+- title: Mozilla Observatory CLI
+  type: documentation
+  source: https://github.com/mozilla/observatory-cli
+  description: Automated header and TLS scoring
+instructions: '# Security Headers
+
+
+  Hand-crafted skill for hardening HTTP responses with security headers.
+
+
+  ## What this skill does
+
+
+  - Verifies which security headers a site sends with curl
+
+  - Configures headers in nginx and application layers
+
+  - Scores the site with Mozilla Observatory to track progress
+
+
+  ## When to use
+
+
+  - Adding headers after a pentest finding
+
+  - Pre-launch checklist for a public site
+
+  - Proving header coverage to compliance
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # What headers does the site send?
+
+  curl -sI https://app.example.com/ | grep -iE ''strict-transport-security|content-security-policy|x-frame-options|referrer-policy|x-content-type-options''
+
+
+  # CORS on a cross-origin request
+
+  curl -sI -H ''Origin: https://evil.example.com'' https://app.example.com/ | grep -i ''access-control-allow-origin''
+
+
+  # Automated score
+
+  npx @mozilla/observatory-cli --host app.example.com --rescan
+
+
+  # TLS version in use
+
+  curl -s -o /dev/null -w ''%{ssl_protocol}\n'' https://app.example.com/
+
+  ```
+
+
+  ## nginx config
+
+
+  ```nginx
+
+  add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
+
+  add_header Content-Security-Policy "default-src ''self''; img-src ''self'' data:" always;
+
+  add_header X-Frame-Options "SAMEORIGIN" always;
+
+  add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+  add_header X-Content-Type-Options "nosniff" always;
+
+  ```
+
+
+  ## Testing
+
+
+  ```bash
+
+  curl -sI https://app.example.com/ | grep -i x-frame-options
+
+  curl -sI https://app.example.com/ | grep -i content-security-policy
+
+  ```
+
+
+  ## Best practices
+
+
+  - Deploy HSTS only after HTTPS is stable; it is sticky
+
+  - Use the always keyword in nginx so error pages get headers too
+
+  - Re-run the Observatory scan after each header change
+
+  '
+examples:
+- input: Is my site sending security headers?
+  output: curl -sI https://app.example.com/ | grep -iE 'strict-transport-security|content-security-policy|x-frame-options'
+    and compare with the OWASP list.
+- input: Get a baseline security score
+  output: npx @mozilla/observatory-cli --host app.example.com --rescan returns letter grades plus the
+    missing headers to add.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: security-headers.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-security-headers
+  generic:
+    system_prompt: 'You take the Security Headers seat. You do it through http-header-hardening: Configure
+      and verify HTTP security headers. The commands are real, e.g. `curl -sI https://app.example.com/
+      | grep -iE...`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,83 @@
+name: lambda-identity-py
+display_name: Lambda Identity Py
+category: ml
+subcategory: agent
+description: Lambda deployment agent. Manages Lambda ML deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Lambda Deploy Agent
+  description: Lambda deployment agent. Manages Lambda ML deployment.
+  commands:
+  - docker build -t lambda:latest .
+  - docker push registry.example.com/lambda:latest
+  - kubectl set image deployment/lambda lambda=registry.example.com/lambda:latest
+  - helm upgrade lambda ./helm-chart --namespace production
+  - kubectl rollout status deployment/lambda --timeout=300s
+  - python identity.py --agent lambda-identity-py
+  examples:
+  - sam build
+  - sam deploy --guided
+  - 'aws lambda invoke --function-name my-function --payload ''{"text": "Hello"}'' output.json'
+  - curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke
+  parameters: []
+knowledge:
+- title: lambda-identity-py Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for lambda-identity-py
+instructions: 'Lambda ML deployment specialist. Call on this agent to ship a new version of the lambda
+  ML service. Workflow: `docker build -t lambda:latest .`, `docker push registry.example.com/lambda:latest`,
+  `kubectl set image deployment/lambda lambda=registry.example.com/lambda:latest`, `helm upgrade lambda
+  ./helm-chart --namespace production`, then `kubectl rollout status deployment/lambda --timeout=300s`.
+  Confirm context with `python identity.py --agent lambda-identity-py`. Common failure modes: registry
+  auth errors, ImagePullBackOff after `kubectl set image`, Helm chart/values mismatches; check the rollout
+  status first and verify the pushed tag matches before retrying. Verify with platform tooling, e.g. `sam
+  build` and `sam deploy --guided` and `aws lambda invoke --function-name my-function --payload ''{"text":
+  "Hello"}'' output.json` and `curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke`.
+  Report the pushed tag, rollout result, and failed revisions with fixes.'
+examples:
+- sam build
+- sam deploy --guided
+- 'aws lambda invoke --function-name my-function --payload ''{"text": "Hello"}'' output.json'
+- curl https://my-api-id.execute-api.us-east-1.amazonaws.com/prod/invoke
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: lambda-identity-py.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Lambda deployment expert. Help users deploy Lambda ML applications.
+  opencode:
+    plugin: opencode-lambda-identity-py
+  generic:
+    system_prompt: You are lambda-identity-py. Lambda deployment agent. Manages Lambda ML deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

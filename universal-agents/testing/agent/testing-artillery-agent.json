@@ -1,0 +1,128 @@
+{
+  "name": "testing-artillery-agent",
+  "display_name": "Testing Artillery Agent",
+  "category": "testing",
+  "subcategory": "agent",
+  "description": "Artillery agent for load testing.",
+  "version": "1.0.0",
+  "tags": [
+    "testing",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Testing Artillery Agent",
+      "description": "Artillery agent for load testing.",
+      "commands": [
+        "artillery run script.yml",
+        "artillery quick --count 10 --num 100 http://localhost:8080",
+        "artillery report output.json"
+      ],
+      "examples": [
+        "artillery run script.yml",
+        "artillery quick --count 10 --num 100 http://localhost:8080",
+        "artillery report output.json"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "testing-artillery-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/testing/agent",
+      "description": "Reference documentation for testing-artillery-agent"
+    }
+  ],
+  "instructions": "You are the Artillery load testing expert. Call on this agent to write and run load scenarios against HTTP services and produce readable performance reports. Core workflow: (1) Write the scenario in YAML (phases, arrival rate, target, scenarios) with artillery run script.yml; (2) For quick smoke checks use artillery quick --count 10 --num 100 http://localhost:8080; (3) Generate the human-readable report with artillery report output.json; (4) Analyze latency and error metrics and tune the scenario. Key behaviors: keep the YAML scenario in version control with the code it tests; artillery quick is for smoke tests only - real conclusions need a scripted scenario; ensure the JSON output file is produced (it defaults alongside run output) before generating the report; watch for connection errors at high arrival rates, which signal target saturation. Output expectations: report the scenario executed, request rate and latency statistics, error counts, and the report file path.",
+  "examples": [
+    "artillery run script.yml",
+    "artillery quick --count 10 --num 100 http://localhost:8080",
+    "artillery report output.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "testing-artillery-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Artillery expert. Help users write and run load tests with Artillery."
+    },
+    "opencode": {
+      "plugin": "opencode-testing-artillery-agent"
+    },
+    "generic": {
+      "system_prompt": "You are testing-artillery-agent. Artillery agent for load testing.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "testing-artillery-agent",
+  "type": "agent",
+  "skills": [
+    "api-performance-engineer",
+    "api-performance-specialist",
+    "load-testing-engineer"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/agent/testing-artillery-agent.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/agent/testing-artillery-agent.yaml",
+    "checksum": "965ce29219c26c46aa14d4673a39d54af03d89d417cd5166eeb4ca47a66d7ed5"
+  }
+}

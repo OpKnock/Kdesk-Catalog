@@ -1,0 +1,173 @@
+{
+  "name": "rest-assured",
+  "display_name": "Rest Assured",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Rest Assured skill: Java REST API testing with Given/When/Then flows, JSONPath assertions, response validation, and Maven/Gradle integration.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "./gradlew",
+    "mvn"
+  ],
+  "capabilities": [
+    {
+      "name": "rest-assured-bdd",
+      "description": "Write and run BDD-style REST tests in Java with Rest Assured",
+      "commands": [
+        "mvn dependency:get -Dartifact=io.rest-assured:rest-assured:5.4.0",
+        "mvn test -Dtest=OrderApiTest",
+        "mvn test -q -Dtest=OrderApiTest#shouldReturn201",
+        "./gradlew test --tests '*ApiTest' --info",
+        "mvn verify -Dskip.integration.tests=false"
+      ],
+      "examples": [
+        "mvn test -Dtest=OrderApiTest",
+        "mvn test -q -Dtest=OrderApiTest#shouldReturn201",
+        "./gradlew test --tests '*ApiTest' --info"
+      ],
+      "parameters": [
+        {
+          "name": "baseURI",
+          "type": "string",
+          "description": "RestAssured.baseURI, e.g. http://localhost:8080"
+        },
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "RestAssured.port when not 80/443"
+        },
+        {
+          "name": "jsonPath",
+          "type": "string",
+          "description": "GPath expression like data.items[0].id"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Rest Assured docs",
+      "type": "documentation",
+      "source": "https://github.com/rest-assured/rest-assured/wiki/Usage",
+      "description": "Given/When/Then DSL, JSONPath, and configuration"
+    },
+    {
+      "title": "Rest Assured on Maven Central",
+      "type": "documentation",
+      "source": "https://central.sonatype.com/artifact/io.rest-assured/rest-assured",
+      "description": "Latest versions and dependencies"
+    }
+  ],
+  "instructions": "# Rest Assured\n\nHand-crafted skill for REST API testing in Java with Rest Assured.\n\n## What this skill does\n\n- Builds BDD-style tests: given() setup, when() request, then() assertions\n- Asserts status codes, headers, and JSONPath expressions\n- Runs individual tests via Maven or Gradle filters\n\n## When to use\n\n- Contract tests against Spring Boot or other Java APIs\n- Smoke tests that should run in CI after deploy\n- Local verification of endpoints during development\n\n## Real commands\n\n```bash\n# Fetch the dependency explicitly\nmvn dependency:get -Dartifact=io.rest-assured:rest-assured:5.4.0\n\n# Run a whole test class\nmvn test -Dtest=OrderApiTest\n\n# Run a single method\nmvn test -q -Dtest=OrderApiTest#shouldReturn201\n\n# Gradle equivalent with verbose output\n./gradlew test --tests '*ApiTest' --info\n```\n\n## Test example\n\n```java\nimport static io.restassured.RestAssured.*;\n\ngiven()\n    .contentType(\"application/json\")\n    .body(\"{\"customer\":7,\"total\":199}\")\n.when()\n    .post(\"/v1/orders\")\n.then()\n    .statusCode(201)\n    .body(\"id\", greaterThan(0))\n    .header(\"Location\", not(emptyString()));\n\n// JSONPath extraction\nint id = when().get(\"/v1/orders\").then().statusCode(200)\n    .extract().path(\"data[0].id\");\n```\n\n## Config example\n\n```java\nRestAssured.baseURI = \"http://localhost:8080\";\nRestAssured.port = 8080;\n```\n\n## Testing\n\n```bash\nmvn test -Dtest=OrderApiTest\n./gradlew test --tests '*ApiTest'\n```\n\n## Best practices\n\n- Keep test data creation in @BeforeAll so tests stay independent\n- Prefer JSONPath assertions over raw string contains checks\n- Put integration tests behind a Maven profile so unit builds stay fast\n",
+  "examples": [
+    {
+      "input": "Assert POST /v1/orders returns 201 with a body id",
+      "output": "given().contentType(\"application/json\").body(\"...\").when().post(\"/v1/orders\").then().statusCode(201).body(\"id\", greaterThan(0)); run with mvn test -Dtest=OrderApiTest."
+    },
+    {
+      "input": "Run one failing test repeatedly",
+      "output": "mvn test -q -Dtest=OrderApiTest#shouldReturn201 to rerun only that method."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rest-assured.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rest-assured"
+    },
+    "generic": {
+      "system_prompt": "You take the Rest Assured seat. You do it through rest-assured-bdd: Write and run BDD-style REST tests in Java with Rest Assured. The commands are real, e.g. `mvn dependency:get -Dartifact=io.rest-assured:rest-assured:5.4.0`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rest-assured",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rest-assured-bdd",
+        "name": "baseURI",
+        "type": "string",
+        "description": "RestAssured.baseURI, e.g. http://localhost:8080"
+      },
+      {
+        "capability": "rest-assured-bdd",
+        "name": "port",
+        "type": "integer",
+        "description": "RestAssured.port when not 80/443"
+      },
+      {
+        "capability": "rest-assured-bdd",
+        "name": "jsonPath",
+        "type": "string",
+        "description": "GPath expression like data.items[0].id"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "./gradlew",
+    "mvn"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/rest-assured-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/rest-assured-skill.yaml",
+    "checksum": "b89309b43b6b57049da1085a169ca81df1c601cdb8faa0646484b2119856f4c7"
+  }
+}

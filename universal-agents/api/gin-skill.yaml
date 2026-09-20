@@ -1,0 +1,100 @@
+name: gin
+display_name: Gin
+category: api
+subcategory: general
+description: 'Build Go HTTP APIs with the Gin framework: run the server, register middleware, and test
+  handlers.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: gin-development
+  description: Run Gin apps, add middleware, and test handlers with Go testing.
+  commands:
+  - go get github.com/gin-gonic/gin
+  - go run main.go
+  - go build -o server main.go
+  - go test ./... -race -v
+  - curl -s localhost:8080/api/orders | jq
+  examples:
+  - go get github.com/gin-gonic/gin && go run main.go
+  - go test ./... -race -v
+  - curl -s localhost:8080/api/orders | jq
+  parameters:
+  - name: port
+    type: integer
+    description: Gin listen port
+  - name: mode
+    type: string
+    description: GIN_MODE debug/release
+  - name: middleware
+    type: string
+    description: logger, recovery, cors, custom
+knowledge:
+- title: Gin documentation
+  type: documentation
+  source: https://gin-gonic.com/docs/
+  description: Routing, middleware, binding, and testing
+- title: Gin GitHub
+  type: documentation
+  source: https://github.com/gin-gonic/gin
+  description: Benchmarks and the gin.H test helper
+instructions: "# Gin\n\n## What this skill does\n\nGin is a popular Go web framework with a martini-like\
+  \ API, fast HTTP router, JSON binding/validation, and a middleware chain. This skill covers running,\
+  \ routing, and testing.\n\n## When to use\n\n- Building Go REST APIs quickly\n- Teams preferring express-like\
+  \ syntax in Go\n- JSON-heavy services with validation needs\n\n## Real commands\n\n```bash\n# Get and\
+  \ run\ngo get github.com/gin-gonic/gin\ngo run main.go\n\n# Build and test\ngo build -o server main.go\n\
+  go test ./... -race -v\n\n# Smoke test\ncurl -s localhost:8080/api/orders | jq\n```\n\n## Minimal app\n\
+  \n```go\npackage main\n\nimport (\n    \"github.com/gin-gonic/gin\"\n)\n\nfunc main() {\n    r := gin.Default()\n\
+  \n    r.GET(\"/api/orders/:id\", func(c *gin.Context) {\n        id := c.Param(\"id\")\n        if id\
+  \ == \"\" {\n            c.JSON(400, gin.H{\"error\": \"missing id\"})\n            return\n       \
+  \ }\n        c.JSON(200, gin.H{\"id\": id})\n    })\n\n    r.Run(\":8080\")\n}\n```\n\n## Middleware\
+  \ example\n\n```go\nfunc RequestID() gin.HandlerFunc {\n    return func(c *gin.Context) {\n        c.Header(\"\
+  X-Request-ID\", uuid.New().String())\n        c.Next()\n    }\n}\n```\n\n## Testing\n\n```go\nfunc TestGetOrder(t\
+  \ *testing.T) {\n    router := setupRouter()\n    w := httptest.NewRecorder()\n    req, _ := http.NewRequest(\"\
+  GET\", \"/api/orders/1\", nil)\n    router.ServeHTTP(w, req)\n    if w.Code != 200 { t.Fatalf(\"got\
+  \ %d\", w.Code) }\n}\n```\n\n## Best practices\n\n- Set `GIN_MODE=release` in production; debug mode\
+  \ is slow.\n- Use `ShouldBindJSON` with explicit struct tags for validation.\n- Register recovery middleware;\
+  \ never let a panic escape.\n- Test handlers with httptest against the router, not a live port.\n- Keep\
+  \ handlers thin; put logic in services for testability.\n"
+examples:
+- input: Start a Gin API server
+  output: go get github.com/gin-gonic/gin, write routes with r.GET/r.POST, run with go run main.go, and
+    verify with curl.
+- input: Add a request-id header to all responses
+  output: Register a RequestID middleware in r.Use() before routes so every handler adds the header.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: gin.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-gin
+  generic:
+    system_prompt: 'You work Gin hands-on. You do it through gin-development: Run Gin apps, add middleware,
+      and test handlers with Go testing. The commands are real, e.g. `go get github.com/gin-gonic/gin`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,186 @@
+{
+  "name": "api-version-git-cliff",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Maintains API changelogs and version history: git-cliff generation from commits, conventional commits, and changelog-driven release notes.",
+  "keywords": [
+    "api-version-git-cliff"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-version-git-cliff.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-version-git-cliff"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Api Version Git Cliff. You do it through git-cliff: Generate changelogs from git history. The commands are real, e.g. `npx git-cliff --init`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "git-cliff",
+      "description": "Generate changelogs from git history",
+      "commands": [
+        "npx git-cliff --init",
+        "npx git-cliff -o CHANGELOG.md",
+        "npx git-cliff --unreleased",
+        "npx git-cliff --bump",
+        "npx git-cliff --tag v2.0.0"
+      ],
+      "examples": [
+        "git-cliff --init creates cliff.toml",
+        "git-cliff -o writes the changelog",
+        "--unreleased previews pending changes"
+      ],
+      "parameters": [
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "Version tag to generate for"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Changelog output file"
+        },
+        {
+          "name": "range",
+          "type": "string",
+          "description": "Commit range"
+        }
+      ]
+    },
+    {
+      "name": "conventional-commits",
+      "description": "Structure commits for changelog generation",
+      "commands": [
+        "npx commitizen init cz-conventional-changelog --save-dev --save-exact",
+        "npx cz",
+        "npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+        "git log --oneline --format='%h %s' -20"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "node.js",
+    "python",
+    "openapi"
+  ],
+  "tools": [
+    "node.js",
+    "python",
+    "openapi",
+    "postman"
+  ],
+  "examples": [
+    {
+      "input": "Generate the v2.0.0 changelog",
+      "output": "Runs git-cliff --tag v2.0.0 and reviews the breaking changes"
+    },
+    {
+      "input": "Standardize commits",
+      "output": "Sets up commitizen and enforces conventional format"
+    }
+  ],
+  "instructions": "# API Version v4 - Changelogs\n\nChangelog generation and history.\n\n## What This Skill Does\n- Generates changelogs from commits\n- Enforces conventional commits\n- Produces release notes automatically\n\n## When to Use\n- Preparing release notes\n- Auditing API changes between versions\n- Enforcing commit standards\n\n## Real Commands\n\n```bash\nnpx git-cliff --init\nnpx git-cliff -o CHANGELOG.md\nnpx git-cliff --bump\nnpx commitizen init cz-conventional-changelog --save-dev --save-exact\n```\n\n## Conventional Commits\n\n```\nfeat(users): add v2 avatar endpoint\nfix(auth): correct token expiry check\nBREAKING CHANGE: remove v1 legacy fields\n```\n\n## Testing\n- Verify changelog entries per release\n- Check breaking changes are flagged\n- Test cliff config in CI\n\n\n## Best Practices\n- Enforce commit conventions with a linter\n- Generate changelogs at release time\n- Publish changelogs to docs sites",
+  "display_name": "Api Version Git Cliff",
+  "knowledge": [
+    {
+      "title": "git-cliff Docs",
+      "type": "documentation",
+      "source": "https://git-cliff.org/docs/",
+      "description": "Changelog generation from git history"
+    },
+    {
+      "title": "Conventional Commits",
+      "type": "documentation",
+      "source": "https://www.conventionalcommits.org/en/v1.0.0/",
+      "description": "Commit message convention"
+    }
+  ],
+  "id": "api-version-git-cliff",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "git-cliff",
+        "name": "tag",
+        "type": "string",
+        "description": "Version tag to generate for"
+      },
+      {
+        "capability": "git-cliff",
+        "name": "output",
+        "type": "string",
+        "description": "Changelog output file"
+      },
+      {
+        "capability": "git-cliff",
+        "name": "range",
+        "type": "string",
+        "description": "Commit range"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node.js",
+    "python",
+    "openapi"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-version-git-cliff/skill/api-version-git-cliff.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-version-git-cliff/skill/api-version-git-cliff.yaml",
+    "checksum": "aee9e3c8c4462c629089d7333cf034c885ecf4341ddb003241cbfbc34d24e371"
+  }
+}

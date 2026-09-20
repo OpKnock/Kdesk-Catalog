@@ -1,0 +1,171 @@
+{
+  "name": "rest-openapi-gen",
+  "display_name": "Rest Openapi Gen",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted OpenAPI generation skill: validate specs, lint with Redocly, and generate typed clients/server stubs with openapi-generator for any language.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "openapi-generate",
+      "description": "Validate, lint, and generate code from OpenAPI specifications",
+      "commands": [
+        "npx @openapitools/openapi-generator-cli version",
+        "npx @openapitools/openapi-generator-cli validate -i openapi.yaml",
+        "npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g python -o out/python",
+        "npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-axios -o out/ts --additional-properties=withInterfaces=true",
+        "npx @redocly/cli lint openapi.yaml"
+      ],
+      "examples": [
+        "npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g go -o out/go",
+        "npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g java -o out/java --library=webclient",
+        "npx @redocly/cli lint openapi.yaml --config redocly.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "input",
+          "type": "string",
+          "description": "Path to the OpenAPI spec (-i flag)"
+        },
+        {
+          "name": "generator",
+          "type": "string",
+          "description": "Target generator, e.g. python, go, java, typescript-axios"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output directory for generated code"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OpenAPI Generator usage",
+      "type": "documentation",
+      "source": "https://openapi-generator.tech/docs/usage",
+      "description": "CLI flags, generators list, and templates"
+    },
+    {
+      "title": "OpenAPI Specification",
+      "type": "documentation",
+      "source": "https://spec.openapis.org/oas/v3.1.0",
+      "description": "Spec structure: paths, schemas, security schemes"
+    }
+  ],
+  "instructions": "# OpenAPI Code Generation\n\nHand-crafted skill for generating clients and servers from OpenAPI specs.\n\n## What this skill does\n\n- Validates specs so generation does not fail halfway\n- Lints for spec quality with Redocly rules\n- Generates typed SDKs and server stubs in many languages\n\n## When to use\n\n- Contract-first development: spec drives all consumers\n- Producing versioned client SDKs for each release\n- Keeping server stubs in sync with the documented API\n\n## Real commands\n\n```bash\n# Check the CLI\nnpx @openapitools/openapi-generator-cli version\n\n# Validate the spec first\nnpx @openapitools/openapi-generator-cli validate -i openapi.yaml\n\n# Python client\nnpx @openapitools/openapi-generator-cli generate -i openapi.yaml -g python -o out/python\n\n# TypeScript axios client with interfaces\nnpx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-axios -o out/ts --additional-properties=withInterfaces=true\n\n# Go client\nnpx @openapitools/openapi-generator-cli generate -i openapi.yaml -g go -o out/go\n\n# Lint the spec before merging\nnpx @redocly/cli lint openapi.yaml\n```\n\n## Spec quality gates\n\n```bash\n# Redocly config to fail CI on errors\nnpx @redocly/cli lint openapi.yaml --config redocly.yaml\n```\n\n## Testing generated code\n\n```bash\ncd out/python && pip install -e .\npython -c 'from openapi_client import Configuration, ApiClient, OrdersApi; print(OrdersApi(ApiClient(Configuration(host=\"http://localhost:8080\"))))'\n```\n\n## Best practices\n\n- Always validate before generate to get clean error messages\n- Commit the spec, regenerate SDKs per release tag\n- Pin the CLI version in package.json to keep output deterministic\n",
+  "examples": [
+    {
+      "input": "Generate a Python client from openapi.yaml",
+      "output": "npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g python -o out/python, then pip install -e out/python and use the openapi_client package."
+    },
+    {
+      "input": "My spec fails validation",
+      "output": "Run npx @openapitools/openapi-generator-cli validate -i openapi.yaml and fix the reported line, then rerun generation."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rest-openapi-gen.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rest-openapi-gen"
+    },
+    "generic": {
+      "system_prompt": "You take the Rest Openapi Gen seat. You do it through openapi-generate: Validate, lint, and generate code from OpenAPI specifications. The commands are real, e.g. `npx @openapitools/openapi-generator-cli version`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rest-openapi-gen",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "openapi-generate",
+        "name": "input",
+        "type": "string",
+        "description": "Path to the OpenAPI spec (-i flag)"
+      },
+      {
+        "capability": "openapi-generate",
+        "name": "generator",
+        "type": "string",
+        "description": "Target generator, e.g. python, go, java, typescript-axios"
+      },
+      {
+        "capability": "openapi-generate",
+        "name": "output",
+        "type": "string",
+        "description": "Output directory for generated code"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/rest-openapi-gen-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/rest-openapi-gen-skill.yaml",
+    "checksum": "33333d0b5c6905041e0252f299bdf1592150b92b178b0861f618b58ef5416f9f"
+  }
+}

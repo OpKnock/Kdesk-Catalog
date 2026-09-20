@@ -1,0 +1,187 @@
+{
+  "name": "api-rate-specialist",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "security",
+  "description": "Implements application-level rate limiting with express-rate-limit and @fastify/rate-limit: window configuration, skip logic, headers, and standardizer patterns.",
+  "keywords": [
+    "rate-limiting",
+    "redis"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-rate-specialist.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-rate-specialist"
+    },
+    "generic": {
+      "system_prompt": "You own api-rate-specialist end to end. You do it through express-rate-limit: Configure express-rate-limit middleware options. The commands are real, e.g. `npm install express-rate-limit`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "express-rate-limit",
+      "description": "Configure express-rate-limit middleware options",
+      "commands": [
+        "npm install express-rate-limit",
+        "node -e \"const rateLimit=require('express-rate-limit'); console.log(rateLimit({windowMs:60000,limit:100}).name)\"",
+        "curl -s -D- -o /dev/null http://localhost:3000/api | grep -i 'x-ratelimit'",
+        "curl -s -o /dev/null -w '%{http_code}\\n' -X POST http://localhost:3000/api/login",
+        "for i in $(seq 1 120); do curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/api; done | sort | uniq -c"
+      ],
+      "examples": [
+        "rateLimit({ windowMs: 60000, limit: 100 }) allows 100 req/min",
+        "standardHeaders: true emits RateLimit-* headers",
+        "skip: (req) => req.ip === '127.0.0.1' bypasses localhost"
+      ],
+      "parameters": [
+        {
+          "name": "windowMs",
+          "type": "integer",
+          "description": "Window duration in milliseconds"
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "description": "Maximum requests per window"
+        },
+        {
+          "name": "keyGenerator",
+          "type": "function",
+          "description": "Client key derivation function"
+        }
+      ]
+    },
+    {
+      "name": "fastify-rate-limit",
+      "description": "Configure the Fastify rate limit plugin",
+      "commands": [
+        "npm install @fastify/rate-limit",
+        "curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/api",
+        "node -e \"const rl=require('@fastify/rate-limit'); console.log(typeof rl)\""
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "prerequisites": [
+    "redis",
+    "node.js",
+    "python"
+  ],
+  "tools": [
+    "redis",
+    "node.js",
+    "python",
+    "nginx",
+    "express-rate-limit"
+  ],
+  "examples": [
+    {
+      "input": "Limit login attempts per IP",
+      "output": "Mounts express-rate-limit on /api/login with a 5-per-minute window and skip for tests"
+    },
+    {
+      "input": "Emit standard rate limit headers",
+      "output": "Enables standardHeaders and verifies RateLimit-* with curl -D-"
+    }
+  ],
+  "instructions": "# API Rate Specialist\n\nApp-level rate limiting libraries.\n\n## What This Skill Does\n- Adds in-process rate limiting to Express and Fastify\n- Emits standard RateLimit headers\n- Supports custom key generation and skip rules\n\n## When to Use\n- Single-instance services needing quick throttling\n- Per-route limits (login, uploads)\n- Building blocks before a gateway strategy\n\n## Real Commands\n\n```bash\nnpm install express-rate-limit\ncurl -s -D- -o /dev/null http://localhost:3000/api | grep -i 'x-ratelimit'\nfor i in $(seq 1 120); do curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/api; done | sort | uniq -c\n```\n\n## Configuration\n\n```js\napp.use('/api', rateLimit({\n  windowMs: 60 * 1000,\n  limit: 100,\n  standardHeaders: 'draft-8',\n  keyGenerator: (req) => req.headers['x-client-id'] || req.ip\n}));\n```\n\n## Testing\n- Confirm 429 after exceeding the limit\n- Validate RateLimit-Reset header math\n- Verify skip rules bypass counting for health checks\n\n## Best Practices\n- Mount tight limits on auth endpoints first\n- Use a shared store (Redis) for multi-instance deployments\n- Return informative Retry-After with 429s",
+  "display_name": "api-rate-specialist",
+  "knowledge": [
+    {
+      "title": "express-rate-limit",
+      "type": "documentation",
+      "source": "https://expressjs.com/en/resources/middleware/rate-limit.html",
+      "description": "Official Express rate limiting middleware docs"
+    },
+    {
+      "title": "@fastify/rate-limit",
+      "type": "documentation",
+      "source": "https://github.com/fastify/fastify-rate-limit",
+      "description": "Fastify plugin with store options and hooks"
+    }
+  ],
+  "id": "api-rate-specialist",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "express-rate-limit",
+        "name": "windowMs",
+        "type": "integer",
+        "description": "Window duration in milliseconds"
+      },
+      {
+        "capability": "express-rate-limit",
+        "name": "limit",
+        "type": "integer",
+        "description": "Maximum requests per window"
+      },
+      {
+        "capability": "express-rate-limit",
+        "name": "keyGenerator",
+        "type": "function",
+        "description": "Client key derivation function"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis",
+    "node.js",
+    "python"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-rate-specialist/skill/api-rate-specialist.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-rate-specialist/skill/api-rate-specialist.yaml",
+    "checksum": "413bd2b04b77eb74c2edc793ea56a1a405d9d5ac4a73f4fd1afecf8e5d1940cf"
+  }
+}

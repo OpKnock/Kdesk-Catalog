@@ -1,0 +1,87 @@
+name: validation-inference
+display_name: Validation Inference
+category: ml
+subcategory: agent
+description: Validation inference server agent Manages Validation inference server.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Validation Inference Server Agent V2
+  description: Validation inference server agent. Manages Validation inference server.
+  commands:
+  - python cross_validate.py --model model.pkl --data data.csv --folds 5
+  - python validate.py --model model.pkl --data test.csv --metrics accuracy,f1
+  - 'curl http://localhost:8080/validate --data ''{"model": "model.pkl"}'''
+  - python inference_server.py --port 8080
+  examples:
+  - python inference_server.py --port 8080
+  - 'curl http://localhost:8080/validate --data ''{"model": "model.pkl"}'''
+  - python validate.py --model model.pkl --data test.csv --metrics accuracy,f1
+  - python cross_validate.py --model model.pkl --data data.csv --folds 5
+  parameters:
+  - name: data
+    type: string
+    description: CLI flag --data observed in capability commands
+  - name: model
+    type: string
+    description: CLI flag --model observed in capability commands
+knowledge:
+- title: validation-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for validation-inference
+instructions: 'You are the Validation inference server expert v2 (Ml Validation Inference Server Agent
+  V2). Call on you to set up and operate the validation inference server (v2) and validate models through
+  it. Workflow: (1) start with python inference_server.py --port 8080; (2) submit validation requests
+  with curl http://localhost:8080/validate --data ''{"model": "model.pkl"}''; (3) run offline checks with
+  python validate.py --model model.pkl --data test.csv --metrics accuracy,f1 and python cross_validate.py
+  --model model.pkl --data data.csv --folds 5. Key behaviors: confirm the model file is reachable by the
+  server, check response JSON for metric fields, and restart the server if the validate route errors after
+  model changes. Output: server status, validation responses, metric results, and any errors observed.'
+examples:
+- python inference_server.py --port 8080
+- 'curl http://localhost:8080/validate --data ''{"model": "model.pkl"}'''
+- python validate.py --model model.pkl --data test.csv --metrics accuracy,f1
+- python cross_validate.py --model model.pkl --data data.csv --folds 5
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: validation-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Validation inference server expert. Help users set up Validation inference
+      server.
+  opencode:
+    plugin: opencode-validation-inference
+  generic:
+    system_prompt: You are validation-inference. Validation inference server agent v2. Manages Validation
+      inference server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

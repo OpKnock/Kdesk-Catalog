@@ -1,0 +1,208 @@
+{
+  "name": "crane",
+  "display_name": "crane",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Manipulates container images and registries with google/crane: copy, move, tag, export, and validate image manifests and digests.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "crane"
+  ],
+  "capabilities": [
+    {
+      "name": "registry-operations",
+      "description": "Copy, move, tag, and delete images across registries without a full daemon.",
+      "commands": [
+        "crane copy nginx:latest registry.example.com/nginx:latest",
+        "crane move old.example.com/app:v1 new.example.com/app:v1",
+        "crane tag nginx:latest v1.0.0",
+        "crane delete registry.example.com/app:v1",
+        "crane ls registry.example.com/app",
+        "crane validate --remote registry.example.com/app"
+      ],
+      "examples": [
+        "crane copy nginx:latest registry.example.com/nginx:latest",
+        "crane tag nginx:latest v1.0.0",
+        "crane ls registry.example.com/app"
+      ],
+      "parameters": [
+        {
+          "name": "src",
+          "type": "string",
+          "description": "Source image or repo reference"
+        },
+        {
+          "name": "dest",
+          "type": "string",
+          "description": "Destination repo reference"
+        },
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "Tag to apply"
+        }
+      ]
+    },
+    {
+      "name": "manifest-and-digest",
+      "description": "Inspect manifests, digests, and export images for offline analysis.",
+      "commands": [
+        "crane manifest nginx:latest | jq .",
+        "crane digest nginx:latest",
+        "crane export nginx:latest nginx.tar",
+        "crane index ls registry.example.com/app",
+        "crane auth login registry.example.com -u user -p pass"
+      ],
+      "examples": [
+        "crane digest nginx:latest",
+        "crane export nginx:latest /tmp/nginx.tar",
+        "crane manifest nginx:latest | jq -r .mediaType"
+      ],
+      "parameters": [
+        {
+          "name": "image",
+          "type": "string",
+          "description": "Image reference to inspect"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output tar file for export"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "crane CLI Reference",
+      "type": "documentation",
+      "source": "https://github.com/google/go-containerregistry/blob/main/cmd/crane/README.md",
+      "description": "All crane subcommands: copy, export, digest, ls, validate"
+    },
+    {
+      "title": "go-containerregistry Project",
+      "type": "documentation",
+      "source": "https://github.com/google/go-containerregistry",
+      "description": "Library and tools for registry interaction"
+    }
+  ],
+  "instructions": "# crane Registry Tooling\n\nCopy, tag, and inspect container images across registries using google/crane — no daemon required.\n\n## What This Skill Does\n\n- Copies and moves images between registries (mirroring, air-gapped transfer)\n- Reads OCI/Docker manifests and computes digests\n- Exports images to tarballs for offline or malware analysis\n- Validates images and lists tags/repos\n- Auth to private registries with plain or credential helpers\n\n## When to Use\n\n- Mirroring images into a private registry\n- Pinning digests for supply-chain safety\n- Verifying that an image was not tampered with\n- Air-gapped environments where `docker pull` is unavailable\n\n## Real Commands\n\n```bash\n# Copy between registries\ncrane copy nginx:latest registry.example.com/nginx:latest\ncrane copy nginx:latest registry.example.com/nginx:latest -p     # preserve exact tag list\n\n# Move / tag / delete\ncrane move old.example.com/app:v1 new.example.com/app:v1\ncrane tag nginx:latest v1.0.0\ncrane delete registry.example.com/app:v1\n\n# Inspect\ncrane manifest nginx:latest\ncrane digest nginx:latest\ncrane ls registry.example.com/app\ncrane index ls registry.example.com/app\n\n# Export and validate\ncrane export nginx:latest /tmp/nginx.tar\ncrane validate --remote --tarball /tmp/nginx.tar registry.example.com/app\n\n# Auth\ncrane auth login registry.example.com -u user -p pass\n```\n\n## Best Practices\n\n- Always pin images by digest in production (`image@sha256:...`)\n- Use `crane validate --remote` in CI to catch broken images early\n- Copy with `-p` when preserving tags matters (e.g. `latest`)\n- Verify registry ACLs with `crane auth login` before large transfers",
+  "examples": [
+    {
+      "input": "Mirror our public images to an internal registry",
+      "output": "Agent writes a script using crane copy for each image, runs crane validate on results, and pins digests into deployment manifests"
+    },
+    {
+      "input": "Check what tags exist for app in our registry",
+      "output": "Agent runs crane ls registry.example.com/app and presents the tag list with commit info"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "crane.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-crane"
+    },
+    "generic": {
+      "system_prompt": "You are the crane specialist. You do it through registry-operations: Copy, move, tag, and delete images across registries without a full daemon. The commands are real, e.g. `crane copy nginx:latest registry.example.com/nginx:latest`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "crane",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "registry-operations",
+        "name": "src",
+        "type": "string",
+        "description": "Source image or repo reference"
+      },
+      {
+        "capability": "registry-operations",
+        "name": "dest",
+        "type": "string",
+        "description": "Destination repo reference"
+      },
+      {
+        "capability": "registry-operations",
+        "name": "tag",
+        "type": "string",
+        "description": "Tag to apply"
+      },
+      {
+        "capability": "manifest-and-digest",
+        "name": "image",
+        "type": "string",
+        "description": "Image reference to inspect"
+      },
+      {
+        "capability": "manifest-and-digest",
+        "name": "output",
+        "type": "string",
+        "description": "Output tar file for export"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "crane"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/crane-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/crane-skill.yaml",
+    "checksum": "1be92aaa72a9c9088a1485407c15b091357bf3955ecc3c77bff6f9d13869bcc7"
+  }
+}

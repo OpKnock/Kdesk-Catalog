@@ -1,0 +1,153 @@
+{
+  "name": "fairness-inference",
+  "display_name": "Fairness Inference",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Fairness inference server agent Manages Fairness inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Fairness Inference Server Agent V2",
+      "description": "Fairness inference server agent. Manages Fairness inference server.",
+      "commands": [
+        "python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race",
+        "curl http://localhost:8080/fairness --data '{\"model\": \"model.pkl\"}'",
+        "python bias_mitigation.py --model model.pkl --data data.csv --method reweighting",
+        "python inference_server.py --port 8080"
+      ],
+      "examples": [
+        "python inference_server.py --port 8080",
+        "curl http://localhost:8080/fairness --data '{\"model\": \"model.pkl\"}'",
+        "python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race",
+        "python bias_mitigation.py --model model.pkl --data data.csv --method reweighting"
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "type": "string",
+          "description": "CLI flag --data observed in capability commands"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "fairness-inference Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for fairness-inference"
+    }
+  ],
+  "instructions": "You are the Fairness Inference Server Agent V2, operator of the Fairness inference server. Workflow: start with 'python inference_server.py --port 8080', exercise with 'curl http://localhost:8080/fairness --data {\"model\": \"model.pkl\"}', and run 'python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race' and 'python bias_mitigation.py --model model.pkl --data data.csv --method reweighting'. Failure modes: the server not loading the model, malformed payloads, and missing protected attributes; check logs and payload shape. Report server status, the /fairness response, and fairness metrics.",
+  "examples": [
+    "python inference_server.py --port 8080",
+    "curl http://localhost:8080/fairness --data '{\"model\": \"model.pkl\"}'",
+    "python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race",
+    "python bias_mitigation.py --model model.pkl --data data.csv --method reweighting"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "fairness-inference.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Fairness inference server expert. Help users set up Fairness inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-fairness-inference"
+    },
+    "generic": {
+      "system_prompt": "You are fairness-inference. Fairness inference server agent. Manages Fairness inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "fairness-inference",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Fairness Inference Server Agent V2",
+        "name": "data",
+        "type": "string",
+        "description": "CLI flag --data observed in capability commands"
+      },
+      {
+        "capability": "Ml Fairness Inference Server Agent V2",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/fairness-inference.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/fairness-inference.yaml",
+    "checksum": "2a0ee39e236e8230b0885dd4c7c7c080d0ff0d417140e216d1bc496dbb541f5e"
+  }
+}

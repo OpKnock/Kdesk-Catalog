@@ -1,0 +1,175 @@
+{
+  "name": "ml-privacy-gcp-agent",
+  "display_name": "Ml Privacy Gcp Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "GCP ML privacy agent. Manages ML privacy and data protection on GCP.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Privacy Gcp Agent",
+      "description": "GCP ML privacy agent. Manages ML privacy and data protection on GCP.",
+      "commands": [
+        "gcloud kms keys create <key> --keyring <ring> --purpose encryption",
+        "gcloud kms encrypt --key <key> --keyring <ring> --plaintext-file data.bin --cipher-file encrypted.bi",
+        "gcloud kms decrypt --key <key> --keyring <ring> --cipher-file encrypted.bin --plaintext-file decrypt",
+        "gcloud kms keys list --keyring <ring>"
+      ],
+      "examples": [
+        "gcloud kms keys create <key> --keyring <ring> --purpose encryption",
+        "gcloud kms encrypt --key <key> --keyring <ring> --plaintext-file data.bin --cipher-file encrypted.bin",
+        "gcloud kms decrypt --key <key> --keyring <ring> --cipher-file encrypted.bin --plaintext-file decrypted.bin",
+        "gcloud kms keys list --keyring <ring>"
+      ],
+      "parameters": [
+        {
+          "name": "cipher-file",
+          "type": "string",
+          "description": "CLI flag --cipher-file observed in capability commands"
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "CLI flag --key observed in capability commands"
+        },
+        {
+          "name": "keyring",
+          "type": "string",
+          "description": "CLI flag --keyring observed in capability commands"
+        },
+        {
+          "name": "plaintext-file",
+          "type": "string",
+          "description": "CLI flag --plaintext-file observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-privacy-gcp-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-privacy-gcp-agent"
+    }
+  ],
+  "instructions": "You are the GCP ML Privacy Agent, the specialist users call to encrypt ML data on Google Cloud using Cloud KMS. Create an encryption key with `gcloud kms keys create <key> --keyring <ring> --purpose encryption`, then encrypt with `gcloud kms encrypt --key <key> --keyring <ring> --plaintext-file data.bin --cipher-file encrypted.bin` and decrypt with `gcloud kms decrypt --key <key> --keyring <ring> --cipher-file encrypted.bin --plaintext-file decrypted.bin`. Audit keys with `gcloud kms keys list --keyring <ring>`. Confirm the keyring exists and the key name matches, and verify decrypted.bin equals the original data. Report the key name, encrypt/decrypt verification, the keys list output, and any KMS permission errors.",
+  "examples": [
+    "gcloud kms keys create <key> --keyring <ring> --purpose encryption",
+    "gcloud kms encrypt --key <key> --keyring <ring> --plaintext-file data.bin --cipher-file encrypted.bin",
+    "gcloud kms decrypt --key <key> --keyring <ring> --cipher-file encrypted.bin --plaintext-file decrypted.bin",
+    "gcloud kms keys list --keyring <ring>"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-privacy-gcp-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a GCP ML privacy expert. Help users manage ML privacy on GCP."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-privacy-gcp-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-privacy-gcp-agent. GCP ML privacy agent. Manages ML privacy and data protection on GCP.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-privacy-gcp-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Privacy Gcp Agent",
+        "name": "cipher-file",
+        "type": "string",
+        "description": "CLI flag --cipher-file observed in capability commands"
+      },
+      {
+        "capability": "Ml Privacy Gcp Agent",
+        "name": "key",
+        "type": "string",
+        "description": "CLI flag --key observed in capability commands"
+      },
+      {
+        "capability": "Ml Privacy Gcp Agent",
+        "name": "keyring",
+        "type": "string",
+        "description": "CLI flag --keyring observed in capability commands"
+      },
+      {
+        "capability": "Ml Privacy Gcp Agent",
+        "name": "plaintext-file",
+        "type": "string",
+        "description": "CLI flag --plaintext-file observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-privacy-gcp-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-privacy-gcp-agent.yaml",
+    "checksum": "04d49b914c57720e834c0f846322f962d2e9605237c3d4d6b4c3fdd85278d30c"
+  }
+}

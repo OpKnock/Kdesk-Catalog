@@ -1,0 +1,172 @@
+name: api-webhook-github-webhooks
+version: 2.0.0
+type: skill
+category: backend
+description: 'Integrates with platform webhooks: GitHub repository hooks, Stripe event triggers, Slack
+  incoming webhooks, and signature verification patterns.'
+keywords:
+- webhooks
+- delivery
+- signature
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-webhook-github-webhooks.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-webhook-github-webhooks
+  generic:
+    system_prompt: 'Your lane is Api Webhook Github Webhooks. You do it through github-webhooks: Manage
+      GitHub repository webhooks. The commands are real, e.g. `gh api repos/octocat/Hello-World/hooks
+      --method POST -f...`. You answer with exact commands, not abstractions, and flag anything you have
+      not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: github-webhooks
+  description: Manage GitHub repository webhooks
+  commands:
+  - gh api repos/octocat/Hello-World/hooks --method POST -f config.url=https://example.com/hook -f config.content_type=json
+    -f events[]=push
+  - gh api repos/octocat/Hello-World/hooks | jq '.[].config.url'
+  - gh api repos/octocat/Hello-World/hooks/1 --method PATCH -f active=false
+  - gh api repos/octocat/Hello-World/hooks/1/deliveries | jq '.[0].status'
+  examples:
+  - gh api POST creates a push webhook
+  - deliveries endpoints show delivery status
+  - config.content_type=json sets the payload format
+  parameters:
+  - name: repo
+    type: string
+    description: owner/repo
+  - name: url
+    type: string
+    description: Webhook URL
+  - name: events
+    type: array
+    description: Event types
+- name: stripe-slack
+  description: Trigger and receive Stripe and Slack events
+  commands:
+  - stripe listen --forward-to localhost:3000/webhooks
+  - stripe trigger payment_intent.succeeded
+  - 'curl -s -X POST -H "Authorization: Bearer $SLACK_TOKEN" -H ''Content-Type: application/json'' -d
+    ''{"text":"Deploy complete"}'' https://slack.com/api/chat.postMessage'
+  - stripe trigger checkout.session.completed
+  examples: []
+  parameters: []
+prerequisites:
+- node.js
+- python
+- ngrok
+- redis
+tools:
+- node.js
+- python
+- ngrok
+- redis
+- stripe-cli
+examples:
+- input: Receive Stripe payments locally
+  output: Runs stripe listen and triggers payment_intent.succeeded
+- input: Add a GitHub push hook
+  output: Creates the hook with gh api and verifies deliveries
+instructions: '# API Webhook v5 - Integrations
+
+
+  Platform webhook integration patterns.
+
+
+  ## What This Skill Does
+
+  - Manages GitHub webhooks via API
+
+  - Triggers Stripe events locally
+
+  - Posts to Slack channels
+
+
+  ## When to Use
+
+  - CI-driven webhook consumers
+
+  - Payment event handling
+
+  - Notification pipelines
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  gh api repos/octocat/Hello-World/hooks --method POST -f config.url=https://example.com/hook -f config.content_type=json
+  -f events[]=push
+
+  stripe listen --forward-to localhost:3000/webhooks
+
+  stripe trigger payment_intent.succeeded
+
+  ```
+
+
+  ## Integration Pattern
+
+  1. Listen locally with stripe CLI
+
+  2. Trigger a real event
+
+  3. Verify signature and payload
+
+  4. Process and acknowledge
+
+
+  ## Testing
+
+  - Trigger each event type
+
+  - Check delivery status via APIs
+
+  - Verify signature failures are rejected
+
+
+
+  ## Best Practices
+
+  - Verify provider signatures always
+
+  - Handle delivery retries gracefully
+
+  - Log event IDs end-to-end'
+display_name: Api Webhook Github Webhooks
+knowledge:
+- title: GitHub Webhook Docs
+  type: documentation
+  source: https://docs.github.com/en/webhooks
+  description: GitHub webhook events and delivery
+- title: Stripe CLI Docs
+  type: documentation
+  source: https://docs.stripe.com/stripe-cli
+  description: Triggering events locally with stripe

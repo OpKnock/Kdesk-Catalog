@@ -1,0 +1,113 @@
+name: express
+display_name: express
+category: backend
+subcategory: general
+description: 'Builds Node.js HTTP APIs with Express: routing, middleware, error handling, validation,
+  and production hardening.'
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- node
+- npm
+- npx
+capabilities:
+- commands:
+  - npm init -y
+  - npm install express
+  - npx express-generator myapp
+  - node server.js
+  - npm start
+  description: Scaffold and run Express applications.
+  name: express-app
+  examples:
+  - npx express-generator --view=ejs myapp
+  - node --watch server.js
+  - npm run dev
+  parameters:
+  - description: Entry file to run
+    name: entry
+    type: string
+  - description: Listen port
+    name: port
+    type: integer
+- commands:
+  - npm install helmet cors express-rate-limit
+  - npm install morgan
+  - npm install --save-dev supertest
+  - npm audit fix
+  description: Add routing, validation, and error middleware.
+  name: express-middleware
+  examples:
+  - npm install express-validator joi
+  - npm install compression
+  - npm audit --audit-level=high
+  parameters:
+  - description: npm package to install
+    name: package
+    type: string
+  - name: route
+    type: string
+    description: Route path the middleware applies to
+knowledge:
+- title: Express Docs
+  description: Routing, middleware, and API reference
+  source: https://expressjs.com
+  type: documentation
+- title: Express Security Best Practices
+  description: Production security hardening
+  source: https://expressjs.com/en/advanced/best-practice-security.html
+  type: documentation
+instructions: "# Express\n\nMinimal web framework for Node.js.\n\n## When to Use\n\n- REST APIs and web\
+  \ apps with simple routing needs\n- Microservices where a lightweight runtime is preferred\n- SPA backends\
+  \ serving JSON and static files\n\n## Commands\n\n```bash\n# Scaffold\nnpm init -y\nnpm install express\n\
+  npx express-generator myapp\n\n# Run\nnode server.js\nnode --watch server.js\n\n# Common middleware\n\
+  npm install helmet cors express-rate-limit morgan\nnpm install compression\n\n# Testing\nnpm install\
+  \ --save-dev supertest\n```\n\n## App Example\n\n```javascript\nconst express = require(\"express\"\
+  );\nconst app = express();\n\napp.use(express.json());\napp.use(require(\"helmet\")());\n\napp.get(\"\
+  /health\", (req, res) => res.json({ ok: true }));\n\napp.use((err, req, res, next) => {\n  console.error(err);\n\
+  \  res.status(500).json({ error: \"internal\" });\n});\n\napp.listen(3000);\n```\n\n## Best Practices\n\
+  \n- Put helmet, cors, and json body parsing before routes\n- Validate request input; never trust req.body\
+  \ blindly\n- Centralize error handling in one error middleware\n- Use async wrapper or try/catch for\
+  \ promises in handlers\n- Run npm audit in CI and pin production dependencies\n- Serve behind a reverse\
+  \ proxy with trust proxy enabled when needed"
+examples:
+- input: Add input validation to an Express endpoint
+  output: Agent installs express-validator, adds validation middleware to the route, and returns 400 with
+    field errors.
+- input: Express crashes on async errors
+  output: Agent wraps async handlers or adds an express-async-errors style pattern and implements a central
+    error middleware.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: express.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-express
+  generic:
+    system_prompt: 'Your lane is express. You do it through express-app: Scaffold and run Express applications.
+      The commands are real, e.g. `npm init -y`. You prefer the shortest safe path, and you reproduce
+      failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,204 @@
+name: azure-api-management
+display_name: Azure Api Management
+category: api
+subcategory: general
+description: 'Manages Azure API Management: service creation, API import, operation inspection, policies,
+  and subscriptions via the Azure CLI.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: apim-service
+  description: Create and manage API Management instances.
+  commands:
+  - az apim create --name my-apim --resource-group rg --publisher-email admin@example.com --publisher-name
+    MyOrg --sku-name Consumption
+  - az apim show --name my-apim -g rg
+  - az apim list --resource-group rg
+  - az apim delete --name my-apim -g rg --yes
+  - az apim list-skus
+  examples:
+  - az apim create --name my-apim --resource-group rg --publisher-email admin@example.com --publisher-name
+    MyOrg --sku-name Developer
+  - az apim show --name my-apim -g rg --query 'gatewayUrl' -o tsv
+  - az apim list --resource-group rg --query '[].{name:name,sku:sku.name}' -o table
+  parameters:
+  - name: sku
+    type: string
+    description: Consumption, Developer, Basic, Standard, Premium
+  - name: publisher_email
+    type: string
+    description: Publisher email
+- name: api-import
+  description: Import and manage APIs in APIM.
+  commands:
+  - az apim api import --service-name my-apim -g rg --api-id petstore --path petstore --specification-format
+    OpenApiJson --specification-path ./openapi.json
+  - az apim api list --service-name my-apim -g rg
+  - az apim api show --service-name my-apim -g rg --api-id petstore
+  - az apim api operation list --service-name my-apim -g rg --api-id petstore
+  - az apim api update --service-name my-apim -g rg --api-id petstore --display-name "Pet Store v2"
+  examples:
+  - az apim api import --service-name my-apim -g rg --api-id petstore --path petstore --specification-format
+    OpenApiJson --specification-url https://example.com/openapi.json
+  - az apim api operation list --service-name my-apim -g rg --api-id petstore --query '[].{method:method,url:urlTemplate}'
+    -o table
+  - az apim api list --service-name my-apim -g rg --query '[].{id:name,path:path}' -o table
+  parameters:
+  - name: api_id
+    type: string
+    description: API identifier
+  - name: path
+    type: string
+    description: URL path suffix
+  - name: spec_file
+    type: string
+    description: OpenAPI spec file or URL
+- name: subscriptions
+  description: Manage subscriptions and keys.
+  commands:
+  - az apim subscription list --service-name my-apim -g rg
+  - az apim subscription create --service-name my-apim -g rg --name svc-key --owner-id svc-account --scope
+    /apis
+  - az apim subscription show --service-name my-apim -g rg --subscription-id <sub-id>
+  - az apim subscription regenerate-primary-key --service-name my-apim -g rg --subscription-id <sub-id>
+  - 'curl -s -H "Ocp-Apim-Subscription-Key: $SUBSCRIPTION_KEY" https://my-apim.azure-api.net/petstore/pets'
+  examples:
+  - az apim subscription create --service-name my-apim -g rg --name svc-key --owner-id svc-account --scope
+    /apis --primary-key $(openssl rand -hex 16)
+  - az apim subscription regenerate-secondary-key --service-name my-apim -g rg --subscription-id <sub-id>
+  - 'curl -s -H "Ocp-Apim-Subscription-Key: $KEY" https://my-apim.azure-api.net/petstore/pets?limit=5'
+  parameters:
+  - name: subscription_name
+    type: string
+    description: Subscription name
+  - name: scope
+    type: string
+    description: 'Scope: /apis, /apis/{api}, /products'
+  - name: owner_id
+    type: string
+    description: Owner user/group id
+knowledge:
+- title: API Management Docs
+  type: documentation
+  source: https://learn.microsoft.com/en-us/azure/api-management/
+  description: APIM concepts, policies, subscriptions
+- title: Azure CLI apim Reference
+  type: documentation
+  source: https://learn.microsoft.com/en-us/cli/azure/apim
+  description: az apim commands
+instructions: '# Azure API Management
+
+
+  ## What this skill does
+
+
+  Manages Azure API Management: creating APIM services, importing OpenAPI specs, inspecting operations,
+  managing subscription keys, and testing proxied endpoints.
+
+
+  ## When to use
+
+
+  - Exposing a backend API with rate limits, caching, or transformation
+
+  - Importing an OpenAPI spec to generate the gateway surface
+
+  - Issuing and rotating subscription keys
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Create a service
+
+  az apim create --name my-apim --resource-group rg --publisher-email admin@example.com --publisher-name
+  MyOrg --sku-name Consumption
+
+
+  # Import an OpenAPI spec
+
+  az apim api import --service-name my-apim -g rg --api-id petstore --path petstore --specification-format
+  OpenApiJson --specification-path ./openapi.json
+
+
+  # List operations
+
+  az apim api operation list --service-name my-apim -g rg --api-id petstore --query ''[].{method:method,url:urlTemplate}''
+  -o table
+
+
+  # Subscription
+
+  az apim subscription create --service-name my-apim -g rg --name svc-key --owner-id svc-account --scope
+  /apis
+
+
+  # Call through the gateway
+
+  curl -s -H "Ocp-Apim-Subscription-Key: $KEY" https://my-apim.azure-api.net/petstore/pets
+
+  ```
+
+
+  ## Testing
+
+
+  - Import then immediately list operations to verify the spec parsed
+
+  - Call the gateway URL with and without a key (401 without)
+
+
+  ## Best practices
+
+
+  - Use Consumption/Developer tier for dev; Premium for production SLAs
+
+  - Set policies (rate limit, CORS) per API or product
+
+  - Rotate keys via regenerate-primary-key on a schedule'
+examples:
+- input: Expose our petstore backend through APIM
+  output: Creates the APIM service, imports openapi.json, creates a subscription, and demonstrates a curl
+    call through the gateway URL with Ocp-Apim-Subscription-Key.
+- input: Rotate the subscription key
+  output: Runs regenerate-primary-key, updates downstream config, and verifies the old key now returns
+    401.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: azure-api-management.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-azure-api-management
+  generic:
+    system_prompt: 'You own Azure Api Management end to end. You do it through apim-service: Create and
+      manage API Management instances. The commands are real, e.g. `az apim create --name my-apim --resource-group
+      rg --publisher-email admin@example.com...`. You verify each step you report and stay honest about
+      what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

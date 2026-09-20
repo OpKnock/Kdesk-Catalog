@@ -1,0 +1,199 @@
+{
+  "name": "rate-limiting-backend",
+  "display_name": "Rate Limiting",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Implements API rate limiting with Redis sliding windows, token buckets, and nginx/AWS strategies to protect services from abuse.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "nginx",
+    "redis-cli"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "redis-cli incr ratelimit:user:42",
+        "redis-cli expire ratelimit:user:42 60",
+        "redis-cli eval \"local c=redis.call(\\\"incr\\\",KEYS[1]); if c==1 then redis.call(\\\"expire\\\",KEYS[1],ARGV[1]) end; return c\" 1 ratelimit:user:42 60",
+        "redis-cli ttl ratelimit:user:42"
+      ],
+      "description": "Enforce rate limits with Redis primitives.",
+      "name": "redis-rate-limit",
+      "examples": [
+        "redis-cli INCR ratelimit:user:42",
+        "redis-cli --scan --pattern \"ratelimit:*\"",
+        "redis-cli DEL ratelimit:user:42"
+      ],
+      "parameters": [
+        {
+          "description": "Rate limit key",
+          "name": "key",
+          "type": "string"
+        },
+        {
+          "description": "Window in seconds",
+          "name": "window",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "nginx -t",
+        "nginx -s reload",
+        "ab -n 1000 -c 50 http://localhost:8000/api",
+        "curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/api"
+      ],
+      "description": "Configure limits at the reverse proxy layer.",
+      "name": "proxy-limiting",
+      "examples": [
+        "ab -n 5000 -c 100 http://localhost:8000/",
+        "wrk -t4 -c100 -d10s http://localhost:8000/api"
+      ],
+      "parameters": [
+        {
+          "description": "Limit like 10r/s",
+          "name": "rate",
+          "type": "string"
+        },
+        {
+          "name": "zone",
+          "type": "string",
+          "description": "nginx limit_req zone name"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Redis Rate Limiting Patterns",
+      "description": "Fixed window, sliding window, and token bucket",
+      "source": "https://redis.io/docs/latest/develop/use/rate-limiting/",
+      "type": "documentation"
+    },
+    {
+      "title": "Nginx Rate Limiting",
+      "description": "limit_req and limit_conn directives",
+      "source": "https://nginx.org/en/docs/http/ngx_http_limit_req_module.html",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Rate Limiting\n\nProtect APIs from abuse with rate limits.\n\n## When to Use\n\n- Public APIs where abuse costs money (LLM calls, SMS, scraping)\n- Login and auth endpoints against credential stuffing\n- Protecting downstream services from cascading load\n\n## Algorithms\n\n- Fixed window: count per bucket; bursts at boundaries\n- Sliding window: exact counts over rolling period\n- Token bucket: steady rate with burst allowance\n- Leaky bucket: smooth output regardless of input\n\n## Redis Fixed Window\n\n```bash\nredis-cli INCR ratelimit:user:42\nredis-cli EXPIRE ratelimit:user:42 60\n```\n\n## Nginx Example\n\n```nginx\nlimit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;\n\nserver {\n    location /api/ {\n        limit_req zone=api burst=20 nodelay;\n        proxy_pass http://backend;\n    }\n}\n```\n\n## Commands\n\n```bash\nnginx -t\nnginx -s reload\n\n# Load test your limits\nab -n 1000 -c 50 http://localhost:8000/api\nwrk -t4 -c100 -d10s http://localhost:8000/api\n```\n\n## Best Practices\n\n- Return 429 with Retry-After so clients back off correctly\n- Rate limit by identity (API key/user) and by IP as fallback\n- Use Lua scripts or INCR+EXPIRE atomically; avoid TOCTOU races\n- Add per-route limits, not just global ones\n- Load test with ab/wrk to verify headers and behavior\n- Store counters in Redis, not app memory, in multi-instance deploys",
+  "examples": [
+    {
+      "input": "Add per-user rate limits to my API",
+      "output": "Agent implements Redis fixed-window with INCR/EXPIRE, returns 429 with Retry-After, and adds an nginx limit_req zone for IP fallback."
+    },
+    {
+      "input": "Is my rate limit actually working?",
+      "output": "Agent load tests with ab -n 1000 -c 50 and checks for 429 responses and Retry-After headers."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "rate-limiting-backend.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-rate-limiting"
+    },
+    "generic": {
+      "system_prompt": "You are the Rate Limiting specialist. You do it through redis-rate-limit: Enforce rate limits with Redis primitives. The commands are real, e.g. `redis-cli incr ratelimit:user:42`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "rate-limiting-backend",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "redis-rate-limit",
+        "name": "key",
+        "type": "string",
+        "description": "Rate limit key"
+      },
+      {
+        "capability": "redis-rate-limit",
+        "name": "window",
+        "type": "integer",
+        "description": "Window in seconds"
+      },
+      {
+        "capability": "proxy-limiting",
+        "name": "rate",
+        "type": "string",
+        "description": "Limit like 10r/s"
+      },
+      {
+        "capability": "proxy-limiting",
+        "name": "zone",
+        "type": "string",
+        "description": "nginx limit_req zone name"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "nginx",
+    "redis-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/rate-limiting-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/rate-limiting-skill.yaml",
+    "checksum": "863c37595d32cb73814c1cf65de602013c4c6dbf8759cd9cbbd06a0a74c0d53e"
+  }
+}

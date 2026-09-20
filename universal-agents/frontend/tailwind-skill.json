@@ -1,0 +1,230 @@
+{
+  "name": "tailwind",
+  "display_name": "Tailwind",
+  "category": "frontend",
+  "subcategory": "general",
+  "description": "Configures and builds utility-first CSS with Tailwind: content scanning, custom themes, and production optimization.",
+  "version": "2.0.0",
+  "tags": [
+    "frontend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npm",
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "setup",
+      "description": "Install and configure Tailwind CSS.",
+      "commands": [
+        "npm install -D tailwindcss @tailwindcss/cli",
+        "npx @tailwindcss/cli init -p",
+        "npx @tailwindcss/cli init --ts",
+        "npm install -D @tailwindcss/vite",
+        "npm install -D @tailwindcss/typography"
+      ],
+      "examples": [
+        "npm install -D tailwindcss @tailwindcss/vite",
+        "npx @tailwindcss/cli init --ts",
+        "npm install -D @tailwindcss/forms @tailwindcss/typography"
+      ],
+      "parameters": [
+        {
+          "name": "init",
+          "type": "string",
+          "description": "Generate config with -p for postcss"
+        },
+        {
+          "name": "ts",
+          "type": "string",
+          "description": "Generate TypeScript config"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": "Glob patterns of files to scan for classes"
+        }
+      ]
+    },
+    {
+      "name": "build",
+      "description": "Compile Tailwind CSS for development and production.",
+      "commands": [
+        "npx @tailwindcss/cli -i src/input.css -o dist/output.css",
+        "npx @tailwindcss/cli -i src/input.css -o dist/output.css --minify",
+        "npx @tailwindcss/cli -i src/input.css -o dist/output.css --watch",
+        "npx @tailwindcss/cli -i src/input.css -o dist/output.css --minify --watch",
+        "npx tailwindcss -c tailwind.config.js -i src/input.css -o dist/output.css"
+      ],
+      "examples": [
+        "npx @tailwindcss/cli -i src/input.css -o dist/output.css --minify",
+        "npx @tailwindcss/cli -i src/input.css -o dist/output.css --watch",
+        "npx tailwindcss -c tailwind.config.js -i src/input.css -o dist/output.css --minify"
+      ],
+      "parameters": [
+        {
+          "name": "input",
+          "type": "string",
+          "description": "Input CSS file with @import tailwindcss"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output CSS file path"
+        },
+        {
+          "name": "minify",
+          "type": "string",
+          "description": "Minify output for production"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Tailwind CSS Docs",
+      "type": "documentation",
+      "source": "https://tailwindcss.com/docs",
+      "description": "Utility classes, config, and theming"
+    },
+    {
+      "title": "Tailwind CLI",
+      "type": "documentation",
+      "source": "https://tailwindcss.com/docs/cli",
+      "description": "Tailwind CLI build and watch commands"
+    },
+    {
+      "title": "Tailwind with Vite",
+      "type": "documentation",
+      "source": "https://tailwindcss.com/docs/installation/using-vite",
+      "description": "Vite plugin installation guide"
+    }
+  ],
+  "instructions": "# Tailwind CSS\n\nShip utility-first CSS with Tailwind CLI pipelines.\n\n## When to Use\n\n- Rapid UI iteration with utility classes\n- Consistent design tokens across large teams\n- Small CSS payloads with only used classes compiled\n\n## Install and configure\n\n```bash\nnpm install -D tailwindcss @tailwindcss/cli\nnpx @tailwindcss/cli init -p\n```\n\n## Input CSS\n\n```css\n@import \"tailwindcss\";\n@theme {\n  --color-brand: #4f46e5;\n  --font-display: \"Sora\", sans-serif;\n}\n```\n\n## Build and watch\n\n```bash\nnpx @tailwindcss/cli -i src/input.css -o dist/output.css\nnpx @tailwindcss/cli -i src/input.css -o dist/output.css --watch\nnpx @tailwindcss/cli -i src/input.css -o dist/output.css --minify\n```\n\n## Content scanning\n\nTailwind v4 auto-detects sources; with a config file, keep content globs tight:\n\n```js\n/** @type {import('tailwindcss').Config} */\nexport default {\n  content: ['./src/**/*.{html,js,svelte,tsx}'],\n  theme: { extend: { colors: { brand: '#4f46e5' } } }\n};\n```\n\n## Custom utilities\n\n```css\n@utility glass {\n  backdrop-filter: blur(8px);\n  background: rgb(255 255 255 / 0.8);\n}\n```\n\n## Best practices\n\n- Keep design tokens in `@theme`, not scattered hex values.\n- Extract repeated markup into components, not custom classes.\n- Verify output size: minified CSS should grow only with usage.\n- Prefer responsive prefixes over media query duplication.\n\n## Testing\n\n```bash\nnpx @tailwindcss/cli -i src/input.css -o dist/output.css --minify\nls -la dist/output.css\n```\n\nWatch for unexpected bloat after adding libraries.",
+  "examples": [
+    {
+      "input": "Set up Tailwind v4 with a custom brand color and watch mode.",
+      "output": "Installs tailwindcss and the CLI, generates config, defines the brand color in @theme, and runs the --watch build."
+    },
+    {
+      "input": "Build a minified production stylesheet.",
+      "output": "Runs npx @tailwindcss/cli -i src/input.css -o dist/output.css --minify and checks output size."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "tailwind.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-tailwind"
+    },
+    "generic": {
+      "system_prompt": "You own Tailwind end to end. You do it through setup: Install and configure Tailwind CSS. The commands are real, e.g. `npm install -D tailwindcss @tailwindcss/cli`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "tailwind",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "setup",
+        "name": "init",
+        "type": "string",
+        "description": "Generate config with -p for postcss"
+      },
+      {
+        "capability": "setup",
+        "name": "ts",
+        "type": "string",
+        "description": "Generate TypeScript config"
+      },
+      {
+        "capability": "setup",
+        "name": "content",
+        "type": "string",
+        "description": "Glob patterns of files to scan for classes"
+      },
+      {
+        "capability": "build",
+        "name": "input",
+        "type": "string",
+        "description": "Input CSS file with @import tailwindcss"
+      },
+      {
+        "capability": "build",
+        "name": "output",
+        "type": "string",
+        "description": "Output CSS file path"
+      },
+      {
+        "capability": "build",
+        "name": "minify",
+        "type": "string",
+        "description": "Minify output for production"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npm",
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "frontend/tailwind-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/frontend/tailwind-skill.yaml",
+    "checksum": "4ab7fa32ae2af1c2bea580222aa982241556c6b28ff5aceb59338f4dd32db08f"
+  }
+}

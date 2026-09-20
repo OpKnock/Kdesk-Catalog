@@ -1,0 +1,118 @@
+name: load-test-analysis
+display_name: Load Test Analysis
+category: api
+subcategory: general
+description: 'Analyze load test results: extract percentiles from k6/hey/ab outputs, compute error rates,
+  and summarize performance regressions.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- awk
+- hey
+capabilities:
+- name: percentile-analysis
+  description: Extract latency percentiles from k6 JSON exports and CLI summaries.
+  commands:
+  - k6 run --summary-export=summary.json load.js
+  - jq '.metrics.http_req_duration.values["p(95)"]' summary.json
+  - jq '.metrics.http_req_failed.values.rate' summary.json
+  - hey -n 5000 -c 100 http://localhost:8080/ | grep '95% in'
+  examples:
+  - k6 run --summary-export=summary.json load.js
+  - jq '.metrics.http_req_duration.values["p(95)"]' summary.json
+  - hey -n 5000 -c 100 http://localhost:8080/ | grep '95% in'
+  parameters:
+  - name: summary_file
+    type: string
+    description: k6 --summary-export JSON file.
+  - name: percentile
+    type: string
+    description: Percentile to extract, e.g. p(95), p(99).
+- name: compare-runs
+  description: Compare baseline vs. after runs and summarize throughput/errors.
+  commands:
+  - ab -n 10000 -c 200 -k http://localhost:8080/ | grep -E 'Requests per second|Failed requests'
+  - jq '.metrics.http_reqs.values.count / .metrics.http_req_duration.values.avg' summary.json
+  - awk '/^Requests per second/{print $4}' ab-before.txt ab-after.txt
+  - k6 run --summary-trend-stats='avg,p(99.9)' load.js
+  examples:
+  - ab -n 10000 -c 200 -k http://localhost:8080/ | grep -E 'Requests per second|Failed requests'
+  - awk '/^Requests per second/{print $4}' ab-before.txt ab-after.txt
+  - jq '.metrics.http_reqs.values.count / .metrics.http_req_duration.values.avg' summary.json
+  parameters:
+  - name: baseline
+    type: string
+    description: Baseline results file.
+  - name: after
+    type: string
+    description: After-change results file.
+knowledge:
+- title: k6 Summary Export
+  type: documentation
+  source: https://grafana.com/docs/k6/latest/results-output/end-of-test/
+  description: k6 end-of-test summary and JSON export.
+- title: jq manual
+  type: documentation
+  source: https://jqlang.github.io/jq/manual/
+  description: jq processing language reference.
+instructions: "# Load Test Analysis\n\nTurn load test output into actionable performance signals.\n\n\
+  ## What this skill does\n\n- Extracts p(95)/p(99) latency and error rates from results.\n- Compares\
+  \ baseline vs. regression runs.\n- Computes throughput from raw counters.\n\n## When to use\n\n- Post-load-test\
+  \ triage: did this release regress?\n- Building perf dashboards from k6/ab/hey outputs.\n- Writing CI\
+  \ gates on percentile thresholds.\n\n## Real commands\n\n```bash\n# k6 run with export\nk6 run --summary-export=summary.json\
+  \ load.js\n\n# p(95) latency\njq '.metrics.http_req_duration.values[\"p(95)\"]' summary.json\n\n# Error\
+  \ rate\njq '.metrics.http_req_failed.values.rate' summary.json\n\n# Throughput (req/s)\njq '.metrics.http_reqs.values.count\
+  \ / .metrics.http_req_duration.values.avg' summary.json\n\n# hey percentile\nhey -n 5000 -c 100 http://localhost:8080/\
+  \ | grep '95% in'\n\n# ab summary\nab -n 10000 -c 200 -k http://localhost:8080/ | grep -E 'Requests\
+  \ per second|Failed requests'\n\n# Compare two ab runs\nawk '/^Requests per second/{print $4}' ab-before.txt\
+  \ ab-after.txt\n\n# Tight stats for CI gates\nk6 run --summary-trend-stats='avg,p(99.9)' load.js\n```\n\
+  \n## Example analysis workflow\n\n```bash\nk6 run --summary-export=before.json load.js\n# ... deploy\
+  \ change ...\nk6 run --summary-export=after.json load.js\njq -n --argjson b \"$(cat before.json)\" --argjson\
+  \ a \"$(cat after.json)\"   '{p95_delta: ($a.metrics.http_req_duration.values[\"p(95)\"] - $b.metrics.http_req_duration.values[\"\
+  p(95)\"]),\n    err_delta: ($a.metrics.http_req_failed.values.rate - $b.metrics.http_req_failed.values.rate)}'\n\
+  ```\n\n## Testing\n\n```bash\njq -e '.metrics.http_req_duration.values[\"p(95)\"] < 300' summary.json\
+  \ && echo PASS\n```\n\n## Best practices\n\n- Always capture a baseline under identical load profiles.\n\
+  - Report p(95)/p(99) plus error rate; averages hide tail pain.\n- Store summaries with run metadata\
+  \ (commit, env) for trend analysis.\n"
+examples:
+- input: Did p95 regress after the deploy?
+  output: Run k6 with --summary-export before and after, then diff the p(95) values with jq.
+- input: What was the error rate?
+  output: jq '.metrics.http_req_failed.values.rate' summary.json
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: load-test-analysis.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-load-test-analysis
+  generic:
+    system_prompt: 'You work Load Test Analysis hands-on. You do it through percentile-analysis: Extract
+      latency percentiles from k6 JSON exports and CLI summaries. The commands are real, e.g. `k6 run
+      --summary-export=summary.json load.js`. You prefer the shortest safe path, and you reproduce failures
+      before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

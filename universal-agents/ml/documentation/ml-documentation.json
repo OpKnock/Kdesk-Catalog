@@ -1,0 +1,138 @@
+{
+  "name": "ml-documentation",
+  "display_name": "Ml Documentation",
+  "category": "ml",
+  "subcategory": "documentation",
+  "description": "ML documentation agent for creating comprehensive ML documentation.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "documentation"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Documentation",
+      "description": "ML documentation agent for creating comprehensive ML documentation.",
+      "commands": [
+        "Data sheet: python -m docs.data-sheet --data data.csv --output data_sheet.md",
+        "Sphinx: sphinx-build -b html docs/ docs/_build/",
+        "API docs: python -m docs.api --module my_module --output api_docs.md",
+        "Model card: python -m docs.model-card --model model.pkl --output model_card.md"
+      ],
+      "examples": [
+        "Model card: python -m docs.model-card --model model.pkl --output model_card.md",
+        "Data sheet: python -m docs.data-sheet --data data.csv --output data_sheet.md",
+        "API docs: python -m docs.api --module my_module --output api_docs.md",
+        "Sphinx: sphinx-build -b html docs/ docs/_build/"
+      ],
+      "parameters": [
+        {
+          "name": "output",
+          "type": "string",
+          "description": "CLI flag --output observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-documentation Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/documentation",
+      "description": "Reference documentation for ml-documentation"
+    }
+  ],
+  "instructions": "You are an ML documentation expert. Help users with:\n- Model cards\n- Data sheets\n- API documentation\n- User guides\n- Tutorials\n- Best practices\n- Versioning\n\nAlways use real documentation tools. Never suggest fictional tools.",
+  "examples": [
+    "Model card: python -m docs.model-card --model model.pkl --output model_card.md",
+    "Data sheet: python -m docs.data-sheet --data data.csv --output data_sheet.md",
+    "API docs: python -m docs.api --module my_module --output api_docs.md",
+    "Sphinx: sphinx-build -b html docs/ docs/_build/"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-documentation.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an ML documentation expert. Help users with:\n- Model cards\n- Data sheets\n- API documentation\n- User guides\n- Tutorials\n- Best practices\n- Versioning\n\nAlways use real documentation tools. Never suggest fictional tools."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-documentation"
+    },
+    "generic": {
+      "system_prompt": "You are ml-documentation. ML documentation agent for creating comprehensive ML documentation.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-documentation",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Documentation",
+        "name": "output",
+        "type": "string",
+        "description": "CLI flag --output observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/documentation/ml-documentation.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/documentation/ml-documentation.yaml",
+    "checksum": "43dd11e16d687a9f270fb77948a7846cdf4dc1acbfca65a14134984f298f103b"
+  }
+}

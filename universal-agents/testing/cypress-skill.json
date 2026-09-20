@@ -1,0 +1,247 @@
+{
+  "name": "cypress",
+  "display_name": "cypress",
+  "category": "testing",
+  "subcategory": "general",
+  "description": "Runs E2E tests for web apps with Cypress, including component tests, parallel runs, and dashboard recording.",
+  "version": "2.0.0",
+  "tags": [
+    "testing"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "cypress",
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "cypress-runs",
+      "description": "Open, run, and filter Cypress tests.",
+      "commands": [
+        "npx cypress open",
+        "npx cypress run",
+        "npx cypress run --browser chrome",
+        "npx cypress run --spec cypress/e2e/login.cy.js",
+        "npx cypress run --headed"
+      ],
+      "examples": [
+        "npx cypress open",
+        "npx cypress run --spec cypress/e2e/login.cy.js",
+        "npx cypress run --browser edge"
+      ],
+      "parameters": [
+        {
+          "name": "spec",
+          "type": "string",
+          "description": "Test file or glob pattern"
+        },
+        {
+          "name": "browser",
+          "type": "string",
+          "description": "Browser: chrome, firefox, edge, electron"
+        }
+      ]
+    },
+    {
+      "name": "parallel-and-record",
+      "description": "Parallelize runs and record to Cypress Cloud.",
+      "commands": [
+        "npx cypress run --record --key $CYPRESS_RECORD_KEY",
+        "npx cypress run --parallel --record",
+        "npx cypress run --group chrome --browser chrome",
+        "npx cypress run --tag smoke"
+      ],
+      "examples": [
+        "npx cypress run --record --key $CYPRESS_RECORD_KEY",
+        "npx cypress run --parallel --record --group chrome",
+        "npx cypress run --tag smoke"
+      ],
+      "parameters": [
+        {
+          "name": "recordKey",
+          "type": "string",
+          "description": "Cypress Cloud record key"
+        },
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "Run tag for filtering"
+        },
+        {
+          "name": "group",
+          "type": "string",
+          "description": "Group name for parallel runs"
+        }
+      ]
+    },
+    {
+      "name": "component-and-debug",
+      "description": "Component testing and debugging helpers.",
+      "commands": [
+        "npx cypress run --component",
+        "npx cypress run --env grep='login'",
+        "npx cypress run --config video=false",
+        "cypress verify"
+      ],
+      "examples": [
+        "npx cypress run --component",
+        "npx cypress run --env grep='login'",
+        "npx cypress run --config video=false"
+      ],
+      "parameters": [
+        {
+          "name": "env",
+          "type": "object",
+          "description": "Environment variables for tests"
+        },
+        {
+          "name": "config",
+          "type": "object",
+          "description": "Runtime config overrides"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Cypress Documentation",
+      "type": "documentation",
+      "source": "https://docs.cypress.io/",
+      "description": "E2E and component testing guide"
+    },
+    {
+      "title": "Cypress CLI Reference",
+      "type": "documentation",
+      "source": "https://docs.cypress.io/app/references/command-line",
+      "description": "All CLI flags and options"
+    }
+  ],
+  "instructions": "# Cypress\n\nFast, reliable E2E and component testing for web apps.\n\n## What This Skill Does\n\n- Runs E2E suites in headed/interactive mode\n- Filters specs and tests with CLI flags\n- Parallelizes runs and records to Cypress Cloud\n- Writes resilient selectors and custom commands\n\n## When to Use\n\n- Full user-journey regression suites\n- Visual and component testing\n- PR gating for web frontends\n\n## Real Commands\n\n```bash\n# Interactive and headless\nnpx cypress open\nnpx cypress run --browser chrome\nnpx cypress run --spec cypress/e2e/login.cy.js\n\n# Cloud and parallel\nnpx cypress run --record --key $CYPRESS_RECORD_KEY\nnpx cypress run --parallel --record --group chrome\n\n# Component and config\nnpx cypress run --component\nnpx cypress run --env grep='login'\nnpx cypress run --config video=false\n```\n\n## Sample Test\n\n```js\ndescribe('login', () => {\n  it('logs in with valid credentials', () => {\n    cy.visit('/login');\n    cy.get('[data-cy=email]').type('alice@example.com');\n    cy.get('[data-cy=password]').type('secret');\n    cy.get('[data-cy=submit]').click();\n    cy.url().should('include', '/dashboard');\n  });\n});\n```\n\n## Best Practices\n\n- Use data-cy attributes; never CSS classes in selectors\n- Keep tests independent with cy.intercept stubs\n- Run a smoke subset on PRs, full suite nightly\n- Record to Cypress Cloud for flake analytics\n- Parallelize across machines for large suites",
+  "examples": [
+    {
+      "input": "Test the login flow end to end",
+      "output": "Agent writes a login spec with data-cy selectors, runs npx cypress run --spec cypress/e2e/login.cy.js, and fixes failures."
+    },
+    {
+      "input": "Speed up our 300-test suite",
+      "output": "Agent adds --record and --parallel with grouping, and moves stable tests to component testing."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cypress.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cypress"
+    },
+    "generic": {
+      "system_prompt": "You work cypress hands-on. You do it through cypress-runs: Open, run, and filter Cypress tests. The commands are real, e.g. `npx cypress open`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cypress",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cypress-runs",
+        "name": "spec",
+        "type": "string",
+        "description": "Test file or glob pattern"
+      },
+      {
+        "capability": "cypress-runs",
+        "name": "browser",
+        "type": "string",
+        "description": "Browser: chrome, firefox, edge, electron"
+      },
+      {
+        "capability": "parallel-and-record",
+        "name": "recordKey",
+        "type": "string",
+        "description": "Cypress Cloud record key"
+      },
+      {
+        "capability": "parallel-and-record",
+        "name": "tag",
+        "type": "string",
+        "description": "Run tag for filtering"
+      },
+      {
+        "capability": "parallel-and-record",
+        "name": "group",
+        "type": "string",
+        "description": "Group name for parallel runs"
+      },
+      {
+        "capability": "component-and-debug",
+        "name": "env",
+        "type": "object",
+        "description": "Environment variables for tests"
+      },
+      {
+        "capability": "component-and-debug",
+        "name": "config",
+        "type": "object",
+        "description": "Runtime config overrides"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "cypress",
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "testing/cypress-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/testing/cypress-skill.yaml",
+    "checksum": "cebb01acc86198fbbcaab0bd625d3110ba3be4b514541591df9d36a6b18279ac"
+  }
+}

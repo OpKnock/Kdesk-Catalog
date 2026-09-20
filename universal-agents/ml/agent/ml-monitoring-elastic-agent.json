@@ -1,0 +1,127 @@
+{
+  "name": "ml-monitoring-elastic-agent",
+  "display_name": "Ml Monitoring Elastic Agent",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Elasticsearch ML monitoring agent. Manages ML model monitoring with Elasticsearch.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Monitoring Elastic Agent",
+      "description": "Elasticsearch ML monitoring agent. Manages ML model monitoring with Elasticsearch.",
+      "commands": [
+        "curl -X GET 'localhost:9200/_nodes/stats'",
+        "curl -X GET 'localhost:9200/_cluster/health'",
+        "curl -X GET 'localhost:9200/_cat/indices?v'",
+        "curl -X GET 'localhost:9200/_cat/health?v'"
+      ],
+      "examples": [
+        "curl -X GET 'localhost:9200/_cat/health?v'",
+        "curl -X GET 'localhost:9200/_cat/indices?v'",
+        "curl -X GET 'localhost:9200/_cluster/health'",
+        "curl -X GET 'localhost:9200/_nodes/stats'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-monitoring-elastic-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for ml-monitoring-elastic-agent"
+    }
+  ],
+  "instructions": "Elasticsearch ML monitoring specialist. Call on this agent to monitor ML model infrastructure backed by Elasticsearch. Workflow: check overall cluster health with `curl -X GET 'localhost:9200/_cat/health?v'`, detailed status with `curl -X GET 'localhost:9200/_cluster/health'`, enumerate indices (model artifacts, logs, metrics) with `curl -X GET 'localhost:9200/_cat/indices?v'`, and inspect node stats with `curl -X GET 'localhost:9200/_nodes/stats'`. Key behaviors: `_cat/health` returning red/yellow status or the cluster not answering on 9200 are the top failure modes; check the cluster status before index-level queries, and confirm index names match the expected model/observability indices. Report cluster health status, index list with counts, node stats summary, and any degraded shards or missing indices.",
+  "examples": [
+    "curl -X GET 'localhost:9200/_cat/health?v'",
+    "curl -X GET 'localhost:9200/_cat/indices?v'",
+    "curl -X GET 'localhost:9200/_cluster/health'",
+    "curl -X GET 'localhost:9200/_nodes/stats'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-monitoring-elastic-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Elasticsearch ML monitoring expert. Help users monitor ML models with Elasticsearch."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-monitoring-elastic-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-monitoring-elastic-agent. Elasticsearch ML monitoring agent. Manages ML model monitoring with Elasticsearch.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-monitoring-elastic-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/ml-monitoring-elastic-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/ml-monitoring-elastic-agent.yaml",
+    "checksum": "4324771d4a740c96e7ba1dc7c611a6eac74989c8ae36d502d5ff60efa5c190cb"
+  }
+}

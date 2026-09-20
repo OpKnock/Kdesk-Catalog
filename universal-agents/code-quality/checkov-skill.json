@@ -1,0 +1,209 @@
+{
+  "name": "checkov",
+  "display_name": "Checkov",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Scans IaC (Terraform, CloudFormation, Kubernetes, Dockerfile) for misconfigurations with Checkov policy-as-code.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "checkov"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "checkov -d .",
+        "checkov -f main.tf",
+        "checkov -d . --framework terraform",
+        "checkov -d . --skip-check CKV_AWS_1",
+        "checkov -d . --quiet"
+      ],
+      "description": "Scan infrastructure files for policy violations.",
+      "name": "checkov-scan",
+      "examples": [
+        "checkov -d . --framework kubernetes,terraform",
+        "checkov -f main.tf --compact",
+        "checkov -d . --output sarif"
+      ],
+      "parameters": [
+        {
+          "description": "Directory to scan",
+          "name": "directory",
+          "type": "string"
+        },
+        {
+          "description": "Comma-separated frameworks",
+          "name": "framework",
+          "type": "string"
+        },
+        {
+          "description": "Check ids to skip",
+          "name": "skip-check",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "checkov -d . --output sarif --output-file-path ./reports",
+        "checkov -d . --output junitxml --output-file-path ./reports",
+        "checkov -d . --output json --output-file-path ./reports",
+        "checkov -d . --baseline .checkov.baseline"
+      ],
+      "description": "Generate machine-readable reports.",
+      "name": "checkov-output",
+      "examples": [
+        "checkov -d . --output sarif --output-file-path ./reports --quiet",
+        "checkov -d . --create-baseline"
+      ],
+      "parameters": [
+        {
+          "description": "sarif, junitxml, json, cli",
+          "name": "output",
+          "type": "string"
+        },
+        {
+          "description": "Report directory",
+          "name": "output-file-path",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Checkov Docs",
+      "description": "CLI, policies, and framework coverage",
+      "source": "https://www.checkov.io",
+      "type": "documentation"
+    },
+    {
+      "title": "Checkov on GitHub",
+      "description": "Source and policy index",
+      "source": "https://github.com/bridgecrewio/checkov",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Checkov\n\nPolicy-as-code scanning for infrastructure.\n\n## When to Use\n\n- Terraform and CloudFormation misconfiguration checks\n- Kubernetes manifest security\n- Dockerfile best-practice violations\n- Shift-left IaC security in CI\n\n## Commands\n\n```bash\n# Scan a directory\ncheckov -d .\n\n# Scan a single file\ncheckov -f main.tf\n\n# Limit frameworks\ncheckov -d . --framework terraform,kubernetes\n\n# Skip a known check\ncheckov -d . --skip-check CKV_AWS_1\n\n# Quiet output (failures only)\ncheckov -d . --quiet\n\n# Machine-readable reports\ncheckov -d . --output sarif --output-file-path ./reports\ncheckov -d . --output junitxml --output-file-path ./reports\n\n# Baseline existing findings\ncheckov -d . --create-baseline\ncheckov -d . --baseline .checkov.baseline\n```\n\n## Best Practices\n\n- Run checkov in CI on every IaC change\n- Use --baseline to track existing debt without blocking\n- Fail builds on new findings: use --check or sarif severity\n- Scan the plan output, not just the code\n- Customize with skip-check only after documented review\n- Pin the Checkov version in CI",
+  "examples": [
+    {
+      "input": "Scan my Terraform for security issues",
+      "output": "Agent runs checkov -d . --framework terraform and prioritizes CKV_AWS S3/bucket and IAM findings."
+    },
+    {
+      "input": "Generate a SARIF report for GitHub",
+      "output": "Agent runs checkov -d . --output sarif and wires the report into Code Scanning."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "checkov.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-checkov"
+    },
+    "generic": {
+      "system_prompt": "You are the Checkov specialist. You do it through checkov-scan: Scan infrastructure files for policy violations. The commands are real, e.g. `checkov -d .`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "checkov",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "checkov-scan",
+        "name": "directory",
+        "type": "string",
+        "description": "Directory to scan"
+      },
+      {
+        "capability": "checkov-scan",
+        "name": "framework",
+        "type": "string",
+        "description": "Comma-separated frameworks"
+      },
+      {
+        "capability": "checkov-scan",
+        "name": "skip-check",
+        "type": "string",
+        "description": "Check ids to skip"
+      },
+      {
+        "capability": "checkov-output",
+        "name": "output",
+        "type": "string",
+        "description": "sarif, junitxml, json, cli"
+      },
+      {
+        "capability": "checkov-output",
+        "name": "output-file-path",
+        "type": "string",
+        "description": "Report directory"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "checkov"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/checkov-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/checkov-skill.yaml",
+    "checksum": "9ac0aaa68941370869bbb40cb4c29c0f097e5d7af1340c0c6480194183014065"
+  }
+}

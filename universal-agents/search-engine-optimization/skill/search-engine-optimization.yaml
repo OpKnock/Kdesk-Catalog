@@ -1,0 +1,137 @@
+name: search-engine-optimization
+version: 2.0.0
+type: skill
+category: frontend
+description: Audits and improves site SEO with Lighthouse CI, crawler checks, sitemap generation, and
+  Core Web Vitals measurement from the CLI.
+keywords:
+- search
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: search-engine-optimization.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-search-engine-optimization
+  generic:
+    system_prompt: 'This is your domain: search-engine-optimization. You do it through lighthouse-audit:
+      Run Lighthouse audits for SEO, performance, and accessibility scores. The commands are real, e.g.
+      `npx lighthouse https://example.com --only-categories=seo,performance --output=json...`. You run
+      and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: lighthouse-audit
+  description: Run Lighthouse audits for SEO, performance, and accessibility scores.
+  commands:
+  - npx lighthouse https://example.com --only-categories=seo,performance --output=json --output-path=lh.json
+  - npx lhci autorun
+  - npx lighthouse https://example.com --chrome-flags="--headless"
+  - npx lhci collect --url=https://example.com --numberOfRuns=3
+  examples:
+  - npx lighthouse https://example.com --only-categories=seo --output=json --output-path=seo.json
+  - npx lhci autorun
+  - npx lighthouse https://example.com/checkout --budget-path=budget.json
+  parameters:
+  - name: url
+    type: string
+    description: Page URL to audit
+  - name: categories
+    type: array
+    description: Lighthouse categories to include, e.g. seo, performance, accessibility
+  - name: output-path
+    type: string
+    description: Where to write the JSON report
+- name: crawling-and-content
+  description: Validate meta tags, robots.txt, sitemaps, and HTTP headers with curl and htmlhint.
+  commands:
+  - curl -s https://example.com/robots.txt
+  - curl -s https://example.com/sitemap.xml | head -20
+  - curl -sI https://example.com | grep -i '^HTTP\|^content-type\|^cache-control'
+  - npx htmlhint index.html
+  - curl -s https://example.com | grep -o '<title>[^<]*</title>'
+  examples:
+  - curl -sI https://example.com | grep -i '^content-encoding'
+  - curl -s https://example.com/sitemap.xml | grep -c '<url>'
+  - npx htmlhint public/index.html
+  parameters:
+  - name: path
+    type: string
+    description: URL path or local file to inspect
+  - name: header
+    type: string
+    description: HTTP header to filter, e.g. cache-control
+prerequisites:
+- elasticsearch
+- meilisearch
+- typesense
+- node.js
+tools:
+- elasticsearch
+- meilisearch
+- typesense
+- algolia
+- node.js
+- python
+examples:
+- input: My homepage SEO score dropped. Audit it
+  output: Agent runs npx lighthouse --only-categories=seo --output=json, parses failing audits, checks
+    robots.txt and sitemap with curl, and reports concrete fixes.
+- input: Set up an SEO performance gate in CI
+  output: Agent writes a lighthouserc.json with score assertions and adds npx lhci autorun to the CI pipeline.
+instructions: "# Search Engine Optimization\n\nAudit and improve on-page SEO, crawlability, and performance\
+  \ signals from the terminal.\n\n## What This Skill Does\n\n- Runs Lighthouse SEO/performance audits\
+  \ and extracts scored JSON\n- Validates robots.txt, sitemaps, and critical HTTP headers\n- Lints HTML\
+  \ for missing titles, meta descriptions, and heading structure\n- Measures Core Web Vitals (LCP, CLS,\
+  \ INP) across runs\n- Enforces performance budgets in CI with Lighthouse CI\n\n## When to Use\n\n- A\
+  \ page loses rankings and needs an SEO audit\n- Site migration or launch needs crawlability checks\n\
+  - CI should block PRs that regress Lighthouse scores\n\n## Real Commands\n\n```bash\n# Full audit with\
+  \ machine-readable output\nnpx lighthouse https://example.com --only-categories=seo,performance --output=json\
+  \ --output-path=lh.json\n\n# CI gate with budgets and assertions\nnpx lhci collect --url=https://example.com\
+  \ --numberOfRuns=3\nnpx lhci assert --preset=lighthouse:recommended\nnpx lhci upload --target=temporary-public-storage\n\
+  \n# Crawlability and headers\ncurl -s https://example.com/robots.txt\ncurl -s https://example.com/sitemap.xml\
+  \ | grep -c '<url>'\ncurl -sI https://example.com | grep -i 'cache-control'\n\n# On-page linting\nnpx\
+  \ htmlhint public/index.html\ncurl -s https://example.com | grep -o '<title>[^<]*</title>'\n```\n\n\
+  ## Sample lighthouserc\n\n```json\n{\n  \"ci\": {\n    \"collect\": { \"url\": [\"https://example.com\"\
+  ], \"numberOfRuns\": 3 },\n    \"assert\": {\n      \"assertions\": {\n        \"categories:seo\": [\"\
+  error\", { \"minScore\": 0.9 }],\n        \"categories:performance\": [\"warn\", { \"minScore\": 0.8\
+  \ }]\n      }\n    }\n  }\n}\n```\n\n## Best Practices\n\n- Audit the top-traffic and money pages, not\
+  \ just the homepage\n- Verify sitemap URLs return 200 and match canonical URLs\n- Keep LCP under 2.5s:\
+  \ compress images, preload critical assets\n- Set cache-control on static assets and avoid redirect\
+  \ chains\n- Wire lhci into CI so SEO regressions fail the build"
+display_name: search-engine-optimization
+knowledge:
+- title: Lighthouse Documentation
+  type: documentation
+  source: https://developer.chrome.com/docs/lighthouse/overview
+  description: Audit categories, scoring, and CLI usage
+- title: Google Search Central
+  type: documentation
+  source: https://developers.google.com/search/docs
+  description: SEO essentials, sitemaps, and structured data guides
+- title: Lighthouse CI
+  type: documentation
+  source: https://github.com/GoogleChrome/lighthouse-ci
+  description: CI integration with lhci collect, assert, and upload

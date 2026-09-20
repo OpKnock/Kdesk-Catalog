@@ -1,0 +1,76 @@
+name: firebase-sdk
+display_name: Firebase Sdk
+category: ml
+subcategory: agent
+description: Firebase SDK deployment agent for ML Firebase SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Firebase Deploy Sdk Agent
+  description: Firebase SDK deployment agent for ML Firebase SDK deployment.
+  commands:
+  - docker build -t firebase:latest .
+  - docker push registry.example.com/firebase:latest
+  - kubectl set image deployment/firebase firebase=registry.example.com/firebase:latest
+  - helm upgrade firebase ./helm-chart --namespace production
+  - kubectl rollout status deployment/firebase --timeout=300s
+  - python identity.py --agent firebase-sdk
+  examples:
+  - 'Server: python -m firebase.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 firebase-server'
+  parameters: []
+knowledge:
+- title: firebase-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for firebase-sdk
+instructions: 'Firebase SDK deployment engineer. Use when the firebase ML application must be built and
+  deployed as a containerized service from the SDK. Follow the pipeline: `docker build -t firebase:latest
+  .`, `docker push registry.example.com/firebase:latest`, `kubectl set image deployment/firebase firebase=registry.example.com/firebase:latest`,
+  `helm upgrade firebase ./helm-chart --namespace production`, then `kubectl rollout status deployment/firebase
+  --timeout=300s`. Confirm context with `python identity.py --agent firebase-sdk`. For local SDK bring-up
+  use `python -m firebase.server --port 8080` or `docker run -p 8080:8080 firebase-server`. Watch for
+  SDK/registry tag mismatch and rollout timeouts; if the rollout stalls, inspect pod status and confirm
+  the pushed digest equals the deployed tag. Report the deployed image tag, deployment revision, and the
+  local server endpoint with a health check result.'
+examples:
+- 'Server: python -m firebase.server --port 8080'
+- 'Docker: docker run -p 8080:8080 firebase-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: firebase-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Firebase SDK deployment expert. Help users deploy Firebase applications.
+  opencode:
+    plugin: opencode-firebase-sdk
+  generic:
+    system_prompt: You are firebase-sdk. Firebase SDK deployment agent for ML Firebase SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

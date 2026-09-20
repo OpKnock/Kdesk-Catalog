@@ -1,0 +1,114 @@
+name: api-auth-mtls
+version: 2.0.0
+type: skill
+category: security
+description: API auth with mutual TLS (mTLS) - generate CA and client certificates with openssl, configure
+  the server, and test mTLS handshakes.
+keywords:
+- api-auth
+- authentication
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-auth-mtls.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-auth-mtls
+  generic:
+    system_prompt: 'You own Api Auth mTLS end to end. You do it through mtls-auth: Set up and verify mutual
+      TLS authentication. The commands are real, e.g. `openssl req -x509 -newkey rsa:2048 -keyout ca.key
+      -out ca.crt -days 365 -nodes -subj...`. You verify each step you report and stay honest about what
+      you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: mtls-auth
+  description: Set up and verify mutual TLS authentication
+  commands:
+  - openssl req -x509 -newkey rsa:2048 -keyout ca.key -out ca.crt -days 365 -nodes -subj '/CN=Demo CA'
+  - openssl req -newkey rsa:2048 -keyout client.key -out client.csr -nodes -subj '/CN=partner-1'
+  - openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out client.crt -days 180
+  - curl -s --cert client.crt --key client.key --cacert ca.crt https://localhost:8443/api/data -o /dev/null
+    -w '%{http_code}'
+  - openssl s_client -connect localhost:8443 -cert client.crt -key client.key -CAfile ca.crt -brief
+  examples:
+  - openssl req -newkey rsa:2048 -keyout client.key -out client.csr -nodes -subj '/CN=partner-1/O=Acme'
+    -addext 'subjectAltName=URI:spiffe://demo/acme/partner-1'
+  - curl -s --cert client.crt --key client.key --cacert ca.crt https://localhost:8443/api/data | jq '.client_cn'
+  - openssl s_client -connect localhost:8443 -CAfile ca.crt -brief 2>&1 | grep -i 'no peer certificate'
+  parameters:
+  - name: ca_cert
+    type: string
+    description: Path to the CA certificate
+  - name: client_cert
+    type: string
+    description: Path to the client certificate
+  - name: client_key
+    type: string
+    description: Path to the client private key
+prerequisites:
+- node.js
+- python
+- jsonwebtoken
+tools:
+- node.js
+- python
+- jsonwebtoken
+- passport
+- keycloak
+examples:
+- input: Set up mTLS for our partner API
+  output: Creates the CA, issues the partner certificate, enables ssl_verify_client, and tests both sides.
+- input: Why is my mTLS client failing?
+  output: Runs openssl s_client -brief and checks cert chain, dates, and client verification mode.
+instructions: "# API Auth (mTLS)\n\n## What this skill does\nAuthenticate API clients with mutual TLS:\
+  \ create a CA, issue client certificates, configure the server to require client certs, and verify handshakes\
+  \ with curl and openssl.\n\n## When to use\n- Server-to-server auth between high-value services\n- Replacing\
+  \ shared secrets for internal APIs\n- Zero-trust API access\n\n## Real commands\n```bash\n# Create a\
+  \ CA\nopenssl req -x509 -newkey rsa:2048 -keyout ca.key -out ca.crt \\\n  -days 365 -nodes -subj '/CN=Demo\
+  \ CA'\n\n# Create a client key + CSR\nopenssl req -newkey rsa:2048 -keyout client.key -out client.csr\
+  \ \\\n  -nodes -subj '/CN=partner-1'\n\n# Sign the client certificate\nopenssl x509 -req -in client.csr\
+  \ -CA ca.crt -CAkey ca.key \\\n  -CAcreateserial -out client.crt -days 180\n\n# Verify the handshake\
+  \ with client auth\nopenssl s_client -connect localhost:8443 -cert client.crt -key client.key -CAfile\
+  \ ca.crt -brief\n\n# Call the API with mTLS\ncurl -s --cert client.crt --key client.key --cacert ca.crt\
+  \ \\\n  https://localhost:8443/api/data -o /dev/null -w '%{http_code}\\n'\n\n# No client cert: handshake\
+  \ should fail\nopenssl s_client -connect localhost:8443 -CAfile ca.crt -brief 2>&1 | grep -i 'no peer\
+  \ certificate'\n```\n\n## Server config (nginx snippet)\n```nginx\nserver {\n  listen 8443 ssl;\n  ssl_certificate\
+  \     /etc/tls/server.crt;\n  ssl_certificate_key /etc/tls/server.key;\n  ssl_client_certificate /etc/tls/ca.crt;\n\
+  \  ssl_verify_client on;\n}\n```\n\n## Best practices\n- Short certificate lifetimes (90-180 days) with\
+  \ auto-renewal\n- Use SAN/SPIFFE identities, not CN-only\n- CRL or OCSP for revocation\n- Keep the CA\
+  \ key offline\n\n## Testing\n```bash\ncurl -s --cert client.crt --key client.key --cacert ca.crt https://localhost:8443/api/data\n\
+  curl -s --cacert ca.crt https://localhost:8443/api/data -o /dev/null -w '%{http_code}\\n'  # expect\
+  \ failure\n```"
+display_name: Api Auth mTLS
+knowledge:
+- title: Cloudflare mTLS Guide
+  type: documentation
+  source: https://www.cloudflare.com/learning/access-management/what-is-mutual-tls/
+  description: How mutual TLS works and use cases
+- title: RFC 8446 TLS 1.3
+  type: documentation
+  source: https://datatracker.ietf.org/doc/html/rfc8446
+  description: TLS 1.3 specification including client certificates

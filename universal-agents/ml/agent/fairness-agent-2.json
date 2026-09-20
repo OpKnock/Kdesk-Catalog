@@ -1,0 +1,128 @@
+{
+  "name": "fairness-agent-2",
+  "display_name": "Fairness Agent 2",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Fairness inference server agent. Manages Fairness ML inference server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Fairness Inference Server Agent",
+      "description": "Fairness inference server agent. Manages Fairness ML inference server.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"model\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent fairness-agent-2"
+      ],
+      "examples": [
+        "python serve_fairness.py --port 8080",
+        "curl http://localhost:8080/fairness --data '{\"model\": \"model.pkl\"}'",
+        "python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race",
+        "python bias_mitigation.py --model model.pkl --data data.csv --method reweighting"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "fairness-agent-2 Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for fairness-agent-2"
+    }
+  ],
+  "instructions": "You are the Fairness Inference Server Agent, owner of the Fairness ML inference server exposing the v1 API. Workflow: start with 'python serve_fairness.py --port 8080', health-check with 'curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health', list models with 'curl -s http://localhost:8080/v1/models | jq -r .data[].id', predict with 'curl -X POST http://localhost:8080/v1/predict', and chat with model \"model\". Run 'python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race' and 'python bias_mitigation.py --model model.pkl --data data.csv --method reweighting'; exercise 'curl http://localhost:8080/fairness'. Failure modes: model load failures and non-200 health; read logs. Report health code, model ids, prediction output, and fairness findings.",
+  "examples": [
+    "python serve_fairness.py --port 8080",
+    "curl http://localhost:8080/fairness --data '{\"model\": \"model.pkl\"}'",
+    "python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race",
+    "python bias_mitigation.py --model model.pkl --data data.csv --method reweighting"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "fairness-agent-2.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Fairness inference server expert. Help users set up Fairness ML inference server."
+    },
+    "opencode": {
+      "plugin": "opencode-fairness-agent-2"
+    },
+    "generic": {
+      "system_prompt": "You are fairness-agent-2. Fairness inference server agent. Manages Fairness ML inference server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "fairness-agent-2",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/fairness-agent-2.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/fairness-agent-2.yaml",
+    "checksum": "84913a4b5faede5577d2014316c5daa1f53d4d7392696f86f89a50160db8e468"
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "name": "celery",
+  "display_name": "celery",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Configures and operates Celery distributed task queues: workers, beat scheduler, result backends, routing, and monitoring.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "celery"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "celery -A proj worker --loglevel=info",
+        "celery -A proj worker --concurrency=4 -Q high,default",
+        "celery -A proj purge -f",
+        "celery -A proj status",
+        "celery -A proj control shutdown"
+      ],
+      "description": "Start and manage Celery worker processes.",
+      "name": "celery-workers",
+      "examples": [
+        "celery -A proj worker --loglevel=debug --traceback",
+        "celery -A proj worker --hostname=w1@%h --concurrency=8",
+        "celery -A proj inspect stats"
+      ],
+      "parameters": [
+        {
+          "description": "Worker process count",
+          "name": "concurrency",
+          "type": "integer"
+        },
+        {
+          "description": "Queues to consume, comma-separated",
+          "name": "queues",
+          "type": "string"
+        },
+        {
+          "description": "Worker hostname template",
+          "name": "hostname",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "celery -A proj beat --loglevel=info",
+        "celery -A proj beat --schedule /var/lib/celerybeat-schedule",
+        "celery -A proj call tasks.add --args=\"[2,2]\"",
+        "celery -A proj inspect scheduled"
+      ],
+      "description": "Schedule periodic tasks with the beat scheduler.",
+      "name": "celery-beat",
+      "examples": [
+        "celery -A proj beat --loglevel=info --pidfile=/tmp/beat.pid",
+        "celery -A proj call tasks.send_digest --kwargs=\"{\\\"user_id\\\": 7}\""
+      ],
+      "parameters": [
+        {
+          "description": "Path to the persistent schedule db",
+          "name": "schedule",
+          "type": "string"
+        },
+        {
+          "name": "loglevel",
+          "type": "string",
+          "description": "Logging level: info, debug, warning"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Celery Docs",
+      "description": "Worker, beat, result backends, and task reference",
+      "source": "https://docs.celeryq.dev/en/stable/",
+      "type": "documentation"
+    },
+    {
+      "title": "Celery Best Practices",
+      "description": "Task design guidance",
+      "source": "https://docs.celeryq.dev/en/stable/userguide/tasks.html",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Celery\n\nDistributed task queue for Python.\n\n## When to Use\n\n- Long-running or I/O-heavy work triggered by web requests\n- Periodic jobs via beat\n- Retryable processing against flaky external services\n- Fan-out jobs across many workers\n\n## Setup\n\n```bash\npip install celery[redis]\n```\n\n## Commands\n\n```bash\n# Start a worker\ncelery -A proj worker --loglevel=info\n\n# Multi-queue worker\ncelery -A proj worker --concurrency=4 -Q high,default\n\n# Periodic scheduler\ncelery -A proj beat --loglevel=info\n\n# Check worker health\ncelery -A proj status\ncelery -A proj inspect active\ncelery -A proj inspect stats\n\n# Clear pending tasks\ncelery -A proj purge -f\n\n# Graceful shutdown\ncelery -A proj control shutdown\n\n# Call a task from the CLI\ncelery -A proj call tasks.add --args=\"[2,2]\"\n```\n\n## Config\n\n```python\n# celery.py\nfrom celery import Celery\napp = Celery(\"proj\", broker=\"redis://localhost:6379/0\",\n             backend=\"redis://localhost:6379/1\")\napp.conf.task_routes = {\"tasks.send_email\": {\"queue\": \"email\"}}\napp.conf.beat_schedule = {\n    \"cleanup-every-10m\": {\n        \"task\": \"tasks.cleanup\",\n        \"schedule\": 600.0,\n    }\n}\n```\n\n## Task Example\n\n```python\n@shared_task(bind=True, max_retries=3, default_retry_delay=60)\ndef send_email(self, to):\n    try:\n        send(to)\n    except TemporaryFailure as exc:\n        raise self.retry(exc=exc)\n```\n\n## Best Practices\n\n- Keep tasks idempotent and small\n- Use task_routes to separate critical and background queues\n- Always bound tasks with max_retries for network-dependent work\n- Use inspect and flower for production monitoring\n- Use acks_late for at-least-once delivery semantics",
+  "examples": [
+    {
+      "input": "Why are my Celery tasks not executing?",
+      "output": "Agent checks broker connectivity (redis-cli ping), verifies worker running with celery -A proj status, inspects queue routing with -Q, and checks task registration."
+    },
+    {
+      "input": "Set up a task that runs every 15 minutes",
+      "output": "Agent configures app.conf.beat_schedule with crontab or seconds interval and starts celery -A proj beat --loglevel=info."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "celery.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-celery"
+    },
+    "generic": {
+      "system_prompt": "You work celery hands-on. You do it through celery-workers: Start and manage Celery worker processes. The commands are real, e.g. `celery -A proj worker --loglevel=info`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "celery",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "celery-workers",
+        "name": "concurrency",
+        "type": "integer",
+        "description": "Worker process count"
+      },
+      {
+        "capability": "celery-workers",
+        "name": "queues",
+        "type": "string",
+        "description": "Queues to consume, comma-separated"
+      },
+      {
+        "capability": "celery-workers",
+        "name": "hostname",
+        "type": "string",
+        "description": "Worker hostname template"
+      },
+      {
+        "capability": "celery-beat",
+        "name": "schedule",
+        "type": "string",
+        "description": "Path to the persistent schedule db"
+      },
+      {
+        "capability": "celery-beat",
+        "name": "loglevel",
+        "type": "string",
+        "description": "Logging level: info, debug, warning"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "celery"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/celery-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/celery-skill.yaml",
+    "checksum": "ce2e9cac11c9606f964da272145e8024ee4fcd8eadd2fe9fef24253842a87c12"
+  }
+}

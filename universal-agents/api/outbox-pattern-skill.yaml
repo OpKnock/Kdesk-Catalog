@@ -1,0 +1,99 @@
+name: outbox-pattern
+display_name: Outbox Pattern
+category: api
+subcategory: general
+description: 'Transactional outbox pattern: outbox tables, relay workers, Debezium CDC, and reliable event
+  publishing.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- mysql
+capabilities:
+- name: outbox-implementation
+  description: Design outbox tables, poll-and-forward relay SQL, and Debezium outbox event router connectors.
+  commands:
+  - mysql -u app -p -e "SELECT * FROM outbox WHERE status='pending' ORDER BY id LIMIT 100;"
+  - mysql -u app -p -e "UPDATE outbox SET status='sent' WHERE id IN (...);"
+  - 'curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" -d @outbox-connector.json'
+  - curl -s http://localhost:8083/connectors
+  - curl -s http://localhost:8083/connectors/outbox-connector/status
+  examples:
+  - curl -s http://localhost:8083/connectors/outbox-connector/status | jq .
+  - mysql -u app -p -e "SELECT COUNT(*) FROM outbox WHERE status='pending';"
+  - curl -X DELETE http://localhost:8083/connectors/outbox-connector
+  parameters:
+  - name: table
+    type: string
+    description: Outbox table name
+  - name: status
+    type: string
+    description: pending, sent or failed
+  - name: connector_name
+    type: string
+    description: Debezium connector name
+knowledge:
+- title: Debezium Outbox Event Router
+  type: documentation
+  source: https://debezium.io/documentation/reference/stable/transformations/outbox-event-router.html
+  description: CDC-based outbox table to event publication
+- title: Microservices.io Outbox Pattern
+  type: documentation
+  source: https://microservices.io/patterns/data/transactional-outbox.html
+  description: Pattern description and rationale
+instructions: "# Outbox Pattern\n\nThe transactional outbox writes events to the same DB transaction as\
+  \ the business change, then relays them to the broker.\n\n## What this skill does\n\n- Designs outbox\
+  \ table schemas\n- Implements relay workers (poll or CDC)\n- Deploys Debezium connectors\n\n## When\
+  \ to use\n\n- Publishing events reliably from DB-backed services\n- Avoiding dual-write problems (DB\
+  \ + broker)\n\n## Real commands\n\n```bash\n# Relay worker polling\nmysql -u app -p -e \"SELECT * FROM\
+  \ outbox WHERE status='pending' ORDER BY id LIMIT 100;\"\nmysql -u app -p -e \"UPDATE outbox SET status='sent'\
+  \ WHERE id IN (...);\"\n\n# Debezium connector lifecycle\ncurl -X POST http://localhost:8083/connectors\
+  \ -H \"Content-Type: application/json\" -d @outbox-connector.json\ncurl -s http://localhost:8083/connectors/outbox-connector/status\n\
+  curl -X DELETE http://localhost:8083/connectors/outbox-connector\n```\n\n## Table schema\n\n```sql\n\
+  CREATE TABLE outbox (\n  id BIGINT AUTO_INCREMENT PRIMARY KEY,\n  aggregate_type VARCHAR(100) NOT NULL,\n\
+  \  aggregate_id VARCHAR(100) NOT NULL,\n  event_type VARCHAR(100) NOT NULL,\n  payload JSON NOT NULL,\n\
+  \  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  status ENUM('pending','sent') DEFAULT 'pending'\n\
+  );\n```\n\n## Best practices\n\n- Write event + business row in ONE transaction\n- Make relay idempotent\
+  \ (publish, then mark sent)\n- Add retention cleanup for old sent rows"
+examples:
+- input: My orders service writes to DB and publishes to Kafka, but events are lost when Kafka is down
+  output: The agent implements the outbox table, a relay worker or Debezium connector, and shows the SQL.
+- input: Set up Debezium to stream the outbox table
+  output: The agent configures the outbox event router connector and verifies with the connector status
+    endpoint.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: outbox-pattern.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-outbox-pattern
+  generic:
+    system_prompt: 'This is your domain: Outbox Pattern. You do it through outbox-implementation: Design
+      outbox tables, poll-and-forward relay SQL, and Debezium outbox event router connectors. The commands
+      are real, e.g. `mysql -u app -p -e SELECT * FROM outbox WHERE status=pending ORDER BY id LIMIT 100;`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

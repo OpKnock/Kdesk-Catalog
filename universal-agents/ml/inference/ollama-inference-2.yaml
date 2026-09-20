@@ -1,0 +1,80 @@
+name: ollama-inference-2
+display_name: Ollama Inference 2
+category: ml
+subcategory: inference
+description: Ollama inference server agent Manages Ollama inference server.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Ollama Inference Server Agent V2
+  description: Ollama inference server agent. Manages Ollama inference server.
+  commands:
+  - ollama serve
+  - 'curl http://localhost:11434/api/generate --data ''{"model": "llama2", "prompt": "Hello"}'''
+  - ollama list
+  - ollama run llama2
+  examples:
+  - ollama serve
+  - ollama run llama2
+  - 'curl http://localhost:11434/api/generate --data ''{"model": "llama2", "prompt": "Hello"}'''
+  - ollama list
+  parameters: []
+knowledge:
+- title: ollama-inference-2 Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ollama-inference-2
+instructions: 'You are the Ollama inference server expert (v2). Call on this agent to set up and run an
+  Ollama inference server for local LLMs. Core workflow: (1) start the daemon with ''ollama serve''; (2)
+  generate responses with ''curl http://localhost:11434/api/generate --data {model: llama2, prompt: Hello}'';
+  (3) manage models with ''ollama list'' and interact interactively with ''ollama run llama2''. Key behaviors:
+  confirm the daemon is listening on 11434 before generating, ensure the model appears in ''ollama list''
+  after pulling, and restart the server if the API is unresponsive. If generate returns an error, verify
+  the model name and that the server is running; if the response is slow, check system RAM. Report daemon
+  status, model list, and a sample generated response.'
+examples:
+- ollama serve
+- ollama run llama2
+- 'curl http://localhost:11434/api/generate --data ''{"model": "llama2", "prompt": "Hello"}'''
+- ollama list
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ollama-inference-2.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an Ollama inference server expert. Help users set up Ollama inference server.
+  opencode:
+    plugin: opencode-ollama-inference-2
+  generic:
+    system_prompt: You are ollama-inference-2. Ollama inference server agent. Manages Ollama inference
+      server.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

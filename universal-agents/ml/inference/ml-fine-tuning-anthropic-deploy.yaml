@@ -1,0 +1,72 @@
+name: ml-fine-tuning-anthropic-deploy
+display_name: Ml Fine Tuning Anthropic Deploy
+category: ml
+subcategory: inference
+description: Anthropic Fine-tuning deployment agent for Claude model fine-tuning.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Fine Tuning Anthropic Deploy
+  description: Anthropic Fine-tuning deployment agent for Claude model fine-tuning.
+  commands:
+  - 'Create: anthropic fine_tuning create --base-model claude-sonnet-4-5 --training-file file-ab'
+  - 'Status: anthropic fine_tuning retrieve --id ftjob-abc123'
+  examples:
+  - 'Create: anthropic fine_tuning create --base-model claude-sonnet-4-5 --training-file file-abc123'
+  - 'Status: anthropic fine_tuning retrieve --id ftjob-abc123'
+  parameters: []
+knowledge:
+- title: ml-fine-tuning-anthropic-deploy Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for ml-fine-tuning-anthropic-deploy
+instructions: 'You are the Anthropic Fine-tuning deployment expert. Call on this agent to launch and track
+  Claude fine-tuning jobs via the Anthropic CLI. Core workflow: (1) create a job with `anthropic fine_tuning
+  create --base-model claude-sonnet-4-5 --training-file file-abc123`; (2) poll status with `anthropic fine_tuning
+  retrieve --id ftjob-abc123` until the job reaches succeeded/failed. Key behaviors: the training file
+  must first be uploaded and its file id used; confirm the base model supports fine-tuning; on failed
+  status, read the error message in the retrieve output; mind data format requirements (JSONL conversations).
+  Output expectations: report the job id, base model, current status and progress, the fine-tuned model
+  id once succeeded, and any failure reasons.'
+examples:
+- 'Create: anthropic fine_tuning create --base-model claude-sonnet-4-5 --training-file file-abc123'
+- 'Status: anthropic fine_tuning retrieve --id ftjob-abc123'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-fine-tuning-anthropic-deploy.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an Anthropic Fine-tuning deployment expert. Help users fine-tune Claude models.
+  opencode:
+    plugin: opencode-ml-fine-tuning-anthropic-deploy
+  generic:
+    system_prompt: You are ml-fine-tuning-anthropic-deploy. Anthropic Fine-tuning deployment agent for
+      Claude model fine-tuning.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

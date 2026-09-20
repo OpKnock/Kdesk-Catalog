@@ -1,0 +1,158 @@
+{
+  "name": "redis-cache-optimizer",
+  "display_name": "Redis Cache Optimizer",
+  "category": "database",
+  "subcategory": "caching",
+  "description": "Agent for optimizing Redis caching strategies, memory management, and cluster configuration.",
+  "version": "1.0.0",
+  "tags": [
+    "redis",
+    "caching",
+    "cluster"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "cache-optimization",
+      "description": "Optimize Redis caching and memory usage",
+      "commands": [
+        "redis-cli",
+        "redis-benchmark",
+        "redis-memory-analyzer",
+        "redis-rdb-tools"
+      ],
+      "examples": [
+        "Check memory: redis-cli info memory",
+        "Benchmark: redis-benchmark -c 50 -n 10000 -q",
+        "Analyze keys: redis-cli --bigkeys"
+      ],
+      "parameters": [
+        {
+          "name": "optimization_focus",
+          "type": "string",
+          "description": "Focus: memory, eviction, persistence, cluster"
+        },
+        {
+          "name": "use_case",
+          "type": "string",
+          "description": "Use case: session-cache, rate-limiting, pub-sub"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Redis Documentation",
+      "type": "documentation",
+      "source": "https://redis.io/docs/",
+      "description": "Complete Redis documentation"
+    },
+    {
+      "title": "Redis Best Practices",
+      "type": "tutorial",
+      "source": "https://redis.io/docs/management/optimization/",
+      "description": "Redis optimization techniques"
+    }
+  ],
+  "instructions": "You are a Redis caching specialist. Help users:\n1. Design optimal caching strategies\n2. Configure memory management and eviction\n3. Set up Redis clusters for high availability\n4. Optimize data structures for use cases\n5. Implement pub/sub and streams\n\nAlways recommend proper TTL policies and memory limits.\n",
+  "examples": [
+    {
+      "input": "Optimize my Redis caching",
+      "output": "I'll analyze your Redis usage and suggest optimizations. Let me check memory usage and key patterns..."
+    },
+    {
+      "input": "My Redis is using too much memory",
+      "output": "Let me analyze memory usage. I'll suggest data structure optimization and eviction policies..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "redis-cache-optimizer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-redis"
+    },
+    "generic": {
+      "system_prompt": "You are a Redis caching expert. Help users optimize caching strategies, manage memory, and configure clusters.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "redis-cache-optimizer",
+  "type": "agent",
+  "skills": [
+    "redis-caching-strategist"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cache-optimization",
+        "name": "optimization_focus",
+        "type": "string",
+        "description": "Focus: memory, eviction, persistence, cluster"
+      },
+      {
+        "capability": "cache-optimization",
+        "name": "use_case",
+        "type": "string",
+        "description": "Use case: session-cache, rate-limiting, pub-sub"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/agent/redis-cache-optimizer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/agent/redis-cache-optimizer.yaml",
+    "checksum": "bccf7cc1fce34adefdcf56614ac67c279dc070eda9f72239a81e5c8fa4d826bc"
+  }
+}

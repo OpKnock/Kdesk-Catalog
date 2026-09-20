@@ -1,0 +1,200 @@
+name: redis-sentinel
+display_name: Redis Sentinel
+category: api
+subcategory: general
+description: 'Hand-crafted Redis Sentinel skill: monitor masters, manage quorum-based failover, inspect
+  sentinel state, and verify replica promotion.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- redis-cli
+- redis-sentinel
+capabilities:
+- name: sentinel-operations
+  description: 'Operate Redis Sentinel: monitor, failover, and inspect master/replica state'
+  commands:
+  - redis-sentinel /etc/redis/sentinel.conf
+  - redis-cli -p 26379 SENTINEL masters
+  - redis-cli -p 26379 SENTINEL get-master-addr-by-name mymaster
+  - redis-cli -p 26379 SENTINEL monitor mymaster 127.0.0.1 6379 2
+  - redis-cli -p 26379 SENTINEL failover mymaster
+  - redis-cli -p 26379 SENTINEL replica mymaster 127.0.0.1 6380
+  examples:
+  - redis-cli -p 26379 SENTINEL get-master-addr-by-name mymaster
+  - redis-cli -p 26379 SENTINEL ckquorum mymaster
+  - redis-cli -p 26379 SENTINEL failover mymaster
+  parameters:
+  - name: master_name
+    type: string
+    description: Logical name of the monitored master, e.g. mymaster
+  - name: quorum
+    type: integer
+    description: Number of sentinels that must agree before failover
+  - name: down_after_milliseconds
+    type: integer
+    description: How long a master must be unreachable before it is flagged
+knowledge:
+- title: Redis Sentinel docs
+  type: documentation
+  source: https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/
+  description: Sentinel architecture, quorum, and failover behavior
+- title: SENTINEL command reference
+  type: documentation
+  source: https://redis.io/docs/latest/commands/sentinel/
+  description: All SENTINEL subcommands
+instructions: '# Redis Sentinel
+
+
+  Hand-crafted skill for running Redis high availability with Sentinel.
+
+
+  ## What this skill does
+
+
+  - Monitors masters and detects failures with quorum voting
+
+  - Triggers automatic failover and reports the new master address
+
+  - Adds replicas to a master and inspects the full sentinel topology
+
+
+  ## When to use
+
+
+  - You need automatic failover without Redis Cluster sharding
+
+  - Applications should discover the current master via SENTINEL get-master-addr
+
+  - Verifying HA behavior in a staging environment
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Start sentinel with a config file
+
+  redis-sentinel /etc/redis/sentinel.conf
+
+
+  # List monitored masters
+
+  redis-cli -p 26379 SENTINEL masters
+
+
+  # Find the current master endpoint (what clients call)
+
+  redis-cli -p 26379 SENTINEL get-master-addr-by-name mymaster
+
+
+  # Add a master dynamically (quorum 2)
+
+  redis-cli -p 26379 SENTINEL monitor mymaster 127.0.0.1 6379 2
+
+
+  # Verify quorum is reachable
+
+  redis-cli -p 26379 SENTINEL ckquorum mymaster
+
+
+  # Force a failover (no wait for detection)
+
+  redis-cli -p 26379 SENTINEL failover mymaster
+
+
+  # Attach a replica to the master
+
+  redis-cli -p 26379 SENTINEL replica mymaster 127.0.0.1 6380
+
+  ```
+
+
+  ## Config example
+
+
+  ```conf
+
+  # sentinel.conf
+
+  port 26379
+
+  sentinel monitor mymaster 127.0.0.1 6379 2
+
+  sentinel down-after-milliseconds mymaster 5000
+
+  sentinel failover-timeout mymaster 30000
+
+  sentinel parallel-syncs mymaster 1
+
+  ```
+
+
+  ## Testing a failover
+
+
+  ```bash
+
+  # Stop the master
+
+  redis-cli -p 6379 SHUTDOWN NOSAVE
+
+  # Watch sentinel promote a replica
+
+  redis-cli -p 26379 SENTINEL get-master-addr-by-name mymaster
+
+  ```
+
+
+  ## Best practices
+
+
+  - Run at least 3 sentinels in production (quorum 2)
+
+  - Never run sentinel and its monitored master on one host in prod
+
+  - Configure sentinel to write its state: sentinel.conf is rewritten on changes
+
+  '
+examples:
+- input: Where is the current Redis master?
+  output: redis-cli -p 26379 SENTINEL get-master-addr-by-name mymaster returns ip:port of the live master.
+- input: Force HA to switch master now
+  output: Run redis-cli -p 26379 SENTINEL failover mymaster, then confirm with SENTINEL get-master-addr-by-name
+    mymaster.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: redis-sentinel.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-redis-sentinel
+  generic:
+    system_prompt: 'You work Redis Sentinel hands-on. You do it through sentinel-operations: Operate Redis
+      Sentinel: monitor, failover, and inspect master/replica state. The commands are real, e.g. `redis-sentinel
+      /etc/redis/sentinel.conf`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

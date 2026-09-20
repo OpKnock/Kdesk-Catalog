@@ -1,0 +1,107 @@
+name: chi
+display_name: Chi
+category: api
+subcategory: general
+description: 'Build Go HTTP APIs with the chi router: routing, middleware, URL params, and subrouters.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: chi-routing
+  description: Create chi routers with groups, middleware, and path parameters
+  commands:
+  - go get github.com/go-chi/chi/v5
+  - go get github.com/go-chi/cors
+  - go run main.go
+  - go build ./...
+  examples:
+  - go get github.com/go-chi/chi/v5 && go run main.go
+  - go mod tidy && go build ./...
+  - go test -v ./...
+  parameters:
+  - name: route
+    type: string
+    description: Route pattern such as /api/users/{id}
+- name: chi-testing
+  description: Test chi handlers and verify responses with curl
+  commands:
+  - go test ./...
+  - curl -i http://localhost:3000/api/users
+  - curl -s http://localhost:3000/api/users/42
+  - 'curl -s -X POST -H "Content-Type: application/json" -d ''{"name":"alice"}'' http://localhost:3000/api/users'
+  examples:
+  - curl -s http://localhost:3000/api/users | jq '.[0].name'
+  - 'curl -s -o /dev/null -w "%{http_code}\n" -X POST -H "Content-Type: application/json" -d ''{"name":"alice"}''
+    http://localhost:3000/api/users'
+  - go test -race ./...
+  parameters:
+  - name: port
+    type: string
+    description: Server listen port, default 3000
+knowledge:
+- title: chi GitHub Repo
+  type: documentation
+  source: https://github.com/go-chi/chi
+  description: chi router docs, middleware list, and examples
+- title: chi Middleware Docs
+  type: documentation
+  source: https://pkg.go.dev/github.com/go-chi/chi/v5/middleware
+  description: chi built-in middleware reference
+instructions: "# Chi Router\n\nBuild lightweight Go HTTP APIs with chi.\n\n## When to Use\n\n- Go services\
+  \ needing a simple, composable router\n- REST APIs with path parameters and middleware\n- Adding CORS,\
+  \ logging, and request IDs without a framework\n\n## Setup\n\n```bash\ngo mod init example.com/api\n\
+  go get github.com/go-chi/chi/v5\ngo get github.com/go-chi/cors\n```\n\n## Basic Server\n\n```go\npackage\
+  \ main\n\nimport (\n  \"net/http\"\n  \"github.com/go-chi/chi/v5\"\n  \"github.com/go-chi/chi/v5/middleware\"\
+  \n)\n\nfunc main() {\n  r := chi.NewRouter()\n  r.Use(middleware.Logger)\n  r.Use(middleware.Recoverer)\n\
+  \n  r.Get(\"/health\", func(w http.ResponseWriter, req *http.Request) {\n    w.Write([]byte(\"ok\"))\n\
+  \  })\n\n  r.Route(\"/api\", func(r chi.Router) {\n    r.Get(\"/users\", listUsers)\n    r.Get(\"/users/{id}\"\
+  , getUser)\n    r.Post(\"/users\", createUser)\n  })\n\n  http.ListenAndServe(\":3000\", r)\n}\n```\n\
+  \n## Path Parameters\n\n```go\nfunc getUser(w http.ResponseWriter, req *http.Request) {\n  id := chi.URLParam(req,\
+  \ \"id\")\n  w.Write([]byte(id))\n}\n```\n\n## Run and Test\n\n```bash\ngo run main.go &\ncurl -i http://localhost:3000/api/users\n\
+  curl -s http://localhost:3000/api/users/42\ncurl -s -X POST -H \"Content-Type: application/json\" -d\
+  \ '{\"name\":\"alice\"}' http://localhost:3000/api/users\n```\n\n## Testing\n\n```bash\ngo test -v ./...\n\
+  go test -race ./...\ngo vet ./...\n```\n\n## Best Practices\n\n- Use r.Route groups to namespace endpoints\n\
+  - Add middleware early: Logger, Recoverer, Timeout, RealIP\n- Validate JSON bodies and return proper\
+  \ 400s\n- Use chi.URLParam for path params\n- Keep handlers small and unit-testable"
+examples:
+- input: Scaffold a REST API with chi with /health and CRUD on users.
+  output: The agent writes a main.go using chi.NewRouter with a Route group and runs it with go run main.go,
+    then verifies endpoints with curl.
+- input: Add JSON body parsing to my POST handler.
+  output: The agent shows a createUser handler decoding with json.NewDecoder and returning 400 on invalid
+    JSON.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: chi.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-chi
+  generic:
+    system_prompt: 'You own Chi end to end. You do it through chi-routing: Create chi routers with groups,
+      middleware, and path parameters. The commands are real, e.g. `go get github.com/go-chi/chi/v5`.
+      You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

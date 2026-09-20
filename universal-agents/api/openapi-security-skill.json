@@ -1,0 +1,177 @@
+{
+  "name": "openapi-security",
+  "display_name": "Openapi Security",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Define and validate security schemes in OpenAPI: apiKey, bearer JWT, OAuth2 flows, mutual TLS, and security requirement rules.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx",
+    "openapi-generator-cli",
+    "redocly",
+    "spectral"
+  ],
+  "capabilities": [
+    {
+      "name": "openapi-security-schemes",
+      "description": "Author security schemes and requirements, then lint and validate them with Spectral and openapi-generator.",
+      "commands": [
+        "openapi-generator-cli validate -i openapi.yaml",
+        "spectral lint openapi.yaml",
+        "npx @stoplight/spectral-cli lint openapi.yaml -r security.rules.yaml",
+        "redocly lint openapi.yaml --extends recommended",
+        "curl -s https://api.example.com/.well-known/openapi.yaml | openapi-generator-cli validate -i /dev/stdin"
+      ],
+      "examples": [
+        "spectral lint openapi.yaml",
+        "openapi-generator-cli validate -i openapi.yaml",
+        "redocly lint openapi.yaml"
+      ],
+      "parameters": [
+        {
+          "name": "scheme_type",
+          "type": "string",
+          "description": "apiKey, http, oauth2, openIdConnect, mutualTLS"
+        },
+        {
+          "name": "flows",
+          "type": "object",
+          "description": "OAuth2 flows: implicit, password, clientCredentials, authorizationCode"
+        },
+        {
+          "name": "scopes",
+          "type": "array",
+          "description": "Scopes referenced by security requirements"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OpenAPI Security Schemes",
+      "type": "documentation",
+      "source": "https://swagger.io/docs/specification/authentication/",
+      "description": "apiKey, HTTP auth, OAuth2, OpenID Connect in OpenAPI"
+    },
+    {
+      "title": "Spectral Rules",
+      "type": "documentation",
+      "source": "https://docs.stoplight.io/docs/spectral/reference/rules",
+      "description": "Built-in security rules and custom rule authoring"
+    }
+  ],
+  "instructions": "# OpenAPI Security\n\nSecurity schemes describe HOW clients authenticate; security requirements describe WHERE.\n\n## What this skill does\n\n- Writes securitySchemes for every auth style\n- Applies security requirements globally or per-operation\n- Validates with linters and generators\n\n## When to use\n\n- Documenting auth on a new API\n- Catching missing or misapplied security in CI\n\n## Real commands\n\n```bash\nopenapi-generator-cli validate -i openapi.yaml\nspectral lint openapi.yaml\nredocly lint openapi.yaml --extends recommended\n```\n\n## Example schemes\n\n```yaml\ncomponents:\n  securitySchemes:\n    bearerAuth:\n      type: http\n      scheme: bearer\n      bearerFormat: JWT\n    apiKeyHeader:\n      type: apiKey\n      in: header\n      name: X-API-Key\n    oauth:\n      type: oauth2\n      flows:\n        clientCredentials:\n          tokenUrl: https://auth.example.com/token\n          scopes:\n            read: Read access\n            write: Write access\nsecurity:\n  - bearerAuth: []\n```\n\n## Per-operation override\n\n```yaml\npaths:\n  /public:\n    get:\n      security: []\n```\n\n## Best practices\n\n- Always add a global `security` block\n- Test client generation with `openapi-generator-cli generate`\n- Lint in CI so every PR re-validates schemes",
+  "examples": [
+    {
+      "input": "Document OAuth2 client-credentials auth on my API",
+      "output": "The agent adds the oauth2 security scheme with clientCredentials flow and applies it as a global requirement."
+    },
+    {
+      "input": "Find endpoints missing auth in my spec",
+      "output": "The agent runs spectral lint with the security ruleset and shows the unsecured paths."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "openapi-security.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-openapi-security"
+    },
+    "generic": {
+      "system_prompt": "You are the Openapi Security specialist. You do it through openapi-security-schemes: Author security schemes and requirements, then lint and validate them with Spectral and openapi-generator. The commands are real, e.g. `openapi-generator-cli validate -i openapi.yaml`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "openapi-security",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "openapi-security-schemes",
+        "name": "scheme_type",
+        "type": "string",
+        "description": "apiKey, http, oauth2, openIdConnect, mutualTLS"
+      },
+      {
+        "capability": "openapi-security-schemes",
+        "name": "flows",
+        "type": "object",
+        "description": "OAuth2 flows: implicit, password, clientCredentials, authorizationCode"
+      },
+      {
+        "capability": "openapi-security-schemes",
+        "name": "scopes",
+        "type": "array",
+        "description": "Scopes referenced by security requirements"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx",
+    "openapi-generator-cli",
+    "redocly",
+    "spectral"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/openapi-security-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/openapi-security-skill.yaml",
+    "checksum": "be6df9a4b1cbe4e1e08ada1e8ac80358237dee1c1c8fb4cb4bd41d691c5397eb"
+  }
+}

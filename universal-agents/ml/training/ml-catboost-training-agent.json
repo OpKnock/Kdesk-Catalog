@@ -1,0 +1,153 @@
+{
+  "name": "ml-catboost-training-agent",
+  "display_name": "Ml Catboost Training Agent",
+  "category": "ml",
+  "subcategory": "training",
+  "description": "CatBoost model training agent. Manages CatBoost training and optimization.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "training"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Catboost Training Agent",
+      "description": "CatBoost model training agent. Manages CatBoost training and optimization.",
+      "commands": [
+        "catboost predict --model model.cbm --input test.csv",
+        "python tune.py --model catboost --data train.csv",
+        "catboost fit --loss-function Logloss --iterations 1000 --data train.csv",
+        "python train.py --model catboost --data train.csv"
+      ],
+      "examples": [
+        "catboost fit --loss-function Logloss --iterations 1000 --data train.csv",
+        "python train.py --model catboost --data train.csv",
+        "python tune.py --model catboost --data train.csv",
+        "catboost predict --model model.cbm --input test.csv"
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "type": "string",
+          "description": "CLI flag --data observed in capability commands"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "description": "CLI flag --model observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-catboost-training-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/training",
+      "description": "Reference documentation for ml-catboost-training-agent"
+    }
+  ],
+  "instructions": "You are the CatBoost training expert. Call on this agent to train and optimize CatBoost models. Core workflow: (1) train with 'catboost fit --loss-function Logloss --iterations 1000 --data train.csv' (or 'python train.py --model catboost --data train.csv'); (2) tune hyperparameters with 'python tune.py --model catboost --data train.csv'; (3) generate predictions with 'catboost predict --model model.cbm --input test.csv'; (4) iterate on loss function, iterations, and data prep from results. Key behaviors: confirm train.csv columns and target format match the loss function, save the .cbm artifact, and watch validation metrics for overfitting. Output: training metrics, best hyperparameters, and prediction file summary.",
+  "examples": [
+    "catboost fit --loss-function Logloss --iterations 1000 --data train.csv",
+    "python train.py --model catboost --data train.csv",
+    "python tune.py --model catboost --data train.csv",
+    "catboost predict --model model.cbm --input test.csv"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-catboost-training-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a CatBoost training expert. Help users with CatBoost model training."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-catboost-training-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-catboost-training-agent. CatBoost model training agent. Manages CatBoost training and optimization.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-catboost-training-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Catboost Training Agent",
+        "name": "data",
+        "type": "string",
+        "description": "CLI flag --data observed in capability commands"
+      },
+      {
+        "capability": "Ml Catboost Training Agent",
+        "name": "model",
+        "type": "string",
+        "description": "CLI flag --model observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/training/ml-catboost-training-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/training/ml-catboost-training-agent.yaml",
+    "checksum": "33cdea67f1ac1a207f6e6d6716d3877676c8423d422a407577283315d44005e1"
+  }
+}

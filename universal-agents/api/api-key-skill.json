@@ -1,0 +1,212 @@
+{
+  "name": "api-key",
+  "display_name": "Api Key",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Designs, generates, stores, and rotates API keys: high-entropy generation with openssl, hashed storage, and Vault-backed issuance.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "node",
+    "openssl",
+    "uuidgen",
+    "vault"
+  ],
+  "capabilities": [
+    {
+      "name": "key-generation",
+      "description": "Generate strong API keys and inspect their entropy.",
+      "commands": [
+        "openssl rand -hex 32",
+        "openssl rand -base64 32",
+        "node -e \"console.log(require('crypto').randomBytes(32).toString('base64url'))\"",
+        "uuidgen",
+        "openssl rand -base64 32 | sha256sum"
+      ],
+      "examples": [
+        "KEY=$(openssl rand -hex 32) && echo $KEY",
+        "openssl rand -base64 48 | tr '+/' '-_' | tr -d '='",
+        "node -e \"console.log(require('crypto').randomBytes(24).toString('hex'))\""
+      ],
+      "parameters": [
+        {
+          "name": "bytes",
+          "type": "number",
+          "description": "Number of random bytes (32 = 256 bits)"
+        },
+        {
+          "name": "encoding",
+          "type": "string",
+          "description": "hex, base64, or base64url"
+        }
+      ]
+    },
+    {
+      "name": "vault-issuance",
+      "description": "Store, retrieve, and rotate API keys in HashiCorp Vault KV.",
+      "commands": [
+        "vault kv put secret/api-keys/prod key=$(openssl rand -hex 32)",
+        "vault kv get secret/api-keys/prod",
+        "vault kv list secret/api-keys",
+        "vault kv delete secret/api-keys/expired",
+        "vault kv patch secret/api-keys/prod rotated_at=$(date -u +%FT%TZ)"
+      ],
+      "examples": [
+        "vault kv put secret/api-keys/prod service=payments key=$(openssl rand -hex 32)",
+        "vault kv get -field=key secret/api-keys/prod",
+        "vault kv metadata get secret/api-keys/prod"
+      ],
+      "parameters": [
+        {
+          "name": "path",
+          "type": "string",
+          "description": "Vault KV path, e.g. secret/api-keys/prod"
+        },
+        {
+          "name": "field",
+          "type": "string",
+          "description": "Single field to read from the secret"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Vault KV v2",
+      "type": "documentation",
+      "source": "https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v2",
+      "description": "kv put/get/list/patch and versioning"
+    },
+    {
+      "title": "OWASP API Key Cheat Sheet",
+      "type": "documentation",
+      "source": "https://cheatsheetseries.owasp.org/cheatsheets/API_Key_Security_Cheat_Sheet.html",
+      "description": "Generation, storage, rotation guidance"
+    },
+    {
+      "title": "RFC 9110 Authorization",
+      "type": "documentation",
+      "source": "https://www.rfc-editor.org/rfc/rfc9110#name-authorization",
+      "description": "Key transport via Authorization header"
+    }
+  ],
+  "instructions": "# API Keys\n\n## What this skill does\n\nEnd-to-end API key management: generating high-entropy keys with openssl/node crypto, storing them in Vault KV, hashing keys at rest, and rotating keys with dual-write grace windows.\n\n## When to use\n\n- Adding key-based auth to an API\n- Responding to a leaked key incident (rotation)\n- Centralizing key storage instead of .env pasting\n\n## Real commands\n\n```bash\n# Generate a 256-bit key\nopenssl rand -hex 32\nopenssl rand -base64 32\n\n# Store in Vault\nvault kv put secret/api-keys/prod key=$(openssl rand -hex 32)\n\n# Retrieve\nvault kv get -field=key secret/api-keys/prod\n\n# List / delete\nvault kv list secret/api-keys\nvault kv delete secret/api-keys/expired\n```\n\n## Storage best practice\n\nStore only a SHA-256 hash of the key in the application database:\n\n```bash\nKEY=$(openssl rand -hex 32)\necho -n \"$KEY\" | sha256sum\n```\n\nShow the raw key exactly once, then hash it.\n\n## Rotation checklist\n\n1. Generate new key and store as v2 in Vault\n2. Deploy dual-read (accept old + new) for a grace window\n3. Cut over writers to the new key\n4. Revoke the old key with vault kv delete\n\n## Testing\n\n- Confirm the old key stops working after revocation\n- Verify Vault ACLs: a service can only read its own path\n\n## Best practices\n\n- Never log keys; redact Authorization in access logs\n- Rate-limit by key and monitor anomalous usage\n- Use X-API-Key header or Bearer tokens consistently",
+  "examples": [
+    {
+      "input": "Generate a new API key for payments",
+      "output": "Runs openssl rand -hex 32, stores it with vault kv put, saves a SHA-256 hash for the app DB, and shows the one-time display of the raw key."
+    },
+    {
+      "input": "A key leaked in a commit, rotate it",
+      "output": "Generates a replacement, patches Vault, deploys dual-write, then deletes the compromised version and verifies only the new key remains."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-key.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-key"
+    },
+    "generic": {
+      "system_prompt": "You are the Api Key specialist. You do it through key-generation: Generate strong API keys and inspect their entropy. The commands are real, e.g. `openssl rand -hex 32`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "api-key",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "key-generation",
+        "name": "bytes",
+        "type": "number",
+        "description": "Number of random bytes (32 = 256 bits)"
+      },
+      {
+        "capability": "key-generation",
+        "name": "encoding",
+        "type": "string",
+        "description": "hex, base64, or base64url"
+      },
+      {
+        "capability": "vault-issuance",
+        "name": "path",
+        "type": "string",
+        "description": "Vault KV path, e.g. secret/api-keys/prod"
+      },
+      {
+        "capability": "vault-issuance",
+        "name": "field",
+        "type": "string",
+        "description": "Single field to read from the secret"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "node",
+    "openssl",
+    "uuidgen",
+    "vault"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/api-key-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/api-key-skill.yaml",
+    "checksum": "a445c222a4fc051dfc7c38931c5d102ff2dc02016e7fce1fa8cb095dfcc8ec5f"
+  }
+}

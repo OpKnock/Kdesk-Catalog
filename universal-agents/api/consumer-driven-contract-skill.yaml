@@ -1,0 +1,130 @@
+name: consumer-driven-contract
+display_name: Consumer Driven Contract
+category: api
+subcategory: general
+description: 'Implement consumer-driven contracts with Pact: publish pacts to a broker, check compatibility,
+  and gate deployments with can-i-deploy.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- docker
+- npx
+capabilities:
+- name: pact-broker
+  description: Run the Pact Broker and publish pacts from consumer builds
+  commands:
+  - docker run -d -p 9292:9292 pactfoundation/pact-broker:latest
+  - npx @pact-foundation/pact-cli publish ./pacts --broker-base-url http://localhost:9292 --consumer-version
+    1.0.0
+  - npx @pact-foundation/pact-cli list-latest-pact-versions --broker-base-url http://localhost:9292
+  - curl -s http://localhost:9292/ | grep -i pact
+  examples:
+  - npx @pact-foundation/pact-cli publish ./pacts --broker-base-url http://localhost:9292 --consumer-version
+    1.0.0
+  - npx @pact-foundation/pact-cli list-latest-pact-versions --broker-base-url http://localhost:9292
+  - curl -s http://localhost:9292/pacts/provider/UserService/consumer/WebApp/version/1.0.0 | jq '.interactions
+    | length'
+  parameters:
+  - name: pacts_dir
+    type: string
+    description: Directory with pact json files
+  - name: broker_url
+    type: string
+    description: Pact Broker base URL
+- name: deployment-gating
+  description: Check compatibility and gate deployments with can-i-deploy
+  commands:
+  - npx @pact-foundation/pact-cli can-i-deploy --pacticipant UserService --version 2.0.0 --to-environment
+    production
+  - npx @pact-foundation/pact-cli can-i-deploy --pacticipant WebApp --version 1.0.0 --to-environment production
+  - npx @pact-foundation/pact-cli record-deployment --pacticipant UserService --version 2.0.0 --environment
+    production
+  - npx @pact-foundation/pact-cli can-i-deploy --pacticipant UserService --latest
+  examples:
+  - npx @pact-foundation/pact-cli can-i-deploy --pacticipant UserService --version 2.0.0 --to-environment
+    production
+  - npx @pact-foundation/pact-cli record-deployment --pacticipant UserService --version 2.0.0 --environment
+    production
+  - npx @pact-foundation/pact-cli can-i-deploy --pacticipant WebApp --version 1.0.0 --to-environment production
+  parameters:
+  - name: pacticipant
+    type: string
+    description: Service name (consumer or provider)
+  - name: version
+    type: string
+    description: Version to check
+  - name: environment
+    type: string
+    description: Target environment such as production
+knowledge:
+- title: Pact Consumer-Driven Contracts
+  type: documentation
+  source: https://docs.pact.io/consumer-driven-contracts
+  description: Consumer-driven contracts theory and workflow
+- title: Pact CLI Docs
+  type: documentation
+  source: https://docs.pact.io/pact_broker/client_cli
+  description: pact-cli publish, can-i-deploy, and record-deployment reference
+instructions: "# Consumer-Driven Contracts\n\nLet consumers define what they expect from providers via\
+  \ Pact.\n\n## When to Use\n\n- Many consumers depending on one API\n- Safe independent releases of consumer\
+  \ and provider\n- Verifying compatibility before deployment\n\n## Run the Broker\n\n```bash\ndocker\
+  \ run -d -p 9292:9292 pactfoundation/pact-broker:latest\n```\n\n## Consumer Creates a Pact\n\n```js\n\
+  const { PactV3 } = require('@pact-foundation/pact');\nconst provider = new PactV3({ consumer: 'WebApp',\
+  \ provider: 'UserService' });\nawait provider.addInteraction({\n  states: [{ description: 'user exists'\
+  \ }],\n  uponReceiving: 'a request for a user',\n  withRequest: { method: 'GET', path: '/users/42' },\n\
+  \  willRespondWith: { status: 200, body: { id: 42, name: 'alice' } },\n});\n```\n\n## Publish\n\n```bash\n\
+  npx @pact-foundation/pact-cli publish ./pacts \\\n  --broker-base-url http://localhost:9292 \\\n  --consumer-version\
+  \ 1.0.0\n```\n\n## Provider Verifies\n\n```bash\nnpx @pact-foundation/pact-cli verify \\\n  --provider-base-url\
+  \ http://localhost:8080 \\\n  --pact-urls http://localhost:9292/pacts/provider/UserService/consumer/WebApp/latest\n\
+  ```\n\n## Gate Deployments\n\n```bash\nnpx @pact-foundation/pact-cli can-i-deploy \\\n  --pacticipant\
+  \ UserService --version 2.0.0 --to-environment production\nnpx @pact-foundation/pact-cli record-deployment\
+  \ \\\n  --pacticipant UserService --version 2.0.0 --environment production\n```\n\n## Testing\n\n```bash\n\
+  # Break a contract: remove a field the consumer expects, then verify\nnpx @pact-foundation/pact-cli\
+  \ can-i-deploy --pacticipant UserService --version 2.0.1 --to-environment production\n```\n\n## Best\
+  \ Practices\n\n- Keep contract tests on the consumer side\n- Verify provider against the latest pact\
+  \ of every consumer\n- Use provider states to control test data\n- Run can-i-deploy before every production\
+  \ deploy\n- Record deployments to track the version matrix\n- Fail CI when verification fails"
+examples:
+- input: My API consumer expects a new field; can I deploy the provider?
+  output: The agent checks with pact-cli can-i-deploy for the provider version, runs the provider verification
+    against the consumer pact, then allows deploy if compatible.
+- input: Publish my consumer pacts to the broker.
+  output: The agent runs npx @pact-foundation/pact-cli publish ./pacts --broker-base-url http://localhost:9292
+    --consumer-version 1.0.0.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: consumer-driven-contract.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-consumer-driven-contract
+  generic:
+    system_prompt: 'You are the Consumer Driven Contract specialist. You do it through pact-broker: Run
+      the Pact Broker and publish pacts from consumer builds. The commands are real, e.g. `docker run
+      -d -p 9292:9292 pactfoundation/pact-broker:latest`. You verify each step you report and stay honest
+      about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

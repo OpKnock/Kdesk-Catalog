@@ -1,0 +1,157 @@
+{
+  "name": "identity-federation",
+  "display_name": "Identity Federation",
+  "category": "security",
+  "subcategory": "identity",
+  "description": "Agent for implementing identity federation with SAML, OIDC, and cross-domain SSO.",
+  "version": "1.0.0",
+  "tags": [
+    "identity",
+    "federation",
+    "saml",
+    "oidc",
+    "sso"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "identity-federation",
+      "description": "Implement identity federation",
+      "commands": [
+        "saml",
+        "oidc",
+        "keycloak"
+      ],
+      "examples": [
+        "Keycloak: docker run -p 8080:8080 quay.io/keycloak/keycloak",
+        "OIDC: curl -d 'grant_type=authorization_code' -d 'code=xxx' https://auth.example.com/token",
+        "SAML: samltool validate --xml --inFile response.xml"
+      ],
+      "parameters": [
+        {
+          "name": "protocol",
+          "type": "string",
+          "description": "Protocol: saml, oidc, oauth2"
+        },
+        {
+          "name": "provider",
+          "type": "string",
+          "description": "Provider: keycloak, okta, azure-ad, auth0"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "SAML Specification",
+      "type": "documentation",
+      "source": "https://docs.oasis-open.org/security/saml/v2.0/",
+      "description": "SAML 2.0 specification"
+    },
+    {
+      "Title": "OIDC Documentation",
+      "type": "tutorial",
+      "source": "https://openid.net/developers/specs/",
+      "description": "OpenID Connect documentation"
+    }
+  ],
+  "instructions": "You are an identity federation specialist. Help users:\n1. Set up SSO\n2. Configure federation\n3. Implement SAML/OIDC\n4. Handle attribute mapping\n5. Manage trust relationships\n\nAlways recommend OIDC over SAML when possible.\n",
+  "examples": [
+    {
+      "input": "Set up SSO",
+      "output": "I'll configure OIDC-based SSO with your identity provider..."
+    },
+    {
+      "input": "Federate identities",
+      "output": "I'll set up SAML federation with Keycloak..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "identity-federation.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-identity-federation"
+    },
+    "generic": {
+      "system_prompt": "You are an identity federation expert. Help users implement SSO with SAML and OIDC.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "identity-federation",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "identity-federation",
+        "name": "protocol",
+        "type": "string",
+        "description": "Protocol: saml, oidc, oauth2"
+      },
+      {
+        "capability": "identity-federation",
+        "name": "provider",
+        "type": "string",
+        "description": "Provider: keycloak, okta, azure-ad, auth0"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/agent/identity-federation.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/agent/identity-federation.yaml",
+    "checksum": "4bb2b7107ca5ec74995611ae8c40efdf717d03b685f60be5aafbd69874b29071"
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "name": "mythril",
+  "display_name": "Mythril",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Security analysis of Ethereum smart contracts with Mythril, finding reentrancy, overflow, and other EVM vulnerabilities.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "myth"
+  ],
+  "capabilities": [
+    {
+      "name": "smart-contract-analysis",
+      "description": "Run Mythril symbolic-execution analysis against Solidity contracts",
+      "commands": [
+        "myth analyze contracts/Token.sol",
+        "myth analyze --execution-timeout 120 contract.sol",
+        "myth analyze -a 0x1234... --rpc https://eth.llamarpc.com --blocks 5",
+        "myth analyze --solc-json solc.json contracts/",
+        "myth analyze --mode diamond --favorites detector-reentrancy contracts/"
+      ],
+      "examples": [
+        "myth analyze --execution-timeout 90 contracts/Vault.sol",
+        "myth analyze -a 0xdeadbeef --infura-id $INFURA_ID",
+        "myth analyze --graph contracts/Tok.sol"
+      ],
+      "parameters": [
+        {
+          "name": "execution-timeout",
+          "type": "number",
+          "description": "Timeout in seconds for each analysis run"
+        },
+        {
+          "name": "rpc",
+          "type": "string",
+          "description": "RPC endpoint used when analyzing a deployed address"
+        },
+        {
+          "name": "solc-json",
+          "type": "string",
+          "description": "JSON config file with compiler settings and remappings"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Mythril docs",
+      "type": "documentation",
+      "source": "https://mythril-classic.readthedocs.io/",
+      "description": "CLI usage, detector list, and analysis modes"
+    },
+    {
+      "title": "Mythril GitHub",
+      "type": "documentation",
+      "source": "https://github.com/Consensys/mythril",
+      "description": "Installation, Docker image, and supported detectors"
+    }
+  ],
+  "instructions": "# Mythril\n\nSymbolic-execution security analyzer for Ethereum smart contracts. Flags reentrancy,\ninteger over/underflow, and dangerous call patterns.\n\n## When to Use\n\n- Auditing a contract before deployment\n- Analyzing an already-deployed contract on-chain\n- Checking that a fix removed the flagged vulnerability\n\n## Real Commands\n\n```bash\n# Install via Docker (recommended)\ndocker pull mythril/myth\n\n# Analyze a source file\ndocker run -v $(pwd):/tmp mythril/myth analyze /tmp/Token.sol\n\n# Analyze with a timeout\nmyth analyze --execution-timeout 120 contracts/Vault.sol\n\n# Analyze a deployed contract\nmyth analyze -a 0xABC123 --rpc https://eth.llamarpc.com --blocks 5\n\n# With custom solc settings\nmyth analyze --solc-json solc.json contracts/\n\n# Control the graph output\nmyth analyze --graph contracts/Counter.sol\n```\n\n## Detector Example Output\n\n```\n==== Reentrancy ====\nSWC ID: 107\nSeverity: High\nIn function: withdraw(uint256)\nState variables written after the call:\n  balances[msg.sender]\n```\n\n## Best Practices\n\n- Run on a local fork with `--rpc` against staging, never mainnet with live funds\n- Pair Mythril with Slither and a manual review; no tool is exhaustive\n- Use `--execution-timeout` to bound long analysis runs\n- Re-run after every Solidity change; issues disappear quickly\n\n## Example Response\n\nA reentrancy finding is reported with SWC ID 107, affected function, and the\nstate-variable write that happens after the external call; the agent suggests the\nchecks-effects-interactions fix.",
+  "examples": [
+    {
+      "input": "Audit this contract before deploying",
+      "output": "Runs myth analyze contracts/Token.sol --execution-timeout 120, summarizes findings by severity, and recommends fixes for each SWC"
+    },
+    {
+      "input": "Is this deployed contract vulnerable?",
+      "output": "Runs myth analyze -a 0xADDR --rpc <rpc> --blocks 10 and reports any reentrancy or overflow findings"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "mythril.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-mythril"
+    },
+    "generic": {
+      "system_prompt": "You own Mythril end to end. You do it through smart-contract-analysis: Run Mythril symbolic-execution analysis against Solidity contracts. The commands are real, e.g. `myth analyze contracts/Token.sol`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "mythril",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "smart-contract-analysis",
+        "name": "execution-timeout",
+        "type": "number",
+        "description": "Timeout in seconds for each analysis run"
+      },
+      {
+        "capability": "smart-contract-analysis",
+        "name": "rpc",
+        "type": "string",
+        "description": "RPC endpoint used when analyzing a deployed address"
+      },
+      {
+        "capability": "smart-contract-analysis",
+        "name": "solc-json",
+        "type": "string",
+        "description": "JSON config file with compiler settings and remappings"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "myth"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/mythril-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/mythril-skill.yaml",
+    "checksum": "d4c2dfe2c1142b74454e8781c950c2a80205a369a00e09427b706bfff1bdc59e"
+  }
+}

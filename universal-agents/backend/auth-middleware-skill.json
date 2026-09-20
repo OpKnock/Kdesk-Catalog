@@ -1,0 +1,187 @@
+{
+  "name": "auth-middleware",
+  "display_name": "Auth Middleware",
+  "category": "backend",
+  "subcategory": "general",
+  "description": "Implements authentication middleware: JWT verification with jsonwebtoken, Passport strategies, oauth2-proxy for edge auth, and token lifecycle checks.",
+  "version": "2.0.0",
+  "tags": [
+    "backend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker",
+    "node",
+    "npm"
+  ],
+  "capabilities": [
+    {
+      "name": "jwt-middleware",
+      "description": "Verify JWTs in request middleware",
+      "commands": [
+        "npm install jsonwebtoken express",
+        "node -e \"const jwt=require('jsonwebtoken'); const t=jwt.sign({sub:'user-1',role:'admin'},'s3cret',{expiresIn:'1h'}); console.log(t)\"",
+        "node -e \"const jwt=require('jsonwebtoken'); const t=jwt.sign({sub:'user-1'},'s3cret',{expiresIn:5}); setTimeout(()=>{try{jwt.verify(t,'s3cret')}catch(e){console.log('expired:',e.name)}},6000)\"",
+        "curl -s -o /dev/null -w '%{http_code}\\n' -H \"Authorization: Bearer $TOKEN\" http://localhost:3000/api/me",
+        "curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/api/me"
+      ],
+      "examples": [
+        "jwt.sign issues tokens with claims",
+        "jwt.verify validates signature and expiry",
+        "curl with/without tokens tests enforcement"
+      ],
+      "parameters": [
+        {
+          "name": "secret",
+          "type": "string",
+          "description": "JWT signing secret"
+        },
+        {
+          "name": "expiresIn",
+          "type": "string",
+          "description": "Token lifetime"
+        },
+        {
+          "name": "claims",
+          "type": "object",
+          "description": "Token claims"
+        }
+      ]
+    },
+    {
+      "name": "passport-oauth",
+      "description": "Authenticate with Passport and oauth2-proxy",
+      "commands": [
+        "npm install passport passport-jwt",
+        "node -e \"const p=require('passport'); console.log(typeof p.authenticate)\"",
+        "docker run -d -p 4180:4180 bitnami/oauth2-proxy --provider github --upstream http://localhost:3000 --email-domain example.com --client-id $CLIENT_ID --client-secret $CLIENT_SECRET",
+        "curl -s -o /dev/null -w '%{http_code}\\n' -H \"Authorization: Bearer invalid\" http://localhost:4180/oauth2/start"
+      ],
+      "examples": [],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Passport.js Docs",
+      "type": "documentation",
+      "source": "https://www.passportjs.org/docs/",
+      "description": "Passport authentication strategies"
+    },
+    {
+      "title": "oauth2-proxy Docs",
+      "type": "documentation",
+      "source": "https://oauth2-proxy.github.io/oauth2-proxy/",
+      "description": "Reverse proxy for OAuth2 auth"
+    }
+  ],
+  "instructions": "# Auth Middleware\n\nAuthentication middleware implementation.\n\n## What This Skill Does\n- Verifies JWTs on requests\n- Extracts user context from tokens\n- Rejects missing/expired credentials\n\n## When to Use\n- Protecting API routes\n- Adding SSO with oauth2-proxy\n- Standardizing auth across services\n\n## Real Commands\n\n```bash\nnpm install jsonwebtoken express\nnode -e \"const jwt=require('jsonwebtoken'); const t=jwt.sign({sub:'user-1'},'s3cret',{expiresIn:'1h'}); console.log(t)\"\ncurl -s -o /dev/null -w '%{http_code}\\n' -H \"Authorization: Bearer $TOKEN\" http://localhost:3000/api/me\n```\n\n## Middleware Example\n\n```js\nfunction requireAuth(req, res, next) {\n  const header = req.get('Authorization') || '';\n  const token = header.replace('Bearer ', '');\n  try {\n    req.user = jwt.verify(token, SECRET);\n    next();\n  } catch {\n    res.sendStatus(401);\n  }\n}\n```\n\n## Testing\n- Test missing, invalid, and expired tokens\n- Verify user context on protected routes\n- Test role-based access paths\n\n\n## Best Practices\n- Always verify expiry and signature\n- Use RS256 for production issuance\n- Return 401 uniformly for auth failures",
+  "examples": [
+    {
+      "input": "Protect /api/me with JWT",
+      "output": "Wires requireAuth middleware and tests 401/200 paths"
+    },
+    {
+      "input": "Add OAuth at the edge",
+      "output": "Runs oauth2-proxy in front of the app and verifies the login flow"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "auth-middleware.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-auth-middleware"
+    },
+    "generic": {
+      "system_prompt": "You work Auth Middleware hands-on. You do it through jwt-middleware: Verify JWTs in request middleware. The commands are real, e.g. `npm install jsonwebtoken express`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "auth-middleware",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "jwt-middleware",
+        "name": "secret",
+        "type": "string",
+        "description": "JWT signing secret"
+      },
+      {
+        "capability": "jwt-middleware",
+        "name": "expiresIn",
+        "type": "string",
+        "description": "Token lifetime"
+      },
+      {
+        "capability": "jwt-middleware",
+        "name": "claims",
+        "type": "object",
+        "description": "Token claims"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker",
+    "node",
+    "npm"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "backend/auth-middleware-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/backend/auth-middleware-skill.yaml",
+    "checksum": "e72b3a48eb206df321098fda24ca216d90ee8af01befeb4501c2a27fa8f62521"
+  }
+}

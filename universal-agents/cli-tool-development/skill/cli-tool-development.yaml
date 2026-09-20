@@ -1,0 +1,129 @@
+name: cli-tool-development
+version: 2.0.0
+type: skill
+category: devtools
+description: 'Develops command-line tools with Commander, Click, and cobra: argument parsing, subcommands,
+  help text, and distribution.'
+keywords:
+- cli-tool
+- command-line
+- argument-parsing
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: cli-tool-development.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-cli-tool-development
+  generic:
+    system_prompt: 'You take the cli-tool-development seat. You do it through cli-scaffolding: Scaffold
+      CLI tools in Node, Python, and Go. The commands are real, e.g. `npm install commander`. You answer
+      with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- commands:
+  - npm install commander
+  - npm init -y && npm pkg set bin="./bin/mycli.js"
+  - python -m pip install click
+  - go install github.com/spf13/cobra-cli@latest
+  - cobra-cli init mycli
+  description: Scaffold CLI tools in Node, Python, and Go.
+  name: cli-scaffolding
+  examples:
+  - cobra-cli add serve
+  - npm install oclif
+  - pip install typer
+  parameters:
+  - description: node, python, or go
+    name: language
+    type: string
+  - description: CLI name
+    name: name
+    type: string
+- commands:
+  - node bin/mycli.js --help
+  - python -m mycli --version
+  - go run ./cmd/mycli --help
+  - npm link
+  - echo "test input" | mycli parse
+  description: Test and verify CLI behavior.
+  name: cli-verification
+  examples:
+  - mycli --help | head -40
+  - mycli greet --name World
+  - mycli --version
+  parameters:
+  - description: CLI arguments
+    name: args
+    type: string
+  - name: stdin
+    type: string
+    description: Piped input to test stdin handling
+prerequisites:
+- node.js
+- python
+- click
+- commander
+tools:
+- node.js
+- python
+- click
+- commander
+- ink
+examples:
+- input: Build a CLI that queries our API
+  output: Agent scaffolds with commander or click, adds a subcommand with flags, and wires API calls with
+    error handling.
+- input: Make my CLI installable globally
+  output: Agent adds a bin entry (npm link / pip install -e . / go install) and tests it from any directory.
+instructions: "# CLI Tool Development\n\nBuild polished command-line tools.\n\n## When to Use\n\n- Internal\
+  \ developer tooling and automation\n- Wrappers around APIs and services\n- Scripts that need args, flags,\
+  \ and subcommands\n- Tools distributed to other teams or users\n\n## Commands\n\n```bash\n# Node with\
+  \ Commander\nnpm init -y\nnpm install commander\nnode bin/mycli.js --help\n\n# Python with Click\npip\
+  \ install click\npython -m mycli --help\n\n# Go with Cobra\ngo install github.com/spf13/cobra-cli@latest\n\
+  cobra-cli init mycli\ncobra-cli add serve\ngo run ./cmd/mycli --help\n\n# Global install for dev\nnpm\
+  \ link\n```\n\n## Python Click Example\n\n```python\nimport click\n\n@click.command()\n@click.option(\"\
+  --name\", default=\"World\", help=\"Who to greet\")\n@click.option(\"--verbose\", is_flag=True)\ndef\
+  \ greet(name, verbose):\n    \"\"\"Greet someone.\"\"\"\n    if verbose:\n        click.echo(\"verbose\
+  \ mode\")\n    click.echo(f\"Hello, {name}!\")\n\nif __name__ == \"__main__\":\n    greet()\n```\n\n\
+  ## Best Practices\n\n- Always provide --help and --version\n- Exit with non-zero codes and messages\
+  \ on stderr for errors\n- Make flags idempotent and composable for piping\n- Test with golden fixtures\
+  \ and snapshot tests\n- Support CI environments (no TTY, no color when piped)\n- Document each flag;\
+  \ the help text is the docs"
+display_name: cli-tool-development
+knowledge:
+- title: Commander.js Docs
+  description: Node CLI framework
+  source: https://github.com/tj/commander.js
+  type: documentation
+- title: Click Docs
+  description: Python CLI framework
+  source: https://click.palletsprojects.com
+  type: documentation
+- title: Cobra Docs
+  description: Go CLI framework
+  source: https://cobra.dev
+  type: documentation

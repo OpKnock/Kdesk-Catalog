@@ -1,0 +1,194 @@
+{
+  "name": "knip",
+  "display_name": "knip",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Finds unused files, exports, and dependencies with knip, the JavaScript dead-code detective, including plugin configs.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "npx knip",
+        "npx knip --production",
+        "npx knip --no-gitignore",
+        "npx knip --include files,dependencies",
+        "npx knip --reporter json"
+      ],
+      "description": "Scan projects for dead code.",
+      "name": "knip-scan",
+      "examples": [
+        "npx knip --json > knip-report.json",
+        "npx knip --include exports --tags owner",
+        "npx knip --config knip.jsonc"
+      ],
+      "parameters": [
+        {
+          "description": "files, exports, dependencies",
+          "name": "include",
+          "type": "string"
+        },
+        {
+          "description": "default, json, codeowners",
+          "name": "reporter",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "npx knip --init",
+        "npx knip --debug",
+        "npx knip --fix",
+        "npx knip --dependencies"
+      ],
+      "description": "Configure entry points and ignore rules.",
+      "name": "knip-config",
+      "examples": [
+        "npx knip --fix --include dependencies",
+        "npx knip --workspace packages/*"
+      ],
+      "parameters": [
+        {
+          "description": "Fix issues where possible",
+          "name": "fix",
+          "type": "boolean"
+        },
+        {
+          "description": "Workspace glob",
+          "name": "workspace",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Knip Docs",
+      "description": "Features, config, and reporters",
+      "source": "https://knip.dev",
+      "type": "documentation"
+    },
+    {
+      "title": "Knip on GitHub",
+      "description": "Source and releases",
+      "source": "https://github.com/webpro/knip",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Knip\n\nFind dead code in JavaScript projects.\n\n## When to Use\n\n- Removing unused files, exports, and dependencies\n- Cleaning monorepos where packages hide usage\n- Reducing bundle size and install time\n- Pre-merge CI checks for dead code regressions\n\n## Commands\n\n```bash\n# Scan\nnpx knip\n\n# Production-only concerns\nnpx knip --production\n\n# Scope\nnpx knip --include files,dependencies\nnpx knip --include exports\n\n# Reports\nnpx knip --json > knip-report.json\nnpx knip --reporter codeowners\n\n# Init and debug\nnpx knip --init\nnpx knip --debug\n\n# Auto-fix dependencies\nnpx knip --fix --include dependencies\n```\n\n## Config Example\n\n```json\n{\n  \"entry\": [\"src/index.ts\", \"scripts/*.ts\"],\n  \"ignore\": [\"src/generated/**\"],\n  \"ignoreDependencies\": [\"@types/node\"]\n}\n```\n\n## Best Practices\n\n- Run knip in CI on every merge\n- Define entry points explicitly for CLI tools\n- Ignore generated directories and bundled output\n- Review the report before bulk-deleting files\n- Use --include exports to find dead public API surface\n- Treat new dead code as a build failure",
+  "examples": [
+    {
+      "input": "Find unused dependencies in my app",
+      "output": "Agent runs npx knip --include dependencies, removes the unused packages, and re-runs tests."
+    },
+    {
+      "input": "Set up knip for a monorepo",
+      "output": "Agent configures workspaces and entry points, then wires knip --json into CI."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "knip.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-knip"
+    },
+    "generic": {
+      "system_prompt": "Your lane is knip. You do it through knip-scan: Scan projects for dead code. The commands are real, e.g. `npx knip`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "knip",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "knip-scan",
+        "name": "include",
+        "type": "string",
+        "description": "files, exports, dependencies"
+      },
+      {
+        "capability": "knip-scan",
+        "name": "reporter",
+        "type": "string",
+        "description": "default, json, codeowners"
+      },
+      {
+        "capability": "knip-config",
+        "name": "fix",
+        "type": "boolean",
+        "description": "Fix issues where possible"
+      },
+      {
+        "capability": "knip-config",
+        "name": "workspace",
+        "type": "string",
+        "description": "Workspace glob"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/knip-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/knip-skill.yaml",
+    "checksum": "c70a6bbc7b5ade9457aae3e308186cf3706f91d8ababfb1081bec64e90f2925e"
+  }
+}

@@ -1,0 +1,85 @@
+name: embedding-identity-py
+display_name: Embedding Identity Py
+category: ml
+subcategory: embedding
+description: Embedding deployment agent. Manages Embedding ML deployment.
+version: 1.0.0
+tags:
+- ml
+- embedding
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Embedding Deploy Agent
+  description: Embedding deployment agent. Manages Embedding ML deployment.
+  commands:
+  - docker build -t model:latest .
+  - docker push registry.example.com/model:latest
+  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - helm upgrade model ./helm-chart --namespace production
+  - kubectl rollout status deployment/model --timeout=300s
+  - python identity.py --agent embedding-identity-py
+  examples:
+  - python serve_embeddings.py --model sentence-transformers --port 8080
+  - 'curl http://localhost:8080/embed --data ''{"text": "Hello world"}'''
+  - python embed.py --input texts.txt --output embeddings.npy
+  - python search.py --query 'hello world' --index embeddings.npy
+  parameters: []
+knowledge:
+- title: embedding-identity-py Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/embedding
+  description: Reference documentation for embedding-identity-py
+instructions: 'You are the Embedding deployment agent. Call on this agent when an embedding ML service
+  must be built, containerized, and shipped to Kubernetes. Core workflow: (1) locally validate the serving
+  path with `python serve_embeddings.py --model sentence-transformers --port 8080` and smoke-test it with
+  `curl http://localhost:8080/embed --data ''{"text": "Hello world"}''`; (2) package it with `docker build
+  -t model:latest .` and `docker push registry.example.com/model:latest`; (3) roll out with `kubectl set
+  image deployment/model model=registry.example.com/model:latest` or `helm upgrade model ./helm-chart
+  --namespace production`, then confirm with `kubectl rollout status deployment/model --timeout=300s`.
+  Key behaviors: keep the image tag identical across push and set-image; if the rollout stalls, check
+  pod crash-loop logs; verify batch utilities like `python embed.py --input texts.txt --output embeddings.npy`
+  and `python search.py --query ''hello world'' --index embeddings.npy` still work after deploy. Output
+  expectations: report build/push result, deployment update applied, rollout readiness, and the live embedding
+  endpoint plus a sample curl for verification.'
+examples:
+- python serve_embeddings.py --model sentence-transformers --port 8080
+- 'curl http://localhost:8080/embed --data ''{"text": "Hello world"}'''
+- python embed.py --input texts.txt --output embeddings.npy
+- python search.py --query 'hello world' --index embeddings.npy
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: embedding-identity-py.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an Embedding deployment expert. Help users deploy Embedding ML applications.
+  opencode:
+    plugin: opencode-embedding-identity-py
+  generic:
+    system_prompt: You are embedding-identity-py. Embedding deployment agent. Manages Embedding ML deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

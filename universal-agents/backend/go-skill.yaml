@@ -1,0 +1,117 @@
+name: go
+display_name: go
+category: backend
+subcategory: general
+description: 'Builds backend services in Go: module management, testing, benchmarking, profiling, and
+  race detection.'
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- commands:
+  - go mod init example.com/myapp
+  - go build ./...
+  - go vet ./...
+  - go install ./cmd/app
+  - go run ./cmd/app
+  description: Create modules, build, vet, and install Go programs.
+  name: go-build
+  examples:
+  - go build -o bin/app ./cmd/app
+  - go mod tidy
+  - go vet -v ./...
+  parameters:
+  - description: Package pattern to build
+    name: package
+    type: string
+  - description: Binary output path
+    name: output
+    type: string
+- commands:
+  - go test ./...
+  - go test -race ./...
+  - go test -cover ./...
+  - go test -bench=. -benchmem ./internal/parse
+  - go test -run TestParse -v
+  description: Run tests, benchmarks, and race detection.
+  name: go-testing
+  examples:
+  - go test -race -count=1 ./...
+  - go test -bench=BenchmarkParse -benchmem -run ^$ ./...
+  - go test -coverprofile=coverage.out ./...
+  parameters:
+  - description: Regex matching test names
+    name: run
+    type: string
+  - description: Regex matching benchmarks
+    name: bench
+    type: string
+  - description: Collect coverage
+    name: cover
+    type: boolean
+knowledge:
+- title: Go Docs
+  description: Language spec, toolchain, and module reference
+  source: https://go.dev/doc/
+  type: documentation
+- title: Effective Go
+  description: Idiomatic Go style guidance
+  source: https://go.dev/doc/effective_go
+  type: documentation
+- title: Go Testing Package
+  description: Testing and benchmark APIs
+  source: https://pkg.go.dev/testing
+  type: documentation
+instructions: "# Go\n\nBackend development with the Go toolchain.\n\n## When to Use\n\n- High-concurrency\
+  \ services (HTTP, gRPC, workers)\n- CLIs and infrastructure tooling\n- Systems where memory and startup\
+  \ matter\n- Services that benefit from static binaries\n\n## Commands\n\n```bash\n# Module init\ngo\
+  \ mod init example.com/myapp\n\n# Build and vet\ngo build ./...\ngo vet ./...\n\n# Tests\ngo test ./...\n\
+  go test -race ./...\ngo test -cover ./...\n\n# Benchmarks\ngo test -bench=. -benchmem ./internal/parse\n\
+  \n# Run and install\ngo run ./cmd/app\ngo install ./cmd/app\n```\n\n## HTTP Server\n\n```go\npackage\
+  \ main\n\nimport (\n\t\"log\"\n\t\"net/http\"\n)\n\nfunc main() {\n\thttp.HandleFunc(\"/health\", func(w\
+  \ http.ResponseWriter, r *http.Request) {\n\t\tw.Write([]byte(\"ok\"))\n\t})\n\tlog.Fatal(http.ListenAndServe(\"\
+  :8080\", nil))\n}\n```\n\n## Best Practices\n\n- Always run go test -race in CI to catch data races\n\
+  - Keep the public API of packages small; export only what is needed\n- Use context for cancellation\
+  \ and timeouts in handlers and clients\n- Run gofmt/go vet before every commit\n- Prefer errgroup for\
+  \ running independent goroutines with error propagation\n- Pin dependencies in go.mod and update with\
+  \ go get -u then go mod tidy"
+examples:
+- input: My Go service deadlocks intermittently
+  output: Agent runs go test -race, explains race detector output, and fixes shared state with mutexes
+    or channels.
+- input: How fast is my JSON parser really?
+  output: Agent writes a benchmark test and runs go test -bench=. -benchmem to compare allocations and
+    throughput.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: go.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-go
+  generic:
+    system_prompt: 'This is your domain: go. You do it through go-build: Create modules, build, vet, and
+      install Go programs. The commands are real, e.g. `go mod init example.com/myapp`. You run and verify
+      the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

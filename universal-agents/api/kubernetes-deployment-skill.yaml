@@ -1,0 +1,118 @@
+name: kubernetes-deployment
+display_name: Kubernetes Deployment
+category: api
+subcategory: general
+description: 'Deploy and operate workloads with kubectl: create deployments, scale replicas, update images,
+  and manage rollouts.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kubectl
+capabilities:
+- name: deploy-basic
+  description: Create, scale, and update deployments.
+  commands:
+  - kubectl create deployment nginx --image=nginx:1.27 --replicas=3
+  - kubectl scale deployment nginx --replicas=5
+  - kubectl set image deployment/nginx nginx=nginx:1.28
+  - kubectl expose deployment nginx --port=80 --type=ClusterIP
+  examples:
+  - kubectl create deployment nginx --image=nginx:1.27 --replicas=3
+  - kubectl scale deployment nginx --replicas=5
+  - kubectl set image deployment/nginx nginx=nginx:1.28
+  parameters:
+  - name: name
+    type: string
+    description: Deployment name.
+  - name: image
+    type: string
+    description: Container image.
+  - name: replicas
+    type: integer
+    description: Desired replica count.
+- name: rollout-ops
+  description: Monitor rollout progress and status.
+  commands:
+  - kubectl rollout status deployment/nginx
+  - kubectl rollout restart deployment/nginx
+  - kubectl get deployments
+  - kubectl get pods -l app=nginx -o wide
+  - kubectl describe deployment nginx
+  examples:
+  - kubectl rollout status deployment/nginx
+  - kubectl rollout restart deployment/nginx
+  - kubectl get deployments
+  parameters:
+  - name: name
+    type: string
+    description: Deployment name.
+  - name: label
+    type: string
+    description: Pod selector label.
+knowledge:
+- title: Deployments
+  type: documentation
+  source: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+  description: Official Deployment controller documentation.
+- title: kubectl cheat sheet
+  type: documentation
+  source: https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+  description: Common kubectl operations.
+instructions: "# Kubernetes Deployments\n\nCreate and operate declarative workloads with kubectl.\n\n\
+  ## What this skill does\n\n- Creates deployments from images with replica counts.\n- Scales replicas\
+  \ and updates images.\n- Manages rollouts and status checks.\n\n## When to use\n\n- Deploying stateless\
+  \ services.\n- Day-2 operations: scaling, image bumps, restarts.\n- Checking rollout health during releases.\n\
+  \n## Real commands\n\n```bash\n# Create\nkubectl create deployment nginx --image=nginx:1.27 --replicas=3\n\
+  \n# Scale\nkubectl scale deployment nginx --replicas=5\n\n# Update image (triggers a rollout)\nkubectl\
+  \ set image deployment/nginx nginx=nginx:1.28\n\n# Expose as a service\nkubectl expose deployment nginx\
+  \ --port=80 --type=ClusterIP\n\n# Rollout status\nkubectl rollout status deployment/nginx\n\n# Restart\
+  \ (re-pull, new rollout)\nkubectl rollout restart deployment/nginx\n\n# Inspect\nkubectl get deployments\n\
+  kubectl get pods -l app=nginx -o wide\nkubectl describe deployment nginx\n```\n\n## Deployment YAML\
+  \ example\n\n```yaml\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: nginx\nspec:\n  replicas:\
+  \ 3\n  selector:\n    matchLabels:\n      app: nginx\n  template:\n    metadata:\n      labels:\n  \
+  \      app: nginx\n    spec:\n      containers:\n        - name: nginx\n          image: nginx:1.27\n\
+  \          ports:\n            - containerPort: 80\n```\n\n## Testing\n\n```bash\nkubectl apply -f deployment.yaml\n\
+  kubectl rollout status deployment/nginx\nkubectl get pods --watch\n```\n\n## Best practices\n\n- Always\
+  \ set resource requests/limits on containers.\n- Use apply -f with versioned manifests, not ad-hoc create.\n\
+  - Check rollout status before declaring a release done.\n"
+examples:
+- input: Deploy nginx with 3 replicas
+  output: kubectl create deployment nginx --image=nginx:1.27 --replicas=3
+- input: Bump the image safely
+  output: kubectl set image deployment/nginx nginx=nginx:1.28 && kubectl rollout status deployment/nginx
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kubernetes-deployment.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kubernetes-deployment
+  generic:
+    system_prompt: 'You work Kubernetes Deployment hands-on. You do it through deploy-basic: Create, scale,
+      and update deployments. The commands are real, e.g. `kubectl create deployment nginx --image=nginx:1.27
+      --replicas=3`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

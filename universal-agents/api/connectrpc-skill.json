@@ -1,0 +1,200 @@
+{
+  "name": "connectrpc",
+  "display_name": "Connectrpc",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Develop modern RPC services with ConnectRPC: protocol choice, buf codegen, and calling services from Go and browsers.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "buf",
+    "grpcurl"
+  ],
+  "capabilities": [
+    {
+      "name": "proto-codegen",
+      "description": "Lint, generate, and manage protobuf with buf for ConnectRPC projects",
+      "commands": [
+        "buf lint",
+        "buf generate",
+        "buf breaking --against .git#branch=main",
+        "buf export --output gen"
+      ],
+      "examples": [
+        "buf lint proto && buf generate proto",
+        "buf breaking --against .git#branch=main",
+        "buf export --output gen && ls gen"
+      ],
+      "parameters": [
+        {
+          "name": "proto_dir",
+          "type": "string",
+          "description": "Directory of proto files"
+        },
+        {
+          "name": "output_dir",
+          "type": "string",
+          "description": "Generation output directory"
+        }
+      ]
+    },
+    {
+      "name": "protocol-calls",
+      "description": "Call ConnectRPC services over Connect, gRPC, and gRPC-Web protocols",
+      "commands": [
+        "curl -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}' http://localhost:8080/example.v1.GreetService/Greet",
+        "curl -H \"Content-Type: application/proto\" --data-binary @req.bin http://localhost:8080/example.v1.GreetService/Greet",
+        "grpcurl -plaintext -d '{\"name\":\"alice\"}' localhost:8080 example.v1.GreetService/Greet",
+        "grpcurl -plaintext localhost:8080 list"
+      ],
+      "examples": [
+        "curl -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}' http://localhost:8080/example.v1.GreetService/Greet",
+        "grpcurl -plaintext localhost:8080 list",
+        "grpcurl -plaintext -d '{}' localhost:8080 example.v1.GreetService/Greet"
+      ],
+      "parameters": [
+        {
+          "name": "service_fqrn",
+          "type": "string",
+          "description": "Fully qualified RPC path such as example.v1.GreetService/Greet"
+        },
+        {
+          "name": "content_type",
+          "type": "string",
+          "description": "application/json, application/proto, application/connect+proto"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ConnectRPC Docs",
+      "type": "documentation",
+      "source": "https://connectrpc.com/docs/",
+      "description": "ConnectRPC protocols, language support, and codegen guide"
+    },
+    {
+      "title": "buf Docs",
+      "type": "documentation",
+      "source": "https://buf.build/docs/",
+      "description": "buf CLI reference for protobuf management"
+    }
+  ],
+  "instructions": "# ConnectRPC\n\nDevelop modern RPC services with the Connect protocol.\n\n## When to Use\n\n- New services needing gRPC interop plus JSON for browsers\n- Replacing REST with typed, generated RPC\n- Streaming without the complexity of raw gRPC\n\n## Setup\n\n```bash\ngo mod init example.com/rpc\ngo get connectrpc.com/connect@latest\ngo get google.golang.org/protobuf@latest\n```\n\n## Proto\n\n```proto\nsyntax = \"proto3\";\npackage example.v1;\n\nservice GreetService {\n  rpc Greet(GreetRequest) returns (GreetResponse);\n}\n```\n\n## buf.gen.yaml\n\n```yaml\nversion: v2\nplugins:\n  - local: protoc-gen-go\n    out: gen\n  - local: protoc-gen-connect-go\n    out: gen\n```\n\n## Generate and Serve\n\n```bash\nbuf lint\nbuf generate\nbuf breaking --against .git#branch=main\ngo run ./cmd/server\n```\n\n## Call from Three Protocols\n\n```bash\n# Connect JSON\ncurl -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}' \\\n  http://localhost:8080/example.v1.GreetService/Greet\n\n# gRPC (grpcurl)\ngrpcurl -plaintext -d '{\"name\":\"alice\"}' localhost:8080 example.v1.GreetService/Greet\n\n# gRPC-Web via browser transport\n```\n\n## Testing\n\n```bash\ngo test ./...\ngrpcurl -plaintext localhost:8080 list\ncurl -s -o /dev/null -w \"%{http_code}\\n\" -H \"Content-Type: application/json\" -d '{}' http://localhost:8080/example.v1.GreetService/Greet\n```\n\n## Best Practices\n\n- Prefer Connect protocol for browser and mobile clients\n- Run buf lint and buf breaking in CI\n- Use one proto as the single source of truth\n- Version the package in the proto namespace\n- Add interceptors for auth, logging, and metrics\n- Check health with connect grpchealth",
+  "examples": [
+    {
+      "input": "Scaffold a ConnectRPC service and generate stubs.",
+      "output": "The agent writes the proto, sets up buf.gen.yaml with protoc-gen-go and protoc-gen-connect-go, runs buf generate, and starts the server."
+    },
+    {
+      "input": "Call my ConnectRPC service over gRPC from the terminal.",
+      "output": "The agent uses grpcurl -plaintext with -d '{\"name\":\"alice\"}' against localhost:8080 and the service path."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "connectrpc.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-connectrpc"
+    },
+    "generic": {
+      "system_prompt": "You are the Connectrpc specialist. You do it through proto-codegen: Lint, generate, and manage protobuf with buf for ConnectRPC projects. The commands are real, e.g. `buf lint`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "connectrpc",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "proto-codegen",
+        "name": "proto_dir",
+        "type": "string",
+        "description": "Directory of proto files"
+      },
+      {
+        "capability": "proto-codegen",
+        "name": "output_dir",
+        "type": "string",
+        "description": "Generation output directory"
+      },
+      {
+        "capability": "protocol-calls",
+        "name": "service_fqrn",
+        "type": "string",
+        "description": "Fully qualified RPC path such as example.v1.GreetService/Greet"
+      },
+      {
+        "capability": "protocol-calls",
+        "name": "content_type",
+        "type": "string",
+        "description": "application/json, application/proto, application/connect+proto"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "buf",
+    "grpcurl"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/connectrpc-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/connectrpc-skill.yaml",
+    "checksum": "7cf6d0d4b1f32e0d4d85f82ea51dc8b4322301e3936ea93a42c2ec21196336f6"
+  }
+}

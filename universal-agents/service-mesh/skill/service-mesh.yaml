@@ -1,0 +1,151 @@
+name: service-mesh-service-mesh
+version: 2.0.0
+type: skill
+category: infrastructure
+description: Deploys, injects, and diagnoses service meshes (Istio, Linkerd) including mTLS, traffic routing,
+  and observability dashboards.
+keywords:
+- service-mesh
+- istio
+- linkerd
+- observability
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: service-mesh-service-mesh.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-service-mesh
+  generic:
+    system_prompt: 'You work service-mesh-service-mesh hands-on. You do it through istio-management: Install
+      Istio, inject sidecars, and inspect the mesh. The commands are real, e.g. `istioctl install --set
+      profile=demo -y`. You prefer the shortest safe path, and you reproduce failures before diagnosing
+      them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: istio-management
+  description: Install Istio, inject sidecars, and inspect the mesh.
+  commands:
+  - istioctl install --set profile=demo -y
+  - istioctl analyze
+  - istioctl proxy-status
+  - istioctl proxy-config routes deployment/reviews.default
+  - kubectl label namespace default istio-injection=enabled
+  - istioctl dashboard kiali
+  examples:
+  - istioctl install --set profile=demo -y
+  - istioctl analyze --use-kube=false --list-validators
+  - istioctl proxy-status
+  parameters:
+  - name: profile
+    type: string
+    description: 'Installation profile: default, demo, minimal, external'
+  - name: namespace
+    type: string
+    description: Namespace to label for injection
+- name: linkerd-management
+  description: Install Linkerd, inject proxies, and verify mesh health.
+  commands:
+  - linkerd install | kubectl apply -f -
+  - linkerd check
+  - linkerd inject deploy/ | kubectl apply -f -
+  - linkerd viz dashboard
+  - linkerd stat deploy
+  - linkerd tap deploy/web
+  examples:
+  - linkerd install | kubectl apply -f -
+  - linkerd check --pre
+  - linkerd stat deploy
+  parameters:
+  - name: deploy
+    type: string
+    description: Deployment to inject, stat, or tap
+  - name: namespace
+    type: string
+    description: Target namespace
+- name: traffic-routing
+  description: Apply mTLS, routing, and canary rules.
+  commands:
+  - istioctl x waypoint apply --enroll-namespace default
+  - kubectl apply -f virtualservice.yaml
+  - kubectl apply -f peerauthentication.yaml
+  - kubectl apply -f destinationrule.yaml
+  - kubectl get virtualservices
+  examples:
+  - kubectl apply -f virtualservice.yaml
+  - kubectl apply -f peerauthentication.yaml
+  - kubectl get virtualservices
+  parameters:
+  - name: manifest
+    type: string
+    description: Mesh config manifest path
+  - name: weight
+    type: number
+    description: Traffic weight for canary routing
+prerequisites:
+- kubernetes
+- istio
+- linkerd
+- helm
+tools:
+- kubernetes
+- istio
+- linkerd
+- helm
+- jaeger
+examples:
+- input: Set up mTLS for my cluster
+  output: Agent installs Istio, labels namespaces for injection, applies a strict PeerAuthentication,
+    and verifies with istioctl proxy-status.
+- input: Route 10% of traffic to the new version
+  output: Agent applies a DestinationRule with subsets and a VirtualService with weighted routes, then
+    verifies with istioctl proxy-config routes.
+instructions: "# Service Mesh\n\nOperate Istio and Linkerd service meshes for mTLS, routing, and observability.\n\
+  \n## What This Skill Does\n\n- Installs Istio/Linkerd and verifies mesh health\n- Injects sidecars into\
+  \ namespaces and workloads\n- Applies mTLS, virtual service, and canary routing rules\n- Inspects proxy\
+  \ config and dashboards for traffic\n\n## When to Use\n\n- Securing service-to-service traffic with\
+  \ mTLS\n- Rolling out canary or weighted routing\n- Debugging mesh latency or connectivity\n\n## Real\
+  \ Commands\n\n```bash\n# Istio\nistioctl install --set profile=demo -y\nistioctl analyze\nistioctl proxy-status\n\
+  istioctl proxy-config routes deployment/reviews.default\nkubectl label namespace default istio-injection=enabled\n\
+  istioctl dashboard kiali\n\n# Linkerd\nlinkerd install | kubectl apply -f -\nlinkerd check\nlinkerd\
+  \ inject deploy/ | kubectl apply -f -\nlinkerd viz dashboard\nlinkerd stat deploy\nlinkerd tap deploy/web\n\
+  ```\n\n## Canary Routing (Istio)\n\n```yaml\napiVersion: networking.istio.io/v1\nkind: VirtualService\n\
+  metadata:\n  name: reviews\nspec:\n  hosts: [reviews]\n  http:\n    - route:\n        - destination:\
+  \ { host: reviews, subset: v2 }\n          weight: 10\n        - destination: { host: reviews, subset:\
+  \ v1 }\n          weight: 90\n```\n\n## Best Practices\n\n- Verify sidecar injection before rollout\
+  \ (kubectl get pods -o wide)\n- Run istioctl analyze after every manifest change\n- Enforce strict mTLS\
+  \ via PeerAuthentication after staged rollout\n- Use weighted routing for canaries; shift 10% increments\n\
+  - Monitor with Kiali/Grafana dashboards in every mesh"
+display_name: service-mesh-service-mesh
+knowledge:
+- title: Istio Documentation
+  type: documentation
+  source: https://istio.io/latest/docs/
+  description: Installation, traffic management, and security features
+- title: Linkerd Documentation
+  type: documentation
+  source: https://linkerd.io/2.16/overview/
+  description: Install, inject, and observability commands

@@ -1,0 +1,203 @@
+{
+  "name": "kafka-connect",
+  "display_name": "Kafka Connect",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Run and operate Kafka Connect clusters: standalone and distributed workers, connector lifecycle via the REST API, and status/offset inspection.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "connect-distributed.sh",
+    "connect-standalone.sh",
+    "kafka-topics.sh"
+  ],
+  "capabilities": [
+    {
+      "name": "worker-runtime",
+      "description": "Start Kafka Connect in standalone or distributed mode.",
+      "commands": [
+        "connect-distributed.sh config/connect-distributed.properties",
+        "connect-standalone.sh config/connect-standalone.properties config/connector-file-source.properties",
+        "connect-distributed.sh config/connect-distributed.properties config/worker-log4j.properties",
+        "kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic connect-offsets"
+      ],
+      "examples": [
+        "connect-distributed.sh config/connect-distributed.properties",
+        "connect-standalone.sh config/connect-standalone.properties config/connector-file-source.properties",
+        "kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic connect-offsets"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "Worker properties file."
+        },
+        {
+          "name": "connector_config",
+          "type": "string",
+          "description": "Standalone connector properties file."
+        }
+      ]
+    },
+    {
+      "name": "connector-rest",
+      "description": "Manage connectors through the Connect REST API (port 8083 by default).",
+      "commands": [
+        "curl -s http://localhost:8083/connectors",
+        "curl -s -X POST http://localhost:8083/connectors -H 'Content-Type: application/json' -d @file-source.json",
+        "curl -s http://localhost:8083/connectors/file-source/status",
+        "curl -s http://localhost:8083/connector-plugins",
+        "curl -s -X DELETE http://localhost:8083/connectors/file-source"
+      ],
+      "examples": [
+        "curl -s -X POST http://localhost:8083/connectors -H 'Content-Type: application/json' -d @file-source.json",
+        "curl -s http://localhost:8083/connectors/file-source/status | jq .tasks",
+        "curl -s http://localhost:8083/connector-plugins | jq '.[].class'"
+      ],
+      "parameters": [
+        {
+          "name": "connector",
+          "type": "string",
+          "description": "Connector name."
+        },
+        {
+          "name": "payload",
+          "type": "string",
+          "description": "JSON config file posted to /connectors."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Kafka Connect Guide",
+      "type": "documentation",
+      "source": "https://kafka.apache.org/documentation/#connect",
+      "description": "Official Connect concepts: workers, connectors, tasks, offsets."
+    },
+    {
+      "title": "Connect REST API",
+      "type": "documentation",
+      "source": "https://docs.confluent.io/platform/current/connect/references/restapi.html",
+      "description": "Full Connect REST API reference."
+    }
+  ],
+  "instructions": "# Kafka Connect\n\nRun and manage Kafka Connect for streaming data between Kafka and external systems.\n\n## What this skill does\n\n- Starts standalone and distributed Connect workers.\n- Creates, lists, pauses, and deletes connectors via the REST API.\n- Inspects task status, configs, and offset topics.\n\n## When to use\n\n- Ingesting DB/file/S3 data into Kafka (source connectors).\n- Sinking Kafka data to Elasticsearch, S3, or JDBC (sink connectors).\n- CDC pipelines with Debezium.\n\n## Real commands\n\n```bash\n# Distributed worker\nconnect-distributed.sh config/connect-distributed.properties\n\n# Standalone (dev) with one source connector\nconnect-standalone.sh config/connect-standalone.properties \\\n  config/connector-file-source.properties\n\n# List connectors\ncurl -s http://localhost:8083/connectors\n\n# Create a connector from JSON\ncurl -s -X POST http://localhost:8083/connectors \\\n  -H 'Content-Type: application/json' -d @file-source.json\n\n# Check status (task assignment, errors)\ncurl -s http://localhost:8083/connectors/file-source/status | jq .\n\n# List installed connector plugins\ncurl -s http://localhost:8083/connector-plugins | jq '.[].class'\n\n# Delete a connector\ncurl -s -X DELETE http://localhost:8083/connectors/file-source\n```\n\n## Connector JSON example\n\n```json\n{\n  \"name\": \"file-source\",\n  \"config\": {\n    \"connector.class\": \"org.apache.kafka.connect.file.FileStreamSourceConnector\",\n    \"tasks.max\": \"1\",\n    \"topic\": \"orders\",\n    \"file\": \"/data/orders.log\"\n  }\n}\n```\n\n## Testing\n\n```bash\n# Verify offsets topic exists in distributed mode\nkafka-topics.sh --bootstrap-server localhost:9092 --describe --topic connect-offsets\n```\n\n## Best practices\n\n- Use distributed mode in production for rebalancing and failover.\n- Name connectors <source|sink>-<system>-<name>; one connector per logical pipeline.\n- Monitor /connectors/<name>/status in your alerting; tasks fail fast on bad schemas.\n",
+  "examples": [
+    {
+      "input": "Create a file source connector",
+      "output": "Post the JSON config to http://localhost:8083/connectors, then check `curl -s http://localhost:8083/connectors/file-source/status`."
+    },
+    {
+      "input": "Why is my sink task failing?",
+      "output": "Inspect task state via the status endpoint, read the last error in the trace, and check the dead letter queue topic if configured."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "kafka-connect.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-kafka-connect"
+    },
+    "generic": {
+      "system_prompt": "You own Kafka Connect end to end. You do it through worker-runtime: Start Kafka Connect in standalone or distributed mode. The commands are real, e.g. `connect-distributed.sh config/connect-distributed.properties`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "kafka-connect",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "worker-runtime",
+        "name": "config",
+        "type": "string",
+        "description": "Worker properties file."
+      },
+      {
+        "capability": "worker-runtime",
+        "name": "connector_config",
+        "type": "string",
+        "description": "Standalone connector properties file."
+      },
+      {
+        "capability": "connector-rest",
+        "name": "connector",
+        "type": "string",
+        "description": "Connector name."
+      },
+      {
+        "capability": "connector-rest",
+        "name": "payload",
+        "type": "string",
+        "description": "JSON config file posted to /connectors."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "connect-distributed.sh",
+    "connect-standalone.sh",
+    "kafka-topics.sh"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/kafka-connect-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/kafka-connect-skill.yaml",
+    "checksum": "0f5cc4e3f44f62df5456c981b2945a9d9f3d9d449c00782151e5143884713717"
+  }
+}

@@ -1,0 +1,213 @@
+{
+  "name": "business-intelligence",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "data",
+  "description": "Builds BI pipelines with SQL warehouses, dbt, Metabase, and Superset: metrics modeling, dashboards, and scheduled reporting.",
+  "keywords": [
+    "business-intelligence",
+    "reporting",
+    "analytics"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "business-intelligence.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-business-intelligence"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: business-intelligence. You do it through bi-warehouses: Query and manage warehouse data. The commands are real, e.g. `psql postgres://user:pass@localhost/analytics -c SELECT count(*) FROM orders`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "commands": [
+        "psql \"postgres://user:pass@localhost/analytics\" -c \"SELECT count(*) FROM orders\"",
+        "duckdb analytics.db \"SELECT count(*) FROM orders\"",
+        "mysql -u root -p analytics -e \"SHOW TABLES\"",
+        "duckdb -csv analytics.db \"SELECT * FROM orders LIMIT 10\""
+      ],
+      "description": "Query and manage warehouse data.",
+      "name": "bi-warehouses",
+      "examples": [
+        "psql analytics -c \"\\\\dt\"",
+        "duckdb analytics.db \"SELECT date_trunc('day', created_at) d, count(*) FROM orders GROUP BY 1\"",
+        "python -m venv .venv"
+      ],
+      "parameters": [
+        {
+          "description": "Connection string",
+          "name": "connection",
+          "type": "string"
+        },
+        {
+          "description": "Query text",
+          "name": "sql",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "dbt init my_project",
+        "dbt run",
+        "dbt test",
+        "dbt build",
+        "dbt docs generate"
+      ],
+      "description": "Model metrics with dbt.",
+      "name": "bi-modeling",
+      "examples": [
+        "dbt run --select stg_orders",
+        "dbt test --select tag:core",
+        "dbt docs serve"
+      ],
+      "parameters": [
+        {
+          "description": "Model selection",
+          "name": "select",
+          "type": "string"
+        },
+        {
+          "name": "test",
+          "type": "boolean",
+          "description": "Run dbt data tests"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "snowflake",
+    "bigquery",
+    "dbt",
+    "airflow"
+  ],
+  "tools": [
+    "snowflake",
+    "bigquery",
+    "dbt",
+    "airflow",
+    "metabase"
+  ],
+  "examples": [
+    {
+      "input": "Build a daily revenue report",
+      "output": "Agent writes a dbt mart model, runs dbt build, and exposes the table to Metabase or a scheduled export."
+    },
+    {
+      "input": "Quick analysis without a warehouse",
+      "output": "Agent loads a CSV into DuckDB and runs aggregations with duckdb -csv."
+    }
+  ],
+  "instructions": "# Business Intelligence\n\nBuild analytics pipelines and dashboards.\n\n## When to Use\n\n- Reporting revenue, retention, and funnel metrics\n- Self-serve dashboards for stakeholders\n- Metrics engineering with dbt\n- One-off analysis with DuckDB/psql\n\n## Commands\n\n```bash\n# Ad-hoc querying\npsql analytics -c \"SELECT count(*) FROM orders\"\nduckdb analytics.db \"SELECT * FROM orders LIMIT 10\"\nduckdb -csv analytics.db \"SELECT date_trunc('day', created_at) d, count(*) FROM orders GROUP BY 1\"\n\n# dbt modeling\ndbt init my_project\ndbt run\ndbt test\ndbt build\ndbt docs generate\ndbt docs serve\n\n# Metabase\njava -jar metabase.jar\n```\n\n## dbt Model\n\n```sql\n-- models/marts/daily_orders.sql\nSELECT\n  date_trunc('day', created_at) AS day,\n  count(*) AS orders,\n  sum(total) AS revenue\nFROM {{ ref('stg_orders') }}\nGROUP BY 1\n```\n\n## Best Practices\n\n- Define metrics once in dbt, reuse everywhere\n- Write tests for uniqueness, not-null, and freshness\n- Use semantic layers so dashboard numbers agree\n- Document models with dbt docs generate\n- Schedule dbt build, then refresh dashboards\n- Keep raw data immutable; model in layers (staging, marts)",
+  "display_name": "business-intelligence",
+  "knowledge": [
+    {
+      "title": "dbt Docs",
+      "description": "Project structure, models, and tests",
+      "source": "https://docs.getdbt.com",
+      "type": "documentation"
+    },
+    {
+      "title": "DuckDB Docs",
+      "description": "Embedded analytical database",
+      "source": "https://duckdb.org/docs/",
+      "type": "documentation"
+    },
+    {
+      "title": "Metabase Docs",
+      "description": "Dashboards and questions",
+      "source": "https://www.metabase.com/docs/latest/",
+      "type": "documentation"
+    }
+  ],
+  "id": "business-intelligence",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "bi-warehouses",
+        "name": "connection",
+        "type": "string",
+        "description": "Connection string"
+      },
+      {
+        "capability": "bi-warehouses",
+        "name": "sql",
+        "type": "string",
+        "description": "Query text"
+      },
+      {
+        "capability": "bi-modeling",
+        "name": "select",
+        "type": "string",
+        "description": "Model selection"
+      },
+      {
+        "capability": "bi-modeling",
+        "name": "test",
+        "type": "boolean",
+        "description": "Run dbt data tests"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "snowflake",
+    "bigquery",
+    "dbt",
+    "airflow"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "business-intelligence/skill/business-intelligence.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/business-intelligence/skill/business-intelligence.yaml",
+    "checksum": "288604131e182b3034bcae70a367f7f568d718d93db21140c03522fdd54c6550"
+  }
+}

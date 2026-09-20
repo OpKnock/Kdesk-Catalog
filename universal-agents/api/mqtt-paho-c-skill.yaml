@@ -1,0 +1,102 @@
+name: mqtt-paho-c
+display_name: Mqtt Paho C
+category: api
+subcategory: general
+description: 'Build C applications with the Eclipse Paho MQTT C library: synchronous/async clients, samples,
+  and CMake builds.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- ./build/output/samples/mqttclient_publish
+- cmake
+- ctest
+- git
+capabilities:
+- name: paho-c-build
+  description: Clone, build and run Paho MQTT C samples (MQTTClient/MQTTAsync) with the CMake toolchain.
+  commands:
+  - git clone https://github.com/eclipse/paho.mqtt.c.git
+  - cmake -Bbuild -DPAHO_WITH_SSL=ON
+  - cmake --build build
+  - ctest --test-dir build
+  - ./build/output/samples/MQTTClient_publish -t test/topic -m "hello"
+  examples:
+  - cmake -Bbuild -DPAHO_BUILD_SAMPLES=ON -DPAHO_WITH_SSL=ON
+  - ./build/output/samples/MQTTClient_subscribe -t test/topic -q 1
+  - gcc app.c -o app -lpaho-mqtt3c -lpaho-mqtt3as
+  parameters:
+  - name: sample
+    type: string
+    description: 'Sample binary: MQTTClient_publish, MQTTClient_subscribe, MQTTAsync_publish'
+  - name: topic
+    type: string
+    description: Topic to publish/subscribe to
+  - name: qos
+    type: integer
+    description: QoS level for the sample
+knowledge:
+- title: Paho MQTT C repo
+  type: documentation
+  source: https://github.com/eclipse/paho.mqtt.c
+  description: README, build instructions and API docs for the C client
+- title: Paho C samples
+  type: documentation
+  source: https://github.com/eclipse/paho.mqtt.c/tree/master/src/samples
+  description: MQTTClient and MQTTAsync sample programs
+instructions: "# Paho MQTT C\n\nThe Eclipse Paho C library provides synchronous (MQTTClient) and asynchronous\
+  \ (MQTTAsync) MQTT clients.\n\n## What this skill does\n\n- Builds the library and samples from source\
+  \ with CMake\n- Runs the provided sample clients\n- Links applications against libpaho-mqtt3c / libpaho-mqtt3as\n\
+  \n## When to use\n\n- Embedding MQTT into C daemons or embedded devices\n- Preferring zero-dependency\
+  \ sync/async C APIs\n\n## Real commands\n\n```bash\n# Clone and build\n git clone https://github.com/eclipse/paho.mqtt.c.git\n\
+  cd paho.mqtt.c\ncmake -Bbuild -DPAHO_WITH_SSL=ON -DPAHO_BUILD_SAMPLES=ON\ncmake --build build\nctest\
+  \ --test-dir build\n\n# Run samples (needs a broker)\n./build/output/samples/MQTTClient_publish -t test/topic\
+  \ -m \"hello\"\n./build/output/samples/MQTTClient_subscribe -t test/topic -q 1\n\n# Compile your own\
+  \ app\n gcc app.c -o app -lpaho-mqtt3c\n```\n\n## Minimal sample logic\n\n```c\nMQTTClient client;\n\
+  MQTTClient_create(&client, \"tcp://localhost:1883\", \"client-id\", MQTTCLIENT_PERSISTENCE_NONE, NULL);\n\
+  MQTTClient_connect(client, &conn_opts);\nMQTTClient_publishMessage(client, \"test/topic\", &msg, &token);\n\
+  MQTTClient_destroy(&client);\n```\n\n## Best practices\n\n- Use MQTTAsync for non-blocking event-driven\
+  \ apps\n- Enable SSL build if you need TLS (`-DPAHO_WITH_SSL=ON`)\n- Always set a client ID; use clean\
+  \ sessions with persistent sessions deliberately"
+examples:
+- input: Build paho.mqtt.c with TLS support
+  output: The agent runs the cmake commands with -DPAHO_WITH_SSL=ON and verifies with ctest and a sample
+    publish.
+- input: Publish a message from C to my Mosquitto broker
+  output: The agent shows MQTTClient_create/connect/publish code and compiles it with -lpaho-mqtt3c.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: mqtt-paho-c.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-mqtt-paho-c
+  generic:
+    system_prompt: 'You are the Mqtt Paho C specialist. You do it through paho-c-build: Clone, build and
+      run Paho MQTT C samples (MQTTClient/MQTTAsync) with the CMake toolchain. The commands are real,
+      e.g. `git clone https://github.com/eclipse/paho.mqtt.c.git`. You work hands-on and only report outcomes
+      you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,184 @@
+name: api-graphql-engineer
+version: 2.0.0
+type: skill
+category: backend
+description: 'Implements GraphQL APIs in production: Apollo Server, resolvers with DataLoader, subscriptions,
+  and auth integration.'
+keywords:
+- graphql
+- resolvers
+- subscriptions
+- apollo
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-graphql-engineer.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-graphql-engineer
+  generic:
+    system_prompt: 'You work api-graphql-engineer hands-on. You do it through resolver-implementation:
+      Implement field resolvers with batching and error handling. The commands are real, e.g. `npm install
+      dataloader`. You work hands-on and only report outcomes you have observed.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: resolver-implementation
+  description: Implement field resolvers with batching and error handling
+  commands:
+  - npm install dataloader
+  - node -e "const D=require('dataloader');const l=new D(ids=>Promise.all(ids.map(id=>id*2)));l.load(3).then(console.log)"
+  - npm install graphql-subscriptions
+  - node -e "const g=require('graphql-subscriptions');const {PubSub}=g;const p=new PubSub();console.log(typeof
+    p.publish)"
+  - npm install bcrypt
+  examples:
+  - node -e "const D=require('dataloader');const l=new D(ids=>Promise.all(ids.map(id=>id*2)));Promise.all([l.load(1),l.load(2)]).then(console.log)"
+  - node -e "const g=require('graphql-subscriptions');const {PubSub}=g;const p=new PubSub();p.publish('EVENT',{id:1});console.log('published')"
+  - npm install dataloader graphql-subscriptions
+  parameters:
+  - name: batchFn
+    type: string
+    description: Batch loading function
+  - name: field
+    type: string
+    description: Resolver field name
+- name: auth-integration
+  description: Protect GraphQL fields with JWT validation and directives
+  commands:
+  - npm install express-jwt
+  - node -e "const {expressjwt}=require('express-jwt');const m=expressjwt({secret:'s',algorithms:['HS256']});console.log(typeof
+    m)"
+  - npm install graphql-directive-auth
+  - 'curl -s -X POST http://localhost:4000/graphql -H ''Content-Type: application/json'' -H ''Authorization:
+    Bearer bad'' -d ''{"query":"{ me { id } }"}'''
+  - node -e "const j=require('jsonwebtoken');console.log(j.sign({sub:'u1'},'s',{expiresIn:'1h'}))"
+  examples:
+  - node -e "const {expressjwt}=require('express-jwt');const m=expressjwt({secret:'s',algorithms:['HS256']});console.log(typeof
+    m)"
+  - 'curl -s -X POST http://localhost:4000/graphql -H ''Content-Type: application/json'' -H ''Authorization:
+    Bearer bad'' -d ''{"query":"{ me { id } }"}'''
+  - npm install graphql-directive-auth && npm install express-jwt
+  parameters:
+  - name: secret
+    type: string
+    description: JWT secret
+  - name: algorithm
+    type: string
+    description: Signing algorithm
+prerequisites:
+- apollo-server
+- graphql-codegen
+- node.js
+- python
+tools:
+- apollo-server
+- graphql-codegen
+- node.js
+- python
+- strawberry
+- ariadne
+examples:
+- input: Build a GraphQL API for the e-commerce store
+  output: Ships Apollo Server with Product/Order/User types, batched resolvers, and protected mutations
+- input: Add real-time order updates
+  output: Implements subscriptions with pub/sub so clients receive order status changes over WebSocket
+instructions: '# API GraphQL Engineer
+
+
+  Builds production GraphQL APIs: resolvers, batching, subscriptions, and auth.
+
+
+  ## When to Use
+
+  - Shipping a real GraphQL service
+
+  - Fixing N+1 in existing resolvers
+
+  - Adding real-time subscriptions
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # DataLoader batching
+
+  npm install dataloader
+
+  node -e "const D=require(''dataloader'');const l=new D(ids=>Promise.all(ids.map(id=>id*2)));Promise.all([l.load(1),l.load(2)]).then(console.log)"
+
+
+  # Subscriptions
+
+  npm install graphql-subscriptions
+
+  node -e "const {PubSub}=require(''graphql-subscriptions'');const p=new PubSub();console.log(typeof p.publish)"
+
+
+  # JWT on the HTTP layer
+
+  npm install express-jwt
+
+  curl -s -X POST http://localhost:4000/graphql -H ''Content-Type: application/json'' -H ''Authorization:
+  Bearer bad'' -d ''{"query":"{ me { id } }"}''
+
+  ```
+
+
+  ## Resolver Pattern
+
+  - Parent arguments for field resolution
+
+  - DataLoader per request context
+
+  - Errors with GraphQLError codes
+
+
+  ## Testing
+
+  Benchmark a nested query before and after DataLoader to prove N+1 is gone.
+
+
+  ## Best Practices
+
+  - One DataLoader instance per request
+
+  - Validate subscription topics server-side'
+display_name: api-graphql-engineer
+knowledge:
+- title: DataLoader
+  type: documentation
+  source: https://github.com/graphql/dataloader
+  description: Batching and caching for resolvers
+- title: GraphQL Subscriptions
+  type: documentation
+  source: https://the-guild.dev/graphql/subscriptions
+  description: PubSub and transports
+- title: Apollo Server Auth
+  type: documentation
+  source: https://www.apollographql.com/docs/apollo-server/security/authentication/
+  description: Auth patterns in Apollo

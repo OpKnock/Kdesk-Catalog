@@ -1,0 +1,223 @@
+{
+  "name": "cost-azure",
+  "display_name": "Cost Azure",
+  "category": "finops",
+  "subcategory": "general",
+  "description": "Tracks Azure cloud spend with Cost Management queries, exports, budgets, and consumption APIs to keep billing under control.",
+  "version": "2.0.0",
+  "tags": [
+    "finops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "cost-management",
+      "description": "Query Azure cost data and manage exports via az cost-management.",
+      "commands": [
+        "az cost-management query --type ActualCost --timeframe MonthToDate --scope /subscriptions/$SUBSCRIPTION_ID --aggregation '{\"totalCost\":{\"name\":\"PreTaxCost\",\"function\":\"Sum\"}}'",
+        "az cost-management query --type ActualCost --timeframe LastMonth --scope /subscriptions/$SUBSCRIPTION_ID --grouping '{\"type\":\"Dimension\",\"name\":\"ServiceName\"}'",
+        "az cost-management export create --name monthly-export --type ActualCost --timeframe MonthToDate --storage-account $SA --container $CONTAINER --scope /subscriptions/$SUBSCRIPTION_ID",
+        "az cost-management export list --scope /subscriptions/$SUBSCRIPTION_ID",
+        "az cost-management export run --name monthly-export --scope /subscriptions/$SUBSCRIPTION_ID"
+      ],
+      "examples": [
+        "az cost-management query --type ActualCost --timeframe LastMonth --scope /subscriptions/$SUB --grouping '{\"type\":\"Dimension\",\"name\":\"ResourceGroupName\"}'",
+        "az cost-management query --type ActualCost --timeframe MonthToDate --scope /subscriptions/$SUB --aggregation '{\"totalCost\":{\"name\":\"PreTaxCost\",\"function\":\"Sum\"}}'",
+        "az cost-management export create --name daily-export --type ActualCost --timeframe MonthToDate --storage-account sa --container cost"
+      ],
+      "parameters": [
+        {
+          "name": "type",
+          "type": "string",
+          "description": "ActualCost or AmortizedCost"
+        },
+        {
+          "name": "timeframe",
+          "type": "string",
+          "description": "MonthToDate, LastMonth, or custom start/end"
+        },
+        {
+          "name": "scope",
+          "type": "string",
+          "description": "Subscription or resource-group scope URI"
+        }
+      ]
+    },
+    {
+      "name": "budgets",
+      "description": "Create Azure budgets and view consumption data.",
+      "commands": [
+        "az consumption budget create --budget-name engineering-monthly --amount 15000 --time-grain monthly --start-date 2026-08-01 --category cost",
+        "az consumption budget list",
+        "az consumption budget show --budget-name engineering-monthly",
+        "az consumption usage list --top 10 --metric usage",
+        "az monitor metrics list --resource $RESOURCE_ID --metric PercentageCPU --interval PT1H"
+      ],
+      "examples": [
+        "az consumption budget create --budget-name eng-monthly --amount 15000 --time-grain monthly --start-date 2026-08-01",
+        "az consumption usage list --top 20 | jq '.[] | {name: .name.value, quantity: .quantity}'",
+        "az consumption budget show --budget-name eng-monthly"
+      ],
+      "parameters": [
+        {
+          "name": "budget-name",
+          "type": "string",
+          "description": "Unique budget name"
+        },
+        {
+          "name": "amount",
+          "type": "number",
+          "description": "Budget amount in USD"
+        },
+        {
+          "name": "time-grain",
+          "type": "string",
+          "description": "monthly, quarterly, or annually"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Azure Cost Management + Billing",
+      "type": "documentation",
+      "source": "https://learn.microsoft.com/en-us/azure/cost-management-billing/",
+      "description": "Cost analysis, budgets, exports, and anomaly alerts"
+    },
+    {
+      "title": "az cost-management CLI reference",
+      "type": "documentation",
+      "source": "https://learn.microsoft.com/en-us/cli/azure/cost-management",
+      "description": "Full az cost-management command reference"
+    },
+    {
+      "title": "Azure Consumption CLI",
+      "type": "documentation",
+      "source": "https://learn.microsoft.com/en-us/cli/azure/consumption",
+      "description": "Budgets and usage list commands"
+    }
+  ],
+  "instructions": "# Azure Cost Optimization\n\nUnderstand and reduce Azure spend with Cost Management CLI queries.\n\n## When to Use\n\n- Monthly cost analysis per resource group or service\n- Setting budget alerts for subscriptions\n- Automating cost data exports to storage for BI\n- Spotting VM overspend before invoice day\n\n## Query cost\n\n```bash\naz cost-management query --type ActualCost --timeframe MonthToDate --scope /subscriptions/$SUBSCRIPTION_ID --aggregation '{\"totalCost\":{\"name\":\"PreTaxCost\",\"function\":\"Sum\"}}'\n```\n\nGroup by dimension for a breakdown:\n\n```bash\naz cost-management query --type ActualCost --timeframe LastMonth --scope /subscriptions/$SUB --grouping '{\"type\":\"Dimension\",\"name\":\"ServiceName\"}'\n```\n\n## Budgets\n\n```bash\naz consumption budget create --budget-name eng-monthly --amount 15000 --time-grain monthly --start-date 2026-08-01\n```\n\nAttach action groups so budget thresholds page the FinOps on-call.\n\n## Exports to storage\n\n```bash\naz cost-management export create --name monthly-export --type ActualCost --timeframe MonthToDate --storage-account $SA --container $CONTAINER --scope /subscriptions/$SUB\naz cost-management export run --name monthly-export --scope /subscriptions/$SUB\n```\n\n## VM rightsizing\n\nCheck actual utilization before resizing:\n\n```bash\naz monitor metrics list --resource $RESOURCE_ID --metric PercentageCPU --interval PT1H\n```\n\n## Best practices\n\n- Always scope queries to the subscription, not the tenant root.\n- Set budgets at 80% and 100% of forecast spend.\n- Export daily Parquet files to a lake and aggregate there.\n- Apply Azure Hybrid Benefit for Windows/Linux VMs before paying on-demand.",
+  "examples": [
+    {
+      "input": "Show this month's Azure spend broken down by resource group.",
+      "output": "Runs az cost-management query grouped by ResourceGroupName for MonthToDate ActualCost and returns a ranked breakdown."
+    },
+    {
+      "input": "Set a monthly budget alert for the engineering subscription.",
+      "output": "Creates a cost budget of 15000 USD with a 100% threshold notification and verifies via az consumption budget show."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cost-azure.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cost-azure"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Cost Azure. You do it through cost-management: Query Azure cost data and manage exports via az cost-management. The commands are real, e.g. `az cost-management query --type ActualCost --timeframe MonthToDate --scope...`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cost-azure",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cost-management",
+        "name": "type",
+        "type": "string",
+        "description": "ActualCost or AmortizedCost"
+      },
+      {
+        "capability": "cost-management",
+        "name": "timeframe",
+        "type": "string",
+        "description": "MonthToDate, LastMonth, or custom start/end"
+      },
+      {
+        "capability": "cost-management",
+        "name": "scope",
+        "type": "string",
+        "description": "Subscription or resource-group scope URI"
+      },
+      {
+        "capability": "budgets",
+        "name": "budget-name",
+        "type": "string",
+        "description": "Unique budget name"
+      },
+      {
+        "capability": "budgets",
+        "name": "amount",
+        "type": "number",
+        "description": "Budget amount in USD"
+      },
+      {
+        "capability": "budgets",
+        "name": "time-grain",
+        "type": "string",
+        "description": "monthly, quarterly, or annually"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "finops/cost-azure-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/finops/cost-azure-skill.yaml",
+    "checksum": "8dd3467569140ae74ca1f52b74de25118faa9b8fb6bfcb4f4dceccdf0f985dd6"
+  }
+}

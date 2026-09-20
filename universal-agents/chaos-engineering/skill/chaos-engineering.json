@@ -1,0 +1,207 @@
+{
+  "name": "chaos-engineering-chaos-engineering",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "devops",
+  "description": "Practices chaos engineering with LitmusChaos, Chaos Monkey, and fault injection to verify resilience of distributed systems.",
+  "keywords": [
+    "chaos-engineering",
+    "fault-injection",
+    "resilience"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "chaos-engineering-chaos-engineering.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-chaos-engineering"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: chaos-engineering-chaos-engineering. You do it through litmus-chaos: Run chaos experiments on Kubernetes. The commands are real, e.g. `kubectl apply -f https://litmuschaos.github.io/litmus/litmus-operator-v2.14.0.yaml`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "commands": [
+        "kubectl apply -f https://litmuschaos.github.io/litmus/litmus-operator-v2.14.0.yaml",
+        "kubectl get chaosexperiments",
+        "litmusctl connect --agent-type cluster",
+        "kubectl apply -f experiment.yaml",
+        "kubectl get chaosresult"
+      ],
+      "description": "Run chaos experiments on Kubernetes.",
+      "name": "litmus-chaos",
+      "examples": [
+        "kubectl get chaosengine -n litmus",
+        "kubectl get chaosresult -n litmus -o jsonpath=\"{.items[*].status.experimentStatus.verdict}\"",
+        "litmusctl create agent --agent-type cluster"
+      ],
+      "parameters": [
+        {
+          "description": "Chaos experiment name",
+          "name": "experiment",
+          "type": "string"
+        },
+        {
+          "description": "Target workload",
+          "name": "target",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "kubectl run net-test --image=alpine -- sleep 3600",
+        "kubectl exec -it pod-test -- tc qdisc add dev eth0 root netem loss 20%",
+        "kubectl exec -it pod-test -- kill -STOP 1",
+        "kubectl delete pod myapp --grace-period=0 --force"
+      ],
+      "description": "Inject network and resource faults.",
+      "name": "fault-injection",
+      "examples": [
+        "kubectl exec -it app-pod -- tc qdisc add dev eth0 root netem delay 500ms",
+        "kubectl scale deploy myapp --replicas=0",
+        "kubectl drain node-a --ignore-daemonsets"
+      ],
+      "parameters": [
+        {
+          "description": "Target pod",
+          "name": "pod",
+          "type": "string"
+        },
+        {
+          "description": "delay, loss, kill, scale",
+          "name": "fault",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "docker",
+    "kubernetes",
+    "litmus",
+    "chaos-mesh"
+  ],
+  "tools": [
+    "docker",
+    "kubernetes",
+    "litmus",
+    "chaos-mesh",
+    "gremlin"
+  ],
+  "examples": [
+    {
+      "input": "Test if my service survives DB downtime",
+      "output": "Agent sets up a Litmus pod-delete/network experiment against the service, monitors error rate, and documents the verdict."
+    },
+    {
+      "input": "Simulate network latency between services",
+      "output": "Agent injects tc netem delay on the target pod and observes timeout/retry behavior."
+    }
+  ],
+  "instructions": "# Chaos Engineering\n\nVerify resilience by breaking things on purpose.\n\n## When to Use\n\n- Proving retries, timeouts, and failover actually work\n- Testing dependency failures (DB, cache, third-party API)\n- Validating chaos under realistic traffic, not just in tests\n- Building confidence for incident response\n\n## Principles\n\n- Steady state: define normal behavior first (latency, error rate)\n- Hypothesis: the system tolerates fault X without user impact\n- Blast radius: start small, expand gradually\n- Roll back fast: abort experiment on threshold breach\n\n## Commands\n\n```bash\n# Install Litmus\nkubectl apply -f https://litmuschaos.github.io/litmus/litmus-operator-v2.14.0.yaml\n\n# Inspect available experiments\nkubectl get chaosexperiments\n\n# Track results\nkubectl get chaosresult\nkubectl get chaosengine -n litmus\n\n# Manual faults\nkubectl exec -it app-pod -- kill -STOP 1\nkubectl exec -it app-pod -- tc qdisc add dev eth0 root netem loss 20%\nkubectl delete pod myapp --grace-period=0 --force\nkubectl drain node-a --ignore-daemonsets\n```\n\n## Best Practices\n\n- Run chaos in staging first, then carefully in prod\n- Automate experiments into a pipeline with verdicts\n- Monitor steady state throughout; abort on threshold breach\n- Start with safe faults: network delay, then packet loss, then kill\n- Pair each experiment with an alert so downtime is visible\n- Clean up experiments; never leave faults running",
+  "display_name": "chaos-engineering-chaos-engineering",
+  "knowledge": [
+    {
+      "title": "LitmusChaos Docs",
+      "description": "Experiments, agents, and workflows",
+      "source": "https://docs.litmuschaos.io",
+      "type": "documentation"
+    },
+    {
+      "title": "Principles of Chaos Engineering",
+      "description": "Core principles",
+      "source": "https://principlesofchaos.org",
+      "type": "documentation"
+    }
+  ],
+  "id": "chaos-engineering-chaos-engineering",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "litmus-chaos",
+        "name": "experiment",
+        "type": "string",
+        "description": "Chaos experiment name"
+      },
+      {
+        "capability": "litmus-chaos",
+        "name": "target",
+        "type": "string",
+        "description": "Target workload"
+      },
+      {
+        "capability": "fault-injection",
+        "name": "pod",
+        "type": "string",
+        "description": "Target pod"
+      },
+      {
+        "capability": "fault-injection",
+        "name": "fault",
+        "type": "string",
+        "description": "delay, loss, kill, scale"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker",
+    "kubernetes",
+    "litmus",
+    "chaos-mesh"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "chaos-engineering/skill/chaos-engineering.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/chaos-engineering/skill/chaos-engineering.yaml",
+    "checksum": "3b72004ea33105addbdebce9686943e1ab955ba33465322b63e21ac9ddcb8746"
+  }
+}

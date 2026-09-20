@@ -1,0 +1,203 @@
+{
+  "name": "git-flow",
+  "display_name": "git-flow",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Applies the GitFlow branching model with git-flow extensions: features, releases, hotfixes, and support branches.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "git"
+  ],
+  "capabilities": [
+    {
+      "name": "feature-branches",
+      "description": "Start, finish, and publish feature branches under git-flow.",
+      "commands": [
+        "git flow feature start login-passwordless",
+        "git flow feature publish login-passwordless",
+        "git flow feature finish login-passwordless",
+        "git flow feature list",
+        "git flow feature pull origin login-passwordless"
+      ],
+      "examples": [
+        "git flow feature start login-passwordless",
+        "git flow feature publish login-passwordless",
+        "git flow feature finish login-passwordless"
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Feature branch name"
+        },
+        {
+          "name": "origin",
+          "type": "string",
+          "description": "Remote to sync with"
+        }
+      ]
+    },
+    {
+      "name": "releases-and-hotfixes",
+      "description": "Cut releases from develop and patch production from master/main.",
+      "commands": [
+        "git flow release start 1.2.0",
+        "git flow release publish 1.2.0",
+        "git flow release finish 1.2.0 -m 'Release 1.2.0'",
+        "git flow hotfix start 1.2.1",
+        "git flow hotfix finish 1.2.1",
+        "git flow init"
+      ],
+      "examples": [
+        "git flow release start 1.2.0",
+        "git flow release finish 1.2.0 -m 'Release 1.2.0'",
+        "git flow hotfix finish 1.2.1"
+      ],
+      "parameters": [
+        {
+          "name": "version",
+          "type": "string",
+          "description": "Release or hotfix version tag"
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "description": "Tag message on finish"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "GitFlow Cheatsheet",
+      "type": "documentation",
+      "source": "https://danielkummer.github.io/git-flow-cheatsheet/",
+      "description": "Visual cheatsheet of git-flow commands"
+    },
+    {
+      "title": "A Successful Git Branching Model",
+      "type": "documentation",
+      "source": "https://nvie.com/posts/a-successful-git-branching-model/",
+      "description": "Original GitFlow model by Vincent Driessen"
+    },
+    {
+      "title": "gitflow-avh",
+      "type": "documentation",
+      "source": "https://github.com/petervanderdoes/gitflow-avh",
+      "description": "Maintained git-flow CLI extensions"
+    }
+  ],
+  "instructions": "# GitFlow Branching Model\n\nStructure development around feature, release, and hotfix branches with git-flow.\n\n## What This Skill Does\n\n- Initializes the git-flow branch structure (develop + master/main)\n- Manages feature branches off develop\n- Prepares releases off develop with freeze windows\n- Fixes production with hotfix branches off main, merged back into both\n- Handles support branches for legacy versions\n\n## When to Use\n\n- Teams on scheduled releases (not continuous deployment)\n- Projects needing a stable main + active develop line\n- When hotfixes must bypass the develop queue\n\n## Real Commands\n\n```bash\n# Initialize\ngit flow init -d\n\n# Features\ngit flow feature start login-passwordless\ngit flow feature publish login-passwordless\ngit flow feature finish login-passwordless\ngit flow feature list\n\n# Releases\ngit flow release start 1.2.0\ngit flow release publish 1.2.0\ngit flow release finish 1.2.0 -m 'Release 1.2.0'\n\n# Hotfixes\ngit flow hotfix start 1.2.1\ngit flow hotfix finish 1.2.1 -m 'Hotfix 1.2.1'\n```\n\n## Branch Flow\n\n```\nfeature/*   -> develop\ndevelop     -> release/x.y.z -> main (tag x.y.z)\nhotfix/x.y  -> main + develop\nsupport/x.y -> off main\n```\n\n## Best Practices\n\n- Finish releases/hotfixes with `-m` to create annotated tags\n- Never commit directly to develop or main; always via flow commands or PRs\n- Publish feature branches early for backup and review\n- Use `git flow release start` only when the release scope is frozen\n- Prefer GitHub Flow for continuous-delivery teams; GitFlow suits calendar releases",
+  "examples": [
+    {
+      "input": "Cut a 2.0 release with bugfix-only policy",
+      "output": "Agent starts release branch 2.0, coordinates bugfix merges, finishes the release with a tag, and merges back into develop"
+    },
+    {
+      "input": "Production is broken, patch now",
+      "output": "Agent starts hotfix 1.2.1, applies the fix, finishes it so main gets a tag and develop gets the merge"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "git-flow.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-git-flow"
+    },
+    "generic": {
+      "system_prompt": "You own git-flow end to end. You do it through feature-branches: Start, finish, and publish feature branches under git-flow. The commands are real, e.g. `git flow feature start login-passwordless`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "git-flow",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "feature-branches",
+        "name": "name",
+        "type": "string",
+        "description": "Feature branch name"
+      },
+      {
+        "capability": "feature-branches",
+        "name": "origin",
+        "type": "string",
+        "description": "Remote to sync with"
+      },
+      {
+        "capability": "releases-and-hotfixes",
+        "name": "version",
+        "type": "string",
+        "description": "Release or hotfix version tag"
+      },
+      {
+        "capability": "releases-and-hotfixes",
+        "name": "message",
+        "type": "string",
+        "description": "Tag message on finish"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "git"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/git-flow-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/git-flow-skill.yaml",
+    "checksum": "42166f4adeb4bb4117510db7bc4dbd8cfbdc025df9a88b6b414fd26a61615302"
+  }
+}

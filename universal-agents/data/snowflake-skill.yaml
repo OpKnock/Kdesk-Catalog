@@ -1,0 +1,100 @@
+name: snowflake
+display_name: Snowflake
+category: data
+subcategory: general
+description: 'Works with Snowflake: SQL execution via snowsql, warehouses, stages, and query performance.'
+version: 2.0.0
+tags:
+- data
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- snowsql
+capabilities:
+- name: snowsql
+  description: Execute SQL, scripts, and configuration against Snowflake
+  commands:
+  - snowsql -a myorg-account -u jdoe -d analytics -s core
+  - snowsql -q "SELECT CURRENT_WAREHOUSE(), CURRENT_ROLE();"
+  - snowsql -f scripts/schema.sql --warehouse=etl_wh
+  - snowsql -o exit_on_error=true -f migrations/001.sql
+  - snowsql -q "SHOW WAREHOUSES;" -o output_format=json
+  examples:
+  - snowsql -a myorg-account -u jdoe -d analytics -s core -w compute_wh
+  - snowsql -q "COPY INTO raw.events FROM @stage/events FILE_FORMAT=(TYPE=CSV)"
+  - snowsql -q "SELECT query_id, total_elapsed_time/1000 secs FROM table(information_schema.query_history())
+    ORDER BY total_elapsed_time DESC LIMIT 10;"
+  parameters:
+  - name: warehouse
+    type: string
+    description: Warehouse to run the query on (-w/--warehouse)
+  - name: exit_on_error
+    type: boolean
+    description: Stop script execution on first error
+  - name: output_format
+    type: string
+    description: table, json, csv, or xml output
+knowledge:
+- title: Snowflake docs
+  type: documentation
+  source: https://docs.snowflake.com/
+  description: SQL reference, warehouses, stages, and data loading
+- title: snowsql reference
+  type: documentation
+  source: https://docs.snowflake.com/en/user-guide/snowsql-ref
+  description: snowsql CLI options and config file
+instructions: "# Snowflake\n\nData warehouse operations with snowsql: SQL execution, loading via stages,\n\
+  warehouse management, and query diagnostics.\n\n## When to Use\n\n- Running ad-hoc and scripted SQL\n\
+  - Loading files from stages into tables\n- Investigating slow queries and warehouse usage\n\n## Real\
+  \ Commands\n\n```bash\n# Connect and run one query\nsnowsql -a myorg-account -u jdoe -d analytics -s\
+  \ core -w etl_wh \\\n  -q \"SELECT CURRENT_WAREHOUSE(), CURRENT_ROLE();\"\n\n# Run a script file\nsnowsql\
+  \ -a myorg-account -u jdoe -f scripts/schema.sql --warehouse=etl_wh \\\n  -o exit_on_error=true -o echo=true\n\
+  \n# Load data from a stage\nsnowsql -q \"COPY INTO raw.events FROM @my_stage/events FILE_FORMAT=(TYPE=CSV\
+  \ SKIP_HEADER=1);\"\n\n# Warehouse state\nsnowsql -q \"SHOW WAREHOUSES;\" -o output_format=json\n\n\
+  # Slow query analysis\nsnowsql -q \"SELECT query_id, total_elapsed_time/1000 AS secs, query_text FROM\
+  \ table(information_schema.query_history(result_limit=>10)) ORDER BY total_elapsed_time DESC;\"\n```\n\
+  \n## Best Practices\n\n- Set `-o exit_on_error=true` in migrations to stop on failures\n- Use roles,\
+  \ not individual credentials, for automation\n- Suspend warehouses in dev (auto_suspend) to control\
+  \ cost\n- Load via stages + COPY INTO rather than insert-by-insert\n- Check `QUERY_HISTORY` for cost\
+  \ and performance diagnosis\n\n## Example Response\n\nFor a slow pipeline: finds the slow queries in\
+  \ query_history, checks warehouse\nsize and cache misses, and recommends sizing or clustering changes."
+examples:
+- input: Load yesterday's CSV into the warehouse
+  output: PUTs the file to a stage and runs COPY INTO with snowsql, then validates row counts
+- input: Why is this query slow?
+  output: Looks up the query_id in information_schema.query_history, reports elapsed time and profile,
+    and suggests fixes
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: snowflake.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-snowflake
+  generic:
+    system_prompt: 'You work Snowflake hands-on. You do it through snowsql: Execute SQL, scripts, and
+      configuration against Snowflake. The commands are real, e.g. `snowsql -a myorg-account -u jdoe -d
+      analytics -s core`. You answer with exact commands, not abstractions, and flag anything you have
+      not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

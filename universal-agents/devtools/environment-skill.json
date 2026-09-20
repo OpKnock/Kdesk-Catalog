@@ -1,0 +1,214 @@
+{
+  "name": "environment",
+  "display_name": "environment",
+  "category": "devtools",
+  "subcategory": "general",
+  "description": "Manages development environments: dotfiles, asdf/mise version managers, direnv environment switching, and shell init configs.",
+  "version": "2.0.0",
+  "tags": [
+    "devtools"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "asdf",
+    "direnv",
+    "env",
+    "mise",
+    "source"
+  ],
+  "capabilities": [
+    {
+      "name": "runtime-version-managers",
+      "description": "Install and switch tool versions with asdf/mise.",
+      "commands": [
+        "asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git",
+        "asdf install nodejs 20.11.0",
+        "asdf global nodejs 20.11.0",
+        "asdf current",
+        "mise use node@22",
+        "mise install"
+      ],
+      "examples": [
+        "asdf install nodejs 20.11.0",
+        "asdf global nodejs 20.11.0",
+        "mise use node@22"
+      ],
+      "parameters": [
+        {
+          "name": "tool",
+          "type": "string",
+          "description": "Tool name, e.g. nodejs, python, ruby"
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "description": "Version to install or set"
+        }
+      ]
+    },
+    {
+      "name": "directory-env-and-shell",
+      "description": "Load environment variables per directory with direnv and manage shell init.",
+      "commands": [
+        "direnv allow .",
+        "direnv edit .",
+        "direnv status",
+        "direnv reload",
+        "env | grep -i api",
+        "source .env"
+      ],
+      "examples": [
+        "direnv allow .",
+        "direnv edit .",
+        "direnv status"
+      ],
+      "parameters": [
+        {
+          "name": "dir",
+          "type": "string",
+          "description": "Directory with .envrc"
+        },
+        {
+          "name": "env-var",
+          "type": "string",
+          "description": "Environment variable to inspect or set"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "asdf Documentation",
+      "type": "documentation",
+      "source": "https://asdf-vm.com/",
+      "description": "Multi-language version manager docs"
+    },
+    {
+      "title": "direnv",
+      "type": "documentation",
+      "source": "https://direnv.net/",
+      "description": "Per-directory environment loading"
+    },
+    {
+      "title": "mise",
+      "type": "documentation",
+      "source": "https://mise.jdx.dev/",
+      "description": "dev tools, env vars, and tasks manager"
+    }
+  ],
+  "instructions": "# Environment Engineering\n\nSet up and standardize development environments across machines.\n\n## What This Skill Does\n\n- Installs and manages runtime versions (asdf/mise)\n- Loads project-specific env vars with direnv\n- Writes .tool-versions/.mise.toml for repo pinning\n- Bootstraps shell configs (bash/zsh/fish)\n- Debugs PATH and environment variable issues\n\n## When to Use\n\n- Onboarding a new machine or teammate\n- Multiple projects needing different runtime versions\n- Environment variable chaos between projects\n\n## Real Commands\n\n```bash\n# asdf\nasdf plugin add nodejs\nasdf install nodejs 20.11.0\nasdf global nodejs 20.11.0\nasdf local nodejs 20.11.0   # writes .tool-versions\nasdf current\n\n# mise\nmise use node@22\nmise use --global node@lts\nmise install\nmise ls\n\n# direnv\ndirenv allow .\ndirenv edit .          # edit .envrc\ndirenv status\ndirenv reload\n```\n\n## .envrc Example\n\n```bash\nexport API_URL=http://localhost:8080\nexport NODE_ENV=development\nuse asdf\n```\n\n## Best Practices\n\n- Commit .tool-versions or .mise.toml to pin runtimes per repo\n- Keep dotfiles in a git repo with a bootstrap script\n- Use direnv to scope secrets to directories, not shells\n- Document the golden PATH in the repo README\n- Test environment bootstrap in CI with a clean container",
+  "examples": [
+    {
+      "input": "Projects need different Node versions",
+      "output": "Agent sets up asdf with .tool-versions per project and verifies version switching"
+    },
+    {
+      "input": "API keys keep leaking between projects",
+      "output": "Agent moves secrets into .envrc per project and enforces direnv allow"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "environment.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-environment"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: environment. You do it through runtime-version-managers: Install and switch tool versions with asdf/mise. The commands are real, e.g. `asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "environment",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "runtime-version-managers",
+        "name": "tool",
+        "type": "string",
+        "description": "Tool name, e.g. nodejs, python, ruby"
+      },
+      {
+        "capability": "runtime-version-managers",
+        "name": "version",
+        "type": "string",
+        "description": "Version to install or set"
+      },
+      {
+        "capability": "directory-env-and-shell",
+        "name": "dir",
+        "type": "string",
+        "description": "Directory with .envrc"
+      },
+      {
+        "capability": "directory-env-and-shell",
+        "name": "env-var",
+        "type": "string",
+        "description": "Environment variable to inspect or set"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "asdf",
+    "direnv",
+    "env",
+    "mise",
+    "source"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devtools/environment-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devtools/environment-skill.yaml",
+    "checksum": "6da80f90ca78b163aa5a0cb27d05a1548f6b2ec778e92ce9e820b939e88f4f5a"
+  }
+}

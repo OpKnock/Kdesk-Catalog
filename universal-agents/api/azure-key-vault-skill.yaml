@@ -1,0 +1,202 @@
+name: azure-key-vault
+display_name: Azure Key Vault
+category: api
+subcategory: general
+description: 'Manages secrets, keys, and certificates in Azure Key Vault with the Azure CLI: vault lifecycle,
+  secret CRUD, and access policies.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: vault-lifecycle
+  description: Create and manage Key Vault instances.
+  commands:
+  - az keyvault create --name mykv --resource-group rg
+  - az keyvault show --name mykv
+  - az keyvault list --resource-group rg
+  - az keyvault delete --name mykv
+  - az keyvault purge --name mykv
+  examples:
+  - az keyvault create --name mykv --resource-group rg --location eastus
+  - az keyvault list --resource-group rg --query '[].{name:name,uri:properties.vaultUri}' -o table
+  - az keyvault show --name mykv --query 'properties.vaultUri' -o tsv
+  parameters:
+  - name: vault_name
+    type: string
+    description: Key Vault name
+  - name: resource_group
+    type: string
+    description: Resource group
+  - name: location
+    type: string
+    description: Azure region
+- name: secrets
+  description: Store and retrieve secrets.
+  commands:
+  - az keyvault secret set --vault-name mykv --name db-password --value secret123
+  - az keyvault secret show --vault-name mykv --name db-password
+  - az keyvault secret list --vault-name mykv
+  - az keyvault secret delete --vault-name mykv --name db-password
+  - az keyvault secret set --vault-name mykv --name api-key --value $(openssl rand -hex 32)
+  examples:
+  - az keyvault secret set --vault-name mykv --name db-password --value 'p@ssw0rd!' --expires 2027-01-01T00:00:00Z
+  - az keyvault secret show --vault-name mykv --name db-password --query 'value' -o tsv
+  - az keyvault secret list --vault-name mykv --query '[].name' -o tsv
+  parameters:
+  - name: secret_name
+    type: string
+    description: Secret name
+  - name: value
+    type: string
+    description: Secret value
+  - name: expires
+    type: string
+    description: Expiry date ISO format
+- name: keys-access
+  description: Manage keys and access policies.
+  commands:
+  - az keyvault key create --vault-name mykv --name rsa-key --protection software
+  - az keyvault key list --vault-name mykv
+  - az keyvault set-policy --vault-name mykv --object-id <principal-id> --secret-permissions get list
+    set delete
+  - az keyvault show-policy --vault-name mykv --object-id <principal-id>
+  - az keyvault key show --vault-name mykv --name rsa-key
+  examples:
+  - az keyvault key create --vault-name mykv --name rsa-key --protection software --size 4096
+  - az keyvault set-policy --vault-name mykv --object-id <principal-id> --key-permissions get unwrapKey
+    wrapKey
+  - az keyvault key list --vault-name mykv --query '[].{name:name,kid:key.kid}' -o table
+  parameters:
+  - name: key_name
+    type: string
+    description: Key name
+  - name: protection
+    type: string
+    description: software or hsm
+  - name: permissions
+    type: string
+    description: Permission set (get, list, set, delete, wrapKey...)
+knowledge:
+- title: Key Vault Docs
+  type: documentation
+  source: https://learn.microsoft.com/en-us/azure/key-vault/
+  description: Secrets, keys, certificates, access policies
+- title: Azure CLI keyvault Reference
+  type: documentation
+  source: https://learn.microsoft.com/en-us/cli/azure/keyvault
+  description: az keyvault commands
+instructions: '# Azure Key Vault
+
+
+  ## What this skill does
+
+
+  Manages secrets, keys, and access policies in Azure Key Vault with the Azure CLI: vault lifecycle, secret
+  CRUD with expiry, key management, and RBAC/access policies.
+
+
+  ## When to use
+
+
+  - Centralizing secrets instead of .env files
+
+  - Storing encryption keys for a service
+
+  - Rotating credentials with versioned secrets
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Create a vault
+
+  az keyvault create --name mykv --resource-group rg
+
+
+  # Set and read a secret
+
+  az keyvault secret set --vault-name mykv --name db-password --value secret123
+
+  az keyvault secret show --vault-name mykv --name db-password --query ''value'' -o tsv
+
+
+  # Versioned rotation
+
+  az keyvault secret set --vault-name mykv --name api-key --value $(openssl rand -hex 32)
+
+
+  # Keys
+
+  az keyvault key create --vault-name mykv --name rsa-key --protection software
+
+
+  # Access policy
+
+  az keyvault set-policy --vault-name mykv --object-id <principal-id> --secret-permissions get list set
+  delete
+
+  ```
+
+
+  ## Testing
+
+
+  - Verify identity access with a managed identity + curl to the vault URI
+
+  - List secret versions to confirm rotation creates versions
+
+
+  ## Best practices
+
+
+  - Use managed identities over service principals where possible
+
+  - Set expiry dates on secrets and rotate proactively
+
+  - Restrict network access with vault firewall rules
+
+  - Log access via diagnostic settings to a Log Analytics workspace'
+examples:
+- input: Store the DB password in Key Vault
+  output: Creates the vault (if needed), sets the secret with an expiry, and shows how a service reads
+    it via az keyvault secret show with a managed identity policy.
+- input: Rotate our API key
+  output: Sets a new version of the api-key secret, confirms versions with secret list --include-managed,
+    and updates consumers.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: azure-key-vault.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-azure-key-vault
+  generic:
+    system_prompt: 'This is your domain: Azure Key Vault. You do it through vault-lifecycle: Create and
+      manage Key Vault instances. The commands are real, e.g. `az keyvault create --name mykv --resource-group
+      rg`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

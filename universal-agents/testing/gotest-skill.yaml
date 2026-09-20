@@ -1,0 +1,135 @@
+name: gotest
+display_name: gotest
+category: testing
+subcategory: general
+description: Runs Go tests with go test, covering race detection, coverage profiles, benchmarks, and focused
+  runs.
+version: 2.0.0
+tags:
+- testing
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: go-testing
+  description: Run Go tests with filters and verbosity.
+  commands:
+  - go test ./...
+  - go test -v ./internal/...
+  - go test -run TestOrderService ./...
+  - go test -count=1 ./...
+  - go test -short ./...
+  examples:
+  - go test ./...
+  - go test -run TestOrderService -v ./internal/orders
+  - go test -count=1 ./...
+  parameters:
+  - name: run
+    type: string
+    description: Test name regex filter
+  - name: count
+    type: number
+    description: Repeat count (1 disables cache)
+  - name: short
+    type: boolean
+    description: Skip long-running tests
+- name: race-and-coverage
+  description: Race detection and coverage profiles.
+  commands:
+  - go test -race ./...
+  - go test -coverprofile=coverage.out ./...
+  - go tool cover -func=coverage.out
+  - go tool cover -html=coverage.out
+  - go test -covermode=atomic ./...
+  examples:
+  - go test -race ./...
+  - go test -coverprofile=coverage.out ./... && go tool cover -func=coverage.out
+  - go tool cover -html=coverage.out
+  parameters:
+  - name: coverProfile
+    type: string
+    description: Coverage output file
+  - name: coverMode
+    type: string
+    description: 'Coverage mode: set, count, atomic'
+- name: benchmarks-and-vet
+  description: Benchmarks, profiling, and vet checks.
+  commands:
+  - go test -bench=. -benchmem ./...
+  - go test -bench=BenchmarkParse -benchtime=5s ./...
+  - go vet ./...
+  - go test -run=NONE -bench=. ./...
+  - go test -cpuprofile=cpu.out -bench=. ./...
+  examples:
+  - go test -bench=. -benchmem ./...
+  - go vet ./...
+  - go test -bench=BenchmarkParse -benchtime=5s
+  parameters:
+  - name: bench
+    type: string
+    description: Benchmark regex filter
+  - name: benchtime
+    type: string
+    description: Benchmark duration
+knowledge:
+- title: Testing in Go
+  type: documentation
+  source: https://pkg.go.dev/testing
+  description: Package testing reference
+- title: Go Testing Guide
+  type: documentation
+  source: https://go.dev/doc/tutorial/add-a-test
+  description: Writing and running Go tests tutorial
+- title: Go Test Flags
+  type: documentation
+  source: https://pkg.go.dev/cmd/go#hdr-Testing_flags
+  description: All testing flags for go test
+instructions: "# go test\n\nTesting Go code with the standard toolchain.\n\n## What This Skill Does\n\n\
+  - Runs unit and integration tests with filters\n- Detects data races with -race\n- Produces and visualizes\
+  \ coverage profiles\n- Runs benchmarks with memory stats\n\n## When to Use\n\n- Pre-merge test verification\n\
+  - Race condition debugging\n- Performance regression checks\n\n## Real Commands\n\n```bash\n# Basics\n\
+  \ go test ./...\ngo test -v ./internal/...\ngo test -run TestOrderService ./...\ngo test -count=1 ./...\n\
+  \n# Race detection\ngo test -race ./...\n\n# Coverage\ngo test -coverprofile=coverage.out ./...\ngo\
+  \ tool cover -func=coverage.out\ngo tool cover -html=coverage.out\n\n# Benchmarks\ngo test -bench=.\
+  \ -benchmem ./...\ngo test -bench=BenchmarkParse -benchtime=5s\n\n# Lint\ngo vet ./...\n```\n\n## Sample\
+  \ Test\n\n```go\nfunc TestParse(t *testing.T) {\n\tgot, err := Parse(\"42\")\n\tif err != nil {\n\t\t\
+  t.Fatal(err)\n\t}\n\tif got != 42 {\n\t\tt.Errorf(\"Parse() = %d, want 42\", got)\n\t}\n}\n```\n\n##\
+  \ Best Practices\n\n- Use table-driven tests with t.Run subtests\n- Run -race in CI; races are bugs\n\
+  - Set coverage gates via go tool cover -func\n- Use -count=1 to avoid cached results during debugging\n\
+  - Benchmark against a fixed revision for comparisons"
+examples:
+- input: Run all tests with race detection
+  output: Agent runs go test -race ./... and investigates any reported races with the stack traces.
+- input: Check test coverage of the parser
+  output: Agent runs go test -coverprofile=coverage.out, shows go tool cover -func output, and opens the
+    HTML report.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: gotest.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-gotest
+  generic:
+    system_prompt: 'This is your domain: gotest. You do it through go-testing: Run Go tests with filters
+      and verbosity. The commands are real, e.g. `go test ./...`. You answer with exact commands, not
+      abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,205 @@
+{
+  "name": "biome",
+  "display_name": "biome",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Formats and lints JavaScript/TypeScript with Biome, the fast Rust-based toolchain, including migrate from ESLint/Prettier.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "npx @biomejs/biome init",
+        "npx @biomejs/biome check src/",
+        "npx @biomejs/biome check --write src/",
+        "npx @biomejs/biome format --write src/",
+        "npx @biomejs/biome lint src/"
+      ],
+      "description": "Lint, format, and check code with Biome.",
+      "name": "biome-cli",
+      "examples": [
+        "npx @biomejs/biome check --apply src/",
+        "npx @biomejs/biome format --write --indent-style=space src/",
+        "npx @biomejs/biome check --staged"
+      ],
+      "parameters": [
+        {
+          "description": "Files or dirs to check",
+          "name": "paths",
+          "type": "string"
+        },
+        {
+          "description": "Apply fixes",
+          "name": "write",
+          "type": "boolean"
+        },
+        {
+          "description": "Check staged files only",
+          "name": "staged",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "npx @biomejs/biome migrate eslint",
+        "npx @biomejs/biome migrate prettier",
+        "npx @biomejs/biome migrate --write",
+        "npx @biomejs/biome rage"
+      ],
+      "description": "Migrate from ESLint and Prettier configs.",
+      "name": "biome-migrate",
+      "examples": [
+        "npx @biomejs/biome migrate eslint --write",
+        "npx @biomejs/biome rage --config"
+      ],
+      "parameters": [
+        {
+          "description": "eslint or prettier",
+          "name": "from",
+          "type": "string"
+        },
+        {
+          "name": "write",
+          "type": "boolean",
+          "description": "Write the migrated config to disk"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Biome Docs",
+      "description": "CLI, config, and rules reference",
+      "source": "https://biomejs.dev",
+      "type": "documentation"
+    },
+    {
+      "title": "Biome Migrate",
+      "description": "Migration recipes",
+      "source": "https://biomejs.dev/recipes/migrate-eslint-prettier/",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# Biome\n\nFast JS/TS formatter and linter in one tool.\n\n## When to Use\n\n- Replacing ESLint + Prettier with a single fast tool\n- New projects wanting zero-config defaults\n- Large repos where lint speed matters\n- Enforcing consistent formatting in CI\n\n## Commands\n\n```bash\n# Init\nnpx @biomejs/biome init\n\n# Check (lint + format)\nnpx @biomejs/biome check src/\nnpx @biomejs/biome check --write src/\n\n# Format only\nnpx @biomejs/biome format --write src/\n\n# Lint only\nnpx @biomejs/biome lint src/\n\n# Migrate from ESLint/Prettier\nnpx @biomejs/biome migrate eslint --write\nnpx @biomejs/biome migrate prettier\n\n# Diagnostics\nnpx @biomejs/biome rage\n```\n\n## Config Example\n\n```json\n{\n  \"$schema\": \"./node_modules/@biomejs/biome/configuration_schema.json\",\n  \"formatter\": { \"indentStyle\": \"space\", \"indentWidth\": 2 },\n  \"linter\": {\n    \"rules\": {\n      \"recommended\": true,\n      \"suspicious\": { \"noExplicitAny\": \"warn\" }\n    }\n  }\n}\n```\n\n## Best Practices\n\n- Use check --write in pre-commit, verify-only in CI\n- Keep the generated schema reference in biome.json\n- Run biome migrate when adopting from legacy configs\n- Scope rules per directory with overrides if needed\n- Treat lint errors as CI failures; use warns sparingly\n- Leverage --staged for fast pre-commit runs",
+  "examples": [
+    {
+      "input": "Replace ESLint+Prettier with Biome",
+      "output": "Agent runs migrate eslint and migrate prettier, reviews biome.json, and runs check --write across the repo."
+    },
+    {
+      "input": "Why is Biome failing in CI but not locally?",
+      "output": "Agent compares Biome versions, runs rage for diagnostics, and syncs the schema config."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "biome.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-biome"
+    },
+    "generic": {
+      "system_prompt": "You take the biome seat. You do it through biome-cli: Lint, format, and check code with Biome. The commands are real, e.g. `npx @biomejs/biome init`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "biome",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "biome-cli",
+        "name": "paths",
+        "type": "string",
+        "description": "Files or dirs to check"
+      },
+      {
+        "capability": "biome-cli",
+        "name": "write",
+        "type": "boolean",
+        "description": "Apply fixes"
+      },
+      {
+        "capability": "biome-cli",
+        "name": "staged",
+        "type": "boolean",
+        "description": "Check staged files only"
+      },
+      {
+        "capability": "biome-migrate",
+        "name": "from",
+        "type": "string",
+        "description": "eslint or prettier"
+      },
+      {
+        "capability": "biome-migrate",
+        "name": "write",
+        "type": "boolean",
+        "description": "Write the migrated config to disk"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/biome-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/biome-skill.yaml",
+    "checksum": "2821a0df7d4f2cda8f89733da33cd6b5448fef61bea862a79fa34ee64e3581f7"
+  }
+}

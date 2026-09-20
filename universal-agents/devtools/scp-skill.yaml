@@ -1,0 +1,164 @@
+name: scp
+display_name: scp
+category: devtools
+subcategory: general
+description: 'Copies files to and from remote hosts with scp: recursive dirs, custom ports/keys, and multiple
+  source files.'
+version: 2.0.0
+tags:
+- devtools
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- scp
+capabilities:
+- name: file-transfer
+  description: Copy files and directories between local and remote hosts.
+  commands:
+  - scp file.txt user@host:/home/user/
+  - scp -r project/ user@host:/srv/
+  - scp user@host:/var/log/app.log ./app.log
+  - scp file1.txt file2.txt user@host:/tmp/
+  - scp -P 2222 file.txt user@host:/tmp/
+  - scp -i ~/.ssh/id_ed25519 file.txt user@host:/tmp/
+  examples:
+  - scp file.txt user@host:/home/user/
+  - scp -r project/ user@host:/srv/
+  - scp -i ~/.ssh/id_ed25519 file.txt user@host:/tmp/
+  parameters:
+  - name: src
+    type: string
+    description: Source path (local or user@host:path)
+  - name: dest
+    type: string
+    description: Destination path
+  - name: port
+    type: integer
+    description: SSH port (-P)
+  - name: key
+    type: string
+    description: Identity file (-i)
+knowledge:
+- title: scp Manual (OpenBSD)
+  type: documentation
+  source: https://man.openbsd.org/scp
+  description: scp options and usage
+- title: scp Linux Manual
+  type: documentation
+  source: https://man7.org/linux/man-pages/man1/scp.1.html
+  description: Linux scp reference
+instructions: '# scp File Transfer
+
+
+  Copy files securely to and from remote machines.
+
+
+  ## What This Skill Does
+
+
+  - Copies single files and whole directories (-r)
+
+  - Supports custom ports, keys, and multiple sources
+
+  - Preserves permissions with -p
+
+  - Compresses on slow links with -C
+
+  - Fetches remote files to local paths
+
+
+  ## When to Use
+
+
+  - Quick file transfers without full rsync
+
+  - Pulling logs/configs from servers
+
+  - Pushing artifacts to hosts
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Basic
+
+  scp file.txt user@host:/home/user/
+
+  scp user@host:/var/log/app.log ./app.log
+
+
+  # Directories
+
+  scp -r project/ user@host:/srv/
+
+  scp -r user@host:/etc/nginx/ ./nginx-backup/
+
+
+  # Options
+
+  scp -P 2222 file.txt user@host:/tmp/
+
+  scp -i ~/.ssh/id_ed25519 file.txt user@host:/tmp/
+
+  scp -p file.txt user@host:/home/user/    # preserve mtime/perms
+
+  scp -C bigfile.tar user@host:/tmp/       # compress
+
+
+  # Multiple sources
+
+  scp file1.txt file2.txt dir/ user@host:/tmp/
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use -P for the remote SSH port (lowercase -p means preserve)
+
+  - Prefer rsync for directories with many files (resume support)
+
+  - Verify remote paths are absolute to avoid surprises
+
+  - Use -C for large text files over slow links
+
+  - Batch with scp -r and a single host for scriptable deploys'
+examples:
+- input: Push the deploy package to staging
+  output: Agent scps the tar with a key file and custom port, verifying checksums after
+- input: Pull today's nginx logs
+  output: Agent fetches the log directory recursively with preserve flags
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: scp.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-scp
+  generic:
+    system_prompt: 'You work scp hands-on. You do it through file-transfer: Copy files and directories
+      between local and remote hosts. The commands are real, e.g. `scp file.txt user@host:/home/user/`.
+      You answer with exact commands, not abstractions, and flag anything you have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

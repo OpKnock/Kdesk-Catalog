@@ -1,0 +1,180 @@
+{
+  "name": "ddos-protection",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "security",
+  "description": "Mitigates DDoS attacks: rate limiting, firewall rules, CDN shielding, and attack simulation.",
+  "keywords": [
+    "ddos",
+    "rate-limiting",
+    "cdn",
+    "mitigation"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ddos-protection.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-ddos-protection"
+    },
+    "generic": {
+      "system_prompt": "You work ddos-protection hands-on. You do it through ddos-mitigation: Configure rate limits, firewall rules, and verify mitigation. The commands are real, e.g. `iptables -A INPUT -p tcp --dport 80 -m connlimit --connlimit-above 100 -j DROP`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "ddos-mitigation",
+      "description": "Configure rate limits, firewall rules, and verify mitigation",
+      "commands": [
+        "iptables -A INPUT -p tcp --dport 80 -m connlimit --connlimit-above 100 -j DROP",
+        "nginx -t && nginx -s reload",
+        "ab -n 10000 -c 100 https://app.example.com/",
+        "tcpdump -i eth0 -c 5000 -w /tmp/ddos.pcap",
+        "curl -s -X POST 'https://api.cloudflare.com/client/v4/zones/$ZONE/rate_limits' -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' -d '{\"match\":{\"request\":{\"url\":\"*\"}}}'"
+      ],
+      "examples": [
+        "iptables -L -n -v | head -30",
+        "wrk -t8 -c500 -d60s https://app.example.com/ --latency",
+        "ufw limit ssh comment 'rate limit ssh'"
+      ],
+      "parameters": [
+        {
+          "name": "connlimit-above",
+          "type": "integer",
+          "description": "Connection threshold per source IP"
+        },
+        {
+          "name": "pattern",
+          "type": "string",
+          "description": "tcpdump filter pattern"
+        },
+        {
+          "name": "count",
+          "type": "integer",
+          "description": "Packet count to capture"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "aws-shield",
+    "cloudflare",
+    "nginx",
+    "varnish"
+  ],
+  "tools": [
+    "aws-shield",
+    "cloudflare",
+    "nginx",
+    "varnish",
+    "akamai"
+  ],
+  "examples": [
+    {
+      "input": "We're under attack right now",
+      "output": "Enables edge rate limits, blocks source IPs via firewall, validates origin load, and documents the incident"
+    },
+    {
+      "input": "Harden before launch",
+      "output": "Configures CDN shielding, nginx rate limits, connlimit rules, and runs ab/wrk verification"
+    }
+  ],
+  "instructions": "# DDoS Protection\n\nDefends services against volumetric and application-layer attacks: edge shielding,\nrate limits, and firewall rules.\n\n## When to Use\n\n- During an active attack\n- Hardening before launch (prep)\n- Validating that mitigation configs actually work\n\n## Real Commands\n\n```bash\n# Edge: enable proxy/CDN shielding and rate limits\n# (via Cloudflare API)\ncurl -s -X POST 'https://api.cloudflare.com/client/v4/zones/$ZONE/rate_limits' \\\n  -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' \\\n  -d '{\"match\": {\"request\": {\"url\": \"*\"}}, \"threshold\": 100, \"period\": 60, \"action\": {\"mode\": \"simulate\"}}'\n\n# Host: connection limit at the firewall\nsudo iptables -A INPUT -p tcp --dport 443 -m connlimit --connlimit-above 100 -j DROP\n\n# Nginx rate limit\nsudo nginx -t && sudo nginx -s reload\n\n# Validate: simulate traffic\nsudo ab -n 10000 -c 100 https://app.example.com/\n\n# Capture evidence\nsudo tcpdump -i eth0 -c 5000 -w /tmp/ddos.pcap\n```\n\n## Nginx Rate Limit Config\n\n```nginx\nlimit_req_zone $binary_remote_addr zone=api:10m rate=20r/s;\nserver {\n  location /api/ {\n    limit_req zone=api burst=40 nodelay;\n  }\n}\n```\n\n## Best Practices\n\n- Put a CDN/edge in front; never expose origin IPs\n- Rate limit per IP and per user (auth token)\n- Use `simulate` actions first, then enforce\n- Keep origin whitelisted to the CDN only\n- Have a runbook: edge rules + firewall + emergency scaling\n\n## Example Response\n\nDuring an attack: identifies the traffic signature from pcap, applies edge + host\nmitigations, and verifies origin pressure drops.",
+  "display_name": "ddos-protection",
+  "knowledge": [
+    {
+      "title": "OWASP DoS cheat sheet",
+      "type": "documentation",
+      "source": "https://cheatsheetseries.owasp.org/cheatsheets/Denial_of_Service_Cheat_Sheet.html",
+      "description": "Application-layer DoS defenses and rate limiting"
+    },
+    {
+      "title": "Cloudflare DDoS protection",
+      "type": "documentation",
+      "source": "https://www.cloudflare.com/ddos/",
+      "description": "Edge DDoS mitigation concepts"
+    }
+  ],
+  "id": "ddos-protection",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "ddos-mitigation",
+        "name": "connlimit-above",
+        "type": "integer",
+        "description": "Connection threshold per source IP"
+      },
+      {
+        "capability": "ddos-mitigation",
+        "name": "pattern",
+        "type": "string",
+        "description": "tcpdump filter pattern"
+      },
+      {
+        "capability": "ddos-mitigation",
+        "name": "count",
+        "type": "integer",
+        "description": "Packet count to capture"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "aws-shield",
+    "cloudflare",
+    "nginx",
+    "varnish"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ddos-protection/skill/ddos-protection.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ddos-protection/skill/ddos-protection.yaml",
+    "checksum": "02781ce7de3fe9a8efc61e957ef3a0b6b29fa924c86775580ac54e1612e061eb"
+  }
+}

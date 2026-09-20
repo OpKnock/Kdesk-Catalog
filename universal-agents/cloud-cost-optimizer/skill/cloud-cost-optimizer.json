@@ -1,0 +1,216 @@
+{
+  "name": "cloud-cost-optimizer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "finops",
+  "description": "Optimizes cloud spend with cost visibility, rightsizing, savings plans, and budget alerting on AWS, GCP, and Azure.",
+  "keywords": [
+    "cloud-cost",
+    "rightsizing",
+    "savings-plans"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cloud-cost-optimizer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cloud-cost-optimizer"
+    },
+    "generic": {
+      "system_prompt": "You take the cloud-cost-optimizer seat. You do it through cost-visibility: Query and export cloud costs. The commands are real, e.g. `aws ce get-cost-and-usage --time-period Start=2026-08-01,End=2026-08-10 --granularity...`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "commands": [
+        "aws ce get-cost-and-usage --time-period Start=2026-08-01,End=2026-08-10 --granularity DAILY --metrics UnblendedCost",
+        "aws ce get-cost-and-usage --time-period Start=2026-08-01,End=2026-08-10 --granularity MONTHLY --metrics UnblendedCost --group-by Type=DIMENSION,Key=SERVICE",
+        "gcloud billing projects describe my-project --billing-account 0X1A2B",
+        "az cost-management query --type ActualCost --scope \"/subscriptions/xxx\" --timeframe MonthToDate"
+      ],
+      "description": "Query and export cloud costs.",
+      "name": "cost-visibility",
+      "examples": [
+        "aws ce get-cost-and-usage --time-period Start=2026-08-01,End=2026-08-10 --granularity DAILY --metrics UnblendedCost --group-by Type=DIMENSION,Key=USAGE_TYPE",
+        "gcloud billing accounts list",
+        "aws ce get-savings-plans-utilization --time-period Start=2026-08-01,End=2026-08-10"
+      ],
+      "parameters": [
+        {
+          "description": "Service to group costs by",
+          "name": "service",
+          "type": "string"
+        },
+        {
+          "description": "Start/End date range",
+          "name": "period",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "aws ec2 describe-instances --filters Name=instance-state-name,Values=running --query \"Reservations[*].Instances[*].[InstanceId,InstanceType]\"",
+        "kubectl top node",
+        "kubectl top pod -l app=myapp",
+        "docker stats --no-stream",
+        "gcloud compute instances list"
+      ],
+      "description": "Find idle and oversized resources.",
+      "name": "rightsizing",
+      "examples": [
+        "kubectl get hpa -A",
+        "aws rds describe-db-instances --query \"DBInstances[*].[DBInstanceIdentifier,DBInstanceClass]\"",
+        "gcloud compute instances list --format=\"table(name,zone,status,machineType)\""
+      ],
+      "parameters": [
+        {
+          "description": "Resource type to audit",
+          "name": "resource",
+          "type": "string"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Kubernetes namespace filter"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "aws-cli",
+    "gcloud",
+    "az-cli",
+    "terraform",
+    "infracost"
+  ],
+  "tools": [
+    "aws-cli",
+    "gcloud",
+    "az-cli",
+    "terraform",
+    "infracost",
+    "kubecost"
+  ],
+  "examples": [
+    {
+      "input": "My AWS bill doubled this month",
+      "output": "Agent pulls service breakdown with aws ce, checks for new large instances, and compares against the previous month."
+    },
+    {
+      "input": "Which instances should I downsize?",
+      "output": "Agent compares kubectl top pod utilization or CloudWatch CPU metrics to instance size and rightsizes with headroom."
+    }
+  ],
+  "instructions": "# Cloud Cost Optimizer\n\nReduce cloud spend without breaking workloads.\n\n## When to Use\n\n- Monthly bills creeping up without traffic growth\n- Rightsizing oversized instances and idle clusters\n- Setting budgets before surprises\n- Evaluating savings plans vs on-demand pricing\n\n## Method\n\n1. Get spend breakdown by service and account\n2. Find idle/oversized resources\n3. Rightsize or downscale\n4. Buy savings plans for steady usage\n5. Set budgets and alerts for every environment\n\n## Commands\n\n```bash\n# AWS cost explorer\naws ce get-cost-and-usage --time-period Start=2026-08-01,End=2026-08-10 \\\n  --granularity MONTHLY --metrics UnblendedCost \\\n  --group-by Type=DIMENSION,Key=SERVICE\n\n# Savings plan utilization\naws ce get-savings-plans-utilization --time-period Start=2026-08-01,End=2026-08-10\n\n# GCP\ngcloud billing projects describe my-project --billing-account 0X1A2B\n\n# Azure\naz cost-management query --type ActualCost \\\n  --scope \"/subscriptions/xxx\" --timeframe MonthToDate\n\n# Rightsizing signals\nkubectl top node\nkubectl top pod -l app=myapp\naws ec2 describe-instances --filters Name=instance-state-name,Values=running\n```\n\n## Best Practices\n\n- Tag resources with owner and cost-center; enforce in CI\n- Downscale after hours (stop dev instances) where allowed\n- Use spot/preemptible for interruptible workloads\n- Review committed-use discounts quarterly as usage changes\n- Set budget alerts at 50/80/100% thresholds\n- Kill zombie resources: stale buckets, unused volumes, orphaned IPs",
+  "display_name": "cloud-cost-optimizer",
+  "knowledge": [
+    {
+      "title": "AWS Cost Management",
+      "description": "Cost explorer, budgets, savings plans",
+      "source": "https://docs.aws.amazon.com/cost-management/",
+      "type": "documentation"
+    },
+    {
+      "title": "GCP Cost Management",
+      "description": "Billing, budgets, and recommendations",
+      "source": "https://cloud.google.com/docs/cost-management",
+      "type": "documentation"
+    },
+    {
+      "title": "Azure Cost Optimization",
+      "description": "Cost management and advisor",
+      "source": "https://learn.microsoft.com/azure/cost-management-billing/",
+      "type": "documentation"
+    }
+  ],
+  "id": "cloud-cost-optimizer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cost-visibility",
+        "name": "service",
+        "type": "string",
+        "description": "Service to group costs by"
+      },
+      {
+        "capability": "cost-visibility",
+        "name": "period",
+        "type": "string",
+        "description": "Start/End date range"
+      },
+      {
+        "capability": "rightsizing",
+        "name": "resource",
+        "type": "string",
+        "description": "Resource type to audit"
+      },
+      {
+        "capability": "rightsizing",
+        "name": "namespace",
+        "type": "string",
+        "description": "Kubernetes namespace filter"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "aws-cli",
+    "gcloud",
+    "az-cli",
+    "terraform",
+    "infracost"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud-cost-optimizer/skill/cloud-cost-optimizer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud-cost-optimizer/skill/cloud-cost-optimizer.yaml",
+    "checksum": "48b9bf0f1fcd82ab9b102f3c4e5826ec94d5fdb6a0906b84f191eb597da054af"
+  }
+}

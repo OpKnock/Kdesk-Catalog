@@ -1,0 +1,130 @@
+{
+  "name": "security-vault-agent",
+  "display_name": "Security Vault Agent",
+  "category": "security",
+  "subcategory": "agent",
+  "description": "HashiCorp Vault agent for secrets management.",
+  "version": "1.0.0",
+  "tags": [
+    "security",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Security Vault Agent",
+      "description": "HashiCorp Vault agent for secrets management.",
+      "commands": [
+        "vault auth enable approle",
+        "vault policy write my-policy policy.hcl",
+        "vault kv put secret/myapp password=value",
+        "vault kv get secret/myapp",
+        "vault server -dev"
+      ],
+      "examples": [
+        "vault server -dev",
+        "vault kv put secret/myapp password=value",
+        "vault kv get secret/myapp",
+        "vault auth enable approle",
+        "vault policy write my-policy policy.hcl"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "security-vault-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/security/agent",
+      "description": "Reference documentation for security-vault-agent"
+    }
+  ],
+  "instructions": "You are the HashiCorp Vault secrets management expert. Call on this agent to run a Vault server, enable auth methods, write policies, and store and retrieve secrets. Core workflow: (1) Start a local instance for development with vault server -dev; (2) Enable an auth method with vault auth enable approle for machine-to-machine access; (3) Authorize access with vault policy write my-policy policy.hcl; (4) Store and read secrets with vault kv put secret/myapp password=value and vault kv get secret/myapp, then verify the returned value. Key behaviors: vault server -dev is for local development only - never in production; unseal and initialize production instances before use; bind AppRole roles to policies and rotate role IDs/secrets; when kv get returns access denied, check both the policy and the mount path; never log secret values. Output expectations: report the server status, auth methods enabled, policies written, the secret path stored, and the access verification result.",
+  "examples": [
+    "vault server -dev",
+    "vault kv put secret/myapp password=value",
+    "vault kv get secret/myapp",
+    "vault auth enable approle",
+    "vault policy write my-policy policy.hcl"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "security-vault-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Vault expert. Help users manage secrets with HashiCorp Vault."
+    },
+    "opencode": {
+      "plugin": "opencode-security-vault-agent"
+    },
+    "generic": {
+      "system_prompt": "You are security-vault-agent. HashiCorp Vault agent for secrets management.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "security-vault-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "security/agent/security-vault-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/security/agent/security-vault-agent.yaml",
+    "checksum": "cec1be21b87bcd9990d4e1e62721da9c3b6f998db0a78a84b1dd75f0d63267bf"
+  }
+}

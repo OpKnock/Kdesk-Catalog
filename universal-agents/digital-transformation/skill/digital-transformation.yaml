@@ -1,0 +1,217 @@
+name: digital-transformation
+version: 2.0.0
+type: skill
+category: strategy
+description: 'Drives digital transformation with real tooling: dbt analytics pipelines, workflow orchestration
+  with Airflow, and data platform migrations.'
+keywords:
+- digital-transformation
+- automation
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: digital-transformation.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-digital-transformation
+  generic:
+    system_prompt: 'You work digital-transformation hands-on. You do it through analytics-engineering:
+      Build and test analytics pipelines with dbt. The commands are real, e.g. `dbt init analytics_project`.
+      You verify each step you report and stay honest about what you have not run.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: analytics-engineering
+  description: Build and test analytics pipelines with dbt.
+  commands:
+  - dbt init analytics_project
+  - dbt run --select staging
+  - dbt test --select tag:core
+  - dbt build --select +marts
+  - dbt docs generate
+  - dbt compile --select models/marts
+  examples:
+  - dbt run --select staging
+  - dbt test --select tag:core
+  - dbt docs generate
+  parameters:
+  - name: select
+    type: string
+    description: Node selection, e.g. staging, +marts
+  - name: project
+    type: string
+    description: Project name for dbt init
+- name: workflow-orchestration
+  description: Schedule and operate data workflows with Airflow and Dagster.
+  commands:
+  - airflow db migrate
+  - airflow users create --username admin --firstname A --lastname U --role Admin --email a@b.c
+  - airflow dags list
+  - airflow dags trigger etl_pipeline
+  - airflow tasks test etl_pipeline extract 2026-08-10
+  - dagster job list
+  examples:
+  - airflow dags list
+  - airflow dags trigger etl_pipeline
+  - airflow tasks test etl_pipeline extract 2026-08-10
+  parameters:
+  - name: dag-id
+    type: string
+    description: Airflow DAG id
+  - name: task-id
+    type: string
+    description: Task id to test
+prerequisites:
+- aws
+- terraform
+- kubernetes
+- github
+tools:
+- aws
+- terraform
+- kubernetes
+- github
+- jira
+examples:
+- input: Replace a spreadsheet reporting process
+  output: Agent designs a dbt pipeline with tests, an Airflow schedule, and a dashboard view
+- input: Measure adoption of the new platform
+  output: Agent defines metrics models and a dashboard query plan, then generates docs
+instructions: '# Digital Transformation Engineering
+
+
+  Modernize operations with data platforms, workflow automation, and measurable adoption.
+
+
+  ## What This Skill Does
+
+
+  - Builds analytics engineering stacks with dbt
+
+  - Orchestrates data workflows with Airflow/Dagster
+
+  - Models adoption metrics and KPIs
+
+  - Migrates legacy pipelines to modern warehouses
+
+  - Automates reporting with dashboards
+
+
+  ## When to Use
+
+
+  - Moving an org from spreadsheets to a data platform
+
+  - Standardizing ETL/ELT with versioned models
+
+  - Building executive dashboards on trusted data
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # dbt
+
+  dbt init analytics_project
+
+  dbt run --select staging
+
+  dbt test --select tag:core
+
+  dbt build --select +marts
+
+  dbt docs generate && dbt docs serve
+
+  dbt compile --select models/marts
+
+
+  # Airflow
+
+  airflow db migrate
+
+  airflow users create --username admin --firstname A --lastname U --role Admin --email a@b.c
+
+  airflow dags list
+
+  airflow dags trigger etl_pipeline
+
+  airflow tasks test etl_pipeline extract 2026-08-10
+
+  airflow scheduler
+
+
+  # Dagster
+
+  dagster job list
+
+  dagster materialize -m myrepo
+
+  dagit
+
+  ```
+
+
+  ## Transformation Roadmap
+
+
+  1. Inventory current processes and data sources
+
+  2. Stand up a warehouse + dbt models (staging -> marts)
+
+  3. Orchestrate dependencies with Airflow DAGs
+
+  4. Define KPIs and dashboards
+
+  5. Train teams; measure adoption monthly
+
+
+  ## Best Practices
+
+
+  - Model for trust: test everything with dbt tests
+
+  - Orchestrate with idempotent tasks and retries
+
+  - Version data definitions like code
+
+  - Start with one high-value process; expand after measurable wins
+
+  - Track adoption metrics to justify the platform'
+display_name: digital-transformation
+knowledge:
+- title: dbt Documentation
+  type: documentation
+  source: https://docs.getdbt.com/
+  description: dbt models, tests, docs, and CLI
+- title: Apache Airflow Docs
+  type: documentation
+  source: https://airflow.apache.org/docs/
+  description: Airflow core, operators, and CLI
+- title: AWS Digital Transformation
+  type: documentation
+  source: https://aws.amazon.com/executive-insights/content/digital-transformation/
+  description: Digital transformation guidance and patterns

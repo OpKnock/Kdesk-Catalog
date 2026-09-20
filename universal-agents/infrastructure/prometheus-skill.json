@@ -1,0 +1,224 @@
+{
+  "name": "prometheus",
+  "display_name": "prometheus",
+  "category": "infrastructure",
+  "subcategory": "general",
+  "description": "Operates Prometheus: config validation with promtool, recording rules, and alert rules for production monitoring.",
+  "version": "2.0.0",
+  "tags": [
+    "infrastructure"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "promtool"
+  ],
+  "capabilities": [
+    {
+      "name": "promtool",
+      "description": "Validate and test Prometheus configuration and rules.",
+      "commands": [
+        "promtool check config prometheus.yml",
+        "promtool check rules rules.yml",
+        "promtool test rules test.yml",
+        "promtool check metrics /tmp/metrics.txt",
+        "promtool config routes prometheus.yml"
+      ],
+      "examples": [
+        "promtool check config prometheus.yml --lint=error",
+        "promtool test rules tests/rules_test.yml",
+        "promtool check rules rules/*.yml --strict"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "prometheus.yml to validate"
+        },
+        {
+          "name": "rules",
+          "type": "string",
+          "description": "Rules file(s) to validate"
+        },
+        {
+          "name": "test",
+          "type": "string",
+          "description": "Rules test file with scenarios"
+        }
+      ]
+    },
+    {
+      "name": "rules",
+      "description": "Write recording and alerting rules with tests.",
+      "commands": [
+        "curl -s http://localhost:9090/api/v1/rules | jq '.data.groups[] | {name, rules: [.rules[].name]}'",
+        "curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=up'",
+        "curl -s http://localhost:9090/api/v1/alerts | jq '.data.alerts[] | {labels: .labels.alertname, state}'",
+        "promtool tsdb list /var/lib/prometheus",
+        "curl -s http://localhost:9090/api/v1/status/tsdb | jq '.data'"
+      ],
+      "examples": [
+        "curl -s http://localhost:9090/api/v1/rules | jq '.data.groups | length'",
+        "curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=rate(http_requests_total[5m])'",
+        "promtool tsdb list /var/lib/prometheus | head"
+      ],
+      "parameters": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "PromQL expression"
+        },
+        {
+          "name": "tsdb-path",
+          "type": "string",
+          "description": "Local TSDB directory"
+        },
+        {
+          "name": "rules-file",
+          "type": "string",
+          "description": "Rules yaml path"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Prometheus Docs",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/getting_started/",
+      "description": "Configuration, scrape, and query basics"
+    },
+    {
+      "title": "promtool",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/command-line/promtool/",
+      "description": "check config, check rules, test rules"
+    },
+    {
+      "title": "Recording rules",
+      "type": "documentation",
+      "source": "https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/",
+      "description": "Rule syntax and best practices"
+    }
+  ],
+  "instructions": "# Prometheus\n\nRun Prometheus with validated configs and tested rules.\n\n## When to Use\n\n- Setting up scrape targets and retention\n- Adding recording rules for expensive queries\n- Alerting rules reviewed before deploy\n\n## Validate everything\n\n```bash\npromtool check config prometheus.yml --lint=error\npromtool check rules rules.yml --strict\n```\n\n## Recording rules\n\n```yaml\ngroups:\n  - name: api-usage\n    interval: 1m\n    rules:\n      - record: job:http_requests:rate5m\n        expr: sum by (job) (rate(http_requests_total[5m]))\n```\n\nRecording rules precompute heavy queries for dashboards.\n\n## Alert rules\n\n```yaml\ngroups:\n  - name: availability\n    rules:\n      - alert: ApiDown\n        expr: up{job=\"api\"} == 0\n        for: 2m\n        labels: { severity: critical }\n        annotations:\n          summary: 'API {{ $labels.instance }} is down'\n```\n\n## Test rules\n\n```yaml\nrule_files:\n  - rules.yml\nevaluation_interval: 1m\ntests:\n  - interval: 1m\n    input_series:\n      - series: 'up{job=\"api\"}'\n        values: '0+0x30'\n    alert_rule_test:\n      - eval_time: 3m\n        alertname: ApiDown\n        exp_alerts: []\n```\n\n```bash\npromtool test rules tests/rules_test.yml\n```\n\n## Live inspection\n\n```bash\ncurl -s http://localhost:9090/api/v1/alerts | jq '.data.alerts[] | {alertname: .labels.alertname, state}'\ncurl -s http://localhost:9090/api/v1/rules | jq '.data.groups | length'\n```\n\n## Best practices\n\n- Add `for:` durations to suppress transient alerts.\n- Cap alert labels; too many produce notification storms.\n- Test every new rule before merge.\n- Keep retention and storage sizing reviewed quarterly.\n\n## Testing\n\n```bash\npromtool check config prometheus.yml\npromtool test rules tests/rules_test.yml\n```\n\nBoth run in CI on every config change.",
+  "examples": [
+    {
+      "input": "Add an alert when the API is down for 2 minutes.",
+      "output": "Adds the ApiDown alert rule with for: 2m, tests it with promtool test rules, and checks config."
+    },
+    {
+      "input": "The rules file fails promtool - fix it.",
+      "output": "Runs promtool check rules --strict, identifies the syntax issue, fixes it, and re-validates."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "prometheus.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-prometheus"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: prometheus. You do it through promtool: Validate and test Prometheus configuration and rules. The commands are real, e.g. `promtool check config prometheus.yml`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "prometheus",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "promtool",
+        "name": "config",
+        "type": "string",
+        "description": "prometheus.yml to validate"
+      },
+      {
+        "capability": "promtool",
+        "name": "rules",
+        "type": "string",
+        "description": "Rules file(s) to validate"
+      },
+      {
+        "capability": "promtool",
+        "name": "test",
+        "type": "string",
+        "description": "Rules test file with scenarios"
+      },
+      {
+        "capability": "rules",
+        "name": "query",
+        "type": "string",
+        "description": "PromQL expression"
+      },
+      {
+        "capability": "rules",
+        "name": "tsdb-path",
+        "type": "string",
+        "description": "Local TSDB directory"
+      },
+      {
+        "capability": "rules",
+        "name": "rules-file",
+        "type": "string",
+        "description": "Rules yaml path"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "promtool"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "infrastructure/prometheus-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/infrastructure/prometheus-skill.yaml",
+    "checksum": "bb27e959aab2f346e61459bc7c9ec0dba60e30bb7ce227adb0d6df86a5e26212"
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "name": "cost-optimization-engineer",
+  "display_name": "Cost Optimization Engineer",
+  "category": "cloud",
+  "subcategory": "finops",
+  "description": "Agent for optimizing cloud costs with resource rightsizing, reservations, and spot instances.",
+  "version": "1.0.0",
+  "tags": [
+    "cost-optimization",
+    "rightsizing",
+    "spot-instances",
+    "reservations"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "cost-optimization",
+      "description": "Optimize cloud costs",
+      "commands": [
+        "aws-cost-explorer",
+        "infracost",
+        "kubecost"
+      ],
+      "examples": [
+        "Cost Explorer: aws ce get-cost-and-usage --time-period Start=2024-01-01",
+        "Infracost: infracost breakdown --path .",
+        "Kubecost: kubecost cost-analyzer --namespace cost-analyzer"
+      ],
+      "parameters": [
+        {
+          "name": "optimization_type",
+          "type": "string",
+          "description": "Type: rightsizing, reserved, spot, cleanup"
+        },
+        {
+          "name": "provider",
+          "type": "string",
+          "description": "Provider: aws, gcp, azure"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "Title": "AWS Cost Optimization",
+      "type": "documentation",
+      "source": "https://docs.aws.amazon.com/cost-management/",
+      "description": "AWS cost management"
+    },
+    {
+      "Title": "FinOps Framework",
+      "type": "tutorial",
+      "source": "https://finops.org/framework/",
+      "description": "FinOps Foundation"
+    }
+  ],
+  "instructions": "You are a cost optimization specialist. Help users:\n1. Analyze cloud spend\n2. Rightsize resources\n3. Use reservations\n4. Leverage spot instances\n5. Set budgets\n\nAlways recommend regular cost reviews.\n",
+  "examples": [
+    {
+      "input": "Reduce costs",
+      "output": "I'll analyze and optimize your cloud costs..."
+    },
+    {
+      "input": "Rightsize",
+      "output": "I'll identify and resize over-provisioned resources..."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "cost-optimization-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-cost-optimization"
+    },
+    "generic": {
+      "system_prompt": "You are a cost optimization expert. Help users reduce cloud costs with rightsizing and reservations.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "cost-optimization-engineer",
+  "type": "agent",
+  "skills": [
+    "cloud-cost-optimizer",
+    "cost-optimization",
+    "infracost",
+    "terraform-module-builder"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "cost-optimization",
+        "name": "optimization_type",
+        "type": "string",
+        "description": "Type: rightsizing, reserved, spot, cleanup"
+      },
+      {
+        "capability": "cost-optimization",
+        "name": "provider",
+        "type": "string",
+        "description": "Provider: aws, gcp, azure"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "cloud/agent/cost-optimization-engineer.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/cloud/agent/cost-optimization-engineer.yaml",
+    "checksum": "da86df317b7622b5c87a12e7909377ae7eeb375c4460385cf99d9a519194ee00"
+  }
+}

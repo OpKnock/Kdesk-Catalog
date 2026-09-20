@@ -1,0 +1,204 @@
+{
+  "name": "datadog-logs",
+  "display_name": "Datadog Logs",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Datadog Log Management skill: ingest, search, aggregate, and manage log pipelines and indexes through the real Datadog API v1/v2.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "log-search",
+      "description": "Search and aggregate logs with the Datadog Logs Search API and ingest logs with the intake API",
+      "commands": [
+        "curl -X POST \"https://api.datadoghq.com/api/v2/logs/events/search\" -H \"Content-Type: application/json\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" -d @search.json",
+        "curl -X POST \"https://api.datadoghq.com/api/v2/logs/events/aggregate\" -H \"Content-Type: application/json\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" -d @aggregate.json",
+        "curl -s -X POST \"https://api.datadoghq.com/api/v2/logs/events/search\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" -d '{\"filter\":{\"query\":\"service:api status:error\",\"from\":\"now-1h\"}}' | jq '.data[].attributes.attributes.message'",
+        "curl -X POST \"https://http-intake.logs.datadoghq.com/api/v2/logs\" -H \"Content-Type: application/json\" -H \"DD-API-KEY: $DD_API_KEY\" -d @logs.json"
+      ],
+      "examples": [
+        "curl -X POST \"https://http-intake.logs.datadoghq.com/api/v2/logs\" -H \"Content-Type: application/json\" -H \"DD-API-KEY: $DD_API_KEY\" -d @logs.json",
+        "curl -s -X POST \"https://api.datadoghq.com/api/v2/logs/events/search\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" -d '{\"filter\":{\"query\":\"service:checkout duration:>500\"}}' | jq '.meta.page'",
+        "curl -s -X POST \"https://api.datadoghq.com/api/v2/logs/events/aggregate\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" -d '{\"compute\":[{\"aggregation\":\"count\"}],\"group_by\":[{\"facet\":\"status\"}]}' | jq '.data.buckets'"
+      ],
+      "parameters": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "Datadog Log Search query, e.g. service:api status:error"
+        },
+        {
+          "name": "from",
+          "type": "string",
+          "description": "Start of the time window, e.g. now-1h"
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "description": "End of the time window, e.g. now"
+        }
+      ]
+    },
+    {
+      "name": "log-pipelines",
+      "description": "Manage log processing pipelines, processors, and indexes via the Logs Configuration API",
+      "commands": [
+        "curl -X GET \"https://api.datadoghq.com/api/v1/logs/config/pipelines\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\"",
+        "curl -X POST \"https://api.datadoghq.com/api/v1/logs/config/pipelines\" -H \"Content-Type: application/json\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" -d @pipeline.json",
+        "curl -X DELETE \"https://api.datadoghq.com/api/v1/logs/config/pipelines/PIPELINE_ID\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\"",
+        "curl -X GET \"https://api.datadoghq.com/api/v1/logs/config/indexes\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\""
+      ],
+      "examples": [
+        "curl -X POST \"https://api.datadoghq.com/api/v1/logs/config/pipelines\" -H \"Content-Type: application/json\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" -d '{\"name\":\"Parse Nginx\",\"filter\":{\"query\":\"source:nginx\"}}'",
+        "curl -X GET \"https://api.datadoghq.com/api/v1/logs/config/pipelines\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" | jq '.pipelines[].name'",
+        "curl -X DELETE \"https://api.datadoghq.com/api/v1/logs/config/pipelines/abc123\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\""
+      ],
+      "parameters": [
+        {
+          "name": "pipeline_id",
+          "type": "string",
+          "description": "ID of the log pipeline to delete"
+        },
+        {
+          "name": "filter_query",
+          "type": "string",
+          "description": "Query that selects which logs the pipeline processes"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Datadog Logs Documentation",
+      "type": "documentation",
+      "source": "https://docs.datadoghq.com/logs/",
+      "description": "Official docs for log ingestion, search, aggregation, pipelines, and indexes"
+    },
+    {
+      "title": "Datadog Logs API",
+      "type": "documentation",
+      "source": "https://docs.datadoghq.com/api/latest/logs/",
+      "description": "API reference for the Logs Search, Logs Aggregate, and Logs Configuration endpoints"
+    }
+  ],
+  "instructions": "# Datadog Logs\n\nCollect, search, aggregate, and process application logs with the real Datadog API.\n\n## When to Use\n\n- Ingesting application logs into Datadog\n- Searching logs for errors, latency, or specific attributes\n- Aggregating logs for counts and trends\n- Building parsing pipelines and managing indexes\n\n## Setup\n\n```bash\nexport DD_API_KEY=\"your-api-key\"\nexport DD_APP_KEY=\"your-application-key\"\n# Datadog site defaults to US1; for EU use https://api.datadoghq.eu\nexport DD_SITE=\"datadoghq.com\"\n```\n\n## Ingest Logs\n\n```bash\n# Ingest JSON logs through the intake endpoint\ncurl -X POST \"https://http-intake.logs.datadoghq.com/api/v2/logs\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"DD-API-KEY: $DD_API_KEY\" \\\n  -d '{\"ddsource\":\"api\",\"ddtags\":\"env:prod,team:payments\",\"message\":\"payment failed\",\"service\":\"checkout\",\"status\":\"error\"}'\n```\n\n## Search Logs\n\n```bash\n# Search last hour of errors\ncurl -s -X POST \"https://api.datadoghq.com/api/v2/logs/events/search\" \\\n  -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" \\\n  -d '{\"filter\":{\"query\":\"service:api status:error\",\"from\":\"now-1h\"},\"page\":{\"limit\":50}}' | jq '.data[].attributes.attributes.message'\n\n# Aggregate error count by service\ncurl -s -X POST \"https://api.datadoghq.com/api/v2/logs/events/aggregate\" \\\n  -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" \\\n  -d '{\"compute\":[{\"aggregation\":\"count\"}],\"group_by\":[{\"facet\":\"service\"}]}'\n```\n\n## Pipelines\n\n```bash\n# List pipelines\ncurl -X GET \"https://api.datadoghq.com/api/v1/logs/config/pipelines\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\"\n# Create a pipeline\ncurl -X POST \"https://api.datadoghq.com/api/v1/logs/config/pipelines\" \\\n  -H \"Content-Type: application/json\" -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" \\\n  -d '{\"name\":\"Parse Nginx\",\"filter\":{\"query\":\"source:nginx\"}}'\n```\n\n## Testing\n\n```bash\n# Send a test log and verify it appears in the search API within seconds\ncurl -s -X POST \"https://api.datadoghq.com/api/v2/logs/events/search\" \\\n  -H \"DD-API-KEY: $DD_API_KEY\" -H \"DD-APPLICATION-KEY: $DD_APP_KEY\" \\\n  -d '{\"filter\":{\"query\":\"service:checkout\"},\"page\":{\"limit\":5}}' | jq '.meta.page.total'\n```\n\n## Best Practices\n\n- Always set `service`, `status`, and `env` tags on ingested logs\n- Use `from`/`to` with relative times such as `now-15m`\n- Keep queries scoped with `service:`, `env:`, and `status:` filters\n- Store secrets in env vars, never inline API keys\n- Use the EU endpoint `https://api.datadoghq.eu` when the account is on the EU site",
+  "examples": [
+    {
+      "input": "How do I find all errors from the checkout service in the last hour?",
+      "output": "The agent runs the Logs Search API call with query `service:checkout status:error` and `from:now-1h`, then prints the message attributes via jq."
+    },
+    {
+      "input": "Send a test log line into Datadog.",
+      "output": "The agent curls the intake endpoint https://http-intake.logs.datadoghq.com/api/v2/logs with a JSON body carrying ddsource, service, and status fields."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "datadog-logs.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-datadog-logs"
+    },
+    "generic": {
+      "system_prompt": "You own Datadog Logs end to end. You do it through log-search: Search and aggregate logs with the Datadog Logs Search API and ingest logs with the intake API. The commands are real, e.g. `curl -X POST https://api.datadoghq.com/api/v2/logs/events/search -H Content-Type:...`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "datadog-logs",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "log-search",
+        "name": "query",
+        "type": "string",
+        "description": "Datadog Log Search query, e.g. service:api status:error"
+      },
+      {
+        "capability": "log-search",
+        "name": "from",
+        "type": "string",
+        "description": "Start of the time window, e.g. now-1h"
+      },
+      {
+        "capability": "log-search",
+        "name": "to",
+        "type": "string",
+        "description": "End of the time window, e.g. now"
+      },
+      {
+        "capability": "log-pipelines",
+        "name": "pipeline_id",
+        "type": "string",
+        "description": "ID of the log pipeline to delete"
+      },
+      {
+        "capability": "log-pipelines",
+        "name": "filter_query",
+        "type": "string",
+        "description": "Query that selects which logs the pipeline processes"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/datadog-logs-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/datadog-logs-skill.yaml",
+    "checksum": "acc71487b5cc56ec63a96ac975a1c7af5a826aa3e74b2b49efe6c6f25cd5dfe8"
+  }
+}

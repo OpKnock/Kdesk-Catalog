@@ -1,0 +1,201 @@
+name: kubectl-debug
+display_name: kubectl-debug
+category: devops
+subcategory: general
+description: 'Debugs failing Kubernetes workloads: pod inspection, log analysis, exec shells, ephemeral
+  debug containers, port-forwarding, and node troubleshooting.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- kubectl
+capabilities:
+- name: pod-diagnostics
+  description: Inspect pod state, events, and logs to root-cause failures.
+  commands:
+  - kubectl describe pod <pod>
+  - kubectl get events --sort-by=.lastTimestamp
+  - kubectl logs <pod> --previous
+  - kubectl logs <pod> -c sidecar -f --since=1h
+  - kubectl get pods -o wide
+  - kubectl top pod
+  examples:
+  - kubectl describe pod web-7d9f8c9d4-xk2pq
+  - kubectl logs web-7d9f8c9d4-xk2pq --previous
+  - kubectl get events --sort-by=.lastTimestamp | tail -30
+  parameters:
+  - name: pod
+    type: string
+    description: Pod name
+  - name: container
+    type: string
+    description: Container name for logs
+- name: interactive-debugging
+  description: Exec into pods, run ephemeral debug containers, and forward ports.
+  commands:
+  - kubectl exec -it <pod> -- sh
+  - kubectl run debug --rm -it --restart=Never --image=busybox -- /bin/sh
+  - kubectl debug node/<node> -it --image=ubuntu
+  - kubectl port-forward svc/web 8080:80
+  - kubectl debug <pod> -it --copy-to=debug-pod --container=debug
+  - kubectl cp <pod>:/tmp/dump.tar ./dump.tar
+  examples:
+  - kubectl exec -it web-7d9f8c9d4-xk2pq -- sh
+  - kubectl debug node/worker-1 -it --image=ubuntu
+  - kubectl port-forward svc/web 8080:80
+  parameters:
+  - name: node
+    type: string
+    description: Node name for node debugging
+  - name: image
+    type: string
+    description: Debug image
+  - name: local-port
+    type: string
+    description: Port mapping for port-forward
+knowledge:
+- title: Debugging Running Pods
+  type: documentation
+  source: https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/
+  description: Official pod debugging guide
+- title: kubectl debug
+  type: documentation
+  source: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_debug/
+  description: Ephemeral debug container reference
+- title: Debugging Nodes
+  type: documentation
+  source: https://kubernetes.io/docs/tasks/debug/debug-cluster/kubectl-node-debug/
+  description: Node-level debugging with kubectl debug node/
+instructions: '# Kubernetes Debugging
+
+
+  Root-cause workload failures with a structured kubectl debugging playbook.
+
+
+  ## What This Skill Does
+
+
+  - Reads pod status, events, and container logs (incl. previous crashes)
+
+  - Execs into containers and runs ephemeral debug images
+
+  - Debugs node-level issues without SSH (kubectl debug node/)
+
+  - Forwards ports to test services locally
+
+  - Copies files out of pods for forensics
+
+
+  ## When to Use
+
+
+  - Pods in CrashLoopBackOff, ImagePullBackOff, or Pending
+
+  - App misbehaves in-cluster but works locally
+
+  - Node issues: kubelet errors, disk pressure, network drops
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Diagnose
+
+  kubectl describe pod web-7d9f8c9d4-xk2pq
+
+  kubectl get events --sort-by=.lastTimestamp
+
+  kubectl logs web-7d9f8c9d4-xk2pq --previous
+
+  kubectl logs web-7d9f8c9d4-xk2pq -c istio-proxy -f --since=1h
+
+  kubectl get pods -o wide
+
+  kubectl top pod
+
+
+  # Interact
+
+  kubectl exec -it web-7d9f8c9d4-xk2pq -- sh
+
+  kubectl run debug --rm -it --restart=Never --image=busybox -- /bin/sh
+
+  kubectl debug web-7d9f8c9d4-xk2pq -it --copy-to=debug-pod --container=debug
+
+  kubectl debug node/worker-1 -it --image=ubuntu
+
+  kubectl port-forward svc/web 8080:80
+
+  kubectl cp web-7d9f8c9d4-xk2pq:/var/log/app.log ./app.log
+
+  ```
+
+
+  ## Debug Flow
+
+
+  1. `kubectl get pods -o wide` — where and what state
+
+  2. `kubectl describe pod` — events, probes, mounts, images
+
+  3. `kubectl logs --previous` — crash loop cause
+
+  4. Exec/debug container — runtime evidence
+
+  5. Node debug — kubelet/CNI-level causes
+
+
+  ## Best Practices
+
+
+  - Check `--previous` logs first on CrashLoopBackOff
+
+  - Use ephemeral containers over exec when the image lacks tools
+
+  - Time-box port-forward sessions; use `&` with job control
+
+  - Capture `kubectl get events` before deleting evidence
+
+  - For DNS/network issues, debug from inside the pod network namespace'
+examples:
+- input: All pods are in ImagePullBackOff
+  output: Agent describes a pod, reads the pull error, checks registry auth (imagePullSecrets) or tag
+    existence, and fixes the manifest
+- input: Node is NotReady with disk pressure
+  output: Agent runs kubectl debug node/ -it, inspects df and kubelet logs, and clears images or logs
+    per the diagnosis
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: kubectl-debug.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-kubectl-debug
+  generic:
+    system_prompt: 'You are the kubectl-debug specialist. You do it through pod-diagnostics: Inspect pod
+      state, events, and logs to root-cause failures. The commands are real, e.g. `kubectl describe pod
+      <pod>`. You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

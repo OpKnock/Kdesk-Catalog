@@ -1,0 +1,205 @@
+{
+  "name": "isort",
+  "display_name": "isort",
+  "category": "code-quality",
+  "subcategory": "general",
+  "description": "Sorts Python imports with isort: config profiles, black compatibility, section handling, and CI checks.",
+  "version": "2.0.0",
+  "tags": [
+    "code-quality"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "isort"
+  ],
+  "capabilities": [
+    {
+      "commands": [
+        "isort src/",
+        "isort --check-only src/",
+        "isort --diff src/",
+        "isort --profile black src/",
+        "isort file1.py file2.py"
+      ],
+      "description": "Sort imports with control over profiles.",
+      "name": "isort-sort",
+      "examples": [
+        "isort --check-only --diff src/",
+        "isort --profile black --line-length 100 src/",
+        "isort --skip venv --skip migrations src/"
+      ],
+      "parameters": [
+        {
+          "description": "Files or directories",
+          "name": "paths",
+          "type": "string"
+        },
+        {
+          "description": "black, django, google",
+          "name": "profile",
+          "type": "string"
+        },
+        {
+          "description": "Check without writing",
+          "name": "check-only",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "commands": [
+        "isort --version",
+        "isort --settings-path pyproject.toml src/",
+        "isort --show-config",
+        "isort --resolve-all-configs src/"
+      ],
+      "description": "Configure import sections and settings.",
+      "name": "isort-config",
+      "examples": [
+        "isort --show-config | grep -A5 profile",
+        "python -m isort src/"
+      ],
+      "parameters": [
+        {
+          "description": "Config file path",
+          "name": "settings-path",
+          "type": "string"
+        },
+        {
+          "name": "profile",
+          "type": "string",
+          "description": "Sorting profile: black, django"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "isort Docs",
+      "description": "Usage, config, and profiles",
+      "source": "https://pycqa.github.io/isort/",
+      "type": "documentation"
+    },
+    {
+      "title": "isort on GitHub",
+      "description": "Source and examples",
+      "source": "https://github.com/PyCQA/isort",
+      "type": "documentation"
+    }
+  ],
+  "instructions": "# isort\n\nSort Python imports consistently.\n\n## When to Use\n\n- Enforcing import ordering across a Python codebase\n- Pairing with black for a full formatting story\n- Grouping stdlib, third-party, and first-party imports\n- CI gates that catch import drift\n\n## Commands\n\n```bash\n# Sort a directory\nisort src/\n\n# Check only\nisort --check-only src/\n\n# Show diff\nisort --diff src/\n\n# Black-compatible profile\nisort --profile black src/\n```\n\n## Config Example\n\n```toml\n# pyproject.toml\n[tool.isort]\nprofile = \"black\"\nline_length = 100\nskip = [\"migrations\", \"venv\"]\nknown_first_party = [\"myapp\"]\n```\n\n## Import Order\n\n```python\n# stdlib first\nimport os\nimport sys\n\n# third-party\nimport requests\n\n# first-party\nfrom myapp import utils\n```\n\n## Best Practices\n\n- Use profile = black so black and isort agree\n- Add known_first_party for your own packages\n- Run isort --check-only in CI, sort in pre-commit\n- Keep sections: stdlib, third-party, first-party\n- Skip generated files and migrations\n- Run isort before black for stable results",
+  "examples": [
+    {
+      "input": "Sort imports across my project",
+      "output": "Agent runs isort src/ with the black profile and reviews the diff before committing."
+    },
+    {
+      "input": "isort and black keep fighting",
+      "output": "Agent sets profile = black in pyproject.toml and aligns line lengths."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "isort.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-isort"
+    },
+    "generic": {
+      "system_prompt": "You take the isort seat. You do it through isort-sort: Sort imports with control over profiles. The commands are real, e.g. `isort src/`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "isort",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "isort-sort",
+        "name": "paths",
+        "type": "string",
+        "description": "Files or directories"
+      },
+      {
+        "capability": "isort-sort",
+        "name": "profile",
+        "type": "string",
+        "description": "black, django, google"
+      },
+      {
+        "capability": "isort-sort",
+        "name": "check-only",
+        "type": "boolean",
+        "description": "Check without writing"
+      },
+      {
+        "capability": "isort-config",
+        "name": "settings-path",
+        "type": "string",
+        "description": "Config file path"
+      },
+      {
+        "capability": "isort-config",
+        "name": "profile",
+        "type": "string",
+        "description": "Sorting profile: black, django"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "isort"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "code-quality/isort-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/code-quality/isort-skill.yaml",
+    "checksum": "4ae5e8005250811e1b0d400446177ff1a2c6bcbabd78d08f2513ef338272a8eb"
+  }
+}

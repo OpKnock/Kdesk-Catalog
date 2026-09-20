@@ -1,0 +1,230 @@
+{
+  "name": "astro",
+  "display_name": "Astro",
+  "category": "frontend",
+  "subcategory": "general",
+  "description": "Builds content-focused websites and islands-architecture apps with Astro: content collections, integrations, and static builds.",
+  "version": "2.0.0",
+  "tags": [
+    "frontend"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "npm",
+    "npx"
+  ],
+  "capabilities": [
+    {
+      "name": "scaffold",
+      "description": "Create Astro projects and add framework integrations.",
+      "commands": [
+        "npm create astro@latest -- --template minimal --no-git --install",
+        "npx astro add react",
+        "npx astro add tailwind",
+        "npx astro add sitemap",
+        "npx astro add @astrojs/mdx"
+      ],
+      "examples": [
+        "npm create astro@latest -- --template blog --install --no-git",
+        "npx astro add react --yes",
+        "npx astro add vercel"
+      ],
+      "parameters": [
+        {
+          "name": "template",
+          "type": "string",
+          "description": "minimal, blog, docs, or portfolio starter"
+        },
+        {
+          "name": "install",
+          "type": "string",
+          "description": "--install to auto-install dependencies"
+        },
+        {
+          "name": "no-git",
+          "type": "string",
+          "description": "Skip git initialization"
+        }
+      ]
+    },
+    {
+      "name": "build-preview",
+      "description": "Develop, type-check, build, and preview Astro sites.",
+      "commands": [
+        "npm run dev",
+        "npx astro check",
+        "npm run build",
+        "npx astro preview",
+        "npx astro sync"
+      ],
+      "examples": [
+        "npm run dev -- --port 4321",
+        "npx astro check --minimumSeverityLevel error",
+        "npm run build && npx astro preview --port 8080"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "number",
+          "description": "Dev/preview server port"
+        },
+        {
+          "name": "minimumSeverityLevel",
+          "type": "string",
+          "description": "astro check severity gate: hint, warning, error"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "static (default) or server for SSR"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Astro Docs",
+      "type": "documentation",
+      "source": "https://docs.astro.build/en/getting-started/",
+      "description": "Project structure, islands, and rendering modes"
+    },
+    {
+      "title": "Astro Content Collections",
+      "type": "documentation",
+      "source": "https://docs.astro.build/en/guides/content-collections/",
+      "description": "Type-safe Markdown/MDX content with schemas"
+    },
+    {
+      "title": "Astro CLI",
+      "type": "documentation",
+      "source": "https://docs.astro.build/en/reference/cli-reference/",
+      "description": "astro add, check, build, preview, sync commands"
+    }
+  ],
+  "instructions": "# Astro\n\nBuild fast content sites and island-architecture apps with Astro.\n\n## When to Use\n\n- Blogs, docs, marketing sites, portfolios\n- Hybrid sites that mix static content with interactive islands\n- Sites needing excellent Core Web Vitals out of the box\n\n## Create a project\n\n```bash\nnpm create astro@latest -- --template minimal --no-git\nnpx astro add react tailwind sitemap\n```\n\n## Content collections\n\n```typescript\n// src/content.config.ts\nimport { defineCollection, z } from 'astro:content';\n\nexport const collections = {\n  posts: defineCollection({\n    type: 'content',\n    schema: z.object({\n      title: z.string(),\n      pubDate: z.coerce.date(),\n      tags: z.array(z.string()).default([]),\n      draft: z.boolean().default(false)\n    })\n  })\n};\n```\n\n```bash\nnpx astro sync\n```\n\nSync regenerates content types - run it after editing schemas.\n\n## Islands\n\nInteractive components render only when they need hydration:\n\n```tsx\nimport Counter from '../components/Counter.tsx';\n<Counter client:load />\n```\n\nUse `client:idle`, `client:visible`, or `client:only=\"react\"` to control when JS ships.\n\n## Build and check\n\n```bash\nnpx astro check --minimumSeverityLevel error\nnpm run build\nnpx astro preview\n```\n\n## Best practices\n\n- Prefer Markdown/MDX for content; components for layout.\n- Add `@astrojs/sitemap` and `astro:env` for production config.\n- Set `output: 'static'` unless you need SSR.\n- Always run `astro check` in CI before deploy.",
+  "examples": [
+    {
+      "input": "Start a blog with MDX and a React search island.",
+      "output": "Scaffolds with the blog template, adds MDX and react integrations, creates a posts content collection with schema, and mounts a client:visible search island."
+    },
+    {
+      "input": "Ship a docs site with a strict type check.",
+      "output": "Adds the docs template, configures content collections, and gates CI on npx astro check --minimumSeverityLevel error before npm run build."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "astro.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-astro"
+    },
+    "generic": {
+      "system_prompt": "You work Astro hands-on. You do it through scaffold: Create Astro projects and add framework integrations. The commands are real, e.g. `npm create astro@latest -- --template minimal --no-git --install`. You work hands-on and only report outcomes you have observed.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "astro",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "scaffold",
+        "name": "template",
+        "type": "string",
+        "description": "minimal, blog, docs, or portfolio starter"
+      },
+      {
+        "capability": "scaffold",
+        "name": "install",
+        "type": "string",
+        "description": "--install to auto-install dependencies"
+      },
+      {
+        "capability": "scaffold",
+        "name": "no-git",
+        "type": "string",
+        "description": "Skip git initialization"
+      },
+      {
+        "capability": "build-preview",
+        "name": "port",
+        "type": "number",
+        "description": "Dev/preview server port"
+      },
+      {
+        "capability": "build-preview",
+        "name": "minimumSeverityLevel",
+        "type": "string",
+        "description": "astro check severity gate: hint, warning, error"
+      },
+      {
+        "capability": "build-preview",
+        "name": "output",
+        "type": "string",
+        "description": "static (default) or server for SSR"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "npm",
+    "npx"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "frontend/astro-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/frontend/astro-skill.yaml",
+    "checksum": "af9abe0592948a096489f78419f66af1290181742e452c3940d62d648b30e6f3"
+  }
+}

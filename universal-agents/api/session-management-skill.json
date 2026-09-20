@@ -1,0 +1,171 @@
+{
+  "name": "session-management",
+  "display_name": "Session Management",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted session management skill: cookie lifecycle with curl, Redis-backed session stores with TTL, and logout/invalidation patterns.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "redis-cli"
+  ],
+  "capabilities": [
+    {
+      "name": "session-lifecycle",
+      "description": "Manage HTTP sessions: cookies, Redis storage, expiry, logout",
+      "commands": [
+        "redis-cli SET session:7f3a '{\"uid\":42,\"role\":\"admin\"}' EX 3600",
+        "redis-cli TTL session:7f3a",
+        "curl -i -c cookies.txt -X POST http://localhost:8080/login -d 'user=ada'",
+        "curl -i -b cookies.txt http://localhost:8080/me",
+        "curl -X POST -b cookies.txt http://localhost:8080/logout"
+      ],
+      "examples": [
+        "curl -i -c cookies.txt -X POST http://localhost:8080/login -d 'user=ada'",
+        "redis-cli GET session:7f3a",
+        "curl -i -b cookies.txt http://localhost:8080/me"
+      ],
+      "parameters": [
+        {
+          "name": "ttl_seconds",
+          "type": "integer",
+          "description": "Session lifetime in seconds"
+        },
+        {
+          "name": "cookie_name",
+          "type": "string",
+          "description": "Session cookie name"
+        },
+        {
+          "name": "session_id",
+          "type": "string",
+          "description": "Server-side session key, e.g. 7f3a"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "OWASP Session Management Cheat Sheet",
+      "type": "documentation",
+      "source": "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html",
+      "description": "Cookie attributes, session ID strength, expiry"
+    },
+    {
+      "title": "Redis EXPIRE command",
+      "type": "documentation",
+      "source": "https://redis.io/docs/latest/commands/expire/",
+      "description": "Setting session TTLs"
+    }
+  ],
+  "instructions": "# Session Management\n\nHand-crafted skill for HTTP session lifecycles with Redis storage.\n\n## What this skill does\n\n- Stores session state server-side with TTLs\n- Drives the cookie lifecycle with curl: login, use, logout\n- Invalidates sessions on logout and enforces expiry\n\n## When to use\n\n- Designing auth state for a new web app\n- Debugging why sessions persist after logout\n- Tuning session timeout policy\n\n## Real commands\n\n```bash\n# Create a session record with 1h TTL\nredis-cli SET session:7f3a '{\"uid\":42,\"role\":\"admin\"}' EX 3600\nredis-cli TTL session:7f3a\n\n# Login: server sets the cookie in cookies.txt\ncurl -i -c cookies.txt -X POST http://localhost:8080/login -d 'user=ada'\n\n# Authenticated request with the cookie jar\ncurl -i -b cookies.txt http://localhost:8080/me\n\n# Logout: server must delete the session record\ncurl -X POST -b cookies.txt http://localhost:8080/logout\nredis-cli EXISTS session:7f3a   # should return 0\n```\n\n## Cookie attributes\n\n- HttpOnly, Secure, SameSite=Lax\n- Session ID: 128+ random bits from a CSPRNG\n\n## Testing\n\n```bash\ncurl -i -c cookies.txt -X POST http://localhost:8080/login -d 'user=ada'   # Set-Cookie present\nredis-cli TTL session:7f3a\ncurl -i -b cookies.txt http://localhost:8080/me                            # 200\ncurl -X POST -b cookies.txt http://localhost:8080/logout\nredis-cli EXISTS session:7f3a                                              # 0\n```\n\n## Best practices\n\n- Store only the session ID in the cookie; state lives server-side\n- Slide expiry on activity, hard-expire after N hours\n- On logout, delete the Redis record immediately, not just the cookie\n",
+  "examples": [
+    {
+      "input": "Keep sessions alive for exactly 1 hour",
+      "output": "redis-cli SET session:<id> '{}' EX 3600 and refresh the EXPIRE on every authenticated request."
+    },
+    {
+      "input": "Logout does not invalidate old sessions",
+      "output": "Delete the server record on logout: redis-cli DEL session:<id>, and treat missing records as unauthenticated."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "session-management.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-session-management"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Session Management. You do it through session-lifecycle: Manage HTTP sessions: cookies, Redis storage, expiry, logout. The commands are real, e.g. `redis-cli SET session:7f3a {uid:42,role:admin} EX 3600`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "session-management",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "session-lifecycle",
+        "name": "ttl_seconds",
+        "type": "integer",
+        "description": "Session lifetime in seconds"
+      },
+      {
+        "capability": "session-lifecycle",
+        "name": "cookie_name",
+        "type": "string",
+        "description": "Session cookie name"
+      },
+      {
+        "capability": "session-lifecycle",
+        "name": "session_id",
+        "type": "string",
+        "description": "Server-side session key, e.g. 7f3a"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "redis-cli"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/session-management-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/session-management-skill.yaml",
+    "checksum": "3b27eb02bbfefddf04271bb36f362df2d71275f2092c8fbc979cc561fae3a6b1"
+  }
+}

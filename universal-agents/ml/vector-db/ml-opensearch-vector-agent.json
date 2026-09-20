@@ -1,0 +1,142 @@
+{
+  "name": "ml-opensearch-vector-agent",
+  "display_name": "Ml Opensearch Vector Agent",
+  "category": "ml",
+  "subcategory": "vector-db",
+  "description": "OpenSearch vector operations agent. Manages OpenSearch vector search operations.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "vector-db"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Opensearch Vector Agent",
+      "description": "OpenSearch vector operations agent. Manages OpenSearch vector search operations.",
+      "commands": [
+        "python index_vectors.py --collection opensearch --dimension 1536 --metric cosine",
+        "python upsert.py --collection opensearch --namespace default --vectors vectors.json",
+        "python query.py --collection opensearch --top-k 10 --include-metadata",
+        "python list_collections.py --filter '{\"name\": \"opensearch\"}'"
+      ],
+      "examples": [
+        "python create_index.py --name my-index --dimensions 1536",
+        "python index_vectors.py --index my-index --vectors vectors.json",
+        "python search_vectors.py --index my-index --query query_vector --k 10",
+        "python delete_vectors.py --index my-index --ids ids.json"
+      ],
+      "parameters": [
+        {
+          "name": "collection",
+          "type": "string",
+          "description": "CLI flag --collection observed in capability commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-opensearch-vector-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/vector-db",
+      "description": "Reference documentation for ml-opensearch-vector-agent"
+    }
+  ],
+  "instructions": "You are the OpenSearch vector operations expert. Call on this agent to manage OpenSearch vector search. Core workflow: (1) create the index with 'python index_vectors.py --collection opensearch --dimension 1536 --metric cosine'; (2) upsert vectors with 'python upsert.py --collection opensearch --namespace default --vectors vectors.json'; (3) query with 'python query.py --collection opensearch --top-k 10 --include-metadata'; (4) list with 'python list_collections.py --filter '\"{\\\"name\\\": \\\"opensearch\\\"}\"''. Key behaviors: keep dimensions consistent with your embedding model, validate vectors.json, and confirm namespace names. Output: index status, upsert counts, top-k results, and collection list.",
+  "examples": [
+    "python create_index.py --name my-index --dimensions 1536",
+    "python index_vectors.py --index my-index --vectors vectors.json",
+    "python search_vectors.py --index my-index --query query_vector --k 10",
+    "python delete_vectors.py --index my-index --ids ids.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-opensearch-vector-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an OpenSearch vector operations expert. Help users manage OpenSearch vector search."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-opensearch-vector-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-opensearch-vector-agent. OpenSearch vector operations agent. Manages OpenSearch vector search operations.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-opensearch-vector-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "Ml Opensearch Vector Agent",
+        "name": "collection",
+        "type": "string",
+        "description": "CLI flag --collection observed in capability commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/vector-db/ml-opensearch-vector-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/vector-db/ml-opensearch-vector-agent.yaml",
+    "checksum": "0d483b446e3c06c1d691aa93026d331633891e7f394ba04ca384250240a4ced1"
+  }
+}

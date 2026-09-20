@@ -1,0 +1,169 @@
+{
+  "name": "memcached-cli",
+  "display_name": "memcached-cli",
+  "category": "database",
+  "subcategory": "general",
+  "description": "Operates memcached: server startup, key CRUD via telnet/netcat protocol, and stats.",
+  "version": "2.0.0",
+  "tags": [
+    "database"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "memcached",
+    "printf"
+  ],
+  "capabilities": [
+    {
+      "name": "memcached-protocol",
+      "description": "Set/get/delete keys and inspect stats via the memcached text protocol",
+      "commands": [
+        "memcached -p 11211 -u memcached -m 64",
+        "printf 'set mykey 0 60 5\\r\\nhello\\r\\n' | nc localhost 11211",
+        "printf 'get mykey\\r\\n' | nc localhost 11211",
+        "printf 'stats\\r\\n' | nc -q1 localhost 11211",
+        "printf 'delete mykey\\r\\n' | nc localhost 11211"
+      ],
+      "examples": [
+        "printf 'set session:abc 0 1800 11\\r\\nvalue=12345\\r\\n' | nc localhost 11211",
+        "memcached-tool 127.0.0.1:11211 stats",
+        "printf 'flush_all\\r\\n' | nc localhost 11211"
+      ],
+      "parameters": [
+        {
+          "name": "port",
+          "type": "integer",
+          "description": "Listen port for the server (-p)"
+        },
+        {
+          "name": "memory",
+          "type": "integer",
+          "description": "Max memory in MB (-m)"
+        },
+        {
+          "name": "expiration",
+          "type": "integer",
+          "description": "TTL in seconds for set commands"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "memcached wiki",
+      "type": "documentation",
+      "source": "https://github.com/memcached/memcached/wiki",
+      "description": "Protocol reference, stats, and administration"
+    },
+    {
+      "title": "memcached-tool reference",
+      "type": "documentation",
+      "source": "https://github.com/memcached/memcached/wiki/MemcacheTool",
+      "description": "Stats and dump commands via memcached-tool"
+    }
+  ],
+  "instructions": "# Memcached CLI\n\nDistributed cache operations: run the server, read/write keys over the text\nprotocol, and pull stats.\n\n## When to Use\n\n- Debugging cache keys and TTLs\n- Checking hit/miss rates and memory usage\n- Flushing caches during development\n\n## Real Commands\n\n```bash\n# Start a server (64MB, daemonized)\nsudo memcached -p 11211 -u memcached -m 64 -d\n\n# Set a key: set <key> <flags> <ttl> <bytes>\nprintf 'set user:42 0 300 5\\r\\nhello\\r\\n' | nc localhost 11211\n\n# Get\nprintf 'get user:42\\r\\n' | nc localhost 11211\n\n# Delete\nprintf 'delete user:42\\r\\n' | nc localhost 11211\n\n# Stats\nprintf 'stats\\r\\n' | nc -q1 localhost 11211\n\n# Use memcached-tool instead\nsudo memcached-tool 127.0.0.1:11211 stats\n\n# Flush (dev only!)\nprintf 'flush_all\\r\\n' | nc localhost 11211\n```\n\n## Key Stats\n\n- `get_hits` / `get_misses` - hit ratio\n- `curr_items`, `evictions` - capacity pressure\n- `bytes` vs `limit_maxbytes` - memory usage\n\n## Best Practices\n\n- Set realistic TTLs; 30 days max key TTL\n- Prefer CAS (`gets`/`cas`) for read-modify-write\n- Watch evictions; that means cache too small or TTLs too long\n- Never store sensitive data; it's unencrypted by default\n- Use binary protocol in apps (libmemcached) for speed\n\n## Example Response\n\nSets/gets test keys, then reports hit ratio, evictions, and memory usage from\nstats to evaluate cache effectiveness.",
+  "examples": [
+    {
+      "input": "Is the cache being used well?",
+      "output": "Pulls stats, computes hit ratio, and reports evictions and memory pressure"
+    },
+    {
+      "input": "Debug a missing cache key",
+      "output": "Sets a test key with TTL, verifies get works, then checks expiry behavior with a short TTL"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "memcached-cli.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-memcached-cli"
+    },
+    "generic": {
+      "system_prompt": "Your lane is memcached-cli. You do it through memcached-protocol: Set/get/delete keys and inspect stats via the memcached text protocol. The commands are real, e.g. `memcached -p 11211 -u memcached -m 64`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "memcached-cli",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "memcached-protocol",
+        "name": "port",
+        "type": "integer",
+        "description": "Listen port for the server (-p)"
+      },
+      {
+        "capability": "memcached-protocol",
+        "name": "memory",
+        "type": "integer",
+        "description": "Max memory in MB (-m)"
+      },
+      {
+        "capability": "memcached-protocol",
+        "name": "expiration",
+        "type": "integer",
+        "description": "TTL in seconds for set commands"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "memcached",
+    "printf"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "database/memcached-cli-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/database/memcached-cli-skill.yaml",
+    "checksum": "67584a5a74ab4bb59a14c7644e2c9181a70a31d0b85ca8f26dae17e2d1a1479c"
+  }
+}

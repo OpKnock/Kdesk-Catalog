@@ -1,0 +1,238 @@
+{
+  "name": "form-validation-engineer",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "frontend",
+  "description": "Implements client and server-side form validation with Zod, React Hook Form, and HTML constraint validation, with linting gates in CI.",
+  "keywords": [
+    "form-validation",
+    "react-hook-form",
+    "zod",
+    "validation"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "form-validation-engineer.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-form-validation-engineer"
+    },
+    "generic": {
+      "system_prompt": "You are the form-validation-engineer specialist. You do it through zod-schemas: Define and test typed validation schemas with Zod. The commands are real, e.g. `npm init -y && npm install zod react-hook-form @hookform/resolvers`. You answer with exact commands, not abstractions, and flag anything you have not verified yourself.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "zod-schemas",
+      "description": "Define and test typed validation schemas with Zod.",
+      "commands": [
+        "npm init -y && npm install zod react-hook-form @hookform/resolvers",
+        "node -e \"const {z}=require('zod'); const s=z.object({email:z.string().email(),age:z.coerce.number().min(18)}); console.log(s.safeParse({email:'a@b.co',age:'25'}))\"",
+        "npx tsx validate-form.ts",
+        "npm run build",
+        "npm test"
+      ],
+      "examples": [
+        "node --eval \"const {z}=require('zod');z.string().email().safeParse('bad')\"",
+        "npx tsx -e \"import {z} from 'zod'; const s=z.object({name:z.string().min(2).max(60)}); console.log(s.safeParse({name:''}))\"",
+        "npm test -- --runInBand"
+      ],
+      "parameters": [
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Zod schema definition to test"
+        },
+        {
+          "name": "data",
+          "type": "string",
+          "description": "Sample payload to validate"
+        },
+        {
+          "name": "mode",
+          "type": "string",
+          "description": "onBlur or onChange validation mode"
+        }
+      ]
+    },
+    {
+      "name": "html-validation",
+      "description": "Lint HTML forms for accessibility and constraint validation issues.",
+      "commands": [
+        "npx html-validate index.html",
+        "npx html-validate --rule 'form-dup-name:error' src/**/*.html",
+        "npx html-validate --formatter json index.html",
+        "npx html-validate --config .htmlvalidate.json app/",
+        "npx html-validate --max-warnings 5 src/"
+      ],
+      "examples": [
+        "npx html-validate --rule 'input-missing-type:error' form.html",
+        "npx html-validate --formatter stylish index.html",
+        "npx html-validate --config .htmlvalidate.json src --max-warnings 10"
+      ],
+      "parameters": [
+        {
+          "name": "rule",
+          "type": "string",
+          "description": "Rule id with severity override, e.g. form-dup-name:error"
+        },
+        {
+          "name": "formatter",
+          "type": "string",
+          "description": "Output format: stylish, json, codeframe"
+        },
+        {
+          "name": "max-warnings",
+          "type": "number",
+          "description": "Fail beyond this warning count"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "react",
+    "react-hook-form",
+    "zod",
+    "yup"
+  ],
+  "tools": [
+    "react",
+    "react-hook-form",
+    "zod",
+    "yup",
+    "ajv",
+    "node.js"
+  ],
+  "examples": [
+    {
+      "input": "Validate a signup form with password strength and terms checkbox.",
+      "output": "Defines a shared Zod schema with email/password/terms rules, wires zodResolver into React Hook Form, and mirrors the schema in the API route."
+    },
+    {
+      "input": "Enforce form HTML quality in CI.",
+      "output": "Adds npx html-validate with a strict rule set and max-warnings gate to the lint job."
+    }
+  ],
+  "instructions": "# Form Validation\n\nValidate user input at every layer: client UX, server contract, and persistence.\n\n## When to Use\n\n- Building signup, checkout, or settings forms\n- Reusing validation rules between client and server\n- Enforcing field requirements and formatting consistently\n\n## Single source of truth with Zod\n\n```typescript\nimport { z } from 'zod';\n\nexport const signupSchema = z.object({\n  email: z.string().trim().email().max(254),\n  password: z.string().min(12).regex(/[^A-Za-z0-9]/),\n  age: z.coerce.number().int().min(13).max(130).optional(),\n  terms: z.literal(true, { errorMap: () => ({ message: 'Terms must be accepted' }) })\n});\n\nexport type SignupInput = z.infer<typeof signupSchema>;\n```\n\n## Wire into React Hook Form\n\n```typescript\nconst { register, handleSubmit, formState: { errors } } = useForm<SignupInput>({\n  resolver: zodResolver(signupSchema),\n  mode: 'onBlur'\n});\n```\n\nValidate on blur (not every keystroke) to reduce noise, and show errors under fields with `aria-invalid`.\n\n## Server-side revalidation\n\nNever trust the client: re-run the same schema in the API route/action and return 422 with field errors.\n\n## HTML constraint attributes\n\nEven with a JS framework, keep native attributes:\n\n```html\n<input type=\"email\" required minlength=\"3\" maxlength=\"254\" autocomplete=\"email\" aria-describedby=\"email-hint\" />\n```\n\n## Lint gates\n\n```bash\nnpx html-validate --rule 'input-missing-type:error' --max-warnings 5 src/\n```\n\n## Best practices\n\n- Trim and normalize before validating (email lowercase, phone digits).\n- Limit length on every string field to prevent abuse.\n- Test both valid and invalid fixtures in unit tests.\n- Keep error messages specific and user-localizable.",
+  "display_name": "form-validation-engineer",
+  "knowledge": [
+    {
+      "title": "Zod Docs",
+      "type": "documentation",
+      "source": "https://zod.dev/",
+      "description": "Schema declaration and validation library for TypeScript"
+    },
+    {
+      "title": "React Hook Form",
+      "type": "documentation",
+      "source": "https://react-hook-form.com/",
+      "description": "Performant forms with resolver integration"
+    },
+    {
+      "title": "html-validate",
+      "type": "documentation",
+      "source": "https://html-validate.org/",
+      "description": "HTML linter for form and accessibility rules"
+    }
+  ],
+  "id": "form-validation-engineer",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "zod-schemas",
+        "name": "schema",
+        "type": "string",
+        "description": "Zod schema definition to test"
+      },
+      {
+        "capability": "zod-schemas",
+        "name": "data",
+        "type": "string",
+        "description": "Sample payload to validate"
+      },
+      {
+        "capability": "zod-schemas",
+        "name": "mode",
+        "type": "string",
+        "description": "onBlur or onChange validation mode"
+      },
+      {
+        "capability": "html-validation",
+        "name": "rule",
+        "type": "string",
+        "description": "Rule id with severity override, e.g. form-dup-name:error"
+      },
+      {
+        "capability": "html-validation",
+        "name": "formatter",
+        "type": "string",
+        "description": "Output format: stylish, json, codeframe"
+      },
+      {
+        "capability": "html-validation",
+        "name": "max-warnings",
+        "type": "number",
+        "description": "Fail beyond this warning count"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "react",
+    "react-hook-form",
+    "zod",
+    "yup"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "form-validation-engineer/skill/form-validation-engineer.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/form-validation-engineer/skill/form-validation-engineer.yaml",
+    "checksum": "bd7b1c3bb8cd12d674cfdc2ae1da332293fc9813052659b6873e80a51ba958c7"
+  }
+}

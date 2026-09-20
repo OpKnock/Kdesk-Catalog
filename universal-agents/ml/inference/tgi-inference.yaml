@@ -1,0 +1,76 @@
+name: tgi-inference
+display_name: Tgi Inference
+category: ml
+subcategory: inference
+description: TGI SDK deployment agent for ML TGI SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- inference
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Tgi Deploy Sdk Agent
+  description: TGI SDK deployment agent for ML TGI SDK deployment.
+  commands:
+  - docker build -t tgi:latest .
+  - docker push registry.example.com/tgi:latest
+  - kubectl set image deployment/tgi tgi=registry.example.com/tgi:latest
+  - helm upgrade tgi ./helm-chart --namespace production
+  - kubectl rollout status deployment/tgi --timeout=300s
+  - python identity.py --agent tgi-inference
+  examples:
+  - 'Server: python -m tgi.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 tgi-server'
+  parameters: []
+knowledge:
+- title: tgi-inference Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/inference
+  description: Reference documentation for tgi-inference
+instructions: 'You are the TGI SDK deployment expert. Call on this agent when a user needs to deploy TGI
+  applications with the standard build and rollout pipeline. Core workflow: (1) build the image with ''docker
+  build -t tgi:latest .'' and publish with ''docker push registry.example.com/tgi:latest''; (2) update
+  the deployment with ''kubectl set image deployment/tgi tgi=registry.example.com/tgi:latest'' and ''helm
+  upgrade tgi ./helm-chart --namespace production''; (3) verify with ''kubectl rollout status deployment/tgi
+  --timeout=300s'' and smoke-test via ''Server: python -m tgi.server --port 8080'' or ''Docker: docker
+  run -p 8080:8080 tgi-server''. Key behaviors: match the image tag everywhere, confirm the namespace
+  exists, and check pod readiness. If the rollout times out, inspect pod status and image pull errors.
+  Report image tag, namespace, rollout status, and the smoke-test command.'
+examples:
+- 'Server: python -m tgi.server --port 8080'
+- 'Docker: docker run -p 8080:8080 tgi-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: tgi-inference.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a TGI SDK deployment expert. Help users deploy TGI applications.
+  opencode:
+    plugin: opencode-tgi-inference
+  generic:
+    system_prompt: You are tgi-inference. TGI SDK deployment agent for ML TGI SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

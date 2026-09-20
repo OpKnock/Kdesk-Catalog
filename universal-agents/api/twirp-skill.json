@@ -1,0 +1,171 @@
+{
+  "name": "twirp",
+  "display_name": "Twirp",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Hand-crafted Twirp core skill: protobuf contract design, route and error semantics, and client-server testing for the Twirp RPC framework.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "protoc"
+  ],
+  "capabilities": [
+    {
+      "name": "twirp-basics",
+      "description": "Design contracts, serve RPCs, and debug Twirp errors",
+      "commands": [
+        "protoc --twirp_out=. --go_out=. types.proto",
+        "curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H 'Content-Type: application/json' -d '{\"inches\": 12}'",
+        "curl -i -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H 'Content-Type: application/json' -d '{\"inches\": -1}'",
+        "go test ./...",
+        "protoc --version"
+      ],
+      "examples": [
+        "curl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -d '{\"inches\": 12}' -H 'Content-Type: application/json'",
+        "curl -i -s http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -d '{}' -H 'Content-Type: application/json'",
+        "go test ./..."
+      ],
+      "parameters": [
+        {
+          "name": "method",
+          "type": "string",
+          "description": "Twirp method name"
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "description": "JSON payload"
+        },
+        {
+          "name": "service",
+          "type": "string",
+          "description": "Service package"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Twirp official docs",
+      "type": "documentation",
+      "source": "https://twitchtv.github.io/twirp/docs/intro.html",
+      "description": "Framework concepts and errors"
+    },
+    {
+      "title": "Twirp errors spec",
+      "type": "documentation",
+      "source": "https://twitchtv.github.io/twirp/docs/errors.html",
+      "description": "Error codes and JSON shape"
+    }
+  ],
+  "instructions": "# Twirp\n\nHand-crafted skill for the Twirp RPC framework.\n\n## What this skill does\n\n- Defines RPC contracts in proto3\n- Serves methods over HTTP/JSON and protobuf\n- Explains Twirp error codes and how to surface them\n- Verifies behavior with curl and Go tests\n\n## When to use\n\n- Choosing or onboarding onto Twirp\n- Debugging a 404 on an RPC route\n- Enforcing error code conventions across services\n\n## Real commands\n\n```bash\n# Generate code\nprotoc --twirp_out=. --go_out=. types.proto\n\n# Happy path\ncurl -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H 'Content-Type: application/json' -d '{\"inches\": 12}'\n\n# Inspect the full response for errors\ncurl -i -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H 'Content-Type: application/json' -d '{\"inches\": -1}'\n\n# Run the suite\ngo test ./...\n```\n\n## Route and error rules\n\n- Route: /twirp/<service>/<method>, POST only\n- Errors: {\"code\": \"...\", \"msg\": \"...\", \"meta\": {...}} with proper HTTP status\n- 404 usually means the route or service name is wrong\n\n## Proto contract\n\n```proto\nsyntax = \"proto3\";\npackage twirp.example;\n\nmessage Size { int32 inches = 1; }\nmessage Hat { int32 inches = 1; string color = 2; }\n\nservice Haberdasher {\n  rpc MakeHat(Size) returns (Hat);\n}\n```\n\n## Testing\n\n```bash\ncurl -i -X POST http://localhost:8080/twirp/twirp.example.Haberdasher/MakeHat -H 'Content-Type: application/json' -d '{\"inches\": -1}'\ngo test ./...\n```\n\n## Best practices\n\n- Model errors in the proto contract where possible\n- Use invalid_argument for bad input, internal for bugs\n- Keep routes predictable: service names must match exactly\n",
+  "examples": [
+    {
+      "input": "Why is my Twirp call 404ing?",
+      "output": "Verify the route is POST /twirp/<exact service name>/<Method>; service names are case-sensitive."
+    },
+    {
+      "input": "How do I return a bad input error?",
+      "output": "Return twirp.InvalidArgumentError(\"field\", \"reason\") from the handler; it serializes to {\"code\":\"invalid_argument\",...}."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "twirp.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-twirp"
+    },
+    "generic": {
+      "system_prompt": "You work Twirp hands-on. You do it through twirp-basics: Design contracts, serve RPCs, and debug Twirp errors. The commands are real, e.g. `protoc --twirp_out=. --go_out=. types.proto`. You verify each step you report and stay honest about what you have not run.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "twirp",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "twirp-basics",
+        "name": "method",
+        "type": "string",
+        "description": "Twirp method name"
+      },
+      {
+        "capability": "twirp-basics",
+        "name": "body",
+        "type": "string",
+        "description": "JSON payload"
+      },
+      {
+        "capability": "twirp-basics",
+        "name": "service",
+        "type": "string",
+        "description": "Service package"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "protoc"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/twirp-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/twirp-skill.yaml",
+    "checksum": "d32f86b0e1f44f6bba05d0a19c7dae752a6c3d292c1a7fe6e07f48d712957393"
+  }
+}

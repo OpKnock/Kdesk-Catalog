@@ -1,0 +1,201 @@
+name: popeye
+display_name: popeye
+category: devops
+subcategory: general
+description: 'Sanitizes Kubernetes clusters with Popeye: scans live resources for best-practice violations,
+  misconfigurations, and security issues.'
+version: 2.0.0
+tags:
+- devops
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- popeye
+capabilities:
+- name: cluster-sanitize
+  description: Run full-cluster sanitizer scans and review reports.
+  commands:
+  - popeye
+  - popeye -n kube-system
+  - popeye -A
+  - popeye --save
+  - popeye -o yaml
+  - popeye --context prod
+  examples:
+  - popeye
+  - popeye -n kube-system
+  - popeye --save
+  parameters:
+  - name: namespace
+    type: string
+    description: Namespace scope
+  - name: output
+    type: string
+    description: 'Report format: standard, json, yaml, junit'
+  - name: save
+    type: boolean
+    description: Write report to file
+- name: rules-and-overrides
+  description: Customize scans with lint rules, ignore lists, and severity config.
+  commands:
+  - popeye --lint < rules.yaml
+  - popeye --overrides overrides.yaml
+  - popeye -l app=web
+  - popeye --clear-cache
+  - popeye -n app -o json > report.json
+  examples:
+  - popeye --lint < rules.yaml
+  - popeye --overrides overrides.yaml
+  - popeye -n app -o json > report.json
+  parameters:
+  - name: lint
+    type: string
+    description: Inline YAML lint rules via stdin
+  - name: overrides
+    type: string
+    description: Overrides file
+knowledge:
+- title: Popeye GitHub
+  type: documentation
+  source: https://github.com/derailed/popeye
+  description: CLI usage, lint rules, and report output formats
+- title: Popeye Config Reference
+  type: documentation
+  source: https://github.com/derailed/popeye/blob/master/README.md#configuration
+  description: popeye.yaml configuration and severity levels
+instructions: '# Popeye Cluster Sanitizer
+
+
+  Audit Kubernetes clusters for hygiene violations: missing probes, resource limits, deprecated APIs,
+  and security smells.
+
+
+  ## What This Skill Does
+
+
+  - Scans live cluster resources against best-practice lint rules
+
+  - Reports severity-ranked violations (ok, info, warning, error)
+
+  - Scopes scans by namespace or label selector
+
+  - Saves JSON/YAML reports for CI and dashboards
+
+  - Supports custom rule overrides
+
+
+  ## When to Use
+
+
+  - Pre-release cluster audit
+
+  - Spotting risky patterns (no probes, no limits, root containers)
+
+  - CI gate on cluster hygiene
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Full scan
+
+  popeye
+
+  popeye -A
+
+  popeye -n kube-system
+
+  popeye --context prod
+
+
+  # Reports
+
+  popeye --save                 # writes report to file
+
+  popeye -o yaml
+
+  popeye -n app -o json > report.json
+
+  popeye -o junit > report.xml
+
+
+  # Customization
+
+  popeye --lint < rules.yaml
+
+  popeye --overrides overrides.yaml
+
+  popeye -l app=web
+
+  popeye --clear-cache
+
+  ```
+
+
+  ## What It Checks
+
+
+  - Resource limits/requests missing
+
+  - Readiness/liveness probes absent
+
+  - Containers running as root
+
+  - Deprecated apiVersions
+
+  - Excess replicas of ReplicaSets
+
+  - Secrets mounted as env vs files
+
+
+  ## Best Practices
+
+
+  - Run popeye weekly and after every major release
+
+  - Feed JSON output into dashboards for trend tracking
+
+  - Combine with pluto for deprecation scanning and trivy for images
+
+  - Use --overrides to codify your team''s exceptions explicitly
+
+  - Gate on ERROR severity only initially; ratchet down over time'
+examples:
+- input: Audit the staging cluster before launch
+  output: Agent runs popeye, summarizes violations by severity/type, and proposes fixes for error-level
+    issues
+- input: Fail CI if probes are missing
+  output: Agent adds a popeye step with junit output and enforces error-severity exit codes
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: popeye.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-popeye
+  generic:
+    system_prompt: 'You own popeye end to end. You do it through cluster-sanitize: Run full-cluster sanitizer
+      scans and review reports. The commands are real, e.g. `popeye`. You prefer the shortest safe path,
+      and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -1,0 +1,107 @@
+name: haproxy-tuning
+display_name: Haproxy Tuning
+category: api
+subcategory: general
+description: 'HAProxy performance tuning: config validation, runtime stats via the socket, maxconn adjustments,
+  keepalive tuning, and connection limits.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- echo
+- haproxy
+capabilities:
+- name: haproxy-tuning
+  description: Validate, start, and tune HAProxy using config checks and the stats socket.
+  commands:
+  - haproxy -c -f /etc/haproxy/haproxy.cfg
+  - haproxy -f /etc/haproxy/haproxy.cfg -D -p /run/haproxy.pid
+  - echo 'show info' | socat stdio /var/run/haproxy.sock
+  - echo 'show stat' | socat stdio /var/run/haproxy.sock
+  - echo 'set maxconn 6000' | socat stdio /var/run/haproxy.sock
+  examples:
+  - echo 'show servers state' | socat stdio /var/run/haproxy.sock
+  - echo 'set timeout client 60s' | socat stdio /var/run/haproxy.sock
+  - haproxy -c -f /etc/haproxy/haproxy.cfg -f /etc/haproxy/errors/ -d
+  parameters:
+  - name: config_file
+    type: string
+    description: Path to haproxy.cfg.
+  - name: stats_socket
+    type: string
+    description: Path to the admin socket, e.g. /var/run/haproxy.sock.
+  - name: maxconn
+    type: integer
+    description: Global connection limit to set at runtime.
+knowledge:
+- title: HAProxy Configuration Manual
+  type: documentation
+  source: https://docs.haproxy.org/current/configuration.html
+  description: Full HAProxy configuration reference including tuning directives.
+- title: HAProxy Runtime API
+  type: documentation
+  source: https://docs.haproxy.org/current/management.html
+  description: 'Management guide: stats socket commands like show info, set maxconn.'
+instructions: "# HAProxy Tuning\n\nTune HAProxy for throughput, latency, and connection behavior.\n\n\
+  ## What this skill does\n\n- Validates configuration before reloads.\n- Reads live counters (rate, connections,\
+  \ queues) from the runtime socket.\n- Adjusts maxconn, timeouts, and server weights without restarting.\n\
+  - Inspects server state for drain/maintenance operations.\n\n## When to use\n\n- Connections queue up\
+  \ behind a backend.\n- Tuning maxconn to match kernel limits and backend capacity.\n- Gradual draining\
+  \ of servers for maintenance.\n\n## Real commands\n\n```bash\n# Validate config without starting\nhaproxy\
+  \ -c -f /etc/haproxy/haproxy.cfg\n\n# Start in daemon mode with PID file\nhaproxy -f /etc/haproxy/haproxy.cfg\
+  \ -D -p /run/haproxy.pid\n\n# Runtime stats\necho 'show info' | socat stdio /var/run/haproxy.sock\n\
+  echo 'show stat' | socat stdio /var/run/haproxy.sock\n\n# Runtime tuning\necho 'set maxconn 6000' |\
+  \ socat stdio /var/run/haproxy.sock\necho 'set timeout client 60s' | socat stdio /var/run/haproxy.sock\n\
+  \n# Drain a backend server\necho 'set server web/web1 state drain' | socat stdio /var/run/haproxy.sock\n\
+  ```\n\n## Tuning directives (haproxy.cfg)\n\n```haproxy\nglobal\n  maxconn 5000\n  tune.bufsize 32768\n\
+  \  tune.maxrewrite 1024\n\ndefaults\n  timeout connect 5s\n  timeout client 30s\n  timeout server 30s\n\
+  \  timeout queue 10s\n  maxconn 1000\n\nbackend web\n  balance roundrobin\n  server web1 10.0.0.11:8080\
+  \ maxconn 500 weight 1\n  server web2 10.0.0.12:8080 maxconn 500 weight 2\n```\n\n## Testing\n\n```bash\n\
+  # Watch connection growth during a load test\nwatch -n 1 \"echo 'show info' | socat stdio /var/run/haproxy.sock\
+  \ | grep -E 'CurrConns|Maxconn'\"\n```\n\n## Best practices\n\n- Raise `ulimit -n` and `net.core.somaxconn`\
+  \ before maxconn.\n- Use `maxconn` per server so one slow backend cannot monopolize the queue.\n- Prefer\
+  \ `timeout queue` over letting clients wait forever.\n- Validate with `haproxy -c` in CI before every\
+  \ deploy.\n\n## Example exchange\n\n```\nUser: Requests queue at 500+ during traffic spikes.\nAgent:\
+  \ Raise maxconn, check backend server maxconn, and add timeout queue:\n       echo 'set maxconn 10000'\
+  \ | socat stdio /var/run/haproxy.sock\n```"
+examples:
+- input: Validate the HAProxy config
+  output: haproxy -c -f /etc/haproxy/haproxy.cfg
+- input: Check live connection counts
+  output: echo 'show info' | socat stdio /var/run/haproxy.sock | grep -E 'CurrConns|Maxconn'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: haproxy-tuning.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-haproxy-tuning
+  generic:
+    system_prompt: 'Your lane is Haproxy Tuning. You do it through haproxy-tuning: Validate, start, and
+      tune HAProxy using config checks and the stats socket. The commands are real, e.g. `haproxy -c -f
+      /etc/haproxy/haproxy.cfg`. You answer with exact commands, not abstractions, and flag anything you
+      have not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

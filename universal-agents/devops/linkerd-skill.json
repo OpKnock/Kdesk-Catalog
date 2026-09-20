@@ -1,0 +1,206 @@
+{
+  "name": "linkerd",
+  "display_name": "linkerd",
+  "category": "devops",
+  "subcategory": "general",
+  "description": "Deploys and operates the Linkerd service mesh: install/upgrade, mesh injection, golden-metric stats, tap traffic, and multicluster links.",
+  "version": "2.0.0",
+  "tags": [
+    "devops"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "kubectl",
+    "linkerd"
+  ],
+  "capabilities": [
+    {
+      "name": "install-and-mesh",
+      "description": "Install Linkerd, run preflight checks, and inject sidecars.",
+      "commands": [
+        "linkerd check --pre",
+        "linkerd install | kubectl apply -f -",
+        "linkerd check",
+        "kubectl get -n linkerd deploy",
+        "linkerd inject deployment.yaml | kubectl apply -f -",
+        "kubectl rollout restart deployment/web"
+      ],
+      "examples": [
+        "linkerd check --pre",
+        "linkerd install | kubectl apply -f -",
+        "linkerd inject deployment.yaml | kubectl apply -f -"
+      ],
+      "parameters": [
+        {
+          "name": "manifest",
+          "type": "string",
+          "description": "Manifest to inject sidecars into"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace to mesh/inject"
+        }
+      ]
+    },
+    {
+      "name": "observability-and-traffic",
+      "description": "Inspect service metrics, top talkers, and live traffic with tap.",
+      "commands": [
+        "linkerd viz install | kubectl apply -f -",
+        "linkerd stat deploy -n app",
+        "linkerd top deploy -n app",
+        "linkerd tap deploy/web -n app --to deploy/api",
+        "linkerd viz dashboard",
+        "linkerd viz profiles -n app"
+      ],
+      "examples": [
+        "linkerd stat deploy -n app",
+        "linkerd tap deploy/web -n app",
+        "linkerd viz dashboard"
+      ],
+      "parameters": [
+        {
+          "name": "namespace",
+          "type": "string",
+          "description": "Namespace to observe"
+        },
+        {
+          "name": "resource",
+          "type": "string",
+          "description": "Resource for stats, e.g. deploy/web"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Linkerd Documentation",
+      "type": "documentation",
+      "source": "https://linkerd.io/2.15/overview/",
+      "description": "Linkerd concepts, install, and extensions"
+    },
+    {
+      "title": "Linkerd CLI",
+      "type": "documentation",
+      "source": "https://linkerd.io/2.15/reference/cli/",
+      "description": "linkerd check, inject, stat, top, tap reference"
+    },
+    {
+      "title": "Linkerd Multicluster",
+      "type": "documentation",
+      "source": "https://linkerd.io/2.15/features/multicluster/",
+      "description": "Linking clusters with gateway and service mirroring"
+    }
+  ],
+  "instructions": "# Linkerd Service Mesh\n\nAdd a lightweight ultralight mesh: sidecars, mTLS, golden metrics, and live tap.\n\n## What This Skill Does\n\n- Installs the control plane and viz extension\n- Injects linkerd-proxy sidecars into workloads\n- Views golden metrics (success rate, RPS, latency) per resource\n- Taps live traffic with zero instrumentation\n- Links clusters with multicluster service mirroring\n\n## When to Use\n\n- mTLS + per-service metrics without complex sidecar tuning\n- Debugging latency or error rate on specific routes\n- Progressive adoption: mesh a namespace at a time\n\n## Real Commands\n\n```bash\n# Install\nlinkerd check --pre\nlinkerd install | kubectl apply -f -\nlinkerd check\nkubectl get -n linkerd deploy\n\n# Inject\nlinkerd inject deployment.yaml | kubectl apply -f -\nkubectl rollout restart deployment/web\nkubectl get pods -l linkerd.io/proxy=deployment --field-selector=status.phase=Running\n\n# Observability\nlinkerd viz install | kubectl apply -f -\nlinkerd stat deploy -n app\nlinkerd top deploy -n app\nlinkerd tap deploy/web -n app --to deploy/api\nlinkerd viz dashboard\n```\n\n## Multicluster\n\n```bash\nlinkerd multicluster install | kubectl apply -f -\nlinkerd multicluster link --cluster-name=prod\nlinkerd multicluster gateways\n```\n\n## Best Practices\n\n- Run `linkerd check --pre` before install and `linkerd check` after\n- Validate proxy injection: pods must show 2 containers\n- Use tap only briefly in production (it is live traffic)\n- Enable mTLS by default; service-to-service trust is automatic\n- Use `linkerd stat --to` to find which dependency has high latency",
+  "examples": [
+    {
+      "input": "Mesh only the payments namespace",
+      "output": "Agent installs linkerd, injects payments manifests, restarts deployments, and verifies sidecar presence"
+    },
+    {
+      "input": "Which service is slowing the checkout flow?",
+      "output": "Agent runs linkerd stat deploy --to, then top, and taps the suspect route to identify the slow dependency"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "linkerd.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-linkerd"
+    },
+    "generic": {
+      "system_prompt": "You take the linkerd seat. You do it through install-and-mesh: Install Linkerd, run preflight checks, and inject sidecars. The commands are real, e.g. `linkerd check --pre`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "linkerd",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "install-and-mesh",
+        "name": "manifest",
+        "type": "string",
+        "description": "Manifest to inject sidecars into"
+      },
+      {
+        "capability": "install-and-mesh",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace to mesh/inject"
+      },
+      {
+        "capability": "observability-and-traffic",
+        "name": "namespace",
+        "type": "string",
+        "description": "Namespace to observe"
+      },
+      {
+        "capability": "observability-and-traffic",
+        "name": "resource",
+        "type": "string",
+        "description": "Resource for stats, e.g. deploy/web"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "kubectl",
+    "linkerd"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "devops/linkerd-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/devops/linkerd-skill.yaml",
+    "checksum": "0eed5d17d5090f1c2a1252d25c317bc7ae1d6eec88a968cbfb515d916f09257d"
+  }
+}

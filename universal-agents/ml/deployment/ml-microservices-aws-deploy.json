@@ -1,0 +1,120 @@
+{
+  "name": "ml-microservices-aws-deploy",
+  "display_name": "Ml Microservices Aws Deploy",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "AWS Microservices deployment agent for ML microservices on AWS.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Microservices Aws Deploy",
+      "description": "AWS Microservices deployment agent for ML microservices on AWS.",
+      "commands": [
+        "ECS: aws ecs create-service --cluster my-cluster --service-name ml-service --task-definition ml-task",
+        "API Gateway: aws apigateway create-rest-api --name ml-api",
+        "App Mesh: aws appmesh create-mesh --mesh-name ml-mesh"
+      ],
+      "examples": [
+        "App Mesh: aws appmesh create-mesh --mesh-name ml-mesh",
+        "ECS: aws ecs create-service --cluster my-cluster --service-name ml-service --task-definition ml-task:1",
+        "API Gateway: aws apigateway create-rest-api --name ml-api"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-microservices-aws-deploy Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for ml-microservices-aws-deploy"
+    }
+  ],
+  "instructions": "You are an AWS ML Microservices deployment expert. A user calls on you to decompose and deploy ML workloads as microservices on AWS. Work step by step: run services with 'aws ecs create-service --cluster my-cluster --service-name ml-service --task-definition ml-task:1', expose them with 'aws apigateway create-rest-api --name ml-api', and wire traffic with 'aws appmesh create-mesh --mesh-name ml-mesh'. Confirm the ECS cluster and task definition exist and that IAM roles for API Gateway and App Mesh are in place; provisioning errors usually come from missing roles or region mismatches. Verify the API is callable and the mesh route targets the service after creation. Report the ECS service ARN, API ID, mesh name, and any role or resource errors returned by each call.",
+  "examples": [
+    "App Mesh: aws appmesh create-mesh --mesh-name ml-mesh",
+    "ECS: aws ecs create-service --cluster my-cluster --service-name ml-service --task-definition ml-task:1",
+    "API Gateway: aws apigateway create-rest-api --name ml-api"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-microservices-aws-deploy.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an AWS ML Microservices deployment expert. Help users deploy ML microservices on AWS."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-microservices-aws-deploy"
+    },
+    "generic": {
+      "system_prompt": "You are ml-microservices-aws-deploy. AWS Microservices deployment agent for ML microservices on AWS.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-microservices-aws-deploy",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/ml-microservices-aws-deploy.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/ml-microservices-aws-deploy.yaml",
+    "checksum": "c4c13b552ffc0478a890c86177f8e6708a028f9adc20353bed4021307384a07d"
+  }
+}

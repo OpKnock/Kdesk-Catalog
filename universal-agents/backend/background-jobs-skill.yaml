@@ -1,0 +1,132 @@
+name: background-jobs
+display_name: Background Jobs
+category: backend
+subcategory: general
+description: Designs and operates async background job systems across BullMQ, Celery, and Sidekiq with
+  retries, delays, priorities, and worker lifecycle management.
+version: 2.0.0
+tags:
+- backend
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- celery
+- redis-cli
+- sidekiq
+capabilities:
+- commands:
+  - celery -A proj worker --loglevel=info --concurrency=4
+  - celery -A proj purge -f
+  - celery -A proj inspect active
+  - sidekiq -C config/sidekiq.yml
+  - redis-cli llen bull:email:wait
+  description: Create queues, run workers, and manage job lifecycle across BullMQ, Celery, and Sidekiq.
+  name: job-queues
+  examples:
+  - celery -A proj worker --loglevel=info --concurrency=4
+  - sidekiq -C config/sidekiq.yml -q default,5 -q mailers,3
+  - redis-cli zrange bull:email:delayed 0 -1
+  parameters:
+  - description: Number of worker processes to spawn
+    name: concurrency
+    type: integer
+  - description: Comma-separated queue names to process
+    name: queues
+    type: string
+  - description: 'Logging level: info, debug, warning, error'
+    name: loglevel
+    type: string
+- commands:
+  - celery -A proj inspect registered
+  - celery -A proj inspect active_queues
+  - redis-cli keys "bull:*"
+  - redis-cli hgetall bull:job:12345
+  description: Inspect queue depth, stalled jobs, and retry state.
+  name: job-monitoring
+  examples:
+  - celery -A proj inspect stats
+  - redis-cli lrange bull:email:wait 0 10
+  parameters:
+  - description: Job identifier to inspect
+    name: job-id
+    type: string
+  - name: queue
+    type: string
+    description: Queue name to inspect
+knowledge:
+- title: BullMQ Docs
+  description: Queue, worker, and scheduler APIs for Node.js background jobs
+  source: https://docs.bullmq.io
+  type: documentation
+- title: Celery Docs
+  description: Distributed task queue reference for Python
+  source: https://docs.celeryq.dev/en/stable/
+  type: documentation
+- title: Sidekiq Docs
+  description: Simple, efficient background processing for Ruby
+  source: https://github.com/sidekiq/sidekiq/wiki
+  type: documentation
+instructions: "# Background Jobs\n\nBuild and operate async background job pipelines with BullMQ, Celery,\
+  \ and Sidekiq.\n\n## When to Use\n\n- Offloading slow work (email, video encoding, report generation)\
+  \ from request path\n- Scheduled or recurring tasks (cron-like) with Beat or a scheduler\n- Fan-out\
+  \ fan-in workflows with dependencies between jobs\n- Retry and dead-letter handling for unreliable downstream\
+  \ services\n\n## Core Concepts\n\n- Queue: durable list of pending jobs backed by Redis\n- Worker: process\
+  \ that pops jobs and executes the task function\n- Broker: transport (Redis, RabbitMQ) that stores jobs\
+  \ and results\n- Retry policy: exponential backoff with max retries per task\n- Priority and delay:\
+  \ jobs can be scheduled for later or weighted\n\n## Commands\n\n```bash\n# Celery worker with 4 processes\n\
+  celery -A proj worker --loglevel=info --concurrency=4\n\n# Start the periodic scheduler\ncelery -A proj\
+  \ beat --loglevel=info\n\n# Purge all pending jobs\ncelery -A proj purge -f\n\n# Inspect running workers\n\
+  celery -A proj inspect active\ncelery -A proj inspect registered\ncelery -A proj status\n\n# Sidekiq\
+  \ worker with weighted queues\nsidekiq -C config/sidekiq.yml -q default,5 -q mailers,3\n\n# BullMQ worker\
+  \ (Node.js)\nnode worker.js\n\n# Inspect BullMQ queue depth in Redis\nredis-cli llen bull:email:wait\n\
+  ```\n\n## Task Definition\n\n```python\n# tasks.py (Celery)\nfrom celery import shared_task\n\n@shared_task(bind=True,\
+  \ max_retries=3, default_retry_delay=60)\ndef send_email(self, to, subject):\n    try:\n        send_mail(to,\
+  \ subject)\n    except Exception as exc:\n        raise self.retry(exc=exc)\n```\n\n## Scheduling\n\n\
+  ```python\n# Periodic tasks with beat\nfrom celery.schedules import crontab\nbeat_schedule = {\n   \
+  \ \"daily-report\": {\n        \"task\": \"tasks.generate_report\",\n        \"schedule\": crontab(hour=7,\
+  \ minute=30),\n    }\n}\n```\n\n## Best Practices\n\n- Always set max_retries and default_retry_delay\
+  \ to avoid infinite retries\n- Use separate queues for critical and low-priority work\n- Make tasks\
+  \ idempotent so replay is safe after a crash\n- Monitor queue depth and stale jobs in production\n-\
+  \ Keep task payloads small; pass IDs, not full objects\n- Use result backends only when the caller needs\
+  \ the return value"
+examples:
+- input: How do I retry a failed Celery task with backoff?
+  output: Agent adds max_retries and default_retry_delay to the task decorator, shows the self.retry(exc=exc)
+    pattern, and suggests running celery -A proj worker to process retries.
+- input: My BullMQ queue is backing up. What should I check?
+  output: Agent runs redis-cli llen bull:queue:wait to measure depth, inspects stalled jobs with redis-cli
+    keys "bull:*", and recommends adding more workers with node worker.js.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: background-jobs.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-background-jobs
+  generic:
+    system_prompt: 'This is your domain: Background Jobs. You do it through job-queues: Create queues,
+      run workers, and manage job lifecycle across BullMQ, Celery, and Sidekiq. The commands are real,
+      e.g. `celery -A proj worker --loglevel=info --concurrency=4`. You run and verify the real CLI commands
+      before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

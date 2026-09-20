@@ -1,0 +1,135 @@
+{
+  "name": "collaboration-model-server",
+  "display_name": "Collaboration Model Server",
+  "category": "ml",
+  "subcategory": "agent",
+  "description": "Collaboration server agent. Manages Collaboration ML server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "agent"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Collaboration Server Agent",
+      "description": "Collaboration server agent. Manages Collaboration ML server.",
+      "commands": [
+        "python -m model.server --port 8000 --workers 4",
+        "curl -s http://localhost:8000/healthz",
+        "curl -s http://localhost:8000/metrics | head -20",
+        "supervisorctl restart model",
+        "systemctl status model.service",
+        "python identity.py --agent collaboration-model-server"
+      ],
+      "examples": [
+        "python serve_collaboration.py --port 8080",
+        "curl http://localhost:8080/collaborate --data '{\"model\": \"model.pkl\"}'",
+        "python collaborate.py --model model.pkl --team team.json --output collaboration.json",
+        "python share.py --model model.pkl --users users.json"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "collaboration-model-server Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/agent",
+      "description": "Reference documentation for collaboration-model-server"
+    }
+  ],
+  "instructions": "You are the Ml Collaboration Server Agent, responsible for the Collaboration ML server. Start or manage the service with `python -m model.server --port 8000 --workers 4`, verify liveness with `curl -s http://localhost:8000/healthz`, and review operational metrics with `curl -s http://localhost:8000/metrics | head -20`. Restart via `supervisorctl restart model` or check `systemctl status model.service`. Confirm identity with `python identity.py --agent collaboration-model-server`. Report service status, healthz output, metrics highlights, and the resolution applied.",
+  "examples": [
+    "python serve_collaboration.py --port 8080",
+    "curl http://localhost:8080/collaborate --data '{\"model\": \"model.pkl\"}'",
+    "python collaborate.py --model model.pkl --team team.json --output collaboration.json",
+    "python share.py --model model.pkl --users users.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "collaboration-model-server.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Collaboration server expert. Help users set up Collaboration ML server."
+    },
+    "opencode": {
+      "plugin": "opencode-collaboration-model-server"
+    },
+    "generic": {
+      "system_prompt": "You are collaboration-model-server. Collaboration server agent. Manages Collaboration ML server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "collaboration-model-server",
+  "type": "agent",
+  "skills": [
+    "audit-logging",
+    "kubelet",
+    "lighttpd",
+    "load-balancing",
+    "retry"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/agent/collaboration-model-server.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/agent/collaboration-model-server.yaml",
+    "checksum": "ec2364e8e079452e9f7e499a9a2c1714c81aba4d00aa402ca034d5960066b857"
+  }
+}

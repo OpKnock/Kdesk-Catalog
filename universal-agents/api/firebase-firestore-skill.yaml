@@ -1,0 +1,106 @@
+name: firebase-firestore
+display_name: Firebase Firestore
+category: api
+subcategory: general
+description: 'Cloud Firestore database operations: manage data, indexes, and security rules; read and
+  write documents from the CLI.'
+version: 2.0.0
+tags:
+- api
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- firebase
+- node
+capabilities:
+- name: firestore-data
+  description: Read, write, and administer Firestore data, indexes, and rules.
+  commands:
+  - firebase firestore:indexes
+  - firebase deploy --only firestore:rules
+  - firebase deploy --only firestore:indexes
+  - firebase firestore:delete --all-collections --yes
+  - node -e "const admin=require('firebase-admin');admin.initializeApp();admin.firestore().collection('orders').where('status','==','paid').limit(5).get().then(s=>console.log(s.size))"
+  examples:
+  - firebase deploy --only firestore:rules
+  - firebase deploy --only firestore:indexes
+  - node -e "const admin=require('firebase-admin');admin.initializeApp();admin.firestore().collection('orders').where('status','==','paid').limit(5).get().then(s=>console.log(s.size))"
+  parameters:
+  - name: collection
+    type: string
+    description: Collection to query or modify
+  - name: rules-file
+    type: string
+    description: Path to firestore.rules
+  - name: indexes-file
+    type: string
+    description: Path to firestore.indexes.json
+knowledge:
+- title: Firestore data model
+  type: documentation
+  source: https://firebase.google.com/docs/firestore/data-model
+  description: Collections, documents, and composite index requirements
+- title: Firestore security rules
+  type: documentation
+  source: https://firebase.google.com/docs/firestore/security/get-started
+  description: Writing and testing security rules
+instructions: "# Firebase Firestore\n\n## What this skill does\n\nFirestore is a NoSQL document database\
+  \ with realtime sync. This skill covers CLI data ops, index management (composite indexes for multi-field\
+  \ queries), and security rules deployment.\n\n## When to use\n\n- Administering Firestore data from\
+  \ the command line\n- Deploying rules and indexes with the rest of your code\n- Debugging queries that\
+  \ fail with missing-index errors\n\n## Real commands\n\n```bash\n# Show required indexes\nfirebase firestore:indexes\n\
+  \n# Deploy rules and indexes\nfirebase deploy --only firestore:rules\nfirebase deploy --only firestore:indexes\n\
+  \n# Dangerous cleanup (with confirmation)\nfirebase firestore:delete --all-collections --yes\n\n# Query\
+  \ via Admin SDK\nnode -e \"const admin=require('firebase-admin');admin.initializeApp();admin.firestore().collection('orders').where('status','==','paid').limit(5).get().then(s=>console.log(s.size))\"\
+  \n```\n\n## firestore.rules example\n\n```javascript\nrules_version = '2';\nservice cloud.firestore\
+  \ {\n  match /databases/{database}/documents {\n    match /orders/{orderId} {\n      allow read: if\
+  \ request.auth != null && resource.data.owner == request.auth.uid;\n      allow write: if request.auth\
+  \ != null && request.auth.uid == request.auth.uid;\n    }\n  }\n}\n```\n\n## Composite index pattern\n\
+  \n```json\n{\n  \"indexes\": [\n    {\n      \"collectionGroup\": \"orders\",\n      \"queryScope\"\
+  : \"COLLECTION\",\n      \"fields\": [\n        {\"fieldPath\": \"status\", \"order\": \"ASCENDING\"\
+  },\n        {\"fieldPath\": \"createdAt\", \"order\": \"DESCENDING\"}\n      ]\n    }\n  ]\n}\n```\n\
+  \n## Testing\n\n```bash\n# Rules emulator for local validation\nfirebase emulators:start --only firestore\n\
+  firebase deploy --only firestore:rules --dry-run\n```\n\n## Best practices\n\n- Design queries around\
+  \ indexes first; multi-field inequality filters need composites.\n- Test rules with the emulator before\
+  \ deploying.\n- Use `--dry-run` for rules deploys.\n- Batch writes over sequential ones; keep documents\
+  \ small (<1MB).\n- Never run `firestore:delete --all-collections` against production without a backup.\n"
+examples:
+- input: Query needs a composite index
+  output: Run firebase firestore:indexes to see the required index definition, add it to firestore.indexes.json,
+    and firebase deploy --only firestore:indexes.
+- input: Lock down orders to their owner
+  output: Write security rules matching /orders/{orderId} with resource.data.owner == request.auth.uid
+    and deploy with firebase deploy --only firestore:rules.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: firebase-firestore.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-firebase-firestore
+  generic:
+    system_prompt: 'You own Firebase Firestore end to end. You do it through firestore-data: Read, write,
+      and administer Firestore data, indexes, and rules. The commands are real, e.g. `firebase firestore:indexes`.
+      You run and verify the real CLI commands before you claim anything.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

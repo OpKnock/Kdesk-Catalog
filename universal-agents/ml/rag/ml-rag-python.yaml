@@ -1,0 +1,112 @@
+name: ml-rag-python
+display_name: Ml Rag Python
+category: ml
+subcategory: rag
+description: RAG (Retrieval Augmented Generation) agent for document Q&A.
+version: 1.0.0
+tags:
+- ml
+- rag
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Rag Python
+  description: RAG (Retrieval Augmented Generation) agent for document Q&A.
+  commands:
+  - 'Chroma: from langchain_community.vectorstores import Chroma; vectorstore = Chroma.from_documents(chu'
+  - 'LangChain: from langchain_community.document_loaders import TextLoader; loader = TextLoader(''docs.tx'
+  - 'Retrieval: from langchain.chains import RetrievalQA; qa_chain = RetrievalQA.from_chain_type(llm,
+    ret'
+  - 'Splitter: from langchain.text_splitter import RecursiveCharacterTextSplitter; splitter = RecursiveCh'
+  examples:
+  - 'LangChain: from langchain_community.document_loaders import TextLoader; loader = TextLoader(''docs.txt'');
+    documents = loader.load()'
+  - 'Splitter: from langchain.text_splitter import RecursiveCharacterTextSplitter; splitter = RecursiveCharacterTextSplitter(chunk_size=1000,
+    chunk_overlap=200); chunks = splitter.split_documents(documents)'
+  - 'Chroma: from langchain_community.vectorstores import Chroma; vectorstore = Chroma.from_documents(chunks,
+    embedding)'
+  - 'Retrieval: from langchain.chains import RetrievalQA; qa_chain = RetrievalQA.from_chain_type(llm,
+    retriever=vectorstore.as_retriever())'
+  parameters: []
+knowledge:
+- title: ml-rag-python Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/rag
+  description: Reference documentation for ml-rag-python
+instructions: 'You are a RAG expert. Help users with:
+
+  - Document loading
+
+  - Text splitting
+
+  - Embedding generation
+
+  - Vector storage
+
+  - Retrieval
+
+  - Generation
+
+  - Evaluation
+
+
+  Always use real RAG tools. Never suggest fictional tools.'
+examples:
+- 'LangChain: from langchain_community.document_loaders import TextLoader; loader = TextLoader(''docs.txt'');
+  documents = loader.load()'
+- 'Splitter: from langchain.text_splitter import RecursiveCharacterTextSplitter; splitter = RecursiveCharacterTextSplitter(chunk_size=1000,
+  chunk_overlap=200); chunks = splitter.split_documents(documents)'
+- 'Chroma: from langchain_community.vectorstores import Chroma; vectorstore = Chroma.from_documents(chunks,
+  embedding)'
+- 'Retrieval: from langchain.chains import RetrievalQA; qa_chain = RetrievalQA.from_chain_type(llm, retriever=vectorstore.as_retriever())'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: ml-rag-python.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a RAG expert. Help users with:
+
+      - Document loading
+
+      - Text splitting
+
+      - Embedding generation
+
+      - Vector storage
+
+      - Retrieval
+
+      - Generation
+
+      - Evaluation
+
+
+      Always use real RAG tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-ml-rag-python
+  generic:
+    system_prompt: You are ml-rag-python. RAG (Retrieval Augmented Generation) agent for document Q&A.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

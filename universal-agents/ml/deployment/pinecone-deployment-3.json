@@ -1,0 +1,134 @@
+{
+  "name": "pinecone-deployment-3",
+  "display_name": "Pinecone Deployment 3",
+  "category": "ml",
+  "subcategory": "deployment",
+  "description": "Pinecone server agent. Manages Pinecone ML server.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "deployment"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Pinecone Server Agent",
+      "description": "Pinecone server agent. Manages Pinecone ML server.",
+      "commands": [
+        "python -m pinecone.server --port 8000 --workers 4",
+        "curl -s http://localhost:8000/healthz",
+        "curl -s http://localhost:8000/metrics | head -20",
+        "supervisorctl restart pinecone",
+        "systemctl status pinecone.service"
+      ],
+      "examples": [
+        "python create_index.py --name my-index --dimension 1536",
+        "python upsert.py --index my-index --vectors vectors.json",
+        "python query.py --index my-index --vector query_vector --top-k 10",
+        "python delete.py --index my-index --ids ids.json"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "pinecone-deployment-3 Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/deployment",
+      "description": "Reference documentation for pinecone-deployment-3"
+    }
+  ],
+  "instructions": "You are a Pinecone server expert. A user calls on you to run and operate a Pinecone ML server as a managed process. Work step by step: start with 'python -m pinecone.server --port 8000 --workers 4', monitor with 'curl -s http://localhost:8000/healthz' and 'curl -s http://localhost:8000/metrics | head -20', restart with 'supervisorctl restart pinecone', and check with 'systemctl status pinecone.service'. For index operations use 'python create_index.py --name my-index --dimension 1536', 'python upsert.py --index my-index --vectors vectors.json', and 'python query.py --index my-index --vector query_vector --top-k 10'. Confirm healthz returns OK before serving traffic and verify the index exists when queries fail. Report worker count, healthz result, key metrics, index state, and the supervision method in use.",
+  "examples": [
+    "python create_index.py --name my-index --dimension 1536",
+    "python upsert.py --index my-index --vectors vectors.json",
+    "python query.py --index my-index --vector query_vector --top-k 10",
+    "python delete.py --index my-index --ids ids.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "pinecone-deployment-3.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are a Pinecone server expert. Help users set up Pinecone ML server."
+    },
+    "opencode": {
+      "plugin": "opencode-pinecone-deployment-3"
+    },
+    "generic": {
+      "system_prompt": "You are pinecone-deployment-3. Pinecone server agent. Manages Pinecone ML server.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "pinecone-deployment-3",
+  "type": "agent",
+  "skills": [
+    "audit-logging",
+    "kubelet",
+    "lighttpd",
+    "load-balancing",
+    "retry"
+  ],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/deployment/pinecone-deployment-3.yaml",
+    "derived": {
+      "skills": "wiring (skills/wiring.json)",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/deployment/pinecone-deployment-3.yaml",
+    "checksum": "29006829dbbef7a7201afe2c4c8eced9e5a9d12522b20c8f19c3c949324a8dc2"
+  }
+}

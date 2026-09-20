@@ -1,0 +1,205 @@
+{
+  "name": "api-graphql-rest",
+  "version": "2.0.0",
+  "type": "skill",
+  "category": "backend",
+  "description": "Migrates and troubleshoots GraphQL: REST-to-GraphQL transitions, performance debugging, and breaking-change-safe schema evolution.",
+  "keywords": [
+    "graphql",
+    "schema"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "api-graphql-rest.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-api-graphql-rest"
+    },
+    "generic": {
+      "system_prompt": "You own Api Graphql Rest end to end. You do it through rest-to-graphql: Wrap REST endpoints with GraphQL resolvers during migration. The commands are real, e.g. `npm install @graphql-tools/url-loader @graphql-tools/stitch`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "capabilities": [
+    {
+      "name": "rest-to-graphql",
+      "description": "Wrap REST endpoints with GraphQL resolvers during migration",
+      "commands": [
+        "npm install @graphql-tools/url-loader @graphql-tools/stitch",
+        "npm install graphql-http",
+        "curl -s http://localhost:3000/api/users | python -m json.tool",
+        "node -e \"const {loadFromUrl}=require('@graphql-tools/url-loader');loadFromUrl('http://localhost:3000/graphql').then(s=>console.log(s?'schema loaded':'no'))\"",
+        "curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ users { id } }\"}'"
+      ],
+      "examples": [
+        "curl -s http://localhost:3000/api/users | python -m json.tool",
+        "node -e \"const {loadFromUrl}=require('@graphql-tools/url-loader');loadFromUrl('http://localhost:3000/graphql').then(s=>console.log(s?'schema loaded':'no'))\"",
+        "curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ users { id } }\"}'"
+      ],
+      "parameters": [
+        {
+          "name": "restUrl",
+          "type": "string",
+          "description": "REST endpoint to wrap"
+        },
+        {
+          "name": "graphqlUrl",
+          "type": "string",
+          "description": "GraphQL endpoint"
+        }
+      ]
+    },
+    {
+      "name": "schema-evolution",
+      "description": "Evolve schemas without breaking existing clients",
+      "commands": [
+        "npx graphql-inspector diff schema-v1.graphql schema-v2.graphql",
+        "graphql-inspector diff schema-v1.graphql schema-v2.graphql --rule 'field.removed:error'",
+        "rover subgraph check mygraph@prod --name products --schema ./products.graphql",
+        "node -e \"console.log('deprecate before remove: @deprecated + notice period')\"",
+        "graphql-inspector coverage schema.graphql queries/**/*.graphql"
+      ],
+      "examples": [
+        "npx graphql-inspector diff schema-v1.graphql schema-v2.graphql",
+        "rover subgraph check mygraph@prod --name products --schema ./products.graphql",
+        "graphql-inspector coverage schema.graphql queries/**/*.graphql"
+      ],
+      "parameters": [
+        {
+          "name": "oldSchema",
+          "type": "string",
+          "description": "Old schema"
+        },
+        {
+          "name": "newSchema",
+          "type": "string",
+          "description": "New schema"
+        }
+      ]
+    }
+  ],
+  "prerequisites": [
+    "apollo-server",
+    "graphql-codegen",
+    "dataloader"
+  ],
+  "tools": [
+    "apollo-server",
+    "graphql-codegen",
+    "dataloader",
+    "node.js",
+    "python"
+  ],
+  "examples": [
+    {
+      "input": "Migrate a REST endpoint to GraphQL gradually",
+      "output": "Adds a GraphQL layer backed by existing REST calls, then swaps implementations one resolver at a time"
+    },
+    {
+      "input": "Evolve the schema without breaking clients",
+      "output": "Runs inspector diffs with removal-as-error rules and deprecation windows for changed fields"
+    }
+  ],
+  "instructions": "# API GraphQL (Migration & Evolution)\n\nMigrates to GraphQL and keeps schemas evolving safely.\n\n## When to Use\n- REST-to-GraphQL migrations\n- Schema breaking-change reviews\n- Client compatibility concerns\n\n## Real Commands\n\n```bash\n# Wrap REST during migration\ncurl -s http://localhost:3000/api/users | python -m json.tool\nnpm install @graphql-tools/url-loader\n\n# Diff schemas\nnpx graphql-inspector diff schema-v1.graphql schema-v2.graphql\n\n# Fail on removed fields\ngraphql-inspector diff schema-v1.graphql schema-v2.graphql --rule 'field.removed:error'\n\n# Coverage of real queries\ngraphql-inspector coverage schema.graphql queries/**/*.graphql\n```\n\n## Evolution Rules\n- Deprecate with @deprecated first\n- Remove after a notice period\n- Run diff checks in CI\n\n## Testing\nRun all client queries against the new schema before cutting over.\n\n## Best Practices\n- Keep the migration layer thin and temporary\n- Track query coverage to avoid dead types",
+  "display_name": "Api Graphql Rest",
+  "knowledge": [
+    {
+      "title": "GraphQL Inspector Diff",
+      "type": "documentation",
+      "source": "https://the-guild.dev/graphql/inspector/docs/features/diff",
+      "description": "Breaking change detection rules"
+    },
+    {
+      "title": "GraphQL Tools URL Loader",
+      "type": "documentation",
+      "source": "https://the-guild.dev/graphql/tools/docs/modules/url-loader",
+      "description": "Load schemas from URLs"
+    }
+  ],
+  "id": "api-graphql-rest",
+  "skills": [],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "rest-to-graphql",
+        "name": "restUrl",
+        "type": "string",
+        "description": "REST endpoint to wrap"
+      },
+      {
+        "capability": "rest-to-graphql",
+        "name": "graphqlUrl",
+        "type": "string",
+        "description": "GraphQL endpoint"
+      },
+      {
+        "capability": "schema-evolution",
+        "name": "oldSchema",
+        "type": "string",
+        "description": "Old schema"
+      },
+      {
+        "capability": "schema-evolution",
+        "name": "newSchema",
+        "type": "string",
+        "description": "New schema"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "apollo-server",
+    "graphql-codegen",
+    "dataloader"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api-graphql-rest/skill/api-graphql-rest.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api-graphql-rest/skill/api-graphql-rest.yaml",
+    "checksum": "27f8bc89c4f58eea13a23e6337c941ad612f21be094dc12effa20c7266a7a556"
+  }
+}

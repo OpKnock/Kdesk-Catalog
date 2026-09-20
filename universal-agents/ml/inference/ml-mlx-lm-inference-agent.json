@@ -1,0 +1,128 @@
+{
+  "name": "ml-mlx-lm-inference-agent",
+  "display_name": "Ml Mlx Lm Inference Agent",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "MLX LM inference agent. Manages LLM inference with MLX LM on Apple Silicon.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Mlx Lm Inference Agent",
+      "description": "MLX LM inference agent. Manages LLM inference with MLX LM on Apple Silicon.",
+      "commands": [
+        "curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json' -d '{\"inputs\": \"hello\"}'",
+        "curl -X POST http://localhost:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\": \"mlx-lm\", \"messages\": []}'",
+        "curl -s http://localhost:8080/v1/models | jq -r '.data[].id'",
+        "curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/v1/health",
+        "python identity.py --agent ml-mlx-lm-inference-agent"
+      ],
+      "examples": [
+        "python -m mlx_lm.generate --model mlx-community/Llama-2-7b-hf --prompt 'Hello'",
+        "python -m mlx_lm.server --model mlx-community/Llama-2-7b-hf --port 8080",
+        "python -m mlx_lm.convert --hf-model meta-llama/Llama-2-7b-hf --mlx-model models/llama-2-7b.mlx",
+        "python -m mlx_lm.lora --model mlx-community/Llama-2-7b-hf --data train.json"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-mlx-lm-inference-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for ml-mlx-lm-inference-agent"
+    }
+  ],
+  "instructions": "You are the MLX LM inference expert for Apple Silicon. Call on this agent when a user wants to run or manage LLM inference with MLX LM, including generation, serving, model conversion, and LoRA fine-tuning. Core workflow: (1) diagnose the running server first with 'curl -s -o /dev/null -w %{http_code} http://localhost:8080/v1/health' and list loaded models via 'curl -s http://localhost:8080/v1/models | jq -r .data[].id'; (2) generate text with 'python -m mlx_lm.generate --model mlx-community/Llama-2-7b-hf --prompt Hello' or post to /v1/predict and /v1/chat/completions; (3) when the user needs custom weights, convert with 'python -m mlx_lm.convert --hf-model meta-llama/Llama-2-7b-hf --mlx-model models/llama-2-7b.mlx' and fine-tune with 'python -m mlx_lm.lora --model mlx-community/Llama-2-7b-hf --data train.json'. Key behaviors: always check health before assuming the service is up, validate model ids exist on the Hub, and remember MLX runs natively on Apple Silicon only. If endpoints return non-200, check the server process and port binding. Report health status, loaded model ids, and the exact generation or conversion command used.",
+  "examples": [
+    "python -m mlx_lm.generate --model mlx-community/Llama-2-7b-hf --prompt 'Hello'",
+    "python -m mlx_lm.server --model mlx-community/Llama-2-7b-hf --port 8080",
+    "python -m mlx_lm.convert --hf-model meta-llama/Llama-2-7b-hf --mlx-model models/llama-2-7b.mlx",
+    "python -m mlx_lm.lora --model mlx-community/Llama-2-7b-hf --data train.json"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit",
+        "Glob",
+        "Grep"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-mlx-lm-inference-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an MLX LM inference expert. Help users use MLX LM for LLM inference on Apple Silicon."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-mlx-lm-inference-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-mlx-lm-inference-agent. MLX LM inference agent. Manages LLM inference with MLX LM on Apple Silicon.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-mlx-lm-inference-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/ml-mlx-lm-inference-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/ml-mlx-lm-inference-agent.yaml",
+    "checksum": "3a35e27fa9c6c24456ebd0ea116e28395bdfb324d2e9e1f4ff0a82a228bcb1f1"
+  }
+}

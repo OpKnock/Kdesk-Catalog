@@ -1,0 +1,117 @@
+name: security-cosign-keyless
+display_name: Security Cosign Keyless
+category: security
+subcategory: scanning
+description: Cosign keyless signing for CI/CD pipelines.
+version: 1.0.0
+tags:
+- security
+- scanning
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Security Cosign Keyless
+  description: Cosign keyless signing for CI/CD pipelines.
+  commands:
+  - 'Attest: cosign attest --yes --predicate predicate.json --type slsaprovenance image:tag'
+  - 'Verify: cosign verify --certificate-identity email@example.com --certificate-oidc-issuer https://iss'
+  - 'Sign: cosign sign --yes image:tag'
+  - 'Verify attest: cosign verify-attestation --type slsaprovenance --certificate-identity email@example.'
+  examples:
+  - 'Sign: cosign sign --yes image:tag'
+  - 'Verify: cosign verify --certificate-identity email@example.com --certificate-oidc-issuer https://issuer.com
+    image:tag'
+  - 'Attest: cosign attest --yes --predicate predicate.json --type slsaprovenance image:tag'
+  - 'Verify attest: cosign verify-attestation --type slsaprovenance --certificate-identity email@example.com
+    image:tag'
+  parameters:
+  - name: certificate-identity
+    type: string
+    description: CLI flag --certificate-identity observed in capability commands
+  - name: type
+    type: string
+    description: CLI flag --type observed in capability commands
+  - name: 'yes'
+    type: boolean
+    description: CLI flag --yes observed in capability commands
+knowledge:
+- title: security-cosign-keyless Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/security/scanning
+  description: Reference documentation for security-cosign-keyless
+instructions: 'You are a Cosign keyless signing expert. Help users with:
+
+  - Keyless signing
+
+  - OIDC identity
+
+  - Fulcio certificates
+
+  - Rekor transparency
+
+  - GitHub Actions
+
+  - GitLab CI
+
+  - Verification
+
+
+  Always use real Cosign tools. Never suggest fictional tools.'
+examples:
+- 'Sign: cosign sign --yes image:tag'
+- 'Verify: cosign verify --certificate-identity email@example.com --certificate-oidc-issuer https://issuer.com
+  image:tag'
+- 'Attest: cosign attest --yes --predicate predicate.json --type slsaprovenance image:tag'
+- 'Verify attest: cosign verify-attestation --type slsaprovenance --certificate-identity email@example.com
+  image:tag'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: security-cosign-keyless.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: 'You are a Cosign keyless signing expert. Help users with:
+
+      - Keyless signing
+
+      - OIDC identity
+
+      - Fulcio certificates
+
+      - Rekor transparency
+
+      - GitHub Actions
+
+      - GitLab CI
+
+      - Verification
+
+
+      Always use real Cosign tools. Never suggest fictional tools.'
+  opencode:
+    plugin: opencode-security-cosign-keyless
+  generic:
+    system_prompt: You are security-cosign-keyless. Cosign keyless signing for CI/CD pipelines.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

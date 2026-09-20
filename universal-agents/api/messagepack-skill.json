@@ -1,0 +1,177 @@
+{
+  "name": "messagepack",
+  "display_name": "Messagepack",
+  "category": "api",
+  "subcategory": "general",
+  "description": "MessagePack binary serialization: encode/decode payloads, integrate MessagePack into APIs, and debug binary message dumps.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "json2msgpack",
+    "msgpack-cli",
+    "msgpack2json",
+    "python3"
+  ],
+  "capabilities": [
+    {
+      "name": "messagepack-encode-decode",
+      "description": "Encode JSON to MessagePack, decode MessagePack to JSON, and inspect binary payloads using the msgpack-tools utilities.",
+      "commands": [
+        "json2msgpack < input.json > output.msgpack",
+        "msgpack2json < output.msgpack",
+        "msgpack2json -j < output.msgpack",
+        "python3 -c \"import msgpack,sys; print(msgpack.unpackb(open('output.msgpack','rb').read(), raw=False))\"",
+        "msgpack-cli decode output.msgpack"
+      ],
+      "examples": [
+        "json2msgpack < user.json > user.msgpack",
+        "msgpack2json -j < user.msgpack",
+        "python3 -c \"import msgpack; print(msgpack.packb({'a':1,'b':[1,2,3]}, use_bin_type=True))\""
+      ],
+      "parameters": [
+        {
+          "name": "input_file",
+          "type": "string",
+          "description": "JSON file to encode into MessagePack"
+        },
+        {
+          "name": "pretty",
+          "type": "boolean",
+          "description": "Pretty-print decoded JSON output"
+        },
+        {
+          "name": "use_bin_type",
+          "type": "boolean",
+          "description": "Use msgpack bin type for bytes instead of str"
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "MessagePack Official Site",
+      "type": "documentation",
+      "source": "https://msgpack.org/",
+      "description": "Specification, implementations and format details for MessagePack"
+    },
+    {
+      "title": "msgpack-tools GitHub",
+      "type": "documentation",
+      "source": "https://github.com/ludocode/msgpack-tools",
+      "description": "json2msgpack and msgpack2json command-line utilities"
+    }
+  ],
+  "instructions": "# MessagePack\n\nMessagePack is an efficient binary serialization format that represents JSON-like objects as compact binary data.\n\n## What this skill does\n\n- Encodes JSON data into MessagePack binary for storage or wire transfer\n- Decodes MessagePack binaries back into human-readable JSON\n- Verifies that a production client and server agree on the same payload bytes\n\n## When to use\n\n- Replacing JSON with a compact binary format on HTTP or TCP APIs\n- Debugging raw MessagePack payloads captured from a wire or a message queue\n- Adding MessagePack support to Python/Go/Java services\n\n## Real commands\n\n```bash\n# Encode JSON file to MessagePack\njson2msgpack < input.json > output.msgpack\n\n# Decode MessagePack to JSON\nmsgpack2json < output.msgpack\nmsgpack2json -j < output.msgpack   # pretty printed\n\n# Inspect binary payload with Python\npython3 -c \"import msgpack; print(msgpack.unpackb(open('output.msgpack','rb').read(), raw=False))\"\n\n# Hex-dump to verify on-the-wire bytes\nxxd output.msgpack\n```\n\n## Language integration\n\n```python\n# Python client\nimport msgpack\npayload = msgpack.packb({\"user\": \"alice\", \"roles\": [\"admin\"]}, use_bin_type=True)\nmsg = msgpack.unpackb(payload, raw=False)\n```\n\n```go\n// Go: gopkg.in/vmihailenco/msgpack.v2\nb, _ := msgpack.Marshal(map[string]interface{}{\"user\": \"alice\"})\nvar m map[string]interface{}\nmsgpack.Unmarshal(b, &m)\n```\n\n## Testing\n\nRound-trip a payload and compare bytes before and after re-encoding:\n\n```bash\njson2msgpack < input.json > a.msgpack\nmsgpack2json -j < a.msgpack > roundtrip.json\npython3 -c \"import json,sys; a=json.load(open('input.json')); b=json.load(open('roundtrip.json')); sys.exit(0 if a==b else 1)\"\n```\n\n## Best practices\n\n- Use `use_bin_type=True` / `use_ext_types` so strings and bytes stay distinct\n- Always send `Content-Type: application/msgpack` on HTTP endpoints\n- Never log raw binary; base64-encode first with `base64 output.msgpack`",
+  "examples": [
+    {
+      "input": "My API returns a huge JSON list and latency is high. How do I switch to MessagePack?",
+      "output": "The agent encodes payloads with `json2msgpack`, updates the HTTP handler to set `Content-Type: application/msgpack`, and shows the Python/Go server changes to pack and unpack the body."
+    },
+    {
+      "input": "Decode this binary file I captured from my MQTT topic",
+      "output": "The agent runs `msgpack2json -j < capture.msgpack` and interprets the resulting JSON fields for the user."
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "messagepack.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-messagepack"
+    },
+    "generic": {
+      "system_prompt": "You own Messagepack end to end. You do it through messagepack-encode-decode: Encode JSON to MessagePack, decode MessagePack to JSON, and inspect binary payloads using the msgpack-tools utilities. The commands are real, e.g. `json2msgpack < input.json > output.msgpack`. You run and verify the real CLI commands before you claim anything.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "messagepack",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "messagepack-encode-decode",
+        "name": "input_file",
+        "type": "string",
+        "description": "JSON file to encode into MessagePack"
+      },
+      {
+        "capability": "messagepack-encode-decode",
+        "name": "pretty",
+        "type": "boolean",
+        "description": "Pretty-print decoded JSON output"
+      },
+      {
+        "capability": "messagepack-encode-decode",
+        "name": "use_bin_type",
+        "type": "boolean",
+        "description": "Use msgpack bin type for bytes instead of str"
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "json2msgpack",
+    "msgpack-cli",
+    "msgpack2json",
+    "python3"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/messagepack-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/messagepack-skill.yaml",
+    "checksum": "19554445f86e4beec8af6d6c2cd4e030740d2a6d72aee3dbdab819160ccb051d"
+  }
+}

@@ -1,0 +1,202 @@
+{
+  "name": "lightstep-observability",
+  "display_name": "Lightstep Observability",
+  "category": "api",
+  "subcategory": "general",
+  "description": "Send and query traces and metrics with Lightstep: OpenTelemetry collector configuration, OTLP ingestion, and Lightstep API queries.",
+  "version": "2.0.0",
+  "tags": [
+    "api"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "prerequisites": [
+    "docker",
+    "otel-cli",
+    "otelcol-contrib"
+  ],
+  "capabilities": [
+    {
+      "name": "otel-ingest",
+      "description": "Run the OpenTelemetry Collector and emit OTLP telemetry.",
+      "commands": [
+        "otelcol-contrib --config otelcol.yaml",
+        "docker run -p 4317:4317 -p 4318:4318 -e OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 -e LS_ACCESS_TOKEN=$LS_TOKEN otel/opentelemetry-collector-contrib:latest",
+        "curl -s -X POST http://localhost:4318/v1/traces -H 'Content-Type: application/x-protobuf' --data-binary @traces.pb",
+        "otel-cli exec --service checkout --name 'postgres.query' -- curl -s http://localhost:8080/api"
+      ],
+      "examples": [
+        "otelcol-contrib --config otelcol.yaml",
+        "curl -s -X POST http://localhost:4318/v1/traces -H 'Content-Type: application/x-protobuf' --data-binary @traces.pb",
+        "otel-cli exec --service checkout --name 'postgres.query' -- curl -s http://localhost:8080/api"
+      ],
+      "parameters": [
+        {
+          "name": "config",
+          "type": "string",
+          "description": "OpenTelemetry Collector config file."
+        },
+        {
+          "name": "access_token",
+          "type": "string",
+          "description": "Lightstep access token (LS_ACCESS_TOKEN)."
+        }
+      ]
+    },
+    {
+      "name": "lightstep-api",
+      "description": "Query Lightstep via the public API and the built-in CLI/curl.",
+      "commands": [
+        "curl -s -H \"Authorization: Bearer $LS_TOKEN\" https://api.lightstep.com/public/v0.2/projects/{project}/snapshots",
+        "curl -s -H \"Authorization: Bearer $LS_TOKEN\" \"https://api.lightstep.com/public/v0.2/projects/{project}/traces?operation=checkout.checkout\"",
+        "curl -s http://localhost:4318/metrics",
+        "curl -s -X POST http://localhost:4318/v1/metrics -H 'Content-Type: application/x-protobuf' --data-binary @metrics.pb"
+      ],
+      "examples": [
+        "curl -s -H \"Authorization: Bearer $LS_TOKEN\" https://api.lightstep.com/public/v0.2/projects/{project}/snapshots",
+        "curl -s http://localhost:4318/metrics",
+        "curl -s -H \"Authorization: Bearer $LS_TOKEN\" \"https://api.lightstep.com/public/v0.2/projects/{project}/traces?operation=checkout.checkout\""
+      ],
+      "parameters": [
+        {
+          "name": "project",
+          "type": "string",
+          "description": "Lightstep project name."
+        },
+        {
+          "name": "operation",
+          "type": "string",
+          "description": "Trace operation filter."
+        }
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "Lightstep Docs",
+      "type": "documentation",
+      "source": "https://docs.lightstep.com/",
+      "description": "Official Lightstep documentation."
+    },
+    {
+      "title": "OpenTelemetry Collector",
+      "type": "documentation",
+      "source": "https://opentelemetry.io/docs/collector/",
+      "description": "OTel collector setup and configuration."
+    }
+  ],
+  "instructions": "# Lightstep Observability\n\nInstrument services with OpenTelemetry and send telemetry to Lightstep.\n\n## What this skill does\n\n- Runs the OTel Collector exporting to Lightstep.\n- Emits OTLP traces/metrics from apps and the CLI.\n- Queries traces and snapshots via the public API.\n\n## When to use\n\n- Distributed tracing across microservices.\n- SLO monitoring on trace-based latency.\n- Onboarding new services to Lightstep.\n\n## Real commands\n\n```bash\n# Run the collector\notelcol-contrib --config otelcol.yaml\n\n# Docker collector with Lightstep export\ndocker run -p 4317:4317 -p 4318:4318 \\\n  -e OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 \\\n  -e LS_ACCESS_TOKEN=$LS_TOKEN \\\n  otel/opentelemetry-collector-contrib:latest\n\n# Emit a trace around a command\notel-cli exec --service checkout --name 'postgres.query' \\\n  -- curl -s http://localhost:8080/api\n\n# Push protobuf OTLP directly\ncurl -s -X POST http://localhost:4318/v1/traces \\\n  -H 'Content-Type: application/x-protobuf' --data-binary @traces.pb\n\n# Query snapshots (project SLOs)\ncurl -s -H \"Authorization: Bearer $LS_TOKEN\" \\\n  https://api.lightstep.com/public/v0.2/projects/{project}/snapshots\n\n# Query traces for an operation\ncurl -s -H \"Authorization: Bearer $LS_TOKEN\" \\\n  \"https://api.lightstep.com/public/v0.2/projects/{project}/traces?operation=checkout.checkout\"\n```\n\n## otelcol.yaml example\n\n```yaml\nreceivers:\n  otlp:\n    protocols:\n      grpc:\n      http:\nexporters:\n  otlp/lightstep:\n    endpoint: ingest.lightstep.com:443\n    headers:\n      \"lightstep-access-token\": ${LS_ACCESS_TOKEN}\nservice:\n  pipelines:\n    traces:\n      receivers: [otlp]\n      exporters: [otlp/lightstep]\n```\n\n## Testing\n\n```bash\ncurl -s http://localhost:4318/metrics   # collector is alive\n```\n\n## Best practices\n\n- Send access tokens via env var, never hard-coded configs.\n- Use the same service.name across hosts so traces join correctly.\n- Configure tail sampling for high-volume services to control cost.\n",
+  "examples": [
+    {
+      "input": "Get traces for the checkout service",
+      "output": "Run the collector, emit spans with otel-cli exec --service checkout, then query https://api.lightstep.com/public/v0.2/projects/{project}/traces?operation=checkout.*"
+    },
+    {
+      "input": "Instrument an existing curl call",
+      "output": "otel-cli exec --service billing --name 'api.call' -- curl -s http://localhost:8080/invoice"
+    }
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "lightstep-observability.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    },
+    "opencode": {
+      "plugin": "opencode-lightstep-observability"
+    },
+    "generic": {
+      "system_prompt": "This is your domain: Lightstep Observability. You do it through otel-ingest: Run the OpenTelemetry Collector and emit OTLP telemetry. The commands are real, e.g. `otelcol-contrib --config otelcol.yaml`. You prefer the shortest safe path, and you reproduce failures before diagnosing them.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "lightstep-observability",
+  "type": "skill",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {
+    "parameters": [
+      {
+        "capability": "otel-ingest",
+        "name": "config",
+        "type": "string",
+        "description": "OpenTelemetry Collector config file."
+      },
+      {
+        "capability": "otel-ingest",
+        "name": "access_token",
+        "type": "string",
+        "description": "Lightstep access token (LS_ACCESS_TOKEN)."
+      },
+      {
+        "capability": "lightstep-api",
+        "name": "project",
+        "type": "string",
+        "description": "Lightstep project name."
+      },
+      {
+        "capability": "lightstep-api",
+        "name": "operation",
+        "type": "string",
+        "description": "Trace operation filter."
+      }
+    ]
+  },
+  "outputs": {},
+  "dependencies": [
+    "docker",
+    "otel-cli",
+    "otelcol-contrib"
+  ],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "api/lightstep-observability-skill.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "capability.parameters",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "prerequisites"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/api/lightstep-observability-skill.yaml",
+    "checksum": "8fa77cb293f83796434f7102308108c290f5dc1fb92b596c21547f9913cdec16"
+  }
+}

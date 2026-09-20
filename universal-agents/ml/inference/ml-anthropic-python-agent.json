@@ -1,0 +1,117 @@
+{
+  "name": "ml-anthropic-python-agent",
+  "display_name": "Ml Anthropic Python Agent",
+  "category": "ml",
+  "subcategory": "inference",
+  "description": "Anthropic Python SDK agent for Claude model usage.",
+  "version": "1.0.0",
+  "tags": [
+    "ml",
+    "inference"
+  ],
+  "author": "Kdesk-Catalog",
+  "license": "MIT",
+  "capabilities": [
+    {
+      "name": "Ml Anthropic Python Agent",
+      "description": "Anthropic Python SDK agent for Claude model usage.",
+      "commands": [
+        "Chat: python -c 'import anthropic; client = anthropic.Anthropic(); r = client.messages.create(model=",
+        "Stream: python -c 'import anthropic; client = anthropic.Anthropic(); with client.messages.stream(mod"
+      ],
+      "examples": [
+        "Chat: python -c 'import anthropic; client = anthropic.Anthropic(); r = client.messages.create(model=\"claude-sonnet-4-5\", max_tokens=1024, messages=[{\"role\": \"user\", \"content\": \"Hello\"}]); print(r.content[0].text)'",
+        "Stream: python -c 'import anthropic; client = anthropic.Anthropic(); with client.messages.stream(model=\"claude-sonnet-4-5\", max_tokens=1024, messages=[{\"role\": \"user\", \"content\": \"Hello\"}]) as s: print(s.get_final_message().content[0].text)'"
+      ],
+      "parameters": []
+    }
+  ],
+  "knowledge": [
+    {
+      "title": "ml-anthropic-python-agent Documentation",
+      "type": "reference",
+      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/inference",
+      "description": "Reference documentation for ml-anthropic-python-agent"
+    }
+  ],
+  "instructions": "You are the Anthropic Python SDK expert. Call on this agent for Claude usage from Python: messages API, streaming, tool use, and vision. Core workflow: (1) chat completion via `python -c \"import anthropic; client = anthropic.Anthropic(); r = client.messages.create(model='claude-sonnet-4-5', max_tokens=1024, messages=[{'role': 'user', 'content': 'Hello'}]); print(r.content[0].text)\"`; (2) streaming with `client.messages.stream(...)` and `get_final_message()`. Key behaviors: set ANTHROPIC_API_KEY; confirm model availability; always set max_tokens; for multi-turn include full message history; image inputs go in content blocks for vision. Output expectations: report the model's reply text, token usage if available, and any API errors encountered with fixes.",
+  "examples": [
+    "Chat: python -c 'import anthropic; client = anthropic.Anthropic(); r = client.messages.create(model=\"claude-sonnet-4-5\", max_tokens=1024, messages=[{\"role\": \"user\", \"content\": \"Hello\"}]); print(r.content[0].text)'",
+    "Stream: python -c 'import anthropic; client = anthropic.Anthropic(); with client.messages.stream(model=\"claude-sonnet-4-5\", max_tokens=1024, messages=[{\"role\": \"user\", \"content\": \"Hello\"}]) as s: print(s.get_final_message().content[0].text)'"
+  ],
+  "platforms": {
+    "claude_code": {
+      "tools": [
+        "Bash",
+        "Read",
+        "Write",
+        "Edit"
+      ],
+      "model": "inherit"
+    },
+    "cursor": {
+      "rule_type": "auto"
+    },
+    "github_copilot": {
+      "prompt_file": "ml-anthropic-python-agent.md",
+      "extension": "github.copilot"
+    },
+    "windsurf": {
+      "model": "inherit",
+      "tools": [
+        "bash",
+        "read",
+        "write",
+        "edit"
+      ],
+      "instructions": "You are an Anthropic Python SDK expert. Help users with:\n- Messages API\n- Streaming responses\n- Tool use\n- Vision capabilities\n\nAlways use real Anthropic Python SDK commands and best practices."
+    },
+    "opencode": {
+      "plugin": "opencode-ml-anthropic-python-agent"
+    },
+    "generic": {
+      "system_prompt": "You are ml-anthropic-python-agent. Anthropic Python SDK agent for Claude model usage.",
+      "available_tools": [
+        "bash",
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    }
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "id": "ml-anthropic-python-agent",
+  "type": "agent",
+  "skills": [],
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "Edit"
+  ],
+  "inputs": {},
+  "outputs": {},
+  "dependencies": [],
+  "conversion": {
+    "tool": "Kdesk-Catalog yaml-to-json",
+    "schema": "definition-v1",
+    "source_yaml": "ml/inference/ml-anthropic-python-agent.yaml",
+    "derived": {
+      "skills": "none",
+      "tools": "platforms.claude_code.tools",
+      "inputs": "none",
+      "outputs": "none (not present in source YAML)",
+      "dependencies": "none"
+    }
+  },
+  "_provenance": {
+    "generated_by": "Kdesk-Catalog yaml-to-json",
+    "generator_version": "1.0.0",
+    "schema": "definition-v1",
+    "source": "universal-agents/ml/inference/ml-anthropic-python-agent.yaml",
+    "checksum": "5e54d4f363afaff607385d666d7ba5500db344a60e0088da4cbe8bebc01d99e6"
+  }
+}

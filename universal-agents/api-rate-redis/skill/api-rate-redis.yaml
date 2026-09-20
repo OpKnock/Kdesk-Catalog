@@ -1,0 +1,116 @@
+name: api-rate-redis
+version: 2.0.0
+type: skill
+category: security
+description: 'Builds distributed rate limiting with Redis: shared counters across instances, ioredis clients,
+  and Dockerized Redis for multi-node consistency.'
+keywords:
+- rate-limiting
+- distributed
+- redis
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    - Glob
+    - Grep
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: api-rate-redis.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-api-rate-redis
+  generic:
+    system_prompt: 'You work Api Rate Redis hands-on. You do it through redis-setup: Run and connect to
+      Redis for shared limit state. The commands are real, e.g. `docker run -d -p 6379:6379 --name api-redis
+      redis:7`. You answer with exact commands, not abstractions, and flag anything you have not verified
+      yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+capabilities:
+- name: redis-setup
+  description: Run and connect to Redis for shared limit state
+  commands:
+  - docker run -d -p 6379:6379 --name api-redis redis:7
+  - redis-cli ping
+  - redis-cli -u redis://localhost:6379 GET rate:user:1
+  - npm install ioredis
+  - node -e "const Redis=require('ioredis'); const r=new Redis(); r.incr('rate:user:1').then(v=>{console.log(v);
+    r.quit()})"
+  examples:
+  - redis-cli ping verifies connectivity
+  - INCR against the shared key counts across instances
+  - ioredis client runs Lua-free counter ops from Node
+  parameters:
+  - name: key
+    type: string
+    description: Rate counter key name
+  - name: expiry-seconds
+    type: integer
+    description: TTL for the counter window
+  - name: limit
+    type: integer
+    description: Max requests per window
+- name: node-integration
+  description: Integrate Redis counting into a Node API
+  commands:
+  - redis-cli INCR rate:user:1 && redis-cli EXPIRE rate:user:1 60
+  - redis-cli --scan --pattern 'rate:*'
+  - node -e "const Redis=require('ioredis'); const r=new Redis(); r.multi().incr('k').expire('k',60).exec().then(x=>{console.log(x);
+    r.quit()})"
+  examples: []
+  parameters: []
+prerequisites:
+- redis
+- node.js
+- python
+tools:
+- redis
+- node.js
+- python
+- nginx
+- express-rate-limit
+examples:
+- input: Share limits across two API instances
+  output: Swaps the in-memory limiter for ioredis counters with a shared key namespace
+- input: Inspect current limit state
+  output: Scans rate:* keys with redis-cli and reports counts per client
+instructions: "# API Rate v2 - Redis Distributed\n\nDistributed rate limiting with Redis.\n\n## What This\
+  \ Skill Does\n- Shares counters across all API instances\n- Uses atomic INCR with TTL windows\n- Survives\
+  \ instance restarts\n\n## When to Use\n- Multiple instances behind a load balancer\n- Multi-region deployments\
+  \ needing shared limits\n- Migration from in-memory to shared state\n\n## Real Commands\n\n```bash\n\
+  docker run -d -p 6379:6379 --name api-redis redis:7\nredis-cli ping\nredis-cli INCR rate:user:1\nredis-cli\
+  \ EXPIRE rate:user:1 60\n```\n\n## Atomic Middleware Pattern\n\n```js\nconst Redis = require('ioredis');\n\
+  const redis = new Redis({ host: 'redis', port: 6379 });\nasync function consume(key, limit, windowSec)\
+  \ {\n  const count = await redis.incr(key);\n  if (count === 1) await redis.expire(key, windowSec);\n\
+  \  return count <= limit;\n}\n```\n\n## Testing\n- Run two instances and confirm shared enforcement\n\
+  - Kill Redis and verify fail-open/fail-closed policy\n- Check memory with redis-cli --scan --pattern\
+  \ 'rate:*'\n\n## Best Practices\n- Use MULTI or Lua for check-and-set atomicity\n- Namespace keys by\
+  \ environment\n- Set conservative maxmemory with eviction policy"
+display_name: Api Rate Redis
+knowledge:
+- title: Redis Commands
+  type: documentation
+  source: https://redis.io/docs/latest/commands/incr/
+  description: INCR and related counter commands
+- title: ioredis GitHub
+  type: documentation
+  source: https://github.com/redis/ioredis
+  description: Node.js Redis client with Lua and pipeline support

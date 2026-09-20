@@ -1,0 +1,185 @@
+name: cosign
+display_name: cosign
+category: security
+subcategory: general
+description: Signs and verifies container images, blobs, and attestations with Sigstore cosign for supply-chain
+  provenance.
+version: 2.0.0
+tags:
+- security
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- cosign
+capabilities:
+- name: image-signing
+  description: Generate key pairs, sign images, and verify signatures against keys or keyless providers.
+  commands:
+  - cosign generate-key-pair
+  - cosign sign --key cosign.key ghcr.io/org/app:latest
+  - cosign verify --key cosign.pub ghcr.io/org/app:latest
+  - cosign sign --key cosign.key --tlog-upload=false ghcr.io/org/app:latest
+  - cosign triangulate ghcr.io/org/app:latest
+  examples:
+  - cosign generate-key-pair
+  - cosign sign --key cosign.key ghcr.io/org/app:latest
+  - cosign verify --key cosign.pub ghcr.io/org/app:latest
+  parameters:
+  - name: image
+    type: string
+    description: Container image reference to sign or verify
+  - name: key
+    type: string
+    description: Path to the signing private key or public key
+  - name: tlogUpload
+    type: boolean
+    description: Whether to upload to the transparency log
+- name: attestations
+  description: Attach and verify SLSA provenance and custom attestations.
+  commands:
+  - cosign attest --key cosign.key --type slsaprovenance --predicate provenance.json ghcr.io/org/app:latest
+  - cosign verify-attestation --key cosign.pub ghcr.io/org/app:latest
+  - cosign verify-attestation --type slsaprovenance --key cosign.pub ghcr.io/org/app:latest
+  - cosign attest-blob --key cosign.key --type custom attest.txt
+  examples:
+  - cosign attest --key cosign.key --type slsaprovenance --predicate provenance.json ghcr.io/org/app:latest
+  - cosign verify-attestation --type slsaprovenance --key cosign.pub ghcr.io/org/app:latest
+  parameters:
+  - name: type
+    type: string
+    description: 'Attestation type: slsaprovenance, spdx, custom'
+  - name: predicate
+    type: string
+    description: Path to the JSON predicate file
+knowledge:
+- title: cosign Documentation
+  type: documentation
+  source: https://docs.sigstore.dev/cosign/
+  description: Signing, verification, key management, and keyless workflows
+- title: Sigstore Overview
+  type: documentation
+  source: https://docs.sigstore.dev/
+  description: Rekor, Fulcio, and the sigstore trust model
+instructions: '# cosign
+
+
+  Sign and verify container images and blobs for software supply chain integrity.
+
+
+  ## What This Skill Does
+
+
+  - Generates and manages cosign key pairs
+
+  - Signs OCI images with key-based or keyless (OIDC) flows
+
+  - Verifies signatures, certificates, and transparency log entries
+
+  - Attaches and verifies SLSA provenance and SBOM attestations
+
+  - Inspects where signatures are stored with triangulate
+
+
+  ## When to Use
+
+
+  - Images must be verifiable before deployment in production
+
+  - SBOMs and provenance need tamper-evident attestation
+
+  - A verification policy is required in CI/CD
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Key-based signing
+
+  cosign generate-key-pair
+
+  cosign sign --key cosign.key ghcr.io/org/app:latest
+
+  cosign verify --key cosign.pub ghcr.io/org/app:latest
+
+
+  # Keyless signing (defaults to OIDC + Fulcio)
+
+  cosign sign ghcr.io/org/app:latest
+
+  cosign verify ghcr.io/org/app:latest
+
+
+  # Attestations
+
+  cosign attest --key cosign.key --type slsaprovenance --predicate provenance.json ghcr.io/org/app:latest
+
+  cosign verify-attestation --type slsaprovenance --key cosign.pub ghcr.io/org/app:latest
+
+
+  # Blob signing
+
+  cosign sign-blob --key cosign.key artifact.txt
+
+  cosign verify-blob --key cosign.pub --signature artifact.txt.sig artifact.txt
+
+
+  # Find where the signature lives
+
+  cosign triangulate ghcr.io/org/app:latest
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Store the private key offline or in KMS (--key gcpkms:// / azurekms://)
+
+  - Enable transparency log upload by default; disable only for private registries
+
+  - Sign the SBOM and provenance, then verify at deploy time
+
+  - Rotate keys periodically and re-sign released tags if required
+
+  - Verify in production with a policy engine (Kyverno/Sigstore policy controller)'
+examples:
+- input: Sign the image my CI builds
+  output: Agent adds cosign sign --key cosign.key with COSIGN_PASSWORD in CI secrets and stores the key
+    in the key store, then wires cosign verify into the deploy job.
+- input: Verify this image came from our pipeline
+  output: Agent runs cosign verify --key cosign.pub image and, if provenance exists, cosign verify-attestation
+    --type slsaprovenance to check the build source.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: cosign.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-cosign
+  generic:
+    system_prompt: 'You own cosign end to end. You do it through image-signing: Generate key pairs, sign
+      images, and verify signatures against keys or keyless providers. The commands are real, e.g. `cosign
+      generate-key-pair`. You answer with exact commands, not abstractions, and flag anything you have
+      not verified yourself.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

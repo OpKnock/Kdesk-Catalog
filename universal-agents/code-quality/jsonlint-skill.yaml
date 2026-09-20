@@ -1,0 +1,181 @@
+name: jsonlint
+display_name: jsonlint
+category: code-quality
+subcategory: general
+description: Validates and formats JSON files with jsonlint and jq for parsing, diffing, and schema checks.
+version: 2.0.0
+tags:
+- code-quality
+author: Kdesk-Catalog
+license: MIT
+prerequisites:
+- echo
+- jsonlint
+- python
+capabilities:
+- commands:
+  - jsonlint config.json
+  - jsonlint -q config.json
+  - python -m json.tool config.json > /dev/null
+  - jq empty config.json
+  - echo "{\"a\":1}" | jsonlint
+  description: Validate JSON syntax from files or stdin.
+  name: json-validation
+  examples:
+  - jsonlint -q package.json && echo valid
+  - jq empty db/seed.json
+  - python -m json.tool config.json | head -20
+  parameters:
+  - description: JSON file path
+    name: file
+    type: string
+  - description: Silent on success
+    name: quiet
+    type: boolean
+- commands:
+  - jq . config.json
+  - jq -r ".name" package.json
+  - jq ".items | length" data.json
+  - jq -S . config.json > formatted.json
+  - jq "map(select(.active))" users.json
+  description: Query, format, and transform JSON with jq.
+  name: json-processing
+  examples:
+  - jq -r ".users[].email" users.json
+  - 'jq "group_by(.type) | map({type: .[0].type, count: length})" data.json'
+  - jq --arg k "key" ".[$k]" data.json
+  parameters:
+  - description: jq filter expression
+    name: filter
+    type: string
+  - name: output
+    type: string
+    description: Output file path
+knowledge:
+- title: jq Manual
+  description: Filter language reference
+  source: https://jqlang.github.io/jq/manual/
+  type: documentation
+- title: JSON Spec
+  description: JSON syntax specification
+  source: https://www.json.org/json-en.html
+  type: documentation
+instructions: '# JSON Lint
+
+
+  Validate and manipulate JSON files.
+
+
+  ## When to Use
+
+
+  - Verifying config and seed files parse correctly
+
+  - CI checks that catch invalid JSON early
+
+  - Querying and transforming JSON without writing scripts
+
+  - Cleaning up unformatted JSON output
+
+
+  ## Commands
+
+
+  ```bash
+
+  # Validate
+
+  jsonlint config.json
+
+  jsonlint -q config.json
+
+  jq empty config.json
+
+  python -m json.tool config.json > /dev/null
+
+
+  # Format
+
+  jq . config.json
+
+  python -m json.tool config.json
+
+
+  # Query
+
+  jq -r ".name" package.json
+
+  jq ".items | length" data.json
+
+  jq -r ".users[].email" users.json
+
+  jq "map(select(.active))" users.json
+
+
+  # Write sorted output
+
+  jq -S . config.json > formatted.json
+
+  ```
+
+
+  ## CI Example
+
+
+  ```bash
+
+  jq empty ./*.json && echo "all valid"
+
+  ```
+
+
+  ## Best Practices
+
+
+  - Use jq empty in CI to validate without output
+
+  - Prefer -S for stable, sorted JSON in git
+
+  - Quote filters with single quotes in shells
+
+  - Use --arg to inject variables into filters safely
+
+  - Never eval JSON as code (no JSON.parse of untrusted)
+
+  - Keep JSON configs pretty-printed for review'
+examples:
+- input: Validate all JSON files in my repo
+  output: Agent loops jq empty over the files and reports the invalid ones with line context.
+- input: Extract all emails from a JSON array
+  output: Agent runs jq -r ".users[].email" and shows the output.
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: jsonlint.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+  opencode:
+    plugin: opencode-jsonlint
+  generic:
+    system_prompt: 'You work jsonlint hands-on. You do it through json-validation: Validate JSON syntax
+      from files or stdin. The commands are real, e.g. `jsonlint config.json`. You prefer the shortest
+      safe path, and you reproduce failures before diagnosing them.'
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

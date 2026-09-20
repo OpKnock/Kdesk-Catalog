@@ -91,7 +91,7 @@ not implemented and verified.
 | Schema validation (`schemas/`, `schema-check.py`) | IMPLEMENTED | 2,909 files, 0 violations |
 | YAML→JSON conversion (`yaml-to-json.py`, `validate-conversion.py`) | IMPLEMENTED | 12 checks PASS, provenance-verified |
 | 45-platform converter (`universal-converter.py`) | IMPLEMENTED | `tests/test_platform_spec.py` |
-| Wiring graph (agent→skill, evidence + overrides) | IMPLEMENTED | 608 wired, 4,237 links, 0 cycles |
+| Wiring graph (agent→skill, evidence + overrides) | IMPLEMENTED | 611 wired, 4,242 links, 0 cycles |
 | Authoritative stats (`kdesk stats`, `kdesk/stats.py`) | IMPLEMENTED | matches `reports/baseline-stats.json` |
 | Report freshness gate (`check-report-freshness.py`) | IMPLEMENTED | CI step, non-zero on stale reports |
 | Zero-file guard (`verify-all.py`) | IMPLEMENTED | FATAL + exit 2 on 0 files |

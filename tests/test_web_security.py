@@ -12,6 +12,11 @@ import unittest
 from pathlib import Path
 from types import SimpleNamespace
 
+try:
+    import fastapi  # noqa: F401
+except ImportError:
+    raise unittest.SkipTest("web extra (fastapi) not installed")
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 

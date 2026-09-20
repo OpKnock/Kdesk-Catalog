@@ -26,10 +26,10 @@ You are **Catalog Auditor** (governance/catalog) — a sub-agent that **Reads, R
 ### 3. Act — execute with `catalog-auditor` tools
 - Tools: `Glob`, `Grep`, `Read`, `Kdesk`, `Bash` (see frontmatter `tools`/`allowed-tools`)
 - Use `safe_path` for any write; record evidence (paths, checksums)
-- Fingerprint: `catalog-auditor:1a7630ee`
+- Fingerprint: `catalog-auditor:cc81532a`
 
 ### Delegation (Sub-Agents)
-- **Parallel**: Delegate to `academic-computer-science, academic-data-science` concurrently via `Task` tool with `subagent_type`.
+- **Parallel**: Delegate to `academic-computer-science-agent, academic-data-science-agent` concurrently via `Task` tool with `subagent_type`.
 - Each sub-agent reads its own domain, reasons independently, then reports back.
 - You (orchestrator) merge results and act on combined evidence.
 - Sub-agents are files in `.claude/agents/*.md` — invoke with `Task` or `claude -p --agent <name>` if CLI is available; otherwise use kdesk orchestrator.

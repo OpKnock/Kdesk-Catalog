@@ -73,66 +73,9 @@ python scripts/universal-converter.py --platforms windsurf --quiet
 
 > **A complete AI agent & skill registry at your fingertips** — From ML engineers to Reddit community ninjas, from whimsy injectors to reality checkers. Each definition is a specialized expert with personality, processes, and proven deliverables.
 
-### 🎯 Agent Types
-
-| Type | Description | Examples |
-|------|-------------|----------|
-| **Persona Agents** | Role-based experts with full end-to-end workflows | `ml-engineer`, `api-architect`, `sre-engineer`, `devops-engineer` |
-| **Specialist Agents** | Deep domain tool operators | `terraform-module-builder`, `kubernetes-deployment-specialist`, `api-security-engineer` |
-| **Automation Agents** | Pipeline/workflow executors | `ci-pipeline-optimizer`, `deployment-strategy-engineer`, `background-job-scheduler` |
-
-### 🛠 Skill Types
-
-| Type | Description | Examples |
-|------|-------------|----------|
-| **Tool Workflow Skills** | End-to-end CLI tool operations | `terraform-infrastructure`, `docker-deployment`, `kubernetes-deployment` |
-| **Pattern & Architecture Skills** | Design patterns & system architectures | `circuit-breaker-pattern`, `sidecar-pattern`, `adapter-pattern` |
-| **Integration Skills** | Third-party API connections | `stripe-payments`, `github-webhooks`, `slack-bot` |
-| **Security & Compliance Skills** | Hardening, scanning, audit | `trivy-security-scanner`, `semgrep-security`, `soc2-compliance` |
-
 ---
 
-## 🚀 Quick Start
-
-### 1. Clone & Generate
-
-```bash
-git clone https://github.com/OpKnock/Kdesk-Catalog
-cd Kdesk-Catalog
-
-# Generate for ALL platforms (~15 min, 130k files)
-python scripts/universal-converter.py --platforms all --quiet
-
-# Or just one platform (fast)
-python scripts/universal-converter.py --platforms windsurf --quiet
-```
-
-### 2. Install to Your Tool
-
-| Platform | Install Command |
-|----------|-----------------|
-| **Claude Code** | `cp -r platform-agents/claude_code/.claude/agents/* ~/.claude/agents/ && cp -r platform-agents/claude_code/.claude/skills/* ~/.claude/skills/` |
-| **Cursor** | `cp -r platform-agents/cursor/* .cursor/rules/` |
-| **GitHub Copilot** | `cp -r platform-agents/github_copilot/.github .github/` |
-| **Codex CLI** | `cp -r platform-agents/codex_cli/.agents .` |
-| **Gemini CLI** | `cp -r platform-agents/gemini_cli/.gemini .` |
-| **Windsurf** | `cp -r platform-agents/windsurf/* .windsurf/rules/` |
-| **OpenCode** | `opencode plugin install ./platform-agents/opencode` |
-| **Zed** | `cp -r platform-agents/zed/.agents .` |
-| **Cline** | `cp -r platform-agents/cline/.clinerules .` |
-| **Goose** | `cp -r platform-agents/goose/recipes/* ~/.config/goose/recipes/` |
-
-> Each platform folder in `platform-agents/` has its own `README.md` with exact instructions.
-
----
-
-## 🎭 The Catalog: AI Specialists Ready to Transform Your Workflow
-
-> **A complete AI agent & skill registry at your fingertips** — From ML engineers to Reddit community ninjas, from whimsy injectors to reality checkers. Each definition is a specialized expert with personality, processes, and proven deliverables.
-
----
-
-## 🎨 The Catalog Roster
+## 🎭 The Catalog Roster
 
 ### 💻 Engineering Division
 

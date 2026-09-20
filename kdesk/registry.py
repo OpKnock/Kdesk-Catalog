@@ -21,7 +21,13 @@ class CatalogError(Exception):
 
 
 def default_repo_root() -> Path:
-    """Repo root derived from the package location (portable, no hard-coded paths)."""
+    """Repo root derived from the package location or current working directory.
+    Walks up from CWD to find universal-agents; falls back to package location."""
+    cwd = Path.cwd()
+    for parent in [cwd] + list(cwd.parents):
+        if (parent / "universal-agents").is_dir():
+            return parent
+    # Fallback: package location (for installed package)
     return Path(__file__).resolve().parents[1]
 
 

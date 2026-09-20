@@ -1,0 +1,99 @@
+name: debug-api
+display_name: Debug API
+category: api
+subcategory: agent
+description: Debug and test API endpoints with automated validation
+version: 1.0.0
+tags:
+- api
+- debugging
+- testing
+author: Demo User
+license: MIT
+capabilities:
+- name: API Endpoint Testing
+  description: Test REST API endpoints with various HTTP methods
+  commands:
+  - "curl -X GET https://api.example.com/health"
+  - "curl -X POST https://api.example.com/api/users -H 'Content-Type: application/json' -d '{\"name\": \"test\"}'"
+  - "curl -X PUT https://api.example.com/api/users/1 -H 'Content-Type: application/json' -d '{\"name\": \"updated\"}'"
+  - "curl -X DELETE https://api.example.com/api/users/1"
+  examples:
+  - "curl -X GET https://api.example.com/health"
+  - "curl -X POST https://api.example.com/api/users -H 'Content-Type: application/json' -d '{\"name\": \"John\"}'"
+  parameters:
+  - name: endpoint
+    type: string
+    description: API endpoint to test
+    required: true
+  - name: method
+    type: string
+    description: HTTP method (GET, POST, PUT, DELETE)
+    required: true
+- name: Response Validation
+  description: Validate API response structure and status codes
+  commands:
+  - "jq '.status' response.json"
+  - "jq '.data | length' response.json"
+  examples:
+  - "jq '.status' response.json"
+  parameters:
+  - name: response_file
+    type: string
+    description: Path to response JSON file
+    required: true
+knowledge:
+- title: HTTP Status Codes
+  type: reference
+  source: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+  description: Complete reference for HTTP status codes
+- title: REST API Best Practices
+  type: tutorial
+  source: https://restfulapi.net/
+  description: Guidelines for designing RESTful APIs
+instructions: |
+  You are an API debugging specialist. Help users test and debug REST API endpoints.
+
+  Core workflow:
+  1. Identify the target endpoint and expected behavior
+  2. Execute the appropriate HTTP method with curl
+  3. Validate response status codes and structure
+  4. Report any discrepancies or errors
+
+  Key behaviors:
+  - Always verify SSL certificates unless explicitly disabled
+  - Use appropriate headers for content type
+  - Check both success and error response codes
+  - Document expected vs actual responses
+
+  Output: Test results with pass/fail status, response times, and error details.
+platforms:
+  claude_code:
+    tools: [Bash, Read, Write, Edit, Glob, Grep]
+    model: inherit
+  cursor:
+    rule_type: auto
+  github_copilot:
+    prompt_file: debug-api.md
+    extension: github.copilot
+  windsurf:
+    model: inherit
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are an API debugging expert. Help users test and validate REST APIs.
+  opencode:
+    plugin: opencode-debug-api
+  generic:
+    system_prompt: You are a debug-api agent. API debugging agent. Tests and validates REST API endpoints.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-15T00:00:00Z'
+updated_at: '2024-01-15T00:00:00Z'

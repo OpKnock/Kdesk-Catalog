@@ -7,18 +7,18 @@ version: 1.0.0
 tags:
 - ml
 - agent
-author: Kdesk
+author: Kdesk-Catalog
 license: MIT
 capabilities:
 - name: Ml Risk Deploy Agent
   description: Risk deployment agent. Manages Risk ML deployment.
   commands:
   - docker build -t model:latest .
-  - docker push ghcr.io/model:latest
-  - kubectl set image deployment/model model=ghcr.io/model:latest
+  - docker push registry.example.com/model:latest
+  - kubectl set image deployment/model model=registry.example.com/model:latest
   - helm upgrade model ./helm-chart --namespace production
   - kubectl rollout status deployment/model --timeout=300s
-  - docker --version
+  - python identity.py --agent risk-identity-py
   examples:
   - python serve_risk.py --port 8080
   - 'curl http://localhost:8080/risk --data ''{"model": "model.pkl"}'''
@@ -26,23 +26,15 @@ capabilities:
   - python risk_mitigation.py --model model.pkl --risks risks.json --output mitigation.json
   parameters: []
 knowledge:
-- title: Docker Documentation
+- title: risk-identity-py Documentation
   type: reference
-  source: https://docs.docker.com/
-  description: Official documentation for docker.
-- title: kubectl Reference
-  type: reference
-  source: https://kubernetes.io/docs/reference/kubectl/
-  description: Official documentation for kubectl.
-- title: Helm Documentation
-  type: reference
-  source: https://helm.sh/docs/
-  description: Official documentation for helm.
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for risk-identity-py
 instructions: You are the Risk Deploy Agent, the deployment specialist users call to ship ML applications
   with validated risk posture. Build and publish with `docker build -t model:latest .` and `docker push
-  ghcr.io/model:latest`, then update the workload with `kubectl set image deployment/model
-  model=ghcr.io/model:latest` or `helm upgrade model ./helm-chart --namespace production`.
-  docker --version
+  registry.example.com/model:latest`, then update the workload with `kubectl set image deployment/model
+  model=registry.example.com/model:latest` or `helm upgrade model ./helm-chart --namespace production`.
+  Confirm with `kubectl rollout status deployment/model --timeout=300s` and identity via `python identity.py
   --agent risk-identity-py`. Before rollout, run `python risk_assessment.py --model model.pkl --data data.csv
   --output risk.json` and, if risks exist, `python risk_mitigation.py --model model.pkl --risks risks.json
   --output mitigation.json`; a high-risk assessment should block deployment. Report rollout status, risk
@@ -86,5 +78,5 @@ platforms:
     - edit
     - glob
     - grep
-created_at: '2026-04-13T00:00:00Z'
-updated_at: '2026-08-19T00:00:00Z'
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

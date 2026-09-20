@@ -12,7 +12,7 @@ The new `kdesk` package adds the orchestration layer on top of the existing pipe
 
 1. **One source of truth.** `universal-agents/` YAML is canonical. `agents/`, `skills/`, `workflows/`, `platform-agents/` are regenerable artifacts (gitignored). Never edit generated output directly.
 2. **No invention.** Every derived field carries a `conversion` provenance block tracing it to its source (real CLI commands, declared tools, explicit references). Wiring links exist only when tool-evidence aligns.
-3. **Honest support claims.** Platform adapters declare `FULLY_SUPPORTED | PARTIALLY_SUPPORTED | DEPRECATED | NOT_SUPPORTED | UNKNOWN` — never claim unverified support.
+3. **Honest support claims.** Platform adapters declare `SUPPORTED | PARTIALLY_SUPPORTED | NOT_SUPPORTED | EMULATED | UNKNOWN` — never claim unverified support.
 4. **Concept separation.** Agent, subagent, skill, workflow, tool, MCP, hook, rule, memory, and model are distinct concepts connected only through the capability model.
 5. **Everything testable.** Every pipeline stage has unit tests; CI (`.github/workflows/ci.yml`) runs schema check, wiring, conversion validation, and the full test suite.
 6. **Portable.** No hard-coded `C:\Users\...` paths; paths derive from the repo (`Path(__file__).resolve().parents[1]`), environment variables, or `platformdirs`.
@@ -26,7 +26,7 @@ universal-agents/<family>/agent|skill/<name>.yaml     (2,909 source files)
         ▼
 extract-skill-tools.py ──► prerequisites from real command binaries
 extract-parameters.py ───► parameters from real CLI flags
-wire-skills.py ──────────► skills/wiring.json  (611 agents wired, 4,242 links)
+wire-skills.py ──────────► skills/wiring.json  (631 agents, 4,534 links)
 yaml-to-json.py ─────────► agents/ (1,766) + skills/ (1,143) JSON definitions
         │                  workflows/ (1,766 *.workflow.json)
         ▼
@@ -91,7 +91,7 @@ not implemented and verified.
 | Schema validation (`schemas/`, `schema-check.py`) | IMPLEMENTED | 2,909 files, 0 violations |
 | YAML→JSON conversion (`yaml-to-json.py`, `validate-conversion.py`) | IMPLEMENTED | 12 checks PASS, provenance-verified |
 | 45-platform converter (`universal-converter.py`) | IMPLEMENTED | `tests/test_platform_spec.py` |
-| Wiring graph (agent→skill, evidence + overrides) | IMPLEMENTED | 611 wired, 4,242 links, 0 cycles |
+| Wiring graph (agent→skill, evidence + overrides) | IMPLEMENTED | 608 wired, 4,237 links, 0 cycles |
 | Authoritative stats (`kdesk stats`, `kdesk/stats.py`) | IMPLEMENTED | matches `reports/baseline-stats.json` |
 | Report freshness gate (`check-report-freshness.py`) | IMPLEMENTED | CI step, non-zero on stale reports |
 | Zero-file guard (`verify-all.py`) | IMPLEMENTED | FATAL + exit 2 on 0 files |
@@ -135,9 +135,9 @@ Each capability owns real CLI commands whose **first word is a tool binary** (e.
 
 | Level | Meaning |
 |-------|---------|
-| `FULLY_SUPPORTED` | Native format emitted by the verified converter pipeline |
-| `PARTIALLY_SUPPORTED` | Format emitted, but some fields are dropped with warnings |
-| `DEPRECATED` | Legacy platform kept for compatibility, no longer actively maintained |
+| `SUPPORTED` | Native format emitted by the verified converter pipeline |
+| `PARTIALLY_SUPPORTED` | Format emitted, but some fields are dropped with warnings (e.g. void fragments) |
+| `EMULATED` | Content available only through a non-native representation |
 | `NOT_SUPPORTED` | No output for this platform/feature |
 | `UNKNOWN` | No documented config; nothing claimed |
 

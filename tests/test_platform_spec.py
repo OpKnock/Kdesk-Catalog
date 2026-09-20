@@ -58,13 +58,6 @@ def yaml_frontmatter(text):
         return {}
 
 
-def require_full_scan(test):
-    """Skip full-catalog sweeps unless KDESK_FULL=1 (they scan ~130k files)."""
-    if os.environ.get("KDESK_FULL") != "1":
-        test.skipTest("set KDESK_FULL=1 to run full-catalog sweeps")
-    return True
-
-
 class TestClaudeCodeFormat(unittest.TestCase):
     def test_agents_are_md_with_frontmatter(self):
         agents = list((OUT / "claude_code" / ".claude" / "agents").glob("*.md"))
@@ -210,7 +203,6 @@ class TestNoStaleModels(unittest.TestCase):
     def test_no_stale_model_ids_in_outputs(self):
         # Stale model pins only ever live in frontmatter/config at file top,
         # so reading the head of each file is a complete check.
-        require_full_scan(self)
         stale_hits = 0
         for f in OUT.rglob("*"):
             if not f.is_file():
@@ -224,7 +216,6 @@ class TestNoStaleModels(unittest.TestCase):
         self.assertEqual(stale_hits, 0)
 
     def test_no_stale_models_in_sources(self):
-        require_full_scan(self)
         stale_hits = 0
         for f in UA.rglob("*.yaml"):
             if f.name == "registry.yaml":
@@ -237,7 +228,6 @@ class TestNoStaleModels(unittest.TestCase):
 
 class TestNoOrphans(unittest.TestCase):
     def test_no_orphan_files(self):
-        require_full_scan(self)
         orphans = []
         for platform_dir in OUT.iterdir():
             if not platform_dir.is_dir():

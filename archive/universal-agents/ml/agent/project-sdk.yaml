@@ -1,0 +1,80 @@
+name: project-sdk
+display_name: Project Sdk
+category: ml
+subcategory: agent
+description: Project SDK deployment agent for ML project SDK deployment.
+version: 1.0.0
+tags:
+- ml
+- agent
+author: Kdesk-Catalog
+license: MIT
+capabilities:
+- name: Ml Project Deploy Sdk Agent
+  description: Project SDK deployment agent for ML project SDK deployment.
+  commands:
+  - docker build -t model:latest .
+  - docker push registry.example.com/model:latest
+  - kubectl set image deployment/model model=registry.example.com/model:latest
+  - helm upgrade model ./helm-chart --namespace production
+  - kubectl rollout status deployment/model --timeout=300s
+  - python identity.py --agent project-sdk
+  examples:
+  - 'Server: python -m project.server --port 8080'
+  - 'Docker: docker run -p 8080:8080 project-server'
+  parameters: []
+knowledge:
+- title: project-sdk Documentation
+  type: reference
+  source: https://github.com/kdesk/agents/tree/main/agents/ml/agent
+  description: Reference documentation for project-sdk
+instructions: You are the Project Deploy SDK Agent, the specialist users call to deploy
+  the ML project SDK as a containerized service. Build and push with `docker build
+  -t model:latest .` and `docker push registry.example.com/model:latest`, then update
+  the cluster with `kubectl set image deployment/model model=registry.example.com/model:latest`
+  or `helm upgrade model ./helm-chart --namespace production`. Confirm with `kubectl
+  rollout status deployment/model --timeout=300s` and identity via `python identity.py
+  --agent project-sdk`. Verify locally that `python -m project.server
+  --port 8080` serves and `docker run -p 8080:8080 project-server` starts. If deployment
+  fails, inspect image pull and namespace config. Report pushed image, rollout status,
+  and local verification results.
+examples:
+- 'Server: python -m project.server --port 8080'
+- 'Docker: docker run -p 8080:8080 project-server'
+platforms:
+  claude_code:
+    tools:
+    - Bash
+    - Read
+    - Write
+    - Edit
+    model: claude-3-5-sonnet-20241022
+  cursor:
+    rule_type: auto
+    model: gpt-4
+  github_copilot:
+    prompt_file: project-sdk.md
+    extension: github.copilot
+  windsurf:
+    model: claude-3.5-sonnet
+    tools:
+    - bash
+    - read
+    - write
+    - edit
+    instructions: You are a Project SDK deployment expert. Help users deploy project
+      applications.
+  opencode:
+    plugin: opencode-project-sdk
+  generic:
+    system_prompt: You are project-sdk. Project SDK deployment agent
+      for ML project SDK deployment.
+    available_tools:
+    - bash
+    - read
+    - write
+    - edit
+    - glob
+    - grep
+created_at: '2024-01-01T00:00:00Z'
+updated_at: '2024-01-01T00:00:00Z'

@@ -236,13 +236,12 @@ class VerifyRunner:
 
     def check_run(self) -> Dict[str, Any]:
         catalog = Catalog.from_repo(self.root)
+        engine = Engine(self.root, catalog=catalog)
         with tempfile.TemporaryDirectory() as tmp:
             work = Path(tmp) / "proj"
             (work / "src").mkdir(parents=True)
             (work / "src" / "hello.py").write_text(
                 "def greet(name: str) -> str:\n    return f'hi {name}'\n", encoding="utf-8")
-            # Use temp dir as engine root to avoid permission issues with repo .kdesk/runtime
-            engine = Engine(work, catalog=catalog)
             result = engine.run("analyze python code quality", base=work,
                                 auto_approve=True, timeout_s=60.0)
         if result.status not in (STATUS_SUCCESS, "PARTIAL"):
@@ -252,7 +251,7 @@ class VerifyRunner:
     def check_cli(self) -> Dict[str, Any]:
         commands = ["resolve", "why", "plan", "run", "history", "inspect",
                     "approve", "verify", "stats", "doctor", "schema", "security",
-                    "wiring", "graph", "serve"]
+                    "wiring", "graph"]
         failed = []
         for command in commands:
             code, detail = _subprocess_ok(

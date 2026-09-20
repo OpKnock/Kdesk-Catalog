@@ -33,6 +33,12 @@ def _file_count(path: Path) -> int:
     return sum(1 for p in path.rglob("*") if p.is_file())
 
 
+def _dir_count(path: Path) -> int:
+    if not path.is_dir():
+        return 0
+    return sum(1 for p in path.iterdir() if p.is_dir())
+
+
 _CHECKSUM_CACHE: Dict[str, Dict[str, str]] = {}
 _PLATFORM_COUNT_CACHE: Dict[str, int] = {}
 
@@ -88,24 +94,17 @@ def _definition_checksums(root: Path) -> Dict[str, str]:
     return out
 
 
-def compute(root: Optional[Path] = None, fast: bool = False,
-            catalog=None) -> Dict[str, Any]:
+def compute(root: Optional[Path] = None) -> Dict[str, Any]:
     """Compute authoritative, current repository statistics.
 
     Raises StatsError if zero definitions are found (never a false pass).
-
-    If fast=True, skips the slow platform_output_files count and uses a cached value.
-
-    Pass a pre-loaded `catalog` to skip re-parsing all definitions
-    (used by the long-lived dashboard server; CLI callers omit it).
     """
     root = Path(root) if root else default_repo_root()
     if not (root / "universal-agents").is_dir():
         raise StatsError(f"universal-agents directory not found under {root}")
 
     try:
-        if catalog is None:
-            catalog = Catalog.from_repo(root)
+        catalog = Catalog.from_repo(root)
     except CatalogError as exc:
         raise StatsError(str(exc)) from exc
     if not catalog.agents and not catalog.skills:
@@ -119,22 +118,8 @@ def compute(root: Optional[Path] = None, fast: bool = False,
     workflow_files = sorted(workflows_dir.rglob("*.workflow.json")) if workflows_dir.is_dir() else []
 
     platform_dir = root / "platform-agents"
-    # Supported platforms per the canonical registry (45, incl. deprecated
-    # ones kept for reference) — NOT the output-dir count, which lags when
-    # a platform has no generated dir yet.
-    from kdesk.platforms import get_registry
-    platform_dirs = len(get_registry().all())
-    if fast:
-        report = root / "reports" / "catalog-stats.json"
-        if report.is_file():
-            try:
-                platform_output_files = int(json.loads(report.read_text(encoding="utf-8")).get("platform_output_files", 0))
-            except (OSError, ValueError):
-                platform_output_files = _platform_output_count(platform_dir)
-        else:
-            platform_output_files = _platform_output_count(platform_dir)
-    else:
-        platform_output_files = _platform_output_count(platform_dir)
+    platform_dirs = _dir_count(platform_dir)
+    platform_output_files = _platform_output_count(platform_dir)
     platform_registry_files = (
         sum(1 for p in platform_dir.iterdir() if p.is_file()) if platform_dir.is_dir() else 0
     )

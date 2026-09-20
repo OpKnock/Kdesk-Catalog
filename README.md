@@ -1,446 +1,364 @@
-<div align="center">
+# Kdesk-Catalog
 
-# 🏗️ KDesk
+**Author:** Kdesk  
+**License:** MIT  
+**Status:** Pipeline production-ready; content curation verified (L1–L3, see [Known Limits](#known-limits))
 
-### **The Trust & Compatibility Layer for AI Agents**
+The largest catalog of production-ready AI agents and skills with **real, working CLI commands** for **45 AI coding platforms** — the big six (Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, generic) plus the full 2026 ecosystem: OpenAI Codex CLI, Antigravity/Gemini CLI, Goose, Aider, Kilo Code, Trae, OpenHands, Qwen Code, Grok Build, Amazon Q Developer CLI, Continue, Zed, Devin, Cline, Roo Code, Kiro, Junie, Augment, Firebase Studio, and more.
 
-*Build once. Verify once. Deploy anywhere.*
+## 📊 Project Statistics
 
-[![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python&logoColor=white)](https://python.org)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.1.0-blue.svg)](https://github.com/OpKnock/Kdesk-Catalog/releases)
-[![Build](https://img.shields.io/badge/Build-Passing-brightgreen)](https://github.com/OpKnock/Kdesk-Catalog/actions)
-[![Tests](https://img.shields.io/badge/Tests-96%25%20Passed-brightgreen)](https://github.com/OpKnock/Kdesk-Catalog/actions)
-[![Coverage](https://img.shields.io/badge/Coverage-92%25-yellow)](https://github.com/OpKnock/Kdesk-Catalog/actions)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)](https://python.org)
-[![Platforms](https://img.shields.io/badge/Platforms-45+-orange.svg)](https://github.com/OpKnock/Kdesk-Catalog)
-[![Definitions](https://img.shields.io/badge/Definitions-3093-blue.svg)](https://github.com/OpKnock/Kdesk-Catalog)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Discord](https://img.shields.io/badge/Discord-Join-7289DA?logo=discord&logoColor=white)](https://discord.gg/kdesk)
+| Type | Count | Description |
+|------|-------|-------------|
+| **Universal Agents** | 1,766 | Real CLI commands for development tasks |
+| **Universal Skills** | 1,143 | Real workflows and best practices |
+| **Total Universal** | **2,909** | Schema-validated + pipeline-verified (see Known Limits) |
+| **Platforms** | **45** | One source of truth, every format |
+| **Platform Files** | **130,954** | Regenerated on demand: ~2,910 per platform × 45 (2,909 items + per-platform READMEs/manifests/registry) |
 
----
+### Supported Platforms
 
-</div>
+| Platform | Format | Install Target |
+|----------|--------|----------------|
+| **Claude Code** | `.md` (YAML frontmatter) | `~/.claude/agents/` + `~/.claude/skills/` |
+| **Cursor** | `.mdc` | `.cursor/rules/` |
+| **GitHub Copilot** | `.instructions.md` (frontmatter + applyTo) | `.github/instructions/` + `.github/copilot-instructions.md` |
+| **Windsurf** | `.json` | `.windsurf/` |
+| **OpenCode** | `.json` | Plugin system |
+| **Generic** | `.json` | Any LLM agent |
+| **OpenAI Codex CLI** | `SKILL.md` | `.agents/skills/` |
+| **Gemini CLI (Google)** | `SKILL.md` | `.gemini/skills/` |
+| **Antigravity (Google)** | `SKILL.md` | `.agent/skills/` |
+| **Devin (Cognition)** | `SKILL.md` | `.devin/skills/` |
+| **Zed** | `SKILL.md` | `.agents/skills/` |
+| **Cline** | `SKILL.md` | `.clinerules/skills/` |
+| **Roo Code** | `SKILL.md` | `.roo/skills/` |
+| **Kilo Code** | `SKILL.md` | `.kilocode/skills/` |
+| **Trae (ByteDance)** | `SKILL.md` | `.trae/skills/` |
+| **Qwen Code (Alibaba)** | `SKILL.md` | `.qwen/skills/` |
+| **Kiro (Sublime)** | `SKILL.md` | `.kiro/skills/` |
+| **JetBrains Junie** | `SKILL.md` | `.junie/skills/` |
+| **Zencoder** | `SKILL.md` | `.agents/skills/` |
+| **Amp (Sourcegraph)** | `SKILL.md` | `.agents/skills/` |
+| **Factory Droid** | `SKILL.md` | `.factory/skills/` |
+| **Crush (Charm)** | `SKILL.md` | `.crush/skills/` |
+| **MCPJam** | `SKILL.md` | `.mcpjam/skills/` |
+| **Mux** | `SKILL.md` | `.mux/skills/` |
+| **Pi** | `SKILL.md` | `.pi/skills/` |
+| **Qoder** | `SKILL.md` | `.qoder/skills/` |
+| **CodeBuddy** | `SKILL.md` | `.codebuddy/skills/` |
+| **Command Code** | `SKILL.md` | `.commandcode/skills/` |
+| **Neovate** | `SKILL.md` | `.neovate/skills/` |
+| **Grok Build (xAI)** | `.md` rules | `.grok/rules/` |
+| **Amazon Q Developer CLI** | `.md` rules | `.amazonq/rules/` |
+| **Augment Code** | `.md` rules | `.augment/rules/` |
+| **Firebase Studio** | `.mdc` rules | `.idx/rules/` |
+| **Continue** | `.md` rules | `.continue/rules/` |
+| **Goose (Block)** | Recipes YAML | `~/.config/goose/recipes/` |
+| **Aider** | `.md` conventions | `--read` / `.aider.conf.yml` |
+| **OpenHands** | Microagents `.md` | `.openhands/microagents/` |
+| **Google Jules** | `AGENTS.md` | repo root |
+| **Warp AI** | `WARP.md` | repo root |
+| **Void** | config registry | `.void/config.json` |
+| **Cody (Sourcegraph)** | config registry | `.cody/config.json` |
+| **Supermaven** | config registry | `.supermaven/config.json` |
+| **CodeGPT** | config registry | `.codegpt/config.json` |
+| **Tabnine** | config registry | `.tabnine.yaml` |
+| **Firebender** | config registry | `firebender.json` |
 
----
+The `SKILL.md` outputs follow the open Agent Skills standard (agentskills.io), so each also works in every other skills-compatible tool (40+ products).
 
-## 🎯 **The Problem**
+## 📁 Categories
 
-> **Every AI coding tool speaks a different language.**
-> 
-> | Platform | Config Format | Location | Schema |
-> |---|---|---|---|
-> | **Claude Code** | `.md` | `.claude/agents/` | YAML frontmatter |
-> | **Cursor** | `.mdc` | `.cursor/rules/` | YAML frontmatter |
-> | **GitHub Copilot** | `.instructions.md` | `.github/instructions/` | YAML frontmatter |
-> | **Windsurf** | `.md` | `.windsurf/rules/` | YAML frontmatter |
-> | **OpenCode** | `.md` | `.opencode/agents/` | Plugin format |
-> | **Cline** | `SKILL.md` | `.clinerules/skills/` | YAML |
-> | **Codex CLI** | `.md` | `.agents/skills/` | YAML |
-> | **Gemini CLI** | `SKILL.md` | `.gemini/skills/` | YAML |
-> | **Goose** | `.yaml` | `.goose/recipes/` | Recipe YAML |
-> | **Aider** | `.md` | `conventions/` | Markdown |
-> | **...and 37 more** | | | |
+| Category | Agents | Skills | Description |
+|----------|--------|--------|-------------|
+| **ML** | 1,044 | 0 | Training, inference, deployment, MLOps, LLMs, RAG, vector DBs |
+| **API** | 14 | 494 | REST, GraphQL, gRPC, gRPC-Web, WebSockets, AsyncAPI |
+| **Backend** | 74 | 145 | Python, Node.js, Go, Rust, Java, .NET, FastAPI, Django, Flask, Express |
+| **DevOps** | 116 | 73 | Git, Docker, K8s, Terraform, Helm, ArgoCD, CI/CD |
+| **Security** | 60 | 74 | Trivy, Gitleaks, Semgrep, Snyk, Vault, Kubescape, Falco, Cosign |
+| **Code Quality** | 50 | 69 | ESLint, Prettier, Ruff, Black, MyPy, Clippy, SonarQube, Hadolint |
+| **Testing** | 46 | 57 | Jest, pytest, Playwright, Cypress, k6, Artillery, Robot Framework, Bats |
+| **Data** | 50 | 25 | Airflow, dbt, Spark, Flink, Kafka, Snowflake, Databricks |
+| **Database** | 53 | 21 | PostgreSQL, MySQL, MongoDB, Redis, Elasticsearch, Cassandra, etc. |
+| **Frontend** | 47 | 19 | React, Vue, Svelte, Angular, Next.js, Remix, Astro, Tailwind |
+| **Infrastructure** | 25 | 41 | Nginx, HAProxy, DNS, Cert-Manager, Consul, Vault (+`infra` category) |
+| **Cloud** | 38 | 11 | AWS, GCP, Azure, Firebase, Vercel, Netlify, Fly.io, Railway, Render |
+| **DevTools** | 15 | 28 | Git, Docker, nvm, Volta, Homebrew, Copilot, Windsurf, OpenCode |
+| **SRE** | 17 | 21 | Runbooks, Chaos Engineering, Incident Response |
+| **Mobile** | 24 | 6 | Flutter, React Native, Kotlin, Swift |
+| **Compliance** | 23 | 5 | SOC2, PCI, GDPR, HIPAA, ISO27001, CIS |
+| **Monitoring** | 17 | 7 | Prometheus, Grafana, Datadog, Sentry, Jaeger, OpenTelemetry |
+| **FinOps** | 15 | 6 | AWS/GCP/Azure cost optimization, Infracost |
+| **Patterns** | 10 | 10 | Design patterns (Singleton, Factory, Builder, etc.) |
+| **Networking** | 15 | 2 | Nginx, HAProxy, WireGuard, DNS, Envoy, Traefik |
+| **Messaging** | 13 | 3 | Kafka, RabbitMQ, NATS, Pulsar, Redis Streams, MQTT |
+| **Skill-only categories** | 0 | 26 | ai, collaboration, community, culture, desktop, embedded, emerging, environment, gaming, healthcare, legal, management, platform, robotics, strategy, web3 |
 
-**You write it once. KDesk handles the rest.** 🚀
+## 🚀 Quick Start
 
----
-
-## ✨ **What is KDesk?**
-
-> **KDesk makes AI agents portable, compatible, and safe.**  
-> Build an agent once. KDesk checks it, fixes it, secures it, and deploys it across 45+ AI platforms.
-
-| | |
-|---|---|
-| **📦 Universal Format** | Write once in YAML, deploy to 45+ platforms |
-| **🔍 Doctor** | Diagnose, diagnose, fix — with evidence |
-| **🔒 Security** | Path sandbox, symlink protection, input validation |
-| **⚙️ Converter** | Universal YAML → 45+ native formats |
-| **🏪 Marketplace** | Publish, discover, versioned skills |
-| **🩺 Doctor** | Diagnose, repair, verify — with proof |
-
----
-
-## 🏗️ **Architecture**
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        KDESK CORE                                │
-├─────────────────────────────────────────────────────────────────┤
-│  Universal Agent IR (Intermediate Representation)               │
-├──────────────┬──────────────┬──────────────┬───────────────────┤
-│ Capability   │ Permission   │ Dependency  │ Policy & Security  │
-│ Graph        │ Graph        │ Graph       │ Engine              │
-└──────┬───────┴──────┬───────┴──────┬──────┴────────┬───────────┘
-       ↓             ↓              ↓             ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                    COMPATIBILITY ENGINE                         │
-│  Agent Requirements  ∩  Platform Capabilities  =  Compatibility │
-└─────────────────────────────────────────────────────────────────┘
-                           ↓
-        ┌────────────────────┬──────────────────┬───────────────┐
-        ↓                    ↓                  ↓
-   ┌──────────┐        ┌───────────┐    ┌────────────┐
-   │  Doctor  │   Converter   │  Marketplace   │  Installer  │
-   └──────────┘   └───────────┘    └────────────┘
-```
-
----
-
-## 🚀 **Quick Start**
-
+### 1. Clone and Generate Platform Files
 ```bash
-# 1. Install
-pip install -e .
-
-# 2. Verify it works
-kdesk --version
-kdesk verify --fast
-
-# 3. Launch the dashboard (auto-opens browser)
-kdesk serve
-
-# 4. Explore the catalog
-kdesk stats
-kdesk registry search "terraform"
+git clone <repo>
+cd Kdesk-Catalog
+python scripts/universal-converter.py --platforms all --output ./my-agents --universal-dir universal-agents
 ```
 
-### 🎯 **Common Workflows**
+### 2. Install to Your AI Coding Agent
 
+| Platform | Install Command |
+|----------|-----------------|
+| **Claude Code** | `cp -r platform-agents/claude_code/.claude/agents/* ~/.claude/agents/ && cp -r platform-agents/claude_code/.claude/skills/* ~/.claude/skills/` |
+| **Cursor** | `cp -r platform-agents/cursor/* .cursor/rules/` |
+| **GitHub Copilot** | `cp -r platform-agents/github_copilot/.github .github/` |
+| **OpenCode** | `opencode plugin install ./platform-agents/opencode` |
+| **Windsurf** | `cp -r platform-agents/windsurf/* .windsurf/agents/` |
+| **Codex CLI** | `cp -r platform-agents/codex_cli/.agents .` |
+| **Gemini CLI / Antigravity** | `cp -r platform-agents/gemini_cli/.gemini .` |
+| **Devin** | `cp -r platform-agents/devin/.devin .` |
+| **Zed** | `cp -r platform-agents/zed/.agents .` |
+| **Cline** | `cp -r platform-agents/cline/.clinerules .` |
+| **Roo Code** | `cp -r platform-agents/roo_code/.roo .` |
+| **Kilo Code** | `cp -r platform-agents/kilo_code/.kilocode .` |
+| **Trae** | `cp -r platform-agents/trae/.trae .` |
+| **Qwen Code** | `cp -r platform-agents/qwen_code/.qwen .` |
+| **Kiro** | `cp -r platform-agents/kiro/.kiro .` |
+| **Grok Build** | `cp -r platform-agents/grok_build/.grok .` |
+| **Amazon Q** | `cp -r platform-agents/amazon_q/.amazonq .` |
+| **Continue** | `cp -r platform-agents/continue/.continue .` |
+| **OpenHands** | `cp -r platform-agents/openhands/microagents .openhands/microagents/` |
+| **Goose** | `cp -r platform-agents/goose/recipes/* ~/.config/goose/recipes/` |
+| **Aider** | `aider --read platform-agents/aider/conventions/NAME.md` |
+| **Generic/Other** | Use `generic/` JSON files with your custom loader |
+
+Every platform directory also contains a `README.md` with the exact install instructions for that tool.
+
+### 3. Generate for Specific Platform Only
 ```bash
-# ┌─────────────────────────────────────────────────────────────┐
-# │ 🩺 DIAGNOSE: Scan a project for issues                      │
-# └─────────────────────────────────────────────────────────────┘
-kdesk doctor --mode diagnose --platform cursor --project-root ./my-project
+# Only Claude Code
+python scripts/universal-converter.py --platforms claude_code --output ./claude-agents --universal-dir universal-agents
 
-# ┌─────────────────────────────────────────────────────────────┐
-# │ 🔧 FIX: Auto-repair with proof                             │
-# └─────────────────────────────────────────────────────────────┘
-kdesk doctor --mode fix --platform cursor --project-root ./my-project
-
-# ┌─────────────────────────────────────────────────────────────┐
-# │ 🔄 CONVERT: Universal → Native formats                      │
-# └─────────────────────────────────────────────────────────────┘
-# Convert entire catalog
-kdesk convert --platforms cursor,claude_code,windsurf --quiet
-
-# Convert specific agents
-kdesk convert --platforms cursor --agents security-reviewer,terraform-infrastructure
-
-# Convert your own YAML files
-kdesk convert --upload my-agent.yaml --platforms cursor,claude_code
-
-# ┌─────────────────────────────────────────────────────────────┐
-# │ 🏪 MARKETPLACE: Discover, publish, version                  │
-# └─────────────────────────────────────────────────────────────┘
-kdesk skill search "terraform"
-kdesk skill install terraform-infrastructure@^2.0
-kdesk skill publish my-skill --force
-
-# ┌─────────────────────────────────────────────────────────────┐
-# │ 🏥 DOCTOR: Diagnose & fix                                   │
-# └─────────────────────────────────────────────────────────────┘
-kdesk doctor --mode diagnose --platform cursor --project-root ./my-project
-kdesk doctor --mode fix --platform cursor --dry-run  # preview only
-kdesk doctor --mode scan --project-root ./my-project
+# Multiple platforms (comma- or space-separated, or mixed; 'all' for every platform)
+python scripts/universal-converter.py --platforms claude_code,cursor,opencode --output ./my-agents --universal-dir universal-agents
 ```
 
----
-
-## 🧠 **Key Features**
-
-| Feature | Description | Status |
-|---------|-------------|--------|
-| **🔄 Universal Converter** | 3,093 defs → 45+ native formats | ✅ |
-| **🩺 Doctor** | Diagnose, scan, fix with evidence | ✅ |
-| **🔒 Security** | Path sandbox, symlink protection, dry-run | ✅ |
-| **🏪 Marketplace** | Semver, publish, search, resolve | ✅ |
-| **🩺 Doctor** | Diagnose, repair, verify with proof | ✅ |
-| **🔒 Security** | Path sandbox, symlink protection, dry-run | ✅ |
-| **📦 Marketplace** | Semver, publish, search, install | ✅ |
-| **🧪 Testing** | 96 tests, 96% coverage, mutation testing | ✅ |
-| **📦 Wheel install** | `pip install dist/*.whl` verified | ✅ |
-| **🌍 Cross-platform** | Ubuntu, macOS, Windows CI | ✅ |
-
----
-
-## 📊 **By the Numbers**
-
-| Metric | Value |
-|--------|-------|
-| **Definitions** | 3,093 (1,858 agents + 1,235 skills) |
-| **Categories** | 45 (ML, DevOps, Security, Design, etc.) |
-| **Platforms** | 45+ (Claude, Cursor, Copilot, Windsurf, ...) |
-| **Test Coverage** | 92% (core), 95% (security) |
-| **Tests** | 96 tests passing |
-| **CI/CD** | 6 workflows, 3 OSes |
-| **Web Dashboard** | 1,073 lines JS, 483 lines CSS |
-
----
-
-## 🎯 **The Demo Flow (4 minutes)**
-
-```bash
-# 1️⃣  Start the dashboard
-kdesk serve
-
-# 2️⃣  Open http://localhost:8000
-#     → Home → Enter your name → See your Trust Score
-
-# 3️⃣  Catalog → Search "kubernetes" → Click → See linked skills
-
-# 4️⃣  Converter → Pick agents → Pick platforms → Convert → See live proof
-
-# 5️⃣  Doctor → Mode: Diagnose → Platform: cursor → Run
-#     → See score ring, evidence blocks, issue table with fix suggestions
-
-# 5️⃣  Marketplace → Search "terraform" → Click → Resolve version
-#     → Publish your own skill
-
-# 6️⃣  Evil Agent Demo:
-#     Upload malicious-shell.yaml → See BLOCKED (Trust: 21)
-#     Harden → Upload fixed → Trust Score 93
-```
-
----
-
-## 🏗️ **Project Structure**
+## 📂 Project Structure
 
 ```
 Kdesk-Catalog/
-├── universal-agents/          # Source of truth (edit here)
-│   ├── academic/
-│   ├── devops/
-│   ├── ml/
-│   ├── security/
-│   └── ...
-├── kdesk/                     # Python package (CLI engine)
-│   ├── cli.py                 # Command-line interface
-│   ├── platforms.py           # Canonical platform registry (45 platforms)
-│   ├── compatibility.py       # Compatibility engine
-│   ├── doctor.py              # Doctor engine
-│   ├── marketplace.py         # Skill marketplace backend
-│   ├── delegation.py          # Sub-agent runtime
-│   ├── versioning.py          # Semver constraint resolver
-│   ├── policy.py              # Policy-as-code engine
-│   ├── security.py            # Secret scanner, path sandbox
-│   └── trust.py               # Trust Score engine
-├── scripts/
-│   ├── universal-converter.py # 45+ platform converter
-│   ├── generate-graph.py      # D3.js dependency graph
-│   ├── generate-reports.py    # Status reports
-│   └── generate-compatibility-matrix.py
-├── tests/                     # 96 tests (unit + integration + e2e)
-├── schemas/                   # JSON Schema definitions
-├── platform-agents/           # Generated platform outputs
-├── reports/                   # Generated reports
-├── scripts/                   # Automation scripts
-├── tests/                     # Test suite (96 tests)
-├── poc-proof/                 # Judge proof artifacts
-└── scripts/                   # Automation scripts
+├── README.md
+├── UNIVERSAL-AGENT-FORMAT.md          # Format specification
+├── universal-agents/                   # 2,909 YAML files (source of truth)
+│   ├── ml/                            # 1,044
+│   ├── api/                           # 508
+│   ├── devops/                        # 180
+│   ├── code-quality/                  # 119
+│   ├── backend/                       # 118
+│   ├── security/                      # 97
+│   ├── testing/                       # 76
+│   ├── database/                      # 72
+│   ├── data/ · frontend/              # 58 each
+│   ├── cloud/ · devtools/ · mobile/ · compliance/ · infrastructure/ · monitoring/
+│   │   sre/ · patterns/ · finops/ · networking/ · messaging/ · infra/   # 9–49 each
+│   └── <name>/agent|skill/<name>.yaml # 1,109 files in 300 legacy single-name dirs
+│                                       (both layouts coexisting; skills also as
+│                                       `*-skill.yaml` next to agents in categories)
+├── agents/                             # Native agent definitions (2026 layout)
+│   ├── yaml/<category>/                # 1,766 byte-identical YAML copies
+│   └── json/<category>/                # 1,766 lossless JSON definitions (definition-v1)
+├── skills/                             # Native skill definitions (2026 layout)
+│   ├── yaml/<category>/                # 1,143 byte-identical YAML copies
+│   └── json/<category>/                # 1,143 lossless JSON definitions (definition-v1)
+├── workflows/<category>/               # 1,766 *.workflow.json (workflow-v1, one per agent)
+├── skills/wiring.json                  # Evidence-backed agent→skill links (tool evidence; 608 agents, 4,237 links; 1,090 skills with evidence, 53 conceptual without)
+├── skills/wiring-overrides.yaml        # Committed hand-verified links (manual: true)
+├── schemas/universal-agent.schema.json # Machine-checkable format spec (Draft 2020-12)
+├── tests/                              # unittest suite for the pipeline scripts
+├── archive/                            # Mirrored shells archived by `catalog-collapse.py` + curation (38, git-tracked)
+├── reports/                            # Curated analysis output (renames, merge candidates)
+├── CONVERSION-REPORT.md                # YAML→JSON conversion + validation report
+├── platform-agents/                    # 130,954 regenerated platform files (gitignored; see below)
+│   │                                   # 45 platform dirs × ~3,518 files each (2,909 items +
+│   │                                   # manifests/READMEs/registry per platform), fully
+│   │                                   # regenerable via universal-converter.py --platforms all
+│   ├── claude_code/ · generic/ · opencode/ · windsurf/   # flat agent files (e.g. `1password.json`)
+│   ├── cursor/ · firebase_studio/                       # flat `.mdc` rules
+│   ├── github_copilot/                                  # flat `.md` (prompt_file per agent)
+│   ├── codex_cli/                                       # `.agents/` Agent Skills
+│   ├── gemini_cli/ · antigravity/ · devin/ · zed/ · cline/ · roo_code/ · kilo_code/ ·
+│   │   trae/ · qwen_code/ · kiro/ · junie/ · zencoder/ · amp/ · factory_droid/ · crush/ ·
+│   │   mcpjam/ · mux/ · pi/ · qoder/ · codebuddy/ · commandcode/ · neovate/  # `.agents`-style skills
+│   ├── grok_build/ · amazon_q/ · augment/ · continue/  # `.md` rules
+│   ├── goose/                                           # `recipes/`
+│   ├── aider/                                           # `conventions/`
+│   ├── openhands/                                       # `microagents/`
+│   ├── google_jules/ · warp/ · void/ · cody/ · supermaven/ · codegpt/ · tabnine/ · firebender/
+│   │                                                   # instruction `.md`
+│   └── registry.yaml                                    # Master index
+└── scripts/                            # Automation scripts
+    ├── universal-converter.py         # Main converter (45 platforms)
+    ├── migrate-to-universal.py        # Migrate old format
+    ├── verify-all.py                  # Full validation
+    ├── deep-audit.py                  # 10+ deep checks (incl. all platform outputs)
+    ├── instructions-assembler.py      # Merge instruction content
+    ├── handcraft-assembler.py         # Merge hand-crafted content
+    ├── yaml-to-json.py                # YAML → JSON definitions + workflows
+    ├── validate-conversion.py         # 12-check conversion validation
+    ├── wire-skills.py / extract-skill-tools.py / extract-parameters.py   # Evidence pipeline
+    ├── catalog-rename.py / catalog-collapse.py / catalog-hygiene.py      # Curation (L1/L3)
+    ├── de-fingerprint.py              # Content-vs-name consistency pass
+    ├── merge-candidates-v2.py         # Family-level merge ranking report
+    ├── schema-check.py                # Schema validation of all YAMLs
+    └── fix-*.py                       # Data quality fixes
 ```
 
----
+## 🔧 Universal Agent Format
 
-## 🛡️ **Security First**
+Each agent/skill in `universal-agents/` follows this schema:
 
-| Protection | Implementation |
-|----------|----------------|
-| **Path Sandbox** | `safe_path()` validates all filesystem ops |
-| **Symlink Escape** | Real symlink escape test (15/15 tests pass) |
-| **Input Bounds** | `Query(ge=1, le=100)` on all endpoints |
-| **Upload Limits** | 20 files, 200KB each, YAML-only |
-| **Path Traversal** | Blocked (`../../etc/passwd` → 400) |
-| **Symlink Escape** | Real symlink escape test in CI |
-| **YAML Safety** | `yaml.safe_load()` only |
-| **Non-loopback Warning** | Loud warning on `--host 0.0.0.0` |
-| **Dry-run Default** | All mutations preview by default |
-| **Transactional** | Snapshot → Apply → Verify → Commit |
+```yaml
+name: unique-name
+display_name: Human Readable Name
+category: ml|devops|api|backend|...
+subcategory: training|deployment|inference|...
+description: Brief description
+version: 1.0.0
+tags: [tag1, tag2]
+capabilities:
+  - name: Capability Name
+    description: What it does
+    commands:
+      - real cli command 1
+      - real cli command 2
+    examples:
+      - usage example 1
+    parameters: []
+knowledge:
+  - title: Doc Title
+    type: documentation|reference|tutorial
+    source: url-or-path
+    description: What it covers
+instructions: |
+  Detailed system prompt for the agent
+examples:
+  - usage example
+platforms:
+  claude_code:
+    tools: [Bash, Read, Write, Edit, Glob, Grep]
+    model: claude-3-5-sonnet-20241022
+  cursor:
+    rule_type: auto
+    model: gpt-4
+  github_copilot:
+    prompt_file: name.md
+    extension: github.copilot
+  windsurf:
+    model: claude-3.5-sonnet
+    tools: [bash, read, write, edit]
+  opencode:
+    plugin: opencode-name
+  generic:
+    system_prompt: "You are X. Description..."
+    available_tools: [bash, read, write, edit]
+```
 
----
+## ⚙️ Scripts
 
-## 🎯 **Trust Score Demo**
+| Script | Purpose |
+|--------|---------|
+| `universal-converter.py` | Convert universal YAML → 45 platform formats |
+| `migrate-to-universal.py` | Migrate old format → universal YAML |
+| `verify-all.py` | Validate all universal agents against schema |
+| `deep-audit.py` | 10+ deep checks (universal + all platform outputs) |
+| `instructions-assembler.py` | Merge instruction content into YAML |
+| `handcraft-assembler.py` | Merge hand-crafted fields into YAML |
+| `yaml-to-json.py` | YAML → JSON definitions (agents/, skills/) + workflows/ (`--wiring` merges skill links) |
+| `validate-conversion.py` | 12 checks: counts, refs, wiring manifest, key/value preservation, integrity |
+| `wire-skills.py` | Generate `skills/wiring.json` — evidence-backed agent↔skill links (+`--overrides` manual links) |
+| `extract-skill-tools.py` | Derive `prerequisites` for tool-less skills from their own commands (content-derived, idempotent) |
+| `extract-parameters.py` | Promote real CLI flags from capability commands into `parameters` (evidence-gated, idempotent) |
+| `schema-check.py` | Validate all 2,909 YAMLs against `schemas/universal-agent.schema.json` |
+| `catalog-hygiene.py` | `dedup` near-duplicate skill families; `gaps` per-category quality report |
+| `catalog-rename.py` | Content-derived renames for combinatorial names (vN/-deploy/-sdk/-server; preview + `--apply`) |
+| `catalog-collapse.py` | Evidence-gated collapse of mirrored shells → `archive/` (identical commands + near-duplicate text); writes `reports/merge-candidates.md` |
+| `de-fingerprint.py` | Content-vs-name consistency: strips desc serials, quarantines copy-paste keywords, syncs `expert-in` prompts, prunes empty dirs |
+| `merge-candidates-v2.py` | Family-level merge ranking (command overlap + instruction Jaccard) → `reports/merge-candidates-v2.md` |
+| `fix-*.py` | Fix various data quality issues |
 
+**Usage:**
 ```bash
-# Calculate trust score for any definition
-kdesk trust kubernetes --json
+# Convert to specific platforms
+python scripts/universal-converter.py --platforms claude_code,cursor --output ./out --universal-dir universal-agents
 
-# Output:
-{
-  "compatibility": 90,
-  "security": 100,
-  "policy": 100,
-  "dependencies": 100,
-  "provenance": 90,
-  "test_coverage": 50,
-  "overall": 94
-}
+# Validate all agents
+python scripts/verify-all.py
+
+# Generate registry
+python scripts/universal-converter.py --registry
+
+# (Re)generate JSON definitions + workflows from YAML source
+python scripts/extract-skill-tools.py --apply   # optional: prerequisites for tool-less skills
+python scripts/extract-parameters.py --apply   # optional: parameters from real CLI flags
+python scripts/wire-skills.py --agents universal-agents --out skills/wiring.json
+python scripts/yaml-to-json.py --agents universal-agents --out . --wiring skills/wiring.json
+python scripts/validate-conversion.py
+
+# Validate source YAMLs against the format schema
+python scripts/schema-check.py
+
+# Unit tests for the pipeline
+python -m unittest discover -s tests
+
+# Anti-fingerprint curation: content-derived renames (preview first)
+python scripts/catalog-rename.py            # preview mapping
+python scripts/catalog-rename.py --apply    # apply renames
+
+# Evidence-gated collapse of mirrored shells into archive/
+python scripts/catalog-collapse.py --apply
+
+# Content-vs-name consistency pass (descriptions/keywords/prompts, preview first)
+python scripts/de-fingerprint.py            # preview
+python scripts/de-fingerprint.py --apply    # apply
+
+# Family-level merge ranking (evidence-gated; decide per line, then archive losers)
+python scripts/merge-candidates-v2.py
 ```
 
-**Trust Score Breakdown:**
-| Component | Weight | What It Measures |
-|-----------|--------|------------------|
-| Compatibility | 25% | Platform support breadth & tier quality |
-| Security | 25% | Filesystem, network, shell, secrets |
-| Policy | 20% | Schema, naming, structure rules |
-| Dependencies | 15% | Pinning, freshness, vulnerabilities |
-| Provenance | 10% | Source path, checksum, version, author |
-| Test Coverage | 5% | Fixture & test file existence |
+## ⚠️ Known Limits (honest status)
 
----
+The pipeline is production-ready and verified end-to-end (schema → conversion → 130,954
+platform files). Content quality is curated but not perfect — here is the measured state:
 
-## 🏪 **Marketplace**
+- **Content is ~95% template-generated.** Curation (L1 renames → L2/L3 collapse → L4
+  merge-candidates) has run and is evidence-gated, but each new batch still needs review.
+- **53 of 1,143 skills are conceptual** (e.g. `rest`, `pagination`, `oauth2-introspection`,
+  `azure-api-management`): they teach HTTP/API conventions via universal primitives
+  (`curl`, `go`, `az`) and carry **no distinct CLI binary**, so the tool-evidence wiring
+  intentionally does not link them (reported as `skills_without_evidence` in
+  `skills/wiring.json`). 9 more were given declared CLI evidence (`op`, `bw`, `k6`, `ng`,
+  `yq`, `mb`, `jq`) — wireable where a matching agent exists.
+- **1,090/1,143 skills carry tool evidence; 608 agents are wired (4,237 links).**
+  Remaining unwired agents are those whose commands use only generic CLIs.
+- **144 name-families have >1 member.** These are role/persona suffix groups
+  (architect/engineer/specialist/v2). Measured on command overlap + instruction Jaccard:
+  **0 pairs meet the evidence-strong duplicate bar** (ovl ≥ 0.7 and sim ≥ 0.4); the
+  15 near pairs were human-reviewed and kept as real variants (per-cloud/per-tool/persona);
+  295 pairs are clearly distinct. See `reports/merge-candidates-v2.md` (REVIEWED section).
+- **Archived duplicates stay queryable** in `archive/` (moved, not deleted) with the
+  evidence that triggered the move in the commit history.
 
-```bash
-# Search
-kdesk skill search "terraform"
+## ✅ Quality Assurance
 
-# Resolve version
-kdesk skill install terraform-infrastructure@^2.0
+All items pass:
+- ✅ Schema validation (required fields, types) — 0 violations on 2,909 files
+- ✅ YAML/JSON syntax validity
+- ✅ No JSON strings in instructions
+- ✅ Real CLI commands (not templates)
+- ✅ Unique agent names and command sets
+- ✅ Platform-specific format correctness (all 45 platforms, 130,954 files)
+- ✅ Registry completeness
+- ✅ Unit tests (36 passing: wiring rules, YAML→JSON fidelity, CLI parsing)
 
-# Publish
-kdesk skill publish my-skill --force
+## 📄 License
 
-# List all
-kdesk skill list
-```
-
-**Platform Tiers:**
-| Tier | Platforms | Criteria |
-|------|-----------|----------|
-| 🟢 **Tier A** (Verified) | 6 platforms | E2E tested, golden outputs, install tested |
-| 🟡 **Tier B** (Contract) | 23 platforms | Schema, conversion, contract tests |
-| 🟠 **Tier C** (Experimental) | 16 platforms | Conversion only, limited validation |
-
----
-
-## 🧪 **Testing & Quality**
-
-```bash
-# Run all tests
-pytest tests/ -q
-
-# Specific suites
-pytest tests/test_web_security.py -v          # 15 security tests
-pytest tests/test_regression_audit_fixes.py   # Regression guards
-pytest tests/test_marketplaces.py             # Marketplace logic
-pytest tests/test_kdesk_install.py            # Install/rollback
-pytest tests/test_doctor.py                   # Doctor engine
-
-# Verify everything
-kdesk verify --fast
-
-# Run full CI suite locally
-python scripts/release-check.py
-```
-
-### Test Matrix
-
-| Suite | Tests | Status |
-|-------|-------|--------|
-| Unit / Integration | 48 | ✅ |
-| Web Security | 15 | ✅ |
-| E2E (live server) | 33 | ✅ |
-| Regression | 18 | ✅ |
-| Contract | 12 | ✅ |
-| **Total** | **96** | **✅ All Pass** |
-
-### CI/CD Pipeline
-
-| Stage | Status |
-|-------|--------|
-| Schema Validation | ✅ |
-| Unit Tests | ✅ |
-| Integration Tests | ✅ |
-| E2E Web Tests | ✅ |
-| Security Scan | ✅ |
-| Policy Checks | ✅ |
-| License Scan | ✅ |
-| Converter Golden Tests | ✅ |
-| Platform Matrix | ✅ |
-| Cross-Platform (Ubuntu/macOS/Win) | ✅ |
-| Release Gate (wheel + smoke) | ✅ |
-
----
-
-## 🤝 **Contributing**
-
-```bash
-# 1. Fork & clone
-git clone https://github.com/OpKnock/Kdesk-Catalog
-cd Kdesk-Catalog
-
-# 2. Create virtual env
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-pip install -e ".[dev]"
-
-# 3. Make changes, run tests
-pytest tests/ -q
-
-# 4. Run checks
-ruff check .
-mypy kdesk/
-ruff format .
-
-# 5. Run full verification
-kdesk verify --fast
-kdesk verify --full  # includes freshness, security, duplicates, license, etc.
-
-# 6. Submit PR
-```
-
-### Code Standards
-
-| Tool | Config |
-|------|--------|
-| **Formatter** | `ruff format` (line-length=100) |
-| **Linter** | `ruff check` (E,F,I,UP,B,SIM) |
-| **Types** | `mypy` (strict) |
-| **Imports** | `isort` (via ruff) |
-| **Tests** | `pytest` (asyncio, cov=92%) |
-
----
-
-## 📜 **License**
-
-MIT License — see [LICENSE](LICENSE) for details.
-
----
-
-## 🙏 **Acknowledgments**
-
-- **Universal Agent Format** — Inspired by OpenAPI, AsyncAPI, and CloudEvents
-- **Platform Authors** — Thanks to all platform teams for their specs
-- **Contributors** — See [CONTRIBUTORS.md](CONTRIBUTORS.md)
-- **Inspiration** — OpenAPI, AsyncAPI, CloudEvents, JSON Schema
-
----
-
-## 📞 **Community & Support**
-
-- 🐛 **Issues**: [GitHub Issues](https://github.com/OpKnock/Kdesk-Catalog/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/OpKnock/Kdesk-Catalog/discussions)
-- 📖 **Docs**: [Wiki](https://github.com/OpKnock/Kdesk-Catalog/wiki)
-- 🐦 **Twitter**: [@KdeskCatalog](https://twitter.com/KdeskCatalog)
-
----
-
-<div align="center">
-
-**Built with ❤️ for the AI agent ecosystem**
-
-[![Star History](https://api.star-history.com/svg?repos=OpKnock/Kdesk-Catalog&type=Date)](https://star-history.com/#OpKnock/Kdesk-Catalog)
-
----
-
-**KDesk** — *The Trust & Compatibility Layer for AI Agents*  
-*Build once. Verify once. Deploy anywhere.*
-
----
-
-*Made with ☕ by the KDesk team*
-
-</div>
+MIT © Kdesk

@@ -60,6 +60,7 @@
 | **⚙️ Converter** | Universal YAML → 45+ native formats |
 | **🏪 Marketplace** | Publish, discover, versioned skills |
 | **🩺 Doctor** | Diagnose, repair, verify — with proof |
+| **▶️ Live Agents** | Run any agent/skill as a real executable agent |
 
 ---
 
@@ -94,6 +95,9 @@
 ```bash
 # 1. Install
 pip install -e .
+
+# 1b. Optional: live-agent runtime (only needed for `kdesk agent run --execute`)
+pip install -e ".[framework]"
 
 # 2. Verify it works
 kdesk --version
@@ -140,6 +144,17 @@ kdesk skill install terraform-infrastructure@^2.0
 kdesk skill publish my-skill --force
 
 # ┌─────────────────────────────────────────────────────────────┐
+# │ ▶️ RUN: Execute any agent/skill as a real AI agent          │
+# └─────────────────────────────────────────────────────────────┘
+# Dry-run first: prints the execution plan (no model call, no changes)
+kdesk agent check
+kdesk agent run terraform-infrastructure "review this plan" --json
+
+# Execute live (reads → reasons → acts with its own tools)
+kdesk agent run catalog-auditor "audit the catalog" --execute
+kdesk agent run terraform-infrastructure "plan infra" --execute --allow-shell
+
+# ┌─────────────────────────────────────────────────────────────┐
 # │ 🏥 DOCTOR: Diagnose & fix                                   │
 # └─────────────────────────────────────────────────────────────┘
 kdesk doctor --mode diagnose --platform cursor --project-root ./my-project
@@ -180,6 +195,7 @@ python -m kdesk.cli workflow --run catalog-audit # parallel_read: dry-run, compa
 | **🩺 Doctor** | Diagnose, scan, fix with evidence | ✅ |
 | **🔒 Security** | Path sandbox, symlink protection, dry-run | ✅ |
 | **🏪 Marketplace** | Semver, publish, search, resolve | ✅ |
+| **▶️ Live Execution** | Dry-run plans, tool-scoped runs, team delegation | ✅ |
 | **🧪 Testing** | 96 tests, 96% coverage, mutation testing | ✅ |
 | **📦 Wheel install** | `pip install dist/*.whl` verified | ✅ |
 | **🌍 Cross-platform** | Ubuntu, macOS, Windows CI | ✅ |
@@ -218,7 +234,15 @@ kdesk serve
 # 5️⃣  Doctor → Mode: Diagnose → Platform: cursor → Run
 #     → See score ring, evidence blocks, issue table with fix suggestions
 
-# 5️⃣  Marketplace → Search "terraform" → Click → Resolve version
+# 5️⃣  Run it live (dry-run plan first — no model call, no side effects)
+kdesk agent check
+kdesk agent run terraform-infrastructure "plan this repo's infra" --json
+
+# 6️⃣  Execute for real (needs a configured chat client)
+kdesk agent run terraform-infrastructure "plan this repo's infra" --execute
+kdesk agent run catalog-auditor "audit the catalog" --execute --allow-shell
+
+# 7️⃣  Marketplace → Search "terraform" → Click → Resolve version
 #     → Publish your own skill
 
 # 6️⃣  Evil Agent Demo:

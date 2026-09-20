@@ -270,6 +270,46 @@ def _cmd_serve(args) -> int:
     return 0
 
 
+def _cmd_agent(args) -> int:
+    from kdesk import agent_runtime as ar
+
+    if args.agent_command == "check":
+        ok = ar.runtime_available()
+        data = {
+            "runtime": "available" if ok else "missing",
+            "package": ar.RUNTIME_IMPORT,
+            "install": f"pip install {ar.RUNTIME_PIP_SPEC}",
+        }
+        if args.json:
+            print(json.dumps(data, indent=2))
+        else:
+            print(f"Live-agent runtime: {data['runtime']}")
+            if not ok:
+                print(f"  Install it with: {data['install']}")
+        return 0 if ok else 3
+    elif args.agent_command == "run":
+        catalog = _catalog(args)
+        try:
+            result = ar.run_agent(
+                catalog,
+                args.name,
+                args.task,
+                dry_run=not args.execute,
+                allow_shell=args.allow_shell,
+            )
+        except ar.AgentRuntimeError as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 1
+        if args.json or isinstance(result, dict):
+            print(json.dumps(result, indent=2, default=str))
+        else:
+            print(result)
+        return 0
+    else:
+        print("Usage: kdesk agent {run|check} ...")
+        return 2
+
+
 def _cmd_trust(args) -> int:
     from kdesk.trust import calculate_trust_score
     result = calculate_trust_score(args.name, args.platform)

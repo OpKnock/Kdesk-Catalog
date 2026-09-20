@@ -10,6 +10,10 @@ category: string                # e.g., "ml", "devops", "database", "api", "secu
 subcategory: string             # optional: "training", "inference", "deployment", etc.
 description: string             # what this agent does
 version: string                 # semantic version (1.0.0)
+color: string                   # optional UI accent color (hex, #RRGGBB)
+emoji: string                   # optional icon emoji for marketplaces
+vibe: string                    # optional tone descriptor ("playful", "formal")
+voice: string                   # optional voice descriptor ("concise", "friendly")
 tags:                           # searchable tags
   - string
 author: string                  # optional

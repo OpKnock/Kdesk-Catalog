@@ -78,7 +78,27 @@ Expected: 1,766 agents + 1,143 skills per platform (~2,909 items), all frontmatt
 
 Remove the copied directories per platform (e.g. `rm -rf ~/.claude/agents ~/.claude/skills`, `rm -rf .cursor/rules`, `rm -rf .github/instructions`). Platform files are regenerable — the catalog is never modified by installation.
 
-## 7. Notes
+## 7. Versioning
+
+- **Content version = git revision.** The catalog has no independent semantic
+  version: `universal-agents/` is the source of truth and every generated
+  artifact (platform files, JSON definitions, marketplaces) is regenerable from
+  it. Pin your installs to a git tag or commit SHA when you need reproducibility.
+- **Tool version.** `kdesk` reports its own version via
+  `kdesk --version` (`kdesk.__version__`, e.g. `1.1.0`) and includes it in
+  `kdesk verify` output.
+- **Install manifest.** `kdesk install` records every installed file (relative
+  target + SHA-256) in `<base>/.kdesk/manifest.json` (manifest format v1).
+  `kdesk verify` compares installed files against the manifest, and
+  `kdesk uninstall`/rollback uses it to remove only what kdesk installed.
+- **Keeping installs current.** After pulling new catalog revisions, re-run the
+  converter (`python scripts/universal-converter.py --platforms <name>`) and
+  re-install (`kdesk install <platform>`); files whose SHA-256 changed are
+  re-copied, identical files are skipped. Platform artifacts are never
+  hand-edited, so drift is limited to locally modified copies, which
+  `kdesk verify` reports as `MALFORMED`/`EXTRA`.
+
+## 8. Notes
 
 - `platform-agents/` is gitignored: always regenerate from `universal-agents/` after pulling updates.
 - Model pins: keep `inherit` (portable default) — do not hand-edit installed files.

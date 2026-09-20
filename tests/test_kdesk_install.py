@@ -85,10 +85,11 @@ class InstallToolFilterTests(unittest.TestCase):
 
     def test_tool_filter_installs_only_invoking_definitions(self):
         installer = Installer(self.registry, home_dir=self.base)
-        result = installer.install("claude_code", base=self.base, tool="python")
+        # Use "git" which is a common tool in many definitions
+        result = installer.install("claude_code", base=self.base, tool="git")
         self.assertTrue(self.index, "def index should not be empty")
         matching = {stem for stem, tools in self.index.items()
-                    if "python" in tools}
+                    if "git" in tools}
         self.assertTrue(matching)
         installed = [p for p in (self.base / ".claude").rglob("*")
                      if p.is_file()]

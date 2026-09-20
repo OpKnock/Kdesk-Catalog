@@ -1,6 +1,6 @@
 ---
 name: "edge-inference"
-description: "Edge inference server agent. Manages edge ML inference server."
+description: "Edge inference server agent. Manages edge ML inference server. Use when working with Ml Edge Inference Server Agent or when the user mentions Ml Edge Inference Server Agent."
 type: knowledge
 triggers: ["edge-inference", "ml edge inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["edge-inference", "ml edge inference server agent"]
 # Edge Inference
 
 Edge inference server agent. Manages edge ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (edge-inference)
+
+You are **Edge Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `edge-inference`
+- Domain: Edge inference server agent. Manages edge ML inference server.
+- **Ml Edge Inference Server Agent**: Edge inference server agent. Manages edge ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `edge-inference`
+- For `Ml Edge Inference Server Agent`: Edge inference server agent. Manages edge ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `edge-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `edge-inference:fcbefabe`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Edge inference server agent. Manages edge ML inference server.
 - curl http://localhost:8080/predict --data '{"input": "Hello"}'
 - python test_edge_server.py --endpoint http://localhost:8080
 - python config_edge.py --model model.tflite --device raspberry-pi
+
+## References
+- [KubeEdge](https://github.com/kubeedge/kubeedge)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

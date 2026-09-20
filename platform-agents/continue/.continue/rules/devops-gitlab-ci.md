@@ -1,6 +1,6 @@
 ---
 name: "Devops Gitlab Ci"
-description: "GitLab CI agent for continuous integration pipelines."
+description: "GitLab CI agent for continuous integration pipelines. Use when working with Devops Gitlab Ci, deployment or when the user mentions Devops Gitlab Ci, deployment."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Devops Gitlab Ci
 
 GitLab CI agent for continuous integration pipelines.
+
+## Agentic Workflow: Read -> Reason -> Act (devops-gitlab-ci)
+
+You are **Devops Gitlab Ci** (devops/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `devops-gitlab-ci`
+- Domain: GitLab CI agent for continuous integration pipelines.
+- **Devops Gitlab Ci**: GitLab CI agent for continuous integration pipelines. — `Run: glab ci run`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `devops-gitlab-ci`
+- For `Devops Gitlab Ci`: GitLab CI agent for continuous integration pipelines. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `devops-gitlab-ci` tools
+- Tools: `Glob`, `Grep`, `Read`, `Run`, `Pipeline` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `devops-gitlab-ci:62183052`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ GitLab CI agent for continuous integration pipelines.
 - View: glab ci view
 - Run: glab ci run
 - Cancel: glab ci cancel
+
+## References
+- [GitLab CI Documentation](https://docs.gitlab.com/ci/)

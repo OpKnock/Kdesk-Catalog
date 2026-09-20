@@ -2,15 +2,27 @@ title: Async Asyncio Basics
 description: 'Builds concurrent Python services with asyncio: coroutines, task groups, aiohttp clients,
   timeouts, and semaphore-bounded concurrency.'
 version: 2.0.0
-instructions: "# Async Asyncio Basics\n\nBuilds concurrent Python services with asyncio: coroutines, task\
-  \ groups, aiohttp clients, timeouts, and semaphore-bounded concurrency.\n\n## Instructions\n\n# Async\
-  \ v2 (Python asyncio)\n\n## What this skill does\n\nBuilds concurrent I/O-bound Python services on asyncio:\
-  \ coroutines and tasks, parallel gather, aiohttp clients with timeouts, semaphores for bounded concurrency,\
-  \ and correct shutdown.\n\n## When to use\n\n- A Python service blocks on many HTTP calls that could\
-  \ be parallel\n- Replacing threads/process pools with an event loop\n- Debugging 'Event loop is closed'\
-  \ or timeout leaks\n\n## Real commands\n\n```bash\n# Basic coroutine execution\npython -c \"import asyncio;\
-  \ asyncio.run(asyncio.sleep(0.1)); print('ok')\"\n\n# Parallel execution: 2s of sleeps in ~1s wall time\n\
-  python -c \"import asyncio, time; async def m(): t=time.perf_counter(); await asyncio.gather(asyncio.sleep(1),\
+instructions: "Builds concurrent Python services with asyncio: coroutines, task groups, aiohttp clients,\
+  \ timeouts, and semaphore-bounded concurrency.\n\n## Agentic Workflow: Read -> Reason -> Act (async-asyncio-basics)\n\
+  \nYou are **Async Asyncio Basics** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via\
+  \ `allowed-tools`.\n\n### 1. Read — api context for `async-asyncio-basics`\n- Domain: Builds concurrent\
+  \ Python services with asyncio: coroutines, task groups, aiohttp clients, timeouts, and semaphore-bounded\
+  \ concurrency.\n- **asyncio-basics**: Run coroutines and tasks on the asyncio event loop. — `python\
+  \ -c \"import asyncio; asyncio.run(asyncio.sleep(0.1)); print('ok')\"`\n- **async-http**: Make concurrent\
+  \ HTTP calls with aiohttp and bound timeouts. — `pip install aiohttp`\n- Check `knowledge` and `prerequisites:\
+  \ pip, python`\n\n### 2. Reason — think for `async-asyncio-basics`\n- For `asyncio-basics`: Run coroutines\
+  \ and tasks on the asyncio event loop. — decide which checks to run\n- For `async-http`: Make concurrent\
+  \ HTTP calls with aiohttp and bound timeouts. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `async-asyncio-basics`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `async-asyncio-basics:52baebed`\n\
+  \n# Async v2 (Python asyncio)\n\n## What this skill does\n\nBuilds concurrent I/O-bound Python services\
+  \ on asyncio: coroutines and tasks, parallel gather, aiohttp clients with timeouts, semaphores for bounded\
+  \ concurrency, and correct shutdown.\n\n## When to use\n\n- A Python service blocks on many HTTP calls\
+  \ that could be parallel\n- Replacing threads/process pools with an event loop\n- Debugging 'Event loop\
+  \ is closed' or timeout leaks\n\n## Real commands\n\n```bash\n# Basic coroutine execution\npython -c\
+  \ \"import asyncio; asyncio.run(asyncio.sleep(0.1)); print('ok')\"\n\n# Parallel execution: 2s of sleeps\
+  \ in ~1s wall time\npython -c \"import asyncio, time; async def m(): t=time.perf_counter(); await asyncio.gather(asyncio.sleep(1),\
   \ asyncio.sleep(1)); print(f'{time.perf_counter()-t:.2f}s')\"\n\n# aiohttp with total timeout\npip install\
   \ aiohttp\npython -c \"import aiohttp, asyncio; async def m(): async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5))\
   \ as s: r=await s.get('https://httpbin.org/delay/3'); print(r.status)\"\n```\n\n## Bounded concurrency\n\
@@ -21,23 +33,27 @@ instructions: "# Async Asyncio Basics\n\nBuilds concurrent Python services with 
   \ asyncio.run(main())\n- Verify parallelism by timing concurrent sleeps (max, not sum)\n\n## Best practices\n\
   \n- Prefer asyncio.timeout() context managers over raw wait_for\n- Bound concurrency with semaphores\
   \ for rate-limited APIs\n- Do CPU work in executors, never in the event loop\n\n## Capabilities\n\n\
-  ### asyncio-basics\nRun coroutines and tasks on the asyncio event loop.\n\n**Commands:**\n- `python\
-  \ -c \"import asyncio; asyncio.run(asyncio.sleep(0.1)); print('ok')\"`\n- `python -c \"import asyncio,\
-  \ time; async def m(): t=time.perf_counter(); await asyncio.gather(asyncio.sleep(1), asyncio.sleep(1));\
-  \ print(f'{time.perf_counter()-t:.2f}s')\"`\n- `python -m asyncio`\n- `python -c \"import asyncio; async\
-  \ def f(): return 42; print(asyncio.run(f()))\"`\n\n**Examples:**\n- python -c \"import asyncio; print(asyncio.run(asyncio.gather(*(asyncio.sleep(i/10)\
-  \ for i in range(5)))))\"\n- python -c \"import asyncio; async def f(): return 42; print(asyncio.run(f()))\"\
-  \n- python -c \"import asyncio; print(asyncio.get_event_loop_policy().get_event_loop().class_)\"\n\n\
-  ### async-http\nMake concurrent HTTP calls with aiohttp and bound timeouts.\n\n**Commands:**\n- `pip\
-  \ install aiohttp`\n- `python -c \"import aiohttp, asyncio; async def m(): async with aiohttp.ClientSession()\
-  \ as s: r=await s.get('https://httpbin.org/get'); print(r.status)\"`\n- `python -c \"import aiohttp,\
-  \ asyncio; async def m(): async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5)) as\
-  \ s: r=await s.get('https://httpbin.org/delay/3'); print(r.status)\"`\n- `python -c \"import aiohttp,\
+  ### asyncio-basics\nRun coroutines and tasks on the asyncio event loop.\n\n**Parameters:**\n- `tasks`\
+  \ (string): Comma-separated coroutines to gather\n- `timeout` (number): asyncio.timeout value in seconds\n\
+  \n**Commands:**\n- `python -c \"import asyncio; asyncio.run(asyncio.sleep(0.1)); print('ok')\"`\n- `python\
+  \ -c \"import asyncio, time; async def m(): t=time.perf_counter(); await asyncio.gather(asyncio.sleep(1),\
+  \ asyncio.sleep(1)); print(f'{time.perf_counter()-t:.2f}s')\"`\n- `python -m asyncio`\n- `python -c\
+  \ \"import asyncio; async def f(): return 42; print(asyncio.run(f()))\"`\n\n**Examples:**\n- python\
+  \ -c \"import asyncio; print(asyncio.run(asyncio.gather(*(asyncio.sleep(i/10) for i in range(5)))))\"\
+  \n- python -c \"import asyncio; async def f(): return 42; print(asyncio.run(f()))\"\n- python -c \"\
+  import asyncio; print(asyncio.get_event_loop_policy().get_event_loop().class_)\"\n\n### async-http\n\
+  Make concurrent HTTP calls with aiohttp and bound timeouts.\n\n**Parameters:**\n- `url` (string): Endpoint\
+  \ to call\n- `total_timeout` (number): aiohttp.ClientTimeout total seconds\n- `concurrency` (number):\
+  \ Concurrent requests via gather/semaphore\n\n**Commands:**\n- `pip install aiohttp`\n- `python -c \"\
+  import aiohttp, asyncio; async def m(): async with aiohttp.ClientSession() as s: r=await s.get('https://httpbin.org/get');\
+  \ print(r.status)\"`\n- `python -c \"import aiohttp, asyncio; async def m(): async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5))\
+  \ as s: r=await s.get('https://httpbin.org/delay/3'); print(r.status)\"`\n- `python -c \"import aiohttp,\
   \ asyncio, time; async def m(): t=time.perf_counter(); async with aiohttp.ClientSession() as s: await\
   \ asyncio.gather(*(s.get('https://httpbin.org/delay/1') for _ in range(5))); print(f'{(time.perf_counter()-t):.2f}s')\"\
   `\n\n**Examples:**\n- python -c \"import aiohttp, asyncio; async def m(): async with aiohttp.ClientSession()\
   \ as s: r=await s.post('https://httpbin.org/post', json={'a':1}); print(r.status); print((await r.json())['json'])\"\
   \n- python -c \"import aiohttp, asyncio; async def m(): async with aiohttp.ClientSession() as s: await\
   \ asyncio.gather(*(s.get('https://httpbin.org/get') for _ in range(10)))\"\n- python -c \"import aiohttp;\
-  \ print([k for k in aiohttp.__dict__ if 'Client' in k])\""
+  \ print([k for k in aiohttp.__dict__ if 'Client' in k])\"\n\n## References\n- [Python asyncio](https://docs.python.org/3/library/asyncio.html)\n\
+  - [aiohttp](https://docs.aiohttp.org/en/stable/)\n- [uvloop](https://github.com/MagicStack/uvloop)"
 prompt: Act as Async Asyncio Basics and handle the task per the instructions.

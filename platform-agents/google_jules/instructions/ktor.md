@@ -1,8 +1,24 @@
-# Ktor
-
 General Ktor development lifecycle: project scaffolding with the Ktor Gradle plugin, dependency management, and dev/test workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ktor)
+
+You are **Ktor** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `ktor`
+- Domain: General Ktor development lifecycle: project scaffolding with the Ktor Gradle plugin, dependency management, and dev/test workflows.
+- **ktor-lifecycle**: Scaffold, build, and run Ktor projects with Gradle. — `gradle wrapper --gradle-version 8.7`
+- **plugin-config**: Configure the Ktor Gradle plugin and application entry point. — `./gradlew build -x test`
+- Check `knowledge` and `prerequisites: ./gradlew, build/install/app/bin/app, gradle`
+
+### 2. Reason — think for `ktor`
+- For `ktor-lifecycle`: Scaffold, build, and run Ktor projects with Gradle. — decide which checks to run
+- For `plugin-config`: Configure the Ktor Gradle plugin and application entry point. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ktor` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gradle`, `./gradlew` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ktor:da22c0b1`
 
 # Ktor (General)
 
@@ -76,6 +92,10 @@ ktor {
 ### ktor-lifecycle
 Scaffold, build, and run Ktor projects with Gradle.
 
+**Parameters:**
+- `gradle_version` (string): Gradle wrapper version.
+- `task` (string): Gradle task: run, build, clean, test.
+
 **Commands:**
 - `gradle wrapper --gradle-version 8.7`
 - `./gradlew clean build`
@@ -90,6 +110,9 @@ Scaffold, build, and run Ktor projects with Gradle.
 ### plugin-config
 Configure the Ktor Gradle plugin and application entry point.
 
+**Parameters:**
+- `main_class` (string): Application entry class, e.g. io.ktor.server.netty.EngineMain.
+
 **Commands:**
 - `./gradlew build -x test`
 - `./gradlew installDist`
@@ -100,3 +123,7 @@ Configure the Ktor Gradle plugin and application entry point.
 - ./gradlew installDist
 - build/install/app/bin/app
 - ./gradlew build -x test
+
+## References
+- [Ktor Documentation](https://ktor.io/docs/welcome.html)
+- [Ktor Gradle Plugin](https://ktor.io/docs/gradle-plugin.html)

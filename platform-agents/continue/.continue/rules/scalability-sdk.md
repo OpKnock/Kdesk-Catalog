@@ -1,6 +1,6 @@
 ---
 name: "Scalability Sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Scalability Deploy Sdk Agent V2 or when the user mentions Ml Scalability Deploy Sdk Agent V2."
 globs: ["**/*.r", "**/*.scala"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Scalability Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (scalability-sdk)
+
+You are **Scalability Sdk** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `scalability-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Scalability Deploy Sdk Agent V2**: Scalability SDK deployment agent for ML Scalability SDK deployment. — `docker build -t scalability:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `scalability-sdk`
+- For `Ml Scalability Deploy Sdk Agent V2`: Scalability SDK deployment agent for ML Scalability SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `scalability-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Scalability` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `scalability-sdk:2300a0f9`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Scalability SDK deployment agent for ML Scalability SDK deployment.
 **Examples:**
 - Server: python -m scalability.server --port 8080
 - Docker: docker run -p 8080:8080 scalability-server
+
+## References
+- [Kubernetes Architecture](https://kubernetes.io/docs/concepts/architecture/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

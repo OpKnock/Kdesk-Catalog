@@ -1,6 +1,6 @@
 ---
 name: "Ml Deepseek Python"
-description: "DeepSeek Python SDK agent for reasoning models."
+description: "DeepSeek Python SDK agent for reasoning models. Use when working with Ml Deepseek Python, deployment or when the user mentions Ml Deepseek Python, deployment."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Deepseek Python
 
 DeepSeek Python SDK agent for reasoning models.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-deepseek-python)
+
+You are **Ml Deepseek Python** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-deepseek-python`
+- Domain: DeepSeek Python SDK agent for reasoning models.
+- **Ml Deepseek Python**: DeepSeek Python SDK agent for reasoning models. — `Code: client.completions.create(model='deepseek-coder', prompt='def fibonacci(n)`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-deepseek-python`
+- For `Ml Deepseek Python`: DeepSeek Python SDK agent for reasoning models. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-deepseek-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Code`, `Install` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-deepseek-python:d81934e8`
 
 ## Instructions
 
@@ -38,3 +56,7 @@ DeepSeek Python SDK agent for reasoning models.
 - Client: from openai import OpenAI; client = OpenAI(base_url='https://api.deepseek.com', api_key='API_KEY')
 - Chat: client.chat.completions.create(model='deepseek-chat', messages=[{'role': 'user', 'content': 'Hello'}])
 - Code: client.completions.create(model='deepseek-coder', prompt='def fibonacci(n):')
+
+## References
+- [DeepSeek API Documentation](https://api-docs.deepseek.com/)
+- [OpenAI API Documentation](https://platform.openai.com/docs/)

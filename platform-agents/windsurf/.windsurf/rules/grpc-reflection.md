@@ -6,27 +6,23 @@ globs: ["**/*.go", "**/*.java", "**/*.py", "**/*.r", "**/*.sh"]
 
 gRPC server reflection: enabling reflection on servers and discovering services, methods, and message schemas at runtime with grpcurl.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (grpc-reflection)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Grpc Reflection** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `grpcurl -plaintext localhost:50051 list`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `grpc-reflection`
+- Domain: gRPC server reflection: enabling reflection on servers and discovering services, methods, and message schemas at runtime with grpcurl.
+- **reflection-discovery**: Discover services, methods, and message types from a running gRPC server without proto files. — `grpcurl -plaintext localhost:50051 list`
+- Check `knowledge` and `prerequisites: grpcurl`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `grpc-reflection`
+- For `reflection-discovery`: Discover services, methods, and message types from a running gRPC server without proto files. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `grpc-reflection` tools
+- Tools: `Glob`, `Grep`, `Read`, `Grpcurl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grpc-reflection:e0223b01`
 
 # gRPC Reflection
 

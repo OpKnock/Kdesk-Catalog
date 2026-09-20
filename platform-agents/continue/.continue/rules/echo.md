@@ -1,15 +1,29 @@
 ---
 name: "Echo"
-description: "HTTP echo and request debugging: sends requests to public echo services (httpbin, Postman Echo) and local containers to verify headers, methods, and payloads during API development."
+description: "HTTP echo and request debugging: sends requests to public echo services (httpbin, Postman Echo) and local containers to verify headers, methods, and payloads during API development. Use when working with http echo, api or when the user mentions http echo, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Echo
-
 HTTP echo and request debugging: sends requests to public echo services (httpbin, Postman Echo) and local containers to verify headers, methods, and payloads during API development.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (echo)
+
+You are **Echo** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `echo`
+- Domain: HTTP echo and request debugging: sends requests to public echo services (httpbin, Postman Echo) and local containers to verify headers, methods, and payloads during API development.
+- **http-echo**: Use echo services and local echo containers to verify how requests arrive at a server. — `curl https://httpbin.org/get?foo=bar`
+- Check `knowledge` and `prerequisites: docker`
+
+### 2. Reason — think for `echo`
+- For `http-echo`: Use echo services and local echo containers to verify how requests arrive at a server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `echo` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `echo:d5b515b9`
 
 # Echo
 
@@ -66,6 +80,11 @@ curl -X PUT https://httpbin.org/put -H 'X-Custom: value' | jq '.headers["X-Custo
 ### http-echo
 Use echo services and local echo containers to verify how requests arrive at a server.
 
+**Parameters:**
+- `method` (string): HTTP method to test: GET, POST, PUT, DELETE
+- `headers` (array): Custom headers to inspect in the echo response
+- `payload` (string): JSON body echoed back by the service
+
 **Commands:**
 - `curl https://httpbin.org/get?foo=bar`
 - `curl -X POST https://httpbin.org/post -d '{"hello":"world"}' -H 'Content-Type: application/json'`
@@ -77,3 +96,6 @@ Use echo services and local echo containers to verify how requests arrive at a s
 - curl -X POST https://httpbin.org/post -d '{"hello":"world"}' -H 'Content-Type: application/json' | jq '.json'
 - curl -s https://postman-echo.com/get?foo=bar | jq '.args'
 - curl -i -X PUT https://httpbin.org/put -H 'X-Custom: value' | head -20
+
+## References
+- [httpbin docs](https://httpbin.org/)

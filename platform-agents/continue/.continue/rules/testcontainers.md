@@ -1,15 +1,33 @@
 ---
 name: "testcontainers"
-description: "Start, inspect, and stop test containers. JUnit integration with it handling Java. Node.js integration with it package. and services."
+description: "Start, inspect, and stop test containers. JUnit integration with it handling Java. Node.js integration with it package. and services. Use when working with container lifecycle, testcontainers java, testcontainers node, testing or when the user mentions container lifecycle, testcontainers java, testcontainers node, testing."
 globs: ["**/*.go", "**/*.java", "**/*.r", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# testcontainers
-
 Start, inspect, and stop test containers. JUnit integration with it handling Java. Node.js integration with it package. and services.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (testcontainers)
+
+You are **testcontainers** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `testcontainers`
+- Domain: Start, inspect, and stop test containers. JUnit integration with it handling Java. Node.js integration with it package. and services.
+- **container-lifecycle**: Start, inspect, and stop test containers. — `docker ps --filter name=testcontainer`
+- **testcontainers-java**: JUnit integration with Testcontainers for Java. — `mvn test -Dtest=OrderRepositoryIT`
+- **testcontainers-node**: Node.js integration with testcontainers package. — `npm test`
+- Check `knowledge` and `prerequisites: ./gradlew, docker, mvn, node`
+
+### 2. Reason — think for `testcontainers`
+- For `container-lifecycle`: Start, inspect, and stop test containers. — decide which checks to run
+- For `testcontainers-java`: JUnit integration with Testcontainers for Java. — decide which checks to run
+- For `testcontainers-node`: Node.js integration with testcontainers package. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `testcontainers` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Mvn` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `testcontainers:b456fcab`
 
 # Testcontainers
 
@@ -74,6 +92,10 @@ class OrderRepositoryIT {
 ### container-lifecycle
 Start, inspect, and stop test containers.
 
+**Parameters:**
+- `image` (string): Container image, e.g. postgres:16
+- `port` (number): Exposed port
+
 **Commands:**
 - `docker ps --filter name=testcontainer`
 - `docker logs $(docker ps -q --filter name=testcontainer-postgres)`
@@ -89,6 +111,10 @@ Start, inspect, and stop test containers.
 ### testcontainers-java
 JUnit integration with Testcontainers for Java.
 
+**Parameters:**
+- `test` (string): Test class filter
+- `maxContainers` (number): Parallel container limit
+
 **Commands:**
 - `mvn test -Dtest=OrderRepositoryIT`
 - `mvn verify`
@@ -103,6 +129,10 @@ JUnit integration with Testcontainers for Java.
 ### testcontainers-node
 Node.js integration with testcontainers package.
 
+**Parameters:**
+- `runner` (string): Test runner invocation
+- `runInBand` (boolean): Run jest tests in-band to avoid container port conflicts.
+
 **Commands:**
 - `npm test`
 - `npx jest --runInBand tests/db.test.js`
@@ -113,3 +143,8 @@ Node.js integration with testcontainers package.
 - npm test
 - npx jest --runInBand tests/db.test.js
 - docker stats --no-stream $(docker ps -q --filter name=testcontainer)
+
+## References
+- [Testcontainers Documentation](https://testcontainers.com/)
+- [Testcontainers Java](https://java.testcontainers.org/)
+- [Testcontainers Node](https://node.testcontainers.org/)

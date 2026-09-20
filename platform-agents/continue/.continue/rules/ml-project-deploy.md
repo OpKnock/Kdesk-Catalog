@@ -1,6 +1,6 @@
 ---
 name: "Ml Project Deploy"
-description: "Project deployment agent for ML project management service deployment."
+description: "Project deployment agent for ML project management service deployment. Use when working with Ml Project Deploy or when the user mentions Ml Project Deploy."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Project Deploy
 
 Project deployment agent for ML project management service deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-project-deploy)
+
+You are **Ml Project Deploy** (ml/project) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-project-deploy`
+- Domain: Project deployment agent for ML project management service deployment.
+- **Ml Project Deploy**: Project deployment agent for ML project management service deployment. — `Create: python -m ml_project.create --name 'Customer Churn Model'`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-project-deploy`
+- For `Ml Project Deploy`: Project deployment agent for ML project management service deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-project-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Create`, `Health` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-project-deploy:b332eae4`
 
 ## Instructions
 
@@ -27,3 +45,8 @@ Project deployment agent for ML project management service deployment.
 - Server: python -m ml_project.server --port 8080
 - Create: python -m ml_project.create --name 'Customer Churn Model'
 - Health: curl http://localhost:8080/health
+
+## References
+- [Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

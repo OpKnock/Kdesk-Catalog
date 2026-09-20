@@ -2,25 +2,37 @@ title: Fly Io
 description: 'Deploy applications to Fly.io edge infrastructure with flyctl: launch apps, scale machines,
   manage volumes, and wire secrets.'
 version: 2.0.0
-instructions: "# Fly Io\n\nDeploy applications to Fly.io edge infrastructure with flyctl: launch apps,\
-  \ scale machines, manage volumes, and wire secrets.\n\n## Instructions\n\n# Fly.io\n\n## What this skill\
-  \ does\n\nFly.io runs containerized apps on micro-VMs distributed across regions. flyctl launches apps,\
-  \ deploys from Dockerfiles, scales machines, attaches volumes, and manages secrets.\n\n## When to use\n\
-  \n- Deploying an app close to users in multiple regions\n- Attaching persistent volumes to stateful\
-  \ services\n- Simple single-command deploys from CI\n\n## Real commands\n\n```bash\n# Launch and deploy\n\
-  fly launch --name myapp --region ams\nfly deploy\n\n# Status and logs\nfly status\nfly logs\n\n# Scale\n\
-  fly scale count 3 --region ams\nfly scale show\n\n# Secrets and volumes\nfly secrets set DATABASE_URL=postgres://user:pass@host/db\n\
-  fly volumes create data --size 10 --region ams\n```\n\n## fly.toml example\n\n```toml\napp = \"myapp\"\
-  \nprimary_region = \"ams\"\n\n[build]\n  dockerfile = \"Dockerfile\"\n\n[mounts]\n  source = \"data\"\
-  \n  destination = \"/data\"\n\n[[services]]\n  internal_port = 8080\n  protocol = \"tcp\"\n  [[services.ports]]\n\
-  \    handlers = [\"http\"]\n    port = 80\n```\n\n## Testing\n\n```bash\n# Deploy a preview environment\n\
-  fly deploy --image myapp:preview\nfly curl myapp.fly.dev/health\n```\n\n## Best practices\n\n- Mount\
-  \ volumes only where state lives; keep app machines stateless.\n- Use `fly secrets` for config, not\
-  \ env in fly.toml.\n- Pin regions for latency-sensitive workloads.\n- Test `fly launch --ha=false` for\
-  \ single-node dev, then enable HA.\n- Watch `fly status` machine states before and after deploys.\n\n\
-  ## Capabilities\n\n### flyctl-deploy\nLaunch, deploy, scale, and monitor apps on Fly.io.\n\n**Commands:**\n\
-  - `fly launch --name myapp --region ams`\n- `fly deploy`\n- `fly status`\n- `fly scale count 3 --region\
-  \ ams`\n- `fly secrets set DATABASE_URL=postgres://...`\n- `fly volumes create data --size 10 --region\
-  \ ams`\n- `fly logs`\n\n**Examples:**\n- fly launch --name myapp --region ams && fly deploy\n- fly scale\
-  \ count 3 --region ams && fly status\n- fly secrets set DATABASE_URL=postgres://... && fly deploy"
+instructions: "Deploy applications to Fly.io edge infrastructure with flyctl: launch apps, scale machines,\
+  \ manage volumes, and wire secrets.\n\n## Agentic Workflow: Read -> Reason -> Act (fly-io)\n\nYou are\
+  \ **Fly Io** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n\
+  ### 1. Read — api context for `fly-io`\n- Domain: Deploy applications to Fly.io edge infrastructure\
+  \ with flyctl: launch apps, scale machines, manage volumes, and wire secrets.\n- **flyctl-deploy**:\
+  \ Launch, deploy, scale, and monitor apps on Fly.io. — `fly launch --name myapp --region ams`\n- Check\
+  \ `knowledge` and `prerequisites: fly`\n\n### 2. Reason — think for `fly-io`\n- For `flyctl-deploy`:\
+  \ Launch, deploy, scale, and monitor apps on Fly.io. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `fly-io` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Fly` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `fly-io:2c1ce69e`\n\n# Fly.io\n\n\
+  ## What this skill does\n\nFly.io runs containerized apps on micro-VMs distributed across regions. flyctl\
+  \ launches apps, deploys from Dockerfiles, scales machines, attaches volumes, and manages secrets.\n\
+  \n## When to use\n\n- Deploying an app close to users in multiple regions\n- Attaching persistent volumes\
+  \ to stateful services\n- Simple single-command deploys from CI\n\n## Real commands\n\n```bash\n# Launch\
+  \ and deploy\nfly launch --name myapp --region ams\nfly deploy\n\n# Status and logs\nfly status\nfly\
+  \ logs\n\n# Scale\nfly scale count 3 --region ams\nfly scale show\n\n# Secrets and volumes\nfly secrets\
+  \ set DATABASE_URL=postgres://user:pass@host/db\nfly volumes create data --size 10 --region ams\n```\n\
+  \n## fly.toml example\n\n```toml\napp = \"myapp\"\nprimary_region = \"ams\"\n\n[build]\n  dockerfile\
+  \ = \"Dockerfile\"\n\n[mounts]\n  source = \"data\"\n  destination = \"/data\"\n\n[[services]]\n  internal_port\
+  \ = 8080\n  protocol = \"tcp\"\n  [[services.ports]]\n    handlers = [\"http\"]\n    port = 80\n```\n\
+  \n## Testing\n\n```bash\n# Deploy a preview environment\nfly deploy --image myapp:preview\nfly curl\
+  \ myapp.fly.dev/health\n```\n\n## Best practices\n\n- Mount volumes only where state lives; keep app\
+  \ machines stateless.\n- Use `fly secrets` for config, not env in fly.toml.\n- Pin regions for latency-sensitive\
+  \ workloads.\n- Test `fly launch --ha=false` for single-node dev, then enable HA.\n- Watch `fly status`\
+  \ machine states before and after deploys.\n\n## Capabilities\n\n### flyctl-deploy\nLaunch, deploy,\
+  \ scale, and monitor apps on Fly.io.\n\n**Parameters:**\n- `app-name` (string): Fly app name\n- `region`\
+  \ (string): Deployment region like ams or iad\n- `count` (integer): Number of machines/instances\n\n\
+  **Commands:**\n- `fly launch --name myapp --region ams`\n- `fly deploy`\n- `fly status`\n- `fly scale\
+  \ count 3 --region ams`\n- `fly secrets set DATABASE_URL=postgres://...`\n- `fly volumes create data\
+  \ --size 10 --region ams`\n- `fly logs`\n\n**Examples:**\n- fly launch --name myapp --region ams &&\
+  \ fly deploy\n- fly scale count 3 --region ams && fly status\n- fly secrets set DATABASE_URL=postgres://...\
+  \ && fly deploy\n\n## References\n- [Fly.io docs](https://fly.io/docs/)\n- [flyctl reference](https://fly.io/docs/flyctl/)"
 prompt: Act as Fly Io and handle the task per the instructions.

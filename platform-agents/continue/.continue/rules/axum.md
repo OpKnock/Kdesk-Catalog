@@ -1,15 +1,31 @@
 ---
 name: "Axum"
-description: "Builds HTTP APIs in Rust with Axum: routing, extractors, shared state, middleware, and testing with tower."
+description: "Builds HTTP APIs in Rust with Axum: routing, extractors, shared state, middleware, and testing with tower. Use when working with project setup, serve and test, api or when the user mentions project setup, serve and test, api."
 globs: ["**/*.go", "**/*.r", "**/*.rs", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Axum
-
 Builds HTTP APIs in Rust with Axum: routing, extractors, shared state, middleware, and testing with tower.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (axum)
+
+You are **Axum** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `axum`
+- Domain: Builds HTTP APIs in Rust with Axum: routing, extractors, shared state, middleware, and testing with tower.
+- **project-setup**: Create an Axum project and add dependencies. — `cargo new axum-api`
+- **serve-and-test**: Run the server and test routes with tower ServiceExt. — `cargo run`
+- Check `knowledge` and `prerequisites: cargo`
+
+### 2. Reason — think for `axum`
+- For `project-setup`: Create an Axum project and add dependencies. — decide which checks to run
+- For `serve-and-test`: Run the server and test routes with tower ServiceExt. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `axum` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `axum:04a32048`
 
 # Axum
 
@@ -83,6 +99,9 @@ async fn get_user(State(db): State<Db>, Path(id): Path<u64>) -> String {
 ### project-setup
 Create an Axum project and add dependencies.
 
+**Parameters:**
+- `features` (string): Cargo features for axum or tower-http
+
 **Commands:**
 - `cargo new axum-api`
 - `cargo add axum tokio --features tokio/full`
@@ -98,6 +117,10 @@ Create an Axum project and add dependencies.
 ### serve-and-test
 Run the server and test routes with tower ServiceExt.
 
+**Parameters:**
+- `port` (number): Bind port (default 3000)
+- `addr` (string): Bind address
+
 **Commands:**
 - `cargo run`
 - `curl -s http://localhost:3000/health`
@@ -109,3 +132,8 @@ Run the server and test routes with tower ServiceExt.
 - cargo run && curl -s http://localhost:3000/health
 - cargo test -- --nocapture
 - cargo clippy --all-targets -- -D warnings
+
+## References
+- [Axum Docs (docs.rs)](https://docs.rs/axum/latest/axum/)
+- [Axum README](https://github.com/tokio-rs/axum)
+- [tower-http](https://docs.rs/tower-http)

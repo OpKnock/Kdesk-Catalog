@@ -1,6 +1,6 @@
 ---
 name: "Ml Gke Inference Agent"
-description: "GKE inference agent. Manages ML inference on Google Kubernetes Engine."
+description: "GKE inference agent. Manages ML inference on Google Kubernetes Engine. Use when working with Ml Gke Inference Agent or when the user mentions Ml Gke Inference Agent."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Gke Inference Agent
 
 GKE inference agent. Manages ML inference on Google Kubernetes Engine.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-gke-inference-agent)
+
+You are **Ml Gke Inference Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-gke-inference-agent`
+- Domain: GKE inference agent. Manages ML inference on Google Kubernetes Engine.
+- **Ml Gke Inference Agent**: GKE inference agent. Manages ML inference on Google Kubernetes Engine. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-gke-inference-agent`
+- For `Ml Gke Inference Agent`: GKE inference agent. Manages ML inference on Google Kubernetes Engine. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-gke-inference-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Gke` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-gke-inference-agent:8f5aa137`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ GKE inference agent. Manages ML inference on Google Kubernetes Engine.
 - kubectl logs -f <pod>
 - kubectl get services
 - gcloud container clusters list
+
+## References
+- [Google Kubernetes Engine Documentation](https://cloud.google.com/kubernetes-engine/docs)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

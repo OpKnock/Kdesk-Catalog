@@ -6,27 +6,23 @@ globs: ["**/*.java", "**/*.r", "**/*.sh"]
 
 Build Java MQTT clients with Eclipse Paho Java: MqttClient API, callbacks, persistence and Maven setup.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (mqtt-paho-java)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Mqtt Paho Java** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `mvn dependency:tree`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `mqtt-paho-java`
+- Domain: Build Java MQTT clients with Eclipse Paho Java: MqttClient API, callbacks, persistence and Maven setup.
+- **paho-java-client**: Add the paho.mqttv3 dependency, write synchronous/async clients and manage connections in Maven proj — `mvn dependency:tree`
+- Check `knowledge` and `prerequisites: mvn`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `mqtt-paho-java`
+- For `paho-java-client`: Add the paho.mqttv3 dependency, write synchronous/async clients and manage connections in Maven projects. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `mqtt-paho-java` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mqtt-paho-java:df0b7bd6`
 
 # Paho MQTT Java
 

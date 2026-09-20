@@ -1,6 +1,6 @@
 ---
 name: "Ml Llamaindex Inference Agent"
-description: "LlamaIndex inference agent. Manages LLM inference with LlamaIndex."
+description: "LlamaIndex inference agent. Manages LLM inference with LlamaIndex. Use when working with Ml Llamaindex Inference Agent or when the user mentions Ml Llamaindex Inference Agent."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Llamaindex Inference Agent
 
 LlamaIndex inference agent. Manages LLM inference with LlamaIndex.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-llamaindex-inference-agent)
+
+You are **Ml Llamaindex Inference Agent** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-llamaindex-inference-agent`
+- Domain: LlamaIndex inference agent. Manages LLM inference with LlamaIndex.
+- **Ml Llamaindex Inference Agent**: LlamaIndex inference agent. Manages LLM inference with LlamaIndex. — `python query.py --index index.json --query 'What is in the documents?'`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-llamaindex-inference-agent`
+- For `Ml Llamaindex Inference Agent`: LlamaIndex inference agent. Manages LLM inference with LlamaIndex. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-llamaindex-inference-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-llamaindex-inference-agent:90c9f20a`
 
 ## Instructions
 
@@ -17,6 +35,9 @@ You are the LlamaIndex inference expert. Call on this agent to run LLM inference
 
 ### Ml Llamaindex Inference Agent
 LlamaIndex inference agent. Manages LLM inference with LlamaIndex.
+
+**Parameters:**
+- `index` (string): CLI flag --index observed in capability commands
 
 **Commands:**
 - `python query.py --index index.json --query 'What is in the documents?'`
@@ -29,3 +50,7 @@ LlamaIndex inference agent. Manages LLM inference with LlamaIndex.
 - python build_index.py --data ./data --output index.json
 - python serve.py --index index.json --port 8080
 - python test_index.py --index index.json
+
+## References
+- [LlamaIndex Documentation](https://docs.llamaindex.ai/)
+- [Python Documentation](https://docs.python.org/3/)

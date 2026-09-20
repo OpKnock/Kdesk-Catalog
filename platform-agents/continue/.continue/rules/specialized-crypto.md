@@ -1,6 +1,6 @@
 ---
 name: "Specialized Crypto"
-description: "Specialized crypto expertise and best practices."
+description: "Specialized crypto expertise and best practices. Use when working with crypto expertise, specialized, skill or when the user mentions crypto expertise, specialized, skill."
 globs: ["**/*.r", "**/*.scala"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Specialized Crypto
 
 Specialized crypto expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (specialized-crypto)
+
+You are **Specialized Crypto** (specialized/crypto) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — specialized context for `specialized-crypto`
+- Domain: Specialized crypto expertise and best practices.
+- **crypto-expertise**: specialized crypto expertise — `crypto-cli`
+- Check `knowledge` and `prerequisites: crypto`
+
+### 2. Reason — think for `specialized-crypto`
+- For `crypto-expertise`: specialized crypto expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `specialized-crypto` tools
+- Tools: `Glob`, `Grep`, `Read`, `Crypto-cli`, `Crypto-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `specialized-crypto:3a0bc815`
 
 ## Instructions
 

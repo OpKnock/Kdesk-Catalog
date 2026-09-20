@@ -1,6 +1,6 @@
 ---
 name: "design-ux"
-description: "Design ux expertise and best practices."
+description: "Design ux expertise and best practices. Use when working with ux expertise, design, skill or when the user mentions ux expertise, design, skill."
 type: knowledge
 triggers: ["design-ux", "ux-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["design-ux", "ux-expertise"]
 # Design Ux
 
 Design ux expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (design-ux)
+
+You are **Design Ux** (design/ux) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — design context for `design-ux`
+- Domain: Design ux expertise and best practices.
+- **ux-expertise**: design ux expertise — `ux-cli`
+- Check `knowledge` and `prerequisites: ux`
+
+### 2. Reason — think for `design-ux`
+- For `ux-expertise`: design ux expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `design-ux` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ux-cli`, `Ux-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `design-ux:001a42c9`
 
 ## Instructions
 

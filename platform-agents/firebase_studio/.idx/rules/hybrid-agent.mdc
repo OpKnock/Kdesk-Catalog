@@ -1,5 +1,5 @@
 ---
-description: "Hybrid server agent. Manages hybrid cloud-edge ML server."
+description: "Hybrid server agent. Manages hybrid cloud-edge ML server. Use when working with Ml Hybrid Server Agent or when the user mentions Ml Hybrid Server Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Hybrid Agent
 
 Hybrid server agent. Manages hybrid cloud-edge ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (hybrid-agent)
+
+You are **Hybrid Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `hybrid-agent`
+- Domain: Hybrid server agent. Manages hybrid cloud-edge ML server.
+- **Ml Hybrid Server Agent**: Hybrid server agent. Manages hybrid cloud-edge ML server. — `python -m hybrid.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `hybrid-agent`
+- For `Ml Hybrid Server Agent`: Hybrid server agent. Manages hybrid cloud-edge ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `hybrid-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `hybrid-agent:4f6cbfa2`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Hybrid server agent. Manages hybrid cloud-edge ML server.
 - curl http://localhost:8080/predict --data '{"input": "Hello"}'
 - python test_hybrid_server.py --endpoint http://localhost:8080
 - python config_hybrid.py --cloud-model gpt-4 --edge-model model.tflite
+
+## References
+- [Google Cloud Anthos](https://cloud.google.com/anthos/docs)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

@@ -1,8 +1,22 @@
-# Adapter
-
 Implements the Adapter pattern in TypeScript: converting interfaces between incompatible systems with minimal coupling.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (adapter)
+
+You are **Adapter** (patterns/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — patterns context for `adapter`
+- Domain: Implements the Adapter pattern in TypeScript: converting interfaces between incompatible systems with minimal coupling.
+- **typescript**: Implement and test Adapter pattern examples. — `npx tsc --strict --outDir dist adapter.ts`
+- Check `knowledge` and `prerequisites: node, npm, npx`
+
+### 2. Reason — think for `adapter`
+- For `typescript`: Implement and test Adapter pattern examples. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `adapter` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `adapter:86391bdb`
 
 # Adapter Pattern
 
@@ -75,6 +89,11 @@ Test that all interface methods translate correctly, including error paths.
 ### typescript
 Implement and test Adapter pattern examples.
 
+**Parameters:**
+- `strict` (string): Enable strict type checking
+- `outDir` (string): Compile output directory
+- `watch` (string): Rebuild on change
+
 **Commands:**
 - `npx tsc --strict --outDir dist adapter.ts`
 - `node --test dist/adapter.test.js`
@@ -86,3 +105,7 @@ Implement and test Adapter pattern examples.
 - npx tsc --strict adapter.ts main.ts --outDir dist
 - node --test dist/*.test.js
 - npx tsc --noEmit --strict adapter.ts
+
+## References
+- [Refactoring Guru: Adapter](https://refactoring.guru/design-patterns/adapter)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)

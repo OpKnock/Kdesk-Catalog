@@ -2,8 +2,19 @@ title: Encryption In Transit
 description: 'TLS encryption in transit: test certificates with openssl s_client, inspect cipher suites
   and handshakes, and verify proper SNI and chain validation.'
 version: 2.0.0
-instructions: "# Encryption In Transit\n\nTLS encryption in transit: test certificates with openssl s_client,\
-  \ inspect cipher suites and handshakes, and verify proper SNI and chain validation.\n\n## Instructions\n\
+instructions: "TLS encryption in transit: test certificates with openssl s_client, inspect cipher suites\
+  \ and handshakes, and verify proper SNI and chain validation.\n\n## Agentic Workflow: Read -> Reason\
+  \ -> Act (encryption-in-transit)\n\nYou are **Encryption In Transit** (api/general) — a sub-agent that\
+  \ **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `encryption-in-transit`\n\
+  - Domain: TLS encryption in transit: test certificates with openssl s_client, inspect cipher suites\
+  \ and handshakes, and verify proper SNI and chain validation.\n- **tls-verification**: Probe TLS endpoints,\
+  \ inspect certificates and ciphers, and validate chains. — `echo | openssl s_client -connect httpbin.org:443\
+  \ -servername httpbin.org 2>/dev/`\n- Check `knowledge` and `prerequisites: echo, nmap`\n\n### 2. Reason\
+  \ — think for `encryption-in-transit`\n- For `tls-verification`: Probe TLS endpoints, inspect certificates\
+  \ and ciphers, and validate chains. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust`\
+  \ + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `encryption-in-transit` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Echo`, `Nmap` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `encryption-in-transit:de6a67b6`\n\
   \n# Encryption in Transit\n\n## What this skill does\n\nEncryption in transit means every byte between\
   \ client and server is protected by TLS. This skill focuses on verifying that protection: certificate\
   \ validity, protocol versions, cipher suites, chain trust, and HSTS.\n\n## When to use\n\n- Diagnosing\
@@ -23,12 +34,14 @@ instructions: "# Encryption In Transit\n\nTLS encryption in transit: test certif
   \ deploying HTTPS so browsers never downgrade.\n- Automate certificate renewal monitoring (e.g. expiry\
   \ alerts 30 days out).\n- Always pass `-servername` when testing virtual-hosted endpoints.\n\n## Capabilities\n\
   \n### tls-verification\nProbe TLS endpoints, inspect certificates and ciphers, and validate chains.\n\
-  \n**Commands:**\n- `echo | openssl s_client -connect httpbin.org:443 -servername httpbin.org 2>/dev/null\
-  \ | openssl x509 -noout -dates -subject -issuer`\n- `echo | openssl s_client -connect api.github.com:443\
-  \ -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'`\n- `echo | openssl s_client -connect httpbin.org:443\
-  \ -verify_return_error 2>&1 | grep -iE 'verify|error'`\n- `nmap --script ssl-enum-ciphers -p 443 httpbin.org`\n\
-  - `curl -sI https://httpbin.org | grep -i 'strict-transport-security'`\n\n**Examples:**\n- echo | openssl\
+  \n**Parameters:**\n- `host` (string): Hostname of the TLS endpoint\n- `port` (integer): TLS port, usually\
+  \ 443\n- `sni-host` (string): SNI name for virtual-hosted endpoints\n\n**Commands:**\n- `echo | openssl\
   \ s_client -connect httpbin.org:443 -servername httpbin.org 2>/dev/null | openssl x509 -noout -dates\
-  \ -subject -issuer\n- echo | openssl s_client -connect api.github.com:443 -tls1_3 2>/dev/null | grep\
-  \ -E 'Protocol|Cipher'\n- curl -sI https://httpbin.org | grep -i 'strict-transport-security'"
+  \ -subject -issuer`\n- `echo | openssl s_client -connect api.github.com:443 -tls1_3 2>/dev/null | grep\
+  \ -E 'Protocol|Cipher'`\n- `echo | openssl s_client -connect httpbin.org:443 -verify_return_error 2>&1\
+  \ | grep -iE 'verify|error'`\n- `nmap --script ssl-enum-ciphers -p 443 httpbin.org`\n- `curl -sI https://httpbin.org\
+  \ | grep -i 'strict-transport-security'`\n\n**Examples:**\n- echo | openssl s_client -connect httpbin.org:443\
+  \ -servername httpbin.org 2>/dev/null | openssl x509 -noout -dates -subject -issuer\n- echo | openssl\
+  \ s_client -connect api.github.com:443 -tls1_3 2>/dev/null | grep -E 'Protocol|Cipher'\n- curl -sI https://httpbin.org\
+  \ | grep -i 'strict-transport-security'\n\n## References\n- [openssl s_client man page](https://docs.openssl.org/master/man1/openssl-s_client/)"
 prompt: Act as Encryption In Transit and handle the task per the instructions.

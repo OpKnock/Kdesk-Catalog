@@ -1,8 +1,24 @@
-# knip
-
 Finds unused files, exports, and dependencies with knip, the JavaScript dead-code detective, including plugin configs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (knip)
+
+You are **knip** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `knip`
+- Domain: Finds unused files, exports, and dependencies with knip, the JavaScript dead-code detective, including plugin configs.
+- **knip-scan**: Scan projects for dead code. — `npx knip`
+- **knip-config**: Configure entry points and ignore rules. — `npx knip --init`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `knip`
+- For `knip-scan`: Scan projects for dead code. — decide which checks to run
+- For `knip-config`: Configure entry points and ignore rules. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `knip` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `knip:1845fb4b`
 
 # Knip
 
@@ -64,6 +80,10 @@ npx knip --fix --include dependencies
 ### knip-scan
 Scan projects for dead code.
 
+**Parameters:**
+- `include` (string): files, exports, dependencies
+- `reporter` (string): default, json, codeowners
+
 **Commands:**
 - `npx knip`
 - `npx knip --production`
@@ -79,6 +99,10 @@ Scan projects for dead code.
 ### knip-config
 Configure entry points and ignore rules.
 
+**Parameters:**
+- `fix` (boolean): Fix issues where possible
+- `workspace` (string): Workspace glob
+
 **Commands:**
 - `npx knip --init`
 - `npx knip --debug`
@@ -88,3 +112,7 @@ Configure entry points and ignore rules.
 **Examples:**
 - npx knip --fix --include dependencies
 - npx knip --workspace packages/*
+
+## References
+- [Knip Docs](https://knip.dev)
+- [Knip on GitHub](https://github.com/webpro/knip)

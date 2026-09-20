@@ -1,6 +1,6 @@
 ---
 name: "ml-neptune-server"
-description: "Neptune server agent for experiment tracking server."
+description: "Neptune server agent for experiment tracking server. Use when working with Ml Neptune Server, inference or when the user mentions Ml Neptune Server, inference."
 type: knowledge
 triggers: ["ml-neptune-server", "ml neptune server"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-neptune-server", "ml neptune server"]
 # Ml Neptune Server
 
 Neptune server agent for experiment tracking server.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-neptune-server)
+
+You are **Ml Neptune Server** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-neptune-server`
+- Domain: Neptune server agent for experiment tracking server.
+- **Ml Neptune Server**: Neptune server agent for experiment tracking server. — `Docker: docker run -d -p 8080:8080 neptune/server`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-neptune-server`
+- For `Ml Neptune Server`: Neptune server agent for experiment tracking server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-neptune-server` tools
+- Tools: `Glob`, `Grep`, `Read`, `Docker`, `Config` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-neptune-server:34ee77f3`
 
 ## Instructions
 
@@ -38,3 +56,7 @@ Neptune server agent for experiment tracking server.
 - Docker: docker run -d -p 8080:8080 neptune/server
 - Config: cat neptune-server.yaml
 - Backup: neptune-server backup
+
+## References
+- [Neptune.ai Documentation](https://docs.neptune.ai/)
+- [Docker Documentation](https://docs.docker.com/)

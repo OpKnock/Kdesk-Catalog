@@ -2,8 +2,20 @@ title: rbac-manager
 description: Declaratively manages Kubernetes RBAC with RBACManager RbacDefinitions, generating Roles,
   RoleBindings, and ClusterRoles.
 version: 2.0.0
-instructions: "# rbac-manager\n\nDeclaratively manages Kubernetes RBAC with RBACManager RbacDefinitions,\
-  \ generating Roles, RoleBindings, and ClusterRoles.\n\n## Instructions\n\n# RBAC Manager\n\nDeclarative\
+instructions: "Declaratively manages Kubernetes RBAC with RBACManager RbacDefinitions, generating Roles,\
+  \ RoleBindings, and ClusterRoles.\n\n## Agentic Workflow: Read -> Reason -> Act (rbac-manager)\n\nYou\
+  \ are **rbac-manager** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — security context for `rbac-manager`\n- Domain: Declaratively manages Kubernetes RBAC\
+  \ with RBACManager RbacDefinitions, generating Roles, RoleBindings, and ClusterRoles.\n- **rbacdefinition-management**:\
+  \ Install RBACManager and manage RbacDefinition resources. — `helm repo add fairwinds-stable https://charts.fairwinds.com/stable`\n\
+  - **rbac-inspection**: Inspect generated roles and bindings for verification. — `kubectl get roles -A\
+  \ | grep -i team-dev`\n- Check `knowledge` and `prerequisites: helm, kubectl`\n\n### 2. Reason — think\
+  \ for `rbac-manager`\n- For `rbacdefinition-management`: Install RBACManager and manage RbacDefinition\
+  \ resources. — decide which checks to run\n- For `rbac-inspection`: Inspect generated roles and bindings\
+  \ for verification. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `rbac-manager` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record\
+  \ evidence (paths, checksums)\n- Fingerprint: `rbac-manager:aff1e152`\n\n# RBAC Manager\n\nDeclarative\
   \ Kubernetes RBAC with RbacDefinitions.\n\n## What This Skill Does\n\n- Installs the RBAC Manager operator\n\
   - Defines per-team RbacDefinitions with rules and subject matchers\n- Generates and reconciles Roles,\
   \ RoleBindings, and ClusterRoles\n- Inspects the resulting bindings and effective permissions\n\n##\
@@ -21,15 +33,19 @@ instructions: "# rbac-manager\n\nDeclaratively manages Kubernetes RBAC with RBAC
   - Model access by team, not by individual ad-hoc edits\n- Verify with kubectl auth can-i, not by assumption\n\
   - Review generated resources in dry-run gitops diffs\n- Rotate subject matchers carefully: they trigger\
   \ wide regeneration\n\n## Capabilities\n\n### rbacdefinition-management\nInstall RBACManager and manage\
-  \ RbacDefinition resources.\n\n**Commands:**\n- `helm repo add fairwinds-stable https://charts.fairwinds.com/stable`\n\
+  \ RbacDefinition resources.\n\n**Parameters:**\n- `name` (string): RbacDefinition name\n- `namespace`\
+  \ (string): Operator namespace\n\n**Commands:**\n- `helm repo add fairwinds-stable https://charts.fairwinds.com/stable`\n\
   - `helm install rbac-manager fairwinds-stable/rbac-manager -n rbac-manager --create-namespace`\n- `kubectl\
   \ get rbacdefinitions.rbacmanager.reactiveops.io -A`\n- `kubectl apply -f rbacdefinition.yaml`\n- `kubectl\
   \ describe rbacdefinition team-dev`\n\n**Examples:**\n- helm install rbac-manager fairwinds-stable/rbac-manager\n\
   - kubectl get rbacdefinitions.rbacmanager.reactiveops.io -A\n- kubectl apply -f rbacdefinition.yaml\n\
-  \n### rbac-inspection\nInspect generated roles and bindings for verification.\n\n**Commands:**\n- `kubectl\
-  \ get roles -A | grep -i team-dev`\n- `kubectl get rolebindings.rbacmanager.reactiveops.io -A`\n- `kubectl\
-  \ get clusterrolebindings.rbacmanager.reactiveops.io`\n- `kubectl auth can-i --list --as=system:serviceaccount:default:team-dev`\n\
-  - `kubectl get clusterroles | grep rbac-manager`\n\n**Examples:**\n- kubectl get rolebindings.rbacmanager.reactiveops.io\
-  \ -A\n- kubectl auth can-i create deployments --as=system:serviceaccount:prod:deployer\n- kubectl get\
-  \ clusterroles | grep team"
+  \n### rbac-inspection\nInspect generated roles and bindings for verification.\n\n**Parameters:**\n-\
+  \ `serviceAccount` (string): SA identity for auth can-i checks\n- `namespace` (string): Namespace scope\
+  \ for RBAC and auth can-i checks.\n\n**Commands:**\n- `kubectl get roles -A | grep -i team-dev`\n- `kubectl\
+  \ get rolebindings.rbacmanager.reactiveops.io -A`\n- `kubectl get clusterrolebindings.rbacmanager.reactiveops.io`\n\
+  - `kubectl auth can-i --list --as=system:serviceaccount:default:team-dev`\n- `kubectl get clusterroles\
+  \ | grep rbac-manager`\n\n**Examples:**\n- kubectl get rolebindings.rbacmanager.reactiveops.io -A\n\
+  - kubectl auth can-i create deployments --as=system:serviceaccount:prod:deployer\n- kubectl get clusterroles\
+  \ | grep team\n\n## References\n- [RBAC Manager Documentation](https://rbac-manager.docs.fairwinds.com/)\n\
+  - [Fairwinds RBAC Manager GitHub](https://github.com/FairwindsOps/rbac-manager)"
 prompt: Act as rbac-manager and handle the task per the instructions.

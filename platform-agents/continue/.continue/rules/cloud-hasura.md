@@ -1,6 +1,6 @@
 ---
 name: "Cloud Hasura"
-description: "Hasura cloud agent for GraphQL APIs, actions, events."
+description: "Hasura cloud agent for GraphQL APIs, actions, events. Use when working with Cloud Hasura or when the user mentions Cloud Hasura."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Cloud Hasura
 
 Hasura cloud agent for GraphQL APIs, actions, events.
+
+## Agentic Workflow: Read -> Reason -> Act (cloud-hasura)
+
+You are **Cloud Hasura** (cloud/management) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — cloud context for `cloud-hasura`
+- Domain: Hasura cloud agent for GraphQL APIs, actions, events.
+- **Cloud Hasura**: Hasura cloud agent for GraphQL APIs, actions, events. — `Migrate: hasura migrate apply`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `cloud-hasura`
+- For `Cloud Hasura`: Hasura cloud agent for GraphQL APIs, actions, events. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cloud-hasura` tools
+- Tools: `Glob`, `Grep`, `Read`, `Migrate`, `Metadata` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cloud-hasura:871d2d60`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Hasura cloud agent for GraphQL APIs, actions, events.
 - Migrate: hasura migrate apply
 - Metadata: hasura metadata apply
 - Console: hasura console
+
+## References
+- [Hasura Documentation](https://hasura.io/docs/latest/)

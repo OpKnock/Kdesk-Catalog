@@ -1,5 +1,5 @@
 ---
-description: "ML it agent handling Pinecone integration."
+description: "ML it agent handling Pinecone integration. Use when working with Ml Pinecone Python Sdk Agent, deployment or when the user mentions Ml Pinecone Python Sdk Agent, deployment."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Pinecone Python Sdk
 
 ML it agent handling Pinecone integration.
+
+## Agentic Workflow: Read -> Reason -> Act (pinecone-python-sdk)
+
+You are **Pinecone Python Sdk** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `pinecone-python-sdk`
+- Domain: ML it agent handling Pinecone integration.
+- **Ml Pinecone Python Sdk Agent**: ML Pinecone Python SDK agent for Pinecone integration. — `Query: python -c 'from pinecone import Pinecone; pc = Pinecone(api_key="..."); i`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `pinecone-python-sdk`
+- For `Ml Pinecone Python Sdk Agent`: ML Pinecone Python SDK agent for Pinecone integration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pinecone-python-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Query`, `Init` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pinecone-python-sdk:d64ae650`
 
 ## Instructions
 
@@ -26,3 +44,7 @@ ML Pinecone Python SDK agent for Pinecone integration.
 - Init: python -c 'from pinecone import Pinecone; pc = Pinecone(api_key="..."); print(pc.list_indexes())'
 - Upsert: python -c 'from pinecone import Pinecone; pc = Pinecone(api_key="..."); index = pc.Index("my-index"); index.upsert(vectors=[("id1", [1.0, 2.0, 3.0])])'
 - Query: python -c 'from pinecone import Pinecone; pc = Pinecone(api_key="..."); index = pc.Index("my-index"); print(index.query(vector=[1.0, 2.0, 3.0], top_k=5))'
+
+## References
+- [Pinecone Documentation](https://docs.pinecone.io/)
+- [Python Documentation](https://docs.python.org/3/)

@@ -1,14 +1,28 @@
 ---
-description: "Builds design systems: Storybook components, design tokens, Chromatic visual tests, and docs."
+description: "Builds design systems: Storybook components, design tokens, Chromatic visual tests, and docs. Use when working with storybook workflow or when the user mentions storybook workflow."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# design-system
-
 Builds design systems: Storybook components, design tokens, Chromatic visual tests, and docs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (design-system)
+
+You are **design-system** (frontend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `design-system`
+- Domain: Builds design systems: Storybook components, design tokens, Chromatic visual tests, and docs.
+- **storybook-workflow**: Create, test, and publish component libraries with Storybook — `npx storybook@latest init --yes`
+- Check `knowledge` and `prerequisites: node.js, react, storybook, styled-components`
+
+### 2. Reason — think for `design-system`
+- For `storybook-workflow`: Create, test, and publish component libraries with Storybook — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `design-system` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `design-system:1e269a1a`
 
 # Design System
 
@@ -79,6 +93,11 @@ change set with links for review.
 ### storybook-workflow
 Create, test, and publish component libraries with Storybook
 
+**Parameters:**
+- `project-token` (string): Chromatic project token for visual tests
+- `exit-zero-on-changes` (boolean): Don't fail CI when visual changes exist
+- `port` (integer): Dev server port for Storybook
+
 **Commands:**
 - `npx storybook@latest init --yes`
 - `npm run storybook -- --port 6006`
@@ -90,3 +109,8 @@ Create, test, and publish component libraries with Storybook
 - npx storybook addon install @storybook/addon-a11y
 - npx chromatic --auto-accept-changes
 - npx tokens-transformer tokens.json tokens/
+
+## References
+- [Storybook docs](https://storybook.js.org/docs/)
+- [Chromatic docs](https://www.chromatic.com/docs/)
+- [Style Dictionary docs](https://styledictionary.com/)

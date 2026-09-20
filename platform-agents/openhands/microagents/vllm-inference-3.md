@@ -1,6 +1,6 @@
 ---
 name: "vllm-inference-3"
-description: "vLLM inference server agent. Manages vLLM ML inference server."
+description: "vLLM inference server agent. Manages vLLM ML inference server. Use when working with Ml Vllm Inference Server Agent or when the user mentions Ml Vllm Inference Server Agent."
 type: knowledge
 triggers: ["vllm-inference-3", "ml vllm inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["vllm-inference-3", "ml vllm inference server agent"]
 # Vllm Inference 3
 
 vLLM inference server agent. Manages vLLM ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (vllm-inference-3)
+
+You are **Vllm Inference 3** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `vllm-inference-3`
+- Domain: vLLM inference server agent. Manages vLLM ML inference server.
+- **Ml Vllm Inference Server Agent**: vLLM inference server agent. Manages vLLM ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `vllm-inference-3`
+- For `Ml Vllm Inference Server Agent`: vLLM inference server agent. Manages vLLM ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `vllm-inference-3` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Vllm` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vllm-inference-3:cbe571b5`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ vLLM inference server agent. Manages vLLM ML inference server.
 - curl http://localhost:8000/v1/models
 - curl http://localhost:8000/v1/completions --data '{"model": "meta-llama/Llama-2-7b-hf", "prompt": "Hello"}'
 - python -m vllm.entrypoints.openai.api_server --help
+
+## References
+- [vLLM Documentation](https://docs.vllm.ai/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

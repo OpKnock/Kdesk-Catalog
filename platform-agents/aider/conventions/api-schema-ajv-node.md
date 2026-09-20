@@ -1,8 +1,24 @@
-# Api Schema Ajv Node
-
 Uses JSON Schema in Node.js validation pipelines: ajv with formats, custom keywords, schema compilation caching, and request validation middleware.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-schema-ajv-node)
+
+You are **Api Schema Ajv Node** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `api-schema-ajv-node`
+- Domain: Uses JSON Schema in Node.js validation pipelines: ajv with formats, custom keywords, schema compilation caching, and request validation middleware.
+- **ajv-node**: Compile and use ajv validators in Node — `npm install ajv ajv-formats`
+- **request-validation**: Validate request bodies in middleware — `node -e "const Ajv=require('ajv'); const v=new Ajv().compile({type:'object',addi`
+- Check `knowledge` and `prerequisites: openapi, json-schema, node.js, python`
+
+### 2. Reason — think for `api-schema-ajv-node`
+- For `ajv-node`: Compile and use ajv validators in Node — decide which checks to run
+- For `request-validation`: Validate request bodies in middleware — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-schema-ajv-node` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-schema-ajv-node:a7772fe6`
 
 # API Schema v2 - Node Validation
 
@@ -50,6 +66,11 @@ app.post('/api/users', (req, res) => {
 ### ajv-node
 Compile and use ajv validators in Node
 
+**Parameters:**
+- `schema` (object): Schema object
+- `data` (object): Payload to validate
+- `allErrors` (boolean): Report all errors
+
 **Commands:**
 - `npm install ajv ajv-formats`
 - `node -e "const Ajv=require('ajv'); const addFormats=require('ajv-formats'); const a=new Ajv({allErrors:true}); addFormats(a); const v=a.compile({type:'object',properties:{email:{type:'string',format:'email'}},required:['email']}); console.log(v({email:'a@b.co'}), JSON.stringify(v.errors))"`
@@ -72,3 +93,7 @@ Validate request bodies in middleware
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Ajv Guide](https://ajv.js.org/guide/getting-started.html)
+- [Ajv Keywords](https://ajv.js.org/docs/guide/custom-keywords.html)

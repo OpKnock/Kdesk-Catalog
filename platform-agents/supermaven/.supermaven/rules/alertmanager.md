@@ -1,8 +1,24 @@
-# alertmanager
-
 Query alerts and manage silences from the CLI. Validate it configuration and routing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (alertmanager)
+
+You are **alertmanager** (monitoring/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — monitoring context for `alertmanager`
+- Domain: Query alerts and manage silences from the CLI. Validate it configuration and routing.
+- **amtool**: Query alerts and manage silences from the CLI. — `amtool alert query --alertmanager.url=http://localhost:9093`
+- **config**: Validate Alertmanager configuration and routing. — `amtool check-config alertmanager.yml`
+- Check `knowledge` and `prerequisites: amtool`
+
+### 2. Reason — think for `alertmanager`
+- For `amtool`: Query alerts and manage silences from the CLI. — decide which checks to run
+- For `config`: Validate Alertmanager configuration and routing. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `alertmanager` tools
+- Tools: `Glob`, `Grep`, `Read`, `Amtool`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `alertmanager:ea273ece`
 
 # Alertmanager
 
@@ -78,6 +94,11 @@ Post a test firing alert and verify the route/receiver chain.
 ### amtool
 Query alerts and manage silences from the CLI.
 
+**Parameters:**
+- `alertmanager.url` (string): Alertmanager API URL
+- `duration` (string): Silence duration like 2h
+- `comment` (string): Silence rationale (required by policy)
+
 **Commands:**
 - `amtool alert query --alertmanager.url=http://localhost:9093`
 - `amtool alert query --alertmanager.url=http://localhost:9093 --state=active`
@@ -93,6 +114,11 @@ Query alerts and manage silences from the CLI.
 ### config
 Validate Alertmanager configuration and routing.
 
+**Parameters:**
+- `config` (string): alertmanager.yml path
+- `payload` (string): Alert JSON to post
+- `url` (string): Alertmanager base URL
+
 **Commands:**
 - `amtool check-config alertmanager.yml`
 - `amtool config routes --alertmanager.url=http://localhost:9093`
@@ -104,3 +130,8 @@ Validate Alertmanager configuration and routing.
 - amtool check-config /etc/alertmanager/alertmanager.yml
 - amtool config routes --alertmanager.url=http://localhost:9093
 - curl -s http://localhost:9093/api/v2/alerts | jq length
+
+## References
+- [Alertmanager Docs](https://prometheus.io/docs/alerting/latest/alertmanager/)
+- [amtool](https://prometheus.io/docs/alerting/latest/amtool/)
+- [Alertmanager HTTP API](https://prometheus.io/docs/alerting/latest/clients/)

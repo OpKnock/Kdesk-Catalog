@@ -1,15 +1,31 @@
 ---
 name: "api-gov-governance-design"
-description: "Designs API governance programs: style guide structure, ruleset architecture, and enforcement workflows before rollout."
+description: "Designs API governance programs: style guide structure, ruleset architecture, and enforcement workflows before rollout. Use when working with governance design, workflow design or when the user mentions governance design, workflow design."
 type: knowledge
 triggers: ["api-gov-governance-design", "governance-design", "workflow-design"]
 ---
 
-# Api Gov Governance Design
-
 Designs API governance programs: style guide structure, ruleset architecture, and enforcement workflows before rollout.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-gov-governance-design)
+
+You are **Api Gov Governance Design** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-gov-governance-design`
+- Domain: Designs API governance programs: style guide structure, ruleset architecture, and enforcement workflows before rollout.
+- **governance-design**: Structure style guides and rulesets with severity tiers and scopes — `mkdir -p rules/guides rules/functions tests/fixtures`
+- **workflow-design**: Design review workflows: who reviews, what CI checks, exception process — `node -e "console.log('flow: lint -> diff -> review -> approve')"`
+- Check `knowledge` and `prerequisites: spectral, openapi`
+
+### 2. Reason — think for `api-gov-governance-design`
+- For `governance-design`: Structure style guides and rulesets with severity tiers and scopes — decide which checks to run
+- For `workflow-design`: Design review workflows: who reviews, what CI checks, exception process — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-gov-governance-design` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mkdir`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-gov-governance-design:8cc1cb34`
 
 # API Gov (Design)
 
@@ -55,6 +71,10 @@ Validate every new rule against fixtures before rollout.
 ### governance-design
 Structure style guides and rulesets with severity tiers and scopes
 
+**Parameters:**
+- `tier` (string): Rule severity tier
+- `domain` (string): Rule domain: naming, errors, pagination
+
 **Commands:**
 - `mkdir -p rules/guides rules/functions tests/fixtures`
 - `node -e "const fs=require('fs');fs.writeFileSync('rules/guides/naming.yaml','# naming rules\n')"`
@@ -70,6 +90,10 @@ Structure style guides and rulesets with severity tiers and scopes
 ### workflow-design
 Design review workflows: who reviews, what CI checks, exception process
 
+**Parameters:**
+- `waiverDays` (string): Waiver duration
+- `gate` (string): CI gate severity
+
 **Commands:**
 - `node -e "console.log('flow: lint -> diff -> review -> approve')"`
 - `python -c "print('gate: fail on error severity')"`
@@ -81,3 +105,7 @@ Design review workflows: who reviews, what CI checks, exception process
 - node -e "const fs=require('fs');fs.writeFileSync('docs/EXCEPTIONS.md','# Exceptions\n\n1. Submit waiver PR\n2. Time-box 30 days\n')"
 - node -e "console.log('flow: lint -> diff -> review -> approve')"
 - git add docs/EXCEPTIONS.md && git commit -m 'document exception process'
+
+## References
+- [Spectral Ruleset Design](https://docs.stoplight.io/docs/spectral/reference/rulesets)
+- [Governance Maturity](https://www.getambassador.io/resources/api-governance)

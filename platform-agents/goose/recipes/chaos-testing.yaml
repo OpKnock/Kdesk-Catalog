@@ -2,14 +2,48 @@ title: Chaos Testing
 description: Chaos test APIs by injecting latency, errors, and network faults with Toxiproxy, then load-testing
   resilience with vegeta and hey.
 version: 2.0.0
-instructions: '# Chaos Testing
+instructions: 'Chaos test APIs by injecting latency, errors, and network faults with Toxiproxy, then load-testing
+  resilience with vegeta and hey.
 
 
-  Chaos test APIs by injecting latency, errors, and network faults with Toxiproxy, then load-testing resilience
-  with vegeta and hey.
+  ## Agentic Workflow: Read -> Reason -> Act (chaos-testing)
 
 
-  ## Instructions
+  You are **Chaos Testing** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — api context for `chaos-testing`
+
+  - Domain: Chaos test APIs by injecting latency, errors, and network faults with Toxiproxy, then load-testing
+  resilience with vegeta and hey.
+
+  - **fault-injection**: Inject latency, bandwith, and error faults on a proxy between client and API
+  using toxiproxy-cli — `toxiproxy-cli create api -l localhost:8081 -u localhost:8080`
+
+  - **resilience-load**: Generate load against the faulted API and measure error rates and percentiles
+  — `vegeta attack -targets targets.txt -rate 50 -duration 30s | vegeta report`
+
+  - Check `knowledge` and `prerequisites: hey, toxiproxy-cli, vegeta`
+
+
+  ### 2. Reason — think for `chaos-testing`
+
+  - For `fault-injection`: Inject latency, bandwith, and error faults on a proxy between client and API
+  using toxiproxy-cli — decide which checks to run
+
+  - For `resilience-load`: Generate load against the faulted API and measure error rates and percentiles
+  — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `chaos-testing` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Toxiproxy-cli`, `Vegeta` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `chaos-testing:f1e0bd7e`
 
 
   # Chaos Testing
@@ -128,6 +162,13 @@ instructions: '# Chaos Testing
   Inject latency, bandwith, and error faults on a proxy between client and API using toxiproxy-cli
 
 
+  **Parameters:**
+
+  - `toxin_type` (string): latency, bandwidth, disconnect, timeout, or reset_peer
+
+  - `latency_ms` (string): Amount of latency to inject in milliseconds
+
+
   **Commands:**
 
   - `toxiproxy-cli create api -l localhost:8081 -u localhost:8080`
@@ -153,6 +194,13 @@ instructions: '# Chaos Testing
   Generate load against the faulted API and measure error rates and percentiles
 
 
+  **Parameters:**
+
+  - `rate` (string): Requests per second for vegeta
+
+  - `duration` (string): Test duration such as 30s or 1m
+
+
   **Commands:**
 
   - `vegeta attack -targets targets.txt -rate 50 -duration 30s | vegeta report`
@@ -173,5 +221,12 @@ instructions: '# Chaos Testing
   - hey -n 500 -c 25 http://localhost:8080/api/users
 
   - vegeta attack -targets targets.txt -rate 100 -duration 60s -output results.bin; vegeta report -type=hist[0,100ms,500ms,1s]
-  results.bin'
+  results.bin
+
+
+  ## References
+
+  - [Toxiproxy Docs](https://github.com/Shopify/toxiproxy)
+
+  - [Vegeta Docs](https://github.com/tsenart/vegeta)'
 prompt: Act as Chaos Testing and handle the task per the instructions.

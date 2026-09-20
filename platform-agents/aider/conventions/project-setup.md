@@ -1,8 +1,24 @@
-# project-setup
-
 Bootstraps new projects: git init, scaffolds (create-vite, cargo new, cookiecutter), venvs, repo creation, and CI skeleton.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (project-setup)
+
+You are **project-setup** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `project-setup`
+- Domain: Bootstraps new projects: git init, scaffolds (create-vite, cargo new, cookiecutter), venvs, repo creation, and CI skeleton.
+- **scaffolding**: Scaffold projects with ecosystem-standard generators. — `npx create-vite@latest frontend --template react-ts`
+- **repo-and-hygiene**: Create repos and set up baseline project hygiene. — `git init -b main`
+- Check `knowledge` and `prerequisites: cargo, cookiecutter, echo, git`
+
+### 2. Reason — think for `project-setup`
+- For `scaffolding`: Scaffold projects with ecosystem-standard generators. — decide which checks to run
+- For `repo-and-hygiene`: Create repos and set up baseline project hygiene. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `project-setup` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `project-setup:27bbc19f`
 
 # Project Bootstrapping
 
@@ -63,6 +79,10 @@ git commit -m 'chore: scaffold project'
 ### scaffolding
 Scaffold projects with ecosystem-standard generators.
 
+**Parameters:**
+- `name` (string): Project name
+- `template` (string): Scaffold template
+
 **Commands:**
 - `npx create-vite@latest frontend --template react-ts`
 - `cargo new my-service --bin`
@@ -79,6 +99,10 @@ Scaffold projects with ecosystem-standard generators.
 ### repo-and-hygiene
 Create repos and set up baseline project hygiene.
 
+**Parameters:**
+- `org` (string): GitHub org for repo creation
+- `repo-name` (string): Repository name
+
 **Commands:**
 - `git init -b main`
 - `gh repo create myorg/myapp --private --source=. --push`
@@ -91,3 +115,8 @@ Create repos and set up baseline project hygiene.
 - gh repo create myorg/myapp --private --source=. --push
 - git init -b main
 - echo 'node_modules/' > .gitignore
+
+## References
+- [create-vite](https://vite.dev/guide/)
+- [gh repo create](https://cli.github.com/manual/gh_repo_create)
+- [Cookiecutter](https://cookiecutter.readthedocs.io/)

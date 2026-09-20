@@ -1,8 +1,26 @@
-# Amqp
-
 Operates AMQP brokers (RabbitMQ) with rabbitmqctl and rabbitmqadmin: queue/exchange inspection, message publish/get, and user management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (amqp)
+
+You are **Amqp** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `amqp`
+- Domain: Operates AMQP brokers (RabbitMQ) with rabbitmqctl and rabbitmqadmin: queue/exchange inspection, message publish/get, and user management.
+- **broker-ops**: Inspect broker status, queues, exchanges, and bindings. — `rabbitmqctl status`
+- **queue-management**: Declare, purge, delete queues and publish/consume for debugging. — `rabbitmqadmin declare queue name=orders durable=true`
+- **user-management**: Manage AMQP users and permissions across vhosts. — `rabbitmqctl add_user svc-user secret123`
+- Check `knowledge` and `prerequisites: rabbitmqadmin, rabbitmqctl`
+
+### 2. Reason — think for `amqp`
+- For `broker-ops`: Inspect broker status, queues, exchanges, and bindings. — decide which checks to run
+- For `queue-management`: Declare, purge, delete queues and publish/consume for debugging. — decide which checks to run
+- For `user-management`: Manage AMQP users and permissions across vhosts. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `amqp` tools
+- Tools: `Glob`, `Grep`, `Read`, `Rabbitmqctl`, `Rabbitmqadmin` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `amqp:f41d7a62`
 
 # AMQP
 
@@ -61,6 +79,10 @@ rabbitmqctl set_permissions -p / svc-user ".*" ".*" ".*"
 ### broker-ops
 Inspect broker status, queues, exchanges, and bindings.
 
+**Parameters:**
+- `vhost` (string): Virtual host filter, e.g. /api
+- `queue` (string): Queue name to inspect
+
 **Commands:**
 - `rabbitmqctl status`
 - `rabbitmqctl list_queues name messages consumers`
@@ -75,6 +97,11 @@ Inspect broker status, queues, exchanges, and bindings.
 
 ### queue-management
 Declare, purge, delete queues and publish/consume for debugging.
+
+**Parameters:**
+- `routing_key` (string): Routing key for topic exchanges
+- `payload` (string): Message body to publish
+- `count` (number): Number of messages to fetch
 
 **Commands:**
 - `rabbitmqadmin declare queue name=orders durable=true`
@@ -91,6 +118,11 @@ Declare, purge, delete queues and publish/consume for debugging.
 ### user-management
 Manage AMQP users and permissions across vhosts.
 
+**Parameters:**
+- `user` (string): RabbitMQ username
+- `vhost` (string): Vhost to grant permissions on
+- `permissions` (string): Configure-write-read regex triple
+
 **Commands:**
 - `rabbitmqctl add_user svc-user secret123`
 - `rabbitmqctl set_permissions -p / svc-user ".*" ".*" ".*"`
@@ -102,3 +134,9 @@ Manage AMQP users and permissions across vhosts.
 - rabbitmqctl set_permissions -p /api svc-user "^orders.*" ".*" ".*"
 - rabbitmqctl list_permissions -p /
 - rabbitmqctl authenticate_user svc-user secret123
+
+## References
+- [RabbitMQ Docs](https://www.rabbitmq.com/docs)
+- [rabbitmqctl](https://www.rabbitmq.com/docs/man/rabbitmqctl.8)
+- [rabbitmqadmin](https://www.rabbitmq.com/docs/management-cli)
+- [AMQP Concepts](https://www.rabbitmq.com/tutorials/amqp-concepts)

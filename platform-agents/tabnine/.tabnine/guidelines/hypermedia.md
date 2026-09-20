@@ -1,8 +1,22 @@
-# Hypermedia
-
 Hypermedia APIs (HAL, JSON:API, HATEOAS): discovering links with curl, following affordances, and designing self-describing responses.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (hypermedia)
+
+You are **Hypermedia** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `hypermedia`
+- Domain: Hypermedia APIs (HAL, JSON:API, HATEOAS): discovering links with curl, following affordances, and designing self-describing responses.
+- **hypermedia-consumption**: Explore and follow hypermedia-driven APIs using HAL and JSON:API conventions. — `curl -H "Accept: application/hal+json" http://localhost:8080/orders/1`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `hypermedia`
+- For `hypermedia-consumption`: Explore and follow hypermedia-driven APIs using HAL and JSON:API conventions. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `hypermedia` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `hypermedia:82a55e50`
 
 # Hypermedia
 
@@ -87,6 +101,11 @@ Agent: Expose the affordance64:    in _links and let the client follow it:
 ### hypermedia-consumption
 Explore and follow hypermedia-driven APIs using HAL and JSON:API conventions.
 
+**Parameters:**
+- `accept` (string): Media type, e.g. application/hal+json or application/vnd.api+json.
+- `resource_url` (string): URL of the resource to fetch.
+- `relation` (string): Link relation to extract, e.g. self, next, related.
+
 **Commands:**
 - `curl -H "Accept: application/hal+json" http://localhost:8080/orders/1`
 - `curl -H "Accept: application/vnd.api+json" http://localhost:8080/api/articles`
@@ -98,3 +117,7 @@ Explore and follow hypermedia-driven APIs using HAL and JSON:API conventions.
 - curl -s -H "Accept: application/hal+json" http://localhost:8080/orders/1 | jq '._links.self.href'
 - curl -s -H "Accept: application/vnd.api+json" http://localhost:8080/api/articles | jq '.links.next'
 - curl -s http://localhost:8080/api | jq .
+
+## References
+- [HAL Specification](https://stateless.co/hal_specification.html)
+- [JSON:API Spec](https://jsonapi.org/format/)

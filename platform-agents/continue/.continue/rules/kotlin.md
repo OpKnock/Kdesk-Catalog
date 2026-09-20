@@ -1,15 +1,31 @@
 ---
 name: "Kotlin"
-description: "Develops Android apps with Kotlin and Gradle: builds, tests, linting, and ktlint formatting checks."
+description: "Develops Android apps with Kotlin and Gradle: builds, tests, linting, and ktlint formatting checks. Use when working with gradle, kotlin tools or when the user mentions gradle, kotlin tools."
 globs: ["**/*.java", "**/*.json", "**/*.kt", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Kotlin
-
 Develops Android apps with Kotlin and Gradle: builds, tests, linting, and ktlint formatting checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kotlin)
+
+You are **Kotlin** (mobile/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — mobile context for `kotlin`
+- Domain: Develops Android apps with Kotlin and Gradle: builds, tests, linting, and ktlint formatting checks.
+- **gradle**: Build and test Android/Kotlin projects with Gradle. — `gradle wrapper --gradle-version 8.10`
+- **kotlin-tools**: Format, lint, and run Kotlin scripts. — `ktlint 'src/**/*.kt'`
+- Check `knowledge` and `prerequisites: ./gradlew, gradle, java, kotlinc`
+
+### 2. Reason — think for `kotlin`
+- For `gradle`: Build and test Android/Kotlin projects with Gradle. — decide which checks to run
+- For `kotlin-tools`: Format, lint, and run Kotlin scripts. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kotlin` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gradle`, `./gradlew` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kotlin:a5701562`
 
 # Kotlin (Android)
 
@@ -82,6 +98,11 @@ Both must pass before merge.
 ### gradle
 Build and test Android/Kotlin projects with Gradle.
 
+**Parameters:**
+- `task` (string): Gradle task like assembleDebug, test, lint
+- `tests` (string): Test class filter with --tests
+- `stacktrace` (string): Full stack traces on failure
+
 **Commands:**
 - `gradle wrapper --gradle-version 8.10`
 - `./gradlew build`
@@ -97,6 +118,11 @@ Build and test Android/Kotlin projects with Gradle.
 ### kotlin-tools
 Format, lint, and run Kotlin scripts.
 
+**Parameters:**
+- `glob` (string): Kotlin file glob
+- `format` (string): Auto-fix with -F
+- `code-style` (string): official or android code style
+
 **Commands:**
 - `ktlint 'src/**/*.kt'`
 - `ktlint -F 'src/**/*.kt'`
@@ -108,3 +134,8 @@ Format, lint, and run Kotlin scripts.
 - ktlint --code-style=official 'src/**/*.kt'
 - kotlinc -script stats.kts -- data.csv
 - ktlint -F --editorconfig=.editorconfig 'src/**/*.kt'
+
+## References
+- [Kotlin Docs](https://kotlinlang.org/docs/home.html)
+- [Gradle User Manual](https://docs.gradle.org/current/userguide/userguide.html)
+- [ktlint](https://github.com/pinterest/ktlint)

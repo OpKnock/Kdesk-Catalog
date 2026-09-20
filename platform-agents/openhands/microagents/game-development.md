@@ -1,15 +1,31 @@
 ---
 name: "game-development"
-description: "Builds games with Godot and Unity headless pipelines: project export, automated builds, and CI artifact generation."
+description: "Builds games with Godot and Unity headless pipelines: project export, automated builds, and CI artifact generation. Use when working with godot, unity or when the user mentions godot, unity."
 type: knowledge
 triggers: ["game-development", "godot", "unity"]
 ---
 
-# game-development
-
 Builds games with Godot and Unity headless pipelines: project export, automated builds, and CI artifact generation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (game-development)
+
+You are **game-development** (gaming) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — gaming context for `game-development`
+- Domain: Builds games with Godot and Unity headless pipelines: project export, automated builds, and CI artifact generation.
+- **godot**: Run Godot headless for imports, tests, and exports. — `godot --headless --path project/ --import`
+- **unity**: Drive Unity builds and test runs from the command line. — `unity-editor -batchmode -quit -projectPath . -executeMethod BuildScript.PerformB`
+- Check `knowledge` and `prerequisites: unity, unreal, godot, phaser`
+
+### 2. Reason — think for `game-development`
+- For `godot`: Run Godot headless for imports, tests, and exports. — decide which checks to run
+- For `unity`: Drive Unity builds and test runs from the command line. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `game-development` tools
+- Tools: `Glob`, `Grep`, `Read`, `Godot`, `Unity-editor` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `game-development:1d96a853`
 
 # Game Development
 
@@ -83,6 +99,11 @@ Run unit (GDScript / EditMode) and PlayMode suites in CI and gate merges on resu
 ### godot
 Run Godot headless for imports, tests, and exports.
 
+**Parameters:**
+- `headless` (string): Run without a window (CI mode)
+- `export-release` (string): Export preset name and output path
+- `script` (string): GDScript entry point to run
+
 **Commands:**
 - `godot --headless --path project/ --import`
 - `godot --headless --path project/ --script res://tests/run_tests.gd`
@@ -98,6 +119,11 @@ Run Godot headless for imports, tests, and exports.
 ### unity
 Drive Unity builds and test runs from the command line.
 
+**Parameters:**
+- `batchmode` (string): Run without editor UI for CI
+- `buildTarget` (string): Android, WebGL, StandaloneWindows64, etc.
+- `executeMethod` (string): Static build method to invoke
+
 **Commands:**
 - `unity-editor -batchmode -quit -projectPath . -executeMethod BuildScript.PerformBuild`
 - `unity-editor -batchmode -quit -runTests -testPlatform PlayMode -testResults results.xml`
@@ -109,3 +135,8 @@ Drive Unity builds and test runs from the command line.
 - unity-editor -batchmode -quit -projectPath . -buildTarget WebGL -outputPath build/web
 - unity-editor -batchmode -quit -runTests -testPlatform EditMode -testResults edit.xml
 - unity-editor -batchmode -quit -projectPath . -executeMethod BuildScript.PerformBuild -nographics
+
+## References
+- [Godot Docs](https://docs.godotengine.org/en/stable/tutorials/editor/command_line_tutorial.html)
+- [Unity command line arguments](https://docs.unity3d.com/Manual/CommandLineArguments.html)
+- [Godot Export](https://docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html)

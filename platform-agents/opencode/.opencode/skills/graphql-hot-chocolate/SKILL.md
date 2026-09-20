@@ -5,27 +5,23 @@ description: "GraphQL in .NET with Hot Chocolate: build schemas from C# types, r
 
 GraphQL in .NET with Hot Chocolate: build schemas from C# types, run the server, and use Banana Cake Pop for testing.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (graphql-hot-chocolate)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Graphql Hot Chocolate** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `dotnet add package HotChocolate.AspNetCore`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `graphql-hot-chocolate`
+- Domain: GraphQL in .NET with Hot Chocolate: build schemas from C# types, run the server, and use Banana Cake Pop for testing.
+- **hotchocolate-development**: Scaffold Hot Chocolate servers, add packages, and run queries. — `dotnet add package HotChocolate.AspNetCore`
+- Check `knowledge` and `prerequisites: dotnet`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `graphql-hot-chocolate`
+- For `hotchocolate-development`: Scaffold Hot Chocolate servers, add packages, and run queries. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `graphql-hot-chocolate` tools
+- Tools: `Glob`, `Grep`, `Read`, `Dotnet`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `graphql-hot-chocolate:de54e49f`
 
 # GraphQL Hot Chocolate
 

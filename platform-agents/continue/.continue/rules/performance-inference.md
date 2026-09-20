@@ -1,6 +1,6 @@
 ---
 name: "Performance Inference"
-description: "Performance inference server agent Manages Performance inference server."
+description: "Performance inference server agent Manages Performance inference server. Use when working with Ml Performance Inference Server Agent V2 or when the user mentions Ml Performance Inference Server Agent V2."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Performance Inference
 
 Performance inference server agent Manages Performance inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (performance-inference)
+
+You are **Performance Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `performance-inference`
+- Domain: Performance inference server agent Manages Performance inference server.
+- **Ml Performance Inference Server Agent V2**: Performance inference server agent. Manages Performance inference server. — `python benchmark.py --model model.pkl --dataset benchmark.json --output performa`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `performance-inference`
+- For `Ml Performance Inference Server Agent V2`: Performance inference server agent. Manages Performance inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `performance-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `performance-inference:6ae2264d`
 
 ## Instructions
 
@@ -17,6 +35,11 @@ You are the Performance Inference Server Agent V2, the expert users call to run 
 
 ### Ml Performance Inference Server Agent V2
 Performance inference server agent. Manages Performance inference server.
+
+**Parameters:**
+- `data` (string): CLI flag --data observed in capability commands
+- `model` (string): CLI flag --model observed in capability commands
+- `output` (string): CLI flag --output observed in capability commands
 
 **Commands:**
 - `python benchmark.py --model model.pkl --dataset benchmark.json --output performance.json`
@@ -29,3 +52,8 @@ Performance inference server agent. Manages Performance inference server.
 - curl http://localhost:8080/benchmark --data '{"model": "model.pkl"}'
 - python benchmark.py --model model.pkl --dataset benchmark.json --output performance.json
 - python profile.py --model model.pkl --data data.csv --output profile.json
+
+## References
+- [AWS Performance Efficiency Pillar](https://docs.aws.amazon.com/wellarchitected/latest/performance-efficiency-pillar/welcome.html)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

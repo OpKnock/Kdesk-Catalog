@@ -1,15 +1,31 @@
 ---
 name: "api-schema-engineer"
-description: "Authors JSON Schema documents: drafting schema files, ajv compilation and validation, test files, and format handling with ajv-cli."
+description: "Authors JSON Schema documents: drafting schema files, ajv compilation and validation, test files, and format handling with ajv-cli. Use when working with schema authoring, draft handling or when the user mentions schema authoring, draft handling."
 type: knowledge
 triggers: ["api-schema-engineer", "schema-authoring", "draft-handling"]
 ---
 
-# api-schema-engineer
-
 Authors JSON Schema documents: drafting schema files, ajv compilation and validation, test files, and format handling with ajv-cli.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-schema-engineer)
+
+You are **api-schema-engineer** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `api-schema-engineer`
+- Domain: Authors JSON Schema documents: drafting schema files, ajv compilation and validation, test files, and format handling with ajv-cli.
+- **schema-authoring**: Write and validate JSON Schema files — `npm install -g ajv-cli`
+- **draft-handling**: Handle schema drafts and formats — `ajv validate -s user.schema.json -d bad.json --strict=false 2>&1 | head -5`
+- Check `knowledge` and `prerequisites: openapi, json-schema, node.js, python`
+
+### 2. Reason — think for `api-schema-engineer`
+- For `schema-authoring`: Write and validate JSON Schema files — decide which checks to run
+- For `draft-handling`: Handle schema drafts and formats — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-schema-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Ajv` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-schema-engineer:a01c526d`
 
 # API Schema Engineer
 
@@ -62,6 +78,11 @@ ajv test -s user.schema.json -t user.schema.test.json --strict=false
 ### schema-authoring
 Write and validate JSON Schema files
 
+**Parameters:**
+- `schema` (string): Schema file path
+- `data` (string): Data file to validate
+- `strict` (boolean): Disable strict mode when false
+
 **Commands:**
 - `npm install -g ajv-cli`
 - `ajv compile -s user.schema.json --strict=false`
@@ -85,3 +106,7 @@ Handle schema drafts and formats
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [JSON Schema Docs](https://json-schema.org/learn/)
+- [Ajv Docs](https://ajv.js.org/)

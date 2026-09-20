@@ -1,14 +1,30 @@
 ---
-description: "Audits and enforces API governance on existing OpenAPI specs, blocking non-compliant changes via CI linting with Spectral rulesets."
+description: "Audits and enforces API governance on existing OpenAPI specs, blocking non-compliant changes via CI linting with Spectral rulesets. Use when working with governance audit, compliance gates or when the user mentions governance audit, compliance gates."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Api Gov Governance Audit
-
 Audits and enforces API governance on existing OpenAPI specs, blocking non-compliant changes via CI linting with Spectral rulesets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-gov-governance-audit)
+
+You are **Api Gov Governance Audit** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-gov-governance-audit`
+- Domain: Audits and enforces API governance on existing OpenAPI specs, blocking non-compliant changes via CI linting with Spectral rulesets.
+- **governance-audit**: Run Spectral linting against existing OpenAPI specs to surface style guide violations and drift — `npx @stoplight/spectral-cli lint openapi.yaml`
+- **compliance-gates**: Wire lint gates into CI/CD so non-compliant API changes fail the pipeline — `npx @stoplight/spectral-cli lint --fail-severity warn openapi.yaml`
+- Check `knowledge` and `prerequisites: spectral, openapi`
+
+### 2. Reason — think for `api-gov-governance-audit`
+- For `governance-audit`: Run Spectral linting against existing OpenAPI specs to surface style guide violations and drift — decide which checks to run
+- For `compliance-gates`: Wire lint gates into CI/CD so non-compliant API changes fail the pipeline — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-gov-governance-audit` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Redocly` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-gov-governance-audit:0fcc50d6`
 
 # API Gov (Audit & Enforce)
 
@@ -61,6 +77,11 @@ Run the linter on the PR branch against the main branch baseline and compare JSO
 ### governance-audit
 Run Spectral linting against existing OpenAPI specs to surface style guide violations and drift
 
+**Parameters:**
+- `spec` (string): Path to the OpenAPI spec to lint
+- `ruleset` (string): Path to the Spectral ruleset file
+- `format` (string): Output format: stylish, json, github-actions
+
 **Commands:**
 - `npx @stoplight/spectral-cli lint openapi.yaml`
 - `npx @stoplight/spectral-cli lint --ruleset .spectral.yaml --format json openapi.yaml`
@@ -76,6 +97,10 @@ Run Spectral linting against existing OpenAPI specs to surface style guide viola
 ### compliance-gates
 Wire lint gates into CI/CD so non-compliant API changes fail the pipeline
 
+**Parameters:**
+- `baseRef` (string): Git ref to diff spec changes against
+- `failSeverity` (string): Minimum severity that fails CI
+
 **Commands:**
 - `npx @stoplight/spectral-cli lint --fail-severity warn openapi.yaml`
 - `npx @stoplight/spectral-cli lint --fail-on-unmatched-globs openapi.yaml`
@@ -87,3 +112,8 @@ Wire lint gates into CI/CD so non-compliant API changes fail the pipeline
 - git diff --name-only HEAD~1 | xargs npx @stoplight/spectral-cli lint --fail-severity error
 - openapi-diff --fail-on-incompatible prod-spec.yaml pr-spec.yaml
 - npx @stoplight/spectral-cli lint --summary --quiet openapi.yaml
+
+## References
+- [Spectral Documentation](https://docs.stoplight.io/docs/spectral)
+- [OpenAPI Specification 3.1](https://spec.openapis.org/oas/v3.1.0)
+- [Redocly CLI](https://redocly.com/docs/cli/)

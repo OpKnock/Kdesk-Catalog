@@ -5,27 +5,23 @@ description: "Pulsar Functions: create, deploy, trigger and manage lightweight s
 
 Pulsar Functions: create, deploy, trigger and manage lightweight stream processors.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (pulsar-functions)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Pulsar Functions** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `bin/pulsar-admin functions create --tenant public --namespac`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `pulsar-functions`
+- Domain: Pulsar Functions: create, deploy, trigger and manage lightweight stream processors.
+- **pulsar-functions-operations**: Deploy and manage Pulsar Functions with pulsar-admin, and trigger them with test inputs. — `bin/pulsar-admin functions create --tenant public --namespace default --name dou`
+- Check `knowledge` and `prerequisites: bin/pulsar-admin`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `pulsar-functions`
+- For `pulsar-functions-operations`: Deploy and manage Pulsar Functions with pulsar-admin, and trigger them with test inputs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `pulsar-functions` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bin/pulsar-admin` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pulsar-functions:5a1d0d82`
 
 # Pulsar Functions
 

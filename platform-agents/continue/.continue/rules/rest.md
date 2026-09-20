@@ -1,15 +1,29 @@
 ---
 name: "Rest"
-description: "Expert core reference covering resource modeling, curl CRUD flows, status code semantics, and JSON handling with jq suited to daily API work."
+description: "Expert core reference covering resource modeling, curl CRUD flows, status code semantics, and JSON handling with jq suited to daily API work. Use when working with rest crud, api or when the user mentions rest crud, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Rest
-
 Expert core reference covering resource modeling, curl CRUD flows, status code semantics, and JSON handling with jq suited to daily API work.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rest)
+
+You are **Rest** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `rest`
+- Domain: Expert core reference covering resource modeling, curl CRUD flows, status code semantics, and JSON handling with jq suited to daily API work.
+- **rest-crud**: Execute and debug REST CRUD flows with curl and jq — `curl -s -X POST https://api.your-app.test/v1/orders -H 'Content-Type: applicatio`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `rest`
+- For `rest-crud`: Execute and debug REST CRUD flows with curl and jq — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rest` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rest:6bfccbc6`
 
 # REST APIs
 
@@ -73,6 +87,11 @@ curl -s https://api.your-app.test/v1/orders | jq '.items | length'
 ### rest-crud
 Execute and debug REST CRUD flows with curl and jq
 
+**Parameters:**
+- `url` (string): Endpoint URL including path and query
+- `method` (string): HTTP verb: GET, POST, PUT, PATCH, DELETE
+- `body` (string): JSON request body for mutating requests
+
 **Commands:**
 - `curl -s -X POST https://api.your-app.test/v1/orders -H 'Content-Type: application/json' -d '{"customer":7,"total":199}'`
 - `curl -s -X PUT https://api.your-app.test/v1/orders/7 -H 'Content-Type: application/json' -d '{"status":"shipped"}'`
@@ -84,3 +103,7 @@ Execute and debug REST CRUD flows with curl and jq
 - curl -s https://api.your-app.test/v1/orders | jq '.items[] | {id, total}'
 - curl -s -X PATCH https://api.your-app.test/v1/orders/7 -d '{"status":"canceled"}'
 - curl -s -o /dev/null -w '%{http_code}\n' https://api.your-app.test/v1/orders/999
+
+## References
+- [MDN HTTP methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods)
+- [curl man page](https://curl.se/docs/manpage.html)

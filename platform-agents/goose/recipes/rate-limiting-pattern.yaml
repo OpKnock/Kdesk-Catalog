@@ -2,8 +2,19 @@ title: Rate Limiting Pattern
 description: 'Rate limiting architecture patterns: edge vs service-level, distributed limits with Redis,
   and Envoy filter setup.'
 version: 2.0.0
-instructions: "# Rate Limiting Pattern\n\nRate limiting architecture patterns: edge vs service-level,\
-  \ distributed limits with Redis, and Envoy filter setup.\n\n## Instructions\n\n# Rate Limiting Patterns\n\
+instructions: "Rate limiting architecture patterns: edge vs service-level, distributed limits with Redis,\
+  \ and Envoy filter setup.\n\n## Agentic Workflow: Read -> Reason -> Act (rate-limiting-pattern)\n\n\
+  You are **Rate Limiting Pattern** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via\
+  \ `allowed-tools`.\n\n### 1. Read — api context for `rate-limiting-pattern`\n- Domain: Rate limiting\
+  \ architecture patterns: edge vs service-level, distributed limits with Redis, and Envoy filter setup.\n\
+  - **rate-limit-patterns**: Implement distributed rate limiting patterns with Redis sliding window and\
+  \ Envoy rate limit filters. — `envoy --config-path envoy.yaml`\n- Check `knowledge` and `prerequisites:\
+  \ envoy, redis-cli`\n\n### 2. Reason — think for `rate-limiting-pattern`\n- For `rate-limit-patterns`:\
+  \ Implement distributed rate limiting patterns with Redis sliding window and Envoy rate limit filters.\
+  \ — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for\
+  \ your inputs\n\n### 3. Act — execute with `rate-limiting-pattern` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Envoy`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record\
+  \ evidence (paths, checksums)\n- Fingerprint: `rate-limiting-pattern:8115d48e`\n\n# Rate Limiting Patterns\n\
   \nRate limits live at different layers: reverse proxy, gateway, or application.\n\n## What this skill\
   \ does\n\n- Builds distributed limits with Redis sorted sets\n- Configures Envoy rate limit filters\n\
   - Chooses the right layer per use case\n\n## When to use\n\n- Multi-instance apps need shared limits\n\
@@ -18,10 +29,13 @@ instructions: "# Rate Limiting Pattern\n\nRate limiting architecture patterns: e
   \ instances are stateless\n\n## Best practices\n\n- Combine edge and service-level limits\n- Use ZSETs\
   \ with timestamps for sliding windows\n- Return 429 + Retry-After consistently\n\n## Capabilities\n\n\
   ### rate-limit-patterns\nImplement distributed rate limiting patterns with Redis sliding window and\
-  \ Envoy rate limit filters.\n\n**Commands:**\n- `envoy --config-path envoy.yaml`\n- `redis-cli ZREMRANGEBYSCORE\
-  \ user:42:rl 0 $(date +%s000 -d '-60 seconds')`\n- `redis-cli ZADD user:42:rl $(date +%s000) $(date\
-  \ +%s000)`\n- `redis-cli ZCARD user:42:rl`\n- `curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:10000/api`\n\
-  \n**Examples:**\n- redis-cli ZADD user:42:rl 1710000000000 1710000000000; redis-cli ZCARD user:42:rl\n\
+  \ Envoy rate limit filters.\n\n**Parameters:**\n- `key` (string): Redis sorted set key for the window\n\
+  - `window_seconds` (integer): Sliding window size\n- `limit` (integer): Max requests per window\n\n\
+  **Commands:**\n- `envoy --config-path envoy.yaml`\n- `redis-cli ZREMRANGEBYSCORE user:42:rl 0 $(date\
+  \ +%s000 -d '-60 seconds')`\n- `redis-cli ZADD user:42:rl $(date +%s000) $(date +%s000)`\n- `redis-cli\
+  \ ZCARD user:42:rl`\n- `curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:10000/api`\n\n\
+  **Examples:**\n- redis-cli ZADD user:42:rl 1710000000000 1710000000000; redis-cli ZCARD user:42:rl\n\
   - curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:10000/api\n- redis-cli ZREMRANGEBYSCORE\
-  \ user:42:rl 0 1710000000000"
+  \ user:42:rl 0 1710000000000\n\n## References\n- [Envoy Rate Limit Filter](https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/rate_limit_filter)\n\
+  - [Redis sliding window pattern](https://redis.io/glossary/rate-limiting/)"
 prompt: Act as Rate Limiting Pattern and handle the task per the instructions.

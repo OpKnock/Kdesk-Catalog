@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(curl:*) Bash(gh:*) Bash(systemctl:*) Bash(ti
 
 Expert reference covering GNU timeout, curl retry flags, wait-for-service loops, and systemd/supervisor restart policies suited to long-running jobs.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (retry)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Retry** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `timeout 30s curl -sf https://api.your-app.test/health || ech`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `retry`
+- Domain: Expert reference covering GNU timeout, curl retry flags, wait-for-service loops, and systemd/supervisor restart policies suited to long-running jobs.
+- **shell-job-retry**: Retry and restart shell jobs: timeout guards, readiness waits, service restarts — `timeout 30s curl -sf https://api.your-app.test/health || echo 'timed out'`
+- Check `knowledge` and `prerequisites: systemctl, timeout, until`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `retry`
+- For `shell-job-retry`: Retry and restart shell jobs: timeout guards, readiness waits, service restarts — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `retry` tools
+- Tools: `Glob`, `Grep`, `Read`, `Timeout`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `retry:8c3bd6b8`
 
 # Retry (shell & process level)
 

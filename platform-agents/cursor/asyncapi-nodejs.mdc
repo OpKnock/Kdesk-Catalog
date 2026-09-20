@@ -6,27 +6,25 @@ alwaysApply: false
 
 Generates Node.js applications from AsyncAPI documents with the nodejs-template, then installs, runs, and tests the generated subscriber.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (asyncapi-nodejs)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Asyncapi Nodejs** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-templ`, `npx @asyncapi/modelina generate --input asyncapi.yaml --outp`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `asyncapi-nodejs`
+- Domain: Generates Node.js applications from AsyncAPI documents with the nodejs-template, then installs, runs, and tests the generated subscriber.
+- **node-generation**: Generate a Node.js async API app from the spec. — `npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-template -o ./generated -`
+- **ts-models**: Generate TypeScript models from the schema with Modelina. — `npx @asyncapi/modelina generate --input asyncapi.yaml --output ./generated/src/m`
+- Check `knowledge` and `prerequisites: node, npm, npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `asyncapi-nodejs`
+- For `node-generation`: Generate a Node.js async API app from the spec. — decide which checks to run
+- For `ts-models`: Generate TypeScript models from the schema with Modelina. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `asyncapi-nodejs` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `asyncapi-nodejs:5958e564`
 
 # AsyncAPI Node.js
 

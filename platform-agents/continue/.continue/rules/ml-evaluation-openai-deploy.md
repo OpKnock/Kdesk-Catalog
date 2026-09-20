@@ -1,6 +1,6 @@
 ---
 name: "Ml Evaluation Openai Deploy"
-description: "OpenAI Evaluation deployment agent for OpenAI model evaluation."
+description: "OpenAI Evaluation deployment agent for OpenAI model evaluation. Use when working with Ml Evaluation Openai Deploy, inference or when the user mentions Ml Evaluation Openai Deploy, inference."
 globs: ["**/*.json", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Evaluation Openai Deploy
 
 OpenAI Evaluation deployment agent for OpenAI model evaluation.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-evaluation-openai-deploy)
+
+You are **Ml Evaluation Openai Deploy** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-evaluation-openai-deploy`
+- Domain: OpenAI Evaluation deployment agent for OpenAI model evaluation.
+- **Ml Evaluation Openai Deploy**: OpenAI Evaluation deployment agent for OpenAI model evaluation. — `Results: openai eval results --eval-id eval-abc123`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-evaluation-openai-deploy`
+- For `Ml Evaluation Openai Deploy`: OpenAI Evaluation deployment agent for OpenAI model evaluation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-evaluation-openai-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Results`, `Eval` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-evaluation-openai-deploy:42a5456a`
 
 ## Instructions
 
@@ -25,3 +43,6 @@ OpenAI Evaluation deployment agent for OpenAI model evaluation.
 **Examples:**
 - Eval: openai eval create --model gpt-4 --dataset eval.json
 - Results: openai eval results --eval-id eval-abc123
+
+## References
+- [OpenAI API Documentation](https://platform.openai.com/docs/)

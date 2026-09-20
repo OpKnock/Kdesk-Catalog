@@ -1,14 +1,28 @@
 ---
-description: "Produce and consume Redis Streams from Go with go-redis: XAdd for appending, XReadGroup for consumer-group reads, XAck, and XPending introspection."
+description: "Produce and consume Redis Streams from Go with go-redis: XAdd for appending, XReadGroup for consumer-group reads, XAck, and XPending introspection. Use when working with go redis streams, api or when the user mentions go redis streams, api."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Redis Streams Go
-
 Produce and consume Redis Streams from Go with go-redis: XAdd for appending, XReadGroup for consumer-group reads, XAck, and XPending introspection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (redis-streams-go)
+
+You are **Redis Streams Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `redis-streams-go`
+- Domain: Produce and consume Redis Streams from Go with go-redis: XAdd for appending, XReadGroup for consumer-group reads, XAck, and XPending introspection.
+- **go-redis-streams**: Produce and consume Redis Streams from Go with go-redis — `go get github.com/redis/go-redis/v9`
+- Check `knowledge` and `prerequisites: redis-cli`
+
+### 2. Reason — think for `redis-streams-go`
+- For `go-redis-streams`: Produce and consume Redis Streams from Go with go-redis — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `redis-streams-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `redis-streams-go:6af5984e`
 
 # Redis Streams in Go
 
@@ -87,6 +101,11 @@ redis-cli XPENDING orders workers
 ### go-redis-streams
 Produce and consume Redis Streams from Go with go-redis
 
+**Parameters:**
+- `stream` (string): Stream key name
+- `group` (string): Consumer group name for XGroupCreate
+- `count` (integer): Max entries per XRead/XReadGroup call
+
 **Commands:**
 - `go get github.com/redis/go-redis/v9`
 - `redis-cli XADD orders * amount 99.50`
@@ -98,3 +117,7 @@ Produce and consume Redis Streams from Go with go-redis
 - redis-cli XGROUP CREATE orders workers $ MKSTREAM
 - redis-cli XINFO GROUPS orders
 - go run main.go
+
+## References
+- [go-redis streams API](https://pkg.go.dev/github.com/redis/go-redis/v9#Client.XAdd)
+- [Redis Streams docs](https://redis.io/docs/latest/develop/data-types/streams/)

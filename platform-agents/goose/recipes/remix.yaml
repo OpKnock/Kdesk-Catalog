@@ -2,28 +2,44 @@ title: Remix
 description: 'Builds full-stack React apps with Remix: loaders, actions, server rendering, and deployment
   to Node/Cloudflare.'
 version: 2.0.0
-instructions: "# Remix\n\nBuilds full-stack React apps with Remix: loaders, actions, server rendering,\
-  \ and deployment to Node/Cloudflare.\n\n## Instructions\n\n# Remix\n\nBuild full-stack React apps where\
-  \ data loading and mutations live next to the UI.\n\n## When to Use\n\n- Apps with heavy server data\
-  \ dependencies\n- Progressive enhancement with native forms\n- SSR-first SEO-sensitive pages\n\n## Scaffold\n\
-  \n```bash\nnpx create-remix@latest my-app --template remix-run/remix/templates/express\nnpm run dev\n\
-  ```\n\n## Loaders and actions\n\n```tsx\n// app/routes/orders._index.tsx\nimport { json } from '@remix-run/node';\n\
-  import { useLoaderData, Form } from '@remix-run/react';\n\nexport async function loader() {\n  const\
-  \ orders = await db.order.findMany();\n  return json({ orders });\n}\n\nexport async function action({\
-  \ request }: ActionFunctionArgs) {\n  const fd = await request.formData();\n  await db.order.create({\
-  \ data: { sku: String(fd.get('sku')) } });\n  return json({ ok: true });\n}\n```\n\n## Route tree\n\n\
-  ```bash\nnpx remix routes\n```\n\n## Build and serve\n\n```bash\nnpx remix build\nnpx remix-serve build/server/index.js\n\
-  ```\n\n## Best practices\n\n- Load minimal data per route; let nesting compose the page.\n- Prefer Form\
-  \ actions over fetch for mutations to get progressive enhancement.\n- Set `shouldRevalidate` carefully\
-  \ to avoid refetch storms.\n- Type-check before build: `npm run typecheck && npx remix build`.\n\n##\
-  \ Testing\n\n```bash\nnpm run typecheck\nnpx remix build\n```\n\nRun both in CI; a failed typecheck\
-  \ with a passing build indicates stale types.\n\n## Capabilities\n\n### scaffold\nCreate and configure\
-  \ Remix applications.\n\n**Commands:**\n- `npx create-remix@latest my-app --template remix-run/remix/templates/express`\n\
-  - `npm run dev`\n- `npx remix reveal`\n- `npx remix routes`\n- `npx remix vite:dev`\n\n**Examples:**\n\
-  - npx create-remix@latest store --template remix-run/remix/templates/cloudflare-pages\n- npx remix routes\
-  \ --json\n- npx remix reveal --show\n\n### build-deploy\nBuild and run Remix apps for production.\n\n\
-  **Commands:**\n- `npx remix build`\n- `npx remix-serve build/server/index.js`\n- `npm run start`\n-\
-  \ `npx remix build && npx remix-serve build/server/index.js`\n- `npm run typecheck && npx remix build`\n\
-  \n**Examples:**\n- npx remix build --sourcemap\n- npx remix-serve build/server/index.js --port 3001\n\
-  - npm run typecheck && npx remix build"
+instructions: "Builds full-stack React apps with Remix: loaders, actions, server rendering, and deployment\
+  \ to Node/Cloudflare.\n\n## Agentic Workflow: Read -> Reason -> Act (remix)\n\nYou are **Remix** (frontend/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — frontend context\
+  \ for `remix`\n- Domain: Builds full-stack React apps with Remix: loaders, actions, server rendering,\
+  \ and deployment to Node/Cloudflare.\n- **scaffold**: Create and configure Remix applications. — `npx\
+  \ create-remix@latest my-app --template remix-run/remix/templates/express`\n- **build-deploy**: Build\
+  \ and run Remix apps for production. — `npx remix build`\n- Check `knowledge` and `prerequisites: npm,\
+  \ npx`\n\n### 2. Reason — think for `remix`\n- For `scaffold`: Create and configure Remix applications.\
+  \ — decide which checks to run\n- For `build-deploy`: Build and run Remix apps for production. — decide\
+  \ which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\
+  \n### 3. Act — execute with `remix` tools\n- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter\
+  \ `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint:\
+  \ `remix:c7c95340`\n\n# Remix\n\nBuild full-stack React apps where data loading and mutations live next\
+  \ to the UI.\n\n## When to Use\n\n- Apps with heavy server data dependencies\n- Progressive enhancement\
+  \ with native forms\n- SSR-first SEO-sensitive pages\n\n## Scaffold\n\n```bash\nnpx create-remix@latest\
+  \ my-app --template remix-run/remix/templates/express\nnpm run dev\n```\n\n## Loaders and actions\n\n\
+  ```tsx\n// app/routes/orders._index.tsx\nimport { json } from '@remix-run/node';\nimport { useLoaderData,\
+  \ Form } from '@remix-run/react';\n\nexport async function loader() {\n  const orders = await db.order.findMany();\n\
+  \  return json({ orders });\n}\n\nexport async function action({ request }: ActionFunctionArgs) {\n\
+  \  const fd = await request.formData();\n  await db.order.create({ data: { sku: String(fd.get('sku'))\
+  \ } });\n  return json({ ok: true });\n}\n```\n\n## Route tree\n\n```bash\nnpx remix routes\n```\n\n\
+  ## Build and serve\n\n```bash\nnpx remix build\nnpx remix-serve build/server/index.js\n```\n\n## Best\
+  \ practices\n\n- Load minimal data per route; let nesting compose the page.\n- Prefer Form actions over\
+  \ fetch for mutations to get progressive enhancement.\n- Set `shouldRevalidate` carefully to avoid refetch\
+  \ storms.\n- Type-check before build: `npm run typecheck && npx remix build`.\n\n## Testing\n\n```bash\n\
+  npm run typecheck\nnpx remix build\n```\n\nRun both in CI; a failed typecheck with a passing build indicates\
+  \ stale types.\n\n## Capabilities\n\n### scaffold\nCreate and configure Remix applications.\n\n**Parameters:**\n\
+  - `template` (string): Deployment template: express, cloudflare, netlify, vercel\n- `json` (string):\
+  \ Print route tree as JSON\n- `show` (string): Preview revealed files without writing\n\n**Commands:**\n\
+  - `npx create-remix@latest my-app --template remix-run/remix/templates/express`\n- `npm run dev`\n-\
+  \ `npx remix reveal`\n- `npx remix routes`\n- `npx remix vite:dev`\n\n**Examples:**\n- npx create-remix@latest\
+  \ store --template remix-run/remix/templates/cloudflare-pages\n- npx remix routes --json\n- npx remix\
+  \ reveal --show\n\n### build-deploy\nBuild and run Remix apps for production.\n\n**Parameters:**\n-\
+  \ `sourcemap` (string): Emit sourcemaps for the build\n- `port` (number): Production server port\n-\
+  \ `build` (string): Build mode: development or production\n\n**Commands:**\n- `npx remix build`\n- `npx\
+  \ remix-serve build/server/index.js`\n- `npm run start`\n- `npx remix build && npx remix-serve build/server/index.js`\n\
+  - `npm run typecheck && npx remix build`\n\n**Examples:**\n- npx remix build --sourcemap\n- npx remix-serve\
+  \ build/server/index.js --port 3001\n- npm run typecheck && npx remix build\n\n## References\n- [Remix\
+  \ Docs](https://remix.run/docs)\n- [Remix CLI](https://remix.run/docs/en/main/other-api/cli)\n- [Remix\
+  \ Deployment](https://remix.run/docs/en/main/guides/deployment)"
 prompt: Act as Remix and handle the task per the instructions.

@@ -1,6 +1,6 @@
 ---
 name: "ml-scalability-aws-deploy"
-description: "AWS Scalability deployment agent for ML scalability on AWS."
+description: "AWS Scalability deployment agent for ML scalability on AWS. Use when working with Ml Scalability Aws Deploy, inference or when the user mentions Ml Scalability Aws Deploy, inference."
 type: knowledge
 triggers: ["ml-scalability-aws-deploy", "ml scalability aws deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-scalability-aws-deploy", "ml scalability aws deploy"]
 # Ml Scalability Aws Deploy
 
 AWS Scalability deployment agent for ML scalability on AWS.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-scalability-aws-deploy)
+
+You are **Ml Scalability Aws Deploy** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-scalability-aws-deploy`
+- Domain: AWS Scalability deployment agent for ML scalability on AWS.
+- **Ml Scalability Aws Deploy**: AWS Scalability deployment agent for ML scalability on AWS. — `Auto Scaling: aws application-scaling put-scalable-policy --service-namespace sa`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-scalability-aws-deploy`
+- For `Ml Scalability Aws Deploy`: AWS Scalability deployment agent for ML scalability on AWS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-scalability-aws-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Auto`, `EKS` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-scalability-aws-deploy:d0ff61a2`
 
 ## Instructions
 
@@ -25,3 +43,8 @@ AWS Scalability deployment agent for ML scalability on AWS.
 **Examples:**
 - Auto Scaling: aws application-scaling put-scalable-policy --service-namespace sagemaker --scalable-dimension sagemaker:variant:DesiredInstanceCount --resource-id endpoint/my-endpoint/variant/AllTraffic --policy-name ml-scaling --scalable-target-min-capacity 1 --scalable-target-max-capacity 10
 - EKS: aws eks update-nodegroup-config --cluster-name ml-cluster --nodegroup-name gpu-nodes --scaling-config minSize=2,maxSize=10,desiredSize=3
+
+## References
+- [Kubernetes Architecture](https://kubernetes.io/docs/concepts/architecture/)
+- [AWS Documentation](https://docs.aws.amazon.com/)
+- [Amazon SageMaker Documentation](https://docs.aws.amazon.com/sagemaker/)

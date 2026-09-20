@@ -1,6 +1,6 @@
 ---
 name: "eks-identity-py"
-description: "EKS deployment agent. Manages EKS ML deployment."
+description: "EKS deployment agent. Manages EKS ML deployment. Use when working with Ml Eks Deploy Agent or when the user mentions Ml Eks Deploy Agent."
 type: knowledge
 triggers: ["eks-identity-py", "ml eks deploy agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["eks-identity-py", "ml eks deploy agent"]
 # Eks Identity Py
 
 EKS deployment agent. Manages EKS ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (eks-identity-py)
+
+You are **Eks Identity Py** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `eks-identity-py`
+- Domain: EKS deployment agent. Manages EKS ML deployment.
+- **Ml Eks Deploy Agent**: EKS deployment agent. Manages EKS ML deployment. — `docker build -t eks:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `eks-identity-py`
+- For `Ml Eks Deploy Agent`: EKS deployment agent. Manages EKS ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `eks-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Eks` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `eks-identity-py:9ae16f95`
 
 ## Instructions
 
@@ -32,3 +50,8 @@ EKS deployment agent. Manages EKS ML deployment.
 - kubectl logs -f demo-pod
 - kubectl get services
 - eksctl get cluster --name my-cluster
+
+## References
+- [Amazon EKS Documentation](https://docs.aws.amazon.com/eks/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

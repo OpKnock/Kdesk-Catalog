@@ -1,15 +1,31 @@
 ---
 name: "etcd"
-description: "Operates etcd key-value stores: read/write keys, watch changes, manage members, snapshots, backups, and cluster health."
+description: "Operates etcd key-value stores: read/write keys, watch changes, manage members, snapshots, backups, and cluster health. Use when working with kv operations, cluster and backup, devops or when the user mentions kv operations, cluster and backup, devops."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# etcd
-
 Operates etcd key-value stores: read/write keys, watch changes, manage members, snapshots, backups, and cluster health.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (etcd)
+
+You are **etcd** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `etcd`
+- Domain: Operates etcd key-value stores: read/write keys, watch changes, manage members, snapshots, backups, and cluster health.
+- **kv-operations**: Put, get, delete, and watch keys in the etcd database. — `etcdctl put /config/app version 1.2.3`
+- **cluster-and-backup**: Manage members, check health, defrag, and take snapshots for backup. — `etcdctl member list`
+- Check `knowledge` and `prerequisites: etcdctl`
+
+### 2. Reason — think for `etcd`
+- For `kv-operations`: Put, get, delete, and watch keys in the etcd database. — decide which checks to run
+- For `cluster-and-backup`: Manage members, check health, defrag, and take snapshots for backup. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `etcd` tools
+- Tools: `Glob`, `Grep`, `Read`, `Etcdctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `etcd:37a8d658`
 
 # etcd Operations
 
@@ -70,6 +86,11 @@ etcdctl defrag --cluster
 ### kv-operations
 Put, get, delete, and watch keys in the etcd database.
 
+**Parameters:**
+- `key` (string): Key path, e.g. /config/app
+- `value` (string): Value to set
+- `prefix` (boolean): Operate on key prefix
+
 **Commands:**
 - `etcdctl put /config/app version 1.2.3`
 - `etcdctl get /config/app --prefix`
@@ -86,6 +107,10 @@ Put, get, delete, and watch keys in the etcd database.
 ### cluster-and-backup
 Manage members, check health, defrag, and take snapshots for backup.
 
+**Parameters:**
+- `endpoints` (string): Comma-separated etcd endpoints, e.g. 10.0.0.1:2379
+- `snapshot-file` (string): Path to snapshot db file
+
 **Commands:**
 - `etcdctl member list`
 - `etcdctl endpoint health --cluster`
@@ -98,3 +123,7 @@ Manage members, check health, defrag, and take snapshots for backup.
 - etcdctl endpoint health --cluster
 - etcdctl snapshot save /backups/etcd-2026-08-10.db
 - etcdctl member list -w table
+
+## References
+- [etcd Documentation](https://etcd.io/docs/)
+- [etcdctl Manual](https://etcd.io/docs/latest/op-guide/maintenance/)

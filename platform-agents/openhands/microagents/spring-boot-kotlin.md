@@ -1,15 +1,29 @@
 ---
 name: "spring-boot-kotlin"
-description: "Scaffolds, runs, and tests Spring Boot applications written in Kotlin with Gradle. Generates projects from start.spring.io with selected starters, runs via bootRun, probes actuator health endpoints, and executes Kotlin test classes."
+description: "Scaffolds, runs, and tests Spring Boot applications written in Kotlin with Gradle. Generates projects from start.spring.io with selected starters, runs via bootRun, probes actuator health endpoints, and executes Kotlin test classes. Use when working with spring kotlin workflow, api or when the user mentions spring kotlin workflow, api."
 type: knowledge
 triggers: ["spring-boot-kotlin", "spring-kotlin-workflow"]
 ---
 
-# Spring Boot Kotlin
-
 Scaffolds, runs, and tests Spring Boot applications written in Kotlin with Gradle. Generates projects from start.spring.io with selected starters, runs via bootRun, probes actuator health endpoints, and executes Kotlin test classes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (spring-boot-kotlin)
+
+You are **Spring Boot Kotlin** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `spring-boot-kotlin`
+- Domain: Scaffolds, runs, and tests Spring Boot applications written in Kotlin with Gradle. Generates projects from start.spring.io with selected starters, runs via bootRun, probes actuator health endpoints, a
+- **spring-kotlin-workflow**: Scaffolds, runs, and tests Spring Boot applications written in Kotlin with Gradle. Generates project — `curl -s https://start.spring.io/starter.zip -d language=kotlin -d type=gradle-pr`
+- Check `knowledge` and `prerequisites: ./gradlew`
+
+### 2. Reason — think for `spring-boot-kotlin`
+- For `spring-kotlin-workflow`: Scaffolds, runs, and tests Spring Boot applications written in Kotlin with Gradle. Generates projects from start.spring. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `spring-boot-kotlin` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `./gradlew` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `spring-boot-kotlin:3940d053`
 
 # Spring Boot with Kotlin
 
@@ -81,6 +95,11 @@ curl -s localhost:8080/actuator/health | jq .status
 ### spring-kotlin-workflow
 Scaffolds, runs, and tests Spring Boot applications written in Kotlin with Gradle. Generates projects from start.spring.io with selected starters, runs via bootRun, probes actuator health endpoints, and executes Kotlin test classes.
 
+**Parameters:**
+- `dependencies` (string): Comma-separated Spring Boot starters (e.g., web,data-jpa,actuator)
+- `test_class` (string): Fully qualified test class name
+- `java_version` (integer): Java version for the project (e.g., 17, 21)
+
 **Commands:**
 - `curl -s https://start.spring.io/starter.zip -d language=kotlin -d type=gradle-project -d dependencies=web,data-jpa,actuator -o demo.zip`
 - `./gradlew bootRun`
@@ -95,3 +114,6 @@ Scaffolds, runs, and tests Spring Boot applications written in Kotlin with Gradl
 - curl -s localhost:8080/actuator/health
 - ./gradlew test --tests 'com.example.demo.DemoApplicationTests'
 - ./gradlew build && java -jar build/libs/demo-0.0.1-SNAPSHOT.jar
+
+## References
+- [Spring Boot docs](https://docs.spring.io/spring-boot/index.html)

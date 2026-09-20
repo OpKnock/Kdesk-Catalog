@@ -1,15 +1,31 @@
 ---
 name: "api-graphql-rest"
-description: "Migrates and troubleshoots GraphQL: REST-to-GraphQL transitions, performance debugging, and breaking-change-safe schema evolution."
+description: "Migrates and troubleshoots GraphQL: REST-to-GraphQL transitions, performance debugging, and breaking-change-safe schema evolution. Use when working with rest to graphql, schema evolution or when the user mentions rest to graphql, schema evolution."
 type: knowledge
 triggers: ["api-graphql-rest", "rest-to-graphql", "schema-evolution"]
 ---
 
-# Api Graphql Rest
-
 Migrates and troubleshoots GraphQL: REST-to-GraphQL transitions, performance debugging, and breaking-change-safe schema evolution.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-graphql-rest)
+
+You are **Api Graphql Rest** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-graphql-rest`
+- Domain: Migrates and troubleshoots GraphQL: REST-to-GraphQL transitions, performance debugging, and breaking-change-safe schema evolution.
+- **rest-to-graphql**: Wrap REST endpoints with GraphQL resolvers during migration — `npm install @graphql-tools/url-loader @graphql-tools/stitch`
+- **schema-evolution**: Evolve schemas without breaking existing clients — `npx graphql-inspector diff schema-v1.graphql schema-v2.graphql`
+- Check `knowledge` and `prerequisites: apollo-server, graphql-codegen, dataloader`
+
+### 2. Reason — think for `api-graphql-rest`
+- For `rest-to-graphql`: Wrap REST endpoints with GraphQL resolvers during migration — decide which checks to run
+- For `schema-evolution`: Evolve schemas without breaking existing clients — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-graphql-rest` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-graphql-rest:27f8bc89`
 
 # API GraphQL (Migration & Evolution)
 
@@ -54,6 +70,10 @@ Run all client queries against the new schema before cutting over.
 ### rest-to-graphql
 Wrap REST endpoints with GraphQL resolvers during migration
 
+**Parameters:**
+- `restUrl` (string): REST endpoint to wrap
+- `graphqlUrl` (string): GraphQL endpoint
+
 **Commands:**
 - `npm install @graphql-tools/url-loader @graphql-tools/stitch`
 - `npm install graphql-http`
@@ -69,6 +89,10 @@ Wrap REST endpoints with GraphQL resolvers during migration
 ### schema-evolution
 Evolve schemas without breaking existing clients
 
+**Parameters:**
+- `oldSchema` (string): Old schema
+- `newSchema` (string): New schema
+
 **Commands:**
 - `npx graphql-inspector diff schema-v1.graphql schema-v2.graphql`
 - `graphql-inspector diff schema-v1.graphql schema-v2.graphql --rule 'field.removed:error'`
@@ -80,3 +104,7 @@ Evolve schemas without breaking existing clients
 - npx graphql-inspector diff schema-v1.graphql schema-v2.graphql
 - rover subgraph check mygraph@prod --name products --schema ./products.graphql
 - graphql-inspector coverage schema.graphql queries/**/*.graphql
+
+## References
+- [GraphQL Inspector Diff](https://the-guild.dev/graphql/inspector/docs/features/diff)
+- [GraphQL Tools URL Loader](https://the-guild.dev/graphql/tools/docs/modules/url-loader)

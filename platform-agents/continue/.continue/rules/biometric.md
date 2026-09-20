@@ -1,15 +1,33 @@
 ---
 name: "Biometric"
-description: "Implements biometric authentication with WebAuthn/FIDO2: attestation, credential registration, assertion verification, and testing with libfido2."
+description: "Implements biometric authentication with WebAuthn/FIDO2: attestation, credential registration, assertion verification, and testing with libfido2. Use when working with webauthn registration, assertion, attestation, api or when the user mentions webauthn registration, assertion, attestation, api."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Biometric
-
 Implements biometric authentication with WebAuthn/FIDO2: attestation, credential registration, assertion verification, and testing with libfido2.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (biometric)
+
+You are **Biometric** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `biometric`
+- Domain: Implements biometric authentication with WebAuthn/FIDO2: attestation, credential registration, assertion verification, and testing with libfido2.
+- **webauthn-registration**: Test WebAuthn registration flows at the hardware level. — `fido2-cred -M -r -i client.data /dev/hidraw0`
+- **assertion**: Perform biometric assertions for authentication. — `fido2-assert -G -r -i client.data /dev/hidraw0`
+- **attestation**: Inspect attestation and key metadata. — `openssl x509 -in attestation.der -inform DER -noout -text`
+- Check `knowledge` and `prerequisites: fido2-assert, fido2-cred, fido2-token, lsusb`
+
+### 2. Reason — think for `biometric`
+- For `webauthn-registration`: Test WebAuthn registration flows at the hardware level. — decide which checks to run
+- For `assertion`: Perform biometric assertions for authentication. — decide which checks to run
+- For `attestation`: Inspect attestation and key metadata. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `biometric` tools
+- Tools: `Glob`, `Grep`, `Read`, `Fido2-cred`, `Fido2-token` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `biometric:d8593901`
 
 # Biometric
 
@@ -59,6 +77,10 @@ openssl x509 -in attestation.der -inform DER -noout -subject -issuer
 ### webauthn-registration
 Test WebAuthn registration flows at the hardware level.
 
+**Parameters:**
+- `device` (string): HID device path, e.g. /dev/hidraw0
+- `client_data` (string): Client data JSON file
+
 **Commands:**
 - `fido2-cred -M -r -i client.data /dev/hidraw0`
 - `fido2-cred -M -r -i client.data -o cred /dev/hidraw0`
@@ -74,6 +96,10 @@ Test WebAuthn registration flows at the hardware level.
 ### assertion
 Perform biometric assertions for authentication.
 
+**Parameters:**
+- `device` (string): HID device path
+- `assertion_file` (string): Output assertion file
+
 **Commands:**
 - `fido2-assert -G -r -i client.data /dev/hidraw0`
 - `fido2-assert -G -r -i client.data -o assert /dev/hidraw0`
@@ -88,6 +114,10 @@ Perform biometric assertions for authentication.
 ### attestation
 Inspect attestation and key metadata.
 
+**Parameters:**
+- `cert_file` (string): Attestation certificate file
+- `format` (string): DER or PEM
+
 **Commands:**
 - `openssl x509 -in attestation.der -inform DER -noout -text`
 - `openssl x509 -in attestation.der -inform DER -noout -subject -issuer`
@@ -99,3 +129,8 @@ Inspect attestation and key metadata.
 - openssl x509 -in attestation.der -inform DER -noout -subject -issuer
 - fido2-token -I /dev/hidraw0
 - lsusb | grep -i fido
+
+## References
+- [WebAuthn Spec](https://www.w3.org/TR/webauthn-2/)
+- [libfido2](https://github.com/Yubico/libfido2)
+- [OWASP Biometrics](https://owasp.org/www-community/controls/Biometric_Authentication)

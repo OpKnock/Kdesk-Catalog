@@ -2,14 +2,50 @@ title: Blue Green Deployment
 description: 'Implements blue-green deployments on Kubernetes: parallel deployments, service cutover,
   rollback, and verification.'
 version: 2.0.0
-instructions: '# Blue Green Deployment
+instructions: 'Implements blue-green deployments on Kubernetes: parallel deployments, service cutover,
+  rollback, and verification.
 
 
-  Implements blue-green deployments on Kubernetes: parallel deployments, service cutover, rollback, and
-  verification.
+  ## Agentic Workflow: Read -> Reason -> Act (blue-green-deployment)
 
 
-  ## Instructions
+  You are **Blue Green Deployment** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via
+  `allowed-tools`.
+
+
+  ### 1. Read — api context for `blue-green-deployment`
+
+  - Domain: Implements blue-green deployments on Kubernetes: parallel deployments, service cutover, rollback,
+  and verification.
+
+  - **deploy-flow**: Deploy blue/green versions and switch traffic. — `kubectl apply -f app-blue.yaml`
+
+  - **traffic-switch**: Point the service selector at the active version. — `kubectl patch service my-api
+  -p ''{"spec":{"selector":{"version":"green"}}}''`
+
+  - **rollback-verify**: Roll back to the previous color and verify. — `kubectl rollout status deployment/my-api-green`
+
+  - Check `knowledge` and `prerequisites: kubectl`
+
+
+  ### 2. Reason — think for `blue-green-deployment`
+
+  - For `deploy-flow`: Deploy blue/green versions and switch traffic. — decide which checks to run
+
+  - For `traffic-switch`: Point the service selector at the active version. — decide which checks to run
+
+  - For `rollback-verify`: Roll back to the previous color and verify. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `blue-green-deployment` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `blue-green-deployment:7ec6c25d`
 
 
   # Blue-Green Deployment
@@ -104,6 +140,13 @@ instructions: '# Blue Green Deployment
   Deploy blue/green versions and switch traffic.
 
 
+  **Parameters:**
+
+  - `version` (string): blue or green
+
+  - `manifest` (string): Deployment manifest path
+
+
   **Commands:**
 
   - `kubectl apply -f app-blue.yaml`
@@ -129,6 +172,13 @@ instructions: '# Blue Green Deployment
   ### traffic-switch
 
   Point the service selector at the active version.
+
+
+  **Parameters:**
+
+  - `service` (string): Service name
+
+  - `selector` (string): Label selector value, e.g. version=green
 
 
   **Commands:**
@@ -159,6 +209,13 @@ instructions: '# Blue Green Deployment
   Roll back to the previous color and verify.
 
 
+  **Parameters:**
+
+  - `deployment` (string): Deployment name
+
+  - `replicas` (number): Scale count
+
+
   **Commands:**
 
   - `kubectl rollout status deployment/my-api-green`
@@ -178,5 +235,12 @@ instructions: '# Blue Green Deployment
 
   - kubectl scale deployment my-api-blue --replicas=0
 
-  - kubectl get pods -l version=blue -o wide'
+  - kubectl get pods -l version=blue -o wide
+
+
+  ## References
+
+  - [Blue Green Deployment (Martin Fowler)](https://martinfowler.com/bliki/BlueGreenDeployment.html)
+
+  - [Kubernetes Services](https://kubernetes.io/docs/concepts/services-networking/service/)'
 prompt: Act as Blue Green Deployment and handle the task per the instructions.

@@ -2,16 +2,29 @@ title: falco
 description: Detects abnormal container and host behavior at runtime with Falco rule engines, event generators,
   and falcoctl artifact management.
 version: 2.0.0
-instructions: "# falco\n\nDetects abnormal container and host behavior at runtime with Falco rule engines,\
-  \ event generators, and falcoctl artifact management.\n\n## Instructions\n\n# Falco\n\nRuntime security\
-  \ monitoring for containers and hosts using syscall-driven rules.\n\n## What This Skill Does\n\n- Deploys\
-  \ Falco on hosts or in-cluster (DaemonSet via Helm)\n- Loads default and custom rule files\n- Generates\
-  \ realistic attack events for testing rule coverage\n- Manages rules artifacts and kernel drivers with\
-  \ falcoctl\n- Streams alerts to stdout, files, or external sinks\n\n## When to Use\n\n- Detecting shell\
-  \ access, privilege escalation, or odd syscall patterns\n- Validating that custom detection rules fire\n\
-  - Auditing container runtime behavior after an incident\n\n## Real Commands\n\n```bash\n# Install drivers\
-  \ and run\nfalcoctl driver install\nfalco\n\n# Custom rules\nfalco -r /etc/falco/rules.d/custom.yaml\n\
-  \n# Configure via --set\nfalco --set rules_files=[] --set rules_files[0]=/etc/falco/rules.d/custom.yaml\n\
+instructions: "Detects abnormal container and host behavior at runtime with Falco rule engines, event\
+  \ generators, and falcoctl artifact management.\n\n## Agentic Workflow: Read -> Reason -> Act (falco)\n\
+  \nYou are **falco** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — security context for `falco`\n- Domain: Detects abnormal container and host behavior\
+  \ at runtime with Falco rule engines, event generators, and falcoctl artifact management.\n- **falco-runtime**:\
+  \ Run Falco, configure rules, and view detected events. — `falco`\n- **falcoctl-artifacts**: Manage\
+  \ rules artifacts and drivers with falcoctl. — `falcoctl driver install`\n- **event-generation**: Generate\
+  \ test events to validate rule coverage. — `falco-event-generator run`\n- Check `knowledge` and `prerequisites:\
+  \ falco, falco-event-generator, falcoctl, kubectl`\n\n### 2. Reason — think for `falco`\n- For `falco-runtime`:\
+  \ Run Falco, configure rules, and view detected events. — decide which checks to run\n- For `falcoctl-artifacts`:\
+  \ Manage rules artifacts and drivers with falcoctl. — decide which checks to run\n- For `event-generation`:\
+  \ Generate test events to validate rule coverage. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `falco` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Falco`, `Falcoctl` (see frontmatter `tools`/`allowed-tools`)\n- Use\
+  \ `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `falco:7fec008f`\n\n\
+  # Falco\n\nRuntime security monitoring for containers and hosts using syscall-driven rules.\n\n## What\
+  \ This Skill Does\n\n- Deploys Falco on hosts or in-cluster (DaemonSet via Helm)\n- Loads default and\
+  \ custom rule files\n- Generates realistic attack events for testing rule coverage\n- Manages rules\
+  \ artifacts and kernel drivers with falcoctl\n- Streams alerts to stdout, files, or external sinks\n\
+  \n## When to Use\n\n- Detecting shell access, privilege escalation, or odd syscall patterns\n- Validating\
+  \ that custom detection rules fire\n- Auditing container runtime behavior after an incident\n\n## Real\
+  \ Commands\n\n```bash\n# Install drivers and run\nfalcoctl driver install\nfalco\n\n# Custom rules\n\
+  falco -r /etc/falco/rules.d/custom.yaml\n\n# Configure via --set\nfalco --set rules_files=[] --set rules_files[0]=/etc/falco/rules.d/custom.yaml\n\
   \n# Manage artifacts\nfalcoctl artifact install falcosecurity/falco-rules\nfalcoctl index list\n\n#\
   \ Generate test events\nfalco-event-generator run syscall\nfalco-event-generator run network\n```\n\n\
   ## Sample Custom Rule\n\n```yaml\n- rule: Write Below Binary Dir\n  desc: Detect writes to /usr/bin\n\
@@ -21,16 +34,22 @@ instructions: "# falco\n\nDetects abnormal container and host behavior at runtim
   \ every node is covered\n- Validate new rules against the event generator before production\n- Forward\
   \ alerts to a SIEM or alertmanager for correlation\n- Keep rules artifacts versioned via falcoctl and\
   \ pin versions\n- Update the kernel driver on node upgrades before enabling Falco\n\n## Capabilities\n\
-  \n### falco-runtime\nRun Falco, configure rules, and view detected events.\n\n**Commands:**\n- `falco`\n\
-  - `falco --version`\n- `falco -r /etc/falco/rules.d/custom.yaml`\n- `falco --set rules_files=[] --set\
-  \ rules_files[0]=/etc/falco/custom.yaml`\n- `falco -e /dev/null -c falco.yaml`\n\n**Examples:**\n- falco\
-  \ -r rules.d/custom.yaml\n- falco --version\n- falco --set output.format='%evt.time %user.name %proc.name'\n\
-  \n### falcoctl-artifacts\nManage rules artifacts and drivers with falcoctl.\n\n**Commands:**\n- `falcoctl\
-  \ driver install`\n- `falcoctl driver list`\n- `falcoctl artifact install falcosecurity/falco-rules`\n\
-  - `falcoctl index list`\n- `falcoctl artifact list falcosecurity`\n\n**Examples:**\n- falcoctl driver\
-  \ install\n- falcoctl artifact install falcosecurity/falco-rules\n- falcoctl index list\n\n### event-generation\n\
-  Generate test events to validate rule coverage.\n\n**Commands:**\n- `falco-event-generator run`\n- `falco-event-generator\
-  \ run syscall`\n- `falco-event-generator list`\n- `kubectl apply -f https://raw.githubusercontent.com/falcosecurity/event-generator/main/deploy/kubernetes/event-generator.yaml`\n\
+  \n### falco-runtime\nRun Falco, configure rules, and view detected events.\n\n**Parameters:**\n- `rulesFile`\
+  \ (string): Additional rules file to load\n- `set` (object): Config overrides, e.g. output.format or\
+  \ rules_files\n\n**Commands:**\n- `falco`\n- `falco --version`\n- `falco -r /etc/falco/rules.d/custom.yaml`\n\
+  - `falco --set rules_files=[] --set rules_files[0]=/etc/falco/custom.yaml`\n- `falco -e /dev/null -c\
+  \ falco.yaml`\n\n**Examples:**\n- falco -r rules.d/custom.yaml\n- falco --version\n- falco --set output.format='%evt.time\
+  \ %user.name %proc.name'\n\n### falcoctl-artifacts\nManage rules artifacts and drivers with falcoctl.\n\
+  \n**Parameters:**\n- `artifact` (string): Artifact name, e.g. falcosecurity/falco-rules\n- `version`\
+  \ (string): Artifact version constraint\n\n**Commands:**\n- `falcoctl driver install`\n- `falcoctl driver\
+  \ list`\n- `falcoctl artifact install falcosecurity/falco-rules`\n- `falcoctl index list`\n- `falcoctl\
+  \ artifact list falcosecurity`\n\n**Examples:**\n- falcoctl driver install\n- falcoctl artifact install\
+  \ falcosecurity/falco-rules\n- falcoctl index list\n\n### event-generation\nGenerate test events to\
+  \ validate rule coverage.\n\n**Parameters:**\n- `action` (string): Event action: run, list, or a specific\
+  \ action name\n- `namespace` (string): Namespace to deploy the event-generator workload in.\n\n**Commands:**\n\
+  - `falco-event-generator run`\n- `falco-event-generator run syscall`\n- `falco-event-generator list`\n\
+  - `kubectl apply -f https://raw.githubusercontent.com/falcosecurity/event-generator/main/deploy/kubernetes/event-generator.yaml`\n\
   \n**Examples:**\n- falco-event-generator run syscall\n- falco-event-generator list\n- falco-event-generator\
-  \ run network"
+  \ run network\n\n## References\n- [Falco Documentation](https://falco.org/docs/)\n- [falcoctl Guide](https://falco.org/docs/falcoctl/)\n\
+  - [Falco Rules Reference](https://falco.org/docs/reference/rules/)"
 prompt: Act as falco and handle the task per the instructions.

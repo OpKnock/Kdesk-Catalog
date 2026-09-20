@@ -6,27 +6,23 @@ applyTo: "**/*.json **/*.py **/*.r"
 
 AWS Lambda deployment agent for ML Lambda deployment on AWS.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (ml-lambda-aws-deploy)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Ml Lambda Aws Deploy** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `Invoke: aws lambda invoke --function-name ml-inference --pay`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — ml context for `ml-lambda-aws-deploy`
+- Domain: AWS Lambda deployment agent for ML Lambda deployment on AWS.
+- **Ml Lambda Aws Deploy**: AWS Lambda deployment agent for ML Lambda deployment on AWS. — `Invoke: aws lambda invoke --function-name ml-inference --payload '{"input": [1,2`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `ml-lambda-aws-deploy`
+- For `Ml Lambda Aws Deploy`: AWS Lambda deployment agent for ML Lambda deployment on AWS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `ml-lambda-aws-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Invoke`, `Deploy` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-lambda-aws-deploy:01f0c54b`
 
 ## Instructions
 

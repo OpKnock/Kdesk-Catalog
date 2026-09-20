@@ -4,27 +4,23 @@ applyTo: "**/*.json **/*.r **/*.sh"
 
 Creates, serves, invokes, and deploys Netlify Functions using the Netlify CLI. Supports local development with netlify dev, function testing with payloads, and production deployments.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (netlify-functions)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Netlify Functions** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `netlify functions:create`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `netlify-functions`
+- Domain: Creates, serves, invokes, and deploys Netlify Functions using the Netlify CLI. Supports local development with netlify dev, function testing with payloads, and production deployments.
+- **netlify-functions-workflow**: Create, serve, invoke and deploy Netlify Functions with the Netlify CLI. — `netlify functions:create`
+- Check `knowledge` and `prerequisites: netlify`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `netlify-functions`
+- For `netlify-functions-workflow`: Create, serve, invoke and deploy Netlify Functions with the Netlify CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `netlify-functions` tools
+- Tools: `Glob`, `Grep`, `Read`, `Netlify` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `netlify-functions:d598c69d`
 
 # Netlify Functions
 

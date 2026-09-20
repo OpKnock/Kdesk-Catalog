@@ -4,27 +4,23 @@ applyTo: "**/*.java **/*.json **/*.kt **/*.r **/*.sh"
 
 Builds reactive APIs with Eclipse Vert.x on the JVM. Scaffolds Maven projects via the official archetype, runs verticles with hot reload, packages executable fat jars, and verifies endpoints with curl.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (vertx)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Vertx** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `mvn archetype:generate -DarchetypeGroupId=io.vertx -Darchety`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `vertx`
+- Domain: Builds reactive APIs with Eclipse Vert.x on the JVM. Scaffolds Maven projects via the official archetype, runs verticles with hot reload, packages executable fat jars, and verifies endpoints with curl
+- **vertx-project**: Scaffold, run, and package Vert.x applications — `mvn archetype:generate -DarchetypeGroupId=io.vertx -DarchetypeArtifactId=vertx-m`
+- Check `knowledge` and `prerequisites: java, mvn`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `vertx`
+- For `vertx-project`: Scaffold, run, and package Vert.x applications — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `vertx` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `Java` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vertx:6a6132fe`
 
 # Vert.x
 

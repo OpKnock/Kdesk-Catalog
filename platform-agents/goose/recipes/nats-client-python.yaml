@@ -1,12 +1,22 @@
 title: Nats Client Python
 description: 'NATS clients in Python with nats-py: async connect, pub/sub, JetStream consumers, and request-reply.'
 version: 2.0.0
-instructions: "# Nats Client Python\n\nNATS clients in Python with nats-py: async connect, pub/sub, JetStream\
-  \ consumers, and request-reply.\n\n## Instructions\n\n# NATS Python Client\n\nnats-py is the official\
-  \ asyncio-based NATS client for Python.\n\n## What this skill does\n\n- Connects asynchronously with\
-  \ reconnect policies\n- Publishes/subscribes and does request-reply\n- Consumes from JetStream streams\n\
-  \n## When to use\n\n- Python data pipelines and workers\n- Async services in the NATS ecosystem\n\n\
-  ## Real commands\n\n```bash\npip install nats-py\npython3 -m pip show nats-py\npython3 pub.py\npython3\
+instructions: "NATS clients in Python with nats-py: async connect, pub/sub, JetStream consumers, and request-reply.\n\
+  \n## Agentic Workflow: Read -> Reason -> Act (nats-client-python)\n\nYou are **Nats Client Python**\
+  \ (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read\
+  \ — api context for `nats-client-python`\n- Domain: NATS clients in Python with nats-py: async connect,\
+  \ pub/sub, JetStream consumers, and request-reply.\n- **nats-python-client**: Install nats-py and write\
+  \ async Python clients for core NATS and JetStream. — `pip install nats-py`\n- Check `knowledge` and\
+  \ `prerequisites: pip, python3`\n\n### 2. Reason — think for `nats-client-python`\n- For `nats-python-client`:\
+  \ Install nats-py and write async Python clients for core NATS and JetStream. — decide which checks\
+  \ to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3.\
+  \ Act — execute with `nats-client-python` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Python3`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `nats-client-python:751dc6a5`\n\n# NATS Python Client\n\nnats-py is the\
+  \ official asyncio-based NATS client for Python.\n\n## What this skill does\n\n- Connects asynchronously\
+  \ with reconnect policies\n- Publishes/subscribes and does request-reply\n- Consumes from JetStream\
+  \ streams\n\n## When to use\n\n- Python data pipelines and workers\n- Async services in the NATS ecosystem\n\
+  \n## Real commands\n\n```bash\npip install nats-py\npython3 -m pip show nats-py\npython3 pub.py\npython3\
   \ sub.py\n```\n\n## Subscribe\n\n```python\nimport asyncio, nats\n\nasync def main():\n    nc = await\
   \ nats.connect(\"nats://localhost:4222\")\n    sub = await nc.subscribe(\"orders.*\")\n    async for\
   \ msg in sub:\n        print(f\"{msg.subject}: {msg.data.decode()}\")\n        await msg.ack()\n\nasyncio.run(main())\n\
@@ -16,7 +26,10 @@ instructions: "# Nats Client Python\n\nNATS clients in Python with nats-py: asyn
   )\nmsgs = await pull.fetch(10)\n```\n\n## Best practices\n\n- Use `await nc.drain()` on shutdown to\
   \ flush pending\n- Prefer async contexts; avoid blocking calls in the loop\n- Use queue groups for competing\
   \ consumers\n\n## Capabilities\n\n### nats-python-client\nInstall nats-py and write async Python clients\
-  \ for core NATS and JetStream.\n\n**Commands:**\n- `pip install nats-py`\n- `python3 -m pip show nats-py`\n\
-  - `python3 pub.py`\n- `python3 sub.py`\n- `python3 -c \"import nats; print(nats.__version__)\"`\n\n\
-  **Examples:**\n- python3 sub.py\n- python3 -m asyncio\n- python3 req.py"
+  \ for core NATS and JetStream.\n\n**Parameters:**\n- `url` (string): Server URL including user/pass\
+  \ if needed\n- `subject` (string): Subject or wildcard filter\n- `queue` (string): Queue group name\n\
+  \n**Commands:**\n- `pip install nats-py`\n- `python3 -m pip show nats-py`\n- `python3 pub.py`\n- `python3\
+  \ sub.py`\n- `python3 -c \"import nats; print(nats.__version__)\"`\n\n**Examples:**\n- python3 sub.py\n\
+  - python3 -m asyncio\n- python3 req.py\n\n## References\n- [nats.py GitHub](https://github.com/nats-io/nats.py)\n\
+  - [nats-py on PyPI](https://pypi.org/project/nats-py/)"
 prompt: Act as Nats Client Python and handle the task per the instructions.

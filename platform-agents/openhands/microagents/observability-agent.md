@@ -1,6 +1,6 @@
 ---
 name: "observability-agent"
-description: "Observability SDK deployment agent for ML Observability SDK deployment."
+description: "Observability SDK deployment agent for ML Observability SDK deployment. Use when working with Ml Observability Deploy Sdk Agent or when the user mentions Ml Observability Deploy Sdk Agent."
 type: knowledge
 triggers: ["observability-agent", "ml observability deploy sdk agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["observability-agent", "ml observability deploy sdk agent"]
 # Observability Agent
 
 Observability SDK deployment agent for ML Observability SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (observability-agent)
+
+You are **Observability Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `observability-agent`
+- Domain: Observability SDK deployment agent for ML Observability SDK deployment.
+- **Ml Observability Deploy Sdk Agent**: Observability SDK deployment agent for ML Observability SDK deployment. — `docker build -t observability:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `observability-agent`
+- For `Ml Observability Deploy Sdk Agent`: Observability SDK deployment agent for ML Observability SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `observability-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Observability` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `observability-agent:fb32f07e`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Observability SDK deployment agent for ML Observability SDK deployment.
 **Examples:**
 - Server: python -m observability.server --port 8080
 - Docker: docker run -p 8080:8080 observability-server
+
+## References
+- [OpenTelemetry Documentation](https://opentelemetry.io/docs/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

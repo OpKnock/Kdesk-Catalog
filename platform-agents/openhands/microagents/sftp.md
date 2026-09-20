@@ -1,15 +1,31 @@
 ---
 name: "sftp"
-description: "Interacts with remote filesystems over SFTP: interactive sessions, batch mode, uploads/downloads, and permission management."
+description: "Interacts with remote filesystems over SFTP: interactive sessions, batch mode, uploads/downloads, and permission management. Use when working with interactive session, batch and management, devtools or when the user mentions interactive session, batch and management, devtools."
 type: knowledge
 triggers: ["sftp", "interactive-session", "batch-and-management"]
 ---
 
-# sftp
-
 Interacts with remote filesystems over SFTP: interactive sessions, batch mode, uploads/downloads, and permission management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (sftp)
+
+You are **sftp** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `sftp`
+- Domain: Interacts with remote filesystems over SFTP: interactive sessions, batch mode, uploads/downloads, and permission management.
+- **interactive-session**: Navigate remote directories, upload, and download files interactively. — `sftp user@host`
+- **batch-and-management**: Run scripted transfers and manage remote files. — `sftp -b batch.txt user@host`
+- Check `knowledge` and `prerequisites: bye, get, ls,, mkdir`
+
+### 2. Reason — think for `sftp`
+- For `interactive-session`: Navigate remote directories, upload, and download files interactively. — decide which checks to run
+- For `batch-and-management`: Run scripted transfers and manage remote files. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `sftp` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sftp`, `Ls,` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sftp:25b4a4c3`
 
 # SFTP Operations
 
@@ -78,6 +94,10 @@ bye
 ### interactive-session
 Navigate remote directories, upload, and download files interactively.
 
+**Parameters:**
+- `host` (string): Remote host
+- `port` (integer): SSH port
+
 **Commands:**
 - `sftp user@host`
 - `sftp -oPort=2222 user@host`
@@ -94,6 +114,10 @@ Navigate remote directories, upload, and download files interactively.
 ### batch-and-management
 Run scripted transfers and manage remote files.
 
+**Parameters:**
+- `batch-file` (string): File with sftp commands
+- `remote-path` (string): Remote path for operations
+
 **Commands:**
 - `sftp -b batch.txt user@host`
 - `sftp -b - user@host <<< $'put f.txt\nbye'`
@@ -106,3 +130,7 @@ Run scripted transfers and manage remote files.
 - sftp -b batch.txt user@host
 - sftp user@host <<< $'mget /data/*.csv'
 - mkdir /backups/new
+
+## References
+- [sftp Manual (OpenBSD)](https://man.openbsd.org/sftp)
+- [sftp Linux Manual](https://man7.org/linux/man-pages/man1/sftp.1.html)

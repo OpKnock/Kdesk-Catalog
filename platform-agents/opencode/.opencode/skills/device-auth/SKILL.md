@@ -5,27 +5,23 @@ description: "Implements OAuth 2.0 Device Authorization Grant (RFC 8628) on inpu
 
 Implements OAuth 2.0 Device Authorization Grant (RFC 8628) on input-constrained devices: device code request, token polling, and slow-down error handling.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (device-auth)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Device Auth** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -X POST https://httpbin.org/anything/oauth/device_autho`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `device-auth`
+- Domain: Implements OAuth 2.0 Device Authorization Grant (RFC 8628) on input-constrained devices: device code request, token polling, and slow-down error handling.
+- **device-flow**: Drive the full device code flow with curl: device authorization request, token polling, and error ha — `curl -X POST https://httpbin.org/anything/oauth/device_authorization -d 'client_`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `device-auth`
+- For `device-flow`: Drive the full device code flow with curl: device authorization request, token polling, and error handling. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `device-auth` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `device-auth:af56c5de`
 
 # Device Authorization
 

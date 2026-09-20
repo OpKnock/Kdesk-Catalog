@@ -1,6 +1,6 @@
 ---
 name: "Ml Tgi Node"
-description: "Text Generation Inference Node.js SDK agent for LLM serving."
+description: "Text Generation Inference Node.js SDK agent for LLM serving. Use when working with Ml Tgi Node, inference or when the user mentions Ml Tgi Node, inference."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Tgi Node
 
 Text Generation Inference Node.js SDK agent for LLM serving.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-tgi-node)
+
+You are **Ml Tgi Node** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-tgi-node`
+- Domain: Text Generation Inference Node.js SDK agent for LLM serving.
+- **Ml Tgi Node**: Text Generation Inference Node.js SDK agent for LLM serving. — `Install: npm install @huggingface/inference`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-tgi-node`
+- For `Ml Tgi Node`: Text Generation Inference Node.js SDK agent for LLM serving. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-tgi-node` tools
+- Tools: `Glob`, `Grep`, `Read`, `Install`, `Chat` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-tgi-node:e26c9855`
 
 ## Instructions
 
@@ -38,3 +56,8 @@ Text Generation Inference Node.js SDK agent for LLM serving.
 - Client: import { HfInference } from '@huggingface/inference'; const client = new HfInference('API_KEY')
 - Generate: const response = await client.textGeneration({model: 'meta-llama/Llama-2-7b-chat-hf', inputs: 'Hello'})
 - Chat: const response = await client.conversational({model: 'meta-llama/Llama-2-7b-chat-hf', inputs: {past_user_inputs: [], generated_responses: [], text: 'Hello'}})
+
+## References
+- [Text Generation Inference](https://huggingface.co/docs/text-generation-inference/)
+- [npm Documentation](https://docs.npmjs.com/)
+- [TensorFlow Serving](https://www.tensorflow.org/serving)

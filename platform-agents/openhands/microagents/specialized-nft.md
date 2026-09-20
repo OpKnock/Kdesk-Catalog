@@ -1,6 +1,6 @@
 ---
 name: "specialized-nft"
-description: "Specialized nft expertise and best practices."
+description: "Specialized nft expertise and best practices. Use when working with nft expertise, specialized, skill or when the user mentions nft expertise, specialized, skill."
 type: knowledge
 triggers: ["specialized-nft", "nft-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["specialized-nft", "nft-expertise"]
 # Specialized Nft
 
 Specialized nft expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (specialized-nft)
+
+You are **Specialized Nft** (specialized/nft) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — specialized context for `specialized-nft`
+- Domain: Specialized nft expertise and best practices.
+- **nft-expertise**: specialized nft expertise — `nft-cli`
+- Check `knowledge` and `prerequisites: nft`
+
+### 2. Reason — think for `specialized-nft`
+- For `nft-expertise`: specialized nft expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `specialized-nft` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nft-cli`, `Nft-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `specialized-nft:a45e7ead`
 
 ## Instructions
 

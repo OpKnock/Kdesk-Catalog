@@ -4,27 +4,23 @@ applyTo: "**/*.json **/*.r **/*.sh **/*.{yaml,yml}"
 
 CI/CD with GitHub Actions: run workflows locally with act, manage secrets and runners via gh, and debug workflow runs.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (github-actions-workflows)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Github Actions Workflows** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `gh workflow run ci.yml --ref main`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `github-actions-workflows`
+- Domain: CI/CD with GitHub Actions: run workflows locally with act, manage secrets and runners via gh, and debug workflow runs.
+- **actions-workflows**: Run, validate, and debug GitHub Actions workflows. — `gh workflow run ci.yml --ref main`
+- Check `knowledge` and `prerequisites: act`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `github-actions-workflows`
+- For `actions-workflows`: Run, validate, and debug GitHub Actions workflows. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `github-actions-workflows` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gh`, `Act` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `github-actions-workflows:1d92e0e2`
 
 # GitHub Actions v2
 

@@ -1,6 +1,6 @@
 ---
 name: "Transformation"
-description: "it SDK deployment agent handling ML it SDK deployment."
+description: "it SDK deployment agent handling ML it SDK deployment. Use when working with Ml Transformation Deploy Sdk or when the user mentions Ml Transformation Deploy Sdk."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Transformation
 
 it SDK deployment agent handling ML it SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (transformation)
+
+You are **Transformation** (ml/transformation) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `transformation`
+- Domain: it SDK deployment agent handling ML it SDK deployment.
+- **Ml Transformation Deploy Sdk**: Transformation SDK deployment agent for ML Transformation SDK deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `transformation`
+- For `Ml Transformation Deploy Sdk`: Transformation SDK deployment agent for ML Transformation SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `transformation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `transformation:10a91227`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Transformation SDK deployment agent for ML Transformation SDK deployment.
 **Examples:**
 - Server: python -m transformation.server --port 8080
 - Docker: docker run -p 8080:8080 transformation-server
+
+## References
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

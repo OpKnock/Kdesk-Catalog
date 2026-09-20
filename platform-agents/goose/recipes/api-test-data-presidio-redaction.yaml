@@ -2,14 +2,46 @@ title: Api Test Data Presidio Redaction
 description: 'Anonymizes and masks test data for safe environments: Presidio PII redaction, jq field masking,
   and synthetic data generation for compliance.'
 version: 2.0.0
-instructions: '# Api Test Data Presidio Redaction
+instructions: 'Anonymizes and masks test data for safe environments: Presidio PII redaction, jq field
+  masking, and synthetic data generation for compliance.
 
 
-  Anonymizes and masks test data for safe environments: Presidio PII redaction, jq field masking, and
-  synthetic data generation for compliance.
+  ## Agentic Workflow: Read -> Reason -> Act (api-test-data-presidio-redaction)
 
 
-  ## Instructions
+  You are **Api Test Data Presidio Redaction** (testing) — a sub-agent that **Reads, Reasons, and Acts**
+  via `allowed-tools`.
+
+
+  ### 1. Read — testing context for `api-test-data-presidio-redaction`
+
+  - Domain: Anonymizes and masks test data for safe environments: Presidio PII redaction, jq field masking,
+  and synthetic data generation for compliance.
+
+  - **presidio-redaction**: Redact PII with Microsoft Presidio — `pip install presidio-analyzer presidio-anonymizer`
+
+  - **field-masking**: Mask fields with jq transformations — `curl -s http://localhost:3000/api/users
+  | jq ''map(.email |= sub("(?<=.{3}).*(?=@`
+
+  - Check `knowledge` and `prerequisites: faker, node.js, python`
+
+
+  ### 2. Reason — think for `api-test-data-presidio-redaction`
+
+  - For `presidio-redaction`: Redact PII with Microsoft Presidio — decide which checks to run
+
+  - For `field-masking`: Mask fields with jq transformations — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `api-test-data-presidio-redaction` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Bash`, `Presidio-anonymizer` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `api-test-data-presidio-redaction:d656856b`
 
 
   # API Test Data v4 - Masking
@@ -86,6 +118,15 @@ instructions: '# Api Test Data Presidio Redaction
   Redact PII with Microsoft Presidio
 
 
+  **Parameters:**
+
+  - `text` (string): Input text to process
+
+  - `language` (string): Language of the input
+
+  - `entities` (array): PII entity types to detect
+
+
   **Commands:**
 
   - `pip install presidio-analyzer presidio-anonymizer`
@@ -126,5 +167,12 @@ instructions: '# Api Test Data Presidio Redaction
 
   - -cli --help
 
-  - -api --help'
+  - -api --help
+
+
+  ## References
+
+  - [Presidio Docs](https://microsoft.github.io/presidio/)
+
+  - [jq Manual](https://jqlang.github.io/jq/manual/)'
 prompt: Act as Api Test Data Presidio Redaction and handle the task per the instructions.

@@ -1,8 +1,24 @@
-# Api Error Reproduction
-
 Troubleshoots API error issues: reproduce failures, trace error flows, correlate with releases, and fix root causes.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-error-reproduction)
+
+You are **Api Error Reproduction** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-error-reproduction`
+- Domain: Troubleshoots API error issues: reproduce failures, trace error flows, correlate with releases, and fix root causes.
+- **error-reproduction**: Reproduce error conditions with curl and scenario payloads — `curl -s -X POST http://localhost:3000/api/users -H 'Content-Type: application/js`
+- **log-analysis**: Correlate errors in logs and metrics to find root causes — `node -e "console.log('trace_id=abc123 err=DB_TIMEOUT op=users.list')"`
+- Check `knowledge` and `prerequisites: node.js, python, openapi`
+
+### 2. Reason — think for `api-error-reproduction`
+- For `error-reproduction`: Reproduce error conditions with curl and scenario payloads — decide which checks to run
+- For `log-analysis`: Correlate errors in logs and metrics to find root causes — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-error-reproduction` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-error-reproduction:fcabb7cd`
 
 # API Error (Troubleshooting)
 
@@ -47,6 +63,10 @@ Turn each reproduction into an automated regression test.
 ### error-reproduction
 Reproduce error conditions with curl and scenario payloads
 
+**Parameters:**
+- `url` (string): Endpoint to probe
+- `method` (string): HTTP method
+
 **Commands:**
 - `curl -s -X POST http://localhost:3000/api/users -H 'Content-Type: application/json' -d '{"email":"bad"}' -w '\n%{http_code}'`
 - `curl -s http://localhost:3000/api/users/999999 -w '\n%{http_code}'`
@@ -62,6 +82,10 @@ Reproduce error conditions with curl and scenario payloads
 ### log-analysis
 Correlate errors in logs and metrics to find root causes
 
+**Parameters:**
+- `pattern` (string): Log filter pattern
+- `lines` (string): Number of log lines
+
 **Commands:**
 - `node -e "console.log('trace_id=abc123 err=DB_TIMEOUT op=users.list')"`
 - `curl -s http://localhost:3000/metrics | grep -E 'http_errors|http_error_total' | head`
@@ -73,3 +97,7 @@ Correlate errors in logs and metrics to find root causes
 - kubectl logs -l app=api --tail=200 | grep -iE 'error|exception' | tail -20
 - curl -s http://localhost:3000/metrics | grep -E 'http_errors|http_error_total' | head
 - curl -s http://localhost:3000/health -w '\n%{http_code}'
+
+## References
+- [kubectl Logs](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_logs/)
+- [Prometheus Metrics](https://prometheus.io/docs/instrumenting/writing_exporters/)

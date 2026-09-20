@@ -2,32 +2,47 @@ title: Health Checks
 description: Implements liveness, readiness, and startup probes across Kubernetes, Docker, and HTTP endpoints
   with proper semantics.
 version: 2.0.0
-instructions: "# Health Checks\n\nImplements liveness, readiness, and startup probes across Kubernetes,\
-  \ Docker, and HTTP endpoints with proper semantics.\n\n## Instructions\n\n# Health Checks\n\nImplement\
-  \ liveness, readiness, and startup probes correctly.\n\n## When to Use\n\n- Every deployed service should\
-  \ expose health endpoints\n- Kubernetes orchestration for restart and traffic decisions\n- Load balancers\
-  \ deciding when to take instances out of rotation\n- Distributed systems that need dependency status\
-  \ visibility\n\n## Endpoint Semantics\n\n- /health/live (liveness): process is alive; restart if failing\n\
-  - /health/ready (readiness): can serve traffic; drop from LB if failing\n- /health/startup: slow-starting\
-  \ apps; gates the other probes\n\n## Commands\n\n```bash\n# Test endpoints\ncurl -s -o /dev/null -w\
-  \ \"%{http_code}\" http://localhost:8000/health\ncurl -sf http://localhost:8000/ready && echo OK\n\n\
-  # Kubernetes\nkubectl apply -f deployment.yaml\nkubectl rollout status deployment/myapp\nkubectl describe\
-  \ pod -l app=myapp\nkubectl get pods -w\n```\n\n## Probe Example\n\n```yaml\n# deployment.yaml (excerpt)\n\
-  containers:\n  - name: myapp\n    image: myapp:1.2.3\n    livenessProbe:\n      httpGet:\n        path:\
-  \ /health/live\n        port: 8080\n      periodSeconds: 10\n    readinessProbe:\n      httpGet:\n \
-  \       path: /health/ready\n        port: 8080\n      initialDelaySeconds: 5\n    startupProbe:\n \
-  \     httpGet:\n        path: /health/startup\n        port: 8080\n      failureThreshold: 30\n```\n\
-  \n## Best Practices\n\n- Readiness should check real dependencies with timeouts and caching\n- Never\
-  \ let a health check take longer than the probe timeout\n- Return 503 with a body describing which dependency\
-  \ is down\n- Keep health endpoints cheap; do not run full DB queries every probe\n- Use startup probes\
-  \ for apps that need >10s to boot\n- Alert on readiness failures separately from liveness restarts\n\
-  \n## Capabilities\n\n### http-health\nCreate and test HTTP health endpoints.\n\n**Commands:**\n- `curl\
-  \ -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/health`\n- `curl -s http://localhost:8000/ready`\n\
-  - `curl -s http://localhost:8000/live`\n- `python -m http.server 8080`\n\n**Examples:**\n- curl -s -o\
-  \ /dev/null -w \"%{http_code} %{time_total}\" http://localhost:8000/health\n- curl -sf http://localhost:8000/ready\
-  \ && echo OK\n\n### k8s-probes\nDefine liveness, readiness, and startup probes in Kubernetes manifests.\n\
+instructions: "Implements liveness, readiness, and startup probes across Kubernetes, Docker, and HTTP\
+  \ endpoints with proper semantics.\n\n## Agentic Workflow: Read -> Reason -> Act (health-checks)\n\n\
+  You are **Health Checks** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — backend context for `health-checks`\n- Domain: Implements liveness, readiness, and startup\
+  \ probes across Kubernetes, Docker, and HTTP endpoints with proper semantics.\n- **http-health**: Create\
+  \ and test HTTP health endpoints. — `curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/health`\n\
+  - **k8s-probes**: Define liveness, readiness, and startup probes in Kubernetes manifests. — `kubectl\
+  \ apply -f deployment.yaml`\n- Check `knowledge` and `prerequisites: kubectl, python`\n\n### 2. Reason\
+  \ — think for `health-checks`\n- For `http-health`: Create and test HTTP health endpoints. — decide\
+  \ which checks to run\n- For `k8s-probes`: Define liveness, readiness, and startup probes in Kubernetes\
+  \ manifests. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `health-checks` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `health-checks:06dde41a`\n\n# Health Checks\n\nImplement liveness,\
+  \ readiness, and startup probes correctly.\n\n## When to Use\n\n- Every deployed service should expose\
+  \ health endpoints\n- Kubernetes orchestration for restart and traffic decisions\n- Load balancers deciding\
+  \ when to take instances out of rotation\n- Distributed systems that need dependency status visibility\n\
+  \n## Endpoint Semantics\n\n- /health/live (liveness): process is alive; restart if failing\n- /health/ready\
+  \ (readiness): can serve traffic; drop from LB if failing\n- /health/startup: slow-starting apps; gates\
+  \ the other probes\n\n## Commands\n\n```bash\n# Test endpoints\ncurl -s -o /dev/null -w \"%{http_code}\"\
+  \ http://localhost:8000/health\ncurl -sf http://localhost:8000/ready && echo OK\n\n# Kubernetes\nkubectl\
+  \ apply -f deployment.yaml\nkubectl rollout status deployment/myapp\nkubectl describe pod -l app=myapp\n\
+  kubectl get pods -w\n```\n\n## Probe Example\n\n```yaml\n# deployment.yaml (excerpt)\ncontainers:\n\
+  \  - name: myapp\n    image: myapp:1.2.3\n    livenessProbe:\n      httpGet:\n        path: /health/live\n\
+  \        port: 8080\n      periodSeconds: 10\n    readinessProbe:\n      httpGet:\n        path: /health/ready\n\
+  \        port: 8080\n      initialDelaySeconds: 5\n    startupProbe:\n      httpGet:\n        path:\
+  \ /health/startup\n        port: 8080\n      failureThreshold: 30\n```\n\n## Best Practices\n\n- Readiness\
+  \ should check real dependencies with timeouts and caching\n- Never let a health check take longer than\
+  \ the probe timeout\n- Return 503 with a body describing which dependency is down\n- Keep health endpoints\
+  \ cheap; do not run full DB queries every probe\n- Use startup probes for apps that need >10s to boot\n\
+  - Alert on readiness failures separately from liveness restarts\n\n## Capabilities\n\n### http-health\n\
+  Create and test HTTP health endpoints.\n\n**Parameters:**\n- `path` (string): Health endpoint path\n\
+  - `method` (string): HTTP method to request with\n\n**Commands:**\n- `curl -s -o /dev/null -w \"%{http_code}\"\
+  \ http://localhost:8000/health`\n- `curl -s http://localhost:8000/ready`\n- `curl -s http://localhost:8000/live`\n\
+  - `python -m http.server 8080`\n\n**Examples:**\n- curl -s -o /dev/null -w \"%{http_code} %{time_total}\"\
+  \ http://localhost:8000/health\n- curl -sf http://localhost:8000/ready && echo OK\n\n### k8s-probes\n\
+  Define liveness, readiness, and startup probes in Kubernetes manifests.\n\n**Parameters:**\n- `probe-type`\
+  \ (string): liveness, readiness, or startup\n- `initial-delay` (integer): Seconds before first probe\n\
   \n**Commands:**\n- `kubectl apply -f deployment.yaml`\n- `kubectl get pods -w`\n- `kubectl describe\
   \ pod myapp-abc123`\n- `kubectl rollout status deployment/myapp`\n\n**Examples:**\n- kubectl get deploy\
   \ myapp -o jsonpath=\"{.spec.template.spec.containers[0].readinessProbe}\"\n- kubectl describe pod -l\
-  \ app=myapp | grep -A5 Probes"
+  \ app=myapp | grep -A5 Probes\n\n## References\n- [Kubernetes Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)\n\
+  - [Health Checks Best Practices](https://microservices.io/patterns/observability/health-check-api.html)"
 prompt: Act as Health Checks and handle the task per the instructions.

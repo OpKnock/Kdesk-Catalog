@@ -1,6 +1,6 @@
 ---
 name: "compliance-soc2"
-description: "SOC 2 compliance automation agent for controls, evidence, audits."
+description: "SOC 2 compliance automation agent for controls, evidence, audits. Use when working with Compliance Soc2, audit or when the user mentions Compliance Soc2, audit."
 type: knowledge
 triggers: ["compliance-soc2", "compliance soc2"]
 ---
@@ -8,6 +8,24 @@ triggers: ["compliance-soc2", "compliance soc2"]
 # Compliance Soc2
 
 SOC 2 compliance automation agent for controls, evidence, audits.
+
+## Agentic Workflow: Read -> Reason -> Act (compliance-soc2)
+
+You are **Compliance Soc2** (compliance/audit) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — compliance context for `compliance-soc2`
+- Domain: SOC 2 compliance automation agent for controls, evidence, audits.
+- **Compliance Soc2**: SOC 2 compliance automation agent for controls, evidence, audits. — `Audit log: aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventNa`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `compliance-soc2`
+- For `Compliance Soc2`: SOC 2 compliance automation agent for controls, evidence, audits. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `compliance-soc2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Audit`, `Policy` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `compliance-soc2:fb26c468`
 
 ## Instructions
 
@@ -39,3 +57,7 @@ SOC 2 compliance automation agent for controls, evidence, audits.
 - Access review: aws iam generate-credential-report
 - Policy: cat policies/access-control-policy.md
 - Audit log: aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=ConsoleLogin
+
+## References
+- [AICPA SOC 2](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
+- [AWS Documentation](https://docs.aws.amazon.com/)

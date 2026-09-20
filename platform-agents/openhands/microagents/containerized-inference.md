@@ -1,6 +1,6 @@
 ---
 name: "containerized-inference"
-description: "Containerized inference server agent. Manages containerized ML inference server."
+description: "Containerized inference server agent. Manages containerized ML inference server. Use when working with Ml Containerized Inference Server Agent or when the user mentions Ml Containerized Inference Server Agent."
 type: knowledge
 triggers: ["containerized-inference", "ml containerized inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["containerized-inference", "ml containerized inference server agent"]
 # Containerized Inference
 
 Containerized inference server agent. Manages containerized ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (containerized-inference)
+
+You are **Containerized Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `containerized-inference`
+- Domain: Containerized inference server agent. Manages containerized ML inference server.
+- **Ml Containerized Inference Server Agent**: Containerized inference server agent. Manages containerized ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `containerized-inference`
+- For `Ml Containerized Inference Server Agent`: Containerized inference server agent. Manages containerized ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `containerized-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `containerized-inference:2bcf63ea`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Containerized inference server agent. Manages containerized ML inference server.
 - docker-compose up -d
 - docker ps
 - docker logs <container>
+
+## References
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)
+- [Python Documentation](https://docs.python.org/3/)

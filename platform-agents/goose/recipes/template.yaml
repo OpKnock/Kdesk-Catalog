@@ -2,24 +2,36 @@ title: Template
 description: 'Implements the Template Method pattern in Java with Maven: fixed algorithm skeletons with
   overridable steps.'
 version: 2.0.0
-instructions: "# Template\n\nImplements the Template Method pattern in Java with Maven: fixed algorithm\
-  \ skeletons with overridable steps.\n\n## Instructions\n\n# Template Method Pattern\n\nDefine an algorithm\
-  \ skeleton; let subclasses fill the steps.\n\n## When to Use\n\n- Recurring multi-step processes with\
-  \ variant steps\n- Pipelines where ordering must be fixed\n- Reusing flow while allowing step overrides\n\
-  \n## Example (Java)\n\n```java\npublic abstract class OrderProcessor {\n    public final void process()\
-  \ {\n        validate();\n        charge();\n        notifyCustomer();\n    }\n\n    protected abstract\
-  \ void validate();\n    protected abstract void charge();\n    protected void notifyCustomer() { /*\
-  \ default no-op */ }\n}\n\npublic class CardOrderProcessor extends OrderProcessor {\n    protected void\
-  \ validate() { System.out.println(\"validating card\"); }\n    protected void charge() { System.out.println(\"\
-  charging card\"); }\n    protected void notifyCustomer() { System.out.println(\"emailed receipt\");\
-  \ }\n}\n```\n\n## Test\n\n```java\n@Test\nvoid processesInOrder() {\n    new CardOrderProcessor().process();\n\
+instructions: "Implements the Template Method pattern in Java with Maven: fixed algorithm skeletons with\
+  \ overridable steps.\n\n## Agentic Workflow: Read -> Reason -> Act (template)\n\nYou are **Template**\
+  \ (patterns/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1.\
+  \ Read — patterns context for `template`\n- Domain: Implements the Template Method pattern in Java with\
+  \ Maven: fixed algorithm skeletons with overridable steps.\n- **java-maven**: Implement and test template\
+  \ method examples. — `mvn archetype:generate -DgroupId=com.example -DartifactId=template -DarchetypeAr`\n\
+  - Check `knowledge` and `prerequisites: mvn`\n\n### 2. Reason — think for `template`\n- For `java-maven`:\
+  \ Implement and test template method examples. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `template` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Mvn` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `template:352413ea`\n\n# Template\
+  \ Method Pattern\n\nDefine an algorithm skeleton; let subclasses fill the steps.\n\n## When to Use\n\
+  \n- Recurring multi-step processes with variant steps\n- Pipelines where ordering must be fixed\n- Reusing\
+  \ flow while allowing step overrides\n\n## Example (Java)\n\n```java\npublic abstract class OrderProcessor\
+  \ {\n    public final void process() {\n        validate();\n        charge();\n        notifyCustomer();\n\
+  \    }\n\n    protected abstract void validate();\n    protected abstract void charge();\n    protected\
+  \ void notifyCustomer() { /* default no-op */ }\n}\n\npublic class CardOrderProcessor extends OrderProcessor\
+  \ {\n    protected void validate() { System.out.println(\"validating card\"); }\n    protected void\
+  \ charge() { System.out.println(\"charging card\"); }\n    protected void notifyCustomer() { System.out.println(\"\
+  emailed receipt\"); }\n}\n```\n\n## Test\n\n```java\n@Test\nvoid processesInOrder() {\n    new CardOrderProcessor().process();\n\
   \    // verify order via a recorder\n}\n```\n\n```bash\nmvn -q test\n```\n\n## Best practices\n\n- Mark\
   \ the skeleton `final` to lock step order.\n- Provide sensible defaults for optional steps.\n- Keep\
   \ steps cohesive; extract overridable points deliberately.\n- Use the pattern sparingly - composition\
   \ beats inheritance often.\n\n## Testing\n\nTest the skeleton order and each subclass's step overrides.\n\
-  \n## Capabilities\n\n### java-maven\nImplement and test template method examples.\n\n**Commands:**\n\
-  - `mvn archetype:generate -DgroupId=com.example -DartifactId=template -DarchetypeArtifactId=maven-archetype-quickstart`\n\
-  - `mvn -q compile`\n- `mvn -q test`\n- `mvn -q test -Dtest=OrderProcessorTest`\n- `mvn -q exec:java`\n\
-  \n**Examples:**\n- mvn -q test -Dtest='OrderProcessorTest#processOrder'\n- mvn -q compile && mvn -q\
-  \ exec:java -Dexec.mainClass=com.example.Main\n- mvn -q test -DfailIfNoTests=false"
+  \n## Capabilities\n\n### java-maven\nImplement and test template method examples.\n\n**Parameters:**\n\
+  - `test` (string): Test class or method filter\n- `archetype` (string): Maven archetype id\n- `q` (string):\
+  \ Quiet output\n\n**Commands:**\n- `mvn archetype:generate -DgroupId=com.example -DartifactId=template\
+  \ -DarchetypeArtifactId=maven-archetype-quickstart`\n- `mvn -q compile`\n- `mvn -q test`\n- `mvn -q\
+  \ test -Dtest=OrderProcessorTest`\n- `mvn -q exec:java`\n\n**Examples:**\n- mvn -q test -Dtest='OrderProcessorTest#processOrder'\n\
+  - mvn -q compile && mvn -q exec:java -Dexec.mainClass=com.example.Main\n- mvn -q test -DfailIfNoTests=false\n\
+  \n## References\n- [Refactoring Guru: Template Method](https://refactoring.guru/design-patterns/template-method)\n\
+  - [Maven Surefire](https://maven.apache.org/surefire/maven-surefire-plugin/)"
 prompt: Act as Template and handle the task per the instructions.

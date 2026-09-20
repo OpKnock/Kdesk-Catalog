@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(./splunk:*) Bash(curl:*) Bash(splunk:*)"
 
 Drives log analysis and event ingestion in Splunk: runs bounded SPL queries, registers file monitor inputs, and pushes structured events through HTTP Event Collector and REST search endpoints.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (splunk)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Splunk** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `./splunk start --accept-license`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `splunk`
+- Domain: Drives log analysis and event ingestion in Splunk: runs bounded SPL queries, registers file monitor inputs, and pushes structured events through HTTP Event Collector and REST search endpoints.
+- **splunk-search-ingest**: Runs SPL queries, configures data inputs, and pushes events through HEC and REST endpoints — `./splunk start --accept-license`
+- Check `knowledge` and `prerequisites: splunk`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `splunk`
+- For `splunk-search-ingest`: Runs SPL queries, configures data inputs, and pushes events through HEC and REST endpoints — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `splunk` tools
+- Tools: `Glob`, `Grep`, `Read`, `./splunk`, `Splunk` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `splunk:0c3a2f4f`
 
 # Splunk
 

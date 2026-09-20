@@ -2,38 +2,55 @@ title: wiremock
 description: Stubs HTTP APIs with WireMock standalone, managing mappings, requests journal, and delays
   via the admin API.
 version: 2.0.0
-instructions: "# wiremock\n\nStubs HTTP APIs with WireMock standalone, managing mappings, requests journal,\
-  \ and delays via the admin API.\n\n## Instructions\n\n# WireMock\n\nAPI stubbing for tests and development.\n\
-  \n## What This Skill Does\n\n- Serves stubbed responses for any HTTP API\n- Creates mappings via the\
-  \ admin REST API\n- Simulates delays, faults, and failures\n- Journals requests for verification\n\n\
-  \n## When to Use\n\n- Frontend dev against a stubbed backend\n- Testing error and latency scenarios\n\
-  - Contract verification in integration tests\n\n## Real Commands\n\n```bash\n# Start\njava -jar wiremock-standalone.jar\
-  \ --port 8080\ndocker run -d -p 8080:8080 --name wiremock wiremock/wiremock\n\n# Stub a mapping\ncurl\
-  \ -X POST http://localhost:8080/__admin/mappings -d '{\n  \"request\": {\"method\": \"GET\", \"url\"\
-  : \"/api/users\"},\n  \"response\": {\"status\": 200, \"jsonBody\": {\"users\": []}}\n}'\n\n# Simulate\
-  \ delay\ncurl -X POST http://localhost:8080/__admin/mappings -d '{\n  \"request\": {\"method\": \"GET\"\
-  , \"url\": \"/api/users\"},\n  \"response\": {\"fixedDelayMilliseconds\": 2000, \"status\": 200}\n}'\n\
-  \n# Verify requests\ncurl -s http://localhost:8080/__admin/requests\ncurl -X POST http://localhost:8080/__admin/requests/reset\n\
-  ```\n\n## Best Practices\n\n- Load mappings from __files + mappings dir at startup\n- Reset state between\
-  \ test suites\n- Use response templating for dynamic data\n- Verify request counts for call assertions\n\
-  - Mirror the real API contract in stubs\n\n## Capabilities\n\n### wiremock-start\nStart WireMock standalone\
-  \ or in Docker.\n\n**Commands:**\n- `java -jar wiremock-standalone.jar --port 8080`\n- `docker run -d\
-  \ -p 8080:8080 --name wiremock wiremock/wiremock`\n- `java -jar wiremock-standalone.jar --root-dir stubs\
-  \ --port 8080 --verbose`\n- `docker run -d -p 8080:8080 -v $PWD/stubs:/home/wiremock wiremock/wiremock`\n\
-  \n**Examples:**\n- docker run -d -p 8080:8080 --name wiremock wiremock/wiremock\n- java -jar wiremock-standalone.jar\
-  \ --root-dir stubs --port 8080\n- docker run -d -p 8080:8080 -v $PWD/stubs:/home/wiremock wiremock/wiremock\n\
-  \n### stub-mappings\nCreate and manage stub mappings via admin API.\n\n**Commands:**\n- `curl -X POST\
-  \ http://localhost:8080/__admin/mappings -d '{\"request\":{\"method\":\"GET\",\"url\":\"/api/users\"\
-  },\"response\":{\"status\":200,\"jsonBody\":{\"users\":[]}}}'`\n- `curl -s http://localhost:8080/__admin/mappings`\n\
-  - `curl -X DELETE http://localhost:8080/__admin/mappings/{id}`\n- `curl -X POST http://localhost:8080/__admin/mappings/reset`\n\
-  - `curl -s -X POST http://localhost:8080/__admin/mappings -d '{\"request\":{\"method\":\"GET\",\"url\"\
-  :\"/api/users\"},\"response\":{\"fixedDelayMilliseconds\":2000,\"status\":200}}'`\n\n**Examples:**\n\
-  - curl -X POST http://localhost:8080/__admin/mappings -d '{\"request\":{\"method\":\"GET\",\"url\":\"\
-  /api/users\"},\"response\":{\"status\":200,\"jsonBody\":{\"users\":[]}}}'\n- curl -s http://localhost:8080/__admin/mappings\n\
-  - curl -X POST http://localhost:8080/__admin/mappings/reset\n\n### requests-journal\nVerify received\
-  \ requests.\n\n**Commands:**\n- `curl -s http://localhost:8080/__admin/requests`\n- `curl -s http://localhost:8080/__admin/requests?limit=10`\n\
-  - `curl -X POST http://localhost:8080/__admin/requests/reset`\n- `curl -s http://localhost:8080/__admin/requests/find\
-  \ -d '{\"method\":\"POST\",\"url\":\"/api/orders\"}'`\n\n**Examples:**\n- curl -s http://localhost:8080/__admin/requests\n\
-  - curl -X POST http://localhost:8080/__admin/requests/reset\n- curl -s http://localhost:8080/__admin/requests/find\
-  \ -d '{\"method\":\"POST\",\"url\":\"/api/orders\"}'"
+instructions: "Stubs HTTP APIs with WireMock standalone, managing mappings, requests journal, and delays\
+  \ via the admin API.\n\n## Agentic Workflow: Read -> Reason -> Act (wiremock)\n\nYou are **wiremock**\
+  \ (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read\
+  \ — testing context for `wiremock`\n- Domain: Stubs HTTP APIs with WireMock standalone, managing mappings,\
+  \ requests journal, and delays via the admin API.\n- **wiremock-start**: Start WireMock standalone or\
+  \ in Docker. — `java -jar wiremock-standalone.jar --port 8080`\n- **stub-mappings**: Create and manage\
+  \ stub mappings via admin API. — `curl -X POST http://localhost:8080/__admin/mappings -d '{\"request\"\
+  :{\"method\":\"GE`\n- **requests-journal**: Verify received requests. — `curl -s http://localhost:8080/__admin/requests`\n\
+  - Check `knowledge` and `prerequisites: docker, java`\n\n### 2. Reason — think for `wiremock`\n- For\
+  \ `wiremock-start`: Start WireMock standalone or in Docker. — decide which checks to run\n- For `stub-mappings`:\
+  \ Create and manage stub mappings via admin API. — decide which checks to run\n- For `requests-journal`:\
+  \ Verify received requests. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `wiremock` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Java`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write;\
+  \ record evidence (paths, checksums)\n- Fingerprint: `wiremock:d2724675`\n\n# WireMock\n\nAPI stubbing\
+  \ for tests and development.\n\n## What This Skill Does\n\n- Serves stubbed responses for any HTTP API\n\
+  - Creates mappings via the admin REST API\n- Simulates delays, faults, and failures\n- Journals requests\
+  \ for verification\n\n\n## When to Use\n\n- Frontend dev against a stubbed backend\n- Testing error\
+  \ and latency scenarios\n- Contract verification in integration tests\n\n## Real Commands\n\n```bash\n\
+  # Start\njava -jar wiremock-standalone.jar --port 8080\ndocker run -d -p 8080:8080 --name wiremock wiremock/wiremock\n\
+  \n# Stub a mapping\ncurl -X POST http://localhost:8080/__admin/mappings -d '{\n  \"request\": {\"method\"\
+  : \"GET\", \"url\": \"/api/users\"},\n  \"response\": {\"status\": 200, \"jsonBody\": {\"users\": []}}\n\
+  }'\n\n# Simulate delay\ncurl -X POST http://localhost:8080/__admin/mappings -d '{\n  \"request\": {\"\
+  method\": \"GET\", \"url\": \"/api/users\"},\n  \"response\": {\"fixedDelayMilliseconds\": 2000, \"\
+  status\": 200}\n}'\n\n# Verify requests\ncurl -s http://localhost:8080/__admin/requests\ncurl -X POST\
+  \ http://localhost:8080/__admin/requests/reset\n```\n\n## Best Practices\n\n- Load mappings from __files\
+  \ + mappings dir at startup\n- Reset state between test suites\n- Use response templating for dynamic\
+  \ data\n- Verify request counts for call assertions\n- Mirror the real API contract in stubs\n\n## Capabilities\n\
+  \n### wiremock-start\nStart WireMock standalone or in Docker.\n\n**Parameters:**\n- `port` (number):\
+  \ Server port\n- `rootDir` (string): Stubs directory\n\n**Commands:**\n- `java -jar wiremock-standalone.jar\
+  \ --port 8080`\n- `docker run -d -p 8080:8080 --name wiremock wiremock/wiremock`\n- `java -jar wiremock-standalone.jar\
+  \ --root-dir stubs --port 8080 --verbose`\n- `docker run -d -p 8080:8080 -v $PWD/stubs:/home/wiremock\
+  \ wiremock/wiremock`\n\n**Examples:**\n- docker run -d -p 8080:8080 --name wiremock wiremock/wiremock\n\
+  - java -jar wiremock-standalone.jar --root-dir stubs --port 8080\n- docker run -d -p 8080:8080 -v $PWD/stubs:/home/wiremock\
+  \ wiremock/wiremock\n\n### stub-mappings\nCreate and manage stub mappings via admin API.\n\n**Parameters:**\n\
+  - `request` (object): Request matcher\n- `response` (object): Response definition\n- `delay` (number):\
+  \ Fixed delay milliseconds\n\n**Commands:**\n- `curl -X POST http://localhost:8080/__admin/mappings\
+  \ -d '{\"request\":{\"method\":\"GET\",\"url\":\"/api/users\"},\"response\":{\"status\":200,\"jsonBody\"\
+  :{\"users\":[]}}}'`\n- `curl -s http://localhost:8080/__admin/mappings`\n- `curl -X DELETE http://localhost:8080/__admin/mappings/{id}`\n\
+  - `curl -X POST http://localhost:8080/__admin/mappings/reset`\n- `curl -s -X POST http://localhost:8080/__admin/mappings\
+  \ -d '{\"request\":{\"method\":\"GET\",\"url\":\"/api/users\"},\"response\":{\"fixedDelayMilliseconds\"\
+  :2000,\"status\":200}}'`\n\n**Examples:**\n- curl -X POST http://localhost:8080/__admin/mappings -d\
+  \ '{\"request\":{\"method\":\"GET\",\"url\":\"/api/users\"},\"response\":{\"status\":200,\"jsonBody\"\
+  :{\"users\":[]}}}'\n- curl -s http://localhost:8080/__admin/mappings\n- curl -X POST http://localhost:8080/__admin/mappings/reset\n\
+  \n### requests-journal\nVerify received requests.\n\n**Parameters:**\n- `method` (string): Method filter\n\
+  - `url` (string): URL filter\n\n**Commands:**\n- `curl -s http://localhost:8080/__admin/requests`\n\
+  - `curl -s http://localhost:8080/__admin/requests?limit=10`\n- `curl -X POST http://localhost:8080/__admin/requests/reset`\n\
+  - `curl -s http://localhost:8080/__admin/requests/find -d '{\"method\":\"POST\",\"url\":\"/api/orders\"\
+  }'`\n\n**Examples:**\n- curl -s http://localhost:8080/__admin/requests\n- curl -X POST http://localhost:8080/__admin/requests/reset\n\
+  - curl -s http://localhost:8080/__admin/requests/find -d '{\"method\":\"POST\",\"url\":\"/api/orders\"\
+  }'\n\n## References\n- [WireMock Documentation](https://wiremock.org/docs/)\n- [WireMock Stubbing Reference](https://wiremock.org/docs/stubbing/)"
 prompt: Act as wiremock and handle the task per the instructions.

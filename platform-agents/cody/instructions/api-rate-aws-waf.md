@@ -1,8 +1,24 @@
-# Api Rate Aws Waf
-
 Configures managed rate limiting on cloud gateways: AWS WAFv2 rate-based rules, Google Cloud Armor policies, and Cloudflare rate limiting via API.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-rate-aws-waf)
+
+You are **Api Rate Aws Waf** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `api-rate-aws-waf`
+- Domain: Configures managed rate limiting on cloud gateways: AWS WAFv2 rate-based rules, Google Cloud Armor policies, and Cloudflare rate limiting via API.
+- **aws-waf**: Create rate-based WAF rules and ACLs — `aws wafv2 create-web-acl --name api-rate-acl --scope REGIONAL --default-action A`
+- **cloudflare-rate**: Manage Cloudflare rate limiting rules — `curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/rate_limits`
+- Check `knowledge` and `prerequisites: redis, node.js, python`
+
+### 2. Reason — think for `api-rate-aws-waf`
+- For `aws-waf`: Create rate-based WAF rules and ACLs — decide which checks to run
+- For `cloudflare-rate`: Manage Cloudflare rate limiting rules — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-rate-aws-waf` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-rate-aws-waf:9aefe271`
 
 # API Rate v3 - Cloud Gateways
 
@@ -53,6 +69,11 @@ aws wafv2 create-web-acl --name api-rate-acl --scope REGIONAL --default-action A
 ### aws-waf
 Create rate-based WAF rules and ACLs
 
+**Parameters:**
+- `rate-limit` (integer): Requests per 5-minute window per IP
+- `evaluation-window` (string): Window size for the rate calculation
+- `action` (string): Block, Allow, or Count on breach
+
 **Commands:**
 - `aws wafv2 create-web-acl --name api-rate-acl --scope REGIONAL --default-action Allow={} --rules file://rate-rule.json --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=api-rate-acl --region us-east-1`
 - `aws wafv2 list-web-acls --scope REGIONAL --region us-east-1 | jq '.WebACLs[].Name'`
@@ -76,3 +97,7 @@ Manage Cloudflare rate limiting rules
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [AWS WAF Rate-based Rules](https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-rate-based.html)
+- [Cloudflare Rate Limiting API](https://developers.cloudflare.com/api/resources/rate_limits/)

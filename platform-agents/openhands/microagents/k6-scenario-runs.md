@@ -1,15 +1,31 @@
 ---
 name: "k6-scenario-runs"
-description: "Advanced load testing with Grafana k6: scenario-based scripts, threshold gates, ramping VUs, and structured result export for CI analysis."
+description: "Advanced load testing with Grafana k6: scenario-based scripts, threshold gates, ramping VUs, and structured result export for CI analysis. Use when working with scenario runs, export archive, api or when the user mentions scenario runs, export archive, api."
 type: knowledge
 triggers: ["k6-scenario-runs", "scenario-runs", "export-archive"]
 ---
 
-# K6 Scenario Runs
-
 Advanced load testing with Grafana k6: scenario-based scripts, threshold gates, ramping VUs, and structured result export for CI analysis.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (k6-scenario-runs)
+
+You are **K6 Scenario Runs** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `k6-scenario-runs`
+- Domain: Advanced load testing with Grafana k6: scenario-based scripts, threshold gates, ramping VUs, and structured result export for CI analysis.
+- **scenario-runs**: Run k6 scripts with scenarios, ramping profiles, and environment overrides. — `k6 run script.js`
+- **export-archive**: Export JSON summaries and archives for CI dashboards and later replay. — `k6 run --summary-export=summary.json script.js`
+- Check `knowledge` and `prerequisites: k6`
+
+### 2. Reason — think for `k6-scenario-runs`
+- For `scenario-runs`: Run k6 scripts with scenarios, ramping profiles, and environment overrides. — decide which checks to run
+- For `export-archive`: Export JSON summaries and archives for CI dashboards and later replay. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `k6-scenario-runs` tools
+- Tools: `Glob`, `Grep`, `Read`, `K6` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `k6-scenario-runs:29cea62d`
 
 # k6 (Advanced)
 
@@ -97,6 +113,12 @@ k6 run --vus 10 --iterations 20 script.js   # smoke check before the real run
 ### scenario-runs
 Run k6 scripts with scenarios, ramping profiles, and environment overrides.
 
+**Parameters:**
+- `vus` (integer): Number of virtual users.
+- `duration` (string): Test duration, e.g. 30s, 5m.
+- `scenario` (string): Named scenario in options.scenarios to run.
+- `e` (string): Environment variable override, e.g. -e BASE_URL=... .
+
 **Commands:**
 - `k6 run script.js`
 - `k6 run --vus 50 --duration 1m script.js`
@@ -112,6 +134,9 @@ Run k6 scripts with scenarios, ramping profiles, and environment overrides.
 ### export-archive
 Export JSON summaries and archives for CI dashboards and later replay.
 
+**Parameters:**
+- `out` (string): Metrics output: json=file, influxdb=..., prometheus-remote=... .
+
 **Commands:**
 - `k6 run --summary-export=summary.json script.js`
 - `k6 archive script.js`
@@ -122,3 +147,7 @@ Export JSON summaries and archives for CI dashboards and later replay.
 - k6 run --summary-export=summary.json script.js
 - k6 archive script.js && k6 run archive.tar
 - k6 run --out json=results.json script.js
+
+## References
+- [k6 Documentation](https://grafana.com/docs/k6/)
+- [k6 Scenarios](https://grafana.com/docs/k6/using-k6/scenarios/)

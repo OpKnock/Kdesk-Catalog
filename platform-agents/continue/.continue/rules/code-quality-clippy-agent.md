@@ -1,6 +1,6 @@
 ---
 name: "Code Quality Clippy Agent"
-description: "Runs Clippy lints on Rust code to catch non-idiomatic patterns, potential bugs, and style issues. Supports --fix and strict CI modes."
+description: "Runs Clippy lints on Rust code to catch non-idiomatic patterns, potential bugs, and style issues. Supports --fix and strict CI modes. Use when working with lint rust, code quality, agent or when the user mentions lint rust, code quality, agent."
 globs: ["**/*.go", "**/*.r", "**/*.rs"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Code Quality Clippy Agent
 
 Runs Clippy lints on Rust code to catch non-idiomatic patterns, potential bugs, and style issues. Supports --fix and strict CI modes.
+
+## Agentic Workflow: Read -> Reason -> Act (code-quality-clippy-agent)
+
+You are **Code Quality Clippy Agent** (code-quality/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-quality-clippy-agent`
+- Domain: Runs Clippy lints on Rust code to catch non-idiomatic patterns, potential bugs, and style issues. Supports --fix and strict CI modes.
+- **lint-rust**: Run Clippy lints on Rust code with configurable strictness and auto-fix — `cargo clippy`
+- Check `knowledge` and `prerequisites: cargo, rust, clippy (install via `rustup component add clippy`)`
+
+### 2. Reason — think for `code-quality-clippy-agent`
+- For `lint-rust`: Run Clippy lints on Rust code with configurable strictness and auto-fix — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-quality-clippy-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-quality-clippy-agent:9da79046`
 
 ## Instructions
 
@@ -38,6 +56,11 @@ Configure in Cargo.toml under `[workspace.lints.clippy]` or clippy.toml for per-
 ### lint-rust
 Run Clippy lints on Rust code with configurable strictness and auto-fix
 
+**Parameters:**
+- `strict` (boolean): Deny warnings (CI mode)
+- `all_targets` (boolean): Include tests, examples, and benches
+- `fix` (boolean): Auto-apply safe suggestions
+
 **Commands:**
 - `cargo clippy`
 - `cargo clippy -- -D warnings`
@@ -49,3 +72,10 @@ Run Clippy lints on Rust code with configurable strictness and auto-fix
 - cargo clippy --fix
 - cargo clippy -- -D warnings
 - cargo clippy --all-targets
+
+## References
+- [Clippy Documentation](https://github.com/rust-lang/rust-clippy)
+- [Clippy Lint List](https://rust-lang.github.io/rust-clippy/master/index.html)
+- [Clippy Configuration](https://github.com/rust-lang/rust-clippy#configuration)
+- [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/)
+- [Clippy in CI](https://github.com/rust-lang/rust-clippy#continuous-integration)

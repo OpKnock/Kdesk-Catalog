@@ -1,15 +1,31 @@
 ---
 name: "api-documentation-generator"
-description: "Automates documentation generation: extracts OpenAPI from code, bundles specs, builds static sites, and publishes in CI."
+description: "Automates documentation generation: extracts OpenAPI from code, bundles specs, builds static sites, and publishes in CI. Use when working with spec extraction, publish pipeline or when the user mentions spec extraction, publish pipeline."
 type: knowledge
 triggers: ["api-documentation-generator", "spec-extraction", "publish-pipeline"]
 ---
 
-# api-documentation-generator
-
 Automates documentation generation: extracts OpenAPI from code, bundles specs, builds static sites, and publishes in CI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-documentation-generator)
+
+You are **api-documentation-generator** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-documentation-generator`
+- Domain: Automates documentation generation: extracts OpenAPI from code, bundles specs, builds static sites, and publishes in CI.
+- **spec-extraction**: Extract OpenAPI specs from code with decorators and tooling — `npm install @nestjs/swagger`
+- **publish-pipeline**: Build and publish documentation sites in CI — `npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml`
+- Check `knowledge` and `prerequisites: swagger-cli, redoc-cli, openapi-generator, prism`
+
+### 2. Reason — think for `api-documentation-generator`
+- For `spec-extraction`: Extract OpenAPI specs from code with decorators and tooling — decide which checks to run
+- For `publish-pipeline`: Build and publish documentation sites in CI — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-documentation-generator` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-documentation-generator:344455e1`
 
 # API Documentation Generator
 
@@ -56,6 +72,10 @@ Compare generated docs against the running API automatically.
 ### spec-extraction
 Extract OpenAPI specs from code with decorators and tooling
 
+**Parameters:**
+- `framework` (string): FastAPI, NestJS, Express
+- `output` (string): Spec output path
+
 **Commands:**
 - `npm install @nestjs/swagger`
 - `npm install swagger-autogen`
@@ -71,6 +91,10 @@ Extract OpenAPI specs from code with decorators and tooling
 ### publish-pipeline
 Build and publish documentation sites in CI
 
+**Parameters:**
+- `spec` (string): Source OpenAPI spec
+- `outputDir` (string): Static site output
+
 **Commands:**
 - `npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml`
 - `npx @redocly/cli build-docs dist/bundled.yaml -o dist/index.html`
@@ -82,3 +106,8 @@ Build and publish documentation sites in CI
 - npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml && npx @redocly/cli build-docs dist/bundled.yaml -o dist/index.html
 - npx @redocly/cli lint dist/bundled.yaml
 - npm install -g docusaurus && npx docusaurus build
+
+## References
+- [swagger-autogen](https://github.com/davibaltar/swagger-autogen)
+- [FastAPI OpenAPI](https://fastapi.tiangolo.com/advanced/openapi-callbacks/)
+- [Docusaurus](https://docusaurus.io/docs)

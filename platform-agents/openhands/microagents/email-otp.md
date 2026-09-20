@@ -1,15 +1,29 @@
 ---
 name: "email-otp"
-description: "One-time password delivery by email: generate OTPs, send via SMTP/transactional APIs, and verify codes with rate limiting and expiry."
+description: "One-time password delivery by email: generate OTPs, send via SMTP/transactional APIs, and verify codes with rate limiting and expiry. Use when working with otp verification, api or when the user mentions otp verification, api."
 type: knowledge
 triggers: ["email-otp", "otp-verification"]
 ---
 
-# Email Otp
-
 One-time password delivery by email: generate OTPs, send via SMTP/transactional APIs, and verify codes with rate limiting and expiry.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (email-otp)
+
+You are **Email Otp** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `email-otp`
+- Domain: One-time password delivery by email: generate OTPs, send via SMTP/transactional APIs, and verify codes with rate limiting and expiry.
+- **otp-verification**: Send OTP emails and verify codes against stored hashes with expiry and attempt limits. — `curl -s --url 'smtp://smtp.gmail.com:587' --ssl-reqd --mail-from otp@yourdomain.`
+- Check `knowledge` and `prerequisites: node, redis-cli`
+
+### 2. Reason — think for `email-otp`
+- For `otp-verification`: Send OTP emails and verify codes against stored hashes with expiry and attempt limits. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `email-otp` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `email-otp:7916ba5e`
 
 # Email OTP
 
@@ -73,6 +87,11 @@ redis-cli INCR fail:user@gmail.com
 ### otp-verification
 Send OTP emails and verify codes against stored hashes with expiry and attempt limits.
 
+**Parameters:**
+- `recipient` (string): Email address receiving the OTP
+- `ttl` (integer): OTP validity in seconds (e.g. 300)
+- `code-length` (integer): Number of digits in the OTP
+
 **Commands:**
 - `curl -s --url 'smtp://smtp.gmail.com:587' --ssl-reqd --mail-from otp@yourdomain.com --mail-rcpt user@gmail.com --upload-file email.txt --user 'otp@yourdomain.com:app-password'`
 - `node -e "const o=require('otplib');console.log(o.authenticator.generate('BASE32SECRET'))"`
@@ -84,3 +103,6 @@ Send OTP emails and verify codes against stored hashes with expiry and attempt l
 - redis-cli SET otp:user@gmail.com 482913 EX 300 && curl -s --url 'smtp://smtp.gmail.com:587' --ssl-reqd --mail-from otp@yourdomain.com --mail-rcpt user@gmail.com --upload-file email.txt --user 'otp@yourdomain.com:app-password'
 - redis-cli GET otp:user@gmail.com
 - curl -s -X POST https://api.sendgrid.com/v3/mail/send -H 'Authorization: Bearer $SENDGRID_KEY' -H 'Content-Type: application/json' -d @email.json
+
+## References
+- [NIST OTP Guidelines 800-63B](https://pages.nist.gov/800-63-3/sp800-63b.html)

@@ -1,14 +1,28 @@
 ---
-description: "Drive Supabase Auth flows via REST and the Supabase CLI."
+description: "Drive Supabase Auth flows via REST and the Supabase CLI. Use when working with supabase auth flow, api or when the user mentions supabase auth flow, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Supabase Auth
-
 Drive Supabase Auth flows via REST and the Supabase CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (supabase-auth)
+
+You are **Supabase Auth** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `supabase-auth`
+- Domain: Drive Supabase Auth flows via REST and the Supabase CLI.
+- **supabase-auth-flow**: Drive Supabase Auth flows via REST and the Supabase CLI — `supabase init && supabase start`
+- Check `knowledge` and `prerequisites: supabase`
+
+### 2. Reason — think for `supabase-auth`
+- For `supabase-auth-flow`: Drive Supabase Auth flows via REST and the Supabase CLI — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `supabase-auth` tools
+- Tools: `Glob`, `Grep`, `Read`, `Supabase`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `supabase-auth:6bde29cd`
 
 # Supabase Auth
 
@@ -75,6 +89,11 @@ echo $TOKEN
 ### supabase-auth-flow
 Drive Supabase Auth flows via REST and the Supabase CLI
 
+**Parameters:**
+- `anon_key` (string): Supabase anon (public) API key
+- `grant_type` (string): password, refresh_token, or otp for /auth/v1/token
+- `email` (string): User email for signup/signin
+
 **Commands:**
 - `supabase init && supabase start`
 - `curl -X POST "https://your-project.supabase.co/auth/v1/signup" -H "apikey: $SUPABASE_ANON_KEY" -H "Content-Type: application/json" -d "{\"email\":\"ada@localhost\",\"password\":\"supersecret\"}"`
@@ -86,3 +105,7 @@ Drive Supabase Auth flows via REST and the Supabase CLI
 - curl -X POST "https://your-project.supabase.co/auth/v1/signup" -H "apikey: $SUPABASE_ANON_KEY" -d "{\"email\":\"ada@localhost\",\"password\":\"supersecret\"}"
 - curl -X POST "https://your-project.supabase.co/auth/v1/token?grant_type=refresh_token" -H "apikey: $SUPABASE_ANON_KEY" -d "refresh_token=$REFRESH" | jq -r .access_token
 - curl -s "https://your-project.supabase.co/auth/v1/user" -H "apikey: $SUPABASE_ANON_KEY" -H "Authorization: Bearer $ACCESS_TOKEN" | jq ".email"
+
+## References
+- [Supabase Auth docs](https://supabase.com/docs/guides/auth)
+- [Supabase CLI reference](https://supabase.com/docs/reference/cli)

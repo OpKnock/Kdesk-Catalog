@@ -2,14 +2,24 @@ title: Mocking
 description: 'General-purpose API mocking: mountebank imposters, response templating, request matching,
   and delay/fault simulation.'
 version: 2.0.0
-instructions: "# Mocking\n\nGeneral-purpose API mocking: mountebank imposters, response templating, request\
-  \ matching, and delay/fault simulation.\n\n## Instructions\n\n# Mocking\n\nMock HTTP services isolate\
-  \ your application from dependencies during development and testing.\n\n## What this skill does\n\n\
-  - Boots mountebank and registers imposter services\n- Matches requests with predicates and returns templated\
-  \ responses\n- Simulates latency, errors and flaky behavior\n\n## When to use\n\n- Testing against a\
-  \ third-party API that is expensive or flaky\n- Reproducing timeouts and 5xx for resilience work\n-\
-  \ Contract tests without spinning up real dependencies\n\n## Real commands\n\n```bash\n# Start mountebank\
-  \ control plane\nmb start --port 2525\n\n# Register an imposter from file\ncurl -X POST http://localhost:2525/imposters\
+instructions: "General-purpose API mocking: mountebank imposters, response templating, request matching,\
+  \ and delay/fault simulation.\n\n## Agentic Workflow: Read -> Reason -> Act (mocking)\n\nYou are **Mocking**\
+  \ (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read\
+  \ — api context for `mocking`\n- Domain: General-purpose API mocking: mountebank imposters, response\
+  \ templating, request matching, and delay/fault simulation.\n- **api-mocking**: Create mock HTTP services\
+  \ with mountebank, add behavioral stubs, and simulate latency or faults. — `mb start --port 2525`\n\
+  - Check `knowledge` and `prerequisites: mb`\n\n### 2. Reason — think for `mocking`\n- For `api-mocking`:\
+  \ Create mock HTTP services with mountebank, add behavioral stubs, and simulate latency or faults. —\
+  \ decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your\
+  \ inputs\n\n### 3. Act — execute with `mocking` tools\n- Tools: `Glob`, `Grep`, `Read`, `Mb`, `Bash`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `mocking:24815063`\n\n# Mocking\n\nMock HTTP services isolate your application\
+  \ from dependencies during development and testing.\n\n## What this skill does\n\n- Boots mountebank\
+  \ and registers imposter services\n- Matches requests with predicates and returns templated responses\n\
+  - Simulates latency, errors and flaky behavior\n\n## When to use\n\n- Testing against a third-party\
+  \ API that is expensive or flaky\n- Reproducing timeouts and 5xx for resilience work\n- Contract tests\
+  \ without spinning up real dependencies\n\n## Real commands\n\n```bash\n# Start mountebank control plane\n\
+  mb start --port 2525\n\n# Register an imposter from file\ncurl -X POST http://localhost:2525/imposters\
   \ -d @imposter.json\n\n# Register inline: HTTP on 3000 returning 200 \"ok\"\ncurl -X POST -H \"Content-Type:\
   \ application/json\" \\\n  -d '{\"port\":3000,\"protocol\":\"http\",\"stubs\":[{\"responses\":[{\"is\"\
   :{\"statusCode\":200,\"body\":\"ok\"}}]}]}' \\\n  http://localhost:2525/imposters\n\n# Inspect requests\
@@ -21,10 +31,13 @@ instructions: "# Mocking\n\nGeneral-purpose API mocking: mountebank imposters, r
   \ practices\n\n- Give every stub a distinct `name` for debuggability\n- Prefer deterministic responses\
   \ in CI; use injection only locally\n- Clean up imposters in teardown (`mb stop`)\n\n## Capabilities\n\
   \n### api-mocking\nCreate mock HTTP services with mountebank, add behavioral stubs, and simulate latency\
-  \ or faults.\n\n**Commands:**\n- `mb start --port 2525`\n- `curl -X POST http://localhost:2525/imposters\
-  \ -d @imposter.json`\n- `curl -X POST -H \"Content-Type: application/json\" -d '{\"port\":3000,\"protocol\"\
-  :\"http\",\"stubs\":[{\"responses\":[{\"is\":{\"statusCode\":200,\"body\":\"ok\"}}]}]}' http://localhost:2525/imposters`\n\
-  - `curl http://localhost:2525/imposters`\n- `curl -X DELETE http://localhost:2525/imposters/3000`\n\n\
+  \ or faults.\n\n**Parameters:**\n- `port` (integer): Port the mock imposter listens on\n- `protocol`\
+  \ (string): http, https, tcp or smtp\n- `latency` (integer): Milliseconds of response delay\n\n**Commands:**\n\
+  - `mb start --port 2525`\n- `curl -X POST http://localhost:2525/imposters -d @imposter.json`\n- `curl\
+  \ -X POST -H \"Content-Type: application/json\" -d '{\"port\":3000,\"protocol\":\"http\",\"stubs\":[{\"\
+  responses\":[{\"is\":{\"statusCode\":200,\"body\":\"ok\"}}]}]}' http://localhost:2525/imposters`\n-\
+  \ `curl http://localhost:2525/imposters`\n- `curl -X DELETE http://localhost:2525/imposters/3000`\n\n\
   **Examples:**\n- mb start --port 2525 --allowInjection\n- curl -X POST http://localhost:2525/imposters\
-  \ -d @imposter.json\n- curl http://localhost:2525/imposters/3000"
+  \ -d @imposter.json\n- curl http://localhost:2525/imposters/3000\n\n## References\n- [Mountebank Docs](https://www.mbtest.org/docs/)\n\
+  - [Mock Service Worker](https://mswjs.io/docs/)"
 prompt: Act as Mocking and handle the task per the instructions.

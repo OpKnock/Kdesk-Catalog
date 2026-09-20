@@ -6,27 +6,25 @@ alwaysApply: false
 
 Baseline host monitoring on Linux: CPU, memory, disk, and network telemetry with top, vmstat, iostat, and sar.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (monitoring-infrastructure)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **monitoring-infrastructure** (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `uptime`, `sar -u 1 3`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — infrastructure context for `monitoring-infrastructure`
+- Domain: Baseline host monitoring on Linux: CPU, memory, disk, and network telemetry with top, vmstat, iostat, and sar.
+- **host-metrics**: Collect instant host utilization snapshots. — `uptime`
+- **history**: Review historical utilization with sysstat sar. — `sar -u 1 3`
+- Check `knowledge` and `prerequisites: free, iostat, sar, top`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `monitoring-infrastructure`
+- For `host-metrics`: Collect instant host utilization snapshots. — decide which checks to run
+- For `history`: Review historical utilization with sysstat sar. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `monitoring-infrastructure` tools
+- Tools: `Glob`, `Grep`, `Read`, `Uptime`, `Vmstat` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `monitoring-infrastructure:490ef6b9`
 
 # Host Monitoring
 

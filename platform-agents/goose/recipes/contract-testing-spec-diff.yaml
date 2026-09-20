@@ -2,11 +2,24 @@ title: Contract Testing Spec Diff
 description: 'Schema-based contract testing: diff OpenAPI specs across versions and lint schemas with
   spectral and openapi-diff.'
 version: 2.0.0
-instructions: "# Contract Testing Spec Diff\n\nSchema-based contract testing: diff OpenAPI specs across\
-  \ versions and lint schemas with spectral and openapi-diff.\n\n## Instructions\n\n# Contract Testing\
-  \ v2 (Schema Based)\n\nVerify API contracts by diffing and linting OpenAPI specifications.\n\n## When\
-  \ to Use\n\n- Catching breaking changes before release\n- Enforcing API design rules in CI\n- Contract\
-  \ testing without running services\n\n## Validate the Spec\n\n```bash\nnpx @apidevtools/swagger-cli\
+instructions: "Schema-based contract testing: diff OpenAPI specs across versions and lint schemas with\
+  \ spectral and openapi-diff.\n\n## Agentic Workflow: Read -> Reason -> Act (contract-testing-spec-diff)\n\
+  \nYou are **Contract Testing Spec Diff** (api/general) — a sub-agent that **Reads, Reasons, and Acts**\
+  \ via `allowed-tools`.\n\n### 1. Read — api context for `contract-testing-spec-diff`\n- Domain: Schema-based\
+  \ contract testing: diff OpenAPI specs across versions and lint schemas with spectral and openapi-diff.\n\
+  - **spec-diff**: Detect breaking changes between OpenAPI spec versions with openapi-diff and swagger-cli\
+  \ — `npx openapi-diff openapi-v1.yaml openapi-v2.yaml`\n- **spectral-lint**: Lint OpenAPI specs with\
+  \ custom Spectral rulesets to enforce contract rules — `npx @stoplight/spectral-cli lint openapi.yaml`\n\
+  - Check `knowledge` and `prerequisites: npx`\n\n### 2. Reason — think for `contract-testing-spec-diff`\n\
+  - For `spec-diff`: Detect breaking changes between OpenAPI spec versions with openapi-diff and swagger-cli\
+  \ — decide which checks to run\n- For `spectral-lint`: Lint OpenAPI specs with custom Spectral rulesets\
+  \ to enforce contract rules — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `contract-testing-spec-diff` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `contract-testing-spec-diff:125f4e2c`\n\
+  \n# Contract Testing v2 (Schema Based)\n\nVerify API contracts by diffing and linting OpenAPI specifications.\n\
+  \n## When to Use\n\n- Catching breaking changes before release\n- Enforcing API design rules in CI\n\
+  - Contract testing without running services\n\n## Validate the Spec\n\n```bash\nnpx @apidevtools/swagger-cli\
   \ validate openapi.yaml\nnpx @apidevtools/swagger-parser-cli validate openapi.yaml\n```\n\n## Detect\
   \ Breaking Changes\n\n```bash\nnpx openapi-diff openapi-v1.yaml openapi-v2.yaml\nnpx openapi-diff --summary-only\
   \ openapi-v1.yaml openapi-v2.yaml\n```\n\nBreaking changes include removed paths, removed required properties,\
@@ -21,15 +34,19 @@ instructions: "# Contract Testing Spec Diff\n\nSchema-based contract testing: di
   \ API versions\n- Version specs explicitly (openapi-v1.yaml, openapi-v2.yaml)\n- Enforce the ruleset\
   \ in pull requests\n- Keep schemas strict: required fields, defined enums, explicit types\n- Combine\
   \ with consumer-driven Pact for runtime checks\n\n## Capabilities\n\n### spec-diff\nDetect breaking\
-  \ changes between OpenAPI spec versions with openapi-diff and swagger-cli\n\n**Commands:**\n- `npx openapi-diff\
-  \ openapi-v1.yaml openapi-v2.yaml`\n- `npx @apidevtools/swagger-cli validate openapi.yaml`\n- `npx @apidevtools/swagger-parser-cli\
-  \ validate openapi.yaml`\n- `npx openapi-diff --summary-only openapi-v1.yaml openapi-v2.yaml`\n\n**Examples:**\n\
-  - npx @apidevtools/swagger-cli validate openapi.yaml\n- npx openapi-diff openapi-v1.yaml openapi-v2.yaml\n\
-  - npx openapi-diff --summary-only api-2024.yaml api-2025.yaml | jq '.breakingDifferences'\n\n### spectral-lint\n\
-  Lint OpenAPI specs with custom Spectral rulesets to enforce contract rules\n\n**Commands:**\n- `npx\
-  \ @stoplight/spectral-cli lint openapi.yaml`\n- `npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yaml`\n\
-  - `npx @stoplight/spectral-cli lint openapi.yaml --format json`\n- `npx @stoplight/spectral-cli lint\
-  \ openapi.yaml -r .spectral.yaml -f junit`\n\n**Examples:**\n- npx @stoplight/spectral-cli lint openapi.yaml\
-  \ -r .spectral.yaml\n- npx @stoplight/spectral-cli lint openapi.yaml -f json > lint.json\n- npx @stoplight/spectral-cli\
-  \ lint openapi.yaml --ruleset-json"
+  \ changes between OpenAPI spec versions with openapi-diff and swagger-cli\n\n**Parameters:**\n- `spec_a`\
+  \ (string): Old OpenAPI spec file\n- `spec_b` (string): New OpenAPI spec file\n\n**Commands:**\n- `npx\
+  \ openapi-diff openapi-v1.yaml openapi-v2.yaml`\n- `npx @apidevtools/swagger-cli validate openapi.yaml`\n\
+  - `npx @apidevtools/swagger-parser-cli validate openapi.yaml`\n- `npx openapi-diff --summary-only openapi-v1.yaml\
+  \ openapi-v2.yaml`\n\n**Examples:**\n- npx @apidevtools/swagger-cli validate openapi.yaml\n- npx openapi-diff\
+  \ openapi-v1.yaml openapi-v2.yaml\n- npx openapi-diff --summary-only api-2024.yaml api-2025.yaml | jq\
+  \ '.breakingDifferences'\n\n### spectral-lint\nLint OpenAPI specs with custom Spectral rulesets to enforce\
+  \ contract rules\n\n**Parameters:**\n- `ruleset` (string): Path to Spectral ruleset file\n- `spec` (string):\
+  \ OpenAPI spec file to lint\n\n**Commands:**\n- `npx @stoplight/spectral-cli lint openapi.yaml`\n- `npx\
+  \ @stoplight/spectral-cli lint openapi.yaml -r .spectral.yaml`\n- `npx @stoplight/spectral-cli lint\
+  \ openapi.yaml --format json`\n- `npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yaml -f\
+  \ junit`\n\n**Examples:**\n- npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yaml\n- npx\
+  \ @stoplight/spectral-cli lint openapi.yaml -f json > lint.json\n- npx @stoplight/spectral-cli lint\
+  \ openapi.yaml --ruleset-json\n\n## References\n- [OpenAPI Diff](https://github.com/OpenAPITools/openapi-diff)\n\
+  - [Spectral Docs](https://docs.stoplight.io/docs/spectral)"
 prompt: Act as Contract Testing Spec Diff and handle the task per the instructions.

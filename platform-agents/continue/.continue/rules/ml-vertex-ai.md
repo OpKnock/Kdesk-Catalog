@@ -1,6 +1,6 @@
 ---
 name: "Ml Vertex Ai"
-description: "Google Vertex AI agent for ML platform."
+description: "Google Vertex AI agent for ML platform. Use when working with Ml Vertex Ai, deployment or when the user mentions Ml Vertex Ai, deployment."
 globs: ["**/*.go", "**/*.json", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Vertex Ai
 
 Google Vertex AI agent for ML platform.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-vertex-ai)
+
+You are **Ml Vertex Ai** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-vertex-ai`
+- Domain: Google Vertex AI agent for ML platform.
+- **Ml Vertex Ai**: Google Vertex AI agent for ML platform. — `Models: gcloud ai models list`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-vertex-ai`
+- For `Ml Vertex Ai`: Google Vertex AI agent for ML platform. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-vertex-ai` tools
+- Tools: `Glob`, `Grep`, `Read`, `Models`, `Endpoints` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-vertex-ai:23799235`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Google Vertex AI agent for ML platform.
 - Endpoints: gcloud ai endpoints list
 - Jobs: gcloud ai custom-jobs list
 - Predict: gcloud ai endpoints predict ENDPOINT_ID --json-request=request.json
+
+## References
+- [Vertex AI Documentation](https://cloud.google.com/vertex-ai/docs)

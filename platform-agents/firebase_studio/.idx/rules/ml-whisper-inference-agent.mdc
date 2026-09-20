@@ -1,5 +1,5 @@
 ---
-description: "Whisper inference agent. Manages audio transcription inference."
+description: "Whisper inference agent. Manages audio transcription inference. Use when working with Ml Whisper Inference Agent or when the user mentions Ml Whisper Inference Agent."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Ml Whisper Inference Agent
 
 Whisper inference agent. Manages audio transcription inference.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-whisper-inference-agent)
+
+You are **Ml Whisper Inference Agent** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-whisper-inference-agent`
+- Domain: Whisper inference agent. Manages audio transcription inference.
+- **Ml Whisper Inference Agent**: Whisper inference agent. Manages audio transcription inference. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-whisper-inference-agent`
+- For `Ml Whisper Inference Agent`: Whisper inference agent. Manages audio transcription inference. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-whisper-inference-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Whisper` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-whisper-inference-agent:1b5b83a8`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Whisper inference agent. Manages audio transcription inference.
 - whisper audio.wav --model small --output_format txt
 - python transcribe.py --model medium --input audio.mp3
 - python serve_whisper.py --model base --port 8080
+
+## References
+- [OpenAI Whisper](https://github.com/openai/whisper)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

@@ -11,27 +11,23 @@ allowed-tools: "Glob Grep Read Bash(graphic-design-api:*) Bash(graphic-design-cl
 
 Design graphic-design expertise and best practices.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (design-graphic-design)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Design Graphic Design** (design/graphic-design) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `graphic-design-cli`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — design context for `design-graphic-design`
+- Domain: Design graphic-design expertise and best practices.
+- **graphic-design-expertise**: design graphic-design expertise — `graphic-design-cli`
+- Check `knowledge` and `prerequisites: graphic-design`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `design-graphic-design`
+- For `graphic-design-expertise`: design graphic-design expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `design-graphic-design` tools
+- Tools: `Glob`, `Grep`, `Read`, `Graphic-design-cli`, `Graphic-design-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `design-graphic-design:8c2795a9`
 
 ## Instructions
 

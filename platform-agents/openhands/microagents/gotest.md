@@ -1,15 +1,33 @@
 ---
 name: "gotest"
-description: "Runs Go tests with go test, covering race detection, coverage profiles, benchmarks, and focused runs."
+description: "Runs Go tests with go test, covering race detection, coverage profiles, benchmarks, and focused runs. Use when working with go testing, race and coverage, benchmarks and vet or when the user mentions go testing, race and coverage, benchmarks and vet."
 type: knowledge
 triggers: ["gotest", "go-testing", "race-and-coverage", "benchmarks-and-vet"]
 ---
 
-# gotest
-
 Runs Go tests with go test, covering race detection, coverage profiles, benchmarks, and focused runs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (gotest)
+
+You are **gotest** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `gotest`
+- Domain: Runs Go tests with go test, covering race detection, coverage profiles, benchmarks, and focused runs.
+- **go-testing**: Run Go tests with filters and verbosity. — `go test ./...`
+- **race-and-coverage**: Race detection and coverage profiles. — `go test -race ./...`
+- **benchmarks-and-vet**: Benchmarks, profiling, and vet checks. — `go test -bench=. -benchmem ./...`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `gotest`
+- For `go-testing`: Run Go tests with filters and verbosity. — decide which checks to run
+- For `race-and-coverage`: Race detection and coverage profiles. — decide which checks to run
+- For `benchmarks-and-vet`: Benchmarks, profiling, and vet checks. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gotest` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gotest:04921252`
 
 # go test
 
@@ -80,6 +98,11 @@ func TestParse(t *testing.T) {
 ### go-testing
 Run Go tests with filters and verbosity.
 
+**Parameters:**
+- `run` (string): Test name regex filter
+- `count` (number): Repeat count (1 disables cache)
+- `short` (boolean): Skip long-running tests
+
 **Commands:**
 - `go test ./...`
 - `go test -v ./internal/...`
@@ -94,6 +117,10 @@ Run Go tests with filters and verbosity.
 
 ### race-and-coverage
 Race detection and coverage profiles.
+
+**Parameters:**
+- `coverProfile` (string): Coverage output file
+- `coverMode` (string): Coverage mode: set, count, atomic
 
 **Commands:**
 - `go test -race ./...`
@@ -110,6 +137,10 @@ Race detection and coverage profiles.
 ### benchmarks-and-vet
 Benchmarks, profiling, and vet checks.
 
+**Parameters:**
+- `bench` (string): Benchmark regex filter
+- `benchtime` (string): Benchmark duration
+
 **Commands:**
 - `go test -bench=. -benchmem ./...`
 - `go test -bench=BenchmarkParse -benchtime=5s ./...`
@@ -121,3 +152,8 @@ Benchmarks, profiling, and vet checks.
 - go test -bench=. -benchmem ./...
 - go vet ./...
 - go test -bench=BenchmarkParse -benchtime=5s
+
+## References
+- [Testing in Go](https://pkg.go.dev/testing)
+- [Go Testing Guide](https://go.dev/doc/tutorial/add-a-test)
+- [Go Test Flags](https://pkg.go.dev/cmd/go#hdr-Testing_flags)

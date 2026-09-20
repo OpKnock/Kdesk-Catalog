@@ -6,27 +6,27 @@ alwaysApply: false
 
 Implements application-level rate limiting with Redis-backed sliding windows, token buckets, and fixed windows. Configures Express/Fastify middleware, nginx limits, and validates enforcement with load tests and header assertions.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-rate-limiter)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **API Rate Limiter** (api/security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `redis-cli --eval sliding_window.lua rate:user:123 1 100 60`, `npm install express-rate-limit`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `api-rate-limiter`
+- Domain: Implements application-level rate limiting with Redis-backed sliding windows, token buckets, and fixed windows. Configures Express/Fastify middleware, nginx limits, and validates enforcement with load
+- **redis-sliding-window**: Implements Redis-backed sliding window rate limiting with Lua scripts for atomicity. — `redis-cli --eval sliding_window.lua rate:user:123 1 100 60`
+- **express-middleware**: Configures express-rate-limit middleware with custom key generators and handlers. — `npm install express-rate-limit`
+- **fastify-middleware**: Configures @fastify/rate-limit plugin with Redis store. — `npm install @fastify/rate-limit @fastify/redis`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-rate-limiter`
+- For `redis-sliding-window`: Implements Redis-backed sliding window rate limiting with Lua scripts for atomicity. — decide which checks to run
+- For `express-middleware`: Configures express-rate-limit middleware with custom key generators and handlers. — decide which checks to run
+- For `fastify-middleware`: Configures @fastify/rate-limit plugin with Redis store. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-rate-limiter` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-rate-limiter:6c7d0450`
 
 # API Rate Limiter
 

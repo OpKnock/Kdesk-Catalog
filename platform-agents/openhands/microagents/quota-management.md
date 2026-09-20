@@ -1,15 +1,29 @@
 ---
 name: "quota-management"
-description: "Enforce per-consumer request caps with Redis-backed counters, quota middleware, and 429 responses carrying retry metadata."
+description: "Enforce per-consumer request caps with Redis-backed counters, quota middleware, and 429 responses carrying retry metadata. Use when working with quota enforcement, api or when the user mentions quota enforcement, api."
 type: knowledge
 triggers: ["quota-management", "quota-enforcement"]
 ---
 
-# Quota Management
-
 Enforce per-consumer request caps with Redis-backed counters, quota middleware, and 429 responses carrying retry metadata.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (quota-management)
+
+You are **Quota Management** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `quota-management`
+- Domain: Enforce per-consumer request caps with Redis-backed counters, quota middleware, and 429 responses carrying retry metadata.
+- **quota-enforcement**: Implement per-consumer quotas with Redis counters and enforce them at the API layer. — `redis-cli INCR user:42:requests`
+- Check `knowledge` and `prerequisites: redis-cli`
+
+### 2. Reason — think for `quota-management`
+- For `quota-enforcement`: Implement per-consumer quotas with Redis counters and enforce them at the API layer. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `quota-management` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `quota-management:b49d3481`
 
 # Quota Management
 
@@ -67,6 +81,11 @@ if used > quota(key):
 ### quota-enforcement
 Implement per-consumer quotas with Redis counters and enforce them at the API layer.
 
+**Parameters:**
+- `quota_key` (string): Redis key for the consumer's counter
+- `limit` (integer): Quota limit per window
+- `window` (integer): Window seconds for expiry
+
 **Commands:**
 - `redis-cli INCR user:42:requests`
 - `redis-cli EXPIRE user:42:requests 60`
@@ -78,3 +97,7 @@ Implement per-consumer quotas with Redis counters and enforce them at the API la
 - redis-cli INCR user:42:requests; redis-cli EXPIRE user:42:requests 60
 - redis-cli GET user:42:requests
 - curl -s -o /dev/null -w "%{http_code}\n" -H "X-Api-Key: key-42" http://localhost:8080/api
+
+## References
+- [Redis INCR/EXPIRE](https://redis.io/docs/latest/commands/incr/)
+- [API Quotas Guide](https://swagger.io/resources/articles/what-is-api-quota/)

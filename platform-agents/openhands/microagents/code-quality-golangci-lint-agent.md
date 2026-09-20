@@ -1,6 +1,6 @@
 ---
 name: "code-quality-golangci-lint-agent"
-description: "Aggregates multiple Go linters in a single pass. Runs default suite, enables all linters, and auto-fixes where possible."
+description: "Aggregates multiple Go linters in a single pass. Runs default suite, enables all linters, and auto-fixes where possible. Use when working with lint go, code quality, agent or when the user mentions lint go, code quality, agent."
 type: knowledge
 triggers: ["code-quality-golangci-lint-agent", "lint-go"]
 ---
@@ -8,6 +8,24 @@ triggers: ["code-quality-golangci-lint-agent", "lint-go"]
 # Code Quality Golangci Lint Agent
 
 Aggregates multiple Go linters in a single pass. Runs default suite, enables all linters, and auto-fixes where possible.
+
+## Agentic Workflow: Read -> Reason -> Act (code-quality-golangci-lint-agent)
+
+You are **Code Quality Golangci Lint Agent** (code-quality/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-quality-golangci-lint-agent`
+- Domain: Aggregates multiple Go linters in a single pass. Runs default suite, enables all linters, and auto-fixes where possible.
+- **lint-go**: Run golangci-lint on Go code with configurable linter sets and auto-fix — `golangci-lint run`
+- Check `knowledge` and `prerequisites: golangci-lint (install via `go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest`), go`
+
+### 2. Reason — think for `code-quality-golangci-lint-agent`
+- For `lint-go`: Run golangci-lint on Go code with configurable linter sets and auto-fix — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-quality-golangci-lint-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Golangci-lint` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-quality-golangci-lint-agent:7718ff8d`
 
 ## Instructions
 
@@ -38,6 +56,11 @@ Use .golangci.yml or golangci.toml for linter enables/disables, severity, and is
 ### lint-go
 Run golangci-lint on Go code with configurable linter sets and auto-fix
 
+**Parameters:**
+- `fix` (boolean): Auto-fix safe issues
+- `enable_all` (boolean): Enable all available linters
+- `config` (string): Path to golangci-lint config file
+
 **Commands:**
 - `golangci-lint run`
 - `golangci-lint run --fix`
@@ -49,3 +72,10 @@ Run golangci-lint on Go code with configurable linter sets and auto-fix
 - golangci-lint run --fix
 - golangci-lint run --enable-all
 - golangci-lint linters
+
+## References
+- [golangci-lint Documentation](https://golangci-lint.run/)
+- [Linter Reference](https://golangci-lint.run/usage/linters/)
+- [Configuration Guide](https://golangci-lint.run/usage/configuration/)
+- [CI Integration](https://golangci-lint.run/usage/ci/)
+- [False Positives](https://golangci-lint.run/usage/false-positives/)

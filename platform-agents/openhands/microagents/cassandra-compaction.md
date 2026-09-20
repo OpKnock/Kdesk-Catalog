@@ -1,15 +1,33 @@
 ---
 name: "cassandra-compaction"
-description: "Monitors and controls SSTable merging in Apache Cassandra: inspects compactionstats and history, triggers manual merges, stops runaway operations, and selects or tunes strategies (STCS, LCS, TWCS) for table behavior."
+description: "Monitors and controls SSTable merging in Apache Cassandra: inspects compactionstats and history, triggers manual merges, stops runaway operations, and selects or tunes strategies (STCS, LCS, TWCS) for table behavior. Use when working with compaction status, manual compaction, strategy tuning, api or when the user mentions compaction status, manual compaction, strategy tuning, api."
 type: knowledge
 triggers: ["cassandra-compaction", "compaction-status", "manual-compaction", "strategy-tuning"]
 ---
 
-# Cassandra Compaction
-
 Monitors and controls SSTable merging in Apache Cassandra: inspects compactionstats and history, triggers manual merges, stops runaway operations, and selects or tunes strategies (STCS, LCS, TWCS) for table behavior.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cassandra-compaction)
+
+You are **Cassandra Compaction** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `cassandra-compaction`
+- Domain: Monitors and controls SSTable merging in Apache Cassandra: inspects compactionstats and history, triggers manual merges, stops runaway operations, and selects or tunes strategies (STCS, LCS, TWCS) for
+- **compaction-status**: Inspect compaction activity and history. — `nodetool compactionstats`
+- **manual-compaction**: Trigger or stop compaction on tables. — `nodetool compact mykeyspace users`
+- **strategy-tuning**: Set and tune compaction strategies. — `cqlsh -e "ALTER TABLE mykeyspace.users WITH compaction = {'class':'LeveledCompac`
+- Check `knowledge` and `prerequisites: cqlsh, nodetool`
+
+### 2. Reason — think for `cassandra-compaction`
+- For `compaction-status`: Inspect compaction activity and history. — decide which checks to run
+- For `manual-compaction`: Trigger or stop compaction on tables. — decide which checks to run
+- For `strategy-tuning`: Set and tune compaction strategies. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cassandra-compaction` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nodetool`, `Cqlsh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cassandra-compaction:fae663f0`
 
 # Cassandra Compaction
 
@@ -68,6 +86,10 @@ nodetool setcompactionthroughput 64
 ### compaction-status
 Inspect compaction activity and history.
 
+**Parameters:**
+- `keyspace` (string): Keyspace name
+- `table` (string): Table name
+
 **Commands:**
 - `nodetool compactionstats`
 - `nodetool compactionhistory`
@@ -82,6 +104,10 @@ Inspect compaction activity and history.
 
 ### manual-compaction
 Trigger or stop compaction on tables.
+
+**Parameters:**
+- `keyspace` (string): Keyspace to compact
+- `table` (string): Table to compact
 
 **Commands:**
 - `nodetool compact mykeyspace users`
@@ -98,6 +124,10 @@ Trigger or stop compaction on tables.
 ### strategy-tuning
 Set and tune compaction strategies.
 
+**Parameters:**
+- `strategy` (string): STCS, LCS, TWCS
+- `throughput` (number): Compaction throughput MB/s
+
 **Commands:**
 - `cqlsh -e "ALTER TABLE mykeyspace.users WITH compaction = {'class':'LeveledCompactionStrategy','sstable_size_in_mb':160}"`
 - `cqlsh -e "SELECT table_name, compaction FROM system_schema.tables WHERE keyspace_name='mykeyspace'"`
@@ -109,3 +139,7 @@ Set and tune compaction strategies.
 - cqlsh -e "ALTER TABLE mykeyspace.users WITH compaction = {'class':'LeveledCompactionStrategy','sstable_size_in_mb':160}"
 - cqlsh -e "SELECT table_name, compaction FROM system_schema.tables WHERE keyspace_name='mykeyspace'"
 - nodetool setcompactionthroughput 64
+
+## References
+- [Cassandra Compaction](https://cassandra.apache.org/doc/latest/cassandra/operating/compaction/index.html)
+- [nodetool Reference](https://cassandra.apache.org/doc/latest/cassandra/operating/nodetool/)

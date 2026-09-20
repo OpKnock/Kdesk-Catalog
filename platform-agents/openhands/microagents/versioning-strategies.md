@@ -1,15 +1,29 @@
 ---
 name: "versioning-strategies"
-description: "Evaluates and implements API versioning approaches including semver paths, date-based headers, media-type negotiation, and query parameters. Provides migration workflows and validation enabling selection of the right approach."
+description: "Evaluates and implements API versioning approaches including semver paths, date-based headers, media-type negotiation, and query parameters. Provides migration workflows and validation enabling selection of the right approach. Use when working with strategy selection, api, versioning, architecture or when the user mentions strategy selection, api, versioning, architecture."
 type: knowledge
 triggers: ["versioning-strategies", "strategy-selection"]
 ---
 
-# Versioning Strategies
-
 Evaluates and implements API versioning approaches including semver paths, date-based headers, media-type negotiation, and query parameters. Provides migration workflows and validation enabling selection of the right approach.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (versioning-strategies)
+
+You are **Versioning Strategies** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `versioning-strategies`
+- Domain: Evaluates and implements API versioning approaches including semver paths, date-based headers, media-type negotiation, and query parameters. Provides migration workflows and validation enabling select
+- **strategy-selection**: Evaluate and implement versioning strategies with validation — `curl -s -H "Accept: application/vnd.example+json;version=3" https://api.your-app`
+- Check `knowledge` and `prerequisites: curl, jq`
+
+### 2. Reason — think for `versioning-strategies`
+- For `strategy-selection`: Evaluate and implement versioning strategies with validation — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `versioning-strategies` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `versioning-strategies:4cdb621b`
 
 # Versioning Strategies
 
@@ -78,6 +92,10 @@ for v in 1 2 3; do curl -s -H "X-Version: 2024-0$v-01" https://api.your-app.test
 ### strategy-selection
 Evaluate and implement versioning strategies with validation
 
+**Parameters:**
+- `version` (string): Version in Accept-Version header or query param
+- `sunset` (string): Retirement date returned in Sunset header
+
 **Commands:**
 - `curl -s -H "Accept: application/vnd.example+json;version=3" https://api.your-app.test/widgets`
 - `curl -s -H "X-Version: 2024-06-01" https://api.your-app.test/widgets | jq ".version"`
@@ -89,3 +107,8 @@ Evaluate and implement versioning strategies with validation
 - curl -s -H "Accept: application/vnd.example+json;version=2" https://api.your-app.test/widgets | jq ".schema"
 - curl -s -D - -o /dev/null -H "Accept-Version: 1" https://api.your-app.test/widgets | grep -iE "^(HTTP|deprecation)"
 - curl -s "https://api.your-app.test/widgets?version=2" | jq ".version"
+
+## References
+- [Stripe API Versioning](https://stripe.com/docs/api/versioning)
+- [Swagger API Versioning Guide](https://swagger.io/resources/articles/software-versioning-in-swagger/)
+- [Microsoft API Versioning](https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design)

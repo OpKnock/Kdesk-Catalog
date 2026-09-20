@@ -1,6 +1,6 @@
 ---
 name: "ml-edge-aws-deploy"
-description: "AWS Edge deployment agent for ML edge deployment on AWS."
+description: "AWS Edge deployment agent for ML edge deployment on AWS. Use when working with Ml Edge Aws Deploy, deployment or when the user mentions Ml Edge Aws Deploy, deployment."
 type: knowledge
 triggers: ["ml-edge-aws-deploy", "ml edge aws deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-edge-aws-deploy", "ml edge aws deploy"]
 # Ml Edge Aws Deploy
 
 AWS Edge deployment agent for ML edge deployment on AWS.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-edge-aws-deploy)
+
+You are **Ml Edge Aws Deploy** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-edge-aws-deploy`
+- Domain: AWS Edge deployment agent for ML edge deployment on AWS.
+- **Ml Edge Aws Deploy**: AWS Edge deployment agent for ML edge deployment on AWS. — `SageMaker Edge: aws sagemanager edge create-edge-packaging-job --job-name my-edg`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-edge-aws-deploy`
+- For `Ml Edge Aws Deploy`: AWS Edge deployment agent for ML edge deployment on AWS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-edge-aws-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `SageMaker`, `Wavelength` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-edge-aws-deploy:18e0dc84`
 
 ## Instructions
 
@@ -27,3 +45,8 @@ AWS Edge deployment agent for ML edge deployment on AWS.
 - SageMaker Edge: aws sagemanager edge create-edge-packaging-job --job-name my-edge-job --model-name my-model --role-arn arn:aws:iam::123456789012:role/my-role --output-config S3Bucket=my-bucket,S3Prefix=packages
 - Greengrass: aws greengrassv2 create-component-version --inline-recipe fileb://recipe.json
 - Wavelength: aws ec2 describe-wavelength-zones
+
+## References
+- [KubeEdge](https://github.com/kubeedge/kubeedge)
+- [Amazon SageMaker Documentation](https://docs.aws.amazon.com/sagemaker/)
+- [AWS Documentation](https://docs.aws.amazon.com/)

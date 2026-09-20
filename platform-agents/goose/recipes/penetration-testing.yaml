@@ -2,14 +2,45 @@ title: penetration-testing
 description: 'Runs authorized security assessments: reconnaissance with nmap, web scanning with nuclei/gobuster,
   and targeted exploitation checks.'
 version: 2.0.0
-instructions: '# penetration-testing
+instructions: 'Runs authorized security assessments: reconnaissance with nmap, web scanning with nuclei/gobuster,
+  and targeted exploitation checks.
 
 
-  Runs authorized security assessments: reconnaissance with nmap, web scanning with nuclei/gobuster, and
-  targeted exploitation checks.
+  ## Agentic Workflow: Read -> Reason -> Act (penetration-testing)
 
 
-  ## Instructions
+  You are **penetration-testing** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — security context for `penetration-testing`
+
+  - Domain: Runs authorized security assessments: reconnaissance with nmap, web scanning with nuclei/gobuster,
+  and targeted exploitation checks.
+
+  - **recon**: Discover hosts, ports, and services. — `nmap -sV -sC -p- -T4 target.example.com`
+
+  - **web**: Scan web apps for vulnerabilities and content. — `nuclei -u http://localhost:8080 -severity
+  high,critical`
+
+  - Check `knowledge` and `prerequisites: nmap, burp-suite, metasploit, kali`
+
+
+  ### 2. Reason — think for `penetration-testing`
+
+  - For `recon`: Discover hosts, ports, and services. — decide which checks to run
+
+  - For `web`: Scan web apps for vulnerabilities and content. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `penetration-testing` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Nmap`, `Whois` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `penetration-testing:174a8b3f`
 
 
   # Penetration Testing
@@ -107,6 +138,15 @@ instructions: '# penetration-testing
   Discover hosts, ports, and services.
 
 
+  **Parameters:**
+
+  - `target` (string): Host, IP, or CIDR
+
+  - `ports` (string): Port list or range
+
+  - `scripts` (string): NSE script selection
+
+
   **Commands:**
 
   - `nmap -sV -sC -p- -T4 target.example.com`
@@ -134,6 +174,15 @@ instructions: '# penetration-testing
   Scan web apps for vulnerabilities and content.
 
 
+  **Parameters:**
+
+  - `target-url` (string): Target URL
+
+  - `wordlist` (string): Wordlist path
+
+  - `severity` (string): Minimum severity filter
+
+
   **Commands:**
 
   - `nuclei -u http://localhost:8080 -severity high,critical`
@@ -153,5 +202,14 @@ instructions: '# penetration-testing
 
   - gobuster dir -u http://localhost:8080 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
 
-  - sqlmap -u ''http://localhost:8080/item?id=1'' --batch --technique=BEU --level=2'
+  - sqlmap -u ''http://localhost:8080/item?id=1'' --batch --technique=BEU --level=2
+
+
+  ## References
+
+  - [Nmap Reference Guide](https://nmap.org/book/man.html)
+
+  - [Nuclei](https://nuclei.projectdiscovery.io/)
+
+  - [OWASP Testing Guide](https://owasp.org/www-project-web-security-testing-guide/)'
 prompt: Act as penetration-testing and handle the task per the instructions.

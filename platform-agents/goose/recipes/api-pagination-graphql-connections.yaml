@@ -2,13 +2,27 @@ title: Api Pagination Graphql Connections
 description: 'Implements Relay-style cursor connections for GraphQL APIs: edges/nodes/pageInfo contracts,
   opaque cursors, schema linting, and schema diffing on changes.'
 version: 2.0.0
-instructions: "# Api Pagination Graphql Connections\n\nImplements Relay-style cursor connections for GraphQL\
-  \ APIs: edges/nodes/pageInfo contracts, opaque cursors, schema linting, and schema diffing on changes.\n\
-  \n## Instructions\n\n# API Pagination v3 - GraphQL Connections\n\nRelay cursor connections for GraphQL.\n\
-  \n## What This Skill Does\n- Exposes connections with edges/cursor/node/pageInfo\n- Pages with opaque\
-  \ cursors via first/after and last/before\n- Protects the schema with linting and diffing\n\n## When\
-  \ to Use\n- GraphQL APIs with Relay or Apollo clients\n- Large lists that need stable cursor paging\n\
-  - Adding pagination to existing list fields\n\n## Real Commands\n\n```bash\ncurl -s -X POST http://localhost:4000/graphql\
+instructions: "Implements Relay-style cursor connections for GraphQL APIs: edges/nodes/pageInfo contracts,\
+  \ opaque cursors, schema linting, and schema diffing on changes.\n\n## Agentic Workflow: Read -> Reason\
+  \ -> Act (api-pagination-graphql-connections)\n\nYou are **Api Pagination Graphql Connections** (backend)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — backend context\
+  \ for `api-pagination-graphql-connections`\n- Domain: Implements Relay-style cursor connections for\
+  \ GraphQL APIs: edges/nodes/pageInfo contracts, opaque cursors, schema linting, and schema diffing on\
+  \ changes.\n- **graphql-connections**: Build Relay connection types with cursor pagination — `curl -s\
+  \ -X POST http://localhost:4000/graphql -H 'Content-Type: application/json`\n- **schema-introspection**:\
+  \ Snapshot and verify the live GraphQL schema — `npx @graphql-inspector/cli coverage --schema schema.graphql\
+  \ --queries 'src/**/*.`\n- Check `knowledge` and `prerequisites: node.js, python, postgresql`\n\n###\
+  \ 2. Reason — think for `api-pagination-graphql-connections`\n- For `graphql-connections`: Build Relay\
+  \ connection types with cursor pagination — decide which checks to run\n- For `schema-introspection`:\
+  \ Snapshot and verify the live GraphQL schema — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `api-pagination-graphql-connections`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `api-pagination-graphql-connections:e3d8b05c`\n\
+  \n# API Pagination v3 - GraphQL Connections\n\nRelay cursor connections for GraphQL.\n\n## What This\
+  \ Skill Does\n- Exposes connections with edges/cursor/node/pageInfo\n- Pages with opaque cursors via\
+  \ first/after and last/before\n- Protects the schema with linting and diffing\n\n## When to Use\n- GraphQL\
+  \ APIs with Relay or Apollo clients\n- Large lists that need stable cursor paging\n- Adding pagination\
+  \ to existing list fields\n\n## Real Commands\n\n```bash\ncurl -s -X POST http://localhost:4000/graphql\
   \ -H 'Content-Type: application/json' -d '{\"query\":\"{ users(first: 10, after: \\\"Y3Vyc29yOjEw\\\"\
   ) { edges { cursor node { id } } pageInfo { hasNextPage endCursor } } }\"}'\nnpx graphql-schema-linter\
   \ schema.graphql --rules=relay-connection-types\nnpx @graphql-inspector/cli diff schema-old.graphql\
@@ -17,8 +31,10 @@ instructions: "# Api Pagination Graphql Connections\n\nImplements Relay-style cu
   - Assert hasNextPage flips correctly at the boundary\n- Verify cursors survive reordering by the database\n\
   - Diff schemas in CI to block breaking changes\n\n## Best Practices\n- Enforce max first/before server-side\n\
   - Base cursors on stable sort keys, not offsets\n- Preload edges in a single batched query\n\n## Capabilities\n\
-  \n### graphql-connections\nBuild Relay connection types with cursor pagination\n\n**Commands:**\n- `curl\
-  \ -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ users(first:\
+  \n### graphql-connections\nBuild Relay connection types with cursor pagination\n\n**Parameters:**\n\
+  - `first` (integer): Items to fetch forward from the cursor\n- `after` (string): Opaque cursor to start\
+  \ from\n- `maxPageSize` (integer): Server-enforced cap on first\n\n**Commands:**\n- `curl -s -X POST\
+  \ http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ users(first:\
   \ 10, after: \\\"Y3Vyc29yOjEw\\\") { edges { cursor node { id } } pageInfo { hasNextPage endCursor }\
   \ } }\"}' | jq '.data.users.pageInfo'`\n- `npx graphql-schema-linter schema.graphql --rules=relay-connection-types`\n\
   - `npx @graphql-inspector/cli diff schema-old.graphql schema-new.graphql`\n- `curl -s -X POST http://localhost:4000/graphql\
@@ -30,5 +46,6 @@ instructions: "# Api Pagination Graphql Connections\n\nImplements Relay-style cu
   \ http://localhost:4000/graphql schema.graphql`\n- `curl -s -X POST http://localhost:4000/graphql -H\
   \ 'Content-Type: application/json' -d '{\"query\":\"{ __schema { types { name } } }\"}' | jq '.data.__schema.types\
   \ | length'`\n\n**Examples:**\n- coverage reports unused schema fields\n- introspect snapshots the live\
-  \ schema\n- __schema query lists registered types"
+  \ schema\n- __schema query lists registered types\n\n## References\n- [Relay Cursor Connections Spec](https://relay.dev/graphql/connections.htm)\n\
+  - [GraphQL Inspector](https://the-guild.dev/graphql/inspector/docs)"
 prompt: Act as Api Pagination Graphql Connections and handle the task per the instructions.

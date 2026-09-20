@@ -4,27 +4,25 @@ applyTo: "**/*.go **/*.java **/*.r **/*.sh"
 
 Implement the circuit breaker pattern in Java with Resilience4j and in Go with gobreaker, including thresholds and fallbacks.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (circuit-breaker-pattern)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Circuit Breaker Pattern** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `mvn dependency:get -Dartifact=io.github.resilience4j:resilie`, `go get github.com/sony/gobreaker`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `circuit-breaker-pattern`
+- Domain: Implement the circuit breaker pattern in Java with Resilience4j and in Go with gobreaker, including thresholds and fallbacks.
+- **resilience4j**: Add circuit breakers to Java apps with Resilience4j and configure thresholds — `mvn dependency:get -Dartifact=io.github.resilience4j:resilience4j-circuitbreaker`
+- **gobreaker**: Use sony/gobreaker circuit breaker in Go services with custom thresholds and fallbacks — `go get github.com/sony/gobreaker`
+- Check `knowledge` and `prerequisites: mvn`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `circuit-breaker-pattern`
+- For `resilience4j`: Add circuit breakers to Java apps with Resilience4j and configure thresholds — decide which checks to run
+- For `gobreaker`: Use sony/gobreaker circuit breaker in Go services with custom thresholds and fallbacks — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `circuit-breaker-pattern` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `circuit-breaker-pattern:8a0ae5db`
 
 # Circuit Breaker Pattern
 

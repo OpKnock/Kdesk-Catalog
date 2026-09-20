@@ -7,27 +7,23 @@ description: "Marketing brand expertise and best practices. Use when working wit
 
 Marketing brand expertise and best practices.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (marketing-brand)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Marketing Brand** (marketing/brand) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `brand-cli`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — marketing context for `marketing-brand`
+- Domain: Marketing brand expertise and best practices.
+- **brand-expertise**: marketing brand expertise — `brand-cli`
+- Check `knowledge` and `prerequisites: brand`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `marketing-brand`
+- For `brand-expertise`: marketing brand expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `marketing-brand` tools
+- Tools: `Glob`, `Grep`, `Read`, `Brand-cli`, `Brand-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `marketing-brand:331468f8`
 
 ## Instructions
 

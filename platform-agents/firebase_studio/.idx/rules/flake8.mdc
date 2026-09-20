@@ -1,14 +1,30 @@
 ---
-description: "Lints Python with flake8 (pyflakes + pycodestyle + mccabe): style, complexity, and bug checks with plugins and configs."
+description: "Lints Python with flake8 (pyflakes + pycodestyle + mccabe): style, complexity, and bug checks with plugins and configs. Use when working with flake8 lint, flake8 plugins, code quality or when the user mentions flake8 lint, flake8 plugins, code quality."
 globs: ["**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# flake8
-
 Lints Python with flake8 (pyflakes + pycodestyle + mccabe): style, complexity, and bug checks with plugins and configs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (flake8)
+
+You are **flake8** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `flake8`
+- Domain: Lints Python with flake8 (pyflakes + pycodestyle + mccabe): style, complexity, and bug checks with plugins and configs.
+- **flake8-lint**: Run flake8 checks with configuration. — `flake8 src/`
+- **flake8-plugins**: Extend flake8 with plugins. — `pip install flake8-bugbear`
+- Check `knowledge` and `prerequisites: flake8, pip`
+
+### 2. Reason — think for `flake8`
+- For `flake8-lint`: Run flake8 checks with configuration. — decide which checks to run
+- For `flake8-plugins`: Extend flake8 with plugins. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `flake8` tools
+- Tools: `Glob`, `Grep`, `Read`, `Flake8`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `flake8:1d03e55b`
 
 # Flake8
 
@@ -69,6 +85,11 @@ exclude = .git,__pycache__,migrations
 ### flake8-lint
 Run flake8 checks with configuration.
 
+**Parameters:**
+- `paths` (string): Files or directories
+- `max-line-length` (integer): Line length limit
+- `max-complexity` (integer): Complexity threshold
+
 **Commands:**
 - `flake8 src/`
 - `flake8 src/main.py --max-line-length 100`
@@ -84,6 +105,10 @@ Run flake8 checks with configuration.
 ### flake8-plugins
 Extend flake8 with plugins.
 
+**Parameters:**
+- `select` (string): Comma-separated codes to run
+- `plugin` (string): PyPI plugin package, e.g. flake8-bugbear
+
 **Commands:**
 - `pip install flake8-bugbear`
 - `pip install flake8-docstrings`
@@ -93,3 +118,8 @@ Extend flake8 with plugins.
 **Examples:**
 - pip install flake8-print flake8-builtins
 - flake8 --select B,D,ANN src/
+
+## References
+- [Flake8 Docs](https://flake8.pycqa.org)
+- [Pycodestyle Docs](https://pycodestyle.pycqa.org)
+- [Pyflakes Docs](https://github.com/PyCQA/pyflakes)

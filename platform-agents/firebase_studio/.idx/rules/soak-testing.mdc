@@ -1,14 +1,28 @@
 ---
-description: "Runs sustained load tests for 24+ hours using k6 while monitoring resource trends. Captures memory, CPU, and connection metrics from Kubernetes pods and host-level tools to detect leaks and drift that short tests miss."
+description: "Runs sustained load tests for 24+ hours using k6 while monitoring resource trends. Captures memory, CPU, and connection metrics from Kubernetes pods and host-level tools to detect leaks and drift that short tests miss. Use when working with soak run, api or when the user mentions soak run, api."
 globs: ["**/*.java", "**/*.json", "**/*.r", "**/*.sh", "**/*.{js,ts,jsx,tsx}"]
 alwaysApply: false
 ---
 
-# Soak Testing
-
 Runs sustained load tests for 24+ hours using k6 while monitoring resource trends. Captures memory, CPU, and connection metrics from Kubernetes pods and host-level tools to detect leaks and drift that short tests miss.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (soak-testing)
+
+You are **Soak Testing** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `soak-testing`
+- Domain: Runs sustained load tests for 24+ hours using k6 while monitoring resource trends. Captures memory, CPU, and connection metrics from Kubernetes pods and host-level tools to detect leaks and drift that
+- **soak-run**: Runs sustained load tests for 24+ hours using k6 while monitoring resource trends. Captures memory,  — `k6 run --vus 10 --duration 24h soak.js`
+- Check `knowledge` and `prerequisites: dstat, free, kubectl`
+
+### 2. Reason — think for `soak-testing`
+- For `soak-run`: Runs sustained load tests for 24+ hours using k6 while monitoring resource trends. Captures memory, CPU, and connection  — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `soak-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `K6`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `soak-testing:b30da44e`
 
 # Soak Testing
 
@@ -84,6 +98,11 @@ kubectl top pods -n prod | sort -k2 -h
 ### soak-run
 Runs sustained load tests for 24+ hours using k6 while monitoring resource trends. Captures memory, CPU, and connection metrics from Kubernetes pods and host-level tools to detect leaks and drift that short tests miss.
 
+**Parameters:**
+- `vus` (integer): Number of virtual users for sustained load
+- `duration` (string): Test duration (e.g., 24h, 48h)
+- `script_path` (string): Path to k6 test script
+
 **Commands:**
 - `k6 run --vus 10 --duration 24h soak.js`
 - `k6 run --vus 10 --duration 24h soak.js --out json=soak.json`
@@ -99,3 +118,6 @@ Runs sustained load tests for 24+ hours using k6 while monitoring resource trend
 - kubectl top pods -l app=api -n prod
 - free -h && vmstat 1 10
 - kubectl get hpa api
+
+## References
+- [k6 soak testing guide](https://grafana.com/docs/k6/latest/testing-guides/test-types/soak-testing/)

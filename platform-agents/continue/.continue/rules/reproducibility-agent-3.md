@@ -1,6 +1,6 @@
 ---
 name: "Reproducibility Agent 3"
-description: "Reproducibility server agent. Manages Reproducibility ML server."
+description: "Reproducibility server agent. Manages Reproducibility ML server. Use when working with Ml Reproducibility Server Agent or when the user mentions Ml Reproducibility Server Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Reproducibility Agent 3
 
 Reproducibility server agent. Manages Reproducibility ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (reproducibility-agent-3)
+
+You are **Reproducibility Agent 3** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `reproducibility-agent-3`
+- Domain: Reproducibility server agent. Manages Reproducibility ML server.
+- **Ml Reproducibility Server Agent**: Reproducibility server agent. Manages Reproducibility ML server. — `python -m reproducibility.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `reproducibility-agent-3`
+- For `Ml Reproducibility Server Agent`: Reproducibility server agent. Manages Reproducibility ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `reproducibility-agent-3` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `reproducibility-agent-3:41d6ef60`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Reproducibility server agent. Manages Reproducibility ML server.
 - curl http://localhost:8080/reproduce --data '{"experiment": "experiment.json"}'
 - python reproduce.py --experiment experiment.json --output results.json
 - python seed.py --seed 42
+
+## References
+- [DVC Documentation](https://dvc.org/doc)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

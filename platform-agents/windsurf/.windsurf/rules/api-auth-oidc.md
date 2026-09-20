@@ -6,27 +6,23 @@ globs: ["**/*.go", "**/*.r", "**/*.sh"]
 
 API auth with OpenID Connect - discovery, authorization code flow with PKCE, ID token validation, and userinfo retrieval.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-auth-oidc)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Auth OIDC** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -s http://localhost:8080/realms/demo/.well-known/openid`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `api-auth-oidc`
+- Domain: API auth with OpenID Connect - discovery, authorization code flow with PKCE, ID token validation, and userinfo retrieval.
+- **oidc-flow**: Implement and test OpenID Connect flows — `curl -s http://localhost:8080/realms/demo/.well-known/openid-configuration | jq `
+- Check `knowledge` and `prerequisites: node.js, python, jsonwebtoken`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-auth-oidc`
+- For `oidc-flow`: Implement and test OpenID Connect flows — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-auth-oidc` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-auth-oidc:995af076`
 
 # API Auth (OpenID Connect)
 

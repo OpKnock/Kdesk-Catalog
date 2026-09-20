@@ -1,6 +1,6 @@
 ---
 name: "gke-identity-py"
-description: "GKE deployment agent. Manages GKE ML deployment."
+description: "GKE deployment agent. Manages GKE ML deployment. Use when working with Ml Gke Deploy Agent or when the user mentions Ml Gke Deploy Agent."
 type: knowledge
 triggers: ["gke-identity-py", "ml gke deploy agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["gke-identity-py", "ml gke deploy agent"]
 # Gke Identity Py
 
 GKE deployment agent. Manages GKE ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (gke-identity-py)
+
+You are **Gke Identity Py** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `gke-identity-py`
+- Domain: GKE deployment agent. Manages GKE ML deployment.
+- **Ml Gke Deploy Agent**: GKE deployment agent. Manages GKE ML deployment. — `docker build -t gke:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `gke-identity-py`
+- For `Ml Gke Deploy Agent`: GKE deployment agent. Manages GKE ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gke-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Gke` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gke-identity-py:01bcd7bb`
 
 ## Instructions
 
@@ -32,3 +50,8 @@ GKE deployment agent. Manages GKE ML deployment.
 - kubectl logs -f demo-pod
 - kubectl get services
 - gcloud container clusters list
+
+## References
+- [Google Kubernetes Engine Documentation](https://cloud.google.com/kubernetes-engine/docs)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

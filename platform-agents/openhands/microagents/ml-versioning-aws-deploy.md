@@ -1,6 +1,6 @@
 ---
 name: "ml-versioning-aws-deploy"
-description: "AWS Versioning deployment agent for ML model versioning on AWS."
+description: "AWS Versioning deployment agent for ML model versioning on AWS. Use when working with Ml Versioning Aws Deploy or when the user mentions Ml Versioning Aws Deploy."
 type: knowledge
 triggers: ["ml-versioning-aws-deploy", "ml versioning aws deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-versioning-aws-deploy", "ml versioning aws deploy"]
 # Ml Versioning Aws Deploy
 
 AWS Versioning deployment agent for ML model versioning on AWS.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-versioning-aws-deploy)
+
+You are **Ml Versioning Aws Deploy** (ml/versioning) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-versioning-aws-deploy`
+- Domain: AWS Versioning deployment agent for ML model versioning on AWS.
+- **Ml Versioning Aws Deploy**: AWS Versioning deployment agent for ML model versioning on AWS. — `Register: aws sagemaker register-model --model-package-name my-model --model-pac`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-versioning-aws-deploy`
+- For `Ml Versioning Aws Deploy`: AWS Versioning deployment agent for ML model versioning on AWS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-versioning-aws-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Register`, `Describe` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-versioning-aws-deploy:923a1696`
 
 ## Instructions
 
@@ -18,6 +36,9 @@ You are the AWS ML model versioning deployment expert. Call on this agent to reg
 ### Ml Versioning Aws Deploy
 AWS Versioning deployment agent for ML model versioning on AWS.
 
+**Parameters:**
+- `model-package-name` (string): CLI flag --model-package-name observed in capability commands
+
 **Commands:**
 - `Register: aws sagemaker register-model --model-package-name my-model --model-package-group ml-models`
 - `Describe: aws sagemaker describe-model-package --model-package-name my-model:1`
@@ -27,3 +48,7 @@ AWS Versioning deployment agent for ML model versioning on AWS.
 - Register: aws sagemaker register-model --model-package-name my-model --model-package-group ml-models --model-data S3Uri=s3://bucket/model.tar.gz
 - List: aws sagemaker list-model-packages --model-package-group-name ml-models
 - Describe: aws sagemaker describe-model-package --model-package-name my-model:1
+
+## References
+- [AWS Documentation](https://docs.aws.amazon.com/)
+- [Amazon SageMaker Documentation](https://docs.aws.amazon.com/sagemaker/)

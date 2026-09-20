@@ -1,6 +1,6 @@
 ---
 name: "mlx-lm-sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Mlx Lm Deploy Sdk Agent V2, inference or when the user mentions Ml Mlx Lm Deploy Sdk Agent V2, inference."
 type: knowledge
 triggers: ["mlx-lm-sdk", "ml mlx lm deploy sdk agent v2"]
 ---
@@ -8,6 +8,24 @@ triggers: ["mlx-lm-sdk", "ml mlx lm deploy sdk agent v2"]
 # Mlx Lm Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (mlx-lm-sdk)
+
+You are **Mlx Lm Sdk** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `mlx-lm-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Mlx Lm Deploy Sdk Agent V2**: MLX LM SDK deployment agent for ML MLX LM SDK deployment. — `docker build -t mlx-lm:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `mlx-lm-sdk`
+- For `Ml Mlx Lm Deploy Sdk Agent V2`: MLX LM SDK deployment agent for ML MLX LM SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mlx-lm-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Mlx-lm` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mlx-lm-sdk:fcd5f307`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ MLX LM SDK deployment agent for ML MLX LM SDK deployment.
 **Examples:**
 - Server: python -m mlx_lm.server --port 8080
 - Docker: docker run -p 8080:8080 mlx_lm-server
+
+## References
+- [MLX LM Documentation](https://github.com/ml-explore/mlx-examples/tree/main/llms)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

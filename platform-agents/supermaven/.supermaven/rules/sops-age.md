@@ -1,8 +1,22 @@
-# SOPS Age
-
 Encrypts configuration files with SOPS using age encryption keys. Generates age keypairs, encrypts and decrypts YAML/JSON files, patches individual values in encrypted files without disk decryption, and manages creation rules for GitOps workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (sops-age)
+
+You are **SOPS Age** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `sops-age`
+- Domain: Encrypts configuration files with SOPS using age encryption keys. Generates age keypairs, encrypts and decrypts YAML/JSON files, patches individual values in encrypted files without disk decryption, a
+- **sops-age**: Encrypts configuration files with SOPS using age encryption keys. Generates age keypairs, encrypts a — `age-keygen -o age.key`
+- Check `knowledge` and `prerequisites: age-keygen, sops`
+
+### 2. Reason — think for `sops-age`
+- For `sops-age`: Encrypts configuration files with SOPS using age encryption keys. Generates age keypairs, encrypts and decrypts YAML/JSO — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `sops-age` tools
+- Tools: `Glob`, `Grep`, `Read`, `Age-keygen`, `Sops` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sops-age:85575981`
 
 # SOPS with age
 
@@ -68,6 +82,11 @@ sops --encrypt secrets/application.yaml   # rule-based, no flags
 ### sops-age
 Encrypts configuration files with SOPS using age encryption keys. Generates age keypairs, encrypts and decrypts YAML/JSON files, patches individual values in encrypted files without disk decryption, and manages creation rules for GitOps workflows.
 
+**Parameters:**
+- `age_pubkey` (string): Age public key (age1...)
+- `file_path` (string): Path to YAML/JSON file to encrypt
+- `key_path` (string): Path to age private key file
+
 **Commands:**
 - `age-keygen -o age.key`
 - `age-keygen -y age.key`
@@ -82,3 +101,6 @@ Encrypts configuration files with SOPS using age encryption keys. Generates age 
 - sops --decrypt secrets/application.enc.yaml
 - sops --set '["db"]["password"] "newpass"' secrets/application.enc.yaml
 - sops --rotate-keys secrets/application.enc.yaml
+
+## References
+- [SOPS usage docs](https://getsops.io/docs/)

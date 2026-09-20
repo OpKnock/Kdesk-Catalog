@@ -1,14 +1,30 @@
 ---
-description: "Manages Terraform state: list/show/mv/rm operations, state pull/push, replace-provider, and workspace-safe state surgery."
+description: "Manages Terraform state: list/show/mv/rm operations, state pull/push, replace-provider, and workspace-safe state surgery. Use when working with state inspection, state surgery, devops or when the user mentions state inspection, state surgery, devops."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh", "**/*.tf"]
 alwaysApply: false
 ---
 
-# Terraform State
-
 Manages Terraform state: list/show/mv/rm operations, state pull/push, replace-provider, and workspace-safe state surgery.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (terraform-state)
+
+You are **Terraform State** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `terraform-state`
+- Domain: Manages Terraform state: list/show/mv/rm operations, state pull/push, replace-provider, and workspace-safe state surgery.
+- **state-inspection**: List and inspect resources in Terraform state. — `terraform state list`
+- **state-surgery**: Move, remove, and replace resources in state safely. — `terraform state mv aws_instance.web aws_instance.web2`
+- Check `knowledge` and `prerequisites: terraform`
+
+### 2. Reason — think for `terraform-state`
+- For `state-inspection`: List and inspect resources in Terraform state. — decide which checks to run
+- For `state-surgery`: Move, remove, and replace resources in state safely. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `terraform-state` tools
+- Tools: `Glob`, `Grep`, `Read`, `Terraform` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `terraform-state:6ac80a19`
 
 # Terraform State Management
 
@@ -73,6 +89,10 @@ terraform state push backup.tfstate
 ### state-inspection
 List and inspect resources in Terraform state.
 
+**Parameters:**
+- `resource` (string): Resource address, e.g. aws_instance.web
+- `state-file` (string): Explicit state file path
+
 **Commands:**
 - `terraform state list`
 - `terraform state list -state=envs/prod/terraform.tfstate`
@@ -88,6 +108,10 @@ List and inspect resources in Terraform state.
 ### state-surgery
 Move, remove, and replace resources in state safely.
 
+**Parameters:**
+- `from` (string): Source resource address
+- `to` (string): Destination resource address
+
 **Commands:**
 - `terraform state mv aws_instance.web aws_instance.web2`
 - `terraform state mv 'module.app.aws_s3_bucket.b' 'module.core.aws_s3_bucket.b'`
@@ -100,3 +124,7 @@ Move, remove, and replace resources in state safely.
 - terraform state mv aws_instance.web aws_instance.web2
 - terraform state rm aws_instance.orphan
 - terraform state replace-provider -auto-approve hashicorp/aws public.ecr.aws/acme/aws
+
+## References
+- [Terraform State](https://developer.hashicorp.com/terraform/language/state)
+- [terraform state Command](https://developer.hashicorp.com/terraform/cli/commands/state)

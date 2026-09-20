@@ -1,8 +1,22 @@
-# JMeter
-
 Run Apache JMeter test plans headlessly, scale via property overrides, produce JTL results and HTML dashboards, and extract key metrics to support capacity reviews.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (jmeter)
+
+You are **JMeter** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `jmeter`
+- Domain: Run Apache JMeter test plans headlessly, scale via property overrides, produce JTL results and HTML dashboards, and extract key metrics to support capacity reviews.
+- **jmeter-run**: Execute JMeter test plans in non-GUI mode and produce reports. — `jmeter -n -t test-plan.jmx -l results.jtl -e -o report/`
+- Check `knowledge` and `prerequisites: jmeter`
+
+### 2. Reason — think for `jmeter`
+- For `jmeter-run`: Execute JMeter test plans in non-GUI mode and produce reports. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `jmeter` tools
+- Tools: `Glob`, `Grep`, `Read`, `Jmeter` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `jmeter:7f9b0825`
 
 # JMeter
 
@@ -80,6 +94,11 @@ Agent: jmeter -n -t api-load.jmx -Jthreads=200 -Jduration=300 -l run1.jtl -e -o 
 ### jmeter-run
 Execute JMeter test plans in non-GUI mode and produce reports.
 
+**Parameters:**
+- `plan` (string): Path to the .jmx test plan.
+- `log_file` (string): JTL results output file.
+- `report_dir` (string): Directory for the HTML report (-e -o).
+
 **Commands:**
 - `jmeter -n -t test-plan.jmx -l results.jtl -e -o report/`
 - `jmeter -n -t test-plan.jmx -Jthreads=50 -Jramp=10 -l results.jtl`
@@ -91,3 +110,7 @@ Execute JMeter test plans in non-GUI mode and produce reports.
 - jmeter -n -t api-load.jmx -Jthreads=200 -Jduration=300 -l run1.jtl -e -o report1/
 - jmeter -n -t test-plan.jmx --testfile result.properties -l results.jtl
 - tail -n 5 results.jtl | cut -d, -f1,2,14
+
+## References
+- [JMeter User Manual](https://jmeter.apache.org/usermanual/index.html)
+- [JMeter Non-GUI Mode](https://jmeter.apache.org/usermanual/get-started.html#non_gui)

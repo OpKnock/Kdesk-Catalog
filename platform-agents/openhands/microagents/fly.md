@@ -1,15 +1,31 @@
 ---
 name: "fly"
-description: "Deploys applications to Fly.io with the flyctl CLI: app creation, scaling machines, volumes, secrets, and wireguard VPN."
+description: "Deploys applications to Fly.io with the flyctl CLI: app creation, scaling machines, volumes, secrets, and wireguard VPN. Use when working with fly deploy, fly ops, cloud or when the user mentions fly deploy, fly ops, cloud."
 type: knowledge
 triggers: ["fly", "fly-deploy", "fly-ops"]
 ---
 
-# Fly
-
 Deploys applications to Fly.io with the flyctl CLI: app creation, scaling machines, volumes, secrets, and wireguard VPN.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (fly)
+
+You are **Fly** (cloud/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — cloud context for `fly`
+- Domain: Deploys applications to Fly.io with the flyctl CLI: app creation, scaling machines, volumes, secrets, and wireguard VPN.
+- **fly-deploy**: Create apps, launch machines, and deploy. — `fly launch`
+- **fly-ops**: Manage machines, volumes, and secrets. — `fly machines list -a myapp`
+- Check `knowledge` and `prerequisites: fly`
+
+### 2. Reason — think for `fly`
+- For `fly-deploy`: Create apps, launch machines, and deploy. — decide which checks to run
+- For `fly-ops`: Manage machines, volumes, and secrets. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `fly` tools
+- Tools: `Glob`, `Grep`, `Read`, `Fly` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fly:f82b1264`
 
 # Fly.io
 
@@ -70,6 +86,10 @@ fly ssh console -a myapp
 ### fly-deploy
 Create apps, launch machines, and deploy.
 
+**Parameters:**
+- `app` (string): Fly app name
+- `region` (string): Fly region code
+
 **Commands:**
 - `fly launch`
 - `fly deploy`
@@ -85,6 +105,10 @@ Create apps, launch machines, and deploy.
 ### fly-ops
 Manage machines, volumes, and secrets.
 
+**Parameters:**
+- `machine-id` (string): Machine id
+- `secret` (string): KEY=VALUE pair
+
 **Commands:**
 - `fly machines list -a myapp`
 - `fly volume create data -a myapp --region lhr --size 5`
@@ -96,3 +120,7 @@ Manage machines, volumes, and secrets.
 - fly machines destroy 123abc -a myapp --force
 - fly volumes list -a myapp
 - fly secrets set --detach AUTH_TOKEN=abc123
+
+## References
+- [Fly.io Docs](https://fly.io/docs/)
+- [flyctl Reference](https://fly.io/docs/flyctl/)

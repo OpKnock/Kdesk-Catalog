@@ -9,27 +9,27 @@ allowed-tools: "Glob Grep Read Bash(git:*) Bash(sops:*)"
 
 Encrypts YAML/JSON/ENV files with age, PGP, KMS, or Vault keys using SOPS, with git integration for secrets management.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (sops-security)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **sops-security** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `sops -e secrets.yaml > secrets.enc.yaml`, `sops secrets.enc.yaml`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `sops-security`
+- Domain: Encrypts YAML/JSON/ENV files with age, PGP, KMS, or Vault keys using SOPS, with git integration for secrets management.
+- **file-encryption**: Encrypt and decrypt config files with key providers. — `sops -e secrets.yaml > secrets.enc.yaml`
+- **editing-and-kms**: Edit encrypted values and use cloud KMS keys. — `sops secrets.enc.yaml`
+- **git-integration**: Use sops with git diff and merge tools. — `git config --global diff.sopsdiffer.textconv "sops -d"`
+- Check `knowledge` and `prerequisites: git, sops`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `sops-security`
+- For `file-encryption`: Encrypt and decrypt config files with key providers. — decide which checks to run
+- For `editing-and-kms`: Edit encrypted values and use cloud KMS keys. — decide which checks to run
+- For `git-integration`: Use sops with git diff and merge tools. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `sops-security` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sops`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sops-security:a4c8b30f`
 
 # SOPS
 

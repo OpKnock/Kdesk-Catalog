@@ -1,8 +1,24 @@
-# curl-devtools
-
 Makes HTTP requests with curl: headers, methods, auth, redirects, timeouts, retries, and output formatting for API debugging.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (curl-devtools)
+
+You are **curl-devtools** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `curl-devtools`
+- Domain: Makes HTTP requests with curl: headers, methods, auth, redirects, timeouts, retries, and output formatting for API debugging.
+- **http-requests**: Send GET/POST/PUT requests with headers, bodies, and auth. — `curl -I http://localhost:8080`
+- **downloads-and-metrics**: Download files and measure request timing and status. — `curl -o file.zip http://localhost:8080/file.zip`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `curl-devtools`
+- For `http-requests`: Send GET/POST/PUT requests with headers, bodies, and auth. — decide which checks to run
+- For `downloads-and-metrics`: Download files and measure request timing and status. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `curl-devtools` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `curl-devtools:e2f2024a`
 
 # curl HTTP Client
 
@@ -56,6 +72,11 @@ curl -s https://api.example.com/data | jq .
 ### http-requests
 Send GET/POST/PUT requests with headers, bodies, and auth.
 
+**Parameters:**
+- `method` (string): HTTP method via -X
+- `data` (string): Request body via -d
+- `header` (string): Request header via -H
+
 **Commands:**
 - `curl -I http://localhost:8080`
 - `curl -X POST http://localhost:8080/items -H 'Content-Type: application/json' -d '{"name":"x"}'`
@@ -72,6 +93,11 @@ Send GET/POST/PUT requests with headers, bodies, and auth.
 ### downloads-and-metrics
 Download files and measure request timing and status.
 
+**Parameters:**
+- `output` (string): Output file via -o
+- `retry` (integer): Retry count
+- `max-time` (integer): Timeout in seconds
+
 **Commands:**
 - `curl -o file.zip http://localhost:8080/file.zip`
 - `curl -O http://localhost:8080/file.zip`
@@ -84,3 +110,7 @@ Download files and measure request timing and status.
 - curl -w '%{http_code} %{time_total}\n' -o /dev/null http://localhost:8080
 - curl --retry 5 --retry-delay 2 http://localhost:8080/flaky
 - curl -s http://localhost:8080/api | jq .
+
+## References
+- [curl Manual](https://curl.se/docs/manpage.html)
+- [curl Everything Guide](https://everything.curl.dev/)

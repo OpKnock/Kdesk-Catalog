@@ -1,15 +1,29 @@
 ---
 name: "gcp-secret-manager"
-description: "Store and manage secrets in GCP Secret Manager: create and version secrets, access values, and grant access via IAM."
+description: "Store and manage secrets in GCP Secret Manager: create and version secrets, access values, and grant access via IAM. Use when working with secret manager, api or when the user mentions secret manager, api."
 type: knowledge
 triggers: ["gcp-secret-manager", "secret-manager"]
 ---
 
-# Gcp Secret Manager
-
 Store and manage secrets in GCP Secret Manager: create and version secrets, access values, and grant access via IAM.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (gcp-secret-manager)
+
+You are **Gcp Secret Manager** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `gcp-secret-manager`
+- Domain: Store and manage secrets in GCP Secret Manager: create and version secrets, access values, and grant access via IAM.
+- **secret-manager**: Create, access, version, and delete secrets with gcloud. — `printf 'postgres://app:pass@db:5432/app' | gcloud secrets versions add db-url --`
+- Check `knowledge` and `prerequisites: gcloud, printf`
+
+### 2. Reason — think for `gcp-secret-manager`
+- For `secret-manager`: Create, access, version, and delete secrets with gcloud. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gcp-secret-manager` tools
+- Tools: `Glob`, `Grep`, `Read`, `Printf`, `Gcloud` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gcp-secret-manager:5ce12b35`
 
 # GCP Secret Manager
 
@@ -70,6 +84,11 @@ test "$V" = "$EXPECTED" && echo OK
 ### secret-manager
 Create, access, version, and delete secrets with gcloud.
 
+**Parameters:**
+- `secret-name` (string): Secret identifier
+- `version` (string): Version number or latest
+- `replication` (string): automatic or user-managed replication
+
 **Commands:**
 - `printf 'postgres://app:pass@db:5432/app' | gcloud secrets versions add db-url --data-file=-`
 - `gcloud secrets create db-url --replication-policy=automatic --data-file=- <<< 'postgres://...'`
@@ -82,3 +101,7 @@ Create, access, version, and delete secrets with gcloud.
 - gcloud secrets versions access latest --secret=db-url
 - gcloud secrets create db-url --replication-policy=automatic --data-file=- <<< 'postgres://...'
 - gcloud secrets add-iam-policy-binding db-url --member=serviceAccount:app-sa@my-project.iam.gserviceaccount.com --role=roles/secretmanager.secretAccessor
+
+## References
+- [Secret Manager docs](https://cloud.google.com/secret-manager/docs)
+- [gcloud secrets reference](https://cloud.google.com/sdk/gcloud/reference/secrets)

@@ -1,6 +1,6 @@
 ---
 name: "Iac Scanner"
-description: "IaC scanning agent for Checkov, tfsec, KICS, and Terrascan."
+description: "IaC scanning agent for Checkov, tfsec, KICS, and Terrascan. Use when working with Iac Scanner, security, scanning or when the user mentions Iac Scanner, security, scanning."
 globs: ["**/*.json", "**/*.r", "**/*.tf", "**/Dockerfile*"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Iac Scanner
 
 IaC scanning agent for Checkov, tfsec, KICS, and Terrascan.
+
+## Agentic Workflow: Read -> Reason -> Act (iac-scanner)
+
+You are **Iac Scanner** (security/scanning) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `iac-scanner`
+- Domain: IaC scanning agent for Checkov, tfsec, KICS, and Terrascan.
+- **Iac Scanner**: IaC scanning agent for Checkov, tfsec, KICS, and Terrascan. — `KICS: kics scan -p . --output-format json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `iac-scanner`
+- For `Iac Scanner`: IaC scanning agent for Checkov, tfsec, KICS, and Terrascan. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `iac-scanner` tools
+- Tools: `Glob`, `Grep`, `Read`, `KICS`, `Tfsec` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `iac-scanner:62a321b8`
 
 ## Instructions
 
@@ -37,3 +55,7 @@ IaC scanning agent for Checkov, tfsec, KICS, and Terrascan.
 - tfsec: tfsec . --format sarif
 - KICS: kics scan -p . --output-format json
 - Terrascan: terrascan scan -d . -p aws
+
+## References
+- [Terraform Documentation](https://developer.hashicorp.com/terraform/docs)
+- [AWS Documentation](https://docs.aws.amazon.com/)

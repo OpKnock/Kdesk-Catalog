@@ -6,27 +6,23 @@ alwaysApply: false
 
 Hardens HTTP responses by configuring and verifying security headers including CSP, HSTS, X-Frame-Options, Referrer-Policy, and X-Content-Type-Options. Validates implementations with curl and scores compliance using Mozilla Observatory.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (security-headers)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Security Headers** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -sI https://httpbin.org/headers | grep -iE 'strict-tran`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `security-headers`
+- Domain: Hardens HTTP responses by configuring and verifying security headers including CSP, HSTS, X-Frame-Options, Referrer-Policy, and X-Content-Type-Options. Validates implementations with curl and scores c
+- **http-header-hardening**: Configure and verify HTTP security headers — `curl -sI https://httpbin.org/headers | grep -iE 'strict-transport-security|conte`
+- Check `knowledge` and `prerequisites: curl, npx`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `security-headers`
+- For `http-header-hardening`: Configure and verify HTTP security headers — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `security-headers` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `security-headers:c21221e7`
 
 # Security Headers
 

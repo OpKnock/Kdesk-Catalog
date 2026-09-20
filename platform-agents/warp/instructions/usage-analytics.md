@@ -1,8 +1,22 @@
-# Usage Analytics
-
 Tracks product usage events and queries analytics APIs. Sends custom events to Plausible and Mixpanel, retrieves aggregate statistics and time-series data for dashboards, and imports historical event data via API.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (usage-analytics)
+
+You are **Usage Analytics** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `usage-analytics`
+- Domain: Tracks product usage events and queries analytics APIs. Sends custom events to Plausible and Mixpanel, retrieves aggregate statistics and time-series data for dashboards, and imports historical event 
+- **analytics-events**: Collect and query product usage events — `curl -X POST https://plausible.io/api/event -H "Content-Type: application/json" `
+- Check `knowledge` and `prerequisites: python, curl`
+
+### 2. Reason — think for `usage-analytics`
+- For `analytics-events`: Collect and query product usage events — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `usage-analytics` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `usage-analytics:bacac21b`
 
 # Usage Analytics
 
@@ -62,6 +76,11 @@ curl -X POST https://plausible.io/api/event -H "Content-Type: application/json" 
 ### analytics-events
 Collect and query product usage events
 
+**Parameters:**
+- `site_id` (string): Domain for Plausible queries
+- `period` (string): 30d, 7d, or month
+- `metrics` (string): visitors, pageviews, bounce_rate
+
 **Commands:**
 - `curl -X POST https://plausible.io/api/event -H "Content-Type: application/json" -d "{\"domain\":\"app.your-app.test\",\"name\":\"signup\",\"url\":\"https://app.your-app.test/signup\",\"props\":{\"plan\":\"pro\"}}"`
 - `curl -s "https://plausible.io/api/v1/stats/aggregate?site_id=app.your-app.test&period=30d&metrics=visitors,pageviews" -H "Authorization: Bearer $PLAUSIBLE_API_KEY" | jq`
@@ -73,3 +92,8 @@ Collect and query product usage events
 - curl -X POST https://plausible.io/api/event -H "Content-Type: application/json" -d "{\"domain\":\"app.your-app.test\",\"name\":\"signup\",\"url\":\"https://app.your-app.test/signup\"}"
 - curl -s "https://plausible.io/api/v1/stats/aggregate?site_id=app.your-app.test&period=30d&metrics=visitors,pageviews" -H "Authorization: Bearer KEY" | jq
 - curl -s "https://plausible.io/api/v1/stats/timeseries?site_id=app.your-app.test&period=7d&metrics=pageviews" -H "Authorization: Bearer KEY" | jq
+
+## References
+- [Plausible events API](https://plausible.io/docs/events-api)
+- [Plausible stats API](https://plausible.io/docs/stats-api)
+- [Mixpanel import API](https://developer.mixpanel.com/reference/http-import)

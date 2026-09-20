@@ -1,15 +1,31 @@
 ---
 name: "log-aggregation-devops"
-description: "Aggregates logs across infrastructure with Loki, Elasticsearch, and Fluent Bit: collection pipelines, queries, and retention."
+description: "Aggregates logs across infrastructure with Loki, Elasticsearch, and Fluent Bit: collection pipelines, queries, and retention. Use when working with loki stack, elk pipeline, devops or when the user mentions loki stack, elk pipeline, devops."
 type: knowledge
 triggers: ["log-aggregation-devops", "loki-stack", "elk-pipeline"]
 ---
 
-# Log Aggregation
-
 Aggregates logs across infrastructure with Loki, Elasticsearch, and Fluent Bit: collection pipelines, queries, and retention.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (log-aggregation-devops)
+
+You are **Log Aggregation** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `log-aggregation-devops`
+- Domain: Aggregates logs across infrastructure with Loki, Elasticsearch, and Fluent Bit: collection pipelines, queries, and retention.
+- **loki-stack**: Deploy Loki + Promtail and query aggregated logs with LogQL. — `helm repo add grafana https://grafana.github.io/helm-charts`
+- **elk-pipeline**: Run Elasticsearch, Logstash, and Filebeat pipelines for index-based aggregation. — `docker run -d -p 9200:9200 -e discovery.type=single-node docker.elastic.co/elast`
+- Check `knowledge` and `prerequisites: docker, filebeat, helm, kubectl`
+
+### 2. Reason — think for `log-aggregation-devops`
+- For `loki-stack`: Deploy Loki + Promtail and query aggregated logs with LogQL. — decide which checks to run
+- For `elk-pipeline`: Run Elasticsearch, Logstash, and Filebeat pipelines for index-based aggregation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `log-aggregation-devops` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Logcli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `log-aggregation-devops:4ed7fceb`
 
 # Log Aggregation
 
@@ -62,6 +78,10 @@ fluent-bit -c fluent-bit.conf
 ### loki-stack
 Deploy Loki + Promtail and query aggregated logs with LogQL.
 
+**Parameters:**
+- `query` (string): LogQL stream selector and filter
+- `limit` (integer): Max log entries to return
+
 **Commands:**
 - `helm repo add grafana https://grafana.github.io/helm-charts`
 - `helm upgrade --install loki grafana/loki-stack --namespace observability --create-namespace`
@@ -78,6 +98,10 @@ Deploy Loki + Promtail and query aggregated logs with LogQL.
 ### elk-pipeline
 Run Elasticsearch, Logstash, and Filebeat pipelines for index-based aggregation.
 
+**Parameters:**
+- `index` (string): Elasticsearch index pattern
+- `config` (string): Beat/Logstash config path
+
 **Commands:**
 - `docker run -d -p 9200:9200 -e discovery.type=single-node docker.elastic.co/elasticsearch/elasticsearch:8.13.0`
 - `docker run -d -v logstash.conf:/usr/share/logstash/pipeline -p 5044:5044 docker.elastic.co/logstash/logstash:8.13.0`
@@ -90,3 +114,8 @@ Run Elasticsearch, Logstash, and Filebeat pipelines for index-based aggregation.
 - docker run -d -p 9200:9200 elasticsearch:8.13.0
 - filebeat -e -c filebeat.yml
 - curl -s localhost:9200/_cat/indices?v
+
+## References
+- [Loki Documentation](https://grafana.com/docs/loki/latest/)
+- [Elasticsearch Reference](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html)
+- [Fluent Bit](https://docs.fluentbit.io/manual/)

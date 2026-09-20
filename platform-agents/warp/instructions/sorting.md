@@ -1,8 +1,22 @@
-# Sorting
-
 Sorts data correctly on the command line and in code. Handles CSV columns with numeric awareness, human-readable sizes (4.2K vs 1.3G), JSON arrays with jq sort_by, and SQL results with ORDER BY for API response ordering.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (sorting)
+
+You are **Sorting** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `sorting`
+- Domain: Sorts data correctly on the command line and in code. Handles CSV columns with numeric awareness, human-readable sizes (4.2K vs 1.3G), JSON arrays with jq sort_by, and SQL results with ORDER BY for AP
+- **sort-data**: Sorts data correctly on the command line and in code. Handles CSV columns with numeric awareness, hu — `sort -k2 -n data.csv`
+- Check `knowledge` and `prerequisites: python, sort, sqlite3`
+
+### 2. Reason — think for `sorting`
+- For `sort-data`: Sorts data correctly on the command line and in code. Handles CSV columns with numeric awareness, human-readable sizes ( — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `sorting` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sort`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `sorting:56385c58`
 
 # Sorting
 
@@ -70,6 +84,12 @@ c,1
 ### sort-data
 Sorts data correctly on the command line and in code. Handles CSV columns with numeric awareness, human-readable sizes (4.2K vs 1.3G), JSON arrays with jq sort_by, and SQL results with ORDER BY for API response ordering.
 
+**Parameters:**
+- `column` (integer): Column number to sort by (1-indexed)
+- `numeric` (boolean): Enable numeric sort
+- `json_field` (string): JSON field name to sort by
+- `sql_column` (string): SQL column name for ORDER BY
+
 **Commands:**
 - `sort -k2 -n data.csv`
 - `sort -h sizes.txt`
@@ -81,3 +101,6 @@ Sorts data correctly on the command line and in code. Handles CSV columns with n
 - sort -h sizes.txt
 - jq 'sort_by(.timestamp)' events.json
 - sqlite3 db.sqlite "SELECT * FROM events ORDER BY timestamp DESC"
+
+## References
+- [GNU sort manual](https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html)

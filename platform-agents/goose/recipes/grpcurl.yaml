@@ -2,38 +2,58 @@ title: grpcurl
 description: Interacts with gRPC servers from the CLI with grpcurl, including reflection, protobuf imports,
   and metadata headers.
 version: 2.0.0
-instructions: "# grpcurl\n\nInteracts with gRPC servers from the CLI with grpcurl, including reflection,\
-  \ protobuf imports, and metadata headers.\n\n## Instructions\n\n# grpcurl\n\nTest and debug gRPC services\
-  \ from the command line.\n\n## What This Skill Does\n\n- Lists and describes services via server reflection\n\
-  - Invokes unary and streaming RPCs with JSON input\n- Sends metadata headers (auth, tracing)\n- Works\
-  \ with proto files when reflection is off\n\n## When to Use\n\n- Smoke-testing a gRPC endpoint\n- Exploring\
-  \ an unknown service's API\n- Debugging auth or deadline issues\n\n## Real Commands\n\n```bash\n# Reflection\n\
-  \ grpcurl -plaintext localhost:50051 list\ngrpcurl -plaintext localhost:50051 describe my.package.Greeter\n\
-  \n# Calls\n grpcurl -plaintext -d '{\"name\": \"world\"}' localhost:50051 my.package.Greeter/SayHello\n\
-  grpcurl -plaintext -d '{\"id\": 1}' -H 'authorization: Bearer TOKEN' localhost:50051 my.package.Users/Get\n\
-  \n# Streaming (stdin)\n grpcurl -plaintext -d @ localhost:50051 my.package.Chat/Send <<< '{\"msg\":\
-  \ \"hi\"}'\n\n# Proto imports without reflection\n grpcurl -import-path ./proto -proto hello.proto -plaintext\
-  \ -d '{\"name\":\"x\"}' localhost:50051 hello.Greeter/SayHello\n```\n\n## Best Practices\n\n- Enable\
-  \ server reflection in dev environments\n- Always set -max-time to avoid hangs\n- Verify error details\
-  \ in the grpc-status trailer\n- Test with real auth headers against staging\n- Pair with protoc for\
-  \ offline schema inspection\n\n## Capabilities\n\n### grpc-reflection\nList and describe services via\
-  \ server reflection.\n\n**Commands:**\n- `grpcurl -plaintext localhost:50051 list`\n- `grpcurl -plaintext\
+instructions: "Interacts with gRPC servers from the CLI with grpcurl, including reflection, protobuf imports,\
+  \ and metadata headers.\n\n## Agentic Workflow: Read -> Reason -> Act (grpcurl)\n\nYou are **grpcurl**\
+  \ (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read\
+  \ — testing context for `grpcurl`\n- Domain: Interacts with gRPC servers from the CLI with grpcurl,\
+  \ including reflection, protobuf imports, and metadata headers.\n- **grpc-reflection**: List and describe\
+  \ services via server reflection. — `grpcurl -plaintext localhost:50051 list`\n- **grpc-calls**: Invoke\
+  \ unary and streaming RPCs with JSON payloads. — `grpcurl -plaintext -d '{\"name\": \"world\"}' localhost:50051\
+  \ my.package.Greeter/Say`\n- **protobuf-imports**: Call servers without reflection using proto files.\
+  \ — `grpcurl -import-path ./proto -proto hello.proto -plaintext -d '{\"name\":\"x\"}' loc`\n- Check\
+  \ `knowledge` and `prerequisites: grpcurl`\n\n### 2. Reason — think for `grpcurl`\n- For `grpc-reflection`:\
+  \ List and describe services via server reflection. — decide which checks to run\n- For `grpc-calls`:\
+  \ Invoke unary and streaming RPCs with JSON payloads. — decide which checks to run\n- For `protobuf-imports`:\
+  \ Call servers without reflection using proto files. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `grpcurl` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Grpcurl` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `grpcurl:2dd21d89`\n\n# grpcurl\n\
+  \nTest and debug gRPC services from the command line.\n\n## What This Skill Does\n\n- Lists and describes\
+  \ services via server reflection\n- Invokes unary and streaming RPCs with JSON input\n- Sends metadata\
+  \ headers (auth, tracing)\n- Works with proto files when reflection is off\n\n## When to Use\n\n- Smoke-testing\
+  \ a gRPC endpoint\n- Exploring an unknown service's API\n- Debugging auth or deadline issues\n\n## Real\
+  \ Commands\n\n```bash\n# Reflection\n grpcurl -plaintext localhost:50051 list\ngrpcurl -plaintext localhost:50051\
+  \ describe my.package.Greeter\n\n# Calls\n grpcurl -plaintext -d '{\"name\": \"world\"}' localhost:50051\
+  \ my.package.Greeter/SayHello\ngrpcurl -plaintext -d '{\"id\": 1}' -H 'authorization: Bearer TOKEN'\
+  \ localhost:50051 my.package.Users/Get\n\n# Streaming (stdin)\n grpcurl -plaintext -d @ localhost:50051\
+  \ my.package.Chat/Send <<< '{\"msg\": \"hi\"}'\n\n# Proto imports without reflection\n grpcurl -import-path\
+  \ ./proto -proto hello.proto -plaintext -d '{\"name\":\"x\"}' localhost:50051 hello.Greeter/SayHello\n\
+  ```\n\n## Best Practices\n\n- Enable server reflection in dev environments\n- Always set -max-time to\
+  \ avoid hangs\n- Verify error details in the grpc-status trailer\n- Test with real auth headers against\
+  \ staging\n- Pair with protoc for offline schema inspection\n\n## Capabilities\n\n### grpc-reflection\n\
+  List and describe services via server reflection.\n\n**Parameters:**\n- `addr` (string): Server address\
+  \ host:port\n- `plaintext` (boolean): Use plaintext instead of TLS\n- `symbol` (string): Service or\
+  \ message to describe\n\n**Commands:**\n- `grpcurl -plaintext localhost:50051 list`\n- `grpcurl -plaintext\
   \ localhost:50051 list my.package`\n- `grpcurl -plaintext localhost:50051 describe my.package.Greeter`\n\
   - `grpcurl -plaintext localhost:50051 describe my.package.HelloRequest`\n\n**Examples:**\n- grpcurl\
   \ -plaintext localhost:50051 list\n- grpcurl -plaintext localhost:50051 describe my.package.Greeter\n\
   - grpcurl -plaintext localhost:50051 list my.package\n\n### grpc-calls\nInvoke unary and streaming RPCs\
-  \ with JSON payloads.\n\n**Commands:**\n- `grpcurl -plaintext -d '{\"name\": \"world\"}' localhost:50051\
-  \ my.package.Greeter/SayHello`\n- `grpcurl -plaintext -d @ localhost:50051 my.package.Chat/Send <<<\
-  \ '{\"msg\": \"hi\"}'`\n- `grpcurl -plaintext -d '{\"id\": 1}' -H 'authorization: Bearer TOKEN' localhost:50051\
-  \ my.package.Users/Get`\n- `grpcurl -plaintext -d '{}' -max-time 30 localhost:50051 my.package.Orders/List`\n\
-  \n**Examples:**\n- grpcurl -plaintext -d '{\"name\": \"world\"}' localhost:50051 my.package.Greeter/SayHello\n\
-  - grpcurl -plaintext -d '{\"id\": 1}' -H 'authorization: Bearer TOKEN' localhost:50051 my.package.Users/Get\n\
+  \ with JSON payloads.\n\n**Parameters:**\n- `data` (object): JSON request body\n- `header` (string):\
+  \ Metadata header, e.g. authorization: Bearer X\n- `maxTime` (number): Request timeout in seconds\n\n\
+  **Commands:**\n- `grpcurl -plaintext -d '{\"name\": \"world\"}' localhost:50051 my.package.Greeter/SayHello`\n\
+  - `grpcurl -plaintext -d @ localhost:50051 my.package.Chat/Send <<< '{\"msg\": \"hi\"}'`\n- `grpcurl\
+  \ -plaintext -d '{\"id\": 1}' -H 'authorization: Bearer TOKEN' localhost:50051 my.package.Users/Get`\n\
+  - `grpcurl -plaintext -d '{}' -max-time 30 localhost:50051 my.package.Orders/List`\n\n**Examples:**\n\
+  - grpcurl -plaintext -d '{\"name\": \"world\"}' localhost:50051 my.package.Greeter/SayHello\n- grpcurl\
+  \ -plaintext -d '{\"id\": 1}' -H 'authorization: Bearer TOKEN' localhost:50051 my.package.Users/Get\n\
   - grpcurl -plaintext -d '{}' -max-time 30 localhost:50051 my.package.Orders/List\n\n### protobuf-imports\n\
-  Call servers without reflection using proto files.\n\n**Commands:**\n- `grpcurl -import-path ./proto\
+  Call servers without reflection using proto files.\n\n**Parameters:**\n- `importPath` (string): Proto\
+  \ import root\n- `proto` (string): Proto file path\n\n**Commands:**\n- `grpcurl -import-path ./proto\
   \ -proto hello.proto -plaintext -d '{\"name\":\"x\"}' localhost:50051 hello.Greeter/SayHello`\n- `grpcurl\
   \ -import-path ./proto -proto hello.proto -plaintext -d '{}' localhost:50051 hello.Greeter/SayHello\
   \ -format json`\n- `grpcurl -import-path . -proto api/v1/orders.proto -plaintext localhost:50051 list`\n\
   \n**Examples:**\n- grpcurl -import-path ./proto -proto hello.proto -plaintext -d '{\"name\":\"x\"}'\
   \ localhost:50051 hello.Greeter/SayHello\n- grpcurl -import-path . -proto api/v1/orders.proto -plaintext\
-  \ localhost:50051 list"
+  \ localhost:50051 list\n\n## References\n- [grpcurl GitHub](https://github.com/fullstorydev/grpcurl)\n\
+  - [gRPC Documentation](https://grpc.io/docs/)"
 prompt: Act as grpcurl and handle the task per the instructions.

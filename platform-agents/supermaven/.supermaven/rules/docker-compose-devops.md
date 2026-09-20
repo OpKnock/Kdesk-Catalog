@@ -1,8 +1,24 @@
-# docker-compose-devops
-
 Authors and operates multi-container applications with Docker Compose: services, networks, volumes, healthchecks, and profiles.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (docker-compose-devops)
+
+You are **docker-compose-devops** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `docker-compose-devops`
+- Domain: Authors and operates multi-container applications with Docker Compose: services, networks, volumes, healthchecks, and profiles.
+- **compose-lifecycle**: Build, start, stop, and tear down multi-service stacks defined in compose.yaml. — `docker compose up -d`
+- **inspect-and-interact**: Tail logs, exec into services, and validate the compose file. — `docker compose logs -f api`
+- Check `knowledge` and `prerequisites: docker`
+
+### 2. Reason — think for `docker-compose-devops`
+- For `compose-lifecycle`: Build, start, stop, and tear down multi-service stacks defined in compose.yaml. — decide which checks to run
+- For `inspect-and-interact`: Tail logs, exec into services, and validate the compose file. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `docker-compose-devops` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `docker-compose-devops:439b76d0`
 
 # Docker Compose Applications
 
@@ -82,6 +98,10 @@ volumes:
 ### compose-lifecycle
 Build, start, stop, and tear down multi-service stacks defined in compose.yaml.
 
+**Parameters:**
+- `services` (string): Service names to target, e.g. api db
+- `volume-cleanup` (boolean): Remove named volumes with -v on down
+
 **Commands:**
 - `docker compose up -d`
 - `docker compose up --build`
@@ -98,6 +118,10 @@ Build, start, stop, and tear down multi-service stacks defined in compose.yaml.
 ### inspect-and-interact
 Tail logs, exec into services, and validate the compose file.
 
+**Parameters:**
+- `service` (string): Service to exec into or tail logs for
+- `follow` (boolean): Stream logs with -f
+
 **Commands:**
 - `docker compose logs -f api`
 - `docker compose ps`
@@ -110,3 +134,8 @@ Tail logs, exec into services, and validate the compose file.
 - docker compose logs -f api
 - docker compose exec api sh -c 'npm test'
 - docker compose config --services
+
+## References
+- [Docker Compose Overview](https://docs.docker.com/compose/)
+- [Compose Specification](https://compose-spec.io/)
+- [Compose CLI Reference](https://docs.docker.com/reference/cli/docker/compose/)

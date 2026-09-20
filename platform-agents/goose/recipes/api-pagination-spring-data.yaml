@@ -2,8 +2,21 @@ title: Api Pagination Spring Data
 description: 'Implements offset/limit pagination with Spring Data JPA and Spring Data REST: Pageable,
   HAL links, page metadata, and sort parameters.'
 version: 2.0.0
-instructions: "# Api Pagination Spring Data\n\nImplements offset/limit pagination with Spring Data JPA\
-  \ and Spring Data REST: Pageable, HAL links, page metadata, and sort parameters.\n\n## Instructions\n\
+instructions: "Implements offset/limit pagination with Spring Data JPA and Spring Data REST: Pageable,\
+  \ HAL links, page metadata, and sort parameters.\n\n## Agentic Workflow: Read -> Reason -> Act (api-pagination-spring-data)\n\
+  \nYou are **Api Pagination Spring Data** (backend) — a sub-agent that **Reads, Reasons, and Acts** via\
+  \ `allowed-tools`.\n\n### 1. Read — backend context for `api-pagination-spring-data`\n- Domain: Implements\
+  \ offset/limit pagination with Spring Data JPA and Spring Data REST: Pageable, HAL links, page metadata,\
+  \ and sort parameters.\n- **spring-data-paging**: Use Spring Data Pageable with HAL response metadata\
+  \ — `curl -s 'http://localhost:8080/api/users?page=0&size=20' | jq '.page.totalElemen`\n- **pageable-repositories**:\
+  \ Define paging repository methods and custom Pageable defaults — `curl -s 'http://localhost:8080/api/users?size=0'\
+  \ -o /dev/null -w '%{http_code}\\n`\n- Check `knowledge` and `prerequisites: node.js, python, postgresql`\n\
+  \n### 2. Reason — think for `api-pagination-spring-data`\n- For `spring-data-paging`: Use Spring Data\
+  \ Pageable with HAL response metadata — decide which checks to run\n- For `pageable-repositories`: Define\
+  \ paging repository methods and custom Pageable defaults — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `api-pagination-spring-data`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash`, `./mvnw` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `api-pagination-spring-data:1228bdee`\n\
   \n# API Pagination v2 - Spring Data\n\nOffset pagination with Spring Data.\n\n## What This Skill Does\n\
   - Maps Pageable parameters to JPA queries\n- Returns HAL links and page metadata\n- Enforces page size\
   \ limits and sort whitelisting\n\n## When to Use\n- Spring Boot APIs needing standard page/size paging\n\
@@ -16,13 +29,16 @@ instructions: "# Api Pagination Spring Data\n\nImplements offset/limit paginatio
   \ do not cause SQL errors\n\n## Best Practices\n- Configure spring.data.rest.max-page-size globally\n\
   - Whitelist sortable properties to avoid expensive sorts\n- Use Page<DTO> projections to avoid N+1 lazy\
   \ loading\n\n## Capabilities\n\n### spring-data-paging\nUse Spring Data Pageable with HAL response metadata\n\
-  \n**Commands:**\n- `curl -s 'http://localhost:8080/api/users?page=0&size=20' | jq '.page.totalElements,\
-  \ .page.totalPages'`\n- `curl -s -H 'Accept: application/hal+json' 'http://localhost:8080/api/users'\
-  \ | jq '._links.next.href'`\n- `curl -s 'http://localhost:8080/api/users?sort=name,desc' | jq '._embedded.users[0].name'`\n\
-  - `./mvnw clean test`\n\n**Examples:**\n- page=0&size=20 selects page one with 20 items\n- Accept: application/hal+json\
+  \n**Parameters:**\n- `page` (integer): Zero-based page index\n- `size` (integer): Page size, capped\
+  \ by Spring config\n- `sort` (string): Comma-separated property,dir pairs\n\n**Commands:**\n- `curl\
+  \ -s 'http://localhost:8080/api/users?page=0&size=20' | jq '.page.totalElements, .page.totalPages'`\n\
+  - `curl -s -H 'Accept: application/hal+json' 'http://localhost:8080/api/users' | jq '._links.next.href'`\n\
+  - `curl -s 'http://localhost:8080/api/users?sort=name,desc' | jq '._embedded.users[0].name'`\n- `./mvnw\
+  \ clean test`\n\n**Examples:**\n- page=0&size=20 selects page one with 20 items\n- Accept: application/hal+json\
   \ returns _links with next/prev\n- sort=name,desc orders results before paging\n\n### pageable-repositories\n\
   Define paging repository methods and custom Pageable defaults\n\n**Commands:**\n- `curl -s 'http://localhost:8080/api/users?size=0'\
   \ -o /dev/null -w '%{http_code}\\n'`\n- `curl -s 'http://localhost:8080/api/users?page=-1' -o /dev/null\
   \ -w '%{http_code}\\n'`\n- `./mvnw spring-boot:run -Dspring-boot.run.arguments=--spring.data.rest.default-page-size=50`\n\
-  \n**Examples:**\n- -cli --help\n- -api --help"
+  \n**Examples:**\n- -cli --help\n- -api --help\n\n## References\n- [Spring Data REST Docs](https://docs.spring.io/spring-data/rest/reference/paging-chapter.html)\n\
+  - [Spring Data JPA Repositories](https://docs.spring.io/spring-data/jpa/reference/repositories/paging-and-sorting.html)"
 prompt: Act as Api Pagination Spring Data and handle the task per the instructions.

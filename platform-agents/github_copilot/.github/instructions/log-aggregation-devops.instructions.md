@@ -4,27 +4,25 @@ applyTo: "**/*.json **/*.r **/*.sh"
 
 Aggregates logs across infrastructure with Loki, Elasticsearch, and Fluent Bit: collection pipelines, queries, and retention.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (log-aggregation-devops)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Log Aggregation** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `helm repo add grafana https://grafana.github.io/helm-charts`, `docker run -d -p 9200:9200 -e discovery.type=single-node doc`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devops context for `log-aggregation-devops`
+- Domain: Aggregates logs across infrastructure with Loki, Elasticsearch, and Fluent Bit: collection pipelines, queries, and retention.
+- **loki-stack**: Deploy Loki + Promtail and query aggregated logs with LogQL. — `helm repo add grafana https://grafana.github.io/helm-charts`
+- **elk-pipeline**: Run Elasticsearch, Logstash, and Filebeat pipelines for index-based aggregation. — `docker run -d -p 9200:9200 -e discovery.type=single-node docker.elastic.co/elast`
+- Check `knowledge` and `prerequisites: docker, filebeat, helm, kubectl`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `log-aggregation-devops`
+- For `loki-stack`: Deploy Loki + Promtail and query aggregated logs with LogQL. — decide which checks to run
+- For `elk-pipeline`: Run Elasticsearch, Logstash, and Filebeat pipelines for index-based aggregation. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `log-aggregation-devops` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Logcli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `log-aggregation-devops:4ed7fceb`
 
 # Log Aggregation
 

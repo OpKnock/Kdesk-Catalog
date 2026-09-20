@@ -2,24 +2,37 @@ title: markdownlint
 description: Lints Markdown files with markdownlint/markdownlint-cli2, enforcing consistent heading, list,
   and link style.
 version: 2.0.0
-instructions: "# markdownlint\n\nLints Markdown files with markdownlint/markdownlint-cli2, enforcing consistent\
-  \ heading, list, and link style.\n\n## Instructions\n\n# Markdownlint\n\nLints Markdown files against\
-  \ a rule set covering headings, lists, indentation, links,\nand code fences so documentation stays consistent.\n\
-  \n## When to Use\n\n- Enforcing consistent docs style in a repo\n- Catching broken link syntax or mixed\
-  \ list markers in README files\n- Pre-commit/CI checks for markdown\n\n## Real Commands\n\n```bash\n\
-  # Check one file\nnpx markdownlint-cli2 README.md\n\n# Check all markdown in docs/, ignoring node_modules\
-  \ and vendor\nnpx markdownlint-cli2 'docs/**/*.md' '#node_modules' '#vendor'\n\n# Auto-fix\nnpx markdownlint-cli2\
-  \ --fix 'docs/**/*.md'\n\n# Custom config\nnpx markdownlint-cli2 --config .markdownlint-cli2.yaml .\n\
-  \n# JSON report for CI\nnpx markdownlint-cli2 --output report.json '**/*.md' '#node_modules'\n```\n\n\
-  ## Config (.markdownlint-cli2.yaml)\n\n```yaml\nconfig:\n  MD013:\n    line_length: 100\n  MD024: false\n\
-  \  MD033: false\nignores:\n  - 'node_modules/**'\n```\n\n## CI\n\n```yaml\n- name: Lint docs\n  run:\
-  \ npx markdownlint-cli2 '**/*.md' '#node_modules' '#dist'\n```\n\n## Best Practices\n\n- Use glob ignores\
-  \ (`#node_modules`) rather than editing files\n- Disable rules deliberately (MD013 long lines, MD033\
-  \ inline HTML) per team taste\n- Run `--fix` before review, then address remaining warnings manually\n\
-  - Check config is committed so CI matches local behavior\n\n## Capabilities\n\n### markdown-linting\n\
-  Check and fix Markdown style violations with configurable rule sets\n\n**Commands:**\n- `npx markdownlint-cli2\
-  \ 'docs/**/*.md'`\n- `npx markdownlint-cli2 --fix .`\n- `npx markdownlint-cli2 --config .markdownlint-cli2.yaml\
-  \ README.md`\n- `npx markdownlint-cli2 '**/*.md' '#node_modules' '#vendor'`\n- `npx markdownlint-cli2\
-  \ --output markdownlint-report.json '**/*.md'`\n\n**Examples:**\n- npx markdownlint-cli2 --fix docs/\n\
-  - npx markdownlint-cli2 README.md CHANGELOG.md\n- npx markdownlint-cli2 '**/*.md' --config .markdownlint-cli2.yaml"
+instructions: "Lints Markdown files with markdownlint/markdownlint-cli2, enforcing consistent heading,\
+  \ list, and link style.\n\n## Agentic Workflow: Read -> Reason -> Act (markdownlint)\n\nYou are **markdownlint**\
+  \ (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n###\
+  \ 1. Read — code-quality context for `markdownlint`\n- Domain: Lints Markdown files with markdownlint/markdownlint-cli2,\
+  \ enforcing consistent heading, list, and link style.\n- **markdown-linting**: Check and fix Markdown\
+  \ style violations with configurable rule sets — `npx markdownlint-cli2 'docs/**/*.md'`\n- Check `knowledge`\
+  \ and `prerequisites: npx`\n\n### 2. Reason — think for `markdownlint`\n- For `markdown-linting`: Check\
+  \ and fix Markdown style violations with configurable rule sets — decide which checks to run\n- Evaluate\
+  \ trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with\
+  \ `markdownlint` tools\n- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `markdownlint:0f9ff47b`\n\
+  \n# Markdownlint\n\nLints Markdown files against a rule set covering headings, lists, indentation, links,\n\
+  and code fences so documentation stays consistent.\n\n## When to Use\n\n- Enforcing consistent docs\
+  \ style in a repo\n- Catching broken link syntax or mixed list markers in README files\n- Pre-commit/CI\
+  \ checks for markdown\n\n## Real Commands\n\n```bash\n# Check one file\nnpx markdownlint-cli2 README.md\n\
+  \n# Check all markdown in docs/, ignoring node_modules and vendor\nnpx markdownlint-cli2 'docs/**/*.md'\
+  \ '#node_modules' '#vendor'\n\n# Auto-fix\nnpx markdownlint-cli2 --fix 'docs/**/*.md'\n\n# Custom config\n\
+  npx markdownlint-cli2 --config .markdownlint-cli2.yaml .\n\n# JSON report for CI\nnpx markdownlint-cli2\
+  \ --output report.json '**/*.md' '#node_modules'\n```\n\n## Config (.markdownlint-cli2.yaml)\n\n```yaml\n\
+  config:\n  MD013:\n    line_length: 100\n  MD024: false\n  MD033: false\nignores:\n  - 'node_modules/**'\n\
+  ```\n\n## CI\n\n```yaml\n- name: Lint docs\n  run: npx markdownlint-cli2 '**/*.md' '#node_modules' '#dist'\n\
+  ```\n\n## Best Practices\n\n- Use glob ignores (`#node_modules`) rather than editing files\n- Disable\
+  \ rules deliberately (MD013 long lines, MD033 inline HTML) per team taste\n- Run `--fix` before review,\
+  \ then address remaining warnings manually\n- Check config is committed so CI matches local behavior\n\
+  \n## Capabilities\n\n### markdown-linting\nCheck and fix Markdown style violations with configurable\
+  \ rule sets\n\n**Parameters:**\n- `config` (string): Path to a config file (.markdownlint-cli2.yaml/jsonc\
+  \ or .markdownlint.json)\n- `fix` (boolean): Automatically fix fixable violations\n- `output` (string):\
+  \ Write the report to a file instead of stdout\n\n**Commands:**\n- `npx markdownlint-cli2 'docs/**/*.md'`\n\
+  - `npx markdownlint-cli2 --fix .`\n- `npx markdownlint-cli2 --config .markdownlint-cli2.yaml README.md`\n\
+  - `npx markdownlint-cli2 '**/*.md' '#node_modules' '#vendor'`\n- `npx markdownlint-cli2 --output markdownlint-report.json\
+  \ '**/*.md'`\n\n**Examples:**\n- npx markdownlint-cli2 --fix docs/\n- npx markdownlint-cli2 README.md\
+  \ CHANGELOG.md\n- npx markdownlint-cli2 '**/*.md' --config .markdownlint-cli2.yaml\n\n## References\n\
+  - [markdownlint-cli2 GitHub](https://github.com/DavidAnson/markdownlint-cli2)\n- [markdownlint rules](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md)"
 prompt: Act as markdownlint and handle the task per the instructions.

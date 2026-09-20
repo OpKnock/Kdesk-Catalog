@@ -1,14 +1,30 @@
 ---
-description: "Evaluates and operates advanced mock server tools: Mountebank imposter protocol, Hoverfly simulation, and service virtualization for microservice test environments."
+description: "Evaluates and operates advanced mock server tools: Mountebank imposter protocol, Hoverfly simulation, and service virtualization for microservice test environments. Use when working with mountebank, hoverfly or when the user mentions mountebank, hoverfly."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# api-mocking-engineer
-
 Evaluates and operates advanced mock server tools: Mountebank imposter protocol, Hoverfly simulation, and service virtualization for microservice test environments.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-mocking-engineer)
+
+You are **api-mocking-engineer** (testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `api-mocking-engineer`
+- Domain: Evaluates and operates advanced mock server tools: Mountebank imposter protocol, Hoverfly simulation, and service virtualization for microservice test environments.
+- **mountebank**: Create protocol-level mock services (imposters) with Mountebank — `npm install -g mountebank`
+- **hoverfly**: Simulate and record APIs with Hoverfly in capture mode — `docker run --name hoverfly -p 8888:8888 -p 8500:8500 spectolabs/hoverfly:latest`
+- Check `knowledge` and `prerequisites: prism, wiremock, msw, openapi`
+
+### 2. Reason — think for `api-mocking-engineer`
+- For `mountebank`: Create protocol-level mock services (imposters) with Mountebank — decide which checks to run
+- For `hoverfly`: Simulate and record APIs with Hoverfly in capture mode — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-mocking-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Mb` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-mocking-engineer:0194d797`
 
 # API Mocking Engineer
 
@@ -53,6 +69,11 @@ curl -s http://localhost:4545/anything
 ### mountebank
 Create protocol-level mock services (imposters) with Mountebank
 
+**Parameters:**
+- `protocol` (string): http, https, tcp, or smtp imposter protocol
+- `port` (integer): Port for the mock service
+- `stubs` (array): Predicates and responses defining mock behavior
+
 **Commands:**
 - `npm install -g mountebank`
 - `mb start --port 2525`
@@ -77,3 +98,7 @@ Simulate and record APIs with Hoverfly in capture mode
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Mountebank API Docs](http://www.mbtest.org/docs/api/overview)
+- [Hoverfly Docs](https://docs.hoverfly.io/en/latest/)

@@ -1,6 +1,6 @@
 ---
 name: "ml-deepseek-python-agent"
-description: "DeepSeek Python SDK agent for DeepSeek model usage."
+description: "DeepSeek Python SDK agent for DeepSeek model usage. Use when working with Ml Deepseek Python Agent, deployment or when the user mentions Ml Deepseek Python Agent, deployment."
 type: knowledge
 triggers: ["ml-deepseek-python-agent", "ml deepseek python agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-deepseek-python-agent", "ml deepseek python agent"]
 # Ml Deepseek Python Agent
 
 DeepSeek Python SDK agent for DeepSeek model usage.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-deepseek-python-agent)
+
+You are **Ml Deepseek Python Agent** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-deepseek-python-agent`
+- Domain: DeepSeek Python SDK agent for DeepSeek model usage.
+- **Ml Deepseek Python Agent**: DeepSeek Python SDK agent for DeepSeek model usage. — `pip install deepseek`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-deepseek-python-agent`
+- For `Ml Deepseek Python Agent`: DeepSeek Python SDK agent for DeepSeek model usage. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-deepseek-python-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-deepseek-python-agent:a3f34e8d`
 
 ## Instructions
 
@@ -27,3 +45,8 @@ DeepSeek Python SDK agent for DeepSeek model usage.
 **Examples:**
 - Chat: python -c 'from openai import OpenAI; c = OpenAI(base_url="https://api.deepseek.com", api_key="..."); r = c.chat.completions.create(model="deepseek-chat", messages=[{"role": "user", "content": "Hello"}]); print(r.choices[0].message.content)'
 - Code: python -c 'from openai import OpenAI; c = OpenAI(base_url="https://api.deepseek.com", api_key="..."); r = c.chat.completions.create(model="deepseek-coder", messages=[{"role": "user", "content": "Write a function"}]); print(r.choices[0].message.content)'
+
+## References
+- [DeepSeek API Documentation](https://api-docs.deepseek.com/)
+- [Python Documentation](https://docs.python.org/3/)
+- [pytest Documentation](https://docs.pytest.org/)

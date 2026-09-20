@@ -1,6 +1,6 @@
 ---
 name: "ml-evolution-aws-deploy"
-description: "AWS Evolution deployment agent for ML model evolution on AWS."
+description: "AWS Evolution deployment agent for ML model evolution on AWS. Use when working with Ml Evolution Aws Deploy or when the user mentions Ml Evolution Aws Deploy."
 type: knowledge
 triggers: ["ml-evolution-aws-deploy", "ml evolution aws deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-evolution-aws-deploy", "ml evolution aws deploy"]
 # Ml Evolution Aws Deploy
 
 AWS Evolution deployment agent for ML model evolution on AWS.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-evolution-aws-deploy)
+
+You are **Ml Evolution Aws Deploy** (ml/evolution) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-evolution-aws-deploy`
+- Domain: AWS Evolution deployment agent for ML model evolution on AWS.
+- **Ml Evolution Aws Deploy**: AWS Evolution deployment agent for ML model evolution on AWS. — `AutoML: aws sagemaker create-auto-ml-job --auto-ml-job-name my-automl --input-da`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-evolution-aws-deploy`
+- For `Ml Evolution Aws Deploy`: AWS Evolution deployment agent for ML model evolution on AWS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-evolution-aws-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `AutoML`, `SageMaker` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-evolution-aws-deploy:afdf3d94`
 
 ## Instructions
 
@@ -25,3 +43,7 @@ AWS Evolution deployment agent for ML model evolution on AWS.
 **Examples:**
 - SageMaker Pipelines: aws sagemaker start-pipeline-execution --pipeline-name my-pipeline
 - AutoML: aws sagemaker create-auto-ml-job --auto-ml-job-name my-automl --input-data-config '[{"DataSource": {"S3DataSource": {"S3DataType": "S3Prefix", "S3Uri": "s3://bucket/data"}}}]' --output-data-config '{"S3OutputPath": "s3://bucket/output"}' --problemType Regression
+
+## References
+- [AWS Documentation](https://docs.aws.amazon.com/)
+- [Amazon SageMaker Documentation](https://docs.aws.amazon.com/sagemaker/)

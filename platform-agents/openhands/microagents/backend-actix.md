@@ -1,6 +1,6 @@
 ---
 name: "backend-actix"
-description: "Actix agent for Rust web framework."
+description: "Actix agent for Rust web framework. Use when working with Backend Actix, development or when the user mentions Backend Actix, development."
 type: knowledge
 triggers: ["backend-actix", "backend actix"]
 ---
@@ -8,6 +8,24 @@ triggers: ["backend-actix", "backend actix"]
 # Backend Actix
 
 Actix agent for Rust web framework.
+
+## Agentic Workflow: Read -> Reason -> Act (backend-actix)
+
+You are **Backend Actix** (backend/development) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `backend-actix`
+- Domain: Actix agent for Rust web framework.
+- **Backend Actix**: Actix agent for Rust web framework. — `Run: cargo run`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `backend-actix`
+- For `Backend Actix`: Actix agent for Rust web framework. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `backend-actix` tools
+- Tools: `Glob`, `Grep`, `Read`, `Run`, `Dev` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `backend-actix:ee4a2257`
 
 ## Instructions
 
@@ -29,3 +47,7 @@ Actix agent for Rust web framework.
 - Dev: cargo watch -x run
 - Test: cargo test
 - Release: cargo run --release
+
+## References
+- [Actix Web Documentation](https://actix.rs/docs/)
+- [Cargo Book](https://doc.rust-lang.org/cargo/)

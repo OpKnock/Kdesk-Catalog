@@ -8,27 +8,23 @@ globs: ["**/*.java", "**/*.r", "**/*.{js,ts,jsx,tsx}"]
 
 Build interactive islands with partial hydration for fast loads.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (islands-architecture)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Islands Architecture** (frontend/architecture) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `astro`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — frontend context for `islands-architecture`
+- Domain: Build interactive islands with partial hydration for fast loads.
+- **islands-architecture**: Implement islands architecture — `astro`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `islands-architecture`
+- For `islands-architecture`: Implement islands architecture — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `islands-architecture` tools
+- Tools: `Glob`, `Grep`, `Read`, `Astro`, `Vite` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `islands-architecture:2119f230`
 
 ## Instructions
 

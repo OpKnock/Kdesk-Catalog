@@ -6,27 +6,25 @@ globs: ["**/*.go", "**/*.py", "**/*.r", "**/*.sh"]
 
 Develops command-line tools with Commander, Click, and cobra: argument parsing, subcommands, help text, and distribution.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (cli-tool-development)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **cli-tool-development** (devtools) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npm install commander`, `node bin/mycli.js --help`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devtools context for `cli-tool-development`
+- Domain: Develops command-line tools with Commander, Click, and cobra: argument parsing, subcommands, help text, and distribution.
+- **cli-scaffolding**: Scaffold CLI tools in Node, Python, and Go. — `npm install commander`
+- **cli-verification**: Test and verify CLI behavior. — `node bin/mycli.js --help`
+- Check `knowledge` and `prerequisites: node.js, python, click, commander`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `cli-tool-development`
+- For `cli-scaffolding`: Scaffold CLI tools in Node, Python, and Go. — decide which checks to run
+- For `cli-verification`: Test and verify CLI behavior. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `cli-tool-development` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Cobra-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cli-tool-development:37fdb1e2`
 
 # CLI Tool Development
 

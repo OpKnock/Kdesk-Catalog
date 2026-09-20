@@ -1,15 +1,31 @@
 ---
 name: "queue-based-architecture"
-description: "Designs queue-based systems with AWS SQS and Redis Streams: queues, DLQs, consumer groups, and at-least-once semantics."
+description: "Designs queue-based systems with AWS SQS and Redis Streams: queues, DLQs, consumer groups, and at-least-once semantics. Use when working with sqs, redis streams or when the user mentions sqs, redis streams."
 type: knowledge
 triggers: ["queue-based-architecture", "sqs", "redis-streams"]
 ---
 
-# queue-based-architecture
-
 Designs queue-based systems with AWS SQS and Redis Streams: queues, DLQs, consumer groups, and at-least-once semantics.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (queue-based-architecture)
+
+You are **queue-based-architecture** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `queue-based-architecture`
+- Domain: Designs queue-based systems with AWS SQS and Redis Streams: queues, DLQs, consumer groups, and at-least-once semantics.
+- **sqs**: Manage SQS queues and messages. — `aws sqs create-queue --queue-name orders --attributes VisibilityTimeout=60`
+- **redis-streams**: Use Redis Streams for consumer groups and replays. — `redis-cli XADD orders:stream '*' order 42 sku A1`
+- Check `knowledge` and `prerequisites: redis, rabbitmq, kafka, node.js`
+
+### 2. Reason — think for `queue-based-architecture`
+- For `sqs`: Manage SQS queues and messages. — decide which checks to run
+- For `redis-streams`: Use Redis Streams for consumer groups and replays. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `queue-based-architecture` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `queue-based-architecture:2800cfb9`
 
 # Queue-Based Architecture
 
@@ -69,6 +85,11 @@ Send 10k messages, kill a consumer, restart, and verify zero loss with counts.
 ### sqs
 Manage SQS queues and messages.
 
+**Parameters:**
+- `queue-url` (string): SQS queue URL
+- `message-body` (string): Message payload
+- `max-number-of-messages` (number): Batch receive size
+
 **Commands:**
 - `aws sqs create-queue --queue-name orders --attributes VisibilityTimeout=60`
 - `aws sqs send-message --queue-url $QUEUE_URL --message-body '{"order":42}'`
@@ -84,6 +105,11 @@ Manage SQS queues and messages.
 ### redis-streams
 Use Redis Streams for consumer groups and replays.
 
+**Parameters:**
+- `stream` (string): Stream key
+- `group` (string): Consumer group name
+- `consumer` (string): Consumer name
+
 **Commands:**
 - `redis-cli XADD orders:stream '*' order 42 sku A1`
 - `redis-cli XGROUP CREATE orders:stream workers 0`
@@ -95,3 +121,8 @@ Use Redis Streams for consumer groups and replays.
 - redis-cli XGROUP CREATE orders:stream workers 0 MKSTREAM
 - redis-cli XREADGROUP GROUP workers w2 COUNT 5 STREAMS orders:stream '>'
 - redis-cli XINFO GROUPS orders:stream
+
+## References
+- [Amazon SQS](https://docs.aws.amazon.com/sqs/)
+- [Redis Streams](https://redis.io/docs/latest/develop/data-types/streams/)
+- [AWS Lambda + SQS](https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html)

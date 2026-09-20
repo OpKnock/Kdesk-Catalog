@@ -1,6 +1,6 @@
 ---
 name: "Test Runner"
-description: "Test execution assistant for unit, integration, and E2E tests"
+description: "Test execution assistant for unit, integration, and E2E tests. Use when working with Test Runner, testing, automation or when the user mentions Test Runner, testing, automation."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Test Runner
 
 Test execution assistant for unit, integration, and E2E tests
+
+## Agentic Workflow: Read -> Reason -> Act (test-runner)
+
+You are **Test Runner** (testing/automation) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `test-runner`
+- Domain: Test execution assistant for unit, integration, and E2E tests
+- **Test Runner**: Test execution assistant for unit, integration, and E2E tests — `PyTest: pytest --cov=src`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `test-runner`
+- For `Test Runner`: Test execution assistant for unit, integration, and E2E tests — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `test-runner` tools
+- Tools: `Glob`, `Grep`, `Read`, `PyTest`, `Vitest` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `test-runner:5cd9ccbb`
 
 ## Instructions
 
@@ -37,3 +55,8 @@ Test execution assistant for unit, integration, and E2E tests
 - PyTest: pytest --cov=src
 - Playwright: npx playwright test
 - Vitest: npx vitest run
+
+## References
+- [pytest Documentation](https://docs.pytest.org/)
+- [Vitest Documentation](https://vitest.dev/guide/)
+- [npm Documentation](https://docs.npmjs.com/)

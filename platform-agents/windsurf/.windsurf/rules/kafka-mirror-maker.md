@@ -6,27 +6,25 @@ globs: ["**/*.r", "**/*.sh"]
 
 Replicate Kafka clusters with MirrorMaker 2: cluster-to-cluster topology configs, connector management, and cross-cluster topic verification.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (kafka-mirror-maker)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Kafka Mirror Maker** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `kafka-mirror-maker2.sh --config config/mm2.properties`, `curl -s http://localhost:8083/connectors | jq .`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `kafka-mirror-maker`
+- Domain: Replicate Kafka clusters with MirrorMaker 2: cluster-to-cluster topology configs, connector management, and cross-cluster topic verification.
+- **mm2-run**: Run MirrorMaker 2 in standalone mode with a topology properties file. — `kafka-mirror-maker2.sh --config config/mm2.properties`
+- **verify-replication**: Check MM2 connectors, replicated topics, and consumed data on the target cluster. — `curl -s http://localhost:8083/connectors | jq .`
+- Check `knowledge` and `prerequisites: kafka-console-consumer.sh, kafka-mirror-maker.sh, kafka-mirror-maker2.sh, kafka-topics.sh`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `kafka-mirror-maker`
+- For `mm2-run`: Run MirrorMaker 2 in standalone mode with a topology properties file. — decide which checks to run
+- For `verify-replication`: Check MM2 connectors, replicated topics, and consumed data on the target cluster. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `kafka-mirror-maker` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-mirror-maker2.sh`, `Kafka-mirror-maker.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-mirror-maker:9aec5e06`
 
 # Kafka MirrorMaker 2
 

@@ -6,27 +6,23 @@ applyTo: "**/*.r **/*.scala"
 
 Design Ui specialist agent for ui operations and workflows.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (design-ui-agent)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Design Ui Agent** (design/ui) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `ui-cli`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — design context for `design-ui-agent`
+- Domain: Design Ui specialist agent for ui operations and workflows.
+- **ui-expertise**: Expert knowledge in ui — `ui-cli`
+- Check `knowledge` references before acting
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `design-ui-agent`
+- For `ui-expertise`: Expert knowledge in ui — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `design-ui-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ui-cli`, `Ui-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `design-ui-agent:5a9d8350`
 
 ## Instructions
 

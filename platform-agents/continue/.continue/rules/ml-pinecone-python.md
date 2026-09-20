@@ -1,6 +1,6 @@
 ---
 name: "Ml Pinecone Python"
-description: "Pinecone Python SDK agent for vector database operations."
+description: "Pinecone Python SDK agent for vector database operations. Use when working with Ml Pinecone Python, deployment or when the user mentions Ml Pinecone Python, deployment."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Pinecone Python
 
 Pinecone Python SDK agent for vector database operations.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-pinecone-python)
+
+You are **Ml Pinecone Python** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-pinecone-python`
+- Domain: Pinecone Python SDK agent for vector database operations.
+- **Ml Pinecone Python**: Pinecone Python SDK agent for vector database operations. — `Query: index.query(vector=[0.1, 0.2, 0.3], top_k=10)`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-pinecone-python`
+- For `Ml Pinecone Python`: Pinecone Python SDK agent for vector database operations. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-pinecone-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Query`, `Install` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-pinecone-python:d22d5000`
 
 ## Instructions
 
@@ -40,3 +58,6 @@ Pinecone Python SDK agent for vector database operations.
 - Index: pc.create_index(name='my-index', dimension=1536, metric='cosine')
 - Upsert: index.upsert(vectors=[('id1', [0.1, 0.2, 0.3])])
 - Query: index.query(vector=[0.1, 0.2, 0.3], top_k=10)
+
+## References
+- [Pinecone Documentation](https://docs.pinecone.io/)

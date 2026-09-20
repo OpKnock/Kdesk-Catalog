@@ -1,8 +1,24 @@
-# Api Monitor Checkly Cli
-
 Builds synthetic monitoring with Checkly: multi-step browser checks, API checks as code, and deployment to Checkly's global runners from a Node project.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-monitor-checkly-cli)
+
+You are **Api Monitor Checkly Cli** (sre) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — sre context for `api-monitor-checkly-cli`
+- Domain: Builds synthetic monitoring with Checkly: multi-step browser checks, API checks as code, and deployment to Checkly's global runners from a Node project.
+- **checkly-cli**: Author and deploy API/browser checks as code — `npx create-checkly-project my-checks --template api-check`
+- **synthetic-flows**: Script multi-step user journeys as Playwright browser checks — `npm install @playwright/test`
+- Check `knowledge` and `prerequisites: prometheus, grafana`
+
+### 2. Reason — think for `api-monitor-checkly-cli`
+- For `checkly-cli`: Author and deploy API/browser checks as code — decide which checks to run
+- For `synthetic-flows`: Script multi-step user journeys as Playwright browser checks — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-monitor-checkly-cli` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-monitor-checkly-cli:118db93b`
 
 # API Monitor v3 - Synthetic Checks
 
@@ -54,6 +70,11 @@ new ApiCheck('api-health', {
 ### checkly-cli
 Author and deploy API/browser checks as code
 
+**Parameters:**
+- `check-name` (string): Identifier of the check to run
+- `template` (string): Scaffold template: api-check, browser-check, group
+- `env` (string): Environment variable file for check secrets
+
 **Commands:**
 - `npx create-checkly-project my-checks --template api-check`
 - `npx checkly test`
@@ -78,3 +99,7 @@ Script multi-step user journeys as Playwright browser checks
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Checkly CLI Docs](https://www.checklyhq.com/docs/cli/)
+- [Checkly API Checks](https://www.checklyhq.com/docs/api-checks/)

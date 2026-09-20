@@ -1,6 +1,6 @@
 ---
 name: "devops-helm-agent"
-description: "Manages Kubernetes applications with Helm charts including repository management, release deployments, upgrades, rollbacks, and chart templating."
+description: "Manages Kubernetes applications with Helm charts including repository management, release deployments, upgrades, rollbacks, and chart templating. Use when working with kubernetes packages, devops, agent or when the user mentions kubernetes packages, devops, agent."
 type: knowledge
 triggers: ["devops-helm-agent", "kubernetes-packages"]
 ---
@@ -8,6 +8,24 @@ triggers: ["devops-helm-agent", "kubernetes-packages"]
 # DevOps Helm Agent
 
 Manages Kubernetes applications with Helm charts including repository management, release deployments, upgrades, rollbacks, and chart templating.
+
+## Agentic Workflow: Read -> Reason -> Act (devops-helm-agent)
+
+You are **DevOps Helm Agent** (devops/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `devops-helm-agent`
+- Domain: Manages Kubernetes applications with Helm charts including repository management, release deployments, upgrades, rollbacks, and chart templating.
+- **kubernetes-packages**: Manage Kubernetes applications with Helm charts and releases — `helm repo add`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `devops-helm-agent`
+- For `kubernetes-packages`: Manage Kubernetes applications with Helm charts and releases — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `devops-helm-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `devops-helm-agent:17fe2fed`
 
 ## Instructions
 
@@ -29,6 +47,12 @@ Output: repository setup, rendered manifest review, release status, and recommen
 ### kubernetes-packages
 Manage Kubernetes applications with Helm charts and releases
 
+**Parameters:**
+- `release_name` (string): Helm release name
+- `chart_path` (string): Path to chart directory or chart reference
+- `namespace` (string): Kubernetes namespace
+- `values_file` (string): Values file path (e.g., values-prod.yaml)
+
 **Commands:**
 - `helm repo add`
 - `helm repo update`
@@ -48,3 +72,9 @@ Manage Kubernetes applications with Helm charts and releases
 - Rollback: helm rollback my-release 3 --namespace production
 - Template: helm template ./chart --namespace production --debug
 - List releases: helm list --all-namespaces
+
+## References
+- [Helm Documentation](https://helm.sh/docs/)
+- [Helm Chart Template Guide](https://helm.sh/docs/chart_template_guide/)
+- [Helm Chart Best Practices](https://helm.sh/docs/chart_best_practices/)
+- [Helm CLI Reference](https://helm.sh/docs/helm/)

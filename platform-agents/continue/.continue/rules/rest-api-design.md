@@ -1,15 +1,31 @@
 ---
 name: "Rest Api Design"
-description: "Designs consistent REST APIs: resource modeling, status codes, versioning, pagination, filtering, and OpenAPI documentation."
+description: "Designs consistent REST APIs: resource modeling, status codes, versioning, pagination, filtering, and OpenAPI documentation. Use when working with rest openapi, rest testing, backend or when the user mentions rest openapi, rest testing, backend."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Rest Api Design
-
 Designs consistent REST APIs: resource modeling, status codes, versioning, pagination, filtering, and OpenAPI documentation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rest-api-design)
+
+You are **Rest Api Design** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `rest-api-design`
+- Domain: Designs consistent REST APIs: resource modeling, status codes, versioning, pagination, filtering, and OpenAPI documentation.
+- **rest-openapi**: Validate and serve OpenAPI specifications. — `npx @redocly/cli lint openapi.yaml`
+- **rest-testing**: Exercise endpoints and verify API behavior. — `curl -s -X POST http://localhost:8000/api/users -H "Content-Type: application/js`
+- Check `knowledge` and `prerequisites: npx, python`
+
+### 2. Reason — think for `rest-api-design`
+- For `rest-openapi`: Validate and serve OpenAPI specifications. — decide which checks to run
+- For `rest-testing`: Exercise endpoints and verify API behavior. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rest-api-design` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rest-api-design:4291f7e2`
 
 # REST API Design
 
@@ -68,6 +84,10 @@ curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/api/users/999
 ### rest-openapi
 Validate and serve OpenAPI specifications.
 
+**Parameters:**
+- `spec` (string): OpenAPI file path
+- `format` (string): Spec format: yaml or json
+
 **Commands:**
 - `npx @redocly/cli lint openapi.yaml`
 - `npx @redocly/cli bundle openapi.yaml -o bundled.yaml`
@@ -82,6 +102,10 @@ Validate and serve OpenAPI specifications.
 ### rest-testing
 Exercise endpoints and verify API behavior.
 
+**Parameters:**
+- `endpoint` (string): API endpoint URL
+- `method` (string): HTTP method
+
 **Commands:**
 - `curl -s -X POST http://localhost:8000/api/users -H "Content-Type: application/json" -d "{\"name\":\"ann\"}"`
 - `curl -s http://localhost:8000/api/users?page=2&limit=20`
@@ -92,3 +116,8 @@ Exercise endpoints and verify API behavior.
 - curl -s -X DELETE -o /dev/null -w "%{http_code}" http://localhost:8000/api/users/1
 - curl -s "http://localhost:8000/api/users?sort=-created_at&status=active"
 - curl -s http://localhost:8000/api/users/1 | python -m json.tool
+
+## References
+- [REST API Tutorial](https://restfulapi.net)
+- [OpenAPI Spec](https://spec.openapis.org/oas/v3.1.0)
+- [Redocly CLI](https://redocly.com/docs/cli/)

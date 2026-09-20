@@ -4,27 +4,25 @@ applyTo: "**/*.go **/*.json **/*.r **/*.sh"
 
 Chaos test APIs by injecting latency, errors, and network faults with Toxiproxy, then load-testing resilience with vegeta and hey.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (chaos-testing)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Chaos Testing** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `toxiproxy-cli create api -l localhost:8081 -u localhost:8080`, `vegeta attack -targets targets.txt -rate 50 -duration 30s | `
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `chaos-testing`
+- Domain: Chaos test APIs by injecting latency, errors, and network faults with Toxiproxy, then load-testing resilience with vegeta and hey.
+- **fault-injection**: Inject latency, bandwith, and error faults on a proxy between client and API using toxiproxy-cli — `toxiproxy-cli create api -l localhost:8081 -u localhost:8080`
+- **resilience-load**: Generate load against the faulted API and measure error rates and percentiles — `vegeta attack -targets targets.txt -rate 50 -duration 30s | vegeta report`
+- Check `knowledge` and `prerequisites: hey, toxiproxy-cli, vegeta`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `chaos-testing`
+- For `fault-injection`: Inject latency, bandwith, and error faults on a proxy between client and API using toxiproxy-cli — decide which checks to run
+- For `resilience-load`: Generate load against the faulted API and measure error rates and percentiles — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `chaos-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Toxiproxy-cli`, `Vegeta` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `chaos-testing:f1e0bd7e`
 
 # Chaos Testing
 

@@ -4,27 +4,23 @@ applyTo: "**/*.json **/*.py **/*.r **/*.sh"
 
 Expert reference covering exponential backoff with tenacity, curl retry flags, Retry-After handling, and jitter to survive cascading failures.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (retry-pattern)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Retry Pattern** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl --retry 5 --retry-delay 2 --retry-all-errors --retry-co`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `retry-pattern`
+- Domain: Expert reference covering exponential backoff with tenacity, curl retry flags, Retry-After handling, and jitter to survive cascading failures.
+- **exponential-backoff**: Retry failing calls with exponential backoff, jitter, and Retry-After — `curl --retry 5 --retry-delay 2 --retry-all-errors --retry-connrefused https://ap`
+- Check `knowledge` and `prerequisites: pip`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `retry-pattern`
+- For `exponential-backoff`: Retry failing calls with exponential backoff, jitter, and Retry-After — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `retry-pattern` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `retry-pattern:284a7f89`
 
 # Retry Pattern
 

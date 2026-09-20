@@ -1,15 +1,29 @@
 ---
 name: "h2o"
-description: "H2O.ai machine learning platform: starting H2O clusters with java -jar h2o.jar, importing data, training models, and querying the REST API."
+description: "H2O.ai machine learning platform: starting H2O clusters with java -jar h2o.jar, importing data, training models, and querying the REST API. Use when working with h2o cluster ops, api or when the user mentions h2o cluster ops, api."
 type: knowledge
 triggers: ["h2o", "h2o-cluster-ops"]
 ---
 
-# H2O
-
 H2O.ai machine learning platform: starting H2O clusters with java -jar h2o.jar, importing data, training models, and querying the REST API.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (h2o)
+
+You are **H2O** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `h2o`
+- Domain: H2O.ai machine learning platform: starting H2O clusters with java -jar h2o.jar, importing data, training models, and querying the REST API.
+- **h2o-cluster-ops**: Start H2O clusters, import datasets, and train/inspect models via the H2O REST API. — `java -Xmx4g -jar h2o.jar -port 54321 -name myCluster`
+- Check `knowledge` and `prerequisites: java`
+
+### 2. Reason — think for `h2o`
+- For `h2o-cluster-ops`: Start H2O clusters, import datasets, and train/inspect models via the H2O REST API. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `h2o` tools
+- Tools: `Glob`, `Grep`, `Read`, `Java`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `h2o:16d5b9ee`
 
 # H2O
 
@@ -88,6 +102,11 @@ Agent: curl http://localhost:54321/3/Cloud | jq .nodes  # lists node addresses
 ### h2o-cluster-ops
 Start H2O clusters, import datasets, and train/inspect models via the H2O REST API.
 
+**Parameters:**
+- `port` (integer): H2O REST/Flow port (default 54321).
+- `max_mem` (string): JVM heap, e.g. -Xmx4g.
+- `name` (string): Cluster name used for multinode discovery.
+
 **Commands:**
 - `java -Xmx4g -jar h2o.jar -port 54321 -name myCluster`
 - `curl http://localhost:54321/3/Cloud`
@@ -99,3 +118,7 @@ Start H2O clusters, import datasets, and train/inspect models via the H2O REST A
 - java -Xmx8g -jar h2o.jar -port 54322 -name prod
 - curl 'http://localhost:54321/3/Frames?row_count=5' | jq .frames[0].rows
 - curl 'http://localhost:54321/3/Predictions/models/glm1/frames/housing.hex'
+
+## References
+- [H2O Docs](https://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html)
+- [H2O REST API](https://docs.h2o.ai/h2o/latest-stable/h2o-docs/rest-api-reference.html)

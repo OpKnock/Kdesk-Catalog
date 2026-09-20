@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(curl:*) Bash(ngrok:*) Bash(node:*) Bash(npm:
 
 Troubleshoots and hardens third-party API integrations: retries, circuit breakers, idempotency, and webhook reliability.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-integration-resilience-patterns)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Integration Resilience Patterns** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npm install p-retry`, `ngrok http 3000`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `api-integration-resilience-patterns`
+- Domain: Troubleshoots and hardens third-party API integrations: retries, circuit breakers, idempotency, and webhook reliability.
+- **resilience-patterns**: Add retry backoff, circuit breakers, and fallbacks around flaky third-party calls — `npm install p-retry`
+- **webhook-debugging**: Forward, replay, and verify webhooks from third-party services — `ngrok http 3000`
+- Check `knowledge` and `prerequisites: node.js, python, ngrok, redis`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-integration-resilience-patterns`
+- For `resilience-patterns`: Add retry backoff, circuit breakers, and fallbacks around flaky third-party calls — decide which checks to run
+- For `webhook-debugging`: Forward, replay, and verify webhooks from third-party services — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-integration-resilience-patterns` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Ngrok` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-integration-resilience-patterns:34a9b331`
 
 # API Integration (Reliability)
 

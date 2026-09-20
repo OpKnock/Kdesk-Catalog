@@ -2,29 +2,42 @@ title: Express Routing
 description: 'Build REST APIs with Express: scaffold projects, run the dev server, add middleware, and
   test routes with supertest.'
 version: 2.0.0
-instructions: "# Express Routing\n\nBuild REST APIs with Express: scaffold projects, run the dev server,\
-  \ add middleware, and test routes with supertest.\n\n## Instructions\n\n# Express v2\n\n## What this\
-  \ skill does\n\nExpress is the classic Node.js web framework. This skill covers modern Express practice:\
-  \ generators, middleware chains (morgan, cors, helmet), JSON APIs, and route testing with supertest.\n\
-  \n## When to use\n\n- Scaffolding a new REST service quickly\n- Adding logging, CORS, and security headers\
-  \ to an existing app\n- Writing integration tests for routes\n\n## Real commands\n\n```bash\n# Scaffold\n\
-  npx express-generator --view=ejs myapp\ncd myapp && npm install\n\n# Run (with dev reload)\nnpm start\n\
-  npx nodemon src/app.js\n\n# Common middleware\ngnpm install express morgan cors helmet\n\n# Test\nnpm\
-  \ test\n```\n\n## Route + middleware example\n\n```javascript\nconst express = require('express')\n\
-  const app = express()\n\napp.use(express.json())\napp.use(require('morgan')('combined'))\napp.use(require('helmet')())\n\
-  \napp.get('/api/orders/:id', (req, res, next) => {\n  try {\n    const order = db.find(req.params.id)\n\
-  \    if (!order) {\n      const err = new Error('Not found')\n      err.status = 404\n      throw err\n\
-  \    }\n    res.json(order)\n  } catch (e) {\n    next(e)\n  }\n})\n\napp.use((err, req, res, next)\
-  \ => {\n  res.status(err.status || 500).json({ error: err.message })\n})\n\napp.listen(3000)\n```\n\n\
-  ## Testing with supertest\n\n```javascript\nconst request = require('supertest')\nconst app = require('../src/app')\n\
-  \ntest('returns 404 for missing order', async () => {\n  const res = await request(app).get('/api/orders/999')\n\
-  \  expect(res.status).toBe(404)\n})\n```\n\n## Best practices\n\n- Put `app` in its own module so supertest\
+instructions: "Build REST APIs with Express: scaffold projects, run the dev server, add middleware, and\
+  \ test routes with supertest.\n\n## Agentic Workflow: Read -> Reason -> Act (express-routing)\n\nYou\
+  \ are **Express Routing** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `express-routing`\n- Domain: Build REST APIs with Express: scaffold\
+  \ projects, run the dev server, add middleware, and test routes with supertest.\n- **express-routing**:\
+  \ Scaffold, run, extend, and test Express applications. — `npx express-generator --view=ejs myapp`\n\
+  - Check `knowledge` and `prerequisites: npm, npx`\n\n### 2. Reason — think for `express-routing`\n-\
+  \ For `express-routing`: Scaffold, run, extend, and test Express applications. — decide which checks\
+  \ to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3.\
+  \ Act — execute with `express-routing` tools\n- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter\
+  \ `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint:\
+  \ `express-routing:6d53ed63`\n\n# Express v2\n\n## What this skill does\n\nExpress is the classic Node.js\
+  \ web framework. This skill covers modern Express practice: generators, middleware chains (morgan, cors,\
+  \ helmet), JSON APIs, and route testing with supertest.\n\n## When to use\n\n- Scaffolding a new REST\
+  \ service quickly\n- Adding logging, CORS, and security headers to an existing app\n- Writing integration\
+  \ tests for routes\n\n## Real commands\n\n```bash\n# Scaffold\nnpx express-generator --view=ejs myapp\n\
+  cd myapp && npm install\n\n# Run (with dev reload)\nnpm start\nnpx nodemon src/app.js\n\n# Common middleware\n\
+  gnpm install express morgan cors helmet\n\n# Test\nnpm test\n```\n\n## Route + middleware example\n\n\
+  ```javascript\nconst express = require('express')\nconst app = express()\n\napp.use(express.json())\n\
+  app.use(require('morgan')('combined'))\napp.use(require('helmet')())\n\napp.get('/api/orders/:id', (req,\
+  \ res, next) => {\n  try {\n    const order = db.find(req.params.id)\n    if (!order) {\n      const\
+  \ err = new Error('Not found')\n      err.status = 404\n      throw err\n    }\n    res.json(order)\n\
+  \  } catch (e) {\n    next(e)\n  }\n})\n\napp.use((err, req, res, next) => {\n  res.status(err.status\
+  \ || 500).json({ error: err.message })\n})\n\napp.listen(3000)\n```\n\n## Testing with supertest\n\n\
+  ```javascript\nconst request = require('supertest')\nconst app = require('../src/app')\n\ntest('returns\
+  \ 404 for missing order', async () => {\n  const res = await request(app).get('/api/orders/999')\n \
+  \ expect(res.status).toBe(404)\n})\n```\n\n## Best practices\n\n- Put `app` in its own module so supertest\
   \ can import it without listening.\n- Order middleware correctly: security headers -> logging -> json\
   \ -> routes.\n- Use the four-arg error handler; never send stacks to clients.\n- Prefer `express.json()`\
   \ over body-parser directly.\n- Pin `engines` in package.json to the Node version in prod.\n\n## Capabilities\n\
-  \n### express-routing\nScaffold, run, extend, and test Express applications.\n\n**Commands:**\n- `npx\
-  \ express-generator --view=ejs myapp`\n- `npm install express morgan cors helmet`\n- `npm start`\n-\
-  \ `npm run dev`\n- `npx nodemon src/app.js`\n- `npm test`\n\n**Examples:**\n- npx express-generator\
-  \ --view=ejs myapp && cd myapp && npm install && npm start\n- npm install express morgan cors helmet\
-  \ && npm run dev\n- curl -s localhost:3000/api/orders | jq"
+  \n### express-routing\nScaffold, run, extend, and test Express applications.\n\n**Parameters:**\n- `port`\
+  \ (integer): Port for the Express server\n- `view-engine` (string): ejs, pug, or none for API-only\n\
+  - `dev-tool` (string): nodemon or node --watch for dev restarts\n\n**Commands:**\n- `npx express-generator\
+  \ --view=ejs myapp`\n- `npm install express morgan cors helmet`\n- `npm start`\n- `npm run dev`\n- `npx\
+  \ nodemon src/app.js`\n- `npm test`\n\n**Examples:**\n- npx express-generator --view=ejs myapp && cd\
+  \ myapp && npm install && npm start\n- npm install express morgan cors helmet && npm run dev\n- curl\
+  \ -s localhost:3000/api/orders | jq\n\n## References\n- [Express Documentation](https://expressjs.com/)\n\
+  - [Supertest](https://github.com/ladjs/supertest)"
 prompt: Act as Express Routing and handle the task per the instructions.

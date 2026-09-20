@@ -1,6 +1,6 @@
 ---
 name: "Tgi Inference"
-description: "TGI SDK deployment agent for ML TGI SDK deployment."
+description: "TGI SDK deployment agent for ML TGI SDK deployment. Use when working with Ml Tgi Deploy Sdk Agent, inference or when the user mentions Ml Tgi Deploy Sdk Agent, inference."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Tgi Inference
 
 TGI SDK deployment agent for ML TGI SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (tgi-inference)
+
+You are **Tgi Inference** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `tgi-inference`
+- Domain: TGI SDK deployment agent for ML TGI SDK deployment.
+- **Ml Tgi Deploy Sdk Agent**: TGI SDK deployment agent for ML TGI SDK deployment. — `docker build -t tgi:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `tgi-inference`
+- For `Ml Tgi Deploy Sdk Agent`: TGI SDK deployment agent for ML TGI SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tgi-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Tgi` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tgi-inference:66276271`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ TGI SDK deployment agent for ML TGI SDK deployment.
 **Examples:**
 - Server: python -m tgi.server --port 8080
 - Docker: docker run -p 8080:8080 tgi-server
+
+## References
+- [Text Generation Inference](https://huggingface.co/docs/text-generation-inference/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

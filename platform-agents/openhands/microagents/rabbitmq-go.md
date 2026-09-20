@@ -1,15 +1,29 @@
 ---
 name: "rabbitmq-go"
-description: "RabbitMQ clients in Go with amqp091-go: connection/channel management, publish/consume, and consumer recovery."
+description: "RabbitMQ clients in Go with amqp091-go: connection/channel management, publish/consume, and consumer recovery. Use when working with rabbitmq go client, api or when the user mentions rabbitmq go client, api."
 type: knowledge
 triggers: ["rabbitmq-go", "rabbitmq-go-client"]
 ---
 
-# Rabbitmq Go
-
 RabbitMQ clients in Go with amqp091-go: connection/channel management, publish/consume, and consumer recovery.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rabbitmq-go)
+
+You are **Rabbitmq Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `rabbitmq-go`
+- Domain: RabbitMQ clients in Go with amqp091-go: connection/channel management, publish/consume, and consumer recovery.
+- **rabbitmq-go-client**: Write Go RabbitMQ publishers and consumers, manage channels and handle reconnects. — `go get github.com/rabbitmq/amqp091-go`
+- Check `knowledge` and `prerequisites: rabbitmqctl`
+
+### 2. Reason — think for `rabbitmq-go`
+- For `rabbitmq-go-client`: Write Go RabbitMQ publishers and consumers, manage channels and handle reconnects. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rabbitmq-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Rabbitmqctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rabbitmq-go:efae2db1`
 
 # RabbitMQ Go
 
@@ -70,6 +84,11 @@ for d := range msgs {
 ### rabbitmq-go-client
 Write Go RabbitMQ publishers and consumers, manage channels and handle reconnects.
 
+**Parameters:**
+- `queue` (string): Queue name
+- `exchange` (string): Exchange name
+- `url` (string): amqp:// connection URL
+
 **Commands:**
 - `go get github.com/rabbitmq/amqp091-go`
 - `go mod tidy`
@@ -81,3 +100,7 @@ Write Go RabbitMQ publishers and consumers, manage channels and handle reconnect
 - go run publisher.go
 - rabbitmqctl list_queues name messages
 - go test ./... 
+
+## References
+- [amqp091-go GitHub](https://github.com/rabbitmq/amqp091-go)
+- [RabbitMQ Go guide](https://www.rabbitmq.com/clients/go-api-guide.html)

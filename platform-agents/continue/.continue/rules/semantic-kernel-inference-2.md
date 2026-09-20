@@ -1,6 +1,6 @@
 ---
 name: "Semantic Kernel Inference 2"
-description: "Semantic Kernel inference server agent. Manages Semantic Kernel ML inference server."
+description: "Semantic Kernel inference server agent. Manages Semantic Kernel ML inference server. Use when working with Ml Semantic Kernel Inference Server Agent or when the user mentions Ml Semantic Kernel Inference Server Agent."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Semantic Kernel Inference 2
 
 Semantic Kernel inference server agent. Manages Semantic Kernel ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (semantic-kernel-inference-2)
+
+You are **Semantic Kernel Inference 2** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `semantic-kernel-inference-2`
+- Domain: Semantic Kernel inference server agent. Manages Semantic Kernel ML inference server.
+- **Ml Semantic Kernel Inference Server Agent**: Semantic Kernel inference server agent. Manages Semantic Kernel ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `semantic-kernel-inference-2`
+- For `Ml Semantic Kernel Inference Server Agent`: Semantic Kernel inference server agent. Manages Semantic Kernel ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `semantic-kernel-inference-2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Semantic-kernel` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `semantic-kernel-inference-2:11d39613`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Semantic Kernel inference server agent. Manages Semantic Kernel ML inference ser
 - dotnet run --project SemanticKernel
 - python run_plugin.py --plugin my_plugin --function my_function
 - python test_kernel.py
+
+## References
+- [Semantic Kernel Documentation](https://learn.microsoft.com/semantic-kernel/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

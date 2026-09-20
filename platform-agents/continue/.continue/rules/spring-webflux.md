@@ -1,15 +1,29 @@
 ---
 name: "Spring WebFlux"
-description: "Builds and tests reactive endpoints with Spring WebFlux. Streams Flux responses with curl -N, serves Server-Sent Events via text/event-stream, consumes downstream services reactively with WebClient, and handles multipart uploads non-blockingly."
+description: "Builds and tests reactive endpoints with Spring WebFlux. Streams Flux responses with curl -N, serves Server-Sent Events via text/event-stream, consumes downstream services reactively with WebClient, and handles multipart uploads non-blockingly. Use when working with webflux reactive, api or when the user mentions webflux reactive, api."
 globs: ["**/*.java", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Spring WebFlux
-
 Builds and tests reactive endpoints with Spring WebFlux. Streams Flux responses with curl -N, serves Server-Sent Events via text/event-stream, consumes downstream services reactively with WebClient, and handles multipart uploads non-blockingly.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (spring-webflux)
+
+You are **Spring WebFlux** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `spring-webflux`
+- Domain: Builds and tests reactive endpoints with Spring WebFlux. Streams Flux responses with curl -N, serves Server-Sent Events via text/event-stream, consumes downstream services reactively with WebClient, a
+- **webflux-reactive**: Builds and tests reactive endpoints with Spring WebFlux. Streams Flux responses with curl -N, serves — `./mvnw spring-boot:run`
+- Check `knowledge` and `prerequisites: ./mvnw`
+
+### 2. Reason — think for `spring-webflux`
+- For `webflux-reactive`: Builds and tests reactive endpoints with Spring WebFlux. Streams Flux responses with curl -N, serves Server-Sent Events  — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `spring-webflux` tools
+- Tools: `Glob`, `Grep`, `Read`, `./mvnw`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `spring-webflux:40111df2`
 
 # Spring WebFlux
 
@@ -82,6 +96,11 @@ curl -H 'Accept: text/event-stream' -N localhost:8080/events | head -3
 ### webflux-reactive
 Builds and tests reactive endpoints with Spring WebFlux. Streams Flux responses with curl -N, serves Server-Sent Events via text/event-stream, consumes downstream services reactively with WebClient, and handles multipart uploads non-blockingly.
 
+**Parameters:**
+- `endpoint` (string): Base URL of the WebFlux service
+- `accept_header` (string): Accept header for SSE (text/event-stream)
+- `file_path` (string): Path to file for multipart upload
+
 **Commands:**
 - `./mvnw spring-boot:run`
 - `curl -N localhost:8080/flux`
@@ -94,3 +113,6 @@ Builds and tests reactive endpoints with Spring WebFlux. Streams Flux responses 
 - curl -H "Accept: text/event-stream" -N localhost:8080/events
 - curl -s localhost:8080/api/prices | jq 'length'
 - curl -s -X POST localhost:8080/upload -F "file=@data.csv"
+
+## References
+- [WebFlux reference](https://docs.spring.io/spring-framework/reference/web/webflux.html)

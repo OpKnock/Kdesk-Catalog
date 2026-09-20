@@ -2,15 +2,25 @@ title: Axum
 description: 'Builds HTTP APIs in Rust with Axum: routing, extractors, shared state, middleware, and testing
   with tower.'
 version: 2.0.0
-instructions: "# Axum\n\nBuilds HTTP APIs in Rust with Axum: routing, extractors, shared state, middleware,\
-  \ and testing with tower.\n\n## Instructions\n\n# Axum\n\n## What this skill does\n\nBuilds HTTP APIs\
-  \ in Rust with Axum: routing, extractors, shared state, middleware (CORS/tracing), and route testing\
-  \ with tower.\n\n## When to use\n\n- A new Rust REST API with tokio\n- Adding extractors, state, or\
-  \ middleware to an existing app\n- Fast, compile-time-safe routing\n\n## Real commands\n\n```bash\n\
-  cargo new axum-api\ncargo add axum tokio --features tokio/full\ncargo add serde --features derive\n\
-  cargo add tower-http --features cors,trace\n\ncargo run\ncurl -s http://localhost:3000/health\n\ncargo\
-  \ test\ncargo clippy -- -D warnings\ncargo build --release\n```\n\n## Minimal server\n\n```rust\nuse\
-  \ axum::{routing::get, Router};\n\n#[tokio::main]\nasync fn main() {\n    let app = Router::new().route(\"\
+instructions: "Builds HTTP APIs in Rust with Axum: routing, extractors, shared state, middleware, and\
+  \ testing with tower.\n\n## Agentic Workflow: Read -> Reason -> Act (axum)\n\nYou are **Axum** (api/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context\
+  \ for `axum`\n- Domain: Builds HTTP APIs in Rust with Axum: routing, extractors, shared state, middleware,\
+  \ and testing with tower.\n- **project-setup**: Create an Axum project and add dependencies. — `cargo\
+  \ new axum-api`\n- **serve-and-test**: Run the server and test routes with tower ServiceExt. — `cargo\
+  \ run`\n- Check `knowledge` and `prerequisites: cargo`\n\n### 2. Reason — think for `axum`\n- For `project-setup`:\
+  \ Create an Axum project and add dependencies. — decide which checks to run\n- For `serve-and-test`:\
+  \ Run the server and test routes with tower ServiceExt. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `axum` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `axum:04a32048`\n\n# Axum\n\n##\
+  \ What this skill does\n\nBuilds HTTP APIs in Rust with Axum: routing, extractors, shared state, middleware\
+  \ (CORS/tracing), and route testing with tower.\n\n## When to use\n\n- A new Rust REST API with tokio\n\
+  - Adding extractors, state, or middleware to an existing app\n- Fast, compile-time-safe routing\n\n\
+  ## Real commands\n\n```bash\ncargo new axum-api\ncargo add axum tokio --features tokio/full\ncargo add\
+  \ serde --features derive\ncargo add tower-http --features cors,trace\n\ncargo run\ncurl -s http://localhost:3000/health\n\
+  \ncargo test\ncargo clippy -- -D warnings\ncargo build --release\n```\n\n## Minimal server\n\n```rust\n\
+  use axum::{routing::get, Router};\n\n#[tokio::main]\nasync fn main() {\n    let app = Router::new().route(\"\
   /health\", get(|| async { \"ok\" }));\n    let listener = tokio::net::TcpListener::bind(\"0.0.0.0:3000\"\
   ).await.unwrap();\n    axum::serve(listener, app).await.unwrap();\n}\n```\n\n## State + extractors\n\
   \n```rust\n#[derive(Clone)]\nstruct Db { pool: String }\n\nlet app = Router::new()\n    .route(\"/users/:id\"\
@@ -19,12 +29,15 @@ instructions: "# Axum\n\nBuilds HTTP APIs in Rust with Axum: routing, extractors
   ## Testing\n\n- Test routers with tower::ServiceExt::oneshot\n- Use `cargo test` and clippy in CI\n\n\
   ## Best practices\n\n- Share dependencies via state, not globals\n- Use path parameters and typed extractors\
   \ instead of manual parsing\n- Layer CORS via tower-http, not hand-rolled middleware\n\n## Capabilities\n\
-  \n### project-setup\nCreate an Axum project and add dependencies.\n\n**Commands:**\n- `cargo new axum-api`\n\
-  - `cargo add axum tokio --features tokio/full`\n- `cargo add serde --features derive`\n- `cargo add\
-  \ tower-http --features cors`\n- `cargo build`\n\n**Examples:**\n- cargo new axum-api && cargo add axum\
-  \ tokio --features tokio/full\n- cargo add axum --features multipart,ws\n- cargo add tower-http --features\
-  \ trace,cors\n\n### serve-and-test\nRun the server and test routes with tower ServiceExt.\n\n**Commands:**\n\
-  - `cargo run`\n- `curl -s http://localhost:3000/health`\n- `cargo test`\n- `cargo clippy -- -D warnings`\n\
-  - `cargo build --release`\n\n**Examples:**\n- cargo run && curl -s http://localhost:3000/health\n- cargo\
-  \ test -- --nocapture\n- cargo clippy --all-targets -- -D warnings"
+  \n### project-setup\nCreate an Axum project and add dependencies.\n\n**Parameters:**\n- `features` (string):\
+  \ Cargo features for axum or tower-http\n\n**Commands:**\n- `cargo new axum-api`\n- `cargo add axum\
+  \ tokio --features tokio/full`\n- `cargo add serde --features derive`\n- `cargo add tower-http --features\
+  \ cors`\n- `cargo build`\n\n**Examples:**\n- cargo new axum-api && cargo add axum tokio --features tokio/full\n\
+  - cargo add axum --features multipart,ws\n- cargo add tower-http --features trace,cors\n\n### serve-and-test\n\
+  Run the server and test routes with tower ServiceExt.\n\n**Parameters:**\n- `port` (number): Bind port\
+  \ (default 3000)\n- `addr` (string): Bind address\n\n**Commands:**\n- `cargo run`\n- `curl -s http://localhost:3000/health`\n\
+  - `cargo test`\n- `cargo clippy -- -D warnings`\n- `cargo build --release`\n\n**Examples:**\n- cargo\
+  \ run && curl -s http://localhost:3000/health\n- cargo test -- --nocapture\n- cargo clippy --all-targets\
+  \ -- -D warnings\n\n## References\n- [Axum Docs (docs.rs)](https://docs.rs/axum/latest/axum/)\n- [Axum\
+  \ README](https://github.com/tokio-rs/axum)\n- [tower-http](https://docs.rs/tower-http)"
 prompt: Act as Axum and handle the task per the instructions.

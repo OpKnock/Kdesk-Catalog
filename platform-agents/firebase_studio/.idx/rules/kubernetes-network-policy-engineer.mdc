@@ -1,14 +1,30 @@
 ---
-description: "Designs zero-trust pod networking with Kubernetes NetworkPolicies: default-deny, allowlists, and verification of actual traffic flow."
+description: "Designs zero-trust pod networking with Kubernetes NetworkPolicies: default-deny, allowlists, and verification of actual traffic flow. Use when working with policies, verify or when the user mentions policies, verify."
 globs: ["**/*.json", "**/*.r", "**/*.rs", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# kubernetes-network-policy-engineer
-
 Designs zero-trust pod networking with Kubernetes NetworkPolicies: default-deny, allowlists, and verification of actual traffic flow.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kubernetes-network-policy-engineer)
+
+You are **kubernetes-network-policy-engineer** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `kubernetes-network-policy-engineer`
+- Domain: Designs zero-trust pod networking with Kubernetes NetworkPolicies: default-deny, allowlists, and verification of actual traffic flow.
+- **policies**: Create and inspect NetworkPolicies. — `kubectl get networkpolicies -A`
+- **verify**: Prove policy behavior with real traffic probes. — `kubectl run nettest --image=curlimages/curl -it --rm -- curl -s http://payments:`
+- Check `knowledge` and `prerequisites: kubectl, helm`
+
+### 2. Reason — think for `kubernetes-network-policy-engineer`
+- For `policies`: Create and inspect NetworkPolicies. — decide which checks to run
+- For `verify`: Prove policy behavior with real traffic probes. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kubernetes-network-policy-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kubernetes-network-policy-engineer:1786c8b2`
 
 # Kubernetes Network Policies
 
@@ -88,6 +104,11 @@ Run the probe matrix after every policy change: expected-allow and expected-bloc
 ### policies
 Create and inspect NetworkPolicies.
 
+**Parameters:**
+- `namespace` (string): Namespace to scope queries
+- `manifest` (string): Policy YAML file
+- `output` (string): Output format: wide, yaml, json
+
 **Commands:**
 - `kubectl get networkpolicies -A`
 - `kubectl apply -f default-deny.yaml`
@@ -103,6 +124,11 @@ Create and inspect NetworkPolicies.
 ### verify
 Prove policy behavior with real traffic probes.
 
+**Parameters:**
+- `image` (string): Probe container image
+- `timeout` (number): Connection timeout to detect blocking
+- `namespace` (string): Namespace for the probe pod
+
 **Commands:**
 - `kubectl run nettest --image=curlimages/curl -it --rm -- curl -s http://payments:8080/healthz`
 - `kubectl run probe --image=busybox -it --rm -- wget -qO- http://auth-service:80`
@@ -114,3 +140,8 @@ Prove policy behavior with real traffic probes.
 - kubectl run nettest --image=curlimages/curl -it --rm --namespace payments -- curl -s http://web:80
 - kubectl exec deploy/api -- wget -T 2 -qO- http://redis:6379 && echo allowed
 - kubectl run probe --image=busybox --rm -it -- wget -T 3 -qO- http://auth:80
+
+## References
+- [Kubernetes NetworkPolicies](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+- [Cilium Network Policy docs](https://docs.cilium.io/en/stable/security/policy/)
+- [kubectl cheatsheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)

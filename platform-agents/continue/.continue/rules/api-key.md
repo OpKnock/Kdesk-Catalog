@@ -1,15 +1,31 @@
 ---
 name: "Api Key"
-description: "Designs, generates, stores, and rotates API keys: high-entropy generation with openssl, hashed storage, and Vault-backed issuance."
+description: "Designs, generates, stores, and rotates API keys: high-entropy generation with openssl, hashed storage, and Vault-backed issuance. Use when working with key generation, vault issuance, api or when the user mentions key generation, vault issuance, api."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Api Key
-
 Designs, generates, stores, and rotates API keys: high-entropy generation with openssl, hashed storage, and Vault-backed issuance.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-key)
+
+You are **Api Key** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `api-key`
+- Domain: Designs, generates, stores, and rotates API keys: high-entropy generation with openssl, hashed storage, and Vault-backed issuance.
+- **key-generation**: Generate strong API keys and inspect their entropy. — `openssl rand -hex 32`
+- **vault-issuance**: Store, retrieve, and rotate API keys in HashiCorp Vault KV. — `vault kv put secret/api-keys/prod key=$(openssl rand -hex 32)`
+- Check `knowledge` and `prerequisites: node, openssl, uuidgen, vault`
+
+### 2. Reason — think for `api-key`
+- For `key-generation`: Generate strong API keys and inspect their entropy. — decide which checks to run
+- For `vault-issuance`: Store, retrieve, and rotate API keys in HashiCorp Vault KV. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-key` tools
+- Tools: `Glob`, `Grep`, `Read`, `Openssl`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-key:64825289`
 
 # API Keys
 
@@ -75,6 +91,10 @@ Show the raw key exactly once, then hash it.
 ### key-generation
 Generate strong API keys and inspect their entropy.
 
+**Parameters:**
+- `bytes` (number): Number of random bytes (32 = 256 bits)
+- `encoding` (string): hex, base64, or base64url
+
 **Commands:**
 - `openssl rand -hex 32`
 - `openssl rand -base64 32`
@@ -90,6 +110,10 @@ Generate strong API keys and inspect their entropy.
 ### vault-issuance
 Store, retrieve, and rotate API keys in HashiCorp Vault KV.
 
+**Parameters:**
+- `path` (string): Vault KV path, e.g. secret/api-keys/prod
+- `field` (string): Single field to read from the secret
+
 **Commands:**
 - `vault kv put secret/api-keys/prod key=$(openssl rand -hex 32)`
 - `vault kv get secret/api-keys/prod`
@@ -101,3 +125,8 @@ Store, retrieve, and rotate API keys in HashiCorp Vault KV.
 - vault kv put secret/api-keys/prod service=payments key=$(openssl rand -hex 32)
 - vault kv get -field=key secret/api-keys/prod
 - vault kv metadata get secret/api-keys/prod
+
+## References
+- [Vault KV v2](https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v2)
+- [OWASP API Key Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/API_Key_Security_Cheat_Sheet.html)
+- [RFC 9110 Authorization](https://www.rfc-editor.org/rfc/rfc9110#name-authorization)

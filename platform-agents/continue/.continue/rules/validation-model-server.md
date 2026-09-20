@@ -1,6 +1,6 @@
 ---
 name: "Validation Model Server"
-description: "Validation server agent. Manages Validation ML server."
+description: "Validation server agent. Manages Validation ML server. Use when working with Ml Validation Server Agent or when the user mentions Ml Validation Server Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Validation Model Server
 
 Validation server agent. Manages Validation ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (validation-model-server)
+
+You are **Validation Model Server** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `validation-model-server`
+- Domain: Validation server agent. Manages Validation ML server.
+- **Ml Validation Server Agent**: Validation server agent. Manages Validation ML server. — `python -m model.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `validation-model-server`
+- For `Ml Validation Server Agent`: Validation server agent. Manages Validation ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `validation-model-server` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `validation-model-server:0f29d16d`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Validation server agent. Manages Validation ML server.
 - curl http://localhost:8080/validate --data '{"model": "model.pkl"}'
 - python validate.py --model model.pkl --data test.csv --metrics accuracy,f1
 - python cross_validate.py --model model.pkl --data data.csv --folds 5
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)

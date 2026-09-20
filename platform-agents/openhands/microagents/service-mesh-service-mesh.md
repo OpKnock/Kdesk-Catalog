@@ -1,15 +1,33 @@
 ---
 name: "service-mesh-service-mesh"
-description: "Deploys, injects, and diagnoses service meshes (Istio, Linkerd) including mTLS, traffic routing, and observability dashboards."
+description: "Deploys, injects, and diagnoses service meshes (Istio, Linkerd) including mTLS, traffic routing, and observability dashboards. Use when working with istio management, linkerd management, traffic routing or when the user mentions istio management, linkerd management, traffic routing."
 type: knowledge
 triggers: ["service-mesh-service-mesh", "istio-management", "linkerd-management", "traffic-routing"]
 ---
 
-# service-mesh-service-mesh
-
 Deploys, injects, and diagnoses service meshes (Istio, Linkerd) including mTLS, traffic routing, and observability dashboards.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (service-mesh-service-mesh)
+
+You are **service-mesh-service-mesh** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `service-mesh-service-mesh`
+- Domain: Deploys, injects, and diagnoses service meshes (Istio, Linkerd) including mTLS, traffic routing, and observability dashboards.
+- **istio-management**: Install Istio, inject sidecars, and inspect the mesh. — `istioctl install --set profile=demo -y`
+- **linkerd-management**: Install Linkerd, inject proxies, and verify mesh health. — `linkerd install | kubectl apply -f -`
+- **traffic-routing**: Apply mTLS, routing, and canary rules. — `istioctl x waypoint apply --enroll-namespace default`
+- Check `knowledge` and `prerequisites: kubernetes, istio, linkerd, helm`
+
+### 2. Reason — think for `service-mesh-service-mesh`
+- For `istio-management`: Install Istio, inject sidecars, and inspect the mesh. — decide which checks to run
+- For `linkerd-management`: Install Linkerd, inject proxies, and verify mesh health. — decide which checks to run
+- For `traffic-routing`: Apply mTLS, routing, and canary rules. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `service-mesh-service-mesh` tools
+- Tools: `Glob`, `Grep`, `Read`, `Istioctl`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `service-mesh-service-mesh:bea487ad`
 
 # Service Mesh
 
@@ -78,6 +96,10 @@ spec:
 ### istio-management
 Install Istio, inject sidecars, and inspect the mesh.
 
+**Parameters:**
+- `profile` (string): Installation profile: default, demo, minimal, external
+- `namespace` (string): Namespace to label for injection
+
 **Commands:**
 - `istioctl install --set profile=demo -y`
 - `istioctl analyze`
@@ -93,6 +115,10 @@ Install Istio, inject sidecars, and inspect the mesh.
 
 ### linkerd-management
 Install Linkerd, inject proxies, and verify mesh health.
+
+**Parameters:**
+- `deploy` (string): Deployment to inject, stat, or tap
+- `namespace` (string): Target namespace
 
 **Commands:**
 - `linkerd install | kubectl apply -f -`
@@ -110,6 +136,10 @@ Install Linkerd, inject proxies, and verify mesh health.
 ### traffic-routing
 Apply mTLS, routing, and canary rules.
 
+**Parameters:**
+- `manifest` (string): Mesh config manifest path
+- `weight` (number): Traffic weight for canary routing
+
 **Commands:**
 - `istioctl x waypoint apply --enroll-namespace default`
 - `kubectl apply -f virtualservice.yaml`
@@ -121,3 +151,7 @@ Apply mTLS, routing, and canary rules.
 - kubectl apply -f virtualservice.yaml
 - kubectl apply -f peerauthentication.yaml
 - kubectl get virtualservices
+
+## References
+- [Istio Documentation](https://istio.io/latest/docs/)
+- [Linkerd Documentation](https://linkerd.io/2.16/overview/)

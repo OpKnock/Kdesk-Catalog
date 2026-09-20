@@ -1,15 +1,29 @@
 ---
 name: "Grpc Rust"
-description: "gRPC services and clients in Rust with tonic: tonic-build codegen from protos, Prost message types, and tower-based interceptors."
+description: "gRPC services and clients in Rust with tonic: tonic-build codegen from protos, Prost message types, and tower-based interceptors. Use when working with rust grpc tonic, api or when the user mentions rust grpc tonic, api."
 globs: ["**/*.go", "**/*.r", "**/*.rs", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Grpc Rust
-
 gRPC services and clients in Rust with tonic: tonic-build codegen from protos, Prost message types, and tower-based interceptors.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (grpc-rust)
+
+You are **Grpc Rust** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `grpc-rust`
+- Domain: gRPC services and clients in Rust with tonic: tonic-build codegen from protos, Prost message types, and tower-based interceptors.
+- **rust-grpc-tonic**: Generate tonic stubs from protos at build time and run async gRPC servers. — `cargo add tonic tonic-prost prost`
+- Check `knowledge` and `prerequisites: cargo`
+
+### 2. Reason — think for `grpc-rust`
+- For `rust-grpc-tonic`: Generate tonic stubs from protos at build time and run async gRPC servers. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `grpc-rust` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `grpc-rust:5bfb3fcf`
 
 # gRPC Rust
 
@@ -108,6 +122,11 @@ Agent: Install protoc (apt install protobuf-compiler) or set PROTOC env var to t
 ### rust-grpc-tonic
 Generate tonic stubs from protos at build time and run async gRPC servers.
 
+**Parameters:**
+- `proto_dir` (string): Directory containing .proto files for tonic-build.
+- `grpc_port` (integer): Server listen port, default 50051.
+- `crate_type` (string): bin or lib crate layout for generated code.
+
 **Commands:**
 - `cargo add tonic tonic-prost prost`
 - `cargo add --build tonic-build`
@@ -119,3 +138,7 @@ Generate tonic stubs from protos at build time and run async gRPC servers.
 - cargo add tokio --features macros,rt-multi-thread
 - cargo run --bin server & grpcurl -plaintext localhost:50051 list
 - cargo clippy -- -D warnings
+
+## References
+- [tonic docs.rs](https://docs.rs/tonic)
+- [tonic GitHub](https://github.com/hyperium/tonic)

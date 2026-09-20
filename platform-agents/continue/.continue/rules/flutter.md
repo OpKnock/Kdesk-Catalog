@@ -1,15 +1,29 @@
 ---
 name: "flutter"
-description: "Flutter mobile development. Real flutter CLI."
+description: "Flutter mobile development. Real flutter CLI. Use when working with flutter, mobile or when the user mentions flutter, mobile."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# flutter
-
 Flutter mobile development. Real flutter CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (flutter)
+
+You are **flutter** (mobile/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — mobile context for `flutter`
+- Domain: Flutter mobile development. Real flutter CLI.
+- **flutter**: Flutter mobile development. Real flutter CLI. — `flutter create my_app`
+- Check `knowledge` and `prerequisites: flutter`
+
+### 2. Reason — think for `flutter`
+- For `flutter`: Flutter mobile development. Real flutter CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `flutter` tools
+- Tools: `Glob`, `Grep`, `Read`, `Flutter` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `flutter:5af1107e`
 
 # Flutter
 
@@ -214,3 +228,6 @@ Flutter mobile development. Real flutter CLI.
 - flutter create my_app
 - flutter run
 - flutter run -d demo-device-id
+
+## References
+- [flutter Skill Documentation](skills/mobile/flutter.md)

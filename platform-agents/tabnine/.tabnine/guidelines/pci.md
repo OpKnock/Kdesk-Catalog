@@ -1,8 +1,22 @@
-# Pci
-
 Test network segmentation, TLS strength, and scan coverage handling it scopes. and logs.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (pci)
+
+You are **Pci** (compliance/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — compliance context for `pci`
+- Domain: Test network segmentation, TLS strength, and scan coverage handling it scopes. and logs.'
+- **pci-controls**: Test network segmentation, TLS strength, and scan coverage for PCI scopes — `nmap -sT -sV -p 443 --script ssl-enum-ciphers payment.example.com`
+- Check `knowledge` and `prerequisites: nikto, nmap, sslscan`
+
+### 2. Reason — think for `pci`
+- For `pci-controls`: Test network segmentation, TLS strength, and scan coverage for PCI scopes — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pci` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nmap`, `Sslscan` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pci:fbc08093`
 
 # PCI DSS
 
@@ -63,6 +77,11 @@ in code, and a requirement-by-requirement status with fix steps.
 ### pci-controls
 Test network segmentation, TLS strength, and scan coverage for PCI scopes
 
+**Parameters:**
+- `script` (string): nmap NSE script to run, e.g. ssl-enum-ciphers
+- `open` (boolean): Report only open ports
+- `ssl` (boolean): Force TLS mode in nikto
+
 **Commands:**
 - `nmap -sT -sV -p 443 --script ssl-enum-ciphers payment.example.com`
 - `sslscan payment.example.com`
@@ -74,3 +93,7 @@ Test network segmentation, TLS strength, and scan coverage for PCI scopes
 - nmap -p 1521,3306,5432 --open 10.0.0.0/24
 - curl -s -o /dev/null -w '%{ssl_version} %{http_version}\n' http://localhost:8080
 - rg -i "card|pan|track2|cvv" src/ --glob '!*.test.*'
+
+## References
+- [PCI DSS official](https://www.pcisecuritystandards.org/)
+- [PCI DSS v4 requirements](https://www.pcisecuritystandards.org/document_library/?category=PCI%20DSS)

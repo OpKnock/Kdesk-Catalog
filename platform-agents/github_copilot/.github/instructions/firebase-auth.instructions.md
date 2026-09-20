@@ -4,27 +4,23 @@ applyTo: "**/*.go **/*.java **/*.json **/*.r **/*.rs **/*.sh **/*.{js,ts,jsx,tsx
 
 Firebase Authentication operations: manage users and ID tokens, test sign-in flows with the CLI, and verify token validation.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (firebase-auth)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Firebase Auth** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `firebase auth:list`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `firebase-auth`
+- Domain: Firebase Authentication operations: manage users and ID tokens, test sign-in flows with the CLI, and verify token validation.
+- **auth-admin**: Administer Firebase Auth users, issue custom tokens, and verify ID tokens. — `firebase auth:list`
+- Check `knowledge` and `prerequisites: firebase, node`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `firebase-auth`
+- For `auth-admin`: Administer Firebase Auth users, issue custom tokens, and verify ID tokens. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `firebase-auth` tools
+- Tools: `Glob`, `Grep`, `Read`, `Firebase`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `firebase-auth:ff5080fe`
 
 # Firebase Auth
 

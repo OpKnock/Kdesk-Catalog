@@ -1,6 +1,6 @@
 ---
 name: "Reproducibility Identity Py"
-description: "Reproducibility deployment agent. Manages Reproducibility ML deployment."
+description: "Reproducibility deployment agent. Manages Reproducibility ML deployment. Use when working with Ml Reproducibility Deploy Agent or when the user mentions Ml Reproducibility Deploy Agent."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Reproducibility Identity Py
 
 Reproducibility deployment agent. Manages Reproducibility ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (reproducibility-identity-py)
+
+You are **Reproducibility Identity Py** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `reproducibility-identity-py`
+- Domain: Reproducibility deployment agent. Manages Reproducibility ML deployment.
+- **Ml Reproducibility Deploy Agent**: Reproducibility deployment agent. Manages Reproducibility ML deployment. — `docker build -t reproducibility:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `reproducibility-identity-py`
+- For `Ml Reproducibility Deploy Agent`: Reproducibility deployment agent. Manages Reproducibility ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `reproducibility-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Reproducibility` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `reproducibility-identity-py:1614fd47`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Reproducibility deployment agent. Manages Reproducibility ML deployment.
 - curl http://localhost:8080/reproduce --data '{"experiment": "experiment.json"}'
 - python reproduce.py --experiment experiment.json --output results.json
 - python seed.py --seed 42
+
+## References
+- [DVC Documentation](https://dvc.org/doc)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

@@ -1,15 +1,29 @@
 ---
 name: "dynamodb-streams"
-description: "Processes DynamoDB change streams: enables streams, lists shards, iterates records with shard iterators, and validates stream view types."
+description: "Processes DynamoDB change streams: enables streams, lists shards, iterates records with shard iterators, and validates stream view types. Use when working with stream processing, api or when the user mentions stream processing, api."
 type: knowledge
 triggers: ["dynamodb-streams", "stream-processing"]
 ---
 
-# Dynamodb Streams
-
 Processes DynamoDB change streams: enables streams, lists shards, iterates records with shard iterators, and validates stream view types.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (dynamodb-streams)
+
+You are **Dynamodb Streams** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `dynamodb-streams`
+- Domain: Processes DynamoDB change streams: enables streams, lists shards, iterates records with shard iterators, and validates stream view types.
+- **stream-processing**: Enable stream specs, list streams and shards, and read records via shard iterators. — `aws dynamodb update-table --table-name Orders --stream-specification StreamEnabl`
+- Check `knowledge` and `prerequisites: aws`
+
+### 2. Reason — think for `dynamodb-streams`
+- For `stream-processing`: Enable stream specs, list streams and shards, and read records via shard iterators. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `dynamodb-streams` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `dynamodb-streams:61fb3970`
 
 # DynamoDB Streams
 
@@ -76,6 +90,11 @@ sleep 5
 ### stream-processing
 Enable stream specs, list streams and shards, and read records via shard iterators.
 
+**Parameters:**
+- `table-name` (string): DynamoDB table to read streams from
+- `stream-arn` (string): ARN of the table stream
+- `shard-iterator-type` (string): TRIM_HORIZON, LATEST, AT_SEQUENCE_NUMBER, or AFTER_SEQUENCE_NUMBER
+
 **Commands:**
 - `aws dynamodb update-table --table-name Orders --stream-specification StreamEnabled=true,StreamViewType=NEW_AND_OLD_IMAGES`
 - `aws dynamodbstreams list-streams --table-name Orders`
@@ -87,3 +106,6 @@ Enable stream specs, list streams and shards, and read records via shard iterato
 - aws dynamodb update-table --table-name Orders --stream-specification StreamEnabled=true,StreamViewType=NEW_IMAGE
 - aws dynamodbstreams list-streams --table-name Orders | jq '.Streams[0].StreamArn'
 - aws dynamodbstreams get-records --shard-iterator "$(aws dynamodbstreams get-shard-iterator --stream-arn $ARN --shard-id $SHARD --shard-iterator-type TRIM_HORIZON --query ShardIterator --output text)"
+
+## References
+- [DynamoDB Streams Docs](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.html)

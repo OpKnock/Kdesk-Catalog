@@ -6,27 +6,25 @@ globs: ["**/*.json", "**/*.r", "**/*.sh"]
 
 Implement Command Query Responsibility Segregation with EventStoreDB: append events, project read models, and query them.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (cqrs)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Cqrs** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `docker run -d --name eventstore -p 2113:2113 eventstore/even`, `curl http://localhost:2113/streams/order-1 -H "Accept: appli`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `cqrs`
+- Domain: Implement Command Query Responsibility Segregation with EventStoreDB: append events, project read models, and query them.
+- **eventstore**: Run EventStoreDB and append/read events via its HTTP API — `docker run -d --name eventstore -p 2113:2113 eventstore/eventstore:latest --inse`
+- **read-models**: Project events into queryable read models and consume streams — `curl http://localhost:2113/streams/order-1 -H "Accept: application/json" | jq '.`
+- Check `knowledge` and `prerequisites: docker`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `cqrs`
+- For `eventstore`: Run EventStoreDB and append/read events via its HTTP API — decide which checks to run
+- For `read-models`: Project events into queryable read models and consume streams — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `cqrs` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cqrs:86f6848f`
 
 # CQRS
 

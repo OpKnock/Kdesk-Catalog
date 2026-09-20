@@ -1,14 +1,30 @@
 ---
-description: "Performs advanced git surgery: bisect debugging, reflog recovery, history rewriting with filter-repo, subtrees, worktrees, and partial clones."
+description: "Performs advanced git surgery: bisect debugging, reflog recovery, history rewriting with filter-repo, subtrees, worktrees, and partial clones. Use when working with bisect and recovery, history and trees, devops or when the user mentions bisect and recovery, history and trees, devops."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# git-advanced
-
 Performs advanced git surgery: bisect debugging, reflog recovery, history rewriting with filter-repo, subtrees, worktrees, and partial clones.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (git-advanced)
+
+You are **git-advanced** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `git-advanced`
+- Domain: Performs advanced git surgery: bisect debugging, reflog recovery, history rewriting with filter-repo, subtrees, worktrees, and partial clones.
+- **bisect-and-recovery**: Find the commit that introduced a bug and recover lost work. — `git bisect start`
+- **history-and-trees**: Rewrite history, split repos, and manage subtree and worktree workflows. — `git filter-repo --path server/ --invert-paths`
+- Check `knowledge` and `prerequisites: git`
+
+### 2. Reason — think for `git-advanced`
+- For `bisect-and-recovery`: Find the commit that introduced a bug and recover lost work. — decide which checks to run
+- For `history-and-trees`: Rewrite history, split repos, and manage subtree and worktree workflows. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `git-advanced` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `git-advanced:510879b1`
 
 # Advanced Git Techniques
 
@@ -73,6 +89,10 @@ git subtree pull --prefix=vendor/libs vendor-repo main
 ### bisect-and-recovery
 Find the commit that introduced a bug and recover lost work.
 
+**Parameters:**
+- `command` (string): Test command for git bisect run
+- `revision` (string): Reflog entry, e.g. HEAD@{3}
+
 **Commands:**
 - `git bisect start`
 - `git bisect good v1.0 && git bisect bad HEAD`
@@ -89,6 +109,10 @@ Find the commit that introduced a bug and recover lost work.
 ### history-and-trees
 Rewrite history, split repos, and manage subtree and worktree workflows.
 
+**Parameters:**
+- `path` (string): Path to remove or add via subtree
+- `remote` (string): Remote repo URL for subtree operations
+
 **Commands:**
 - `git filter-repo --path server/ --invert-paths`
 - `git filter-repo --strip-blobs-bigger-than 10M`
@@ -101,3 +125,8 @@ Rewrite history, split repos, and manage subtree and worktree workflows.
 - git filter-repo --path secrets/ --invert-paths
 - git worktree add ../hotfix v1.2.3
 - git subtree pull --prefix=vendor/libs vendor-repo main
+
+## References
+- [git-filter-repo](https://github.com/newren/git-filter-repo)
+- [git reflog](https://git-scm.com/docs/git-reflog)
+- [git worktree](https://git-scm.com/docs/git-worktree)

@@ -1,8 +1,22 @@
-# Webhook Retry
-
 Designs retry policies for webhook delivery with exponential backoff and jitter. Uses idempotency keys to make replays safe, manages dead-letter queues, and provides per-delivery retry and replay APIs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (webhook-retry)
+
+You are **Webhook Retry** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `webhook-retry`
+- Domain: Designs retry policies for webhook delivery with exponential backoff and jitter. Uses idempotency keys to make replays safe, manages dead-letter queues, and provides per-delivery retry and replay APIs
+- **retry-policy**: Configure and test webhook retry and backoff behavior — `curl --retry 3 --retry-delay 2 --retry-all-errors -X POST -d "{\"event\":\"order`
+- Check `knowledge` and `prerequisites: curl, jq`
+
+### 2. Reason — think for `webhook-retry`
+- For `retry-policy`: Configure and test webhook retry and backoff behavior — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `webhook-retry` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `webhook-retry:2392e974`
 
 # Webhook Retry
 
@@ -71,6 +85,11 @@ curl -s http://localhost:8080/webhooks/deliveries | jq ".[0] | {attempts, next_r
 ### retry-policy
 Configure and test webhook retry and backoff behavior
 
+**Parameters:**
+- `retry` (integer): Max curl retries
+- `retry_delay` (integer): Seconds between retries
+- `backoff_base` (integer): Base multiplier for exponential backoff
+
 **Commands:**
 - `curl --retry 3 --retry-delay 2 --retry-all-errors -X POST -d "{\"event\":\"order.created\"}" http://localhost:8080/webhooks/orders`
 - `curl -s -X POST http://localhost:8080/webhooks/deliveries/DELIVERY_ID/retry | jq ".next_retry_at"`
@@ -82,3 +101,8 @@ Configure and test webhook retry and backoff behavior
 - curl --retry 5 --retry-delay 30 --retry-connrefused http://localhost:8080/health
 - curl -s -X POST http://localhost:8080/webhooks/deliveries/DELIVERY_ID/requeue | jq ".attempts"
 - curl -s -X POST "http://localhost:8080/webhooks/deliveries?status=dead-letter" -H "Content-Type: application/json" -d "{}" | jq ".requeued"
+
+## References
+- [AWS EventBridge Retry Policy](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-rule-dlq.html)
+- [Stripe Webhook Best Practices](https://docs.stripe.com/webhooks/best-practices)
+- [Webhooks.fyi Retry](https://webhooks.fyi/docs/retry/)

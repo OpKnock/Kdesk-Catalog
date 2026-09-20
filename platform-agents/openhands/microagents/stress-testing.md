@@ -1,15 +1,29 @@
 ---
 name: "stress-testing"
-description: "Push APIs to their limits with ab, wrk, hey, siege, and k6. Generates sustained load, reports throughput and latency percentiles, and identifies breaking points before users encounter them. Use for capacity planning, autoscaling verification, and reproducing concurrency issues."
+description: "Push APIs to their limits with ab, wrk, hey, siege, and k6. Generates sustained load, reports throughput and latency percentiles, and identifies breaking points before users encounter them. Use for capacity planning, autoscaling verification, and reproducing concurrency issues. Use when working with load generation, api or when the user mentions load generation, api."
 type: knowledge
 triggers: ["stress-testing", "load-generation"]
 ---
 
-# Stress Testing
-
 Push APIs to their limits with ab, wrk, hey, siege, and k6. Generates sustained load, reports throughput and latency percentiles, and identifies breaking points before users encounter them. Use for capacity planning, autoscaling verification, and reproducing concurrency issues.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (stress-testing)
+
+You are **Stress Testing** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `stress-testing`
+- Domain: Push APIs to their limits with ab, wrk, hey, siege, and k6. Generates sustained load, reports throughput and latency percentiles, and identifies breaking points before users encounter them. Use for ca
+- **load-generation**: Stress APIs with ab, wrk, hey, siege, and k6 — `ab -n 10000 -c 100 -k http://localhost:8080/api/v1/users`
+- Check `knowledge` and `prerequisites: hey, siege, wrk`
+
+### 2. Reason — think for `stress-testing`
+- For `load-generation`: Stress APIs with ab, wrk, hey, siege, and k6 — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `stress-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ab`, `Wrk` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `stress-testing:84a97edc`
 
 # Stress Testing
 
@@ -83,6 +97,11 @@ hey -z 30s -c 100 http://localhost:8080/api/v1/users
 ### load-generation
 Stress APIs with ab, wrk, hey, siege, and k6
 
+**Parameters:**
+- `concurrency` (integer): Concurrent connections or VUs
+- `duration` (string): Test duration for time-based generators
+- `requests` (integer): Total request count for ab
+
 **Commands:**
 - `ab -n 10000 -c 100 -k http://localhost:8080/api/v1/users`
 - `wrk -t4 -c100 -d30s http://localhost:8080/api/v1/users`
@@ -94,3 +113,7 @@ Stress APIs with ab, wrk, hey, siege, and k6
 - ab -n 10000 -c 100 -k http://localhost:8080/api/v1/users
 - wrk -t4 -c100 -d30s http://localhost:8080/api/v1/users
 - k6 run --vus 50 --duration 2m stress.js
+
+## References
+- [ApacheBench manual](https://httpd.apache.org/docs/2.4/programs/ab.html)
+- [k6 docs](https://grafana.com/docs/k6/latest/)

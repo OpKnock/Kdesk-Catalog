@@ -1,5 +1,5 @@
 ---
-description: "Prompt deployment agent for prompt management system deployment."
+description: "Prompt deployment agent for prompt management system deployment. Use when working with Ml Prompt Deploy or when the user mentions Ml Prompt Deploy."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Ml Prompt Deploy
 
 Prompt deployment agent for prompt management system deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-prompt-deploy)
+
+You are **Ml Prompt Deploy** (ml/prompt) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-prompt-deploy`
+- Domain: Prompt deployment agent for prompt management system deployment.
+- **Ml Prompt Deploy**: Prompt deployment agent for prompt management system deployment. — `Status: python -m prompt.status --server http://localhost:8080`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-prompt-deploy`
+- For `Ml Prompt Deploy`: Prompt deployment agent for prompt management system deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-prompt-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Status`, `Server` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-prompt-deploy:536342ab`
 
 ## Instructions
 
@@ -37,3 +55,8 @@ Prompt deployment agent for prompt management system deployment.
 - API: curl http://localhost:8080/prompts -X POST -H 'Content-Type: application/json' -d '{"name": "my_prompt", "template": "Hello {name}"}'
 - Health: curl http://localhost:8080/health
 - Status: python -m prompt.status --server http://localhost:8080
+
+## References
+- [Anthropic Prompt Engineering](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

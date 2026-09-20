@@ -1,8 +1,24 @@
-# istio
-
 Installs and operates Istio service mesh: sidecar injection, VirtualService/DestinationRule traffic routing, mTLS, and traffic observation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (istio)
+
+You are **istio** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `istio`
+- Domain: Installs and operates Istio service mesh: sidecar injection, VirtualService/DestinationRule traffic routing, mTLS, and traffic observation.
+- **install-and-verify**: Install the mesh, verify control plane health, and configure sidecar injection. — `istioctl install --set profile=demo`
+- **traffic-management**: Configure VirtualService, DestinationRule, and Gateway resources for canary and weighted routing. — `kubectl apply -f virtualservice.yaml`
+- Check `knowledge` and `prerequisites: istioctl, kubectl`
+
+### 2. Reason — think for `istio`
+- For `install-and-verify`: Install the mesh, verify control plane health, and configure sidecar injection. — decide which checks to run
+- For `traffic-management`: Configure VirtualService, DestinationRule, and Gateway resources for canary and weighted routing. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `istio` tools
+- Tools: `Glob`, `Grep`, `Read`, `Istioctl`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `istio:f39fc388`
 
 # Istio Service Mesh
 
@@ -73,6 +89,10 @@ spec:
 ### install-and-verify
 Install the mesh, verify control plane health, and configure sidecar injection.
 
+**Parameters:**
+- `profile` (string): Install profile: default, demo, minimal, external
+- `namespace` (string): Namespace to enable injection on
+
 **Commands:**
 - `istioctl install --set profile=demo`
 - `istioctl verify-install`
@@ -89,6 +109,10 @@ Install the mesh, verify control plane health, and configure sidecar injection.
 ### traffic-management
 Configure VirtualService, DestinationRule, and Gateway resources for canary and weighted routing.
 
+**Parameters:**
+- `pod` (string): Pod name for proxy-config inspection
+- `manifest` (string): CR manifest file
+
 **Commands:**
 - `kubectl apply -f virtualservice.yaml`
 - `kubectl apply -f destinationrule.yaml`
@@ -101,3 +125,8 @@ Configure VirtualService, DestinationRule, and Gateway resources for canary and 
 - kubectl apply -f virtualservice.yaml
 - istioctl proxy-config route reviews-v1-abc
 - istioctl experimental describe pod reviews-v1-abc
+
+## References
+- [Istio Documentation](https://istio.io/latest/docs/)
+- [Istio Traffic Management](https://istio.io/latest/docs/concepts/traffic-management/)
+- [Istio Security](https://istio.io/latest/docs/concepts/security/)

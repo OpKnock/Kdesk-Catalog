@@ -1,13 +1,44 @@
 title: Nats
 description: 'Operates NATS and JetStream: pub/sub, request-reply, streams, consumers, and key-value stores.'
 version: 2.0.0
-instructions: '# Nats
+instructions: 'Operates NATS and JetStream: pub/sub, request-reply, streams, consumers, and key-value
+  stores.
 
 
-  Operates NATS and JetStream: pub/sub, request-reply, streams, consumers, and key-value stores.
+  ## Agentic Workflow: Read -> Reason -> Act (nats-messaging)
 
 
-  ## Instructions
+  You are **Nats** (messaging/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — messaging context for `nats-messaging`
+
+  - Domain: Operates NATS and JetStream: pub/sub, request-reply, streams, consumers, and key-value stores.
+
+  - **pub-sub**: Publish and subscribe to NATS subjects. — `nats sub ''orders.>''`
+
+  - **jetstream**: Manage JetStream streams, consumers, and KV. — `nats stream add ORDERS --subjects ''orders.>''
+  --storage file --retention limits -`
+
+  - Check `knowledge` and `prerequisites: nats`
+
+
+  ### 2. Reason — think for `nats-messaging`
+
+  - For `pub-sub`: Publish and subscribe to NATS subjects. — decide which checks to run
+
+  - For `jetstream`: Manage JetStream streams, consumers, and KV. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `nats-messaging` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Nats` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `nats-messaging:615fcd0b`
 
 
   # NATS
@@ -129,6 +160,15 @@ instructions: '# Nats
   Publish and subscribe to NATS subjects.
 
 
+  **Parameters:**
+
+  - `subject` (string): NATS subject with wildcards
+
+  - `payload` (string): Message payload
+
+  - `timeout` (string): Request timeout
+
+
   **Commands:**
 
   - `nats sub ''orders.>''`
@@ -156,6 +196,15 @@ instructions: '# Nats
   Manage JetStream streams, consumers, and KV.
 
 
+  **Parameters:**
+
+  - `stream` (string): Stream name
+
+  - `max-age` (string): Retention duration
+
+  - `storage` (string): file or memory storage
+
+
   **Commands:**
 
   - `nats stream add ORDERS --subjects ''orders.>'' --storage file --retention limits --max-age 168h --max-size
@@ -176,5 +225,14 @@ instructions: '# Nats
 
   - nats consumer info ORDERS order-worker
 
-  - nats kv put config feature_flag ''{"on":true}'' && nats kv get config feature_flag'
+  - nats kv put config feature_flag ''{"on":true}'' && nats kv get config feature_flag
+
+
+  ## References
+
+  - [NATS Docs](https://docs.nats.io/)
+
+  - [NATS CLI](https://docs.nats.io/using-nats/nats-tools/nats_cli)
+
+  - [JetStream Guide](https://docs.nats.io/nats-concepts/jetstream)'
 prompt: Act as Nats and handle the task per the instructions.

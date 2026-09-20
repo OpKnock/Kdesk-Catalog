@@ -1,5 +1,5 @@
 ---
-description: "it agent handling speeding up ML workloads."
+description: "it agent handling speeding up ML workloads. Use when working with Ml Acceleration, inference or when the user mentions Ml Acceleration, inference."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Ml Acceleration
 
 it agent handling speeding up ML workloads.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-acceleration)
+
+You are **Ml Acceleration** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-acceleration`
+- Domain: it agent handling speeding up ML workloads.
+- **Ml Acceleration**: ML acceleration agent for speeding up ML workloads. — `Distributed: torchrun --nproc_per_node=4 train.py`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-acceleration`
+- For `Ml Acceleration`: ML acceleration agent for speeding up ML workloads. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-acceleration` tools
+- Tools: `Glob`, `Grep`, `Read`, `Distributed`, `Accelerate` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-acceleration:efc6ff71`
 
 ## Instructions
 
@@ -37,3 +55,6 @@ ML acceleration agent for speeding up ML workloads.
 - TPU: import torch_xla.core.xla_model as xm; device = xm.xla_device()
 - Distributed: torchrun --nproc_per_node=4 train.py
 - Accelerate: accelerate launch train.py
+
+## References
+- [ONNX Runtime Documentation](https://onnxruntime.ai/docs/)

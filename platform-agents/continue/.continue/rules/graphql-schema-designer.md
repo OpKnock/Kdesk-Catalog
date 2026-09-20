@@ -1,15 +1,31 @@
 ---
 name: "graphql-schema-designer"
-description: "Designs and evolves GraphQL schemas: linting with graphql-schema-linter, drift checks with graphql-inspector, and typed codegen."
+description: "Designs and evolves GraphQL schemas: linting with graphql-schema-linter, drift checks with graphql-inspector, and typed codegen. Use when working with lint, diff or when the user mentions lint, diff."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# graphql-schema-designer
-
 Designs and evolves GraphQL schemas: linting with graphql-schema-linter, drift checks with graphql-inspector, and typed codegen.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (graphql-schema-designer)
+
+You are **graphql-schema-designer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `graphql-schema-designer`
+- Domain: Designs and evolves GraphQL schemas: linting with graphql-schema-linter, drift checks with graphql-inspector, and typed codegen.
+- **lint**: Lint GraphQL schemas against rulesets. — `npx graphql-schema-linter schema.graphql`
+- **diff**: Compare schema versions and generate typed clients. — `npx graphql-inspector diff old.graphql new.graphql`
+- Check `knowledge` and `prerequisites: apollo-server, graphql-codegen, rover, altair`
+
+### 2. Reason — think for `graphql-schema-designer`
+- For `lint`: Lint GraphQL schemas against rulesets. — decide which checks to run
+- For `diff`: Compare schema versions and generate typed clients. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `graphql-schema-designer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `graphql-schema-designer:6105d60a`
 
 # GraphQL Schema Design
 
@@ -92,6 +108,11 @@ Run the linter and inspector diff in CI on every PR touching schema files.
 ### lint
 Lint GraphQL schemas against rulesets.
 
+**Parameters:**
+- `rules` (string): Comma-separated rule names
+- `format` (string): stylish or json output
+- `ignore` (string): Rules to skip
+
 **Commands:**
 - `npx graphql-schema-linter schema.graphql`
 - `npx graphql-schema-linter schema.graphql --rules fields-have-descriptions,types-have-descriptions`
@@ -107,6 +128,11 @@ Lint GraphQL schemas against rulesets.
 ### diff
 Compare schema versions and generate typed clients.
 
+**Parameters:**
+- `schema` (string): Schema file(s) to analyze
+- `config` (string): codegen configuration file
+- `watch` (string): Regenerate on file changes
+
 **Commands:**
 - `npx graphql-inspector diff old.graphql new.graphql`
 - `npx graphql-inspector validate --schema new.graphql 'operations/**/*.graphql'`
@@ -118,3 +144,8 @@ Compare schema versions and generate typed clients.
 - npx graphql-inspector diff schema-2026-07.graphql schema-2026-08.graphql
 - npx graphql-codegen --config codegen.ts --silent
 - npx graphql-inspector validate --schema schema.graphql 'src/**/*.graphql'
+
+## References
+- [GraphQL Schema Spec](https://graphql.org/learn/schema/)
+- [GraphQL Inspector](https://the-guild.dev/graphql/inspector/docs)
+- [GraphQL Codegen](https://the-guild.dev/graphql/codegen/docs)

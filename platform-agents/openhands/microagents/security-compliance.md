@@ -1,6 +1,6 @@
 ---
 name: "security-compliance"
-description: "Security compliance expertise and best practices."
+description: "Security compliance expertise and best practices. Use when working with compliance expertise, security, skill or when the user mentions compliance expertise, security, skill."
 type: knowledge
 triggers: ["security-compliance", "compliance-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["security-compliance", "compliance-expertise"]
 # Security Compliance
 
 Security compliance expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (security-compliance)
+
+You are **Security Compliance** (security/compliance) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `security-compliance`
+- Domain: Security compliance expertise and best practices.
+- **compliance-expertise**: security compliance expertise — `compliance-cli`
+- Check `knowledge` and `prerequisites: compliance`
+
+### 2. Reason — think for `security-compliance`
+- For `compliance-expertise`: security compliance expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `security-compliance` tools
+- Tools: `Glob`, `Grep`, `Read`, `Compliance-cli`, `Compliance-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `security-compliance:f2ad104a`
 
 ## Instructions
 

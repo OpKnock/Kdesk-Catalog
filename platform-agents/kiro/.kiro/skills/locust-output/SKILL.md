@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(locust:*) Bash(ls:*)"
 
 Load testing with Locust: HttpUser task files, headless runs, web UI, CSV collection, and distributed execution for large-scale tests.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (locust-output)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Locust Output** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `locust -f locustfile.py --headless -u 1000 -r 100 --host htt`, `locust -f locustfile.py --headless -u 500 -r 50 --csv=result`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `locust-output`
+- Domain: Load testing with Locust: HttpUser task files, headless runs, web UI, CSV collection, and distributed execution for large-scale tests.
+- **locust-run**: Run locust tests headless or with the web UI. — `locust -f locustfile.py --headless -u 1000 -r 100 --host https://httpbin.org`
+- **locust-output**: Collect CSV results and run distributed tests. — `locust -f locustfile.py --headless -u 500 -r 50 --csv=results --csv-full-history`
+- Check `knowledge` and `prerequisites: locust`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `locust-output`
+- For `locust-run`: Run locust tests headless or with the web UI. — decide which checks to run
+- For `locust-output`: Collect CSV results and run distributed tests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `locust-output` tools
+- Tools: `Glob`, `Grep`, `Read`, `Locust`, `Ls` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `locust-output:6de70834`
 
 # Locust
 

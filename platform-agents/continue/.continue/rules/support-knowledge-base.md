@@ -1,6 +1,6 @@
 ---
 name: "Support Knowledge Base"
-description: "Support knowledge-base expertise and best practices."
+description: "Support knowledge-base expertise and best practices. Use when working with knowledge base expertise, support, knowledge base, skill or when the user mentions knowledge base expertise, support, knowledge base, skill."
 globs: ["**/*.r", "**/*.scala"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Support Knowledge Base
 
 Support knowledge-base expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (support-knowledge-base)
+
+You are **Support Knowledge Base** (support/knowledge-base) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — support context for `support-knowledge-base`
+- Domain: Support knowledge-base expertise and best practices.
+- **knowledge-base-expertise**: support knowledge-base expertise — `knowledge-base-cli`
+- Check `knowledge` and `prerequisites: knowledge-base`
+
+### 2. Reason — think for `support-knowledge-base`
+- For `knowledge-base-expertise`: support knowledge-base expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `support-knowledge-base` tools
+- Tools: `Glob`, `Grep`, `Read`, `Knowledge-base-cli`, `Knowledge-base-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `support-knowledge-base:f3d6686e`
 
 ## Instructions
 

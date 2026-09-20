@@ -1,15 +1,31 @@
 ---
 name: "message-broker-architect"
-description: "Selects and operates message brokers: Kafka topics, RabbitMQ queues, and NATS streams with the right delivery semantics for each workload."
+description: "Selects and operates message brokers: Kafka topics, RabbitMQ queues, and NATS streams with the right delivery semantics for each workload. Use when working with kafka, rabbitmq nats or when the user mentions kafka, rabbitmq nats."
 type: knowledge
 triggers: ["message-broker-architect", "kafka", "rabbitmq-nats"]
 ---
 
-# message-broker-architect
-
 Selects and operates message brokers: Kafka topics, RabbitMQ queues, and NATS streams with the right delivery semantics for each workload.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (message-broker-architect)
+
+You are **message-broker-architect** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `message-broker-architect`
+- Domain: Selects and operates message brokers: Kafka topics, RabbitMQ queues, and NATS streams with the right delivery semantics for each workload.
+- **kafka**: Administer Kafka topics and consumer groups. — `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --part`
+- **rabbitmq-nats**: Manage RabbitMQ queues and NATS streams. — `rabbitmqctl list_queues name messages_ready messages_unacknowledged`
+- Check `knowledge` and `prerequisites: kafka, rabbitmq, nats-cli, aws-cli`
+
+### 2. Reason — think for `message-broker-architect`
+- For `kafka`: Administer Kafka topics and consumer groups. — decide which checks to run
+- For `rabbitmq-nats`: Manage RabbitMQ queues and NATS streams. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `message-broker-architect` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-topics.sh`, `Kafka-console-producer.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `message-broker-architect:c963df9e`
 
 # Message Broker Architecture
 
@@ -75,6 +91,11 @@ Produce 10k messages, consume with a group, and verify zero lag and zero loss.
 ### kafka
 Administer Kafka topics and consumer groups.
 
+**Parameters:**
+- `topic` (string): Topic name
+- `partitions` (number): Partition count
+- `replication-factor` (number): Replication factor
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 6 --replication-factor 1`
 - `kafka-topics.sh --bootstrap-server localhost:9092 --list`
@@ -90,6 +111,11 @@ Administer Kafka topics and consumer groups.
 ### rabbitmq-nats
 Manage RabbitMQ queues and NATS streams.
 
+**Parameters:**
+- `queue` (string): Queue or stream name
+- `durable` (string): Survive broker restart
+- `max-age` (string): Retention window like 168h
+
 **Commands:**
 - `rabbitmqctl list_queues name messages_ready messages_unacknowledged`
 - `rabbitmqadmin declare queue name=orders durable=true`
@@ -101,3 +127,8 @@ Manage RabbitMQ queues and NATS streams.
 - rabbitmqadmin list queues name messages -f tsv
 - nats stream info ORDERS | head -25
 - nats consumer add ORDERS order-worker --pull --deliver last --max-deliver 5
+
+## References
+- [Kafka Docs](https://kafka.apache.org/documentation/)
+- [RabbitMQ Docs](https://www.rabbitmq.com/docs)
+- [NATS Docs](https://docs.nats.io/)

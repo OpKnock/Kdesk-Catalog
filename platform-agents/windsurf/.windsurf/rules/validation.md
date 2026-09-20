@@ -6,27 +6,23 @@ globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
 
 Validates JSON payloads against JSON Schema (draft 2020-12) using ajv-cli and Python jsonschema. Compiles schemas to catch errors before deployment, enforces contracts in CI pipelines, and performs quick shape checks with jq.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (validation)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Validation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx ajv-cli validate -s schema.json -d data.json --strict=fa`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `validation`
+- Domain: Validates JSON payloads against JSON Schema (draft 2020-12) using ajv-cli and Python jsonschema. Compiles schemas to catch errors before deployment, enforces contracts in CI pipelines, and performs qu
+- **schema-validate**: Validate JSON payloads against JSON Schema — `npx ajv-cli validate -s schema.json -d data.json --strict=false`
+- Check `knowledge` and `prerequisites: npx, python, jq`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `validation`
+- For `schema-validate`: Validate JSON payloads against JSON Schema — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `validation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `validation:73dc273a`
 
 # Validation
 

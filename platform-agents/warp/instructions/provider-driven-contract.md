@@ -1,8 +1,22 @@
-# Provider Driven Contract
-
 Provider-driven contract testing with Pact: publish pacts, verify against providers, and gate deploys.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (provider-driven-contract)
+
+You are **Provider Driven Contract** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `provider-driven-contract`
+- Domain: Provider-driven contract testing with Pact: publish pacts, verify against providers, and gate deploys.
+- **pact-contract-testing**: Publish pact files to a broker, verify provider endpoints, and run can-i-deploy checks. — `pact-broker publish ./pacts -b http://localhost:9292 -c 1.0.0 -a main`
+- Check `knowledge` and `prerequisites: pact-broker, pact-provider-verifier`
+
+### 2. Reason — think for `provider-driven-contract`
+- For `pact-contract-testing`: Publish pact files to a broker, verify provider endpoints, and run can-i-deploy checks. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `provider-driven-contract` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pact-broker`, `Pact-provider-verifier` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `provider-driven-contract:835d4add`
 
 # Provider-Driven Contracts
 
@@ -54,6 +68,11 @@ pact-broker can-i-deploy --pacticipant orders-api --version 1.0.0 --to prod -b h
 ### pact-contract-testing
 Publish pact files to a broker, verify provider endpoints, and run can-i-deploy checks.
 
+**Parameters:**
+- `broker_url` (string): Pact broker base URL
+- `version` (string): Consumer/provider version
+- `pacts_dir` (string): Directory with generated pact files
+
 **Commands:**
 - `pact-broker publish ./pacts -b http://localhost:9292 -c 1.0.0 -a main`
 - `pact-broker list-latest-pact-versions -b http://localhost:9292`
@@ -65,3 +84,7 @@ Publish pact files to a broker, verify provider endpoints, and run can-i-deploy 
 - pact-broker publish ./pacts -b http://localhost:9292 -c 1.0.0
 - pact-provider-verifier --provider-base-url=http://localhost:8080 --pact-urls=./pacts/*.json --provider-version 1.0.0
 - pact-broker can-i-deploy --pacticipant orders-api --version 1.0.0 --to prod
+
+## References
+- [Pact Docs](https://docs.pact.io/)
+- [Pact Broker Client](https://github.com/pact-foundation/pact_broker-client)

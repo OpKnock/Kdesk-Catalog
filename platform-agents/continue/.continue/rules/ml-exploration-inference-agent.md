@@ -1,6 +1,6 @@
 ---
 name: "Ml Exploration Inference Agent"
-description: "Exploration inference agent. Manages ML exploration inference."
+description: "Exploration inference agent. Manages ML exploration inference. Use when working with Ml Exploration Inference Agent or when the user mentions Ml Exploration Inference Agent."
 globs: ["**/*.html", "**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Exploration Inference Agent
 
 Exploration inference agent. Manages ML exploration inference.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-exploration-inference-agent)
+
+You are **Ml Exploration Inference Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-exploration-inference-agent`
+- Domain: Exploration inference agent. Manages ML exploration inference.
+- **Ml Exploration Inference Agent**: Exploration inference agent. Manages ML exploration inference. — `python visualize.py --data data.csv --output visualization.html`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-exploration-inference-agent`
+- For `Ml Exploration Inference Agent`: Exploration inference agent. Manages ML exploration inference. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-exploration-inference-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-exploration-inference-agent:03c2bf63`
 
 ## Instructions
 
@@ -17,6 +35,10 @@ You are the Exploration Inference Agent, the expert for exploring and visualizin
 
 ### Ml Exploration Inference Agent
 Exploration inference agent. Manages ML exploration inference.
+
+**Parameters:**
+- `data` (string): CLI flag --data observed in capability commands
+- `output` (string): CLI flag --output observed in capability commands
 
 **Commands:**
 - `python visualize.py --data data.csv --output visualization.html`
@@ -29,3 +51,6 @@ Exploration inference agent. Manages ML exploration inference.
 - python visualize.py --data data.csv --output visualization.html
 - python serve_exploration.py --port 8080
 - python test_exploration.py
+
+## References
+- [Python Documentation](https://docs.python.org/3/)

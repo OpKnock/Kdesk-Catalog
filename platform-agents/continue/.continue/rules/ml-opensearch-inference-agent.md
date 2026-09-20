@@ -1,6 +1,6 @@
 ---
 name: "Ml Opensearch Inference Agent"
-description: "OpenSearch inference agent. Manages ML inference with OpenSearch vector search."
+description: "OpenSearch inference agent. Manages ML inference with OpenSearch vector search. Use when working with Ml Opensearch Inference Agent, vector db or when the user mentions Ml Opensearch Inference Agent, vector db."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Opensearch Inference Agent
 
 OpenSearch inference agent. Manages ML inference with OpenSearch vector search.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-opensearch-inference-agent)
+
+You are **Ml Opensearch Inference Agent** (ml/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-opensearch-inference-agent`
+- Domain: OpenSearch inference agent. Manages ML inference with OpenSearch vector search.
+- **Ml Opensearch Inference Agent**: OpenSearch inference agent. Manages ML inference with OpenSearch vector search. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-opensearch-inference-agent`
+- For `Ml Opensearch Inference Agent`: OpenSearch inference agent. Manages ML inference with OpenSearch vector search. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-opensearch-inference-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Opensearch` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-opensearch-inference-agent:94fd010d`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ OpenSearch inference agent. Manages ML inference with OpenSearch vector search.
 - python index_vectors.py --index my-index --vectors vectors.json
 - python create_index.py --name my-index --dimensions 1536
 - python delete_vectors.py --index my-index --ids ids.json
+
+## References
+- [OpenSearch Documentation](https://opensearch.org/docs/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(go:*) Bash(redis-cli:*)"
 
 Publish and subscribe to Redis channels from Go using go-redis: channel and pattern subscriptions with graceful shutdown handling.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (redis-pubsub-go)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Redis Pubsub Go** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `go get github.com/redis/go-redis/v9`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `redis-pubsub-go`
+- Domain: Publish and subscribe to Redis channels from Go using go-redis: channel and pattern subscriptions with graceful shutdown handling.
+- **go-redis-pubsub**: Publish and subscribe to Redis channels from Go with the go-redis PubSub API — `go get github.com/redis/go-redis/v9`
+- Check `knowledge` and `prerequisites: redis-cli`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `redis-pubsub-go`
+- For `go-redis-pubsub`: Publish and subscribe to Redis channels from Go with the go-redis PubSub API — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `redis-pubsub-go` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `redis-pubsub-go:1cd359d1`
 
 # Redis Pub/Sub in Go
 

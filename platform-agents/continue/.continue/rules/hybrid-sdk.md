@@ -1,6 +1,6 @@
 ---
 name: "Hybrid Sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Hybrid Deploy Sdk Agent or when the user mentions Ml Hybrid Deploy Sdk Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Hybrid Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (hybrid-sdk)
+
+You are **Hybrid Sdk** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `hybrid-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Hybrid Deploy Sdk Agent**: Hybrid SDK deployment agent for ML hybrid SDK deployment. — `docker build -t hybrid:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `hybrid-sdk`
+- For `Ml Hybrid Deploy Sdk Agent`: Hybrid SDK deployment agent for ML hybrid SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `hybrid-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Hybrid` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `hybrid-sdk:c0e18825`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Hybrid SDK deployment agent for ML hybrid SDK deployment.
 **Examples:**
 - Server: python -m hybrid.server --port 8080
 - Docker: docker run -p 8080:8080 hybrid-server
+
+## References
+- [Google Cloud Anthos](https://cloud.google.com/anthos/docs)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

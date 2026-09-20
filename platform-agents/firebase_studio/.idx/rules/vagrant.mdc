@@ -1,14 +1,30 @@
 ---
-description: "Manages reproducible virtual machines with Vagrant: boxes, providers, provisioning, snapshots, and multi-machine environments."
+description: "Manages reproducible virtual machines with Vagrant: boxes, providers, provisioning, snapshots, and multi-machine environments. Use when working with vm lifecycle, provisioning and snapshots, devops or when the user mentions vm lifecycle, provisioning and snapshots, devops."
 globs: ["**/*.r", "**/*.rb", "**/*.sh"]
 alwaysApply: false
 ---
 
-# vagrant
-
 Manages reproducible virtual machines with Vagrant: boxes, providers, provisioning, snapshots, and multi-machine environments.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (vagrant)
+
+You are **vagrant** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `vagrant`
+- Domain: Manages reproducible virtual machines with Vagrant: boxes, providers, provisioning, snapshots, and multi-machine environments.
+- **vm-lifecycle**: Initialize, boot, and manage VMs from a Vagrantfile. — `vagrant init hashicorp/bionic64`
+- **provisioning-and-snapshots**: Provision VMs, reload configs, and snapshot state. — `vagrant provision`
+- Check `knowledge` and `prerequisites: vagrant`
+
+### 2. Reason — think for `vagrant`
+- For `vm-lifecycle`: Initialize, boot, and manage VMs from a Vagrantfile. — decide which checks to run
+- For `provisioning-and-snapshots`: Provision VMs, reload configs, and snapshot state. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `vagrant` tools
+- Tools: `Glob`, `Grep`, `Read`, `Vagrant` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vagrant:e2964406`
 
 # Vagrant Virtual Machines
 
@@ -78,6 +94,10 @@ end
 ### vm-lifecycle
 Initialize, boot, and manage VMs from a Vagrantfile.
 
+**Parameters:**
+- `box` (string): Box name, e.g. hashicorp/bionic64
+- `machine` (string): Machine name in multi-machine Vagrantfiles
+
 **Commands:**
 - `vagrant init hashicorp/bionic64`
 - `vagrant up`
@@ -94,6 +114,10 @@ Initialize, boot, and manage VMs from a Vagrantfile.
 ### provisioning-and-snapshots
 Provision VMs, reload configs, and snapshot state.
 
+**Parameters:**
+- `snapshot` (string): Snapshot name
+- `box` (string): Box to query
+
 **Commands:**
 - `vagrant provision`
 - `vagrant reload --provision`
@@ -106,3 +130,8 @@ Provision VMs, reload configs, and snapshot state.
 - vagrant provision
 - vagrant snapshot save baseline
 - vagrant snapshot restore baseline
+
+## References
+- [Vagrant Documentation](https://developer.hashicorp.com/vagrant/docs)
+- [Vagrant Provisioning](https://developer.hashicorp.com/vagrant/docs/provisioning)
+- [HashiCorp Vagrant Catalog](https://app.vagrantup.com/boxes/search)

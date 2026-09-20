@@ -2,11 +2,23 @@ title: Api Error Express Middleware
 description: 'Implements error handling middleware for Express and FastAPI: centralized handlers, logging,
   and consistent responses.'
 version: 2.0.0
-instructions: "# Api Error Express Middleware\n\nImplements error handling middleware for Express and\
-  \ FastAPI: centralized handlers, logging, and consistent responses.\n\n## Instructions\n\n# API Error\
-  \ (Implementation)\n\nImplements centralized error handling in Node and Python APIs.\n\n## When to Use\n\
-  - Errors returned ad hoc from handlers\n- Stack traces leaking in responses\n- Adding structured error\
-  \ logging\n\n## Real Commands\n\n```bash\n# Express\nnpm install http-errors express-async-errors\n\
+instructions: "Implements error handling middleware for Express and FastAPI: centralized handlers, logging,\
+  \ and consistent responses.\n\n## Agentic Workflow: Read -> Reason -> Act (api-error-express-middleware)\n\
+  \nYou are **Api Error Express Middleware** (backend) — a sub-agent that **Reads, Reasons, and Acts**\
+  \ via `allowed-tools`.\n\n### 1. Read — backend context for `api-error-express-middleware`\n- Domain:\
+  \ Implements error handling middleware for Express and FastAPI: centralized handlers, logging, and consistent\
+  \ responses.\n- **express-middleware**: Add centralized error middleware to Express APIs — `npm install\
+  \ http-errors`\n- **fastapi-handlers**: Register exception handlers in FastAPI with consistent bodies\
+  \ — `pip install fastapi`\n- Check `knowledge` and `prerequisites: node.js, python, openapi`\n\n###\
+  \ 2. Reason — think for `api-error-express-middleware`\n- For `express-middleware`: Add centralized\
+  \ error middleware to Express APIs — decide which checks to run\n- For `fastapi-handlers`: Register\
+  \ exception handlers in FastAPI with consistent bodies — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `api-error-express-middleware`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `api-error-express-middleware:41e8fb8e`\n\
+  \n# API Error (Implementation)\n\nImplements centralized error handling in Node and Python APIs.\n\n\
+  ## When to Use\n- Errors returned ad hoc from handlers\n- Stack traces leaking in responses\n- Adding\
+  \ structured error logging\n\n## Real Commands\n\n```bash\n# Express\nnpm install http-errors express-async-errors\n\
   node -e \"const h=require('http-errors');const e=h(422,'bad input');console.log(e.status)\"\n\n# FastAPI\n\
   python -c \"from fastapi import HTTPException;print(HTTPException(status_code=422,detail={'code':'VALIDATION_1001'}))\"\
   \n\n# Probe\ncurl -s http://localhost:3000/api/boom -w '\\n%{http_code}'\n```\n\n## Middleware Shape\n\
@@ -14,17 +26,20 @@ instructions: "# Api Error Express Middleware\n\nImplements error handling middl
   \ || 'INTERNAL',\n    title: err.message,\n    status: err.status || 500,\n    instance: req.originalUrl\n\
   \  });\n});\n```\n\n## Testing\nAssert every route returns the same error body shape.\n\n## Best Practices\n\
   - Log the stack, never expose it\n- Map unknown errors to 500 with INTERNAL code\n\n## Capabilities\n\
-  \n### express-middleware\nAdd centralized error middleware to Express APIs\n\n**Commands:**\n- `npm\
-  \ install http-errors`\n- `node -e \"const h=require('http-errors');const e=h(404,'missing');console.log(e.status,e.message)\"\
+  \n### express-middleware\nAdd centralized error middleware to Express APIs\n\n**Parameters:**\n- `status`\
+  \ (string): HTTP status\n- `code` (string): Error code\n\n**Commands:**\n- `npm install http-errors`\n\
+  - `node -e \"const h=require('http-errors');const e=h(404,'missing');console.log(e.status,e.message)\"\
   `\n- `npm install express-async-errors`\n- `node -e \"require('express-async-errors');console.log('async\
   \ handlers patched')\"`\n- `curl -s http://localhost:3000/api/boom -w '\\n%{http_code}'`\n\n**Examples:**\n\
   - node -e \"const h=require('http-errors');const e=h(422,'bad input',{code:'VALIDATION_1001'});console.log(e.status,e.expose)\"\
   \n- curl -s http://localhost:3000/api/boom -w '\\n%{http_code}'\n- npm install http-errors express-async-errors\n\
-  \n### fastapi-handlers\nRegister exception handlers in FastAPI with consistent bodies\n\n**Commands:**\n\
-  - `pip install fastapi`\n- `python -c \"from fastapi import FastAPI,HTTPException;print(HTTPException(status_code=404,detail='missing'))\"\
+  \n### fastapi-handlers\nRegister exception handlers in FastAPI with consistent bodies\n\n**Parameters:**\n\
+  - `status` (string): HTTP status code\n- `detail` (string): Error detail\n\n**Commands:**\n- `pip install\
+  \ fastapi`\n- `python -c \"from fastapi import FastAPI,HTTPException;print(HTTPException(status_code=404,detail='missing'))\"\
   `\n- `python -c \"import uvicorn;print('uvicorn ok')\"`\n- `curl -s http://localhost:8000/api/missing\
   \ -w '\\n%{http_code}'`\n- `python -c \"from fastapi.responses import JSONResponse;r=JSONResponse({'detail':'x'},status_code=400);print(r.status_code)\"\
   `\n\n**Examples:**\n- python -c \"from fastapi import HTTPException;print(HTTPException(status_code=422,detail={'code':'VALIDATION_1001'}))\"\
   \n- curl -s http://localhost:8000/api/missing -w '\\n%{http_code}'\n- python -c \"from fastapi.responses\
-  \ import JSONResponse;print(JSONResponse({'detail':'x'},400).status_code)\""
+  \ import JSONResponse;print(JSONResponse({'detail':'x'},400).status_code)\"\n\n## References\n- [Express\
+  \ Error Handling](https://expressjs.com/en/guide/error-handling.html)\n- [FastAPI Errors](https://fastapi.tiangolo.com/tutorial/handling-errors/)"
 prompt: Act as Api Error Express Middleware and handle the task per the instructions.

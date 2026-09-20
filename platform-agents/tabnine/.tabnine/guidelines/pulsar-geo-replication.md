@@ -1,8 +1,22 @@
-# Pulsar Geo Replication
-
 Pulsar geo-replication: cluster configuration, namespace replication, and cross-region topic replication.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (pulsar-geo-replication)
+
+You are **Pulsar Geo Replication** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `pulsar-geo-replication`
+- Domain: Pulsar geo-replication: cluster configuration, namespace replication, and cross-region topic replication.
+- **pulsar-geo-replication**: Configure namespaces for replication across clusters and monitor replication state. — `bin/pulsar-admin clusters list`
+- Check `knowledge` and `prerequisites: bin/pulsar-admin`
+
+### 2. Reason — think for `pulsar-geo-replication`
+- For `pulsar-geo-replication`: Configure namespaces for replication across clusters and monitor replication state. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pulsar-geo-replication` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bin/pulsar-admin` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pulsar-geo-replication:4d813a2a`
 
 # Pulsar Geo-Replication
 
@@ -56,6 +70,11 @@ replicationClusters=primary,backup
 ### pulsar-geo-replication
 Configure namespaces for replication across clusters and monitor replication state.
 
+**Parameters:**
+- `namespace` (string): Tenant/namespace, e.g. public/default
+- `clusters` (array): Cluster names participating in replication
+- `topic` (string): Persistent topic to inspect
+
 **Commands:**
 - `bin/pulsar-admin clusters list`
 - `bin/pulsar-admin namespaces set-clusters public/default --clusters primary,backup`
@@ -67,3 +86,7 @@ Configure namespaces for replication across clusters and monitor replication sta
 - bin/pulsar-admin namespaces set-clusters public/default --clusters us-east,eu-west
 - bin/pulsar-admin namespaces get-clusters public/default
 - bin/pulsar-admin topics stats persistent://primary/my-topic | jq '.replicationBacklog'
+
+## References
+- [Pulsar Geo-replication docs](https://pulsar.apache.org/docs/3.0.x/administration-geo/)
+- [Replication concepts](https://pulsar.apache.org/docs/3.0.x/concepts-replication/)

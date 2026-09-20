@@ -1,15 +1,31 @@
 ---
 name: "runbook"
-description: "Creates and maintains operational runbooks with MkDocs and mdBook, including alerts-to-runbook linking and searchable playbooks."
+description: "Creates and maintains operational runbooks with MkDocs and mdBook, including alerts-to-runbook linking and searchable playbooks. Use when working with runbook authoring, runbook maintenance, sre or when the user mentions runbook authoring, runbook maintenance, sre."
 type: knowledge
 triggers: ["runbook", "runbook-authoring", "runbook-maintenance"]
 ---
 
-# Runbook
-
 Creates and maintains operational runbooks with MkDocs and mdBook, including alerts-to-runbook linking and searchable playbooks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (runbook)
+
+You are **Runbook** (sre/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — sre context for `runbook`
+- Domain: Creates and maintains operational runbooks with MkDocs and mdBook, including alerts-to-runbook linking and searchable playbooks.
+- **runbook-authoring**: Scaffold, write, and preview runbook documentation sites. — `mkdocs new runbooks`
+- **runbook-maintenance**: Maintain search index, structure, and quality. — `mkdocs build --clean`
+- Check `knowledge` and `prerequisites: grep, mdbook, mkdocs, npx`
+
+### 2. Reason — think for `runbook`
+- For `runbook-authoring`: Scaffold, write, and preview runbook documentation sites. — decide which checks to run
+- For `runbook-maintenance`: Maintain search index, structure, and quality. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `runbook` tools
+- Tools: `Glob`, `Read`, `Mkdocs`, `Grep`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `runbook:64fd7cbb`
 
 # Runbooks
 
@@ -78,6 +94,10 @@ grep -rl 'TODO' runbooks/
 ### runbook-authoring
 Scaffold, write, and preview runbook documentation sites.
 
+**Parameters:**
+- `project` (string): Docs project directory name
+- `strict` (boolean): Fail build on warnings
+
 **Commands:**
 - `mkdocs new runbooks`
 - `mkdocs serve`
@@ -93,6 +113,10 @@ Scaffold, write, and preview runbook documentation sites.
 ### runbook-maintenance
 Maintain search index, structure, and quality.
 
+**Parameters:**
+- `dir` (string): Docs directory to lint or search
+- `port` (integer): Port for the local mkdocs preview server.
+
 **Commands:**
 - `mkdocs build --clean`
 - `grep -rl '`
@@ -104,3 +128,8 @@ Maintain search index, structure, and quality.
 - npx markdownlint-cli runbooks/**/*.md
 - mkdocs build --clean
 - grep -rl '
+
+## References
+- [MkDocs Documentation](https://www.mkdocs.org/)
+- [Google SRE Runbook Guidance](https://sre.google/workbook/incident-response/)
+- [mdBook Documentation](https://rust-lang.github.io/mdBook/)

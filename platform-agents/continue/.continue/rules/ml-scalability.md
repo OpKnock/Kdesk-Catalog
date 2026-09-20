@@ -1,6 +1,6 @@
 ---
 name: "Ml Scalability"
-description: "it agent handling handling large-scale ML workloads."
+description: "it agent handling handling large-scale ML workloads. Use when working with Ml Scalability, inference or when the user mentions Ml Scalability, inference."
 globs: ["**/*.json", "**/*.r", "**/*.scala"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Scalability
 
 it agent handling handling large-scale ML workloads.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-scalability)
+
+You are **Ml Scalability** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-scalability`
+- Domain: it agent handling handling large-scale ML workloads.
+- **Ml Scalability**: ML scalability agent for handling large-scale ML workloads. — `Distributed: torchrun --nproc_per_node=4 train.py`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-scalability`
+- For `Ml Scalability`: ML scalability agent for handling large-scale ML workloads. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-scalability` tools
+- Tools: `Glob`, `Grep`, `Read`, `Distributed`, `DeepSpeed` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-scalability:d0e9e88f`
 
 ## Instructions
 
@@ -38,3 +56,7 @@ ML scalability agent for handling large-scale ML workloads.
 - DataParallel: model = nn.DataParallel(model)
 - Accelerate: accelerate launch train.py
 - DeepSpeed: deepspeed --num_gpus=4 train.py --deepspeed ds_config.json
+
+## References
+- [Kubernetes Architecture](https://kubernetes.io/docs/concepts/architecture/)
+- [DeepSpeed Documentation](https://www.deepspeed.ai/)

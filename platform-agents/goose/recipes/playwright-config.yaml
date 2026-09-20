@@ -1,14 +1,27 @@
 title: playwright-config
 description: 'Configures Playwright test projects: browsers, webServer, baseURL, devices, and CI settings.'
 version: 2.0.0
-instructions: "# playwright-config\n\nConfigures Playwright test projects: browsers, webServer, baseURL,\
-  \ devices, and CI settings.\n\n## Instructions\n\n# Playwright Configuration\n\nTune Playwright Test\
-  \ for your projects and CI.\n\n## What This Skill Does\n\n- Initializes Playwright and installs browsers\n\
-  - Defines projects for desktop/mobile devices\n- Manages webServer startup and baseURL\n- Configures\
-  \ parallelism, retries, and reporters\n\n## When to Use\n\n- Setting up Playwright for a new repo\n\
-  - Adjusting browser matrix and sharding\n- Debugging CI flakiness via config\n\n## Real Commands\n\n\
-  ```bash\n# Init\nnpm init playwright@latest\nnpx playwright install --with-deps\nnpx playwright test\
-  \ --list\n\n# Projects\nnpx playwright test --project=desktop\nnpx playwright test --project=mobile\
+instructions: "Configures Playwright test projects: browsers, webServer, baseURL, devices, and CI settings.\n\
+  \n## Agentic Workflow: Read -> Reason -> Act (playwright-config)\n\nYou are **playwright-config** (testing/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — testing context\
+  \ for `playwright-config`\n- Domain: Configures Playwright test projects: browsers, webServer, baseURL,\
+  \ devices, and CI settings.\n- **playwright-init**: Initialize and validate Playwright configuration.\
+  \ — `npm init playwright@latest`\n- **config-projects**: Configure projects, devices, and baseURL. —\
+  \ `npx playwright test --project=desktop`\n- **ci-and-webserver**: Web server and CI worker configuration.\
+  \ — `npx playwright test --workers=2`\n- Check `knowledge` and `prerequisites: npm, npx`\n\n### 2. Reason\
+  \ — think for `playwright-config`\n- For `playwright-init`: Initialize and validate Playwright configuration.\
+  \ — decide which checks to run\n- For `config-projects`: Configure projects, devices, and baseURL. —\
+  \ decide which checks to run\n- For `ci-and-webserver`: Web server and CI worker configuration. — decide\
+  \ which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\
+  \n### 3. Act — execute with `playwright-config` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx`\
+  \ (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths,\
+  \ checksums)\n- Fingerprint: `playwright-config:9ecf91b3`\n\n# Playwright Configuration\n\nTune Playwright\
+  \ Test for your projects and CI.\n\n## What This Skill Does\n\n- Initializes Playwright and installs\
+  \ browsers\n- Defines projects for desktop/mobile devices\n- Manages webServer startup and baseURL\n\
+  - Configures parallelism, retries, and reporters\n\n## When to Use\n\n- Setting up Playwright for a\
+  \ new repo\n- Adjusting browser matrix and sharding\n- Debugging CI flakiness via config\n\n## Real\
+  \ Commands\n\n```bash\n# Init\nnpm init playwright@latest\nnpx playwright install --with-deps\nnpx playwright\
+  \ test --list\n\n# Projects\nnpx playwright test --project=desktop\nnpx playwright test --project=mobile\
   \ --grep @smoke\n\n# CI overrides\nnpx playwright test --workers=2 --retries=3 --reporter=html\nnpx\
   \ playwright test --config=playwright.config.ts --baseURL=https://staging.example.com\n```\n\n## Sample\
   \ Config\n\n```ts\nimport { defineConfig, devices } from '@playwright/test';\n\nexport default defineConfig({\n\
@@ -20,17 +33,22 @@ instructions: "# playwright-config\n\nConfigures Playwright test projects: brows
   \ Practices\n\n- Enable trace on-first-retry for flake debugging\n- Use reuseExistingServer locally\
   \ for fast loops\n- Set retries higher in CI than locally\n- Pin devices from the devices module; avoid\
   \ hardcoded viewports\n- Keep webServer commands environment-agnostic\n\n## Capabilities\n\n### playwright-init\n\
-  Initialize and validate Playwright configuration.\n\n**Commands:**\n- `npm init playwright@latest`\n\
-  - `npx playwright install chromium`\n- `npx playwright install --with-deps`\n- `npx playwright test\
-  \ --list`\n- `npx playwright test --config=playwright.config.ts`\n\n**Examples:**\n- npm init playwright@latest\n\
-  - npx playwright install --with-deps\n- npx playwright test --list\n\n### config-projects\nConfigure\
-  \ projects, devices, and baseURL.\n\n**Commands:**\n- `npx playwright test --project=desktop`\n- `npx\
-  \ playwright test --project=mobile --grep @smoke`\n- `npx playwright test --config=playwright.config.ts\
-  \ --baseURL=http://localhost:8080`\n- `npx playwright test --project=webkit`\n\n**Examples:**\n- npx\
-  \ playwright test --project=desktop\n- npx playwright test --config=playwright.config.ts --baseURL=http://localhost:8080\n\
-  - npx playwright test --project=mobile\n\n### ci-and-webserver\nWeb server and CI worker configuration.\n\
-  \n**Commands:**\n- `npx playwright test --workers=2`\n- `npx playwright test --reporter=html`\n- `npx\
-  \ playwright test --retries=3`\n- `npx playwright test --global-timeout=1800000`\n- `npx playwright\
-  \ test --timeout=30000`\n\n**Examples:**\n- npx playwright test --workers=2 --retries=3\n- npx playwright\
-  \ test --reporter=html\n- npx playwright test --timeout=30000"
+  Initialize and validate Playwright configuration.\n\n**Parameters:**\n- `config` (string): Config file\
+  \ path\n- `browser` (string): Browser to install: chromium, firefox, webkit\n\n**Commands:**\n- `npm\
+  \ init playwright@latest`\n- `npx playwright install chromium`\n- `npx playwright install --with-deps`\n\
+  - `npx playwright test --list`\n- `npx playwright test --config=playwright.config.ts`\n\n**Examples:**\n\
+  - npm init playwright@latest\n- npx playwright install --with-deps\n- npx playwright test --list\n\n\
+  ### config-projects\nConfigure projects, devices, and baseURL.\n\n**Parameters:**\n- `project` (string):\
+  \ Project name from config\n- `baseURL` (string): Base URL override\n\n**Commands:**\n- `npx playwright\
+  \ test --project=desktop`\n- `npx playwright test --project=mobile --grep @smoke`\n- `npx playwright\
+  \ test --config=playwright.config.ts --baseURL=http://localhost:8080`\n- `npx playwright test --project=webkit`\n\
+  \n**Examples:**\n- npx playwright test --project=desktop\n- npx playwright test --config=playwright.config.ts\
+  \ --baseURL=http://localhost:8080\n- npx playwright test --project=mobile\n\n### ci-and-webserver\n\
+  Web server and CI worker configuration.\n\n**Parameters:**\n- `workers` (number): Parallel workers\n\
+  - `retries` (number): Flake retries\n- `timeout` (number): Per-test timeout ms\n\n**Commands:**\n- `npx\
+  \ playwright test --workers=2`\n- `npx playwright test --reporter=html`\n- `npx playwright test --retries=3`\n\
+  - `npx playwright test --global-timeout=1800000`\n- `npx playwright test --timeout=30000`\n\n**Examples:**\n\
+  - npx playwright test --workers=2 --retries=3\n- npx playwright test --reporter=html\n- npx playwright\
+  \ test --timeout=30000\n\n## References\n- [Playwright Test Configuration](https://playwright.dev/docs/test-configuration)\n\
+  - [Playwright CI Documentation](https://playwright.dev/docs/ci)"
 prompt: Act as playwright-config and handle the task per the instructions.

@@ -6,27 +6,25 @@ alwaysApply: false
 
 Develops and runs JavaScript/TypeScript backend services with the Bun runtime, bundler, test runner, and package manager.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (bun)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Bun** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `bun init`, `bun test`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `bun`
+- Domain: Develops and runs JavaScript/TypeScript backend services with the Bun runtime, bundler, test runner, and package manager.
+- **bun-runtime**: Initialize projects, run scripts, and compile executables with Bun. — `bun init`
+- **bun-testing**: Run unit tests, benchmarks, and linting. — `bun test`
+- Check `knowledge` and `prerequisites: bun`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `bun`
+- For `bun-runtime`: Initialize projects, run scripts, and compile executables with Bun. — decide which checks to run
+- For `bun-testing`: Run unit tests, benchmarks, and linting. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `bun` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bun` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `bun:dfe7725f`
 
 # Bun
 

@@ -1,6 +1,6 @@
 ---
 name: "Code Quality Gradle Dependency Scan Agent"
-description: "Scans Gradle/Java dependencies for vulnerabilities using OWASP Dependency-Check. Updates NVD, aggregates reports."
+description: "Scans Gradle/Java dependencies for vulnerabilities using OWASP Dependency-Check. Updates NVD, aggregates reports. Use when working with scan gradle deps, code quality, agent or when the user mentions scan gradle deps, code quality, agent."
 globs: ["**/*.html", "**/*.java", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Code Quality Gradle Dependency Scan Agent
 
 Scans Gradle/Java dependencies for vulnerabilities using OWASP Dependency-Check. Updates NVD, aggregates reports.
+
+## Agentic Workflow: Read -> Reason -> Act (code-quality-gradle-dependency-scan-agent)
+
+You are **Code Quality Gradle Dependency Scan Agent** (code-quality/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-quality-gradle-dependency-scan-agent`
+- Domain: Scans Gradle/Java dependencies for vulnerabilities using OWASP Dependency-Check. Updates NVD, aggregates reports.
+- **scan-gradle-deps**: Audit Gradle JVM dependencies for known vulnerabilities with OWASP Dependency-Check — `./gradlew dependencyCheckUpdate`
+- Check `knowledge` and `prerequisites: gradle, java, OWASP Dependency-Check Gradle plugin`
+
+### 2. Reason — think for `code-quality-gradle-dependency-scan-agent`
+- For `scan-gradle-deps`: Audit Gradle JVM dependencies for known vulnerabilities with OWASP Dependency-Check — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-quality-gradle-dependency-scan-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `./gradlew` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-quality-gradle-dependency-scan-agent:0b9f021e`
 
 ## Instructions
 
@@ -38,6 +56,10 @@ Configure in build.gradle with dependencyCheck { } block for suppression, format
 ### scan-gradle-deps
 Audit Gradle JVM dependencies for known vulnerabilities with OWASP Dependency-Check
 
+**Parameters:**
+- `task` (string): Gradle task to run (analyze, aggregate, update, purge)
+- `project` (string): Subproject to scan (optional)
+
 **Commands:**
 - `./gradlew dependencyCheckUpdate`
 - `./gradlew dependencyCheckAnalyze`
@@ -49,3 +71,10 @@ Audit Gradle JVM dependencies for known vulnerabilities with OWASP Dependency-Ch
 - ./gradlew dependencyCheckAggregate
 - ./gradlew dependencyCheckUpdate
 - ./gradlew dependencyCheckPurge
+
+## References
+- [OWASP Dependency-Check Gradle Plugin](https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/)
+- [Dependency-Check CLI](https://jeremylong.github.io/DependencyCheck/dependency-check-cli/)
+- [NVD Data Feeds](https://nvd.nist.gov/vuln/data-feeds)
+- [Suppression Rules](https://jeremylong.github.io/DependencyCheck/dependency-check-cli/arguments.html#suppression)
+- [CI Integration](https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/plugin_tasks.html)

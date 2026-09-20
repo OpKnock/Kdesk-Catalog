@@ -2,32 +2,45 @@ title: Honeycomb Observability
 description: Manage Honeycomb datasets, execute ad-hoc queries, and ship events via the CLI. Covers OTLP
   exporter wiring, dataset operations, and query workflows for production observability.
 version: 2.0.0
-instructions: "# Honeycomb Observability\n\nManage Honeycomb datasets, execute ad-hoc queries, and ship\
-  \ events via the CLI. Covers OTLP exporter wiring, dataset operations, and query workflows for production\
-  \ observability.\n\n## Instructions\n\n# Honeycomb Observability\n\nQuery and instrument with Honeycomb\
-  \ from the CLI.\n\n## What this skill does\n\n- Logs into Honeycomb from the CLI and lists datasets.\n\
-  - Runs ad-hoc queries against live data (time ranges, breakdowns, calculations).\n- Posts raw events\
-  \ for testing ingestion.\n- Wires OpenTelemetry exporters to Honeycomb.\n\n## When to use\n\n- Investigating\
-  \ a latency spike with a quick query.\n- Verifying a service is sending telemetry to the right dataset.\n\
-  - Bootstrapping OTLP config for new services.\n\n## Real commands\n\n```bash\n# Authenticate\nhoneycomb\
-  \ auth login\n\n# List datasets\nhoneycomb dataset list\n\n# Run a query: count of events per app.name\
-  \ in the last hour\nhoneycomb query run --dataset myservice '{\n  \"time_range\": 3600,\n  \"breakdowns\"\
-  : [\"app.name\"],\n  \"calculations\": [{\"op\": \"COUNT\"}]\n}'\n\n# Post a test event\nhoneycomb events\
-  \ post --dataset myservice --json '{\"name\":\"GET /api\",\"duration_ms\":42}'\n```\n\n## OTLP wiring\n\
-  \n```bash\nexport OTEL_EXPORTER_OTLP_ENDPOINT=https://api.honeycomb.io\nexport OTEL_EXPORTER_OTLP_HEADERS=\"\
-  x-honeycomb-team=$HONEYCOMB_API_KEY\"\nexport OTEL_SERVICE_NAME=myservice\n```\n\n## Testing\n\n```bash\n\
-  honeycomb events post --dataset myservice --json '{\"check\":\"pipeline\"}' \\\n  && honeycomb query\
-  \ run --dataset myservice '{\"time_range\": 300, \"calculations\": [{\"op\": \"COUNT\"}]}'\n```\n\n\
-  ## Best practices\n\n- Set a meaningful service name for every service so breakdowns work.\n- Keep dataset\
-  \ names consistent with service names.\n- Use derived columns for slow queries instead of heavy breakdowns.\n\
-  - Store the API key in the honeycomb CLI keyring, not in code.\n\n## Example exchange\n\n```\nUser:\
-  \ Which app version is generating 500s right now?\nAgent: honeycomb query run --dataset myservice '{\"\
-  time_range\": 900, \"breakdowns\": [\"app.version\"], \"calculations\": [{\"op\":\"COUNT\",\"field\"\
-  :\"*\"}]}'\n```\n\n## Capabilities\n\n### honeycomb-ops\nManage datasets, run queries, and send events\
-  \ with the Honeycomb CLI.\n\n**Commands:**\n- `honeycomb auth login`\n- `honeycomb dataset list`\n-\
-  \ `honeycomb query run --dataset myservice '{\"time_range\": 3600, \"breakdowns\": [\"app.name\"], \"\
-  calculations\": [{\"op\": \"COUNT\"}]}'`\n- `honeycomb events post --dataset myservice --json '{\"name\"\
-  :\"GET /api\",\"duration_ms\":42}'`\n- `honeycomb --version`\n\n**Examples:**\n- honeycomb query run\
-  \ --dataset myservice '{\"time_range\": 900, \"order\": [{\"op\": \"COUNT\"}]}'\n- honeycomb dataset\
-  \ create frontend\n- export OTEL_EXPORTER_OTLP_ENDPOINT=https://api.honeycomb.io"
+instructions: "Manage Honeycomb datasets, execute ad-hoc queries, and ship events via the CLI. Covers\
+  \ OTLP exporter wiring, dataset operations, and query workflows for production observability.\n\n##\
+  \ Agentic Workflow: Read -> Reason -> Act (honeycomb-observability)\n\nYou are **Honeycomb Observability**\
+  \ (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read\
+  \ — api context for `honeycomb-observability`\n- Domain: Manage Honeycomb datasets, execute ad-hoc queries,\
+  \ and ship events via the CLI. Covers OTLP exporter wiring, dataset operations, and query workflows\
+  \ for production observability.\n- **honeycomb-ops**: Manage datasets, run queries, and send events\
+  \ with the Honeycomb CLI. — `honeycomb auth login`\n- Check `knowledge` and `prerequisites: honeycomb`\n\
+  \n### 2. Reason — think for `honeycomb-observability`\n- For `honeycomb-ops`: Manage datasets, run queries,\
+  \ and send events with the Honeycomb CLI. — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `honeycomb-observability`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Honeycomb` (see frontmatter `tools`/`allowed-tools`)\n- Use\
+  \ `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `honeycomb-observability:533647a0`\n\
+  \n# Honeycomb Observability\n\nQuery and instrument with Honeycomb from the CLI.\n\n## What this skill\
+  \ does\n\n- Logs into Honeycomb from the CLI and lists datasets.\n- Runs ad-hoc queries against live\
+  \ data (time ranges, breakdowns, calculations).\n- Posts raw events for testing ingestion.\n- Wires\
+  \ OpenTelemetry exporters to Honeycomb.\n\n## When to use\n\n- Investigating a latency spike with a\
+  \ quick query.\n- Verifying a service is sending telemetry to the right dataset.\n- Bootstrapping OTLP\
+  \ config for new services.\n\n## Real commands\n\n```bash\n# Authenticate\nhoneycomb auth login\n\n\
+  # List datasets\nhoneycomb dataset list\n\n# Run a query: count of events per app.name in the last hour\n\
+  honeycomb query run --dataset myservice '{\n  \"time_range\": 3600,\n  \"breakdowns\": [\"app.name\"\
+  ],\n  \"calculations\": [{\"op\": \"COUNT\"}]\n}'\n\n# Post a test event\nhoneycomb events post --dataset\
+  \ myservice --json '{\"name\":\"GET /api\",\"duration_ms\":42}'\n```\n\n## OTLP wiring\n\n```bash\n\
+  export OTEL_EXPORTER_OTLP_ENDPOINT=https://api.honeycomb.io\nexport OTEL_EXPORTER_OTLP_HEADERS=\"x-honeycomb-team=$HONEYCOMB_API_KEY\"\
+  \nexport OTEL_SERVICE_NAME=myservice\n```\n\n## Testing\n\n```bash\nhoneycomb events post --dataset\
+  \ myservice --json '{\"check\":\"pipeline\"}' \\\n  && honeycomb query run --dataset myservice '{\"\
+  time_range\": 300, \"calculations\": [{\"op\": \"COUNT\"}]}'\n```\n\n## Best practices\n\n- Set a meaningful\
+  \ service name for every service so breakdowns work.\n- Keep dataset names consistent with service names.\n\
+  - Use derived columns for slow queries instead of heavy breakdowns.\n- Store the API key in the honeycomb\
+  \ CLI keyring, not in code.\n\n## Example exchange\n\n```\nUser: Which app version is generating 500s\
+  \ right now?\nAgent: honeycomb query run --dataset myservice '{\"time_range\": 900, \"breakdowns\":\
+  \ [\"app.version\"], \"calculations\": [{\"op\":\"COUNT\",\"field\":\"*\"}]}'\n```\n\n## Capabilities\n\
+  \n### honeycomb-ops\nManage datasets, run queries, and send events with the Honeycomb CLI.\n\n**Parameters:**\n\
+  - `dataset` (string): Honeycomb dataset name.\n- `time_range` (integer): Query window in seconds.\n\
+  - `api_key` (string): Honeycomb API key (or OTEL header).\n\n**Commands:**\n- `honeycomb auth login`\n\
+  - `honeycomb dataset list`\n- `honeycomb query run --dataset myservice '{\"time_range\": 3600, \"breakdowns\"\
+  : [\"app.name\"], \"calculations\": [{\"op\": \"COUNT\"}]}'`\n- `honeycomb events post --dataset myservice\
+  \ --json '{\"name\":\"GET /api\",\"duration_ms\":42}'`\n- `honeycomb --version`\n\n**Examples:**\n-\
+  \ honeycomb query run --dataset myservice '{\"time_range\": 900, \"order\": [{\"op\": \"COUNT\"}]}'\n\
+  - honeycomb dataset create frontend\n- export OTEL_EXPORTER_OTLP_ENDPOINT=https://api.honeycomb.io\n\
+  \n## References\n- [Honeycomb Docs](https://docs.honeycomb.io/)\n- [Honeycomb CLI](https://docs.honeycomb.io/working-with-your-data/honeycomb-cli/)"
 prompt: Act as Honeycomb Observability and handle the task per the instructions.

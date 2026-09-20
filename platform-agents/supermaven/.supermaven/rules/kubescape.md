@@ -1,8 +1,26 @@
-# kubescape
-
 Scans Kubernetes clusters, manifests, and images against NSA/CISA, MITRE, and other hardening frameworks with kubescape.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kubescape)
+
+You are **kubescape** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `kubescape`
+- Domain: Scans Kubernetes clusters, manifests, and images against NSA/CISA, MITRE, and other hardening frameworks with kubescape.
+- **framework-scans**: Scan clusters or files against security frameworks. — `kubescape scan framework nsa`
+- **workload-and-image-scan**: Scan manifest files and container images directly. — `kubescape scan workload nginx.yaml`
+- **reporting**: Export scan results in CI and audit formats. — `kubescape scan framework nsa --format sarif --output scan.sarif`
+- Check `knowledge` and `prerequisites: kubescape`
+
+### 2. Reason — think for `kubescape`
+- For `framework-scans`: Scan clusters or files against security frameworks. — decide which checks to run
+- For `workload-and-image-scan`: Scan manifest files and container images directly. — decide which checks to run
+- For `reporting`: Export scan results in CI and audit formats. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kubescape` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kubescape` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kubescape:3938aace`
 
 # Kubescape
 
@@ -62,6 +80,10 @@ kubescape scan framework nsa --format html --output report.html
 ### framework-scans
 Scan clusters or files against security frameworks.
 
+**Parameters:**
+- `framework` (string): Framework name: nsa, mitre-attack, cis-eks-t1.2.0, all
+- `verbose` (boolean): Show full control details in output
+
 **Commands:**
 - `kubescape scan framework nsa`
 - `kubescape scan framework all`
@@ -77,6 +99,10 @@ Scan clusters or files against security frameworks.
 ### workload-and-image-scan
 Scan manifest files and container images directly.
 
+**Parameters:**
+- `filePath` (string): Directory of manifests to scan
+- `workload` (string): Path to a specific workload manifest
+
 **Commands:**
 - `kubescape scan workload nginx.yaml`
 - `kubescape scan image ubuntu:latest`
@@ -91,6 +117,11 @@ Scan manifest files and container images directly.
 ### reporting
 Export scan results in CI and audit formats.
 
+**Parameters:**
+- `format` (string): Output format: sarif, json, html, junit
+- `output` (string): Output file path
+- `failThreshold` (number): Compliance score below which exit code is nonzero
+
 **Commands:**
 - `kubescape scan framework nsa --format sarif --output scan.sarif`
 - `kubescape scan framework all --format json --output scan.json`
@@ -101,3 +132,7 @@ Export scan results in CI and audit formats.
 - kubescape scan framework nsa --format sarif --output scan.sarif
 - kubescape scan framework nsa --format html --output report.html
 - kubescape scan framework all --set-exit-code 3 --fail-threshold 80
+
+## References
+- [Kubescape Documentation](https://kubescape.io/docs/)
+- [Kubescape GitHub](https://github.com/kubescape/kubescape)

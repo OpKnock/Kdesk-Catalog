@@ -1,6 +1,6 @@
 ---
 name: "streaming-inference"
-description: "Streaming inference server agent. Manages streaming LLM inference server."
+description: "Streaming inference server agent. Manages streaming LLM inference server. Use when working with Ml Streaming Inference Server Agent or when the user mentions Ml Streaming Inference Server Agent."
 type: knowledge
 triggers: ["streaming-inference", "ml streaming inference server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["streaming-inference", "ml streaming inference server agent"]
 # Streaming Inference
 
 Streaming inference server agent. Manages streaming LLM inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (streaming-inference)
+
+You are **Streaming Inference** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `streaming-inference`
+- Domain: Streaming inference server agent. Manages streaming LLM inference server.
+- **Ml Streaming Inference Server Agent**: Streaming inference server agent. Manages streaming LLM inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `streaming-inference`
+- For `Ml Streaming Inference Server Agent`: Streaming inference server agent. Manages streaming LLM inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `streaming-inference` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `streaming-inference:d6c97f6e`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Streaming inference server agent. Manages streaming LLM inference server.
 - curl -N http://localhost:8080/v1/completions --data '{"prompt": "Hello", "stream": true}'
 - python test_stream_server.py --endpoint http://localhost:8080
 - python config_stream.py --model gpt-4 --max-tokens 100
+
+## References
+- [Apache Kafka Documentation](https://kafka.apache.org/documentation/)
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)

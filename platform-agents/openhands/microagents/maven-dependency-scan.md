@@ -1,15 +1,29 @@
 ---
 name: "maven-dependency-scan"
-description: "Scans Maven projects for known vulnerable dependencies using the OWASP Dependency-Check Maven plugin."
+description: "Scans Maven projects for known vulnerable dependencies using the OWASP Dependency-Check Maven plugin. Use when working with dependency check, code quality or when the user mentions dependency check, code quality."
 type: knowledge
 triggers: ["maven-dependency-scan", "dependency-check"]
 ---
 
-# Maven Dependency Scan
-
 Scans Maven projects for known vulnerable dependencies using the OWASP Dependency-Check Maven plugin.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (maven-dependency-scan)
+
+You are **Maven Dependency Scan** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `maven-dependency-scan`
+- Domain: Scans Maven projects for known vulnerable dependencies using the OWASP Dependency-Check Maven plugin.
+- **dependency-check**: Run OWASP Dependency-Check against Maven projects and fail builds on high-CVSS findings — `mvn org.owasp:dependency-check-maven:check`
+- Check `knowledge` and `prerequisites: mvn`
+
+### 2. Reason — think for `maven-dependency-scan`
+- For `dependency-check`: Run OWASP Dependency-Check against Maven projects and fail builds on high-CVSS findings — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `maven-dependency-scan` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `maven-dependency-scan:42554880`
 
 # Maven Dependency Scan
 
@@ -72,6 +86,11 @@ recommends the upgraded version.
 ### dependency-check
 Run OWASP Dependency-Check against Maven projects and fail builds on high-CVSS findings
 
+**Parameters:**
+- `failBuildOnCVSS` (number): Fail the build when a vulnerability with CVSS score >= this value is found
+- `format` (string): Report format: HTML, JSON, XML, SARIF, CSV, or ALL
+- `suppressionFiles` (string): XML file listing false-positive suppressions
+
 **Commands:**
 - `mvn org.owasp:dependency-check-maven:check`
 - `mvn dependency-check:check -DfailBuildOnCVSS=7 -Dformat=ALL`
@@ -83,3 +102,7 @@ Run OWASP Dependency-Check against Maven projects and fail builds on high-CVSS f
 - mvn org.owasp:dependency-check-maven:check -Dformat=HTML
 - mvn dependency-check:aggregate -Dformat=ALL -DoutputDirectory=target/dc
 - mvn verify -Ddependency-check.failBuildOnCVSS=8
+
+## References
+- [OWASP Dependency-Check docs](https://jeremylong.github.io/DependencyCheck/)
+- [Dependency-Check Maven plugin](https://jeremylong.github.io/DependencyCheck/dependency-check-maven/)

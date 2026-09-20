@@ -1,15 +1,29 @@
 ---
 name: "kcat"
-description: "Produce, consume, and inspect Kafka topics with it. Kafka topics.'"
+description: "Produce, consume, and inspect Kafka topics with it. Kafka topics.'. Use when working with kcat commands, database or when the user mentions kcat commands, database."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# kcat
-
 Produce, consume, and inspect Kafka topics with it. Kafka topics.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kcat)
+
+You are **kcat** (database/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `kcat`
+- Domain: Produce, consume, and inspect Kafka topics with it. Kafka topics.'
+- **kcat-commands**: Produce, consume, and inspect Kafka topics with kcat — `kcat -b localhost:9092 -t orders -P`
+- Check `knowledge` and `prerequisites: kcat`
+
+### 2. Reason — think for `kcat`
+- For `kcat-commands`: Produce, consume, and inspect Kafka topics with kcat — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kcat` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kcat` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kcat:77f2089b`
 
 # kcat
 
@@ -64,6 +78,11 @@ topic metadata layout.
 ### kcat-commands
 Produce, consume, and inspect Kafka topics with kcat
 
+**Parameters:**
+- `offset` (string): Start offset: beginning, end, or -10
+- `format` (string): Message output format string (-f)
+- `exit` (boolean): Exit after consuming (-e) or print parsed exit codes
+
 **Commands:**
 - `kcat -b localhost:9092 -t orders -P`
 - `kcat -b localhost:9092 -t orders -C -o -10`
@@ -75,3 +94,7 @@ Produce, consume, and inspect Kafka topics with kcat
 - echo '{"id":1}' | kcat -b localhost:9092 -t orders -P -l
 - kcat -b localhost:9092 -t orders -C -q -o end -c 5
 - kcat -b localhost:9092 -L -J | jq '.topics[0]'
+
+## References
+- [kcat GitHub](https://github.com/edenhill/kcat)
+- [kcat usage examples](https://github.com/edenhill/kcat#examples)

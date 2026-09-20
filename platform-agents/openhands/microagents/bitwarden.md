@@ -1,15 +1,33 @@
 ---
 name: "bitwarden"
-description: "Manages passwords and secrets with the Bitwarden CLI: login, item CRUD, generation, exports, and sync."
+description: "Manages passwords and secrets with the Bitwarden CLI: login, item CRUD, generation, exports, and sync. Use when working with auth session, item management, generation export, api or when the user mentions auth session, item management, generation export, api."
 type: knowledge
 triggers: ["bitwarden", "auth-session", "item-management", "generation-export"]
 ---
 
-# Bitwarden
-
 Manages passwords and secrets with the Bitwarden CLI: login, item CRUD, generation, exports, and sync.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (bitwarden)
+
+You are **Bitwarden** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `bitwarden`
+- Domain: Manages passwords and secrets with the Bitwarden CLI: login, item CRUD, generation, exports, and sync.
+- **auth-session**: Log in, unlock, and manage CLI sessions. — `bw login`
+- **item-management**: Create, read, update, and delete vault items. — `bw get password https://api.your-app.test`
+- **generation-export**: Generate passwords and export vaults. — `bw generate -l 20 -n -s`
+- Check `knowledge` and `prerequisites: bw`
+
+### 2. Reason — think for `bitwarden`
+- For `auth-session`: Log in, unlock, and manage CLI sessions. — decide which checks to run
+- For `item-management`: Create, read, update, and delete vault items. — decide which checks to run
+- For `generation-export`: Generate passwords and export vaults. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `bitwarden` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bw` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `bitwarden:fa68b141`
 
 # Bitwarden
 
@@ -64,6 +82,10 @@ bw export --format json --output vault.json --session $BW_SESSION
 ### auth-session
 Log in, unlock, and manage CLI sessions.
 
+**Parameters:**
+- `email` (string): Account email
+- `raw` (boolean): Print raw session token
+
 **Commands:**
 - `bw login`
 - `bw unlock`
@@ -78,6 +100,10 @@ Log in, unlock, and manage CLI sessions.
 
 ### item-management
 Create, read, update, and delete vault items.
+
+**Parameters:**
+- `search` (string): Search query
+- `item_id` (string): Item ID or search term
 
 **Commands:**
 - `bw get password https://api.your-app.test`
@@ -94,6 +120,10 @@ Create, read, update, and delete vault items.
 ### generation-export
 Generate passwords and export vaults.
 
+**Parameters:**
+- `length` (number): Password length (-l)
+- `export_format` (string): json or csv
+
 **Commands:**
 - `bw generate -l 20 -n -s`
 - `bw generate -u -l 24`
@@ -105,3 +135,7 @@ Generate passwords and export vaults.
 - bw generate -l 24 -n -s --base64
 - bw export --format json --output vault.json
 - bw get totp google
+
+## References
+- [Bitwarden CLI Docs](https://bitwarden.com/help/cli/)
+- [Bitwarden API](https://bitwarden.com/help/api/)

@@ -1,15 +1,29 @@
 ---
 name: "Rollbar Error Tracking"
-description: "Expert Rollbar skill for Python SDK reporting, deploy tracking, item and deploy REST API calls, and querying recent errors for triage."
+description: "Expert Rollbar skill for Python SDK reporting, deploy tracking, item and deploy REST API calls, and querying recent errors for triage. Use when working with rollbar reporting, api or when the user mentions rollbar reporting, api."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Rollbar Error Tracking
-
 Expert Rollbar skill for Python SDK reporting, deploy tracking, item and deploy REST API calls, and querying recent errors for triage.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rollbar-error-tracking)
+
+You are **Rollbar Error Tracking** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `rollbar-error-tracking`
+- Domain: Expert Rollbar skill for Python SDK reporting, deploy tracking, item and deploy REST API calls, and querying recent errors for triage.
+- **rollbar-reporting**: Report errors and deploys to Rollbar and query items — `pip install rollbar`
+- Check `knowledge` and `prerequisites: pip, python`
+
+### 2. Reason — think for `rollbar-error-tracking`
+- For `rollbar-reporting`: Report errors and deploys to Rollbar and query items — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rollbar-error-tracking` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rollbar-error-tracking:47d7f72b`
 
 # Rollbar Error Tracking
 
@@ -78,6 +92,11 @@ curl -X POST https://api.rollbar.com/api/1/item/ -H 'Content-Type: application/j
 ### rollbar-reporting
 Report errors and deploys to Rollbar and query items
 
+**Parameters:**
+- `access_token` (string): Server or read access token
+- `environment` (string): Environment name, e.g. prod or staging
+- `revision` (string): Git SHA associated with a deploy
+
 **Commands:**
 - `pip install rollbar`
 - `python -c 'import rollbar; rollbar.init("POST_SERVER_ITEM_ACCESS_TOKEN", "prod"); rollbar.report_message("booted", "info")'`
@@ -89,3 +108,7 @@ Report errors and deploys to Rollbar and query items
 - curl -s 'https://api.rollbar.com/api/1/items/?access_token=READ_TOKEN&environment=prod&level=error' | jq '.result.items | length'
 - python -c 'import rollbar; rollbar.report_exc_info()'
 - curl -X POST https://api.rollbar.com/api/1/deploy/ -H 'Content-Type: application/json' -d '{"access_token":"POST_SERVER_ITEM_ACCESS_TOKEN","environment":"prod","revision":"abc123"}'
+
+## References
+- [Rollbar Python SDK](https://docs.rollbar.com/docs/python)
+- [Rollbar API reference](https://docs.rollbar.com/reference)

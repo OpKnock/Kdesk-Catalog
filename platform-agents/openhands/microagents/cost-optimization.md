@@ -1,15 +1,29 @@
 ---
 name: "cost-optimization"
-description: "Analyzes and reduces cloud and infrastructure costs: cost explorer queries, idle resource detection, and rightsizing."
+description: "Analyzes and reduces cloud and infrastructure costs: cost explorer queries, idle resource detection, and rightsizing. Use when working with cloud cost analysis or when the user mentions cloud cost analysis."
 type: knowledge
 triggers: ["cost-optimization", "cloud-cost-analysis"]
 ---
 
-# cost-optimization
-
 Analyzes and reduces cloud and infrastructure costs: cost explorer queries, idle resource detection, and rightsizing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cost-optimization)
+
+You are **cost-optimization** (finops) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — finops context for `cost-optimization`
+- Domain: Analyzes and reduces cloud and infrastructure costs: cost explorer queries, idle resource detection, and rightsizing.
+- **cloud-cost-analysis**: Query AWS cost data and find waste — `aws ce get-cost-and-usage --time-period Start=$(date +%Y-%m-01) --granularity MO`
+- Check `knowledge` and `prerequisites: aws, terraform, kubernetes, cloud-cpu`
+
+### 2. Reason — think for `cost-optimization`
+- For `cloud-cost-analysis`: Query AWS cost data and find waste — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cost-optimization` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cost-optimization:d7052638`
 
 # Cost Optimization
 
@@ -66,6 +80,11 @@ and prioritized recommendations with expected savings.
 ### cloud-cost-analysis
 Query AWS cost data and find waste
 
+**Parameters:**
+- `time-period` (string): Start and End dates for the cost query
+- `granularity` (string): DAILY, MONTHLY, or HOURLY cost aggregation
+- `group-by` (string): Group costs by SERVICE, USAGE_TYPE, or AZ
+
 **Commands:**
 - `aws ce get-cost-and-usage --time-period Start=$(date +%Y-%m-01) --granularity MONTHLY --metrics UnblendedCost --group-by Type=DIMENSION,Key=SERVICE`
 - `aws ce get-cost-and-usage --time-period Start=$(date -d '-6 months' +%Y-%m-01) --granularity MONTHLY --metrics UnblendedCost`
@@ -77,3 +96,7 @@ Query AWS cost data and find waste
 - aws ce get-cost-and-usage --time-period Start=2024-01-01 --granularity DAILY --metrics UnblendedCost | jq '.ResultsByTime[].Total.UnblendedCost.Amount'
 - aws ec2 describe-addresses --query 'Addresses[?AssociationId==null].PublicIp'
 - aws cloudwatch get-metric-statistics --namespace AWS/S3 --metric-name BucketSizeBytes --dimensions Name=BucketName,Value=logs
+
+## References
+- [AWS Cost Explorer docs](https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html)
+- [AWS Well-Architected cost pillar](https://docs.aws.amazon.com/wellarchitected/latest/cost-optimization-pillar/welcome.html)

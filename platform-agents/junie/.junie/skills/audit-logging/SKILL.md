@@ -9,27 +9,27 @@ allowed-tools: "Glob Grep Read Bash(auditctl:*) Bash(augenrules:*) Bash(aureport
 
 Implements tamper-resistant audit logging on Linux: auditd configuration, rule creation, event search, and report generation.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (audit-logging)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Audit Logging** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `auditctl -w /etc/passwd -p wa -k password_changes`, `ausearch -k password_changes -ts today`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `audit-logging`
+- Domain: Implements tamper-resistant audit logging on Linux: auditd configuration, rule creation, event search, and report generation.
+- **auditd**: Configure the Linux audit daemon and its rules. — `auditctl -w /etc/passwd -p wa -k password_changes`
+- **search-report**: Search audit logs and produce summaries. — `ausearch -k password_changes -ts today`
+- **app-logging**: Forward application audit events to syslog/journald. — `logger -t my-api "AUDIT user=alice action=delete resource=order/42"`
+- Check `knowledge` and `prerequisites: auditctl, augenrules, aureport, ausearch`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `audit-logging`
+- For `auditd`: Configure the Linux audit daemon and its rules. — decide which checks to run
+- For `search-report`: Search audit logs and produce summaries. — decide which checks to run
+- For `app-logging`: Forward application audit events to syslog/journald. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `audit-logging` tools
+- Tools: `Glob`, `Grep`, `Read`, `Auditctl`, `Systemctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `audit-logging:d80dfe65`
 
 # Audit Logging
 

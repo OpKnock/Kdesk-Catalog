@@ -1,15 +1,31 @@
 ---
 name: "cors"
-description: "Configure and debug Cross-Origin Resource Sharing: setting CORS headers, preflight handling, and origin allowlists."
+description: "Configure and debug Cross-Origin Resource Sharing: setting CORS headers, preflight handling, and origin allowlists. Use when working with cors headers, express cors, api or when the user mentions cors headers, express cors, api."
 type: knowledge
 triggers: ["cors", "cors-headers", "express-cors"]
 ---
 
-# Cors
-
 Configure and debug Cross-Origin Resource Sharing: setting CORS headers, preflight handling, and origin allowlists.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cors)
+
+You are **Cors** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `cors`
+- Domain: Configure and debug Cross-Origin Resource Sharing: setting CORS headers, preflight handling, and origin allowlists.
+- **cors-headers**: Configure CORS headers on API responses and test them with curl — `curl -i -H "Origin: http://github.com" https://httpbin.org/get`
+- **express-cors**: Configure CORS with the cors npm package and restrict allowed origins — `npm install cors`
+- Check `knowledge` and `prerequisites: node, npm`
+
+### 2. Reason — think for `cors`
+- For `cors-headers`: Configure CORS headers on API responses and test them with curl — decide which checks to run
+- For `express-cors`: Configure CORS with the cors npm package and restrict allowed origins — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cors` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cors:779e2469`
 
 # CORS
 
@@ -82,6 +98,9 @@ curl -s -D - -o /dev/null -H "Origin: http://blocked-origin.test" http://localho
 ### cors-headers
 Configure CORS headers on API responses and test them with curl
 
+**Parameters:**
+- `origin` (string): Origin header to test, e.g. http://github.com
+
 **Commands:**
 - `curl -i -H "Origin: http://github.com" https://httpbin.org/get`
 - `curl -s -D - -o /dev/null -H "Origin: http://github.com" https://httpbin.org/get | grep -i access-control`
@@ -96,6 +115,9 @@ Configure CORS headers on API responses and test them with curl
 ### express-cors
 Configure CORS with the cors npm package and restrict allowed origins
 
+**Parameters:**
+- `allowed_origins` (string): Comma-separated list of allowed origins
+
 **Commands:**
 - `npm install cors`
 - `node server.js`
@@ -106,3 +128,7 @@ Configure CORS with the cors npm package and restrict allowed origins
 - npm install cors && node server.js
 - curl -i -H "Origin: http://localhost:3000" http://localhost:8080/api
 - curl -s -D - -o /dev/null -H "Origin: http://blocked-origin.test" http://localhost:8080/api | grep -i access-control-allow-origin
+
+## References
+- [MDN CORS Guide](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+- [cors npm package](https://www.npmjs.com/package/cors)

@@ -1,8 +1,22 @@
-# Prometheus Monitoring
-
 Prometheus server operations: config, relabeling, recording rules, queries via promtool, and API access.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (prometheus-monitoring)
+
+You are **Prometheus Monitoring** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `prometheus-monitoring`
+- Domain: Prometheus server operations: config, relabeling, recording rules, queries via promtool, and API access.
+- **prometheus-operations**: Run Prometheus, validate config and rules, run instant/range queries and manage targets. — `prometheus --config.file=prometheus.yml --storage.tsdb.path=/data/prom`
+- Check `knowledge` and `prerequisites: prometheus, promtool`
+
+### 2. Reason — think for `prometheus-monitoring`
+- For `prometheus-operations`: Run Prometheus, validate config and rules, run instant/range queries and manage targets. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `prometheus-monitoring` tools
+- Tools: `Glob`, `Grep`, `Read`, `Prometheus`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `prometheus-monitoring:1906636d`
 
 # Prometheus Monitoring
 
@@ -62,6 +76,11 @@ scrape_configs:
 ### prometheus-operations
 Run Prometheus, validate config and rules, run instant/range queries and manage targets.
 
+**Parameters:**
+- `config_file` (string): Path to prometheus.yml
+- `query` (string): PromQL query string
+- `url` (string): Prometheus API base URL
+
 **Commands:**
 - `prometheus --config.file=prometheus.yml --storage.tsdb.path=/data/prom`
 - `promtool check config prometheus.yml`
@@ -73,3 +92,7 @@ Run Prometheus, validate config and rules, run instant/range queries and manage 
 - promtool query instant 'sum(rate(http_requests_total[5m]))' --url http://localhost:9090
 - promtool check config prometheus.yml && promtool check rules rules.yml
 - curl -s 'http://localhost:9090/api/v1/targets' | jq '.data.activeTargets[].health' | sort | uniq -c
+
+## References
+- [Prometheus Docs](https://prometheus.io/docs/prometheus/latest/)
+- [promtool reference](https://prometheus.io/docs/prometheus/latest/command-line/promtool/)

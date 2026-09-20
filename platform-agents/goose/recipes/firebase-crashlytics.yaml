@@ -2,14 +2,42 @@ title: Firebase Crashlytics
 description: Inspect crash issues, upload symbols, and manage release reporting. and verify symbol uploads
   for readable stack traces.'
 version: 2.0.0
-instructions: '# Firebase Crashlytics
+instructions: 'Inspect crash issues, upload symbols, and manage release reporting. and verify symbol uploads
+  for readable stack traces.''
 
 
-  Inspect crash issues, upload symbols, and manage release reporting. and verify symbol uploads for readable
-  stack traces.''
+  ## Agentic Workflow: Read -> Reason -> Act (firebase-crashlytics)
 
 
-  ## Instructions
+  You are **Firebase Crashlytics** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — api context for `firebase-crashlytics`
+
+  - Domain: Inspect crash issues, upload symbols, and manage release reporting. and verify symbol uploads
+  for readable stack traces.''
+
+  - **crashlytics-ops**: Inspect crash issues, upload symbols, and manage release reporting. — `curl -s
+  ''https://firebase.googleapis.com/v1beta1/projects/$PROJECT_ID/crashlytic`
+
+  - Check `knowledge` and `prerequisites: firebase`
+
+
+  ### 2. Reason — think for `firebase-crashlytics`
+
+  - For `crashlytics-ops`: Inspect crash issues, upload symbols, and manage release reporting. — decide
+  which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `firebase-crashlytics` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Bash`, `Firebase` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `firebase-crashlytics:c77afb35`
 
 
   # Firebase Crashlytics
@@ -107,6 +135,15 @@ instructions: '# Firebase Crashlytics
   Inspect crash issues, upload symbols, and manage release reporting.
 
 
+  **Parameters:**
+
+  - `app-id` (string): Android app id or iOS bundle id
+
+  - `issue-id` (string): Crashlytics issue identifier
+
+  - `symbols-path` (string): Path to native symbol files (dSYM/so)
+
+
   **Commands:**
 
   - `curl -s ''https://firebase.googleapis.com/v1beta1/projects/$PROJECT_ID/crashlytics/issues'' -H ''Authorization:
@@ -130,5 +167,12 @@ instructions: '# Firebase Crashlytics
   - curl -s ''https://firebase.googleapis.com/v1beta1/projects/$PROJECT_ID/crashlytics/issues'' -H ''Authorization:
   Bearer $ACCESS_TOKEN'' | jq ''.issues[] | {issueId, title, fatal}''
 
-  - firebase crashlytics:reports:list'
+  - firebase crashlytics:reports:list
+
+
+  ## References
+
+  - [Crashlytics REST API](https://firebase.google.com/docs/crashlytics/rest-api)
+
+  - [Crashlytics symbol upload](https://firebase.google.com/docs/crashlytics/get-deobfuscated-reports)'
 prompt: Act as Firebase Crashlytics and handle the task per the instructions.

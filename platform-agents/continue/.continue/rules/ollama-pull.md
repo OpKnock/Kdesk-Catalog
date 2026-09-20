@@ -1,6 +1,6 @@
 ---
 name: "Ollama Pull"
-description: "Ollama SDK deployment agent for ML Ollama SDK deployment."
+description: "Ollama SDK deployment agent for ML Ollama SDK deployment. Use when working with Ml Ollama Deploy Sdk, inference or when the user mentions Ml Ollama Deploy Sdk, inference."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ollama Pull
 
 Ollama SDK deployment agent for ML Ollama SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ollama-pull)
+
+You are **Ollama Pull** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ollama-pull`
+- Domain: Ollama SDK deployment agent for ML Ollama SDK deployment.
+- **Ml Ollama Deploy Sdk**: Ollama SDK deployment agent for ML Ollama SDK deployment. — `Pull: ollama pull llama2`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ollama-pull`
+- For `Ml Ollama Deploy Sdk`: Ollama SDK deployment agent for ML Ollama SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ollama-pull` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pull`, `Server` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ollama-pull:942589e0`
 
 ## Instructions
 
@@ -27,3 +45,6 @@ Ollama SDK deployment agent for ML Ollama SDK deployment.
 - Server: ollama serve
 - Pull: ollama pull llama2
 - Run: ollama run llama2
+
+## References
+- [Ollama Documentation](https://docs.ollama.com/)

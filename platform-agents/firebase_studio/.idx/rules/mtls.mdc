@@ -1,14 +1,28 @@
 ---
-description: "Mutual TLS (mTLS) setup: CA creation, server/client certificates, TLS verification, and enforcing mutual authentication."
+description: "Mutual TLS (mTLS) setup: CA creation, server/client certificates, TLS verification, and enforcing mutual authentication. Use when working with mtls certificates, api or when the user mentions mtls certificates, api."
 globs: ["**/*.r", "**/*.rs", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Mtls
-
 Mutual TLS (mTLS) setup: CA creation, server/client certificates, TLS verification, and enforcing mutual authentication.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (mtls)
+
+You are **Mtls** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `mtls`
+- Domain: Mutual TLS (mTLS) setup: CA creation, server/client certificates, TLS verification, and enforcing mutual authentication.
+- **mtls-certificates**: Create a CA and issue server/client certificates, then verify mTLS handshakes with curl and openssl. — `openssl req -x509 -newkey rsa:2048 -nodes -keyout ca.key -out ca.crt -days 365 -`
+- Check `knowledge` and `prerequisites: openssl`
+
+### 2. Reason — think for `mtls`
+- For `mtls-certificates`: Create a CA and issue server/client certificates, then verify mTLS handshakes with curl and openssl. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mtls` tools
+- Tools: `Glob`, `Grep`, `Read`, `Openssl`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mtls:5f0d80b0`
 
 # mTLS
 
@@ -72,6 +86,11 @@ server {
 ### mtls-certificates
 Create a CA and issue server/client certificates, then verify mTLS handshakes with curl and openssl.
 
+**Parameters:**
+- `ca_cert` (string): Path to the CA certificate bundle
+- `client_cert` (string): Client certificate for mutual auth
+- `endpoint` (string): TLS endpoint URL to verify
+
 **Commands:**
 - `openssl req -x509 -newkey rsa:2048 -nodes -keyout ca.key -out ca.crt -days 365 -subj "/CN=my-ca"`
 - `openssl req -newkey rsa:2048 -nodes -keyout server.key -out server.csr -subj "/CN=localhost"`
@@ -83,3 +102,7 @@ Create a CA and issue server/client certificates, then verify mTLS handshakes wi
 - openssl verify -CAfile ca.crt server.crt
 - curl -v --cacert ca.crt --cert client.crt --key client.key https://localhost:8443/health
 - openssl s_client -connect localhost:8443 -CAfile ca.crt 2>&1 | grep -i 'verify return'
+
+## References
+- [OpenSSL man pages](https://www.openssl.org/docs/manmaster/man1/)
+- [mTLS Explained (Cloudflare)](https://www.cloudflare.com/learning/access-management/what-is-mutual-tls/)

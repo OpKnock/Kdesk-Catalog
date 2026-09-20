@@ -1,14 +1,30 @@
 ---
-description: "Develops engineering leaders: PR review practice, contribution metrics, and team-level operational habits grounded in real GitHub workflows."
+description: "Develops engineering leaders: PR review practice, contribution metrics, and team-level operational habits grounded in real GitHub workflows. Use when working with review practice, team habits or when the user mentions review practice, team habits."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# leadership-development
-
 Develops engineering leaders: PR review practice, contribution metrics, and team-level operational habits grounded in real GitHub workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (leadership-development)
+
+You are **leadership-development** (management) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — management context for `leadership-development`
+- Domain: Develops engineering leaders: PR review practice, contribution metrics, and team-level operational habits grounded in real GitHub workflows.
+- **review-practice**: Build review habits and track team contribution patterns. — `gh pr list --repo owner/repo --search 'reviewed-by:@me' --state all`
+- **team-habits**: Run 1:1s and team operations with tangible artifacts. — `gh issue create --title '1:1 notes - 2026-08-10' --body 'Skip: roadmap; focus: g`
+- Check `knowledge` and `prerequisites: lattic, 15five, slack, zoom`
+
+### 2. Reason — think for `leadership-development`
+- For `review-practice`: Build review habits and track team contribution patterns. — decide which checks to run
+- For `team-habits`: Run 1:1s and team operations with tangible artifacts. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `leadership-development` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `leadership-development:22f9c6c5`
 
 # Leadership Development
 
@@ -72,6 +88,11 @@ Audit your own habits monthly: review response time, 1:1 cadence, action-item cl
 ### review-practice
 Build review habits and track team contribution patterns.
 
+**Parameters:**
+- `repo` (string): owner/repo pair
+- `reviewed-by` (string): Reviewer login filter
+- `search` (string): GitHub search query
+
 **Commands:**
 - `gh pr list --repo owner/repo --search 'reviewed-by:@me' --state all`
 - `gh pr list --review-requested @me`
@@ -87,6 +108,11 @@ Build review habits and track team contribution patterns.
 ### team-habits
 Run 1:1s and team operations with tangible artifacts.
 
+**Parameters:**
+- `label` (string): Issue label like 1-1 or action-item
+- `title` (string): Issue title
+- `body` (string): Issue body
+
 **Commands:**
 - `gh issue create --title '1:1 notes - 2026-08-10' --body 'Skip: roadmap; focus: growth areas' --repo owner/repo --label 1-1`
 - `gh issue list --label 1-1 --state open --repo owner/repo`
@@ -98,3 +124,8 @@ Run 1:1s and team operations with tangible artifacts.
 - gh issue create --title '1:1 - ada' --body 'Follow-ups: onboarding checklist' --repo owner/repo
 - gh issue list --label 1-1 --search 'state:open' --repo owner/repo
 - gh issue comment 42 --body 'Resolution: agreed in retro'
+
+## References
+- [GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow)
+- [Google re:Work Manager Guide](https://rework.withgoogle.com/en/guides/manager-guide/)
+- [Engineering Manager Handbook](https://increment.com/teams/)

@@ -1,6 +1,6 @@
 ---
 name: "product-management-product-strategy"
-description: "Product-Management product-strategy expertise and best practices."
+description: "Product-Management product-strategy expertise and best practices. Use when working with product strategy expertise, product management, product strategy, skill or when the user mentions product strategy expertise, product management, product strategy, skill."
 type: knowledge
 triggers: ["product-management-product-strategy", "product-strategy-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["product-management-product-strategy", "product-strategy-expertise"]
 # Product-Management Product Strategy
 
 Product-Management product-strategy expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (product-management-product-strategy)
+
+You are **Product-Management Product Strategy** (product-management/product-strategy) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — product-management context for `product-management-product-strategy`
+- Domain: Product-Management product-strategy expertise and best practices.
+- **product-strategy-expertise**: product-management product-strategy expertise — `product-strategy-cli`
+- Check `knowledge` and `prerequisites: product-strategy`
+
+### 2. Reason — think for `product-management-product-strategy`
+- For `product-strategy-expertise`: product-management product-strategy expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `product-management-product-strategy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Product-strategy-cli`, `Product-strategy-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `product-management-product-strategy:beb2f2eb`
 
 ## Instructions
 

@@ -1,15 +1,31 @@
 ---
 name: "error-handling-architect-error-handling-architect"
-description: "Designs robust error handling: structured errors, observability with Sentry, static analysis, and graceful degradation patterns."
+description: "Designs robust error handling: structured errors, observability with Sentry, static analysis, and graceful degradation patterns. Use when working with error observability, static analysis gates or when the user mentions error observability, static analysis gates."
 type: knowledge
 triggers: ["error-handling-architect-error-handling-architect", "error-observability", "static-analysis-gates"]
 ---
 
-# error-handling-architect-error-handling-architect
-
 Designs robust error handling: structured errors, observability with Sentry, static analysis, and graceful degradation patterns.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (error-handling-architect-error-handling-architect)
+
+You are **error-handling-architect-error-handling-architect** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `error-handling-architect-error-handling-architect`
+- Domain: Designs robust error handling: structured errors, observability with Sentry, static analysis, and graceful degradation patterns.
+- **error-observability**: Instrument and monitor errors with sentry-cli. — `sentry-cli login`
+- **static-analysis-gates**: Catch error-handling bugs before runtime with linters. — `golangci-lint run --enable=errcheck,staticcheck ./...`
+- Check `knowledge` and `prerequisites: node.js, python, sentry, bugsnag`
+
+### 2. Reason — think for `error-handling-architect-error-handling-architect`
+- For `error-observability`: Instrument and monitor errors with sentry-cli. — decide which checks to run
+- For `static-analysis-gates`: Catch error-handling bugs before runtime with linters. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `error-handling-architect-error-handling-architect` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sentry-cli`, `Golangci-lint` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `error-handling-architect-error-handling-architect:6c5f761c`
 
 # Error Handling Architecture
 
@@ -70,6 +86,10 @@ pytest --tb=short --maxfail=1 tests/
 ### error-observability
 Instrument and monitor errors with sentry-cli.
 
+**Parameters:**
+- `release` (string): Release version
+- `project` (string): Sentry project slug
+
 **Commands:**
 - `sentry-cli login`
 - `sentry-cli releases new -p app app@1.2.0`
@@ -86,6 +106,10 @@ Instrument and monitor errors with sentry-cli.
 ### static-analysis-gates
 Catch error-handling bugs before runtime with linters.
 
+**Parameters:**
+- `path` (string): Path to analyze
+- `rules` (string): Rule set to enable
+
 **Commands:**
 - `golangci-lint run --enable=errcheck,staticcheck ./...`
 - `mypy --strict --warn-unreachable src/`
@@ -98,3 +122,8 @@ Catch error-handling bugs before runtime with linters.
 - golangci-lint run --enable=errcheck,staticcheck ./...
 - cargo clippy -- -D warnings
 - ruff check src/ --select E,F,B
+
+## References
+- [Sentry CLI](https://docs.sentry.io/cli/)
+- [errcheck](https://github.com/kisielk/errcheck)
+- [golangci-lint](https://golangci-lint.run/)

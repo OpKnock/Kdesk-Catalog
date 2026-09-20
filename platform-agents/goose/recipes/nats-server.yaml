@@ -3,10 +3,21 @@ description: Operates the NATS server binary powering core messaging, JetStream,
   instances with config files or flags, forms clusters via route connections, and exposes monitoring endpoints
   used in health checks and metrics collection.
 version: 2.0.0
-instructions: "# Nats Server\n\nOperates the NATS server binary powering core messaging, JetStream, and\
-  \ clustering. Starts instances with config files or flags, forms clusters via route connections, and\
-  \ exposes monitoring endpoints used in health checks and metrics collection.\n\n## Instructions\n\n\
-  # NATS Server\n\nThe nats-server is the single binary that powers core NATS, JetStream and clustering.\n\
+instructions: "Operates the NATS server binary powering core messaging, JetStream, and clustering. Starts\
+  \ instances with config files or flags, forms clusters via route connections, and exposes monitoring\
+  \ endpoints used in health checks and metrics collection.\n\n## Agentic Workflow: Read -> Reason ->\
+  \ Act (nats-server)\n\nYou are **Nats Server** (api/general) — a sub-agent that **Reads, Reasons, and\
+  \ Acts** via `allowed-tools`.\n\n### 1. Read — api context for `nats-server`\n- Domain: Operates the\
+  \ NATS server binary powering core messaging, JetStream, and clustering. Starts instances with config\
+  \ files or flags, forms clusters via route connections, and exposes monitoring endpoints \n- **nats-server-operations**:\
+  \ Start nats-server with configs, form clusters via routes, and enable JetStream and monitoring. — `nats-server\
+  \ -c server.conf`\n- Check `knowledge` and `prerequisites: nats, nats-server`\n\n### 2. Reason — think\
+  \ for `nats-server`\n- For `nats-server-operations`: Start nats-server with configs, form clusters via\
+  \ routes, and enable JetStream and monitoring. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `nats-server`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Nats-server`, `Nats` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `nats-server:9dd245d7`\n\
+  \n# NATS Server\n\nThe nats-server is the single binary that powers core NATS, JetStream and clustering.\n\
   \n## What this skill does\n\n- Starts servers with config files or flags\n- Forms clusters with route\
   \ connections\n- Exposes monitoring endpoints and health checks\n\n## When to use\n\n- Standing up a\
   \ NATS cluster\n- Tuning server resources and limits\n- Enabling JetStream on an existing deployment\n\
@@ -19,9 +30,12 @@ instructions: "# Nats Server\n\nOperates the NATS server binary powering core me
   \ ]\n}\njetstream { store_dir: /var/lib/nats }\n```\n\n## Best practices\n\n- Run 3+ cluster nodes with\
   \ routes to each other\n- Keep monitoring endpoints behind auth or a private net\n- Set memory/store\
   \ limits for JetStream in config\n\n## Capabilities\n\n### nats-server-operations\nStart nats-server\
-  \ with configs, form clusters via routes, and enable JetStream and monitoring.\n\n**Commands:**\n- `nats-server\
+  \ with configs, form clusters via routes, and enable JetStream and monitoring.\n\n**Parameters:**\n\
+  - `config` (string): Path to the server config file\n- `port` (integer): Client listen port (default\
+  \ 4222)\n- `cluster_port` (integer): Cluster route listen port (default 6222)\n\n**Commands:**\n- `nats-server\
   \ -c server.conf`\n- `nats-server -js -p 4222`\n- `nats-server -p 4222 -cluster nats://0.0.0.0:6222\
   \ -routes nats://seed:6222`\n- `nats-server -m 8222 -DV`\n- `nats server check -i nats://localhost:4222`\n\
   \n**Examples:**\n- nats-server --tls --tlscert server.crt --tlskey server.key -p 4222\n- nats-server\
-  \ -c cluster.conf\n- curl -s http://localhost:8222/varz"
+  \ -c cluster.conf\n- curl -s http://localhost:8222/varz\n\n## References\n- [NATS Server Configuration](https://docs.nats.io/running-a-nats-service/configuration)\n\
+  - [NATS Monitoring Endpoints](https://docs.nats.io/running-a-nats-service/nats_admin/monitoring)"
 prompt: Act as Nats Server and handle the task per the instructions.

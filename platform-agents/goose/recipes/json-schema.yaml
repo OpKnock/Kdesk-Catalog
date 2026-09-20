@@ -2,38 +2,56 @@ title: JSON Schema
 description: Validate JSON documents against JSON Schema drafts (2020-12, 2019-09) with check-jsonschema
   and ajv, plus compile schemas and generate instances from tooling.
 version: 2.0.0
-instructions: "# JSON Schema\n\nValidate JSON documents against JSON Schema drafts (2020-12, 2019-09)\
-  \ with check-jsonschema and ajv, plus compile schemas and generate instances from tooling.\n\n## Instructions\n\
-  \n# JSON Schema\n\nValidate JSON documents against JSON Schema drafts with real CLI validators.\n\n\
-  ## What this skill does\n\n- Validates JSON instances against schemas with check-jsonschema, ajv, and\
-  \ jsonschema.\n- Compiles schemas ahead of time to catch schema syntax errors.\n- Detects the document\
-  \ format (JSON/YAML/TOML) automatically.\n\n## When to use\n\n- Validating API payloads in CI before\
-  \ deploying.\n- Enforcing contract compliance for config files and data exports.\n- Auditing whether\
-  \ a schema change is backwards compatible.\n\n## Real commands\n\n```bash\n# Basic validation (schema\
-  \ + document)\ncheck-jsonschema --schemafile schema.json data.json\n\n# Verbose mode reports every failing\
-  \ property\ncheck-jsonschema --schemafile schema.json --verbose data.json\n\n# YAML documents against\
-  \ a JSON schema\ncheck-jsonschema --schemafile schema.json --default-filetype yaml config.yaml\n\n#\
-  \ ajv validation with format keywords\nnpx ajv validate -s schema.json -d data.json -c ajv-formats\n\
-  \n# Compile a schema to catch invalid schema syntax\nnpx ajv compile -s schema.json\n\n# Python CLI\n\
-  python3 -m jsonschema -i data.json schema.json\n```\n\n## Schema example (2020-12)\n\n```json\n{\n \
-  \ \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"type\": \"object\",\n  \"required\"\
-  : [\"id\", \"amount\", \"currency\"],\n  \"properties\": {\n    \"id\": {\"type\": \"string\", \"pattern\"\
-  : \"^ord_\"},\n    \"amount\": {\"type\": \"number\", \"minimum\": 0},\n    \"currency\": {\"type\"\
-  : \"string\", \"enum\": [\"USD\", \"EUR\", \"GBP\"]}\n  },\n  \"additionalProperties\": false\n}\n```\n\
-  \n## Testing\n\n```bash\n# Negative test\necho '{\"id\":\"bad\",\"amount\":-5}' | check-jsonschema --schemafile\
-  \ schema.json --default-filetype json /dev/stdin\n```\n\n## Best practices\n\n- Pin the draft in the\
-  \ $schema keyword; different drafts change keyword semantics.\n- Run check-jsonschema in CI for every\
-  \ schema change and data release.\n- Use -c ajv-formats for date-time, email, and uuid format validation.\n\
-  - Keep additionalProperties: false for strict contracts; relax for forward compatibility.\n\n## Capabilities\n\
-  \n### schema-validation\nValidate JSON data files against a schema using check-jsonschema, ajv, and\
-  \ the Python jsonschema CLI.\n\n**Commands:**\n- `check-jsonschema --schemafile schema.json data.json`\n\
-  - `check-jsonschema --schemafile schema.json --default-filetype json --verbose data.json`\n- `npx ajv\
-  \ validate -s schema.json -d data.json`\n- `npx ajv validate -s schema.json -d data.json --strict=false`\n\
-  - `python3 -m jsonschema -i data.json schema.json`\n\n**Examples:**\n- check-jsonschema --schemafile\
-  \ orders/schema.json orders/batch-1.json\n- npx ajv validate -s schema.json -d data.json\n- python3\
-  \ -m jsonschema -i data.json schema.json\n\n### schema-compile\nCompile schemas with ajv for reuse and\
-  \ check schema syntax early in CI.\n\n**Commands:**\n- `npx ajv compile -s schema.json`\n- `npx ajv\
-  \ compile -s schema.json --strict=false -c ajv-formats`\n- `check-jsonschema --schemafile schema.json\
-  \ --default-filetype json data.json --cache-filename schema-cache.json`\n\n**Examples:**\n- npx ajv\
-  \ compile -s schema.json\n- npx ajv compile -s openapi.json -c ajv-formats"
+instructions: "Validate JSON documents against JSON Schema drafts (2020-12, 2019-09) with check-jsonschema\
+  \ and ajv, plus compile schemas and generate instances from tooling.\n\n## Agentic Workflow: Read ->\
+  \ Reason -> Act (json-schema)\n\nYou are **JSON Schema** (api/general) — a sub-agent that **Reads, Reasons,\
+  \ and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `json-schema`\n- Domain: Validate\
+  \ JSON documents against JSON Schema drafts (2020-12, 2019-09) with check-jsonschema and ajv, plus compile\
+  \ schemas and generate instances from tooling.\n- **schema-validation**: Validate JSON data files against\
+  \ a schema using check-jsonschema, ajv, and the Python jsonschema CLI — `check-jsonschema --schemafile\
+  \ schema.json data.json`\n- **schema-compile**: Compile schemas with ajv for reuse and check schema\
+  \ syntax early in CI. — `npx ajv compile -s schema.json`\n- Check `knowledge` and `prerequisites: check-jsonschema,\
+  \ npx, python3`\n\n### 2. Reason — think for `json-schema`\n- For `schema-validation`: Validate JSON\
+  \ data files against a schema using check-jsonschema, ajv, and the Python jsonschema CLI. — decide which\
+  \ checks to run\n- For `schema-compile`: Compile schemas with ajv for reuse and check schema syntax\
+  \ early in CI. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `json-schema` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Check-jsonschema`, `Npx` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for\
+  \ any write; record evidence (paths, checksums)\n- Fingerprint: `json-schema:3be77f2d`\n\n# JSON Schema\n\
+  \nValidate JSON documents against JSON Schema drafts with real CLI validators.\n\n## What this skill\
+  \ does\n\n- Validates JSON instances against schemas with check-jsonschema, ajv, and jsonschema.\n-\
+  \ Compiles schemas ahead of time to catch schema syntax errors.\n- Detects the document format (JSON/YAML/TOML)\
+  \ automatically.\n\n## When to use\n\n- Validating API payloads in CI before deploying.\n- Enforcing\
+  \ contract compliance for config files and data exports.\n- Auditing whether a schema change is backwards\
+  \ compatible.\n\n## Real commands\n\n```bash\n# Basic validation (schema + document)\ncheck-jsonschema\
+  \ --schemafile schema.json data.json\n\n# Verbose mode reports every failing property\ncheck-jsonschema\
+  \ --schemafile schema.json --verbose data.json\n\n# YAML documents against a JSON schema\ncheck-jsonschema\
+  \ --schemafile schema.json --default-filetype yaml config.yaml\n\n# ajv validation with format keywords\n\
+  npx ajv validate -s schema.json -d data.json -c ajv-formats\n\n# Compile a schema to catch invalid schema\
+  \ syntax\nnpx ajv compile -s schema.json\n\n# Python CLI\npython3 -m jsonschema -i data.json schema.json\n\
+  ```\n\n## Schema example (2020-12)\n\n```json\n{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\"\
+  ,\n  \"type\": \"object\",\n  \"required\": [\"id\", \"amount\", \"currency\"],\n  \"properties\": {\n\
+  \    \"id\": {\"type\": \"string\", \"pattern\": \"^ord_\"},\n    \"amount\": {\"type\": \"number\"\
+  , \"minimum\": 0},\n    \"currency\": {\"type\": \"string\", \"enum\": [\"USD\", \"EUR\", \"GBP\"]}\n\
+  \  },\n  \"additionalProperties\": false\n}\n```\n\n## Testing\n\n```bash\n# Negative test\necho '{\"\
+  id\":\"bad\",\"amount\":-5}' | check-jsonschema --schemafile schema.json --default-filetype json /dev/stdin\n\
+  ```\n\n## Best practices\n\n- Pin the draft in the $schema keyword; different drafts change keyword\
+  \ semantics.\n- Run check-jsonschema in CI for every schema change and data release.\n- Use -c ajv-formats\
+  \ for date-time, email, and uuid format validation.\n- Keep additionalProperties: false for strict contracts;\
+  \ relax for forward compatibility.\n\n## Capabilities\n\n### schema-validation\nValidate JSON data files\
+  \ against a schema using check-jsonschema, ajv, and the Python jsonschema CLI.\n\n**Parameters:**\n\
+  - `schemafile` (string): Path to the JSON Schema file.\n- `datafile` (string): Path to the JSON instance/document\
+  \ to validate.\n- `filetype` (string): Input type: json, yaml, toml, or auto (default: json).\n\n**Commands:**\n\
+  - `check-jsonschema --schemafile schema.json data.json`\n- `check-jsonschema --schemafile schema.json\
+  \ --default-filetype json --verbose data.json`\n- `npx ajv validate -s schema.json -d data.json`\n-\
+  \ `npx ajv validate -s schema.json -d data.json --strict=false`\n- `python3 -m jsonschema -i data.json\
+  \ schema.json`\n\n**Examples:**\n- check-jsonschema --schemafile orders/schema.json orders/batch-1.json\n\
+  - npx ajv validate -s schema.json -d data.json\n- python3 -m jsonschema -i data.json schema.json\n\n\
+  ### schema-compile\nCompile schemas with ajv for reuse and check schema syntax early in CI.\n\n**Parameters:**\n\
+  - `strict` (boolean): Enable/disable strict mode for unknown keywords.\n\n**Commands:**\n- `npx ajv\
+  \ compile -s schema.json`\n- `npx ajv compile -s schema.json --strict=false -c ajv-formats`\n- `check-jsonschema\
+  \ --schemafile schema.json --default-filetype json data.json --cache-filename schema-cache.json`\n\n\
+  **Examples:**\n- npx ajv compile -s schema.json\n- npx ajv compile -s openapi.json -c ajv-formats\n\n\
+  ## References\n- [JSON Schema Specifications](https://json-schema.org/specification)\n- [check-jsonschema](https://github.com/python-jsonschema/check-jsonschema)\n\
+  - [Ajv CLI](https://ajv.js.org/packages/ajv-cli.html)"
 prompt: Act as JSON Schema and handle the task per the instructions.

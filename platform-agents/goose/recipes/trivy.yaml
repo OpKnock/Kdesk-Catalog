@@ -3,36 +3,55 @@ description: Scan images, directories, and repos handling vulnerabilities and se
   and manage SBOMs. Scan Kubernetes clusters handling vulnerabilities and misconfigs. IaC misconfigs,
   and licenses with Trivy.
 version: 2.0.0
-instructions: "# trivy\n\nScan images, directories, and repos handling vulnerabilities and secrets. Scan\
-  \ IaC configs and manage SBOMs. Scan Kubernetes clusters handling vulnerabilities and misconfigs. IaC\
-  \ misconfigs, and licenses with Trivy.\n\n## Instructions\n\n# Trivy\n\nComprehensive scanner: images,\
-  \ filesystems, repos, configs, and clusters.\n\n## What This Skill Does\n\n- Scans container images\
-  \ for CVEs with SBOM awareness\n- Scans filesystems for secrets, licenses, and misconfigs\n- Scans Kubernetes\
-  \ clusters for posture issues\n- Generates SBOMs and SARIF reports\n\n## When to Use\n\n- Image gate\
-  \ before deploy\n- Repo-wide secret and dependency scan\n- Cluster security posture reviews\n\n## Real\
-  \ Commands\n\n```bash\n# Images\n trivy image nginx:latest\ntrivy image --severity HIGH,CRITICAL --ignore-unfixed\
-  \ myapp:latest\ntrivy image --format sarif -o scan.sarif myapp:latest\n\n# Filesystems and repos\ntrivy\
-  \ fs --scanners vuln,secret,config .\ntrivy repo https://github.com/org/repo\n\n# Configs (IaC)\ntrivy\
-  \ config terraform/\n\n# SBOM\n trivy image --format cyclonedx -o sbom.cdx.json myapp:latest\n trivy\
-  \ sbom sbom.cdx.json\n\n# Kubernetes\n trivy kubernetes --report summary cluster\ntrivy kubernetes cluster\
-  \ --severity HIGH,CRITICAL\n```\n\n## CI Gate\n\n```yaml\n- name: Trivy image scan\n  run: |\n    trivy\
-  \ image --exit-code 1 --severity CRITICAL --ignore-unfixed myapp:latest\n```\n\n## Best Practices\n\n\
-  - Use --ignore-unfixed to focus on actionable findings\n- Set --exit-code 1 with severity gates in CI\n\
-  - Run secret scans on every commit; image scans on every tag\n- Schedule DB updates and pin trivy versions\
-  \ for stable results\n- Generate SBOMs at build time for later re-scanning\n\n## Capabilities\n\n###\
-  \ image-and-fs-scan\nScan images, directories, and repos for vulnerabilities and secrets.\n\n**Commands:**\n\
-  - `trivy image nginx:latest`\n- `trivy image --severity HIGH,CRITICAL --ignore-unfixed nginx:latest`\n\
-  - `trivy fs --scanners vuln,secret,config .`\n- `trivy repo https://github.com/org/repo`\n- `trivy image\
-  \ --format sarif -o scan.sarif nginx:latest`\n\n**Examples:**\n- trivy image --severity HIGH,CRITICAL\
-  \ --ignore-unfixed myapp:latest\n- trivy fs --scanners secret .\n- trivy repo https://github.com/org/repo\
-  \ --scanners vuln\n\n### config-and-sbom\nScan IaC configs and manage SBOMs.\n\n**Commands:**\n- `trivy\
-  \ config .`\n- `trivy config --severity CRITICAL terraform/`\n- `trivy sbom --sbom-format cyclonedx\
+instructions: "Scan images, directories, and repos handling vulnerabilities and secrets. Scan IaC configs\
+  \ and manage SBOMs. Scan Kubernetes clusters handling vulnerabilities and misconfigs. IaC misconfigs,\
+  \ and licenses with Trivy.\n\n## Agentic Workflow: Read -> Reason -> Act (trivy)\n\nYou are **trivy**\
+  \ (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1.\
+  \ Read — security context for `trivy`\n- Domain: Scan images, directories, and repos handling vulnerabilities\
+  \ and secrets. Scan IaC configs and manage SBOMs. Scan Kubernetes clusters handling vulnerabilities\
+  \ and misconfigs. IaC misconfigs, and licen\n- **image-and-fs-scan**: Scan images, directories, and\
+  \ repos for vulnerabilities and secrets. — `trivy image nginx:latest`\n- **config-and-sbom**: Scan IaC\
+  \ configs and manage SBOMs. — `trivy config .`\n- **cluster-scan**: Scan Kubernetes clusters for vulnerabilities\
+  \ and misconfigs. — `trivy kubernetes --report summary cluster`\n- Check `knowledge` and `prerequisites:\
+  \ trivy`\n\n### 2. Reason — think for `trivy`\n- For `image-and-fs-scan`: Scan images, directories,\
+  \ and repos for vulnerabilities and secrets. — decide which checks to run\n- For `config-and-sbom`:\
+  \ Scan IaC configs and manage SBOMs. — decide which checks to run\n- For `cluster-scan`: Scan Kubernetes\
+  \ clusters for vulnerabilities and misconfigs. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `trivy` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Trivy` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `trivy:bf32a219`\n\n# Trivy\n\n\
+  Comprehensive scanner: images, filesystems, repos, configs, and clusters.\n\n## What This Skill Does\n\
+  \n- Scans container images for CVEs with SBOM awareness\n- Scans filesystems for secrets, licenses,\
+  \ and misconfigs\n- Scans Kubernetes clusters for posture issues\n- Generates SBOMs and SARIF reports\n\
+  \n## When to Use\n\n- Image gate before deploy\n- Repo-wide secret and dependency scan\n- Cluster security\
+  \ posture reviews\n\n## Real Commands\n\n```bash\n# Images\n trivy image nginx:latest\ntrivy image --severity\
+  \ HIGH,CRITICAL --ignore-unfixed myapp:latest\ntrivy image --format sarif -o scan.sarif myapp:latest\n\
+  \n# Filesystems and repos\ntrivy fs --scanners vuln,secret,config .\ntrivy repo https://github.com/org/repo\n\
+  \n# Configs (IaC)\ntrivy config terraform/\n\n# SBOM\n trivy image --format cyclonedx -o sbom.cdx.json\
+  \ myapp:latest\n trivy sbom sbom.cdx.json\n\n# Kubernetes\n trivy kubernetes --report summary cluster\n\
+  trivy kubernetes cluster --severity HIGH,CRITICAL\n```\n\n## CI Gate\n\n```yaml\n- name: Trivy image\
+  \ scan\n  run: |\n    trivy image --exit-code 1 --severity CRITICAL --ignore-unfixed myapp:latest\n\
+  ```\n\n## Best Practices\n\n- Use --ignore-unfixed to focus on actionable findings\n- Set --exit-code\
+  \ 1 with severity gates in CI\n- Run secret scans on every commit; image scans on every tag\n- Schedule\
+  \ DB updates and pin trivy versions for stable results\n- Generate SBOMs at build time for later re-scanning\n\
+  \n## Capabilities\n\n### image-and-fs-scan\nScan images, directories, and repos for vulnerabilities\
+  \ and secrets.\n\n**Parameters:**\n- `target` (string): Image, directory, or repo URL to scan\n- `scanners`\
+  \ (array): Scan types: vuln, secret, config, license\n- `severity` (string): Minimum severity: LOW,\
+  \ MEDIUM, HIGH, CRITICAL\n\n**Commands:**\n- `trivy image nginx:latest`\n- `trivy image --severity HIGH,CRITICAL\
+  \ --ignore-unfixed nginx:latest`\n- `trivy fs --scanners vuln,secret,config .`\n- `trivy repo https://github.com/org/repo`\n\
+  - `trivy image --format sarif -o scan.sarif nginx:latest`\n\n**Examples:**\n- trivy image --severity\
+  \ HIGH,CRITICAL --ignore-unfixed myapp:latest\n- trivy fs --scanners secret .\n- trivy repo https://github.com/org/repo\
+  \ --scanners vuln\n\n### config-and-sbom\nScan IaC configs and manage SBOMs.\n\n**Parameters:**\n- `sbomFormat`\
+  \ (string): SBOM format: cyclonedx, spdx\n- `output` (string): Output file path\n\n**Commands:**\n-\
+  \ `trivy config .`\n- `trivy config --severity CRITICAL terraform/`\n- `trivy sbom --sbom-format cyclonedx\
   \ sbom.cdx.json`\n- `trivy image --format cyclonedx -o sbom.cdx.json nginx:latest`\n- `trivy image --ignore-unfixed\
   \ --list-all-pkgs nginx:latest`\n\n**Examples:**\n- trivy config terraform/\n- trivy image --format\
   \ cyclonedx -o sbom.cdx.json nginx:latest\n- trivy sbom sbom.cdx.json\n\n### cluster-scan\nScan Kubernetes\
-  \ clusters for vulnerabilities and misconfigs.\n\n**Commands:**\n- `trivy kubernetes --report summary\
-  \ cluster`\n- `trivy kubernetes cluster --severity HIGH,CRITICAL`\n- `trivy kubernetes --report all\
-  \ --format sarif -o k8s.sarif`\n- `trivy k8s --skip-images deployment/myapp`\n\n**Examples:**\n- trivy\
-  \ kubernetes --report summary cluster\n- trivy kubernetes cluster --severity HIGH,CRITICAL\n- trivy\
-  \ k8s --skip-images deployment/myapp"
+  \ clusters for vulnerabilities and misconfigs.\n\n**Parameters:**\n- `report` (string): Report scope:\
+  \ summary, all\n- `skipImages` (boolean): Skip image scanning in cluster scans\n\n**Commands:**\n- `trivy\
+  \ kubernetes --report summary cluster`\n- `trivy kubernetes cluster --severity HIGH,CRITICAL`\n- `trivy\
+  \ kubernetes --report all --format sarif -o k8s.sarif`\n- `trivy k8s --skip-images deployment/myapp`\n\
+  \n**Examples:**\n- trivy kubernetes --report summary cluster\n- trivy kubernetes cluster --severity\
+  \ HIGH,CRITICAL\n- trivy k8s --skip-images deployment/myapp\n\n## References\n- [Trivy Documentation](https://trivy.dev/)\n\
+  - [Trivy GitHub](https://github.com/aquasecurity/trivy)"
 prompt: Act as trivy and handle the task per the instructions.

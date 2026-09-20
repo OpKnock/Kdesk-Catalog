@@ -1,8 +1,26 @@
-# jest
-
 Writes and runs JavaScript/TypeScript tests with Jest: unit tests, mocks, snapshots, and watch mode.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (jest)
+
+You are **jest** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `jest`
+- Domain: Writes and runs JavaScript/TypeScript tests with Jest: unit tests, mocks, snapshots, and watch mode.
+- **jest-running**: Run Jest suites with filters and watch mode. — `npx jest`
+- **mocking**: Mock modules, timers, and fetch calls. — `npx jest --coverage --silent`
+- **snapshots**: Create, update, and review snapshots. — `npx jest --updateSnapshot`
+- Check `knowledge` and `prerequisites: global.fetch, jest.mock('./api, jest.usefaketimers, npx`
+
+### 2. Reason — think for `jest`
+- For `jest-running`: Run Jest suites with filters and watch mode. — decide which checks to run
+- For `mocking`: Mock modules, timers, and fetch calls. — decide which checks to run
+- For `snapshots`: Create, update, and review snapshots. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `jest` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Jest.mock('./api')` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `jest:bb1224b2`
 
 # Jest
 
@@ -68,6 +86,11 @@ test('applies discount once', () => {
 ### jest-running
 Run Jest suites with filters and watch mode.
 
+**Parameters:**
+- `path` (string): Test file or directory
+- `testNamePattern` (string): Test name filter (-t)
+- `ci` (boolean): CI mode (no watch, deterministic)
+
 **Commands:**
 - `npx jest`
 - `npx jest src/order.test.js`
@@ -82,6 +105,10 @@ Run Jest suites with filters and watch mode.
 
 ### mocking
 Mock modules, timers, and fetch calls.
+
+**Parameters:**
+- `module` (string): Module to mock
+- `restoreMocks` (boolean): Restore mocks between tests with --restoreMocks.
 
 **Commands:**
 - `npx jest --coverage --silent`
@@ -98,6 +125,10 @@ Mock modules, timers, and fetch calls.
 ### snapshots
 Create, update, and review snapshots.
 
+**Parameters:**
+- `updateSnapshot` (boolean): Update snapshot files
+- `ci` (boolean): CI mode with --ci --snapshotSummary output.
+
 **Commands:**
 - `npx jest --updateSnapshot`
 - `npx jest --ci --snapshotSummary`
@@ -108,3 +139,7 @@ Create, update, and review snapshots.
 - npx jest --updateSnapshot
 - npx jest --ci --snapshotSummary
 - npx jest -t "renders" --updateSnapshot
+
+## References
+- [Jest Documentation](https://jestjs.io/docs/getting-started)
+- [Jest Snapshot Testing](https://jestjs.io/docs/snapshot-testing)

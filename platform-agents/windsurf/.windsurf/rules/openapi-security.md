@@ -6,27 +6,23 @@ globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 
 Authors OpenAPI security schemes including apiKey, HTTP bearer JWT, OAuth2 flows, and mutual TLS. Validates schemes with Spectral, Redocly, and openapi-generator in CI.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (openapi-security)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Openapi Security** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `openapi-generator-cli validate -i openapi.yaml`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `openapi-security`
+- Domain: Authors OpenAPI security schemes including apiKey, HTTP bearer JWT, OAuth2 flows, and mutual TLS. Validates schemes with Spectral, Redocly, and openapi-generator in CI.
+- **openapi-security-schemes**: Author security schemes and requirements, then lint and validate them with Spectral and openapi-gene — `openapi-generator-cli validate -i openapi.yaml`
+- Check `knowledge` and `prerequisites: npx, openapi-generator-cli, redocly, spectral`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `openapi-security`
+- For `openapi-security-schemes`: Author security schemes and requirements, then lint and validate them with Spectral and openapi-generator. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `openapi-security` tools
+- Tools: `Glob`, `Grep`, `Read`, `Openapi-generator-cli`, `Spectral` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `openapi-security:8e38eeb4`
 
 # OpenAPI Security
 

@@ -5,27 +5,25 @@ description: "Creates and verifies supply-chain integrity layouts with in-toto: 
 
 Creates and verifies supply-chain integrity layouts with in-toto: step signatures, product attestation, and full-chain verification.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (in-toto)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **in-toto** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `in-toto-run --step-name build --key build.key --products art`, `in-toto-keygen alice`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `in-toto`
+- Domain: Creates and verifies supply-chain integrity layouts with in-toto: step signatures, product attestation, and full-chain verification.
+- **step-execution**: Record supply chain steps with in-toto-run and in-toto-record wrappers. — `in-toto-run --step-name build --key build.key --products artifacts/ -- make buil`
+- **layout-verification**: Sign layouts and verify the whole chain against keys and rules. — `in-toto-keygen alice`
+- Check `knowledge` and `prerequisites: in-toto-keygen, in-toto-record, in-toto-run, in-toto-sign`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `in-toto`
+- For `step-execution`: Record supply chain steps with in-toto-run and in-toto-record wrappers. — decide which checks to run
+- For `layout-verification`: Sign layouts and verify the whole chain against keys and rules. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `in-toto` tools
+- Tools: `Glob`, `Grep`, `Read`, `In-toto-run`, `In-toto-record` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `in-toto:83c0e747`
 
 # in-toto
 

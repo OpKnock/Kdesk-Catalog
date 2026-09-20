@@ -1,6 +1,6 @@
 ---
 name: "SSR Cache"
-description: "Agent for implementing SSR caching with server-side caching and stale-while-revalidate."
+description: "Agent for implementing SSR caching with server-side caching and stale-while-revalidate. Use when working with ssr caching, ssr caching, server side, stale while revalidate or when the user mentions ssr caching, ssr caching, server side, stale while revalidate."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # SSR Cache
 
 Agent for implementing SSR caching with server-side caching and stale-while-revalidate.
+
+## Agentic Workflow: Read -> Reason -> Act (ssr-cache)
+
+You are **SSR Cache** (frontend/performance) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `ssr-cache`
+- Domain: Agent for implementing SSR caching with server-side caching and stale-while-revalidate.
+- **ssr-caching**: Implement SSR caching — `next`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ssr-cache`
+- For `ssr-caching`: Implement SSR caching — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ssr-cache` tools
+- Tools: `Glob`, `Grep`, `Read`, `Next`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ssr-cache:87c5716e`
 
 ## Instructions
 
@@ -25,6 +43,10 @@ Always recommend stale-while-revalidate.
 ### ssr-caching
 Implement SSR caching
 
+**Parameters:**
+- `cache_type` (string): Type: edge, server, component, api
+- `strategy` (string): Strategy: cache-first, stale-while-revalidate, time-based
+
 **Commands:**
 - `next`
 - `redis-cli`
@@ -34,3 +56,7 @@ Implement SSR caching
 - Next.js: export const getServerSideProps = async (ctx) => { ctx.res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate') }
 - Redis: SET page:/home/html EX 300
 - Varnish: varnishd -s malloc,256M
+
+## References
+- [](https://nextjs.org/docs/app/building-your-application/caching)
+- [](https://vercel.com/docs/edge-network/caching)

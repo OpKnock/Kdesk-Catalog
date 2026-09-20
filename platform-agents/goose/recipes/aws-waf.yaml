@@ -2,14 +2,50 @@ title: Aws Waf
 description: Creates and manages web ACLs with IP sets and rate-based rules, associates them with Application
   Load Balancers, API Gateway stages, and CloudFront distributions, and inspects sampled requests.
 version: 2.0.0
-instructions: '# Aws Waf
+instructions: 'Creates and manages web ACLs with IP sets and rate-based rules, associates them with Application
+  Load Balancers, API Gateway stages, and CloudFront distributions, and inspects sampled requests.
 
 
-  Creates and manages web ACLs with IP sets and rate-based rules, associates them with Application Load
-  Balancers, API Gateway stages, and CloudFront distributions, and inspects sampled requests.
+  ## Agentic Workflow: Read -> Reason -> Act (aws-waf)
 
 
-  ## Instructions
+  You are **Aws Waf** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — api context for `aws-waf`
+
+  - Domain: Creates and manages web ACLs with IP sets and rate-based rules, associates them with Application
+  Load Balancers, API Gateway stages, and CloudFront distributions, and inspects sampled requests.
+
+  - **web-acl**: Create and inspect WAF web ACLs. — `aws wafv2 list-web-acls --scope REGIONAL`
+
+  - **rules-ipset**: Add rules and IP sets to web ACLs. — `aws wafv2 create-ip-set --name blocked-ips
+  --scope REGIONAL --ip-address-version`
+
+  - **associate**: Associate web ACLs with protected resources. — `aws wafv2 associate-web-acl --web-acl-arn
+  arn:aws:wafv2:us-east-1:111122223333:r`
+
+  - Check `knowledge` and `prerequisites: aws`
+
+
+  ### 2. Reason — think for `aws-waf`
+
+  - For `web-acl`: Create and inspect WAF web ACLs. — decide which checks to run
+
+  - For `rules-ipset`: Add rules and IP sets to web ACLs. — decide which checks to run
+
+  - For `associate`: Associate web ACLs with protected resources. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `aws-waf` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `aws-waf:bd13f7c0`
 
 
   # AWS WAF
@@ -109,6 +145,13 @@ instructions: '# Aws Waf
   Create and inspect WAF web ACLs.
 
 
+  **Parameters:**
+
+  - `scope` (string): REGIONAL or CLOUDFRONT
+
+  - `acl_name` (string): Web ACL name
+
+
   **Commands:**
 
   - `aws wafv2 list-web-acls --scope REGIONAL`
@@ -136,6 +179,15 @@ instructions: '# Aws Waf
   ### rules-ipset
 
   Add rules and IP sets to web ACLs.
+
+
+  **Parameters:**
+
+  - `ip_set_name` (string): IP set name
+
+  - `addresses` (string): CIDR addresses
+
+  - `rules_file` (string): JSON rules file
 
 
   **Commands:**
@@ -171,6 +223,13 @@ instructions: '# Aws Waf
   Associate web ACLs with protected resources.
 
 
+  **Parameters:**
+
+  - `resource_arn` (string): ARN of the protected resource
+
+  - `web_acl_arn` (string): Web ACL ARN
+
+
   **Commands:**
 
   - `aws wafv2 associate-web-acl --web-acl-arn arn:aws:wafv2:us-east-1:111122223333:regional/webacl/my-acl/acl123
@@ -190,5 +249,12 @@ instructions: '# Aws Waf
 
   - aws wafv2 get-web-acl-for-resource --resource-arn arn:aws:apigateway:us-east-1::/restapis/abc123xyz/stages/prod
 
-  - aws wafv2 list-resources-for-web-acl --web-acl-arn arn:aws:wafv2:us-east-1:111122223333:regional/webacl/my-acl/acl123'
+  - aws wafv2 list-resources-for-web-acl --web-acl-arn arn:aws:wafv2:us-east-1:111122223333:regional/webacl/my-acl/acl123
+
+
+  ## References
+
+  - [WAF Developer Guide](https://docs.aws.amazon.com/waf/latest/developerguide/)
+
+  - [AWS CLI wafv2 Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/wafv2/index.html)'
 prompt: Act as Aws Waf and handle the task per the instructions.

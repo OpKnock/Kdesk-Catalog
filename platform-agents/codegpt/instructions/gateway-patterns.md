@@ -1,8 +1,22 @@
-# Gateway Patterns
-
 API gateway design patterns: routing, aggregation, authentication, rate limiting, and versioning with Kong, nginx, and Envoy.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (gateway-patterns)
+
+You are **Gateway Patterns** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `gateway-patterns`
+- Domain: API gateway design patterns: routing, aggregation, authentication, rate limiting, and versioning with Kong, nginx, and Envoy.
+- **kong-gateway**: Manage Kong routes, services, and plugins; test gateway behavior. — `curl -s -X POST http://localhost:8001/services -d 'name=orders' -d 'url=http://o`
+- Check `knowledge` and `prerequisites: nginx`
+
+### 2. Reason — think for `gateway-patterns`
+- For `kong-gateway`: Manage Kong routes, services, and plugins; test gateway behavior. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gateway-patterns` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Nginx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gateway-patterns:c7d4f43d`
 
 # Gateway Patterns
 
@@ -60,6 +74,11 @@ curl -s -X POST http://localhost:8001/consumers/svc/key-auth -d 'key=secret123' 
 ### kong-gateway
 Manage Kong routes, services, and plugins; test gateway behavior.
 
+**Parameters:**
+- `service-name` (string): Gateway service name
+- `path-prefix` (string): Route path prefix like /api/orders
+- `plugin` (string): Plugin: rate-limiting, key-auth, cors, proxy-cache
+
 **Commands:**
 - `curl -s -X POST http://localhost:8001/services -d 'name=orders' -d 'url=http://orders-service:8080' | jq '.id'`
 - `curl -s -X POST http://localhost:8001/services/orders/routes -d 'paths[]=/api/orders' -d 'name=orders-route' | jq '.paths'`
@@ -71,3 +90,7 @@ Manage Kong routes, services, and plugins; test gateway behavior.
 - curl -s -X POST http://localhost:8001/services/orders/routes -d 'paths[]=/api/orders' -d 'name=orders-route' | jq '.paths'
 - curl -s -X POST http://localhost:8001/services/orders/plugins -d 'name=rate-limiting' -d 'config.minute=100' | jq '.name'
 - curl -s http://localhost:8001/services | jq '.data[] | {name, host}'
+
+## References
+- [Kong Admin API](https://developer.konghq.com/gateway/latest/admin-api/)
+- [API Gateway patterns](https://microservices.io/patterns/apigateway.html)

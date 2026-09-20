@@ -1,15 +1,33 @@
 ---
 name: "Aws Secrets Manager"
-description: "Manages secrets in AWS Secrets Manager: creation, retrieval, rotation, versioning, and deletion with the AWS CLI."
+description: "Manages secrets in AWS Secrets Manager: creation, retrieval, rotation, versioning, and deletion with the AWS CLI. Use when working with secret lifecycle, rotation versioning, iam access, api or when the user mentions secret lifecycle, rotation versioning, iam access, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Aws Secrets Manager
-
 Manages secrets in AWS Secrets Manager: creation, retrieval, rotation, versioning, and deletion with the AWS CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (aws-secrets-manager)
+
+You are **Aws Secrets Manager** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `aws-secrets-manager`
+- Domain: Manages secrets in AWS Secrets Manager: creation, retrieval, rotation, versioning, and deletion with the AWS CLI.
+- **secret-lifecycle**: Create, retrieve, list, and delete secrets. — `aws secretsmanager create-secret --name prod/api-db --secret-string '{"user":"ad`
+- **rotation-versioning**: Manage secret versions and rotation. — `aws secretsmanager put-secret-value --secret-id prod/api-db --secret-string '{"u`
+- **iam-access**: Grant and verify cross-account/service access to secrets. — `aws secretsmanager get-random-password --password-length 32 --exclude-punctuatio`
+- Check `knowledge` and `prerequisites: aws`
+
+### 2. Reason — think for `aws-secrets-manager`
+- For `secret-lifecycle`: Create, retrieve, list, and delete secrets. — decide which checks to run
+- For `rotation-versioning`: Manage secret versions and rotation. — decide which checks to run
+- For `iam-access`: Grant and verify cross-account/service access to secrets. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `aws-secrets-manager` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `aws-secrets-manager:b60cbc7f`
 
 # AWS Secrets Manager
 
@@ -62,6 +80,11 @@ aws secretsmanager rotate-secret --secret-id prod/api-db --rotation-lambda-arn a
 ### secret-lifecycle
 Create, retrieve, list, and delete secrets.
 
+**Parameters:**
+- `secret_id` (string): Secret name or ARN
+- `secret_string` (string): Secret value (string or JSON)
+- `tags` (string): Key=value tags
+
 **Commands:**
 - `aws secretsmanager create-secret --name prod/api-db --secret-string '{"user":"admin","pass":"x"}'`
 - `aws secretsmanager get-secret-value --secret-id prod/api-db`
@@ -76,6 +99,10 @@ Create, retrieve, list, and delete secrets.
 
 ### rotation-versioning
 Manage secret versions and rotation.
+
+**Parameters:**
+- `version_stage` (string): Version stage: AWSCURRENT, AWSPREVIOUS
+- `rotation_lambda` (string): Rotation Lambda ARN
 
 **Commands:**
 - `aws secretsmanager put-secret-value --secret-id prod/api-db --secret-string '{"user":"admin","pass":"new"}'`
@@ -92,6 +119,10 @@ Manage secret versions and rotation.
 ### iam-access
 Grant and verify cross-account/service access to secrets.
 
+**Parameters:**
+- `password_length` (number): Length for generated passwords
+- `policy_document` (string): IAM policy JSON for secret access
+
 **Commands:**
 - `aws secretsmanager get-random-password --password-length 32 --exclude-punctuation`
 - `aws secretsmanager get-random-password --password-length 20 --require-each-included-type`
@@ -102,3 +133,7 @@ Grant and verify cross-account/service access to secrets.
 - aws secretsmanager get-random-password --password-length 32 --exclude-punctuation --exclude-numbers | jq -r .RandomPassword
 - aws iam put-role-policy --role-name api-role --policy-name secret-read --policy-document '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["secretsmanager:GetSecretValue"],"Resource":"arn:aws:secretsmanager:us-east-1:111122223333:secret:prod/api-db-*"}]}'
 - aws secretsmanager get-random-password --password-length 40
+
+## References
+- [Secrets Manager User Guide](https://docs.aws.amazon.com/secretsmanager/latest/userguide/)
+- [AWS CLI secretsmanager Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/secretsmanager/index.html)

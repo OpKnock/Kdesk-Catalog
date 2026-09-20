@@ -6,27 +6,25 @@ globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 
 Validates API contracts continuously: response schema checks at runtime, spec diffs in CI, and consumer contract verification.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-contract-validator-api-contract-validator)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **api-contract-validator-api-contract-validator** (testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npm install express-openapi-validator`, `openapi-diff v1.yaml v2.yaml`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — testing context for `api-contract-validator-api-contract-validator`
+- Domain: Validates API contracts continuously: response schema checks at runtime, spec diffs in CI, and consumer contract verification.
+- **runtime-validation**: Validate API responses at runtime against the OpenAPI contract — `npm install express-openapi-validator`
+- **spec-diff-checking**: Diff specs across versions in CI to block breaking changes — `openapi-diff v1.yaml v2.yaml`
+- Check `knowledge` and `prerequisites: pact, openapi, node.js, python`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-contract-validator-api-contract-validator`
+- For `runtime-validation`: Validate API responses at runtime against the OpenAPI contract — decide which checks to run
+- For `spec-diff-checking`: Diff specs across versions in CI to block breaking changes — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-contract-validator-api-contract-validator` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Openapi-diff` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-contract-validator-api-contract-validator:ea1d2090`
 
 # API Contract Validator
 

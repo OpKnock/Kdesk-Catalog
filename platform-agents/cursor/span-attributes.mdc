@@ -6,27 +6,23 @@ alwaysApply: false
 
 Creates OpenTelemetry spans with semantic convention attributes using otel-cli. Attaches HTTP attributes (method, status_code, route), database attributes (system, statement), wraps arbitrary commands with exec, and exports via OTLP to collectors.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (span-attributes)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Span Attributes** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `otel-cli span --name "http.request" --endpoint http://localh`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `span-attributes`
+- Domain: Creates OpenTelemetry spans with semantic convention attributes using otel-cli. Attaches HTTP attributes (method, status_code, route), database attributes (system, statement), wraps arbitrary commands
+- **otel-span-attrs**: Creates OpenTelemetry spans with semantic convention attributes using otel-cli. Attaches HTTP attrib — `otel-cli span --name "http.request" --endpoint http://localhost:4318 --attrs "ht`
+- Check `knowledge` and `prerequisites: export, otel-cli`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `span-attributes`
+- For `otel-span-attrs`: Creates OpenTelemetry spans with semantic convention attributes using otel-cli. Attaches HTTP attributes (method, status — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `span-attributes` tools
+- Tools: `Glob`, `Grep`, `Read`, `Otel-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `span-attributes:2f386fc5`
 
 # Span Attributes
 

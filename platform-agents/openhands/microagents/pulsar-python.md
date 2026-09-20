@@ -1,15 +1,29 @@
 ---
 name: "pulsar-python"
-description: "Pulsar clients in Python: producer/consumer code, pulsar-client wheel, and message schemas."
+description: "Pulsar clients in Python: producer/consumer code, pulsar-client wheel, and message schemas. Use when working with pulsar python client, api or when the user mentions pulsar python client, api."
 type: knowledge
 triggers: ["pulsar-python", "pulsar-python-client"]
 ---
 
-# Pulsar Python
-
 Pulsar clients in Python: producer/consumer code, pulsar-client wheel, and message schemas.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (pulsar-python)
+
+You are **Pulsar Python** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `pulsar-python`
+- Domain: Pulsar clients in Python: producer/consumer code, pulsar-client wheel, and message schemas.
+- **pulsar-python-client**: Install pulsar-client and build Python producers and consumers. — `pip install pulsar-client`
+- Check `knowledge` and `prerequisites: pip, python3`
+
+### 2. Reason — think for `pulsar-python`
+- For `pulsar-python-client`: Install pulsar-client and build Python producers and consumers. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pulsar-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Python3` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pulsar-python:35982cda`
 
 # Pulsar Python
 
@@ -66,6 +80,11 @@ while True:
 ### pulsar-python-client
 Install pulsar-client and build Python producers and consumers.
 
+**Parameters:**
+- `topic` (string): Topic name
+- `subscription` (string): Consumer subscription name
+- `service_url` (string): pulsar:// broker URL
+
 **Commands:**
 - `pip install pulsar-client`
 - `python3 -m pip show pulsar-client`
@@ -77,3 +96,7 @@ Install pulsar-client and build Python producers and consumers.
 - python3 producer.py
 - python3 consumer.py
 - pip install pulsar-client==3.2.0
+
+## References
+- [Pulsar Python client docs](https://pulsar.apache.org/docs/3.0.x/client-libraries-python/)
+- [pulsar-client on PyPI](https://pypi.org/project/pulsar-client/)

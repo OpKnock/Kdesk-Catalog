@@ -1,15 +1,31 @@
 ---
 name: "kustomize"
-description: "Manage Kubernetes manifests with Kustomize: overlays per environment, image/namespace overrides, and build-to-apply workflows."
+description: "Manage Kubernetes manifests with Kustomize: overlays per environment, image/namespace overrides, and build-to-apply workflows. Use when working with kustomize build, kustomize edit, api or when the user mentions kustomize build, kustomize edit, api."
 type: knowledge
 triggers: ["kustomize", "kustomize-build", "kustomize-edit"]
 ---
 
-# Kustomize
-
 Manage Kubernetes manifests with Kustomize: overlays per environment, image/namespace overrides, and build-to-apply workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kustomize)
+
+You are **Kustomize** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `kustomize`
+- Domain: Manage Kubernetes manifests with Kustomize: overlays per environment, image/namespace overrides, and build-to-apply workflows.
+- **kustomize-build**: Build and apply kustomized manifests. — `kustomize build .`
+- **kustomize-edit**: Edit kustomization.yaml: images, namespaces, and common labels. — `kustomize create --resources=../base`
+- Check `knowledge` and `prerequisites: kubectl, kustomize`
+
+### 2. Reason — think for `kustomize`
+- For `kustomize-build`: Build and apply kustomized manifests. — decide which checks to run
+- For `kustomize-edit`: Edit kustomization.yaml: images, namespaces, and common labels. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kustomize` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kustomize`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kustomize:88dc1910`
 
 # Kustomize
 
@@ -99,6 +115,10 @@ kustomize build overlays/prod | kubectl apply --dry-run=client -f -
 ### kustomize-build
 Build and apply kustomized manifests.
 
+**Parameters:**
+- `dir` (string): Kustomization directory.
+- `restrictor` (string): LoadRestrictionsNone allows files outside the root.
+
 **Commands:**
 - `kustomize build .`
 - `kubectl apply -k .`
@@ -113,6 +133,11 @@ Build and apply kustomized manifests.
 ### kustomize-edit
 Edit kustomization.yaml: images, namespaces, and common labels.
 
+**Parameters:**
+- `image` (string): image=image:tag pair.
+- `namespace` (string): Namespace to set for all resources.
+- `nameprefix` (string): Prefix added to resource names.
+
 **Commands:**
 - `kustomize create --resources=../base`
 - `kustomize edit set image myapp=myapp:v2.0`
@@ -124,3 +149,7 @@ Edit kustomization.yaml: images, namespaces, and common labels.
 - kustomize create --resources=../base
 - kustomize edit set image myapp=myapp:v2.0
 - kustomize edit set namespace production
+
+## References
+- [Kustomize](https://kubectl.docs.kubernetes.io/)
+- [Kustomize CLI Reference](https://kubectl.docs.kubernetes.io/references/kustomize/)

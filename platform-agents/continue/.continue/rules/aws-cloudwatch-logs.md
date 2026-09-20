@@ -1,15 +1,33 @@
 ---
 name: "Aws Cloudwatch Logs"
-description: "Manages CloudWatch Logs: log groups and streams, putting events, filtering with patterns, and tailing logs."
+description: "Manages CloudWatch Logs: log groups and streams, putting events, filtering with patterns, and tailing logs. Use when working with log groups, query logs, ingest, api or when the user mentions log groups, query logs, ingest, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Aws Cloudwatch Logs
-
 Manages CloudWatch Logs: log groups and streams, putting events, filtering with patterns, and tailing logs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (aws-cloudwatch-logs)
+
+You are **Aws Cloudwatch Logs** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `aws-cloudwatch-logs`
+- Domain: Manages CloudWatch Logs: log groups and streams, putting events, filtering with patterns, and tailing logs.
+- **log-groups**: Create and manage log groups and streams. — `aws logs create-log-group --log-group-name /aws/api/prod`
+- **query-logs**: Filter and search log events. — `aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern "ERRO`
+- **ingest**: Put log events and test ingestion. — `aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001`
+- Check `knowledge` and `prerequisites: aws`
+
+### 2. Reason — think for `aws-cloudwatch-logs`
+- For `log-groups`: Create and manage log groups and streams. — decide which checks to run
+- For `query-logs`: Filter and search log events. — decide which checks to run
+- For `ingest`: Put log events and test ingestion. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `aws-cloudwatch-logs` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `aws-cloudwatch-logs:b4cf3b39`
 
 # AWS CloudWatch Logs
 
@@ -59,6 +77,10 @@ aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001
 ### log-groups
 Create and manage log groups and streams.
 
+**Parameters:**
+- `log_group` (string): Log group name
+- `retention` (number): Retention in days
+
 **Commands:**
 - `aws logs create-log-group --log-group-name /aws/api/prod`
 - `aws logs create-log-stream --log-group-name /aws/api/prod --log-stream-name api-001`
@@ -73,6 +95,11 @@ Create and manage log groups and streams.
 
 ### query-logs
 Filter and search log events.
+
+**Parameters:**
+- `filter_pattern` (string): CloudWatch Logs filter pattern
+- `start_time` (number): Start time in ms epoch
+- `since` (string): Relative window for tail (1h, 30m)
 
 **Commands:**
 - `aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern "ERROR"`
@@ -89,6 +116,10 @@ Filter and search log events.
 ### ingest
 Put log events and test ingestion.
 
+**Parameters:**
+- `message` (string): Log event message
+- `tags` (string): Key=value tags
+
 **Commands:**
 - `aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001 --log-events timestamp=$(($(date +%s)*1000)),message='health ok'`
 - `aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001 --log-events timestamp=$(($(date +%s)*1000)),message='ERROR timeout'`
@@ -99,3 +130,8 @@ Put log events and test ingestion.
 - aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001 --log-events timestamp=$(($(date +%s)*1000)),message='{"event":"deploy"}'
 - aws logs tag-log-group --log-group-name /aws/api/prod --tags team=api
 - aws logs list-tags-log-group --log-group-name /aws/api/prod
+
+## References
+- [CloudWatch Logs Docs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html)
+- [Filter Pattern Syntax](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html)
+- [AWS CLI logs Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/logs/index.html)

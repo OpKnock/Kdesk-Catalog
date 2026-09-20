@@ -1,14 +1,28 @@
 ---
-description: "Analyzes network traffic from the terminal using Wireshark's tshark CLI. Captures live packets, filters with display syntax, extracts fields to CSV, follows TCP streams, and inspects HTTP/TLS handshakes without a GUI."
+description: "Analyzes network traffic from the terminal using Wireshark's tshark CLI. Captures live packets, filters with display syntax, extracts fields to CSV, follows TCP streams, and inspects HTTP/TLS handshakes without a GUI. Use when working with capture analyze, api, network, troubleshooting or when the user mentions capture analyze, api, network, troubleshooting."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Tshark
-
 Analyzes network traffic from the terminal using Wireshark's tshark CLI. Captures live packets, filters with display syntax, extracts fields to CSV, follows TCP streams, and inspects HTTP/TLS handshakes without a GUI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (tshark)
+
+You are **Tshark** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `tshark`
+- Domain: Analyzes network traffic from the terminal using Wireshark's tshark CLI. Captures live packets, filters with display syntax, extracts fields to CSV, follows TCP streams, and inspects HTTP/TLS handshak
+- **capture-analyze**: Capture, filter, and decode packets from the CLI — `tshark -i eth0 -f "tcp port 443" -w capture.pcapng -c 1000`
+- Check `knowledge` and `prerequisites: tshark`
+
+### 2. Reason — think for `tshark`
+- For `capture-analyze`: Capture, filter, and decode packets from the CLI — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tshark` tools
+- Tools: `Glob`, `Grep`, `Read`, `Tshark` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tshark:cf61bfe4`
 
 # Tshark
 
@@ -74,6 +88,11 @@ tshark -r capture.pcapng -T fields -e http.request.uri
 ### capture-analyze
 Capture, filter, and decode packets from the CLI
 
+**Parameters:**
+- `interface` (string): Interface to capture, e.g. eth0
+- `filter` (string): Display filter, e.g. http.request
+- `fields` (string): Comma-separated field extractors
+
 **Commands:**
 - `tshark -i eth0 -f "tcp port 443" -w capture.pcapng -c 1000`
 - `tshark -r capture.pcapng -Y "http.request"`
@@ -85,3 +104,9 @@ Capture, filter, and decode packets from the CLI
 - tshark -r capture.pcapng -Y "http.request"
 - tshark -r capture.pcapng -T fields -e ip.src -e tcp.port
 - tshark -i eth0 -Y "dns" -T fields -e dns.qry.name
+
+## References
+- [tshark man page](https://www.wireshark.org/docs/man-pages/tshark.html)
+- [Display filters reference](https://www.wireshark.org/docs/dfref/)
+- [Wireshark User Guide](https://www.wireshark.org/docs/wsug_html_chunked/)
+- [TLS handshake analysis](https://www.wireshark.org/docs/wsug_html_chunked/ChAdvTLS.html)

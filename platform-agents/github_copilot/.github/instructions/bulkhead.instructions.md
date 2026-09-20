@@ -4,27 +4,27 @@ applyTo: "**/*.java **/*.r **/*.sh **/*.{yaml,yml}"
 
 Implements bulkhead isolation with opossum (Node.js) and Resilience4j (Java): semaphores, per-dependency pools, and testing.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (bulkhead)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Bulkhead** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npm install opossum`, `mvn dependency:tree | grep resilience4j-bulkhead`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `bulkhead`
+- Domain: Implements bulkhead isolation with opossum (Node.js) and Resilience4j (Java): semaphores, per-dependency pools, and testing.
+- **opossum-node**: Add bulkhead limits to Node.js calls with opossum. — `npm install opossum`
+- **resilience4j-java**: Configure Resilience4j bulkheads in Java apps. — `mvn dependency:tree | grep resilience4j-bulkhead`
+- **verify**: Load-test bulkhead behavior. — `ab -n 1000 -c 100 http://localhost:8080/api/calls`
+- Check `knowledge` and `prerequisites: kubectl, mvn, node, npm`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `bulkhead`
+- For `opossum-node`: Add bulkhead limits to Node.js calls with opossum. — decide which checks to run
+- For `resilience4j-java`: Configure Resilience4j bulkheads in Java apps. — decide which checks to run
+- For `verify`: Load-test bulkhead behavior. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `bulkhead` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Mvn` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `bulkhead:c27ff877`
 
 # Bulkhead
 

@@ -1,15 +1,29 @@
 ---
 name: "Firebase Remote Config"
-description: "Firebase Remote Config: manage parameter values per environment, publish changes with conditions, and fetch config from the CLI."
+description: "Firebase Remote Config: manage parameter values per environment, publish changes with conditions, and fetch config from the CLI. Use when working with remote config, api or when the user mentions remote config, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Firebase Remote Config
-
 Firebase Remote Config: manage parameter values per environment, publish changes with conditions, and fetch config from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (firebase-remote-config)
+
+You are **Firebase Remote Config** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `firebase-remote-config`
+- Domain: Firebase Remote Config: manage parameter values per environment, publish changes with conditions, and fetch config from the CLI.
+- **remote-config**: List, get, and publish Remote Config parameters and templates. — `curl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/rem`
+- Check `knowledge` and `prerequisites: node`
+
+### 2. Reason — think for `firebase-remote-config`
+- For `remote-config`: List, get, and publish Remote Config parameters and templates. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `firebase-remote-config` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `firebase-remote-config:76c3713d`
 
 # Firebase Remote Config
 
@@ -68,6 +82,11 @@ curl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/rem
 ### remote-config
 List, get, and publish Remote Config parameters and templates.
 
+**Parameters:**
+- `parameter-key` (string): Remote Config parameter key
+- `condition` (string): Condition like app_version or audience segment
+- `default-value` (string): Fallback value when no condition matches
+
 **Commands:**
 - `curl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig' -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.parameters | keys'`
 - `curl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig' -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.parameters.maintenance_mode'`
@@ -79,3 +98,7 @@ List, get, and publish Remote Config parameters and templates.
 - curl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig' -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.parameters | keys'
 - curl -s 'https://firebaseremoteconfig.googleapis.com/v1/projects/$PROJECT_ID/remoteConfig' -H 'Authorization: Bearer $ACCESS_TOKEN' | jq '.version'
 - node -e "const rc=require('firebase/remote-config');const app=initializeApp();rc.getRemoteConfig(app).then(c=>{console.log(c.value('welcome_message'));c.activate()})"
+
+## References
+- [Remote Config REST API](https://firebase.google.com/docs/reference/rest/remote-config/)
+- [Remote Config overview](https://firebase.google.com/docs/remote-config)

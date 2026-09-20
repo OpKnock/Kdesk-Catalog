@@ -1,15 +1,31 @@
 ---
 name: "health-checks"
-description: "Implements liveness, readiness, and startup probes across Kubernetes, Docker, and HTTP endpoints with proper semantics."
+description: "Implements liveness, readiness, and startup probes across Kubernetes, Docker, and HTTP endpoints with proper semantics. Use when working with http health, k8s probes, backend or when the user mentions http health, k8s probes, backend."
 type: knowledge
 triggers: ["health-checks", "http-health", "k8s-probes"]
 ---
 
-# Health Checks
-
 Implements liveness, readiness, and startup probes across Kubernetes, Docker, and HTTP endpoints with proper semantics.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (health-checks)
+
+You are **Health Checks** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `health-checks`
+- Domain: Implements liveness, readiness, and startup probes across Kubernetes, Docker, and HTTP endpoints with proper semantics.
+- **http-health**: Create and test HTTP health endpoints. — `curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/health`
+- **k8s-probes**: Define liveness, readiness, and startup probes in Kubernetes manifests. — `kubectl apply -f deployment.yaml`
+- Check `knowledge` and `prerequisites: kubectl, python`
+
+### 2. Reason — think for `health-checks`
+- For `http-health`: Create and test HTTP health endpoints. — decide which checks to run
+- For `k8s-probes`: Define liveness, readiness, and startup probes in Kubernetes manifests. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `health-checks` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `health-checks:06dde41a`
 
 # Health Checks
 
@@ -80,6 +96,10 @@ containers:
 ### http-health
 Create and test HTTP health endpoints.
 
+**Parameters:**
+- `path` (string): Health endpoint path
+- `method` (string): HTTP method to request with
+
 **Commands:**
 - `curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/health`
 - `curl -s http://localhost:8000/ready`
@@ -93,6 +113,10 @@ Create and test HTTP health endpoints.
 ### k8s-probes
 Define liveness, readiness, and startup probes in Kubernetes manifests.
 
+**Parameters:**
+- `probe-type` (string): liveness, readiness, or startup
+- `initial-delay` (integer): Seconds before first probe
+
 **Commands:**
 - `kubectl apply -f deployment.yaml`
 - `kubectl get pods -w`
@@ -102,3 +126,7 @@ Define liveness, readiness, and startup probes in Kubernetes manifests.
 **Examples:**
 - kubectl get deploy myapp -o jsonpath="{.spec.template.spec.containers[0].readinessProbe}"
 - kubectl describe pod -l app=myapp | grep -A5 Probes
+
+## References
+- [Kubernetes Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+- [Health Checks Best Practices](https://microservices.io/patterns/observability/health-check-api.html)

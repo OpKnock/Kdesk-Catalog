@@ -6,27 +6,25 @@ globs: ["**/*.go", "**/*.json", "**/*.py", "**/*.r", "**/*.rs", "**/*.sh"]
 
 Decode, verify, and troubleshoot JWTs: inspect header/payload locally, validate signatures with openssl and PyJWT, and test bearer-auth APIs with curl.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (jwt-validation)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **JWT Validation** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `echo $JWT | cut -d. -f2 | base64 -d 2>/dev/null | jq .`, `echo -n "$HEADER.$PAYLOAD" | openssl dgst -sha256 -verify pu`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `jwt-validation`
+- Domain: Decode, verify, and troubleshoot JWTs: inspect header/payload locally, validate signatures with openssl and PyJWT, and test bearer-auth APIs with curl.
+- **decode-inspect**: Decode JWT header and payload locally without any library. — `echo $JWT | cut -d. -f2 | base64 -d 2>/dev/null | jq .`
+- **verify-signature**: Verify JWT signatures with openssl, PyJWT, and curl against a real auth endpoint. — `echo -n "$HEADER.$PAYLOAD" | openssl dgst -sha256 -verify public.pem -signature `
+- Check `knowledge` and `prerequisites: echo, npx, python3`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `jwt-validation`
+- For `decode-inspect`: Decode JWT header and payload locally without any library. — decide which checks to run
+- For `verify-signature`: Verify JWT signatures with openssl, PyJWT, and curl against a real auth endpoint. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `jwt-validation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Echo`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `jwt-validation:3ba67d63`
 
 # JWT Validation
 

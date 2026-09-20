@@ -1,6 +1,6 @@
 ---
 name: "Ml Innovation Deploy"
-description: "Innovation deployment agent for ML innovation service deployment."
+description: "Innovation deployment agent for ML innovation service deployment. Use when working with Ml Innovation Deploy or when the user mentions Ml Innovation Deploy."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Innovation Deploy
 
 Innovation deployment agent for ML innovation service deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-innovation-deploy)
+
+You are **Ml Innovation Deploy** (ml/innovation) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-innovation-deploy`
+- Domain: Innovation deployment agent for ML innovation service deployment.
+- **Ml Innovation Deploy**: Innovation deployment agent for ML innovation service deployment. — `Server: python -m ml_innovation.server --port 8080`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-innovation-deploy`
+- For `Ml Innovation Deploy`: Innovation deployment agent for ML innovation service deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-innovation-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Server`, `Health` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-innovation-deploy:94969d4d`
 
 ## Instructions
 
@@ -27,3 +45,7 @@ Innovation deployment agent for ML innovation service deployment.
 - Server: python -m ml_innovation.server --port 8080
 - Idea: python -m ml_innovation.submit --title 'Novel Attention Mechanism'
 - Health: curl http://localhost:8080/health
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

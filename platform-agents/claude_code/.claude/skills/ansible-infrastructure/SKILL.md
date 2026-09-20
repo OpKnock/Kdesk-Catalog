@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(ansible:*) Bash(ansible-playbook:*)"
 
 Automates server configuration with Ansible: inventory, playbooks, roles, and ad-hoc modules across fleets.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (ansible-infrastructure)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **ansible-infrastructure** (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `ansible-playbook -i inventory/prod.ini site.yml`, `ansible all -m ping -i inventory/prod.ini`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — infrastructure context for `ansible-infrastructure`
+- Domain: Automates server configuration with Ansible: inventory, playbooks, roles, and ad-hoc modules across fleets.
+- **playbooks**: Write and run Ansible playbooks against inventories. — `ansible-playbook -i inventory/prod.ini site.yml`
+- **ad-hoc**: Run one-off modules across hosts without a playbook. — `ansible all -m ping -i inventory/prod.ini`
+- Check `knowledge` and `prerequisites: ansible, ansible-playbook`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `ansible-infrastructure`
+- For `playbooks`: Write and run Ansible playbooks against inventories. — decide which checks to run
+- For `ad-hoc`: Run one-off modules across hosts without a playbook. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `ansible-infrastructure` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ansible-playbook`, `Ansible` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ansible-infrastructure:fc553120`
 
 # Ansible
 

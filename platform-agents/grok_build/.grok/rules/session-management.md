@@ -1,26 +1,22 @@
 Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with TTL, drives cookie lifecycle through login and logout flows, and enforces immediate invalidation on logout by deleting the Redis record.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (session-management)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Session Management** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `redis-cli SET session:abc123 "{\"user_id\":42}" EX 3600`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `session-management`
+- Domain: Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with TTL, drives cookie lifecycle through login and logout flows, and enforces immediate invalidation on 
+- **session-lifecycle**: Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with  — `redis-cli SET session:abc123 "{\"user_id\":42}" EX 3600`
+- Check `knowledge` and `prerequisites: redis-cli`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `session-management`
+- For `session-lifecycle`: Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with TTL, drives cookie l — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `session-management` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `session-management:441da535`
 
 # Session Management
 

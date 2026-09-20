@@ -1,13 +1,40 @@
 title: memcached-cli
 description: 'Operates memcached: server startup, key CRUD via telnet/netcat protocol, and stats.'
 version: 2.0.0
-instructions: '# memcached-cli
+instructions: 'Operates memcached: server startup, key CRUD via telnet/netcat protocol, and stats.
 
 
-  Operates memcached: server startup, key CRUD via telnet/netcat protocol, and stats.
+  ## Agentic Workflow: Read -> Reason -> Act (memcached-cli)
 
 
-  ## Instructions
+  You are **memcached-cli** (database/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — database context for `memcached-cli`
+
+  - Domain: Operates memcached: server startup, key CRUD via telnet/netcat protocol, and stats.
+
+  - **memcached-protocol**: Set/get/delete keys and inspect stats via the memcached text protocol — `memcached
+  -p 11211 -u memcached -m 64`
+
+  - Check `knowledge` and `prerequisites: memcached, printf`
+
+
+  ### 2. Reason — think for `memcached-cli`
+
+  - For `memcached-protocol`: Set/get/delete keys and inspect stats via the memcached text protocol —
+  decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `memcached-cli` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Memcached`, `Printf` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `memcached-cli:54691be7`
 
 
   # Memcached CLI
@@ -110,6 +137,15 @@ instructions: '# memcached-cli
   Set/get/delete keys and inspect stats via the memcached text protocol
 
 
+  **Parameters:**
+
+  - `port` (integer): Listen port for the server (-p)
+
+  - `memory` (integer): Max memory in MB (-m)
+
+  - `expiration` (integer): TTL in seconds for set commands
+
+
   **Commands:**
 
   - `memcached -p 11211 -u memcached -m 64`
@@ -129,5 +165,12 @@ instructions: '# memcached-cli
 
   - memcached-tool 127.0.0.1:11211 stats
 
-  - printf ''flush_all\r\n'' | nc localhost 11211'
+  - printf ''flush_all\r\n'' | nc localhost 11211
+
+
+  ## References
+
+  - [memcached wiki](https://github.com/memcached/memcached/wiki)
+
+  - [memcached-tool reference](https://github.com/memcached/memcached/wiki/MemcacheTool)'
 prompt: Act as memcached-cli and handle the task per the instructions.

@@ -1,8 +1,24 @@
-# code-review
-
 Performs systematic code reviews: diff analysis, security checks, test coverage review, and actionable feedback.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (code-review)
+
+You are **code-review** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-review`
+- Domain: Performs systematic code reviews: diff analysis, security checks, test coverage review, and actionable feedback.
+- **diff-review**: Analyze diffs and changed files. — `git diff HEAD~1`
+- **security-review**: Scan for secrets and vulnerable patterns. — `gitleaks detect`
+- Check `knowledge` and `prerequisites: git, gitleaks, grep, trufflehog`
+
+### 2. Reason — think for `code-review`
+- For `diff-review`: Analyze diffs and changed files. — decide which checks to run
+- For `security-review`: Scan for secrets and vulnerable patterns. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-review` tools
+- Tools: `Glob`, `Read`, `Bash`, `Gitleaks`, `Trufflehog` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-review:08235db7`
 
 # Code Review
 
@@ -56,6 +72,10 @@ git log -S "BEGIN RSA PRIVATE KEY" --all
 ### diff-review
 Analyze diffs and changed files.
 
+**Parameters:**
+- `range` (string): Commit range
+- `path` (string): Path filter
+
 **Commands:**
 - `git diff HEAD~1`
 - `git diff --stat HEAD~1`
@@ -71,6 +91,10 @@ Analyze diffs and changed files.
 ### security-review
 Scan for secrets and vulnerable patterns.
 
+**Parameters:**
+- `scope` (string): Files or history to scan
+- `range` (string): Commit range to scan
+
 **Commands:**
 - `gitleaks detect`
 - `gitleaks detect --source .`
@@ -82,3 +106,7 @@ Scan for secrets and vulnerable patterns.
 - gitleaks detect --log-opts="-20"
 - trufflehog git --branch main
 - git log -S "BEGIN RSA PRIVATE KEY" --all
+
+## References
+- [Google Code Review Guide](https://google.github.io/eng-practices/review/)
+- [Gitleaks Docs](https://github.com/gitleaks/gitleaks)

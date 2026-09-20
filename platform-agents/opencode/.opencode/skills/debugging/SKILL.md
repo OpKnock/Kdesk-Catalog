@@ -5,27 +5,25 @@ description: "Debug applications systematically with interactive debuggers, logg
 
 Debug applications systematically with interactive debuggers, logging, tracing, and profilers across runtimes.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (debugging)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **debugging** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `node --inspect-brk server.js`, `tail -f logs/app.log`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — code-quality context for `debugging`
+- Domain: Debug applications systematically with interactive debuggers, logging, tracing, and profilers across runtimes.
+- **runtime-debuggers**: Attach interactive debuggers in Node, Python, and Go. — `node --inspect-brk server.js`
+- **tracing-observability**: Use logs and traces to isolate faults. — `tail -f logs/app.log`
+- Check `knowledge` and `prerequisites: dlv, kubectl, ngrep, node`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `debugging`
+- For `runtime-debuggers`: Attach interactive debuggers in Node, Python, and Go. — decide which checks to run
+- For `tracing-observability`: Use logs and traces to isolate faults. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `debugging` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Dlv` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `debugging:8ac47b3d`
 
 # Debugging
 

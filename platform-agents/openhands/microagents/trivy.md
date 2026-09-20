@@ -1,15 +1,33 @@
 ---
 name: "trivy"
-description: "Scan images, directories, and repos handling vulnerabilities and secrets. Scan IaC configs and manage SBOMs. Scan Kubernetes clusters handling vulnerabilities and misconfigs. IaC misconfigs, and licenses with Trivy."
+description: "Scan images, directories, and repos handling vulnerabilities and secrets. Scan IaC configs and manage SBOMs. Scan Kubernetes clusters handling vulnerabilities and misconfigs. IaC misconfigs, and licenses with Trivy. Use when working with image and fs scan, config and sbom, cluster scan, security or when the user mentions image and fs scan, config and sbom, cluster scan, security."
 type: knowledge
 triggers: ["trivy", "image-and-fs-scan", "config-and-sbom", "cluster-scan"]
 ---
 
-# trivy
-
 Scan images, directories, and repos handling vulnerabilities and secrets. Scan IaC configs and manage SBOMs. Scan Kubernetes clusters handling vulnerabilities and misconfigs. IaC misconfigs, and licenses with Trivy.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (trivy)
+
+You are **trivy** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `trivy`
+- Domain: Scan images, directories, and repos handling vulnerabilities and secrets. Scan IaC configs and manage SBOMs. Scan Kubernetes clusters handling vulnerabilities and misconfigs. IaC misconfigs, and licen
+- **image-and-fs-scan**: Scan images, directories, and repos for vulnerabilities and secrets. — `trivy image nginx:latest`
+- **config-and-sbom**: Scan IaC configs and manage SBOMs. — `trivy config .`
+- **cluster-scan**: Scan Kubernetes clusters for vulnerabilities and misconfigs. — `trivy kubernetes --report summary cluster`
+- Check `knowledge` and `prerequisites: trivy`
+
+### 2. Reason — think for `trivy`
+- For `image-and-fs-scan`: Scan images, directories, and repos for vulnerabilities and secrets. — decide which checks to run
+- For `config-and-sbom`: Scan IaC configs and manage SBOMs. — decide which checks to run
+- For `cluster-scan`: Scan Kubernetes clusters for vulnerabilities and misconfigs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `trivy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Trivy` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `trivy:bf32a219`
 
 # Trivy
 
@@ -73,6 +91,11 @@ trivy kubernetes cluster --severity HIGH,CRITICAL
 ### image-and-fs-scan
 Scan images, directories, and repos for vulnerabilities and secrets.
 
+**Parameters:**
+- `target` (string): Image, directory, or repo URL to scan
+- `scanners` (array): Scan types: vuln, secret, config, license
+- `severity` (string): Minimum severity: LOW, MEDIUM, HIGH, CRITICAL
+
 **Commands:**
 - `trivy image nginx:latest`
 - `trivy image --severity HIGH,CRITICAL --ignore-unfixed nginx:latest`
@@ -87,6 +110,10 @@ Scan images, directories, and repos for vulnerabilities and secrets.
 
 ### config-and-sbom
 Scan IaC configs and manage SBOMs.
+
+**Parameters:**
+- `sbomFormat` (string): SBOM format: cyclonedx, spdx
+- `output` (string): Output file path
 
 **Commands:**
 - `trivy config .`
@@ -103,6 +130,10 @@ Scan IaC configs and manage SBOMs.
 ### cluster-scan
 Scan Kubernetes clusters for vulnerabilities and misconfigs.
 
+**Parameters:**
+- `report` (string): Report scope: summary, all
+- `skipImages` (boolean): Skip image scanning in cluster scans
+
 **Commands:**
 - `trivy kubernetes --report summary cluster`
 - `trivy kubernetes cluster --severity HIGH,CRITICAL`
@@ -113,3 +144,7 @@ Scan Kubernetes clusters for vulnerabilities and misconfigs.
 - trivy kubernetes --report summary cluster
 - trivy kubernetes cluster --severity HIGH,CRITICAL
 - trivy k8s --skip-images deployment/myapp
+
+## References
+- [Trivy Documentation](https://trivy.dev/)
+- [Trivy GitHub](https://github.com/aquasecurity/trivy)

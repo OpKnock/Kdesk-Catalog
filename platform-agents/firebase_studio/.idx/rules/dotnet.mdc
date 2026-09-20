@@ -1,14 +1,32 @@
 ---
-description: "Develops .NET backend services with the dotnet CLI: projects, EF Core migrations, tests, and publish workflows."
+description: "Develops .NET backend services with the dotnet CLI: projects, EF Core migrations, tests, and publish workflows. Use when working with dotnet cli, dotnet ef, dotnet testing, backend or when the user mentions dotnet cli, dotnet ef, dotnet testing, backend."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Dotnet
-
 Develops .NET backend services with the dotnet CLI: projects, EF Core migrations, tests, and publish workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (dotnet)
+
+You are **Dotnet** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `dotnet`
+- Domain: Develops .NET backend services with the dotnet CLI: projects, EF Core migrations, tests, and publish workflows.
+- **dotnet-cli**: Create, build, and run .NET projects. — `dotnet new webapi -n MyApi`
+- **dotnet-ef**: Manage Entity Framework Core migrations and schema. — `dotnet ef migrations add InitialCreate`
+- **dotnet-testing**: Run tests and format code. — `dotnet test`
+- Check `knowledge` and `prerequisites: dotnet`
+
+### 2. Reason — think for `dotnet`
+- For `dotnet-cli`: Create, build, and run .NET projects. — decide which checks to run
+- For `dotnet-ef`: Manage Entity Framework Core migrations and schema. — decide which checks to run
+- For `dotnet-testing`: Run tests and format code. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `dotnet` tools
+- Tools: `Glob`, `Grep`, `Read`, `Dotnet` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `dotnet:00a20866`
 
 # .NET
 
@@ -80,6 +98,10 @@ app.Run();
 ### dotnet-cli
 Create, build, and run .NET projects.
 
+**Parameters:**
+- `template` (string): Template name: webapi, console, classlib
+- `name` (string): Project or solution name
+
 **Commands:**
 - `dotnet new webapi -n MyApi`
 - `dotnet run`
@@ -94,6 +116,10 @@ Create, build, and run .NET projects.
 
 ### dotnet-ef
 Manage Entity Framework Core migrations and schema.
+
+**Parameters:**
+- `name` (string): Migration name
+- `context` (string): DbContext type
 
 **Commands:**
 - `dotnet ef migrations add InitialCreate`
@@ -110,6 +136,10 @@ Manage Entity Framework Core migrations and schema.
 ### dotnet-testing
 Run tests and format code.
 
+**Parameters:**
+- `filter` (string): Test filter expression
+- `coverage` (boolean): Collect code coverage with Coverlet
+
 **Commands:**
 - `dotnet test`
 - `dotnet test --filter TestCategory=Unit`
@@ -120,3 +150,8 @@ Run tests and format code.
 - dotnet test --logger "console;verbosity=detailed"
 - dotnet format --verify-no-changes
 - dotnet test -p:CollectCoverage=true
+
+## References
+- [.NET Docs](https://learn.microsoft.com/dotnet)
+- [EF Core Docs](https://learn.microsoft.com/ef/core/)
+- [ASP.NET Core Docs](https://learn.microsoft.com/aspnet/core)

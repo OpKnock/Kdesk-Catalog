@@ -1,14 +1,30 @@
 ---
-description: "Runs aggregated Go linting with golangci-lint: dozens of linters, fast parallel runs, config, and CI integration."
+description: "Runs aggregated Go linting with golangci-lint: dozens of linters, fast parallel runs, config, and CI integration. Use when working with golangci run, golangci config, code quality or when the user mentions golangci run, golangci config, code quality."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Golangci Lint
-
 Runs aggregated Go linting with golangci-lint: dozens of linters, fast parallel runs, config, and CI integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (golangci-lint)
+
+You are **Golangci Lint** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `golangci-lint`
+- Domain: Runs aggregated Go linting with golangci-lint: dozens of linters, fast parallel runs, config, and CI integration.
+- **golangci-run**: Run golangci-lint with linter selection. — `golangci-lint run`
+- **golangci-config**: Manage linter configuration. — `golangci-lint linters`
+- Check `knowledge` and `prerequisites: golangci-lint`
+
+### 2. Reason — think for `golangci-lint`
+- For `golangci-run`: Run golangci-lint with linter selection. — decide which checks to run
+- For `golangci-config`: Manage linter configuration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `golangci-lint` tools
+- Tools: `Glob`, `Grep`, `Read`, `Golangci-lint` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `golangci-lint:af8ad5ca`
 
 # golangci-lint
 
@@ -79,6 +95,11 @@ issues:
 ### golangci-run
 Run golangci-lint with linter selection.
 
+**Parameters:**
+- `paths` (string): Packages to lint
+- `fix` (boolean): Apply fixes
+- `out-format` (string): colored-line-number, github-actions, json
+
 **Commands:**
 - `golangci-lint run`
 - `golangci-lint run ./...`
@@ -94,6 +115,10 @@ Run golangci-lint with linter selection.
 ### golangci-config
 Manage linter configuration.
 
+**Parameters:**
+- `enable` (string): Linters to enable
+- `disable` (string): Linters to disable
+
 **Commands:**
 - `golangci-lint linters`
 - `golangci-lint version`
@@ -103,3 +128,7 @@ Manage linter configuration.
 **Examples:**
 - golangci-lint linters | grep enabled
 - golangci-lint run --disable errcheck
+
+## References
+- [golangci-lint Docs](https://golangci-lint.run)
+- [golangci-lint on GitHub](https://github.com/golangci/golangci-lint)

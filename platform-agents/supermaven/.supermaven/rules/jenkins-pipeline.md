@@ -1,8 +1,22 @@
-# Jenkins Pipeline
-
 Jenkins pipeline operations: triggering builds via jenkins-cli and curl, running Groovy scripts, listing jobs, and checking build status.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (jenkins-pipeline)
+
+You are **Jenkins Pipeline** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `jenkins-pipeline`
+- Domain: Jenkins pipeline operations: triggering builds via jenkins-cli and curl, running Groovy scripts, listing jobs, and checking build status.
+- **jenkins-cli**: Trigger, monitor, and script Jenkins jobs from the terminal. — `java -jar jenkins-cli.jar -s http://localhost:8080 list-jobs`
+- Check `knowledge` and `prerequisites: java`
+
+### 2. Reason — think for `jenkins-pipeline`
+- For `jenkins-cli`: Trigger, monitor, and script Jenkins jobs from the terminal. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `jenkins-pipeline` tools
+- Tools: `Glob`, `Grep`, `Read`, `Java`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `jenkins-pipeline:8a4888c3`
 
 # Jenkins Pipeline
 
@@ -83,6 +97,11 @@ Agent: curl -u admin:token -X POST 'http://localhost:8080/job/deploy/buildWithPa
 ### jenkins-cli
 Trigger, monitor, and script Jenkins jobs from the terminal.
 
+**Parameters:**
+- `job` (string): Jenkins job name.
+- `build_number` (integer): Build number to inspect.
+- `params` (string): Build parameters as key=value pairs.
+
 **Commands:**
 - `java -jar jenkins-cli.jar -s http://localhost:8080 list-jobs`
 - `java -jar jenkins-cli.jar -s http://localhost:8080 build MyJob -s -v`
@@ -94,3 +113,7 @@ Trigger, monitor, and script Jenkins jobs from the terminal.
 - curl -u admin:token -X POST 'http://localhost:8080/job/MyJob/buildWithParameters?TARGET=staging'
 - curl -s 'http://localhost:8080/job/MyJob/lastSuccessfulBuild/artifact/report.json' | jq .
 - java -jar jenkins-cli.jar -s http://localhost:8080 console MyJob 42
+
+## References
+- [Jenkins CLI Docs](https://www.jenkins.io/doc/book/managing/cli/)
+- [Pipeline Syntax](https://www.jenkins.io/doc/book/pipeline/syntax/)

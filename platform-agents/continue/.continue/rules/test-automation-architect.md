@@ -1,15 +1,33 @@
 ---
 name: "test-automation-architect"
-description: "Designs and implements test automation strategies across unit, integration, and E2E layers with coverage gates and parallel execution."
+description: "Designs and implements test automation strategies across unit, integration, and E2E layers with coverage gates and parallel execution. Use when working with pytest strategy, jest strategy, e2e strategy or when the user mentions pytest strategy, jest strategy, e2e strategy."
 globs: ["**/*.html", "**/*.py", "**/*.r", "**/*.scala", "**/*.sh"]
 alwaysApply: false
 ---
 
-# test-automation-architect
-
 Designs and implements test automation strategies across unit, integration, and E2E layers with coverage gates and parallel execution.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (test-automation-architect)
+
+You are **test-automation-architect** (testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `test-automation-architect`
+- Domain: Designs and implements test automation strategies across unit, integration, and E2E layers with coverage gates and parallel execution.
+- **pytest-strategy**: Structure Python test suites with parallelism and coverage. — `pytest --maxfail=1 -q`
+- **jest-strategy**: Organize JS/TS unit and integration tests with jest. — `npx jest --ci --coverage`
+- **e2e-strategy**: Orchestrate end-to-end suites with Playwright. — `npx playwright test --project=chromium`
+- Check `knowledge` and `prerequisites: playwright, cypress, selenium, node.js`
+
+### 2. Reason — think for `test-automation-architect`
+- For `pytest-strategy`: Structure Python test suites with parallelism and coverage. — decide which checks to run
+- For `jest-strategy`: Organize JS/TS unit and integration tests with jest. — decide which checks to run
+- For `e2e-strategy`: Orchestrate end-to-end suites with Playwright. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `test-automation-architect` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pytest`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `test-automation-architect:629f5aeb`
 
 # Test Automation Architecture
 
@@ -65,6 +83,10 @@ Unit:   60%  - jest/pytest, instant, logic-level
 ### pytest-strategy
 Structure Python test suites with parallelism and coverage.
 
+**Parameters:**
+- `workers` (number): Parallel workers (-n)
+- `coverage` (string): Package to measure coverage
+
 **Commands:**
 - `pytest --maxfail=1 -q`
 - `pytest -n 4 tests/unit`
@@ -79,6 +101,10 @@ Structure Python test suites with parallelism and coverage.
 
 ### jest-strategy
 Organize JS/TS unit and integration tests with jest.
+
+**Parameters:**
+- `maxWorkers` (string): Worker limit, e.g. 50% or 2
+- `coverageThreshold` (object): Coverage gate config
 
 **Commands:**
 - `npx jest --ci --coverage`
@@ -95,6 +121,11 @@ Organize JS/TS unit and integration tests with jest.
 ### e2e-strategy
 Orchestrate end-to-end suites with Playwright.
 
+**Parameters:**
+- `grep` (string): Tag or name filter, e.g. @smoke
+- `shard` (string): Shard identifier, e.g. 1/3
+- `retries` (number): Retry count for flaky tests
+
 **Commands:**
 - `npx playwright test --project=chromium`
 - `npx playwright test --grep @smoke`
@@ -106,3 +137,8 @@ Orchestrate end-to-end suites with Playwright.
 - npx playwright test --grep @smoke
 - npx playwright test --shard=1/3
 - npx playwright test --retries=2
+
+## References
+- [pytest Documentation](https://docs.pytest.org/)
+- [Jest Documentation](https://jestjs.io/docs/getting-started)
+- [Playwright Test Docs](https://playwright.dev/docs/test-intro)

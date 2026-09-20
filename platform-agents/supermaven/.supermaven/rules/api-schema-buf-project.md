@@ -1,8 +1,24 @@
-# Api Schema Buf Project
-
 Manages protobuf schemas with buf: project setup, linting, formatting, code generation, and breaking-change detection for gRPC APIs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-schema-buf-project)
+
+You are **Api Schema Buf Project** (data) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `api-schema-buf-project`
+- Domain: Manages protobuf schemas with buf: project setup, linting, formatting, code generation, and breaking-change detection for gRPC APIs.
+- **buf-project**: Set up and maintain buf protobuf projects — `go install github.com/bufbuild/buf/cmd/buf@latest`
+- **generation-breaking**: Generate code and detect breaking changes — `buf generate`
+- Check `knowledge` and `prerequisites: openapi, json-schema, node.js, python`
+
+### 2. Reason — think for `api-schema-buf-project`
+- For `buf-project`: Set up and maintain buf protobuf projects — decide which checks to run
+- For `generation-breaking`: Generate code and detect breaking changes — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-schema-buf-project` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Buf` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-schema-buf-project:05bfbdef`
 
 # API Schema v3 - Protobuf/buf
 
@@ -56,6 +72,11 @@ message User {
 ### buf-project
 Set up and maintain buf protobuf projects
 
+**Parameters:**
+- `module` (string): Buf module path
+- `input` (string): Input directory or file
+- `against` (string): Baseline for breaking checks
+
 **Commands:**
 - `go install github.com/bufbuild/buf/cmd/buf@latest`
 - `buf --version`
@@ -80,3 +101,7 @@ Generate code and detect breaking changes
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [buf Docs](https://buf.build/docs/)
+- [Protobuf Language Guide](https://protobuf.dev/programming-guides/proto3/)

@@ -1,15 +1,33 @@
 ---
 name: "stateless-api-designer-stateless-api-designer"
-description: "Designs stateless, versioned REST/HTTP APIs with OpenAPI specs, validating contracts with Redocly, Spectral, and Swagger CLI."
+description: "Designs stateless, versioned REST/HTTP APIs with OpenAPI specs, validating contracts with Redocly, Spectral, and Swagger CLI. Use when working with openapi authoring, spectral linting, code generation or when the user mentions openapi authoring, spectral linting, code generation."
 type: knowledge
 triggers: ["stateless-api-designer-stateless-api-designer", "openapi-authoring", "spectral-linting", "code-generation"]
 ---
 
-# stateless-api-designer-stateless-api-designer
-
 Designs stateless, versioned REST/HTTP APIs with OpenAPI specs, validating contracts with Redocly, Spectral, and Swagger CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (stateless-api-designer-stateless-api-designer)
+
+You are **stateless-api-designer-stateless-api-designer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `stateless-api-designer-stateless-api-designer`
+- Domain: Designs stateless, versioned REST/HTTP APIs with OpenAPI specs, validating contracts with Redocly, Spectral, and Swagger CLI.
+- **openapi-authoring**: Create, bundle, and validate OpenAPI documents. — `npx @redocly/cli init`
+- **spectral-linting**: Enforce API style rules with Spectral. — `npx spectral lint openapi.yaml`
+- **code-generation**: Generate server stubs and clients from specs. — `openapi-generator-cli generate -i openapi.yaml -g python-fastapi -o server/`
+- Check `knowledge` and `prerequisites: redis, node.js, python, kubernetes`
+
+### 2. Reason — think for `stateless-api-designer-stateless-api-designer`
+- For `openapi-authoring`: Create, bundle, and validate OpenAPI documents. — decide which checks to run
+- For `spectral-linting`: Enforce API style rules with Spectral. — decide which checks to run
+- For `code-generation`: Generate server stubs and clients from specs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `stateless-api-designer-stateless-api-designer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Openapi-generator-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `stateless-api-designer-stateless-api-designer:f24d849c`
 
 # Stateless API Design
 
@@ -71,6 +89,10 @@ openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o client/
 ### openapi-authoring
 Create, bundle, and validate OpenAPI documents.
 
+**Parameters:**
+- `spec` (string): OpenAPI spec file path
+- `output` (string): Bundled output path
+
 **Commands:**
 - `npx @redocly/cli init`
 - `npx @redocly/cli bundle openapi.yaml -o bundled.yaml`
@@ -86,6 +108,10 @@ Create, bundle, and validate OpenAPI documents.
 ### spectral-linting
 Enforce API style rules with Spectral.
 
+**Parameters:**
+- `ruleset` (string): Custom ruleset file
+- `format` (string): Output format: stylish, json, sarif
+
 **Commands:**
 - `npx spectral lint openapi.yaml`
 - `npx spectral lint openapi.yaml --ruleset api-style.rules.yaml`
@@ -100,6 +126,10 @@ Enforce API style rules with Spectral.
 ### code-generation
 Generate server stubs and clients from specs.
 
+**Parameters:**
+- `generator` (string): Generator name: python-fastapi, typescript-fetch, go, spring
+- `output` (string): Output directory
+
 **Commands:**
 - `openapi-generator-cli generate -i openapi.yaml -g python-fastapi -o server/`
 - `openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o client/`
@@ -110,3 +140,8 @@ Generate server stubs and clients from specs.
 - openapi-generator-cli generate -i openapi.yaml -g python-fastapi -o server/
 - openapi-generator-cli validate -i openapi.yaml
 - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o client/
+
+## References
+- [OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0)
+- [Redocly CLI Documentation](https://redocly.com/docs/cli/)
+- [Spectral Documentation](https://docs.stoplight.io/docs/spectral)

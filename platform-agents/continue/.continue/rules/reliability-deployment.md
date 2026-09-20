@@ -1,6 +1,6 @@
 ---
 name: "Reliability Deployment"
-description: "Reliability SDK deployment agent for ML Reliability SDK deployment."
+description: "Reliability SDK deployment agent for ML Reliability SDK deployment. Use when working with Ml Reliability Deploy Sdk, deployment or when the user mentions Ml Reliability Deploy Sdk, deployment."
 globs: ["**/*.py", "**/*.r", "**/Dockerfile*"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Reliability Deployment
 
 Reliability SDK deployment agent for ML Reliability SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (reliability-deployment)
+
+You are **Reliability Deployment** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `reliability-deployment`
+- Domain: Reliability SDK deployment agent for ML Reliability SDK deployment.
+- **Ml Reliability Deploy Sdk**: Reliability SDK deployment agent for ML Reliability SDK deployment. — `docker build -t reliability:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `reliability-deployment`
+- For `Ml Reliability Deploy Sdk`: Reliability SDK deployment agent for ML Reliability SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `reliability-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Reliability` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `reliability-deployment:0fdad8ce`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Reliability SDK deployment agent for ML Reliability SDK deployment.
 **Examples:**
 - Server: python -m reliability.server --port 8080
 - Docker: docker run -p 8080:8080 reliability-server
+
+## References
+- [Google SRE Book](https://sre.google/sre-book/table-of-contents/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

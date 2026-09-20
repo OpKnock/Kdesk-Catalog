@@ -2,31 +2,47 @@ title: crictl
 description: 'Debugs containers and pods at the CRI level with crictl: inspect sandboxes, run containers
   directly, and read container logs and stats.'
 version: 2.0.0
-instructions: "# crictl\n\nDebugs containers and pods at the CRI level with crictl: inspect sandboxes,\
-  \ run containers directly, and read container logs and stats.\n\n## Instructions\n\n# crictl CRI Debugging\n\
-  \nInspect containers and pods at the container-runtime-interface level, below kubectl.\n\n## What This\
-  \ Skill Does\n\n- Lists pods and containers the way containerd sees them\n- Inspects sandbox and container\
-  \ details (images, mounts, labels)\n- Execs and reads logs without relying on the API server\n- Runs\
-  \ one-off debug containers (e.g. busybox) inside the runtime\n- Pulls stats and prunes stale images/containers\n\
-  \n## When to Use\n\n- kubectl hangs or the API server is down but nodes run containers\n- Debugging\
-  \ container start failures, OOM kills, or runtime errors\n- Forensics: what is actually running on a\
-  \ node right now\n\n## Real Commands\n\n```bash\n# Inspect\ncrictl pods\ncrictl pods --state Ready\n\
-  crictl ps -a\ncrictl inspect 3e2d1c4a          # container details\ncrictl inspectp a9b8c7d6       \
-  \  # pod sandbox details\ncrictl images\ncrictl info                      # runtime + CRI version\n\n\
-  # Debug\ncrictl run --no-pull debug.json sandbox.json\ncrictl exec -it 3e2d1c4a sh\ncrictl logs --tail\
-  \ 200 3e2d1c4a\ncrictl stats\n\n# Cleanup\ncrictl rm -f <id>\ncrictl rmi --prune\ncrictl cleanup\n```\n\
-  \n## Debug Container Config\n\n```json\n{\n  \"metadata\": { \"name\": \"debug-container\" },\n  \"\
-  image\": { \"image\": \"busybox\" },\n  \"command\": [\"sh\", \"-c\", \"sleep 3600\"],\n  \"stdin\"\
-  : true\n}\n```\n\n## Best Practices\n\n- Set `--runtime-endpoint unix:///run/containerd/containerd.sock`\
-  \ on containerd nodes\n- Use `crictl inspect` output (JSON) with jq for scripting\n- Prefer `crictl\
-  \ logs --tail` over full logs in production\n- Use `crictl stats` to spot CPU/mem pressure before OOM-kill\
-  \ forensics\n\n## Capabilities\n\n### cri-inspection\nList, inspect, and describe pods and containers\
-  \ as seen by the container runtime.\n\n**Commands:**\n- `crictl ps`\n- `crictl pods`\n- `crictl inspect\
-  \ $(docker ps -q)`\n- `crictl inspectp demo-pod-id`\n- `crictl images`\n- `crictl info`\n\n**Examples:**\n\
-  - crictl ps -a\n- crictl inspect 3e2d1c4a\n- crictl pods --state Ready\n\n### debug-and-logs\nRun one-off\
-  \ debug containers, exec into running containers, and stream logs at runtime level.\n\n**Commands:**\n\
+instructions: "Debugs containers and pods at the CRI level with crictl: inspect sandboxes, run containers\
+  \ directly, and read container logs and stats.\n\n## Agentic Workflow: Read -> Reason -> Act (crictl)\n\
+  \nYou are **crictl** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — devops context for `crictl`\n- Domain: Debugs containers and pods at the CRI level with\
+  \ crictl: inspect sandboxes, run containers directly, and read container logs and stats.\n- **cri-inspection**:\
+  \ List, inspect, and describe pods and containers as seen by the container runtime. — `crictl ps`\n\
+  - **debug-and-logs**: Run one-off debug containers, exec into running containers, and stream logs at\
+  \ runtime level. — `crictl run --no-pull debug-container.json sandbox.json`\n- Check `knowledge` and\
+  \ `prerequisites: crictl`\n\n### 2. Reason — think for `crictl`\n- For `cri-inspection`: List, inspect,\
+  \ and describe pods and containers as seen by the container runtime. — decide which checks to run\n\
+  - For `debug-and-logs`: Run one-off debug containers, exec into running containers, and stream logs\
+  \ at runtime level. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `crictl` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Crictl` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `crictl:453f4608`\n\n# crictl CRI Debugging\n\nInspect containers\
+  \ and pods at the container-runtime-interface level, below kubectl.\n\n## What This Skill Does\n\n-\
+  \ Lists pods and containers the way containerd sees them\n- Inspects sandbox and container details (images,\
+  \ mounts, labels)\n- Execs and reads logs without relying on the API server\n- Runs one-off debug containers\
+  \ (e.g. busybox) inside the runtime\n- Pulls stats and prunes stale images/containers\n\n## When to\
+  \ Use\n\n- kubectl hangs or the API server is down but nodes run containers\n- Debugging container start\
+  \ failures, OOM kills, or runtime errors\n- Forensics: what is actually running on a node right now\n\
+  \n## Real Commands\n\n```bash\n# Inspect\ncrictl pods\ncrictl pods --state Ready\ncrictl ps -a\ncrictl\
+  \ inspect 3e2d1c4a          # container details\ncrictl inspectp a9b8c7d6         # pod sandbox details\n\
+  crictl images\ncrictl info                      # runtime + CRI version\n\n# Debug\ncrictl run --no-pull\
+  \ debug.json sandbox.json\ncrictl exec -it 3e2d1c4a sh\ncrictl logs --tail 200 3e2d1c4a\ncrictl stats\n\
+  \n# Cleanup\ncrictl rm -f <id>\ncrictl rmi --prune\ncrictl cleanup\n```\n\n## Debug Container Config\n\
+  \n```json\n{\n  \"metadata\": { \"name\": \"debug-container\" },\n  \"image\": { \"image\": \"busybox\"\
+  \ },\n  \"command\": [\"sh\", \"-c\", \"sleep 3600\"],\n  \"stdin\": true\n}\n```\n\n## Best Practices\n\
+  \n- Set `--runtime-endpoint unix:///run/containerd/containerd.sock` on containerd nodes\n- Use `crictl\
+  \ inspect` output (JSON) with jq for scripting\n- Prefer `crictl logs --tail` over full logs in production\n\
+  - Use `crictl stats` to spot CPU/mem pressure before OOM-kill forensics\n\n## Capabilities\n\n### cri-inspection\n\
+  List, inspect, and describe pods and containers as seen by the container runtime.\n\n**Parameters:**\n\
+  - `id` (string): Container or pod sandbox ID prefix\n- `state` (string): Filter by state: Running, Exited,\
+  \ Ready\n\n**Commands:**\n- `crictl ps`\n- `crictl pods`\n- `crictl inspect $(docker ps -q)`\n- `crictl\
+  \ inspectp demo-pod-id`\n- `crictl images`\n- `crictl info`\n\n**Examples:**\n- crictl ps -a\n- crictl\
+  \ inspect 3e2d1c4a\n- crictl pods --state Ready\n\n### debug-and-logs\nRun one-off debug containers,\
+  \ exec into running containers, and stream logs at runtime level.\n\n**Parameters:**\n- `container-id`\
+  \ (string): Container ID prefix\n- `tail` (integer): Number of log lines to show\n\n**Commands:**\n\
   - `crictl run --no-pull debug-container.json sandbox.json`\n- `crictl exec -it $(docker ps -q) sh`\n\
   - `crictl logs --tail 100 $(docker ps -q)`\n- `crictl stats`\n- `crictl rm $(docker ps -q)`\n- `crictl\
   \ rmi --prune`\n\n**Examples:**\n- crictl exec -it 3e2d1c4a sh\n- crictl logs --tail 200 3e2d1c4a\n\
-  - crictl stats"
+  - crictl stats\n\n## References\n- [crictl Reference (Kubernetes)](https://kubernetes.io/docs/reference/tools/mapcrictl/)\n\
+  - [crictl GitHub](https://github.com/kubernetes-sigs/cri-tools/blob/master/docs/crictl.md)"
 prompt: Act as crictl and handle the task per the instructions.

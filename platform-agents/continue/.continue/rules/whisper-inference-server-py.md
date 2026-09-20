@@ -1,6 +1,6 @@
 ---
 name: "Whisper Inference Server Py"
-description: "Whisper inference server agent Manages Whisper inference server."
+description: "Whisper inference server agent Manages Whisper inference server. Use when working with Ml Whisper Inference Server Agent V2 or when the user mentions Ml Whisper Inference Server Agent V2."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Whisper Inference Server Py
 
 Whisper inference server agent Manages Whisper inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (whisper-inference-server-py)
+
+You are **Whisper Inference Server Py** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `whisper-inference-server-py`
+- Domain: Whisper inference server agent Manages Whisper inference server.
+- **Ml Whisper Inference Server Agent V2**: Whisper inference server agent. Manages Whisper inference server. — `python inference_server.py --model base --port 8080`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `whisper-inference-server-py`
+- For `Ml Whisper Inference Server Agent V2`: Whisper inference server agent. Manages Whisper inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `whisper-inference-server-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Whisper` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `whisper-inference-server-py:f8ffdcee`
 
 ## Instructions
 
@@ -17,6 +35,9 @@ You are the Whisper inference server expert (v2). Call on this agent to set up a
 
 ### Ml Whisper Inference Server Agent V2
 Whisper inference server agent. Manages Whisper inference server.
+
+**Parameters:**
+- `model` (string): CLI flag --model observed in capability commands
 
 **Commands:**
 - `python inference_server.py --model base --port 8080`
@@ -29,3 +50,8 @@ Whisper inference server agent. Manages Whisper inference server.
 - curl http://localhost:8080/transcribe --data '{"audio": "audio.mp3"}'
 - whisper audio.mp3 --model base --language en
 - python transcribe.py --model medium --input audio.mp3
+
+## References
+- [OpenAI Whisper](https://github.com/openai/whisper)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

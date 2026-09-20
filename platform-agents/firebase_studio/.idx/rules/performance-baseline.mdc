@@ -1,14 +1,28 @@
 ---
-description: "Establish performance baselines: k6 load tests, thresholds, trend stats, and regression comparison."
+description: "Establish performance baselines: k6 load tests, thresholds, trend stats, and regression comparison. Use when working with k6 baseline testing, api or when the user mentions k6 baseline testing, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Performance Baseline
-
 Establish performance baselines: k6 load tests, thresholds, trend stats, and regression comparison.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (performance-baseline)
+
+You are **Performance Baseline** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `performance-baseline`
+- Domain: Establish performance baselines: k6 load tests, thresholds, trend stats, and regression comparison.
+- **k6-baseline-testing**: Write and run k6 load tests with thresholds, virtual users and summary statistics. — `k6 run --vus 50 --duration 30s script.js`
+- Check `knowledge` and `prerequisites: k6`
+
+### 2. Reason — think for `performance-baseline`
+- For `k6-baseline-testing`: Write and run k6 load tests with thresholds, virtual users and summary statistics. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `performance-baseline` tools
+- Tools: `Glob`, `Grep`, `Read`, `K6` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `performance-baseline:9e476997`
 
 # Performance Baselines
 
@@ -77,6 +91,11 @@ export default function () {
 ### k6-baseline-testing
 Write and run k6 load tests with thresholds, virtual users and summary statistics.
 
+**Parameters:**
+- `vus` (integer): Number of virtual users
+- `duration` (string): Test duration like 30s or 1m
+- `script` (string): Path to the k6 test script
+
 **Commands:**
 - `k6 run --vus 50 --duration 30s script.js`
 - `k6 inspect script.js`
@@ -88,3 +107,7 @@ Write and run k6 load tests with thresholds, virtual users and summary statistic
 - k6 run --vus 20 --duration 1m --summary-trend-stats='avg,p(90),p(95)' script.js
 - k6 inspect script.js
 - k6 run --out json=results.json --vus 100 --duration 2m script.js
+
+## References
+- [k6 Documentation](https://grafana.com/docs/k6/latest/)
+- [k6 Metrics Reference](https://grafana.com/docs/k6/latest/using-k6/metrics/)

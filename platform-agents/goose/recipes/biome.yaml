@@ -2,26 +2,40 @@ title: biome
 description: Formats and lints JavaScript/TypeScript with Biome, the fast Rust-based toolchain, including
   migrate from ESLint/Prettier.
 version: 2.0.0
-instructions: "# biome\n\nFormats and lints JavaScript/TypeScript with Biome, the fast Rust-based toolchain,\
-  \ including migrate from ESLint/Prettier.\n\n## Instructions\n\n# Biome\n\nFast JS/TS formatter and\
-  \ linter in one tool.\n\n## When to Use\n\n- Replacing ESLint + Prettier with a single fast tool\n-\
-  \ New projects wanting zero-config defaults\n- Large repos where lint speed matters\n- Enforcing consistent\
-  \ formatting in CI\n\n## Commands\n\n```bash\n# Init\nnpx @biomejs/biome init\n\n# Check (lint + format)\n\
-  npx @biomejs/biome check src/\nnpx @biomejs/biome check --write src/\n\n# Format only\nnpx @biomejs/biome\
-  \ format --write src/\n\n# Lint only\nnpx @biomejs/biome lint src/\n\n# Migrate from ESLint/Prettier\n\
-  npx @biomejs/biome migrate eslint --write\nnpx @biomejs/biome migrate prettier\n\n# Diagnostics\nnpx\
-  \ @biomejs/biome rage\n```\n\n## Config Example\n\n```json\n{\n  \"$schema\": \"./node_modules/@biomejs/biome/configuration_schema.json\"\
-  ,\n  \"formatter\": { \"indentStyle\": \"space\", \"indentWidth\": 2 },\n  \"linter\": {\n    \"rules\"\
-  : {\n      \"recommended\": true,\n      \"suspicious\": { \"noExplicitAny\": \"warn\" }\n    }\n  }\n\
-  }\n```\n\n## Best Practices\n\n- Use check --write in pre-commit, verify-only in CI\n- Keep the generated\
-  \ schema reference in biome.json\n- Run biome migrate when adopting from legacy configs\n- Scope rules\
-  \ per directory with overrides if needed\n- Treat lint errors as CI failures; use warns sparingly\n\
-  - Leverage --staged for fast pre-commit runs\n\n## Capabilities\n\n### biome-cli\nLint, format, and\
-  \ check code with Biome.\n\n**Commands:**\n- `npx @biomejs/biome init`\n- `npx @biomejs/biome check\
+instructions: "Formats and lints JavaScript/TypeScript with Biome, the fast Rust-based toolchain, including\
+  \ migrate from ESLint/Prettier.\n\n## Agentic Workflow: Read -> Reason -> Act (biome)\n\nYou are **biome**\
+  \ (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n###\
+  \ 1. Read — code-quality context for `biome`\n- Domain: Formats and lints JavaScript/TypeScript with\
+  \ Biome, the fast Rust-based toolchain, including migrate from ESLint/Prettier.\n- **biome-cli**: Lint,\
+  \ format, and check code with Biome. — `npx @biomejs/biome init`\n- **biome-migrate**: Migrate from\
+  \ ESLint and Prettier configs. — `npx @biomejs/biome migrate eslint`\n- Check `knowledge` and `prerequisites:\
+  \ npx`\n\n### 2. Reason — think for `biome`\n- For `biome-cli`: Lint, format, and check code with Biome.\
+  \ — decide which checks to run\n- For `biome-migrate`: Migrate from ESLint and Prettier configs. — decide\
+  \ which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\
+  \n### 3. Act — execute with `biome` tools\n- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `biome:b47df873`\n\
+  \n# Biome\n\nFast JS/TS formatter and linter in one tool.\n\n## When to Use\n\n- Replacing ESLint +\
+  \ Prettier with a single fast tool\n- New projects wanting zero-config defaults\n- Large repos where\
+  \ lint speed matters\n- Enforcing consistent formatting in CI\n\n## Commands\n\n```bash\n# Init\nnpx\
+  \ @biomejs/biome init\n\n# Check (lint + format)\nnpx @biomejs/biome check src/\nnpx @biomejs/biome\
+  \ check --write src/\n\n# Format only\nnpx @biomejs/biome format --write src/\n\n# Lint only\nnpx @biomejs/biome\
+  \ lint src/\n\n# Migrate from ESLint/Prettier\nnpx @biomejs/biome migrate eslint --write\nnpx @biomejs/biome\
+  \ migrate prettier\n\n# Diagnostics\nnpx @biomejs/biome rage\n```\n\n## Config Example\n\n```json\n\
+  {\n  \"$schema\": \"./node_modules/@biomejs/biome/configuration_schema.json\",\n  \"formatter\": { \"\
+  indentStyle\": \"space\", \"indentWidth\": 2 },\n  \"linter\": {\n    \"rules\": {\n      \"recommended\"\
+  : true,\n      \"suspicious\": { \"noExplicitAny\": \"warn\" }\n    }\n  }\n}\n```\n\n## Best Practices\n\
+  \n- Use check --write in pre-commit, verify-only in CI\n- Keep the generated schema reference in biome.json\n\
+  - Run biome migrate when adopting from legacy configs\n- Scope rules per directory with overrides if\
+  \ needed\n- Treat lint errors as CI failures; use warns sparingly\n- Leverage --staged for fast pre-commit\
+  \ runs\n\n## Capabilities\n\n### biome-cli\nLint, format, and check code with Biome.\n\n**Parameters:**\n\
+  - `paths` (string): Files or dirs to check\n- `write` (boolean): Apply fixes\n- `staged` (boolean):\
+  \ Check staged files only\n\n**Commands:**\n- `npx @biomejs/biome init`\n- `npx @biomejs/biome check\
   \ src/`\n- `npx @biomejs/biome check --write src/`\n- `npx @biomejs/biome format --write src/`\n- `npx\
   \ @biomejs/biome lint src/`\n\n**Examples:**\n- npx @biomejs/biome check --apply src/\n- npx @biomejs/biome\
   \ format --write --indent-style=space src/\n- npx @biomejs/biome check --staged\n\n### biome-migrate\n\
-  Migrate from ESLint and Prettier configs.\n\n**Commands:**\n- `npx @biomejs/biome migrate eslint`\n\
-  - `npx @biomejs/biome migrate prettier`\n- `npx @biomejs/biome migrate --write`\n- `npx @biomejs/biome\
-  \ rage`\n\n**Examples:**\n- npx @biomejs/biome migrate eslint --write\n- npx @biomejs/biome rage --config"
+  Migrate from ESLint and Prettier configs.\n\n**Parameters:**\n- `from` (string): eslint or prettier\n\
+  - `write` (boolean): Write the migrated config to disk\n\n**Commands:**\n- `npx @biomejs/biome migrate\
+  \ eslint`\n- `npx @biomejs/biome migrate prettier`\n- `npx @biomejs/biome migrate --write`\n- `npx @biomejs/biome\
+  \ rage`\n\n**Examples:**\n- npx @biomejs/biome migrate eslint --write\n- npx @biomejs/biome rage --config\n\
+  \n## References\n- [Biome Docs](https://biomejs.dev)\n- [Biome Migrate](https://biomejs.dev/recipes/migrate-eslint-prettier/)"
 prompt: Act as biome and handle the task per the instructions.

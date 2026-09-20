@@ -1,15 +1,29 @@
 ---
 name: "tide"
-description: "Automate pull request merges with Prow Tide's merge pools and the GitHub CLI. Configures label-based merge criteria, triages PR status with gh commands, monitors pool health in the cluster, and queues merges that execute automatically when checks pass and labels are present."
+description: "Automate pull request merges with Prow Tide's merge pools and the GitHub CLI. Configures label-based merge criteria, triages PR status with gh commands, monitors pool health in the cluster, and queues merges that execute automatically when checks pass and labels are present. Use when working with tide merge automation, api or when the user mentions tide merge automation, api."
 type: knowledge
 triggers: ["tide", "tide-merge-automation"]
 ---
 
-# Tide
-
 Automate pull request merges with Prow Tide's merge pools and the GitHub CLI. Configures label-based merge criteria, triages PR status with gh commands, monitors pool health in the cluster, and queues merges that execute automatically when checks pass and labels are present.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (tide)
+
+You are **Tide** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `tide`
+- Domain: Automate pull request merges with Prow Tide's merge pools and the GitHub CLI. Configures label-based merge criteria, triages PR status with gh commands, monitors pool health in the cluster, and queues
+- **tide-merge-automation**: Automate PR merges with Prow Tide and gh commands — `gh pr list --state open --status-failure`
+- Check `knowledge` and `prerequisites: kubectl`
+
+### 2. Reason — think for `tide`
+- For `tide-merge-automation`: Automate PR merges with Prow Tide and gh commands — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tide` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gh`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tide:e14d4c46`
 
 # Prow Tide
 
@@ -88,6 +102,11 @@ gh pr status
 ### tide-merge-automation
 Automate PR merges with Prow Tide and gh commands
 
+**Parameters:**
+- `pr_number` (integer): Pull request number
+- `merge_method` (string): squash, merge, or rebase
+- `branch` (string): Target branch for the merge pool
+
 **Commands:**
 - `gh pr list --state open --status-failure`
 - `gh pr checks 1234`
@@ -99,3 +118,7 @@ Automate PR merges with Prow Tide and gh commands
 - gh pr list --state open --status-failure
 - gh pr merge 1234 --squash --auto
 - gh pr status
+
+## References
+- [Prow Tide docs](https://docs.prow.k8s.io/docs/subprojects/tide/)
+- [gh CLI manual](https://cli.github.com/manual/)

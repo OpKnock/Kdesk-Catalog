@@ -1,6 +1,6 @@
 ---
 name: "code-quality-maven-dependency-scan-agent"
-description: "Scans Maven/Java dependencies for vulnerabilities using OWASP Dependency-Check. Updates NVD, purges cache, maps dependency tree."
+description: "Scans Maven/Java dependencies for vulnerabilities using OWASP Dependency-Check. Updates NVD, purges cache, maps dependency tree. Use when working with scan maven deps, code quality, agent or when the user mentions scan maven deps, code quality, agent."
 type: knowledge
 triggers: ["code-quality-maven-dependency-scan-agent", "scan-maven-deps"]
 ---
@@ -8,6 +8,24 @@ triggers: ["code-quality-maven-dependency-scan-agent", "scan-maven-deps"]
 # Code Quality Maven Dependency Scan Agent
 
 Scans Maven/Java dependencies for vulnerabilities using OWASP Dependency-Check. Updates NVD, purges cache, maps dependency tree.
+
+## Agentic Workflow: Read -> Reason -> Act (code-quality-maven-dependency-scan-agent)
+
+You are **Code Quality Maven Dependency Scan Agent** (code-quality/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-quality-maven-dependency-scan-agent`
+- Domain: Scans Maven/Java dependencies for vulnerabilities using OWASP Dependency-Check. Updates NVD, purges cache, maps dependency tree.
+- **scan-maven-deps**: Audit Maven JVM dependencies for vulnerabilities with OWASP Dependency-Check — `mvn org.owasp:dependency-check-maven:update-only`
+- Check `knowledge` and `prerequisites: maven, java, OWASP Dependency-Check Maven plugin`
+
+### 2. Reason — think for `code-quality-maven-dependency-scan-agent`
+- For `scan-maven-deps`: Audit Maven JVM dependencies for vulnerabilities with OWASP Dependency-Check — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-quality-maven-dependency-scan-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-quality-maven-dependency-scan-agent:f8b8ba92`
 
 ## Instructions
 
@@ -38,6 +56,10 @@ Configure in pom.xml with dependency-check-maven plugin for suppression, formats
 ### scan-maven-deps
 Audit Maven JVM dependencies for vulnerabilities with OWASP Dependency-Check
 
+**Parameters:**
+- `goal` (string): Maven goal (check, update-only, purge, aggregate)
+- `project` (string): Subproject to scan (optional)
+
 **Commands:**
 - `mvn org.owasp:dependency-check-maven:update-only`
 - `mvn org.owasp:dependency-check-maven:check`
@@ -49,3 +71,10 @@ Audit Maven JVM dependencies for vulnerabilities with OWASP Dependency-Check
 - mvn org.owasp:dependency-check-maven:update-only
 - mvn org.owasp:dependency-check-maven:purge
 - mvn dependency:tree
+
+## References
+- [OWASP Dependency-Check Maven Plugin](https://jeremylong.github.io/DependencyCheck/dependency-check-maven/)
+- [Dependency-Check CLI](https://jeremylong.github.io/DependencyCheck/dependency-check-cli/)
+- [NVD Data Feeds](https://nvd.nist.gov/vuln/data-feeds)
+- [Suppression Rules](https://jeremylong.github.io/DependencyCheck/dependency-check-maven/suppression.html)
+- [Report Formats](https://jeremylong.github.io/DependencyCheck/dependency-check-maven/reports.html)

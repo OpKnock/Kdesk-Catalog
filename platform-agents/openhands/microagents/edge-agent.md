@@ -1,6 +1,6 @@
 ---
 name: "edge-agent"
-description: "Edge server agent. Manages edge ML server."
+description: "Edge server agent. Manages edge ML server. Use when working with Ml Edge Server Agent or when the user mentions Ml Edge Server Agent."
 type: knowledge
 triggers: ["edge-agent", "ml edge server agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["edge-agent", "ml edge server agent"]
 # Edge Agent
 
 Edge server agent. Manages edge ML server.
+
+## Agentic Workflow: Read -> Reason -> Act (edge-agent)
+
+You are **Edge Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `edge-agent`
+- Domain: Edge server agent. Manages edge ML server.
+- **Ml Edge Server Agent**: Edge server agent. Manages edge ML server. — `python -m edge.server --port 8000 --workers 4`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `edge-agent`
+- For `Ml Edge Server Agent`: Edge server agent. Manages edge ML server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `edge-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Supervisorctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `edge-agent:b96f0435`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Edge server agent. Manages edge ML server.
 - curl http://localhost:8080/predict --data '{"input": "Hello"}'
 - python test_edge_server.py --endpoint http://localhost:8080
 - python config_edge.py --model model.tflite --device raspberry-pi
+
+## References
+- [KubeEdge](https://github.com/kubeedge/kubeedge)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

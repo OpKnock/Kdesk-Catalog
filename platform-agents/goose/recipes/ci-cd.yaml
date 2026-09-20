@@ -2,15 +2,27 @@ title: ci-cd
 description: Sets up and maintains CI/CD pipelines with GitHub Actions and GitLab CI, including workflow
   authoring, secrets handling, and run debugging.
 version: 2.0.0
-instructions: "# ci-cd\n\nSets up and maintains CI/CD pipelines with GitHub Actions and GitLab CI, including\
-  \ workflow authoring, secrets handling, and run debugging.\n\n## Instructions\n\n# CI/CD Pipeline Engineering\n\
-  \nDesign, author, and debug continuous integration and delivery pipelines for GitHub Actions and GitLab\
-  \ CI.\n\n## What This Skill Does\n\n- Writes valid `.github/workflows/*.yml` and `.gitlab-ci.yml` configs\n\
-  - Validates pipeline syntax locally before pushing\n- Debugs failing runs using the gh and glab CLIs\n\
-  - Manages environment secrets, caches, and artifact passing between jobs\n- Implements caching, matrix\
-  \ builds, and deployment gates\n\n## When to Use\n\n- A user asks to set up CI for a repository\n- A\
-  \ pipeline run fails and needs diagnosis\n- Adding deploy steps, artifact publishing, or test coverage\
-  \ gates\n\n## Real Commands\n\n```bash\n# Validate workflows before pushing (GitHub)\nactionlint .github/workflows/deploy.yml\n\
+instructions: "Sets up and maintains CI/CD pipelines with GitHub Actions and GitLab CI, including workflow\
+  \ authoring, secrets handling, and run debugging.\n\n## Agentic Workflow: Read -> Reason -> Act (ci-cd)\n\
+  \nYou are **ci-cd** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — devops context for `ci-cd`\n- Domain: Sets up and maintains CI/CD pipelines with GitHub\
+  \ Actions and GitLab CI, including workflow authoring, secrets handling, and run debugging.\n- **github-actions**:\
+  \ Create, trigger, and inspect GitHub Actions workflows via the gh CLI and YAML configs. — `gh workflow\
+  \ list`\n- **gitlab-ci**: Manage GitLab CI pipelines, runners, and pipeline schedules. — `glab ci status`\n\
+  - Check `knowledge` and `prerequisites: actionlint, glab`\n\n### 2. Reason — think for `ci-cd`\n- For\
+  \ `github-actions`: Create, trigger, and inspect GitHub Actions workflows via the gh CLI and YAML configs.\
+  \ — decide which checks to run\n- For `gitlab-ci`: Manage GitLab CI pipelines, runners, and pipeline\
+  \ schedules. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `ci-cd` tools\n- Tools: `Glob`, `Grep`, `Read`, `Gh`,\
+  \ `Actionlint` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `ci-cd:b61f572f`\n\n# CI/CD Pipeline Engineering\n\nDesign, author,\
+  \ and debug continuous integration and delivery pipelines for GitHub Actions and GitLab CI.\n\n## What\
+  \ This Skill Does\n\n- Writes valid `.github/workflows/*.yml` and `.gitlab-ci.yml` configs\n- Validates\
+  \ pipeline syntax locally before pushing\n- Debugs failing runs using the gh and glab CLIs\n- Manages\
+  \ environment secrets, caches, and artifact passing between jobs\n- Implements caching, matrix builds,\
+  \ and deployment gates\n\n## When to Use\n\n- A user asks to set up CI for a repository\n- A pipeline\
+  \ run fails and needs diagnosis\n- Adding deploy steps, artifact publishing, or test coverage gates\n\
+  \n## Real Commands\n\n```bash\n# Validate workflows before pushing (GitHub)\nactionlint .github/workflows/deploy.yml\n\
   actionlint -shellcheck= /usr/bin/shellcheck -pyflakes= /usr/bin/pyflakes .github/workflows/*.yml\n\n\
   # Trigger and watch runs (GitHub)\ngh workflow run deploy.yml -f environment=staging --ref main\ngh\
   \ run list --workflow=deploy.yml --limit 5\ngh run watch 4473148674\ngh run view 4473148674 --log-failed\n\
@@ -26,12 +38,17 @@ instructions: "# ci-cd\n\nSets up and maintains CI/CD pipelines with GitHub Acti
   - Cache package managers (npm, pip, maven) with `cache` inputs\n- Put long-lived credentials in repository\
   \ secrets, never in workflow YAML\n- Fail fast: keep each job under ~10 minutes and parallelize with\
   \ matrix\n\n## Capabilities\n\n### github-actions\nCreate, trigger, and inspect GitHub Actions workflows\
-  \ via the gh CLI and YAML configs.\n\n**Commands:**\n- `gh workflow list`\n- `gh workflow run deploy.yml\
-  \ -f environment=staging`\n- `gh run list --limit 10`\n- `gh run watch 1234567890`\n- `gh run view 1234567890\
-  \ --log-failed`\n- `actionlint .github/workflows/deploy.yml`\n\n**Examples:**\n- gh workflow run release.yml\
-  \ -f version=1.2.3\n- gh run view 4473148674 --log-failed\n- actionlint .github/workflows/*.yml\n\n\
-  ### gitlab-ci\nManage GitLab CI pipelines, runners, and pipeline schedules.\n\n**Commands:**\n- `glab\
-  \ ci status`\n- `glab ci lint .gitlab-ci.yml`\n- `glab pipeline run`\n- `glab ci trace 1234567`\n- `glab\
-  \ runner list`\n- `glab ci retry 1234567`\n\n**Examples:**\n- glab ci lint .gitlab-ci.yml\n- glab pipeline\
-  \ run -b main\n- glab ci trace 2846210"
+  \ via the gh CLI and YAML configs.\n\n**Parameters:**\n- `workflow` (string): Workflow file name or\
+  \ ID to run, e.g. deploy.yml\n- `run-id` (string): Workflow run ID for inspection (gh run view)\n- `inputs`\
+  \ (object): Key-value inputs passed with -f, e.g. environment=staging\n\n**Commands:**\n- `gh workflow\
+  \ list`\n- `gh workflow run deploy.yml -f environment=staging`\n- `gh run list --limit 10`\n- `gh run\
+  \ watch 1234567890`\n- `gh run view 1234567890 --log-failed`\n- `actionlint .github/workflows/deploy.yml`\n\
+  \n**Examples:**\n- gh workflow run release.yml -f version=1.2.3\n- gh run view 4473148674 --log-failed\n\
+  - actionlint .github/workflows/*.yml\n\n### gitlab-ci\nManage GitLab CI pipelines, runners, and pipeline\
+  \ schedules.\n\n**Parameters:**\n- `pipeline-id` (string): Pipeline ID to trace, retry, or inspect\n\
+  - `branch` (string): Branch to run the pipeline on\n\n**Commands:**\n- `glab ci status`\n- `glab ci\
+  \ lint .gitlab-ci.yml`\n- `glab pipeline run`\n- `glab ci trace 1234567`\n- `glab runner list`\n- `glab\
+  \ ci retry 1234567`\n\n**Examples:**\n- glab ci lint .gitlab-ci.yml\n- glab pipeline run -b main\n-\
+  \ glab ci trace 2846210\n\n## References\n- [GitHub Actions Documentation](https://docs.github.com/en/actions)\n\
+  - [GitLab CI/CD Documentation](https://docs.gitlab.com/ci/)\n- [actionlint](https://github.com/rhysd/actionlint)"
 prompt: Act as ci-cd and handle the task per the instructions.

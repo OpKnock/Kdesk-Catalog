@@ -1,8 +1,26 @@
-# team-management
-
 Manages GitHub-based team workflows with gh CLI: issues, PRs, reviews, releases, and contribution metrics.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (team-management)
+
+You are **team-management** (management) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — management context for `team-management`
+- Domain: Manages GitHub-based team workflows with gh CLI: issues, PRs, reviews, releases, and contribution metrics.
+- **pr-management**: List, review, merge, and manage pull requests. — `gh pr list --state open`
+- **issue-and-project**: Manage issues, labels, and project boards. — `gh issue create --title 'Fix login bug' --body 'details'`
+- **releases-and-team**: Create releases and inspect team activity. — `gh release create v1.2.3 --generate-notes`
+- Check `knowledge` and `prerequisites: greenhouse, lever, lattic, 15five`
+
+### 2. Reason — think for `team-management`
+- For `pr-management`: List, review, merge, and manage pull requests. — decide which checks to run
+- For `issue-and-project`: Manage issues, labels, and project boards. — decide which checks to run
+- For `releases-and-team`: Create releases and inspect team activity. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `team-management` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `team-management:0eb5ad33`
 
 # Team Management
 
@@ -70,6 +88,10 @@ gh release create $(git describe --tags) --generate-notes
 ### pr-management
 List, review, merge, and manage pull requests.
 
+**Parameters:**
+- `prNumber` (number): Pull request number
+- `state` (string): PR state filter: open, closed, merged
+
 **Commands:**
 - `gh pr list --state open`
 - `gh pr view 123`
@@ -86,6 +108,10 @@ List, review, merge, and manage pull requests.
 ### issue-and-project
 Manage issues, labels, and project boards.
 
+**Parameters:**
+- `issueNumber` (number): Issue number
+- `label` (string): Label filter or name
+
 **Commands:**
 - `gh issue create --title 'Fix login bug' --body 'details'`
 - `gh issue list --label bug --assignee @me`
@@ -101,6 +127,10 @@ Manage issues, labels, and project boards.
 ### releases-and-team
 Create releases and inspect team activity.
 
+**Parameters:**
+- `tag` (string): Release tag name
+- `target` (string): Target branch for the release
+
 **Commands:**
 - `gh release create v1.2.3 --generate-notes`
 - `gh release create v1.2.3 --target main --notes 'Release notes'`
@@ -111,3 +141,7 @@ Create releases and inspect team activity.
 - gh release create v1.2.3 --generate-notes
 - gh api orgs/ORG/teams/TEAM/members --jq '.[].login'
 - gh release view v1.2.3
+
+## References
+- [GitHub CLI Documentation](https://cli.github.com/manual/)
+- [GitHub REST API](https://docs.github.com/en/rest)

@@ -1,15 +1,31 @@
 ---
 name: "tooling"
-description: "Standardizes everyday infra developer tooling: jq/yq data processing, Docker Compose workflows, and task runners."
+description: "Standardizes everyday infra developer tooling: jq/yq data processing, Docker Compose workflows, and task runners. Use when working with data tools, compose, infrastructure or when the user mentions data tools, compose, infrastructure."
 type: knowledge
 triggers: ["tooling", "data-tools", "compose"]
 ---
 
-# Tooling
-
 Standardizes everyday infra developer tooling: jq/yq data processing, Docker Compose workflows, and task runners.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (tooling)
+
+You are **Tooling** (infrastructure/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `tooling`
+- Domain: Standardizes everyday infra developer tooling: jq/yq data processing, Docker Compose workflows, and task runners.
+- **data-tools**: Process JSON and YAML with jq and yq. — `jq '.name, .version' package.json`
+- **compose**: Manage local dev environments with Docker Compose. — `docker compose up -d`
+- Check `knowledge` and `prerequisites: docker`
+
+### 2. Reason — think for `tooling`
+- For `data-tools`: Process JSON and YAML with jq and yq. — decide which checks to run
+- For `compose`: Manage local dev environments with Docker Compose. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `tooling` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tooling:2f5f1860`
 
 # Infrastructure Tooling
 
@@ -86,6 +102,11 @@ Validate JSON/YAML in CI before scripts consume them.
 ### data-tools
 Process JSON and YAML with jq and yq.
 
+**Parameters:**
+- `filter` (string): jq/yq filter expression
+- `input` (string): Input JSON/YAML file
+- `output` (string): Output transformation like @csv, @tsv
+
 **Commands:**
 - `jq '.name, .version' package.json`
 - `jq -r '.items[] | select(.status=="running") | .id' instances.json`
@@ -101,6 +122,11 @@ Process JSON and YAML with jq and yq.
 ### compose
 Manage local dev environments with Docker Compose.
 
+**Parameters:**
+- `service` (string): Compose service name
+- `detach` (string): Run in background with -d
+- `follow` (string): Follow logs with -f
+
 **Commands:**
 - `docker compose up -d`
 - `docker compose ps`
@@ -112,3 +138,8 @@ Manage local dev environments with Docker Compose.
 - docker compose up -d --build
 - docker compose logs --tail=50 api
 - docker compose run --rm migrate
+
+## References
+- [jq Manual](https://jqlang.github.io/jq/manual/)
+- [yq Docs](https://mikefarah.gitbook.io/yq)
+- [Docker Compose](https://docs.docker.com/compose/)

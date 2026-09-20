@@ -6,27 +6,23 @@ globs: ["**/*.r", "**/*.sh"]
 
 Store and manage secrets in GCP Secret Manager: create and version secrets, access values, and grant access via IAM.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (gcp-secret-manager)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Gcp Secret Manager** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `printf 'postgres://app:pass@db:5432/app' | gcloud secrets ve`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `gcp-secret-manager`
+- Domain: Store and manage secrets in GCP Secret Manager: create and version secrets, access values, and grant access via IAM.
+- **secret-manager**: Create, access, version, and delete secrets with gcloud. — `printf 'postgres://app:pass@db:5432/app' | gcloud secrets versions add db-url --`
+- Check `knowledge` and `prerequisites: gcloud, printf`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `gcp-secret-manager`
+- For `secret-manager`: Create, access, version, and delete secrets with gcloud. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `gcp-secret-manager` tools
+- Tools: `Glob`, `Grep`, `Read`, `Printf`, `Gcloud` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gcp-secret-manager:5ce12b35`
 
 # GCP Secret Manager
 

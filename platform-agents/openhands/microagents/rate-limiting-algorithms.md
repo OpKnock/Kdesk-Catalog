@@ -1,15 +1,29 @@
 ---
 name: "rate-limiting-algorithms"
-description: "Rate limiting algorithms: token bucket, leaky bucket, fixed window, sliding window \u2014 implementation and tuning."
+description: "Rate limiting algorithms: token bucket, leaky bucket, fixed window, sliding window \u2014 implementation and tuning. Use when working with rate limit algorithms, api or when the user mentions rate limit algorithms, api."
 type: knowledge
 triggers: ["rate-limiting-algorithms", "rate-limit-algorithms"]
 ---
 
-# Rate Limiting Algorithms
-
 Rate limiting algorithms: token bucket, leaky bucket, fixed window, sliding window — implementation and tuning.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rate-limiting-algorithms)
+
+You are **Rate Limiting Algorithms** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `rate-limiting-algorithms`
+- Domain: Rate limiting algorithms: token bucket, leaky bucket, fixed window, sliding window — implementation and tuning.
+- **rate-limit-algorithms**: Implement token bucket and sliding window algorithms, and configure nginx burst handling. — `redis-cli --eval token_bucket.lua mykey, , 10 1 5`
+- Check `knowledge` and `prerequisites: nginx, redis-cli`
+
+### 2. Reason — think for `rate-limiting-algorithms`
+- For `rate-limit-algorithms`: Implement token bucket and sliding window algorithms, and configure nginx burst handling. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rate-limiting-algorithms` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`, `Nginx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rate-limiting-algorithms:f147e1ec`
 
 # Rate Limiting Algorithms
 
@@ -76,6 +90,11 @@ local tokens = tonumber(redis.call('GET', key..':n') or burst)
 ### rate-limit-algorithms
 Implement token bucket and sliding window algorithms, and configure nginx burst handling.
 
+**Parameters:**
+- `rate` (integer): Token refill rate per second
+- `burst` (integer): Bucket capacity
+- `key` (string): Rate limit key
+
 **Commands:**
 - `redis-cli --eval token_bucket.lua mykey, , 10 1 5`
 - `redis-cli EVALSHA $(redis-cli SCRIPT LOAD "$(cat token_bucket.lua)") 1 mykey 10 1 5`
@@ -87,3 +106,7 @@ Implement token bucket and sliding window algorithms, and configure nginx burst 
 - redis-cli --eval token_bucket.lua user:7 , 10 1 5
 - ab -n 200 -c 20 http://localhost:8080/api
 - curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/api
+
+## References
+- [nginx limit_req module](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html)
+- [Rate limiting algorithms overview](https://konghq.com/blog/how-to-design-a-scalable-rate-limiting-algorithm)

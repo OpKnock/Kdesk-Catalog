@@ -1,6 +1,6 @@
 ---
 name: "fireworks-deployment"
-description: "Fireworks SDK deployment agent for ML Fireworks SDK deployment."
+description: "Fireworks SDK deployment agent for ML Fireworks SDK deployment. Use when working with Ml Fireworks Deploy Sdk, deployment or when the user mentions Ml Fireworks Deploy Sdk, deployment."
 type: knowledge
 triggers: ["fireworks-deployment", "ml fireworks deploy sdk"]
 ---
@@ -8,6 +8,24 @@ triggers: ["fireworks-deployment", "ml fireworks deploy sdk"]
 # Fireworks Deployment
 
 Fireworks SDK deployment agent for ML Fireworks SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (fireworks-deployment)
+
+You are **Fireworks Deployment** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `fireworks-deployment`
+- Domain: Fireworks SDK deployment agent for ML Fireworks SDK deployment.
+- **Ml Fireworks Deploy Sdk**: Fireworks SDK deployment agent for ML Fireworks SDK deployment. — `docker build -t fireworks:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `fireworks-deployment`
+- For `Ml Fireworks Deploy Sdk`: Fireworks SDK deployment agent for ML Fireworks SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `fireworks-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Fireworks` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fireworks-deployment:0bd713bc`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Fireworks SDK deployment agent for ML Fireworks SDK deployment.
 **Examples:**
 - Server: python -m fireworks.server --port 8080
 - Docker: docker run -p 8080:8080 fireworks-server
+
+## References
+- [Fireworks AI Documentation](https://docs.fireworks.ai/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

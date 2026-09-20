@@ -1,15 +1,31 @@
 ---
 name: "k9s"
-description: "Navigates Kubernetes clusters with the k9s terminal UI: pod inspection, log streaming, resource editing, and context switching."
+description: "Navigates Kubernetes clusters with the k9s terminal UI: pod inspection, log streaming, resource editing, and context switching. Use when working with terminal ui navigation, live observability, devops or when the user mentions terminal ui navigation, live observability, devops."
 globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# k9s
-
 Navigates Kubernetes clusters with the k9s terminal UI: pod inspection, log streaming, resource editing, and context switching.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (k9s)
+
+You are **k9s** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `k9s`
+- Domain: Navigates Kubernetes clusters with the k9s terminal UI: pod inspection, log streaming, resource editing, and context switching.
+- **terminal-ui-navigation**: Launch k9s scoped to namespaces, resources, or contexts, and use hotkeys for views. — `k9s`
+- **live-observability**: Stream logs, exec shells, and drill into resource details from the UI (keybindings). — `k9s --logoless`
+- Check `knowledge` and `prerequisites: k9s`
+
+### 2. Reason — think for `k9s`
+- For `terminal-ui-navigation`: Launch k9s scoped to namespaces, resources, or contexts, and use hotkeys for views. — decide which checks to run
+- For `live-observability`: Stream logs, exec shells, and drill into resource details from the UI (keybindings). — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `k9s` tools
+- Tools: `Glob`, `Grep`, `Read`, `K9s` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `k9s:9b1308f3`
 
 # k9s Terminal UI
 
@@ -64,6 +80,11 @@ k9s --kubeconfig ~/.kube/config2
 ### terminal-ui-navigation
 Launch k9s scoped to namespaces, resources, or contexts, and use hotkeys for views.
 
+**Parameters:**
+- `namespace` (string): Namespace to scope to
+- `context` (string): Kubeconfig context
+- `resource` (string): Initial resource view, e.g. deployments
+
 **Commands:**
 - `k9s`
 - `k9s -n production`
@@ -80,6 +101,10 @@ Launch k9s scoped to namespaces, resources, or contexts, and use hotkeys for vie
 ### live-observability
 Stream logs, exec shells, and drill into resource details from the UI (keybindings).
 
+**Parameters:**
+- `command` (string): Initial view command like deploy/web
+- `kubeconfig` (string): Alternate kubeconfig path
+
 **Commands:**
 - `k9s --logoless`
 - `k9s --readonly`
@@ -91,3 +116,7 @@ Stream logs, exec shells, and drill into resource details from the UI (keybindin
 - k9s --readonly
 - k9s --command deploy/web
 - k9s --plugins myplugin.yaml
+
+## References
+- [k9s CLI Documentation](https://k9scli.io/)
+- [k9s GitHub](https://github.com/derailed/k9s)

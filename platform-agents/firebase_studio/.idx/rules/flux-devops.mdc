@@ -1,14 +1,30 @@
 ---
-description: "Implements GitOps with Flux CD: bootstrap clusters from git, manage Kustomizations and HelmReleases, and reconcile on demand."
+description: "Implements GitOps with Flux CD: bootstrap clusters from git, manage Kustomizations and HelmReleases, and reconcile on demand. Use when working with flux bootstrap, kustomizations and helm, devops or when the user mentions flux bootstrap, kustomizations and helm, devops."
 globs: ["**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# flux-devops
-
 Implements GitOps with Flux CD: bootstrap clusters from git, manage Kustomizations and HelmReleases, and reconcile on demand.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (flux-devops)
+
+You are **flux-devops** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `flux-devops`
+- Domain: Implements GitOps with Flux CD: bootstrap clusters from git, manage Kustomizations and HelmReleases, and reconcile on demand.
+- **flux-bootstrap**: Bootstrap Flux into a cluster and create Git sources for repositories. — `flux check --pre`
+- **kustomizations-and-helm**: Define Kustomizations and HelmReleases, and trigger reconciliations. — `flux create kustomization apps --source=GitRepository/app --path=./apps --prune=`
+- Check `knowledge` and `prerequisites: flux`
+
+### 2. Reason — think for `flux-devops`
+- For `flux-bootstrap`: Bootstrap Flux into a cluster and create Git sources for repositories. — decide which checks to run
+- For `kustomizations-and-helm`: Define Kustomizations and HelmReleases, and trigger reconciliations. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `flux-devops` tools
+- Tools: `Glob`, `Grep`, `Read`, `Flux` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `flux-devops:69bd50fa`
 
 # Flux CD GitOps
 
@@ -66,6 +82,11 @@ kubectl get kustomization apps -o yaml | yq .status
 ### flux-bootstrap
 Bootstrap Flux into a cluster and create Git sources for repositories.
 
+**Parameters:**
+- `owner` (string): GitHub org/user for bootstrap
+- `repository` (string): Git repository name
+- `path` (string): Cluster config path in the repo
+
 **Commands:**
 - `flux check --pre`
 - `flux bootstrap github --owner=myorg --repository=fleet --branch=main --path=./clusters/prod`
@@ -81,6 +102,11 @@ Bootstrap Flux into a cluster and create Git sources for repositories.
 ### kustomizations-and-helm
 Define Kustomizations and HelmReleases, and trigger reconciliations.
 
+**Parameters:**
+- `name` (string): Resource name
+- `path` (string): Path in git repo to watch
+- `interval` (string): Reconciliation interval, e.g. 5m
+
 **Commands:**
 - `flux create kustomization apps --source=GitRepository/app --path=./apps --prune=true --interval=5m`
 - `flux create helmrelease nginx --source=HelmRepository/bitnami --chart=nginx --target-namespace=web`
@@ -93,3 +119,8 @@ Define Kustomizations and HelmReleases, and trigger reconciliations.
 - flux create kustomization apps --source=GitRepository/app --path=./apps --prune=true
 - flux reconcile kustomization apps
 - flux get helmreleases -A
+
+## References
+- [Flux Documentation](https://fluxcd.io/flux/)
+- [Flux CLI Reference](https://fluxcd.io/flux/cmd/)
+- [Flux GitHub Provider](https://fluxcd.io/flux/installation/)

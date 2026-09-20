@@ -1,14 +1,30 @@
 ---
-description: "Deploys the OpenTelemetry stack: collector pipelines, trace generation, and metrics/logs/traces correlation."
+description: "Deploys the OpenTelemetry stack: collector pipelines, trace generation, and metrics/logs/traces correlation. Use when working with collector, tracegen or when the user mentions collector, tracegen."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# observability-stack-engineer
-
 Deploys the OpenTelemetry stack: collector pipelines, trace generation, and metrics/logs/traces correlation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (observability-stack-engineer)
+
+You are **observability-stack-engineer** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `observability-stack-engineer`
+- Domain: Deploys the OpenTelemetry stack: collector pipelines, trace generation, and metrics/logs/traces correlation.
+- **collector**: Run and validate OpenTelemetry collectors. — `otelcol --config otel.yaml`
+- **tracegen**: Generate load and verify the pipeline. — `tracegen -service checkout -trace 100 -duration 30s -otlp-endpoint localhost:431`
+- Check `knowledge` and `prerequisites: prometheus, grafana, opentelemetry-collector, jaeger`
+
+### 2. Reason — think for `observability-stack-engineer`
+- For `collector`: Run and validate OpenTelemetry collectors. — decide which checks to run
+- For `tracegen`: Generate load and verify the pipeline. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `observability-stack-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Otelcol`, `Otelcol-contrib` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `observability-stack-engineer:dc8d3984`
 
 # Observability Stack
 
@@ -95,6 +111,11 @@ Traces must appear in Tempo within seconds.
 ### collector
 Run and validate OpenTelemetry collectors.
 
+**Parameters:**
+- `config` (string): Collector config file
+- `validate` (string): Validate config and exit
+- `metrics-port` (number): Collector self-metrics port
+
 **Commands:**
 - `otelcol --config otel.yaml`
 - `otelcol --config otel.yaml --validate`
@@ -110,6 +131,11 @@ Run and validate OpenTelemetry collectors.
 ### tracegen
 Generate load and verify the pipeline.
 
+**Parameters:**
+- `service` (string): Service name for generated traces
+- `trace` (number): Traces per second
+- `duration` (string): Generation duration
+
 **Commands:**
 - `tracegen -service checkout -trace 100 -duration 30s -otlp-endpoint localhost:4317`
 - `tracegen -service checkout -trace 100 -duration 30s`
@@ -121,3 +147,8 @@ Generate load and verify the pipeline.
 - tracegen -service checkout -trace 50 -duration 15s -otlp-attributes service.version=3.2.0
 - otel-cli exec --service demo -- sleep 1
 - curl -G -s 'http://localhost:3200/api/search' --data-urlencode 'tags=service.name=demo' --data-urlencode 'limit=5' | jq '.traces | length'
+
+## References
+- [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
+- [otel-cli](https://github.com/equinix-labs/otel-cli)
+- [tracegen](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/cmd/tracegen)

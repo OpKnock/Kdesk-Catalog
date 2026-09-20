@@ -1,8 +1,22 @@
-# Metrics Cardinality
-
 Diagnose and fix high-cardinality metric problems in Prometheus: find exploding label values, top series, and identify offending scrape targets.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (metrics-cardinality)
+
+You are **Metrics Cardinality** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `metrics-cardinality`
+- Domain: Diagnose and fix high-cardinality metric problems in Prometheus: find exploding label values, top series, and identify offending scrape targets.
+- **cardinality-diagnosis**: Analyze a Prometheus TSDB to find high-cardinality series, top label combinations, and memory-heavy  — `promtool tsdb analyze --help`
+- Check `knowledge` and `prerequisites: promtool`
+
+### 2. Reason — think for `metrics-cardinality`
+- For `cardinality-diagnosis`: Analyze a Prometheus TSDB to find high-cardinality series, top label combinations, and memory-heavy metrics. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `metrics-cardinality` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `metrics-cardinality:0c23edda`
 
 # Metrics Cardinality
 
@@ -61,6 +75,11 @@ metric_relabel_configs:
 ### cardinality-diagnosis
 Analyze a Prometheus TSDB to find high-cardinality series, top label combinations, and memory-heavy metrics.
 
+**Parameters:**
+- `db_path` (string): Path to the Prometheus TSDB directory
+- `match` (string): Label matcher used to filter series
+- `topk` (integer): Number of highest-cardinality metrics to return
+
 **Commands:**
 - `promtool tsdb analyze --help`
 - `promtool tsdb analyze /var/lib/prometheus/metrics2/`
@@ -72,3 +91,7 @@ Analyze a Prometheus TSDB to find high-cardinality series, top label combination
 - promtool tsdb analyze /var/lib/prometheus/metrics2/
 - curl -g 'http://localhost:9090/api/v1/query?query=topk(10,count%20by%20(__name__)({__name__=~".+"}))'
 - promtool tsdb series --match 'http_requests_total{status=~".*"}' /var/lib/prometheus/metrics2/
+
+## References
+- [Prometheus Cardinality Best Practices](https://prometheus.io/docs/practices/instrumentation/)
+- [promtool TSDB docs](https://prometheus.io/docs/prometheus/latest/command-line/promtool/)

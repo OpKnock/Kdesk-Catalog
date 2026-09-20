@@ -1,15 +1,33 @@
 ---
 name: "burn-rate-alerts"
-description: "Designs SLO burn-rate alerts: multi-window burn rates, Prometheus rules, SLO windows, and alert fatigue control."
+description: "Designs SLO burn-rate alerts: multi-window burn rates, Prometheus rules, SLO windows, and alert fatigue control. Use when working with slo calculation, multi window rules, budget ops, api or when the user mentions slo calculation, multi window rules, budget ops, api."
 type: knowledge
 triggers: ["burn-rate-alerts", "slo-calculation", "multi-window-rules", "budget-ops"]
 ---
 
-# Burn Rate Alerts
-
 Designs SLO burn-rate alerts: multi-window burn rates, Prometheus rules, SLO windows, and alert fatigue control.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (burn-rate-alerts)
+
+You are **Burn Rate Alerts** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `burn-rate-alerts`
+- Domain: Designs SLO burn-rate alerts: multi-window burn rates, Prometheus rules, SLO windows, and alert fatigue control.
+- **slo-calculation**: Compute error budget and burn rates. — `promtool query instant 'sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(`
+- **multi-window-rules**: Author multi-window, multi-burn-rate alert rules. — `promtool check rules burn-rate.yml`
+- **budget-ops**: Track error budget consumption. — `curl -s 'http://localhost:9090/api/v1/query?query=(1%20-%20sum(rate(http_request`
+- Check `knowledge` and `prerequisites: amtool, promtool, python`
+
+### 2. Reason — think for `burn-rate-alerts`
+- For `slo-calculation`: Compute error budget and burn rates. — decide which checks to run
+- For `multi-window-rules`: Author multi-window, multi-burn-rate alert rules. — decide which checks to run
+- For `budget-ops`: Track error budget consumption. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `burn-rate-alerts` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Amtool` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `burn-rate-alerts:f35bea49`
 
 # Burn-Rate Alerts
 
@@ -62,6 +80,10 @@ promtool test rules burn-rate-test.yml
 ### slo-calculation
 Compute error budget and burn rates.
 
+**Parameters:**
+- `window` (string): Evaluation window (5m, 1h, 1d)
+- `status_regex` (string): Status class regex
+
 **Commands:**
 - `promtool query instant 'sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))'`
 - `promtool query instant '1 - (sum(rate(http_requests_total{status=~"2.."}[1h])) / sum(rate(http_requests_total[1h])))'`
@@ -75,6 +97,10 @@ Compute error budget and burn rates.
 
 ### multi-window-rules
 Author multi-window, multi-burn-rate alert rules.
+
+**Parameters:**
+- `rules_file` (string): Burn-rate rule file
+- `test_file` (string): Rule unit test file
 
 **Commands:**
 - `promtool check rules burn-rate.yml`
@@ -90,6 +116,10 @@ Author multi-window, multi-burn-rate alert rules.
 ### budget-ops
 Track error budget consumption.
 
+**Parameters:**
+- `slo_target` (number): SLO target, e.g. 0.99
+- `window` (string): Budget window (30d, 7d)
+
 **Commands:**
 - `curl -s 'http://localhost:9090/api/v1/query?query=(1%20-%20sum(rate(http_requests_total%7Bstatus%3D~%222..%22%7D%5B30d%5D))%20/%20sum(rate(http_requests_total%5B30d%5D)))' | jq '.data.result[0].value[1]'`
 - `promtool query instant 'error_rate_30d gt 0.01'`
@@ -99,3 +129,8 @@ Track error budget consumption.
 - curl -s 'http://localhost:9090/api/v1/query?query=(1%20-%20sum(rate(http_requests_total%7Bstatus%3D~%222..%22%7D%5B30d%5D))%20/%20sum(rate(http_requests_total%5B30d%5D)))' | jq -r '.data.result[0].value[1]'
 - promtool query instant 'error_budget_remaining = 1 - (1 - availability30d) / (1 - 0.99)'
 - curl -s 'http://localhost:9090/api/v1/query?query=sum(rate(http_requests_total%7Bstatus%3D~%225..%22%7D%5B30d%5D))%20/%20sum(rate(http_requests_total%5B30d%5D))' | jq .
+
+## References
+- [SRE Workbook: Alerting on SLOs](https://sre.google/workbook/alerting-on-slos/)
+- [Prometheus Alerting](https://prometheus.io/docs/alerting/latest/overview/)
+- [Site Reliability Engineering](https://sre.google/sre-book/service-level-objectives/)

@@ -1,6 +1,6 @@
 ---
 name: "database-elasticsearch"
-description: "Elasticsearch agent for search and analytics engine."
+description: "Elasticsearch agent for search and analytics engine. Use when working with Database Elasticsearch or when the user mentions Database Elasticsearch."
 type: knowledge
 triggers: ["database-elasticsearch", "database elasticsearch"]
 ---
@@ -8,6 +8,24 @@ triggers: ["database-elasticsearch", "database elasticsearch"]
 # Database Elasticsearch
 
 Elasticsearch agent for search and analytics engine.
+
+## Agentic Workflow: Read -> Reason -> Act (database-elasticsearch)
+
+You are **Database Elasticsearch** (database/vector-db) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — database context for `database-elasticsearch`
+- Domain: Elasticsearch agent for search and analytics engine.
+- **Database Elasticsearch**: Elasticsearch agent for search and analytics engine. — `Search: curl http://localhost:9200/myindex/_search`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `database-elasticsearch`
+- For `Database Elasticsearch`: Elasticsearch agent for search and analytics engine. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `database-elasticsearch` tools
+- Tools: `Glob`, `Grep`, `Read`, `Search`, `Mapping` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `database-elasticsearch:6d19da63`
 
 ## Instructions
 
@@ -38,3 +56,7 @@ Elasticsearch agent for search and analytics engine.
 - Indices: curl http://localhost:9200/_cat/indices?v
 - Search: curl http://localhost:9200/myindex/_search
 - Mapping: curl http://localhost:9200/myindex/_mapping
+
+## References
+- [Elasticsearch Guide](https://www.elastic.co/guide/en/elasticsearch/reference/current/)
+- [curl Documentation](https://curl.se/docs/)

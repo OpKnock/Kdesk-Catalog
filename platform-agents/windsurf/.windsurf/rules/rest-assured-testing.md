@@ -6,27 +6,23 @@ globs: ["**/*.java", "**/*.json", "**/*.kt", "**/*.r", "**/*.sh", "**/*.{yaml,ym
 
 REST Assured Java API testing. Real REST Assured CLI.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (rest-assured-testing)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **rest-assured-testing** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `mvn test -Dtest=UsersApiTest`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — testing context for `rest-assured-testing`
+- Domain: REST Assured Java API testing. Real REST Assured CLI.
+- **rest-assured**: REST Assured Java API testing. Real REST Assured CLI. — `mvn test -Dtest=UsersApiTest`
+- Check `knowledge` and `prerequisites: ./gradlew, mvn`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `rest-assured-testing`
+- For `rest-assured`: REST Assured Java API testing. Real REST Assured CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `rest-assured-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mvn`, `./gradlew` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rest-assured-testing:7dd5d5f3`
 
 # REST Assured
 

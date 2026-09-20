@@ -1,15 +1,31 @@
 ---
 name: "jq"
-description: "Processes JSON in the shell with jq: filtering, transformations, aggregation, and scripting against APIs and log streams."
+description: "Processes JSON in the shell with jq: filtering, transformations, aggregation, and scripting against APIs and log streams. Use when working with query and filter, transform and aggregate, devtools or when the user mentions query and filter, transform and aggregate, devtools."
 type: knowledge
 triggers: ["jq", "query-and-filter", "transform-and-aggregate"]
 ---
 
-# jq
-
 Processes JSON in the shell with jq: filtering, transformations, aggregation, and scripting against APIs and log streams.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (jq)
+
+You are **jq** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `jq`
+- Domain: Processes JSON in the shell with jq: filtering, transformations, aggregation, and scripting against APIs and log streams.
+- **query-and-filter**: Extract and filter values from JSON documents. — `cat data.json | jq '.users[].name'`
+- **transform-and-aggregate**: Build new JSON, group, count, and reshape data. — `jq '{count: (.items | length), names: [.items[].name]}' data.json`
+- Check `knowledge` and `prerequisites: cat`
+
+### 2. Reason — think for `jq`
+- For `query-and-filter`: Extract and filter values from JSON documents. — decide which checks to run
+- For `transform-and-aggregate`: Build new JSON, group, count, and reshape data. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `jq` tools
+- Tools: `Glob`, `Grep`, `Read`, `Cat`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `jq:d855d8bc`
 
 # jq JSON Processing
 
@@ -63,6 +79,10 @@ curl -s https://api.example.com/data | jq '.result'
 ### query-and-filter
 Extract and filter values from JSON documents.
 
+**Parameters:**
+- `filter` (string): jq filter expression
+- `file` (string): JSON file path
+
 **Commands:**
 - `cat data.json | jq '.users[].name'`
 - `jq '.items[] | select(.status == "open")' data.json`
@@ -79,6 +99,10 @@ Extract and filter values from JSON documents.
 ### transform-and-aggregate
 Build new JSON, group, count, and reshape data.
 
+**Parameters:**
+- `raw` (boolean): Output raw strings without quotes (-r)
+- `compact` (boolean): Compact single-line output (-c)
+
 **Commands:**
 - `jq '{count: (.items | length), names: [.items[].name]}' data.json`
 - `jq 'group_by(.kind) | map({kind: .[0].kind, count: length})' data.json`
@@ -91,3 +115,7 @@ Build new JSON, group, count, and reshape data.
 - jq 'group_by(.kind) | map({kind: .[0].kind, count: length})' data.json
 - jq -r '.items[] | "\(.name)\t\(.id)"' data.json
 - jq 'map(.price) | add / length' data.json
+
+## References
+- [jq Manual](https://jqlang.github.io/jq/manual/)
+- [jq Playground](https://jqplay.org/)

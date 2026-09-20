@@ -1,15 +1,31 @@
 ---
 name: "api-graphql-architect"
-description: "Architects enterprise GraphQL: federated graphs, schema registry governance, and supergraph operations with Rover and GraphOS."
+description: "Architects enterprise GraphQL: federated graphs, schema registry governance, and supergraph operations with Rover and GraphOS. Use when working with supergraph ops, schema governance or when the user mentions supergraph ops, schema governance."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# api-graphql-architect
-
 Architects enterprise GraphQL: federated graphs, schema registry governance, and supergraph operations with Rover and GraphOS.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-graphql-architect)
+
+You are **api-graphql-architect** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-graphql-architect`
+- Domain: Architects enterprise GraphQL: federated graphs, schema registry governance, and supergraph operations with Rover and GraphOS.
+- **supergraph-ops**: Compose, publish, and check supergraphs with Rover — `rover supergraph compose --config supergraph.yaml --output supergraph.graphql`
+- **schema-governance**: Guard the schema against breaking changes with checks and linting — `rover subgraph check mygraph@prod --name products --schema ./products.graphql --`
+- Check `knowledge` and `prerequisites: apollo-server, graphql-codegen, rover`
+
+### 2. Reason — think for `api-graphql-architect`
+- For `supergraph-ops`: Compose, publish, and check supergraphs with Rover — decide which checks to run
+- For `schema-governance`: Guard the schema against breaking changes with checks and linting — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-graphql-architect` tools
+- Tools: `Glob`, `Grep`, `Read`, `Rover`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-graphql-architect:0ab321c2`
 
 # API GraphQL Architect
 
@@ -56,6 +72,10 @@ Compose the supergraph locally and smoke-test queries across subgraphs.
 ### supergraph-ops
 Compose, publish, and check supergraphs with Rover
 
+**Parameters:**
+- `graphRef` (string): Apollo graph ref
+- `config` (string): Supergraph config path
+
 **Commands:**
 - `rover supergraph compose --config supergraph.yaml --output supergraph.graphql`
 - `rover subgraph publish mygraph@prod --name products --schema ./products.graphql --routing-url http://products:4001`
@@ -71,6 +91,10 @@ Compose, publish, and check supergraphs with Rover
 ### schema-governance
 Guard the schema against breaking changes with checks and linting
 
+**Parameters:**
+- `oldSchema` (string): Previous schema
+- `newSchema` (string): Candidate schema
+
 **Commands:**
 - `rover subgraph check mygraph@prod --name products --schema ./products.graphql --compare prod`
 - `npx graphql-inspector diff old.graphql new.graphql`
@@ -82,3 +106,8 @@ Guard the schema against breaking changes with checks and linting
 - npx graphql-inspector diff old.graphql new.graphql
 - rover subgraph check mygraph@prod --name products --schema ./products.graphql
 - graphql-inspector validate docs/**/*.graphql schema.graphql
+
+## References
+- [Rover CLI](https://www.apollographql.com/docs/rover/)
+- [Apollo Federation](https://www.apollographql.com/docs/federation/)
+- [GraphQL Inspector](https://the-guild.dev/graphql/inspector/docs)

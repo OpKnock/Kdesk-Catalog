@@ -1,14 +1,30 @@
 ---
-description: "Builds and deploys infrastructure with Pulumi (TypeScript/Python/Go): stacks, previews, outputs, imports, and state management."
+description: "Builds and deploys infrastructure with Pulumi (TypeScript/Python/Go): stacks, previews, outputs, imports, and state management. Use when working with stack lifecycle, config and state, devops or when the user mentions stack lifecycle, config and state, devops."
 globs: ["**/*.go", "**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{ts,tsx}"]
 alwaysApply: false
 ---
 
-# pulumi
-
 Builds and deploys infrastructure with Pulumi (TypeScript/Python/Go): stacks, previews, outputs, imports, and state management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (pulumi)
+
+You are **pulumi** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `pulumi`
+- Domain: Builds and deploys infrastructure with Pulumi (TypeScript/Python/Go): stacks, previews, outputs, imports, and state management.
+- **stack-lifecycle**: Create, preview, deploy, and destroy infrastructure stacks. — `pulumi new aws-typescript`
+- **config-and-state**: Manage configuration, secrets, outputs, and import existing resources. — `pulumi config set aws:region us-east-1`
+- Check `knowledge` and `prerequisites: pulumi`
+
+### 2. Reason — think for `pulumi`
+- For `stack-lifecycle`: Create, preview, deploy, and destroy infrastructure stacks. — decide which checks to run
+- For `config-and-state`: Manage configuration, secrets, outputs, and import existing resources. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `pulumi` tools
+- Tools: `Glob`, `Grep`, `Read`, `Pulumi` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pulumi:e97f71fe`
 
 # Pulumi Infrastructure as Code
 
@@ -77,6 +93,10 @@ export const bucketName = bucket.id;
 ### stack-lifecycle
 Create, preview, deploy, and destroy infrastructure stacks.
 
+**Parameters:**
+- `stack` (string): Stack name
+- `template` (string): Project template, e.g. aws-typescript
+
 **Commands:**
 - `pulumi new aws-typescript`
 - `pulumi stack init dev`
@@ -93,6 +113,11 @@ Create, preview, deploy, and destroy infrastructure stacks.
 ### config-and-state
 Manage configuration, secrets, outputs, and import existing resources.
 
+**Parameters:**
+- `key` (string): Config key
+- `value` (string): Config value
+- `output` (string): Stack output name
+
 **Commands:**
 - `pulumi config set aws:region us-east-1`
 - `pulumi config set --secret db_password 's3cr3t'`
@@ -105,3 +130,8 @@ Manage configuration, secrets, outputs, and import existing resources.
 - pulumi config set --secret db_password 's3cr3t'
 - pulumi stack output endpoint
 - pulumi import aws:s3/bucket:Bucket my-bucket aws-123456
+
+## References
+- [Pulumi Documentation](https://www.pulumi.com/docs/)
+- [Pulumi CLI Commands](https://www.pulumi.com/docs/cli/commands/)
+- [Pulumi Registry](https://www.pulumi.com/registry/)

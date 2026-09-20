@@ -2,35 +2,53 @@ title: locust
 description: Runs distributed load tests with Locust user classes, headless mode, HTML reports, and master/worker
   clusters.
 version: 2.0.0
-instructions: "# locust\n\nRuns distributed load tests with Locust user classes, headless mode, HTML reports,\
-  \ and master/worker clusters.\n\n## Instructions\n\n# Locust\n\nPython-based load testing with realistic\
-  \ user scenarios.\n\n## What This Skill Does\n\n- Defines user behaviors with HttpUser classes\n- Runs\
-  \ headless with user ramps and durations\n- Generates HTML and CSV reports\n- Scales with master/worker\
-  \ clusters\n\n## When to Use\n\n- Scenario-based load tests with complex flows\n- Distributed load generation\n\
-  - Long-running soak tests\n\n## Real Commands\n\n```bash\n# Local UI\nlocust -f locustfile.py\n\n# Headless\n\
-  locust --headless -u 100 -r 10 -t 30s -f locustfile.py\nlocust --headless -u 50 -r 5 --run-time 5m --host\
-  \ https://api.example.com\n\n# Reports\nlocust --headless -u 100 -r 10 -t 1m --html report.html -f locustfile.py\n\
-  locust --headless -u 100 -r 10 --csv stats -t 1m -f locustfile.py\n\n# Distributed\nlocust --master\
-  \ -f locustfile.py\nlocust --worker --master-host=localhost -f locustfile.py\nlocust --master --expect-workers=4\
-  \ -u 400 -r 40 -t 5m\n```\n\n## Sample Locustfile\n\n```python\nfrom locust import HttpUser, task, between\n\
-  \nclass CatalogUser(HttpUser):\n    wait_time = between(1, 3)\n\n    @task\n    def browse(self):\n\
-  \        self.client.get(\"/v1/products\")\n\n    @task(3)\n    def view_product(self):\n        self.client.get(\"\
-  /v1/products/42\")\n```\n\n## Best Practices\n\n- Weight tasks by real user frequency\n- Ramp spawn\
-  \ rate gradually to observe degradation\n- Keep scenarios deterministic for reproducibility\n- Use distributed\
-  \ mode beyond a single machine's limits\n- Export CSV/HTML for every run and archive them\n\n## Capabilities\n\
-  \n### locust-runs\nRun Locust locally and headless.\n\n**Commands:**\n- `locust -f locustfile.py`\n\
-  - `locust --headless -u 100 -r 10 -t 30s -f locustfile.py`\n- `locust -f locustfile.py --web-port 8090`\n\
-  - `locust --headless -u 100 -r 10 --host http://localhost:8080`\n- `locust --headless --users 50 --spawn-rate\
-  \ 5 --run-time 5m -f locustfile.py`\n\n**Examples:**\n- locust --headless -u 100 -r 10 -t 30s -f locustfile.py\n\
-  - locust -f locustfile.py --web-port 8090\n- locust --headless -u 50 -r 5 --run-time 5m -f locustfile.py\n\
-  \n### reporting\nExport HTML reports and stats.\n\n**Commands:**\n- `locust --headless -u 100 -r 10\
-  \ -t 1m --html report.html -f locustfile.py`\n- `locust --headless -u 100 -r 10 --csv stats -t 1m -f\
-  \ locustfile.py`\n- `locust --headless -u 100 -r 10 --csv-full-history --csv stats -t 2m -f locustfile.py`\n\
-  \n**Examples:**\n- locust --headless -u 100 -r 10 -t 1m --html report.html -f locustfile.py\n- locust\
-  \ --headless -u 100 -r 10 --csv stats -t 1m -f locustfile.py\n\n### distributed-mode\nRun master/worker\
-  \ clusters.\n\n**Commands:**\n- `locust --master -f locustfile.py`\n- `locust --worker --master-host=localhost\
-  \ -f locustfile.py`\n- `locust --worker --master-host=10.0.0.5 --master-port=5557 -f locustfile.py`\n\
-  - `locust --master --expect-workers=4 -u 400 -r 40 -t 5m -f locustfile.py`\n\n**Examples:**\n- locust\
-  \ --master -f locustfile.py\n- locust --worker --master-host=localhost -f locustfile.py\n- locust --master\
-  \ --expect-workers=4 -u 400 -r 40 -t 5m"
+instructions: "Runs distributed load tests with Locust user classes, headless mode, HTML reports, and\
+  \ master/worker clusters.\n\n## Agentic Workflow: Read -> Reason -> Act (locust)\n\nYou are **locust**\
+  \ (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read\
+  \ — testing context for `locust`\n- Domain: Runs distributed load tests with Locust user classes, headless\
+  \ mode, HTML reports, and master/worker clusters.\n- **locust-runs**: Run Locust locally and headless.\
+  \ — `locust -f locustfile.py`\n- **reporting**: Export HTML reports and stats. — `locust --headless\
+  \ -u 100 -r 10 -t 1m --html report.html -f locustfile.py`\n- **distributed-mode**: Run master/worker\
+  \ clusters. — `locust --master -f locustfile.py`\n- Check `knowledge` and `prerequisites: locust`\n\n\
+  ### 2. Reason — think for `locust`\n- For `locust-runs`: Run Locust locally and headless. — decide which\
+  \ checks to run\n- For `reporting`: Export HTML reports and stats. — decide which checks to run\n- For\
+  \ `distributed-mode`: Run master/worker clusters. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `locust` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Locust` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `locust:be7c8233`\n\n# Locust\n\n\
+  Python-based load testing with realistic user scenarios.\n\n## What This Skill Does\n\n- Defines user\
+  \ behaviors with HttpUser classes\n- Runs headless with user ramps and durations\n- Generates HTML and\
+  \ CSV reports\n- Scales with master/worker clusters\n\n## When to Use\n\n- Scenario-based load tests\
+  \ with complex flows\n- Distributed load generation\n- Long-running soak tests\n\n## Real Commands\n\
+  \n```bash\n# Local UI\nlocust -f locustfile.py\n\n# Headless\nlocust --headless -u 100 -r 10 -t 30s\
+  \ -f locustfile.py\nlocust --headless -u 50 -r 5 --run-time 5m --host https://api.example.com\n\n# Reports\n\
+  locust --headless -u 100 -r 10 -t 1m --html report.html -f locustfile.py\nlocust --headless -u 100 -r\
+  \ 10 --csv stats -t 1m -f locustfile.py\n\n# Distributed\nlocust --master -f locustfile.py\nlocust --worker\
+  \ --master-host=localhost -f locustfile.py\nlocust --master --expect-workers=4 -u 400 -r 40 -t 5m\n\
+  ```\n\n## Sample Locustfile\n\n```python\nfrom locust import HttpUser, task, between\n\nclass CatalogUser(HttpUser):\n\
+  \    wait_time = between(1, 3)\n\n    @task\n    def browse(self):\n        self.client.get(\"/v1/products\"\
+  )\n\n    @task(3)\n    def view_product(self):\n        self.client.get(\"/v1/products/42\")\n```\n\n\
+  ## Best Practices\n\n- Weight tasks by real user frequency\n- Ramp spawn rate gradually to observe degradation\n\
+  - Keep scenarios deterministic for reproducibility\n- Use distributed mode beyond a single machine's\
+  \ limits\n- Export CSV/HTML for every run and archive them\n\n## Capabilities\n\n### locust-runs\nRun\
+  \ Locust locally and headless.\n\n**Parameters:**\n- `file` (string): Locustfile path\n- `users` (number):\
+  \ Peak number of users (-u)\n- `spawnRate` (number): Users spawned per second (-r)\n\n**Commands:**\n\
+  - `locust -f locustfile.py`\n- `locust --headless -u 100 -r 10 -t 30s -f locustfile.py`\n- `locust -f\
+  \ locustfile.py --web-port 8090`\n- `locust --headless -u 100 -r 10 --host http://localhost:8080`\n\
+  - `locust --headless --users 50 --spawn-rate 5 --run-time 5m -f locustfile.py`\n\n**Examples:**\n- locust\
+  \ --headless -u 100 -r 10 -t 30s -f locustfile.py\n- locust -f locustfile.py --web-port 8090\n- locust\
+  \ --headless -u 50 -r 5 --run-time 5m -f locustfile.py\n\n### reporting\nExport HTML reports and stats.\n\
+  \n**Parameters:**\n- `html` (string): HTML report output path\n- `csv` (string): CSV stats prefix\n\n\
+  **Commands:**\n- `locust --headless -u 100 -r 10 -t 1m --html report.html -f locustfile.py`\n- `locust\
+  \ --headless -u 100 -r 10 --csv stats -t 1m -f locustfile.py`\n- `locust --headless -u 100 -r 10 --csv-full-history\
+  \ --csv stats -t 2m -f locustfile.py`\n\n**Examples:**\n- locust --headless -u 100 -r 10 -t 1m --html\
+  \ report.html -f locustfile.py\n- locust --headless -u 100 -r 10 --csv stats -t 1m -f locustfile.py\n\
+  \n### distributed-mode\nRun master/worker clusters.\n\n**Parameters:**\n- `masterHost` (string): Master\
+  \ host for workers\n- `expectWorkers` (number): Workers to wait for before starting\n\n**Commands:**\n\
+  - `locust --master -f locustfile.py`\n- `locust --worker --master-host=localhost -f locustfile.py`\n\
+  - `locust --worker --master-host=10.0.0.5 --master-port=5557 -f locustfile.py`\n- `locust --master --expect-workers=4\
+  \ -u 400 -r 40 -t 5m -f locustfile.py`\n\n**Examples:**\n- locust --master -f locustfile.py\n- locust\
+  \ --worker --master-host=localhost -f locustfile.py\n- locust --master --expect-workers=4 -u 400 -r\
+  \ 40 -t 5m\n\n## References\n- [Locust Documentation](https://docs.locust.io/en/stable/)\n- [Locust\
+  \ Quickstart](https://docs.locust.io/en/stable/quickstart.html)"
 prompt: Act as locust and handle the task per the instructions.

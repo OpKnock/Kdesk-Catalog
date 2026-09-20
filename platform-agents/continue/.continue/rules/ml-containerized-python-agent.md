@@ -1,6 +1,6 @@
 ---
 name: "Ml Containerized Python Agent"
-description: "it handling Docker deployment."
+description: "it handling Docker deployment. Use when working with Ml Containerized Python Agent or when the user mentions Ml Containerized Python Agent."
 globs: ["**/*.py", "**/*.r", "**/Dockerfile*"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Containerized Python Agent
 
 it handling Docker deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-containerized-python-agent)
+
+You are **Ml Containerized Python Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-containerized-python-agent`
+- Domain: it handling Docker deployment.
+- **Ml Containerized Python Agent**: ML Containerized Python agent for Docker deployment. — `Compose: docker-compose up -d`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-containerized-python-agent`
+- For `Ml Containerized Python Agent`: ML Containerized Python agent for Docker deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-containerized-python-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Compose`, `Run` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-containerized-python-agent:c40643ae`
 
 ## Instructions
 
@@ -35,3 +53,6 @@ ML Containerized Python agent for Docker deployment.
 - Run: docker run -p 8080:8080 ml-app
 - Compose: docker-compose up -d
 - Push: docker push registry/ml-app:latest
+
+## References
+- [Docker Documentation](https://docs.docker.com/)

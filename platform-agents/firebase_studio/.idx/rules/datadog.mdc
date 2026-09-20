@@ -1,14 +1,30 @@
 ---
-description: "Operates the Datadog Agent and dashboards: agent status, live checks, monitors, and diagnostics via the CLI and API."
+description: "Operates the Datadog Agent and dashboards: agent status, live checks, monitors, and diagnostics via the CLI and API. Use when working with agent, monitors, datadog or when the user mentions agent, monitors, datadog."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Datadog
-
 Operates the Datadog Agent and dashboards: agent status, live checks, monitors, and diagnostics via the CLI and API.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (datadog)
+
+You are **Datadog** (monitoring/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — monitoring context for `datadog`
+- Domain: Operates the Datadog Agent and dashboards: agent status, live checks, monitors, and diagnostics via the CLI and API.
+- **agent**: Manage the Datadog agent locally. — `datadog-agent status`
+- **monitors**: Manage monitors and metrics via the Datadog API. — `curl -s -H 'DD-API-KEY: $DD_API_KEY' -H 'DD-APPLICATION-KEY: $DD_APP_KEY' 'https`
+- Check `knowledge` and `prerequisites: datadog-agent`
+
+### 2. Reason — think for `datadog`
+- For `agent`: Manage the Datadog agent locally. — decide which checks to run
+- For `monitors`: Manage monitors and metrics via the Datadog API. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `datadog` tools
+- Tools: `Glob`, `Grep`, `Read`, `Datadog-agent`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `datadog:639044a4`
 
 # Datadog
 
@@ -70,6 +86,11 @@ Confirm checks pass after config changes.
 ### agent
 Manage the Datadog agent locally.
 
+**Parameters:**
+- `check` (string): Integrations check name like nginx, disk
+- `flare` (string): Bundle diagnostics for support
+- `restart` (string): Restart the agent service
+
 **Commands:**
 - `datadog-agent status`
 - `datadog-agent check nginx`
@@ -85,6 +106,11 @@ Manage the Datadog agent locally.
 ### monitors
 Manage monitors and metrics via the Datadog API.
 
+**Parameters:**
+- `api-key` (string): Datadog API key
+- `app-key` (string): Datadog application key
+- `query` (string): Metric or event query
+
 **Commands:**
 - `curl -s -H 'DD-API-KEY: $DD_API_KEY' -H 'DD-APPLICATION-KEY: $DD_APP_KEY' 'https://api.datadoghq.com/api/v1/monitor' | jq '.[] | {id, name, status}'`
 - `curl -s -X POST -H 'DD-API-KEY: $DD_API_KEY' -H 'DD-APPLICATION-KEY: $DD_APP_KEY' -H 'Content-Type: application/json' -d '{"type":"metric alert","query":"avg(last_5m):avg:system.cpu.user{*} > 80","name":"High CPU","message":"CPU above 80%"}' https://api.datadoghq.com/api/v1/monitor`
@@ -96,3 +122,8 @@ Manage monitors and metrics via the Datadog API.
 - curl -s -H 'DD-API-KEY: $K' -H 'DD-APPLICATION-KEY: $A' 'https://api.datadoghq.com/api/v1/monitor' | jq '.[] | select(.status != "OK") | {name, status}'
 - curl -s -X POST -H 'DD-API-KEY: $K' -H 'DD-APPLICATION-KEY: $A' -H 'Content-Type: application/json' -d '{"type":"service check","query":"\"api.up\".over(\"last_5m\").last(5).count_by_status()","name":"API up check"}' https://api.datadoghq.com/api/v1/monitor
 - curl -s -H 'DD-API-KEY: $K' -H 'DD-APPLICATION-KEY: $A' 'https://api.datadoghq.com/api/v1/monitor' | jq 'length'
+
+## References
+- [Datadog Agent](https://docs.datadoghq.com/agent/basic_agent_usage/)
+- [Datadog API](https://docs.datadoghq.com/api/latest/monitors/)
+- [Datadog Integrations](https://docs.datadoghq.com/integrations/)

@@ -4,27 +4,25 @@ applyTo: "**/*.py **/*.r **/*.sh **/*.{yaml,yml}"
 
 Generates Python MQTT applications and dataclass models from AsyncAPI documents with the python-paho-template and Modelina.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (asyncapi-python)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Asyncapi Python** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx @asyncapi/generator asyncapi.yaml @asyncapi/python-paho-`, `npx @asyncapi/modelina generate --input asyncapi.yaml --outp`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `asyncapi-python`
+- Domain: Generates Python MQTT applications and dataclass models from AsyncAPI documents with the python-paho-template and Modelina.
+- **python-generation**: Generate a Python MQTT app from an AsyncAPI spec. — `npx @asyncapi/generator asyncapi.yaml @asyncapi/python-paho-template -o ./genera`
+- **python-models**: Generate Python dataclasses from the spec schema with Modelina. — `npx @asyncapi/modelina generate --input asyncapi.yaml --output ./generated/src/m`
+- Check `knowledge` and `prerequisites: npx, pip, python`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `asyncapi-python`
+- For `python-generation`: Generate a Python MQTT app from an AsyncAPI spec. — decide which checks to run
+- For `python-models`: Generate Python dataclasses from the spec schema with Modelina. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `asyncapi-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `asyncapi-python:8b500e82`
 
 # AsyncAPI Python
 

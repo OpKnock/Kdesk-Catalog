@@ -1,8 +1,24 @@
-# gatekeeper
-
 Enforces OPA-based admission policies in Kubernetes with Gatekeeper ConstraintTemplates and Constraints.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (gatekeeper)
+
+You are **gatekeeper** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `gatekeeper`
+- Domain: Enforces OPA-based admission policies in Kubernetes with Gatekeeper ConstraintTemplates and Constraints.
+- **gatekeeper-install**: Install Gatekeeper and check its operational status. — `kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/`
+- **constraint-management**: Create, list, and debug ConstraintTemplates and Constraints. — `kubectl get constrainttemplates`
+- Check `knowledge` and `prerequisites: helm, kubectl`
+
+### 2. Reason — think for `gatekeeper`
+- For `gatekeeper-install`: Install Gatekeeper and check its operational status. — decide which checks to run
+- For `constraint-management`: Create, list, and debug ConstraintTemplates and Constraints. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gatekeeper` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gatekeeper:409d3509`
 
 # Gatekeeper
 
@@ -81,6 +97,10 @@ spec:
 ### gatekeeper-install
 Install Gatekeeper and check its operational status.
 
+**Parameters:**
+- `namespace` (string): Namespace to inspect, default gatekeeper-system
+- `channel` (string): Gatekeeper release channel: stable, beta, or latest manifest.
+
 **Commands:**
 - `kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/deploy/gatekeeper.yaml`
 - `kubectl get pods -n gatekeeper-system`
@@ -95,6 +115,10 @@ Install Gatekeeper and check its operational status.
 ### constraint-management
 Create, list, and debug ConstraintTemplates and Constraints.
 
+**Parameters:**
+- `template` (string): ConstraintTemplate manifest path
+- `constraint` (string): Constraint instance manifest path
+
 **Commands:**
 - `kubectl get constrainttemplates`
 - `kubectl get constraints`
@@ -106,3 +130,7 @@ Create, list, and debug ConstraintTemplates and Constraints.
 - kubectl get constrainttemplates
 - kubectl get k8srequiredlabels
 - kubectl describe k8srequiredlabels
+
+## References
+- [Gatekeeper Documentation](https://open-policy-agent.github.io/gatekeeper/website/docs/)
+- [OPA Policy Reference](https://www.openpolicyagent.org/docs/latest/policy-language/)

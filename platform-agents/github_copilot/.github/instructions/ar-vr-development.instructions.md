@@ -4,27 +4,25 @@ applyTo: "**/*.r **/*.sh"
 
 Develops AR/VR experiences: Three.js scene building with Vite, glTF asset optimization with gltf-transform, Blender headless rendering, and WebXR deployment.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (ar-vr-development)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **ar-vr-development** (emerging) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npm create vite@latest my-scene -- --template vanilla`, `npm install -g @gltf-transform/cli`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — emerging context for `ar-vr-development`
+- Domain: Develops AR/VR experiences: Three.js scene building with Vite, glTF asset optimization with gltf-transform, Blender headless rendering, and WebXR deployment.
+- **threejs-setup**: Scaffold and build Three.js scenes — `npm create vite@latest my-scene -- --template vanilla`
+- **asset-pipeline**: Optimize 3D assets for the web — `npm install -g @gltf-transform/cli`
+- Check `knowledge` and `prerequisites: unity, unreal, blender, three-js`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `ar-vr-development`
+- For `threejs-setup`: Scaffold and build Three.js scenes — decide which checks to run
+- For `asset-pipeline`: Optimize 3D assets for the web — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `ar-vr-development` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ar-vr-development:b474403f`
 
 # AR/VR Development
 

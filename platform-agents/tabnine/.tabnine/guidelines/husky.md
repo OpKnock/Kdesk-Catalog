@@ -1,8 +1,24 @@
-# husky
-
 Configures Git hooks with husky: pre-commit, commit-msg, pre-push gates, and lint-staged integration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (husky)
+
+You are **husky** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `husky`
+- Domain: Configures Git hooks with husky: pre-commit, commit-msg, pre-push gates, and lint-staged integration.
+- **husky-setup**: Initialize and manage husky hooks. — `npx husky init`
+- **husky-lint-staged**: Run staged-file checks with lint-staged. — `npm install --save-dev lint-staged`
+- Check `knowledge` and `prerequisites: git, npm, npx`
+
+### 2. Reason — think for `husky`
+- For `husky-setup`: Initialize and manage husky hooks. — decide which checks to run
+- For `husky-lint-staged`: Run staged-file checks with lint-staged. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `husky` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `husky:460e628a`
 
 # Husky
 
@@ -57,6 +73,10 @@ git config core.hooksPath
 ### husky-setup
 Initialize and manage husky hooks.
 
+**Parameters:**
+- `hook` (string): Hook name: pre-commit, commit-msg, pre-push
+- `command` (string): Command to run
+
 **Commands:**
 - `npx husky init`
 - `npx husky add .husky/pre-commit "npm test"`
@@ -72,6 +92,10 @@ Initialize and manage husky hooks.
 ### husky-lint-staged
 Run staged-file checks with lint-staged.
 
+**Parameters:**
+- `glob` (string): File pattern
+- `config` (string): lint-staged config path
+
 **Commands:**
 - `npm install --save-dev lint-staged`
 - `npx lint-staged`
@@ -81,3 +105,7 @@ Run staged-file checks with lint-staged.
 **Examples:**
 - npx lint-staged --concurrent 4
 - npx lint-staged --no-stash
+
+## References
+- [Husky Docs](https://typicode.github.io/husky/)
+- [lint-staged Docs](https://github.com/lint-staged/lint-staged)

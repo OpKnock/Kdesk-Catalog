@@ -6,27 +6,25 @@ globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 
 Implements general API versioning across backend services: strategy selection, version headers, backward compatibility, and version-aware routing.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-versioning)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Versioning** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -s -H 'Accept: application/vnd.github.v3+json' https://`, `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:30`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `api-versioning`
+- Domain: Implements general API versioning across backend services: strategy selection, version headers, backward compatibility, and version-aware routing.
+- **version-headers**: Serve versions via headers and negotiation — `curl -s -H 'Accept: application/vnd.github.v3+json' https://api.github.com/repos`
+- **compatibility**: Maintain backward compatibility — `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/v1/users`
+- Check `knowledge` and `prerequisites: git`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-versioning`
+- For `version-headers`: Serve versions via headers and negotiation — decide which checks to run
+- For `compatibility`: Maintain backward compatibility — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-versioning` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-versioning:ddc67614`
 
 # API Versioning
 

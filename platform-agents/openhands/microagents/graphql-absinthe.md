@@ -1,15 +1,29 @@
 ---
 name: "graphql-absinthe"
-description: "GraphQL on Elixir with Absinthe: scaffold schemas, run the mix compiler, generate docs, and test GraphQL queries."
+description: "GraphQL on Elixir with Absinthe: scaffold schemas, run the mix compiler, generate docs, and test GraphQL queries. Use when working with absinthe development, api or when the user mentions absinthe development, api."
 type: knowledge
 triggers: ["graphql-absinthe", "absinthe-development"]
 ---
 
-# Graphql Absinthe
-
 GraphQL on Elixir with Absinthe: scaffold schemas, run the mix compiler, generate docs, and test GraphQL queries.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (graphql-absinthe)
+
+You are **Graphql Absinthe** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `graphql-absinthe`
+- Domain: GraphQL on Elixir with Absinthe: scaffold schemas, run the mix compiler, generate docs, and test GraphQL queries.
+- **absinthe-development**: Manage Absinthe schemas, compile, and run queries in a Phoenix/IEx context. — `mix deps.get && mix absinthe.schema.json --schema MyApp.Schema > schema.json`
+- Check `knowledge` and `prerequisites: iex, mix`
+
+### 2. Reason — think for `graphql-absinthe`
+- For `absinthe-development`: Manage Absinthe schemas, compile, and run queries in a Phoenix/IEx context. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `graphql-absinthe` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mix`, `Iex` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `graphql-absinthe:49c392a9`
 
 # GraphQL Absinthe
 
@@ -84,6 +98,11 @@ Absinthe.run(~s({ order(id: "1") { id status } }), MyApp.Schema)
 ### absinthe-development
 Manage Absinthe schemas, compile, and run queries in a Phoenix/IEx context.
 
+**Parameters:**
+- `schema-module` (string): Absinthe schema module like MyApp.Schema
+- `output` (string): Output file for schema export
+- `test-path` (string): Test directory pattern
+
 **Commands:**
 - `mix deps.get && mix absinthe.schema.json --schema MyApp.Schema > schema.json`
 - `mix absinthe.schema.sdl --schema MyApp.Schema > schema.graphql`
@@ -95,3 +114,7 @@ Manage Absinthe schemas, compile, and run queries in a Phoenix/IEx context.
 - mix absinthe.schema.sdl --schema MyApp.Schema > schema.graphql
 - mix test test/graphql
 - mix absinthe.schema.json --schema MyApp.Schema > schema.json && jq '.data.__schema.queryType.name' schema.json
+
+## References
+- [Absinthe docs](https://hexdocs.pm/absinthe/)
+- [Absinthe mix tasks](https://hexdocs.pm/absinthe/extra-tools.html)

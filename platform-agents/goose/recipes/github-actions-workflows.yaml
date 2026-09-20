@@ -2,8 +2,18 @@ title: Github Actions Workflows
 description: 'CI/CD with GitHub Actions: run workflows locally with act, manage secrets and runners via
   gh, and debug workflow runs.'
 version: 2.0.0
-instructions: "# Github Actions Workflows\n\nCI/CD with GitHub Actions: run workflows locally with act,\
-  \ manage secrets and runners via gh, and debug workflow runs.\n\n## Instructions\n\n# GitHub Actions\
+instructions: "CI/CD with GitHub Actions: run workflows locally with act, manage secrets and runners via\
+  \ gh, and debug workflow runs.\n\n## Agentic Workflow: Read -> Reason -> Act (github-actions-workflows)\n\
+  \nYou are **Github Actions Workflows** (api/general) — a sub-agent that **Reads, Reasons, and Acts**\
+  \ via `allowed-tools`.\n\n### 1. Read — api context for `github-actions-workflows`\n- Domain: CI/CD\
+  \ with GitHub Actions: run workflows locally with act, manage secrets and runners via gh, and debug\
+  \ workflow runs.\n- **actions-workflows**: Run, validate, and debug GitHub Actions workflows. — `gh\
+  \ workflow run ci.yml --ref main`\n- Check `knowledge` and `prerequisites: act`\n\n### 2. Reason — think\
+  \ for `github-actions-workflows`\n- For `actions-workflows`: Run, validate, and debug GitHub Actions\
+  \ workflows. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `github-actions-workflows` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Gh`, `Act` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record\
+  \ evidence (paths, checksums)\n- Fingerprint: `github-actions-workflows:1d92e0e2`\n\n# GitHub Actions\
   \ v2\n\n## What this skill does\n\nGitHub Actions automates CI/CD from .github/workflows/*.yml. The\
   \ gh CLI triggers and inspects runs; act executes workflows locally; secrets are managed per repo/environment.\n\
   \n## When to use\n\n- Triggering and monitoring pipeline runs\n- Reproducing a failing job locally with\
@@ -21,11 +31,14 @@ instructions: "# Github Actions Workflows\n\nCI/CD with GitHub Actions: run work
   \n- Pin action versions by tag/commit; never @main for third parties.\n- Use `actions/cache` for dependency\
   \ caches across runs.\n- Store secrets in GitHub, never inline in YAML.\n- Validate YAML locally with\
   \ act before pushing.\n- Use concurrency groups to cancel stale duplicate runs.\n\n## Capabilities\n\
-  \n### actions-workflows\nRun, validate, and debug GitHub Actions workflows.\n\n**Commands:**\n- `gh\
-  \ workflow run ci.yml --ref main`\n- `gh run list --workflow=ci.yml --limit=5`\n- `gh run watch $(gh\
-  \ run list -w ci.yml -L 1 --json databaseId -q '.[0].databaseId')`\n- `act -W .github/workflows/ci.yml\
-  \ --pull=false`\n- `gh run download $(gh run list -w ci.yml -L 1 --json databaseId -q '.[0].databaseId')\
-  \ -n artifacts`\n- `gh secret set DEPLOY_TOKEN --body=secret123`\n\n**Examples:**\n- gh workflow run\
-  \ ci.yml --ref main && gh run watch\n- act -W .github/workflows/ci.yml --pull=false\n- gh run download\
-  \ $(gh run list -w ci.yml -L 1 --json databaseId -q '.[0].databaseId') -n artifacts"
+  \n### actions-workflows\nRun, validate, and debug GitHub Actions workflows.\n\n**Parameters:**\n- `workflow-file`\
+  \ (string): Workflow YAML path like .github/workflows/ci.yml\n- `ref` (string): Branch or tag to run\
+  \ the workflow on\n- `secret-name` (string): Repository secret to set\n\n**Commands:**\n- `gh workflow\
+  \ run ci.yml --ref main`\n- `gh run list --workflow=ci.yml --limit=5`\n- `gh run watch $(gh run list\
+  \ -w ci.yml -L 1 --json databaseId -q '.[0].databaseId')`\n- `act -W .github/workflows/ci.yml --pull=false`\n\
+  - `gh run download $(gh run list -w ci.yml -L 1 --json databaseId -q '.[0].databaseId') -n artifacts`\n\
+  - `gh secret set DEPLOY_TOKEN --body=secret123`\n\n**Examples:**\n- gh workflow run ci.yml --ref main\
+  \ && gh run watch\n- act -W .github/workflows/ci.yml --pull=false\n- gh run download $(gh run list -w\
+  \ ci.yml -L 1 --json databaseId -q '.[0].databaseId') -n artifacts\n\n## References\n- [GitHub Actions\
+  \ docs](https://docs.github.com/en/actions)\n- [act](https://github.com/nektos/act)"
 prompt: Act as Github Actions Workflows and handle the task per the instructions.

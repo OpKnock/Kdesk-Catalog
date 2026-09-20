@@ -2,12 +2,24 @@ title: Curl
 description: 'Tests and debugs REST APIs from the terminal with curl: methods, headers, JSON bodies, auth,
   TLS options, timing, and output formatting.'
 version: 2.0.0
-instructions: "# Curl\n\nTests and debugs REST APIs from the terminal with curl: methods, headers, JSON\
-  \ bodies, auth, TLS options, timing, and output formatting.\n\n## Instructions\n\n# curl\n\nTest and\
-  \ debug APIs from the terminal with curl.\n\n## When to Use\n\n- Quick API smoke tests and debugging\n\
-  - Reproducing reported issues with exact requests\n- Verifying headers, auth, and TLS behavior\n\n##\
-  \ Basic Requests\n\n```bash\ncurl -i https://httpbin.org/get\ncurl -X POST -H \"Content-Type: application/json\"\
-  \ \\\n  -d '{\"name\":\"alice\"}' https://httpbin.org/post\ncurl -u alice:secret https://httpbin.org/basic-auth/alice/secret\n\
+instructions: "Tests and debugs REST APIs from the terminal with curl: methods, headers, JSON bodies,\
+  \ auth, TLS options, timing, and output formatting.\n\n## Agentic Workflow: Read -> Reason -> Act (curl)\n\
+  \nYou are **Curl** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `curl`\n- Domain: Tests and debugs REST APIs from the terminal with\
+  \ curl: methods, headers, JSON bodies, auth, TLS options, timing, and output formatting.\n- **requests**:\
+  \ Send HTTP requests with curl covering methods, headers, bodies, and auth — `curl -i https://httpbin.org/get`\n\
+  - **debugging**: Inspect responses, headers, TLS, timing, and write output to files — `curl -s -D headers.txt\
+  \ -o response.json https://httpbin.org/get`\n- Check `knowledge` references before acting\n\n### 2.\
+  \ Reason — think for `curl`\n- For `requests`: Send HTTP requests with curl covering methods, headers,\
+  \ bodies, and auth — decide which checks to run\n- For `debugging`: Inspect responses, headers, TLS,\
+  \ timing, and write output to files — decide which checks to run\n- Evaluate trust/policy: `kdesk trust`\
+  \ + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `curl` tools\n- Tools: `Glob`,\
+  \ `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write;\
+  \ record evidence (paths, checksums)\n- Fingerprint: `curl:9973262b`\n\n# curl\n\nTest and debug APIs\
+  \ from the terminal with curl.\n\n## When to Use\n\n- Quick API smoke tests and debugging\n- Reproducing\
+  \ reported issues with exact requests\n- Verifying headers, auth, and TLS behavior\n\n## Basic Requests\n\
+  \n```bash\ncurl -i https://httpbin.org/get\ncurl -X POST -H \"Content-Type: application/json\" \\\n\
+  \  -d '{\"name\":\"alice\"}' https://httpbin.org/post\ncurl -u alice:secret https://httpbin.org/basic-auth/alice/secret\n\
   curl -H \"Authorization: Bearer $TOKEN\" https://httpbin.org/bearer\n```\n\n## Inspecting Responses\n\
   \n```bash\ncurl -s -D headers.txt -o response.json https://httpbin.org/get\ncurl -w \"status:%{http_code}\
   \ time:%{time_total}s size:%{size_download}\\n\" \\\n  -o /dev/null https://httpbin.org/get\ncurl -v\
@@ -20,15 +32,19 @@ instructions: "# Curl\n\nTests and debugs REST APIs from the terminal with curl:
   \ scripts\n- Never put credentials on the command line history; use env vars\n- Use --data-binary for\
   \ exact JSON payloads\n- Add -f to fail fast on HTTP errors in scripts\n- Read responses with jq for\
   \ readability\n\n## Capabilities\n\n### requests\nSend HTTP requests with curl covering methods, headers,\
-  \ bodies, and auth\n\n**Commands:**\n- `curl -i https://httpbin.org/get`\n- `curl -X POST -H \"Content-Type:\
-  \ application/json\" -d '{\"name\":\"alice\"}' https://httpbin.org/post`\n- `curl -u alice:secret https://httpbin.org/basic-auth/alice/secret`\n\
-  - `curl -H \"Authorization: Bearer $TOKEN\" https://httpbin.org/bearer`\n\n**Examples:**\n- curl -X\
-  \ PUT -H \"Content-Type: application/json\" -d '{\"name\":\"bob\"}' https://httpbin.org/put\n- curl\
-  \ -X DELETE -o /dev/null -w \"%{http_code}\\n\" https://httpbin.org/delete\n- curl -H \"Accept: application/vnd.api+json\"\
-  \ https://httpbin.org/get\n\n### debugging\nInspect responses, headers, TLS, timing, and write output\
-  \ to files\n\n**Commands:**\n- `curl -s -D headers.txt -o response.json https://httpbin.org/get`\n-\
-  \ `curl -k https://httpbin.org/get`\n- `curl -w \"status:%{http_code} time:%{time_total}s size:%{size_download}\\\
+  \ bodies, and auth\n\n**Parameters:**\n- `method` (string): HTTP method: GET, POST, PUT, PATCH, DELETE\n\
+  - `url` (string): Target URL\n\n**Commands:**\n- `curl -i https://httpbin.org/get`\n- `curl -X POST\
+  \ -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}' https://httpbin.org/post`\n- `curl\
+  \ -u alice:secret https://httpbin.org/basic-auth/alice/secret`\n- `curl -H \"Authorization: Bearer $TOKEN\"\
+  \ https://httpbin.org/bearer`\n\n**Examples:**\n- curl -X PUT -H \"Content-Type: application/json\"\
+  \ -d '{\"name\":\"bob\"}' https://httpbin.org/put\n- curl -X DELETE -o /dev/null -w \"%{http_code}\\\
+  n\" https://httpbin.org/delete\n- curl -H \"Accept: application/vnd.api+json\" https://httpbin.org/get\n\
+  \n### debugging\nInspect responses, headers, TLS, timing, and write output to files\n\n**Parameters:**\n\
+  - `output_file` (string): File to write the body to with -o\n- `insecure` (string): -k skips TLS verification\
+  \ for self-signed certs\n\n**Commands:**\n- `curl -s -D headers.txt -o response.json https://httpbin.org/get`\n\
+  - `curl -k https://httpbin.org/get`\n- `curl -w \"status:%{http_code} time:%{time_total}s size:%{size_download}\\\
   n\" -o /dev/null https://httpbin.org/get`\n- `curl -v https://httpbin.org/get`\n\n**Examples:**\n- curl\
   \ -w \"%{time_connect} %{time_starttransfer} %{time_total}\\n\" -o /dev/null https://httpbin.org/get\n\
-  - curl -k -v https://httpbin.org/get\n- curl -s https://httpbin.org/get | jq '.origin'"
+  - curl -k -v https://httpbin.org/get\n- curl -s https://httpbin.org/get | jq '.origin'\n\n## References\n\
+  - [curl man page](https://curl.se/docs/manpage.html)\n- [curl Everything curl](https://everything.curl.dev/)"
 prompt: Act as Curl and handle the task per the instructions.

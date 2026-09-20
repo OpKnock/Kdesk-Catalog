@@ -1,15 +1,29 @@
 ---
 name: "doppler"
-description: "Centralizes environment variables and secrets across projects and environments (dev/staging/prod) with Doppler CLI, injecting into processes, CI, and platform sync."
+description: "Centralizes environment variables and secrets across projects and environments (dev/staging/prod) with Doppler CLI, injecting into processes, CI, and platform sync. Use when working with secrets management, api or when the user mentions secrets management, api."
 type: knowledge
 triggers: ["doppler", "secrets-management"]
 ---
 
-# Doppler
-
 Centralizes environment variables and secrets across projects and environments (dev/staging/prod) with Doppler CLI, injecting into processes, CI, and platform sync.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (doppler)
+
+You are **Doppler** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `doppler`
+- Domain: Centralizes environment variables and secrets across projects and environments (dev/staging/prod) with Doppler CLI, injecting into processes, CI, and platform sync.
+- **secrets-management**: Manage Doppler projects, configs, and secrets from the CLI; run processes with injected environment  — `doppler setup`
+- Check `knowledge` and `prerequisites: doppler`
+
+### 2. Reason — think for `doppler`
+- For `secrets-management`: Manage Doppler projects, configs, and secrets from the CLI; run processes with injected environment variables. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `doppler` tools
+- Tools: `Glob`, `Grep`, `Read`, `Doppler` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `doppler:01dbf876`
 
 # Doppler
 
@@ -75,6 +89,11 @@ doppler secrets get API_KEY --config prod --plain | wc -c
 ### secrets-management
 Manage Doppler projects, configs, and secrets from the CLI; run processes with injected environment variables.
 
+**Parameters:**
+- `project` (string): Doppler project name
+- `config` (string): Environment config: dev, staging, prod
+- `secret-key` (string): Name of the secret to get, set, or delete
+
 **Commands:**
 - `doppler setup`
 - `doppler secrets get DOPPLER_TOKEN`
@@ -88,3 +107,6 @@ Manage Doppler projects, configs, and secrets from the CLI; run processes with i
 - doppler setup && doppler secrets get DOPPLER_TOKEN
 - doppler run --config dev -- npm test
 - doppler secrets download --format=env --no-file | grep API_KEY
+
+## References
+- [Doppler CLI Reference](https://docs.doppler.com/docs/cli)

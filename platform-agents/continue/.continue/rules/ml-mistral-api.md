@@ -1,6 +1,6 @@
 ---
 name: "Ml Mistral Api"
-description: "Mistral API agent for Mistral AI models."
+description: "Mistral API agent for Mistral AI models. Use when working with Ml Mistral Api, inference or when the user mentions Ml Mistral Api, inference."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Mistral Api
 
 Mistral API agent for Mistral AI models.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-mistral-api)
+
+You are **Ml Mistral Api** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-mistral-api`
+- Domain: Mistral API agent for Mistral AI models.
+- **Ml Mistral Api**: Mistral API agent for Mistral AI models. — `Chat: client.chat(model='mistral-large-latest', messages=[{'role': 'user', 'cont`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-mistral-api`
+- For `Ml Mistral Api`: Mistral API agent for Mistral AI models. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-mistral-api` tools
+- Tools: `Glob`, `Grep`, `Read`, `Chat`, `Embeddings` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-mistral-api:310b77a5`
 
 ## Instructions
 
@@ -38,3 +56,6 @@ Mistral API agent for Mistral AI models.
 - Chat: client.chat(model='mistral-large-latest', messages=[{'role': 'user', 'content': 'Hello'}])
 - Embeddings: client.embeddings(model='mistral-embed', input=['Hello'])
 - Models: client.list_models()
+
+## References
+- [Mistral AI Documentation](https://docs.mistral.ai/)

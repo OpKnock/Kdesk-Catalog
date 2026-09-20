@@ -1,15 +1,31 @@
 ---
 name: "css-tools"
-description: "Processes, lints, and optimizes CSS with PostCSS, Stylelint, Sass, Lightning CSS, and PurgeCSS pipelines."
+description: "Processes, lints, and optimizes CSS with PostCSS, Stylelint, Sass, Lightning CSS, and PurgeCSS pipelines. Use when working with lint, process, frontend or when the user mentions lint, process, frontend."
 globs: ["**/*.css", "**/*.html", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# css-tools
-
 Processes, lints, and optimizes CSS with PostCSS, Stylelint, Sass, Lightning CSS, and PurgeCSS pipelines.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (css-tools)
+
+You are **css-tools** (frontend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — frontend context for `css-tools`
+- Domain: Processes, lints, and optimizes CSS with PostCSS, Stylelint, Sass, Lightning CSS, and PurgeCSS pipelines.
+- **lint**: Lint and auto-fix CSS and SCSS with Stylelint. — `npx stylelint 'src/**/*.css'`
+- **process**: Compile and optimize CSS with PostCSS, Sass, and Lightning CSS. — `npx postcss src/styles.css -o dist/styles.css --use autoprefixer`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `css-tools`
+- For `lint`: Lint and auto-fix CSS and SCSS with Stylelint. — decide which checks to run
+- For `process`: Compile and optimize CSS with PostCSS, Sass, and Lightning CSS. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `css-tools` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `css-tools:08a60161`
 
 # CSS Tooling
 
@@ -74,6 +90,11 @@ npx lightningcss --minify --targets '>= 0.5%' src/styles.css -o dist/styles.css
 ### lint
 Lint and auto-fix CSS and SCSS with Stylelint.
 
+**Parameters:**
+- `config` (string): Path to Stylelint config
+- `max-warnings` (number): Exit non-zero beyond this many warnings
+- `formatter` (string): stylish, json, compact output
+
 **Commands:**
 - `npx stylelint 'src/**/*.css'`
 - `npx stylelint 'src/**/*.scss' --config .stylelintrc.json`
@@ -89,6 +110,11 @@ Lint and auto-fix CSS and SCSS with Stylelint.
 ### process
 Compile and optimize CSS with PostCSS, Sass, and Lightning CSS.
 
+**Parameters:**
+- `output` (string): Output CSS path or directory
+- `watch` (string): Rebuild on file changes
+- `style` (string): expanded or compressed output style
+
 **Commands:**
 - `npx postcss src/styles.css -o dist/styles.css --use autoprefixer`
 - `npx sass src/scss/main.scss dist/main.css --style compressed`
@@ -100,3 +126,8 @@ Compile and optimize CSS with PostCSS, Sass, and Lightning CSS.
 - npx sass src/scss/main.scss dist/main.css --watch --style compressed
 - npx purgecss --css build/*.css --content 'build/**/*.{html,js}' --output build/
 - npx lightningcss --minify --targets '>= 0.5%' src/a.css src/b.css -o dist/out.css
+
+## References
+- [Stylelint](https://stylelint.io/)
+- [PostCSS](https://postcss.org/)
+- [Sass Docs](https://sass-lang.com/documentation/cli/dart-sass)

@@ -1,6 +1,6 @@
 ---
 name: "Ml Versioning Inference Agent"
-description: "Versioning inference agent. Manages ML versioning inference."
+description: "Versioning inference agent. Manages ML versioning inference. Use when working with Ml Versioning Inference Agent or when the user mentions Ml Versioning Inference Agent."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Versioning Inference Agent
 
 Versioning inference agent. Manages ML versioning inference.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-versioning-inference-agent)
+
+You are **Ml Versioning Inference Agent** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-versioning-inference-agent`
+- Domain: Versioning inference agent. Manages ML versioning inference.
+- **Ml Versioning Inference Agent**: Versioning inference agent. Manages ML versioning inference. — `python version.py --model model.pkl --version 1.0`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-versioning-inference-agent`
+- For `Ml Versioning Inference Agent`: Versioning inference agent. Manages ML versioning inference. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-versioning-inference-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-versioning-inference-agent:9fef5332`
 
 ## Instructions
 
@@ -29,3 +47,6 @@ Versioning inference agent. Manages ML versioning inference.
 - python list_versions.py --model-name my_model
 - python serve_versioning.py --port 8080
 - python test_versioning.py
+
+## References
+- [Python Documentation](https://docs.python.org/3/)

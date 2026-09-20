@@ -2,31 +2,50 @@ title: testcontainers
 description: Start, inspect, and stop test containers. JUnit integration with it handling Java. Node.js
   integration with it package. and services.
 version: 2.0.0
-instructions: "# testcontainers\n\nStart, inspect, and stop test containers. JUnit integration with it\
-  \ handling Java. Node.js integration with it package. and services.\n\n## Instructions\n\n# Testcontainers\n\
-  \nRun real dependencies in tests with throwaway containers.\n\n## What This Skill Does\n\n- Starts databases,\
-  \ brokers, and services per test suite\n- Manages lifecycle automatically (start, wait, stop)\n- Maps\
-  \ random ports to avoid conflicts\n- Works with Java, Node, Go, and .NET test runners\n\n## When to\
-  \ Use\n\n- Integration tests that need a real Postgres/Redis\n- Testing against real message brokers\n\
-  - Replacing in-memory mocks with actual services\n\n## Real Commands\n\n```bash\n# Inspect running test\
-  \ containers\ndocker ps --filter name=testcontainer\ndocker logs $(docker ps -q --filter name=testcontainer-postgres)\n\
-  \n# Java\nmvn test -Dtest=OrderRepositoryIT\nmvn verify\n./gradlew test --tests \"*ContainerTest\"\n\
-  \n# Node\nnpm test\nnpx jest --runInBand tests/db.test.js\n```\n\n## Java Example\n\n```java\n@Testcontainers\n\
-  class OrderRepositoryIT {\n  @Container\n  static PostgreSQLContainer<?> postgres =\n      new PostgreSQLContainer<>(\"\
-  postgres:16\");\n\n  @Test\n  void persistsOrder() {\n    // dataSource points at postgres.getJdbcUrl()\n\
-  \  }\n}\n```\n\n## Best Practices\n\n- Scope containers to the suite, not each test\n- Use wait strategies\
-  \ (healthcheck) before asserting\n- Cap parallel containers to avoid resource exhaustion\n- Clean up\
-  \ images after CI runs\n- Keep container versions pinned to match production\n\n## Capabilities\n\n\
-  ### container-lifecycle\nStart, inspect, and stop test containers.\n\n**Commands:**\n- `docker ps --filter\
-  \ name=testcontainer`\n- `docker logs $(docker ps -q --filter name=testcontainer-postgres)`\n- `docker\
-  \ network ls`\n- `docker image prune -f`\n- `mvn test -Dtest=PostgresContainerTest`\n\n**Examples:**\n\
-  - docker logs $(docker ps -q --filter name=testcontainer-postgres)\n- docker ps --filter name=testcontainer\n\
-  - mvn test -Dtest=PostgresContainerTest\n\n### testcontainers-java\nJUnit integration with Testcontainers\
-  \ for Java.\n\n**Commands:**\n- `mvn test -Dtest=OrderRepositoryIT`\n- `mvn verify`\n- `./gradlew test\
-  \ --tests \"*ContainerTest\"`\n- `mvn test -Dcontainers.maxNumberOfContainers=4`\n\n**Examples:**\n\
-  - mvn test -Dtest=OrderRepositoryIT\n- ./gradlew test --tests \"*ContainerTest\"\n- mvn verify\n\n###\
-  \ testcontainers-node\nNode.js integration with testcontainers package.\n\n**Commands:**\n- `npm test`\n\
+instructions: "Start, inspect, and stop test containers. JUnit integration with it handling Java. Node.js\
+  \ integration with it package. and services.\n\n## Agentic Workflow: Read -> Reason -> Act (testcontainers)\n\
+  \nYou are **testcontainers** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — testing context for `testcontainers`\n- Domain: Start, inspect, and stop test containers.\
+  \ JUnit integration with it handling Java. Node.js integration with it package. and services.\n- **container-lifecycle**:\
+  \ Start, inspect, and stop test containers. — `docker ps --filter name=testcontainer`\n- **testcontainers-java**:\
+  \ JUnit integration with Testcontainers for Java. — `mvn test -Dtest=OrderRepositoryIT`\n- **testcontainers-node**:\
+  \ Node.js integration with testcontainers package. — `npm test`\n- Check `knowledge` and `prerequisites:\
+  \ ./gradlew, docker, mvn, node`\n\n### 2. Reason — think for `testcontainers`\n- For `container-lifecycle`:\
+  \ Start, inspect, and stop test containers. — decide which checks to run\n- For `testcontainers-java`:\
+  \ JUnit integration with Testcontainers for Java. — decide which checks to run\n- For `testcontainers-node`:\
+  \ Node.js integration with testcontainers package. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `testcontainers`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Mvn` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `testcontainers:b456fcab`\n\
+  \n# Testcontainers\n\nRun real dependencies in tests with throwaway containers.\n\n## What This Skill\
+  \ Does\n\n- Starts databases, brokers, and services per test suite\n- Manages lifecycle automatically\
+  \ (start, wait, stop)\n- Maps random ports to avoid conflicts\n- Works with Java, Node, Go, and .NET\
+  \ test runners\n\n## When to Use\n\n- Integration tests that need a real Postgres/Redis\n- Testing against\
+  \ real message brokers\n- Replacing in-memory mocks with actual services\n\n## Real Commands\n\n```bash\n\
+  # Inspect running test containers\ndocker ps --filter name=testcontainer\ndocker logs $(docker ps -q\
+  \ --filter name=testcontainer-postgres)\n\n# Java\nmvn test -Dtest=OrderRepositoryIT\nmvn verify\n./gradlew\
+  \ test --tests \"*ContainerTest\"\n\n# Node\nnpm test\nnpx jest --runInBand tests/db.test.js\n```\n\n\
+  ## Java Example\n\n```java\n@Testcontainers\nclass OrderRepositoryIT {\n  @Container\n  static PostgreSQLContainer<?>\
+  \ postgres =\n      new PostgreSQLContainer<>(\"postgres:16\");\n\n  @Test\n  void persistsOrder() {\n\
+  \    // dataSource points at postgres.getJdbcUrl()\n  }\n}\n```\n\n## Best Practices\n\n- Scope containers\
+  \ to the suite, not each test\n- Use wait strategies (healthcheck) before asserting\n- Cap parallel\
+  \ containers to avoid resource exhaustion\n- Clean up images after CI runs\n- Keep container versions\
+  \ pinned to match production\n\n## Capabilities\n\n### container-lifecycle\nStart, inspect, and stop\
+  \ test containers.\n\n**Parameters:**\n- `image` (string): Container image, e.g. postgres:16\n- `port`\
+  \ (number): Exposed port\n\n**Commands:**\n- `docker ps --filter name=testcontainer`\n- `docker logs\
+  \ $(docker ps -q --filter name=testcontainer-postgres)`\n- `docker network ls`\n- `docker image prune\
+  \ -f`\n- `mvn test -Dtest=PostgresContainerTest`\n\n**Examples:**\n- docker logs $(docker ps -q --filter\
+  \ name=testcontainer-postgres)\n- docker ps --filter name=testcontainer\n- mvn test -Dtest=PostgresContainerTest\n\
+  \n### testcontainers-java\nJUnit integration with Testcontainers for Java.\n\n**Parameters:**\n- `test`\
+  \ (string): Test class filter\n- `maxContainers` (number): Parallel container limit\n\n**Commands:**\n\
+  - `mvn test -Dtest=OrderRepositoryIT`\n- `mvn verify`\n- `./gradlew test --tests \"*ContainerTest\"\
+  `\n- `mvn test -Dcontainers.maxNumberOfContainers=4`\n\n**Examples:**\n- mvn test -Dtest=OrderRepositoryIT\n\
+  - ./gradlew test --tests \"*ContainerTest\"\n- mvn verify\n\n### testcontainers-node\nNode.js integration\
+  \ with testcontainers package.\n\n**Parameters:**\n- `runner` (string): Test runner invocation\n- `runInBand`\
+  \ (boolean): Run jest tests in-band to avoid container port conflicts.\n\n**Commands:**\n- `npm test`\n\
   - `npx jest --runInBand tests/db.test.js`\n- `node --test tests/containers.test.js`\n- `docker stats\
   \ --no-stream $(docker ps -q --filter name=testcontainer)`\n\n**Examples:**\n- npm test\n- npx jest\
-  \ --runInBand tests/db.test.js\n- docker stats --no-stream $(docker ps -q --filter name=testcontainer)"
+  \ --runInBand tests/db.test.js\n- docker stats --no-stream $(docker ps -q --filter name=testcontainer)\n\
+  \n## References\n- [Testcontainers Documentation](https://testcontainers.com/)\n- [Testcontainers Java](https://java.testcontainers.org/)\n\
+  - [Testcontainers Node](https://node.testcontainers.org/)"
 prompt: Act as testcontainers and handle the task per the instructions.

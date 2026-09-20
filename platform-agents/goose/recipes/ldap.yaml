@@ -2,15 +2,28 @@ title: Ldap
 description: Query and administer OpenLDAP directories using ldapsearch, ldapadd, and ldapmodify to manage
   entries, apply LDIF-based changes, and perform authenticated binds.
 version: 2.0.0
-instructions: "# Ldap\n\nQuery and administer OpenLDAP directories using ldapsearch, ldapadd, and ldapmodify\
-  \ to manage entries, apply LDIF-based changes, and perform authenticated binds.\n\n## Instructions\n\
-  \n# LDAP (OpenLDAP)\n\nQuery and administer LDAP directories with the OpenLDAP client tools.\n\n## What\
-  \ this skill does\n\n- Searches entries with ldapsearch (anonymous and bound).\n- Adds/modifies/deletes\
-  \ entries via LDIF.\n- Resets passwords with ldappasswd.\n\n## When to use\n\n- Integrating apps with\
-  \ corporate directory auth.\n- Provisioning and auditing users/groups.\n- Debugging bind and search\
-  \ filter issues.\n\n## Real commands\n\n```bash\n# Authenticated search\nldapsearch -x -H ldap://localhost:389\
-  \ \\\n  -D 'cn=admin,dc=myapp,dc=test' -w secret \\\n  -b 'dc=myapp,dc=test' '(uid=alice)'\n\n# Minimal\
-  \ output, specific attributes\nldapsearch -x -LLL -b 'ou=people,dc=myapp,dc=test' \\\n  '(&(objectClass=inetOrgPerson)(mail=*@myapp.test))'\
+instructions: "Query and administer OpenLDAP directories using ldapsearch, ldapadd, and ldapmodify to\
+  \ manage entries, apply LDIF-based changes, and perform authenticated binds.\n\n## Agentic Workflow:\
+  \ Read -> Reason -> Act (ldap)\n\nYou are **Ldap** (api/general) — a sub-agent that **Reads, Reasons,\
+  \ and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `ldap`\n- Domain: Query and administer\
+  \ OpenLDAP directories using ldapsearch, ldapadd, and ldapmodify to manage entries, apply LDIF-based\
+  \ changes, and perform authenticated binds.\n- **ldap-query**: Search and read directory entries with\
+  \ ldapsearch. — `ldapsearch -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test' -w secret -`\n\
+  - **ldap-write**: Add, modify, and delete entries with LDIF files. — `ldapadd -x -H ldap://localhost:389\
+  \ -D 'cn=admin,dc=myapp,dc=test' -w secret -f a`\n- Check `knowledge` and `prerequisites: ldapadd, ldapdelete,\
+  \ ldapmodify, ldappasswd`\n\n### 2. Reason — think for `ldap`\n- For `ldap-query`: Search and read directory\
+  \ entries with ldapsearch. — decide which checks to run\n- For `ldap-write`: Add, modify, and delete\
+  \ entries with LDIF files. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `ldap` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Ldapsearch`, `Ldapadd` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any\
+  \ write; record evidence (paths, checksums)\n- Fingerprint: `ldap:0204eba3`\n\n# LDAP (OpenLDAP)\n\n\
+  Query and administer LDAP directories with the OpenLDAP client tools.\n\n## What this skill does\n\n\
+  - Searches entries with ldapsearch (anonymous and bound).\n- Adds/modifies/deletes entries via LDIF.\n\
+  - Resets passwords with ldappasswd.\n\n## When to use\n\n- Integrating apps with corporate directory\
+  \ auth.\n- Provisioning and auditing users/groups.\n- Debugging bind and search filter issues.\n\n##\
+  \ Real commands\n\n```bash\n# Authenticated search\nldapsearch -x -H ldap://localhost:389 \\\n  -D 'cn=admin,dc=myapp,dc=test'\
+  \ -w secret \\\n  -b 'dc=myapp,dc=test' '(uid=alice)'\n\n# Minimal output, specific attributes\nldapsearch\
+  \ -x -LLL -b 'ou=people,dc=myapp,dc=test' \\\n  '(&(objectClass=inetOrgPerson)(mail=*@myapp.test))'\
   \ cn mail\n\n# Root DSE (capabilities)\nldapsearch -x -b 'dc=myapp,dc=test' '(objectClass=*)' -s base\n\
   \n# Add from LDIF\nldapadd -x -H ldap://localhost:389 \\\n  -D 'cn=admin,dc=myapp,dc=test' -w secret\
   \ -f alice.ldif\n\n# Modify from LDIF\nldapmodify -x -H ldap://localhost:389 \\\n  -D 'cn=admin,dc=myapp,dc=test'\
@@ -24,6 +37,8 @@ instructions: "# Ldap\n\nQuery and administer OpenLDAP directories using ldapsea
   \n- Use -LLL for scriptable output and -w for bind passwords only on trusted hosts.\n- Never store plaintext\
   \ userPassword in LDIF; use hashed values.\n- Test filters with the smallest scope (ou=) before running\
   \ on the full tree.\n\n## Capabilities\n\n### ldap-query\nSearch and read directory entries with ldapsearch.\n\
+  \n**Parameters:**\n- `base` (string): Search base DN.\n- `filter` (string): LDAP filter, e.g. (uid=alice).\n\
+  - `bind_dn` (string): Bind DN for authenticated search.\n- `password` (string): Bind password (-w).\n\
   \n**Commands:**\n- `ldapsearch -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test' -w secret -b\
   \ 'dc=myapp,dc=test' '(uid=alice)'`\n- `ldapsearch -x -LLL -b 'ou=people,dc=myapp,dc=test' '(&(objectClass=inetOrgPerson)(mail=*@myapp.test))'\
   \ cn mail`\n- `ldapsearch -x -b 'dc=myapp,dc=test' '(objectClass=*)' -s base`\n- `ldapsearch -x -H ldaps://localhost:636\
@@ -31,12 +46,14 @@ instructions: "# Ldap\n\nQuery and administer OpenLDAP directories using ldapsea
   \ -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test' -w secret -b 'dc=myapp,dc=test' '(uid=alice)'\n\
   - ldapsearch -x -LLL -b 'ou=people,dc=myapp,dc=test' '(mail=*@myapp.test)' cn mail\n- ldapsearch -x\
   \ -b 'dc=myapp,dc=test' '(objectClass=*)' -s base\n\n### ldap-write\nAdd, modify, and delete entries\
-  \ with LDIF files.\n\n**Commands:**\n- `ldapadd -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test'\
+  \ with LDIF files.\n\n**Parameters:**\n- `ldif` (string): LDIF file path for add/modify.\n- `dn` (string):\
+  \ Entry DN for delete/password ops.\n\n**Commands:**\n- `ldapadd -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test'\
   \ -w secret -f alice.ldif`\n- `ldapmodify -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test'\
   \ -w secret -f change.ldif`\n- `ldapdelete -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test'\
   \ -w secret 'uid=bob,ou=people,dc=myapp,dc=test'`\n- `ldappasswd -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test'\
   \ -w secret -s newpass 'uid=alice,ou=people,dc=myapp,dc=test'`\n\n**Examples:**\n- ldapadd -x -H ldap://localhost:389\
   \ -D 'cn=admin,dc=myapp,dc=test' -w secret -f alice.ldif\n- ldapmodify -x -H ldap://localhost:389 -D\
   \ 'cn=admin,dc=myapp,dc=test' -w secret -f change.ldif\n- ldapdelete -x -H ldap://localhost:389 -D 'cn=admin,dc=myapp,dc=test'\
-  \ -w secret 'uid=bob,ou=people,dc=myapp,dc=test'"
+  \ -w secret 'uid=bob,ou=people,dc=myapp,dc=test'\n\n## References\n- [OpenLDAP Admin Guide](https://www.openldap.org/doc/admin24/)\n\
+  - [ldapsearch man page](https://man7.org/linux/man-pages/man1/ldapsearch.1.html)"
 prompt: Act as Ldap and handle the task per the instructions.

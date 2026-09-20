@@ -1,15 +1,31 @@
 ---
 name: "Homebrew"
-description: "Installs and manages macOS/Linux software with Homebrew: formulae, casks, services, cleanup, and Brewfile workflows."
+description: "Installs and manages macOS/Linux software with Homebrew: formulae, casks, services, cleanup, and Brewfile workflows. Use when working with package operations, services and cleanup, devtools or when the user mentions package operations, services and cleanup, devtools."
 globs: ["**/*.r", "**/*.rb", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# Homebrew
-
 Installs and manages macOS/Linux software with Homebrew: formulae, casks, services, cleanup, and Brewfile workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (homebrew)
+
+You are **Homebrew** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `homebrew`
+- Domain: Installs and manages macOS/Linux software with Homebrew: formulae, casks, services, cleanup, and Brewfile workflows.
+- **package-operations**: Install, search, upgrade, and uninstall formulae and casks. — `brew search postgres`
+- **services-and-cleanup**: Run background services and maintain a clean brew state. — `brew services start postgresql@16`
+- Check `knowledge` and `prerequisites: brew`
+
+### 2. Reason — think for `homebrew`
+- For `package-operations`: Install, search, upgrade, and uninstall formulae and casks. — decide which checks to run
+- For `services-and-cleanup`: Run background services and maintain a clean brew state. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `homebrew` tools
+- Tools: `Glob`, `Grep`, `Read`, `Brew` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `homebrew:00f8e142`
 
 # Homebrew Package Management
 
@@ -83,6 +99,10 @@ cask "visual-studio-code"
 ### package-operations
 Install, search, upgrade, and uninstall formulae and casks.
 
+**Parameters:**
+- `package` (string): Formula or cask name
+- `cask` (boolean): Treat package as a GUI cask
+
 **Commands:**
 - `brew search postgres`
 - `brew install postgresql@16`
@@ -99,6 +119,10 @@ Install, search, upgrade, and uninstall formulae and casks.
 ### services-and-cleanup
 Run background services and maintain a clean brew state.
 
+**Parameters:**
+- `service` (string): Service name
+- `prune` (string): Cache age to prune
+
 **Commands:**
 - `brew services start postgresql@16`
 - `brew services list`
@@ -111,3 +135,7 @@ Run background services and maintain a clean brew state.
 - brew services start postgresql@16
 - brew cleanup --prune=7
 - brew doctor
+
+## References
+- [Homebrew Documentation](https://docs.brew.sh/)
+- [Homebrew Formulae Search](https://formulae.brew.sh/)

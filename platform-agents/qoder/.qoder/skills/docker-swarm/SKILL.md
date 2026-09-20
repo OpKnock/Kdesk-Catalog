@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(docker:*)"
 
 Deploys and manages Docker Swarm clusters: services, replicas, secrets, configs, stacks, and rolling updates.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (docker-swarm)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **docker-swarm** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `docker swarm init --advertise-addr 10.0.0.5`, `docker service create --name web --replicas 3 --publish 80:8`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devops context for `docker-swarm`
+- Domain: Deploys and manages Docker Swarm clusters: services, replicas, secrets, configs, stacks, and rolling updates.
+- **swarm-cluster**: Initialize swarm, join workers and managers, and inspect cluster state. — `docker swarm init --advertise-addr 10.0.0.5`
+- **services-and-stacks**: Create and update services, deploy stacks, and roll out changes safely. — `docker service create --name web --replicas 3 --publish 80:80 nginx:1.26`
+- Check `knowledge` and `prerequisites: docker`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `docker-swarm`
+- For `swarm-cluster`: Initialize swarm, join workers and managers, and inspect cluster state. — decide which checks to run
+- For `services-and-stacks`: Create and update services, deploy stacks, and roll out changes safely. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `docker-swarm` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `docker-swarm:17dcd6c2`
 
 # Docker Swarm Operations
 

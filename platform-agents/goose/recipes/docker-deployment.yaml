@@ -2,18 +2,29 @@ title: Docker Deployment
 description: 'Production Docker deployments: builds multi-stage images, tags and pushes to registries,
   runs containers with proper restart policies, and rolls back.'
 version: 2.0.0
-instructions: "# Docker Deployment\n\nProduction Docker deployments: builds multi-stage images, tags and\
-  \ pushes to registries, runs containers with proper restart policies, and rolls back.\n\n## Instructions\n\
-  \n# Docker Deployment\n\n## What this skill does\n\nDocker deployment is the art of taking an application\
-  \ from Dockerfile to running container in production: building reproducible images, pushing to a registry,\
-  \ running with correct restart policies, and rolling back safely.\n\n## When to use\n\n- Deploying an\
-  \ application on a single host or small fleet with docker run\n- Building images in CI for later release\n\
-  - Debugging why a production container stopped\n\n## Real commands\n\n```bash\n# Build and push\n docker\
-  \ build -t ghcr.io/org/app:v1.2.3 .\n docker login ghcr.io\n docker push ghcr.io/org/app:v1.2.3\n\n\
-  # Run in production\n docker run -d --name app --restart unless-stopped -p 8080:8080 -e ENV=prod ghcr.io/org/app:v1.2.3\n\
-  \n# Inspect state\n docker inspect app --format '{{json .State}}' | jq\n docker ps -a --filter name=app\n\
-  \n# Roll back to the previous tag\n docker rm -f app\n docker run -d --name app --restart unless-stopped\
-  \ -p 8080:8080 ghcr.io/org/app:v1.2.2\n\n# Cleanup\n docker system prune -af --volumes\n```\n\n## Multi-stage\
+instructions: "Production Docker deployments: builds multi-stage images, tags and pushes to registries,\
+  \ runs containers with proper restart policies, and rolls back.\n\n## Agentic Workflow: Read -> Reason\
+  \ -> Act (docker-deployment)\n\nYou are **Docker Deployment** (api/general) — a sub-agent that **Reads,\
+  \ Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `docker-deployment`\n- Domain:\
+  \ Production Docker deployments: builds multi-stage images, tags and pushes to registries, runs containers\
+  \ with proper restart policies, and rolls back.\n- **image-deploy**: Build, sign, push, run, and inspect\
+  \ Docker images and containers in deployment pipelines. — `docker build -t ghcr.io/org/app:v1.2.3 .`\n\
+  - Check `knowledge` and `prerequisites: docker`\n\n### 2. Reason — think for `docker-deployment`\n-\
+  \ For `image-deploy`: Build, sign, push, run, and inspect Docker images and containers in deployment\
+  \ pipelines. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns\
+  \ for your inputs\n\n### 3. Act — execute with `docker-deployment` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence\
+  \ (paths, checksums)\n- Fingerprint: `docker-deployment:2829df65`\n\n# Docker Deployment\n\n## What\
+  \ this skill does\n\nDocker deployment is the art of taking an application from Dockerfile to running\
+  \ container in production: building reproducible images, pushing to a registry, running with correct\
+  \ restart policies, and rolling back safely.\n\n## When to use\n\n- Deploying an application on a single\
+  \ host or small fleet with docker run\n- Building images in CI for later release\n- Debugging why a\
+  \ production container stopped\n\n## Real commands\n\n```bash\n# Build and push\n docker build -t ghcr.io/org/app:v1.2.3\
+  \ .\n docker login ghcr.io\n docker push ghcr.io/org/app:v1.2.3\n\n# Run in production\n docker run\
+  \ -d --name app --restart unless-stopped -p 8080:8080 -e ENV=prod ghcr.io/org/app:v1.2.3\n\n# Inspect\
+  \ state\n docker inspect app --format '{{json .State}}' | jq\n docker ps -a --filter name=app\n\n# Roll\
+  \ back to the previous tag\n docker rm -f app\n docker run -d --name app --restart unless-stopped -p\
+  \ 8080:8080 ghcr.io/org/app:v1.2.2\n\n# Cleanup\n docker system prune -af --volumes\n```\n\n## Multi-stage\
   \ Dockerfile example\n\n```dockerfile\nFROM golang:1.22 AS build\nWORKDIR /src\nCOPY go.mod go.sum ./\n\
   RUN go mod download\nCOPY . .\nRUN CGO_ENABLED=0 go build -o /bin/app ./cmd/app\n\nFROM alpine:3.20\n\
   RUN adduser -D app\nCOPY --from=build /bin/app /usr/local/bin/app\nUSER app\nEXPOSE 8080\nENTRYPOINT\
@@ -24,10 +35,14 @@ instructions: "# Docker Deployment\n\nProduction Docker deployments: builds mult
   \ `--restart always` with manual runs.\n- Tag images with immutable versions, not `latest`, so rollback\
   \ is deterministic.\n- Keep old images for at least one release cycle to enable quick rollback.\n\n\
   ## Capabilities\n\n### image-deploy\nBuild, sign, push, run, and inspect Docker images and containers\
-  \ in deployment pipelines.\n\n**Commands:**\n- `docker build -t ghcr.io/org/app:v1.2.3 .`\n- `docker\
-  \ login ghcr.io`\n- `docker push ghcr.io/org/app:v1.2.3`\n- `docker run -d --name app --restart unless-stopped\
-  \ -p 8080:8080 -e ENV=prod ghcr.io/org/app:v1.2.3`\n- `docker inspect app --format '{{json .State}}'\
-  \ | jq`\n- `docker system prune -af --volumes`\n\n**Examples:**\n- docker build -t ghcr.io/org/app:v1.2.3\
+  \ in deployment pipelines.\n\n**Parameters:**\n- `image-tag` (string): Full image reference including\
+  \ registry and tag\n- `container-name` (string): Name for the running container\n- `port-mapping` (string):\
+  \ host:container port mapping for -p\n\n**Commands:**\n- `docker build -t ghcr.io/org/app:v1.2.3 .`\n\
+  - `docker login ghcr.io`\n- `docker push ghcr.io/org/app:v1.2.3`\n- `docker run -d --name app --restart\
+  \ unless-stopped -p 8080:8080 -e ENV=prod ghcr.io/org/app:v1.2.3`\n- `docker inspect app --format '{{json\
+  \ .State}}' | jq`\n- `docker system prune -af --volumes`\n\n**Examples:**\n- docker build -t ghcr.io/org/app:v1.2.3\
   \ . && docker push ghcr.io/org/app:v1.2.3\n- docker run -d --name app --restart unless-stopped -p 8080:8080\
-  \ ghcr.io/org/app:v1.2.3\n- docker tag app:old ghcr.io/org/app:v1.2.2 && docker push ghcr.io/org/app:v1.2.2"
+  \ ghcr.io/org/app:v1.2.3\n- docker tag app:old ghcr.io/org/app:v1.2.2 && docker push ghcr.io/org/app:v1.2.2\n\
+  \n## References\n- [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)\n\
+  - [docker CLI Reference](https://docs.docker.com/reference/cli/docker/)"
 prompt: Act as Docker Deployment and handle the task per the instructions.

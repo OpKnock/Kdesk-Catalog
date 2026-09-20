@@ -4,27 +4,25 @@ applyTo: "**/*.r **/*.sh"
 
 Operates etcd key-value stores: read/write keys, watch changes, manage members, snapshots, backups, and cluster health.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (etcd)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **etcd** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `etcdctl put /config/app version 1.2.3`, `etcdctl member list`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devops context for `etcd`
+- Domain: Operates etcd key-value stores: read/write keys, watch changes, manage members, snapshots, backups, and cluster health.
+- **kv-operations**: Put, get, delete, and watch keys in the etcd database. — `etcdctl put /config/app version 1.2.3`
+- **cluster-and-backup**: Manage members, check health, defrag, and take snapshots for backup. — `etcdctl member list`
+- Check `knowledge` and `prerequisites: etcdctl`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `etcd`
+- For `kv-operations`: Put, get, delete, and watch keys in the etcd database. — decide which checks to run
+- For `cluster-and-backup`: Manage members, check health, defrag, and take snapshots for backup. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `etcd` tools
+- Tools: `Glob`, `Grep`, `Read`, `Etcdctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `etcd:37a8d658`
 
 # etcd Operations
 

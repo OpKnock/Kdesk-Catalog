@@ -1,8 +1,24 @@
-# Service Mesh
-
 Evaluates and operates service meshes (Istio, Linkerd, Consul): proxies, sidecar injection, mTLS, mesh observability, and L7 policies.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (service-mesh-devops)
+
+You are **Service Mesh** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `service-mesh-devops`
+- Domain: Evaluates and operates service meshes (Istio, Linkerd, Consul): proxies, sidecar injection, mTLS, mesh observability, and L7 policies.
+- **mesh-selection-and-install**: Choose and install a mesh (Istio/Linkerd/Consul) for a workload profile. — `istioctl install --set profile=default -y`
+- **traffic-and-security-policies**: Enforce mTLS, AuthorizationPolicies, and L7 routing rules. — `kubectl apply -f peerauthentication.yaml`
+- Check `knowledge` and `prerequisites: consul, helm, istioctl, kubectl`
+
+### 2. Reason — think for `service-mesh-devops`
+- For `mesh-selection-and-install`: Choose and install a mesh (Istio/Linkerd/Consul) for a workload profile. — decide which checks to run
+- For `traffic-and-security-policies`: Enforce mTLS, AuthorizationPolicies, and L7 routing rules. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `service-mesh-devops` tools
+- Tools: `Glob`, `Grep`, `Read`, `Istioctl`, `Linkerd` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `service-mesh-devops:ac3d8b75`
 
 # Service Mesh Operations
 
@@ -67,6 +83,10 @@ consul catalog services
 ### mesh-selection-and-install
 Choose and install a mesh (Istio/Linkerd/Consul) for a workload profile.
 
+**Parameters:**
+- `mesh` (string): Mesh to install: istio, linkerd, consul
+- `namespace` (string): Mesh namespace
+
 **Commands:**
 - `istioctl install --set profile=default -y`
 - `linkerd check --pre`
@@ -83,6 +103,10 @@ Choose and install a mesh (Istio/Linkerd/Consul) for a workload profile.
 ### traffic-and-security-policies
 Enforce mTLS, AuthorizationPolicies, and L7 routing rules.
 
+**Parameters:**
+- `pod` (string): Pod for proxy inspection
+- `manifest` (string): Policy CR file
+
 **Commands:**
 - `kubectl apply -f peerauthentication.yaml`
 - `kubectl apply -f authorizationpolicy.yaml`
@@ -95,3 +119,8 @@ Enforce mTLS, AuthorizationPolicies, and L7 routing rules.
 - kubectl apply -f peerauthentication.yaml
 - linkerd tap deploy/web -n app
 - consul intention create web api --allow
+
+## References
+- [Istio Concepts](https://istio.io/latest/docs/concepts/)
+- [Linkerd Overview](https://linkerd.io/2.15/overview/)
+- [Consul Service Mesh](https://developer.hashicorp.com/consul/docs/connect)

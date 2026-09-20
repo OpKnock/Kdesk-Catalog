@@ -2,13 +2,24 @@ title: load-balancer-engineer
 description: 'Architects layer 4/7 load balancing with HAProxy and Envoy: routing, health checks, and
   capacity verification with load tools.'
 version: 2.0.0
-instructions: "# load-balancer-engineer\n\nArchitects layer 4/7 load balancing with HAProxy and Envoy:\
-  \ routing, health checks, and capacity verification with load tools.\n\n## Instructions\n\n# Load Balancer\
-  \ Engineering\n\nDesign and verify layer 4/7 balancers for capacity and correctness.\n\n## When to Use\n\
-  \n- Routing traffic across service instances\n- TLS termination and header manipulation\n- Capacity\
-  \ verification before launches\n\n## Envoy basics\n\n```yaml\nstatic_resources:\n  listeners:\n    -\
-  \ name: listener_0\n      address: { socket_address: { address: 0.0.0.0, port_value: 10000 } }\n   \
-  \   filter_chains:\n        - filters:\n            - name: envoy.filters.network.http_connection_manager\n\
+instructions: "Architects layer 4/7 load balancing with HAProxy and Envoy: routing, health checks, and\
+  \ capacity verification with load tools.\n\n## Agentic Workflow: Read -> Reason -> Act (load-balancer-engineer)\n\
+  \nYou are **load-balancer-engineer** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts**\
+  \ via `allowed-tools`.\n\n### 1. Read — infrastructure context for `load-balancer-engineer`\n- Domain:\
+  \ Architects layer 4/7 load balancing with HAProxy and Envoy: routing, health checks, and capacity verification\
+  \ with load tools.\n- **envoy**: Configure and run Envoy proxies. — `envoy -c envoy.yaml`\n- **capacity**:\
+  \ Verify balancer capacity with load generation. — `hey -n 5000 -c 100 http://127.0.0.1:8080/`\n- Check\
+  \ `knowledge` and `prerequisites: nginx, haproxy, aws-cli, istioctl`\n\n### 2. Reason — think for `load-balancer-engineer`\n\
+  - For `envoy`: Configure and run Envoy proxies. — decide which checks to run\n- For `capacity`: Verify\
+  \ balancer capacity with load generation. — decide which checks to run\n- Evaluate trust/policy: `kdesk\
+  \ trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `load-balancer-engineer`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Envoy`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `load-balancer-engineer:e654f055`\n\
+  \n# Load Balancer Engineering\n\nDesign and verify layer 4/7 balancers for capacity and correctness.\n\
+  \n## When to Use\n\n- Routing traffic across service instances\n- TLS termination and header manipulation\n\
+  - Capacity verification before launches\n\n## Envoy basics\n\n```yaml\nstatic_resources:\n  listeners:\n\
+  \    - name: listener_0\n      address: { socket_address: { address: 0.0.0.0, port_value: 10000 } }\n\
+  \      filter_chains:\n        - filters:\n            - name: envoy.filters.network.http_connection_manager\n\
   \              typed_config:\n                \"@type\": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager\n\
   \                stat_prefix: ingress\n                route_config:\n                  virtual_hosts:\n\
   \                    - name: backend\n                      domains: [\"*\"]\n                     \
@@ -29,16 +40,21 @@ instructions: "# load-balancer-engineer\n\nArchitects layer 4/7 load balancing w
   \ lifetime.\n- Load test at 2x peak to find the failure curve.\n\n## Testing\n\n```bash\nenvoy --mode\
   \ validate --config-path envoy.yaml\nab -n 10000 -c 200 -k http://127.0.0.1:8080/\n```\n\nRecord the\
   \ capacity baseline per release.\n\n## Capabilities\n\n### envoy\nConfigure and run Envoy proxies.\n\
-  \n**Commands:**\n- `envoy -c envoy.yaml`\n- `envoy --config-path envoy.yaml --mode validate`\n- `envoy\
-  \ --mode validate --config-path envoy.yaml`\n- `curl -s http://127.0.0.1:9901/stats | grep -E 'cluster.upstream_cx_active|http.downstream_rq_total'`\n\
+  \n**Parameters:**\n- `config-path` (string): Envoy bootstrap config file\n- `mode` (string): validate\
+  \ or serve mode\n- `admin-port` (number): Envoy admin listener port\n\n**Commands:**\n- `envoy -c envoy.yaml`\n\
+  - `envoy --config-path envoy.yaml --mode validate`\n- `envoy --mode validate --config-path envoy.yaml`\n\
+  - `curl -s http://127.0.0.1:9901/stats | grep -E 'cluster.upstream_cx_active|http.downstream_rq_total'`\n\
   - `curl -s http://127.0.0.1:9901/clusters | grep -E 'health_flags|healthy'`\n\n**Examples:**\n- envoy\
   \ --mode validate --config-path envoy.yaml\n- curl -s http://127.0.0.1:9901/stats/prometheus | grep\
   \ 'envoy_cluster_upstream_cx_active'\n- curl -s http://127.0.0.1:9901/server_info | jq '.version'\n\n\
-  ### capacity\nVerify balancer capacity with load generation.\n\n**Commands:**\n- `hey -n 5000 -c 100\
-  \ http://127.0.0.1:8080/`\n- `ab -n 10000 -c 200 -k http://127.0.0.1:8080/api`\n- `curl -sI http://127.0.0.1:8080/\
-  \ | grep -iE 'HTTP|x-request-id'`\n- `hey -n 2000 -c 50 -m POST -T 'application/json' -d '{\"q\":1}'\
-  \ http://127.0.0.1:8080/search`\n- `curl -s -o /dev/null -w '%{time_total} %{http_code}\\n' http://127.0.0.1:8080/healthz`\n\
-  \n**Examples:**\n- ab -n 10000 -c 200 -k http://127.0.0.1:8080/ | grep -E 'Requests per second|Failed\
-  \ requests'\n- hey -n 3000 -c 100 -z 30s http://127.0.0.1:8080/\n- curl -sI -H 'Host: api.example.com'\
-  \ http://127.0.0.1:8080/ | head -5"
+  ### capacity\nVerify balancer capacity with load generation.\n\n**Parameters:**\n- `requests` (number):\
+  \ Total request count\n- `concurrency` (number): Concurrent connections\n- `method` (string): HTTP method\
+  \ and payload\n\n**Commands:**\n- `hey -n 5000 -c 100 http://127.0.0.1:8080/`\n- `ab -n 10000 -c 200\
+  \ -k http://127.0.0.1:8080/api`\n- `curl -sI http://127.0.0.1:8080/ | grep -iE 'HTTP|x-request-id'`\n\
+  - `hey -n 2000 -c 50 -m POST -T 'application/json' -d '{\"q\":1}' http://127.0.0.1:8080/search`\n- `curl\
+  \ -s -o /dev/null -w '%{time_total} %{http_code}\\n' http://127.0.0.1:8080/healthz`\n\n**Examples:**\n\
+  - ab -n 10000 -c 200 -k http://127.0.0.1:8080/ | grep -E 'Requests per second|Failed requests'\n- hey\
+  \ -n 3000 -c 100 -z 30s http://127.0.0.1:8080/\n- curl -sI -H 'Host: api.example.com' http://127.0.0.1:8080/\
+  \ | head -5\n\n## References\n- [Envoy Proxy Docs](https://www.envoyproxy.io/docs)\n- [Envoy Admin API](https://www.envoyproxy.io/docs/envoy/latest/operations/admin)\n\
+  - [HAProxy Management](https://www.haproxy.org/download/2.9/doc/management.txt)"
 prompt: Act as load-balancer-engineer and handle the task per the instructions.

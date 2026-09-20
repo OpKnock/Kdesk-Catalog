@@ -6,27 +6,25 @@ alwaysApply: false
 
 Designs pagination for APIs and databases: offset vs cursor keysets, EXPLAIN verification, and link-format pagination contracts.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (pagination-designer-pagination-designer)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **pagination-designer-pagination-designer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `psql -c 'EXPLAIN ANALYZE SELECT * FROM items ORDER BY id LIM`, `curl -s 'http://localhost:8080/items?limit=100&page=3' | jq `
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `pagination-designer-pagination-designer`
+- Domain: Designs pagination for APIs and databases: offset vs cursor keysets, EXPLAIN verification, and link-format pagination contracts.
+- **sql**: Prototype and verify pagination queries in SQL. — `psql -c 'EXPLAIN ANALYZE SELECT * FROM items ORDER BY id LIMIT 50 OFFSET 50000;'`
+- **api**: Verify paginated API responses. — `curl -s 'http://localhost:8080/items?limit=100&page=3' | jq '.items | length'`
+- Check `knowledge` and `prerequisites: node.js, python, postgresql, redis`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `pagination-designer-pagination-designer`
+- For `sql`: Prototype and verify pagination queries in SQL. — decide which checks to run
+- For `api`: Verify paginated API responses. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `pagination-designer-pagination-designer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Mysql` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `pagination-designer-pagination-designer:27b89e19`
 
 # Pagination Design
 

@@ -1,5 +1,5 @@
 ---
-description: "AKS deployment agent for ML Azure Kubernetes Service deployment."
+description: "AKS deployment agent for ML Azure Kubernetes Service deployment. Use when working with Ml Aks Deploy, deployment or when the user mentions Ml Aks Deploy, deployment."
 globs: ["**/*.r", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Ml Aks Deploy
 
 AKS deployment agent for ML Azure Kubernetes Service deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-aks-deploy)
+
+You are **Ml Aks Deploy** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-aks-deploy`
+- Domain: AKS deployment agent for ML Azure Kubernetes Service deployment.
+- **Ml Aks Deploy**: AKS deployment agent for ML Azure Kubernetes Service deployment. — `Deploy: kubectl apply -f deployment.yaml`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-aks-deploy`
+- For `Ml Aks Deploy`: AKS deployment agent for ML Azure Kubernetes Service deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-aks-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Deploy`, `Context` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-aks-deploy:576aba3b`
 
 ## Instructions
 
@@ -26,3 +44,7 @@ AKS deployment agent for ML Azure Kubernetes Service deployment.
 - Context: az aks get-credentials --resource-group myRG --name myAKSCluster
 - Deploy: kubectl apply -f deployment.yaml
 - Scale: kubectl scale deployment/ml-service --replicas=3
+
+## References
+- [Azure Kubernetes Service Documentation](https://learn.microsoft.com/azure/aks/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

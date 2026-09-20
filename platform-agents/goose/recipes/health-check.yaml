@@ -2,8 +2,18 @@ title: Health Check
 description: 'Endpoint health checking from the CLI: curl -f probes, TCP checks with nc, HTTP status verification,
   and Kubernetes readiness waits.'
 version: 2.0.0
-instructions: "# Health Check\n\nEndpoint health checking from the CLI: curl -f probes, TCP checks with\
-  \ nc, HTTP status verification, and Kubernetes readiness waits.\n\n## Instructions\n\n# Health Check\n\
+instructions: "Endpoint health checking from the CLI: curl -f probes, TCP checks with nc, HTTP status\
+  \ verification, and Kubernetes readiness waits.\n\n## Agentic Workflow: Read -> Reason -> Act (health-check)\n\
+  \nYou are **Health Check** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `health-check`\n- Domain: Endpoint health checking from the CLI: curl\
+  \ -f probes, TCP checks with nc, HTTP status verification, and Kubernetes readiness waits.\n- **endpoint-probing**:\
+  \ Probe HTTP and TCP endpoints for availability from scripts and CI. — `curl -f -s -o /dev/null -w '%{http_code}\\\
+  n' http://localhost:8080/healthz`\n- Check `knowledge` and `prerequisites: kubectl, wget`\n\n### 2.\
+  \ Reason — think for `health-check`\n- For `endpoint-probing`: Probe HTTP and TCP endpoints for availability\
+  \ from scripts and CI. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `health-check` tools\n- Tools: `Glob`,\
+  \ `Grep`, `Read`, `Bash`, `Nc` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any\
+  \ write; record evidence (paths, checksums)\n- Fingerprint: `health-check:10a9c964`\n\n# Health Check\n\
   \nProbe service health from the command line.\n\n## What this skill does\n\n- Checks HTTP health endpoints\
   \ with curl and wget.\n- Tests TCP reachability with nc.\n- Waits for Kubernetes deployment readiness.\n\
   - Reports latency and status codes for alerting scripts.\n\n## When to use\n\n- Before restarting a\
@@ -21,10 +31,13 @@ instructions: "# Health Check\n\nEndpoint health checking from the CLI: curl -f 
   - Distinguish liveness (process up) from readiness (deps ready) in Kubernetes.\n\n## Example exchange\n\
   \n```\nUser: Is the web service up?\nAgent: curl -fsS http://localhost:8080/health && echo OK\n    \
   \   # prints OK when the service responds 2xx\n```\n\n## Capabilities\n\n### endpoint-probing\nProbe\
-  \ HTTP and TCP endpoints for availability from scripts and CI.\n\n**Commands:**\n- `curl -f -s -o /dev/null\
-  \ -w '%{http_code}\\n' http://localhost:8080/healthz`\n- `curl -fsS http://localhost:8080/health &&\
-  \ echo OK`\n- `nc -zv localhost 8080`\n- `wget --spider -S http://localhost:8080/health 2>&1 | grep\
-  \ HTTP`\n- `kubectl wait --for=condition=Available deployment/web -n default --timeout=60s`\n\n**Examples:**\n\
-  - curl -fsS --max-time 3 http://localhost:8080/health || exit 1\n- nc -zv -w 3 localhost 5432\n- curl\
-  \ -s -o /dev/null -w '%{time_total}\\n' http://localhost:8080/health"
+  \ HTTP and TCP endpoints for availability from scripts and CI.\n\n**Parameters:**\n- `url` (string):\
+  \ Health endpoint URL.\n- `timeout` (integer): Probe timeout in seconds.\n- `expected_code` (integer):\
+  \ Expected HTTP status, default 200.\n\n**Commands:**\n- `curl -f -s -o /dev/null -w '%{http_code}\\\
+  n' http://localhost:8080/healthz`\n- `curl -fsS http://localhost:8080/health && echo OK`\n- `nc -zv\
+  \ localhost 8080`\n- `wget --spider -S http://localhost:8080/health 2>&1 | grep HTTP`\n- `kubectl wait\
+  \ --for=condition=Available deployment/web -n default --timeout=60s`\n\n**Examples:**\n- curl -fsS --max-time\
+  \ 3 http://localhost:8080/health || exit 1\n- nc -zv -w 3 localhost 5432\n- curl -s -o /dev/null -w\
+  \ '%{time_total}\\n' http://localhost:8080/health\n\n## References\n- [curl manual](https://curl.se/docs/manpage.html)\n\
+  - [kubectl wait reference](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_wait/)"
 prompt: Act as Health Check and handle the task per the instructions.

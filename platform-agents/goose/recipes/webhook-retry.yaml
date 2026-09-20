@@ -2,16 +2,27 @@ title: Webhook Retry
 description: Designs retry policies for webhook delivery with exponential backoff and jitter. Uses idempotency
   keys to make replays safe, manages dead-letter queues, and provides per-delivery retry and replay APIs.
 version: 2.0.0
-instructions: "# Webhook Retry\n\nDesigns retry policies for webhook delivery with exponential backoff\
+instructions: "Designs retry policies for webhook delivery with exponential backoff and jitter. Uses idempotency\
+  \ keys to make replays safe, manages dead-letter queues, and provides per-delivery retry and replay\
+  \ APIs.\n\n## Agentic Workflow: Read -> Reason -> Act (webhook-retry)\n\nYou are **Webhook Retry** (api/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context\
+  \ for `webhook-retry`\n- Domain: Designs retry policies for webhook delivery with exponential backoff\
   \ and jitter. Uses idempotency keys to make replays safe, manages dead-letter queues, and provides per-delivery\
-  \ retry and replay APIs.\n\n## Instructions\n\n# Webhook Retry\n\n## What this skill does\n\nDesign\
-  \ retry policies for webhook delivery: exponential backoff with jitter, idempotency keys to make replays\
-  \ safe, dead-letter queues, and per-delivery retry/replay APIs.\n\n## When to use\n\n- Subscribers are\
-  \ flaky or rate-limited\n- Making webhook replays safe for consumers\n- Auditing why events are stuck\n\
-  \n## Real commands\n\n```bash\n# curl-level retry for testing\ncurl --retry 3 --retry-delay 2 --retry-all-errors\
-  \ \\\n  -X POST -d \"{\\\"event\\\":\\\"order.created\\\"}\" http://localhost:8080/webhooks/orders\n\
-  \n# Retry a delivery through the API\ncurl -s -X POST http://localhost:8080/webhooks/deliveries/DELIVERY_ID/retry\
-  \ | jq \".next_retry_at\"\n\n# Dead-letter inspection\ncurl -s \"http://localhost:8080/webhooks/deliveries?status=dead-letter\"\
+  \ retry and replay APIs\n- **retry-policy**: Configure and test webhook retry and backoff behavior —\
+  \ `curl --retry 3 --retry-delay 2 --retry-all-errors -X POST -d \"{\\\"event\\\":\\\"order`\n- Check\
+  \ `knowledge` and `prerequisites: curl, jq`\n\n### 2. Reason — think for `webhook-retry`\n- For `retry-policy`:\
+  \ Configure and test webhook retry and backoff behavior — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `webhook-retry`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `webhook-retry:2392e974`\n\n# Webhook\
+  \ Retry\n\n## What this skill does\n\nDesign retry policies for webhook delivery: exponential backoff\
+  \ with jitter, idempotency keys to make replays safe, dead-letter queues, and per-delivery retry/replay\
+  \ APIs.\n\n## When to use\n\n- Subscribers are flaky or rate-limited\n- Making webhook replays safe\
+  \ for consumers\n- Auditing why events are stuck\n\n## Real commands\n\n```bash\n# curl-level retry\
+  \ for testing\ncurl --retry 3 --retry-delay 2 --retry-all-errors \\\n  -X POST -d \"{\\\"event\\\":\\\
+  \"order.created\\\"}\" http://localhost:8080/webhooks/orders\n\n# Retry a delivery through the API\n\
+  curl -s -X POST http://localhost:8080/webhooks/deliveries/DELIVERY_ID/retry | jq \".next_retry_at\"\n\
+  \n# Dead-letter inspection\ncurl -s \"http://localhost:8080/webhooks/deliveries?status=dead-letter\"\
   \ | jq \"length\"\n\n# Idempotent event creation\ncurl -s -X POST http://localhost:8080/webhooks/events\
   \ \\\n  -H \"Idempotency-Key: evt_42\" -d \"{\\\"event\\\":\\\"payment.succeeded\"}\"\n\n# Same key\
   \ returns the same event, no duplicate deliveries\ncurl -s -X POST http://localhost:8080/webhooks/events\
@@ -23,14 +34,18 @@ instructions: "# Webhook Retry\n\nDesigns retry policies for webhook delivery wi
   \ keys for mutable events\n- Store per-delivery attempt history\n- Requeue dead letters in small batches\n\
   \n## Testing\n\n```bash\n# Force failures then verify backoff\ncurl -s http://localhost:8080/webhooks/deliveries\
   \ | jq \".[0] | {attempts, next_retry_at, status}\"\n```\n\n## Capabilities\n\n### retry-policy\nConfigure\
-  \ and test webhook retry and backoff behavior\n\n**Commands:**\n- `curl --retry 3 --retry-delay 2 --retry-all-errors\
-  \ -X POST -d \"{\\\"event\\\":\\\"order.created\\\"}\" http://localhost:8080/webhooks/orders`\n- `curl\
-  \ -s -X POST http://localhost:8080/webhooks/deliveries/DELIVERY_ID/retry | jq \".next_retry_at\"`\n\
-  - `curl -s \"http://localhost:8080/webhooks/deliveries?status=dead-letter\" | jq \"length\"`\n- `curl\
-  \ -s -X POST http://localhost:8080/webhooks/events -H \"Idempotency-Key: evt_42\" -d \"{\\\"event\\\"\
-  :\\\"payment.succeeded\"}\"`\n- `curl -s \"http://localhost:8080/webhooks/events/evt_42\" | jq \".deliveries\
+  \ and test webhook retry and backoff behavior\n\n**Parameters:**\n- `retry` (integer): Max curl retries\n\
+  - `retry_delay` (integer): Seconds between retries\n- `backoff_base` (integer): Base multiplier for\
+  \ exponential backoff\n\n**Commands:**\n- `curl --retry 3 --retry-delay 2 --retry-all-errors -X POST\
+  \ -d \"{\\\"event\\\":\\\"order.created\\\"}\" http://localhost:8080/webhooks/orders`\n- `curl -s -X\
+  \ POST http://localhost:8080/webhooks/deliveries/DELIVERY_ID/retry | jq \".next_retry_at\"`\n- `curl\
+  \ -s \"http://localhost:8080/webhooks/deliveries?status=dead-letter\" | jq \"length\"`\n- `curl -s -X\
+  \ POST http://localhost:8080/webhooks/events -H \"Idempotency-Key: evt_42\" -d \"{\\\"event\\\":\\\"\
+  payment.succeeded\"}\"`\n- `curl -s \"http://localhost:8080/webhooks/events/evt_42\" | jq \".deliveries\
   \ | length\"`\n\n**Examples:**\n- curl --retry 5 --retry-delay 30 --retry-connrefused http://localhost:8080/health\n\
   - curl -s -X POST http://localhost:8080/webhooks/deliveries/DELIVERY_ID/requeue | jq \".attempts\"\n\
   - curl -s -X POST \"http://localhost:8080/webhooks/deliveries?status=dead-letter\" -H \"Content-Type:\
-  \ application/json\" -d \"{}\" | jq \".requeued\""
+  \ application/json\" -d \"{}\" | jq \".requeued\"\n\n## References\n- [AWS EventBridge Retry Policy](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-rule-dlq.html)\n\
+  - [Stripe Webhook Best Practices](https://docs.stripe.com/webhooks/best-practices)\n- [Webhooks.fyi\
+  \ Retry](https://webhooks.fyi/docs/retry/)"
 prompt: Act as Webhook Retry and handle the task per the instructions.

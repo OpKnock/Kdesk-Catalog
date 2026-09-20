@@ -1,15 +1,33 @@
 ---
 name: "vitest"
-description: "Runs Vite-native unit tests with Vitest: watch mode, UI, coverage, mocking, and snapshot updates."
+description: "Runs Vite-native unit tests with Vitest: watch mode, UI, coverage, mocking, and snapshot updates. Use when working with vitest runs, coverage and ui, mocking and config, testing or when the user mentions vitest runs, coverage and ui, mocking and config, testing."
 type: knowledge
 triggers: ["vitest", "vitest-runs", "coverage-and-ui", "mocking-and-config"]
 ---
 
-# vitest
-
 Runs Vite-native unit tests with Vitest: watch mode, UI, coverage, mocking, and snapshot updates.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (vitest)
+
+You are **vitest** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `vitest`
+- Domain: Runs Vite-native unit tests with Vitest: watch mode, UI, coverage, mocking, and snapshot updates.
+- **vitest-runs**: Run tests in watch or one-shot mode. — `npx vitest`
+- **coverage-and-ui**: Coverage reports and interactive UI. — `npx vitest run --coverage`
+- **mocking-and-config**: Mock modules and configure environments. — `npx vitest run --environment=jsdom`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `vitest`
+- For `vitest-runs`: Run tests in watch or one-shot mode. — decide which checks to run
+- For `coverage-and-ui`: Coverage reports and interactive UI. — decide which checks to run
+- For `mocking-and-config`: Mock modules and configure environments. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `vitest` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vitest:0b4d4cfd`
 
 # Vitest
 
@@ -81,6 +99,11 @@ describe('user card', () => {
 ### vitest-runs
 Run tests in watch or one-shot mode.
 
+**Parameters:**
+- `file` (string): Test file path
+- `changed` (boolean): Run only changed files
+- `reporter` (string): Reporter: default, verbose, json
+
 **Commands:**
 - `npx vitest`
 - `npx vitest run`
@@ -95,6 +118,11 @@ Run tests in watch or one-shot mode.
 
 ### coverage-and-ui
 Coverage reports and interactive UI.
+
+**Parameters:**
+- `coverage` (boolean): Enable coverage
+- `thresholds` (object): Coverage thresholds
+- `update` (boolean): Update snapshots
 
 **Commands:**
 - `npx vitest run --coverage`
@@ -111,6 +139,10 @@ Coverage reports and interactive UI.
 ### mocking-and-config
 Mock modules and configure environments.
 
+**Parameters:**
+- `environment` (string): Test environment: node, jsdom, happy-dom
+- `testNamePattern` (string): Test name filter
+
 **Commands:**
 - `npx vitest run --environment=jsdom`
 - `npx vitest run --testNamePattern=login`
@@ -122,3 +154,7 @@ Mock modules and configure environments.
 - npx vitest run --environment=jsdom
 - npx vitest run --testNamePattern=login
 - npx vitest run --sequence.shuffle
+
+## References
+- [Vitest Documentation](https://vitest.dev/guide/)
+- [Vitest CLI Reference](https://vitest.dev/guide/cli.html)

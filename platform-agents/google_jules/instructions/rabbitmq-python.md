@@ -1,8 +1,22 @@
-# Rabbitmq Python
-
 RabbitMQ clients in Python with pika: connection parameters, blocking adapters, publish/consume and rabbitmqadmin.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rabbitmq-python)
+
+You are **Rabbitmq Python** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `rabbitmq-python`
+- Domain: RabbitMQ clients in Python with pika: connection parameters, blocking adapters, publish/consume and rabbitmqadmin.
+- **rabbitmq-python-client**: Install pika, write publishers/consumers, and manage queues with rabbitmqadmin. — `pip install pika`
+- Check `knowledge` and `prerequisites: pip, python3, rabbitmqadmin`
+
+### 2. Reason — think for `rabbitmq-python`
+- For `rabbitmq-python-client`: Install pika, write publishers/consumers, and manage queues with rabbitmqadmin. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rabbitmq-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Python3` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rabbitmq-python:5f8d202f`
 
 # RabbitMQ Python
 
@@ -62,6 +76,11 @@ ch.start_consuming()
 ### rabbitmq-python-client
 Install pika, write publishers/consumers, and manage queues with rabbitmqadmin.
 
+**Parameters:**
+- `queue` (string): Queue name
+- `host` (string): RabbitMQ host
+- `durable` (boolean): Survive broker restarts
+
 **Commands:**
 - `pip install pika`
 - `python3 publisher.py`
@@ -73,3 +92,7 @@ Install pika, write publishers/consumers, and manage queues with rabbitmqadmin.
 - python3 consumer.py
 - rabbitmqadmin declare queue name=alerts arguments='{"x-message-ttl":60000}'
 - python3 -c "import pika; print(pika.__version__)"
+
+## References
+- [Pika GitHub](https://github.com/pika/pika)
+- [RabbitMQ Python guide](https://www.rabbitmq.com/clients/pika.html)

@@ -1,15 +1,29 @@
 ---
 name: "mqtt-vernemq"
-description: "Operate VerneMQ brokers: start/stop, vmq-admin inspection, clustering, and session/retainer management."
+description: "Operate VerneMQ brokers: start/stop, vmq-admin inspection, clustering, and session/retainer management. Use when working with vernemq operations, api or when the user mentions vernemq operations, api."
 type: knowledge
 triggers: ["mqtt-vernemq", "vernemq-operations"]
 ---
 
-# Mqtt Vernemq
-
 Operate VerneMQ brokers: start/stop, vmq-admin inspection, clustering, and session/retainer management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (mqtt-vernemq)
+
+You are **Mqtt Vernemq** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `mqtt-vernemq`
+- Domain: Operate VerneMQ brokers: start/stop, vmq-admin inspection, clustering, and session/retainer management.
+- **vernemq-operations**: Control the VerneMQ daemon and inspect nodes, listeners, sessions, and retained messages via vmq-adm — `vernemq start`
+- Check `knowledge` and `prerequisites: vernemq, vmq-admin`
+
+### 2. Reason — think for `mqtt-vernemq`
+- For `vernemq-operations`: Control the VerneMQ daemon and inspect nodes, listeners, sessions, and retained messages via vmq-admin. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mqtt-vernemq` tools
+- Tools: `Glob`, `Grep`, `Read`, `Vernemq`, `Vmq-admin` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mqtt-vernemq:4cdc4fd0`
 
 # VerneMQ
 
@@ -66,6 +80,11 @@ vmq-admin cluster show
 ### vernemq-operations
 Control the VerneMQ daemon and inspect nodes, listeners, sessions, and retained messages via vmq-admin.
 
+**Parameters:**
+- `client_id` (string): Client identifier for session inspection
+- `topic` (string): Topic filter for subscriptions
+- `node` (string): Node name for cluster commands
+
 **Commands:**
 - `vernemq start`
 - `vernemq console`
@@ -77,3 +96,7 @@ Control the VerneMQ daemon and inspect nodes, listeners, sessions, and retained 
 - vmq-admin cluster show
 - vmq-admin topic subscription add --client-id cli --topic sensors/#
 - vmq-admin retainer show
+
+## References
+- [VerneMQ Documentation](https://docs.vernemq.com/)
+- [VerneMQ GitHub](https://github.com/vernemq/vernemq)

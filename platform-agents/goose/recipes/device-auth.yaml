@@ -2,17 +2,27 @@ title: Device Auth
 description: 'Implements OAuth 2.0 Device Authorization Grant (RFC 8628) on input-constrained devices:
   device code request, token polling, and slow-down error handling.'
 version: 2.0.0
-instructions: "# Device Auth\n\nImplements OAuth 2.0 Device Authorization Grant (RFC 8628) on input-constrained\
-  \ devices: device code request, token polling, and slow-down error handling.\n\n## Instructions\n\n\
-  # Device Authorization\n\n## What this skill does\n\nOAuth 2.0 Device Authorization Grant (RFC 8628)\
-  \ lets input-constrained devices (smart TVs, CLI logins, IoT) obtain tokens. The device shows a user\
-  \ code and verification URL; the user approves on another device; the client polls for the token.\n\n\
-  ## When to use\n\n- Adding login to CLIs, TVs, or devices without a browser or keyboard\n- Implementing\
-  \ `az login`, `aws sso login` style flows in your own client\n\n## Real commands\n\n```bash\n# Step\
-  \ 1: request a device code\ncurl -s https://httpbin.org/anything/oauth/device_authorization \\\n  -d\
-  \ 'client_id=MY_CLIENT&scope=openid%20profile' | jq '.device_code, .user_code, .verification_uri_complete'\n\
-  \n# Step 2: poll for the token (respect the interval!)  \ncurl -X POST https://httpbin.org/anything/oauth/token\
-  \ \\\n  -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT'\
+instructions: "Implements OAuth 2.0 Device Authorization Grant (RFC 8628) on input-constrained devices:\
+  \ device code request, token polling, and slow-down error handling.\n\n## Agentic Workflow: Read ->\
+  \ Reason -> Act (device-auth)\n\nYou are **Device Auth** (api/general) — a sub-agent that **Reads, Reasons,\
+  \ and Acts** via `allowed-tools`.\n\n### 1. Read — api context for `device-auth`\n- Domain: Implements\
+  \ OAuth 2.0 Device Authorization Grant (RFC 8628) on input-constrained devices: device code request,\
+  \ token polling, and slow-down error handling.\n- **device-flow**: Drive the full device code flow with\
+  \ curl: device authorization request, token polling, and error ha — `curl -X POST https://httpbin.org/anything/oauth/device_authorization\
+  \ -d 'client_`\n- Check `knowledge` references before acting\n\n### 2. Reason — think for `device-auth`\n\
+  - For `device-flow`: Drive the full device code flow with curl: device authorization request, token\
+  \ polling, and error handling. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust`\
+  \ + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `device-auth` tools\n- Tools:\
+  \ `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any\
+  \ write; record evidence (paths, checksums)\n- Fingerprint: `device-auth:af56c5de`\n\n# Device Authorization\n\
+  \n## What this skill does\n\nOAuth 2.0 Device Authorization Grant (RFC 8628) lets input-constrained\
+  \ devices (smart TVs, CLI logins, IoT) obtain tokens. The device shows a user code and verification\
+  \ URL; the user approves on another device; the client polls for the token.\n\n## When to use\n\n- Adding\
+  \ login to CLIs, TVs, or devices without a browser or keyboard\n- Implementing `az login`, `aws sso\
+  \ login` style flows in your own client\n\n## Real commands\n\n```bash\n# Step 1: request a device code\n\
+  curl -s https://httpbin.org/anything/oauth/device_authorization \\\n  -d 'client_id=MY_CLIENT&scope=openid%20profile'\
+  \ | jq '.device_code, .user_code, .verification_uri_complete'\n\n# Step 2: poll for the token (respect\
+  \ the interval!)  \ncurl -X POST https://httpbin.org/anything/oauth/token \\\n  -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT'\
   \ | jq\n\n# Step 3: use and refresh the token\ncurl -X POST https://httpbin.org/anything/oauth/token\
   \ -d 'grant_type=refresh_token&refresh_token=REFRESH&client_id=MY_CLIENT' | jq -r '.access_token'\n\
   ```\n\n## Error handling\n\n```json\n{\"error\": \"slow_down\"}\n{\"error\": \"authorization_pending\"\
@@ -25,8 +35,11 @@ instructions: "# Device Auth\n\nImplements OAuth 2.0 Device Authorization Grant 
   \ | jq; done\n```\n\n## Best practices\n\n- Never log the device_code or access_token.\n- Use PKCE (code_challenge)\
   \ with confidential-client-capable servers even for public clients.\n- Implement the `interval` and\
   \ `slow_down` backoff exactly as specified.\n\n## Capabilities\n\n### device-flow\nDrive the full device\
-  \ code flow with curl: device authorization request, token polling, and error handling.\n\n**Commands:**\n\
-  - `curl -X POST https://httpbin.org/anything/oauth/device_authorization -d 'client_id=MY_CLIENT&scope=openid%20profile'\
+  \ code flow with curl: device authorization request, token polling, and error handling.\n\n**Parameters:**\n\
+  - `client-id` (string): Public client identifier registered at the authorization server\n- `device-code`\
+  \ (string): Opaque code returned by the device_authorization endpoint, used for polling\n- `interval`\
+  \ (integer): Polling interval in seconds returned by the server; increase it on slow_down errors\n\n\
+  **Commands:**\n- `curl -X POST https://httpbin.org/anything/oauth/device_authorization -d 'client_id=MY_CLIENT&scope=openid%20profile'\
   \ -H 'Content-Type: application/x-www-form-urlencoded'`\n- `curl -X POST https://httpbin.org/anything/oauth/token\
   \ -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT'`\n\
   - `curl -X POST https://httpbin.org/anything/oauth/token -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT'\
@@ -36,5 +49,5 @@ instructions: "# Device Auth\n\nImplements OAuth 2.0 Device Authorization Grant 
   \ | jq '.device_code, .user_code, .verification_uri_complete'\n- curl -X POST https://httpbin.org/anything/oauth/token\
   \ -d 'grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=DEVICE_CODE&client_id=MY_CLIENT'\
   \ | jq\n- curl -X POST https://httpbin.org/anything/oauth/token -d 'grant_type=refresh_token&refresh_token=REFRESH&client_id=MY_CLIENT'\
-  \ | jq -r '.access_token'"
+  \ | jq -r '.access_token'\n\n## References\n- [RFC 8628 Device Authorization Grant](https://www.rfc-editor.org/rfc/rfc8628.html)"
 prompt: Act as Device Auth and handle the task per the instructions.

@@ -1,6 +1,6 @@
 ---
 name: "Ml Monitoring Elastic Deploy"
-description: "Elasticsearch Monitoring deployment agent for ML monitoring with Elasticsearch."
+description: "Elasticsearch Monitoring deployment agent for ML monitoring with Elasticsearch. Use when working with Ml Monitoring Elastic Deploy or when the user mentions Ml Monitoring Elastic Deploy."
 globs: ["**/*.json", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Monitoring Elastic Deploy
 
 Elasticsearch Monitoring deployment agent for ML monitoring with Elasticsearch.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-monitoring-elastic-deploy)
+
+You are **Ml Monitoring Elastic Deploy** (ml/monitoring) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-monitoring-elastic-deploy`
+- Domain: Elasticsearch Monitoring deployment agent for ML monitoring with Elasticsearch.
+- **Ml Monitoring Elastic Deploy**: Elasticsearch Monitoring deployment agent for ML monitoring with Elasticsearch. — `Cluster: curl http://localhost:9200/_cluster/health`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-monitoring-elastic-deploy`
+- For `Ml Monitoring Elastic Deploy`: Elasticsearch Monitoring deployment agent for ML monitoring with Elasticsearch. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-monitoring-elastic-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Cluster`, `Index` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-monitoring-elastic-deploy:e1d0606c`
 
 ## Instructions
 
@@ -27,3 +45,7 @@ Elasticsearch Monitoring deployment agent for ML monitoring with Elasticsearch.
 - Cluster: curl http://localhost:9200/_cluster/health
 - Index: curl -X PUT http://localhost:9200/ml-metrics
 - Search: curl -X GET 'http://localhost:9200/ml-metrics/_search' -H 'Content-Type: application/json' -d '{"query": {"range": {"accuracy": {"gte": 0.9}}}'
+
+## References
+- [Elastic Documentation](https://www.elastic.co/guide/)
+- [curl Documentation](https://curl.se/docs/)

@@ -1,8 +1,22 @@
-# Graphql Sangria
-
 GraphQL in Scala with Sangria: define schemas programmatically, run async resolvers, and test queries with the execution API.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (graphql-sangria)
+
+You are **Graphql Sangria** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `graphql-sangria`
+- Domain: GraphQL in Scala with Sangria: define schemas programmatically, run async resolvers, and test queries with the execution API.
+- **sangria-schema**: Define Sangria schemas, execute queries, and export SDL. — `sbt run`
+- Check `knowledge` and `prerequisites: sbt`
+
+### 2. Reason — think for `graphql-sangria`
+- For `sangria-schema`: Define Sangria schemas, execute queries, and export SDL. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `graphql-sangria` tools
+- Tools: `Glob`, `Grep`, `Read`, `Sbt`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `graphql-sangria:d9d62c6c`
 
 # GraphQL Sangria
 
@@ -75,6 +89,11 @@ println(result)
 ### sangria-schema
 Define Sangria schemas, execute queries, and export SDL.
 
+**Parameters:**
+- `schema-object` (string): Scala object exposing the Schema
+- `endpoint` (string): GraphQL HTTP endpoint
+- `main-class` (string): Sangria main class for SDL export
+
 **Commands:**
 - `sbt run`
 - `sbt compile`
@@ -86,3 +105,7 @@ Define Sangria schemas, execute queries, and export SDL.
 - sbt compile && sbt test
 - curl -s -X POST http://localhost:8080/graphql -H 'Content-Type: application/json' -d '{"query":"{ characters { name } }"}' | jq
 - sbt 'runMain example.SchemaExport'
+
+## References
+- [Sangria docs](https://sangria-graphql.org/learn/)
+- [Sangria GitHub](https://github.com/sangria-graphql/sangria)

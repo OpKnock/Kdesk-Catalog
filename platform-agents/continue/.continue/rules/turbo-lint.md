@@ -1,15 +1,29 @@
 ---
 name: "turbo-lint"
-description: "Runs lint targets across Turborepo monorepos with caching, filters, and affected-scope execution."
+description: "Runs lint targets across Turborepo monorepos with caching, filters, and affected-scope execution. Use when working with turbo lint, code quality or when the user mentions turbo lint, code quality."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# turbo-lint
-
 Runs lint targets across Turborepo monorepos with caching, filters, and affected-scope execution.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (turbo-lint)
+
+You are **turbo-lint** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `turbo-lint`
+- Domain: Runs lint targets across Turborepo monorepos with caching, filters, and affected-scope execution.
+- **turbo-lint**: Execute lint tasks in a Turborepo with caching and filtering — `npx turbo lint`
+- Check `knowledge` and `prerequisites: npx`
+
+### 2. Reason — think for `turbo-lint`
+- For `turbo-lint`: Execute lint tasks in a Turborepo with caching and filtering — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `turbo-lint` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `turbo-lint:ea57cd1b`
 
 # Turbo Lint
 
@@ -75,6 +89,11 @@ Shows per-package task status (cached/full), durations, and error counts, with
 ### turbo-lint
 Execute lint tasks in a Turborepo with caching and filtering
 
+**Parameters:**
+- `filter` (string): Include only matching packages, e.g. web or @acme/*
+- `affected` (boolean): Run only packages affected by the change (uses git)
+- `output-logs` (string): new-only, full, hash-only, none - log verbosity
+
 **Commands:**
 - `npx turbo lint`
 - `npx turbo run lint --filter=web`
@@ -86,3 +105,7 @@ Execute lint tasks in a Turborepo with caching and filtering
 - npx turbo run lint --filter=@acme/*
 - npx turbo run lint test --affected --base=main
 - npx turbo lint --output-logs=hash-only
+
+## References
+- [Turborepo docs](https://turbo.build/repo/docs)
+- [Turbo filters](https://turbo.build/repo/docs/reference/filters)

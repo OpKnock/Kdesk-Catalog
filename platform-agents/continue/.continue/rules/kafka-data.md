@@ -1,15 +1,29 @@
 ---
 name: "Kafka"
-description: "Operates Kafka clusters: topics, producers, consumers, consumer groups, and configuration via the Kafka CLI."
+description: "Operates Kafka clusters: topics, producers, consumers, consumer groups, and configuration via the Kafka CLI. Use when working with kafka cli, data or when the user mentions kafka cli, data."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Kafka
-
 Operates Kafka clusters: topics, producers, consumers, consumer groups, and configuration via the Kafka CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (kafka-data)
+
+You are **Kafka** (data/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — data context for `kafka-data`
+- Domain: Operates Kafka clusters: topics, producers, consumers, consumer groups, and configuration via the Kafka CLI.
+- **kafka-cli**: Manage topics, produce/consume messages, and inspect consumer groups — `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --part`
+- Check `knowledge` and `prerequisites: kafka-configs.sh, kafka-console-consumer.sh, kafka-console-producer.sh, kafka-consumer-groups.sh`
+
+### 2. Reason — think for `kafka-data`
+- For `kafka-cli`: Manage topics, produce/consume messages, and inspect consumer groups — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `kafka-data` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kafka-topics.sh`, `Kafka-console-producer.sh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kafka-data:9a113a64`
 
 # Kafka
 
@@ -70,6 +84,11 @@ and recommends scaling consumers or fixing the slow processing step.
 ### kafka-cli
 Manage topics, produce/consume messages, and inspect consumer groups
 
+**Parameters:**
+- `partitions` (integer): Number of partitions for a new topic
+- `replication-factor` (integer): Replication factor for a new topic
+- `from-beginning` (boolean): Consume all messages from the topic start
+
 **Commands:**
 - `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders --partitions 3 --replication-factor 1`
 - `kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders`
@@ -81,3 +100,7 @@ Manage topics, produce/consume messages, and inspect consumer groups
 - kafka-topics.sh --bootstrap-server localhost:9092 --list
 - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages 10
 - kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic orders --partitions 6
+
+## References
+- [Kafka docs](https://kafka.apache.org/documentation/)
+- [Kafka operations guide](https://kafka.apache.org/documentation/#operations)

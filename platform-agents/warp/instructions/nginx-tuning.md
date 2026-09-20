@@ -1,8 +1,22 @@
-# Nginx Tuning
-
 Optimizes nginx for production with worker process sizing, keepalive tuning, kernel parameter adjustments, gzip compression, and load testing validation with ab.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nginx-tuning)
+
+You are **Nginx Tuning** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `nginx-tuning`
+- Domain: Optimizes nginx for production with worker process sizing, keepalive tuning, kernel parameter adjustments, gzip compression, and load testing validation with ab.
+- **nginx-performance-tuning**: Optimize nginx core settings and kernel parameters, then benchmark with ab. — `nginx -t`
+- Check `knowledge` and `prerequisites: nginx, sysctl`
+
+### 2. Reason — think for `nginx-tuning`
+- For `nginx-performance-tuning`: Optimize nginx core settings and kernel parameters, then benchmark with ab. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nginx-tuning` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nginx`, `Sysctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nginx-tuning:45bf8b7b`
 
 # nginx Tuning
 
@@ -72,6 +86,11 @@ http {
 ### nginx-performance-tuning
 Optimize nginx core settings and kernel parameters, then benchmark with ab.
 
+**Parameters:**
+- `workers` (integer): worker_processes value
+- `connections` (integer): worker_connections value
+- `url` (string): URL for load testing
+
 **Commands:**
 - `nginx -t`
 - `nginx -s reload`
@@ -83,3 +102,7 @@ Optimize nginx core settings and kernel parameters, then benchmark with ab.
 - nginx -T | grep -E 'worker_processes|worker_connections'
 - sysctl -w net.ipv4.tcp_fin_timeout=30
 - ab -n 5000 -c 50 -k http://localhost/api
+
+## References
+- [nginx Core Module](https://nginx.org/en/docs/http/ngx_http_core_module.html)
+- [nginx Tuning Guide](https://www.nginx.com/blog/tuning-nginx/)

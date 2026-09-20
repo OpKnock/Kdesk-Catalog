@@ -6,27 +6,25 @@ globs: ["**/*.r", "**/*.rb", "**/*.sh"]
 
 Builds test data factories with FactoryBot: trait definitions, sequences, associations, and on-the-fly attribute overrides for Rails APIs.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (api-test-data-factorybot)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Api Test Data Factorybot** (testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `bundle add factory_bot_rails`, `bundle exec rails runner "FactoryBot.lint"`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — testing context for `api-test-data-factorybot`
+- Domain: Builds test data factories with FactoryBot: trait definitions, sequences, associations, and on-the-fly attribute overrides for Rails APIs.
+- **factorybot**: Define and use model factories — `bundle add factory_bot_rails`
+- **factory-testing**: Lint and verify factories — `bundle exec rails runner "FactoryBot.lint"`
+- Check `knowledge` and `prerequisites: faker, node.js, python`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `api-test-data-factorybot`
+- For `factorybot`: Define and use model factories — decide which checks to run
+- For `factory-testing`: Lint and verify factories — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `api-test-data-factorybot` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bundle` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-test-data-factorybot:72d25b91`
 
 # API Test Data v3 - Factories
 

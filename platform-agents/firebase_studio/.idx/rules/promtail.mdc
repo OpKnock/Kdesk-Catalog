@@ -1,14 +1,28 @@
 ---
-description: "Promtail log shipping to Loki: config, file discovery, labels, pipeline stages and logcli queries."
+description: "Promtail log shipping to Loki: config, file discovery, labels, pipeline stages and logcli queries. Use when working with promtail log shipping, api or when the user mentions promtail log shipping, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Promtail
-
 Promtail log shipping to Loki: config, file discovery, labels, pipeline stages and logcli queries.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (promtail)
+
+You are **Promtail** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `promtail`
+- Domain: Promtail log shipping to Loki: config, file discovery, labels, pipeline stages and logcli queries.
+- **promtail-log-shipping**: Run promtail with configs, process log lines with pipelines, and query Loki with logcli. — `promtail -config.file=promtail.yaml`
+- Check `knowledge` and `prerequisites: logcli, promtail`
+
+### 2. Reason — think for `promtail`
+- For `promtail-log-shipping`: Run promtail with configs, process log lines with pipelines, and query Loki with logcli. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `promtail` tools
+- Tools: `Glob`, `Grep`, `Read`, `Promtail`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `promtail:fb77f99b`
 
 # Promtail
 
@@ -69,6 +83,11 @@ scrape_configs:
 ### promtail-log-shipping
 Run promtail with configs, process log lines with pipelines, and query Loki with logcli.
 
+**Parameters:**
+- `config_file` (string): Promtail config file path
+- `query` (string): LogQL query string
+- `label` (string): Log label key or value
+
 **Commands:**
 - `promtail -config.file=promtail.yaml`
 - `curl -X POST http://localhost:3100/loki/api/v1/push -H "Content-Type: application/json" -d '{"streams":[{"stream":{"job":"app"},"values":[["1710000000000000000","log line"]]}]}'`
@@ -80,3 +99,7 @@ Run promtail with configs, process log lines with pipelines, and query Loki with
 - logcli query '{service="orders"} |= "exception" | json' --limit 100
 - promtail -config.file=promtail.yaml -dry-run
 - logcli query '{job="app"} |= "500"' --since 24h | wc -l
+
+## References
+- [Promtail Docs](https://grafana.com/docs/loki/latest/send-data/promtail/)
+- [LogQL Reference](https://grafana.com/docs/loki/latest/query/)

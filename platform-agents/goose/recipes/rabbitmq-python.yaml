@@ -2,22 +2,34 @@ title: Rabbitmq Python
 description: 'RabbitMQ clients in Python with pika: connection parameters, blocking adapters, publish/consume
   and rabbitmqadmin.'
 version: 2.0.0
-instructions: "# Rabbitmq Python\n\nRabbitMQ clients in Python with pika: connection parameters, blocking\
-  \ adapters, publish/consume and rabbitmqadmin.\n\n## Instructions\n\n# RabbitMQ Python\n\npika is the\
-  \ standard Python client for RabbitMQ with blocking and async adapters.\n\n## What this skill does\n\
-  \n- Installs pika and connects\n- Publishes/consumes with the BlockingConnection\n- Manages queues with\
-  \ rabbitmqadmin\n\n## When to use\n\n- Python workers and scripts\n- Quick queue prototyping\n\n## Real\
-  \ commands\n\n```bash\npip install pika\npython3 publisher.py\npython3 consumer.py\n\n# Manage via rabbitmqadmin\n\
-  rabbitmqadmin declare queue name=tasks durable=true\nrabbitmqadmin get queue=tasks --count=5\n```\n\n\
-  ## Publisher\n\n```python\nimport pika\nconn = pika.BlockingConnection(pika.ConnectionParameters(\"\
+instructions: "RabbitMQ clients in Python with pika: connection parameters, blocking adapters, publish/consume\
+  \ and rabbitmqadmin.\n\n## Agentic Workflow: Read -> Reason -> Act (rabbitmq-python)\n\nYou are **Rabbitmq\
+  \ Python** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n###\
+  \ 1. Read — api context for `rabbitmq-python`\n- Domain: RabbitMQ clients in Python with pika: connection\
+  \ parameters, blocking adapters, publish/consume and rabbitmqadmin.\n- **rabbitmq-python-client**: Install\
+  \ pika, write publishers/consumers, and manage queues with rabbitmqadmin. — `pip install pika`\n- Check\
+  \ `knowledge` and `prerequisites: pip, python3, rabbitmqadmin`\n\n### 2. Reason — think for `rabbitmq-python`\n\
+  - For `rabbitmq-python-client`: Install pika, write publishers/consumers, and manage queues with rabbitmqadmin.\
+  \ — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for\
+  \ your inputs\n\n### 3. Act — execute with `rabbitmq-python` tools\n- Tools: `Glob`, `Grep`, `Read`,\
+  \ `Bash`, `Python3` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record\
+  \ evidence (paths, checksums)\n- Fingerprint: `rabbitmq-python:5f8d202f`\n\n# RabbitMQ Python\n\npika\
+  \ is the standard Python client for RabbitMQ with blocking and async adapters.\n\n## What this skill\
+  \ does\n\n- Installs pika and connects\n- Publishes/consumes with the BlockingConnection\n- Manages\
+  \ queues with rabbitmqadmin\n\n## When to use\n\n- Python workers and scripts\n- Quick queue prototyping\n\
+  \n## Real commands\n\n```bash\npip install pika\npython3 publisher.py\npython3 consumer.py\n\n# Manage\
+  \ via rabbitmqadmin\nrabbitmqadmin declare queue name=tasks durable=true\nrabbitmqadmin get queue=tasks\
+  \ --count=5\n```\n\n## Publisher\n\n```python\nimport pika\nconn = pika.BlockingConnection(pika.ConnectionParameters(\"\
   localhost\"))\nch = conn.channel()\nch.queue_declare(queue=\"tasks\", durable=True)\nch.basic_publish(exchange=\"\
   \", routing_key=\"tasks\", body=\"job\",\n                 properties=pika.BasicProperties(delivery_mode=2))\n\
   conn.close()\n```\n\n## Consumer\n\n```python\nch.basic_qos(prefetch_count=1)\nch.basic_consume(queue=\"\
   tasks\", on_message_callback=cb)\nch.start_consuming()\n```\n\n## Best practices\n\n- Use delivery_mode=2\
   \ for durable messages\n- Acknowledge explicitly for at-least-once\n- Set prefetch_count for fair dispatch\n\
   \n## Capabilities\n\n### rabbitmq-python-client\nInstall pika, write publishers/consumers, and manage\
-  \ queues with rabbitmqadmin.\n\n**Commands:**\n- `pip install pika`\n- `python3 publisher.py`\n- `python3\
-  \ consumer.py`\n- `rabbitmqadmin declare queue name=tasks durable=true`\n- `rabbitmqadmin get queue=tasks\
-  \ --count=5`\n\n**Examples:**\n- python3 consumer.py\n- rabbitmqadmin declare queue name=alerts arguments='{\"\
-  x-message-ttl\":60000}'\n- python3 -c \"import pika; print(pika.__version__)\""
+  \ queues with rabbitmqadmin.\n\n**Parameters:**\n- `queue` (string): Queue name\n- `host` (string):\
+  \ RabbitMQ host\n- `durable` (boolean): Survive broker restarts\n\n**Commands:**\n- `pip install pika`\n\
+  - `python3 publisher.py`\n- `python3 consumer.py`\n- `rabbitmqadmin declare queue name=tasks durable=true`\n\
+  - `rabbitmqadmin get queue=tasks --count=5`\n\n**Examples:**\n- python3 consumer.py\n- rabbitmqadmin\
+  \ declare queue name=alerts arguments='{\"x-message-ttl\":60000}'\n- python3 -c \"import pika; print(pika.__version__)\"\
+  \n\n## References\n- [Pika GitHub](https://github.com/pika/pika)\n- [RabbitMQ Python guide](https://www.rabbitmq.com/clients/pika.html)"
 prompt: Act as Rabbitmq Python and handle the task per the instructions.

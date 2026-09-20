@@ -2,26 +2,40 @@ title: cli-tool-development
 description: 'Develops command-line tools with Commander, Click, and cobra: argument parsing, subcommands,
   help text, and distribution.'
 version: 2.0.0
-instructions: "# cli-tool-development\n\nDevelops command-line tools with Commander, Click, and cobra:\
-  \ argument parsing, subcommands, help text, and distribution.\n\n## Instructions\n\n# CLI Tool Development\n\
-  \nBuild polished command-line tools.\n\n## When to Use\n\n- Internal developer tooling and automation\n\
-  - Wrappers around APIs and services\n- Scripts that need args, flags, and subcommands\n- Tools distributed\
-  \ to other teams or users\n\n## Commands\n\n```bash\n# Node with Commander\nnpm init -y\nnpm install\
-  \ commander\nnode bin/mycli.js --help\n\n# Python with Click\npip install click\npython -m mycli --help\n\
-  \n# Go with Cobra\ngo install github.com/spf13/cobra-cli@latest\ncobra-cli init mycli\ncobra-cli add\
-  \ serve\ngo run ./cmd/mycli --help\n\n# Global install for dev\nnpm link\n```\n\n## Python Click Example\n\
-  \n```python\nimport click\n\n@click.command()\n@click.option(\"--name\", default=\"World\", help=\"\
-  Who to greet\")\n@click.option(\"--verbose\", is_flag=True)\ndef greet(name, verbose):\n    \"\"\"Greet\
-  \ someone.\"\"\"\n    if verbose:\n        click.echo(\"verbose mode\")\n    click.echo(f\"Hello, {name}!\"\
-  )\n\nif __name__ == \"__main__\":\n    greet()\n```\n\n## Best Practices\n\n- Always provide --help\
-  \ and --version\n- Exit with non-zero codes and messages on stderr for errors\n- Make flags idempotent\
-  \ and composable for piping\n- Test with golden fixtures and snapshot tests\n- Support CI environments\
-  \ (no TTY, no color when piped)\n- Document each flag; the help text is the docs\n\n## Capabilities\n\
-  \n### cli-scaffolding\nScaffold CLI tools in Node, Python, and Go.\n\n**Commands:**\n- `npm install\
+instructions: "Develops command-line tools with Commander, Click, and cobra: argument parsing, subcommands,\
+  \ help text, and distribution.\n\n## Agentic Workflow: Read -> Reason -> Act (cli-tool-development)\n\
+  \nYou are **cli-tool-development** (devtools) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — devtools context for `cli-tool-development`\n- Domain: Develops command-line tools with\
+  \ Commander, Click, and cobra: argument parsing, subcommands, help text, and distribution.\n- **cli-scaffolding**:\
+  \ Scaffold CLI tools in Node, Python, and Go. — `npm install commander`\n- **cli-verification**: Test\
+  \ and verify CLI behavior. — `node bin/mycli.js --help`\n- Check `knowledge` and `prerequisites: node.js,\
+  \ python, click, commander`\n\n### 2. Reason — think for `cli-tool-development`\n- For `cli-scaffolding`:\
+  \ Scaffold CLI tools in Node, Python, and Go. — decide which checks to run\n- For `cli-verification`:\
+  \ Test and verify CLI behavior. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust`\
+  \ + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `cli-tool-development` tools\n\
+  - Tools: `Glob`, `Grep`, `Read`, `Bash`, `Cobra-cli` (see frontmatter `tools`/`allowed-tools`)\n- Use\
+  \ `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `cli-tool-development:37fdb1e2`\n\
+  \n# CLI Tool Development\n\nBuild polished command-line tools.\n\n## When to Use\n\n- Internal developer\
+  \ tooling and automation\n- Wrappers around APIs and services\n- Scripts that need args, flags, and\
+  \ subcommands\n- Tools distributed to other teams or users\n\n## Commands\n\n```bash\n# Node with Commander\n\
+  npm init -y\nnpm install commander\nnode bin/mycli.js --help\n\n# Python with Click\npip install click\n\
+  python -m mycli --help\n\n# Go with Cobra\ngo install github.com/spf13/cobra-cli@latest\ncobra-cli init\
+  \ mycli\ncobra-cli add serve\ngo run ./cmd/mycli --help\n\n# Global install for dev\nnpm link\n```\n\
+  \n## Python Click Example\n\n```python\nimport click\n\n@click.command()\n@click.option(\"--name\",\
+  \ default=\"World\", help=\"Who to greet\")\n@click.option(\"--verbose\", is_flag=True)\ndef greet(name,\
+  \ verbose):\n    \"\"\"Greet someone.\"\"\"\n    if verbose:\n        click.echo(\"verbose mode\")\n\
+  \    click.echo(f\"Hello, {name}!\")\n\nif __name__ == \"__main__\":\n    greet()\n```\n\n## Best Practices\n\
+  \n- Always provide --help and --version\n- Exit with non-zero codes and messages on stderr for errors\n\
+  - Make flags idempotent and composable for piping\n- Test with golden fixtures and snapshot tests\n\
+  - Support CI environments (no TTY, no color when piped)\n- Document each flag; the help text is the\
+  \ docs\n\n## Capabilities\n\n### cli-scaffolding\nScaffold CLI tools in Node, Python, and Go.\n\n**Parameters:**\n\
+  - `language` (string): node, python, or go\n- `name` (string): CLI name\n\n**Commands:**\n- `npm install\
   \ commander`\n- `npm init -y && npm pkg set bin=\"./bin/mycli.js\"`\n- `python -m pip install click`\n\
   - `go install github.com/spf13/cobra-cli@latest`\n- `cobra-cli init mycli`\n\n**Examples:**\n- cobra-cli\
   \ add serve\n- npm install oclif\n- pip install typer\n\n### cli-verification\nTest and verify CLI behavior.\n\
+  \n**Parameters:**\n- `args` (string): CLI arguments\n- `stdin` (string): Piped input to test stdin handling\n\
   \n**Commands:**\n- `node bin/mycli.js --help`\n- `python -m mycli --version`\n- `go run ./cmd/mycli\
   \ --help`\n- `npm link`\n- `echo \"test input\" | mycli parse`\n\n**Examples:**\n- mycli --help | head\
-  \ -40\n- mycli greet --name World\n- mycli --version"
+  \ -40\n- mycli greet --name World\n- mycli --version\n\n## References\n- [Commander.js Docs](https://github.com/tj/commander.js)\n\
+  - [Click Docs](https://click.palletsprojects.com)\n- [Cobra Docs](https://cobra.dev)"
 prompt: Act as cli-tool-development and handle the task per the instructions.

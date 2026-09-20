@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(gh:*) Bash(kubectl:*)"
 
 Automate pull request merges with Prow Tide's merge pools and the GitHub CLI. Configures label-based merge criteria, triages PR status with gh commands, monitors pool health in the cluster, and queues merges that execute automatically when checks pass and labels are present.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (tide)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Tide** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `gh pr list --state open --status-failure`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `tide`
+- Domain: Automate pull request merges with Prow Tide's merge pools and the GitHub CLI. Configures label-based merge criteria, triages PR status with gh commands, monitors pool health in the cluster, and queues
+- **tide-merge-automation**: Automate PR merges with Prow Tide and gh commands — `gh pr list --state open --status-failure`
+- Check `knowledge` and `prerequisites: kubectl`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `tide`
+- For `tide-merge-automation`: Automate PR merges with Prow Tide and gh commands — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `tide` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gh`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `tide:e14d4c46`
 
 # Prow Tide
 

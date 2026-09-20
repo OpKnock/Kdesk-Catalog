@@ -6,27 +6,25 @@ globs: ["**/*.r", "**/*.sh"]
 
 Manage cryptographic keys across local openssl and cloud KMS (AWS KMS, GCP KMS, HashiCorp Vault): generation, encryption, and secure storage.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (key-management)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Key Management** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `openssl genrsa -out private.pem 2048`, `aws kms encrypt --key-id alias/orders-key --plaintext fileb:`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `key-management`
+- Domain: Manage cryptographic keys across local openssl and cloud KMS (AWS KMS, GCP KMS, HashiCorp Vault): generation, encryption, and secure storage.
+- **openssl-keys**: Generate RSA/EC key pairs and certificates locally. — `openssl genrsa -out private.pem 2048`
+- **cloud-kms**: Encrypt and decrypt data with AWS KMS, GCP KMS, and Vault. — `aws kms encrypt --key-id alias/orders-key --plaintext fileb://secret.txt --outpu`
+- Check `knowledge` and `prerequisites: aws, gcloud, openssl, vault`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `key-management`
+- For `openssl-keys`: Generate RSA/EC key pairs and certificates locally. — decide which checks to run
+- For `cloud-kms`: Encrypt and decrypt data with AWS KMS, GCP KMS, and Vault. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `key-management` tools
+- Tools: `Glob`, `Grep`, `Read`, `Openssl`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `key-management:c1f458a2`
 
 # Key Management
 

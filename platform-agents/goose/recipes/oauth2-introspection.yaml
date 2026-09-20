@@ -2,29 +2,43 @@ title: Oauth2 Introspection
 description: Validates OAuth2 access and refresh tokens against RFC 7662 introspection endpoints. Checks
   token active status, scopes, and expiration with client credentials authentication.
 version: 2.0.0
-instructions: "# Oauth2 Introspection\n\nValidates OAuth2 access and refresh tokens against RFC 7662 introspection\
-  \ endpoints. Checks token active status, scopes, and expiration with client credentials authentication.\n\
-  \n## Instructions\n\n# OAuth2 Token Introspection\n\nIntrospection (RFC 7662) lets a resource server\
-  \ ask the authorization server whether a token is still valid.\n\n## What this skill does\n\n- Calls\
-  \ introspection endpoints with client credentials\n- Reads active/scope/exp fields in responses\n- Tests\
-  \ with Keycloak and generic endpoints\n\n## When to use\n\n- Validating opaque (non-JWT) access tokens\n\
-  - Checking token expiry and scope server-side\n\n## Real commands\n\n```bash\n# Basic introspection\n\
-  curl -X POST https://auth.your-app.test/introspect \\\n  -d \"token=eyJhbGciOi...\" -u client-id:client-secret\n\
-  \n# With token_type_hint\ncurl -X POST https://auth.your-app.test/introspect \\\n  -d \"token=eyJhbGciOi...\"\
-  \ -d \"token_type_hint=access_token\" -u client-id:client-secret\n\n# Keycloak\ncurl -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token/introspect\
+instructions: "Validates OAuth2 access and refresh tokens against RFC 7662 introspection endpoints. Checks\
+  \ token active status, scopes, and expiration with client credentials authentication.\n\n## Agentic\
+  \ Workflow: Read -> Reason -> Act (oauth2-introspection)\n\nYou are **Oauth2 Introspection** (api/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — api context\
+  \ for `oauth2-introspection`\n- Domain: Validates OAuth2 access and refresh tokens against RFC 7662\
+  \ introspection endpoints. Checks token active status, scopes, and expiration with client credentials\
+  \ authentication.\n- **token-introspection**: Introspect access/refresh tokens against RFC 7662 endpoints\
+  \ to check validity and scopes. — `curl -X POST https://auth.your-app.test/introspect -d \"token=eyJhbGciOi...\"\
+  \ -u c`\n- Check `knowledge` references before acting\n\n### 2. Reason — think for `oauth2-introspection`\n\
+  - For `token-introspection`: Introspect access/refresh tokens against RFC 7662 endpoints to check validity\
+  \ and scopes. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor`\
+  \ patterns for your inputs\n\n### 3. Act — execute with `oauth2-introspection` tools\n- Tools: `Glob`,\
+  \ `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write;\
+  \ record evidence (paths, checksums)\n- Fingerprint: `oauth2-introspection:c794d232`\n\n# OAuth2 Token\
+  \ Introspection\n\nIntrospection (RFC 7662) lets a resource server ask the authorization server whether\
+  \ a token is still valid.\n\n## What this skill does\n\n- Calls introspection endpoints with client\
+  \ credentials\n- Reads active/scope/exp fields in responses\n- Tests with Keycloak and generic endpoints\n\
+  \n## When to use\n\n- Validating opaque (non-JWT) access tokens\n- Checking token expiry and scope server-side\n\
+  \n## Real commands\n\n```bash\n# Basic introspection\ncurl -X POST https://auth.your-app.test/introspect\
+  \ \\\n  -d \"token=eyJhbGciOi...\" -u client-id:client-secret\n\n# With token_type_hint\ncurl -X POST\
+  \ https://auth.your-app.test/introspect \\\n  -d \"token=eyJhbGciOi...\" -d \"token_type_hint=access_token\"\
+  \ -u client-id:client-secret\n\n# Keycloak\ncurl -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token/introspect\
   \ \\\n  -d \"token=xyz\" -u svc:svcsecret\n\n# Basic auth header form\ncurl -X POST https://auth.your-app.test/introspect\
   \ \\\n  -H \"Authorization: Basic $(echo -n client:secret | base64)\" -d \"token=xyz\"\n```\n\n## Response\
   \ fields\n\n```json\n{ \"active\": true, \"scope\": \"read write\", \"client_id\": \"api\", \"exp\"\
   : 1710000000 }\n```\n\n## Best practices\n\n- `active: false` means reject; never cache long\n- Include\
   \ `token_type_hint` for faster lookup\n- Use HTTPS and client authentication on introspection\n\n##\
   \ Capabilities\n\n### token-introspection\nIntrospect access/refresh tokens against RFC 7662 endpoints\
-  \ to check validity and scopes.\n\n**Commands:**\n- `curl -X POST https://auth.your-app.test/introspect\
+  \ to check validity and scopes.\n\n**Parameters:**\n- `endpoint` (string): Introspection endpoint URL\n\
+  - `token` (string): Token value to introspect\n- `client_auth` (string): client_id:client_secret for\
+  \ basic auth\n\n**Commands:**\n- `curl -X POST https://auth.your-app.test/introspect -d \"token=eyJhbGciOi...\"\
+  \ -u client-id:client-secret`\n- `curl -X POST https://auth.your-app.test/introspect -d \"token=eyJhbGciOi...\"\
+  \ -d \"token_type_hint=access_token\" -u client-id:client-secret`\n- `curl -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token/introspect\
   \ -d \"token=eyJhbGciOi...\" -u client-id:client-secret`\n- `curl -X POST https://auth.your-app.test/introspect\
-  \ -d \"token=eyJhbGciOi...\" -d \"token_type_hint=access_token\" -u client-id:client-secret`\n- `curl\
-  \ -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token/introspect -d \"token=eyJhbGciOi...\"\
-  \ -u client-id:client-secret`\n- `curl -X POST https://auth.your-app.test/introspect -H \"Authorization:\
-  \ Basic $(echo -n client:secret | base64)\" -d \"token=xyz\"`\n- `curl -s http://localhost:8080/realms/myrealm/protocol/openid-connect/certs`\n\
+  \ -H \"Authorization: Basic $(echo -n client:secret | base64)\" -d \"token=xyz\"`\n- `curl -s http://localhost:8080/realms/myrealm/protocol/openid-connect/certs`\n\
   \n**Examples:**\n- curl -X POST https://auth.your-app.test/introspect -d \"token=xyz\" -d \"token_type_hint=access_token\"\
   \ -u api-client:secret | jq .\n- curl -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token/introspect\
-  \ -d \"token=xyz\" -u svc:svcsecret | jq '.active,.scope'"
+  \ -d \"token=xyz\" -u svc:svcsecret | jq '.active,.scope'\n\n## References\n- [RFC 7662 Token Introspection](https://datatracker.ietf.org/doc/html/rfc7662)\n\
+  - [Keycloak Token Introspection](https://www.keycloak.org/docs/latest/securing_apps/)"
 prompt: Act as Oauth2 Introspection and handle the task per the instructions.

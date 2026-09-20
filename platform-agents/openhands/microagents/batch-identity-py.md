@@ -1,6 +1,6 @@
 ---
 name: "batch-identity-py"
-description: "Batch SDK deployment agent for ML Batch SDK deployment."
+description: "Batch SDK deployment agent for ML Batch SDK deployment. Use when working with Ml Batch Deploy Sdk, deployment or when the user mentions Ml Batch Deploy Sdk, deployment."
 type: knowledge
 triggers: ["batch-identity-py", "ml batch deploy sdk"]
 ---
@@ -8,6 +8,24 @@ triggers: ["batch-identity-py", "ml batch deploy sdk"]
 # Batch Identity Py
 
 Batch SDK deployment agent for ML Batch SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (batch-identity-py)
+
+You are **Batch Identity Py** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `batch-identity-py`
+- Domain: Batch SDK deployment agent for ML Batch SDK deployment.
+- **Ml Batch Deploy Sdk**: Batch SDK deployment agent for ML Batch SDK deployment. — `docker build -t batch:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `batch-identity-py`
+- For `Ml Batch Deploy Sdk`: Batch SDK deployment agent for ML Batch SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `batch-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Batch` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `batch-identity-py:2a0b023b`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Batch SDK deployment agent for ML Batch SDK deployment.
 **Examples:**
 - Server: python -m batch.server --port 8080
 - Docker: docker run -p 8080:8080 batch-server
+
+## References
+- [Google Cloud Batch](https://cloud.google.com/batch/docs)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

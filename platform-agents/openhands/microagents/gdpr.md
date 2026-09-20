@@ -1,15 +1,29 @@
 ---
 name: "gdpr"
-description: "Guides GDPR compliance work: data mapping, consent audit, breach response, and record keeping."
+description: "Guides GDPR compliance work: data mapping, consent audit, breach response, and record keeping. Use when working with gdpr audit, compliance or when the user mentions gdpr audit, compliance."
 type: knowledge
 triggers: ["gdpr", "gdpr-audit"]
 ---
 
-# Gdpr
-
 Guides GDPR compliance work: data mapping, consent audit, breach response, and record keeping.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (gdpr)
+
+You are **Gdpr** (compliance/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — compliance context for `gdpr`
+- Domain: Guides GDPR compliance work: data mapping, consent audit, breach response, and record keeping.
+- **gdpr-audit**: Find personal data in code, audit consent, and verify security controls — `rg -i -n "(email|phone|ssn|passport|birth[_-]?date|ip_address)" src/ --glob '!*.`
+- Check `knowledge` and `prerequisites: git, gitleaks, node`
+
+### 2. Reason — think for `gdpr`
+- For `gdpr-audit`: Find personal data in code, audit consent, and verify security controls — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `gdpr` tools
+- Tools: `Glob`, `Grep`, `Read`, `Rg`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `gdpr:f38f76ed`
 
 # GDPR
 
@@ -67,6 +81,11 @@ records, deletion flows), and concrete remediation steps per article.
 ### gdpr-audit
 Find personal data in code, audit consent, and verify security controls
 
+**Parameters:**
+- `glob` (string): File pattern filter for the personal-data scan
+- `audit` (boolean): Produce a report instead of interactive output
+- `source` (string): Directory to scan for secrets and personal data
+
 **Commands:**
 - `rg -i -n "(email|phone|ssn|passport|birth[_-]?date|ip_address)" src/ --glob '!*.test.*'`
 - `git grep -l -i "personal data" config/`
@@ -78,3 +97,7 @@ Find personal data in code, audit consent, and verify security controls
 - rg -n 'user\.email' src/ | wc -l
 - npx cookie-checker --scan .
 - openssl s_client -connect example.com:443 -servername example.com -brief
+
+## References
+- [GDPR text (EUR-Lex)](https://gdpr-info.eu/)
+- [EDPB guidelines](https://www.edpb.europa.eu/)

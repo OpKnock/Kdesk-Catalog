@@ -1,15 +1,31 @@
 ---
 name: "cargo-audit"
-description: "Audits Rust dependencies for known vulnerabilities with cargo-audit: advisories, fix suggestions, and CI gating."
+description: "Audits Rust dependencies for known vulnerabilities with cargo-audit: advisories, fix suggestions, and CI gating. Use when working with cargo audit scan, cargo fix, code quality or when the user mentions cargo audit scan, cargo fix, code quality."
 type: knowledge
 triggers: ["cargo-audit", "cargo-audit-scan", "cargo-fix"]
 ---
 
-# Cargo Audit
-
 Audits Rust dependencies for known vulnerabilities with cargo-audit: advisories, fix suggestions, and CI gating.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cargo-audit)
+
+You are **Cargo Audit** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `cargo-audit`
+- Domain: Audits Rust dependencies for known vulnerabilities with cargo-audit: advisories, fix suggestions, and CI gating.
+- **cargo-audit-scan**: Scan dependency trees for vulnerabilities. — `cargo install cargo-audit`
+- **cargo-fix**: Update vulnerable dependencies. — `cargo update -p vulnerable-crate`
+- Check `knowledge` and `prerequisites: cargo`
+
+### 2. Reason — think for `cargo-audit`
+- For `cargo-audit-scan`: Scan dependency trees for vulnerabilities. — decide which checks to run
+- For `cargo-fix`: Update vulnerable dependencies. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cargo-audit` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cargo-audit:ef198c43`
 
 # cargo-audit
 
@@ -68,6 +84,10 @@ cargo outdated
 ### cargo-audit-scan
 Scan dependency trees for vulnerabilities.
 
+**Parameters:**
+- `ignore` (string): Comma-separated RUSTSEC ids to ignore
+- `file` (string): Lockfile path
+
 **Commands:**
 - `cargo install cargo-audit`
 - `cargo audit`
@@ -83,6 +103,10 @@ Scan dependency trees for vulnerabilities.
 ### cargo-fix
 Update vulnerable dependencies.
 
+**Parameters:**
+- `crate` (string): Crate name
+- `precise` (string): Exact version
+
 **Commands:**
 - `cargo update -p vulnerable-crate`
 - `cargo update --precise 1.2.3`
@@ -93,3 +117,7 @@ Update vulnerable dependencies.
 - cargo tree -i openssl
 - cargo update -p openssl --precise 0.10.66
 - cargo audit && echo "clean"
+
+## References
+- [cargo-audit on GitHub](https://github.com/rustsec/rustsec)
+- [RustSec Advisory DB](https://rustsec.org/advisories/)

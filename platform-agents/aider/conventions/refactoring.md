@@ -1,8 +1,22 @@
-# refactoring
-
 Guides safe refactoring: detecting duplication, measuring complexity, and validating with tests after each change.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (refactoring)
+
+You are **refactoring** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `refactoring`
+- Domain: Guides safe refactoring: detecting duplication, measuring complexity, and validating with tests after each change.
+- **refactoring-workflow**: Analyze, refactor, and verify code changes using duplication and dependency tools — `npx jscpd src/`
+- Check `knowledge` and `prerequisites: git, npx, pytest, python`
+
+### 2. Reason — think for `refactoring`
+- For `refactoring-workflow`: Analyze, refactor, and verify code changes using duplication and dependency tools — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `refactoring` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `refactoring:147107b3`
 
 # Refactoring
 
@@ -61,6 +75,11 @@ proposes an order of refactorings with the test command to run after each step.
 ### refactoring-workflow
 Analyze, refactor, and verify code changes using duplication and dependency tools
 
+**Parameters:**
+- `min-lines` (integer): Minimum duplicate block length in lines for jscpd
+- `circular` (boolean): Report circular dependencies with madge
+- `extensions` (string): File extensions madge should analyze, e.g. ts,tsx,js
+
 **Commands:**
 - `npx jscpd src/`
 - `npx madge --circular src/`
@@ -72,3 +91,7 @@ Analyze, refactor, and verify code changes using duplication and dependency tool
 - npx jscpd --min-lines 10 --min-tokens 50 src/
 - npx madge --circular --extensions ts src/
 - git diff --word-diff main...HEAD
+
+## References
+- [Martin Fowler Refactoring](https://martinfowler.com/refactoring/)
+- [Working Effectively with Legacy Code summary](https://www.oreilly.com/library/view/working-effectively-with/0131177052/)

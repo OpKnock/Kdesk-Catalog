@@ -2,14 +2,47 @@ title: Compression
 description: Compress API responses to cut bandwidth and latency using gzip, Brotli, and zstd, with curl
   verification and server configuration.
 version: 2.0.0
-instructions: '# Compression
+instructions: 'Compress API responses to cut bandwidth and latency using gzip, Brotli, and zstd, with
+  curl verification and server configuration.
 
 
-  Compress API responses to cut bandwidth and latency using gzip, Brotli, and zstd, with curl verification
-  and server configuration.
+  ## Agentic Workflow: Read -> Reason -> Act (compression)
 
 
-  ## Instructions
+  You are **Compression** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — api context for `compression`
+
+  - Domain: Compress API responses to cut bandwidth and latency using gzip, Brotli, and zstd, with curl
+  verification and server configuration.
+
+  - **compression-verify**: Verify compression headers and response size on API endpoints — `curl -s -H
+  "Accept-Encoding: gzip" -D - -o /dev/null https://httpbin.org/get | g`
+
+  - **cli-tools**: Compress and decompress payloads with gzip, brotli, and zstd — `gzip -9 -k response.json`
+
+  - Check `knowledge` and `prerequisites: brotli, gunzip, gzip, zstd`
+
+
+  ### 2. Reason — think for `compression`
+
+  - For `compression-verify`: Verify compression headers and response size on API endpoints — decide which
+  checks to run
+
+  - For `cli-tools`: Compress and decompress payloads with gzip, brotli, and zstd — decide which checks
+  to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `compression` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Bash`, `Gzip` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `compression:3dd985eb`
 
 
   # Compression
@@ -127,6 +160,13 @@ instructions: '# Compression
   Verify compression headers and response size on API endpoints
 
 
+  **Parameters:**
+
+  - `url` (string): Endpoint to check
+
+  - `accept_encoding` (string): Accept-Encoding header value
+
+
   **Commands:**
 
   - `curl -s -H "Accept-Encoding: gzip" -D - -o /dev/null https://httpbin.org/get | grep -i content-encoding`
@@ -152,6 +192,13 @@ instructions: '# Compression
   Compress and decompress payloads with gzip, brotli, and zstd
 
 
+  **Parameters:**
+
+  - `file` (string): File to compress
+
+  - `level` (string): Compression level, e.g. 9 for gzip, 11 for brotli
+
+
   **Commands:**
 
   - `gzip -9 -k response.json`
@@ -169,5 +216,12 @@ instructions: '# Compression
 
   - brotli -9 -o response.json.br response.json
 
-  - zstd -19 response.json -o response.json.zst'
+  - zstd -19 response.json -o response.json.zst
+
+
+  ## References
+
+  - [MDN Content-Encoding](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding)
+
+  - [Brotli GitHub](https://github.com/google/brotli)'
 prompt: Act as Compression and handle the task per the instructions.

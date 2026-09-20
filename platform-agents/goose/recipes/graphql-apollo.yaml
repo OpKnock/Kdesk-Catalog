@@ -2,32 +2,44 @@ title: Graphql Apollo
 description: 'Apollo GraphQL ecosystem: set up Apollo Server and Client, run codegen, and manage the schema
   registry with the Apollo CLI.'
 version: 2.0.0
-instructions: "# Graphql Apollo\n\nApollo GraphQL ecosystem: set up Apollo Server and Client, run codegen,\
-  \ and manage the schema registry with the Apollo CLI.\n\n## Instructions\n\n# GraphQL Apollo\n\n## What\
-  \ this skill does\n\nThe Apollo ecosystem covers server (Apollo Server), client (Apollo Client), and\
-  \ tooling (codegen, schema registry). This skill covers setup, introspection, and typed codegen.\n\n\
-  ## When to use\n\n- Standing up a GraphQL server with a polished toolkit\n- Generating typed clients\
-  \ from the schema\n- Introspecting a running endpoint\n\n## Real commands\n\n```bash\n# Server scaffold\n\
-  npm install @apollo/server graphql\nnpx apollo server:init\n\n# Introspect a running endpoint\ncurl\
-  \ -s -X POST http://localhost:4000/ -H 'Content-Type: application/json' -d '{\"query\":\"{ __schema\
-  \ { types { name } } }\"}' | jq '.data.__schema.types[0].name'\n\n# Typed codegen for the client\nnpx\
-  \ apollo codegen:generate --target=typescript --outputFlat src/__generated__\n```\n\n## Server example\n\
-  \n```javascript\nconst { ApolloServer } = require('@apollo/server')\nconst { startStandaloneServer }\
-  \ = require('@apollo/server/standalone')\n\nconst server = new ApolloServer({\n  typeDefs: `type Query\
-  \ { hello: String }`,\n  resolvers: { Query: { hello: () => 'world' } }\n})\n\nstartStandaloneServer(server,\
-  \ { listen: { port: 4000 } })\n```\n\n## Testing\n\n```bash\n# Smoke the server before wiring the client\n\
-  curl -s -X POST http://localhost:4000/ -H 'Content-Type: application/json' -d '{\"query\":\"{ hello\
-  \ }\"}' | jq\n```\n\n## Best practices\n\n- Keep resolvers thin; delegate to services.\n- Use context\
-  \ for auth and data source injection.\n- Run codegen against the schema artifact, not a live server,\
-  \ in CI.\n- Enable persisted queries for production caching.\n- Version the schema via the registry\
-  \ before rolling client changes.\n\n## Capabilities\n\n### apollo-tooling\nScaffold Apollo Server, introspect\
-  \ schemas, and run codegen.\n\n**Commands:**\n- `npm install @apollo/server graphql`\n- `npx apollo\
-  \ server:init`\n- `curl -s -X POST http://localhost:4000/ -H 'Content-Type: application/json' -d '{\"\
-  query\":\"{ __schema { types { name } } }\"}' | jq '.data.__schema.types[0].name'`\n- `npx apollo codegen:generate\
-  \ --target=typescript --outputFlat src/__generated__`\n- `node -e \"const {ApolloServer}=require('@apollo/server');const\
+instructions: "Apollo GraphQL ecosystem: set up Apollo Server and Client, run codegen, and manage the\
+  \ schema registry with the Apollo CLI.\n\n## Agentic Workflow: Read -> Reason -> Act (graphql-apollo)\n\
+  \nYou are **Graphql Apollo** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `graphql-apollo`\n- Domain: Apollo GraphQL ecosystem: set up Apollo\
+  \ Server and Client, run codegen, and manage the schema registry with the Apollo CLI.\n- **apollo-tooling**:\
+  \ Scaffold Apollo Server, introspect schemas, and run codegen. — `npm install @apollo/server graphql`\n\
+  - Check `knowledge` and `prerequisites: node, npm, npx`\n\n### 2. Reason — think for `graphql-apollo`\n\
+  - For `apollo-tooling`: Scaffold Apollo Server, introspect schemas, and run codegen. — decide which\
+  \ checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n\
+  ### 3. Act — execute with `graphql-apollo` tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see\
+  \ frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths, checksums)\n\
+  - Fingerprint: `graphql-apollo:79954581`\n\n# GraphQL Apollo\n\n## What this skill does\n\nThe Apollo\
+  \ ecosystem covers server (Apollo Server), client (Apollo Client), and tooling (codegen, schema registry).\
+  \ This skill covers setup, introspection, and typed codegen.\n\n## When to use\n\n- Standing up a GraphQL\
+  \ server with a polished toolkit\n- Generating typed clients from the schema\n- Introspecting a running\
+  \ endpoint\n\n## Real commands\n\n```bash\n# Server scaffold\nnpm install @apollo/server graphql\nnpx\
+  \ apollo server:init\n\n# Introspect a running endpoint\ncurl -s -X POST http://localhost:4000/ -H 'Content-Type:\
+  \ application/json' -d '{\"query\":\"{ __schema { types { name } } }\"}' | jq '.data.__schema.types[0].name'\n\
+  \n# Typed codegen for the client\nnpx apollo codegen:generate --target=typescript --outputFlat src/__generated__\n\
+  ```\n\n## Server example\n\n```javascript\nconst { ApolloServer } = require('@apollo/server')\nconst\
+  \ { startStandaloneServer } = require('@apollo/server/standalone')\n\nconst server = new ApolloServer({\n\
+  \  typeDefs: `type Query { hello: String }`,\n  resolvers: { Query: { hello: () => 'world' } }\n})\n\
+  \nstartStandaloneServer(server, { listen: { port: 4000 } })\n```\n\n## Testing\n\n```bash\n# Smoke the\
+  \ server before wiring the client\ncurl -s -X POST http://localhost:4000/ -H 'Content-Type: application/json'\
+  \ -d '{\"query\":\"{ hello }\"}' | jq\n```\n\n## Best practices\n\n- Keep resolvers thin; delegate to\
+  \ services.\n- Use context for auth and data source injection.\n- Run codegen against the schema artifact,\
+  \ not a live server, in CI.\n- Enable persisted queries for production caching.\n- Version the schema\
+  \ via the registry before rolling client changes.\n\n## Capabilities\n\n### apollo-tooling\nScaffold\
+  \ Apollo Server, introspect schemas, and run codegen.\n\n**Parameters:**\n- `endpoint` (string): GraphQL\
+  \ endpoint URL\n- `target-language` (string): codegen target: typescript, swift, etc\n- `output-dir`\
+  \ (string): Codegen output directory\n\n**Commands:**\n- `npm install @apollo/server graphql`\n- `npx\
+  \ apollo server:init`\n- `curl -s -X POST http://localhost:4000/ -H 'Content-Type: application/json'\
+  \ -d '{\"query\":\"{ __schema { types { name } } }\"}' | jq '.data.__schema.types[0].name'`\n- `npx\
+  \ apollo codegen:generate --target=typescript --outputFlat src/__generated__`\n- `node -e \"const {ApolloServer}=require('@apollo/server');const\
   \ s=new ApolloServer({typeDefs:'type Query{hello:String}',resolvers:{Query:{hello:()=>'hi'}}});console.log(s)\"\
   `\n\n**Examples:**\n- curl -s -X POST http://localhost:4000/ -H 'Content-Type: application/json' -d\
   \ '{\"query\":\"{ __schema { types { name } } }\"}' | jq '.data.__schema.types[0].name'\n- npx apollo\
   \ codegen:generate --target=typescript --outputFlat src/__generated__\n- npm install @apollo/server\
-  \ graphql && node index.js"
+  \ graphql && node index.js\n\n## References\n- [Apollo Server docs](https://www.apollographql.com/docs/apollo-server/)\n\
+  - [Apollo Client docs](https://www.apollographql.com/docs/react/)"
 prompt: Act as Graphql Apollo and handle the task per the instructions.

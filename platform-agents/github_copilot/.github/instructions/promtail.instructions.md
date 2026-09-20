@@ -4,27 +4,23 @@ applyTo: "**/*.go **/*.json **/*.r **/*.sh **/*.{yaml,yml}"
 
 Promtail log shipping to Loki: config, file discovery, labels, pipeline stages and logcli queries.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (promtail)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Promtail** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `promtail -config.file=promtail.yaml`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `promtail`
+- Domain: Promtail log shipping to Loki: config, file discovery, labels, pipeline stages and logcli queries.
+- **promtail-log-shipping**: Run promtail with configs, process log lines with pipelines, and query Loki with logcli. — `promtail -config.file=promtail.yaml`
+- Check `knowledge` and `prerequisites: logcli, promtail`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `promtail`
+- For `promtail-log-shipping`: Run promtail with configs, process log lines with pipelines, and query Loki with logcli. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `promtail` tools
+- Tools: `Glob`, `Grep`, `Read`, `Promtail`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `promtail:fb77f99b`
 
 # Promtail
 

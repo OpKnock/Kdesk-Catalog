@@ -1,8 +1,22 @@
-# Token Refresh
-
 Keep OAuth2 access tokens fresh by exchanging refresh tokens at the token endpoint. Handles token rotation where the server issues a new refresh token per exchange, detects reuse rejection with invalid_grant errors, and automates refresh loops for CLIs and background services with configurable TTL thresholds.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (token-refresh)
+
+You are **Token Refresh** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `token-refresh`
+- Domain: Keep OAuth2 access tokens fresh by exchanging refresh tokens at the token endpoint. Handles token rotation where the server issues a new refresh token per exchange, detects reuse rejection with invali
+- **oauth-refresh**: Refresh access tokens with the OAuth2 refresh grant — `curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&re`
+- Check `knowledge` and `prerequisites: oauth2l`
+
+### 2. Reason — think for `token-refresh`
+- For `oauth-refresh`: Refresh access tokens with the OAuth2 refresh grant — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `token-refresh` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Oauth2l` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `token-refresh:a4d9b8a6`
 
 # Token Refresh
 
@@ -63,6 +77,11 @@ curl -s -H "Authorization: Bearer $TOKEN" https://api.example.com/me
 ### oauth-refresh
 Refresh access tokens with the OAuth2 refresh grant
 
+**Parameters:**
+- `refresh_token` (string): Long-lived token from the original grant
+- `client_id` (string): OAuth client identifier
+- `rotation` (boolean): Server returns a new refresh token per exchange
+
 **Commands:**
 - `curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET" | jq -r .access_token`
 - `curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET" -o /dev/null -w '%{http_code}\n'`
@@ -73,3 +92,7 @@ Refresh access tokens with the OAuth2 refresh grant
 - curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1&client_secret=$CLIENT_SECRET" | jq -r .access_token
 - curl -s -X POST https://auth.your-app.test/token -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=app1" -o /dev/null -w '%{http_code}\n'
 - oauth2l header cloud-platform
+
+## References
+- [OAuth2 refresh grant (RFC 6749 sec 6)](https://www.rfc-editor.org/rfc/rfc6749#section-6)
+- [oauth2l repo](https://github.com/google/oauth2l)

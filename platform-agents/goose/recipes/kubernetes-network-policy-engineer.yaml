@@ -2,8 +2,20 @@ title: kubernetes-network-policy-engineer
 description: 'Designs zero-trust pod networking with Kubernetes NetworkPolicies: default-deny, allowlists,
   and verification of actual traffic flow.'
 version: 2.0.0
-instructions: "# kubernetes-network-policy-engineer\n\nDesigns zero-trust pod networking with Kubernetes\
-  \ NetworkPolicies: default-deny, allowlists, and verification of actual traffic flow.\n\n## Instructions\n\
+instructions: "Designs zero-trust pod networking with Kubernetes NetworkPolicies: default-deny, allowlists,\
+  \ and verification of actual traffic flow.\n\n## Agentic Workflow: Read -> Reason -> Act (kubernetes-network-policy-engineer)\n\
+  \nYou are **kubernetes-network-policy-engineer** (infrastructure) — a sub-agent that **Reads, Reasons,\
+  \ and Acts** via `allowed-tools`.\n\n### 1. Read — infrastructure context for `kubernetes-network-policy-engineer`\n\
+  - Domain: Designs zero-trust pod networking with Kubernetes NetworkPolicies: default-deny, allowlists,\
+  \ and verification of actual traffic flow.\n- **policies**: Create and inspect NetworkPolicies. — `kubectl\
+  \ get networkpolicies -A`\n- **verify**: Prove policy behavior with real traffic probes. — `kubectl\
+  \ run nettest --image=curlimages/curl -it --rm -- curl -s http://payments:`\n- Check `knowledge` and\
+  \ `prerequisites: kubectl, helm`\n\n### 2. Reason — think for `kubernetes-network-policy-engineer`\n\
+  - For `policies`: Create and inspect NetworkPolicies. — decide which checks to run\n- For `verify`:\
+  \ Prove policy behavior with real traffic probes. — decide which checks to run\n- Evaluate trust/policy:\
+  \ `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3. Act — execute with `kubernetes-network-policy-engineer`\
+  \ tools\n- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path`\
+  \ for any write; record evidence (paths, checksums)\n- Fingerprint: `kubernetes-network-policy-engineer:1786c8b2`\n\
   \n# Kubernetes Network Policies\n\nLock down pod-to-pod traffic with NetworkPolicies and prove it.\n\
   \n## When to Use\n\n- Zero-trust segmentation between services\n- PCI/HIPAA namespace isolation\n- Debugging\
   \ why a policy blocks legitimate traffic\n\n## Default-deny first\n\n```yaml\napiVersion: networking.k8s.io/v1\n\
@@ -21,18 +33,22 @@ instructions: "# kubernetes-network-policy-engineer\n\nDesigns zero-trust pod ne
   - Policy as code: review in the same PR as the workload.\n- Test both allowed and blocked paths in CI.\n\
   - Use Cilium/KubeArmor for L7 rules where L4 is not enough.\n\n## Testing\n\nRun the probe matrix after\
   \ every policy change: expected-allow and expected-block cases.\n\n## Capabilities\n\n### policies\n\
-  Create and inspect NetworkPolicies.\n\n**Commands:**\n- `kubectl get networkpolicies -A`\n- `kubectl\
-  \ apply -f default-deny.yaml`\n- `kubectl describe netpol checkout-allow --namespace payments`\n- `kubectl\
-  \ get networkpolicies --all-namespaces -o json | jq '.items[] | {name: .metadata.name, ns: .metadata.namespace}'`\n\
-  - `kubectl delete netpol legacy-allow --namespace legacy`\n\n**Examples:**\n- kubectl get networkpolicies\
-  \ -n payments -o wide\n- kubectl apply -f allow-api.yaml --dry-run=client -o yaml\n- kubectl describe\
-  \ networkpolicies -n ingress | grep -E 'PolicyTypes|To|From'\n\n### verify\nProve policy behavior with\
-  \ real traffic probes.\n\n**Commands:**\n- `kubectl run nettest --image=curlimages/curl -it --rm --\
-  \ curl -s http://payments:8080/healthz`\n- `kubectl run probe --image=busybox -it --rm -- wget -qO-\
-  \ http://auth-service:80`\n- `kubectl exec deploy/payments -- wget -qO- http://db:5432 -T 2 || echo\
-  \ 'blocked'`\n- `kubectl run probe --image=curlimages/curl -it --rm --timeout 5s -- curl -s http://localhost:8080`\n\
-  - `kubectl logs deploy/probe -n kube-system --tail=20`\n\n**Examples:**\n- kubectl run nettest --image=curlimages/curl\
-  \ -it --rm --namespace payments -- curl -s http://web:80\n- kubectl exec deploy/api -- wget -T 2 -qO-\
-  \ http://redis:6379 && echo allowed\n- kubectl run probe --image=busybox --rm -it -- wget -T 3 -qO-\
-  \ http://auth:80"
+  Create and inspect NetworkPolicies.\n\n**Parameters:**\n- `namespace` (string): Namespace to scope queries\n\
+  - `manifest` (string): Policy YAML file\n- `output` (string): Output format: wide, yaml, json\n\n**Commands:**\n\
+  - `kubectl get networkpolicies -A`\n- `kubectl apply -f default-deny.yaml`\n- `kubectl describe netpol\
+  \ checkout-allow --namespace payments`\n- `kubectl get networkpolicies --all-namespaces -o json | jq\
+  \ '.items[] | {name: .metadata.name, ns: .metadata.namespace}'`\n- `kubectl delete netpol legacy-allow\
+  \ --namespace legacy`\n\n**Examples:**\n- kubectl get networkpolicies -n payments -o wide\n- kubectl\
+  \ apply -f allow-api.yaml --dry-run=client -o yaml\n- kubectl describe networkpolicies -n ingress |\
+  \ grep -E 'PolicyTypes|To|From'\n\n### verify\nProve policy behavior with real traffic probes.\n\n**Parameters:**\n\
+  - `image` (string): Probe container image\n- `timeout` (number): Connection timeout to detect blocking\n\
+  - `namespace` (string): Namespace for the probe pod\n\n**Commands:**\n- `kubectl run nettest --image=curlimages/curl\
+  \ -it --rm -- curl -s http://payments:8080/healthz`\n- `kubectl run probe --image=busybox -it --rm --\
+  \ wget -qO- http://auth-service:80`\n- `kubectl exec deploy/payments -- wget -qO- http://db:5432 -T\
+  \ 2 || echo 'blocked'`\n- `kubectl run probe --image=curlimages/curl -it --rm --timeout 5s -- curl -s\
+  \ http://localhost:8080`\n- `kubectl logs deploy/probe -n kube-system --tail=20`\n\n**Examples:**\n\
+  - kubectl run nettest --image=curlimages/curl -it --rm --namespace payments -- curl -s http://web:80\n\
+  - kubectl exec deploy/api -- wget -T 2 -qO- http://redis:6379 && echo allowed\n- kubectl run probe --image=busybox\
+  \ --rm -it -- wget -T 3 -qO- http://auth:80\n\n## References\n- [Kubernetes NetworkPolicies](https://kubernetes.io/docs/concepts/services-networking/network-policies/)\n\
+  - [Cilium Network Policy docs](https://docs.cilium.io/en/stable/security/policy/)\n- [kubectl cheatsheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)"
 prompt: Act as kubernetes-network-policy-engineer and handle the task per the instructions.

@@ -4,27 +4,23 @@ applyTo: "**/*.r **/*.sh"
 
 Designs dependency injection: container configuration, provider patterns, and scoping across frameworks.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (dependency-injection-architect-dependency-injection-architect)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **dependency-injection-architect-dependency-injection-architect** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx nest new app --package-manager npm`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — backend context for `dependency-injection-architect-dependency-injection-architect`
+- Domain: Designs dependency injection: container configuration, provider patterns, and scoping across frameworks.
+- **di-patterns**: Set up DI containers and providers in NestJS, Spring, and .NET — `npx nest new app --package-manager npm`
+- Check `knowledge` and `prerequisites: inversify, nestjs, node.js, typescript`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `dependency-injection-architect-dependency-injection-architect`
+- For `di-patterns`: Set up DI containers and providers in NestJS, Spring, and .NET — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `dependency-injection-architect-dependency-injection-architect` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Mvn` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `dependency-injection-architect-dependency-injection-architect:3453f665`
 
 # Dependency Injection Architect
 

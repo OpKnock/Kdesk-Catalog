@@ -1,14 +1,30 @@
 ---
-description: "Load-tests pagination endpoints with k6 and autocannon: deep-page queries, worst-case limits, cursor stress, and performance regression detection in CI."
+description: "Load-tests pagination endpoints with k6 and autocannon: deep-page queries, worst-case limits, cursor stress, and performance regression detection in CI. Use when working with pagination load tests, deep page analysis or when the user mentions pagination load tests, deep page analysis."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Api Pagination Load Tests
-
 Load-tests pagination endpoints with k6 and autocannon: deep-page queries, worst-case limits, cursor stress, and performance regression detection in CI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-pagination-load-tests)
+
+You are **Api Pagination Load Tests** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-pagination-load-tests`
+- Domain: Load-tests pagination endpoints with k6 and autocannon: deep-page queries, worst-case limits, cursor stress, and performance regression detection in CI.
+- **pagination-load-tests**: Run load scenarios targeting pagination endpoints — `k6 run pagination-test.js`
+- **deep-page-analysis**: Detect O(n) degradation on deep pagination — `k6 run --iterations 200 deep-page.js`
+- Check `knowledge` and `prerequisites: node.js, python, postgresql`
+
+### 2. Reason — think for `api-pagination-load-tests`
+- For `pagination-load-tests`: Run load scenarios targeting pagination endpoints — decide which checks to run
+- For `deep-page-analysis`: Detect O(n) degradation on deep pagination — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-pagination-load-tests` tools
+- Tools: `Glob`, `Grep`, `Read`, `K6`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-pagination-load-tests:73726b9b`
 
 # API Pagination v5 - Performance
 
@@ -61,6 +77,11 @@ export default function () {
 ### pagination-load-tests
 Run load scenarios targeting pagination endpoints
 
+**Parameters:**
+- `vus` (integer): k6 virtual users
+- `duration` (string): Test duration like 60s
+- `limit` (integer): Page size under test
+
 **Commands:**
 - `k6 run pagination-test.js`
 - `npx autocannon -c 10 -d 30 'http://localhost:3000/users?page=1&limit=100'`
@@ -85,3 +106,7 @@ Detect O(n) degradation on deep pagination
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [k6 Documentation](https://grafana.com/docs/k6/latest/)
+- [autocannon](https://github.com/mcollina/autocannon)

@@ -1,8 +1,24 @@
-# flower
-
 Start and configure the it monitoring server. Query task and worker state through the it HTTP API. with optional basic auth.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (flower)
+
+You are **flower** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `flower`
+- Domain: Start and configure the it monitoring server. Query task and worker state through the it HTTP API. with optional basic auth.
+- **flower-server**: Start and configure the Flower monitoring server. — `pip install flower`
+- **flower-api**: Query task and worker state through the Flower HTTP API. — `curl http://localhost:5555/api/workers`
+- Check `knowledge` and `prerequisites: celery, pip`
+
+### 2. Reason — think for `flower`
+- For `flower-server`: Start and configure the Flower monitoring server. — decide which checks to run
+- For `flower-api`: Query task and worker state through the Flower HTTP API. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `flower` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Celery` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `flower:5459f6b2`
 
 # Flower
 
@@ -52,6 +68,11 @@ curl http://localhost:5555/api/task/info/<task_id>
 ### flower-server
 Start and configure the Flower monitoring server.
 
+**Parameters:**
+- `port` (integer): Web UI port
+- `basic_auth` (string): user:password for the UI
+- `address` (string): Bind address
+
 **Commands:**
 - `pip install flower`
 - `celery -A proj flower --port=5555`
@@ -67,6 +88,10 @@ Start and configure the Flower monitoring server.
 ### flower-api
 Query task and worker state through the Flower HTTP API.
 
+**Parameters:**
+- `task_id` (string): Celery task UUID
+- `task_type` (string): Filter by task name
+
 **Commands:**
 - `curl http://localhost:5555/api/workers`
 - `curl http://localhost:5555/api/tasks`
@@ -78,3 +103,7 @@ Query task and worker state through the Flower HTTP API.
 - curl -s http://localhost:5555/api/workers | python -m json.tool
 - curl -s http://localhost:5555/api/queues/length
 - curl -s http://localhost:5555/api/tasks | jq -r "keys[]" | head
+
+## References
+- [Flower Docs](https://flower.readthedocs.io)
+- [Flower on PyPI](https://pypi.org/project/flower/)

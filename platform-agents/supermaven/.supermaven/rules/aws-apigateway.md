@@ -1,8 +1,24 @@
-# Aws Apigateway
-
 Manages AWS API Gateway REST APIs: creating APIs and resources, deploying to stages, and invoking endpoints via curl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (aws-apigateway)
+
+You are **Aws Apigateway** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `aws-apigateway`
+- Domain: Manages AWS API Gateway REST APIs: creating APIs and resources, deploying to stages, and invoking endpoints via curl.
+- **api-lifecycle**: Create REST APIs, resources, methods, and deployments. — `aws apigateway create-rest-api --name my-api`
+- **invoke-and-test**: Invoke deployed endpoints and test integration. — `curl -X POST https://abc123xyz.execute-api.us-east-1.amazonaws.com/prod/users -H`
+- Check `knowledge` and `prerequisites: aws`
+
+### 2. Reason — think for `aws-apigateway`
+- For `api-lifecycle`: Create REST APIs, resources, methods, and deployments. — decide which checks to run
+- For `invoke-and-test`: Invoke deployed endpoints and test integration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `aws-apigateway` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `aws-apigateway:4e18f94a`
 
 # AWS API Gateway
 
@@ -52,6 +68,11 @@ curl -X POST https://abc123xyz.execute-api.us-east-1.amazonaws.com/prod/users -H
 ### api-lifecycle
 Create REST APIs, resources, methods, and deployments.
 
+**Parameters:**
+- `api_name` (string): Name of the REST API
+- `stage_name` (string): Deployment stage name
+- `region` (string): AWS region
+
 **Commands:**
 - `aws apigateway create-rest-api --name my-api`
 - `aws apigateway get-rest-apis`
@@ -67,6 +88,11 @@ Create REST APIs, resources, methods, and deployments.
 ### invoke-and-test
 Invoke deployed endpoints and test integration.
 
+**Parameters:**
+- `api_id` (string): REST API ID
+- `resource_id` (string): Resource ID for the method
+- `http_method` (string): GET/POST/PUT/DELETE
+
 **Commands:**
 - `curl -X POST https://abc123xyz.execute-api.us-east-1.amazonaws.com/prod/users -H "Content-Type: application/json" -d '{"name":"alice"}'`
 - `curl -s https://abc123xyz.execute-api.us-east-1.amazonaws.com/prod/users?limit=10`
@@ -77,3 +103,8 @@ Invoke deployed endpoints and test integration.
 - curl -X POST https://abc123xyz.execute-api.us-east-1.amazonaws.com/prod/users -H "Content-Type: application/json" -d '{"name":"alice"}'
 - aws apigateway test-invoke-method --rest-api-id abc123xyz --resource-id res123 --http-method GET --path-with-query-string '/users?limit=5'
 - curl -i https://abc123xyz.execute-api.us-east-1.amazonaws.com/prod/users | head -30
+
+## References
+- [API Gateway Developer Guide](https://docs.aws.amazon.com/apigateway/latest/developerguide/)
+- [AWS CLI apigateway Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/apigateway/index.html)
+- [API Gateway Best Practices](https://docs.aws.amazon.com/whitepapers/latest/api-gateway-best-practices/)

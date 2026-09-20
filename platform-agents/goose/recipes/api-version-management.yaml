@@ -2,14 +2,45 @@ title: api-version-management
 description: 'Manages API version lifecycles: deprecation headers, sunset dates, changelogs, and retirement
   processes with RFC 8594 Deprecation header conventions.'
 version: 2.0.0
-instructions: '# api-version-management
+instructions: 'Manages API version lifecycles: deprecation headers, sunset dates, changelogs, and retirement
+  processes with RFC 8594 Deprecation header conventions.
 
 
-  Manages API version lifecycles: deprecation headers, sunset dates, changelogs, and retirement processes
-  with RFC 8594 Deprecation header conventions.
+  ## Agentic Workflow: Read -> Reason -> Act (api-version-management)
 
 
-  ## Instructions
+  You are **api-version-management** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — backend context for `api-version-management`
+
+  - Domain: Manages API version lifecycles: deprecation headers, sunset dates, changelogs, and retirement
+  processes with RFC 8594 Deprecation header conventions.
+
+  - **deprecation-headers**: Signal deprecation with standard headers — `curl -sI http://localhost:8080/v1/users
+  | grep -iE ''^(deprecation|sunset|link):''`
+
+  - **lifecycle-track**: Track versions through the lifecycle — `git tag -a v1.0.0 -m ''v1 initial release''`
+
+  - Check `knowledge` and `prerequisites: node.js, python, openapi, postman`
+
+
+  ### 2. Reason — think for `api-version-management`
+
+  - For `deprecation-headers`: Signal deprecation with standard headers — decide which checks to run
+
+  - For `lifecycle-track`: Track versions through the lifecycle — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `api-version-management` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `api-version-management:49653cd6`
 
 
   # API Version Management
@@ -83,6 +114,15 @@ instructions: '# api-version-management
   Signal deprecation with standard headers
 
 
+  **Parameters:**
+
+  - `header` (string): deprecation, sunset, or link
+
+  - `version` (string): Affected version
+
+  - `date` (string): Sunset date in RFC 1123 format
+
+
   **Commands:**
 
   - `curl -sI http://localhost:8080/v1/users | grep -iE ''^(deprecation|sunset|link):''`
@@ -123,5 +163,12 @@ instructions: '# api-version-management
 
   - -cli --help
 
-  - -api --help'
+  - -api --help
+
+
+  ## References
+
+  - [RFC 8594 - Sunset Header](https://www.rfc-editor.org/rfc/rfc8594)
+
+  - [GitHub Deprecation Policy](https://docs.github.com/en/rest/about-the-rest-api/breaking-changes)'
 prompt: Act as api-version-management and handle the task per the instructions.

@@ -2,26 +2,40 @@ title: Flask
 description: 'Builds Python web apps with Flask: routes, templates, blueprints, CLI commands, and testing
   with pytest.'
 version: 2.0.0
-instructions: "# Flask\n\nBuilds Python web apps with Flask: routes, templates, blueprints, CLI commands,\
-  \ and testing with pytest.\n\n## Instructions\n\n# Flask\n\nLightweight Python web framework.\n\n##\
-  \ When to Use\n\n- Small to medium web apps and JSON APIs\n- Server-rendered pages with Jinja templates\n\
-  - Internal tools and admin dashboards\n- Applications that grow cleanly with blueprints\n\n## Commands\n\
-  \n```bash\npip install flask\n\n# Run with debug\nflask --app app run --debug\n\n# Run with create_app\
-  \ factory\nflask --app app:create_app run --debug\n\n# List routes\nflask --app app routes\n\n# Interactive\
-  \ shell\nflask --app app shell\n\n# Database migrations (flask-migrate)\nflask --app app db init\nflask\
-  \ --app app db migrate -m \"add users\"\nflask --app app db upgrade\nflask --app app db downgrade -1\n\
-  ```\n\n## App Example\n\n```python\n# app.py\nfrom flask import Flask, jsonify, request\n\napp = Flask(__name__)\n\
-  \n@app.get(\"/health\")\ndef health():\n    return jsonify(status=\"ok\")\n\n@app.post(\"/items\")\n\
-  def create_item():\n    data = request.get_json()\n    return jsonify(received=data), 201\n```\n\n##\
-  \ Best Practices\n\n- Use an app factory with create_app for testability\n- Structure larger apps with\
-  \ blueprints per domain\n- Run flask --app app routes to keep the surface area visible\n- Enable debug\
-  \ only in development; never in production\n- Add pytest tests with the app.test_client()\n\n## Capabilities\n\
-  \n### flask-cli\nRun the Flask dev server and app CLI commands.\n\n**Commands:**\n- `flask --app app\
-  \ run --debug`\n- `flask --app app run --host 0.0.0.0 --port 5001`\n- `flask --app app routes`\n- `flask\
-  \ --app app shell`\n- `flask --app app --help`\n\n**Examples:**\n- flask --app app:create_app run --debug\n\
-  - flask --app app routes --sort rule\n- python -m flask --app app run\n\n### flask-extensions\nManage\
-  \ extensions like migrate, SQLAlchemy, and testing.\n\n**Commands:**\n- `pip install Flask-SQLAlchemy\
-  \ flask-migrate`\n- `flask --app app db init`\n- `flask --app app db migrate -m \"add users\"`\n- `flask\
-  \ --app app db upgrade`\n- `pytest`\n\n**Examples:**\n- flask --app app db downgrade -1\n- flask --app\
-  \ app db history\n- pytest -q tests/"
+instructions: "Builds Python web apps with Flask: routes, templates, blueprints, CLI commands, and testing\
+  \ with pytest.\n\n## Agentic Workflow: Read -> Reason -> Act (flask)\n\nYou are **Flask** (backend/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — backend context\
+  \ for `flask`\n- Domain: Builds Python web apps with Flask: routes, templates, blueprints, CLI commands,\
+  \ and testing with pytest.\n- **flask-cli**: Run the Flask dev server and app CLI commands. — `flask\
+  \ --app app run --debug`\n- **flask-extensions**: Manage extensions like migrate, SQLAlchemy, and testing.\
+  \ — `pip install Flask-SQLAlchemy flask-migrate`\n- Check `knowledge` and `prerequisites: flask, pip,\
+  \ pytest`\n\n### 2. Reason — think for `flask`\n- For `flask-cli`: Run the Flask dev server and app\
+  \ CLI commands. — decide which checks to run\n- For `flask-extensions`: Manage extensions like migrate,\
+  \ SQLAlchemy, and testing. — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk\
+  \ doctor` patterns for your inputs\n\n### 3. Act — execute with `flask` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Flask`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write;\
+  \ record evidence (paths, checksums)\n- Fingerprint: `flask:5841902f`\n\n# Flask\n\nLightweight Python\
+  \ web framework.\n\n## When to Use\n\n- Small to medium web apps and JSON APIs\n- Server-rendered pages\
+  \ with Jinja templates\n- Internal tools and admin dashboards\n- Applications that grow cleanly with\
+  \ blueprints\n\n## Commands\n\n```bash\npip install flask\n\n# Run with debug\nflask --app app run --debug\n\
+  \n# Run with create_app factory\nflask --app app:create_app run --debug\n\n# List routes\nflask --app\
+  \ app routes\n\n# Interactive shell\nflask --app app shell\n\n# Database migrations (flask-migrate)\n\
+  flask --app app db init\nflask --app app db migrate -m \"add users\"\nflask --app app db upgrade\nflask\
+  \ --app app db downgrade -1\n```\n\n## App Example\n\n```python\n# app.py\nfrom flask import Flask,\
+  \ jsonify, request\n\napp = Flask(__name__)\n\n@app.get(\"/health\")\ndef health():\n    return jsonify(status=\"\
+  ok\")\n\n@app.post(\"/items\")\ndef create_item():\n    data = request.get_json()\n    return jsonify(received=data),\
+  \ 201\n```\n\n## Best Practices\n\n- Use an app factory with create_app for testability\n- Structure\
+  \ larger apps with blueprints per domain\n- Run flask --app app routes to keep the surface area visible\n\
+  - Enable debug only in development; never in production\n- Add pytest tests with the app.test_client()\n\
+  \n## Capabilities\n\n### flask-cli\nRun the Flask dev server and app CLI commands.\n\n**Parameters:**\n\
+  - `import` (string): App import path\n- `debug` (boolean): Enable debugger and reloader\n\n**Commands:**\n\
+  - `flask --app app run --debug`\n- `flask --app app run --host 0.0.0.0 --port 5001`\n- `flask --app\
+  \ app routes`\n- `flask --app app shell`\n- `flask --app app --help`\n\n**Examples:**\n- flask --app\
+  \ app:create_app run --debug\n- flask --app app routes --sort rule\n- python -m flask --app app run\n\
+  \n### flask-extensions\nManage extensions like migrate, SQLAlchemy, and testing.\n\n**Parameters:**\n\
+  - `message` (string): Migration message\n- `app-import` (string): Flask app import path for CLI commands\n\
+  \n**Commands:**\n- `pip install Flask-SQLAlchemy flask-migrate`\n- `flask --app app db init`\n- `flask\
+  \ --app app db migrate -m \"add users\"`\n- `flask --app app db upgrade`\n- `pytest`\n\n**Examples:**\n\
+  - flask --app app db downgrade -1\n- flask --app app db history\n- pytest -q tests/\n\n## References\n\
+  - [Flask Docs](https://flask.palletsprojects.com)\n- [Flask Migrate Docs](https://flask-migrate.readthedocs.io)"
 prompt: Act as Flask and handle the task per the instructions.

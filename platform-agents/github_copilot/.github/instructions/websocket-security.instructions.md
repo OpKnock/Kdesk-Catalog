@@ -4,27 +4,23 @@ applyTo: "**/*.r **/*.rs **/*.sh"
 
 Hardens WebSocket endpoints against hijacking and abuse. Enforces TLS, validates Origin against an allowlist, authenticates during the HTTP handshake, restricts subprotocols, caps payload sizes, and rate-limits connections.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (websocket-security)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Websocket Security** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `wscat -c wss://api.your-app.test/socket -H "Authorization: B`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `websocket-security`
+- Domain: Hardens WebSocket endpoints against hijacking and abuse. Enforces TLS, validates Origin against an allowlist, authenticates during the HTTP handshake, restricts subprotocols, caps payload sizes, and r
+- **ws-security**: Harden and audit WebSocket endpoints — `wscat -c wss://api.your-app.test/socket -H "Authorization: Bearer token123"`
+- Check `knowledge` and `prerequisites: wscat, curl`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `websocket-security`
+- For `ws-security`: Harden and audit WebSocket endpoints — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `websocket-security` tools
+- Tools: `Glob`, `Grep`, `Read`, `Wscat`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `websocket-security:f5df3569`
 
 # WebSocket Security
 

@@ -1,6 +1,6 @@
 ---
 name: "ml-xai-deploy"
-description: "xAI deployment agent for ML xAI model deployment."
+description: "xAI deployment agent for ML xAI model deployment. Use when working with Ml Xai Deploy, deployment or when the user mentions Ml Xai Deploy, deployment."
 type: knowledge
 triggers: ["ml-xai-deploy", "ml xai deploy"]
 ---
@@ -8,6 +8,24 @@ triggers: ["ml-xai-deploy", "ml xai deploy"]
 # Ml Xai Deploy
 
 xAI deployment agent for ML xAI model deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-xai-deploy)
+
+You are **Ml Xai Deploy** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-xai-deploy`
+- Domain: xAI deployment agent for ML xAI model deployment.
+- **Ml Xai Deploy**: xAI deployment agent for ML xAI model deployment. — `Chat: curl https://api.x.ai/v1/chat/completions -H 'Authorization: Bearer $XAI_A`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-xai-deploy`
+- For `Ml Xai Deploy`: xAI deployment agent for ML xAI model deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-xai-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Chat`, `Status` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-xai-deploy:f3867f33`
 
 ## Instructions
 
@@ -25,3 +43,7 @@ xAI deployment agent for ML xAI model deployment.
 **Examples:**
 - Chat: curl https://api.x.ai/v1/chat/completions -H 'Authorization: Bearer $XAI_API_KEY' -d '{"model": "grok-2", "messages": [{"role": "user", "content": "Hello"}]}'
 - Status: curl https://api.x.ai/v1/models -H 'Authorization: Bearer $XAI_API_KEY'
+
+## References
+- [xAI Documentation](https://docs.x.ai/)
+- [curl Documentation](https://curl.se/docs/)

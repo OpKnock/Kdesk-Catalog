@@ -1,15 +1,31 @@
 ---
 name: "stern"
-description: "Tails and aggregates logs from multiple Kubernetes pods with regex matching using stern: multi-pod, multi-container, and namespace-wide views."
+description: "Tails and aggregates logs from multiple Kubernetes pods with regex matching using stern: multi-pod, multi-container, and namespace-wide views. Use when working with multi pod tailing, filtering and format, devops or when the user mentions multi pod tailing, filtering and format, devops."
 globs: ["**/*.go", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# stern
-
 Tails and aggregates logs from multiple Kubernetes pods with regex matching using stern: multi-pod, multi-container, and namespace-wide views.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (stern)
+
+You are **stern** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `stern`
+- Domain: Tails and aggregates logs from multiple Kubernetes pods with regex matching using stern: multi-pod, multi-container, and namespace-wide views.
+- **multi-pod-tailing**: Tail logs from pod groups matched by regex across namespaces. — `stern web-*`
+- **filtering-and-format**: Filter lines, colorize, and control timestamps and output. — `stern web -i 'GET /health'`
+- Check `knowledge` and `prerequisites: stern`
+
+### 2. Reason — think for `stern`
+- For `multi-pod-tailing`: Tail logs from pod groups matched by regex across namespaces. — decide which checks to run
+- For `filtering-and-format`: Filter lines, colorize, and control timestamps and output. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `stern` tools
+- Tools: `Glob`, `Grep`, `Read`, `Stern` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `stern:7afdf4c1`
 
 # stern Multi-Pod Logging
 
@@ -68,6 +84,11 @@ stern web --max-log-requests 20
 ### multi-pod-tailing
 Tail logs from pod groups matched by regex across namespaces.
 
+**Parameters:**
+- `pattern` (string): Pod name regex, e.g. web-*
+- `namespace` (string): Namespace scope
+- `exclude` (string): Regex to exclude lines
+
 **Commands:**
 - `stern web-*`
 - `stern '^api-.*' -n app`
@@ -84,6 +105,11 @@ Tail logs from pod groups matched by regex across namespaces.
 ### filtering-and-format
 Filter lines, colorize, and control timestamps and output.
 
+**Parameters:**
+- `include` (string): Regex to include lines
+- `since` (string): Look back window, e.g. 30m
+- `template` (string): Go template for output
+
 **Commands:**
 - `stern web -i 'GET /health'`
 - `stern web -n app --timestamps`
@@ -96,3 +122,7 @@ Filter lines, colorize, and control timestamps and output.
 - stern web -i 'GET /health'
 - stern web --since 30m
 - stern web --template '{{.PodName}} {{.Message}}'
+
+## References
+- [stern GitHub](https://github.com/stern/stern)
+- [stern Documentation](https://stern.io/)

@@ -1,15 +1,29 @@
 ---
 name: "ddos-protection"
-description: "Mitigates DDoS attacks: rate limiting, firewall rules, CDN shielding, and attack simulation."
+description: "Mitigates DDoS attacks: rate limiting, firewall rules, CDN shielding, and attack simulation. Use when working with ddos mitigation or when the user mentions ddos mitigation."
 type: knowledge
 triggers: ["ddos-protection", "ddos-mitigation"]
 ---
 
-# ddos-protection
-
 Mitigates DDoS attacks: rate limiting, firewall rules, CDN shielding, and attack simulation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ddos-protection)
+
+You are **ddos-protection** (security) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `ddos-protection`
+- Domain: Mitigates DDoS attacks: rate limiting, firewall rules, CDN shielding, and attack simulation.
+- **ddos-mitigation**: Configure rate limits, firewall rules, and verify mitigation — `iptables -A INPUT -p tcp --dport 80 -m connlimit --connlimit-above 100 -j DROP`
+- Check `knowledge` and `prerequisites: aws-shield, cloudflare, nginx, varnish`
+
+### 2. Reason — think for `ddos-protection`
+- For `ddos-mitigation`: Configure rate limits, firewall rules, and verify mitigation — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ddos-protection` tools
+- Tools: `Glob`, `Grep`, `Read`, `Iptables`, `Nginx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ddos-protection:b482e9bb`
 
 # DDoS Protection
 
@@ -73,6 +87,11 @@ mitigations, and verifies origin pressure drops.
 ### ddos-mitigation
 Configure rate limits, firewall rules, and verify mitigation
 
+**Parameters:**
+- `connlimit-above` (integer): Connection threshold per source IP
+- `pattern` (string): tcpdump filter pattern
+- `count` (integer): Packet count to capture
+
 **Commands:**
 - `iptables -A INPUT -p tcp --dport 80 -m connlimit --connlimit-above 100 -j DROP`
 - `nginx -t && nginx -s reload`
@@ -84,3 +103,7 @@ Configure rate limits, firewall rules, and verify mitigation
 - iptables -L -n -v | head -30
 - wrk -t8 -c500 -d60s http://localhost:8080/ --latency
 - ufw limit ssh comment 'rate limit ssh'
+
+## References
+- [OWASP DoS cheat sheet](https://cheatsheetseries.owasp.org/cheatsheets/Denial_of_Service_Cheat_Sheet.html)
+- [Cloudflare DDoS protection](https://www.cloudflare.com/ddos/)

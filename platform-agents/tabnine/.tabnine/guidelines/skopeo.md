@@ -1,8 +1,24 @@
-# skopeo
-
 Inspects, copies, and signs container images with skopeo — registry operations without a daemon, including sync and list-tags.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (skopeo)
+
+You are **skopeo** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `skopeo`
+- Domain: Inspects, copies, and signs container images with skopeo — registry operations without a daemon, including sync and list-tags.
+- **image-inspection**: Inspect images and registries without pulling layers locally. — `skopeo inspect docker://nginx:latest`
+- **copy-and-sync**: Copy images between transports/registries and sync repositories. — `skopeo copy docker://nginx:latest docker://ghcr.io/nginx:latest`
+- Check `knowledge` and `prerequisites: skopeo`
+
+### 2. Reason — think for `skopeo`
+- For `image-inspection`: Inspect images and registries without pulling layers locally. — decide which checks to run
+- For `copy-and-sync`: Copy images between transports/registries and sync repositories. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `skopeo` tools
+- Tools: `Glob`, `Grep`, `Read`, `Skopeo` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `skopeo:adeae137`
 
 # skopeo Registry Operations
 
@@ -57,6 +73,10 @@ skopeo delete docker://ghcr.io/old-app:v0.9
 ### image-inspection
 Inspect images and registries without pulling layers locally.
 
+**Parameters:**
+- `image` (string): Image reference
+- `format` (string): Go template for output
+
 **Commands:**
 - `skopeo inspect docker://nginx:latest`
 - `skopeo inspect --raw docker://nginx:latest`
@@ -72,6 +92,10 @@ Inspect images and registries without pulling layers locally.
 ### copy-and-sync
 Copy images between transports/registries and sync repositories.
 
+**Parameters:**
+- `src` (string): Source image reference
+- `dest` (string): Destination reference
+
 **Commands:**
 - `skopeo copy docker://nginx:latest docker://ghcr.io/nginx:latest`
 - `skopeo copy --all --preserve-digests docker://ghcr.io/org/app:1.0 docker://ghcr.io/org/app:1.0`
@@ -83,3 +107,7 @@ Copy images between transports/registries and sync repositories.
 - skopeo copy docker://nginx:latest docker://ghcr.io/nginx:latest
 - skopeo sync --src docker --dest dir nginx:latest /opt/images
 - skopeo delete docker://ghcr.io/old-app:v0.9
+
+## References
+- [skopeo GitHub](https://github.com/containers/skopeo)
+- [containers-common Transports](https://github.com/containers/image/blob/main/docs/containers-transports.5.md)

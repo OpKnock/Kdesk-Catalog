@@ -1,15 +1,31 @@
 ---
 name: "clippy"
-description: "Lints Rust code with clippy: lints, autofixes, custom configs, and CI enforcement with -D warnings."
+description: "Lints Rust code with clippy: lints, autofixes, custom configs, and CI enforcement with -D warnings. Use when working with clippy lint, clippy config, code quality or when the user mentions clippy lint, clippy config, code quality."
 type: knowledge
 triggers: ["clippy", "clippy-lint", "clippy-config"]
 ---
 
-# Clippy
-
 Lints Rust code with clippy: lints, autofixes, custom configs, and CI enforcement with -D warnings.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (clippy)
+
+You are **Clippy** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `clippy`
+- Domain: Lints Rust code with clippy: lints, autofixes, custom configs, and CI enforcement with -D warnings.
+- **clippy-lint**: Run clippy over the crate. — `cargo clippy`
+- **clippy-config**: Configure lint levels per crate. — `cargo clippy -- -D clippy::pedantic`
+- Check `knowledge` and `prerequisites: cargo, rustup`
+
+### 2. Reason — think for `clippy`
+- For `clippy-lint`: Run clippy over the crate. — decide which checks to run
+- For `clippy-config`: Configure lint levels per crate. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `clippy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Rustup` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `clippy:af6faed5`
 
 # Clippy
 
@@ -72,6 +88,11 @@ unwrap_used = "warn"
 ### clippy-lint
 Run clippy over the crate.
 
+**Parameters:**
+- `all-targets` (boolean): Lint all targets
+- `fix` (boolean): Apply suggestions
+- `allow` (string): Lints to allow
+
 **Commands:**
 - `cargo clippy`
 - `cargo clippy -- -D warnings`
@@ -87,6 +108,10 @@ Run clippy over the crate.
 ### clippy-config
 Configure lint levels per crate.
 
+**Parameters:**
+- `level` (string): warn, deny, allow
+- `lint-group` (string): pedantic, nursery, restriction
+
 **Commands:**
 - `cargo clippy -- -D clippy::pedantic`
 - `cargo clippy -- -W clippy::nursery`
@@ -96,3 +121,7 @@ Configure lint levels per crate.
 **Examples:**
 - cargo clippy -- -D warnings -D clippy::pedantic
 - cargo clippy -- -A clippy::needless_return
+
+## References
+- [Clippy Docs](https://doc.rust-lang.org/clippy/)
+- [Clippy Lint Index](https://rust-lang.github.io/rust-clippy/master/)

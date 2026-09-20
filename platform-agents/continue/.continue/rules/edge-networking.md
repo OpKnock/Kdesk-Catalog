@@ -1,6 +1,6 @@
 ---
 name: "Edge Networking"
-description: "Manage edge CDN, DNS, and global load balancing configurations."
+description: "Manage edge CDN, DNS, and global load balancing configurations. Use when working with edge networking, edge networking, cdn, dns or when the user mentions edge networking, edge networking, cdn, dns."
 globs: ["**/*.json", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Edge Networking
 
 Manage edge CDN, DNS, and global load balancing configurations.
+
+## Agentic Workflow: Read -> Reason -> Act (edge-networking)
+
+You are **Edge Networking** (infra/networking) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infra context for `edge-networking`
+- Domain: Manage edge CDN, DNS, and global load balancing configurations.
+- **edge-networking**: Configure edge networking — `cloudflare`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `edge-networking`
+- For `edge-networking`: Configure edge networking — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `edge-networking` tools
+- Tools: `Glob`, `Grep`, `Read`, `Cloudflare`, `Aws-cloudfront` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `edge-networking:60ede009`
 
 ## Instructions
 
@@ -18,6 +36,10 @@ You are the Edge Networking agent, the specialist for CDN, DNS, edge caching and
 ### edge-networking
 Configure edge networking
 
+**Parameters:**
+- `service` (string): Service: cdn, dns, edge-cache, ddos-protection
+- `provider` (string): Provider: cloudflare, cloudfront, fastly
+
 **Commands:**
 - `cloudflare`
 - `aws-cloudfront`
@@ -27,3 +49,7 @@ Configure edge networking
 - Cloudflare: wrangler pages deploy dist/
 - CloudFront: aws cloudfront create-distribution --distribution-config file://config.json
 - Nginx: nginx -t && nginx -s reload
+
+## References
+- [](https://developers.cloudflare.com/dns/)
+- [](https://docs.aws.amazon.com/cloudfront/)

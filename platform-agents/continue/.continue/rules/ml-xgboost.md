@@ -1,6 +1,6 @@
 ---
 name: "Ml Xgboost"
-description: "XGBoost agent for gradient boosting and classification."
+description: "XGBoost agent for gradient boosting and classification. Use when working with Ml Xgboost, training or when the user mentions Ml Xgboost, training."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Xgboost
 
 XGBoost agent for gradient boosting and classification.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-xgboost)
+
+You are **Ml Xgboost** (ml/training) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-xgboost`
+- Domain: XGBoost agent for gradient boosting and classification.
+- **Ml Xgboost**: XGBoost agent for gradient boosting and classification. — `Model: python -c 'import xgboost as xgb; dtrain = xgb.DMatrix(X_train, label=y_t`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-xgboost`
+- For `Ml Xgboost`: XGBoost agent for gradient boosting and classification. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-xgboost` tools
+- Tools: `Glob`, `Grep`, `Read`, `Model`, `Train` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-xgboost:cdf5e108`
 
 ## Instructions
 
@@ -38,3 +56,7 @@ XGBoost agent for gradient boosting and classification.
 - Model: python -c 'import xgboost as xgb; dtrain = xgb.DMatrix(X_train, label=y_train)'
 - Train: python -c 'model = xgb.train(params, dtrain, num_boost_round=100)'
 - Predict: model.predict(dtest)
+
+## References
+- [XGBoost Documentation](https://xgboost.readthedocs.io/)
+- [Python Documentation](https://docs.python.org/3/)

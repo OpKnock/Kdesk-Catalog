@@ -1,14 +1,30 @@
 ---
-description: "Evolves GraphQL schemas safely: schema diffing with graphql-inspector, deprecation directives, coverage checks, and breaking-change detection."
+description: "Evolves GraphQL schemas safely: schema diffing with graphql-inspector, deprecation directives, coverage checks, and breaking-change detection. Use when working with schema diffing, deprecations or when the user mentions schema diffing, deprecations."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Api Version Schema Diffing
-
 Evolves GraphQL schemas safely: schema diffing with graphql-inspector, deprecation directives, coverage checks, and breaking-change detection.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-version-schema-diffing)
+
+You are **Api Version Schema Diffing** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-version-schema-diffing`
+- Domain: Evolves GraphQL schemas safely: schema diffing with graphql-inspector, deprecation directives, coverage checks, and breaking-change detection.
+- **schema-diffing**: Diff GraphQL schemas for breaking changes — `npm install -g @graphql-inspector/cli`
+- **deprecations**: Mark fields deprecated in the schema — `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json`
+- Check `knowledge` and `prerequisites: node.js, python, openapi`
+
+### 2. Reason — think for `api-version-schema-diffing`
+- For `schema-diffing`: Diff GraphQL schemas for breaking changes — decide which checks to run
+- For `deprecations`: Mark fields deprecated in the schema — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-version-schema-diffing` tools
+- Tools: `Glob`, `Read`, `Bash`, `Npx`, `Grep` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-version-schema-diffing:e7fe20ca`
 
 # API Version v2 - GraphQL
 
@@ -56,6 +72,11 @@ type User {
 ### schema-diffing
 Diff GraphQL schemas for breaking changes
 
+**Parameters:**
+- `old-schema` (string): Baseline schema file
+- `new-schema` (string): Changed schema file
+- `rule` (string): breaking, safe, or dangerous rules
+
 **Commands:**
 - `npm install -g @graphql-inspector/cli`
 - `npx @graphql-inspector/cli diff schema-old.graphql schema-new.graphql`
@@ -79,3 +100,7 @@ Mark fields deprecated in the schema
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [GraphQL Inspector](https://the-guild.dev/graphql/inspector/docs)
+- [GraphQL Best Practices](https://graphql.org/learn/best-practices/)

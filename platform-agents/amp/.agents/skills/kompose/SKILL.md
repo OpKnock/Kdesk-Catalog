@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(kompose:*)"
 
 Converts docker-compose files to Kubernetes manifests with kompose: conversion, direct deployment, and reverse tooling.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (kompose)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **kompose** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `kompose convert -f docker-compose.yml`, `kompose up -f docker-compose.yml`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devops context for `kompose`
+- Domain: Converts docker-compose files to Kubernetes manifests with kompose: conversion, direct deployment, and reverse tooling.
+- **compose-to-kubernetes**: Translate compose services into Deployment/Service manifests with options for volumes and networks. — `kompose convert -f docker-compose.yml`
+- **deploy-and-rollback**: Deploy compose stacks directly to Kubernetes and tear them down. — `kompose up -f docker-compose.yml`
+- Check `knowledge` and `prerequisites: kompose`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `kompose`
+- For `compose-to-kubernetes`: Translate compose services into Deployment/Service manifests with options for volumes and networks. — decide which checks to run
+- For `deploy-and-rollback`: Deploy compose stacks directly to Kubernetes and tear them down. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `kompose` tools
+- Tools: `Glob`, `Grep`, `Read`, `Kompose` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `kompose:cac11673`
 
 # Kompose Conversion
 

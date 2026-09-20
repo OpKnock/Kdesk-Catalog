@@ -4,27 +4,25 @@ applyTo: "**/*.r **/*.rs **/*.sh"
 
 Generates and manages SSH key pairs: ed25519/RSA creation, fingerprinting, passphrase changes, host key verification, and known_hosts.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (ssh-keygen)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **ssh-keygen** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `ssh-keygen -t ed25519 -C "jane@localhost"`, `ssh-keygen -l -f ~/.ssh/id_ed25519.pub`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — devtools context for `ssh-keygen`
+- Domain: Generates and manages SSH key pairs: ed25519/RSA creation, fingerprinting, passphrase changes, host key verification, and known_hosts.
+- **key-generation**: Generate strong key pairs and export public keys. — `ssh-keygen -t ed25519 -C "jane@localhost"`
+- **host-and-fingerprints**: Verify host keys and manage known_hosts. — `ssh-keygen -l -f ~/.ssh/id_ed25519.pub`
+- Check `knowledge` and `prerequisites: ssh-keygen, ssh-keyscan`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `ssh-keygen`
+- For `key-generation`: Generate strong key pairs and export public keys. — decide which checks to run
+- For `host-and-fingerprints`: Verify host keys and manage known_hosts. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `ssh-keygen` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ssh-keygen`, `Ssh-keyscan` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ssh-keygen:b5ad16bf`
 
 # SSH Key Management
 

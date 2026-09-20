@@ -5,27 +5,25 @@ description: "Tests Node.js HTTP APIs with supertest assertions against Express/
 
 Tests Node.js HTTP APIs with supertest assertions against Express/Fastify servers, including auth and streaming.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (supertest-testing)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **supertest-testing** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `npx jest test/api.test.js`, `request(app).get('/api/users').expect(200)`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — testing context for `supertest-testing`
+- Domain: Tests Node.js HTTP APIs with supertest assertions against Express/Fastify servers, including auth and streaming.
+- **supertest-api-tests**: Write and run API assertions with supertest. — `npx jest test/api.test.js`
+- **request-assertions**: Chain requests and assert responses. — `request(app).get('/api/users').expect(200)`
+- Check `knowledge` and `prerequisites: node, npm, npx, request(app).get('/api/stream').pipe(process.stdout`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `supertest-testing`
+- For `supertest-api-tests`: Write and run API assertions with supertest. — decide which checks to run
+- For `request-assertions`: Chain requests and assert responses. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `supertest-testing` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `supertest-testing:7807ffa2`
 
 # supertest
 

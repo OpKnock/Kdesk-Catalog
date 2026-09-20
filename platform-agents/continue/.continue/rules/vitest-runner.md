@@ -1,6 +1,6 @@
 ---
 name: "Vitest Runner"
-description: "Vitest test runner agent. Real Vitest CLI."
+description: "Vitest test runner agent. Real Vitest CLI. Use when working with Vitest Runner, testing, automation or when the user mentions Vitest Runner, testing, automation."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Vitest Runner
 
 Vitest test runner agent. Real Vitest CLI.
+
+## Agentic Workflow: Read -> Reason -> Act (vitest-runner)
+
+You are **Vitest Runner** (testing/automation) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `vitest-runner`
+- Domain: Vitest test runner agent. Real Vitest CLI.
+- **Vitest Runner**: Vitest test runner agent. Real Vitest CLI. — `Run: npx vitest`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `vitest-runner`
+- For `Vitest Runner`: Vitest test runner agent. Real Vitest CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `vitest-runner` tools
+- Tools: `Glob`, `Grep`, `Read`, `Run`, `UI` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `vitest-runner:1958d2b3`
 
 ## Instructions
 
@@ -37,3 +55,6 @@ Vitest test runner agent. Real Vitest CLI.
 - Run once: npx vitest run
 - Coverage: npx vitest run --coverage
 - UI: npx vitest --ui
+
+## References
+- [Vitest Documentation](https://vitest.dev/guide/)

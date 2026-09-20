@@ -1,6 +1,6 @@
 ---
 name: "aks-sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Aks Deploy Sdk Agent or when the user mentions Ml Aks Deploy Sdk Agent."
 type: knowledge
 triggers: ["aks-sdk", "ml aks deploy sdk agent"]
 ---
@@ -8,6 +8,24 @@ triggers: ["aks-sdk", "ml aks deploy sdk agent"]
 # Aks Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (aks-sdk)
+
+You are **Aks Sdk** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `aks-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Aks Deploy Sdk Agent**: AKS SDK deployment agent for ML AKS SDK deployment. — `docker build -t aks:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `aks-sdk`
+- For `Ml Aks Deploy Sdk Agent`: AKS SDK deployment agent for ML AKS SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `aks-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Aks` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `aks-sdk:135fed23`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ AKS SDK deployment agent for ML AKS SDK deployment.
 **Examples:**
 - Server: python -m aks.server --port 8080
 - Docker: docker run -p 8080:8080 aks-server
+
+## References
+- [Azure Kubernetes Service Documentation](https://learn.microsoft.com/azure/aks/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

@@ -1,15 +1,29 @@
 ---
 name: "Hono"
-description: "Scaffold and run Hono web applications targeting edge runtimes: compose middleware chains, define routes, and launch dev servers on Node.js, Bun, Deno, or Cloudflare Workers."
+description: "Scaffold and run Hono web applications targeting edge runtimes: compose middleware chains, define routes, and launch dev servers on Node.js, Bun, Deno, or Cloudflare Workers. Use when working with hono app lifecycle, api or when the user mentions hono app lifecycle, api."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Hono
-
 Scaffold and run Hono web applications targeting edge runtimes: compose middleware chains, define routes, and launch dev servers on Node.js, Bun, Deno, or Cloudflare Workers.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (hono)
+
+You are **Hono** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `hono`
+- Domain: Scaffold and run Hono web applications targeting edge runtimes: compose middleware chains, define routes, and launch dev servers on Node.js, Bun, Deno, or Cloudflare Workers.
+- **hono-app-lifecycle**: Scaffold, develop, and run Hono applications with the hono CLI and runtime dev servers. — `npm create hono@latest my-app`
+- Check `knowledge` and `prerequisites: bun, npm`
+
+### 2. Reason — think for `hono`
+- For `hono-app-lifecycle`: Scaffold, develop, and run Hono applications with the hono CLI and runtime dev servers. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `hono` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Cd` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `hono:489e23ce`
 
 # Hono
 
@@ -102,6 +116,11 @@ Agent: npm create hono@latest my-app && cd my-app65:    && add
 ### hono-app-lifecycle
 Scaffold, develop, and run Hono applications with the hono CLI and runtime dev servers.
 
+**Parameters:**
+- `template` (string): Project template: nodejs, bun, cloudflare-workers, deno, vercel, etc.
+- `port` (integer): Dev server port.
+- `app_name` (string): Project/app name.
+
 **Commands:**
 - `npm create hono@latest my-app`
 - `cd my-app && npm install`
@@ -113,3 +132,7 @@ Scaffold, develop, and run Hono applications with the hono CLI and runtime dev s
 - npm create hono@latest my-app -- --template cloudflare-workers
 - npm run dev -- --port 3001
 - npm test
+
+## References
+- [Hono Docs](https://hono.dev/docs/)
+- [Hono API Reference](https://hono.dev/api/hono)

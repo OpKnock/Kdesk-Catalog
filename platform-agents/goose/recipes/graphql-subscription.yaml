@@ -2,17 +2,27 @@ title: Graphql Subscription
 description: 'GraphQL subscriptions: set up realtime channels over WebSocket (graphql-ws), publish events,
   and test subscription flows.'
 version: 2.0.0
-instructions: "# Graphql Subscription\n\nGraphQL subscriptions: set up realtime channels over WebSocket\
-  \ (graphql-ws), publish events, and test subscription flows.\n\n## Instructions\n\n# GraphQL Subscriptions\n\
-  \n## What this skill does\n\nSubscriptions push realtime updates over WebSocket using the graphql-ws\
-  \ protocol. Servers publish via PubSub; clients subscribe with a subscription document and receive events\
-  \ as they happen.\n\n## When to use\n\n- Live order boards, chat, and presence\n- Push notifications\
-  \ from mutations\n- Replacing polling with event-driven updates\n\n## Real commands\n\n```bash\n# What\
-  \ subscriptions does the schema offer?\ncurl -s -X POST http://localhost:4000/graphql -H 'Content-Type:\
-  \ application/json' -d '{\"query\":\"{ __type(name: \\\"Subscription\\\") { fields { name } } }\"}'\
-  \ | jq '.data.__type.fields[].name'\n\n# Subscribe via graphql-ws from Node\nnode -e \"const {createClient}=require('graphql-ws');const\
-  \ c=createClient({url:'ws://localhost:4000/graphql'});c.subscribe({query:'subscription { orderUpdated\
-  \ { id status } }'},{next:d=>console.log(d.data),error:e=>console.error(e)});setTimeout(()=>c.dispose(),15000)\"\
+instructions: "GraphQL subscriptions: set up realtime channels over WebSocket (graphql-ws), publish events,\
+  \ and test subscription flows.\n\n## Agentic Workflow: Read -> Reason -> Act (graphql-subscription)\n\
+  \nYou are **Graphql Subscription** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via\
+  \ `allowed-tools`.\n\n### 1. Read — api context for `graphql-subscription`\n- Domain: GraphQL subscriptions:\
+  \ set up realtime channels over WebSocket (graphql-ws), publish events, and test subscription flows.\n\
+  - **subscriptions**: Connect to GraphQL subscription endpoints over WebSocket and verify event delivery.\
+  \ — `npm install graphql-ws @apollo/server @apollo/server/plugin/subscriptionCallback`\n- Check `knowledge`\
+  \ and `prerequisites: grep, node, npm`\n\n### 2. Reason — think for `graphql-subscription`\n- For `subscriptions`:\
+  \ Connect to GraphQL subscription endpoints over WebSocket and verify event delivery. — decide which\
+  \ checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n\
+  ### 3. Act — execute with `graphql-subscription` tools\n- Tools: `Glob`, `Read`, `Bash`, `Grep` (see\
+  \ frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths, checksums)\n\
+  - Fingerprint: `graphql-subscription:e71c29b4`\n\n# GraphQL Subscriptions\n\n## What this skill does\n\
+  \nSubscriptions push realtime updates over WebSocket using the graphql-ws protocol. Servers publish\
+  \ via PubSub; clients subscribe with a subscription document and receive events as they happen.\n\n\
+  ## When to use\n\n- Live order boards, chat, and presence\n- Push notifications from mutations\n- Replacing\
+  \ polling with event-driven updates\n\n## Real commands\n\n```bash\n# What subscriptions does the schema\
+  \ offer?\ncurl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"\
+  query\":\"{ __type(name: \\\"Subscription\\\") { fields { name } } }\"}' | jq '.data.__type.fields[].name'\n\
+  \n# Subscribe via graphql-ws from Node\nnode -e \"const {createClient}=require('graphql-ws');const c=createClient({url:'ws://localhost:4000/graphql'});c.subscribe({query:'subscription\
+  \ { orderUpdated { id status } }'},{next:d=>console.log(d.data),error:e=>console.error(e)});setTimeout(()=>c.dispose(),15000)\"\
   \n\n# Find the pubsub wiring\n grep -rn 'pubsub\\|PubSub' src/ | head -10\n```\n\n## Server example\
   \ (Apollo)\n\n```javascript\nconst { PubSub } = require('graphql-subscriptions')\nconst pubsub = new\
   \ PubSub()\n\nconst typeDefs = `\n  type Subscription { orderUpdated: Order }\n  type Mutation { placeOrder:\
@@ -27,16 +37,19 @@ instructions: "# Graphql Subscription\n\nGraphQL subscriptions: set up realtime 
   \ the socket.\n- Prefer small payloads over the wire; fetch details via query.\n- Add heartbeat/keepalive\
   \ handling to clients.\n- Use a scalable pubsub (Redis) when scaling horizontally.\n\n## Capabilities\n\
   \n### subscriptions\nConnect to GraphQL subscription endpoints over WebSocket and verify event delivery.\n\
-  \n**Commands:**\n- `npm install graphql-ws @apollo/server @apollo/server/plugin/subscriptionCallback`\n\
-  - `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\"\
-  :\"{ __type(name: \\\"Subscription\\\") { fields { name } } }\"}' | jq '.data.__type.fields[].name'`\n\
-  - `node -e \"const {createClient}=require('graphql-ws');const c=createClient({url:'ws://localhost:4000/graphql'});c.subscribe({query:'subscription\
-  \ { orderUpdated { id status } }'},{next:d=>console.log(d.data),error:e=>console.error(e)});setTimeout(()=>c.dispose(),15000)\"\
+  \n**Parameters:**\n- `subscription-query` (string): Subscription document\n- `ws-url` (string): WebSocket\
+  \ endpoint URL\n- `event-topic` (string): PubSub topic emitting the event\n\n**Commands:**\n- `npm install\
+  \ graphql-ws @apollo/server @apollo/server/plugin/subscriptionCallback`\n- `curl -s -X POST http://localhost:4000/graphql\
+  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ __type(name: \\\"Subscription\\\") { fields\
+  \ { name } } }\"}' | jq '.data.__type.fields[].name'`\n- `node -e \"const {createClient}=require('graphql-ws');const\
+  \ c=createClient({url:'ws://localhost:4000/graphql'});c.subscribe({query:'subscription { orderUpdated\
+  \ { id status } }'},{next:d=>console.log(d.data),error:e=>console.error(e)});setTimeout(()=>c.dispose(),15000)\"\
   `\n- `grep -rn 'pubsub\\|PubSub' src/ | head -10`\n- `curl -s -X POST http://localhost:4000/graphql\
   \ -H 'Content-Type: application/json' -d '{\"query\":\"mutation{ placeOrder { orderId } }\"}' | jq`\n\
   \n**Examples:**\n- node -e \"const {createClient}=require('graphql-ws');const c=createClient({url:'ws://localhost:4000/graphql'});c.subscribe({query:'subscription\
   \ { orderUpdated { id status } }'},{next:d=>console.log(d.data),error:e=>console.error(e)});setTimeout(()=>c.dispose(),15000)\"\
   \n- curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{\"query\"\
   :\"{ __type(name: \\\"Subscription\\\") { fields { name } } }\"}' | jq '.data.__type.fields[].name'\n\
-  - grep -rn 'pubsub\\|PubSub' src/ | head -10"
+  - grep -rn 'pubsub\\|PubSub' src/ | head -10\n\n## References\n- [graphql-ws docs](https://the-guild.dev/graphql/ws)\n\
+  - [Apollo subscriptions](https://www.apollographql.com/docs/apollo-server/data/subscriptions/)"
 prompt: Act as Graphql Subscription and handle the task per the instructions.

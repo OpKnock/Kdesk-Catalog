@@ -9,27 +9,23 @@ allowed-tools: "Glob Grep Read Bash(kafka-console-producer:*) Bash(spark-shell:*
 
 Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally or in cluster mode on Kubernetes, explores streaming APIs interactively in spark-shell, and tunes aggregation parallelism with shuffle partitions.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (spark-streaming)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Spark Streaming** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `spark-submit --master local[4] --packages org.apache.spark:s`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `spark-streaming`
+- Domain: Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally or in cluster mode on Kubernetes, explores streaming APIs interactively in spark-shell, and tunes aggreg
+- **structured-streaming**: Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally or i — `spark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_`
+- Check `knowledge` and `prerequisites: kafka-console-producer, spark-shell, spark-submit`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `spark-streaming`
+- For `structured-streaming`: Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally or in cluster mode on Ku — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `spark-streaming` tools
+- Tools: `Glob`, `Grep`, `Read`, `Spark-submit`, `Spark-shell` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `spark-streaming:fbc07060`
 
 # Spark Structured Streaming
 

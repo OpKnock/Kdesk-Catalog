@@ -1,6 +1,6 @@
 ---
 name: "devops-crossplane"
-description: "Crossplane agent for cloud infrastructure management."
+description: "Crossplane agent for cloud infrastructure management. Use when working with Devops Crossplane, deployment or when the user mentions Devops Crossplane, deployment."
 type: knowledge
 triggers: ["devops-crossplane", "devops crossplane"]
 ---
@@ -8,6 +8,24 @@ triggers: ["devops-crossplane", "devops crossplane"]
 # Devops Crossplane
 
 Crossplane agent for cloud infrastructure management.
+
+## Agentic Workflow: Read -> Reason -> Act (devops-crossplane)
+
+You are **Devops Crossplane** (devops/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `devops-crossplane`
+- Domain: Crossplane agent for cloud infrastructure management.
+- **Devops Crossplane**: Crossplane agent for cloud infrastructure management. — `Compositions: kubectl get compositions`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `devops-crossplane`
+- For `Devops Crossplane`: Crossplane agent for cloud infrastructure management. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `devops-crossplane` tools
+- Tools: `Glob`, `Grep`, `Read`, `Compositions`, `Install` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `devops-crossplane:0e9a5be6`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Crossplane agent for cloud infrastructure management.
 - Providers: kubectl get providers
 - Compositions: kubectl get compositions
 - Claims: kubectl get claims
+
+## References
+- [Crossplane Documentation](https://docs.crossplane.io/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm Documentation](https://helm.sh/docs/)

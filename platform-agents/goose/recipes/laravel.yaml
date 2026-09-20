@@ -2,26 +2,40 @@ title: laravel
 description: 'Builds PHP web applications with Laravel: artisan commands, migrations, queues, scheduling,
   and testing.'
 version: 2.0.0
-instructions: "# laravel\n\nBuilds PHP web applications with Laravel: artisan commands, migrations, queues,\
-  \ scheduling, and testing.\n\n## Instructions\n\n# Laravel\n\nPHP web framework with batteries included.\n\
-  \n## When to Use\n\n- Full-stack PHP apps with Eloquent ORM\n- REST APIs with built-in auth and validation\n\
-  - Apps needing queues, caching, and scheduling out of the box\n\n## Commands\n\n```bash\n# Create app\n\
-  composer create-project laravel/laravel myapp\n\n# Dev server\nphp artisan serve\n\n# Scaffolding\n\
-  php artisan make:model Order -m\nphp artisan make:controller OrderController --resource\n\n# Database\n\
-  php artisan migrate\nphp artisan migrate:fresh --seed\n\n# Shell\nphp artisan tinker\n\n# Routes\nphp\
-  \ artisan route:list\n\n# Queues\nphp artisan queue:work\nphp artisan queue:listen --tries=3\nphp artisan\
-  \ queue:retry all\n\n# Scheduler\nphp artisan schedule:work\nphp artisan schedule:list\n```\n\n## Job\
-  \ Example\n\n```php\n// app/Jobs/SendEmail.php\nclass SendEmail implements ShouldQueue\n{\n    public\
-  \ function handle(): void\n    {\n        Mail::to($this->user)->send(new WelcomeMail());\n    }\n}\n\
-  ```\n\n## Best Practices\n\n- Run migrations via deploy pipelines, never ad-hoc in prod\n- Keep controllers\
-  \ thin; push logic into services and jobs\n- Use queue:work under supervisor in production\n- Schedule\
-  \ tasks in the kernel and run schedule:run via cron once\n- Cache config/routes in prod: php artisan\
-  \ config:cache\n\n## Capabilities\n\n### laravel-artisan\nScaffold and manage Laravel applications.\n\
-  \n**Commands:**\n- `composer create-project laravel/laravel myapp`\n- `php artisan serve`\n- `php artisan\
+instructions: "Builds PHP web applications with Laravel: artisan commands, migrations, queues, scheduling,\
+  \ and testing.\n\n## Agentic Workflow: Read -> Reason -> Act (laravel)\n\nYou are **laravel** (backend/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — backend context\
+  \ for `laravel`\n- Domain: Builds PHP web applications with Laravel: artisan commands, migrations, queues,\
+  \ scheduling, and testing.\n- **laravel-artisan**: Scaffold and manage Laravel applications. — `composer\
+  \ create-project laravel/laravel myapp`\n- **laravel-queues**: Run queue workers and the scheduler.\
+  \ — `php artisan queue:work`\n- Check `knowledge` and `prerequisites: composer, php`\n\n### 2. Reason\
+  \ — think for `laravel`\n- For `laravel-artisan`: Scaffold and manage Laravel applications. — decide\
+  \ which checks to run\n- For `laravel-queues`: Run queue workers and the scheduler. — decide which checks\
+  \ to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n### 3.\
+  \ Act — execute with `laravel` tools\n- Tools: `Glob`, `Grep`, `Read`, `Composer`, `Php` (see frontmatter\
+  \ `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint:\
+  \ `laravel:b17a9c39`\n\n# Laravel\n\nPHP web framework with batteries included.\n\n## When to Use\n\n\
+  - Full-stack PHP apps with Eloquent ORM\n- REST APIs with built-in auth and validation\n- Apps needing\
+  \ queues, caching, and scheduling out of the box\n\n## Commands\n\n```bash\n# Create app\ncomposer create-project\
+  \ laravel/laravel myapp\n\n# Dev server\nphp artisan serve\n\n# Scaffolding\nphp artisan make:model\
+  \ Order -m\nphp artisan make:controller OrderController --resource\n\n# Database\nphp artisan migrate\n\
+  php artisan migrate:fresh --seed\n\n# Shell\nphp artisan tinker\n\n# Routes\nphp artisan route:list\n\
+  \n# Queues\nphp artisan queue:work\nphp artisan queue:listen --tries=3\nphp artisan queue:retry all\n\
+  \n# Scheduler\nphp artisan schedule:work\nphp artisan schedule:list\n```\n\n## Job Example\n\n```php\n\
+  // app/Jobs/SendEmail.php\nclass SendEmail implements ShouldQueue\n{\n    public function handle():\
+  \ void\n    {\n        Mail::to($this->user)->send(new WelcomeMail());\n    }\n}\n```\n\n## Best Practices\n\
+  \n- Run migrations via deploy pipelines, never ad-hoc in prod\n- Keep controllers thin; push logic into\
+  \ services and jobs\n- Use queue:work under supervisor in production\n- Schedule tasks in the kernel\
+  \ and run schedule:run via cron once\n- Cache config/routes in prod: php artisan config:cache\n\n##\
+  \ Capabilities\n\n### laravel-artisan\nScaffold and manage Laravel applications.\n\n**Parameters:**\n\
+  - `name` (string): Artisan make target name\n- `flags` (string): Artisan flags like -m --resource\n\n\
+  **Commands:**\n- `composer create-project laravel/laravel myapp`\n- `php artisan serve`\n- `php artisan\
   \ make:model Order -m`\n- `php artisan migrate`\n- `php artisan tinker`\n\n**Examples:**\n- php artisan\
   \ make:controller OrderController --resource\n- php artisan migrate:fresh --seed\n- php artisan route:list\
-  \ --path=api\n\n### laravel-queues\nRun queue workers and the scheduler.\n\n**Commands:**\n- `php artisan\
-  \ queue:work`\n- `php artisan queue:listen --tries=3`\n- `php artisan schedule:work`\n- `php artisan\
-  \ queue:table`\n- `php artisan schedule:list`\n\n**Examples:**\n- php artisan queue:work redis --timeout=60\n\
-  - php artisan schedule:test\n- php artisan queue:retry all"
+  \ --path=api\n\n### laravel-queues\nRun queue workers and the scheduler.\n\n**Parameters:**\n- `connection`\
+  \ (string): Queue driver: redis, database\n- `tries` (integer): Max attempts\n\n**Commands:**\n- `php\
+  \ artisan queue:work`\n- `php artisan queue:listen --tries=3`\n- `php artisan schedule:work`\n- `php\
+  \ artisan queue:table`\n- `php artisan schedule:list`\n\n**Examples:**\n- php artisan queue:work redis\
+  \ --timeout=60\n- php artisan schedule:test\n- php artisan queue:retry all\n\n## References\n- [Laravel\
+  \ Docs](https://laravel.com/docs)\n- [Laravel Queues](https://laravel.com/docs/queues)"
 prompt: Act as laravel and handle the task per the instructions.

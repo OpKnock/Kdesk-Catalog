@@ -1,6 +1,6 @@
 ---
 name: "Paid-Media Google Ads"
-description: "Paid-Media google-ads expertise and best practices."
+description: "Paid-Media google-ads expertise and best practices. Use when working with google ads expertise, paid media, google ads, skill or when the user mentions google ads expertise, paid media, google ads, skill."
 globs: ["**/*.go", "**/*.r", "**/*.scala"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Paid-Media Google Ads
 
 Paid-Media google-ads expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (paid-media-google-ads)
+
+You are **Paid-Media Google Ads** (paid-media/google-ads) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — paid-media context for `paid-media-google-ads`
+- Domain: Paid-Media google-ads expertise and best practices.
+- **google-ads-expertise**: paid-media google-ads expertise — `google-ads-cli`
+- Check `knowledge` and `prerequisites: google-ads`
+
+### 2. Reason — think for `paid-media-google-ads`
+- For `google-ads-expertise`: paid-media google-ads expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `paid-media-google-ads` tools
+- Tools: `Glob`, `Grep`, `Read`, `Google-ads-cli`, `Google-ads-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `paid-media-google-ads:fac30ff6`
 
 ## Instructions
 

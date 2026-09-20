@@ -1,15 +1,33 @@
 ---
 name: "playwright-config"
-description: "Configures Playwright test projects: browsers, webServer, baseURL, devices, and CI settings."
+description: "Configures Playwright test projects: browsers, webServer, baseURL, devices, and CI settings. Use when working with playwright init, config projects, ci and webserver, testing or when the user mentions playwright init, config projects, ci and webserver, testing."
 type: knowledge
 triggers: ["playwright-config", "playwright-init", "config-projects", "ci-and-webserver"]
 ---
 
-# playwright-config
-
 Configures Playwright test projects: browsers, webServer, baseURL, devices, and CI settings.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (playwright-config)
+
+You are **playwright-config** (testing/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `playwright-config`
+- Domain: Configures Playwright test projects: browsers, webServer, baseURL, devices, and CI settings.
+- **playwright-init**: Initialize and validate Playwright configuration. — `npm init playwright@latest`
+- **config-projects**: Configure projects, devices, and baseURL. — `npx playwright test --project=desktop`
+- **ci-and-webserver**: Web server and CI worker configuration. — `npx playwright test --workers=2`
+- Check `knowledge` and `prerequisites: npm, npx`
+
+### 2. Reason — think for `playwright-config`
+- For `playwright-init`: Initialize and validate Playwright configuration. — decide which checks to run
+- For `config-projects`: Configure projects, devices, and baseURL. — decide which checks to run
+- For `ci-and-webserver`: Web server and CI worker configuration. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `playwright-config` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `playwright-config:9ecf91b3`
 
 # Playwright Configuration
 
@@ -84,6 +102,10 @@ export default defineConfig({
 ### playwright-init
 Initialize and validate Playwright configuration.
 
+**Parameters:**
+- `config` (string): Config file path
+- `browser` (string): Browser to install: chromium, firefox, webkit
+
 **Commands:**
 - `npm init playwright@latest`
 - `npx playwright install chromium`
@@ -99,6 +121,10 @@ Initialize and validate Playwright configuration.
 ### config-projects
 Configure projects, devices, and baseURL.
 
+**Parameters:**
+- `project` (string): Project name from config
+- `baseURL` (string): Base URL override
+
 **Commands:**
 - `npx playwright test --project=desktop`
 - `npx playwright test --project=mobile --grep @smoke`
@@ -113,6 +139,11 @@ Configure projects, devices, and baseURL.
 ### ci-and-webserver
 Web server and CI worker configuration.
 
+**Parameters:**
+- `workers` (number): Parallel workers
+- `retries` (number): Flake retries
+- `timeout` (number): Per-test timeout ms
+
 **Commands:**
 - `npx playwright test --workers=2`
 - `npx playwright test --reporter=html`
@@ -124,3 +155,7 @@ Web server and CI worker configuration.
 - npx playwright test --workers=2 --retries=3
 - npx playwright test --reporter=html
 - npx playwright test --timeout=30000
+
+## References
+- [Playwright Test Configuration](https://playwright.dev/docs/test-configuration)
+- [Playwright CI Documentation](https://playwright.dev/docs/ci)

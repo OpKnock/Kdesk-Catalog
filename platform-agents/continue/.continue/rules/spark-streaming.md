@@ -1,15 +1,29 @@
 ---
 name: "Spark Streaming"
-description: "Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally or in cluster mode on Kubernetes, explores streaming APIs interactively in spark-shell, and tunes aggregation parallelism with shuffle partitions."
+description: "Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally or in cluster mode on Kubernetes, explores streaming APIs interactively in spark-shell, and tunes aggregation parallelism with shuffle partitions. Use when working with structured streaming, api or when the user mentions structured streaming, api."
 globs: ["**/*.go", "**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.sql"]
 alwaysApply: false
 ---
 
-# Spark Streaming
-
 Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally or in cluster mode on Kubernetes, explores streaming APIs interactively in spark-shell, and tunes aggregation parallelism with shuffle partitions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (spark-streaming)
+
+You are **Spark Streaming** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `spark-streaming`
+- Domain: Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally or in cluster mode on Kubernetes, explores streaming APIs interactively in spark-shell, and tunes aggreg
+- **structured-streaming**: Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally or i — `spark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_`
+- Check `knowledge` and `prerequisites: kafka-console-producer, spark-shell, spark-submit`
+
+### 2. Reason — think for `spark-streaming`
+- For `structured-streaming`: Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally or in cluster mode on Ku — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `spark-streaming` tools
+- Tools: `Glob`, `Grep`, `Read`, `Spark-submit`, `Spark-shell` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `spark-streaming:fbc07060`
 
 # Spark Structured Streaming
 
@@ -82,6 +96,11 @@ spark-submit --master local[2] --packages org.apache.spark:spark-sql-kafka-0-10_
 ### structured-streaming
 Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming applications locally or in cluster mode on Kubernetes, explores streaming APIs interactively in spark-shell, and tunes aggregation parallelism with shuffle partitions.
 
+**Parameters:**
+- `master` (string): Spark master URL (e.g., local[4], k8s://https://cluster:6443)
+- `packages` (string): Maven coordinates for Kafka connector
+- `shuffle_partitions` (integer): Number of shuffle partitions for aggregation
+
 **Commands:**
 - `spark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 streaming.py`
 - `spark-submit --deploy-mode cluster --master k8s://https://cluster:6443 --class com.app.StreamJob app.jar`
@@ -93,3 +112,6 @@ Runs Spark Structured Streaming jobs with Kafka sources. Submits streaming appli
 - spark-submit --master local[4] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 streaming.py
 - spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1
 - kafka-console-producer --broker-list localhost:9092 --topic events
+
+## References
+- [Spark Kafka integration guide](https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html)

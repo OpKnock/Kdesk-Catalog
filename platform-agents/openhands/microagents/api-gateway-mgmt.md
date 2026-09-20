@@ -1,15 +1,31 @@
 ---
 name: "api-gateway-mgmt"
-description: "Manages API gateways with Kong and decK: service/route registration, plugin policies, consumer credentials, and declarative configuration as code."
+description: "Manages API gateways with Kong and decK: service/route registration, plugin policies, consumer credentials, and declarative configuration as code. Use when working with kong admin, deck config, backend or when the user mentions kong admin, deck config, backend."
 type: knowledge
 triggers: ["api-gateway-mgmt", "kong-admin", "deck-config"]
 ---
 
-# Api Gateway Mgmt
-
 Manages API gateways with Kong and decK: service/route registration, plugin policies, consumer credentials, and declarative configuration as code.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-gateway-mgmt)
+
+You are **Api Gateway Mgmt** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-gateway-mgmt`
+- Domain: Manages API gateways with Kong and decK: service/route registration, plugin policies, consumer credentials, and declarative configuration as code.
+- **kong-admin**: Manage Kong services, routes, and plugins — `docker run -d --name kong -p 8000:8000 -p 8001:8001 kong/kong-gateway`
+- **deck-config**: Manage Kong configuration as code — `deck ping`
+- Check `knowledge` and `prerequisites: deck, docker`
+
+### 2. Reason — think for `api-gateway-mgmt`
+- For `kong-admin`: Manage Kong services, routes, and plugins — decide which checks to run
+- For `deck-config`: Manage Kong configuration as code — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-gateway-mgmt` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Deck` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-gateway-mgmt:600610e9`
 
 # API Gateway Management
 
@@ -56,6 +72,11 @@ curl -s -X POST http://localhost:8001/plugins -d 'name=rate-limiting' -d 'config
 ### kong-admin
 Manage Kong services, routes, and plugins
 
+**Parameters:**
+- `service-name` (string): Upstream service name
+- `upstream-url` (string): Backend URL
+- `paths` (array): Route path patterns
+
 **Commands:**
 - `docker run -d --name kong -p 8000:8000 -p 8001:8001 kong/kong-gateway`
 - `curl -s -X POST http://localhost:8001/services -d 'name=users' -d 'url=http://users-svc:8080'`
@@ -81,3 +102,7 @@ Manage Kong configuration as code
 **Examples:**
 - general-cli --help
 - general-api --help
+
+## References
+- [Kong Gateway Docs](https://docs.konghq.com/gateway/latest/)
+- [decK Docs](https://docs.konghq.com/deck/)

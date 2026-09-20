@@ -4,27 +4,25 @@ applyTo: "**/*.r **/*.sh"
 
 Advanced load testing scenarios: k6 executors, vegeta histograms, distributed locust, and Gatling simulations for realistic workload profiles.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (load-testing-scenario-profiles)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Load Testing Scenario Profiles** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `k6 run --scenario spike scenarios.js`, `locust -f locustfile.py --headless -u 500 -r 50 -t 3m --host`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `load-testing-scenario-profiles`
+- Domain: Advanced load testing scenarios: k6 executors, vegeta histograms, distributed locust, and Gatling simulations for realistic workload profiles.
+- **scenario-profiles**: Run realistic profiles: spikes, soak, and arrival-rate tests. — `k6 run --scenario spike scenarios.js`
+- **distributed-load**: Run distributed load with locust master/workers. — `locust -f locustfile.py --headless -u 500 -r 50 -t 3m --host https://httpbin.org`
+- Check `knowledge` and `prerequisites: gatling.sh, locust, vegeta`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `load-testing-scenario-profiles`
+- For `scenario-profiles`: Run realistic profiles: spikes, soak, and arrival-rate tests. — decide which checks to run
+- For `distributed-load`: Run distributed load with locust master/workers. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `load-testing-scenario-profiles` tools
+- Tools: `Glob`, `Grep`, `Read`, `K6`, `Vegeta` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `load-testing-scenario-profiles:1e04c823`
 
 # Load Testing (Advanced Scenarios)
 

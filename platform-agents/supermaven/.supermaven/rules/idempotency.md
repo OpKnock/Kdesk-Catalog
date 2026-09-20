@@ -1,8 +1,22 @@
-# Idempotency
-
 Idempotency in practice: Stripe-style Idempotency-Key usage, retry loops with curl, storing responses in Redis, and verifying identical replays.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (idempotency)
+
+You are **Idempotency** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `idempotency`
+- Domain: Idempotency in practice: Stripe-style Idempotency-Key usage, retry loops with curl, storing responses in Redis, and verifying identical replays.
+- **idempotency-http**: Send idempotent HTTP requests, cache responses, and verify replay behavior. — `curl -X POST https://api.stripe.com/v1/charges -u sk_test_x: -H "Idempotency-Key`
+- Check `knowledge` and `prerequisites: redis-cli`
+
+### 2. Reason — think for `idempotency`
+- For `idempotency-http`: Send idempotent HTTP requests, cache responses, and verify replay behavior. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `idempotency` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Redis-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `idempotency:07758cc0`
 
 # Idempotency
 
@@ -79,6 +93,11 @@ Agent:70:    Reuse one key for all attempts:
 ### idempotency-http
 Send idempotent HTTP requests, cache responses, and verify replay behavior.
 
+**Parameters:**
+- `key` (string): Idempotency key value.
+- `endpoint` (string): Mutating endpoint URL.
+- `cache_ttl` (integer): Response cache TTL in seconds.
+
 **Commands:**
 - `curl -X POST https://api.stripe.com/v1/charges -u sk_test_x: -H "Idempotency-Key: abc123" -d amount=100 -d currency=usd`
 - `curl -s -X POST -H "Idempotency-Key: k1" http://localhost:8080/v1/payments -d amount=100 -o r1.json`
@@ -90,3 +109,7 @@ Send idempotent HTTP requests, cache responses, and verify replay behavior.
 - curl --retry 3 --retry-all-errors -X POST -H "Idempotency-Key: 9x" http://localhost:8080/v1/payments -d amount=10
 - redis-cli GET idem:k1
 - curl -s -o /dev/null -w '%{http_code}' -X POST -H "Idempotency-Key: k1" http://localhost:8080/v1/payments -d amount=200
+
+## References
+- [Stripe Idempotent Requests](https://docs.stripe.com/api/idempotent_requests)
+- [Redis SETEX](https://redis.io/commands/setex/)

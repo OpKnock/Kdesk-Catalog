@@ -1,6 +1,6 @@
 ---
 name: "Safety"
-description: "it SDK deployment agent handling ML it SDK deployment."
+description: "it SDK deployment agent handling ML it SDK deployment. Use when working with Ml Safety Deploy Sdk or when the user mentions Ml Safety Deploy Sdk."
 globs: ["**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Safety
 
 it SDK deployment agent handling ML it SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (safety)
+
+You are **Safety** (ml/safety) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `safety`
+- Domain: it SDK deployment agent handling ML it SDK deployment.
+- **Ml Safety Deploy Sdk**: Safety SDK deployment agent for ML Safety SDK deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `safety`
+- For `Ml Safety Deploy Sdk`: Safety SDK deployment agent for ML Safety SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `safety` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Safety` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `safety:b9ab6046`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Safety SDK deployment agent for ML Safety SDK deployment.
 **Examples:**
 - Server: python -m safety.server --port 8080
 - Docker: docker run -p 8080:8080 safety-server
+
+## References
+- [Google Responsible AI](https://ai.google/responsibility/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

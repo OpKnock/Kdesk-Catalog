@@ -1,15 +1,29 @@
 ---
 name: "Command"
-description: "Implements the Command pattern in Java with Gradle: encapsulating requests as objects with undo/redo support."
+description: "Implements the Command pattern in Java with Gradle: encapsulating requests as objects with undo/redo support. Use when working with java gradle, command or when the user mentions java gradle, command."
 globs: ["**/*.java", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Command
-
 Implements the Command pattern in Java with Gradle: encapsulating requests as objects with undo/redo support.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (command)
+
+You are **Command** (patterns/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — patterns context for `command`
+- Domain: Implements the Command pattern in Java with Gradle: encapsulating requests as objects with undo/redo support.
+- **java-gradle**: Implement and test Command pattern examples. — `gradle init --type java-library --dsl groovy --test-framework junit-jupiter`
+- Check `knowledge` and `prerequisites: ./gradlew, gradle`
+
+### 2. Reason — think for `command`
+- For `java-gradle`: Implement and test Command pattern examples. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `command` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gradle`, `./gradlew` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `command:dc27c88c`
 
 # Command Pattern
 
@@ -88,6 +102,11 @@ Verify execute-then-undo returns exact prior state.
 ### java-gradle
 Implement and test Command pattern examples.
 
+**Parameters:**
+- `test-framework` (string): junit-jupiter, spock, or testng
+- `tests` (string): Test class filter
+- `dsl` (string): groovy or kotlin build DSL
+
 **Commands:**
 - `gradle init --type java-library --dsl groovy --test-framework junit-jupiter`
 - `gradle wrapper`
@@ -99,3 +118,7 @@ Implement and test Command pattern examples.
 - gradle init --type java-application --test-framework junit-jupiter
 - ./gradlew test --tests 'com.example.command.HistoryTest' --info
 - ./gradlew build -x test
+
+## References
+- [Refactoring Guru: Command](https://refactoring.guru/design-patterns/command)
+- [Gradle Docs](https://docs.gradle.org/current/userguide/java_library_plugin.html)

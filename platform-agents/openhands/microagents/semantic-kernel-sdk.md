@@ -1,6 +1,6 @@
 ---
 name: "semantic-kernel-sdk"
-description: "it deployment agent handling ML it deployment."
+description: "it deployment agent handling ML it deployment. Use when working with Ml Semantic Kernel Deploy Sdk Agent V2, inference or when the user mentions Ml Semantic Kernel Deploy Sdk Agent V2, inference."
 type: knowledge
 triggers: ["semantic-kernel-sdk", "ml semantic kernel deploy sdk agent v2"]
 ---
@@ -8,6 +8,24 @@ triggers: ["semantic-kernel-sdk", "ml semantic kernel deploy sdk agent v2"]
 # Semantic Kernel Sdk
 
 it deployment agent handling ML it deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (semantic-kernel-sdk)
+
+You are **Semantic Kernel Sdk** (ml/inference) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `semantic-kernel-sdk`
+- Domain: it deployment agent handling ML it deployment.
+- **Ml Semantic Kernel Deploy Sdk Agent V2**: Semantic Kernel SDK deployment agent for ML Semantic Kernel SDK deployment. — `docker build -t semantic-kernel:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `semantic-kernel-sdk`
+- For `Ml Semantic Kernel Deploy Sdk Agent V2`: Semantic Kernel SDK deployment agent for ML Semantic Kernel SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `semantic-kernel-sdk` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Semantic-kernel` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `semantic-kernel-sdk:7dd30587`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Semantic Kernel SDK deployment agent for ML Semantic Kernel SDK deployment.
 **Examples:**
 - Server: python -m semantic_kernel.server --port 8080
 - Docker: docker run -p 8080:8080 semantic_kernel-server
+
+## References
+- [Semantic Kernel Documentation](https://learn.microsoft.com/semantic-kernel/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

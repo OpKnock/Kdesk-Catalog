@@ -1,15 +1,31 @@
 ---
 name: "Api Graphql Schema Design"
-description: "Designs advanced GraphQL schemas \u2014 interfaces, unions, custom scalars \u2014 and federated graphs with Apollo Federation subgraphs."
+description: "Designs advanced GraphQL schemas \u2014 interfaces, unions, custom scalars \u2014 and federated graphs with Apollo Federation subgraphs. Use when working with schema design, federation or when the user mentions schema design, federation."
 globs: ["**/*.go", "**/*.py", "**/*.r", "**/*.scala", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# Api Graphql Schema Design
-
 Designs advanced GraphQL schemas — interfaces, unions, custom scalars — and federated graphs with Apollo Federation subgraphs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-graphql-schema-design)
+
+You are **Api Graphql Schema Design** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-graphql-schema-design`
+- Domain: Designs advanced GraphQL schemas — interfaces, unions, custom scalars — and federated graphs with Apollo Federation subgraphs.
+- **schema-design**: Model enterprise GraphQL schemas with shared type patterns and schema-first authoring — `npx graphql-codegen init`
+- **federation**: Compose subgraphs into a supergraph with Apollo Federation and Rover — `rover subgraph publish my-graph@prod --name inventory --schema ./inventory.graph`
+- Check `knowledge` and `prerequisites: apollo-server, graphql-codegen, dataloader`
+
+### 2. Reason — think for `api-graphql-schema-design`
+- For `schema-design`: Model enterprise GraphQL schemas with shared type patterns and schema-first authoring — decide which checks to run
+- For `federation`: Compose subgraphs into a supergraph with Apollo Federation and Rover — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-graphql-schema-design` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Strawberry` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-graphql-schema-design:58adacca`
 
 # API GraphQL (Schema Design & Federation)
 
@@ -66,6 +82,10 @@ Use `rover subgraph check` against the prod schema before publishing to catch br
 ### schema-design
 Model enterprise GraphQL schemas with shared type patterns and schema-first authoring
 
+**Parameters:**
+- `schema` (string): Path to GraphQL SDL schema file
+- `config` (string): graphql-codegen config path
+
 **Commands:**
 - `npx graphql-codegen init`
 - `npx graphql-codegen --config codegen.yml`
@@ -81,6 +101,10 @@ Model enterprise GraphQL schemas with shared type patterns and schema-first auth
 ### federation
 Compose subgraphs into a supergraph with Apollo Federation and Rover
 
+**Parameters:**
+- `graphRef` (string): Apollo graph ref like my-graph@prod
+- `subgraph` (string): Subgraph name
+
 **Commands:**
 - `rover subgraph publish my-graph@prod --name inventory --schema ./inventory.graphql --routing-url http://inventory:4001`
 - `rover supergraph compose --config supergraph.yaml --output supergraph.graphql`
@@ -92,3 +116,8 @@ Compose subgraphs into a supergraph with Apollo Federation and Rover
 - rover supergraph compose --config supergraph.yaml --output supergraph.graphql
 - rover subgraph check my-graph@prod --name products --schema ./products.graphql
 - rover dev --supergraph-config supergraph.yaml --watch
+
+## References
+- [Apollo Federation Docs](https://www.apollographql.com/docs/federation/)
+- [Rover CLI](https://www.apollographql.com/docs/rover/)
+- [GraphQL Code Generator](https://the-guild.dev/graphql/codegen/docs)

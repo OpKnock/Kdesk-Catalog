@@ -1,8 +1,22 @@
-# Graphql Juniper
-
 GraphQL in Rust with Juniper: define schemas with Rust types and macros, run the server, and test queries.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (graphql-juniper)
+
+You are **Graphql Juniper** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `graphql-juniper`
+- Domain: GraphQL in Rust with Juniper: define schemas with Rust types and macros, run the server, and test queries.
+- **juniper-development**: Build Juniper schemas, integrate with Actix/Axum, and run queries. — `cargo add juniper actix-web juniper_actix`
+- Check `knowledge` and `prerequisites: cargo`
+
+### 2. Reason — think for `graphql-juniper`
+- For `juniper-development`: Build Juniper schemas, integrate with Actix/Axum, and run queries. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `graphql-juniper` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `graphql-juniper:77bee2da`
 
 # GraphQL Juniper
 
@@ -77,6 +91,11 @@ curl -s -X POST http://localhost:8080/graphql -H 'Content-Type: application/json
 ### juniper-development
 Build Juniper schemas, integrate with Actix/Axum, and run queries.
 
+**Parameters:**
+- `crate` (string): juniper integration crate
+- `endpoint` (string): GraphQL endpoint path
+- `context-type` (string): Rust context type passed to resolvers
+
 **Commands:**
 - `cargo add juniper actix-web juniper_actix`
 - `cargo run`
@@ -88,3 +107,7 @@ Build Juniper schemas, integrate with Actix/Axum, and run queries.
 - cargo add juniper actix-web juniper_actix && cargo run
 - curl -s -X POST http://localhost:8080/graphql -H 'Content-Type: application/json' -d '{"query":"{ hero { name } }"}' | jq
 - cargo test
+
+## References
+- [Juniper docs](https://graphql-rust.github.io/juniper/)
+- [Juniper GitHub](https://github.com/graphql-rust/juniper)

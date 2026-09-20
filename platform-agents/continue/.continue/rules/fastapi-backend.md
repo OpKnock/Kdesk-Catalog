@@ -1,15 +1,31 @@
 ---
 name: "Fastapi"
-description: "Builds modern Python APIs with FastAPI: automatic OpenAPI docs, Pydantic models, async routes, and deployment with uvicorn."
+description: "Builds modern Python APIs with FastAPI: automatic OpenAPI docs, Pydantic models, async routes, and deployment with uvicorn. Use when working with fastapi dev, fastapi openapi, backend or when the user mentions fastapi dev, fastapi openapi, backend."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Fastapi
-
 Builds modern Python APIs with FastAPI: automatic OpenAPI docs, Pydantic models, async routes, and deployment with uvicorn.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (fastapi-backend)
+
+You are **Fastapi** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `fastapi-backend`
+- Domain: Builds modern Python APIs with FastAPI: automatic OpenAPI docs, Pydantic models, async routes, and deployment with uvicorn.
+- **fastapi-dev**: Scaffold and run FastAPI applications with auto-reload. — `pip install "fastapi[standard]"`
+- **fastapi-openapi**: Inspect generated OpenAPI schema and test endpoints. — `curl http://localhost:8000/openapi.json`
+- Check `knowledge` and `prerequisites: fastapi, pip, python, uvicorn`
+
+### 2. Reason — think for `fastapi-backend`
+- For `fastapi-dev`: Scaffold and run FastAPI applications with auto-reload. — decide which checks to run
+- For `fastapi-openapi`: Inspect generated OpenAPI schema and test endpoints. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `fastapi-backend` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Fastapi` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `fastapi-backend:f44ed39d`
 
 # FastAPI
 
@@ -72,6 +88,11 @@ async def get_item(item_id: int):
 ### fastapi-dev
 Scaffold and run FastAPI applications with auto-reload.
 
+**Parameters:**
+- `host` (string): Bind address
+- `port` (integer): Port to listen on
+- `reload` (boolean): Auto-reload on code changes
+
 **Commands:**
 - `pip install "fastapi[standard]"`
 - `fastapi dev main.py`
@@ -87,6 +108,10 @@ Scaffold and run FastAPI applications with auto-reload.
 ### fastapi-openapi
 Inspect generated OpenAPI schema and test endpoints.
 
+**Parameters:**
+- `path` (string): API path to call
+- `method` (string): HTTP method: GET, POST, DELETE
+
 **Commands:**
 - `curl http://localhost:8000/openapi.json`
 - `curl http://localhost:8000/docs`
@@ -96,3 +121,7 @@ Inspect generated OpenAPI schema and test endpoints.
 **Examples:**
 - curl -s http://localhost:8000/openapi.json | python -m json.tool | head -50
 - curl -X GET "http://localhost:8000/items/1?verbose=true"
+
+## References
+- [FastAPI Docs](https://fastapi.tiangolo.com)
+- [FastAPI Deployment](https://fastapi.tiangolo.com/deployment/)

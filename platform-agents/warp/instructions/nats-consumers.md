@@ -1,8 +1,22 @@
-# Nats Consumers
-
 Manage NATS JetStream consumers: create push/pull consumers, inspect delivery, and handle ack policies.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (nats-consumers)
+
+You are **Nats Consumers** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `nats-consumers`
+- Domain: Manage NATS JetStream consumers: create push/pull consumers, inspect delivery, and handle ack policies.
+- **jetstream-consumers**: Create and manage JetStream consumers with the nats CLI: pull/push modes, ack policies, and inspecti — `nats consumer add ORDERS NEW --pull --deliver all --max-deliver 5 --ack explicit`
+- Check `knowledge` and `prerequisites: nats`
+
+### 2. Reason — think for `nats-consumers`
+- For `jetstream-consumers`: Create and manage JetStream consumers with the nats CLI: pull/push modes, ack policies, and inspection. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `nats-consumers` tools
+- Tools: `Glob`, `Grep`, `Read`, `Nats` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `nats-consumers:006053c1`
 
 # NATS Consumers
 
@@ -54,6 +68,11 @@ nats consumer rm ORDERS NEW
 ### jetstream-consumers
 Create and manage JetStream consumers with the nats CLI: pull/push modes, ack policies, and inspection.
 
+**Parameters:**
+- `stream` (string): Stream name the consumer belongs to
+- `consumer` (string): Consumer durable name
+- `ack_policy` (string): explicit, all, none or at-least-once
+
 **Commands:**
 - `nats consumer add ORDERS NEW --pull --deliver all --max-deliver 5 --ack explicit`
 - `nats consumer add ORDERS PUSH --push --deliver subject ords.push`
@@ -65,3 +84,7 @@ Create and manage JetStream consumers with the nats CLI: pull/push modes, ack po
 - nats consumer add ORDERS WORKER --pull --ack explicit --max-deliver 3 --backoff 5s
 - nats consumer info ORDERS WORKER
 - nats consumer ls ORDERS --names
+
+## References
+- [NATS JetStream Consumers](https://docs.nats.io/using-nats/developer/develop_jetstream/consumers)
+- [nats CLI consumer docs](https://docs.nats.io/using-nats/command-line/)

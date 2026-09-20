@@ -1,15 +1,29 @@
 ---
 name: "session-management"
-description: "Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with TTL, drives cookie lifecycle through login and logout flows, and enforces immediate invalidation on logout by deleting the Redis record."
+description: "Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with TTL, drives cookie lifecycle through login and logout flows, and enforces immediate invalidation on logout by deleting the Redis record. Use when working with session lifecycle, api or when the user mentions session lifecycle, api."
 type: knowledge
 triggers: ["session-management", "session-lifecycle"]
 ---
 
-# Session Management
-
 Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with TTL, drives cookie lifecycle through login and logout flows, and enforces immediate invalidation on logout by deleting the Redis record.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (session-management)
+
+You are **Session Management** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `session-management`
+- Domain: Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with TTL, drives cookie lifecycle through login and logout flows, and enforces immediate invalidation on 
+- **session-lifecycle**: Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with  — `redis-cli SET session:abc123 "{\"user_id\":42}" EX 3600`
+- Check `knowledge` and `prerequisites: redis-cli`
+
+### 2. Reason — think for `session-management`
+- For `session-lifecycle`: Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with TTL, drives cookie l — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `session-management` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `session-management:441da535`
 
 # Session Management
 
@@ -71,6 +85,10 @@ redis-cli EXISTS session:7f3a                                              # 0
 ### session-lifecycle
 Manages HTTP session lifecycles with Redis-backed storage. Creates server-side session records with TTL, drives cookie lifecycle through login and logout flows, and enforces immediate invalidation on logout by deleting the Redis record.
 
+**Parameters:**
+- `session_ttl` (integer): Session time-to-live in seconds
+- `session_id` (string): Session identifier cookie value
+
 **Commands:**
 - `redis-cli SET session:abc123 "{\"user_id\":42}" EX 3600`
 - `redis-cli GET session:abc123`
@@ -82,3 +100,6 @@ Manages HTTP session lifecycles with Redis-backed storage. Creates server-side s
 - redis-cli SET session:abc123 "{\"user_id\":42}" EX 3600
 - curl -b "session_id=abc123" http://api.example.org/protected
 - redis-cli DEL session:abc123
+
+## References
+- [OWASP Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)

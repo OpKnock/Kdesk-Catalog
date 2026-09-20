@@ -1,6 +1,6 @@
 ---
 name: "Audit Agent 2"
-description: "Audit inference server agent. Manages Audit ML inference server."
+description: "Audit inference server agent. Manages Audit ML inference server. Use when working with Ml Audit Inference Server Agent or when the user mentions Ml Audit Inference Server Agent."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Audit Agent 2
 
 Audit inference server agent. Manages Audit ML inference server.
+
+## Agentic Workflow: Read -> Reason -> Act (audit-agent-2)
+
+You are **Audit Agent 2** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `audit-agent-2`
+- Domain: Audit inference server agent. Manages Audit ML inference server.
+- **Ml Audit Inference Server Agent**: Audit inference server agent. Manages Audit ML inference server. — `curl -X POST http://localhost:8080/v1/predict -H 'Content-Type: application/json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `audit-agent-2`
+- For `Ml Audit Inference Server Agent`: Audit inference server agent. Manages Audit ML inference server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `audit-agent-2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `audit-agent-2:3de5a9c9`
 
 ## Instructions
 
@@ -30,3 +48,8 @@ Audit inference server agent. Manages Audit ML inference server.
 - curl http://localhost:8080/audit --data '{"model": "model.pkl"}'
 - python audit.py --model model.pkl --data data.csv --output audit.json
 - python compliance_check.py --model model.pkl --rules rules.json --output compliance.json
+
+## References
+- [curl Documentation](https://curl.se/docs/)
+- [jq Manual](https://jqlang.github.io/jq/)
+- [Python Documentation](https://docs.python.org/3/)

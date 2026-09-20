@@ -1,8 +1,22 @@
-# Railway
-
 Deploy to Railway: login, init, link, deploy, variables, logs and project management with the railway CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (railway)
+
+You are **Railway** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `railway`
+- Domain: Deploy to Railway: login, init, link, deploy, variables, logs and project management with the railway CLI.
+- **railway-deployments**: Deploy applications to Railway, manage environment variables and inspect deployments. — `railway login`
+- Check `knowledge` and `prerequisites: railway`
+
+### 2. Reason — think for `railway`
+- For `railway-deployments`: Deploy applications to Railway, manage environment variables and inspect deployments. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `railway` tools
+- Tools: `Glob`, `Grep`, `Read`, `Railway` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `railway:10913cb4`
 
 # Railway
 
@@ -56,6 +70,11 @@ railway logs --deployment
 ### railway-deployments
 Deploy applications to Railway, manage environment variables and inspect deployments.
 
+**Parameters:**
+- `project` (string): Railway project name
+- `environment` (string): Deploy environment (production/preview)
+- `variable` (string): KEY=VALUE to set
+
 **Commands:**
 - `railway login`
 - `railway init`
@@ -67,3 +86,7 @@ Deploy applications to Railway, manage environment variables and inspect deploym
 - railway up
 - railway variables --set FOO=bar
 - railway run npm run migrate
+
+## References
+- [Railway Docs](https://docs.railway.com/)
+- [Railway CLI GitHub](https://github.com/railwayapp/cli)

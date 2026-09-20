@@ -1,15 +1,31 @@
 ---
 name: "cilium"
-description: "Installs, verifies, and debugs the Cilium CNI with eBPF data plane, CiliumNetworkPolicy, and Hubble observability."
+description: "Installs, verifies, and debugs the Cilium CNI with eBPF data plane, CiliumNetworkPolicy, and Hubble observability. Use when working with cilium install and verify, hubble observability, devops or when the user mentions cilium install and verify, hubble observability, devops."
 type: knowledge
 triggers: ["cilium", "cilium-install-and-verify", "hubble-observability"]
 ---
 
-# cilium
-
 Installs, verifies, and debugs the Cilium CNI with eBPF data plane, CiliumNetworkPolicy, and Hubble observability.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (cilium)
+
+You are **cilium** (devops/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devops context for `cilium`
+- Domain: Installs, verifies, and debugs the Cilium CNI with eBPF data plane, CiliumNetworkPolicy, and Hubble observability.
+- **cilium-install-and-verify**: Install Cilium into a Kubernetes cluster and run connectivity and upgrade verification. — `cilium install --version v1.16.4`
+- **hubble-observability**: Inspect service-to-service traffic flows with Hubble CLI and troubleshoot connectivity issues. — `hubble status`
+- Check `knowledge` and `prerequisites: cilium, hubble`
+
+### 2. Reason — think for `cilium`
+- For `cilium-install-and-verify`: Install Cilium into a Kubernetes cluster and run connectivity and upgrade verification. — decide which checks to run
+- For `hubble-observability`: Inspect service-to-service traffic flows with Hubble CLI and troubleshoot connectivity issues. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cilium` tools
+- Tools: `Glob`, `Grep`, `Read`, `Cilium`, `Hubble` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cilium:c627917d`
 
 # Cilium Networking
 
@@ -83,6 +99,10 @@ spec:
 ### cilium-install-and-verify
 Install Cilium into a Kubernetes cluster and run connectivity and upgrade verification.
 
+**Parameters:**
+- `version` (string): Cilium version to install or upgrade to
+- `kubeconfig` (string): Path to kubeconfig when outside the cluster
+
 **Commands:**
 - `cilium install --version v1.16.4`
 - `cilium status --wait`
@@ -98,6 +118,10 @@ Install Cilium into a Kubernetes cluster and run connectivity and upgrade verifi
 ### hubble-observability
 Inspect service-to-service traffic flows with Hubble CLI and troubleshoot connectivity issues.
 
+**Parameters:**
+- `verdict` (string): Filter flows by verdict: FORWARDED, DROPPED, ERROR
+- `namespace` (string): Filter flows by namespace
+
 **Commands:**
 - `hubble status`
 - `hubble observe --pod default/web-0`
@@ -109,3 +133,8 @@ Inspect service-to-service traffic flows with Hubble CLI and troubleshoot connec
 - hubble observe --verdict DROPPED --last 100
 - hubble observe --to-pod kube-system/coredns-*
 - hubble status
+
+## References
+- [Cilium Documentation](https://docs.cilium.io/en/stable/)
+- [Cilium CLI GitHub](https://github.com/cilium/cilium-cli)
+- [Hubble UI](https://github.com/cilium/hubble)

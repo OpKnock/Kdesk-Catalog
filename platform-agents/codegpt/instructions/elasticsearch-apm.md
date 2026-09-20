@@ -1,8 +1,22 @@
-# Elasticsearch Apm
-
 Application performance monitoring with the Elastic APM stack: configure APM Server, instrument Node.js apps, and query traces from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (elasticsearch-apm)
+
+You are **Elasticsearch Apm** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `elasticsearch-apm`
+- Domain: Application performance monitoring with the Elastic APM stack: configure APM Server, instrument Node.js apps, and query traces from the CLI.
+- **apm-instrumentation**: Configure and run the Elastic APM server and agents, and inspect traces and service status. — `apm-server -e -c apm-server.yml`
+- Check `knowledge` and `prerequisites: apm-server, npm`
+
+### 2. Reason — think for `elasticsearch-apm`
+- For `apm-instrumentation`: Configure and run the Elastic APM server and agents, and inspect traces and service status. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `elasticsearch-apm` tools
+- Tools: `Glob`, `Grep`, `Read`, `Apm-server`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `elasticsearch-apm:05e8921d`
 
 # Elasticsearch APM
 
@@ -79,6 +93,11 @@ curl -s 'localhost:9200/apm-*/_search' -H 'Content-Type: application/json' -d '{
 ### apm-instrumentation
 Configure and run the Elastic APM server and agents, and inspect traces and service status.
 
+**Parameters:**
+- `apm-server-config` (string): Path to apm-server.yml
+- `service-name` (string): APM agent service name for instrumentation
+- `index-pattern` (string): Index pattern for APM data, e.g. apm-*
+
 **Commands:**
 - `apm-server -e -c apm-server.yml`
 - `apm-server test config -c apm-server.yml`
@@ -90,3 +109,7 @@ Configure and run the Elastic APM server and agents, and inspect traces and serv
 - apm-server test config -c apm-server.yml && apm-server -e -c apm-server.yml
 - curl -s 'localhost:9200/apm-*/_search' -H 'Content-Type: application/json' -d '{"query":{"range":{"@timestamp":{"gte":"now-1h"}}}}' | jq '.hits.total'
 - curl -s http://localhost:8200/ | jq '.version'
+
+## References
+- [APM Server Reference](https://www.elastic.co/guide/en/apm/server/current/index.html)
+- [Elastic APM Node.js Agent](https://www.elastic.co/guide/en/apm/agent/nodejs/current/index.html)

@@ -1,15 +1,31 @@
 ---
 name: "Api Mock Wiremock Standalone"
-description: "Builds stateful mock APIs with WireMock standalone: stub mappings via Admin API, request matching, record-and-playback proxying, and stateful scenarios."
+description: "Builds stateful mock APIs with WireMock standalone: stub mappings via Admin API, request matching, record-and-playback proxying, and stateful scenarios. Use when working with wiremock standalone, record playback or when the user mentions wiremock standalone, record playback."
 globs: ["**/*.java", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Api Mock Wiremock Standalone
-
 Builds stateful mock APIs with WireMock standalone: stub mappings via Admin API, request matching, record-and-playback proxying, and stateful scenarios.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-mock-wiremock-standalone)
+
+You are **Api Mock Wiremock Standalone** (testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `api-mock-wiremock-standalone`
+- Domain: Builds stateful mock APIs with WireMock standalone: stub mappings via Admin API, request matching, record-and-playback proxying, and stateful scenarios.
+- **wiremock-standalone**: Run WireMock and register stub mappings dynamically — `java -jar wiremock-standalone-3.9.1.jar --port 8080`
+- **record-playback**: Record real traffic and replay it as stubs — `curl -s -X POST http://localhost:8080/__admin/recordings/start -d '{"targetBaseU`
+- Check `knowledge` and `prerequisites: prism, wiremock, msw`
+
+### 2. Reason — think for `api-mock-wiremock-standalone`
+- For `wiremock-standalone`: Run WireMock and register stub mappings dynamically — decide which checks to run
+- For `record-playback`: Record real traffic and replay it as stubs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-mock-wiremock-standalone` tools
+- Tools: `Glob`, `Grep`, `Read`, `Java`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-mock-wiremock-standalone:d9ab8e5f`
 
 # API Mock v3 - WireMock
 
@@ -62,6 +78,11 @@ curl -s http://localhost:8080/hello
 ### wiremock-standalone
 Run WireMock and register stub mappings dynamically
 
+**Parameters:**
+- `port` (integer): WireMock listen port
+- `stub-json` (object): request matcher + response definition JSON
+- `admin-root` (string): Base path of the Admin API (default /__admin)
+
 **Commands:**
 - `java -jar wiremock-standalone-3.9.1.jar --port 8080`
 - `curl -s -X POST http://localhost:8080/__admin/mappings -H 'Content-Type: application/json' -d '{"request":{"method":"GET","url":"/hello"},"response":{"status":200,"body":"Hello"}}'`
@@ -86,3 +107,7 @@ Record real traffic and replay it as stubs
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [WireMock Standalone](https://wiremock.org/docs/standalone/java-jar/)
+- [WireMock Stubbing](https://wiremock.org/docs/stubbing/)

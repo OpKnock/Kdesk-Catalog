@@ -1,14 +1,30 @@
 ---
-description: "Configures alerting and SLOs for API services: Prometheus alert rules, Alertmanager routes and silence management with amtool, and SLO burn-rate alerts."
+description: "Configures alerting and SLOs for API services: Prometheus alert rules, Alertmanager routes and silence management with amtool, and SLO burn-rate alerts. Use when working with alertmanager, slo rules or when the user mentions alertmanager, slo rules."
 globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# api-monitoring-specialist
-
 Configures alerting and SLOs for API services: Prometheus alert rules, Alertmanager routes and silence management with amtool, and SLO burn-rate alerts.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-monitoring-specialist)
+
+You are **api-monitoring-specialist** (sre) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — sre context for `api-monitoring-specialist`
+- Domain: Configures alerting and SLOs for API services: Prometheus alert rules, Alertmanager routes and silence management with amtool, and SLO burn-rate alerts.
+- **alertmanager**: Operate Alertmanager and manage silences — `curl -s -X POST http://localhost:9093/api/v2/alerts -H 'Content-Type: applicatio`
+- **slo-rules**: Define and test SLO burn-rate alert rules — `promtool check rules slo-rules.yml`
+- Check `knowledge` and `prerequisites: prometheus, grafana, node.js`
+
+### 2. Reason — think for `api-monitoring-specialist`
+- For `alertmanager`: Operate Alertmanager and manage silences — decide which checks to run
+- For `slo-rules`: Define and test SLO burn-rate alert rules — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-monitoring-specialist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Amtool` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-monitoring-specialist:d35c98f3`
 
 # API Monitoring Specialist
 
@@ -59,6 +75,11 @@ groups:
 ### alertmanager
 Operate Alertmanager and manage silences
 
+**Parameters:**
+- `config-file` (string): alertmanager.yml path
+- `matchers` (array): Label matchers for silences and routing
+- `duration` (string): Silence duration like 30m or 4h
+
 **Commands:**
 - `curl -s -X POST http://localhost:9093/api/v2/alerts -H 'Content-Type: application/json' -d '[{"labels":{"alertname":"APIHighErrorRate","service":"api"},"annotations":{"summary":"Error rate above 5%"}}]'`
 - `curl -s http://localhost:9093/api/v2/status | jq '.version'`
@@ -82,3 +103,7 @@ Define and test SLO burn-rate alert rules
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Alertmanager Docs](https://prometheus.io/docs/alerting/latest/alertmanager/)
+- [amtool Docs](https://prometheus.io/docs/alerting/latest/amtool/)

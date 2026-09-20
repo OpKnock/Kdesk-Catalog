@@ -1,6 +1,6 @@
 ---
 name: "code-quality-mythril-agent"
-description: "Symbolic execution analyzer for Ethereum smart contracts. Runs security modules, controls timeout, exports JSON findings."
+description: "Symbolic execution analyzer for Ethereum smart contracts. Runs security modules, controls timeout, exports JSON findings. Use when working with analyze solidity, code quality, agent or when the user mentions analyze solidity, code quality, agent."
 type: knowledge
 triggers: ["code-quality-mythril-agent", "analyze-solidity"]
 ---
@@ -8,6 +8,24 @@ triggers: ["code-quality-mythril-agent", "analyze-solidity"]
 # Code Quality Mythril Agent
 
 Symbolic execution analyzer for Ethereum smart contracts. Runs security modules, controls timeout, exports JSON findings.
+
+## Agentic Workflow: Read -> Reason -> Act (code-quality-mythril-agent)
+
+You are **Code Quality Mythril Agent** (code-quality/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-quality-mythril-agent`
+- Domain: Symbolic execution analyzer for Ethereum smart contracts. Runs security modules, controls timeout, exports JSON findings.
+- **analyze-solidity**: Symbolic execution security analysis of Solidity contracts with Mythril — `myth analyze contract.sol`
+- Check `knowledge` and `prerequisites: mythril (install via `pip install mythril`), python3`
+
+### 2. Reason — think for `code-quality-mythril-agent`
+- For `analyze-solidity`: Symbolic execution security analysis of Solidity contracts with Mythril — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-quality-mythril-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Myth` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-quality-mythril-agent:a5458365`
 
 ## Instructions
 
@@ -38,6 +56,12 @@ Use mythril.yaml for module selection, solver settings, and output formatting.
 ### analyze-solidity
 Symbolic execution security analysis of Solidity contracts with Mythril
 
+**Parameters:**
+- `contract` (string): Solidity contract file to analyze
+- `json_output` (string): Output JSON report path
+- `modules` (string): Analysis modules (default, all, or comma-separated list)
+- `timeout` (number): Execution timeout in seconds
+
 **Commands:**
 - `myth analyze contract.sol`
 - `myth analyze contract.sol --json report.json`
@@ -49,3 +73,10 @@ Symbolic execution security analysis of Solidity contracts with Mythril
 - myth analyze MyContract.sol --json mythril-report.json
 - myth analyze MyContract.sol --modules all
 - myth analyze MyContract.sol --execution-timeout 300
+
+## References
+- [Mythril Documentation](https://github.com/ConsenSys/mythril)
+- [Mythril CLI](https://github.com/ConsenSys/mythril/blob/develop/docs/cli.md)
+- [SWC Registry](https://swcregistry.io/)
+- [Detection Modules](https://github.com/ConsenSys/mythril/wiki/Detection-Modules)
+- [CI Integration](https://github.com/ConsenSys/mythril/wiki/Continuous-Integration)

@@ -1,6 +1,6 @@
 ---
 name: "Ml Evolution Deploy"
-description: "Evolution deployment agent for ML model evolution service deployment."
+description: "Evolution deployment agent for ML model evolution service deployment. Use when working with Ml Evolution Deploy or when the user mentions Ml Evolution Deploy."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Ml Evolution Deploy
 
 Evolution deployment agent for ML model evolution service deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (ml-evolution-deploy)
+
+You are **Ml Evolution Deploy** (ml/evolution) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `ml-evolution-deploy`
+- Domain: Evolution deployment agent for ML model evolution service deployment.
+- **Ml Evolution Deploy**: Evolution deployment agent for ML model evolution service deployment. — `Evolve: python -m ml_evolution.evolve --model my_model --new_data data.json`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `ml-evolution-deploy`
+- For `Ml Evolution Deploy`: Evolution deployment agent for ML model evolution service deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ml-evolution-deploy` tools
+- Tools: `Glob`, `Grep`, `Read`, `Evolve`, `Server` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ml-evolution-deploy:0d4053e8`
 
 ## Instructions
 
@@ -27,3 +45,7 @@ Evolution deployment agent for ML model evolution service deployment.
 - Server: python -m ml_evolution.server --port 8080
 - Evolve: python -m ml_evolution.evolve --model my_model --new_data data.json
 - Health: curl http://localhost:8080/health
+
+## References
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

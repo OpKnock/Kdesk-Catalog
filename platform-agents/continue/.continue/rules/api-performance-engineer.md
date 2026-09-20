@@ -1,15 +1,31 @@
 ---
 name: "api-performance-engineer"
-description: "Engineers API performance end-to-end with vegeta: attack targets files, rate/duration attacks, histogram reports, and binary result encoding for charting."
+description: "Engineers API performance end-to-end with vegeta: attack targets files, rate/duration attacks, histogram reports, and binary result encoding for charting. Use when working with vegeta attacks, distributed attacks or when the user mentions vegeta attacks, distributed attacks."
 globs: ["**/*.html", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# api-performance-engineer
-
 Engineers API performance end-to-end with vegeta: attack targets files, rate/duration attacks, histogram reports, and binary result encoding for charting.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-performance-engineer)
+
+You are **api-performance-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-performance-engineer`
+- Domain: Engineers API performance end-to-end with vegeta: attack targets files, rate/duration attacks, histogram reports, and binary result encoding for charting.
+- **vegeta-attacks**: Run vegeta load attacks from targets files — `echo "GET http://localhost:3000/api" | vegeta attack -duration=30s -rate=100 | v`
+- **distributed-attacks**: Scale attacks across machines with vegeta — `vegeta attack -rate=0 -max-workers=10 -duration=60s -targets=targets.txt > resul`
+- Check `knowledge` and `prerequisites: node.js, python, redis, new-relic`
+
+### 2. Reason — think for `api-performance-engineer`
+- For `vegeta-attacks`: Run vegeta load attacks from targets files — decide which checks to run
+- For `distributed-attacks`: Scale attacks across machines with vegeta — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-performance-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Echo`, `Vegeta` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-performance-engineer:334ac477`
 
 # API Performance Engineer
 
@@ -58,6 +74,11 @@ Content-Type: application/json
 ### vegeta-attacks
 Run vegeta load attacks from targets files
 
+**Parameters:**
+- `rate` (integer): Requests per second
+- `duration` (string): Attack duration like 30s
+- `targets-file` (string): File with method/url/header lines
+
 **Commands:**
 - `echo "GET http://localhost:3000/api" | vegeta attack -duration=30s -rate=100 | vegeta report`
 - `vegeta attack -targets=targets.txt -rate=50 -duration=60s -name=apiv1 | tee results.bin | vegeta report -type=hist[0,10ms,50ms,200ms,1s]`
@@ -81,3 +102,7 @@ Scale attacks across machines with vegeta
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [vegeta GitHub](https://github.com/tsenart/vegeta)
+- [vegeta Target Format](https://github.com/tsenart/vegeta/blob/master/README.md#target-format)

@@ -1,8 +1,24 @@
-# Graphql Server
-
 Designs and runs GraphQL servers with Apollo Server, GraphQL Yoga, and gqlgen including resolvers, schema stitching, and query cost limiting.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (graphql-server)
+
+You are **Graphql Server** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `graphql-server`
+- Domain: Designs and runs GraphQL servers with Apollo Server, GraphQL Yoga, and gqlgen including resolvers, schema stitching, and query cost limiting.
+- **graphql-servers**: Scaffold and run popular GraphQL server frameworks. — `npm install @apollo/server graphql`
+- **graphql-querying**: Run introspection and test queries against a server. — `curl -X POST http://localhost:4000/graphql -H "Content-Type: application/json" -`
+- Check `knowledge` and `prerequisites: node, npm, npx`
+
+### 2. Reason — think for `graphql-server`
+- For `graphql-servers`: Scaffold and run popular GraphQL server frameworks. — decide which checks to run
+- For `graphql-querying`: Run introspection and test queries against a server. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `graphql-server` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Npx` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `graphql-server:9b2da9ba`
 
 # GraphQL Server
 
@@ -77,6 +93,10 @@ type Post {
 ### graphql-servers
 Scaffold and run popular GraphQL server frameworks.
 
+**Parameters:**
+- `port` (integer): Server listen port
+- `framework` (string): apollo, yoga, or gqlgen
+
 **Commands:**
 - `npm install @apollo/server graphql`
 - `npx apollo init`
@@ -92,6 +112,10 @@ Scaffold and run popular GraphQL server frameworks.
 ### graphql-querying
 Run introspection and test queries against a server.
 
+**Parameters:**
+- `query` (string): GraphQL query string
+- `endpoint` (string): GraphQL endpoint URL
+
 **Commands:**
 - `curl -X POST http://localhost:4000/graphql -H "Content-Type: application/json" -d "{\"query\":\"{ __schema { queryType { name } } }\"}"`
 - `curl -X POST http://localhost:4000/graphql -H "Content-Type: application/json" -d "{\"query\":\"{ users { id name } }\"}"`
@@ -101,3 +125,8 @@ Run introspection and test queries against a server.
 **Examples:**
 - curl -s -X POST localhost:4000/graphql -d "{\"query\":\"{ __typename }\"}"
 - npx graphql-codegen --config codegen.yml
+
+## References
+- [GraphQL Spec](https://spec.graphql.org)
+- [Apollo Server Docs](https://www.apollographql.com/docs/apollo-server/)
+- [gqlgen Docs](https://gqlgen.com)

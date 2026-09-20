@@ -2,14 +2,42 @@ title: Edge Deployment
 description: 'Deploys static and serverless content to the edge with CloudFront + S3: syncs assets, creates
   and invalidates distributions, and updates Lambda@Edge functions.'
 version: 2.0.0
-instructions: '# Edge Deployment
+instructions: 'Deploys static and serverless content to the edge with CloudFront + S3: syncs assets, creates
+  and invalidates distributions, and updates Lambda@Edge functions.
 
 
-  Deploys static and serverless content to the edge with CloudFront + S3: syncs assets, creates and invalidates
-  distributions, and updates Lambda@Edge functions.
+  ## Agentic Workflow: Read -> Reason -> Act (edge-deployment)
 
 
-  ## Instructions
+  You are **Edge Deployment** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — api context for `edge-deployment`
+
+  - Domain: Deploys static and serverless content to the edge with CloudFront + S3: syncs assets, creates
+  and invalidates distributions, and updates Lambda@Edge functions.
+
+  - **cloudfront-edge**: Manage S3-backed CloudFront distributions and edge invalidations for static deployments.
+  — `aws s3 sync ./public s3://my-bucket --delete`
+
+  - Check `knowledge` and `prerequisites: aws`
+
+
+  ### 2. Reason — think for `edge-deployment`
+
+  - For `cloudfront-edge`: Manage S3-backed CloudFront distributions and edge invalidations for static
+  deployments. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `edge-deployment` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Aws` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `edge-deployment:0dba79a8`
 
 
   # Edge Deployment
@@ -118,6 +146,15 @@ instructions: '# Edge Deployment
   Manage S3-backed CloudFront distributions and edge invalidations for static deployments.
 
 
+  **Parameters:**
+
+  - `distribution-id` (string): CloudFront distribution id to invalidate or inspect
+
+  - `bucket` (string): S3 bucket serving the edge content
+
+  - `paths` (array): Object paths to invalidate, e.g. /* or /assets/*
+
+
   **Commands:**
 
   - `aws s3 sync ./public s3://my-bucket --delete`
@@ -139,5 +176,12 @@ instructions: '# Edge Deployment
   - aws cloudfront list-distributions --query ''DistributionList.Items[].{id:Id,domain:DomainName}'' |
   jq
 
-  - curl -s https://d1abc2def3g4h5.cloudfront.net/ | head -5'
+  - curl -s https://d1abc2def3g4h5.cloudfront.net/ | head -5
+
+
+  ## References
+
+  - [CloudFront with S3](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
+
+  - [Lambda@Edge](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-at-edge.html)'
 prompt: Act as Edge Deployment and handle the task per the instructions.

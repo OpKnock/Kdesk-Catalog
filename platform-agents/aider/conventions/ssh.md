@@ -1,8 +1,24 @@
-# ssh
-
 Connects to remote hosts with ssh: config files, port forwarding, tunnels, keys, jump hosts, and verbose troubleshooting.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (ssh)
+
+You are **ssh** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — devtools context for `ssh`
+- Domain: Connects to remote hosts with ssh: config files, port forwarding, tunnels, keys, jump hosts, and verbose troubleshooting.
+- **connections**: Connect with keys, ports, and options. — `ssh user@host`
+- **tunnels-and-forwarding**: Forward ports, set up SOCKS proxies, and tunnel traffic. — `ssh -L 8080:localhost:80 user@host`
+- Check `knowledge` and `prerequisites: ssh`
+
+### 2. Reason — think for `ssh`
+- For `connections`: Connect with keys, ports, and options. — decide which checks to run
+- For `tunnels-and-forwarding`: Forward ports, set up SOCKS proxies, and tunnel traffic. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `ssh` tools
+- Tools: `Glob`, `Grep`, `Read`, `Ssh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `ssh:319acc93`
 
 # SSH Connections
 
@@ -66,6 +82,11 @@ Host prod
 ### connections
 Connect with keys, ports, and options.
 
+**Parameters:**
+- `host` (string): Remote host
+- `port` (integer): SSH port
+- `key` (string): Identity file
+
 **Commands:**
 - `ssh user@host`
 - `ssh -p 2222 user@host`
@@ -82,6 +103,10 @@ Connect with keys, ports, and options.
 ### tunnels-and-forwarding
 Forward ports, set up SOCKS proxies, and tunnel traffic.
 
+**Parameters:**
+- `local-port` (integer): Local port for -L
+- `target` (string): Forward target host:port
+
 **Commands:**
 - `ssh -L 8080:localhost:80 user@host`
 - `ssh -R 3000:localhost:3000 user@host`
@@ -94,3 +119,7 @@ Forward ports, set up SOCKS proxies, and tunnel traffic.
 - ssh -L 3306:db.internal:3306 user@bastion
 - ssh -D 1080 -N user@host
 - ssh -vvv user@host
+
+## References
+- [ssh Manual](https://man.openbsd.org/ssh)
+- [ssh_config Manual](https://man.openbsd.org/ssh_config)

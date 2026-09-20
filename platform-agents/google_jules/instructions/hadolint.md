@@ -1,8 +1,24 @@
-# hadolint
-
 Lints Dockerfiles with hadolint: best-practice rules, shellcheck integration, and CI enforcement.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (hadolint)
+
+You are **hadolint** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `hadolint`
+- Domain: Lints Dockerfiles with hadolint: best-practice rules, shellcheck integration, and CI enforcement.
+- **hadolint-lint**: Lint Dockerfiles from CLI or stdin. — `hadolint Dockerfile`
+- **hadolint-config**: Manage rules and formats. — `hadolint --version`
+- Check `knowledge` and `prerequisites: docker, hadolint`
+
+### 2. Reason — think for `hadolint`
+- For `hadolint-lint`: Lint Dockerfiles from CLI or stdin. — decide which checks to run
+- For `hadolint-config`: Manage rules and formats. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `hadolint` tools
+- Tools: `Glob`, `Grep`, `Read`, `Hadolint`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `hadolint:816d4709`
 
 # Hadolint
 
@@ -63,6 +79,11 @@ trustedRegistries:
 ### hadolint-lint
 Lint Dockerfiles from CLI or stdin.
 
+**Parameters:**
+- `file` (string): Dockerfile path
+- `ignore` (string): Rules to ignore
+- `failure-threshold` (string): error, warning, info, style
+
 **Commands:**
 - `hadolint Dockerfile`
 - `hadolint Dockerfile --ignore DL3007`
@@ -78,6 +99,10 @@ Lint Dockerfiles from CLI or stdin.
 ### hadolint-config
 Manage rules and formats.
 
+**Parameters:**
+- `format` (string): tty, json, sarif, checkstyle
+- `output` (string): Report output file path
+
 **Commands:**
 - `hadolint --version`
 - `hadolint Dockerfile --format sarif`
@@ -87,3 +112,7 @@ Manage rules and formats.
 **Examples:**
 - hadolint Dockerfile -f sarif -o hadolint.sarif
 - hadolint Dockerfile --verbose
+
+## References
+- [Hadolint Docs](https://github.com/hadolint/hadolint)
+- [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)

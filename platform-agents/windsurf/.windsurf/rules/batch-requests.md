@@ -6,27 +6,27 @@ globs: ["**/*.json", "**/*.r", "**/*.sh"]
 
 Combines multiple API calls into single HTTP round trips using JSON-RPC batch arrays, GraphQL operation aliases, and dedicated batch endpoints to reduce client-side latency over high-latency networks.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (batch-requests)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Batch Requests** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -X POST http://localhost:8545 -H "Content-Type: applica`, `curl -X POST https://api.your-app.test/graphql -H "Content-T`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `batch-requests`
+- Domain: Combines multiple API calls into single HTTP round trips using JSON-RPC batch arrays, GraphQL operation aliases, and dedicated batch endpoints to reduce client-side latency over high-latency networks.
+- **jsonrpc-batch**: Send batched JSON-RPC requests. — `curl -X POST http://localhost:8545 -H "Content-Type: application/json" -d '[{"js`
+- **graphql-batching**: Execute multiple GraphQL operations in one HTTP round trip. — `curl -X POST https://api.your-app.test/graphql -H "Content-Type: application/jso`
+- **server-batch**: Create and test dedicated batch endpoints. — `curl -X POST https://api.your-app.test/batch -H "Content-Type: application/json"`
+- Check `knowledge` and `prerequisites: jq`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `batch-requests`
+- For `jsonrpc-batch`: Send batched JSON-RPC requests. — decide which checks to run
+- For `graphql-batching`: Execute multiple GraphQL operations in one HTTP round trip. — decide which checks to run
+- For `server-batch`: Create and test dedicated batch endpoints. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `batch-requests` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `batch-requests:35a840f7`
 
 # Batch Requests
 

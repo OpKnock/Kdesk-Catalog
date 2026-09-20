@@ -1,15 +1,31 @@
 ---
 name: "redis-caching-strategist"
-description: "Designs Redis caching strategies: TTL policies, invalidation, hit-rate measurement, and benchmark validation with redis-cli."
+description: "Designs Redis caching strategies: TTL policies, invalidation, hit-rate measurement, and benchmark validation with redis-cli. Use when working with redis cli, benchmark or when the user mentions redis cli, benchmark."
 globs: ["**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# redis-caching-strategist
-
 Designs Redis caching strategies: TTL policies, invalidation, hit-rate measurement, and benchmark validation with redis-cli.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (redis-caching-strategist)
+
+You are **redis-caching-strategist** (infrastructure) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — infrastructure context for `redis-caching-strategist`
+- Domain: Designs Redis caching strategies: TTL policies, invalidation, hit-rate measurement, and benchmark validation with redis-cli.
+- **redis-cli**: Operate cache keys and measure health. — `redis-cli SET session:abc123 '{"user":42}' EX 900`
+- **benchmark**: Validate cache performance with redis-benchmark. — `redis-benchmark -t set,get -n 100000 -c 50 -P 16`
+- Check `knowledge` and `prerequisites: redis-cli, redis-benchmark, redis-sentinel, redis-cluster`
+
+### 2. Reason — think for `redis-caching-strategist`
+- For `redis-cli`: Operate cache keys and measure health. — decide which checks to run
+- For `benchmark`: Validate cache performance with redis-benchmark. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `redis-caching-strategist` tools
+- Tools: `Glob`, `Grep`, `Read`, `Redis-cli`, `Redis-benchmark` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `redis-caching-strategist:31271db1`
 
 # Redis Caching Strategy
 
@@ -75,6 +91,11 @@ Benchmark reads and measure hit rate before/after TTL changes.
 ### redis-cli
 Operate cache keys and measure health.
 
+**Parameters:**
+- `key` (string): Cache key
+- `EX` (number): TTL seconds
+- `pattern` (string): Key scan pattern
+
 **Commands:**
 - `redis-cli SET session:abc123 '{"user":42}' EX 900`
 - `redis-cli TTL session:abc123`
@@ -90,6 +111,11 @@ Operate cache keys and measure health.
 ### benchmark
 Validate cache performance with redis-benchmark.
 
+**Parameters:**
+- `test` (string): Command set like set,get,lpush
+- `clients` (number): Concurrent clients
+- `pipelining` (number): Pipelined requests per client
+
 **Commands:**
 - `redis-benchmark -t set,get -n 100000 -c 50 -P 16`
 - `redis-benchmark -t lpush,incr -n 50000 -c 100 -d 128`
@@ -101,3 +127,8 @@ Validate cache performance with redis-benchmark.
 - redis-benchmark -t set,get -n 100000 -c 50 -P 16 | grep -E 'SET|GET'
 - redis-cli --latency --csv
 - redis-benchmark -t get -n 200000 -c 100 -P 32 -d 256
+
+## References
+- [Redis Caching](https://redis.io/docs/latest/develop/use/patterns/caching/)
+- [Redis Commands](https://redis.io/docs/latest/commands/)
+- [redis-benchmark](https://redis.io/docs/latest/develop/reference/optimization/benchmarks/)

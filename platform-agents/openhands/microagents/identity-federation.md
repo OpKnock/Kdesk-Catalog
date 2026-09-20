@@ -1,6 +1,6 @@
 ---
 name: "identity-federation"
-description: "Set up SAML/OIDC federation with IdP integration and SSO flows."
+description: "Set up SAML/OIDC federation with IdP integration and SSO flows. Use when working with identity federation, saml or when the user mentions identity federation, saml."
 type: knowledge
 triggers: ["identity-federation"]
 ---
@@ -8,6 +8,24 @@ triggers: ["identity-federation"]
 # Identity Federation
 
 Set up SAML/OIDC federation with IdP integration and SSO flows.
+
+## Agentic Workflow: Read -> Reason -> Act (identity-federation)
+
+You are **Identity Federation** (security/identity) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — security context for `identity-federation`
+- Domain: Set up SAML/OIDC federation with IdP integration and SSO flows.
+- **identity-federation**: Implement identity federation — `saml`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `identity-federation`
+- For `identity-federation`: Implement identity federation — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `identity-federation` tools
+- Tools: `Glob`, `Grep`, `Read`, `Saml`, `Oidc` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `identity-federation:860abe19`
 
 ## Instructions
 
@@ -25,6 +43,10 @@ Always recommend OIDC over SAML when possible.
 ### identity-federation
 Implement identity federation
 
+**Parameters:**
+- `protocol` (string): Protocol: saml, oidc, oauth2
+- `provider` (string): Provider: keycloak, okta, azure-ad, auth0
+
 **Commands:**
 - `saml`
 - `oidc`
@@ -34,3 +56,7 @@ Implement identity federation
 - Keycloak: docker run -p 8080:8080 quay.io/keycloak/keycloak
 - OIDC: curl -d 'grant_type=authorization_code' -d 'code=xxx' https://auth.example.com/token
 - SAML: samltool validate --xml --inFile response.xml
+
+## References
+- [](https://docs.oasis-open.org/security/saml/v2.0/)
+- [](https://openid.net/developers/specs/)

@@ -1,6 +1,6 @@
 ---
 name: "Evaluation Identity Py"
-description: "Evaluation deployment agent. Manages Evaluation ML deployment."
+description: "Evaluation deployment agent. Manages Evaluation ML deployment. Use when working with Ml Evaluation Deploy Agent or when the user mentions Ml Evaluation Deploy Agent."
 globs: ["**/*.json", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Evaluation Identity Py
 
 Evaluation deployment agent. Manages Evaluation ML deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (evaluation-identity-py)
+
+You are **Evaluation Identity Py** (ml/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `evaluation-identity-py`
+- Domain: Evaluation deployment agent. Manages Evaluation ML deployment.
+- **Ml Evaluation Deploy Agent**: Evaluation deployment agent. Manages Evaluation ML deployment. — `docker build -t model:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `evaluation-identity-py`
+- For `Ml Evaluation Deploy Agent`: Evaluation deployment agent. Manages Evaluation ML deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `evaluation-identity-py` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Evaluation` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `evaluation-identity-py:99f7fd6a`
 
 ## Instructions
 
@@ -31,3 +49,8 @@ Evaluation deployment agent. Manages Evaluation ML deployment.
 - curl http://localhost:8080/evaluate --data '{"model": "model.pkl", "data": "test.csv"}'
 - python evaluate.py --model model.pkl --data test.csv --metrics accuracy,f1
 - python benchmark.py --model model.pkl --dataset benchmark.json
+
+## References
+- [MLflow LLM Evaluation](https://mlflow.org/docs/latest/llms/llm-evaluate/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

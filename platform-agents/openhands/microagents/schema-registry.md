@@ -1,15 +1,29 @@
 ---
 name: "schema-registry"
-description: "Expert Confluent Schema Registry reference covering Avro schema registration, compatibility checking before promotion, and subject/version listing via REST."
+description: "Expert Confluent Schema Registry reference covering Avro schema registration, compatibility checking before promotion, and subject/version listing via REST. Use when working with schema registry api or when the user mentions schema registry api."
 type: knowledge
 triggers: ["schema-registry", "schema-registry-api"]
 ---
 
-# Schema Registry
-
 Expert Confluent Schema Registry reference covering Avro schema registration, compatibility checking before promotion, and subject/version listing via REST.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (schema-registry)
+
+You are **Schema Registry** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `schema-registry`
+- Domain: Expert Confluent Schema Registry reference covering Avro schema registration, compatibility checking before promotion, and subject/version listing via REST.
+- **schema-registry-api**: Register and validate schemas against the Confluent Schema Registry — `curl -s http://localhost:8081/subjects`
+- Check `knowledge` and `prerequisites: kafka-avro-console-producer`
+
+### 2. Reason — think for `schema-registry`
+- For `schema-registry-api`: Register and validate schemas against the Confluent Schema Registry — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `schema-registry` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Kafka-avro-console-producer` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `schema-registry:4e623359`
 
 # Schema Registry
 
@@ -71,6 +85,11 @@ curl -s http://localhost:8081/config | jq   # current compatibility mode
 ### schema-registry-api
 Register and validate schemas against the Confluent Schema Registry
 
+**Parameters:**
+- `subject` (string): Subject name, e.g. orders-value
+- `schema_file` (string): JSON file with {"schema": "..."} payload
+- `registry_url` (string): Schema Registry base URL
+
 **Commands:**
 - `curl -s http://localhost:8081/subjects`
 - `curl -s http://localhost:8081/subjects/orders-value/versions/latest | jq .version`
@@ -82,3 +101,7 @@ Register and validate schemas against the Confluent Schema Registry
 - curl -s http://localhost:8081/subjects/orders-value/versions | jq
 - curl -X POST http://localhost:8081/subjects/orders-value/versions -H 'Content-Type: application/vnd.schemaregistry.v1+json' -d @new-schema.json
 - curl -s http://localhost:8081/config | jq
+
+## References
+- [Schema Registry API reference](https://docs.confluent.io/platform/current/schema-registry/develop/api.html)
+- [Schema Registry docs](https://docs.confluent.io/platform/current/schema-registry/index.html)

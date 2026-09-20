@@ -1,15 +1,31 @@
 ---
 name: "Api Mock Json"
-description: "Builds zero-code REST mock servers with JSON Server: watch mode, custom routes, filtering, pagination, and CRUD persistence for rapid prototyping."
+description: "Builds zero-code REST mock servers with JSON Server: watch mode, custom routes, filtering, pagination, and CRUD persistence for rapid prototyping. Use when working with json server, route customization or when the user mentions json server, route customization."
 globs: ["**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Api Mock Json
-
 Builds zero-code REST mock servers with JSON Server: watch mode, custom routes, filtering, pagination, and CRUD persistence for rapid prototyping.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-mock-json)
+
+You are **Api Mock Json** (testing) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — testing context for `api-mock-json`
+- Domain: Builds zero-code REST mock servers with JSON Server: watch mode, custom routes, filtering, pagination, and CRUD persistence for rapid prototyping.
+- **json-server**: Serve a mock REST API from a JSON database file — `npm install -g json-server`
+- **route-customization**: Map custom URLs and add middleware to the mock server — `curl -s http://localhost:3001/users/1 | jq .`
+- Check `knowledge` and `prerequisites: prism, wiremock, msw`
+
+### 2. Reason — think for `api-mock-json`
+- For `json-server`: Serve a mock REST API from a JSON database file — decide which checks to run
+- For `route-customization`: Map custom URLs and add middleware to the mock server — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-mock-json` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Json-server` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-mock-json:1facaef5`
 
 # API Mock v2 - JSON Server
 
@@ -61,6 +77,11 @@ Endpoints: GET/POST /users, GET/PUT/PATCH/DELETE /users/:id.
 ### json-server
 Serve a mock REST API from a JSON database file
 
+**Parameters:**
+- `port` (integer): Port for the mock server, default 3000
+- `db-file` (string): JSON file containing collections to serve
+- `routes-file` (string): Custom route mapping file (routes.json)
+
 **Commands:**
 - `npm install -g json-server`
 - `json-server --watch db.json --port 3001`
@@ -84,3 +105,7 @@ Map custom URLs and add middleware to the mock server
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [json-server GitHub](https://github.com/typicode/json-server)
+- [jq Manual](https://jqlang.github.io/jq/manual/)

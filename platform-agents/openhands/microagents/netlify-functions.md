@@ -1,15 +1,29 @@
 ---
 name: "netlify-functions"
-description: "Creates, serves, invokes, and deploys Netlify Functions using the Netlify CLI. Supports local development with netlify dev, function testing with payloads, and production deployments."
+description: "Creates, serves, invokes, and deploys Netlify Functions using the Netlify CLI. Supports local development with netlify dev, function testing with payloads, and production deployments. Use when working with netlify functions workflow, api or when the user mentions netlify functions workflow, api."
 type: knowledge
 triggers: ["netlify-functions", "netlify-functions-workflow"]
 ---
 
-# Netlify Functions
-
 Creates, serves, invokes, and deploys Netlify Functions using the Netlify CLI. Supports local development with netlify dev, function testing with payloads, and production deployments.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (netlify-functions)
+
+You are **Netlify Functions** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `netlify-functions`
+- Domain: Creates, serves, invokes, and deploys Netlify Functions using the Netlify CLI. Supports local development with netlify dev, function testing with payloads, and production deployments.
+- **netlify-functions-workflow**: Create, serve, invoke and deploy Netlify Functions with the Netlify CLI. — `netlify functions:create`
+- Check `knowledge` and `prerequisites: netlify`
+
+### 2. Reason — think for `netlify-functions`
+- For `netlify-functions-workflow`: Create, serve, invoke and deploy Netlify Functions with the Netlify CLI. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `netlify-functions` tools
+- Tools: `Glob`, `Grep`, `Read`, `Netlify` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `netlify-functions:d598c69d`
 
 # Netlify Functions
 
@@ -68,6 +82,11 @@ exports.handler = async (event, context) => ({
 ### netlify-functions-workflow
 Create, serve, invoke and deploy Netlify Functions with the Netlify CLI.
 
+**Parameters:**
+- `function_name` (string): Name of the function to invoke
+- `payload` (string): JSON payload for invocation
+- `port` (integer): Port for local function serving
+
 **Commands:**
 - `netlify functions:create`
 - `netlify functions:serve --port 8888`
@@ -79,3 +98,7 @@ Create, serve, invoke and deploy Netlify Functions with the Netlify CLI.
 - netlify functions:invoke my-function --payload '{"name":"alice"}'
 - netlify functions:serve --functions build/functions
 - netlify deploy --prod --build
+
+## References
+- [Netlify Functions Docs](https://docs.netlify.com/functions/overview/)
+- [Netlify CLI Reference](https://docs.netlify.com/cli/get-started/)

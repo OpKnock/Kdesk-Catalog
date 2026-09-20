@@ -1,14 +1,28 @@
 ---
-description: "Expert SAML 2.0 reference covering signing and verifying assertions with xmlsec1, base64-decoding SAMLResponses, exchanging metadata, and wiring SP-initiated login."
+description: "Expert SAML 2.0 reference covering signing and verifying assertions with xmlsec1, base64-decoding SAMLResponses, exchanging metadata, and wiring SP-initiated login. Use when working with saml assertion tooling, api or when the user mentions saml assertion tooling, api."
 globs: ["**/*.py", "**/*.r", "**/*.rs", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Saml
-
 Expert SAML 2.0 reference covering signing and verifying assertions with xmlsec1, base64-decoding SAMLResponses, exchanging metadata, and wiring SP-initiated login.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (saml)
+
+You are **Saml** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `saml`
+- Domain: Expert SAML 2.0 reference covering signing and verifying assertions with xmlsec1, base64-decoding SAMLResponses, exchanging metadata, and wiring SP-initiated login.
+- **saml-assertion-tooling**: Sign, verify, and decode SAML assertions with xmlsec1 and openssl — `xmlsec1 --verify --pubkey-cert-pem sp-cert.pem saml-response.xml`
+- Check `knowledge` and `prerequisites: openssl, python, xmlsec1`
+
+### 2. Reason — think for `saml`
+- For `saml-assertion-tooling`: Sign, verify, and decode SAML assertions with xmlsec1 and openssl — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `saml` tools
+- Tools: `Glob`, `Grep`, `Read`, `Xmlsec1`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `saml:a3b50033`
 
 # SAML 2.0
 
@@ -69,6 +83,11 @@ xmlsec1 --verify --pubkey-cert-pem idp-cert.pem response.xml
 ### saml-assertion-tooling
 Sign, verify, and decode SAML assertions with xmlsec1 and openssl
 
+**Parameters:**
+- `cert_file` (string): PEM certificate used for verification
+- `key_file` (string): Private key used for signing
+- `acs_url` (string): Assertion Consumer Service endpoint
+
 **Commands:**
 - `xmlsec1 --verify --pubkey-cert-pem sp-cert.pem saml-response.xml`
 - `xmlsec1 --sign --privkey-pem idp-key.pem --pubkey-pem idp-cert.pem --output signed.xml unsigned-assertion.xml`
@@ -80,3 +99,7 @@ Sign, verify, and decode SAML assertions with xmlsec1 and openssl
 - python -c 'import base64; print(base64.b64decode(open("saml-response.b64").read()).decode())'
 - xmlsec1 --verify --pubkey-cert-pem sp-cert.pem signed.xml
 - curl -d "SAMLResponse=$(cat saml-response.b64)" https://app.your-app.test/acs
+
+## References
+- [xmlsec1 documentation](https://www.aleksey.com/xmlsec/api.html)
+- [SAML V2.0 standard](https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf)

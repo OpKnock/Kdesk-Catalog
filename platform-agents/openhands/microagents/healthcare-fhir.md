@@ -1,6 +1,6 @@
 ---
 name: "healthcare-fhir"
-description: "Healthcare fhir expertise and best practices."
+description: "Healthcare fhir expertise and best practices. Use when working with fhir expertise, healthcare, skill or when the user mentions fhir expertise, healthcare, skill."
 type: knowledge
 triggers: ["healthcare-fhir", "fhir-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["healthcare-fhir", "fhir-expertise"]
 # Healthcare Fhir
 
 Healthcare fhir expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (healthcare-fhir)
+
+You are **Healthcare Fhir** (healthcare/fhir) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — healthcare context for `healthcare-fhir`
+- Domain: Healthcare fhir expertise and best practices.
+- **fhir-expertise**: healthcare fhir expertise — `fhir-cli`
+- Check `knowledge` and `prerequisites: fhir`
+
+### 2. Reason — think for `healthcare-fhir`
+- For `fhir-expertise`: healthcare fhir expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `healthcare-fhir` tools
+- Tools: `Glob`, `Grep`, `Read`, `Fhir-cli`, `Fhir-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `healthcare-fhir:22847967`
 
 ## Instructions
 

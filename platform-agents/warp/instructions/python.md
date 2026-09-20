@@ -1,8 +1,24 @@
-# python
-
 Develops Python backends: virtual environments, packaging, dependency management, debugging, and testing with pytest.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (python)
+
+You are **python** (backend/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `python`
+- Domain: Develops Python backends: virtual environments, packaging, dependency management, debugging, and testing with pytest.
+- **python-env**: Manage virtual environments and dependencies. — `python -m venv .venv`
+- **python-dev**: Run, debug, and test Python code. — `python -m pdb app.py`
+- Check `knowledge` and `prerequisites: .venv\\scripts\\activate, pip, pytest, python`
+
+### 2. Reason — think for `python`
+- For `python-env`: Manage virtual environments and dependencies. — decide which checks to run
+- For `python-dev`: Run, debug, and test Python code. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `.venv\\Scripts\\activate` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `python:6626c86d`
 
 # Python
 
@@ -66,6 +82,10 @@ HTTPServer(("", 8000), H).serve_forever()
 ### python-env
 Manage virtual environments and dependencies.
 
+**Parameters:**
+- `env-path` (string): Virtual env path
+- `requirements` (string): Requirements file path
+
 **Commands:**
 - `python -m venv .venv`
 - `.venv\\Scripts\\activate`
@@ -81,6 +101,10 @@ Manage virtual environments and dependencies.
 ### python-dev
 Run, debug, and test Python code.
 
+**Parameters:**
+- `target` (string): Module path or test selector
+- `cov` (boolean): Collect coverage
+
 **Commands:**
 - `python -m pdb app.py`
 - `python -c "import urllib.request; print(urllib.request.urlopen(\"http://localhost:8000/health\").status)"`
@@ -92,3 +116,8 @@ Run, debug, and test Python code.
 - python -m pdb -c continue app.py
 - pytest tests/test_api.py -k "login" -v
 - python -m trace --count app.py
+
+## References
+- [Python Docs](https://docs.python.org/3/)
+- [Python Packaging Guide](https://packaging.python.org)
+- [pytest Docs](https://docs.pytest.org)

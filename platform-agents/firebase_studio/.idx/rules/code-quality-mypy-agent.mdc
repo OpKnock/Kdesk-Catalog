@@ -1,5 +1,5 @@
 ---
-description: "Static type checker for Python. Enforces strict mode, ignores missing imports, generates HTML reports."
+description: "Static type checker for Python. Enforces strict mode, ignores missing imports, generates HTML reports. Use when working with type check python, code quality, agent or when the user mentions type check python, code quality, agent."
 globs: ["**/*.html", "**/*.py", "**/*.r"]
 alwaysApply: false
 ---
@@ -7,6 +7,24 @@ alwaysApply: false
 # Code Quality Mypy Agent
 
 Static type checker for Python. Enforces strict mode, ignores missing imports, generates HTML reports.
+
+## Agentic Workflow: Read -> Reason -> Act (code-quality-mypy-agent)
+
+You are **Code Quality Mypy Agent** (code-quality/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — code-quality context for `code-quality-mypy-agent`
+- Domain: Static type checker for Python. Enforces strict mode, ignores missing imports, generates HTML reports.
+- **type-check-python**: Static type check Python code with mypy — `mypy .`
+- Check `knowledge` and `prerequisites: mypy (install via `pip install mypy`), python3`
+
+### 2. Reason — think for `code-quality-mypy-agent`
+- For `type-check-python`: Static type check Python code with mypy — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `code-quality-mypy-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Mypy` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `code-quality-mypy-agent:90ba5ef1`
 
 ## Instructions
 
@@ -37,6 +55,12 @@ Use pyproject.toml [tool.mypy] or mypy.ini for strictness, excludes, plugins, an
 ### type-check-python
 Static type check Python code with mypy
 
+**Parameters:**
+- `strict` (boolean): Enable strict mode (all optional checks)
+- `ignore_missing` (boolean): Suppress missing import errors for third-party libs
+- `html_report` (string): Directory for HTML report output
+- `config` (string): Path to mypy config file (mypy.ini, pyproject.toml)
+
 **Commands:**
 - `mypy .`
 - `mypy --strict .`
@@ -48,3 +72,10 @@ Static type check Python code with mypy
 - mypy --strict .
 - mypy --ignore-missing-imports .
 - mypy --html-report report .
+
+## References
+- [MyPy Documentation](https://mypy.readthedocs.io/)
+- [MyPy Config Reference](https://mypy.readthedocs.io/en/stable/config_file.html)
+- [Strict Mode](https://mypy.readthedocs.io/en/stable/command_line.html#cmdoption-mypy-strict)
+- [Type Annotations Guide](https://docs.python.org/3/library/typing.html)
+- [CI Integration](https://mypy.readthedocs.io/en/stable/integrations.html)

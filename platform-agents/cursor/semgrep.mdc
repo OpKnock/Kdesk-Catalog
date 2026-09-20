@@ -6,27 +6,27 @@ alwaysApply: false
 
 Finds bugs and security issues with Semgrep's pattern-based SAST across 30+ languages, including custom rules and CI integration.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (semgrep)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **semgrep** (security/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `semgrep scan --config auto .`, `semgrep scan --config custom.yml .`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — security context for `semgrep`
+- Domain: Finds bugs and security issues with Semgrep's pattern-based SAST across 30+ languages, including custom rules and CI integration.
+- **semgrep-scan**: Scan code with built-in or custom rule packs. — `semgrep scan --config auto .`
+- **custom-rules**: Write and test custom pattern rules. — `semgrep scan --config custom.yml .`
+- **ci-integration**: Run Semgrep CI with findings management. — `semgrep login`
+- Check `knowledge` and `prerequisites: semgrep`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `semgrep`
+- For `semgrep-scan`: Scan code with built-in or custom rule packs. — decide which checks to run
+- For `custom-rules`: Write and test custom pattern rules. — decide which checks to run
+- For `ci-integration`: Run Semgrep CI with findings management. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `semgrep` tools
+- Tools: `Glob`, `Grep`, `Read`, `Semgrep` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `semgrep:62704b03`
 
 # Semgrep
 

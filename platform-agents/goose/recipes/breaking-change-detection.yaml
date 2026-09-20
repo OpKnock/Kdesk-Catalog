@@ -2,33 +2,52 @@ title: Breaking Change Detection
 description: Detects breaking changes in OpenAPI specs with openapi-diff, Redocly lint, and changelog-based
   CI gates.
 version: 2.0.0
-instructions: "# Breaking Change Detection\n\nDetects breaking changes in OpenAPI specs with openapi-diff,\
-  \ Redocly lint, and changelog-based CI gates.\n\n## Instructions\n\n# Breaking Change Detection\n\n\
-  ## What this skill does\n\nDetects breaking changes in OpenAPI specs: openapi-diff classification, openapi-changes\
-  \ JSON output, Redocly lint gates, and git-based CI checks comparing released specs.\n\n## When to use\n\
-  \n- A PR modifies openapi.yaml; is it safe to merge?\n- Planning a v2 release\n- Enforcing additive-only\
-  \ changes in CI\n\n## Real commands\n\n```bash\n# Classify changes\nnpx openapi-diff old.yaml new.yaml\n\
-  \n# Fail CI on breaking changes\nnpx openapi-diff old.yaml new.yaml --fail-on incompatible\n\n# JSON\
-  \ analysis\nnpx openapi-changes compare old.yaml new.yaml --json | jq '.breaking'\n\n# Pull the released\
-  \ spec from git\n git show v1.0.0:openapi.yaml > old.yaml\n\n# Lint\nnpx @redocly/cli lint new.yaml\n\
-  \n# Validate\nnpx swagger-cli validate new.yaml\n```\n\nNote: ` git show` with a leading space is just\
-  \ shell formatting; use `git show` normally.\n\n## Testing\n\n- Add a test fixture pair: additive (pass)\
-  \ and breaking (fail) specs\n- Run openapi-diff in CI on every spec change\n\n## Best practices\n\n\
-  - Treat openapi-diff as advisory, Redocly as style enforcement\n- Require a changelog entry alongside\
-  \ breaking changes\n- Keep old.yaml as the last released tag, not main\n\n## Capabilities\n\n### openapi-diff\n\
-  Diff OpenAPI specs for breaking changes.\n\n**Commands:**\n- `npx openapi-diff old.yaml new.yaml`\n\
-  - `npx openapi-diff old.yaml new.yaml --output console --fail-on incompatible`\n- `npx openapi-changes\
-  \ compare old.yaml new.yaml`\n- `npx openapi-changes compare old.yaml new.yaml --json | jq '.breaking'`\n\
-  \n**Examples:**\n- npx openapi-diff old.yaml new.yaml | grep -E 'incompatible|breaking'\n- npx openapi-diff\
-  \ --fail-on incompatible old.yaml new.yaml && echo \"compatible\"\n- npx openapi-changes compare old.yaml\
-  \ new.yaml --json | jq '.breaking[].path'\n\n### redocly-lint\nLint specs and enforce API style rules\
-  \ in CI.\n\n**Commands:**\n- `npx @redocly/cli lint openapi.yaml`\n- `npx @redocly/cli lint --extends\
+instructions: "Detects breaking changes in OpenAPI specs with openapi-diff, Redocly lint, and changelog-based\
+  \ CI gates.\n\n## Agentic Workflow: Read -> Reason -> Act (breaking-change-detection)\n\nYou are **Breaking\
+  \ Change Detection** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\
+  \n### 1. Read — api context for `breaking-change-detection`\n- Domain: Detects breaking changes in OpenAPI\
+  \ specs with openapi-diff, Redocly lint, and changelog-based CI gates.\n- **openapi-diff**: Diff OpenAPI\
+  \ specs for breaking changes. — `npx openapi-diff old.yaml new.yaml`\n- **redocly-lint**: Lint specs\
+  \ and enforce API style rules in CI. — `npx @redocly/cli lint openapi.yaml`\n- **ci-gates**: Wire compat\
+  \ checks into CI. — `git diff --exit-code v1.0.0 v1.1.0 -- openapi.yaml`\n- Check `knowledge` and `prerequisites:\
+  \ git, npx`\n\n### 2. Reason — think for `breaking-change-detection`\n- For `openapi-diff`: Diff OpenAPI\
+  \ specs for breaking changes. — decide which checks to run\n- For `redocly-lint`: Lint specs and enforce\
+  \ API style rules in CI. — decide which checks to run\n- For `ci-gates`: Wire compat checks into CI.\
+  \ — decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for\
+  \ your inputs\n\n### 3. Act — execute with `breaking-change-detection` tools\n- Tools: `Glob`, `Grep`,\
+  \ `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write;\
+  \ record evidence (paths, checksums)\n- Fingerprint: `breaking-change-detection:cd80f7fe`\n\n# Breaking\
+  \ Change Detection\n\n## What this skill does\n\nDetects breaking changes in OpenAPI specs: openapi-diff\
+  \ classification, openapi-changes JSON output, Redocly lint gates, and git-based CI checks comparing\
+  \ released specs.\n\n## When to use\n\n- A PR modifies openapi.yaml; is it safe to merge?\n- Planning\
+  \ a v2 release\n- Enforcing additive-only changes in CI\n\n## Real commands\n\n```bash\n# Classify changes\n\
+  npx openapi-diff old.yaml new.yaml\n\n# Fail CI on breaking changes\nnpx openapi-diff old.yaml new.yaml\
+  \ --fail-on incompatible\n\n# JSON analysis\nnpx openapi-changes compare old.yaml new.yaml --json |\
+  \ jq '.breaking'\n\n# Pull the released spec from git\n git show v1.0.0:openapi.yaml > old.yaml\n\n\
+  # Lint\nnpx @redocly/cli lint new.yaml\n\n# Validate\nnpx swagger-cli validate new.yaml\n```\n\nNote:\
+  \ ` git show` with a leading space is just shell formatting; use `git show` normally.\n\n## Testing\n\
+  \n- Add a test fixture pair: additive (pass) and breaking (fail) specs\n- Run openapi-diff in CI on\
+  \ every spec change\n\n## Best practices\n\n- Treat openapi-diff as advisory, Redocly as style enforcement\n\
+  - Require a changelog entry alongside breaking changes\n- Keep old.yaml as the last released tag, not\
+  \ main\n\n## Capabilities\n\n### openapi-diff\nDiff OpenAPI specs for breaking changes.\n\n**Parameters:**\n\
+  - `old_spec` (string): Baseline spec\n- `new_spec` (string): Candidate spec\n- `fail_on` (string): Fail\
+  \ on 'incompatible' changes\n\n**Commands:**\n- `npx openapi-diff old.yaml new.yaml`\n- `npx openapi-diff\
+  \ old.yaml new.yaml --output console --fail-on incompatible`\n- `npx openapi-changes compare old.yaml\
+  \ new.yaml`\n- `npx openapi-changes compare old.yaml new.yaml --json | jq '.breaking'`\n\n**Examples:**\n\
+  - npx openapi-diff old.yaml new.yaml | grep -E 'incompatible|breaking'\n- npx openapi-diff --fail-on\
+  \ incompatible old.yaml new.yaml && echo \"compatible\"\n- npx openapi-changes compare old.yaml new.yaml\
+  \ --json | jq '.breaking[].path'\n\n### redocly-lint\nLint specs and enforce API style rules in CI.\n\
+  \n**Parameters:**\n- `extends` (string): Config to extend (recommended, minimal)\n- `format` (string):\
+  \ stylish, json\n\n**Commands:**\n- `npx @redocly/cli lint openapi.yaml`\n- `npx @redocly/cli lint --extends\
   \ recommended new.yaml`\n- `npx @redocly/cli lint --format=stylish new.yaml`\n- `npx @redocly/cli lint\
   \ --skip-rule operation-4xx-response new.yaml`\n\n**Examples:**\n- npx @redocly/cli lint --extends recommended\
   \ new.yaml\n- npx @redocly/cli lint --format=json new.yaml > lint.json\n- npx @redocly/cli lint new.yaml\
-  \ --skip-rule no-server-api.your-app.test\n\n### ci-gates\nWire compat checks into CI.\n\n**Commands:**\n\
-  - `git diff --exit-code v1.0.0 v1.1.0 -- openapi.yaml`\n- `npx swagger-cli validate new.yaml`\n- `git\
-  \ show v1.0.0:openapi.yaml > old.yaml`\n- `npx openapi-diff old.yaml new.yaml > compat.txt`\n\n**Examples:**\n\
-  - git show v1.0.0:openapi.yaml > old.yaml && npx openapi-diff old.yaml new.yaml\n- npx swagger-cli validate\
-  \ new.yaml\n- npx openapi-diff old.yaml new.yaml > compat.txt && grep -c incompatible compat.txt"
+  \ --skip-rule no-server-api.your-app.test\n\n### ci-gates\nWire compat checks into CI.\n\n**Parameters:**\n\
+  - `tag` (string): Git tag for the baseline spec\n- `spec_path` (string): Path to the spec in the repo\n\
+  \n**Commands:**\n- `git diff --exit-code v1.0.0 v1.1.0 -- openapi.yaml`\n- `npx swagger-cli validate\
+  \ new.yaml`\n- `git show v1.0.0:openapi.yaml > old.yaml`\n- `npx openapi-diff old.yaml new.yaml > compat.txt`\n\
+  \n**Examples:**\n- git show v1.0.0:openapi.yaml > old.yaml && npx openapi-diff old.yaml new.yaml\n-\
+  \ npx swagger-cli validate new.yaml\n- npx openapi-diff old.yaml new.yaml > compat.txt && grep -c incompatible\
+  \ compat.txt\n\n## References\n- [openapi-diff](https://github.com/OpenAPITools/openapi-diff)\n- [Redocly\
+  \ CLI](https://redocly.com/docs/cli/)\n- [openapi-changes](https://github.com/oasdiff/oasdiff)"
 prompt: Act as Breaking Change Detection and handle the task per the instructions.

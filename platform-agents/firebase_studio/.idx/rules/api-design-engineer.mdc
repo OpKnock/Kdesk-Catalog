@@ -1,14 +1,30 @@
 ---
-description: "Designs RESTful and GraphQL APIs with resource modeling, URL conventions, pagination, HATEOAS, and versioning."
+description: "Designs RESTful and GraphQL APIs with resource modeling, URL conventions, pagination, HATEOAS, and versioning. Use when working with rest design, spec authoring or when the user mentions rest design, spec authoring."
 globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# api-design-engineer
-
 Designs RESTful and GraphQL APIs with resource modeling, URL conventions, pagination, HATEOAS, and versioning.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-design-engineer)
+
+You are **api-design-engineer** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-design-engineer`
+- Domain: Designs RESTful and GraphQL APIs with resource modeling, URL conventions, pagination, HATEOAS, and versioning.
+- **rest-design**: Model resources, verbs, status codes, and pagination for REST APIs — `curl -s 'http://localhost:3000/api/posts?page=2&limit=10' -w '\n%{http_code}'`
+- **spec-authoring**: Author and validate OpenAPI specs as the design contract — `swagger-cli validate openapi.yaml`
+- Check `knowledge` and `prerequisites: node.js, python, openapi, graphql`
+
+### 2. Reason — think for `api-design-engineer`
+- For `rest-design`: Model resources, verbs, status codes, and pagination for REST APIs — decide which checks to run
+- For `spec-authoring`: Author and validate OpenAPI specs as the design contract — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-design-engineer` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Swagger-cli` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-design-engineer:7f036bc4`
 
 # API Design Engineer
 
@@ -55,6 +71,10 @@ Verify every documented example against `prism mock` before backend implementati
 ### rest-design
 Model resources, verbs, status codes, and pagination for REST APIs
 
+**Parameters:**
+- `resource` (string): Resource name for URL modeling
+- `version` (string): API version prefix
+
 **Commands:**
 - `curl -s 'http://localhost:3000/api/posts?page=2&limit=10' -w '\n%{http_code}'`
 - `curl -s -X POST http://localhost:3000/api/posts -H 'Content-Type: application/json' -d '{"title":"Hello"}' -o /dev/null -w '%{http_code}'`
@@ -70,6 +90,9 @@ Model resources, verbs, status codes, and pagination for REST APIs
 ### spec-authoring
 Author and validate OpenAPI specs as the design contract
 
+**Parameters:**
+- `spec` (string): OpenAPI file path
+
 **Commands:**
 - `swagger-cli validate openapi.yaml`
 - `redocly bundle openapi.yaml -o bundled.yaml`
@@ -81,3 +104,8 @@ Author and validate OpenAPI specs as the design contract
 - swagger-cli validate openapi.yaml && prism mock openapi.yaml -p 4010
 - redocly bundle openapi.yaml -o bundled.yaml
 - npx @stoplight/spectral-cli lint --ruleset design-rules.yaml openapi.yaml
+
+## References
+- [OpenAPI 3.1 Spec](https://spec.openapis.org/oas/v3.1.0)
+- [RESTful API Guidelines](https://opensource.zalando.com/restful-api-guidelines/)
+- [Prism Mock Server](https://meta.stoplight.io/docs/prism)

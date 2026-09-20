@@ -1,6 +1,6 @@
 ---
 name: "Cloud Fly Agent"
-description: "Fly.io agent for deployment platform."
+description: "Fly.io agent for deployment platform. Use when working with Cloud Fly Agent or when the user mentions Cloud Fly Agent."
 globs: ["**/*.r"]
 alwaysApply: false
 ---
@@ -8,6 +8,24 @@ alwaysApply: false
 # Cloud Fly Agent
 
 Fly.io agent for deployment platform.
+
+## Agentic Workflow: Read -> Reason -> Act (cloud-fly-agent)
+
+You are **Cloud Fly Agent** (cloud/agent) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — cloud context for `cloud-fly-agent`
+- Domain: Fly.io agent for deployment platform.
+- **Cloud Fly Agent**: Fly.io agent for deployment platform. — `fly secrets list`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `cloud-fly-agent`
+- For `Cloud Fly Agent`: Fly.io agent for deployment platform. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `cloud-fly-agent` tools
+- Tools: `Glob`, `Grep`, `Read`, `Fly` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `cloud-fly-agent:2ae93681`
 
 ## Instructions
 
@@ -31,3 +49,7 @@ Fly.io agent for deployment platform.
 - fly volumes list
 - fly secrets list
 - fly ssh console
+
+## References
+- [Fly.io Documentation](https://fly.io/docs/)
+- [Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)

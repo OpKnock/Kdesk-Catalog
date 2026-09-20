@@ -1,8 +1,22 @@
-# Soc2
-
 Readiness support for SOC 2 Type I/II: mapping Trust Services Criteria to controls and collecting evidence.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (soc2)
+
+You are **Soc2** (compliance/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — compliance context for `soc2`
+- Domain: Readiness support for SOC 2 Type I/II: mapping Trust Services Criteria to controls and collecting evidence.
+- **soc2-evidence**: Gather evidence for the five Trust Services Criteria categories — `gh api repos/$GITHUB_REPO/actions/workflows --paginate | jq '.workflows[].path'`
+- Check `knowledge` and `prerequisites: kubectl, terraform`
+
+### 2. Reason — think for `soc2`
+- For `soc2-evidence`: Gather evidence for the five Trust Services Criteria categories — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `soc2` tools
+- Tools: `Glob`, `Grep`, `Read`, `Gh`, `Terraform` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `soc2:09d06a4d`
 
 # SOC 2
 
@@ -67,6 +81,11 @@ assignments, and gaps flagged for the readiness call.
 ### soc2-evidence
 Gather evidence for the five Trust Services Criteria categories
 
+**Parameters:**
+- `paginate` (boolean): Fetch all pages of the GitHub API result
+- `report-path` (string): Output file for the evidence report
+- `no-color` (boolean): Plain terraform output for logs
+
 **Commands:**
 - `gh api repos/$GITHUB_REPO/actions/workflows --paginate | jq '.workflows[].path'`
 - `terraform plan -no-color -out=/tmp/plan.tfplan && terraform show -json /tmp/plan.tfplan`
@@ -78,3 +97,7 @@ Gather evidence for the five Trust Services Criteria categories
 - gh api repos/$GITHUB_REPO/actions/runs --paginate | jq '.workflow_runs[0:5]'
 - gitleaks detect --source . --report-path gitleaks-soc2.json
 - kubectl get secrets -A | grep -c -v NAME
+
+## References
+- [AICPA SOC 2 overview](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2)
+- [Trust Services Criteria](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2-soc-3-greater-than-trust-services-criteria)

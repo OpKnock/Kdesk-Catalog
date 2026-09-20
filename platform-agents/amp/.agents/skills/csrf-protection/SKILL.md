@@ -9,27 +9,25 @@ allowed-tools: "Glob Grep Read Bash(curl:*) Bash(node:*) Bash(npm:*)"
 
 Prevents cross-site request forgery on state-changing endpoints via double-submit cookie patterns, SameSite cookies, and curl-based validation.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (csrf-protection)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Csrf Protection** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -c cookies.txt -X GET http://localhost:8080/csrf-token`, `npm install csrf-csrf`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `csrf-protection`
+- Domain: Prevents cross-site request forgery on state-changing endpoints via double-submit cookie patterns, SameSite cookies, and curl-based validation.
+- **csrf-tokens**: Issue CSRF tokens and verify double-submit cookie patterns with curl — `curl -c cookies.txt -X GET http://localhost:8080/csrf-token`
+- **csrf-middleware**: Configure CSRF protection middleware and SameSite cookies — `npm install csrf-csrf`
+- Check `knowledge` and `prerequisites: node, npm`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `csrf-protection`
+- For `csrf-tokens`: Issue CSRF tokens and verify double-submit cookie patterns with curl — decide which checks to run
+- For `csrf-middleware`: Configure CSRF protection middleware and SameSite cookies — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `csrf-protection` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `csrf-protection:6eddb962`
 
 # CSRF Protection
 

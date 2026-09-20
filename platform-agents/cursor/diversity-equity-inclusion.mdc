@@ -6,27 +6,25 @@ alwaysApply: false
 
 Analyzes workforce DEI data with real tooling: org audit logs, survey analytics, representation metrics, and inclusive communication.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (diversity-equity-inclusion)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **diversity-equity-inclusion** (culture) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `gh api orgs/{org}/members --paginate | jq 'length'`, `jq 'group_by(.department) | map({dept: .[0].department, avg:`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — culture context for `diversity-equity-inclusion`
+- Domain: Analyzes workforce DEI data with real tooling: org audit logs, survey analytics, representation metrics, and inclusive communication.
+- **org-data-analytics**: Pull and analyze org and team composition data from GitHub. — `gh api orgs/{org}/members --paginate | jq 'length'`
+- **survey-and-text-analysis**: Process engagement survey data and audit language in code/docs. — `jq 'group_by(.department) | map({dept: .[0].department, avg: ([.[].score] | add `
+- Check `knowledge` and `prerequisites: greenhouse, lattic, slack, survey`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `diversity-equity-inclusion`
+- For `org-data-analytics`: Pull and analyze org and team composition data from GitHub. — decide which checks to run
+- For `survey-and-text-analysis`: Process engagement survey data and audit language in code/docs. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `diversity-equity-inclusion` tools
+- Tools: `Glob`, `Read`, `Gh`, `Bash`, `Grep` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `diversity-equity-inclusion:a5e7e6f9`
 
 # Diversity, Equity & Inclusion Analytics
 

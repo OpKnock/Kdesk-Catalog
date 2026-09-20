@@ -1,14 +1,30 @@
 ---
-description: "Expires, archives, and rotates API data with S3 lifecycle policies, MongoDB TTL indexes, and log rotation configs for compliance and cost control."
+description: "Expires, archives, and rotates API data with S3 lifecycle policies, MongoDB TTL indexes, and log rotation configs for compliance and cost control. Use when working with s3 lifecycle, mongo ttl, api or when the user mentions s3 lifecycle, mongo ttl, api."
 globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.sh"]
 alwaysApply: false
 ---
 
-# Data Retention
-
 Expires, archives, and rotates API data with S3 lifecycle policies, MongoDB TTL indexes, and log rotation configs for compliance and cost control.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (data-retention)
+
+You are **Data Retention** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `data-retention`
+- Domain: Expires, archives, and rotates API data with S3 lifecycle policies, MongoDB TTL indexes, and log rotation configs for compliance and cost control.
+- **s3-lifecycle**: Configure S3 bucket lifecycle policies for tiering and expiring objects — `aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-conf`
+- **mongo-ttl**: Use MongoDB TTL indexes and logrotate to expire API data and logs — `mongosh --quiet --eval 'db.events.createIndex({createdAt:1},{expireAfterSeconds:`
+- Check `knowledge` and `prerequisites: aws, logrotate, mongosh`
+
+### 2. Reason — think for `data-retention`
+- For `s3-lifecycle`: Configure S3 bucket lifecycle policies for tiering and expiring objects — decide which checks to run
+- For `mongo-ttl`: Use MongoDB TTL indexes and logrotate to expire API data and logs — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `data-retention` tools
+- Tools: `Glob`, `Grep`, `Read`, `Aws`, `Mongosh` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `data-retention:249123b7`
 
 # Data Retention
 
@@ -95,6 +111,10 @@ mongosh --quiet --eval 'db.events.getIndexes()' | jq '.[] | select(.expireAfterS
 ### s3-lifecycle
 Configure S3 bucket lifecycle policies for tiering and expiring objects
 
+**Parameters:**
+- `bucket` (string): S3 bucket name
+- `days` (string): Expiration or transition days
+
 **Commands:**
 - `aws s3api put-bucket-lifecycle-configuration --bucket my-bucket --lifecycle-configuration file://lifecycle.json`
 - `aws s3api get-bucket-lifecycle-configuration --bucket my-bucket`
@@ -109,6 +129,10 @@ Configure S3 bucket lifecycle policies for tiering and expiring objects
 ### mongo-ttl
 Use MongoDB TTL indexes and logrotate to expire API data and logs
 
+**Parameters:**
+- `expire_seconds` (string): TTL in seconds, e.g. 86400 for one day
+- `collection` (string): MongoDB collection to expire
+
 **Commands:**
 - `mongosh --quiet --eval 'db.events.createIndex({createdAt:1},{expireAfterSeconds:86400})'`
 - `mongosh --quiet --eval 'db.events.getIndexes()'`
@@ -119,3 +143,7 @@ Use MongoDB TTL indexes and logrotate to expire API data and logs
 - mongosh --quiet --eval 'db.events.createIndex({createdAt:1},{expireAfterSeconds:2592000})'
 - mongosh --quiet --eval 'db.events.getIndexes()' | jq
 - logrotate -d /etc/logrotate.d/api
+
+## References
+- [S3 Lifecycle Docs](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html)
+- [MongoDB TTL Indexes](https://www.mongodb.com/docs/manual/core/index-ttl/)

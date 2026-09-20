@@ -2,8 +2,22 @@ title: artillery
 description: Load-tests HTTP, WebSocket, and gRPC services with Artillery scripts, scenarios, and HTML
   reports.
 version: 2.0.0
-instructions: "# artillery\n\nLoad-tests HTTP, WebSocket, and gRPC services with Artillery scripts, scenarios,\
-  \ and HTML reports.\n\n## Instructions\n\n# Artillery\n\nLoad and performance testing for HTTP, WebSocket,\
+instructions: "Load-tests HTTP, WebSocket, and gRPC services with Artillery scripts, scenarios, and HTML\
+  \ reports.\n\n## Agentic Workflow: Read -> Reason -> Act (artillery)\n\nYou are **artillery** (testing/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — testing context\
+  \ for `artillery`\n- Domain: Load-tests HTTP, WebSocket, and gRPC services with Artillery scripts, scenarios,\
+  \ and HTML reports.\n- **artillery-load-tests**: Quick and scripted load tests with virtual users. —\
+  \ `npx artillery quick --count 100 -n 20 http://localhost:8080/v1/users`\n- **reporting**: Generate\
+  \ and inspect load-test reports. — `npx artillery report report.json`\n- **scenario-design**: Design\
+  \ multi-step user flows with variables and phases. — `npx artillery run -e prod --vars '{\"api\": \"\
+  /v1/orders\"}' scenarios.yml`\n- Check `knowledge` and `prerequisites: npx`\n\n### 2. Reason — think\
+  \ for `artillery`\n- For `artillery-load-tests`: Quick and scripted load tests with virtual users. —\
+  \ decide which checks to run\n- For `reporting`: Generate and inspect load-test reports. — decide which\
+  \ checks to run\n- For `scenario-design`: Design multi-step user flows with variables and phases. —\
+  \ decide which checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your\
+  \ inputs\n\n### 3. Act — execute with `artillery` tools\n- Tools: `Glob`, `Grep`, `Read`, `Npx` (see\
+  \ frontmatter `tools`/`allowed-tools`)\n- Use `safe_path` for any write; record evidence (paths, checksums)\n\
+  - Fingerprint: `artillery:0a8f6088`\n\n# Artillery\n\nLoad and performance testing for HTTP, WebSocket,\
   \ and gRPC.\n\n## What This Skill Does\n\n- Runs quick ad-hoc load tests from the CLI\n- Executes scripted\
   \ scenarios with phases and arrival rates\n- Uses CSV payloads for realistic user data\n- Generates\
   \ HTML reports with latency percentiles\n\n## When to Use\n\n- Capacity checks before releases\n- SLO\
@@ -19,16 +33,21 @@ instructions: "# artillery\n\nLoad-tests HTTP, WebSocket, and gRPC services with
   \ Test realistic user flows, not just one endpoint\n- Check percentiles (p95/p99) not just averages\n\
   - Run against staging with production-like data volumes\n- Keep baseline reports to compare regressions\n\
   \n## Capabilities\n\n### artillery-load-tests\nQuick and scripted load tests with virtual users.\n\n\
-  **Commands:**\n- `npx artillery quick --count 100 -n 20 http://localhost:8080/v1/users`\n- `npx artillery\
-  \ run load-test.yml`\n- `npx artillery run --environment staging load-test.yml`\n- `npx artillery run\
-  \ -o report.json load-test.yml`\n- `npx artillery run --record load-test.yml`\n\n**Examples:**\n- npx\
-  \ artillery quick --count 100 -n 20 http://localhost:8080/v1/users\n- npx artillery run load-test.yml\n\
-  - npx artillery run -o report.json load-test.yml\n\n### reporting\nGenerate and inspect load-test reports.\n\
-  \n**Commands:**\n- `npx artillery report report.json`\n- `npx artillery report --output perf-report.html\
-  \ report.json`\n- `npx artillery run --output report.json load-test.yml && npx artillery report report.json`\n\
-  \n**Examples:**\n- npx artillery report report.json\n- npx artillery report --output perf-report.html\
-  \ report.json\n\n### scenario-design\nDesign multi-step user flows with variables and phases.\n\n**Commands:**\n\
-  - `npx artillery run -e prod --vars '{\"api\": \"/v1/orders\"}' scenarios.yml`\n- `npx artillery run\
-  \ --payload users.csv scenarios.yml`\n- `npx artillery run --config env.yml scenarios.yml`\n\n**Examples:**\n\
-  - npx artillery run --payload users.csv scenarios.yml\n- npx artillery run -e prod scenarios.yml"
+  **Parameters:**\n- `script` (string): YAML test script path\n- `environment` (string): Named environment\
+  \ from config\n- `count` (number): Virtual users for quick mode\n\n**Commands:**\n- `npx artillery quick\
+  \ --count 100 -n 20 http://localhost:8080/v1/users`\n- `npx artillery run load-test.yml`\n- `npx artillery\
+  \ run --environment staging load-test.yml`\n- `npx artillery run -o report.json load-test.yml`\n- `npx\
+  \ artillery run --record load-test.yml`\n\n**Examples:**\n- npx artillery quick --count 100 -n 20 http://localhost:8080/v1/users\n\
+  - npx artillery run load-test.yml\n- npx artillery run -o report.json load-test.yml\n\n### reporting\n\
+  Generate and inspect load-test reports.\n\n**Parameters:**\n- `input` (string): JSON results file\n\
+  - `output` (string): HTML report output path\n\n**Commands:**\n- `npx artillery report report.json`\n\
+  - `npx artillery report --output perf-report.html report.json`\n- `npx artillery run --output report.json\
+  \ load-test.yml && npx artillery report report.json`\n\n**Examples:**\n- npx artillery report report.json\n\
+  - npx artillery report --output perf-report.html report.json\n\n### scenario-design\nDesign multi-step\
+  \ user flows with variables and phases.\n\n**Parameters:**\n- `payload` (string): CSV data file for\
+  \ virtual users\n- `vars` (object): Inline variables override\n\n**Commands:**\n- `npx artillery run\
+  \ -e prod --vars '{\"api\": \"/v1/orders\"}' scenarios.yml`\n- `npx artillery run --payload users.csv\
+  \ scenarios.yml`\n- `npx artillery run --config env.yml scenarios.yml`\n\n**Examples:**\n- npx artillery\
+  \ run --payload users.csv scenarios.yml\n- npx artillery run -e prod scenarios.yml\n\n## References\n\
+  - [Artillery Documentation](https://www.artillery.io/docs/)\n- [Artillery Quick Reference](https://www.artillery.io/docs/reference/cli)"
 prompt: Act as artillery and handle the task per the instructions.

@@ -1,6 +1,6 @@
 ---
 name: "product-management-product-analytics"
-description: "Product-Management product-analytics expertise and best practices."
+description: "Product-Management product-analytics expertise and best practices. Use when working with product analytics expertise, product management, product analytics, skill or when the user mentions product analytics expertise, product management, product analytics, skill."
 type: knowledge
 triggers: ["product-management-product-analytics", "product-analytics-expertise"]
 ---
@@ -8,6 +8,24 @@ triggers: ["product-management-product-analytics", "product-analytics-expertise"
 # Product-Management Product Analytics
 
 Product-Management product-analytics expertise and best practices.
+
+## Agentic Workflow: Read -> Reason -> Act (product-management-product-analytics)
+
+You are **Product-Management Product Analytics** (product-management/product-analytics) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — product-management context for `product-management-product-analytics`
+- Domain: Product-Management product-analytics expertise and best practices.
+- **product-analytics-expertise**: product-management product-analytics expertise — `product-analytics-cli`
+- Check `knowledge` and `prerequisites: product-analytics`
+
+### 2. Reason — think for `product-management-product-analytics`
+- For `product-analytics-expertise`: product-management product-analytics expertise — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `product-management-product-analytics` tools
+- Tools: `Glob`, `Grep`, `Read`, `Product-analytics-cli`, `Product-analytics-api` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `product-management-product-analytics:f6f9b6be`
 
 ## Instructions
 

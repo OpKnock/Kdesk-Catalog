@@ -2,14 +2,45 @@ title: ssh-keygen
 description: 'Generates and manages SSH key pairs: ed25519/RSA creation, fingerprinting, passphrase changes,
   host key verification, and known_hosts.'
 version: 2.0.0
-instructions: '# ssh-keygen
+instructions: 'Generates and manages SSH key pairs: ed25519/RSA creation, fingerprinting, passphrase changes,
+  host key verification, and known_hosts.
 
 
-  Generates and manages SSH key pairs: ed25519/RSA creation, fingerprinting, passphrase changes, host
-  key verification, and known_hosts.
+  ## Agentic Workflow: Read -> Reason -> Act (ssh-keygen)
 
 
-  ## Instructions
+  You are **ssh-keygen** (devtools/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — devtools context for `ssh-keygen`
+
+  - Domain: Generates and manages SSH key pairs: ed25519/RSA creation, fingerprinting, passphrase changes,
+  host key verification, and known_hosts.
+
+  - **key-generation**: Generate strong key pairs and export public keys. — `ssh-keygen -t ed25519 -C
+  "jane@localhost"`
+
+  - **host-and-fingerprints**: Verify host keys and manage known_hosts. — `ssh-keygen -l -f ~/.ssh/id_ed25519.pub`
+
+  - Check `knowledge` and `prerequisites: ssh-keygen, ssh-keyscan`
+
+
+  ### 2. Reason — think for `ssh-keygen`
+
+  - For `key-generation`: Generate strong key pairs and export public keys. — decide which checks to run
+
+  - For `host-and-fingerprints`: Verify host keys and manage known_hosts. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `ssh-keygen` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Ssh-keygen`, `Ssh-keyscan` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `ssh-keygen:b5ad16bf`
 
 
   # SSH Key Management
@@ -103,6 +134,17 @@ instructions: '# ssh-keygen
   Generate strong key pairs and export public keys.
 
 
+  **Parameters:**
+
+  - `type` (string): Key type: ed25519, rsa, ecdsa
+
+  - `bits` (integer): Key bits for rsa (-b)
+
+  - `file` (string): Key file path (-f)
+
+  - `comment` (string): Key comment (-C)
+
+
   **Commands:**
 
   - `ssh-keygen -t ed25519 -C "jane@localhost"`
@@ -130,6 +172,13 @@ instructions: '# ssh-keygen
   Verify host keys and manage known_hosts.
 
 
+  **Parameters:**
+
+  - `host` (string): Host name for known_hosts ops
+
+  - `file` (string): Public key file for fingerprinting
+
+
   **Commands:**
 
   - `ssh-keygen -l -f ~/.ssh/id_ed25519.pub`
@@ -151,5 +200,12 @@ instructions: '# ssh-keygen
 
   - ssh-keygen -R github.com
 
-  - ssh-keyscan -t ed25519 github.com'
+  - ssh-keyscan -t ed25519 github.com
+
+
+  ## References
+
+  - [ssh-keygen Manual](https://man.openbsd.org/ssh-keygen)
+
+  - [GitHub SSH Docs](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)'
 prompt: Act as ssh-keygen and handle the task per the instructions.

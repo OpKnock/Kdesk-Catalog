@@ -2,26 +2,37 @@ title: ruff
 description: 'Ultra-fast Python linter and formatter: runs hundreds of rules at once and fixes files in
   place.'
 version: 2.0.0
-instructions: "# ruff\n\nUltra-fast Python linter and formatter: runs hundreds of rules at once and fixes\
-  \ files in place.\n\n## Instructions\n\n# Ruff\n\nRust-based Python linter and formatter, 10-100x faster\
-  \ than Flake8+Black and\nfully compatible with them.\n\n## When to Use\n\n- Replacing a slow multi-tool\
-  \ lint stack (Flake8, Isort, Black)\n- CI lint gates with tiny runtimes\n- Auto-fixing a large legacy\
-  \ codebase\n\n## Real Commands\n\n```bash\n# Install\npip install ruff\n\n# Lint a directory\nruff check\
-  \ src/\n\n# Lint and auto-fix\nruff check --fix src/\n\n# Select specific rule sets\nruff check --select\
-  \ E,F,I,B,UP src/\n\n# Format (Black-compatible)\nruff format .\n\n# Verify formatting in CI\nruff format\
-  \ --check .\n\n# Summary counts per rule\nruff check --statistics src/\n\n# Show a diff of what fixes\
-  \ would change\nruff check --fix --diff src/\n```\n\n## Config (pyproject.toml)\n\n```toml\n[tool.ruff]\n\
-  target-version = \"py311\"\nline-length = 100\n\n[tool.ruff.lint]\nselect = [\"E\", \"F\", \"W\", \"\
-  I\", \"N\", \"UP\", \"B\", \"SIM\", \"C4\"]\nignore = [\"E501\"]\n\n[tool.ruff.format]\nquote-style\
-  \ = \"double\"\n```\n\n## CI\n\n```yaml\n- name: Ruff\n  run: |\n    ruff check .\n    ruff format --check\
-  \ .\n```\n\n## Pre-commit\n\n```yaml\nrepos:\n  - repo: https://github.com/astral-sh/ruff-pre-commit\n\
-  \    rev: v0.6.0\n    hooks:\n      - id: ruff\n        args: [--fix]\n      - id: ruff-format\n```\n\
-  \n## Best Practices\n\n- Use `--fix` in pre-commit, `ruff check .` without fix in CI\n- Prefer `select`\
-  \ over relying on default rule set\n- Pair with mypy for type checking; Ruff does not type check\n\n\
-  ## Example Response\n\nReports counts per rule code (e.g. F401 12 unused imports), what it auto-fixed,\n\
-  and lists remaining issues with file:line.\n\n## Capabilities\n\n### ruff-lint-and-format\nLint, auto-fix,\
-  \ and format Python code with Ruff\n\n**Commands:**\n- `ruff check src/`\n- `ruff check --fix src/`\n\
-  - `ruff format .`\n- `ruff check --select E,F,I --fix src/`\n- `ruff check --output-format=github .`\n\
-  \n**Examples:**\n- ruff check --statistics src/\n- ruff format --check .\n- ruff check --fix-only --diff\
-  \ src/"
+instructions: "Ultra-fast Python linter and formatter: runs hundreds of rules at once and fixes files\
+  \ in place.\n\n## Agentic Workflow: Read -> Reason -> Act (ruff)\n\nYou are **ruff** (code-quality/general)\
+  \ — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.\n\n### 1. Read — code-quality\
+  \ context for `ruff`\n- Domain: Ultra-fast Python linter and formatter: runs hundreds of rules at once\
+  \ and fixes files in place.\n- **ruff-lint-and-format**: Lint, auto-fix, and format Python code with\
+  \ Ruff — `ruff check src/`\n- Check `knowledge` and `prerequisites: ruff`\n\n### 2. Reason — think for\
+  \ `ruff`\n- For `ruff-lint-and-format`: Lint, auto-fix, and format Python code with Ruff — decide which\
+  \ checks to run\n- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs\n\n\
+  ### 3. Act — execute with `ruff` tools\n- Tools: `Glob`, `Grep`, `Read`, `Ruff` (see frontmatter `tools`/`allowed-tools`)\n\
+  - Use `safe_path` for any write; record evidence (paths, checksums)\n- Fingerprint: `ruff:6685563e`\n\
+  \n# Ruff\n\nRust-based Python linter and formatter, 10-100x faster than Flake8+Black and\nfully compatible\
+  \ with them.\n\n## When to Use\n\n- Replacing a slow multi-tool lint stack (Flake8, Isort, Black)\n\
+  - CI lint gates with tiny runtimes\n- Auto-fixing a large legacy codebase\n\n## Real Commands\n\n```bash\n\
+  # Install\npip install ruff\n\n# Lint a directory\nruff check src/\n\n# Lint and auto-fix\nruff check\
+  \ --fix src/\n\n# Select specific rule sets\nruff check --select E,F,I,B,UP src/\n\n# Format (Black-compatible)\n\
+  ruff format .\n\n# Verify formatting in CI\nruff format --check .\n\n# Summary counts per rule\nruff\
+  \ check --statistics src/\n\n# Show a diff of what fixes would change\nruff check --fix --diff src/\n\
+  ```\n\n## Config (pyproject.toml)\n\n```toml\n[tool.ruff]\ntarget-version = \"py311\"\nline-length =\
+  \ 100\n\n[tool.ruff.lint]\nselect = [\"E\", \"F\", \"W\", \"I\", \"N\", \"UP\", \"B\", \"SIM\", \"C4\"\
+  ]\nignore = [\"E501\"]\n\n[tool.ruff.format]\nquote-style = \"double\"\n```\n\n## CI\n\n```yaml\n- name:\
+  \ Ruff\n  run: |\n    ruff check .\n    ruff format --check .\n```\n\n## Pre-commit\n\n```yaml\nrepos:\n\
+  \  - repo: https://github.com/astral-sh/ruff-pre-commit\n    rev: v0.6.0\n    hooks:\n      - id: ruff\n\
+  \        args: [--fix]\n      - id: ruff-format\n```\n\n## Best Practices\n\n- Use `--fix` in pre-commit,\
+  \ `ruff check .` without fix in CI\n- Prefer `select` over relying on default rule set\n- Pair with\
+  \ mypy for type checking; Ruff does not type check\n\n## Example Response\n\nReports counts per rule\
+  \ code (e.g. F401 12 unused imports), what it auto-fixed,\nand lists remaining issues with file:line.\n\
+  \n## Capabilities\n\n### ruff-lint-and-format\nLint, auto-fix, and format Python code with Ruff\n\n\
+  **Parameters:**\n- `select` (string): Comma-separated rule codes to enable, e.g. E,F,I,B,UP\n- `output-format`\
+  \ (string): text, json, github, gitlab, sarif, or junit\n- `target-version` (string): Python version\
+  \ for the rules, e.g. py311\n\n**Commands:**\n- `ruff check src/`\n- `ruff check --fix src/`\n- `ruff\
+  \ format .`\n- `ruff check --select E,F,I --fix src/`\n- `ruff check --output-format=github .`\n\n**Examples:**\n\
+  - ruff check --statistics src/\n- ruff format --check .\n- ruff check --fix-only --diff src/\n\n## References\n\
+  - [Ruff docs](https://docs.astral.sh/ruff/)\n- [Ruff rules catalog](https://docs.astral.sh/ruff/rules/)"
 prompt: Act as ruff and handle the task per the instructions.

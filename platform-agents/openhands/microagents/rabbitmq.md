@@ -1,15 +1,31 @@
 ---
 name: "rabbitmq"
-description: "Operates RabbitMQ brokers: vhosts, users, queues, exchanges, and message flow with rabbitmqctl and rabbitmqadmin."
+description: "Operates RabbitMQ brokers: vhosts, users, queues, exchanges, and message flow with rabbitmqctl and rabbitmqadmin. Use when working with rabbitmqctl, rabbitmqadmin or when the user mentions rabbitmqctl, rabbitmqadmin."
 type: knowledge
 triggers: ["rabbitmq", "rabbitmqctl", "rabbitmqadmin"]
 ---
 
-# Rabbitmq
-
 Operates RabbitMQ brokers: vhosts, users, queues, exchanges, and message flow with rabbitmqctl and rabbitmqadmin.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (rabbitmq)
+
+You are **Rabbitmq** (messaging/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — messaging context for `rabbitmq`
+- Domain: Operates RabbitMQ brokers: vhosts, users, queues, exchanges, and message flow with rabbitmqctl and rabbitmqadmin.
+- **rabbitmqctl**: Administer the broker with rabbitmqctl. — `rabbitmqctl status`
+- **rabbitmqadmin**: Declare and inspect topology with rabbitmqadmin. — `rabbitmqadmin declare queue name=orders durable=true`
+- Check `knowledge` and `prerequisites: rabbitmqadmin, rabbitmqctl`
+
+### 2. Reason — think for `rabbitmq`
+- For `rabbitmqctl`: Administer the broker with rabbitmqctl. — decide which checks to run
+- For `rabbitmqadmin`: Declare and inspect topology with rabbitmqadmin. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `rabbitmq` tools
+- Tools: `Glob`, `Grep`, `Read`, `Rabbitmqctl`, `Rabbitmqadmin` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `rabbitmq:fdc20d3e`
 
 # RabbitMQ
 
@@ -76,6 +92,11 @@ Publish 1k messages to a topic exchange and verify binding fan-out with rabbitmq
 ### rabbitmqctl
 Administer the broker with rabbitmqctl.
 
+**Parameters:**
+- `vhost` (string): Virtual host name
+- `user` (string): RabbitMQ user
+- `formatter` (string): table, tsv, or json
+
 **Commands:**
 - `rabbitmqctl status`
 - `rabbitmqctl list_queues name messages consumers --formatter table`
@@ -91,6 +112,11 @@ Administer the broker with rabbitmqctl.
 ### rabbitmqadmin
 Declare and inspect topology with rabbitmqadmin.
 
+**Parameters:**
+- `queue` (string): Queue name
+- `exchange` (string): Exchange name
+- `routing_key` (string): Binding routing key
+
 **Commands:**
 - `rabbitmqadmin declare queue name=orders durable=true`
 - `rabbitmqadmin declare exchange name=order.events type=topic durable=true`
@@ -102,3 +128,8 @@ Declare and inspect topology with rabbitmqadmin.
 - rabbitmqadmin declare queue name=dead.orders durable=true --vhost=orders_vhost
 - rabbitmqadmin list bindings source destination routing_key
 - rabbitmqadmin get queue=orders ackmode=ack_requeue_true count=1 --format=raw_json
+
+## References
+- [RabbitMQ CLI](https://www.rabbitmq.com/docs/cli)
+- [RabbitMQ Exchanges](https://www.rabbitmq.com/docs/exchanges)
+- [RabbitMQ Queue Guide](https://www.rabbitmq.com/docs/queues)

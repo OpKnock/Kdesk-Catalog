@@ -1,6 +1,6 @@
 ---
 name: "bedrock-deployment"
-description: "Bedrock SDK deployment agent for ML Bedrock SDK deployment."
+description: "Bedrock SDK deployment agent for ML Bedrock SDK deployment. Use when working with Ml Bedrock Deploy Sdk, deployment or when the user mentions Ml Bedrock Deploy Sdk, deployment."
 type: knowledge
 triggers: ["bedrock-deployment", "ml bedrock deploy sdk"]
 ---
@@ -8,6 +8,24 @@ triggers: ["bedrock-deployment", "ml bedrock deploy sdk"]
 # Bedrock Deployment
 
 Bedrock SDK deployment agent for ML Bedrock SDK deployment.
+
+## Agentic Workflow: Read -> Reason -> Act (bedrock-deployment)
+
+You are **Bedrock Deployment** (ml/deployment) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — ml context for `bedrock-deployment`
+- Domain: Bedrock SDK deployment agent for ML Bedrock SDK deployment.
+- **Ml Bedrock Deploy Sdk**: Bedrock SDK deployment agent for ML Bedrock SDK deployment. — `docker build -t bedrock:latest .`
+- Check `knowledge` references before acting
+
+### 2. Reason — think for `bedrock-deployment`
+- For `Ml Bedrock Deploy Sdk`: Bedrock SDK deployment agent for ML Bedrock SDK deployment. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `bedrock-deployment` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Bedrock` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `bedrock-deployment:f44e1b8b`
 
 ## Instructions
 
@@ -29,3 +47,8 @@ Bedrock SDK deployment agent for ML Bedrock SDK deployment.
 **Examples:**
 - Server: python -m bedrock.server --port 8080
 - Docker: docker run -p 8080:8080 bedrock-server
+
+## References
+- [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
+- [Docker Documentation](https://docs.docker.com/)
+- [kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)

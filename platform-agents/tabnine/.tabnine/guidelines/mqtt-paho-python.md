@@ -1,8 +1,22 @@
-# Mqtt Paho Python
-
 Write MQTT clients in Python with paho-mqtt: connect, publish, subscribe with callbacks, and TLS settings.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (mqtt-paho-python)
+
+You are **Mqtt Paho Python** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `mqtt-paho-python`
+- Domain: Write MQTT clients in Python with paho-mqtt: connect, publish, subscribe with callbacks, and TLS settings.
+- **paho-python-client**: Install paho-mqtt and build pub/sub clients with the callback-based Python API. — `pip install paho-mqtt`
+- Check `knowledge` and `prerequisites: pip, python3`
+
+### 2. Reason — think for `mqtt-paho-python`
+- For `paho-python-client`: Install paho-mqtt and build pub/sub clients with the callback-based Python API. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `mqtt-paho-python` tools
+- Tools: `Glob`, `Grep`, `Read`, `Bash`, `Python3` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `mqtt-paho-python:89b6fee3`
 
 # Paho MQTT Python
 
@@ -72,6 +86,11 @@ c.connect("broker.example.com", 8883)
 ### paho-python-client
 Install paho-mqtt and build pub/sub clients with the callback-based Python API.
 
+**Parameters:**
+- `host` (string): Broker hostname
+- `port` (integer): Broker port
+- `qos` (integer): QoS level for publish
+
 **Commands:**
 - `pip install paho-mqtt`
 - `python3 -m pip show paho-mqtt`
@@ -83,3 +102,7 @@ Install paho-mqtt and build pub/sub clients with the callback-based Python API.
 - python3 sub.py -h broker.example.com -p 8883 --cafile ca.crt -t '#'
 - python3 pub.py -t orders/new -m '{"id":1}' -q 1
 - python3 -c "import paho.mqtt.client as mqtt; c=mqtt.Client(); c.connect('localhost',1883); c.publish('t','m'); c.disconnect()"
+
+## References
+- [Paho Python docs](https://www.eclipse.org/paho/index.php?page=clients/python/docs/index.php)
+- [paho-mqtt on PyPI](https://pypi.org/project/paho-mqtt/)

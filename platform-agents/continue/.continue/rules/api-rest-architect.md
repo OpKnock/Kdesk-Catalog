@@ -1,15 +1,31 @@
 ---
 name: "api-rest-architect"
-description: "Architects REST APIs with an OpenAPI-first workflow: spectral linting, Redocly validation, swagger-cli checks, and HTML reference docs generated from one contract."
+description: "Architects REST APIs with an OpenAPI-first workflow: spectral linting, Redocly validation, swagger-cli checks, and HTML reference docs generated from one contract. Use when working with openapi validation, docs generation or when the user mentions openapi validation, docs generation."
 globs: ["**/*.html", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
 alwaysApply: false
 ---
 
-# api-rest-architect
-
 Architects REST APIs with an OpenAPI-first workflow: spectral linting, Redocly validation, swagger-cli checks, and HTML reference docs generated from one contract.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (api-rest-architect)
+
+You are **api-rest-architect** (backend) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — backend context for `api-rest-architect`
+- Domain: Architects REST APIs with an OpenAPI-first workflow: spectral linting, Redocly validation, swagger-cli checks, and HTML reference docs generated from one contract.
+- **openapi-validation**: Lint and validate the OpenAPI contract before implementation — `npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml`
+- **docs-generation**: Generate interactive reference documentation from the spec — `npx @redocly/cli build-docs openapi.yaml -o api-docs.html`
+- Check `knowledge` and `prerequisites: node.js, python, openapi, express`
+
+### 2. Reason — think for `api-rest-architect`
+- For `openapi-validation`: Lint and validate the OpenAPI contract before implementation — decide which checks to run
+- For `docs-generation`: Generate interactive reference documentation from the spec — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `api-rest-architect` tools
+- Tools: `Glob`, `Grep`, `Read`, `Npx`, `Bash` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `api-rest-architect:f7dc25ac`
 
 # API REST Architect
 
@@ -53,6 +69,11 @@ npx @redocly/cli bundle openapi.yaml -o bundled.yaml
 ### openapi-validation
 Lint and validate the OpenAPI contract before implementation
 
+**Parameters:**
+- `spec` (string): Path to the OpenAPI document
+- `ruleset` (string): Spectral ruleset file
+- `extends` (string): Redocly config preset
+
 **Commands:**
 - `npx @stoplight/spectral-cli lint openapi.yaml -r .spectral.yml`
 - `npx @redocly/cli lint openapi.yaml --extends recommended`
@@ -75,3 +96,7 @@ Generate interactive reference documentation from the spec
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0)
+- [Spectral Documentation](https://docs.stoplight.io/docs/spectral/)

@@ -5,27 +5,23 @@ description: "Feature flag management: launch, evaluate, and retire flags with L
 
 Feature flag management: launch, evaluate, and retire flags with LaunchDarkly, toggling features by environment and user segments.
 
-## Agentic Workflow: Read -> Reason -> Act
+## Agentic Workflow: Read -> Reason -> Act (feature-flags)
 
-You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+You are **Feature Flags** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
 
-### 1. Read
-Gather context before acting:
-- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
-- Domain context: `curl -s -X POST https://api.launchdarkly.com/api/v2/flags/de`
-- Check `knowledge` references and prerequisites before proceeding
+### 1. Read — api context for `feature-flags`
+- Domain: Feature flag management: launch, evaluate, and retire flags with LaunchDarkly, toggling features by environment and user segments.
+- **flag-ops**: Create and toggle flags in LaunchDarkly, evaluate via the SDK, and audit flag usage. — `curl -s -X POST https://api.launchdarkly.com/api/v2/flags/default -H 'Authorizat`
+- Check `knowledge` and `prerequisites: grep, node`
 
-### 2. Reason
-Analyze and plan:
-- Compare current state vs desired state (drift, checksums, policy)
-- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
-- Decide: which capabilities/tools are needed, which can be skipped
+### 2. Reason — think for `feature-flags`
+- For `flag-ops`: Create and toggle flags in LaunchDarkly, evaluate via the SDK, and audit flag usage. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
 
-### 3. Act
-Execute with guards:
-- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
-- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
-- Record evidence: file paths, checksums, and tool outputs for verification
+### 3. Act — execute with `feature-flags` tools
+- Tools: `Glob`, `Read`, `Bash`, `Grep` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `feature-flags:6113d63b`
 
 # Feature Flags
 

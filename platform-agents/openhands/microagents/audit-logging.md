@@ -1,15 +1,33 @@
 ---
 name: "audit-logging"
-description: "Implements tamper-resistant audit logging on Linux: auditd configuration, rule creation, event search, and report generation."
+description: "Implements tamper-resistant audit logging on Linux: auditd configuration, rule creation, event search, and report generation. Use when working with auditd, search report, app logging, api or when the user mentions auditd, search report, app logging, api."
 type: knowledge
 triggers: ["audit-logging", "auditd", "search-report", "app-logging"]
 ---
 
-# Audit Logging
-
 Implements tamper-resistant audit logging on Linux: auditd configuration, rule creation, event search, and report generation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act (audit-logging)
+
+You are **Audit Logging** (api/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+### 1. Read — api context for `audit-logging`
+- Domain: Implements tamper-resistant audit logging on Linux: auditd configuration, rule creation, event search, and report generation.
+- **auditd**: Configure the Linux audit daemon and its rules. — `auditctl -w /etc/passwd -p wa -k password_changes`
+- **search-report**: Search audit logs and produce summaries. — `ausearch -k password_changes -ts today`
+- **app-logging**: Forward application audit events to syslog/journald. — `logger -t my-api "AUDIT user=alice action=delete resource=order/42"`
+- Check `knowledge` and `prerequisites: auditctl, augenrules, aureport, ausearch`
+
+### 2. Reason — think for `audit-logging`
+- For `auditd`: Configure the Linux audit daemon and its rules. — decide which checks to run
+- For `search-report`: Search audit logs and produce summaries. — decide which checks to run
+- For `app-logging`: Forward application audit events to syslog/journald. — decide which checks to run
+- Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+### 3. Act — execute with `audit-logging` tools
+- Tools: `Glob`, `Grep`, `Read`, `Auditctl`, `Systemctl` (see frontmatter `tools`/`allowed-tools`)
+- Use `safe_path` for any write; record evidence (paths, checksums)
+- Fingerprint: `audit-logging:d80dfe65`
 
 # Audit Logging
 
@@ -67,6 +85,11 @@ journalctl -u my-api --since "1 hour ago"
 ### auditd
 Configure the Linux audit daemon and its rules.
 
+**Parameters:**
+- `watch_path` (string): File or directory to watch
+- `permissions` (string): Permission filter: r, w, x, a
+- `key` (string): Audit rule key (max 32 chars)
+
 **Commands:**
 - `auditctl -w /etc/passwd -p wa -k password_changes`
 - `auditctl -l`
@@ -81,6 +104,11 @@ Configure the Linux audit daemon and its rules.
 
 ### search-report
 Search audit logs and produce summaries.
+
+**Parameters:**
+- `key` (string): Rule key to filter by
+- `time_start` (string): Start time (-ts), e.g. today or 09:00
+- `time_end` (string): End time (-te)
 
 **Commands:**
 - `ausearch -k password_changes -ts today`
@@ -97,6 +125,10 @@ Search audit logs and produce summaries.
 ### app-logging
 Forward application audit events to syslog/journald.
 
+**Parameters:**
+- `tag` (string): Syslog tag (-t) for the application
+- `message` (string): Audit event message
+
 **Commands:**
 - `logger -t my-api "AUDIT user=alice action=delete resource=order/42"`
 - `journalctl -u my-api --since "1 hour ago"`
@@ -107,3 +139,8 @@ Forward application audit events to syslog/journald.
 - logger -t my-api "AUDIT user=alice action=export resource=reports/2026"
 - journalctl -u my-api -p err -n 100
 - journalctl -t my-api --output=json-pretty
+
+## References
+- [auditd Manual](https://linux.die.net/man/8/auditd)
+- [ausearch Manual](https://linux.die.net/man/8/ausearch)
+- [OWASP Logging Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html)

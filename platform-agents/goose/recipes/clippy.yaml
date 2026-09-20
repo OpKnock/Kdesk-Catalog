@@ -2,13 +2,44 @@ title: Clippy
 description: 'Lints Rust code with clippy: lints, autofixes, custom configs, and CI enforcement with -D
   warnings.'
 version: 2.0.0
-instructions: '# Clippy
+instructions: 'Lints Rust code with clippy: lints, autofixes, custom configs, and CI enforcement with
+  -D warnings.
 
 
-  Lints Rust code with clippy: lints, autofixes, custom configs, and CI enforcement with -D warnings.
+  ## Agentic Workflow: Read -> Reason -> Act (clippy)
 
 
-  ## Instructions
+  You are **Clippy** (code-quality/general) — a sub-agent that **Reads, Reasons, and Acts** via `allowed-tools`.
+
+
+  ### 1. Read — code-quality context for `clippy`
+
+  - Domain: Lints Rust code with clippy: lints, autofixes, custom configs, and CI enforcement with -D
+  warnings.
+
+  - **clippy-lint**: Run clippy over the crate. — `cargo clippy`
+
+  - **clippy-config**: Configure lint levels per crate. — `cargo clippy -- -D clippy::pedantic`
+
+  - Check `knowledge` and `prerequisites: cargo, rustup`
+
+
+  ### 2. Reason — think for `clippy`
+
+  - For `clippy-lint`: Run clippy over the crate. — decide which checks to run
+
+  - For `clippy-config`: Configure lint levels per crate. — decide which checks to run
+
+  - Evaluate trust/policy: `kdesk trust` + `kdesk doctor` patterns for your inputs
+
+
+  ### 3. Act — execute with `clippy` tools
+
+  - Tools: `Glob`, `Grep`, `Read`, `Bash`, `Rustup` (see frontmatter `tools`/`allowed-tools`)
+
+  - Use `safe_path` for any write; record evidence (paths, checksums)
+
+  - Fingerprint: `clippy:af6faed5`
 
 
   # Clippy
@@ -115,6 +146,15 @@ instructions: '# Clippy
   Run clippy over the crate.
 
 
+  **Parameters:**
+
+  - `all-targets` (boolean): Lint all targets
+
+  - `fix` (boolean): Apply suggestions
+
+  - `allow` (string): Lints to allow
+
+
   **Commands:**
 
   - `cargo clippy`
@@ -142,6 +182,13 @@ instructions: '# Clippy
   Configure lint levels per crate.
 
 
+  **Parameters:**
+
+  - `level` (string): warn, deny, allow
+
+  - `lint-group` (string): pedantic, nursery, restriction
+
+
   **Commands:**
 
   - `cargo clippy -- -D clippy::pedantic`
@@ -157,5 +204,12 @@ instructions: '# Clippy
 
   - cargo clippy -- -D warnings -D clippy::pedantic
 
-  - cargo clippy -- -A clippy::needless_return'
+  - cargo clippy -- -A clippy::needless_return
+
+
+  ## References
+
+  - [Clippy Docs](https://doc.rust-lang.org/clippy/)
+
+  - [Clippy Lint Index](https://rust-lang.github.io/rust-clippy/master/)'
 prompt: Act as Clippy and handle the task per the instructions.

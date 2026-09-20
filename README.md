@@ -456,6 +456,6 @@ MIT © [Kdesk](https://github.com/OpKnock)
 
 **[⭐ Star this repo](https://github.com/OpKnock/Kdesk-Catalog)** if you find it useful!
 
-Built with ❤️ for AI developers everywhere.
+
 
 </div>

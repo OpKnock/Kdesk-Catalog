@@ -1,12 +1,12 @@
 ---
 trigger: glob
-description: "Implement it."
+description: "Track database changes, access logs, and compliance audits."
 globs: ["**/*.go", "**/*.r", "**/*.sql"]
 ---
 
 # Database Auditing
 
-Implement it.
+Track database changes, access logs, and compliance audits.
 
 ## Instructions
 

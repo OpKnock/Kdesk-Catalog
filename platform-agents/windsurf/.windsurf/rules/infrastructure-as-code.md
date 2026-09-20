@@ -1,12 +1,12 @@
 ---
 trigger: glob
-description: "Write it."
+description: "Manage infrastructure as code with Terraform, Pulumi, and GitOps."
 globs: ["**/*.r", "**/*.tf"]
 ---
 
 # Infrastructure as Code
 
-Write it.
+Manage infrastructure as code with Terraform, Pulumi, and GitOps.
 
 ## Instructions
 

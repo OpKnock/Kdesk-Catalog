@@ -1,13 +1,13 @@
 ---
 name: "identity-federation"
-description: "Implement it."
+description: "Set up SAML/OIDC federation with IdP integration and SSO flows."
 tools: ["Bash", "Read", "Write", "Edit"]
 model: "inherit"
 ---
 
 # Identity Federation
 
-Implement it.
+Set up SAML/OIDC federation with IdP integration and SSO flows.
 
 ## Instructions
 

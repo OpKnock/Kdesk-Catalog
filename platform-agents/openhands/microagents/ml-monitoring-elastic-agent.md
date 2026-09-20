@@ -1,0 +1,31 @@
+---
+name: "ml-monitoring-elastic-agent"
+description: "Elasticsearch ML monitoring agent. Manages ML model monitoring with Elasticsearch."
+type: knowledge
+triggers: ["ml-monitoring-elastic-agent", "ml monitoring elastic agent"]
+---
+
+# Ml Monitoring Elastic Agent
+
+Elasticsearch ML monitoring agent. Manages ML model monitoring with Elasticsearch.
+
+## Instructions
+
+Elasticsearch ML monitoring specialist. Call on this agent to monitor ML model infrastructure backed by Elasticsearch. Workflow: check overall cluster health with `curl -X GET 'localhost:9200/_cat/health?v'`, detailed status with `curl -X GET 'localhost:9200/_cluster/health'`, enumerate indices (model artifacts, logs, metrics) with `curl -X GET 'localhost:9200/_cat/indices?v'`, and inspect node stats with `curl -X GET 'localhost:9200/_nodes/stats'`. Key behaviors: `_cat/health` returning red/yellow status or the cluster not answering on 9200 are the top failure modes; check the cluster status before index-level queries, and confirm index names match the expected model/observability indices. Report cluster health status, index list with counts, node stats summary, and any degraded shards or missing indices.
+
+## Capabilities
+
+### Ml Monitoring Elastic Agent
+Elasticsearch ML monitoring agent. Manages ML model monitoring with Elasticsearch.
+
+**Commands:**
+- `curl -X GET 'localhost:9200/_nodes/stats'`
+- `curl -X GET 'localhost:9200/_cluster/health'`
+- `curl -X GET 'localhost:9200/_cat/indices?v'`
+- `curl -X GET 'localhost:9200/_cat/health?v'`
+
+**Examples:**
+- curl -X GET 'localhost:9200/_cat/health?v'
+- curl -X GET 'localhost:9200/_cat/indices?v'
+- curl -X GET 'localhost:9200/_cluster/health'
+- curl -X GET 'localhost:9200/_nodes/stats'

@@ -1,0 +1,35 @@
+title: sla-slo-sli
+description: Defines and measures service-level objectives with Prometheus SLIs, error-budget policies,
+  and promtool rule validation.
+version: 2.0.0
+instructions: "# sla-slo-sli\n\nDefines and measures service-level objectives with Prometheus SLIs, error-budget\
+  \ policies, and promtool rule validation.\n\n## Instructions\n\n# SLA / SLO / SLI\n\nTurn availability\
+  \ and latency targets into measured, alertable SLOs.\n\n## What This Skill Does\n\n- Translates business\
+  \ targets into SLIs and SLO windows\n- Writes Prometheus recording rules for ratios and error budgets\n\
+  - Validates rules and tests with promtool\n- Sets burn-rate alerts for fast page-on-alert behavior\n\
+  \n## When to Use\n\n- Defining service-level targets for a new service\n- Auditing whether current SLIs\
+  \ are measured correctly\n- Tuning alerts to fire on error-budget burn\n\n## Real Commands\n\n```bash\n\
+  # Validate and test rules\npromtool check rules slo-rules.yml\npromtool test rules slo-tests.yml\n\n\
+  # Check current SLO state\ncurl -s 'http://localhost:9090/api/v1/query?query=slo:availability_ratio:ratio_rate1h'\
+  \ | jq .\ncurl -s 'http://localhost:9090/api/v1/query?query=error_budget_burn' | jq .\n```\n\n## Sample\
+  \ SLO Rules\n\n```yaml\ngroups:\n  - name: slo-api-availability\n    rules:\n      - record: slo:http_errors:ratio_rate1h\n\
+  \        expr: |\n          sum(rate(http_requests_total{job=\"api\", status=~\"5..\"}[1h]))\n     \
+  \     /\n          sum(rate(http_requests_total{job=\"api\"}[1h]))\n      - record: error_budget_burn\n\
+  \        expr: slo:http_errors:ratio_rate1h / (1 - 0.995)\n```\n\n## Alert Levels\n\n- 1x budget burn\
+  \ for 6h: ticket-worthy degradation\n- 5x burn for 1h: page\n- 15x burn for 10m: page immediately\n\n\
+  ## Best Practices\n\n- Measure SLIs from the user's perspective (edge probes, not server logs)\n- Keep\
+  \ windows to 28-30 days aligned with error-budget reviews\n- Burn-rate alerts beat flat threshold alerts\n\
+  - Document SLOs in the service catalog with the owning team\n- Review budgets weekly; adjust targets\
+  \ only by policy, not silently\n\n## Capabilities\n\n### slo-rule-authoring\nAuthor and validate Prometheus\
+  \ SLO rules and alerts.\n\n**Commands:**\n- `promtool check rules slo-rules.yml`\n- `promtool test rules\
+  \ slo-tests.yml`\n- `promtool query 'http_request_duration_seconds_bucket{le=\"0.5\"}'`\n- `promtool\
+  \ query range 'up' --start=2024-01-01T00:00:00Z --end=2024-01-02T00:00:00Z --step=1h`\n\n**Examples:**\n\
+  - promtool check rules slo-rules.yml\n- promtool test rules slo-tests.yml\n- promtool query 'sum(rate(http_requests_total{job=\"\
+  api\"}[5m]))'\n\n### slo-inspection\nQuery SLO state and error budgets from running Prometheus.\n\n\
+  **Commands:**\n- `curl -s 'http://localhost:9090/api/v1/query?query=slo:availability_ratio:ratio_rate1h'\
+  \ | jq .`\n- `curl -s 'http://localhost:9090/api/v1/query?query=error_budget_burn' | jq .`\n- `curl\
+  \ -s 'http://localhost:9090/api/v1/targets' | jq '.data.activeTargets | length'`\n- `curl -s 'http://localhost:9090/api/v1/query_range?query=up&start=...&end=...&step=300'\
+  \ | jq .`\n\n**Examples:**\n- curl -s 'http://localhost:9090/api/v1/query?query=slo:availability_ratio:ratio_rate1h'\
+  \ | jq -r '.data.result[0].value[1]'\n- curl -s 'http://localhost:9090/api/v1/query?query=error_budget_burn'\
+  \ | jq ."
+prompt: Act as sla-slo-sli and handle the task per the instructions.

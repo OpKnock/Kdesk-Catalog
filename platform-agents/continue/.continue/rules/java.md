@@ -1,0 +1,98 @@
+---
+name: "Java"
+description: "Develops Java backend services with Maven/Gradle, Spring Boot, and the JVM toolchain including build, test, and packaging."
+globs: ["**/*.java", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# Java
+
+Develops Java backend services with Maven/Gradle, Spring Boot, and the JVM toolchain including build, test, and packaging.
+
+## Instructions
+
+# Java
+
+Backend services on the JVM with Maven or Gradle.
+
+## When to Use
+
+- Enterprise services with Spring Boot or Micronaut
+- Long-lived services needing strong typing and tooling
+- High-throughput apps where JVM GC tuning matters
+- Teams already standardized on JVM tooling
+
+## Maven Commands
+
+```bash
+mvn clean package
+mvn test
+mvn spring-boot:run
+mvn dependency:tree
+mvn install -DskipTests
+mvn test -Dtest=OrderServiceTest
+```
+
+## Gradle Commands
+
+```bash
+gradle build
+gradle test --tests "com.example.OrderTest"
+gradle bootRun
+gradle dependencies
+gradle bootJar
+```
+
+## Spring Boot Example
+
+```java
+@RestController
+public class HealthController {
+
+    @GetMapping("/health")
+    public Map<String, String> health() {
+        return Map.of("status", "ok");
+    }
+}
+```
+
+## Best Practices
+
+- Pin JDK and build tool versions for reproducible builds
+- Keep builds fast with -T (Gradle) or parallel modules
+- Use dependency:tree / gradle dependencies to audit transitive deps
+- Prefer records and sealed types for immutable DTOs
+- Containerize with a multi-stage build; JRE base image is enough
+- Enable failfast testing in CI with specific test filters
+
+## Capabilities
+
+### maven-build
+Build and test Maven projects.
+
+**Commands:**
+- `mvn clean package`
+- `mvn test`
+- `mvn spring-boot:run`
+- `mvn dependency:tree`
+- `mvn install -DskipTests`
+
+**Examples:**
+- mvn clean package -DskipTests
+- mvn test -Dtest=OrderServiceTest
+- mvn versions:display-dependency-updates
+
+### gradle-build
+Build and test Gradle projects.
+
+**Commands:**
+- `gradle build`
+- `gradle test`
+- `gradle bootRun`
+- `gradle dependencies`
+- `gradle clean build`
+
+**Examples:**
+- gradle test --tests "com.example.OrderTest"
+- gradle build -x test
+- gradle bootJar

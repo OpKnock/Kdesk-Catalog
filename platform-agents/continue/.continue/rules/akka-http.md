@@ -1,0 +1,99 @@
+---
+name: "Akka Http"
+description: "Builds streaming, reactive HTTP services in Scala with Akka HTTP: route DSL, JSON marshalling, TestKit testing, and sbt workflows."
+globs: ["**/*.java", "**/*.json", "**/*.r", "**/*.scala", "**/*.sh"]
+alwaysApply: false
+---
+
+# Akka Http
+
+Builds streaming, reactive HTTP services in Scala with Akka HTTP: route DSL, JSON marshalling, TestKit testing, and sbt workflows.
+
+## Instructions
+
+# Akka HTTP
+
+## What this skill does
+
+Creates reactive HTTP services in Scala with Akka HTTP: bootstrapping via giter8, route DSL composition, JSON marshalling of case classes, TestKit testing, and sbt-assembly packaging.
+
+## When to use
+
+- A streaming, backpressure-aware REST API in Scala
+- Adding WebSockets or SSE to an actor system
+- Refactoring a Play app into lighter Akka HTTP routes
+
+## Real commands
+
+```bash
+sbt new akka/akka-http-quickstart-scala.g8 --name=my-api
+
+sbt compile
+sbt run
+curl http://localhost:8080/hello?name=world
+
+sbt test
+sbt "testOnly com.acme.UserRouteSpec"
+
+sbt assembly
+java -jar target/scala-2.13/my-api-assembly-0.1.0.jar
+```
+
+## Route example
+
+```scala
+import akka.http.scaladsl.server.Directives._
+
+val route =
+  pathPrefix("api") {
+    get {
+      path("users" / LongNumber) { id =>
+        complete(s"user $id")
+      }
+    }
+  }
+```
+
+## Testing
+
+- Use akka-http-testkit + scalatest: `Post("/users") ~> route ~> check`
+- Assert status and JSON with responseAs[String] or a marshaller
+
+## Best practices
+
+- Put routes in traits that can be mixed into tests
+- Use typed marshalling instead of raw strings
+- Pin Akka versions in build.sbt
+- Prefer pipelining/backlog tuning on the HttpServer for production
+
+## Capabilities
+
+### project-scaffold
+Create an Akka HTTP project from the giter8 template and manage deps.
+
+**Commands:**
+- `sbt new akka/akka-http-quickstart-scala.g8`
+- `sbt update`
+- `sbt compile`
+- `sbt run`
+- `curl http://localhost:8080/hello`
+
+**Examples:**
+- sbt new akka/akka-http-quickstart-scala.g8 --name=my-api
+- sbt "runMain com.acme.Main 8080"
+- curl http://localhost:8080/hello?name=world
+
+### test-and-build
+Test routes with akka-http-testkit, package, and run in CI.
+
+**Commands:**
+- `sbt test`
+- `sbt "testOnly com.acme.RouteSpec"`
+- `sbt assembly`
+- `sbt clean test assembly`
+- `java -jar target/scala-2.13/my-api-assembly-0.1.0.jar`
+
+**Examples:**
+- sbt test
+- sbt assembly && java -jar target/scala-2.13/my-api-assembly-0.1.0.jar
+- sbt "testOnly *HealthSpec*"

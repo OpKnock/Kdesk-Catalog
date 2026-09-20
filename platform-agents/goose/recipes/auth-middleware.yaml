@@ -1,0 +1,31 @@
+title: Auth Middleware
+description: 'Implements authentication middleware: JWT verification with jsonwebtoken, Passport strategies,
+  oauth2-proxy for edge auth, and token lifecycle checks.'
+version: 2.0.0
+instructions: "# Auth Middleware\n\nImplements authentication middleware: JWT verification with jsonwebtoken,\
+  \ Passport strategies, oauth2-proxy for edge auth, and token lifecycle checks.\n\n## Instructions\n\n\
+  # Auth Middleware\n\nAuthentication middleware implementation.\n\n## What This Skill Does\n- Verifies\
+  \ JWTs on requests\n- Extracts user context from tokens\n- Rejects missing/expired credentials\n\n##\
+  \ When to Use\n- Protecting API routes\n- Adding SSO with oauth2-proxy\n- Standardizing auth across\
+  \ services\n\n## Real Commands\n\n```bash\nnpm install jsonwebtoken express\nnode -e \"const jwt=require('jsonwebtoken');\
+  \ const t=jwt.sign({sub:'user-1'},'s3cret',{expiresIn:'1h'}); console.log(t)\"\ncurl -s -o /dev/null\
+  \ -w '%{http_code}\\n' -H \"Authorization: Bearer $TOKEN\" http://localhost:3000/api/me\n```\n\n## Middleware\
+  \ Example\n\n```js\nfunction requireAuth(req, res, next) {\n  const header = req.get('Authorization')\
+  \ || '';\n  const token = header.replace('Bearer ', '');\n  try {\n    req.user = jwt.verify(token,\
+  \ SECRET);\n    next();\n  } catch {\n    res.sendStatus(401);\n  }\n}\n```\n\n## Testing\n- Test missing,\
+  \ invalid, and expired tokens\n- Verify user context on protected routes\n- Test role-based access paths\n\
+  \n\n## Best Practices\n- Always verify expiry and signature\n- Use RS256 for production issuance\n-\
+  \ Return 401 uniformly for auth failures\n\n## Capabilities\n\n### jwt-middleware\nVerify JWTs in request\
+  \ middleware\n\n**Commands:**\n- `npm install jsonwebtoken express`\n- `node -e \"const jwt=require('jsonwebtoken');\
+  \ const t=jwt.sign({sub:'user-1',role:'admin'},'s3cret',{expiresIn:'1h'}); console.log(t)\"`\n- `node\
+  \ -e \"const jwt=require('jsonwebtoken'); const t=jwt.sign({sub:'user-1'},'s3cret',{expiresIn:5}); setTimeout(()=>{try{jwt.verify(t,'s3cret')}catch(e){console.log('expired:',e.name)}},6000)\"\
+  `\n- `curl -s -o /dev/null -w '%{http_code}\\n' -H \"Authorization: Bearer $TOKEN\" http://localhost:3000/api/me`\n\
+  - `curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/api/me`\n\n**Examples:**\n- jwt.sign\
+  \ issues tokens with claims\n- jwt.verify validates signature and expiry\n- curl with/without tokens\
+  \ tests enforcement\n\n### passport-oauth\nAuthenticate with Passport and oauth2-proxy\n\n**Commands:**\n\
+  - `npm install passport passport-jwt`\n- `node -e \"const p=require('passport'); console.log(typeof\
+  \ p.authenticate)\"`\n- `docker run -d -p 4180:4180 bitnami/oauth2-proxy --provider github --upstream\
+  \ http://localhost:3000 --email-domain example.com --client-id $CLIENT_ID --client-secret $CLIENT_SECRET`\n\
+  - `curl -s -o /dev/null -w '%{http_code}\\n' -H \"Authorization: Bearer invalid\" http://localhost:4180/oauth2/start`\n\
+  \n**Examples:**\n- general-cli --help\n- general-api --help"
+prompt: Act as Auth Middleware and handle the task per the instructions.

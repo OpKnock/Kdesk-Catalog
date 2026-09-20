@@ -1,0 +1,50 @@
+title: Kafka Streams
+description: 'Build and run Kafka Streams applications: topology processing, state-store changelogs, application
+  resets, and output topic verification.'
+version: 2.0.0
+instructions: "# Kafka Streams\n\nBuild and run Kafka Streams applications: topology processing, state-store\
+  \ changelogs, application resets, and output topic verification.\n\n## Instructions\n\n# Kafka Streams\n\
+  \nBuild stateful stream-processing apps on top of Kafka.\n\n## What this skill does\n\n- Runs Kafka\
+  \ Streams topologies built with the DSL (map, groupBy, count).\n- Manages state-store changelogs and\
+  \ repartition topics.\n- Resets applications for replays and verification of outputs.\n\n## When to\
+  \ use\n\n- Real-time aggregations (counts, averages, windows).\n- Enrichment/filtering pipelines that\
+  \ stay within Kafka.\n- Exactly-once processing semantics with the Streams DSL.\n\n## Real commands\n\
+  \n```bash\n# Run the app\njava -jar build/libs/kafka-streams-demo.jar config/streams.properties\n./gradlew\
+  \ run\n\n# List Streams internal topics\nkafka-topics.sh --bootstrap-server localhost:9092 --list |\
+  \ grep -E 'changelog|repartition'\n\n# Reset the app (stop it first) to replay from input topics\nkafka-streams-application-reset.sh\
+  \ --bootstrap-server localhost:9092 \\\n  --application-id wordcount-app \\\n  --input-topics lines\
+  \ \\\n  --intermediate-topics wordcount-store-changelog\n\n# Force reset when regular reset is blocked\n\
+  kafka-streams-application-reset.sh --bootstrap-server localhost:9092 \\\n  --application-id wordcount-app\
+  \ --force\n\n# Verify output (keys + values)\nkafka-console-consumer.sh --bootstrap-server localhost:9092\
+  \ \\\n  --topic wordcount-output --from-beginning \\\n  --property print.key=true --property print.value=true\n\
+  \n# Group state of the streams app\nkafka-consumer-groups.sh --bootstrap-server localhost:9092 \\\n\
+  \  --describe --group wordcount-app\n```\n\n## Topology example (WordCount)\n\n```java\nStreamsBuilder\
+  \ builder = new StreamsBuilder();\nKStream<String, String> lines = builder.stream(\"lines\");\nlines\n\
+  \  .flatMapValues(line -> Arrays.asList(line.toLowerCase().split(\" \")))\n  .groupBy((key, word) ->\
+  \ word)\n  .count(Materialized.as(\"wordcount-store\"))\n  .toStream()\n  .to(\"wordcount-output\",\
+  \ Produced.with(Serdes.String(), Serdes.Long()));\n```\n\n## streams.properties example\n\n```properties\n\
+  application.id=wordcount-app\nbootstrap.servers=localhost:9092\ndefault.key.serde=org.apache.kafka.common.serialization.Serdes$StringSerde\n\
+  default.value.serde=org.apache.kafka.common.serialization.Serdes$StringSerde\nprocessing.guarantee=exactly_once_v2\n\
+  ```\n\n## Testing\n\n```bash\n# Feed input, watch output\necho 'the quick brown fox' | kafka-console-producer.sh\
+  \ --bootstrap-server localhost:9092 --topic lines\nkafka-console-consumer.sh --bootstrap-server localhost:9092\
+  \ --topic wordcount-output --from-beginning --property print.key=true\n```\n\n## Best practices\n\n\
+  - Set processing.guarantee=exactly_once_v2 for accurate counts.\n- Reset the app (not delete topics)\
+  \ for deterministic replays.\n- Monitor the streams thread: LAG on changelogs signals state restore\
+  \ in progress.\n\n## Capabilities\n\n### streams-app\nRun Kafka Streams applications and manage their\
+  \ lifecycle.\n\n**Commands:**\n- `java -jar build/libs/kafka-streams-demo.jar config/streams.properties`\n\
+  - `./gradlew run`\n- `kafka-streams-application-reset.sh --bootstrap-server localhost:9092 --application-id\
+  \ wordcount-app --input-topics lines --intermediate-topics wordcount-store-changelog`\n- `kafka-streams-application-reset.sh\
+  \ --bootstrap-server localhost:9092 --application-id wordcount-app --force`\n\n**Examples:**\n- java\
+  \ -jar build/libs/kafka-streams-demo.jar config/streams.properties\n- kafka-streams-application-reset.sh\
+  \ --bootstrap-server localhost:9092 --application-id wordcount-app --input-topics lines --intermediate-topics\
+  \ wordcount-store-changelog\n- ./gradlew run\n\n### output-verify\nVerify stream processing output and\
+  \ internal topology state.\n\n**Commands:**\n- `kafka-console-consumer.sh --bootstrap-server localhost:9092\
+  \ --topic wordcount-output --from-beginning --property print.key=true --property print.value=true`\n\
+  - `kafka-topics.sh --bootstrap-server localhost:9092 --list | grep -E 'wordcount|changelog|repartition'`\n\
+  - `kafka-streams-application-reset.sh --bootstrap-server localhost:9092 --application-id wordcount-app\
+  \ --list`\n- `kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group wordcount-app`\n\
+  \n**Examples:**\n- kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic wordcount-output\
+  \ --from-beginning --property print.key=true\n- kafka-topics.sh --bootstrap-server localhost:9092 --list\
+  \ | grep -E 'changelog|repartition'\n- kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe\
+  \ --group wordcount-app"
+prompt: Act as Kafka Streams and handle the task per the instructions.

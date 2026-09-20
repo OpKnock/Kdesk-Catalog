@@ -1,0 +1,38 @@
+title: Client Generation
+description: Generate API clients from OpenAPI specs with openapi-generator, swagger-codegen, and oapi-codegen
+  across many languages.
+version: 2.0.0
+instructions: "# Client Generation\n\nGenerate API clients from OpenAPI specs with openapi-generator,\
+  \ swagger-codegen, and oapi-codegen across many languages.\n\n## Instructions\n\n# Client Generation\n\
+  \nGenerate typed API clients directly from OpenAPI specifications.\n\n## When to Use\n\n- Producing\
+  \ SDKs for consumers of your API\n- Keeping client and server types in sync from one spec\n- Generating\
+  \ clients in multiple languages from one source\n\n## openapi-generator-cli\n\n```bash\nnpx @openapitools/openapi-generator-cli\
+  \ generate \\\n  -i openapi.yaml -g typescript-fetch -o src/client\n\n# Go client\nnpx @openapitools/openapi-generator-cli\
+  \ generate -i openapi.yaml -g go -o gen/go\n\n# Python client with package name\nnpx @openapitools/openapi-generator-cli\
+  \ generate -i openapi.yaml -g python -o gen/python --package-name myapi\n```\n\nList generators:\n\n\
+  ```bash\nnpx @openapitools/openapi-generator-cli list | grep -i \"typescript\\|go\\|python\"\n```\n\n\
+  ## oapi-codegen (Go)\n\n```bash\ngo install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest\n\
+  \noapi-codegen -package api -generate types,client openapi.yaml > gen/client.gen.go\noapi-codegen -package\
+  \ api -generate types,chi-server,spec openapi.yaml > gen/server.gen.go\n```\n\n## Config via openapitools.json\n\
+  \n```json\n{\n  \"generator-cli\": {\n    \"version\": \"7.8.0\",\n    \"generators\": {\n      \"typescript\"\
+  : {\n        \"generatorName\": \"typescript-fetch\",\n        \"inputSpec\": \"openapi.yaml\",\n  \
+  \      \"output\": \"src/client\"\n      }\n    }\n  }\n}\n```\n\n## Testing\n\n```bash\nnpx @openapitools/openapi-generator-cli\
+  \ validate -i openapi.yaml\nnpm run build\nnpx tsc --noEmit\n```\n\n## Best Practices\n\n- Validate\
+  \ the spec before generating: `openapi-generator-cli validate -i openapi.yaml`\n- Commit generated clients\
+  \ separately from the spec\n- Regenerate on every spec change, ideally in CI\n- Use config files to\
+  \ lock generator versions\n- Review generated code with linting in CI\n\n## Capabilities\n\n### openapi-generator\n\
+  Generate typed API clients from OpenAPI/Swagger specs with OpenAPI Generator\n\n**Commands:**\n- `npx\
+  \ @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o src/client`\n\
+  - `npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g go -o gen/go`\n- `npx @openapitools/openapi-generator-cli\
+  \ generate -i openapi.yaml -g python -o gen/python --package-name myapi`\n- `npx @openapitools/openapi-generator-cli\
+  \ version`\n\n**Examples:**\n- npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-fetch\
+  \ -o src/client\n- npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g java -o gen/java\
+  \ --library resttemplate\n- npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g go -o\
+  \ gen/go --additional-properties=withGoMod=false\n\n### oapi-codegen\nGenerate Go clients and servers\
+  \ with oapi-codegen\n\n**Commands:**\n- `go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest`\n\
+  - `oapi-codegen -package api -generate types,client openapi.yaml > gen/client.gen.go`\n- `oapi-codegen\
+  \ -package api -generate types,chi-server openapi.yaml > gen/server.gen.go`\n- `go build ./...`\n\n\
+  **Examples:**\n- oapi-codegen -package api -generate types,client openapi.yaml > gen/client.gen.go\n\
+  - oapi-codegen -package api -generate types,chi-server,spec openapi.yaml > gen/server.gen.go\n- go test\
+  \ ./..."
+prompt: Act as Client Generation and handle the task per the instructions.

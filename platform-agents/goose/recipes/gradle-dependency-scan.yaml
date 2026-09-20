@@ -1,0 +1,27 @@
+title: Gradle Dependency Scan
+description: Scans Gradle dependencies for vulnerabilities and licenses with OWASP dependency-check and
+  Gradle plugins.
+version: 2.0.0
+instructions: "# Gradle Dependency Scan\n\nScans Gradle dependencies for vulnerabilities and licenses\
+  \ with OWASP dependency-check and Gradle plugins.\n\n## Instructions\n\n# Gradle Dependency Scan\n\n\
+  Find vulnerable and outdated Gradle dependencies.\n\n## When to Use\n\n- Before releases and in CI on\
+  \ every change\n- Tracking CVE exposure in transitive dependencies\n- License compliance checks\n- Keeping\
+  \ the dependency tree understandable\n\n## Setup\n\n```groovy\n// build.gradle\nplugins {\n  id \"org.owasp.dependencycheck\"\
+  \ version \"10.0.0\"\n}\ndependencyCheck {\n  failBuildOnCVSS = 7\n  suppressionFiles = [\"dependency-check-suppressions.xml\"\
+  ]\n}\n```\n\n## Commands\n\n```bash\n# Analyze the project\ngradle dependencyCheckAnalyze\n\n# Update\
+  \ the NVD database\ngradle dependencyCheckUpdate\n\n# Aggregate across subprojects\ngradle dependencyCheckAggregate\n\
+  \n# Inspect the tree\ngradle dependencies\ngradle dependencies --configuration runtimeClasspath\n\n\
+  # Find a specific dependency path\ngradle dependencyInsight --dependency log4j-core\n\n# Preview updates\n\
+  gradle dependencyUpdates\n```\n\n## Best Practices\n\n- Fail the build on CVSS >= 7 in CI\n- Run scans\
+  \ on every commit, not just releases\n- Review suppression files; never blanket-suppress\n- Pin plugin\
+  \ versions and update the NVD feed regularly\n- Use dependencyInsight to trace transitive paths\n- Enable\
+  \ dependency verification metadata in security-sensitive repos\n\n## Capabilities\n\n### gradle-scan\n\
+  Run vulnerability scans on Gradle projects.\n\n**Commands:**\n- `gradle dependencyCheckAnalyze`\n- `gradle\
+  \ dependencyCheckUpdate`\n- `gradle dependencyCheckAggregate`\n- `gradle dependencies`\n- `gradle dependencyUpdates`\n\
+  \n**Examples:**\n- gradle dependencyCheckAnalyze --scan\n- gradle dependencyCheckAggregate -DfailBuildOnCVSS=7\n\
+  - gradle dependencies --configuration runtimeClasspath\n\n### dependency-analysis\nInspect dependency\
+  \ trees and updates.\n\n**Commands:**\n- `gradle dependencyInsight --dependency log4j-core`\n- `gradle\
+  \ dependencies --configuration compileClasspath`\n- `gradle dependencyInsight --dependency jackson --configuration\
+  \ runtimeClasspath`\n- `gradle -q dependencies > deps.txt`\n\n**Examples:**\n- gradle dependencyInsight\
+  \ --dependency spring-web\n- gradle dependencies --write-verification-metadata sha256"
+prompt: Act as Gradle Dependency Scan and handle the task per the instructions.

@@ -1,0 +1,92 @@
+---
+description: "Administers Varnish HTTP cache using VCL. Loads and reloads configurations, invalidates content with bans and purges, inspects hit rates via varnishstat, and debugs request routing with varnishlog."
+globs: ["**/*.html", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# Varnish
+
+Administers Varnish HTTP cache using VCL. Loads and reloads configurations, invalidates content with bans and purges, inspects hit rates via varnishstat, and debugs request routing with varnishlog.
+
+## Instructions
+
+# Varnish
+
+Hand-crafted skill for Varnish cache administration.
+
+## What this skill does
+
+- Loads and reloads VCL configs
+- Invalidates cached content with bans and purges
+- Reads hit rates and request logs
+
+## When to use
+
+- Tuning cache hit rate for an API or site
+- Removing stale content after a release
+- Debugging why a URL will not cache
+
+## Real commands
+
+```bash
+# Start with a VCL and 256MB cache
+varnishd -f /etc/varnish/default.vcl -s malloc,256m
+
+# Reload VCL without dropping traffic
+varnish_reload_vcl
+
+# Ban (invalidate) matching objects
+varnishadm ban "req.url ~ ^/products"
+varnishadm ban "obj.http.x-cache-type ~ html"
+
+# Stats
+varnishstat -1 | grep -E "MAIN.cache_hit|MAIN.cache_miss|MAIN.hitmiss"
+
+# Request log for one URL pattern
+varnishlog -g request -q "ReqURL ~ /products"
+```
+
+## Minimal VCL
+
+```vcl
+vcl 4.0;
+backend default { .host = "127.0.0.1"; .port = "8080"; }
+
+sub vcl_backend_response {
+  if (beresp.ttl <= 0s && bereq.method == "GET") {
+    set beresp.ttl = 120s;
+  }
+  unset beresp.http.Set-Cookie;
+}
+```
+
+## Testing
+
+```bash
+varnishstat -1 | grep "MAIN.cache_hit"   # hit count
+varnishadm ban "req.url ~ ^/products"    # clear products
+```
+
+## Best practices
+
+- Ban with narrow expressions; broad bans purge everything
+- Never cache responses that carry Set-Cookie
+- Watch hitmiss: it means miss then hit, a sign of warmup churn
+
+## Capabilities
+
+### varnish-cache
+Manage VCL, purges, and cache stats
+
+**Commands:**
+- `varnishd -f /etc/varnish/default.vcl -s malloc,256m`
+- `varnish_reload_vcl`
+- `varnishadm ban "req.url ~ ^/products"`
+- `varnishadm ban "obj.http.x-cache-type ~ html"`
+- `varnishstat -1 | grep -E "MAIN.cache_hit|MAIN.cache_miss|MAIN.hitmiss"`
+- `varnishlog -g request -q "ReqURL ~ /products"`
+
+**Examples:**
+- varnishadm ban "req.url ~ ^/products"
+- varnishstat -1 | grep -E "MAIN.cache_hit|MAIN.cache_miss"
+- varnish_reload_vcl

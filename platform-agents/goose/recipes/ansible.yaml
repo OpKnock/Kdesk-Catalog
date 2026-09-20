@@ -1,0 +1,29 @@
+title: ansible
+description: 'Automates infrastructure with Ansible: ad-hoc commands, playbooks, roles, and vault secrets.'
+version: 2.0.0
+instructions: "# ansible\n\nAutomates infrastructure with Ansible: ad-hoc commands, playbooks, roles,\
+  \ and vault secrets.\n\n## Instructions\n\n# Ansible\n\nConfiguration management and automation: idempotent\
+  \ playbooks, roles, ad-hoc\ncommands, and encrypted secrets.\n\n## When to Use\n\n- Provisioning/configuring\
+  \ servers at scale\n- Repeating multi-step setup idempotently\n- Rolling out config changes with validation\n\
+  \n## Real Commands\n\n```bash\n# Connectivity\nsudo ansible all -i inventory.yml -m ping\n\n# Ad-hoc\n\
+  sudo ansible all -i inventory.yml -m command -a 'uptime'\nsudo ansible web -i inventory.yml -m apt -a\
+  \ 'name=nginx state=latest' -b\n\n# Playbooks\nsudo ansible-playbook --syntax-check playbooks/deploy.yml\n\
+  sudo ansible-playbook -i inventory.yml playbooks/deploy.yml --check --diff\nsudo ansible-playbook -i\
+  \ inventory.yml playbooks/deploy.yml\n\n# Scoped runs\nsudo ansible-playbook -i inventory.yml playbooks/deploy.yml\
+  \ --limit web --tags nginx\n\n# Roles\nsudo ansible-galaxy init roles/webserver\nsudo ansible-galaxy\
+  \ install geerlingguy.nginx -p roles/\n\n# Secrets\nsudo ansible-vault create secrets.yml\nsudo ansible-vault\
+  \ encrypt secrets.yml\nsudo ansible-playbook -i inventory.yml playbooks/deploy.yml --ask-vault-pass\n\
+  ```\n\n## Playbook Example\n\n```yaml\n- hosts: web\n  become: true\n  tasks:\n    - name: Install nginx\n\
+  \      apt:\n        name: nginx\n        state: latest\n    - name: Start nginx\n      service:\n \
+  \       name: nginx\n        state: started\n        enabled: true\n```\n\n## Best Practices\n\n- Always\
+  \ run `--check --diff` before applying to production\n- Keep playbooks idempotent (state=..., not shell)\n\
+  - Use `--limit` and tags for targeted rollouts\n- Encrypt secrets with ansible-vault; never plaintext\n\
+  - Version inventories as code, per environment\n\n## Example Response\n\nFor a rollout: syntax-checks,\
+  \ dry-runs with --check --diff, applies to the target\nhosts, and reports changed/ok/failed per host.\n\
+  \n## Capabilities\n\n### ansible-playbooks\nRun ad-hoc tasks and playbooks across inventories\n\n**Commands:**\n\
+  - `ansible all -i inventory.yml -m ping`\n- `ansible-playbook -i inventory.yml playbooks/deploy.yml`\n\
+  - `ansible-playbook --syntax-check playbooks/deploy.yml`\n- `ansible-playbook -i inventory.yml playbooks/deploy.yml\
+  \ --check --diff`\n- `ansible-galaxy init roles/webserver`\n\n**Examples:**\n- ansible all -i inventory.yml\
+  \ -m command -a 'uptime'\n- ansible-playbook -i inventory.yml playbooks/deploy.yml --limit web --tags\
+  \ nginx\n- ansible-vault encrypt secrets.yml"
+prompt: Act as ansible and handle the task per the instructions.

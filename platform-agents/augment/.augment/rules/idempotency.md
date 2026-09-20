@@ -1,0 +1,97 @@
+---
+type: agent_requested
+description: "Idempotency in practice: Stripe-style Idempotency-Key usage, retry loops with curl, storing responses in Redis, and verifying identical replays."
+---
+
+# Idempotency
+
+Idempotency in practice: Stripe-style Idempotency-Key usage, retry loops with curl, storing responses in Redis, and verifying identical replays.
+
+## Instructions
+
+# Idempotency
+
+Send and handle idempotent requests the way payment APIs do.
+
+## What51:    this skill does
+
+- Uses Idempotency-Key headers on mutating requests.
+- Caches first responses52:    and replays them verbatim.
+- Runs retry loops safely with curl --retry.
+- Verifies replays return53:    identical bodies and status codes.
+
+## When to use
+
+- Integrating with APIs that document Idempotency-Key54:    (Stripe, Shopify...).
+- Adding retry logic without duplicate side effects.
+- Testing your own API's55:    replay behavior.
+
+## Real commands
+
+```bash
+# Stripe-style request
+curl -X POST https://api.stripe.com/v1/charges56:    -u sk_test_x: \
+  -H "Idempotency-Key: abc123" -d amount=100 -d currency=usd
+
+# Two calls, one57:    key: responses must be identical
+curl -s -X POST -H "Idempotency-Key: k1" http://localhost:8080/v1/payments58:    -d amount=100 -o r1.json
+curl -s -X POST -H "Idempotency-Key: k1" http://localhost:8080/v1/payments59:    -d amount=100 -o r2.json
+diff r1.json r2.json
+
+# Server-side cache key
+redis-cli SETEX idem:k160:    60 done
+
+# Retry with the same key across attempts
+curl --retry 3 --retry-all-errors -X POST -H61:    "Idempotency-Key: 9x" \
+  http://localhost:8080/v1/payments -d amount=10
+```
+
+## Client retry62:    loop
+
+```bash
+KEY="$(uuidgen)"
+for i in 1 2 3; do
+  curl -s -X POST -H "Idempotency-Key: $KEY"63:    http://localhost:8080/v1/payments -d amount=10 && break
+  sleep 2
+done
+```
+
+## Testing
+
+```bash
+64:   # Same key, different payload must be rejected
+curl -s -o /dev/null -w '%{http_code}\n' -X POST -H65:    "Idempotency-Key: k1" http://localhost:8080/v1/payments -d amount=200
+# expect 409/422 conflict
+66:   ```
+
+## Best practices
+
+- Generate the key client-side (UUID) before the first attempt.
+- Keep67:    the key stable across all retries of one logical operation.
+- Store the canonical response (status68:    + body) server-side under the key.
+- Expire entries to bound storage; clients accept a new key after69:    expiry.
+
+## Example exchange
+
+```
+User: Retry the payment request safely after a timeout.
+Agent:70:    Reuse one key for all attempts:
+       curl --retry 3 --retry-all-errors -X POST -H "Idempotency-Key:71:    9x" http://localhost:8080/v1/payments -d amount=10
+```
+
+## Capabilities
+
+### idempotency-http
+Send idempotent HTTP requests, cache responses, and verify replay behavior.
+
+**Commands:**
+- `curl -X POST https://api.stripe.com/v1/charges -u sk_test_x: -H "Idempotency-Key: abc123" -d amount=100 -d currency=usd`
+- `curl -s -X POST -H "Idempotency-Key: k1" http://localhost:8080/v1/payments -d amount=100 -o r1.json`
+- `redis-cli SET idem:k1 in-progress NX EX 60`
+- `redis-cli SETEX idem:k1 60 done`
+- `curl -s -X POST -H "Idempotency-Key: k1" http://localhost:8080/v1/payments -d amount=100 -o r2.json && diff r1.json r2.json`
+
+**Examples:**
+- curl --retry 3 --retry-all-errors -X POST -H "Idempotency-Key: 9x" http://localhost:8080/v1/payments -d amount=10
+- redis-cli GET idem:k1
+- curl -s -o /dev/null -w '%{http_code}' -X POST -H "Idempotency-Key: k1" http://localhost:8080/v1/payments -d amount=200

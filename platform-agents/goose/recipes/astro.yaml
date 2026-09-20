@@ -1,0 +1,29 @@
+title: Astro
+description: 'Builds content-focused websites and islands-architecture apps with Astro: content collections,
+  integrations, and static builds.'
+version: 2.0.0
+instructions: "# Astro\n\nBuilds content-focused websites and islands-architecture apps with Astro: content\
+  \ collections, integrations, and static builds.\n\n## Instructions\n\n# Astro\n\nBuild fast content\
+  \ sites and island-architecture apps with Astro.\n\n## When to Use\n\n- Blogs, docs, marketing sites,\
+  \ portfolios\n- Hybrid sites that mix static content with interactive islands\n- Sites needing excellent\
+  \ Core Web Vitals out of the box\n\n## Create a project\n\n```bash\nnpm create astro@latest -- --template\
+  \ minimal --no-git\nnpx astro add react tailwind sitemap\n```\n\n## Content collections\n\n```typescript\n\
+  // src/content.config.ts\nimport { defineCollection, z } from 'astro:content';\n\nexport const collections\
+  \ = {\n  posts: defineCollection({\n    type: 'content',\n    schema: z.object({\n      title: z.string(),\n\
+  \      pubDate: z.coerce.date(),\n      tags: z.array(z.string()).default([]),\n      draft: z.boolean().default(false)\n\
+  \    })\n  })\n};\n```\n\n```bash\nnpx astro sync\n```\n\nSync regenerates content types - run it after\
+  \ editing schemas.\n\n## Islands\n\nInteractive components render only when they need hydration:\n\n\
+  ```tsx\nimport Counter from '../components/Counter.tsx';\n<Counter client:load />\n```\n\nUse `client:idle`,\
+  \ `client:visible`, or `client:only=\"react\"` to control when JS ships.\n\n## Build and check\n\n```bash\n\
+  npx astro check --minimumSeverityLevel error\nnpm run build\nnpx astro preview\n```\n\n## Best practices\n\
+  \n- Prefer Markdown/MDX for content; components for layout.\n- Add `@astrojs/sitemap` and `astro:env`\
+  \ for production config.\n- Set `output: 'static'` unless you need SSR.\n- Always run `astro check`\
+  \ in CI before deploy.\n\n## Capabilities\n\n### scaffold\nCreate Astro projects and add framework integrations.\n\
+  \n**Commands:**\n- `npm create astro@latest -- --template minimal --no-git --install`\n- `npx astro\
+  \ add react`\n- `npx astro add tailwind`\n- `npx astro add sitemap`\n- `npx astro add @astrojs/mdx`\n\
+  \n**Examples:**\n- npm create astro@latest -- --template blog --install --no-git\n- npx astro add react\
+  \ --yes\n- npx astro add vercel\n\n### build-preview\nDevelop, type-check, build, and preview Astro\
+  \ sites.\n\n**Commands:**\n- `npm run dev`\n- `npx astro check`\n- `npm run build`\n- `npx astro preview`\n\
+  - `npx astro sync`\n\n**Examples:**\n- npm run dev -- --port 4321\n- npx astro check --minimumSeverityLevel\
+  \ error\n- npm run build && npx astro preview --port 8080"
+prompt: Act as Astro and handle the task per the instructions.

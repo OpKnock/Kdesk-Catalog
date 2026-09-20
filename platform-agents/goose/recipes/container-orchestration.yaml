@@ -1,0 +1,33 @@
+title: Container Orchestration
+description: 'Operates container orchestration platforms (Kubernetes, Docker Swarm, Nomad): cluster bootstrap,
+  scheduling, scaling, and health checks.'
+version: 2.0.0
+instructions: "# Container Orchestration\n\nOperates container orchestration platforms (Kubernetes, Docker\
+  \ Swarm, Nomad): cluster bootstrap, scheduling, scaling, and health checks.\n\n## Instructions\n\n#\
+  \ Container Orchestration\n\nRun and troubleshoot container orchestrators: Kubernetes, Docker Swarm,\
+  \ and HashiCorp Nomad.\n\n## What This Skill Does\n\n- Bootstraps clusters (kubeadm, swarm init, nomad\
+  \ dev agent)\n- Schedules workloads: Deployments, services, jobs, allocations\n- Scales, updates, and\
+  \ performs rolling operations\n- Diagnoses node health and scheduling failures\n\n## When to Use\n\n\
+  - Choosing or operating an orchestrator for a workload\n- Investigating why a workload is unschedulable\
+  \ or unhealthy\n- Migrating between Swarm, Kubernetes, or Nomad\n\n## Real Commands\n\n```bash\n# Kubernetes\
+  \ bootstrap\nkubeadm init --pod-network-cidr=10.244.0.0/16\nkubeadm token create --print-join-command\n\
+  kubectl cluster-info\nkubectl get nodes -o wide\nkubectl top node\n\n# Docker Swarm\ndocker swarm init\
+  \ --advertise-addr 10.0.0.5\ndocker service create --name web --replicas 3 nginx:alpine\ndocker service\
+  \ ls\ndocker node ls\ndocker stack deploy -c stack.yml app\n\n# Nomad\nnomad agent -dev &\nnomad job\
+  \ run web.nomad\nnomad job status web\nnomad alloc logs <alloc-id>\nnomad node status\n```\n\n## Nomad\
+  \ Job Example\n\n```hcl\njob \"web\" {\n  datacenters = [\"dc1\"]\n  group \"web\" {\n    count = 3\n\
+  \    task \"nginx\" {\n      driver = \"docker\"\n      config {\n        image = \"nginx:alpine\"\n\
+  \      }\n      resources {\n        cpu    = 100\n        memory = 128\n      }\n    }\n  }\n}\n```\n\
+  \n## Best Practices\n\n- Use kubeadm's `--print-join-command` for repeatable joins\n- Pin CNI and orchestrator\
+  \ versions together\n- Set resource requests/limits for every workload\n- Drain nodes before maintenance;\
+  \ plan for quorum loss in etcd/swarm managers\n- Use stack/job files (declarative) over ad-hoc imperative\
+  \ commands\n\n## Capabilities\n\n### kubernetes-cluster-ops\nBootstrap and inspect Kubernetes clusters\
+  \ with kubeadm and kubectl.\n\n**Commands:**\n- `kubeadm init --pod-network-cidr=10.244.0.0/16`\n- `kubeadm\
+  \ token create --print-join-command`\n- `kubectl cluster-info`\n- `kubectl get nodes -o wide`\n- `kubectl\
+  \ get componentstatuses`\n- `kubectl top node`\n\n**Examples:**\n- kubeadm init --pod-network-cidr=10.244.0.0/16\n\
+  - kubectl cluster-info\n- kubectl get nodes -o wide\n\n### swarm-and-nomad\nManage Docker Swarm services\
+  \ and HashiCorp Nomad jobs as alternative orchestrators.\n\n**Commands:**\n- `docker swarm init --advertise-addr\
+  \ 10.0.0.5`\n- `docker service create --name web --replicas 3 nginx`\n- `docker node ls`\n- `nomad job\
+  \ run web.nomad`\n- `nomad job status web`\n- `nomad node status`\n\n**Examples:**\n- docker service\
+  \ create --name web --replicas 3 nginx\n- nomad job run web.nomad\n- nomad node status"
+prompt: Act as Container Orchestration and handle the task per the instructions.

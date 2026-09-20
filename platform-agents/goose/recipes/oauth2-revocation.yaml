@@ -1,0 +1,31 @@
+title: Oauth2 Revocation
+description: Revokes OAuth2 access and refresh tokens against RFC 7009 endpoints. Handles 200 responses
+  for processed revocations and verifies revoked state by attempting token refresh.
+version: 2.0.0
+instructions: "# Oauth2 Revocation\n\nRevokes OAuth2 access and refresh tokens against RFC 7009 endpoints.\
+  \ Handles 200 responses for processed revocations and verifies revoked state by attempting token refresh.\n\
+  \n## Instructions\n\n# OAuth2 Token Revocation\n\nRevocation (RFC 7009) invalidates a token so it can\
+  \ no longer be used.\n\n## What this skill does\n\n- Revokes access and refresh tokens\n- Handles 200\
+  \ responses (even for unknown tokens)\n- Verifies revocation by attempting refresh\n\n## When to use\n\
+  \n- Logout flows that must kill server-side sessions\n- Suspending a compromised client's tokens\n\n\
+  ## Real commands\n\n```bash\n# Revoke access token\ncurl -X POST https://auth.your-app.test/revoke \\\
+  \n  -d \"token=eyJhbGciOi...\" -u client-id:client-secret\n\n# Revoke refresh token (common for logout)\n\
+  curl -X POST https://auth.your-app.test/revoke \\\n  -d \"token=eyJhbGciOi...\" -d \"token_type_hint=refresh_token\"\
+  \ -u client-id:client-secret\n\n# Keycloak\ncurl -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/revoke\
+  \ \\\n  -d \"token=xyz\" -u svc:svcsecret\n\n# Verify: refresh should now fail\ncurl -s -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token\
+  \ \\\n  -d \"grant_type=refresh_token\" -d \"refresh_token=xyz\" -d \"client_id=svc\"\n```\n\n## Response\
+  \ semantics\n\n- 200 means processed (even if token was invalid or already revoked)\n- `token_type_hint`\
+  \ is a hint; servers may ignore it\n\n## Best practices\n\n- Always revoke the refresh token on logout\n\
+  - Treat any non-2xx as a failure to retry\n- Combine with introspection to confirm state\n\n## Capabilities\n\
+  \n### token-revocation\nRevoke OAuth2 tokens against RFC 7009 endpoints and verify revoked state.\n\n\
+  **Commands:**\n- `curl -X POST https://auth.your-app.test/revoke -d \"token=eyJhbGciOi...\" -u client-id:client-secret`\n\
+  - `curl -X POST https://auth.your-app.test/revoke -d \"token=eyJhbGciOi...\" -d \"token_type_hint=refresh_token\"\
+  \ -u client-id:client-secret`\n- `curl -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/revoke\
+  \ -d \"token=xyz\" -u svc:svcsecret`\n- `curl -i -X POST https://auth.your-app.test/revoke -d \"token=xyz\"\
+  \ -u client:secret`\n- `curl -s -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token\
+  \ -d \"grant_type=refresh_token\" -d \"refresh_token=xyz\" -d \"client_id=svc\" | jq .`\n\n**Examples:**\n\
+  - curl -X POST https://auth.your-app.test/revoke -d \"token=xyz\" -d \"token_type_hint=refresh_token\"\
+  \ -u client:secret\n- curl -i -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/revoke\
+  \ -d \"token=xyz\" -u svc:svcsecret\n- curl -X POST https://auth.your-app.test/revoke -d \"token=xyz\"\
+  \ -u client:secret -w \"%{http_code}\\n\""
+prompt: Act as Oauth2 Revocation and handle the task per the instructions.

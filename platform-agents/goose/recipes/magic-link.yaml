@@ -1,0 +1,38 @@
+title: Magic Link
+description: 'Implement passwordless login with magic links: JWT signing, one-time token storage with
+  Redis, email delivery, and verification endpoints.'
+version: 2.0.0
+instructions: "# Magic Link\n\nImplement passwordless login with magic links: JWT signing, one-time token\
+  \ storage with Redis, email delivery, and verification endpoints.\n\n## Instructions\n\n# Magic Link\
+  \ Authentication\n\nImplement passwordless login with signed, single-use magic links.\n\n## What this\
+  \ skill does\n\n- Issues short-lived signed tokens for emails.\n- Stores one-time tokens in Redis with\
+  \ TTL.\n- Verifies tokens on the callback endpoint.\n\n## When to use\n\n- Passwordless login flows.\n\
+  - Lowering login friction while keeping security.\n- Replacing emailed passwords with expiring links.\n\
+  \n## Real commands\n\n```bash\n# Generate a random secret or keypair\nopenssl rand -base64 32\nopenssl\
+  \ genrsa -out private.pem 2048\n\n# Issue an RS256 token (15 min TTL)\npython3 -c \"import jwt,datetime;\
+  \ print(jwt.encode({'sub':'alice@myapp.test','aud':'magic-link','exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)},\
+  \ open('private.pem').read(), algorithm='RS256'))\"\n\n# Request a link (app endpoint)\ncurl -s -X POST\
+  \ http://localhost:8080/auth/magic-link \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"email\"\
+  :\"alice@myapp.test\"}'\n\n# Store a one-time token in Redis (900s TTL)\nredis-cli SETEX magic:alice@myapp.test\
+  \ 900 TOKEN\n\n# Verify callback\ncurl -s http://localhost:8080/auth/verify?token=TOKEN\n\n# Replay\
+  \ protection: second use must fail\ncurl -s http://localhost:8080/auth/verify?token=USED_TOKEN\n```\n\
+  \n## Flow example\n\n```text\nPOST /auth/magic-link {email}  ->  generate token, email link\nGET  /auth/verify?token=...\
+  \    ->  validate signature+exp, consume token, issue session\n```\n\n## Testing\n\n```bash\n# Negative\
+  \ tests\ncurl -s http://localhost:8080/auth/verify?token=EXPIRED   # 401\ncurl -s http://localhost:8080/auth/verify?token=USED\
+  \      # 401 (single use)\n```\n\n## Best practices\n\n- Sign tokens (RS256 preferred) and enforce aud/iss\
+  \ claims.\n- Make links single-use: consume the token after successful verification.\n- Rate-limit the\
+  \ request endpoint; leaky magic links enable spam.\n- Keep TTL short (10-15 min); reissue on expiry.\n\
+  \n## Capabilities\n\n### token-issuance\nGenerate and sign short-lived magic link tokens.\n\n**Commands:**\n\
+  - `openssl rand -base64 32`\n- `python3 -c \"import jwt,datetime; print(jwt.encode({'sub':'alice@myapp.test','aud':'magic-link','exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)},\
+  \ open('private.pem').read(), algorithm='RS256'))\"`\n- `npx jwt-cli encode --secret=dev-secret -P sub=alice@myapp.test\
+  \ -P exp=... `\n- `python3 -c \"import secrets; print(secrets.token_urlsafe(32))\"`\n\n**Examples:**\n\
+  - python3 -c \"import jwt,datetime; print(jwt.encode({'sub':'alice@myapp.test','aud':'magic-link','exp':datetime.datetime.utcnow()+datetime.timedelta(minutes=15)},\
+  \ open('private.pem').read(), algorithm='RS256'))\"\n- openssl rand -base64 32\n- python3 -c \"import\
+  \ secrets; print(secrets.token_urlsafe(32))\"\n\n### verify-exchange\nExercise the magic link flow:\
+  \ request, verify, and one-time use.\n\n**Commands:**\n- `curl -s -X POST http://localhost:8080/auth/magic-link\
+  \ -H 'Content-Type: application/json' -d '{\"email\":\"alice@myapp.test\"}'`\n- `curl -s http://localhost:8080/auth/verify?token=TOKEN`\n\
+  - `redis-cli SETEX magic:alice@myapp.test 900 TOKEN`\n- `redis-cli GET magic:alice@myapp.test`\n- `curl\
+  \ -s http://localhost:8080/auth/verify?token=USED_TOKEN`\n\n**Examples:**\n- curl -s -X POST http://localhost:8080/auth/magic-link\
+  \ -H 'Content-Type: application/json' -d '{\"email\":\"alice@myapp.test\"}'\n- curl -s http://localhost:8080/auth/verify?token=TOKEN\n\
+  - redis-cli SETEX magic:alice@myapp.test 900 TOKEN"
+prompt: Act as Magic Link and handle the task per the instructions.

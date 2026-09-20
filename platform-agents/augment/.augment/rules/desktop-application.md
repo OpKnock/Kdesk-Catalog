@@ -1,0 +1,102 @@
+---
+type: agent_requested
+description: "Builds cross-platform desktop apps with Electron and Tauri: scaffolding, dev loops, and packaging."
+---
+
+# desktop-application
+
+Builds cross-platform desktop apps with Electron and Tauri: scaffolding, dev loops, and packaging.
+
+## Instructions
+
+# Desktop Application
+
+Builds cross-platform desktop apps: Electron for web-stack teams, Tauri for
+small binaries.
+
+## When to Use
+
+- Creating a native-feeling app from web tech
+- Packaging installers for Windows/macOS/Linux
+- Debugging main/renderer process issues
+
+## Real Commands
+
+```bash
+# Electron (electron-vite)
+sudo npm create electron-vite@latest my-app -- --template react
+sudo npm run dev
+sudo npm run build
+
+# Package
+sudo npx electron-builder --win nsis
+sudo npx electron-builder --mac dmg --arm64
+sudo npx electron-builder --linux AppImage
+
+# Tauri
+sudo npm create tauri-app@latest
+sudo npm run tauri dev
+sudo npm run tauri build
+sudo npm run tauri build -- --bundles msi
+sudo npx tauri info
+```
+
+## electron-builder Config (electron-builder.yml)
+
+```yaml
+appId: com.example.app
+productName: MyApp
+files:
+  - dist/**/*
+win:
+  target: nsis
+mac:
+  target: [dmg]
+linux:
+  target: [AppImage]
+```
+
+## Best Practices
+
+- Keep the main process minimal; heavy work in renderer/workers
+- Sign builds for distribution (notarization on macOS)
+- Use contextIsolation and no nodeIntegration in renderers
+- Set appId and version before first release
+- Test installers on clean VMs/containers
+
+## Example Response
+
+Scaffolds the app, runs the dev loop, and packages the installer for the target
+platform, reporting artifact paths and sizes.
+
+## Capabilities
+
+### electron-app
+Scaffold, run, and package Electron desktop applications
+
+**Commands:**
+- `npm create electron-vite@latest my-app -- --template react`
+- `npm run dev`
+- `npx electron-builder --win nsis`
+- `npx electron-builder --mac dmg --arm64`
+- `npm run build && npx electron-builder --linux AppImage`
+
+**Examples:**
+- npm run dev -- --host 0.0.0.0
+- npx electron-builder --publish never --config electron-builder.yml
+- npm run build:win
+
+### tauri-app
+Develop and build Tauri apps with a small footprint
+
+**Commands:**
+- `npm create tauri-app@latest`
+- `npm run tauri dev`
+- `npm run tauri build`
+- `npx tauri info`
+- `npm run tauri build -- --bundles msi`
+
+**Examples:**
+- npm run tauri dev -- --port 1420
+- npm run tauri build -- --bundles nsis
+- npx tauri icon app-icon.png

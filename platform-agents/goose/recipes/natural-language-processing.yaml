@@ -1,0 +1,32 @@
+title: natural-language-processing
+description: 'Builds NLP pipelines with spaCy and Hugging Face: model downloads, training configs, and
+  transformers inference.'
+version: 2.0.0
+instructions: "# natural-language-processing\n\nBuilds NLP pipelines with spaCy and Hugging Face: model\
+  \ downloads, training configs, and transformers inference.\n\n## Instructions\n\n# Natural Language\
+  \ Processing\n\nBuild NLP systems with spaCy and Hugging Face.\n\n## When to Use\n\n- Text classification,\
+  \ NER, and summarization\n- Fine-tuning language models for domain data\n- Extracting structured info\
+  \ from free text\n\n## spaCy quickstart\n\n```bash\npython -m spacy download en_core_web_sm\n```\n\n\
+  ```python\nimport spacy\nnlp = spacy.load('en_core_web_sm')\ndoc = nlp('Ada Lovelace wrote the first\
+  \ algorithm.')\nfor ent in doc.ents:\n    print(ent.text, ent.label_)\n```\n\n## Training project\n\n\
+  ```bash\npython -m spacy init config config.cfg --lang en --pipeline ner\npython -m spacy debug data\
+  \ config.cfg\npython -m spacy train config.cfg --output training/\n```\n\n## Transformers pipelines\n\
+  \n```bash\npython -c \"from transformers import pipeline; nlp = pipeline('sentiment-analysis'); print(nlp('This\
+  \ is great!'))\"\n```\n\n## Model management\n\n```bash\nhuggingface-cli login\nhuggingface-cli download\
+  \ gpt2\n```\n\n## Best practices\n\n- Pin model versions for reproducibility.\n- Validate training data\
+  \ before training (spacy debug data).\n- Use a small model for smoke tests, large for production.\n\
+  - Monitor drift on predictions with a golden set.\n\n## Testing\n\n```bash\npython -m spacy evaluate\
+  \ config.cfg training/model-best\n```\n\nMaintain a fixed eval set per release.\n\n## Capabilities\n\
+  \n### spacy\nManage spaCy models and training pipelines.\n\n**Commands:**\n- `python -m spacy download\
+  \ en_core_web_sm`\n- `python -m spacy project run all`\n- `python -m spacy debug data config.cfg`\n\
+  - `python -m spacy debug train config.cfg`\n- `python -m spacy init config config.cfg --lang en --pipeline\
+  \ ner`\n\n**Examples:**\n- python -m spacy download en_core_web_lg\n- python -m spacy project assets\n\
+  - python -m spacy evaluate config.cfg models/best\n\n### transformers\nRun inference and manage models\
+  \ with Hugging Face tooling.\n\n**Commands:**\n- `pip install transformers torch datasets`\n- `huggingface-cli\
+  \ login`\n- `huggingface-cli download gpt2 --repo-type model`\n- `python -c \"from transformers import\
+  \ pipeline; nlp = pipeline('sentiment-analysis'); print(nlp('This is great!'))\"`\n- `python -c \"from\
+  \ transformers import AutoTokenizer, AutoModel; t = AutoTokenizer.from_pretrained('bert-base-uncased');\
+  \ print(t.tokenize('hello world'))\"`\n\n**Examples:**\n- huggingface-cli download meta-llama/Llama-3.1-8B-Instruct\
+  \ --include '*.safetensors'\n- python -c \"from transformers import pipeline; nlp = pipeline('ner');\
+  \ print(nlp('Ada works at OpenAI in San Francisco'))\"\n- huggingface-cli whoami"
+prompt: Act as natural-language-processing and handle the task per the instructions.

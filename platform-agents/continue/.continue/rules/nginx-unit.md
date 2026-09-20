@@ -1,0 +1,83 @@
+---
+name: "Nginx Unit"
+description: "Configures NGINX Unit via its JSON control API to manage listeners, routes, and application objects supporting PHP, Node.js, Python, and Go apps with zero-downtime reloads."
+globs: ["**/*.go", "**/*.json", "**/*.php", "**/*.py", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# Nginx Unit
+
+Configures NGINX Unit via its JSON control API to manage listeners, routes, and application objects supporting PHP, Node.js, Python, and Go apps with zero-downtime reloads.
+
+## Instructions
+
+# NGINX Unit
+
+NGINX Unit is an application server for PHP, Python, Node.js, Go and more, configured entirely over a JSON API.
+
+## What this skill does
+
+- Runs unitd and manages the control API
+- Configures listeners, routes and applications
+- Reloads configs without restarts
+
+## When to use
+
+- Polyglot workloads behind one runtime
+- Zero-downtime config changes
+
+## Real commands
+
+```bash
+# Start
+unitd
+unitd --no-daemon   # foreground
+
+# Full config
+curl -X PUT --data-binary @config.json http://127.0.0.1:8080/config
+
+# Add an application object
+curl -X PUT --data-binary '{"type":"python3","processes":4,"path":"/srv/app","module":"app"}' \
+  http://127.0.0.1:8080/config/applications/web
+
+# Route a listener to it
+curl -X PUT --data-binary '{"listeners":{"*:8300":{"pass":"applications/web"}}}' \
+  http://127.0.0.1:8080/config
+
+# Inspect
+curl -s http://127.0.0.1:8080/config
+curl -s http://127.0.0.1:8080/status
+```
+
+## config.json example
+
+```json
+{
+  "listeners": { "*:8300": { "pass": "routes/main" } },
+  "routes": { "main": [ { "action": { "pass": "applications/web" } } ] },
+  "applications": { "web": { "type": "php", "root": "/srv/www" } }
+}
+```
+
+## Best practices
+
+- Apply config as JSON files for auditability
+- Use routes for request routing across apps
+- Check /status for application and request counters
+
+## Capabilities
+
+### nginx-unit-config
+Control NGINX Unit through its JSON control API: configure listeners, routes and application objects.
+
+**Commands:**
+- `unitd --no-daemon`
+- `curl -X PUT --data-binary @config.json http://127.0.0.1:8080/config`
+- `curl -X PUT --data-binary @app.json http://127.0.0.1:8080/config/applications/web`
+- `curl -X DELETE http://127.0.0.1:8080/config/listeners/127.0.0.1:8300`
+- `curl -s http://127.0.0.1:8080/status`
+
+**Examples:**
+- curl -X PUT --data-binary '{"type":"python3","processes":4,"path":"/srv/app","module":"app"}' http://127.0.0.1:8080/config/applications/web
+- curl -X PUT --data-binary '{"listeners":{"*:8300":{"pass":"applications/web"}}}' http://127.0.0.1:8080/config
+- curl -s http://127.0.0.1:8080/config

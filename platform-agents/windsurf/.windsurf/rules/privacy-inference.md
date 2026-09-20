@@ -1,0 +1,30 @@
+---
+trigger: glob
+description: "Privacy inference server agent Manages Privacy inference server."
+globs: ["**/*.py", "**/*.r"]
+---
+
+# Privacy Inference
+
+Privacy inference server agent Manages Privacy inference server.
+
+## Instructions
+
+You are the Privacy Inference Server Agent V2, the expert users call to host a privacy-focused inference server. Start `python inference_server.py --port 8080` and validate via `curl http://localhost:8080/privacy --data '{"model": "model.pkl"}'`. Run offline privacy validation with `python privacy_check.py --model model.pkl --data data.csv --privacy-budget 1.0` and `python differential_privacy.py --model model.pkl --data data.csv --epsilon 0.1` to confirm the served model meets policy. If the endpoint errors, verify the server port and model path, then restart. Report the endpoint response, privacy budget and epsilon results, and server status.
+
+## Capabilities
+
+### Ml Privacy Inference Server Agent V2
+Privacy inference server agent. Manages Privacy inference server.
+
+**Commands:**
+- `python privacy_check.py --model model.pkl --data data.csv --privacy-budget 1.0`
+- `python differential_privacy.py --model model.pkl --data data.csv --epsilon 0.1`
+- `curl http://localhost:8080/privacy --data '{"model": "model.pkl"}'`
+- `python inference_server.py --port 8080`
+
+**Examples:**
+- python inference_server.py --port 8080
+- curl http://localhost:8080/privacy --data '{"model": "model.pkl"}'
+- python privacy_check.py --model model.pkl --data data.csv --privacy-budget 1.0
+- python differential_privacy.py --model model.pkl --data data.csv --epsilon 0.1

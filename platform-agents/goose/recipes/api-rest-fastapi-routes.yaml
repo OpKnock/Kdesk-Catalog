@@ -1,0 +1,26 @@
+title: Api Rest Fastapi Routes
+description: 'Implements REST APIs with FastAPI and Pydantic: typed routes, automatic OpenAPI docs, dependency
+  injection, and TestClient-based testing.'
+version: 2.0.0
+instructions: "# Api Rest Fastapi Routes\n\nImplements REST APIs with FastAPI and Pydantic: typed routes,\
+  \ automatic OpenAPI docs, dependency injection, and TestClient-based testing.\n\n## Instructions\n\n\
+  # API REST Engineer v2 - FastAPI\n\nREST APIs with FastAPI.\n\n## What This Skill Does\n- Builds typed\
+  \ routes with Pydantic validation\n- Auto-generates OpenAPI docs\n- Uses dependencies for auth and DB\
+  \ access\n\n## When to Use\n- Python REST services\n- Prototyping with instant docs\n- Validation-heavy\
+  \ APIs\n\n## Real Commands\n\n```bash\npip install fastapi uvicorn\nuvicorn main:app --reload\ncurl\
+  \ -s http://127.0.0.1:8000/openapi.json | jq '.paths | keys'\n```\n\n## Route Example\n\n```python\n\
+  from fastapi import FastAPI, Depends\nfrom pydantic import BaseModel\napp = FastAPI()\n\nclass Item(BaseModel):\n\
+  \    name: str\n    price: float\n\n@app.post('/api/items', status_code=201)\ndef create_item(item:\
+  \ Item):\n    return {'id': 1, **item.model_dump()}\n```\n\n## Testing\n- Use TestClient for route tests\
+  \ without a server\n- Verify 422s for schema violations\n- Test dependency overrides for auth\n\n##\
+  \ Best Practices\n- Define response_model to shape output\n- Organize routes with APIRouter\n- Add tags\
+  \ and operation summaries for docs\n\n## Capabilities\n\n### fastapi-routes\nDefine typed FastAPI routes\
+  \ with automatic validation\n\n**Commands:**\n- `pip install fastapi uvicorn`\n- `uvicorn main:app --reload`\n\
+  - `curl -s http://127.0.0.1:8000/openapi.json | jq '.paths | keys'`\n- `curl -s http://127.0.0.1:8000/docs\
+  \ -o /dev/null -w '%{http_code}\\n'`\n- `curl -s -X POST http://127.0.0.1:8000/api/items -H 'Content-Type:\
+  \ application/json' -d '{\"name\":\"widget\"}' -w '\\n%{http_code}\\n'`\n\n**Examples:**\n- uvicorn\
+  \ main:app --reload hot-reloads the API\n- GET /openapi.json returns the generated contract\n- Invalid\
+  \ payloads return 422 automatically\n\n### dependency-injection\nShare auth and DB logic via FastAPI\
+  \ dependencies\n\n**Commands:**\n- `curl -s -o /dev/null -w '%{http_code}\\n' -H 'Authorization: Bearer\
+  \ invalid' http://127.0.0.1:8000/api/me`\n- `pytest -q`\n- `uvicorn main:app --host 0.0.0.0 --port 8000`"
+prompt: Act as Api Rest Fastapi Routes and handle the task per the instructions.

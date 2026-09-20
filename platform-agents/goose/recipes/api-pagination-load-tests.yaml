@@ -1,0 +1,29 @@
+title: Api Pagination Load Tests
+description: 'Load-tests pagination endpoints with k6 and autocannon: deep-page queries, worst-case limits,
+  cursor stress, and performance regression detection in CI.'
+version: 2.0.0
+instructions: "# Api Pagination Load Tests\n\nLoad-tests pagination endpoints with k6 and autocannon:\
+  \ deep-page queries, worst-case limits, cursor stress, and performance regression detection in CI.\n\
+  \n## Instructions\n\n# API Pagination v5 - Performance\n\nLoad testing pagination endpoints.\n\n## What\
+  \ This Skill Does\n- Scripts realistic pagination walk scenarios in k6\n- Benchmarks worst-case page\
+  \ sizes and deep pages\n- Sets thresholds to gate pagination regressions\n\n## When to Use\n- Before\
+  \ moving pagination to cursor mode\n- Tuning page size defaults\n- Catching O(n) OFFSET degradation\n\
+  \n## Real Commands\n\n```bash\nk6 run pagination-test.js\nnpx autocannon -c 10 -d 30 'http://localhost:3000/users?page=1&limit=100'\n\
+  ab -n 2000 -c 50 'http://localhost:3000/users?limit=50'\n```\n\n## k6 Scenario\n\n```js\nimport http\
+  \ from 'k6/http';\nexport const options = {\n  thresholds: { http_req_duration: ['p(95)<250'] }\n};\n\
+  export default function () {\n  const r = http.get('http://localhost:3000/users?page=1&limit=50');\n\
+  \  const next = r.json().next;\n  if (next) http.get(next);\n}\n```\n\n## Testing\n- Compare p95 at\
+  \ page 1 vs page 500 to expose OFFSET cost\n- Test limit at the configured maximum\n- Break tests into\
+  \ categories: first page, middle page, last page\n\n## Best Practices\n- Keep thresholds aggressive\
+  \ on p95 not averages\n- Run against a seeded dataset, not an empty table\n- Assert page size caps prevent\
+  \ pathological queries\n\n## Capabilities\n\n### pagination-load-tests\nRun load scenarios targeting\
+  \ pagination endpoints\n\n**Commands:**\n- `k6 run pagination-test.js`\n- `npx autocannon -c 10 -d 30\
+  \ 'http://localhost:3000/users?page=1&limit=100'`\n- `ab -n 2000 -c 50 'http://localhost:3000/users?limit=50'`\n\
+  - `k6 run --vus 20 --duration 60s --summary-export=summary.json pagination-test.js`\n- `curl -s -o /dev/null\
+  \ -w '%{time_total} %{http_code}\\n' 'http://localhost:3000/users?cursor=deep&limit=100'`\n\n**Examples:**\n\
+  - k6 run pagination-test.js exercises cursor walks in a loop\n- autocannon -c 10 -d 30 floods the limit=100\
+  \ endpoint\n- ab -n 2000 -c 50 measures throughput with offsets\n\n### deep-page-analysis\nDetect O(n)\
+  \ degradation on deep pagination\n\n**Commands:**\n- `k6 run --iterations 200 deep-page.js`\n- `curl\
+  \ -s 'http://localhost:3000/api/timing?page=1' | jq '.serverTimeMs'`\n- `curl -s 'http://localhost:3000/api/timing?page=500'\
+  \ | jq '.serverTimeMs'`\n- `npx autocannon -c 5 -d 20 'http://localhost:3000/users?page=500'`"
+prompt: Act as Api Pagination Load Tests and handle the task per the instructions.

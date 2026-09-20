@@ -1,0 +1,28 @@
+title: Sonarqube
+description: Runs SonarQube analysis via sonar-scanner CLI and manages quality gates, measures, and projects.
+version: 2.0.0
+instructions: "# Sonarqube\n\nRuns SonarQube analysis via sonar-scanner CLI and manages quality gates,\
+  \ measures, and projects.\n\n## Instructions\n\n# SonarQube\n\nContinuously inspects code quality and\
+  \ security via sonar-scanner: bugs,\nvulnerabilities, code smells, and coverage with quality-gate enforcement.\n\
+  \n## When to Use\n\n- CI quality gates on every merge\n- Tracking coverage, duplication, and hotspots\
+  \ over time\n- Language-agnostic analysis (JS, Python, Java, etc.)\n\n## Real Commands\n\n```bash\n\
+  # Run analysis\nsonar-scanner \\\n  -Dsonar.projectKey=myapp \\\n  -Dsonar.projectName=\"My App\" \\\
+  \n  -Dsonar.sources=src \\\n  -Dsonar.host.url=http://localhost:9000 \\\n  -Dsonar.token=$SONAR_TOKEN\n\
+  \n# Block CI on quality gate result\nsonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.qualitygate.timeout=300\
+  \ \\\n  -Dsonar.projectKey=myapp -Dsonar.host.url=http://localhost:9000 -Dsonar.token=$SONAR_TOKEN\n\
+  \n# Maven projects\nmvn verify sonar:sonar -Dsonar.token=$SONAR_TOKEN\n\n# Query measures via API\n\
+  curl -s \"http://localhost:9000/api/measures/component?component=myapp&metricKeys=bugs,vulnerabilities,coverage\"\
+  \n\n# List quality gates\ncurl -s http://localhost:9000/api/qualitygates/list\n```\n\n## Best Practices\n\
+  \n- Use a token scoped per project, never a global admin token\n- Set `sonar.qualitygate.wait=true`\
+  \ for CI blocking; timeout to avoid hangs\n- Pass `sonar.javascript.lcov.reportPaths` (or language equivalent)\
+  \ for coverage\n- Analyze on the exact branch: `-Dsonar.branch.name=$CI_COMMIT_BRANCH`\n- Sonar scanner\
+  \ needs a clean working tree if it uses git blame\n\n## Example Response\n\nReports the analysis URL,\
+  \ the quality gate verdict (OK/ERROR), and the metric\nbreakdown: bugs, vulnerabilities, code smells,\
+  \ coverage %.\n\n## Capabilities\n\n### sonar-scanner\nRun analysis, wait on quality gates, and query\
+  \ SonarQube API\n\n**Commands:**\n- `sonar-scanner -Dsonar.projectKey=myapp -Dsonar.host.url=http://localhost:9000\
+  \ -Dsonar.token=$SONAR_TOKEN`\n- `sonar-scanner -Dsonar.sources=src -Dsonar.tests=tests -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info`\n\
+  - `sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.qualitygate.timeout=300`\n- `mvn sonar:sonar\
+  \ -Dsonar.token=$SONAR_TOKEN`\n- `curl -s http://localhost:9000/api/measures/component?component=myapp&metricKeys=bugs,vulnerabilities,code_smells`\n\
+  \n**Examples:**\n- sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.verbose=true\n- curl -X POST\
+  \ 'http://localhost:9000/api/qualitygates/create?name=ci-gate'\n- mvn verify sonar:sonar -Dsonar.qualitygate.wait=true"
+prompt: Act as Sonarqube and handle the task per the instructions.

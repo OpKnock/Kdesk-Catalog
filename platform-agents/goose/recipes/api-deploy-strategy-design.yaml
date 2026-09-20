@@ -1,0 +1,31 @@
+title: Api Deploy Strategy Design
+description: Designs zero-downtime API deployment strategies — canary, blue-green, rolling — with Argo
+  Rollouts, Istio traffic splitting, and automated rollback.
+version: 2.0.0
+instructions: "# Api Deploy Strategy Design\n\nDesigns zero-downtime API deployment strategies — canary,\
+  \ blue-green, rolling — with Argo Rollouts, Istio traffic splitting, and automated rollback.\n\n## Instructions\n\
+  \n# API Deploy (Strategy Design)\n\nDesigns deployment strategies that keep APIs available during releases\
+  \ and roll back automatically on failure.\n\n## When to Use\n- Zero-downtime releases\n- Canary releases\
+  \ with metric analysis\n- Blue-green switching with instant rollback\n- Meeting availability SLAs\n\n\
+  ## Real Commands\n\n```bash\n# Install Argo Rollouts controller\nkubectl create namespace argo-rollouts\n\
+  kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml\n\
+  kubectl argo rollouts version\n\n# Watch a rollout\nkubectl argo rollouts get rollout api -n prod --watch\n\
+  \n# Promote / abort\nkubectl argo rollouts promote api -n prod\nkubectl argo rollouts abort api -n prod\n\
+  ```\n\n## Canary with Istio\n\n```yaml\n# virtual-service.yaml\napiVersion: networking.istio.io/v1beta1\n\
+  kind: VirtualService\nmetadata: {name: api-canary}\nspec:\n  hosts: [api]\n  http:\n    - route:\n \
+  \       - destination: {host: api, subset: stable, weight: 90}\n        - destination: {host: api, subset:\
+  \ canary, weight: 10}\n```\n\n```bash\nkubectl apply -f virtual-service.yaml\nistioctl analyze -n prod\n\
+  ```\n\n## Testing\nRun `kubectl argo rollouts get rollout --watch` and verify the analysis step pauses\
+  \ on bad metrics.\n\n## Best Practices\n- Always define an abort/promote gate\n- Verify health checks\
+  \ before traffic shift\n- Monitor error rate during rollout\n\n## Capabilities\n\n### strategy-design\n\
+  Select and model deployment strategies for API services with readiness gates and traffic weights\n\n\
+  **Commands:**\n- `kubectl apply -f rollout.yaml`\n- `kubectl argo rollouts get rollout api -n prod`\n\
+  - `kubectl argo rollouts promote api -n prod`\n- `kubectl argo rollouts abort api -n prod`\n- `istioctl\
+  \ analyze -n prod`\n\n**Examples:**\n- kubectl argo rollouts get rollout api --watch -n prod\n- kubectl\
+  \ argo rollouts promote api -n prod\n- istioctl analyze --context prod-cluster -n prod\n\n### traffic-splitting\n\
+  Route canary traffic with Istio VirtualServices and destination rules\n\n**Commands:**\n- `kubectl apply\
+  \ -f virtual-service.yaml`\n- `kubectl apply -f destination-rule.yaml`\n- `istioctl proxy-status`\n\
+  - `kubectl get virtualservice -n prod`\n- `kubectl describe virtualservice api-canary -n prod`\n\n**Examples:**\n\
+  - kubectl apply -f canary/virtual-service.yaml -f canary/destination-rule.yaml\n- istioctl proxy-status\
+  \ | grep api\n- kubectl get virtualservice -n prod -o yaml"
+prompt: Act as Api Deploy Strategy Design and handle the task per the instructions.

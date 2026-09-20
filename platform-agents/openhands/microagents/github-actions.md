@@ -1,0 +1,129 @@
+---
+name: "github-actions"
+description: "Author, validate, and operate GitHub Actions: workflow YAML, secrets, self-hosted runners, and run inspection via gh and actionlint."
+type: knowledge
+triggers: ["github-actions", "workflow-authoring", "run-operations", "secrets-and-runners"]
+---
+
+# github-actions
+
+Author, validate, and operate GitHub Actions: workflow YAML, secrets, self-hosted runners, and run inspection via gh and actionlint.
+
+## Instructions
+
+# GitHub Actions Engineering
+
+Build, validate, and operate CI/CD on GitHub Actions.
+
+## What This Skill Does
+
+- Writes workflow YAML with correct triggers, jobs, and expressions
+- Validates syntax locally with actionlint
+- Triggers, watches, reruns, and debugs runs with gh
+- Manages secrets, variables, environments, and runners
+- Hardens workflows against injection and secret leaks
+
+## When to Use
+
+- Setting up CI/CD in a GitHub repo
+- A workflow run failed and needs diagnosis
+- Registering self-hosted runners for specific hardware
+
+## Real Commands
+
+```bash
+# Author + validate
+actionlint .github/workflows/ci.yml
+yq '.on' .github/workflows/ci.yml
+
+# Run operations
+gh workflow run ci.yml -f environment=staging --ref main
+gh run list --limit 10
+gh run watch 4473148674 --exit-status
+gh run view 4473148674 --log-failed
+gh run rerun 4473148674 --failed
+gh run cancel 4473148674
+
+# Secrets / vars / runners
+gh secret set DEPLOY_TOKEN --body "s3cr3t"
+gh secret list
+gh variable set IMAGE_TAG --body "1.2.0"
+gh runner list
+./config.sh --url https://github.com/org/repo --token <token> --labels prod
+```
+
+## Workflow Template
+
+```yaml
+name: ci
+on:
+  push: { branches: [main] }
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci && npm test
+```
+
+## Best Practices
+
+- Pin actions to SHAs or major versions; audit third-party actions
+- Set `permissions:` at top level to least privilege
+- Never echo secrets; use env passthrough with masking
+- Use `gh run watch --exit-status` in CI scripts
+- Validate with actionlint in a pre-commit hook or a lint job
+
+## Capabilities
+
+### workflow-authoring
+Create and validate workflow files with correct syntax and events.
+
+**Commands:**
+- `actionlint .github/workflows/*.yml`
+- `gh workflow list`
+- `gh workflow disable ci.yml`
+- `gh api repos/{owner}/{repo}/actions/workflows --paginate`
+- `yq '.on' .github/workflows/ci.yml`
+
+**Examples:**
+- actionlint .github/workflows/deploy.yml
+- gh workflow list --all
+- gh api repos/{owner}/{repo}/actions/workflows
+
+### run-operations
+Trigger runs, watch them live, and fetch failed logs.
+
+**Commands:**
+- `gh workflow run ci.yml -f environment=staging`
+- `gh run list --workflow=ci.yml --limit 5`
+- `gh run watch demo-run-id --exit-status`
+- `gh run view demo-run-id --log-failed`
+- `gh run rerun demo-run-id --failed`
+- `gh run cancel demo-run-id`
+
+**Examples:**
+- gh workflow run ci.yml -f environment=staging
+- gh run view 4473148674 --log-failed
+- gh run rerun 4473148674 --failed
+
+### secrets-and-runners
+Manage repository secrets and self-hosted runner registration.
+
+**Commands:**
+- `gh secret set AWS_ACCESS_KEY_ID --body "value"`
+- `gh secret list`
+- `gh variable set MY_VAR --body "value"`
+- `gh runner list`
+- `./config.sh --url https://github.com/org/repo --token demo-token --labels prod,arm64`
+- `gh api repos/{owner}/{repo}/actions/runners`
+
+**Examples:**
+- gh secret set DEPLOY_TOKEN --body "s3cr3t"
+- gh secret list
+- gh runner list

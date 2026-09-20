@@ -1,0 +1,38 @@
+title: Contract Testing
+description: 'Contract testing APIs with Pact: consumer expectations, provider verification, and mock
+  services with pact-js.'
+version: 2.0.0
+instructions: "# Contract Testing\n\nContract testing APIs with Pact: consumer expectations, provider\
+  \ verification, and mock services with pact-js.\n\n## Instructions\n\n# Contract Testing (Pact)\n\n\
+  Test that consumers and providers agree on the API contract.\n\n## When to Use\n\n- Proving API compatibility\
+  \ without full integration tests\n- CI feedback on every consumer or provider change\n- Replacing brittle\
+  \ end-to-end tests between teams\n\n## Consumer Test\n\n```bash\nnpm install @pact-foundation/pact @pact-foundation/pact-node\n\
+  ```\n\n```js\nconst { PactV3 } = require('@pact-foundation/pact');\nconst provider = new PactV3({ consumer:\
+  \ 'WebApp', provider: 'UserService' });\n\ndescribe('UserService contract', () => {\n  it('returns a\
+  \ user', async () => {\n    await provider.addInteraction({\n      uponReceiving: 'a request for a user',\n\
+  \      withRequest: { method: 'GET', path: '/users/42' },\n      willRespondWith: { status: 200, body:\
+  \ { id: 42, name: 'alice' } },\n    });\n    await provider.executeTest(async (mockServer) => {\n  \
+  \    const res = await fetch(`${mockServer.url}/users/42`);\n      expect(await res.json()).toEqual({\
+  \ id: 42, name: 'alice' });\n    });\n  });\n});\n```\n\n```bash\nnpx jest --config jest.config.js\n\
+  ls pacts/\n```\n\n## Provider Verification\n\n```bash\nnpx @pact-foundation/pact-cli verify \\\n  --provider-base-url\
+  \ http://localhost:8080 \\\n  --pact-urls ./pacts/*.json\n```\n\n## Publish and Gate\n\n```bash\nnpx\
+  \ @pact-foundation/pact-cli publish ./pacts --broker-base-url http://localhost:9292 --consumer-version\
+  \ 1.0.0\nnpx @pact-foundation/pact-cli can-i-deploy --pacticipant UserService --version 2.0.0 --to-environment\
+  \ production\n```\n\n## Testing\n\n```bash\n# Break the provider response and re-run verification to\
+  \ see a mismatch\nnpm run test:provider\n```\n\n## Best Practices\n\n- Consumers define expectations;\
+  \ providers verify them\n- Use provider states for data setup\n- Run consumer tests fast in unit test\
+  \ suites\n- Publish pacts from CI with the commit SHA as version\n- Verify against latest pact of every\
+  \ consumer\n- Gate deploys with can-i-deploy\n- Keep matchers loose enough for safe evolution\n\n##\
+  \ Capabilities\n\n### pact-consumer\nWrite consumer contract tests with pact-js against a mock provider\n\
+  \n**Commands:**\n- `npm install @pact-foundation/pact @pact-foundation/pact-node`\n- `npx jest --config\
+  \ jest.config.js`\n- `npm test`\n- `npm run test:contract`\n\n**Examples:**\n- npm install @pact-foundation/pact\
+  \ && npx jest --config jest.config.js\n- npm test -- --runInBand\n- npx jest contracts/ -t 'a request\
+  \ for a user'\n\n### pact-verify\nRun provider verification against published pacts and mock the provider\
+  \ for local checks\n\n**Commands:**\n- `npx @pact-foundation/pact-cli verify --provider-base-url http://localhost:8080\
+  \ --pact-urls ./pacts/*.json`\n- `npx @pact-foundation/pact-cli publish ./pacts --broker-base-url http://localhost:9292\
+  \ --consumer-version 1.0.0`\n- `npx @pact-foundation/pact-cli can-i-deploy --pacticipant UserService\
+  \ --version 2.0.0 --to-environment production`\n- `npm run test:provider`\n\n**Examples:**\n- npx @pact-foundation/pact-cli\
+  \ verify --provider-base-url http://localhost:8080 --pact-urls ./pacts/*.json\n- npx @pact-foundation/pact-cli\
+  \ can-i-deploy --pacticipant WebApp --version 1.0.0 --to-environment production\n- npx @pact-foundation/pact-cli\
+  \ publish ./pacts --broker-base-url http://localhost:9292 --consumer-version 1.0.0"
+prompt: Act as Contract Testing and handle the task per the instructions.

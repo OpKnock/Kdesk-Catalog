@@ -1,0 +1,24 @@
+title: Quota Management
+description: Enforce per-consumer request caps with Redis-backed counters, quota middleware, and 429 responses
+  carrying retry metadata.
+version: 2.0.0
+instructions: "# Quota Management\n\nEnforce per-consumer request caps with Redis-backed counters, quota\
+  \ middleware, and 429 responses carrying retry metadata.\n\n## Instructions\n\n# Quota Management\n\n\
+  Quotas cap how many requests each consumer may make, enforced at the API layer.\n\n## What this skill\
+  \ does\n\n- Counts requests per key with Redis\n- Checks quota before serving\n- Returns 429 with retry\
+  \ info\n\n## When to use\n\n- Per-plan limits for API consumers\n- Fairness across tenants\n\n## Real\
+  \ commands\n\n```bash\n# Count per user per window\nredis-cli INCR user:42:requests\nredis-cli EXPIRE\
+  \ user:42:requests 60\nredis-cli GET user:42:requests\n\n# Store quota config\nredis-cli -n 3 SET quota:user:42\
+  \ 1000\n\n# Verify enforcement\ncurl -s -o /dev/null -w \"%{http_code}\\n\" -H \"X-Api-Key: key-42\"\
+  \ http://localhost:8080/api\n```\n\n## Check logic (pseudo)\n\n```python\nused = redis.incr(f\"user:{key}:requests\"\
+  )\nif used == 1:\n    redis.expire(f\"user:{key}:requests\", window)\nif used > quota(key):\n    return\
+  \ 429, {\"retry_after\": window}\n```\n\n## Response headers\n\n- `Retry-After: 60`\n- `X-RateLimit-Limit`,\
+  \ `X-RateLimit-Remaining`\n\n## Best practices\n\n- Make INCR+EXPIRE atomic or use the INCR+EXPIRE pattern\
+  \ with care\n- Read quotas from a config store, not code\n- Expose remaining quota in headers\n\n##\
+  \ Capabilities\n\n### quota-enforcement\nImplement per-consumer quotas with Redis counters and enforce\
+  \ them at the API layer.\n\n**Commands:**\n- `redis-cli INCR user:42:requests`\n- `redis-cli EXPIRE\
+  \ user:42:requests 60`\n- `redis-cli GET user:42:requests`\n- `redis-cli -n 3 SET quota:user:42 1000`\n\
+  - `curl -s -o /dev/null -w \"%{http_code}\\n\" -H \"X-Api-Key: key-42\" http://localhost:8080/api`\n\
+  \n**Examples:**\n- redis-cli INCR user:42:requests; redis-cli EXPIRE user:42:requests 60\n- redis-cli\
+  \ GET user:42:requests\n- curl -s -o /dev/null -w \"%{http_code}\\n\" -H \"X-Api-Key: key-42\" http://localhost:8080/api"
+prompt: Act as Quota Management and handle the task per the instructions.

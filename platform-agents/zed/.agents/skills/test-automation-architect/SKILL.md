@@ -1,0 +1,106 @@
+---
+name: "test-automation-architect"
+description: "Designs and implements test automation strategies across unit, integration, and E2E layers with coverage gates and parallel execution."
+---
+
+# test-automation-architect
+
+Designs and implements test automation strategies across unit, integration, and E2E layers with coverage gates and parallel execution.
+
+## Instructions
+
+# Test Automation Architecture
+
+Design scalable, reliable test suites across the pyramid.
+
+## What This Skill Does
+
+- Lays out unit/integration/E2E test structures
+- Configures coverage gates and parallel execution
+- Implements tagging for smoke vs full suites
+- Handles flakiness with retries and sharding
+
+## When to Use
+
+- Setting up testing from scratch for a service
+- Speeding up a slow test suite
+- Enforcing coverage policies in CI
+
+## Real Commands
+
+```bash
+# Python
+pytest -n 4 --cov=src --cov-report=term-missing tests/
+pytest --junitxml=results.xml
+
+# Node
+npx jest --ci --coverage --maxWorkers=50%
+npx jest --projects src/api src/ui
+
+# E2E
+npx playwright test --project=chromium --grep @smoke
+npx playwright test --shard=1/3 --retries=2 --reporter=html
+```
+
+## Pyramid Shape
+
+```text
+E2E:    10%  - Playwright, few, slow, business-critical
+API:    30%  - supertest/pytest, fast, contract-level
+Unit:   60%  - jest/pytest, instant, logic-level
+```
+
+## Best Practices
+
+- Keep unit tests deterministic; no network or clocks
+- Tag smoke tests and run them on every PR
+- Shard E2E across CI runners to keep feedback fast
+- Set coverage gates (e.g. 80% lines) that fail the build
+- Treat flaky tests as defects: quarantine or fix, never ignore
+
+## Capabilities
+
+### pytest-strategy
+Structure Python test suites with parallelism and coverage.
+
+**Commands:**
+- `pytest --maxfail=1 -q`
+- `pytest -n 4 tests/unit`
+- `pytest --cov=src --cov-report=term-missing`
+- `pytest --junitxml=results.xml`
+- `pytest --lf --last-failed-no-failures=all`
+
+**Examples:**
+- pytest -n 4 --cov=src tests/
+- pytest --junitxml=results.xml
+- pytest --lf
+
+### jest-strategy
+Organize JS/TS unit and integration tests with jest.
+
+**Commands:**
+- `npx jest --ci --coverage`
+- `npx jest --runInBand`
+- `npx jest --maxWorkers=50%`
+- `npx jest --projects src/api src/ui`
+- `npx jest --silent --testPathIgnorePatterns=e2e`
+
+**Examples:**
+- npx jest --ci --coverage
+- npx jest --maxWorkers=50%
+- npx jest --projects src/api src/ui
+
+### e2e-strategy
+Orchestrate end-to-end suites with Playwright.
+
+**Commands:**
+- `npx playwright test --project=chromium`
+- `npx playwright test --grep @smoke`
+- `npx playwright test --workers=4`
+- `npx playwright test --retries=2 --reporter=html`
+- `npx playwright test --shard=1/3`
+
+**Examples:**
+- npx playwright test --grep @smoke
+- npx playwright test --shard=1/3
+- npx playwright test --retries=2

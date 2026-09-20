@@ -1,0 +1,30 @@
+title: Throttling Pattern
+description: Configure and verify API rate limiting at the edge with nginx limit_req zones and at the
+  application layer with Redis fixed-window counters. Defines burst allowances, emits 429 responses with
+  Retry-After headers, and validates limit enforcement under load with ab and k6.
+version: 2.0.0
+instructions: "# Throttling Pattern\n\nConfigure and verify API rate limiting at the edge with nginx limit_req\
+  \ zones and at the application layer with Redis fixed-window counters. Defines burst allowances, emits\
+  \ 429 responses with Retry-After headers, and validates limit enforcement under load with ab and k6.\n\
+  \n## Instructions\n\n# Throttling Pattern\n\nHand-crafted skill for rate limiting APIs.\n\n## What this\
+  \ skill does\n\n- Configures nginx limit_req zones per key (IP, user, token)\n- Implements Redis fixed-window\
+  \ counters for app-level limits\n- Verifies 429 behavior under load\n\n## When to use\n\n- Protecting\
+  \ public endpoints from abuse\n- Enforcing per-customer quotas\n- Backstop for autoscaling during spikes\n\
+  \n## Real commands\n\n```bash\n# nginx: define the zone once, then apply\ncurl -i http://localhost:8080/api\
+  \ | grep -i 'HTTP/1.1 429'\n\n# Redis fixed window: count + TTL\nredis-cli INCR rate:user:42\nredis-cli\
+  \ EXPIRE rate:user:42 60\nredis-cli SET rate:user:42 1 EX 60 NX   # atomic first-hit\n\n# Verify under\
+  \ load\nab -n 2000 -c 100 http://localhost:8080/api\nk6 run --vus 200 --iterations 5000 throttle.js\n\
+  ```\n\n## nginx config\n\n```nginx\nlimit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;\n\n\
+  server {\n  location /api/ {\n    limit_req zone=api burst=20 nodelay;\n    limit_req_status 429;\n\
+  \  }\n}\n```\n\n## Redis check\n\n```bash\nCOUNT=$(redis-cli INCR rate:user:42)\nif [ \"$COUNT\" -le\
+  \ 10 ]; then\n  redis-cli EXPIRE rate:user:42 60\n  # allow the request\nelse\n  # return 429\nfi\n\
+  ```\n\n## Testing\n\n```bash\nab -n 2000 -c 100 http://localhost:8080/api   # count 429 responses\n\
+  curl -i http://localhost:8080/api | grep -i retry-after\n```\n\n## Best practices\n\n- Rate limit by\
+  \ authenticated user, not just IP, in production\n- Send 429 with Retry-After so clients back off politely\n\
+  - Keep limit state out of the app hot path: edge proxy first\n\n## Capabilities\n\n### rate-limit-config\n\
+  Configure and verify API rate limiting with nginx and Redis\n\n**Commands:**\n- `ab -n 2000 -c 100 http://localhost:8080/api`\n\
+  - `curl -i http://localhost:8080/api | grep -i 'HTTP/1.1 429'`\n- `redis-cli INCR rate:user:42`\n- `redis-cli\
+  \ EXPIRE rate:user:42 60`\n- `k6 run --vus 200 --iterations 5000 throttle.js`\n\n**Examples:**\n- curl\
+  \ -s -o /dev/null -w '%{http_code}\\n' -X POST http://localhost:8080/api -d '{}'\n- redis-cli SET rate:user:42\
+  \ 1 EX 60 NX\n- ab -n 2000 -c 100 http://localhost:8080/api"
+prompt: Act as Throttling Pattern and handle the task per the instructions.

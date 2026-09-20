@@ -1,0 +1,98 @@
+---
+name: "Airflow"
+description: "Builds and operates Airflow DAGs: local setup, DAG testing, task runs, and backfills."
+globs: ["**/*.py", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# Airflow
+
+Builds and operates Airflow DAGs: local setup, DAG testing, task runs, and backfills.
+
+## Instructions
+
+# Airflow
+
+Workflow orchestration: DAG authoring, scheduling, backfills, and troubleshooting
+via the Airflow CLI.
+
+## When to Use
+
+- Scheduling ETL and ML pipelines
+- Re-running failed or historical ranges (backfill)
+- Testing individual tasks without running a full DAG
+
+## Real Commands
+
+```bash
+# Install (recommended via pipx/venv)
+pip install apache-airflow
+
+# First-time database setup
+airflow db init
+airflow db upgrade
+
+# Create an admin user
+airflow users create --username admin --role Admin --email admin@example.com --firstname Admin --lastname User
+
+# Start services (two terminals)
+airflow scheduler
+airflow webserver --port 8080
+
+# DAG management
+airflow dags list
+airflow dags list-import-errors
+airflow dags show my_dag
+
+# Trigger a run
+airflow dags trigger my_dag --conf '{"env": "staging"}'
+
+# Test one task with a fixed execution date
+airflow tasks test my_dag extract 2024-01-01
+
+# Backfill a range
+airflow dags backfill -s 2024-01-01 -e 2024-01-10 my_dag --reset-dagruns
+```
+
+## Minimal DAG (dags/example.py)
+
+```python
+from datetime import datetime, timedelta
+from airflow import DAG
+from airflow.operators.bash import BashOperator
+
+with DAG("example", start_date=datetime(2024, 1, 1), schedule="@daily", catchup=False) as dag:
+    extract = BashOperator(task_id="extract", bash_command="python /app/extract.py")
+    load = BashOperator(task_id="load", bash_command="python /app/load.py")
+    extract >> load
+```
+
+## Best Practices
+
+- Keep DAGs idempotent and deterministic
+- Test with `airflow tasks test` before scheduling
+- Set proper `start_date` and use catchup deliberately
+- Put secrets in Airflow Variables/Connections, not code
+- Monitor with `airflow dags list-runs -d my_dag`
+
+## Example Response
+
+For a failed DAG run: identifies the failing task from logs, suggests the fix,
+then re-runs the single task or backfills the range.
+
+## Capabilities
+
+### airflow-operations
+Manage Airflow metadata, users, DAGs, and task runs from the CLI
+
+**Commands:**
+- `airflow db init`
+- `airflow users create --username admin --firstname A --lastname A --role Admin --email admin@localhost`
+- `airflow dags list`
+- `airflow dags trigger my_dag --conf '{"env": "prod"}'`
+- `airflow tasks test my_dag extract_task 2024-01-01`
+
+**Examples:**
+- airflow dags list-import-errors
+- airflow dags backfill -s 2024-01-01 -e 2024-01-10 my_dag
+- airflow scheduler --num-runs 1

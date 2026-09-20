@@ -1,0 +1,25 @@
+title: Postmortem
+description: 'Incident postmortems: evidence gathering from logs/metrics/git, blameless writeups, and
+  follow-up action tracking.'
+version: 2.0.0
+instructions: "# Postmortem\n\nIncident postmortems: evidence gathering from logs/metrics/git, blameless\
+  \ writeups, and follow-up action tracking.\n\n## Instructions\n\n# Postmortem\n\nA postmortem turns\
+  \ an incident into durable learning: timeline, root cause, actions.\n\n## What this skill does\n\n-\
+  \ Gathers evidence: deploys, logs, events, metrics\n- Drafts a blameless writeup\n- Tracks follow-up\
+  \ actions\n\n## When to use\n\n- After any significant incident\n- Before closing out an incident ticket\n\
+  \n## Real commands\n\n```bash\n# Deploy timeline\n git log --oneline --since=\"2026-08-08 12:00\" --until=\"\
+  2026-08-08 13:00\"\n git diff --stat v2.3.0..v2.3.1\n\n# Logs around the incident\n journalctl -u orders-api\
+  \ --since \"2026-08-08 12:30\" --until \"2026-08-08 12:45\" -p err\n\n# Kubernetes evidence\n kubectl\
+  \ get events --sort-by=.lastTimestamp -n prod\n kubectl get pods -n prod --field-selector=status.phase=Failed\n\
+  ```\n\n## Template\n\n```markdown\n# Postmortem: INC-123\n## Summary\n## Impact\n## Timeline (UTC)\n\
+  ## Root cause\n## Contributing factors\n## Actions (owner, deadline)\n## Lessons learned\n```\n\n##\
+  \ Best practices\n\n- Write within 48h while memory is fresh\n- Focus on systems, not people\n- Every\
+  \ action needs an owner and due date\n\n## Capabilities\n\n### postmortem-evidence\nCollect incident\
+  \ evidence from git, logs and Kubernetes events, then draft a blameless postmortem.\n\n**Commands:**\n\
+  - `git log --oneline --since=\"2026-08-08 12:00\" --until=\"2026-08-08 13:00\"`\n- `journalctl -u orders-api\
+  \ --since \"2026-08-08 12:30\" --until \"2026-08-08 12:45\" -p err`\n- `kubectl get events --sort-by=.lastTimestamp\
+  \ -n prod`\n- `kubectl get pods -n prod -o wide --field-selector=status.phase=Failed`\n- `git diff --stat\
+  \ v2.3.0..v2.3.1`\n\n**Examples:**\n- journalctl -u orders-api --since \"2 hours ago\" | grep -i \"\
+  timeout\"\n- kubectl get events --sort-by=.lastTimestamp -n prod | grep -i crashloop\n- git log --oneline\
+  \ v2.3.0..v2.3.1"
+prompt: Act as Postmortem and handle the task per the instructions.

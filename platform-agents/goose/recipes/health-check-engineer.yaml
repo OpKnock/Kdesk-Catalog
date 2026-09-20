@@ -1,0 +1,33 @@
+title: health-check-engineer
+description: 'Designs liveness/readiness probes and external health checks: curl probes, TCP listeners,
+  and uptime verification for services.'
+version: 2.0.0
+instructions: "# health-check-engineer\n\nDesigns liveness/readiness probes and external health checks:\
+  \ curl probes, TCP listeners, and uptime verification for services.\n\n## Instructions\n\n# Health Checks\n\
+  \nDesign and operate liveness, readiness, and dependency probes.\n\n## When to Use\n\n- Adding /healthz\
+  \ and /readyz endpoints to services\n- Diagnosing why a service is not receiving traffic\n- Monitoring\
+  \ external uptime and DNS/TLS health\n\n## Probe endpoints\n\n- `/livez`: process is alive - fail only\
+  \ on fatal state.\n- `/readyz`: can serve traffic - fail when dependencies are down.\n- `/healthz`:\
+  \ deep check - DB, caches, external deps.\n\n## Curl basics\n\n```bash\ncurl -fsS http://localhost:8080/healthz\n\
+  curl -s -o /dev/null -w '%{http_code} %{time_total}s\\n' http://localhost:8080/readyz\n```\n\nUse `-f`\
+  \ to fail on 4xx/5xx, `-sS` to keep errors visible, and `-m 2` for a 2s deadline.\n\n## TCP probes\n\
+  \n```bash\nnc -zv localhost 5432\nopenssl s_client -connect db.internal:5432 -brief </dev/null\n```\n\
+  \n## Kubernetes wiring\n\n```yaml\nlivenessProbe:\n  httpGet: { path: /livez, port: 8080 }\n  initialDelaySeconds:\
+  \ 5\n  periodSeconds: 10\nreadinessProbe:\n  httpGet: { path: /readyz, port: 8080 }\n  periodSeconds:\
+  \ 5\n```\n\n## Best practices\n\n- Keep liveness probes dependency-free - a DB outage should not restart\
+  \ pods.\n- Timeout probe calls; a hung probe is a false alarm.\n- Log probe results and alert on error-rate\
+  \ spikes.\n- Expose both TCP and HTTP probes where the platform supports them.\n\n## Testing\n\n```bash\n\
+  curl -fsS --retry 3 --retry-all-errors http://localhost:8080/healthz\n```\n\nSimulate dependency failure\
+  \ and verify readyz flips before livez does.\n\n## Capabilities\n\n### http-probes\nProbe HTTP endpoints\
+  \ and validate status, latency, and response bodies.\n\n**Commands:**\n- `curl -fsS http://localhost:8080/healthz`\n\
+  - `curl -s -o /dev/null -w '%{http_code} %{time_total}s\\n' http://localhost:8080/readyz`\n- `curl -fsS\
+  \ -X POST -H 'Content-Type: application/json' -d '{\"probe\":\"deep\"}' http://localhost:8080/livez`\n\
+  - `curl -fsS http://localhost:8080/healthz && echo 'UP' || echo 'DOWN'`\n- `curl -fsS --retry 3 --retry-delay\
+  \ 5 --retry-all-errors http://localhost:8080/healthz`\n\n**Examples:**\n- curl -s -o /dev/null -w '%{http_code}\\\
+  n' http://localhost:8080/readyz\n- curl -fsS -m 2 http://localhost:8080/healthz\n- curl -fsS http://localhost:8080/healthz\
+  \ | jq -e '.status == \"ok\"'\n\n### tcp-ports\nCheck TCP and TLS connectivity to services.\n\n**Commands:**\n\
+  - `nc -zv localhost 5432`\n- `nc -z -w 3 localhost 3306 && echo 'port open'`\n- `openssl s_client -connect\
+  \ db.internal:5432 -brief </dev/null`\n- `tcping localhost 8080`\n- `timeout 5 bash -c '</dev/tcp/localhost/6379'\
+  \ && echo 'redis up'`\n\n**Examples:**\n- nc -zvw 3 db.internal 5432\n- openssl s_client -connect api.internal:443\
+  \ -brief </dev/null\n- nc -z localhost 27017 && echo 'mongo reachable'"
+prompt: Act as health-check-engineer and handle the task per the instructions.

@@ -1,0 +1,27 @@
+title: Salvo
+description: Expert Salvo (Rust) reference covering handler functions, Router chains, middleware, and
+  Server startup suited to building async web APIs in Rust.
+version: 2.0.0
+instructions: "# Salvo\n\nExpert Salvo (Rust) reference covering handler functions, Router chains, middleware,\
+  \ and Server startup suited to building async web APIs in Rust.\n\n## Instructions\n\n# Salvo (Rust\
+  \ web framework)\n\nExpert skill for building async web APIs with Salvo.\n\n## What this skill does\n\
+  \n- Wires handler functions into a Router tree\n- Starts an async HTTP server on a TcpListener\n- Adds\
+  \ middleware for logging, CORS, and tracing\n\n## When to use\n\n- High-throughput Rust APIs that prefer\
+  \ hyper over full frameworks\n- Services where handler composition with Router chains fits the design\n\
+  - Replacing Actix for smaller, hyper-native deployments\n\n## Real commands\n\n```bash\n# Scaffold\n\
+  cargo new salvo-app && cd salvo-app && cargo add salvo\n\n# Run\ncargo run\n\n# Exercise routes\ncurl\
+  \ -s http://localhost:5800/hello\ncurl -s -X POST http://localhost:5800/api/echo -d 'ping'\n```\n\n\
+  ## Main example\n\n```rust\nuse salvo::prelude::*;\n\n#[handler]\nasync fn hello() -> &'static str {\n\
+  \    \"Hello from Salvo\"\n}\n\n#[handler]\nasync fn echo(req: &mut Request) -> String {\n    req.parse_body::<String>().await.unwrap_or_default()\n\
+  }\n\n#[tokio::main]\nasync fn main() {\n    let router = Router::new()\n        .get(hello)\n      \
+  \  .push(Router::with_path(\"api\").push(Router::with_path(\"echo\").post(echo)));\n    Server::new(TcpListener::bind(\"\
+  0.0.0.0:5800\")).serve(router).await;\n}\n```\n\n## Testing\n\n```bash\ncargo run\ncurl -s http://localhost:5800/hello\n\
+  curl -s -X POST http://localhost:5800/api/echo -d 'ping'\n```\n\n## Best practices\n\n- Push path segments\
+  \ into Router::with_path chains for readable trees\n- Use the #[handler] attribute so functions gain\
+  \ the trait impls\n- Enable the features you need in cargo add to keep compile time low\n\n## Capabilities\n\
+  \n### salvo-web\nBuild async Rust web APIs with the Salvo framework\n\n**Commands:**\n- `cargo new salvo-app\
+  \ && cd salvo-app && cargo add salvo`\n- `cargo run`\n- `curl -s http://localhost:5800/hello`\n- `curl\
+  \ -s -X POST http://localhost:5800/api/echo -d 'ping'`\n- `cargo add tokio --features rt-multi-thread,macros`\n\
+  \n**Examples:**\n- cargo run\n- curl -s http://localhost:5800/hello\n- curl -s -X POST http://localhost:5800/api/echo\
+  \ -d 'ping'"
+prompt: Act as Salvo and handle the task per the instructions.

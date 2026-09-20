@@ -1,0 +1,34 @@
+title: Trace Sampling
+description: Control trace volume with head and tail sampling strategies. Configures OpenTelemetry SDK
+  samplers via environment variables (traceidratio, parentbased_traceidratio, always_on), sets Jaeger
+  probabilistic or rate-limiting sampling, and describes collector-side tail sampling policies that retain
+  errors while dropping successful traces.
+version: 2.0.0
+instructions: "# Trace Sampling\n\nControl trace volume with head and tail sampling strategies. Configures\
+  \ OpenTelemetry SDK samplers via environment variables (traceidratio, parentbased_traceidratio, always_on),\
+  \ sets Jaeger probabilistic or rate-limiting sampling, and describes collector-side tail sampling policies\
+  \ that retain errors while dropping successful traces.\n\n## Instructions\n\n# Trace Sampling\n\nHand-crafted\
+  \ skill for controlling trace volume with sampling.\n\n## What this skill does\n\n- Configures SDK head\
+  \ sampling with OTel env vars\n- Sets Jaeger probabilistic or rate-limiting sampling\n- Describes tail\
+  \ sampling for error-priority retention\n\n## When to use\n\n- Trace volume blows past the backend budget\n\
+  - Errors must be kept even at low sample rates\n- Balancing cost vs debuggability per service\n\n##\
+  \ Real commands\n\n```bash\n# Head sampling: keep 10% of traces by trace-id hash\nexport OTEL_TRACES_SAMPLER=traceidratio\
+  \ OTEL_TRACES_SAMPLER_ARG=0.1\n\n# Parent-based: honor the parent span's decision\nexport OTEL_TRACES_SAMPLER=parentbased_traceidratio\
+  \ OTEL_TRACES_SAMPLER_ARG=0.25\n\n# Debug: keep everything\nexport OTEL_TRACES_SAMPLER=always_on\n\n\
+  # Jaeger: probabilistic 10%\ndocker run -p 16686:16686 jaegertracing/all-in-one --sampling.type=probabilistic\
+  \ --sampling.param=0.1\n\n# Jaeger: 10 spans/second per service\ndocker run -p 16686:16686 jaegertracing/all-in-one\
+  \ --sampling.type=ratelimiting --sampling.param=10\n\n# Ask the agent what it samples\ncurl -g 'http://localhost:16686/api/sampling?service=api'\
+  \ | jq\n```\n\n## Tail sampling (collector)\n\n```yaml\nprocessors:\n  tail_sampling:\n    decision_wait:\
+  \ 10s\n    policies:\n      - name: keep-errors\n        type: status_code\n        status_code: { status_codes:\
+  \ [ERROR] }\n      - name: keep-10-percent\n        type: probabilistic\n        probabilistic: { sampling_percentage:\
+  \ 10 }\n```\n\n## Testing\n\n```bash\nexport OTEL_TRACES_SAMPLER=traceidratio OTEL_TRACES_SAMPLER_ARG=1.0\n\
+  # run traffic, then lower to 0.1 and compare span counts in Jaeger\n```\n\n## Best practices\n\n- Use\
+  \ parent-based samplers in microservices to keep traces complete\n- Sample by error status in tail sampling\
+  \ for reliability work\n- Record sampler choice in service config for reproducibility\n\n## Capabilities\n\
+  \n### sampling-strategy\nConfigure head and tail trace sampling rates\n\n**Commands:**\n- `export OTEL_TRACES_SAMPLER=traceidratio\
+  \ OTEL_TRACES_SAMPLER_ARG=0.1`\n- `export OTEL_TRACES_SAMPLER=parentbased_traceidratio OTEL_TRACES_SAMPLER_ARG=0.25`\n\
+  - `docker run -p 16686:16686 jaegertracing/all-in-one --sampling.type=probabilistic --sampling.param=0.1`\n\
+  - `curl -g 'http://localhost:16686/api/sampling?service=api' | jq`\n- `export OTEL_TRACES_SAMPLER=always_on`\n\
+  \n**Examples:**\n- export OTEL_TRACES_SAMPLER=traceidratio OTEL_TRACES_SAMPLER_ARG=0.1\n- curl -g 'http://localhost:16686/api/sampling?service=api'\
+  \ | jq\n- docker run -p 16686:16686 jaegertracing/all-in-one --sampling.type=ratelimiting --sampling.param=10"
+prompt: Act as Trace Sampling and handle the task per the instructions.

@@ -1,0 +1,49 @@
+title: Kafka Compaction
+description: 'Operate Kafka log compaction: enable compacted topics, tune min.cleanable.dirty.ratio and
+  segment.ms, and verify tombstones and duplicate-key removal.'
+version: 2.0.0
+instructions: "# Kafka Compaction\n\nOperate Kafka log compaction: enable compacted topics, tune min.cleanable.dirty.ratio\
+  \ and segment.ms, and verify tombstones and duplicate-key removal.\n\n## Instructions\n\n# Kafka Compaction\n\
+  \nConfigure and operate Kafka log compaction for keyed, always-latest-value topics.\n\n## What this\
+  \ skill does\n\n- Enables cleanup.policy=compact on topics.\n- Tunes compaction frequency (min.cleanable.dirty.ratio)\
+  \ and segment rollover (segment.ms).\n- Verifies duplicate keys are removed and tombstones are applied.\n\
+  \n## When to use\n\n- Materialized state (user profiles, device registry) stored in Kafka.\n- Reduce\
+  \ storage for keyed topics that keep changing.\n- Enabling the Kafka Streams changelog compaction requirement.\n\
+  \n## Real commands\n\n```bash\n# Enable compaction\nkafka-configs.sh --bootstrap-server localhost:9092\
+  \ \\\n  --entity-type topics --entity-name orders --alter \\\n  --add-config cleanup.policy=compact\n\
+  \n# Compact aggressively (lower dirty ratio = more frequent compaction)\nkafka-configs.sh --bootstrap-server\
+  \ localhost:9092 \\\n  --entity-type topics --entity-name orders --alter \\\n  --add-config \"min.cleanable.dirty.ratio=0.01\"\
+  \n\n# Roll segments hourly; keep tombstones 1 day\nkafka-configs.sh --bootstrap-server localhost:9092\
+  \ \\\n  --entity-type topics --entity-name orders --alter \\\n  --add-config \"segment.ms=3600000,delete.retention.ms=86400000\"\
+  \n\n# Inspect config\nkafka-configs.sh --bootstrap-server localhost:9092 \\\n  --entity-type topics\
+  \ --entity-name orders --describe\n\n# Check log segments on disk\nkafka-log-dirs.sh --bootstrap-server\
+  \ localhost:9092 --describe --topic-list orders\n\n# Read keyed records to verify dedup\nkafka-console-consumer.sh\
+  \ --bootstrap-server localhost:9092 \\\n  --topic orders --from-beginning --property print.key=true\
+  \ --max-messages 10\n```\n\n## Config example (create with compaction)\n\n```bash\nkafka-topics.sh --bootstrap-server\
+  \ localhost:9092 --create \\\n  --topic user-profiles --partitions 6 --replication-factor 3 \\\n  --config\
+  \ cleanup.policy=compact --config min.cleanable.dirty.ratio=0.1\n```\n\n## Testing\n\n```bash\n# Produce\
+  \ a key twice, consume from beginning, expect only the newest value\necho '{\"key\":\"u-1\",\"v\":1}'\
+  \ | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic user-profiles --property parse.key=true\
+  \ --property key.separator=:\n```\n\n## Best practices\n\n- Compaction works per partition; order is\
+  \ preserved for a key.\n- Keep segment.ms small for keyed streams so dirty data rolls over fast.\n-\
+  \ Tombstones (null value) remove the key entirely after delete.retention.ms.\n- Don't use compacted\
+  \ topics for event logs; use retention-based topics.\n\n## Capabilities\n\n### enable-compaction\nEnable\
+  \ and tune log compaction per topic with kafka-configs.sh.\n\n**Commands:**\n- `kafka-configs.sh --bootstrap-server\
+  \ localhost:9092 --entity-type topics --entity-name orders --alter --add-config cleanup.policy=compact`\n\
+  - `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --alter\
+  \ --add-config \"min.cleanable.dirty.ratio=0.01\"`\n- `kafka-configs.sh --bootstrap-server localhost:9092\
+  \ --entity-type topics --entity-name orders --alter --add-config \"segment.ms=3600000,delete.retention.ms=86400000\"\
+  `\n- `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --describe`\n\
+  \n**Examples:**\n- kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name\
+  \ orders --alter --add-config cleanup.policy=compact\n- kafka-configs.sh --bootstrap-server localhost:9092\
+  \ --entity-type topics --entity-name orders --alter --add-config \"min.cleanable.dirty.ratio=0.01\"\n\
+  - kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name orders --describe\n\
+  \n### verify-compaction\nVerify compaction state, log segments, and tombstoned keys.\n\n**Commands:**\n\
+  - `kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders`\n- `kafka-log-dirs.sh\
+  \ --bootstrap-server localhost:9092 --describe --topic-list orders`\n- `kafka-console-consumer.sh --bootstrap-server\
+  \ localhost:9092 --topic orders --from-beginning --property print.key=true --max-messages 10`\n- `kafka-run-class.sh\
+  \ kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic orders --time -1`\n\n**Examples:**\n\
+  - kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders\n- kafka-console-consumer.sh\
+  \ --bootstrap-server localhost:9092 --topic orders --from-beginning --property print.key=true --max-messages\
+  \ 10\n- kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list orders"
+prompt: Act as Kafka Compaction and handle the task per the instructions.

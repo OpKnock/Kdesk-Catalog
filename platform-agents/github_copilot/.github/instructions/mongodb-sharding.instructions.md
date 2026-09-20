@@ -1,0 +1,72 @@
+---
+applyTo: "**/*.go **/*.r **/*.sh"
+---
+
+# Mongodb Sharding
+
+Deploy and manage MongoDB sharded clusters: config servers, mongos routers, shard collections and balanced data.
+
+## Instructions
+
+# MongoDB Sharding
+
+Sharding distributes data across multiple machines so write-heavy collections scale horizontally.
+
+## What this skill does
+
+- Starts shardsvr mongods behind a replica set name
+- Runs mongos routers against the config server replica set
+- Enables sharding and chooses shard keys
+
+## When to use
+
+- A collection outgrows a single server
+- Write throughput needs horizontal scaling
+- Building out a new sharded cluster
+
+## Real commands
+
+```bash
+# Shard member (needs --shardsvr and a replSet)
+mongod --shardsvr --replSet shard1 --dbpath /data/shard1 --port 27018
+
+# Config server (--configsvr, replica set cfgReplSet)
+mongod --configsvr --replSet cfgReplSet --dbpath /data/cfg --port 27019
+
+# mongos router
+mongos --configdb cfgReplSet/cfg1:27019,cfg2:27019,cfg3:27019 --port 27017
+
+# Through mongos:
+sh.addShard('shard1/mongo1:27018,mongo2:27018')
+sh.enableSharding('appdb')
+sh.shardCollection('appdb.orders', {customer_id: 'hashed'})
+sh.status()
+```
+
+## Shard key guidance
+
+- Hashed keys give even distribution; ranged keys allow locality
+- Never choose a low-cardinality or monotonically increasing key
+
+## Best practices
+
+- Always run shards as replica sets
+- Monitor `sh.status()` for chunk imbalance
+- Use `balancerStart/Stop` during maintenance windows
+
+## Capabilities
+
+### sharded-cluster-operations
+Configure shardsvr mongods, start mongos, enable sharding and manage chunk distribution.
+
+**Commands:**
+- `mongod --shardsvr --replSet shard1 --dbpath /data/shard1 --port 27018`
+- `mongos --configdb cfgReplSet/cfg1:27019,cfg2:27019,cfg3:27019 --bind_ip 0.0.0.0 --port 27017`
+- `mongosh --eval "sh.enableSharding('appdb')"`
+- `mongosh --eval "sh.shardCollection('appdb.orders', {customer_id: 'hashed'})"`
+- `mongosh --eval "sh.status()"`
+
+**Examples:**
+- mongosh --eval "sh.shardCollection('appdb.orders', {_id: 'hashed'})"
+- mongosh --eval "sh.moveChunk('appdb.orders', {customer_id: MinKey}, 'shard1')"
+- mongosh --eval "sh.addShard('shard1/mongo1:27018,mongo2:27018')"

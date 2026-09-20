@@ -1,0 +1,42 @@
+title: kyverno
+description: Kyverno Kubernetes policy engine. Real kyverno CLI.
+version: 1.0.0
+instructions: "# kyverno\n\nKyverno Kubernetes policy engine. Real kyverno CLI.\n\n## Instructions\n\n\
+  # Kyverno\n\nKyverno Kubernetes policy engine using real CLI.\n\n## When to Use\n\n- Kubernetes policies\n\
+  - Admission control\n- Policy enforcement\n- Generate resources\n\n## Commands\n\n```bash\n# Install\n\
+  brew install kyverno-cli  # macOS\nhelm install kyverno kyverno/kyverno -n kyverno --create-namespace\n\
+  \n# Apply policy\nkyverno apply policy.yaml -r resource.yaml\n\n# Test policy\nkyverno test policy.yaml\n\
+  \n# Validate\nkyverno validate policy.yaml\n\n# Generate\nkyverno generate policy.yaml -r resource.yaml\n\
+  \n# List policies\nkubectl get clusterpolicies\n\n# Check violations\nkubectl get policyreport\n```\n\
+  \n## Policy Types\n\n```yaml\n# Validate\napiVersion: kyverno.io/v1\nkind: ClusterPolicy\nmetadata:\n\
+  \  name: require-labels\nspec:\n  validationFailureAction: enforce\n  rules:\n    - name: check-for-labels\n\
+  \      match:\n        any:\n          - resources:\n              kinds:\n                - Pod\n \
+  \     validate:\n        message: \"Labels are required\"\n        pattern:\n          metadata:\n \
+  \           labels:\n              app: \"?*\"\n\n# Mutate\napiVersion: kyverno.io/v1\nkind: ClusterPolicy\n\
+  metadata:\n  name: add-labels\nspec:\n  rules:\n    - name: add-app-label\n      match:\n        any:\n\
+  \          - resources:\n              kinds:\n                - Pod\n      mutate:\n        patchStrategicMerge:\n\
+  \          metadata:\n            labels:\n              app: \"{{request.object.metadata.name}}\"\n\
+  \n# Generate\napiVersion: kyverno.io/v1\nkind: ClusterPolicy\nmetadata:\n  name: generate-networkpolicy\n\
+  spec:\n  rules:\n    - name: generate-networkpolicy\n      match:\n        any:\n          - resources:\n\
+  \              kinds:\n                - Namespace\n      generate:\n        kind: NetworkPolicy\n \
+  \       name: default-deny\n        namespace: \"{{request.object.metadata.name}}\"\n        data:\n\
+  \          spec:\n            podSelector: {}\n            policyTypes:\n              - Ingress\n \
+  \             - Egress\n```\n\n## Testing\n\n```bash\n# Test policy\nkyverno test policy.yaml\n\n# Test\
+  \ file\ncat > test.yaml <<EOF\n- name: test-policy\n  policy: policy.yaml\n  resources:\n    - name:\
+  \ pod-with-labels\n      kind: Pod\n      apiVersion: v1\n      data:\n        metadata:\n         \
+  \ labels:\n            app: test\n  result: pass\nEOF\n\n# Run tests\nkyverno test test.yaml\n```\n\n\
+  ## Examples\n\n```bash\n# Apply policy\nkyverno apply policy.yaml -r resource.yaml\n\n# Test policy\n\
+  kyverno test policy.yaml\n\n# Validate\nkyverno validate policy.yaml\n```\n\n## CI/CD\n\n```yaml\n#\
+  \ GitHub Actions\n- name: Apply policies\n  run: |\n    kyverno apply policy.yaml -r resource.yaml\n\
+  \n# GitLab CI\npolicy:\n  stage: security\n  script:\n    - kyverno apply policy.yaml -r resource.yaml\n\
+  ```\n\n## Capabilities\n\n### kyverno\nKyverno Kubernetes policy engine. Real kyverno CLI.\n\n**Commands:**\n\
+  - `brew install kyverno-cli`\n- `helm install kyverno kyverno/kyverno -n kyverno --create-namespace`\n\
+  - `kyverno apply policy.yaml -r resource.yaml`\n- `kyverno test policy.yaml`\n- `kyverno validate policy.yaml`\n\
+  - `kyverno generate policy.yaml -r resource.yaml`\n- `kubectl get clusterpolicies`\n- `kubectl get policyreport`\n\
+  - `kyverno test policy.yaml`\n- `cat > test.yaml <<EOF`\n- `- name: test-policy`\n- `policy: policy.yaml`\n\
+  - `resources:`\n- `- name: pod-with-labels`\n- `kind: Pod`\n- `apiVersion: v1`\n- `data:`\n- `metadata:`\n\
+  - `labels:`\n- `app: test`\n- `result: pass`\n- `EOF`\n- `kyverno test test.yaml`\n- `kyverno apply\
+  \ policy.yaml -r resource.yaml`\n- `kyverno test policy.yaml`\n- `kyverno validate policy.yaml`\n\n\
+  **Examples:**\n- brew install kyverno-cli\n- helm install kyverno kyverno/kyverno -n kyverno --create-namespace\n\
+  - kyverno apply policy.yaml -r resource.yaml"
+prompt: Act as kyverno and handle the task per the instructions.

@@ -1,0 +1,79 @@
+---
+type: agent_requested
+description: "Designs documentation site architecture: structure, navigation, code samples, and OpenAPI-based generation pipelines."
+---
+
+# Api Doc Site Architecture
+
+Designs documentation site architecture: structure, navigation, code samples, and OpenAPI-based generation pipelines.
+
+## Instructions
+
+# API Doc (Site Design)
+
+Designs the documentation site before filling it with content.
+
+## When to Use
+- Launching a developer portal
+- Reorganizing scattered docs
+- Automating reference generation
+
+## Real Commands
+
+```bash
+# Scaffold
+mkdir -p docs/guides docs/reference docs/tutorials docs/changelog
+
+# Generate reference from spec
+npx @redocly/cli lint openapi.yaml
+npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml
+npx @redocly/cli build-docs dist/bundled.yaml -o dist/index.html
+
+# Preview
+npx @redocly/cli preview-docs openapi.yaml
+```
+
+## Site Taxonomy
+- Tutorials: step-by-step onboarding
+- Guides: task-oriented how-tos
+- Reference: generated from OpenAPI
+- Changelog: releases and breaking changes
+
+## Testing
+Preview docs locally and verify every link and example.
+
+## Best Practices
+- Reference is generated; guides are curated
+- Search should index all sections
+
+## Capabilities
+
+### site-architecture
+Structure docs sites: guides, reference, tutorials, and changelog
+
+**Commands:**
+- `mkdir -p docs/guides docs/reference docs/tutorials docs/changelog`
+- `node -e "const fs=require('fs');fs.writeFileSync('docs/guides/quickstart.md','# Quickstart\n')"`
+- `node -e "const fs=require('fs');fs.writeFileSync('docs/changelog/CHANGELOG.md','# Changelog\n')"`
+- `node -e "console.log('nav: Guides > Reference > Tutorials')"`
+- `git add docs && git commit -m 'scaffold docs site'`
+
+**Examples:**
+- mkdir -p docs/guides docs/reference docs/tutorials docs/changelog
+- node -e "const fs=require('fs');fs.writeFileSync('docs/guides/quickstart.md','# Quickstart\n')"
+- git add docs && git commit -m 'scaffold docs site'
+
+### generation-pipeline
+Generate reference docs from OpenAPI with Redocly
+
+**Commands:**
+- `npx @redocly/cli lint openapi.yaml`
+- `npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml`
+- `npx @redocly/cli build-docs dist/bundled.yaml -o dist/index.html`
+- `npx @redocly/cli preview-docs openapi.yaml`
+- `npx @redocly/cli build-docs openapi.yaml --output public/reference.html`
+
+**Examples:**
+- npx @redocly/cli lint openapi.yaml && npx @redocly/cli build-docs openapi.yaml -o public/reference.html
+- npx @redocly/cli preview-docs openapi.yaml
+- npx @redocly/cli bundle openapi.yaml -o dist/bundled.yaml

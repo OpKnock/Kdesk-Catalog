@@ -1,0 +1,38 @@
+title: Load Testing Scenario Profiles
+description: 'Advanced load testing scenarios: k6 executors, vegeta histograms, distributed locust, and
+  Gatling simulations for realistic workload profiles.'
+version: 2.0.0
+instructions: "# Load Testing Scenario Profiles\n\nAdvanced load testing scenarios: k6 executors, vegeta\
+  \ histograms, distributed locust, and Gatling simulations for realistic workload profiles.\n\n## Instructions\n\
+  \n# Load Testing (Advanced Scenarios)\n\nRealistic workload profiles and distributed load generation.\n\
+  \n## What this skill does\n\n- Runs spike, soak, and arrival-rate scenarios with k6 executors.\n- Builds\
+  \ latency histograms with vegeta.\n- Distributes load across locust master/workers.\n\n## When to use\n\
+  \n- Validating autoscaling with spike patterns.\n- Finding memory leaks with soak tests.\n- Reproducing\
+  \ production traffic shapes.\n\n## Real commands\n\n```bash\n# k6 scenario runs\nk6 run --scenario spike\
+  \ scenarios.js\nk6 run --scenario soak scenarios.js\n\n# Vegeta histogram\nvegeta attack -rate=50/1s\
+  \ -duration=2m -targets=targets.txt \\\n  | vegeta report -type=hist[0,50ms,100ms,200ms,500ms]\n\n#\
+  \ Gatling simulation\ngatling.sh -s simulations.SpikeSimulation\n\n# Locust headless\nlocust -f locustfile.py\
+  \ --headless -u 500 -r 50 -t 3m \\\n  --host https://httpbin.org\n\n# Distributed: master + workers\n\
+  locust -f locustfile.py --master --master-bind-port=5557\nlocust -f locustfile.py --worker --master-host=10.0.0.10\n\
+  \n# k6 with tight trend stats\nk6 run --quiet --summary-trend-stats='avg,p(99.9)' soak.js\n```\n\n##\
+  \ k6 scenarios.js example\n\n```js\nexport const options = {\n  scenarios: {\n    spike: {\n      executor:\
+  \ 'constant-arrival-rate',\n      duration: '2m',\n      rate: 200,\n      preAllocatedVUs: 50,\n  \
+  \  },\n    soak: {\n      executor: 'ramping-vus',\n      stages: [\n        { duration: '5m', target:\
+  \ 100 },\n        { duration: '55m', target: 100 },\n        { duration: '5m', target: 0 },\n      ],\n\
+  \    },\n  },\n  thresholds: { http_req_failed: ['rate<0.01'] },\n};\n```\n\n## Testing\n\n```bash\n\
+  locust -f locustfile.py --headless -u 10 -r 2 -t 30s   # verify the file works\n```\n\n## Best practices\n\
+  \n- Keep soak tests close to production hours with monitoring attached.\n- Use arrival-rate executors\
+  \ when modeling real user concurrency.\n- Record the exact profile (rate, duration, stages) with every\
+  \ result.\n\n## Capabilities\n\n### scenario-profiles\nRun realistic profiles: spikes, soak, and arrival-rate\
+  \ tests.\n\n**Commands:**\n- `k6 run --scenario spike scenarios.js`\n- `k6 run --scenario soak scenarios.js`\n\
+  - `vegeta attack -rate=50/1s -duration=2m -targets=targets.txt | vegeta report -type=hist[0,50ms,100ms,200ms,500ms]`\n\
+  - `gatling.sh -s simulations.SpikeSimulation`\n\n**Examples:**\n- k6 run --scenario spike scenarios.js\n\
+  - vegeta attack -rate=50/1s -duration=2m -targets=targets.txt | vegeta report -type=hist[0,50ms,100ms,200ms,500ms]\n\
+  - gatling.sh -s simulations.SpikeSimulation\n\n### distributed-load\nRun distributed load with locust\
+  \ master/workers.\n\n**Commands:**\n- `locust -f locustfile.py --headless -u 500 -r 50 -t 3m --host\
+  \ https://httpbin.org`\n- `locust -f locustfile.py --master --master-bind-port=5557`\n- `locust -f locustfile.py\
+  \ --worker --master-host=10.0.0.10`\n- `k6 run --quiet --summary-trend-stats='avg,p(99.9)' soak.js`\n\
+  \n**Examples:**\n- locust -f locustfile.py --headless -u 500 -r 50 -t 3m --host https://httpbin.org\n\
+  - locust -f locustfile.py --worker --master-host=10.0.0.10\n- k6 run --quiet --summary-trend-stats='avg,p(99.9)'\
+  \ soak.js"
+prompt: Act as Load Testing Scenario Profiles and handle the task per the instructions.

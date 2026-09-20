@@ -1,0 +1,28 @@
+title: Graphql Gqlgen
+description: 'GraphQL in Go with gqlgen: generate resolvers from SDL, run the server, and iterate on schema-driven
+  development.'
+version: 2.0.0
+instructions: "# Graphql Gqlgen\n\nGraphQL in Go with gqlgen: generate resolvers from SDL, run the server,\
+  \ and iterate on schema-driven development.\n\n## Instructions\n\n# GraphQL gqlgen\n\n## What this skill\
+  \ does\n\ngqlgen is a schema-first GraphQL server library for Go: it generates all boilerplate from\
+  \ your SDL, leaving you to implement resolver functions with strong types.\n\n## When to use\n\n- Building\
+  \ typed GraphQL services in Go\n- Schema-first teams that want generated code, not mux glue\n- High-performance\
+  \ Go backends\n\n## Real commands\n\n```bash\n# Scaffold the project\n go run github.com/99designs/gqlgen\
+  \ init\n\n# Generate after schema changes\n go run github.com/99designs/gqlgen generate\n\n# Regenerate\
+  \ with a custom config\n go run github.com/99designs/gqlgen --config gqlgen.yml\n\n# Run and test\n\
+  \ go run ./server.go\n go test ./... -v\n```\n\n## gqlgen.yml example\n\n```yaml\nschema:\n  - schema.graphql\n\
+  resolver:\n  layout: follow-schema\n  dir: graph\n  package: graph\nautobind:\n  - \"github.com/example/orders/graph/model\"\
+  \n```\n\n## Resolver stub example\n\n```go\nfunc (r *queryResolver) Order(ctx context.Context, id string)\
+  \ (*model.Order, error) {\n\to, err := r.OrdersRepo.Get(ctx, id)\n\tif errors.Is(err, storage.ErrNotFound)\
+  \ {\n\t\treturn nil, fmt.Errorf(\"order %s not found\", id)\n\t}\n\treturn o, err\n}\n```\n\n## Testing\n\
+  \n```bash\n# Hit the generated playground endpoint\ncurl -s -X POST http://localhost:8080/query -H 'Content-Type:\
+  \ application/json' -d '{\"query\":\"{ order(id: \\\"1\\\") { id } }\"}' | jq\n```\n\n## Best practices\n\
+  \n- Keep the SDL as the source of truth; never hand-edit generated files.\n- Re-run generate in CI and\
+  \ fail on git diff.\n- Autobind model types to avoid duplicate model structs.\n- Implement resolvers\
+  \ in a separate layer (repos/services).\n- Use gqlgen plugins sparingly; stock generators cover most\
+  \ needs.\n\n## Capabilities\n\n### gqlgen-codegen\nGenerate Go resolver code from GraphQL SDL and run\
+  \ the server.\n\n**Commands:**\n- `go run github.com/99designs/gqlgen init`\n- `go run github.com/99designs/gqlgen\
+  \ generate`\n- `go run github.com/99designs/gqlgen --config gqlgen.yml`\n- `go run ./server.go`\n- `go\
+  \ test ./... -v`\n\n**Examples:**\n- go run github.com/99designs/gqlgen init && go run github.com/99designs/gqlgen\
+  \ generate\n- go run ./server.go\n- go run github.com/99designs/gqlgen generate && go test ./... -v"
+prompt: Act as Graphql Gqlgen and handle the task per the instructions.

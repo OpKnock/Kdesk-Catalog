@@ -1,0 +1,29 @@
+title: Graphql Absinthe
+description: 'GraphQL on Elixir with Absinthe: scaffold schemas, run the mix compiler, generate docs,
+  and test GraphQL queries.'
+version: 2.0.0
+instructions: "# Graphql Absinthe\n\nGraphQL on Elixir with Absinthe: scaffold schemas, run the mix compiler,\
+  \ generate docs, and test GraphQL queries.\n\n## Instructions\n\n# GraphQL Absinthe\n\n## What this\
+  \ skill does\n\nAbsinthe is the GraphQL implementation for Elixir. Schemas are defined with the `use\
+  \ Absinthe.Schema` macro, resolvers handle fields, and mix tasks export the schema as SDL/JSON for tooling.\n\
+  \n## When to use\n\n- Building GraphQL APIs on Phoenix/Elixir\n- Exporting the schema for client codegen\n\
+  - Testing resolvers in isolation\n\n## Real commands\n\n```bash\n# Export schema as SDL/JSON\nmix absinthe.schema.sdl\
+  \ --schema MyApp.Schema > schema.graphql\nmix absinthe.schema.json --schema MyApp.Schema > schema.json\n\
+  \n# Tests\nmix test test/graphql\n\n# Interactive\niex -S mix phx.server\n```\n\n## Schema example\n\
+  \n```elixir\ndefmodule MyApp.Schema do\n  use Absinthe.Schema\n\n  import_types Absinthe.Type.Custom\n\
+  \n  query do\n    field :order, :order do\n      arg :id, non_null(:id)\n      resolve fn %{id: id},\
+  \ _ ->\n        case Orders.get(id) do\n          nil -> {:error, \"not found\"}\n          order ->\
+  \ {:ok, order}\n        end\n      end\n    end\n  end\n\n  object :order do\n    field :id, non_null(:id)\n\
+  \    field :status, non_null(:string)\n  end\nend\n```\n\n## Testing\n\n```elixir\n# Absinthe test helper:\
+  \ run a query against the schema directly\nAbsinthe.run(~s({ order(id: \"1\") { id status } }), MyApp.Schema)\n\
+  ```\n\n## Best practices\n\n- Keep resolvers in context modules, not inline in the schema.\n- Use `Absinthe.Test`\
+  \ for schema-level tests without HTTP.\n- Export the SDL in CI and diff it to catch schema drift.\n\
+  - Use dataloader for batched associations.\n- Document fields with `@doc` strings; they surface in schema\
+  \ tooling.\n\n## Capabilities\n\n### absinthe-development\nManage Absinthe schemas, compile, and run\
+  \ queries in a Phoenix/IEx context.\n\n**Commands:**\n- `mix deps.get && mix absinthe.schema.json --schema\
+  \ MyApp.Schema > schema.json`\n- `mix absinthe.schema.sdl --schema MyApp.Schema > schema.graphql`\n\
+  - `mix test test/graphql`\n- `mix run -e \"IO.inspect(MyApp.Schema)\"`\n- `iex -S mix phx.server`\n\n\
+  **Examples:**\n- mix absinthe.schema.sdl --schema MyApp.Schema > schema.graphql\n- mix test test/graphql\n\
+  - mix absinthe.schema.json --schema MyApp.Schema > schema.json && jq '.data.__schema.queryType.name'\
+  \ schema.json"
+prompt: Act as Graphql Absinthe and handle the task per the instructions.

@@ -1,0 +1,32 @@
+title: Sast Dast
+description: Combines static analysis (bandit, semgrep, Trivy) with dynamic testing (OWASP ZAP, nikto,
+  nuclei) for full application security coverage.
+version: 2.0.0
+instructions: "# Sast Dast\n\nCombines static analysis (bandit, semgrep, Trivy) with dynamic testing (OWASP\
+  \ ZAP, nikto, nuclei) for full application security coverage.\n\n## Instructions\n\n# SAST + DAST\n\n\
+  Layered application security: static analysis in CI, dynamic testing against running apps.\n\n## What\
+  \ This Skill Does\n\n- Runs language-specific SAST scanners (bandit, gosec, eslint)\n- Scans IaC and\
+  \ dependencies in the same pipeline\n- Executes OWASP ZAP baseline and full scans against environments\n\
+  - Correlates findings into a single remediation report\n\n## When to Use\n\n- Pre-release security gate\
+  \ for web applications\n- API security review with OpenAPI-driven ZAP scans\n- Investigating a suspected\
+  \ app-level vulnerability\n\n## Real Commands\n\n```bash\n# SAST\nbandit -r src/ -f json -o bandit.json\n\
+  semgrep scan --config p/owasp-top-ten .\ntrivy fs --scanners vuln,secret,config .\ngosec ./...\n\n#\
+  \ DAST against staging\nzap-baseline.py -t https://staging.example.com -r report.html\nzap-full-scan.py\
+  \ -t https://staging.example.com -J zap.json\nnikto -h https://staging.example.com\nnuclei -u https://staging.example.com\
+  \ -severity high,critical\nzap-api-scan.py -t https://staging.example.com/swagger.json -f openapi\n\
+  ```\n\n## Pipeline Shape\n\n```yaml\nstages:\n  sast:\n    - bandit -r src/ && semgrep scan --config\
+  \ auto .\n  deps:\n    - trivy fs --scanners vuln,secret,config .\n  dast:\n    - zap-baseline.py -t\
+  \ $STAGING_URL -r report.html\n```\n\n## Best Practices\n\n- Run SAST on every PR; DAST on staging after\
+  \ deploy\n- Use ZAP's API scan against the OpenAPI spec to hit every endpoint\n- De-duplicate by CWE\
+  \ across tools\n- Gate deploys on critical SAST; use DAST as release evidence\n- Protect staging environments\
+  \ with auth tokens in ZAP scans\n\n## Capabilities\n\n### sast-scanning\nStatic scans for Python, JS,\
+  \ Go, and infrastructure code.\n\n**Commands:**\n- `bandit -r app/ -f json -o bandit.json`\n- `semgrep\
+  \ scan --config auto .`\n- `trivy fs --scanners vuln,secret,config .`\n- `npx eslint --format sarif\
+  \ .`\n- `gosec ./...`\n\n**Examples:**\n- bandit -r src/ -ll\n- semgrep scan --config p/owasp-top-ten\
+  \ .\n- trivy fs --scanners config --severity HIGH .\n\n### dast-scanning\nDynamic scanning against running\
+  \ applications.\n\n**Commands:**\n- `zap-baseline.py -t http://localhost:8080 -r report.html`\n- `zap-full-scan.py\
+  \ -t http://localhost:8080 -J zap.json`\n- `nikto -h http://localhost:8080 -o nikto.html`\n- `nuclei\
+  \ -u http://localhost:8080 -severity high,critical`\n- `zap-api-scan.py -t http://localhost:8080/v3/api-docs\
+  \ -f openapi`\n\n**Examples:**\n- zap-baseline.py -t http://localhost:8080 -r report.html\n- nikto -h\
+  \ http://localhost:8080\n- zap-api-scan.py -t http://localhost:8080/api/swagger.json -f openapi"
+prompt: Act as Sast Dast and handle the task per the instructions.

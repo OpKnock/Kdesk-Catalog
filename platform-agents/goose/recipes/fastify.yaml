@@ -1,0 +1,29 @@
+title: Fastify
+description: 'Build high-performance Node.js APIs with Fastify: plugins, schema validation, hooks, and
+  benchmarking with autocannon.'
+version: 2.0.0
+instructions: "# Fastify\n\nBuild high-performance Node.js APIs with Fastify: plugins, schema validation,\
+  \ hooks, and benchmarking with autocannon.\n\n## Instructions\n\n# Fastify\n\n## What this skill does\n\
+  \nFastify is a fast, low-overhead Node.js framework with JSON Schema validation built in. It is plugin-based,\
+  \ encapsulated, and ships with benchmarks-first performance tooling (autocannon).\n\n## When to use\n\
+  \n- Building APIs where latency and throughput matter\n- Organizing code into plugins with shared decorators\
+  \ and hooks\n- Validating payloads with JSON Schema without extra libraries\n\n## Real commands\n\n\
+  ```bash\n# Scaffold\nnpm create fastify@latest my-app\ncd my-app\n\n# Run dev/prod\nnpm run dev\nnpm\
+  \ start\n\n# Plugins\nnpm install @fastify/cors @fastify/jwt\n\n# Load test\nnpx autocannon -c 50 -d\
+  \ 10 http://localhost:3000/api/orders\n```\n\n## Route with schema example\n\n```javascript\nconst fastify\
+  \ = require('fastify')({ logger: true })\n\nfastify.get('/api/orders/:id', {\n  schema: {\n    params:\
+  \ { type: 'object', properties: { id: { type: 'string' } } },\n    response: { 404: { type: 'object',\
+  \ properties: { message: { type: 'string' } } } }\n  }\n}, async (request, reply) => {\n  const order\
+  \ = await db.find(request.params.id)\n  if (!order) return reply.code(404).send({ message: 'not found'\
+  \ })\n  return order\n})\n\nfastify.listen({ port: 3000 })\n```\n\n## Testing\n\n```bash\nnpm run test\n\
+  # or manual smoke\ncurl -s localhost:3000/api/orders/1 | jq\n```\n\n## Best practices\n\n- Encapsulate\
+  \ features in plugins; pass shared state via decorators.\n- Always define JSON Schema for routes to\
+  \ get serialization speedups.\n- Use fastify.addHook for auth/logging instead of middleware wrappers.\n\
+  - Benchmark every change with autocannon and keep a baseline file.\n- Register plugins with fastify-plugin\
+  \ when they must cross encapsulation.\n\n## Capabilities\n\n### fastify-development\nScaffold, run,\
+  \ extend, and benchmark Fastify applications.\n\n**Commands:**\n- `npm create fastify@latest my-app`\n\
+  - `npm install fastify @fastify/cors @fastify/jwt`\n- `npm run dev`\n- `npm start`\n- `npx autocannon\
+  \ -c 50 -d 10 http://localhost:3000/api/orders`\n- `npm run test`\n\n**Examples:**\n- npm create fastify@latest\
+  \ my-app && cd my-app && npm run dev\n- npx autocannon -c 50 -d 10 http://localhost:3000/api/orders\n\
+  - npm install @fastify/cors @fastify/jwt && npm start"
+prompt: Act as Fastify and handle the task per the instructions.

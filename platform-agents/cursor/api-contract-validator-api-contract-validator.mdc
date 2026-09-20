@@ -1,0 +1,81 @@
+---
+description: "Validates API contracts continuously: response schema checks at runtime, spec diffs in CI, and consumer contract verification."
+globs: ["**/*.json", "**/*.py", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
+alwaysApply: false
+---
+
+# api-contract-validator-api-contract-validator
+
+Validates API contracts continuously: response schema checks at runtime, spec diffs in CI, and consumer contract verification.
+
+## Instructions
+
+# API Contract Validator
+
+Validates contracts everywhere: at runtime, in tests, and in CI diffs.
+
+## When to Use
+- Spec drift reaches production
+- Teams need early breaking-change alerts
+- Third-party responses must match contracts
+
+## Real Commands
+
+```bash
+# Runtime validation
+npm install express-openapi-validator
+
+# Test-time response checks
+npm install supertest --save-dev
+npx jest
+
+# CI diff gates
+openapi-diff --fail-on-incompatible v1.yaml v2.yaml
+
+# Probe responses
+curl -s http://localhost:3000/api/products/1 | python -m json.tool
+```
+
+## Validation Layers
+- Runtime middleware: request/response shapes
+- Tests: supertest assertions
+- CI: openapi-diff on PRs
+
+## Testing
+Add negative tests: send responses that violate the schema and assert 500-level handling.
+
+## Best Practices
+- One spec per version, diffs in CI
+- Log validation failures with request IDs
+
+## Capabilities
+
+### runtime-validation
+Validate API responses at runtime against the OpenAPI contract
+
+**Commands:**
+- `npm install express-openapi-validator`
+- `node -e "const v=require('express-openapi-validator');console.log(typeof v.middleware)"`
+- `npm install @faker-js/faker --save-dev`
+- `curl -s http://localhost:3000/api/products/1 | python -m json.tool`
+- `npm install supertest --save-dev`
+
+**Examples:**
+- npm install express-openapi-validator
+- curl -s http://localhost:3000/api/products/1 | python -m json.tool
+- npm install supertest --save-dev && npx jest
+
+### spec-diff-checking
+Diff specs across versions in CI to block breaking changes
+
+**Commands:**
+- `openapi-diff v1.yaml v2.yaml`
+- `openapi-diff --fail-on-incompatible v1.yaml v2.yaml`
+- `openapi-diff --fail-on-changed v1.yaml v2.yaml`
+- `node -e "const {compare}=require('openapi-spec-validator');console.log(typeof compare)" 2>/dev/null || echo 'install openapi-spec-validator'`
+- `git diff v1.yaml v2.yaml --stat`
+
+**Examples:**
+- openapi-diff --fail-on-incompatible v1.yaml v2.yaml
+- openapi-diff v1.yaml v2.yaml | grep -i 'breaking'
+- git diff v1.yaml v2.yaml --stat && openapi-diff v1.yaml v2.yaml

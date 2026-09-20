@@ -1,0 +1,85 @@
+---
+name: "regression-testing"
+description: "Expert reference using pytest focused reruns, flaky test triage, git bisect to locate bug introduction, and CI gating with JUnit XML reports."
+---
+
+# Regression Testing
+
+Expert reference using pytest focused reruns, flaky test triage, git bisect to locate bug introduction, and CI gating with JUnit XML reports.
+
+## Instructions
+
+# Regression Testing
+
+Expert skill for catching and diagnosing regressions in API codebases.
+
+## What this skill does
+
+- Runs the full suite and reruns only last-failed tests after a fix
+- Isolates tests with -k expressions for fast local iteration
+- Uses git bisect to pinpoint the commit that introduced a regression
+
+## When to use
+
+- A feature change broke unrelated behavior
+- A flaky test is blocking CI
+- You need to identify exactly which commit broke an endpoint
+
+## Real commands
+
+```bash
+# Full suite, quiet
+pytest tests/ -q
+
+# Rerun only the tests that failed last time
+pytest tests/ --lf --tb=short
+
+# Targeted subset with JUnit output for CI
+pytest tests/ -k 'auth or billing' --junitxml=report.xml
+
+# Slowest tests to spot perf regressions
+pytest tests/ --durations=10 -q
+
+# Find the breaking commit
+git bisect start
+git bisect bad            # current HEAD is broken
+git bisect good v1.2.0    # this tag was fine
+git bisect run pytest tests/ -q
+```
+
+## Flaky test triage
+
+```bash
+# Repeat a single test many times
+pytest tests/test_auth.py::test_login -x --count=20
+```
+
+## Testing in CI
+
+```yaml
+- name: Regression suite
+  run: pytest tests/ -q --junitxml=junit.xml --maxfail=3
+```
+
+## Best practices
+
+- Keep the suite green on main; --lf makes local reruns fast
+- JUnit XML lets CI dashboards track flakiness over time
+- Automate git bisect with `git bisect run` so no manual builds are needed
+
+## Capabilities
+
+### regression-guard
+Find and prevent regressions with pytest and git bisect
+
+**Commands:**
+- `pytest tests/ -q`
+- `pytest tests/ --lf --tb=short`
+- `pytest tests/ -k 'auth or billing' --junitxml=report.xml`
+- `git bisect start && git bisect bad && git bisect good v1.2.0`
+- `git log --oneline -15`
+
+**Examples:**
+- pytest tests/ --lf -x
+- git bisect run pytest tests/ -q
+- pytest tests/ --durations=10 -q

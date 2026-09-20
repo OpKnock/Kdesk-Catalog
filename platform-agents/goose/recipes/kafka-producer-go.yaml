@@ -1,0 +1,35 @@
+title: Kafka Producer Go
+description: 'Build Kafka producers in Go with segmentio/kafka-go and IBM/sarama: async writes, batching,
+  acks tuning, and delivery verification.'
+version: 2.0.0
+instructions: "# Kafka Producer Go\n\nBuild Kafka producers in Go with segmentio/kafka-go and IBM/sarama:\
+  \ async writes, batching, acks tuning, and delivery verification.\n\n## Instructions\n\n# Kafka Producer\
+  \ (Go)\n\nWrite high-throughput Go producers with segmentio/kafka-go or sarama.\n\n## What this skill\
+  \ does\n\n- Builds batch writers with kafka-go and async producers with sarama.\n- Tunes acks, batching,\
+  \ and retries for throughput vs. durability.\n- Verifies deliveries against the broker.\n\n## When to\
+  \ use\n\n- Go services publishing domain events.\n- High-volume pipelines needing async, batched writes.\n\
+  - Migrating from kafka-console-producer to app-managed producers.\n\n## Real commands\n\n```bash\n#\
+  \ Dependencies\ngo get github.com/segmentio/kafka-go\ngo get github.com/IBM/sarama\n\n# Run producer\
+  \ (1000 messages)\ngo run ./cmd/producer -topic orders -count 1000 -brokers localhost:9092\n\n# Build\n\
+  go build -o bin/producer ./cmd/producer\n\n# Verify delivery\nkafka-console-consumer.sh --bootstrap-server\
+  \ localhost:9092 \\\n  --topic orders --from-beginning --max-messages 5\nkafka-run-class.sh kafka.tools.GetOffsetShell\
+  \ \\\n  --broker-list localhost:9092 --topic orders --time -1\n```\n\n## Producer example (kafka-go)\n\
+  \n```go\nw := &kafka.Writer{\n  Addr:         kafka.TCP(\"localhost:9092\"),\n  Topic:        \"orders\"\
+  ,\n  Balancer:     &kafka.LeastBytes{},\n  RequiredAcks: kafka.RequireAll,\n  Async:        true,\n\
+  }\nfor i := 0; i < 1000; i++ {\n  w.WriteMessages(context.Background(), kafka.Message{\n    Key:   []byte(fmt.Sprintf(\"\
+  order-%d\", i)),\n    Value: []byte(fmt.Sprintf(\"{\"qty\":%d}\", i)),\n  })\n}\nw.Close()\n```\n\n\
+  ## Testing\n\n```bash\ngo test ./... \n```\n\n## Best practices\n\n- Use Async writers for fire-and-forget\
+  \ at high volume; sync for critical paths.\n- Set RequiredAcks to RequireAll with idempotent producers\
+  \ in production.\n- Close the writer on shutdown so buffered messages flush.\n\n## Capabilities\n\n\
+  ### go-producer-app\nScaffold and run Go producers using kafka-go Writer or sarama AsyncProducer.\n\n\
+  **Commands:**\n- `go get github.com/segmentio/kafka-go`\n- `go get github.com/IBM/sarama`\n- `go run\
+  \ ./cmd/producer -topic orders -count 1000 -brokers localhost:9092`\n- `go build -o bin/producer ./cmd/producer`\n\
+  - `go test ./...`\n\n**Examples:**\n- go run ./cmd/producer -topic orders -count 1000 -brokers localhost:9092\n\
+  - go build -o bin/producer ./cmd/producer && ./bin/producer\n- go vet ./...\n\n### delivery-verify\n\
+  Verify produced records landed correctly with consumers and offsets.\n\n**Commands:**\n- `kafka-console-consumer.sh\
+  \ --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages 5`\n- `kafka-consumer-groups.sh\
+  \ --bootstrap-server localhost:9092 --describe --group verify`\n- `kafka-run-class.sh kafka.tools.GetOffsetShell\
+  \ --broker-list localhost:9092 --topic orders --time -1`\n\n**Examples:**\n- kafka-console-consumer.sh\
+  \ --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages 5\n- kafka-run-class.sh\
+  \ kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic orders --time -1"
+prompt: Act as Kafka Producer Go and handle the task per the instructions.

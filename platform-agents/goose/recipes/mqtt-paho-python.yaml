@@ -1,0 +1,27 @@
+title: Mqtt Paho Python
+description: 'Write MQTT clients in Python with paho-mqtt: connect, publish, subscribe with callbacks,
+  and TLS settings.'
+version: 2.0.0
+instructions: "# Mqtt Paho Python\n\nWrite MQTT clients in Python with paho-mqtt: connect, publish, subscribe\
+  \ with callbacks, and TLS settings.\n\n## Instructions\n\n# Paho MQTT Python\n\npaho-mqtt is the standard\
+  \ Python MQTT client, used in IoT scripts and backend services alike.\n\n## What this skill does\n\n\
+  - Installs paho-mqtt and verifies the import\n- Writes publish/subscribe scripts with the callback model\n\
+  - Configures TLS and retained messages\n\n## When to use\n\n- Quick IoT prototypes and data pipelines\n\
+  - Python services that emit or consume events\n\n## Real commands\n\n```bash\n# Install\npip install\
+  \ paho-mqtt\npython3 -m pip show paho-mqtt\n\n# Run scripts (write pub.py / sub.py)\npython3 pub.py\
+  \ -h localhost -t sensors/temp -m 21.5\npython3 sub.py -h localhost -t sensors/#\n```\n\n## Publisher\n\
+  \n```python\nimport paho.mqtt.client as mqtt\nc = mqtt.Client()\nc.connect(\"localhost\", 1883)\nc.publish(\"\
+  sensors/temp\", \"21.5\", qos=1)\nc.disconnect()\n```\n\n## Subscriber with callbacks\n\n```python\n\
+  def on_message(client, userdata, msg):\n    print(f\"{msg.topic}: {msg.payload.decode()}\")\n\nc = mqtt.Client()\n\
+  c.on_message = on_message\nc.connect(\"localhost\", 1883)\nc.subscribe(\"sensors/#\", qos=0)\nc.loop_forever()\n\
+  ```\n\n## TLS\n\n```python\nc.tls_set(ca_certs=\"ca.crt\", certfile=\"client.crt\", keyfile=\"client.key\"\
+  )\nc.connect(\"broker.example.com\", 8883)\n```\n\n## Best practices\n\n- Call `loop_start()`/`loop_forever()`\
+  \ consistently\n- Set a Client ID for persistent sessions\n- Keep QoS 0 for telemetry, QoS 1 for events\
+  \ that matter\n\n## Capabilities\n\n### paho-python-client\nInstall paho-mqtt and build pub/sub clients\
+  \ with the callback-based Python API.\n\n**Commands:**\n- `pip install paho-mqtt`\n- `python3 -m pip\
+  \ show paho-mqtt`\n- `python3 pub.py -h localhost -t sensors/temp -m 21.5`\n- `python3 sub.py -h localhost\
+  \ -t sensors/#`\n- `python3 -c \"import paho.mqtt.client as mqtt; print(mqtt.__version__ if hasattr(mqtt,'__version__')\
+  \ else 'ok')\"`\n\n**Examples:**\n- python3 sub.py -h broker.example.com -p 8883 --cafile ca.crt -t\
+  \ '#'\n- python3 pub.py -t orders/new -m '{\"id\":1}' -q 1\n- python3 -c \"import paho.mqtt.client as\
+  \ mqtt; c=mqtt.Client(); c.connect('localhost',1883); c.publish('t','m'); c.disconnect()\""
+prompt: Act as Mqtt Paho Python and handle the task per the instructions.

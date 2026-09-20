@@ -1,0 +1,35 @@
+title: Identity Provider
+description: 'Identity provider operations with Keycloak: kcadm.sh realm and user administration, OIDC
+  discovery, client registration, and token introspection.'
+version: 2.0.0
+instructions: "# Identity Provider\n\nIdentity provider operations with Keycloak: kcadm.sh realm and user\
+  \ administration, OIDC discovery, client registration, and token introspection.\n\n## Instructions\n\
+  \n# Identity Provider\n\nRun and administer a Keycloak-based identity provider.\n\n## What this skill\
+  \ does\n\n- Configures kcadm.sh credentials and manages realms.\n- Creates and queries users and clients.\n\
+  - Verifies OIDC discovery metadata.\n- Introspects tokens for debugging.\n\n## When to use\n\n- Standing\
+  \ up SSO for a new environment.\n- Provisioning a test user or client programmatically.\n- Debugging\
+  \ OIDC flows against a real IdP.\n\n## Real commands\n\n```bash\n# Login once per session\nkcadm.sh\
+  \ config credentials --server http://localhost:8080 --realm master --user admin --password admin\n\n\
+  # Realms\nkcadm.sh get realms\nkcadm.sh create realms -s realm=myrealm -s enabled=true\n\n# Users\n\
+  kcadm.sh create users -r myrealm -s username=alice -s enabled=true -p\nkcadm.sh get users -r myrealm\
+  \ --query email=alice@example.com\nkcadm.sh update users/<id> -r myrealm -s 'email=alice@example.com'\n\
+  \n# Clients\nkcadm.sh get clients -r myrealm\nkcadm.sh create clients -r myrealm -s clientId=webapp\
+  \ -s publicClient=true\n\n# OIDC discovery\ncurl http://localhost:8080/realms/myrealm/.well-known/openid-configuration\
+  \ | jq '.authorization_endpoint, .token_endpoint'\n```\n\n## Token exchange for testing\n\n```bash\n\
+  TOKEN=$(curl -s -X POST http://localhost:8080/realms/myrealm/protocol/openid-connect/token \\\n  -d\
+  \ client_id=webapp -d username=alice -d password=pass -d grant_type=password | jq -r .access_token)\n\
+  curl -s http://localhost:8080/realms/myrealm/protocol/openid-connect/userinfo -H \"Authorization: Bearer\
+  \ $TOKEN\"\n```\n\n## Testing\n\n```bash\nkcadm.sh get realms -r myrealm | jq '.realm, .enabled'\n```\n\
+  \n## Best practices\n\n- Never use password grant in production; use authorization code + PKCE.\n- Scope\
+  \ kcadm.sh tokens to a service account, not the master admin.\n- Version realm config: export with `kcadm.sh\
+  \ get realms -r myrealm --export` for drift checks.\n- Rotate client secrets and revoke tokens via `kcadm.sh\
+  \ logout` when needed.\n\n## Example exchange\n\n```\nUser: Create realm myrealm with user alice.\n\
+  Agent: kcadm.sh config credentials ... ; kcadm.sh create realms -s realm=myrealm -s enabled=true\n \
+  \      kcadm.sh create users -r myrealm -s username=alice -s enabled=true -p\n```\n\n## Capabilities\n\
+  \n### keycloak-admin\nAdminister Keycloak realms, users, and clients from the CLI.\n\n**Commands:**\n\
+  - `kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password\
+  \ admin`\n- `kcadm.sh get realms`\n- `kcadm.sh create users -r myrealm -s username=alice -s enabled=true\
+  \ -p`\n- `kcadm.sh get clients -r myrealm`\n- `curl http://localhost:8080/realms/myrealm/.well-known/openid-configuration`\n\
+  \n**Examples:**\n- kcadm.sh create realms -s realm=myrealm -s enabled=true\n- kcadm.sh update users/6c1d\
+  \ -r myrealm -s 'email=alice@example.com'\n- kcadm.sh get users -r myrealm --query email=alice@example.com"
+prompt: Act as Identity Provider and handle the task per the instructions.

@@ -1,0 +1,25 @@
+title: husky
+description: 'Configures Git hooks with husky: pre-commit, commit-msg, pre-push gates, and lint-staged
+  integration.'
+version: 2.0.0
+instructions: "# husky\n\nConfigures Git hooks with husky: pre-commit, commit-msg, pre-push gates, and\
+  \ lint-staged integration.\n\n## Instructions\n\n# Husky\n\nGit hooks made easy.\n\n## When to Use\n\
+  \n- Running tests and lint before commits\n- Validating commit messages with commitlint\n- Pre-push\
+  \ builds and checks\n- Keeping CI from being the first line of defense\n\n## Commands\n\n```bash\n#\
+  \ Init\nnpx husky init\n\n# Add hooks\nnpx husky add .husky/pre-commit \"npm test\"\nnpx husky add .husky/pre-commit\
+  \ \"npx lint-staged\"\nnpx husky add .husky/commit-msg \"npx commitlint --edit \\\"$1\\\"\"\nnpx husky\
+  \ add .husky/pre-push \"npm run build\"\n\n# Verify hooks path\ngit config core.hooksPath\n```\n\n##\
+  \ lint-staged Config\n\n```json\n// package.json\n{\n  \"lint-staged\": {\n    \"*.{js,ts}\": [\"eslint\
+  \ --fix\", \"prettier --write\"],\n    \"*.py\": [\"black\", \"flake8\"]\n  }\n}\n```\n\n## Best Practices\n\
+  \n- Run fast checks in pre-commit (lint + format)\n- Use lint-staged so only changed files are checked\n\
+  - Keep commit-msg validation strict with commitlint\n- Make pre-push run tests and builds\n- In CI,\
+  \ skip hooks: set HUSKY=0 for checkout steps\n- Commit .husky/ so all developers share the hooks\n\n\
+  ## Capabilities\n\n### husky-setup\nInitialize and manage husky hooks.\n\n**Commands:**\n- `npx husky\
+  \ init`\n- `npx husky add .husky/pre-commit \"npm test\"`\n- `npx husky add .husky/commit-msg \"npx\
+  \ commitlint --edit \\\\\"$1\\\\\"\"`\n- `git config core.hooksPath`\n- `npx husky set .husky/pre-push\
+  \ \"npm run build\"`\n\n**Examples:**\n- npx husky add .husky/pre-commit \"npx lint-staged\"\n- npx\
+  \ husky add .husky/pre-push \"npm test\"\n- git config core.hooksPath .husky\n\n### husky-lint-staged\n\
+  Run staged-file checks with lint-staged.\n\n**Commands:**\n- `npm install --save-dev lint-staged`\n\
+  - `npx lint-staged`\n- `npx lint-staged --diff \"src/**/*.ts\"`\n- `npx lint-staged --allow-empty`\n\
+  \n**Examples:**\n- npx lint-staged --concurrent 4\n- npx lint-staged --no-stash"
+prompt: Act as husky and handle the task per the instructions.

@@ -1,0 +1,34 @@
+title: Log Aggregation
+description: 'Collect logs from many sources into one place: Fluent Bit pipelines, journald/tail forwarding,
+  and Kubernetes pod log collection.'
+version: 2.0.0
+instructions: "# Log Aggregation\n\nCollect logs from many sources into one place: Fluent Bit pipelines,\
+  \ journald/tail forwarding, and Kubernetes pod log collection.\n\n## Instructions\n\n# Log Aggregation\n\
+  \nCentralize logs from hosts, containers, and clusters.\n\n## What this skill does\n\n- Runs Fluent\
+  \ Bit pipelines for tail/systemd/docker inputs.\n- Forwards logs to central sinks (forward, elasticsearch,\
+  \ loki).\n- Streams journald, docker, and k8s logs for debugging.\n\n## When to use\n\n- Building a\
+  \ central log store for audit and debugging.\n- Routing app logs to observability platforms.\n- Standardizing\
+  \ log collection across hosts.\n\n## Real commands\n\n```bash\n# Fluent Bit: file -> stdout\nfluent-bit\
+  \ -i tail -p path=/var/log/app.log -o stdout\n\n# Fluent Bit: nginx access log -> fluent forward\nfluent-bit\
+  \ -i tail -p path=/var/log/nginx/access.log \\\n  -o forward -p host=10.0.0.5 -p port=24224\n\n# Fluent\
+  \ Bit: systemd unit\nfluent-bit -i systemd -p systemd_filter=_SYSTEMD_UNIT=myapp.service -o stdout\n\
+  \n# Config-file mode\nfluent-bit -c fluent-bit.conf\n\n# Direct streams\njournalctl -u myapp --since\
+  \ '30 min ago' -f\ndocker logs --tail 100 -f nginx\nkubectl logs --all-containers=true --since=1h deploy/api\n\
+  tail -f /var/log/app/app.log | logger -t app -p user.info\n```\n\n## fluent-bit.conf example\n\n```ini\n\
+  [INPUT]\n    Name tail\n    Path /var/log/app/*.log\n    Tag app.*\n\n[OUTPUT]\n    Name forward\n \
+  \   Match app.*\n    Host 10.0.0.5\n    Port 24224\n```\n\n## Testing\n\n```bash\nfluent-bit -i tail\
+  \ -p path=/var/log/app.log -o stdout --dry-run\n```\n\n## Best practices\n\n- Tag logs by source so\
+  \ routing rules stay clean.\n- Add parsers (nginx, json) at ingestion for structured fields.\n- Buffer\
+  \ locally (file buffer) so outages don't drop logs.\n\n## Capabilities\n\n### fluent-bit\nRun Fluent\
+  \ Bit with input/output pipelines.\n\n**Commands:**\n- `fluent-bit -c fluent-bit.conf`\n- `fluent-bit\
+  \ -i tail -p path=/var/log/app.log -o stdout`\n- `fluent-bit -i tail -p path=/var/log/nginx/access.log\
+  \ -o forward -p host=10.0.0.5 -p port=24224`\n- `fluent-bit -i systemd -p systemd_filter=_SYSTEMD_UNIT=myapp.service\
+  \ -o stdout`\n\n**Examples:**\n- fluent-bit -i tail -p path=/var/log/app.log -o stdout\n- fluent-bit\
+  \ -i tail -p path=/var/log/nginx/access.log -o forward -p host=10.0.0.5 -p port=24224\n- fluent-bit\
+  \ -i systemd -p systemd_filter=_SYSTEMD_UNIT=myapp.service -o stdout\n\n### source-forwarding\nForward\
+  \ logs from journald, docker, and Kubernetes.\n\n**Commands:**\n- `journalctl -u myapp --since '30 min\
+  \ ago' -f`\n- `docker logs --tail 100 -f nginx`\n- `kubectl logs --all-containers=true --since=1h deploy/api`\n\
+  - `tail -f /var/log/app/app.log | logger -t app -p user.info`\n\n**Examples:**\n- journalctl -u myapp\
+  \ --since '30 min ago' -f\n- kubectl logs --all-containers=true --since=1h deploy/api\n- docker logs\
+  \ --tail 100 -f nginx"
+prompt: Act as Log Aggregation and handle the task per the instructions.

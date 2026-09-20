@@ -1,0 +1,34 @@
+title: Mtls
+description: 'Mutual TLS (mTLS) setup: CA creation, server/client certificates, TLS verification, and
+  enforcing mutual authentication.'
+version: 2.0.0
+instructions: "# Mtls\n\nMutual TLS (mTLS) setup: CA creation, server/client certificates, TLS verification,\
+  \ and enforcing mutual authentication.\n\n## Instructions\n\n# mTLS\n\nMutual TLS authenticates both\
+  \ peers: the server presents a cert and the client presents its own, both verified against a shared\
+  \ CA.\n\n## What this skill does\n\n- Generates a CA and issues server/client certificates\n- Configures\
+  \ services to require client certificates\n- Verifies handshakes and certificate chains\n\n## When to\
+  \ use\n\n- Service-to-service authentication in production\n- Replacing API tokens with certificate\
+  \ identity\n- Zero-trust network segmentation\n\n## Real commands\n\n```bash\n# 1. CA\nopenssl req -x509\
+  \ -newkey rsa:2048 -nodes -keyout ca.key -out ca.crt -days 365 -subj \"/CN=my-ca\"\n\n# 2. Server certificate\
+  \ signed by CA\nopenssl req -newkey rsa:2048 -nodes -keyout server.key -out server.csr -subj \"/CN=localhost\"\
+  \nopenssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 365\n\
+  \n# 3. Client certificate (same flow, CN=client-1)\nopenssl req -newkey rsa:2048 -nodes -keyout client.key\
+  \ -out client.csr -subj \"/CN=client-1\"\nopenssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key\
+  \ -CAcreateserial -out client.crt -days 365\n\n# 4. Verify chain\nopenssl verify -CAfile ca.crt server.crt\
+  \ client.crt\n\n# 5. Test the handshake\ncurl --cacert ca.crt --cert client.crt --key client.key https://localhost:8443/api\n\
+  openssl s_client -connect localhost:8443 -cert client.crt -key client.key -CAfile ca.crt\n```\n\n##\
+  \ Server-side enforcement (nginx example)\n\n```nginx\nserver {\n    listen 8443 ssl;\n    ssl_certificate\
+  \     server.crt;\n    ssl_certificate_key server.key;\n    ssl_client_certificate ca.crt;\n    ssl_verify_client\
+  \ on;\n    ssl_verify_depth 2;\n}\n```\n\n## Best practices\n\n- Keep the CA key offline; issue certs\
+  \ with short lifetimes\n- Set `ssl_verify_client optional` during rollout, then `on`\n- Verify with\
+  \ `openssl s_client` before wiring clients\n\n## Capabilities\n\n### mtls-certificates\nCreate a CA\
+  \ and issue server/client certificates, then verify mTLS handshakes with curl and openssl.\n\n**Commands:**\n\
+  - `openssl req -x509 -newkey rsa:2048 -nodes -keyout ca.key -out ca.crt -days 365 -subj \"/CN=my-ca\"\
+  `\n- `openssl req -newkey rsa:2048 -nodes -keyout server.key -out server.csr -subj \"/CN=localhost\"\
+  `\n- `openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days\
+  \ 365`\n- `curl --cacert ca.crt --cert client.crt --key client.key https://localhost:8443/api`\n- `openssl\
+  \ s_client -connect localhost:8443 -cert client.crt -key client.key -CAfile ca.crt`\n\n**Examples:**\n\
+  - openssl verify -CAfile ca.crt server.crt\n- curl -v --cacert ca.crt --cert client.crt --key client.key\
+  \ https://localhost:8443/health\n- openssl s_client -connect localhost:8443 -CAfile ca.crt 2>&1 | grep\
+  \ -i 'verify return'"
+prompt: Act as Mtls and handle the task per the instructions.

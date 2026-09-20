@@ -1,0 +1,34 @@
+title: Distributed Rate Limiting
+description: Designs and operates distributed rate limits across API gateways and services using Redis
+  sliding-window counters, with load-test verification.
+version: 2.0.0
+instructions: "# Distributed Rate Limiting\n\nDesigns and operates distributed rate limits across API\
+  \ gateways and services using Redis sliding-window counters, with load-test verification.\n\n## Instructions\n\
+  \n# Distributed Rate Limiting\n\n## What this skill does\n\nDistributed rate limiting enforces a consistent\
+  \ request budget across every instance of a service by storing counters in a shared store (Redis). This\
+  \ skill covers counter inspection, headers, and load-test verification.\n\n## When to use\n\n- Enforcing\
+  \ per-client quotas across multiple API gateway replicas\n- Debugging unexpected 429 responses on a\
+  \ specific key\n- Tuning limits before a public launch\n\n## Real commands\n\n```bash\n# Find all live\
+  \ limit counters\nredis-cli --scan --pattern 'rl:*' | head -20\n\n# Inspect one bucket\nredis-cli GET\
+  \ rl:{client}:{route}:count\nredis-cli TTL rl:{client}:{route}:window\n\n# Verify the response headers\
+  \ the client sees\ncurl -i https://httpbin.org/headers -H 'Authorization: Bearer $TOKEN' | grep -i 'x-ratelimit'\n\
+  \n# Load-test the endpoint and count 429s\nab -n 2000 -c 50 https://httpbin.org/get | grep -E 'Requests\
+  \ per second|Failed requests'\n```\n\n## Redis sliding window (Lua) example\n\n```lua\n-- EVAL script:\
+  \ per-user sliding window\nlocal key = KEYS[1]\nlocal now = tonumber(ARGV[1])\nlocal window = tonumber(ARGV[2])\n\
+  local limit = tonumber(ARGV[3])\nredis.call('ZREMRANGEBYSCORE', key, 0, now - window * 1000)\nlocal\
+  \ count = redis.call('ZCARD', key)\nif count < limit then\n  redis.call('ZADD', key, now, now .. '-'\
+  \ .. math.random(100000))\n  redis.call('EXPIRE', key, window * 2)\n  return 1\nend\nreturn 0\n```\n\
+  \n## Testing\n\n```bash\n# Confirm 429s start after the limit is exhausted\nfor i in $(seq 1 250); do\
+  \ curl -s -o /dev/null -w '%{http_code}\\n' https://httpbin.org/get; done | sort | uniq -c\n```\n\n\
+  ## Best practices\n\n- Return standard headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`.\n\
+  - Keep Lua scripts atomic and idempotent; test them with `redis-cli --eval`.\n- Exclude health checks\
+  \ and internal calls from counting.\n- Monitor the Redis instance; a limit-store outage must fail open\
+  \ or closed deliberately.\n\n## Capabilities\n\n### redis-window-limits\nInspect Redis-based rate limit\
+  \ counters, exercise limited endpoints, and measure effective limiting under load.\n\n**Commands:**\n\
+  - `redis-cli --scan --pattern 'rl:*' | head -20`\n- `redis-cli GET rl:{client}:{route}:count`\n- `curl\
+  \ -i https://httpbin.org/headers -H 'Authorization: Bearer $TOKEN' | grep -i 'x-ratelimit'`\n- `redis-cli\
+  \ TTL rl:{client}:{route}:window`\n- `ab -n 2000 -c 50 https://httpbin.org/get | grep -E 'Requests per\
+  \ second|Failed requests'`\n\n**Examples:**\n- redis-cli --scan --pattern 'rl:*' | head -20\n- curl\
+  \ -i https://httpbin.org/headers | grep -i 'x-ratelimit'\n- ab -n 2000 -c 50 https://httpbin.org/get\
+  \ | grep -E 'Requests per second|Failed requests'"
+prompt: Act as Distributed Rate Limiting and handle the task per the instructions.

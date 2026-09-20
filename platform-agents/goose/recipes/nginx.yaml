@@ -1,0 +1,31 @@
+title: nginx
+description: 'Configures and operates nginx servers: virtual hosts, TLS termination, log inspection, and
+  zero-downtime reloads.'
+version: 2.0.0
+instructions: "# nginx\n\nConfigures and operates nginx servers: virtual hosts, TLS termination, log inspection,\
+  \ and zero-downtime reloads.\n\n## Instructions\n\n# Nginx\n\nConfigure and run nginx with confidence.\n\
+  \n## When to Use\n\n- Serving static content and reverse-proxying apps\n- TLS termination and HTTP/2\n\
+  - Diagnosing 4xx/5xx traffic patterns\n\n## Virtual host\n\n```nginx\nserver {\n  listen 443 ssl http2;\n\
+  \  server_name api.example.com;\n\n  ssl_certificate     /etc/nginx/ssl/fullchain.pem;\n  ssl_certificate_key\
+  \ /etc/nginx/ssl/privkey.pem;\n\n  location /api/ {\n    proxy_pass http://backend;\n    proxy_set_header\
+  \ Host $host;\n    proxy_set_header X-Forwarded-Proto $scheme;\n  }\n\n  location /static/ {\n    alias\
+  \ /srv/static/;\n    expires 7d;\n    add_header Cache-Control 'public';\n  }\n}\n```\n\n## Safe reload\
+  \ loop\n\n```bash\nnginx -t\nnginx -s reload\n```\n\nAlways test before reload; a bad config leaves\
+  \ the old process running.\n\n## Inspect effective config\n\n```bash\nnginx -T | grep -E 'server_name|listen'\n\
+  ```\n\n## Log triage\n\n```bash\ntail -f /var/log/nginx/error.log\ngrep 'upstream timed out' /var/log/nginx/error.log\
+  \ | tail\n```\n\nStatus-code distribution:\n\n```bash\ntail -n 1000 /var/log/nginx/access.log | awk\
+  \ '{print $9}' | sort | uniq -c | sort -rn\n```\n\n## Best practices\n\n- Pin worker_processes to core\
+  \ count; enable keepalive to upstreams.\n- Enable `gzip` and static asset caching for the web tier.\n\
+  - Never serve `server_tokens off;` default leakage - hide version.\n- Redirect HTTP to HTTPS at the\
+  \ server level, not per-location.\n\n## Testing\n\n```bash\nnginx -t\ncurl -I http://localhost/static/app.js\n\
+  ```\n\nVerify cache headers and TLS chain after each config change.\n\n## Capabilities\n\n### server\n\
+  Manage nginx runtime: test, reload, and inspect.\n\n**Commands:**\n- `nginx -t`\n- `nginx -s reload`\n\
+  - `nginx -T`\n- `nginx -v`\n- `nginx -s stop`\n\n**Examples:**\n- nginx -t -c /etc/nginx/nginx.conf\n\
+  - nginx -T | grep -E 'server_name|listen'\n- nginx -s reload && nginx -v\n\n### logs\nAnalyze access\
+  \ and error logs for issues.\n\n**Commands:**\n- `tail -f /var/log/nginx/error.log`\n- `tail -n 100\
+  \ /var/log/nginx/access.log | awk '{print $9}' | sort | uniq -c | sort -rn`\n- `grep -E '5[0-9]{2}'\
+  \ /var/log/nginx/access.log | tail -20`\n- `tail -f /var/log/nginx/access.log | grep -v ' 200 '`\n-\
+  \ `awk '{print $1}' /var/log/nginx/access.log | sort | uniq -c | sort -rn | head -10`\n\n**Examples:**\n\
+  - tail -f /var/log/nginx/error.log\n- grep 'upstream timed out' /var/log/nginx/error.log | tail\n- tail\
+  \ -n 1000 /var/log/nginx/access.log | awk '{print $9}' | sort | uniq -c | sort -rn"
+prompt: Act as nginx and handle the task per the instructions.

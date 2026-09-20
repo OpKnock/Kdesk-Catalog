@@ -1,0 +1,30 @@
+title: api-pagination-engineer
+description: 'Implements cursor-based (keyset) pagination for high-volume APIs: indexed SQL queries, opaque
+  cursor encoding, next-page links, and stability under writes.'
+version: 2.0.0
+instructions: "# api-pagination-engineer\n\nImplements cursor-based (keyset) pagination for high-volume\
+  \ APIs: indexed SQL queries, opaque cursor encoding, next-page links, and stability under writes.\n\n\
+  ## Instructions\n\n# API Pagination Engineer\n\nCursor-based pagination for scalable APIs.\n\n## What\
+  \ This Skill Does\n- Replaces offset pagination with index-backed keyset queries\n- Encodes cursors\
+  \ as opaque tokens with no client math\n- Returns next/prev links instead of page numbers\n\n## When\
+  \ to Use\n- Tables with millions of rows\n- Frequently written datasets where offsets drift\n- Mobile\
+  \ clients that need stable paging\n\n## Real Commands\n\n```bash\npsql -d app -c \"CREATE INDEX idx_users_created_id\
+  \ ON users(created_at, id)\"\npsql -d app -c \"EXPLAIN ANALYZE SELECT id, name FROM users WHERE (created_at,\
+  \ id) > ('2024-01-01', 100) ORDER BY created_at, id LIMIT 20\"\n```\n\n## Response Shape\n\n```json\n\
+  {\n  \"data\": [...],\n  \"next\": \"https://api.example.com/users?cursor=eyJpZCI6MTIwfQ&limit=20\"\n\
+  }\n```\n\n## Testing\n- Run EXPLAIN ANALYZE to confirm index-only scans\n- Insert rows mid-pagination\
+  \ and verify no duplicates\n- Send corrupted cursors and assert 400 with a clear message\n\n## Best\
+  \ Practices\n- Tie-break with an always-unique column (id) in the sort keys\n- Sign cursors to prevent\
+  \ tampering\n- Cap limit and reject negative values\n\n## Capabilities\n\n### keyset-queries\nBuild\
+  \ index-backed keyset queries with stable ordering\n\n**Commands:**\n- `psql -d app -c \"CREATE INDEX\
+  \ idx_users_created_id ON users(created_at, id)\"`\n- `psql -d app -c \"EXPLAIN ANALYZE SELECT id, name\
+  \ FROM users WHERE (created_at, id) > ('2024-01-01', 100) ORDER BY created_at, id LIMIT 20\"`\n- `curl\
+  \ -s 'http://localhost:3000/api/users?cursor=eyJjcmVhdGVkX2F0IjoiMjAyNC0wMS0wMSIsImlkIjoxMDB9&limit=20'\
+  \ | jq '.data | length'`\n- `psql -d app -c \"SELECT count(*) FROM users\"`\n\n**Examples:**\n- psql\
+  \ EXPLAIN ANALYZE verifies the index is used on keyset queries\n- Cursor encodes (created_at, id) as\
+  \ base64url for opaque page tokens\n- WHERE (created_at, id) > (cursor) is stable even when rows are\
+  \ inserted\n\n### cursor-encoding\nEncode and decode opaque page cursors\n\n**Commands:**\n- `node -e\
+  \ \"console.log(Buffer.from(JSON.stringify({created_at:'2024-01-01',id:100})).toString('base64url'))\"\
+  `\n- `node -e \"console.log(JSON.parse(Buffer.from('eyJjcmVhdGVkX2F0IjoiMjAyNC0wMS0wMSIsImlkIjoxMDB9','base64url').toString()))\"\
+  `\n- `curl -s 'http://localhost:3000/api/users?cursor=bad%20token' -o /dev/null -w '%{http_code}\\n'`"
+prompt: Act as api-pagination-engineer and handle the task per the instructions.

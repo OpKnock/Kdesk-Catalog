@@ -1,0 +1,36 @@
+title: graphql-schema-designer
+description: 'Designs and evolves GraphQL schemas: linting with graphql-schema-linter, drift checks with
+  graphql-inspector, and typed codegen.'
+version: 2.0.0
+instructions: "# graphql-schema-designer\n\nDesigns and evolves GraphQL schemas: linting with graphql-schema-linter,\
+  \ drift checks with graphql-inspector, and typed codegen.\n\n## Instructions\n\n# GraphQL Schema Design\n\
+  \nDesign clean GraphQL schemas and keep them stable across releases.\n\n## When to Use\n\n- Designing\
+  \ a new GraphQL API surface\n- Reviewing schema changes in pull requests\n- Generating typed clients\
+  \ for consumers\n\n## Schema linting\n\n```graphql\n\"\"\"A product in the catalog\"\"\"\ntype Product\
+  \ implements Node {\n  \"\"\"Globally unique id\"\"\"\n  id: ID!\n  \"\"\"Display name\"\"\"\n  name:\
+  \ String!\n  \"\"\"Price in cents\"\"\"\n  price: Int!\n}\n```\n\n```bash\nnpx graphql-schema-linter\
+  \ schema.graphql --rules fields-have-descriptions,types-have-descriptions\n```\n\n## Breaking change\
+  \ detection\n\n```bash\nnpx graphql-inspector diff schema-prod.graphql schema-next.graphql\n```\n\n\
+  Breaking = field removed, type made non-null, arg added without default. Fix them before merge.\n\n\
+  ## Operation validation\n\n```bash\nnpx graphql-inspector validate --schema schema.graphql 'operations/**/*.graphql'\n\
+  ```\n\n## Codegen\n\n```ts\n// codegen.ts\nimport type { CodegenConfig } from '@graphql-codegen/cli';\n\
+  \nconst config: CodegenConfig = {\n  schema: 'schema.graphql',\n  documents: 'operations/**/*.graphql',\n\
+  \  generates: {\n    'src/gql/': {\n      preset: 'client',\n      plugins: []\n    }\n  }\n};\nexport\
+  \ default config;\n```\n\n```bash\nnpx graphql-codegen --config codegen.ts\n```\n\n## Best practices\n\
+  \n- Use interfaces and unions over flag enums where behavior differs.\n- Keep enums sorted; reordering\
+  \ is a breaking change.\n- Prefer nullable return fields over throwing for optional data.\n- Name arguments\
+  \ explicitly; never rely on positional order.\n\n## Testing\n\nRun the linter and inspector diff in\
+  \ CI on every PR touching schema files.\n\n## Capabilities\n\n### lint\nLint GraphQL schemas against\
+  \ rulesets.\n\n**Commands:**\n- `npx graphql-schema-linter schema.graphql`\n- `npx graphql-schema-linter\
+  \ schema.graphql --rules fields-have-descriptions,types-have-descriptions`\n- `npx graphql-schema-linter\
+  \ schema.graphql --format json`\n- `npx graphql-schema-linter 'schema/**/*.graphql' --ignore 'deprecations-have-a-reason'`\n\
+  - `npx graphql-schema-linter schema.graphql --comment-descriptions`\n\n**Examples:**\n- npx graphql-schema-linter\
+  \ schema.graphql --rules enum-values-sorted-alphabetically\n- npx graphql-schema-linter 'schema/**/*.graphql'\
+  \ --format json > lint.json\n- npx graphql-schema-linter schema.graphql --ignore 'description-style'\n\
+  \n### diff\nCompare schema versions and generate typed clients.\n\n**Commands:**\n- `npx graphql-inspector\
+  \ diff old.graphql new.graphql`\n- `npx graphql-inspector validate --schema new.graphql 'operations/**/*.graphql'`\n\
+  - `npx graphql-inspector similar --schema schema.graphql`\n- `npx graphql-codegen --config codegen.ts`\n\
+  - `npx graphql-codegen generate --config codegen.ts --watch`\n\n**Examples:**\n- npx graphql-inspector\
+  \ diff schema-2026-07.graphql schema-2026-08.graphql\n- npx graphql-codegen --config codegen.ts --silent\n\
+  - npx graphql-inspector validate --schema schema.graphql 'src/**/*.graphql'"
+prompt: Act as graphql-schema-designer and handle the task per the instructions.

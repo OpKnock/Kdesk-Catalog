@@ -1,0 +1,30 @@
+title: jest
+description: 'Writes and runs JavaScript/TypeScript tests with Jest: unit tests, mocks, snapshots, and
+  watch mode.'
+version: 2.0.0
+instructions: "# jest\n\nWrites and runs JavaScript/TypeScript tests with Jest: unit tests, mocks, snapshots,\
+  \ and watch mode.\n\n## Instructions\n\n# Jest\n\nUnit and integration testing for JavaScript and TypeScript.\n\
+  \n## What This Skill Does\n\n- Runs test suites with filters and watch mode\n- Writes assertions with\
+  \ rich matchers\n- Mocks modules, timers, and network calls\n- Maintains snapshot tests safely\n\n##\
+  \ When to Use\n\n- Adding tests to JS/TS services\n- Debugging a failing unit test\n- Regression protection\
+  \ for pure logic\n\n## Real Commands\n\n```bash\n# Run\nnpx jest\nnpx jest src/order.test.js\nnpx jest\
+  \ -t \"calculates total\"\nnpx jest --watch\nnpx jest --ci --coverage\n\n# Snapshots\nnpx jest --updateSnapshot\n\
+  npx jest --ci --snapshotSummary\n\n# Debug\nnpx jest --coverage --silent\n```\n\n## Sample Test\n\n\
+  ```js\ntest('calculates total with discount', () => {\n  const order = new Order([{ price: 10, qty:\
+  \ 2 }, { price: 5, qty: 1 }]);\n  expect(order.total(0.1)).toBeCloseTo(22.5);\n});\n\ntest('applies\
+  \ discount once', () => {\n  const order = new Order([{ price: 10, qty: 2 }]);\n  const spy = jest.spyOn(order,\
+  \ 'discount');\n  order.total(0.1);\n  expect(spy).toHaveBeenCalledTimes(1);\n});\n```\n\n## Best Practices\n\
+  \n- Use toBeCloseTo for floats; never toBe on decimals\n- Keep unit tests synchronous and fast\n- Mock\
+  \ external APIs; test real behavior in integration\n- Review snapshot diffs carefully in PRs\n- Run\
+  \ --watch during development, --ci in pipelines\n\n## Capabilities\n\n### jest-running\nRun Jest suites\
+  \ with filters and watch mode.\n\n**Commands:**\n- `npx jest`\n- `npx jest src/order.test.js`\n- `npx\
+  \ jest -t \"calculates total\"`\n- `npx jest --watch`\n- `npx jest --ci --coverage`\n\n**Examples:**\n\
+  - npx jest src/order.test.js\n- npx jest -t \"calculates total\"\n- npx jest --watch\n\n### mocking\n\
+  Mock modules, timers, and fetch calls.\n\n**Commands:**\n- `npx jest --coverage --silent`\n- `jest.mock('./api')`\n\
+  - `jest.useFakeTimers()`\n- `global.fetch = jest.fn()`\n- `npx jest --restoreMocks`\n\n**Examples:**\n\
+  - jest.mock('./api')\n- jest.useFakeTimers()\n- global.fetch = jest.fn(() => Promise.resolve({ json:\
+  \ () => Promise.resolve({}) }))\n\n### snapshots\nCreate, update, and review snapshots.\n\n**Commands:**\n\
+  - `npx jest --updateSnapshot`\n- `npx jest --ci --snapshotSummary`\n- `npx jest -t \"renders\" --updateSnapshot`\n\
+  - `npx jest --watch --updateSnapshot`\n\n**Examples:**\n- npx jest --updateSnapshot\n- npx jest --ci\
+  \ --snapshotSummary\n- npx jest -t \"renders\" --updateSnapshot"
+prompt: Act as jest and handle the task per the instructions.

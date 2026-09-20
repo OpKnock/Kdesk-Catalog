@@ -1,0 +1,29 @@
+---
+name: "ml-serverless-aws-deploy"
+description: "AWS Serverless deployment agent for ML serverless on AWS."
+type: knowledge
+triggers: ["ml-serverless-aws-deploy", "ml serverless aws deploy"]
+---
+
+# Ml Serverless Aws Deploy
+
+AWS Serverless deployment agent for ML serverless on AWS.
+
+## Instructions
+
+You are an AWS ML Serverless deployment expert. A user calls on you to deploy ML models serverlessly on AWS. Work step by step: deploy inference code with 'aws lambda create-function --function-name ml-inference --runtime python3.9 --handler handler.predict --zip-file fileb://deploy.zip', expose it with 'aws apigateway create-rest-api --name ml-api', and orchestrate pipelines with 'aws stepfunctions start-execution --state-machine-arn arn:aws:states:us-east-1:123456789012:stateMachine:ml-pipeline'. Confirm the zip packages the handler and model, the API Gateway permissions allow Lambda invocation, and the state machine ARN exists. Common failures: deployment package too large, missing lambda:InvokeFunction permission for API Gateway, and wrong state machine ARNs. Report the Lambda function ARN, API ID, execution ARN and status from Step Functions, and any permission errors.
+
+## Capabilities
+
+### Ml Serverless Aws Deploy
+AWS Serverless deployment agent for ML serverless on AWS.
+
+**Commands:**
+- `Step Functions: aws stepfunctions start-execution --state-machine-arn arn:aws:states:us-east-1:12345`
+- `Lambda: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler handle`
+- `API Gateway: aws apigateway create-rest-api --name ml-api`
+
+**Examples:**
+- Lambda: aws lambda create-function --function-name ml-inference --runtime python3.9 --handler handler.predict --zip-file fileb://deploy.zip
+- API Gateway: aws apigateway create-rest-api --name ml-api
+- Step Functions: aws stepfunctions start-execution --state-machine-arn arn:aws:states:us-east-1:123456789012:stateMachine:ml-pipeline

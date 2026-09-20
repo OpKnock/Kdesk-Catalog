@@ -1,0 +1,25 @@
+title: Detekt
+description: Run it from the command line or Gradle. Manage existing debt with baselines. and Gradle integration.'
+version: 2.0.0
+instructions: "# Detekt\n\nRun it from the command line or Gradle. Manage existing debt with baselines.\
+  \ and Gradle integration.'\n\n## Instructions\n\n# detekt\n\nStatic analysis for Kotlin.\n\n## When\
+  \ to Use\n\n- Enforcing Kotlin style and complexity budgets\n- Catching smells (long methods, magic\
+  \ numbers, duplicates)\n- Kotlin codebases using Gradle\n- CI quality gates\n\n## Commands\n\n```bash\n\
+  # CLI\ndetekt --input src/main/kotlin\ndetekt --config detekt.yml --input src/\n\n# Reports\ndetekt\
+  \ --report xml:detekt-report.xml\ndetekt --report sarif:detekt-report.sarif\n\n# Gradle\ngradle detekt\n\
+  gradle detektMain detektTest\n\n# Baseline (accept existing findings)\ngradle detektBaseline\ndetekt\
+  \ --baseline detekt-baseline.xml\n\n# Generate default config\ndetekt --generate-config --config detekt.yml\n\
+  ```\n\n## Config Example\n\n```yaml\n# detekt.yml\ncomplexity:\n  LongMethod:\n    threshold: 60\n \
+  \ TooManyFunctions:\n    thresholdInFiles: 12\n\nstyle:\n  MagicNumber:\n    ignoreNumbers: ['-1', '0',\
+  \ '1', '2']\n```\n\n## Best Practices\n\n- Keep the default rule set; enable extensions deliberately\n\
+  - Use baselines to adopt detekt on legacy code\n- Regenerate baseline only on reviewed improvements\n\
+  - Fail CI on new violations, allow old baselined ones\n- Integrate with Gradle: gradle detekt --continue\n\
+  - Pair with ktlint for formatting concerns\n\n## Capabilities\n\n### detekt-cli\nRun detekt from the\
+  \ command line or Gradle.\n\n**Commands:**\n- `detekt --input src/main/kotlin`\n- `detekt --config detekt.yml\
+  \ --input src/`\n- `gradle detekt`\n- `gradle detektMain detektTest`\n- `detekt --version`\n\n**Examples:**\n\
+  - detekt --input src/ --report xml:detekt-report.xml\n- detekt --baseline detekt-baseline.xml\n- gradle\
+  \ detekt --continue\n\n### detekt-baseline\nManage existing debt with baselines.\n\n**Commands:**\n\
+  - `detekt --baseline detekt-baseline.xml --input src/`\n- `detekt --build-upon-default-config`\n- `gradle\
+  \ detektBaseline`\n- `detekt --generate-config`\n\n**Examples:**\n- gradle detektBaseline && gradle\
+  \ detekt\n- detekt --generate-config --config detekt.yml"
+prompt: Act as Detekt and handle the task per the instructions.

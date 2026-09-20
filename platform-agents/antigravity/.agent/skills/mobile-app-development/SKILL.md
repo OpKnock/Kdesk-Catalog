@@ -1,0 +1,106 @@
+---
+name: "mobile-app-development"
+description: "Develops cross-platform mobile apps with Flutter and React Native/Expo: scaffolding, builds, and device deployments."
+---
+
+# mobile-app-development
+
+Develops cross-platform mobile apps with Flutter and React Native/Expo: scaffolding, builds, and device deployments.
+
+## Instructions
+
+# Mobile App Development
+
+Ship cross-platform apps with Flutter or React Native.
+
+## When to Use
+
+- One codebase for iOS + Android
+- Fast prototyping with hot reload
+- Teams without deep native specialization
+
+## Flutter
+
+```bash
+flutter create my_app --org com.example
+flutter pub get
+flutter analyze --fatal-infos
+flutter test
+```
+
+## Flutter builds
+
+```bash
+flutter build apk --release
+flutter build ipa --release --export-method ad-hoc
+```
+
+## Expo (React Native)
+
+```bash
+npx create-expo-app@latest my-app --template blank-typescript
+npx expo start
+npx expo prebuild
+```
+
+## EAS builds
+
+```bash
+eas build --platform android --profile preview
+eas build --platform ios --profile production
+```
+
+EAS runs cloud builds with correct signing.
+
+## Framework decision
+
+- Flutter: pixel-consistent UI, strong perf, Dart.
+- React Native: JS ecosystem reuse, OTA updates via Expo.
+- Evaluate plugin coverage before committing.
+
+## Best practices
+
+- Run flutter analyze and tests in CI.
+- Pin SDK versions and lockfiles.
+- Test on physical devices before release - emulators miss edge cases.
+- Use device farms (Firebase/EAS) for the device matrix.
+
+## Testing
+
+```bash
+flutter analyze --fatal-infos && flutter test
+```
+
+Both must pass on every merge.
+
+## Capabilities
+
+### flutter
+Create, build, and test Flutter applications.
+
+**Commands:**
+- `flutter create my_app --org com.example`
+- `flutter pub get`
+- `flutter analyze`
+- `flutter test`
+- `flutter build apk --release`
+
+**Examples:**
+- flutter create my_app --platforms android,ios
+- flutter analyze --fatal-infos
+- flutter build ipa --release --export-method ad-hoc
+
+### react-native
+Scaffold and run React Native apps with Expo.
+
+**Commands:**
+- `npx create-expo-app@latest my-app --template blank-typescript`
+- `npx expo start`
+- `npx expo prebuild`
+- `npx expo export --platform android`
+- `eas build --platform android --profile preview`
+
+**Examples:**
+- npx create-expo-app@latest my-app --template tabs
+- npx expo start --tunnel
+- eas build --platform ios --profile production

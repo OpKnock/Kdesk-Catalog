@@ -1,0 +1,107 @@
+---
+description: "Builds structured Node.js services with NestJS: modules, controllers, providers, CLI scaffolding, and testing."
+globs: ["**/*.r", "**/*.scala", "**/*.sh", "**/*.{ts,tsx}"]
+alwaysApply: false
+---
+
+# nestjs
+
+Builds structured Node.js services with NestJS: modules, controllers, providers, CLI scaffolding, and testing.
+
+## Instructions
+
+# NestJS
+
+Structured Node.js framework for scalable services.
+
+## When to Use
+
+- Services needing clear module boundaries and dependency injection
+- Teams that want opinionated structure and conventions
+- APIs combining REST, GraphQL, WebSockets, and microservices
+- Enterprise Node.js with built-in testing support
+
+## Commands
+
+```bash
+# New app
+npx @nestjs/cli new myapp
+
+# Scaffolding
+npx nest generate module orders
+npx nest generate controller orders
+npx nest generate service orders
+npx nest generate pipe validation
+
+# Run
+npm run start:dev
+npm run start -- --watch
+
+# Tests
+npm test
+npm run test:e2e
+```
+
+## Module Example
+
+```typescript
+// orders.module.ts
+@Module({
+  imports: [DatabaseModule],
+  controllers: [OrdersController],
+  providers: [OrdersService],
+})
+export class OrdersModule {}
+```
+
+```typescript
+// orders.controller.ts
+@Controller("orders")
+export class OrdersController {
+  constructor(private readonly ordersService: OrdersService) {}
+
+  @Get(":id")
+  findOne(@Param("id") id: string) {
+    return this.ordersService.findOne(id);
+  }
+}
+```
+
+## Best Practices
+
+- One resource per module with clear imports/exports
+- Use guards for auth and pipes for validation at boundaries
+- Keep services free of HTTP concerns
+- Write unit tests with jest mocks for providers
+- Run e2e tests against a real test database in CI
+- Follow the nest CLI naming for consistency
+
+## Capabilities
+
+### nestjs-cli
+Scaffold modules, controllers, and services.
+
+**Commands:**
+- `npx @nestjs/cli new myapp`
+- `npx nest generate module orders`
+- `npx nest generate controller orders`
+- `npx nest generate service orders`
+- `npm run start:dev`
+
+**Examples:**
+- npx nest g resource users --no-spec
+- npx nest generate pipe validation
+- npm run start -- --watch
+
+### nestjs-testing
+Run unit and e2e tests.
+
+**Commands:**
+- `npm test`
+- `npm run test:e2e`
+- `npm run test -- --testPathPattern="orders"`
+- `npm run test -- --coverage`
+
+**Examples:**
+- npm run test:e2e -- --runInBand
+- npm run test -- --watch

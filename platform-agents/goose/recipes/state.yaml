@@ -1,0 +1,27 @@
+title: State
+description: 'Implements the State pattern in TypeScript with Vitest: state machines that swap behavior
+  as state changes.'
+version: 2.0.0
+instructions: "# State\n\nImplements the State pattern in TypeScript with Vitest: state machines that\
+  \ swap behavior as state changes.\n\n## Instructions\n\n# State Pattern\n\nLet an object change behavior\
+  \ when its state changes.\n\n## When to Use\n\n- Objects with many conditional state branches\n- Workflows:\
+  \ draft -> review -> published\n- Replacing huge switch/if chains\n\n## Example (TypeScript)\n\n```typescript\n\
+  interface DocumentState {\n  publish(doc: Document): void;\n  label(): string;\n}\n\nclass DraftState\
+  \ implements DocumentState {\n  label() { return 'draft'; }\n  publish(doc: Document) { doc.setState(new\
+  \ ReviewState()); }\n}\n\nclass ReviewState implements DocumentState {\n  label() { return 'review';\
+  \ }\n  publish(doc: Document) { throw new Error('Needs approval'); }\n}\n\nclass Document {\n  private\
+  \ state: DocumentState = new DraftState();\n  setState(s: DocumentState) { this.state = s; }\n  publish()\
+  \ { this.state.publish(this); }\n  status() { return this.state.label(); }\n}\n```\n\n## Test\n\n```typescript\n\
+  import { describe, it, expect } from 'vitest';\n\ndescribe('Document workflow', () => {\n  it('draft\
+  \ publishes to review', () => {\n    const doc = new Document();\n    doc.publish();\n    expect(doc.status()).toBe('review');\n\
+  \  });\n\n  it('review refuses direct publish', () => {\n    const doc = new Document();\n    doc.publish();\n\
+  \    expect(() => doc.publish()).toThrow('Needs approval');\n  });\n});\n```\n\n```bash\nnpx tsc --noEmit\
+  \ --strict state.ts\nnpx vitest run tests/state.test.ts\n```\n\n## Best practices\n\n- States hold transitions;\
+  \ the context holds data.\n- Encode illegal transitions as explicit errors.\n- Consider a state machine\
+  \ library for complex flows.\n- Test every transition and every illegal transition.\n\n## Testing\n\n\
+  Cover all legal transitions plus each invalid one.\n\n## Capabilities\n\n### ts-vitest\nImplement and\
+  \ test state machine examples.\n\n**Commands:**\n- `npm init -y && npm install -D typescript vitest`\n\
+  - `npx tsc --noEmit --strict state.ts`\n- `npx vitest run tests/state.test.ts`\n- `npx vitest run --coverage`\n\
+  - `npx vitest run tests/state.test.ts -t 'draft'`\n\n**Examples:**\n- npx vitest run tests/state.test.ts\n\
+  - npx tsc --noEmit --strict state.ts machine.ts\n- npx vitest run -t 'publish'"
+prompt: Act as State and handle the task per the instructions.

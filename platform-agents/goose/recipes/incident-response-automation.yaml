@@ -1,0 +1,41 @@
+title: incident-response-automation
+description: 'Automates incident response: webhook triggers, runbook dispatch via GitHub Actions, and
+  remediation playbooks executed from alerts.'
+version: 2.0.0
+instructions: "# incident-response-automation\n\nAutomates incident response: webhook triggers, runbook\
+  \ dispatch via GitHub Actions, and remediation playbooks executed from alerts.\n\n## Instructions\n\n\
+  # Incident Response Automation\n\nAutomate the mechanical parts of incident response so humans handle\
+  \ judgment.\n\n## When to Use\n\n- Alert routing and runbook execution on page\n- Automated rollback/scaling\
+  \ of known failure modes\n- Post-incident status updates across channels\n\n## Webhook fan-out\n\nAlert\
+  \ -> webhook -> channels + ticketing + runbook:\n\n```bash\ncurl -X POST -H 'Content-Type: application/json'\
+  \ -d '{\"text\":\"SEV-1: checkout 500s\"}' $SLACK_WEBHOOK_URL\ncurl -X POST -H 'Content-Type: application/json'\
+  \ -d '{\"summary\":\"checkout down\",\"priority\":\"high\"}' $PAGERDUTY_V2_URL\n```\n\n## Runbook dispatch\n\
+  \n```bash\ngh workflow run runbook.yml -f severity=sev1 -f service=checkout\ngh run watch --exit-status\n\
+  ```\n\nRunbook steps: gather evidence -> stabilize (rollback/scale) -> verify -> notify.\n\n## A minimal\
+  \ rollback workflow\n\n```yaml\nname: runbook\non:\n  workflow_dispatch:\n    inputs:\n      severity:\
+  \ { type: choice, options: [sev1, sev2, sev3, sev4] }\n      action: { type: choice, options: [rollback,\
+  \ scale-up, noop] }\njobs:\n  mitigate:\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo \"\
+  Running ${{ github.event.inputs.action }} for ${{ github.event.inputs.severity }}\"\n      - run: curl\
+  \ -s -X POST ${{ secrets.RUNBOOK_HOOK }} -d '{\"action\":\"${{ github.event.inputs.action }}\"}'\n```\n\
+  \n## Safe automation rules\n\n- Destructive actions always require a human approval step.\n- Every automation\
+  \ logs its action with the incident id.\n- Idempotent remediation: running twice must not double the\
+  \ damage.\n- Keep a dead-man switch: abort automation if it exceeds a time budget.\n\n## Testing\n\n\
+  Dry-run the full webhook chain in staging: simulate an alert and verify channel posts, ticket creation,\
+  \ and runbook dispatch order.\n\n## Capabilities\n\n### runbook-dispatch\nTrigger and monitor automated\
+  \ runbooks in CI pipelines.\n\n**Commands:**\n- `gh workflow run runbook.yml -f severity=sev1 -f service=checkout`\n\
+  - `gh run watch $(gh run list --workflow=runbook.yml --limit 1 --json databaseId -q '.[0].databaseId')`\n\
+  - `gh workflow run mitigate.yml -f incident_id=P12345 -f action=rollback`\n- `gh run list --workflow=runbook.yml\
+  \ --status=in_progress`\n- `gh api repos/{owner}/{repo}/actions/runs/{run_id} | jq '.status'`\n\n**Examples:**\n\
+  - gh workflow run runbook.yml -f severity=sev1 -f service=checkout --ref main\n- gh run watch --exit-status\n\
+  - gh workflow run mitigate.yml -f incident_id=P12345\n\n### webhooks\nWire alerts to chat and ticketing\
+  \ systems via webhooks.\n\n**Commands:**\n- `curl -X POST -H 'Content-Type: application/json' -d '{\"\
+  text\":\"SEV-1: checkout 500s\"}' $SLACK_WEBHOOK_URL`\n- `curl -X POST -H 'Content-Type: application/json'\
+  \ -d '{\"summary\":\"checkout down\",\"priority\":\"high\"}' $PAGERDUTY_V2_URL`\n- `curl -X POST -H\
+  \ 'Content-Type: application/json' -H 'Authorization: Bearer $LINEAR_TOKEN' -d '{\"teamId\":\"...\"\
+  ,\"title\":\"SEV-1 checkout\"}' https://api.linear.app/graphql`\n- `curl -s -X POST $WEBHOOK_RECEIVER\
+  \ -d '{\"event\":\"incident.created\",\"id\":\"P12345\"}'`\n- `curl -i -X POST -H 'Content-Type: application/json'\
+  \ -d '{\"incident\":\"P12345\",\"status\":\"mitigated\"}' $RUNBOOK_HOOK`\n\n**Examples:**\n- curl -X\
+  \ POST -H 'Content-Type: application/json' -d '{\"text\":\"Rollback complete for P12345\"}' $SLACK_WEBHOOK_URL\n\
+  - curl -X POST -d '{}' $PAGERDUTY_V2_URL\n- curl -s -X POST $RUNBOOK_HOOK -d '{\"severity\":\"sev2\"\
+  }'"
+prompt: Act as incident-response-automation and handle the task per the instructions.

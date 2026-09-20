@@ -1,0 +1,42 @@
+title: Kafka Retention
+description: 'Control Kafka data retention: time/size-based retention configs, segment sizing, record
+  deletion by offset, and log dir verification.'
+version: 2.0.0
+instructions: "# Kafka Retention\n\nControl Kafka data retention: time/size-based retention configs, segment\
+  \ sizing, record deletion by offset, and log dir verification.\n\n## Instructions\n\n# Kafka Retention\n\
+  \nControl how long Kafka keeps data and reclaim disk space safely.\n\n## What this skill does\n\n- Sets\
+  \ retention.ms and retention.bytes per topic.\n- Tunes segment.bytes/segment.ms for rollover granularity.\n\
+  - Deletes records below explicit offsets and verifies log sizes.\n\n## When to use\n\n- Reducing storage\
+  \ cost for high-volume topics.\n- Complying with data-retention policies.\n- Purging sensitive records\
+  \ immediately (deletion by offset).\n\n## Real commands\n\n```bash\n# Retain 30 days (2592000000 ms)\n\
+  kafka-configs.sh --bootstrap-server localhost:9092 \\\n  --entity-type topics --entity-name audit --alter\
+  \ \\\n  --add-config retention.ms=2592000000\n\n# Cap size at 1 GiB per partition\nkafka-configs.sh\
+  \ --bootstrap-server localhost:9092 \\\n  --entity-type topics --entity-name audit --alter \\\n  --add-config\
+  \ \"retention.bytes=1073741824\"\n\n# Roll segments hourly for faster cleanup\nkafka-configs.sh --bootstrap-server\
+  \ localhost:9092 \\\n  --entity-type topics --entity-name audit --alter \\\n  --add-config \"segment.bytes=268435456,segment.ms=3600000\"\
+  \n\n# Show current config\nkafka-configs.sh --bootstrap-server localhost:9092 \\\n  --entity-type topics\
+  \ --entity-name audit --describe\n\n# Delete records below an offset\ncat > offsets.json <<'EOF'\n{\"\
+  partitions\":[{\"topic\":\"audit\",\"partition\":0,\"offset\":500000}],\"version\":1}\nEOF\nkafka-delete-records.sh\
+  \ --bootstrap-server localhost:9092 \\\n  --offset-json-file offsets.json\n\n# Verify log sizes\nkafka-log-dirs.sh\
+  \ --bootstrap-server localhost:9092 --describe --topic-list audit\n```\n\n## Testing\n\n```bash\nkafka-run-class.sh\
+  \ kafka.tools.GetOffsetShell \\\n  --broker-list localhost:9092 --topic audit --time -1\n```\n\n## Best\
+  \ practices\n\n- Retention policy is per segment; segments never partially expire.\n- Deletion by offset\
+  \ is a one-way operation; use it deliberately.\n- Set log.retention.check.interval.ms on the broker\
+  \ for timely cleanup.\n\n## Capabilities\n\n### retention-config\nSet time- and size-based retention\
+  \ per topic with kafka-configs.sh.\n\n**Commands:**\n- `kafka-configs.sh --bootstrap-server localhost:9092\
+  \ --entity-type topics --entity-name audit --alter --add-config retention.ms=2592000000`\n- `kafka-configs.sh\
+  \ --bootstrap-server localhost:9092 --entity-type topics --entity-name audit --alter --add-config \"\
+  retention.bytes=1073741824\"`\n- `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics\
+  \ --entity-name audit --alter --add-config \"segment.bytes=268435456,segment.ms=3600000\"`\n- `kafka-configs.sh\
+  \ --bootstrap-server localhost:9092 --entity-type topics --entity-name audit --describe`\n\n**Examples:**\n\
+  - kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name audit --alter\
+  \ --add-config retention.ms=2592000000\n- kafka-configs.sh --bootstrap-server localhost:9092 --entity-type\
+  \ topics --entity-name audit --alter --add-config \"retention.bytes=1073741824\"\n- kafka-configs.sh\
+  \ --bootstrap-server localhost:9092 --entity-type topics --entity-name audit --describe\n\n### record-deletion\n\
+  Delete records below an offset and verify log sizes shrink.\n\n**Commands:**\n- `kafka-delete-records.sh\
+  \ --bootstrap-server localhost:9092 --offset-json-file offsets.json`\n- `kafka-log-dirs.sh --bootstrap-server\
+  \ localhost:9092 --describe --topic-list audit`\n- `kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list\
+  \ localhost:9092 --topic audit --time -1`\n\n**Examples:**\n- kafka-delete-records.sh --bootstrap-server\
+  \ localhost:9092 --offset-json-file offsets.json\n- kafka-log-dirs.sh --bootstrap-server localhost:9092\
+  \ --describe --topic-list audit"
+prompt: Act as Kafka Retention and handle the task per the instructions.

@@ -1,0 +1,28 @@
+title: Tracing
+description: Run the OTel Collector and route traces to backends.
+version: 2.0.0
+instructions: "# Tracing\n\nRun the OTel Collector and route traces to backends.\n\n## Instructions\n\n\
+  # Tracing\n\nHand-crafted skill for running a complete tracing pipeline.\n\n## What this skill does\n\
+  \n- Boots the OpenTelemetry Collector with a full pipeline\n- Ingests OTLP traces and ships them to\
+  \ backends\n- Runs Jaeger and Zipkin backends locally for debugging\n\n## When to use\n\n- Standing\
+  \ up tracing from scratch (SDK -> collector -> backend)\n- Verifying collectors accept and export traces\n\
+  - Local reproduction of a distributed request\n\n## Real commands\n\n```bash\n# Run the collector\n\
+  otelcol-contrib --config otel-collector.yaml\n\n# Ingest a minimal trace (validates the OTLP endpoint)\n\
+  curl -X POST localhost:4318/v1/traces -H 'Content-Type: application/json' -d '{\"resourceSpans\":[]}'\n\
+  \n# Backends\ndocker run -d -p 16686:16686 jaegertracing/all-in-one\ndocker run -d -p 9411:9411 openzipkin/zipkin\n\
+  \n# Zipkin ingest check\ncurl -X POST -H 'Content-Type: application/json' localhost:9411/api/v2/spans\
+  \ -d '[]'\n```\n\n## Collector config\n\n```yaml\nreceivers:\n  otlp:\n    protocols:\n      http:\n\
+  \        endpoint: 0.0.0.0:4318\nprocessors:\n  batch:\nexporters:\n  jaeger:\n    endpoint: localhost:14250\n\
+  \    tls:\n      insecure: true\nservice:\n  pipelines:\n    traces:\n      receivers: [otlp]\n    \
+  \  processors: [batch]\n      exporters: [jaeger]\n```\n\n## Testing\n\n```bash\ncurl -X POST localhost:4318/v1/traces\
+  \ -H 'Content-Type: application/json' -d '{\"resourceSpans\":[]}'\ncurl -s localhost:16686/api/services\
+  \ | jq '.data'\n```\n\n## Best practices\n\n- Always add a batch processor before exporters\n- Buffer\
+  \ to a local file or Kafka when backends are flaky\n- Set sampling before the collector, not after\n\
+  \n## Capabilities\n\n### otel-pipeline\nRun the OTel Collector and route traces to backends\n\n**Commands:**\n\
+  - `otelcol-contrib --config otel-collector.yaml`\n- `curl -X POST localhost:4318/v1/traces -H 'Content-Type:\
+  \ application/json' -d '{\"resourceSpans\":[]}'`\n- `docker run -d -p 16686:16686 jaegertracing/all-in-one`\n\
+  - `docker run -d -p 9411:9411 openzipkin/zipkin`\n- `curl -X POST -H 'Content-Type: application/json'\
+  \ localhost:9411/api/v2/spans -d '[]'`\n\n**Examples:**\n- otelcol-contrib --config otel-collector.yaml\n\
+  - docker run -d -p 16686:16686 jaegertracing/all-in-one\n- curl -X POST localhost:4318/v1/traces -H\
+  \ 'Content-Type: application/json' -d '{\"resourceSpans\":[]}'"
+prompt: Act as Tracing and handle the task per the instructions.

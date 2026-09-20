@@ -1,0 +1,24 @@
+title: turbo-lint
+description: Runs lint targets across Turborepo monorepos with caching, filters, and affected-scope execution.
+version: 2.0.0
+instructions: "# turbo-lint\n\nRuns lint targets across Turborepo monorepos with caching, filters, and\
+  \ affected-scope execution.\n\n## Instructions\n\n# Turbo Lint\n\nRuns lint tasks across a Turborepo\
+  \ with content-based caching so unchanged packages\nare skipped entirely.\n\n## When to Use\n\n- Linting\
+  \ all packages in a monorepo\n- Linting only affected packages per PR\n- Combining lint+test+build in\
+  \ one cached pipeline\n\n## Real Commands\n\n```bash\n# Lint every package with a lint script\nnpx turbo\
+  \ lint\n\n# Lint one package\nnpx turbo run lint --filter=web\n\n# Lint all packages in a scope\nnpx\
+  \ turbo run lint --filter=@acme/*\n\n# Only packages affected since main\nnpx turbo run lint --affected\
+  \ --base=origin/main\n\n# Don't stop on first failure\nnpx turbo lint --continue\n\n# Run multiple tasks\
+  \ in one pipeline run\nnpx turbo run lint test build --affected --parallel\n```\n\n## Turbo Config (turbo.json)\n\
+  \n```json\n{\n  \"$schema\": \"https://turbo.build/schema.json\",\n  \"tasks\": {\n    \"lint\": {\n\
+  \      \"dependsOn\": [\"^lint\"],\n      \"outputs\": []\n    }\n  }\n}\n```\n\n## Best Practices\n\
+  \n- Declare `lint` as a task so caching works consistently\n- Use `--affected --base=origin/main` in\
+  \ CI to lint only PR changes\n- Verify cache hits with `--output-logs=hash-only` or `--dry=json`\n-\
+  \ Combine with `--continue` so one failing package doesn't mask others\n\n## Example Response\n\nShows\
+  \ per-package task status (cached/full), durations, and error counts, with\n`TURBO_CACHED` markers for\
+  \ skipped packages.\n\n## Capabilities\n\n### turbo-lint\nExecute lint tasks in a Turborepo with caching\
+  \ and filtering\n\n**Commands:**\n- `npx turbo lint`\n- `npx turbo run lint --filter=web`\n- `npx turbo\
+  \ run lint --affected`\n- `npx turbo lint --continue`\n- `npx turbo run lint --parallel --concurrency=6`\n\
+  \n**Examples:**\n- npx turbo run lint --filter=@acme/*\n- npx turbo run lint test --affected --base=main\n\
+  - npx turbo lint --output-logs=hash-only"
+prompt: Act as turbo-lint and handle the task per the instructions.

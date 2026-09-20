@@ -1,0 +1,37 @@
+title: Grpc Gateway
+description: 'Expose gRPC services as RESTful JSON APIs using grpc-gateway v2: google.api.http annotations,
+  protoc plugins, and OpenAPI generation.'
+version: 2.0.0
+instructions: "# Grpc Gateway\n\nExpose gRPC services as RESTful JSON APIs using grpc-gateway v2: google.api.http\
+  \ annotations, protoc plugins, and OpenAPI generation.\n\n## Instructions\n\n# grpc-gateway\n\nExpose\
+  \ gRPC backends as REST/JSON APIs with grpc-gateway v2.\n\n## What this skill does\n\n- Maps REST paths\
+  \ and verbs to gRPC methods via `google.api.http` annotations.\n- Generates a standalone gateway binary\
+  \ that reverse-proxies JSON to gRPC.\n- Produces OpenAPI (swagger) specs for downstream API consumers.\n\
+  - Supports query params, request body binding, and custom route patterns.\n\n## When to use\n\n- The\
+  \ same service must serve mobile/web REST clients and internal gRPC clients.\n- You want a single source\
+  \ of truth (the proto) for both protocols.\n- Generating OpenAPI docs for the API portal without hand-writing\
+  \ them.\n\n## Real commands\n\n```bash\n# Install plugins\ngo install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest\n\
+  go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest\n\n# Generate gateway\
+  \ code + OpenAPI spec\nprotoc -I . --grpc-gateway_out=logtostderr=true:./gen \\\n  --openapiv2_out=logtostderr=true:./swagger\
+  \ ./proto/helloworld.proto\n\n# Run the gateway\ngo run ./gateway\n\n# Call the REST endpoint\ncurl\
+  \ http://localhost:8080/v1/hello/John\n```\n\n## Annotation example\n\n```proto\nimport \"google/api/annotations.proto\"\
+  ;\n\nservice Greeter {\n  rpc SayHello(HelloRequest) returns (HelloReply) {\n    option (google.api.http)\
+  \ = {\n      get: \"/v1/hello/{name}\"\n      additional_bindings { post: \"/v1/greet\" body: \"*\"\
+  \ }\n    };\n  }\n}\n```\n\n## Gateway main\n\n```go\nmux := runtime.NewServeMux()\nopts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}\n\
+  err := pb.RegisterGreeterHandlerFromEndpoint(ctx, mux, \"localhost:50051\", opts)\nhttp.ListenAndServe(\"\
+  :8080\", mux)\n```\n\n## Testing\n\n```bash\ngo run ./gateway &\ncurl -s http://localhost:8080/v1/hello/World\
+  \ | jq .message\ncurl -s -X POST http://localhost:8080/v1/greet -d '{\"name\":\"World\"}' | jq .message\n\
+  ```\n\n## Best practices\n\n- Use `additional_bindings` when the same RPC deserves GET and POST shapes.\n\
+  - Return canonical gRPC status codes; the gateway maps them to HTTP codes automatically.\n- Regenerate\
+  \ the OpenAPI spec on every contract change and diff it in CI.\n- Keep the gateway in a separate binary\
+  \ so gRPC service and gateway scale independently.\n\n## Example exchange\n\n```\nUser: Add a REST POST\
+  \ /v1/greet to the Greeter service and regenerate.\nAgent: Annotate SayHello with additional_bindings,\
+  \ then run protoc --grpc-gateway_out and restart the gateway.\n```\n\n## Capabilities\n\n### gateway-generation\n\
+  Generate REST gateway stubs and OpenAPI specs from protos annotated with google.api.http.\n\n**Commands:**\n\
+  - `go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest`\n- `go install\
+  \ github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest`\n- `protoc -I . --grpc-gateway_out=logtostderr=true:./gen\
+  \ ./proto/helloworld.proto`\n- `protoc -I . --openapiv2_out=logtostderr=true:./swagger ./proto/helloworld.proto`\n\
+  - `go run ./gateway`\n\n**Examples:**\n- protoc -I . --grpc-gateway_out=logtostderr=true:./gen --go_out=./gen\
+  \ --go-grpc_out=./gen ./proto/helloworld.proto\n- curl http://localhost:8080/v1/hello/John\n- curl -X\
+  \ POST http://localhost:8080/v1/greet -d '{\"name\":\"John\"}'"
+prompt: Act as Grpc Gateway and handle the task per the instructions.

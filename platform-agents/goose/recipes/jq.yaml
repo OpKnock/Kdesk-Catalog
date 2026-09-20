@@ -1,0 +1,32 @@
+title: jq
+description: 'Processes JSON in the shell with jq: filtering, transformations, aggregation, and scripting
+  against APIs and log streams.'
+version: 2.0.0
+instructions: "# jq\n\nProcesses JSON in the shell with jq: filtering, transformations, aggregation, and\
+  \ scripting against APIs and log streams.\n\n## Instructions\n\n# jq JSON Processing\n\nQuery, transform,\
+  \ and aggregate JSON from the command line.\n\n## What This Skill Does\n\n- Filters and extracts values\
+  \ from JSON documents\n- Selects objects by conditions\n- Builds new JSON objects and arrays\n- Aggregates\
+  \ with group_by, length, add\n- Formats output (raw, compact, colored)\n- Powers API pipelines: curl\
+  \ | jq\n\n## When to Use\n\n- Inspecting API responses in the shell\n- Parsing Kubernetes/cloud CLI\
+  \ JSON output\n- Data wrangling in pipelines\n\n## Real Commands\n\n```bash\n# Extract\ncat data.json\
+  \ | jq '.users[].name'\njq '.items[] | select(.status == \"open\")' data.json\njq '.total' data.json\n\
+  \n# Transform\njq '{count: (.items | length), names: [.items[].name]}' data.json\njq '[.items[] | {name,\
+  \ size}] | sort_by(.size) | reverse' data.json\njq 'map(.price) | add / length' data.json\njq -n '{hello:\
+  \ \"world\", arr: [1,2,3]}'\n\n# Output modes\njq -r '.items[] | \"\\(.name)\t\\(.id)\"' data.json\n\
+  jq -c '.items[]' data.json\ncurl -s https://api.example.com/data | jq '.result'\n```\n\n## Best Practices\n\
+  \n- Use -r for unquoted output (CSV, TSV, shell assignment)\n- Use select() early in pipelines for performance\n\
+  - Quote filters in single quotes to protect shell expansion\n- Prefer jq for ad-hoc; SQL or duckdb for\
+  \ large data analysis\n- Use --arg to inject shell variables: jq --arg name \"$N\" '.name=$name'\n\n\
+  ## Capabilities\n\n### query-and-filter\nExtract and filter values from JSON documents.\n\n**Commands:**\n\
+  - `cat data.json | jq '.users[].name'`\n- `jq '.items[] | select(.status == \"open\")' data.json`\n\
+  - `jq '.[] | {name, id}' data.json`\n- `jq '.total' data.json`\n- `jq 'has(\"errors\")' data.json`\n\
+  - `curl -s http://localhost:8080/data | jq '.result'`\n\n**Examples:**\n- jq '.users[].name' data.json\n\
+  - jq '.items[] | select(.status == \"open\")' data.json\n- curl -s http://localhost:8080/data | jq '.result'\n\
+  \n### transform-and-aggregate\nBuild new JSON, group, count, and reshape data.\n\n**Commands:**\n- `jq\
+  \ '{count: (.items | length), names: [.items[].name]}' data.json`\n- `jq 'group_by(.kind) | map({kind:\
+  \ .[0].kind, count: length})' data.json`\n- `jq '[.items[] | {name, size}] | sort_by(.size) | reverse'\
+  \ data.json`\n- `jq -r '.items[] | \"\\(.name)\\t\\(.id)\"' data.json`\n- `jq 'map(.price) | add / length'\
+  \ data.json`\n- `jq -n '{hello: \"world\", arr: [1,2,3]}'`\n\n**Examples:**\n- jq 'group_by(.kind) |\
+  \ map({kind: .[0].kind, count: length})' data.json\n- jq -r '.items[] | \"\\(.name)\\t\\(.id)\"' data.json\n\
+  - jq 'map(.price) | add / length' data.json"
+prompt: Act as jq and handle the task per the instructions.

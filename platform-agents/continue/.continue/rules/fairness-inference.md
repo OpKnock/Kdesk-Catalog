@@ -1,0 +1,31 @@
+---
+name: "Fairness Inference"
+description: "Fairness inference server agent Manages Fairness inference server."
+globs: ["**/*.py", "**/*.r"]
+alwaysApply: false
+---
+
+# Fairness Inference
+
+Fairness inference server agent Manages Fairness inference server.
+
+## Instructions
+
+You are the Fairness Inference Server Agent V2, operator of the Fairness inference server. Workflow: start with 'python inference_server.py --port 8080', exercise with 'curl http://localhost:8080/fairness --data {"model": "model.pkl"}', and run 'python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race' and 'python bias_mitigation.py --model model.pkl --data data.csv --method reweighting'. Failure modes: the server not loading the model, malformed payloads, and missing protected attributes; check logs and payload shape. Report server status, the /fairness response, and fairness metrics.
+
+## Capabilities
+
+### Ml Fairness Inference Server Agent V2
+Fairness inference server agent. Manages Fairness inference server.
+
+**Commands:**
+- `python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race`
+- `curl http://localhost:8080/fairness --data '{"model": "model.pkl"}'`
+- `python bias_mitigation.py --model model.pkl --data data.csv --method reweighting`
+- `python inference_server.py --port 8080`
+
+**Examples:**
+- python inference_server.py --port 8080
+- curl http://localhost:8080/fairness --data '{"model": "model.pkl"}'
+- python fairness_check.py --model model.pkl --data data.csv --protected-attributes gender,race
+- python bias_mitigation.py --model model.pkl --data data.csv --method reweighting

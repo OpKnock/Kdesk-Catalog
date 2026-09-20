@@ -1,0 +1,43 @@
+title: Cost Aws
+description: Analyzes and reduces AWS spend with Cost Explorer, Budgets, Compute Optimizer, and Cost Optimization
+  Hub CLI queries.
+version: 2.0.0
+instructions: "# Cost Aws\n\nAnalyzes and reduces AWS spend with Cost Explorer, Budgets, Compute Optimizer,\
+  \ and Cost Optimization Hub CLI queries.\n\n## Instructions\n\n# AWS Cost Optimization\n\nFind and eliminate\
+  \ AWS waste using native Cost Explorer and optimization APIs.\n\n## When to Use\n\n- Monthly cost review\
+  \ by service or team\n- Detecting spend anomalies before they compound\n- Rightsizing EC2, RDS, and\
+  \ EBS resources\n- Validating reservations and Savings Plans coverage\n\n## Cost exploration\n\n```bash\n\
+  aws ce get-cost-and-usage --time-period Start=2026-07-01,End=2026-08-01 --granularity DAILY --metrics\
+  \ UnblendedCost --group-by Type=DIMENSION,Key=SERVICE\n```\n\nGroup by `Type=TAG,Key=team` when your\
+  \ org enforces cost-allocation tags.\n\n## Find savings\n\n```bash\naws cost-optimization-hub list-recommendations\
+  \ --category Compute\naws compute-optimizer get-ec2-instance-recommendations\n```\n\nRightsize only\
+  \ after 14 days of steady-state utilization data; avoid churning on bursty jobs.\n\n## Budgets and alerts\n\
+  \n```bash\naws budgets create-budget --account-id 123456789012 --budget file://budget.json --notifications-with-subscribers\
+  \ file://notifications.json\n```\n\nBudget JSON example:\n\n```json\n{\n  \"BudgetLimit\": {\"Amount\"\
+  : \"10000\", \"Unit\": \"USD\"},\n  \"BudgetName\": \"monthly-engineering\",\n  \"BudgetType\": \"COST\"\
+  ,\n  \"TimeUnit\": \"MONTHLY\",\n  \"TimePeriod\": {\"Start\": \"2026-08-01\"}\n}\n```\n\n## Anomaly\
+  \ detection\n\n```bash\naws ce get-anomalies --monitor-arn <monitor-arn> --date-interval Start=2026-07-01\n\
+  aws ce get-anomaly-monitors\n```\n\n## Best practices\n\n- Tag everything; untagged resources are invisible\
+  \ to owners.\n- Use Savings Plans for steady compute and Spot for interruptible work.\n- Archive old\
+  \ S3 objects with lifecycle policies before buying more storage.\n- Review the weekly cost anomaly report\
+  \ and close monitors with known reasons.\n\n## Capabilities\n\n### cost-explorer\nQuery AWS cost and\
+  \ usage data, forecasts, and reservations via the ce API.\n\n**Commands:**\n- `aws ce get-cost-and-usage\
+  \ --time-period Start=2026-07-01,End=2026-08-01 --granularity MONTHLY --metrics UnblendedCost --group-by\
+  \ Type=DIMENSION,Key=SERVICE`\n- `aws ce get-cost-forecast --time-period Start=2026-08-01,End=2026-09-01\
+  \ --metric UNBLENDED_COST --granularity MONTHLY`\n- `aws ce get-reservation-coverage --time-period Start=2026-07-01,End=2026-08-01`\n\
+  - `aws ce get-reservation-utilization --time-period Start=2026-07-01,End=2026-08-01 --granularity DAILY`\n\
+  - `aws ce get-anomalies --monitor-arn arn:aws:ce::123456789012:anomalymonitor/abc --date-interval Start=2026-07-01`\n\
+  \n**Examples:**\n- aws ce get-cost-and-usage --time-period Start=2026-07-01,End=2026-08-01 --granularity\
+  \ DAILY --metrics UnblendedCost --group-by Type=TAG,Key=team\n- aws ce get-cost-and-usage --time-period\
+  \ Start=2026-07-01,End=2026-08-01 --granularity MONTHLY --metrics UnblendedCost --filter '{\"Dimensions\"\
+  :{\"Key\":\"SERVICE\",\"Values\":[\"Amazon Simple Storage Service\"]}}'\n- aws ce get-cost-forecast\
+  \ --metric UNBLENDED_COST --granularity DAILY\n\n### optimization\nFind rightsizing and cost optimization\
+  \ recommendations.\n\n**Commands:**\n- `aws cost-optimization-hub list-recommendations --category Compute`\n\
+  - `aws compute-optimizer get-ec2-instance-recommendations --account-ids 123456789012`\n- `aws compute-optimizer\
+  \ get-ebs-volume-recommendations --account-ids 123456789012`\n- `aws savingsplans list-savings-plans`\n\
+  - `aws budgets describe-budgets --account-id 123456789012`\n\n**Examples:**\n- aws cost-optimization-hub\
+  \ list-recommendations --category Storage --implementation-effort High | jq '.items[] | {resourceId,\
+  \ estimatedSavings}'\n- aws compute-optimizer get-ec2-instance-recommendations | jq '.instanceRecommendations[]\
+  \ | {instanceArn, finding}'\n- aws budgets describe-budgets --account-id 123456789012 --budget-type\
+  \ COST"
+prompt: Act as Cost Aws and handle the task per the instructions.

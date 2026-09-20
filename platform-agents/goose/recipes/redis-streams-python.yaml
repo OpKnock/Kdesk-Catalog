@@ -1,0 +1,37 @@
+title: Redis Streams Python
+description: 'Expert Python skill for Redis Streams using redis-py: covers xadd producers, xread/xreadgroup
+  consumers, xack acknowledgments, and xtrim stream maintenance for job queues and replayable logs.'
+version: 2.0.0
+instructions: "# Redis Streams Python\n\nExpert Python skill for Redis Streams using redis-py: covers\
+  \ xadd producers, xread/xreadgroup consumers, xack acknowledgments, and xtrim stream maintenance for\
+  \ job queues and replayable logs.\n\n## Instructions\n\n# Redis Streams in Python\n\nExpert skill for\
+  \ Redis Streams with redis-py.\n\n## What this skill does\n\n- Produces entries with xadd and lets Redis\
+  \ generate sequence IDs\n- Consumes with xreadgroup in blocking mode for at-least-once delivery\n- Acknowledges,\
+  \ inspects pending entries, and trims the stream\n\n## When to use\n\n- Python workers processing job\
+  \ queues stored in streams\n- Backfill pipelines that need replayable logs\n- Quick data-science reads\
+  \ of stream data\n\n## Real commands\n\n```bash\npip install redis\n\n# Add an entry, returns the new\
+  \ ID\npython -c 'import redis; r=redis.Redis(); print(r.xadd(\"orders\", {\"sku\":\"A1\",\"qty\":2}))'\n\
+  \n# Blocking read of new entries\npython -c 'import redis; r=redis.Redis(); print(r.xread({\"orders\"\
+  : \"$\"}, count=1, block=5000))'\n\n# Create a consumer group\npython -c 'import redis; r=redis.Redis();\
+  \ print(r.xgroup_create(\"orders\", \"workers\", id=\"$\", mkstream=True))'\n\n# Read from a group\n\
+  python -c 'import redis; r=redis.Redis(); print(r.xreadgroup(\"workers\", \"c1\", {\"orders\": \">\"\
+  }, count=2, block=5000))'\n\n# Pending list and trim\npython -c 'import redis; r=redis.Redis(); print(r.xpending(\"\
+  orders\", \"workers\"))'\npython -c 'import redis; r=redis.Redis(); print(r.xtrim(\"orders\", maxlen=1000))'\n\
+  ```\n\n## Consumer loop\n\n```python\nimport redis, time\n\nr = redis.Redis()\nwhile True:\n    msgs\
+  \ = r.xreadgroup(\"workers\", \"c1\", {\"orders\": \">\"}, count=10, block=5000)\n    for _, entries\
+  \ in msgs:\n        for msg_id, fields in entries:\n            print(msg_id, fields)\n            r.xack(\"\
+  orders\", \"workers\", msg_id)\n```\n\n## Testing\n\n```bash\npython -c 'import redis; r=redis.Redis();\
+  \ print(r.xlen(\"orders\"))'\npython -c 'import redis; r=redis.Redis(); print(r.xinfo_groups(\"orders\"\
+  ))'\n```\n\n## Best practices\n\n- Always xack after handling to keep the pending list bounded\n- Use\
+  \ id=\"$\" only for new groups; use \"0\" to replay from the beginning\n- Keep the group name stable\
+  \ across deploys so consumption resumes cleanly\n\n## Capabilities\n\n### redis-py-streams\nWork with\
+  \ Redis Streams from Python: add, read, group, ack, trim\n\n**Commands:**\n- `pip install redis`\n-\
+  \ `python -c 'import redis; r=redis.Redis(); print(r.xadd(\"orders\", {\"sku\":\"A1\",\"qty\":2}))'`\n\
+  - `python -c 'import redis; r=redis.Redis(); print(r.xread({\"orders\": \"$\"}, count=1, block=5000))'`\n\
+  - `python -c 'import redis; r=redis.Redis(); print(r.xgroup_create(\"orders\", \"workers\", id=\"$\"\
+  , mkstream=True))'`\n- `python -c 'import redis; r=redis.Redis(); print(r.xpending(\"orders\", \"workers\"\
+  ))'`\n\n**Examples:**\n- python -c 'import redis; r=redis.Redis(); print(r.xrange(\"orders\", count=5))'\n\
+  - python -c 'import redis; r=redis.Redis(); print(r.xreadgroup(\"workers\", \"c1\", {\"orders\": \"\
+  >\"}, count=2, block=5000))'\n- python -c 'import redis; r=redis.Redis(); print(r.xtrim(\"orders\",\
+  \ maxlen=1000))'"
+prompt: Act as Redis Streams Python and handle the task per the instructions.

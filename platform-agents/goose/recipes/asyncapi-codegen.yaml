@@ -1,0 +1,44 @@
+title: Asyncapi Codegen
+description: Generates code and docs from AsyncAPI documents with the AsyncAPI CLI, generator templates,
+  and Modelina multi-language models.
+version: 2.0.0
+instructions: "# Asyncapi Codegen\n\nGenerates code and docs from AsyncAPI documents with the AsyncAPI\
+  \ CLI, generator templates, and Modelina multi-language models.\n\n## Instructions\n\n# AsyncAPI Codegen\n\
+  \n## What this skill does\n\nWorks with AsyncAPI documents end-to-end: validating and linting, generating\
+  \ servers/clients/docs from templates, and producing typed models with Modelina.\n\n## When to use\n\
+  \n- An event-driven API needs code generated from its spec\n- Validating an AsyncAPI file in CI\n- Bootstrapping\
+  \ a Node/Java/Python subscriber from a spec\n\n## Real commands\n\n```bash\n# Validate\nnpx @asyncapi/cli\
+  \ validate asyncapi.yaml\nnpx @asyncapi/cli lint asyncapi.yaml\n\n# Generate a Node.js app\nnpx @asyncapi/generator\
+  \ asyncapi.yaml @asyncapi/nodejs-template -o ./generated --force-write\n\n# Generate Java Spring project\n\
+  npx @asyncapi/generator asyncapi.yaml @asyncapi/java-spring-template -o ./generated\n\n# Generate HTML\
+  \ docs\nnpx @asyncapi/generator asyncapi.yaml @asyncapi/html-template -o ./docs\n\n# Generate TypeScript\
+  \ models\nnpx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language TypeScript\n\
+  ```\n\n## AsyncAPI document (v3)\n\n```yaml\nasyncapi: 3.0.0\ninfo:\n  title: Order Service\n  version:\
+  \ 1.0.0\nchannels:\n  orderCreated:\n    address: order.created\n    messages:\n      OrderCreated:\n\
+  \        payload:\n          type: object\n          properties:\n            id: {type: string}\noperations:\n\
+  \  publishOrder:\n    action: send\n    channel: { $ref: '#/channels/orderCreated' }\n```\n\n## Testing\n\
+  \n- Validate in CI with npx @asyncapi/cli validate\n- Smoke-test generated code with npm install &&\
+  \ npm start in the output dir\n\n## Best practices\n\n- Keep the spec the single source of truth\n-\
+  \ Re-generate in CI and diff to catch drift\n- Use --param server= to select environments\n\n## Capabilities\n\
+  \n### validation\nValidate and lint AsyncAPI documents.\n\n**Commands:**\n- `npx @asyncapi/cli validate\
+  \ asyncapi.yaml`\n- `npx @asyncapi/cli lint asyncapi.yaml`\n- `npx @asyncapi/cli validate https://raw.githubusercontent.com/asyncapi/spec/master/examples/simple.yml`\n\
+  - `npx @asyncapi/cli --version`\n\n**Examples:**\n- npx @asyncapi/cli validate asyncapi.yaml\n- npx\
+  \ @asyncapi/cli lint --ruleset config.json asyncapi.yaml\n- npx @asyncapi/cli validate --spec-parser-options\
+  \ '{}' asyncapi.yaml\n\n### generation\nGenerate server/client code and docs from templates.\n\n**Commands:**\n\
+  - `npx @asyncapi/generator asyncapi.yaml @asyncapi/nodejs-template -o ./generated --force-write`\n-\
+  \ `npx @asyncapi/generator asyncapi.yaml @asyncapi/java-spring-template -o ./generated`\n- `npx @asyncapi/generator\
+  \ asyncapi.yaml @asyncapi/python-paho-template -o ./generated`\n- `npx @asyncapi/generator asyncapi.yaml\
+  \ @asyncapi/html-template -o ./docs`\n- `npx @asyncapi/generator --param server=production asyncapi.yaml\
+  \ @asyncapi/nodejs-template -o ./generated`\n\n**Examples:**\n- npx @asyncapi/generator asyncapi.yaml\
+  \ @asyncapi/nodejs-template -o ./out --force-write\n- npx @asyncapi/generator --param password=secret\
+  \ asyncapi.yaml @asyncapi/java-spring-template -o ./out\n- npx @asyncapi/generator asyncapi.yaml @asyncapi/markdown-template\
+  \ -o ./docs\n\n### modelina\nGenerate data models for multiple languages from the schema.\n\n**Commands:**\n\
+  - `npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language TypeScript`\n\
+  - `npx @asyncapi/modelina generate --input asyncapi.yaml --output ./src/main/java --language Java`\n\
+  - `npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language Go`\n- `npx @asyncapi/modelina\
+  \ generate --input asyncapi.yaml --output ./models --language Python`\n\n**Examples:**\n- npx @asyncapi/modelina\
+  \ generate --input asyncapi.yaml --output ./models --language TypeScript --packageName com.example\n\
+  - npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language Java --type-mapping\
+  \ string=UUID\n- npx @asyncapi/modelina generate --input asyncapi.yaml --output ./models --language\
+  \ Python --generate-optional"
+prompt: Act as Asyncapi Codegen and handle the task per the instructions.

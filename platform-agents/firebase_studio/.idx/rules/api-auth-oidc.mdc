@@ -1,0 +1,82 @@
+---
+description: "API auth with OpenID Connect - discovery, authorization code flow with PKCE, ID token validation, and userinfo retrieval."
+globs: ["**/*.go", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# Api Auth OIDC
+
+API auth with OpenID Connect - discovery, authorization code flow with PKCE, ID token validation, and userinfo retrieval.
+
+## Instructions
+
+# API Auth (OpenID Connect)
+
+## What this skill does
+Implement OpenID Connect on top of OAuth2: run discovery, drive the authorization code flow with PKCE, validate ID tokens, and call the userinfo endpoint.
+
+## When to use
+- Building SPAs that need identity (not just access)
+- Federating login with an external IdP
+- Moving from opaque sessions to OIDC
+
+## Real commands
+```bash
+# Discovery
+curl -s http://localhost:8080/realms/demo/.well-known/openid-configuration | jq '.authorization_endpoint, .userinfo_endpoint, .jwks_uri'
+
+# Generate PKCE pair
+node -e "const c=require('crypto');\
+const v=c.randomBytes(32).toString('base64url');\
+console.log('verifier:',v);\
+console.log('challenge:',c.createHash('sha256').update(v).digest('base64url'))"
+
+# Authorization request
+curl -s 'http://localhost:8080/realms/demo/protocol/openid-connect/auth?client_id=spa&redirect_uri=http://localhost:3000/cb&response_type=code&scope=openid%20profile&code_challenge=CHALLENGE&code_challenge_method=S256' -o /dev/null -w '%{redirect_url}'
+
+# Exchange code
+curl -s -X POST http://localhost:8080/realms/demo/protocol/openid-connect/token \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'grant_type=authorization_code&client_id=spa&code=$CODE&redirect_uri=http://localhost:3000/cb&code_verifier=VERIFIER' | jq -r '.id_token'
+
+# Userinfo
+curl -s http://localhost:8080/realms/demo/protocol/openid-connect/userinfo -H "Authorization: Bearer $ACCESS" | jq '.preferred_username'
+
+# JWKS for ID token validation
+curl -s http://localhost:8080/realms/demo/protocol/openid-connect/certs | jq '.keys | length'
+
+# Logout
+curl -s http://localhost:8080/realms/demo/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:3000 -o /dev/null -w '%{http_code}'
+```
+
+## ID token validation
+- Verify signature against the JWKS
+- Check iss, aud, exp, nonce, azp if present
+- Always use the code flow with PKCE for SPAs
+
+## Best practices
+- Never expose client secrets in SPAs (use PKCE)
+- Validate the nonce to prevent replay
+- Use `openid` scope so an ID token is returned
+
+## Testing
+```bash
+curl -s http://localhost:8080/realms/demo/.well-known/openid-configuration | jq -e '.issuer' && echo OK
+```
+
+## Capabilities
+
+### oidc-flow
+Implement and test OpenID Connect flows
+
+**Commands:**
+- `curl -s http://localhost:8080/realms/demo/.well-known/openid-configuration | jq '.authorization_endpoint, .userinfo_endpoint'`
+- `curl -s 'http://localhost:8080/realms/demo/protocol/openid-connect/auth?client_id=spa&redirect_uri=http://localhost:3000/cb&response_type=code&scope=openid%20profile&code_challenge=CHALLENGE&code_challenge_method=S256' -o /dev/null -w '%{redirect_url}'`
+- `curl -s -X POST http://localhost:8080/realms/demo/protocol/openid-connect/token -H 'Content-Type: application/x-www-form-urlencoded' -d 'grant_type=authorization_code&client_id=spa&code=$CODE&redirect_uri=http://localhost:3000/cb&code_verifier=VERIFIER' | jq -r '.id_token'`
+- `curl -s http://localhost:8080/realms/demo/protocol/openid-connect/userinfo -H "Authorization: Bearer $ACCESS" | jq '.preferred_username'`
+- `curl -s http://localhost:8080/realms/demo/protocol/openid-connect/certs | jq '.keys | length'`
+
+**Examples:**
+- node -e "const c=require('crypto');const v=c.randomBytes(32).toString('base64url');console.log(v);console.log(c.createHash('sha256').update(v).digest('base64url'))"
+- curl -s -X POST http://localhost:8080/realms/demo/protocol/openid-connect/token -d 'grant_type=authorization_code&client_id=spa&code=$CODE&redirect_uri=http://localhost:3000/cb&code_verifier=VERIFIER' | jq '.expires_in'
+- curl -s http://localhost:8080/realms/demo/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:3000 -o /dev/null -w '%{http_code}'

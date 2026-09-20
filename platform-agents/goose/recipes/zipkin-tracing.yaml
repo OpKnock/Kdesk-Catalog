@@ -1,0 +1,32 @@
+title: Zipkin Tracing
+description: 'Run and use Zipkin for distributed tracing: start the server, emit spans over the v2 API,
+  query traces by ID or service, and review service dependencies.'
+version: 2.0.0
+instructions: "# Zipkin Tracing\n\nRun and use Zipkin for distributed tracing: start the server, emit\
+  \ spans over the v2 API, query traces by ID or service, and review service dependencies.\n\n## Instructions\n\
+  \n# Zipkin Tracing\n\n## What this skill does\nRun and use Zipkin for distributed tracing: start the\
+  \ server, emit spans over the v2 API, query traces by ID or service, and review service dependencies.\n\
+  \n## When to use\n- Tracing requests across microservices\n- Measuring per-service latency\n- Debugging\
+  \ slow end-to-end calls\n\n## Real commands\n```bash\n# Start Zipkin\n docker run -d -p 9411:9411 openzipkin/zipkin\n\
+  \n# List services\ncurl -s http://localhost:9411/api/v2/services | jq '.'\n\n# Emit a span\ncat > span.json\
+  \ <<'EOF'\n[{\n  \"traceId\": \"1234567890abcdef1234567890abcdef\",\n  \"id\": \"1234567890abcdef\"\
+  ,\n  \"name\": \"get /api/users\",\n  \"timestamp\": 1700000000000000,\n  \"duration\": 35000,\n  \"\
+  localEndpoint\": {\"serviceName\": \"orders-api\"},\n  \"kind\": \"SERVER\"\n}]\nEOF\ncurl -s -X POST\
+  \ http://localhost:9411/api/v2/spans -H 'Content-Type: application/json' -d @span.json\n\n# Query traces\n\
+  curl -s http://localhost:9411/api/v2/traces | jq '.[0] | {id, duration}'\n\n# Get one trace\ncurl -s\
+  \ 'http://localhost:9411/api/v2/trace/1234567890abcdef1234567890abcdef' | jq '.[] | {id, name, duration}'\n\
+  \n# Dependencies\ncurl -s http://localhost:9411/api/v2/dependencies | jq '.[0] | {parent, child, callCount}'\n\
+  ```\n\n## Span JSON essentials\n- traceId (128-bit hex), id (64-bit hex)\n- name, kind (CLIENT/SERVER/PRODUCER/CONSUMER)\n\
+  - timestamp (microseconds), duration (microseconds)\n- localEndpoint.serviceName\n- tags, annotations\n\
+  \n## Best practices\n- Propagate the B3 headers (x-b3-traceid, x-b3-spanid) across calls\n- Use client\
+  \ instrumentation (brave, opentelemetry) instead of handcrafted spans in prod\n- Configure sampling\
+  \ (e.g. 10%) at high traffic\n- Set ES storage for long retention\n\n## Testing\n```bash\ncurl -s http://localhost:9411/api/v2/traces\
+  \ | jq 'length'\ncurl -s http://localhost:9411/api/v2/services\n```\n\n## Capabilities\n\n### zipkin-tracing\n\
+  Run Zipkin, emit spans, and query traces\n\n**Commands:**\n- `docker run -d -p 9411:9411 openzipkin/zipkin`\n\
+  - `curl -s http://localhost:9411/api/v2/traces | jq '.[0] | {id, duration}'`\n- `curl -s -X POST http://localhost:9411/api/v2/spans\
+  \ -H 'Content-Type: application/json' -d @span.json`\n- `curl -s 'http://localhost:9411/api/v2/trace/TRACE_ID'\
+  \ | jq '.[] | {id, name, duration}'`\n- `curl -s http://localhost:9411/api/v2/dependencies | jq '.[0]\
+  \ | {parent, child, callCount}'`\n\n**Examples:**\n- docker run -d -p 9411:9411 -e STORAGE_TYPE=elasticsearch\
+  \ -e ES_HOSTS=http://localhost:9200 openzipkin/zipkin\n- curl -s http://localhost:9411/api/v2/services\
+  \ | jq '.'\n- curl -s 'http://localhost:9411/api/v2/spans?serviceName=orders-api' | jq '.[0].name'"
+prompt: Act as Zipkin Tracing and handle the task per the instructions.

@@ -1,0 +1,34 @@
+title: Kerberos
+description: 'Authenticate and administer Kerberos: kinit/klist sessions, keytab management with kadmin,
+  and troubleshooting ticket errors.'
+version: 2.0.0
+instructions: "# Kerberos\n\nAuthenticate and administer Kerberos: kinit/klist sessions, keytab management\
+  \ with kadmin, and troubleshooting ticket errors.\n\n## Instructions\n\n# Kerberos\n\nAuthenticate and\
+  \ administer MIT Kerberos realms.\n\n## What this skill does\n\n- Obtains and manages TGT/ticket sessions\
+  \ with kinit/klist/kdestroy.\n- Creates principals and keytabs with kadmin.\n- Troubleshoots ticket\
+  \ expiry and preauth errors.\n\n## When to use\n\n- SSO authentication for Hadoop, NFS, or LDAP.\n-\
+  \ Service principals for hosts and daemons.\n- Debugging kinit failures (KDC unreachable, clock skew,\
+  \ preauth).\n\n## Real commands\n\n```bash\n# Obtain a ticket (prompts for password)\nkinit alice@STAGING.MYAPP.TEST\n\
+  \n# Ticket with explicit lifetime\nkinit -l 10h alice@STAGING.MYAPP.TEST\n\n# List active tickets\n\
+  klist\nklist -f    # with flags (A=preauth, F=forwardable)\n\n# Keytab tickets\nklist -kt /etc/krb5.keytab\n\
+  \n# Destroy the ticket cache\nkdestroy\n\n# Admin: create a user principal\nkadmin -p admin/admin@STAGING.MYAPP.TEST\
+  \ \\\n  -q \"addprinc -pw s3cret bob@STAGING.MYAPP.TEST\"\n\n# Admin: add service principal to a keytab\n\
+  kadmin -p admin/admin@STAGING.MYAPP.TEST \\\n  -q \"ktadd -k /etc/krb5.keytab host/web-01.staging.myapp.test@STAGING.MYAPP.TEST\"\
+  \n\n# List principals\nkadmin -p admin/admin@STAGING.MYAPP.TEST -q \"listprincs\"\n```\n\n## krb5.conf\
+  \ example\n\n```ini\n[libdefaults]\n  default_realm = STAGING.MYAPP.TEST\n  dns_lookup_realm = false\n\
+  \  dns_lookup_kdc = false\n  ticket_lifetime = 24h\n[realms]\n  STAGING.MYAPP.TEST = {\n    kdc = kdc1.staging.myapp.test\n\
+  \    admin_server = kdc1.staging.myapp.test\n  }\n[domain_realm]\n  .staging.myapp.test = STAGING.MYAPP.TEST\n\
+  ```\n\n## Testing\n\n```bash\n# Verify the service ticket works\nkvno host/web-01.staging.myapp.test@STAGING.MYAPP.TEST\n\
+  ```\n\n## Best practices\n\n- Never embed passwords in scripts; use keytabs with restricted principals.\n\
+  - Keep the clock in sync; skew > 5 minutes breaks preauth.\n- Use -l and -r lifetimes matching service\
+  \ requirements; renew with kinit -R.\n\n## Capabilities\n\n### session-mgmt\nObtain, list, and destroy\
+  \ Kerberos tickets.\n\n**Commands:**\n- `kinit alice@STAGING.MYAPP.TEST`\n- `kinit -l 10h alice@STAGING.MYAPP.TEST`\n\
+  - `klist`\n- `klist -f`\n- `kdestroy`\n\n**Examples:**\n- kinit alice@STAGING.MYAPP.TEST\n- klist -f\n\
+  - kdestroy\n\n### admin-ops\nCreate principals and manage keytabs with kadmin.\n\n**Commands:**\n- `kadmin\
+  \ -p admin/admin@STAGING.MYAPP.TEST -q \"addprinc -pw s3cret bob@STAGING.MYAPP.TEST\"`\n- `kadmin -p\
+  \ admin/admin@STAGING.MYAPP.TEST -q \"ktadd -k /etc/krb5.keytab host/web-01.staging.myapp.test@STAGING.MYAPP.TEST\"\
+  `\n- `kadmin -p admin/admin@STAGING.MYAPP.TEST -q \"listprincs\"`\n- `kadmin -p admin/admin@STAGING.MYAPP.TEST\
+  \ -q \"delprinc bob@STAGING.MYAPP.TEST\"`\n- `klist -kt /etc/krb5.keytab`\n\n**Examples:**\n- kadmin\
+  \ -p admin/admin@STAGING.MYAPP.TEST -q \"addprinc -pw s3cret bob@STAGING.MYAPP.TEST\"\n- kadmin -p admin/admin@STAGING.MYAPP.TEST\
+  \ -q \"ktadd -k /etc/krb5.keytab host/web-01.staging.myapp.test@STAGING.MYAPP.TEST\"\n- klist -kt /etc/krb5.keytab"
+prompt: Act as Kerberos and handle the task per the instructions.

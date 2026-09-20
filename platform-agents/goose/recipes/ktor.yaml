@@ -1,0 +1,28 @@
+title: Ktor
+description: 'General Ktor development lifecycle: project scaffolding with the Ktor Gradle plugin, dependency
+  management, and dev/test workflows.'
+version: 2.0.0
+instructions: "# Ktor\n\nGeneral Ktor development lifecycle: project scaffolding with the Ktor Gradle\
+  \ plugin, dependency management, and dev/test workflows.\n\n## Instructions\n\n# Ktor (General)\n\n\
+  The full Ktor project lifecycle: scaffolding, building, running, and packaging.\n\n## What this skill\
+  \ does\n\n- Bootstraps Ktor projects with the Gradle plugin.\n- Manages engines (Netty, CIO, Jetty)\
+  \ and plugins (content negotiation, auth).\n- Builds runnable distributions.\n\n## When to use\n\n-\
+  \ Starting any Ktor server or client project.\n- Upgrading Ktor versions and engines.\n- Understanding\
+  \ which Ktor artifacts a project pulls in.\n\n## Real commands\n\n```bash\n# Wrapper\ngradle wrapper\
+  \ --gradle-version 8.7\n\n# Full clean build (includes tests)\n./gradlew clean build\n\n# Dev run\n\
+  ./gradlew run\n\n# Install distribution\n./gradlew installDist\nbuild/install/app/bin/app\n\n# Inspect\
+  \ resolved dependencies\ngradle dependencies --configuration runtimeClasspath | grep -i ktor\n```\n\n\
+  ## build.gradle.kts example\n\n```kotlin\nplugins {\n    kotlin(\"jvm\") version \"2.0.0\"\n    id(\"\
+  io.ktor.plugin\") version \"2.3.10\"\n}\n\napplication {\n    mainClass.set(\"io.ktor.server.netty.EngineMain\"\
+  )\n}\n\nktor {\n    fatJar {\n        archiveFileName.set(\"app-all.jar\")\n    }\n}\n```\n\n## Testing\n\
+  \n```bash\n./gradlew test\n```\n\n## Best practices\n\n- Pin Ktor and Kotlin versions; the plugin ties\
+  \ them together.\n- Prefer EngineMain + application.conf for environment-driven config.\n- Use the fatJar\
+  \ task for simple single-binary deploys.\n\n## Capabilities\n\n### ktor-lifecycle\nScaffold, build,\
+  \ and run Ktor projects with Gradle.\n\n**Commands:**\n- `gradle wrapper --gradle-version 8.7`\n- `./gradlew\
+  \ clean build`\n- `./gradlew run`\n- `gradle dependencies --configuration runtimeClasspath | grep -i\
+  \ ktor`\n\n**Examples:**\n- gradle wrapper --gradle-version 8.7\n- ./gradlew clean build\n- gradle dependencies\
+  \ --configuration runtimeClasspath | grep -i ktor\n\n### plugin-config\nConfigure the Ktor Gradle plugin\
+  \ and application entry point.\n\n**Commands:**\n- `./gradlew build -x test`\n- `./gradlew installDist`\n\
+  - `build/install/app/bin/app`\n- `./gradlew dependencies --configuration ktor`\n\n**Examples:**\n- ./gradlew\
+  \ installDist\n- build/install/app/bin/app\n- ./gradlew build -x test"
+prompt: Act as Ktor and handle the task per the instructions.

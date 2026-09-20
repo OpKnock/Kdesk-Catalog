@@ -1,0 +1,37 @@
+title: Data Retention
+description: Expires, archives, and rotates API data with S3 lifecycle policies, MongoDB TTL indexes,
+  and log rotation configs for compliance and cost control.
+version: 2.0.0
+instructions: "# Data Retention\n\nExpires, archives, and rotates API data with S3 lifecycle policies,\
+  \ MongoDB TTL indexes, and log rotation configs for compliance and cost control.\n\n## Instructions\n\
+  \n# Data Retention\n\nExpire, archive, and rotate API data with retention policies.\n\n## When to Use\n\
+  \n- GDPR/CCPA compliance for stored API data\n- Controlling storage costs for logs and events\n- Enforcing\
+  \ retention windows per data class\n\n## S3 Lifecycle\n\n```json\n{\n  \"Rules\": [\n    {\n      \"\
+  ID\": \"expire-raw-events\",\n      \"Status\": \"Enabled\",\n      \"Filter\": {\"Prefix\": \"raw/\"\
+  },\n      \"Transitions\": [\n        {\"Days\": 30, \"StorageClass\": \"STANDARD_IA\"},\n        {\"\
+  Days\": 90, \"StorageClass\": \"GLACIER\"}\n      ],\n      \"Expiration\": {\"Days\": 365}\n    }\n\
+  \  ]\n}\n```\n\n```bash\naws s3api put-bucket-lifecycle-configuration --bucket my-bucket \\\n  --lifecycle-configuration\
+  \ file://lifecycle.json\naws s3api get-bucket-lifecycle-configuration --bucket my-bucket\n```\n\n##\
+  \ MongoDB TTL Index\n\n```bash\nmongosh --quiet --eval 'db.events.createIndex({createdAt:1},{expireAfterSeconds:86400})'\n\
+  mongosh --quiet --eval 'db.events.getIndexes()'\n```\n\nTTL deletes documents where createdAt is older\
+  \ than expireAfterSeconds. Requires an indexed date field.\n\n## Log Rotation\n\n```\n/etc/logrotate.d/api:\n\
+  /var/log/api/*.log {\n  daily\n  rotate 30\n  compress\n  missingok\n  notifempty\n}\n```\n\n```bash\n\
+  logrotate -d /etc/logrotate.d/api\nlogrotate -f /etc/logrotate.d/api\n```\n\n## Testing\n\n```bash\n\
+  # Verify lifecycle config is active\naws s3api get-bucket-lifecycle-configuration --bucket my-bucket\
+  \ | jq '.Rules'\n# Inspect TTL index options\nmongosh --quiet --eval 'db.events.getIndexes()' | jq '.[]\
+  \ | select(.expireAfterSeconds)'\n```\n\n## Best Practices\n\n- Define retention per data class (raw,\
+  \ processed, logs)\n- Test TTL with small expireAfterSeconds values first\n- Use transition before expiration\
+  \ to save costs\n- Document retention in a data policy\n- Monitor delete and transition metrics\n- Prefer\
+  \ encryption and lifecycle over manual deletion\n\n## Capabilities\n\n### s3-lifecycle\nConfigure S3\
+  \ bucket lifecycle policies for tiering and expiring objects\n\n**Commands:**\n- `aws s3api put-bucket-lifecycle-configuration\
+  \ --bucket my-bucket --lifecycle-configuration file://lifecycle.json`\n- `aws s3api get-bucket-lifecycle-configuration\
+  \ --bucket my-bucket`\n- `aws s3api delete-bucket-lifecycle --bucket my-bucket`\n- `aws s3 ls s3://my-bucket\
+  \ --recursive | wc -l`\n\n**Examples:**\n- aws s3api put-bucket-lifecycle-configuration --bucket my-bucket\
+  \ --lifecycle-configuration file://lifecycle.json\n- aws s3api get-bucket-lifecycle-configuration --bucket\
+  \ my-bucket | jq '.Rules'\n- aws s3 ls s3://my-bucket --recursive --summarize | tail -3\n\n### mongo-ttl\n\
+  Use MongoDB TTL indexes and logrotate to expire API data and logs\n\n**Commands:**\n- `mongosh --quiet\
+  \ --eval 'db.events.createIndex({createdAt:1},{expireAfterSeconds:86400})'`\n- `mongosh --quiet --eval\
+  \ 'db.events.getIndexes()'`\n- `logrotate -d /etc/logrotate.d/api`\n- `logrotate -f /etc/logrotate.d/api`\n\
+  \n**Examples:**\n- mongosh --quiet --eval 'db.events.createIndex({createdAt:1},{expireAfterSeconds:2592000})'\n\
+  - mongosh --quiet --eval 'db.events.getIndexes()' | jq\n- logrotate -d /etc/logrotate.d/api"
+prompt: Act as Data Retention and handle the task per the instructions.

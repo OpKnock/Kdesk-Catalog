@@ -1,0 +1,42 @@
+title: Avro
+description: 'Works with Apache Avro data serialization: schema authoring, avro-tools conversion, Python
+  avro library usage, and schema evolution.'
+version: 2.0.0
+instructions: "# Avro\n\nWorks with Apache Avro data serialization: schema authoring, avro-tools conversion,\
+  \ Python avro library usage, and schema evolution.\n\n## Instructions\n\n# Avro\n\n## What this skill\
+  \ does\n\nWorks with Apache Avro serialization: writing schemas, converting data with avro-tools, reading/writing\
+  \ data files in Python, and testing schema evolution (resolution) between writer and reader schemas.\n\
+  \n## When to use\n\n- Serializing records for Kafka or data lakes (compact, typed, evolvable)\n- Converting\
+  \ JSON lines to Avro for storage efficiency\n- Verifying a schema change is backward compatible\n\n\
+  ## Real commands\n\n```bash\n# Inspect metadata\njava -jar avro-tools.jar getmeta events.avro\n\n# Convert\
+  \ Avro to JSON\njava -jar avro-tools.jar tojson events.avro | head -5\n\n# JSON to Avro\njava -jar avro-tools.jar\
+  \ fromjson data.json --schema-file schema.avsc\n\n# Generate sample data\njava -jar avro-tools.jar random\
+  \ --schema-file user.avsc --count 100 sample.avro\n\n# Python\npip install avro\npython -c \"import\
+  \ avro.schema; s=avro.schema.parse(open('user.avsc').read()); print(s.fullname)\"\n```\n\n## Schema\
+  \ example\n\n```json\n{\n  \"type\": \"record\",\n  \"name\": \"User\",\n  \"namespace\": \"com.example\"\
+  ,\n  \"fields\": [\n    {\"name\": \"id\", \"type\": \"long\"},\n    {\"name\": \"email\", \"type\"\
+  : \"string\"}\n  ]\n}\n```\n\n## Schema evolution\n\n- Adding a field with a default is backward compatible\n\
+  - Test resolution: `avro-tools tojson --schema-file reader_v2.avsc writer_v1.avro`\n\n## Testing\n\n\
+  - Round-trip: fromjson then tojson should reproduce input\n- Run evolution checks in CI with both schema\
+  \ versions\n\n## Best practices\n\n- Never remove fields without defaults unless coordinated\n- Store\
+  \ the writer schema in the .avro container header\n- Use Avro IDs in a schema registry for Kafka payloads\n\
+  \n## Capabilities\n\n### avro-tools\nConvert, inspect, and manipulate Avro data files.\n\n**Commands:**\n\
+  - `java -jar avro-tools.jar getmeta file.avro`\n- `java -jar avro-tools.jar tojson file.avro`\n- `java\
+  \ -jar avro-tools.jar fromjson data.json --schema-file schema.avsc`\n- `java -jar avro-tools.jar cat\
+  \ file.avro`\n- `java -jar avro-tools.jar random --schema-file schema.avsc --count 10 test.avro`\n\n\
+  **Examples:**\n- java -jar avro-tools.jar tojson events.avro | head -5\n- java -jar avro-tools.jar getmeta\
+  \ events.avro | head -20\n- java -jar avro-tools.jar random --schema-file user.avsc --count 100 sample.avro\n\
+  \n### python-avro\nSerialize and deserialize Avro with the Python library.\n\n**Commands:**\n- `pip\
+  \ install avro`\n- `python -c \"import avro; print(avro.__version__)\"`\n- `python -c \"from avro.datafile\
+  \ import DataFileWriter; from avro.io import DatumWriter; print('ok')\"`\n- `python -m avro`\n\n**Examples:**\n\
+  - python -c \"import avro.schema; s=avro.schema.parse(open('user.avsc').read()); print(s.fullname)\"\
+  \n- python -c \"from avro import schema; print(schema.parse('\\\"string\\\"').fullname)\"\n- python\
+  \ -c \"import avro.datafile as d; print([x for x in dir(d) if 'Writer' in x or 'Reader' in x])\"\n\n\
+  ### schema-evolution\nTest schema resolution between writer and reader schemas.\n\n**Commands:**\n-\
+  \ `java -jar avro-tools.jar --version`\n- `java -jar avro-tools.jar tojson --schema-file reader.avsc\
+  \ writer.avro`\n- `python -c \"import avro.io as io; print([x for x in dir(io) if 'Reader' in x])\"\
+  `\n- `java -jar avro-tools.jar compile schema schema.avsc /tmp/out`\n\n**Examples:**\n- java -jar avro-tools.jar\
+  \ tojson --schema-file reader_v2.avsc writer_v1.avro | head -3\n- python -c \"from avro.io import DatumReader;\
+  \ r=DatumReader(reader_schema, writer_schema); print('resolution ready')\"\n- java -jar avro-tools.jar\
+  \ compile schema v2.avsc gen/"
+prompt: Act as Avro and handle the task per the instructions.

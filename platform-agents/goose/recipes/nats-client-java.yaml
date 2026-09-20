@@ -1,0 +1,24 @@
+title: Nats Client Java
+description: 'NATS clients in Java with jnats: Nats.connect, async message handlers, request-reply, and
+  Maven setup.'
+version: 2.0.0
+instructions: "# Nats Client Java\n\nNATS clients in Java with jnats: Nats.connect, async message handlers,\
+  \ request-reply, and Maven setup.\n\n## Instructions\n\n# NATS Java Client\n\njnats (io.nats:jnats)\
+  \ is the official NATS client for the JVM.\n\n## What this skill does\n\n- Connects with options and\
+  \ connection listeners\n- Publishes/subscribes with async message handlers\n- Implements request-reply\
+  \ and inbox patterns\n\n## When to use\n\n- Java/Spring services exchanging events over NATS\n- High-throughput\
+  \ pub/sub in JVM backends\n\n## Real commands\n\n```bash\nmvn compile\nmvn exec:java -Dexec.mainClass=com.example.Publisher\n\
+  mvn package\n```\n\n## Publish / subscribe\n\n```java\nConnection nc = Nats.connect(\"nats://localhost:4222\"\
+  );\nnc.publish(\"orders.created\", \"{\\\"id\\\":1}\".getBytes(StandardCharsets.UTF_8));\nDisposable\
+  \ sub = nc.subscribe(\"orders.*\", msg ->\n    System.out.println(new String(msg.getData())));\nThread.sleep(1000);\n\
+  sub.dispose();\nnc.close();\n```\n\n## Request-reply\n\n```java\nCompletableFuture<Message> reply =\
+  \ nc.request(\"service.echo\", \"ping\".getBytes());\nMessage msg = reply.get(2, TimeUnit.SECONDS);\n\
+  ```\n\n## pom.xml\n\n```xml\n<dependency>\n  <groupId>io.nats</groupId>\n  <artifactId>jnats</artifactId>\n\
+  \  <version>2.20.4</version>\n</dependency>\n```\n\n## Best practices\n\n- Close connections in finally\
+  \ blocks\n- Use dispatch listeners for long-lived subscriptions\n- Prefer `Nats.connect(Options)` with\
+  \ `maxReconnects` for HA\n\n## Capabilities\n\n### nats-java-client\nUse the jnats library in Maven\
+  \ projects for connect, pub/sub and request-reply patterns.\n\n**Commands:**\n- `mvn dependency:tree`\n\
+  - `mvn compile`\n- `mvn package`\n- `mvn exec:java -Dexec.mainClass=com.example.Publisher`\n- `curl\
+  \ -s https://repo1.maven.org/maven2/io/nats/jnats/maven-metadata.xml`\n\n**Examples:**\n- mvn exec:java\
+  \ -Dexec.mainClass=com.example.Subscriber\n- mvn dependency:tree -Dincludes=io.nats\n- mvn test"
+prompt: Act as Nats Client Java and handle the task per the instructions.

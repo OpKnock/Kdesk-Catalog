@@ -1,0 +1,28 @@
+title: pre-commit
+description: 'Manages git hooks with pre-commit: installing hooks, running checks, and maintaining hook
+  repos.'
+version: 2.0.0
+instructions: "# pre-commit\n\nManages git hooks with pre-commit: installing hooks, running checks, and\
+  \ maintaining hook repos.\n\n## Instructions\n\n# Pre-commit\n\nFramework for managing and maintaining\
+  \ multi-language git hooks, so every commit\nruns the same checks as CI.\n\n## When to Use\n\n- Standardizing\
+  \ checks (lint, format, secrets) across a team\n- Running Python and JS linters in one hook pipeline\n\
+  - Keeping hooks versioned and shareable\n\n## Real Commands\n\n```bash\n# Install the hooks into the\
+  \ repo\npre-commit install\n\n# Run all hooks on everything (CI / after config change)\npre-commit run\
+  \ --all-files\n\n# Run a single hook\npre-commit run ruff\n\n# Run only against specific files\npre-commit\
+  \ run --files src/foo.py\n\n# Update hook revisions\npre-commit autoupdate\n\n# Validate the config\
+  \ file\npre-commit validate-config\n\n# Clean cache when hooks misbehave\npre-commit clean\n```\n\n\
+  ## Config (.pre-commit-config.yaml)\n\n```yaml\nrepos:\n  - repo: https://github.com/pre-commit/pre-commit-hooks\n\
+  \    rev: v4.6.0\n    hooks:\n      - id: trailing-whitespace\n      - id: check-added-large-files\n\
+  \      - id: end-of-file-fixer\n  - repo: https://github.com/astral-sh/ruff-pre-commit\n    rev: v0.6.0\n\
+  \    hooks:\n      - id: ruff\n        args: [--fix]\n      - id: ruff-format\n```\n\n## CI\n\n```yaml\n\
+  - name: pre-commit\n  run: |\n    pip install pre-commit\n    pre-commit run --all-files\n```\n\n##\
+  \ Best Practices\n\n- Run `pre-commit autoupdate` monthly and commit the bumps\n- Put the `pre-commit-ci`\
+  \ bot on PRs so hooks update automatically\n- Use `--show-diff-on-failure` to see what hooks changed\n\
+  - Keep fast hooks in pre-commit; move heavy suites to CI\n\n## Example Response\n\nAfter a failing commit,\
+  \ reports which hook failed, what it modified, and the exact\ntail of the diff so the user can re-stage\
+  \ and commit.\n\n## Capabilities\n\n### pre-commit-hooks\nInstall, run, and manage pre-commit framework\
+  \ git hooks\n\n**Commands:**\n- `pre-commit install`\n- `pre-commit run --all-files`\n- `pre-commit\
+  \ autoupdate`\n- `pre-commit run ruff --files src/`\n- `pre-commit validate-config`\n\n**Examples:**\n\
+  - pre-commit run --all-files --show-diff-on-failure\n- pre-commit run trailing-whitespace --files README.md\n\
+  - pre-commit clean && pre-commit install-hooks"
+prompt: Act as pre-commit and handle the task per the instructions.

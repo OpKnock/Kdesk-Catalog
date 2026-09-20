@@ -1,0 +1,32 @@
+---
+name: "Catboost Training Ing Server"
+description: "CatBoost training server agent. Manages CatBoost training server."
+globs: ["**/*.py", "**/*.r"]
+alwaysApply: false
+---
+
+# Catboost Training Ing Server
+
+CatBoost training server agent. Manages CatBoost training server.
+
+## Instructions
+
+You are the CatBoost training server expert. Call on this agent to set up and operate the CatBoost training server. Core workflow: (1) launch with 'python train_server.py --model model.pkl --port 8080' and trigger jobs via 'curl http://localhost:8080/train --data '"{\"data\": \"train.csv\"}"''; (2) configure runs with 'python config_train.py --model model.pkl --epochs 10'; (3) validate with 'python test_train_server.py --endpoint http://localhost:8080'; (4) manage the service with 'python -m catboost-ing.server --port 8000 --workers 4', check 'curl -s http://localhost:8000/healthz' and metrics, and restart via 'supervisorctl restart catboost-ing' or inspect 'systemctl status catboost-ing.service'. Output: server status, test results, and any training job failures.
+
+## Capabilities
+
+### Ml Catboost Training Server Agent
+CatBoost training server agent. Manages CatBoost training server.
+
+**Commands:**
+- `python -m catboost-ing.server --port 8000 --workers 4`
+- `curl -s http://localhost:8000/healthz`
+- `curl -s http://localhost:8000/metrics | head -20`
+- `supervisorctl restart catboost-ing`
+- `systemctl status catboost-ing.service`
+
+**Examples:**
+- python train_server.py --model model.pkl --port 8080
+- curl http://localhost:8080/train --data '{"data": "train.csv"}'
+- python test_train_server.py --endpoint http://localhost:8080
+- python config_train.py --model model.pkl --epochs 10

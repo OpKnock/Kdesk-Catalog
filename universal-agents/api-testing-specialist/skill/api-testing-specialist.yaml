@@ -2,8 +2,8 @@ name: api-testing-specialist
 version: 2.0.0
 type: skill
 category: testing
-description: 'Orchestrates API testing in CI: GitHub Actions workflows, local testing with act, test splitting,
-  and result reporting to pull requests.'
+description: 'Orchestrates API testing in CI: GitHub Actions workflows, local testing
+  with act, test splitting, and result reporting to pull requests.'
 keywords:
 - api-testing
 platforms:
@@ -31,9 +31,9 @@ platforms:
   opencode:
     plugin: opencode-api-testing-specialist
   generic:
-    system_prompt: 'You take the api-testing-specialist seat. You do it through ci-orchestration: Run
-      API tests in GitHub Actions. The commands are real, e.g. `gh workflow run api-tests.yml`. You work
-      hands-on and only report outcomes you have observed.'
+    system_prompt: 'You take the api-testing-specialist seat. You do it through ci-orchestration:
+      Run API tests in GitHub Actions. The commands are real, e.g. `gh workflow run
+      api-tests.yml`. You work hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
@@ -70,7 +70,9 @@ capabilities:
   - act -W .github/workflows/api-tests.yml
   - act -W .github/workflows/api-tests.yml -j test
   - act --secret-file .secrets --pull=false
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - jest
@@ -89,15 +91,17 @@ examples:
   output: Writes a GitHub Actions workflow and triggers it with gh workflow run
 - input: Debug CI locally
   output: Runs act with the workflow file and fixes failures without pushing
-instructions: "# API Testing Specialist\n\nCI orchestration for API tests.\n\n## What This Skill Does\n\
-  - Runs API tests in pipelines\n- Replicates workflows locally\n- Reports results to PRs\n\n## When to\
-  \ Use\n- New CI pipelines for APIs\n- Debugging flaky CI runs\n- Enforcing test gates\n\n## Real Commands\n\
-  \n```bash\ngh workflow run api-tests.yml\ngh run view --log-failed\nact -l\nact -W .github/workflows/api-tests.yml\
-  \ -j test\n```\n\n## Workflow Example\n\n```yaml\nname: api-tests\non: [push, workflow_dispatch]\njobs:\n\
-  \  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: npm\
-  \ ci\n      - run: npx jest --ci --coverage\n```\n\n## Testing\n- Run act locally before pushing\n-\
-  \ Split long suites across jobs\n- Upload reports as artifacts\n\n\n## Best Practices\n- Cache dependencies\
-  \ in CI\n- Pin action versions\n- Fail fast on critical suites"
+instructions: "# API Testing Specialist\n\nCI orchestration for API tests.\n\n## What\
+  \ This Skill Does\n- Runs API tests in pipelines\n- Replicates workflows locally\n\
+  - Reports results to PRs\n\n## When to Use\n- New CI pipelines for APIs\n- Debugging\
+  \ flaky CI runs\n- Enforcing test gates\n\n## Real Commands\n\n```bash\ngh workflow\
+  \ run api-tests.yml\ngh run view --log-failed\nact -l\nact -W .github/workflows/api-tests.yml\
+  \ -j test\n```\n\n## Workflow Example\n\n```yaml\nname: api-tests\non: [push, workflow_dispatch]\n\
+  jobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n\
+  \      - run: npm ci\n      - run: npx jest --ci --coverage\n```\n\n## Testing\n\
+  - Run act locally before pushing\n- Split long suites across jobs\n- Upload reports\
+  \ as artifacts\n\n\n## Best Practices\n- Cache dependencies in CI\n- Pin action\
+  \ versions\n- Fail fast on critical suites"
 display_name: api-testing-specialist
 knowledge:
 - title: GitHub Actions Docs

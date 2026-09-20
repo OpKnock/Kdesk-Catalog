@@ -2,8 +2,8 @@ name: api-mock-browser-workers
 version: 2.0.0
 type: skill
 category: testing
-description: 'Implements browser and Node mock layers with MSW combined with Playwright for E2E mocking:
-  persistent session state, resolver utilities, and test isolation.'
+description: 'Implements browser and Node mock layers with MSW combined with Playwright
+  for E2E mocking: persistent session state, resolver utilities, and test isolation.'
 keywords:
 - msw
 platforms:
@@ -31,9 +31,10 @@ platforms:
   opencode:
     plugin: opencode-api-mock-browser-workers
   generic:
-    system_prompt: 'You work Api Mock Browser Workers hands-on. You do it through browser-workers: Configure
-      MSW service workers in a Vite/Next.js application. The commands are real, e.g. `npm install msw
-      --save-dev`. You work hands-on and only report outcomes you have observed.'
+    system_prompt: 'You work Api Mock Browser Workers hands-on. You do it through
+      browser-workers: Configure MSW service workers in a Vite/Next.js application.
+      The commands are real, e.g. `npm install msw --save-dev`. You work hands-on
+      and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
@@ -71,7 +72,9 @@ capabilities:
   - npx playwright test tests/api-flows.spec.ts --project=chromium
   - npx playwright test --ui
   - npx playwright show-report
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - prism
@@ -85,22 +88,26 @@ tools:
 - python
 examples:
 - input: Mock network in Playwright E2E
-  output: Installs @playwright/msw, extends the test fixture with createWorkerFixture, and runs playwright
-    test
+  output: Installs @playwright/msw, extends the test fixture with createWorkerFixture,
+    and runs playwright test
 - input: Serve mocks in production build
-  output: Initializes the worker in the SPA entry only when import.meta.env.DEV is true
-instructions: "# API Mock v4 - MSW + Playwright\n\nBrowser-grade mocking with MSW and E2E coverage.\n\n\
-  ## What This Skill Does\n- Intercepts app traffic in the browser with service workers\n- Shares handlers\
-  \ between dev, unit, and Playwright E2E runs\n- Isolates test data per test with scoped handlers\n\n\
-  ## When to Use\n- E2E suites that must not depend on live backends\n- Reproducing specific API states\
-  \ in UI tests\n- Keeping dev and test mocks from a single source\n\n## Real Commands\n\n```bash\nnpm\
-  \ install msw --save-dev\nnpx msw init public/\n```\n\n## Playwright Integration\n\n```ts\nimport {\
-  \ test as base } from '@playwright/test';\nimport { createWorkerFixture } from '@playwright/msw';\n\
-  export const test = base.extend({\n  worker: createWorkerFixture(handlers)\n});\n```\n\n## Testing\n\
-  - Assert network responses from devtools/network panel match handlers\n- Verify onUnhandledRequest:\
-  \ 'error' surfaces missing mocks\n- Reset server state between Playwright tests\n\n## Best Practices\n\
-  - Version the worker script with the app bundle\n- Use dynamic handlers for time-dependent data\n- Keep\
-  \ handler modules framework-agnostic for reuse"
+  output: Initializes the worker in the SPA entry only when import.meta.env.DEV is
+    true
+instructions: "# API Mock v4 - MSW + Playwright\n\nBrowser-grade mocking with MSW\
+  \ and E2E coverage.\n\n## What This Skill Does\n- Intercepts app traffic in the\
+  \ browser with service workers\n- Shares handlers between dev, unit, and Playwright\
+  \ E2E runs\n- Isolates test data per test with scoped handlers\n\n## When to Use\n\
+  - E2E suites that must not depend on live backends\n- Reproducing specific API states\
+  \ in UI tests\n- Keeping dev and test mocks from a single source\n\n## Real Commands\n\
+  \n```bash\nnpm install msw --save-dev\nnpx msw init public/\n```\n\n## Playwright\
+  \ Integration\n\n```ts\nimport { test as base } from '@playwright/test';\nimport\
+  \ { createWorkerFixture } from '@playwright/msw';\nexport const test = base.extend({\n\
+  \  worker: createWorkerFixture(handlers)\n});\n```\n\n## Testing\n- Assert network\
+  \ responses from devtools/network panel match handlers\n- Verify onUnhandledRequest:\
+  \ 'error' surfaces missing mocks\n- Reset server state between Playwright tests\n\
+  \n## Best Practices\n- Version the worker script with the app bundle\n- Use dynamic\
+  \ handlers for time-dependent data\n- Keep handler modules framework-agnostic for\
+  \ reuse"
 display_name: Api Mock Browser Workers
 knowledge:
 - title: MSW Browser Docs

@@ -2,8 +2,8 @@ name: api-version-engineer
 version: 2.0.0
 type: skill
 category: backend
-description: 'Implements API versioning in Express: URL path versioning, version routing, versioned controllers,
-  and default version behavior.'
+description: 'Implements API versioning in Express: URL path versioning, version routing,
+  versioned controllers, and default version behavior.'
 keywords:
 - api-versioning
 platforms:
@@ -31,10 +31,11 @@ platforms:
   opencode:
     plugin: opencode-api-version-engineer
   generic:
-    system_prompt: 'You own api-version-engineer end to end. You do it through url-versioning: Route requests
-      by versioned URL paths. The commands are real, e.g. `node -e const express=require(express); const
-      app=express(); app.use(/v1,...`. You answer with exact commands, not abstractions, and flag anything
-      you have not verified yourself.'
+    system_prompt: 'You own api-version-engineer end to end. You do it through url-versioning:
+      Route requests by versioned URL paths. The commands are real, e.g. `node -e
+      const express=require(express); const app=express(); app.use(/v1,...`. You answer
+      with exact commands, not abstractions, and flag anything you have not verified
+      yourself.'
     available_tools:
     - bash
     - read
@@ -46,8 +47,8 @@ capabilities:
 - name: url-versioning
   description: Route requests by versioned URL paths
   commands:
-  - node -e "const express=require('express'); const app=express(); app.use('/v1', require('./v1Routes'));
-    app.use('/v2', require('./v2Routes')); app.listen(3000)"
+  - node -e "const express=require('express'); const app=express(); app.use('/v1',
+    require('./v1Routes')); app.use('/v2', require('./v2Routes')); app.listen(3000)"
   - curl -s http://localhost:3000/v1/users | jq '.apiVersion'
   - curl -s http://localhost:3000/v2/users | jq '.apiVersion'
   - curl -s http://localhost:3000/users -o /dev/null -w '%{http_code}\n'
@@ -71,7 +72,9 @@ capabilities:
   - node -e "const fs=require('fs'); console.log(fs.existsSync('routes/v2/users.js'))"
   - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3000/v9/users
   - curl -s http://localhost:3000/v1/users | jq '.count'
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -88,16 +91,18 @@ examples:
   output: Creates a v2 router, mounts it, and verifies both versions via curl
 - input: Default unversioned traffic to latest
   output: Adds a fallback mount serving the current version
-instructions: "# API Version Engineer\n\nURL-based API versioning.\n\n## What This Skill Does\n- Mounts\
-  \ versioned routers at /v1, /v2 paths\n- Keeps versions in isolated modules\n- Controls default version\
-  \ behavior\n\n## When to Use\n- Public APIs with external consumers\n- Adding breaking changes safely\n\
-  - Supporting multiple client cohorts\n\n## Real Commands\n\n```bash\nnode -e \"const express=require('express');\
+instructions: "# API Version Engineer\n\nURL-based API versioning.\n\n## What This\
+  \ Skill Does\n- Mounts versioned routers at /v1, /v2 paths\n- Keeps versions in\
+  \ isolated modules\n- Controls default version behavior\n\n## When to Use\n- Public\
+  \ APIs with external consumers\n- Adding breaking changes safely\n- Supporting multiple\
+  \ client cohorts\n\n## Real Commands\n\n```bash\nnode -e \"const express=require('express');\
   \ const app=express(); app.use('/v1', require('./v1Routes')); app.use('/v2', require('./v2Routes'));\
-  \ app.listen(3000)\"\ncurl -s http://localhost:3000/v1/users | jq '.apiVersion'\ncurl -s http://localhost:3000/v2/users\
-  \ | jq '.apiVersion'\n```\n\n## Structure\n\n```\nroutes/\n  v1/users.js\n  v2/users.js\n```\n\n## Testing\n\
-  - Test each version independently\n- Verify default version behavior\n- Assert unknown versions 404\
-  \ cleanly\n\n## Best Practices\n- Keep version routers thin\n- Share only stable middleware\n- Document\
-  \ sunset dates per version"
+  \ app.listen(3000)\"\ncurl -s http://localhost:3000/v1/users | jq '.apiVersion'\n\
+  curl -s http://localhost:3000/v2/users | jq '.apiVersion'\n```\n\n## Structure\n\
+  \n```\nroutes/\n  v1/users.js\n  v2/users.js\n```\n\n## Testing\n- Test each version\
+  \ independently\n- Verify default version behavior\n- Assert unknown versions 404\
+  \ cleanly\n\n## Best Practices\n- Keep version routers thin\n- Share only stable\
+  \ middleware\n- Document sunset dates per version"
 display_name: api-version-engineer
 knowledge:
 - title: Express Routing

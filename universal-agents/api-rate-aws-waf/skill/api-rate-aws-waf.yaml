@@ -2,8 +2,8 @@ name: api-rate-aws-waf
 version: 2.0.0
 type: skill
 category: security
-description: 'Configures managed rate limiting on cloud gateways: AWS WAFv2 rate-based rules, Google Cloud
-  Armor policies, and Cloudflare rate limiting via API.'
+description: 'Configures managed rate limiting on cloud gateways: AWS WAFv2 rate-based
+  rules, Google Cloud Armor policies, and Cloudflare rate limiting via API.'
 keywords:
 - rate-limiting
 platforms:
@@ -31,10 +31,10 @@ platforms:
   opencode:
     plugin: opencode-api-rate-aws-waf
   generic:
-    system_prompt: 'Your lane is Api Rate Aws Waf. You do it through aws-waf: Create rate-based WAF rules
-      and ACLs. The commands are real, e.g. `aws wafv2 create-web-acl --name api-rate-acl --scope REGIONAL
-      --default-action Allow={}...`. You prefer the shortest safe path, and you reproduce failures before
-      diagnosing them.'
+    system_prompt: 'Your lane is Api Rate Aws Waf. You do it through aws-waf: Create
+      rate-based WAF rules and ACLs. The commands are real, e.g. `aws wafv2 create-web-acl
+      --name api-rate-acl --scope REGIONAL --default-action Allow={}...`. You prefer
+      the shortest safe path, and you reproduce failures before diagnosing them.'
     available_tools:
     - bash
     - read
@@ -46,13 +46,14 @@ capabilities:
 - name: aws-waf
   description: Create rate-based WAF rules and ACLs
   commands:
-  - aws wafv2 create-web-acl --name api-rate-acl --scope REGIONAL --default-action Allow={} --rules file://rate-rule.json
-    --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=api-rate-acl
+  - aws wafv2 create-web-acl --name api-rate-acl --scope REGIONAL --default-action
+    Allow={} --rules file://rate-rule.json --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=api-rate-acl
     --region us-east-1
   - aws wafv2 list-web-acls --scope REGIONAL --region us-east-1 | jq '.WebACLs[].Name'
-  - aws wafv2 get-web-acl --name api-rate-acl --scope REGIONAL --id $ACL_ID --region us-east-1 | jq '.WebACL.Rules[0].Statement'
-  - aws wafv2 update-web-acl --name api-rate-acl --scope REGIONAL --id $ACL_ID --default-action Allow={}
-    --rules file://rate-rule.json --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=api-rate-acl
+  - aws wafv2 get-web-acl --name api-rate-acl --scope REGIONAL --id $ACL_ID --region
+    us-east-1 | jq '.WebACL.Rules[0].Statement'
+  - aws wafv2 update-web-acl --name api-rate-acl --scope REGIONAL --id $ACL_ID --default-action
+    Allow={} --rules file://rate-rule.json --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=api-rate-acl
     --region us-east-1
   examples:
   - RateBasedStatement with Limit 2000 blocks floods per IP
@@ -71,14 +72,19 @@ capabilities:
 - name: cloudflare-rate
   description: Manage Cloudflare rate limiting rules
   commands:
-  - 'curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/rate_limits" -H "Authorization:
-    Bearer $CF_TOKEN" -H ''Content-Type: application/json'' -d ''{"threshold":100,"period":60,"match":{"request":{"url":"api.example.com/*"}},"action":{"mode":"block","timeout":300}}'''
-  - 'curl -s "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/rate_limits" -H "Authorization: Bearer
-    $CF_TOKEN" | jq ''.result[0].threshold'''
-  - gcloud compute security-policies create api-armor --description "API rate limits" --project my-proj
-  - gcloud compute security-policies rules create 1000 --security-policy api-armor --action deny-403 --rate-limit-threshold-count
-    200 --rate-limit-threshold-interval-sec 60 --project my-proj
-  examples: []
+  - 'curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/rate_limits"
+    -H "Authorization: Bearer $CF_TOKEN" -H ''Content-Type: application/json'' -d
+    ''{"threshold":100,"period":60,"match":{"request":{"url":"api.example.com/*"}},"action":{"mode":"block","timeout":300}}'''
+  - 'curl -s "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/rate_limits" -H
+    "Authorization: Bearer $CF_TOKEN" | jq ''.result[0].threshold'''
+  - gcloud compute security-policies create api-armor --description "API rate limits"
+    --project my-proj
+  - gcloud compute security-policies rules create 1000 --security-policy api-armor
+    --action deny-403 --rate-limit-threshold-count 200 --rate-limit-threshold-interval-sec
+    60 --project my-proj
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - redis
@@ -95,20 +101,23 @@ examples:
   output: Creates a WAF rate-based rule at 2000 req/5min and attaches it to the ALB
 - input: Rate limit via Cloudflare
   output: POSTs a rate_limits rule for api.example.com/* with a 60s period
-instructions: "# API Rate v3 - Cloud Gateways\n\nManaged rate limiting at the edge.\n\n## What This Skill\
-  \ Does\n- Applies rate-based blocking before traffic reaches the API\n- Scales limits with provider\
-  \ infrastructure\n- Centralizes visibility in provider metrics\n\n## When to Use\n- Global DDoS and\
-  \ flood protection\n- Per-IP throttling at the network edge\n- Reducing origin load from abusive clients\n\
-  \n## Real Commands\n\n```bash\naws wafv2 create-web-acl --name api-rate-acl --scope REGIONAL --default-action\
-  \ Allow={} --rules file://rate-rule.json --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=api-rate-acl\
-  \ --region us-east-1\n```\n\n## Rate Rule JSON\n\n```json\n{\n  \"Name\": \"block-floods\",\n  \"Priority\"\
-  : 1,\n  \"Statement\": {\n    \"RateBasedStatement\": { \"Limit\": 2000, \"AggregateKeyType\": \"IP\"\
-  \ }\n  },\n  \"Action\": { \"Block\": {} },\n  \"VisibilityConfig\": { \"SampledRequestsEnabled\": true,\
-  \ \"CloudWatchMetricsEnabled\": true, \"MetricName\": \"block-floods\" }\n}\n```\n\n## Testing\n- Send\
-  \ bursts over the threshold and confirm 403/blocked\n- Verify sampled requests appear in provider metrics\n\
-  - Test allowlisted IPs bypass the rule\n\n## Best Practices\n- Start in Count mode to observe, then\
-  \ enable Block\n- Combine IP rate limits with session/header keys\n- Keep provider limits above app-level\
-  \ limits"
+instructions: "# API Rate v3 - Cloud Gateways\n\nManaged rate limiting at the edge.\n\
+  \n## What This Skill Does\n- Applies rate-based blocking before traffic reaches\
+  \ the API\n- Scales limits with provider infrastructure\n- Centralizes visibility\
+  \ in provider metrics\n\n## When to Use\n- Global DDoS and flood protection\n- Per-IP\
+  \ throttling at the network edge\n- Reducing origin load from abusive clients\n\n\
+  ## Real Commands\n\n```bash\naws wafv2 create-web-acl --name api-rate-acl --scope\
+  \ REGIONAL --default-action Allow={} --rules file://rate-rule.json --visibility-config\
+  \ SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=api-rate-acl\
+  \ --region us-east-1\n```\n\n## Rate Rule JSON\n\n```json\n{\n  \"Name\": \"block-floods\"\
+  ,\n  \"Priority\": 1,\n  \"Statement\": {\n    \"RateBasedStatement\": { \"Limit\"\
+  : 2000, \"AggregateKeyType\": \"IP\" }\n  },\n  \"Action\": { \"Block\": {} },\n\
+  \  \"VisibilityConfig\": { \"SampledRequestsEnabled\": true, \"CloudWatchMetricsEnabled\"\
+  : true, \"MetricName\": \"block-floods\" }\n}\n```\n\n## Testing\n- Send bursts\
+  \ over the threshold and confirm 403/blocked\n- Verify sampled requests appear in\
+  \ provider metrics\n- Test allowlisted IPs bypass the rule\n\n## Best Practices\n\
+  - Start in Count mode to observe, then enable Block\n- Combine IP rate limits with\
+  \ session/header keys\n- Keep provider limits above app-level limits"
 display_name: Api Rate Aws Waf
 knowledge:
 - title: AWS WAF Rate-based Rules

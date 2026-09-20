@@ -2,8 +2,8 @@ name: api-test-pact-broker
 version: 2.0.0
 type: skill
 category: testing
-description: 'Implements contract testing with Pact: consumer expectations, provider verification, Pact
-  Broker versioning, and can-i-deploy gating.'
+description: 'Implements contract testing with Pact: consumer expectations, provider
+  verification, Pact Broker versioning, and can-i-deploy gating.'
 keywords:
 - contract-testing
 platforms:
@@ -31,9 +31,10 @@ platforms:
   opencode:
     plugin: opencode-api-test-pact-broker
   generic:
-    system_prompt: 'This is your domain: Api Test Pact Broker. You do it through pact-broker: Publish
-      and manage contracts with Pact Broker. The commands are real, e.g. `pact-broker create-or-update-pacticipant
-      --name OrderService --broker-base-url...`. You work hands-on and only report outcomes you have observed.'
+    system_prompt: 'This is your domain: Api Test Pact Broker. You do it through pact-broker:
+      Publish and manage contracts with Pact Broker. The commands are real, e.g. `pact-broker
+      create-or-update-pacticipant --name OrderService --broker-base-url...`. You
+      work hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
@@ -45,11 +46,13 @@ capabilities:
 - name: pact-broker
   description: Publish and manage contracts with Pact Broker
   commands:
-  - pact-broker create-or-update-pacticipant --name OrderService --broker-base-url http://localhost:8080
+  - pact-broker create-or-update-pacticipant --name OrderService --broker-base-url
+    http://localhost:8080
   - pact-broker publish ./pacts --consumer-app-version 1.2.3 --broker-base-url http://localhost:8080
-  - pact-broker create-version-tag --pacticipant OrderService --version 1.2.3 --tag prod --broker-base-url
-    https://broker.example.com
-  - pact-broker can-i-deploy --pacticipant OrderService --version 1.2.3 --to prod --broker-base-url http://localhost:8080
+  - pact-broker create-version-tag --pacticipant OrderService --version 1.2.3 --tag
+    prod --broker-base-url https://broker.example.com
+  - pact-broker can-i-deploy --pacticipant OrderService --version 1.2.3 --to prod
+    --broker-base-url http://localhost:8080
   examples:
   - publish uploads generated pact files
   - create-version-tag marks prod versions
@@ -71,7 +74,9 @@ capabilities:
   - npx pact-verifier --provider-base-url http://localhost:3000 --pact-url ./pacts/order-consumer-order-service.json
   - npx jest --verbose
   - pact-broker list-latest-pact-versions --broker-base-url http://localhost:8080
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - jest

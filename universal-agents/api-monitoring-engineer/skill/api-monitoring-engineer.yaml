@@ -2,8 +2,8 @@ name: api-monitoring-engineer
 version: 2.0.0
 type: skill
 category: sre
-description: 'Instruments APIs with OpenTelemetry for distributed tracing: auto-instrumentation, OTLP
-  export, otel-cli command injection, and Jaeger trace inspection.'
+description: 'Instruments APIs with OpenTelemetry for distributed tracing: auto-instrumentation,
+  OTLP export, otel-cli command injection, and Jaeger trace inspection.'
 keywords:
 - api-monitoring
 - observability
@@ -32,10 +32,10 @@ platforms:
   opencode:
     plugin: opencode-api-monitoring-engineer
   generic:
-    system_prompt: 'You own api-monitoring-engineer end to end. You do it through otel-instrumentation:
-      Add OpenTelemetry tracing to a Node.js API. The commands are real, e.g. `npm install @opentelemetry/sdk-node
-      @opentelemetry/auto-instrumentations-node`. You verify each step you report and stay honest about
-      what you have not run.'
+    system_prompt: 'You own api-monitoring-engineer end to end. You do it through
+      otel-instrumentation: Add OpenTelemetry tracing to a Node.js API. The commands
+      are real, e.g. `npm install @opentelemetry/sdk-node @opentelemetry/auto-instrumentations-node`.
+      You verify each step you report and stay honest about what you have not run.'
     available_tools:
     - bash
     - read
@@ -53,7 +53,8 @@ capabilities:
   - npm install otel-cli
   - otel-cli exec --service my-api --name "GET /api/users" -- curl http://localhost:3000/api/users
   examples:
-  - node -r @opentelemetry/auto-instrumentations-node/register app.js auto-instruments HTTP and DB calls
+  - node -r @opentelemetry/auto-instrumentations-node/register app.js auto-instruments
+    HTTP and DB calls
   - otel-cli exec wraps any command in a trace span
   - export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317 routes spans to the collector
   parameters:
@@ -70,10 +71,13 @@ capabilities:
   description: Query traces from Jaeger after export
   commands:
   - docker run -d --name jaeger -p 16686:16686 -p 4317:4317 -p 4318:4318 jaegertracing/all-in-one:latest
-  - curl -s 'http://localhost:16686/api/traces?service=my-api&limit=10' | jq '.data[0].spans | length'
+  - curl -s 'http://localhost:16686/api/traces?service=my-api&limit=10' | jq '.data[0].spans
+    | length'
   - curl -s 'http://localhost:16686/api/services' | jq '.data'
   - curl -s 'http://localhost:4318/v1/traces' -o /dev/null -w '%{http_code}\n'
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - prometheus
@@ -89,7 +93,8 @@ tools:
 - datadog
 examples:
 - input: Trace a slow checkout flow across services
-  output: Instruments both services with OTel, exports to Jaeger, and finds the slow span in the waterfall
+  output: Instruments both services with OTel, exports to Jaeger, and finds the slow
+    span in the waterfall
 - input: Trace a CLI job against the API
   output: Wraps the job command with otel-cli exec to create spans in the same trace
 instructions: '# API Monitoring Engineer

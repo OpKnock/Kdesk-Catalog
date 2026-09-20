@@ -2,8 +2,8 @@ name: api-test-data-factorybot
 version: 2.0.0
 type: skill
 category: testing
-description: 'Builds test data factories with FactoryBot: trait definitions, sequences, associations,
-  and on-the-fly attribute overrides for Rails APIs.'
+description: 'Builds test data factories with FactoryBot: trait definitions, sequences,
+  associations, and on-the-fly attribute overrides for Rails APIs.'
 keywords:
 - test-data
 - faker
@@ -32,9 +32,10 @@ platforms:
   opencode:
     plugin: opencode-api-test-data-factorybot
   generic:
-    system_prompt: 'Your lane is Api Test Data Factorybot. You do it through factorybot: Define and use
-      model factories. The commands are real, e.g. `bundle add factory_bot_rails`. You prefer the shortest
-      safe path, and you reproduce failures before diagnosing them.'
+    system_prompt: 'Your lane is Api Test Data Factorybot. You do it through factorybot:
+      Define and use model factories. The commands are real, e.g. `bundle add factory_bot_rails`.
+      You prefer the shortest safe path, and you reproduce failures before diagnosing
+      them.'
     available_tools:
     - bash
     - read
@@ -72,7 +73,9 @@ capabilities:
   - bundle exec rspec spec/factories_spec.rb
   - bundle exec rails db:seed
   - bundle exec rails runner "puts FactoryBot.build(:user).email"
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - faker
@@ -89,16 +92,18 @@ examples:
   output: Runs FactoryBot.create_list(:user, 50, :admin) and asserts counts
 - input: Replace hardcoded fixtures
   output: Migrates specs to factory traits with Faker data
-instructions: "# API Test Data v3 - Factories\n\nTest data factories with FactoryBot.\n\n## What This\
-  \ Skill Does\n- Defines reusable model factories\n- Composes fixtures with traits\n- Seeds large datasets\
-  \ for tests\n\n## When to Use\n- Rails API test suites\n- Replacing brittle hardcoded fixtures\n- Building\
-  \ association graphs\n\n## Real Commands\n\n```bash\nbundle add factory_bot_rails\nbundle exec rails\
-  \ runner \"FactoryBot.create_list(:user, 50)\"\nbundle exec rails runner \"FactoryBot.lint\"\n```\n\n\
-  ## Factory Example\n\n```ruby\nfactory :user do\n  sequence(:email) { |n| \"user#{n}@example.com\" }\n\
-  \  name { Faker::Name.name }\n  role { :member }\n\n  trait :admin do\n    role { :admin }\n  end\n\
-  end\n```\n\n## Testing\n- Run FactoryBot.lint to validate factories\n- Test every trait with a build\
-  \ call\n- Verify associations resolve\n\n\n## Best Practices\n- Use sequences for uniqueness\n- Override\
-  \ attributes explicitly in tests\n- Avoid factory hierarchies deeper than needed"
+instructions: "# API Test Data v3 - Factories\n\nTest data factories with FactoryBot.\n\
+  \n## What This Skill Does\n- Defines reusable model factories\n- Composes fixtures\
+  \ with traits\n- Seeds large datasets for tests\n\n## When to Use\n- Rails API test\
+  \ suites\n- Replacing brittle hardcoded fixtures\n- Building association graphs\n\
+  \n## Real Commands\n\n```bash\nbundle add factory_bot_rails\nbundle exec rails runner\
+  \ \"FactoryBot.create_list(:user, 50)\"\nbundle exec rails runner \"FactoryBot.lint\"\
+  \n```\n\n## Factory Example\n\n```ruby\nfactory :user do\n  sequence(:email) { |n|\
+  \ \"user#{n}@example.com\" }\n  name { Faker::Name.name }\n  role { :member }\n\n\
+  \  trait :admin do\n    role { :admin }\n  end\nend\n```\n\n## Testing\n- Run FactoryBot.lint\
+  \ to validate factories\n- Test every trait with a build call\n- Verify associations\
+  \ resolve\n\n\n## Best Practices\n- Use sequences for uniqueness\n- Override attributes\
+  \ explicitly in tests\n- Avoid factory hierarchies deeper than needed"
 display_name: Api Test Data Factorybot
 knowledge:
 - title: FactoryBot Docs

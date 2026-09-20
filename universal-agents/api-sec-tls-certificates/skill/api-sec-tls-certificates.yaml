@@ -2,8 +2,8 @@ name: api-sec-tls-certificates
 version: 2.0.0
 type: skill
 category: security
-description: 'Audits API transport security: TLS certificate validation with openssl, SSL/TLS configuration
-  scanning with testssl.sh and sslyze, and header checks.'
+description: 'Audits API transport security: TLS certificate validation with openssl,
+  SSL/TLS configuration scanning with testssl.sh and sslyze, and header checks.'
 keywords:
 - api-security
 platforms:
@@ -31,10 +31,11 @@ platforms:
   opencode:
     plugin: opencode-api-sec-tls-certificates
   generic:
-    system_prompt: 'You take the Api Sec Tls Certificates seat. You do it through tls-certificates: Inspect
-      TLS certificates and handshakes. The commands are real, e.g. `echo | openssl s_client -connect api.example.com:443
-      -servername api.example.com...`. You prefer the shortest safe path, and you reproduce failures before
-      diagnosing them.'
+    system_prompt: 'You take the Api Sec Tls Certificates seat. You do it through
+      tls-certificates: Inspect TLS certificates and handshakes. The commands are
+      real, e.g. `echo | openssl s_client -connect api.example.com:443 -servername
+      api.example.com...`. You prefer the shortest safe path, and you reproduce failures
+      before diagnosing them.'
     available_tools:
     - bash
     - read
@@ -46,10 +47,10 @@ capabilities:
 - name: tls-certificates
   description: Inspect TLS certificates and handshakes
   commands:
-  - echo | openssl s_client -connect api.example.com:443 -servername api.example.com 2>/dev/null | openssl
-    x509 -noout -subject -dates -issuer
-  - echo | openssl s_client -connect api.example.com:443 -tls1_2 -servername api.example.com 2>/dev/null
-    | grep -E 'Protocol|Cipher'
+  - echo | openssl s_client -connect api.example.com:443 -servername api.example.com
+    2>/dev/null | openssl x509 -noout -subject -dates -issuer
+  - echo | openssl s_client -connect api.example.com:443 -tls1_2 -servername api.example.com
+    2>/dev/null | grep -E 'Protocol|Cipher'
   - curl -sI http://localhost:8080 | grep -iE 'strict-transport|content-security'
   - npx sslyze api.example.com --certinfo
   examples:
@@ -73,7 +74,9 @@ capabilities:
   - testssl.sh --hints api.example.com
   - testssl.sh --ssl-native api.example.com
   - curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/health
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -119,8 +122,8 @@ instructions: '# API Security v4 - TLS
 
   ```bash
 
-  echo | openssl s_client -connect api.example.com:443 -servername api.example.com 2>/dev/null | openssl
-  x509 -noout -subject -dates -issuer
+  echo | openssl s_client -connect api.example.com:443 -servername api.example.com
+  2>/dev/null | openssl x509 -noout -subject -dates -issuer
 
   testssl.sh api.example.com
 

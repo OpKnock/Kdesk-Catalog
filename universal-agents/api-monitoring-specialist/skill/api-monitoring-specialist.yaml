@@ -2,8 +2,8 @@ name: api-monitoring-specialist
 version: 2.0.0
 type: skill
 category: sre
-description: 'Configures alerting and SLOs for API services: Prometheus alert rules, Alertmanager routes
-  and silence management with amtool, and SLO burn-rate alerts.'
+description: 'Configures alerting and SLOs for API services: Prometheus alert rules,
+  Alertmanager routes and silence management with amtool, and SLO burn-rate alerts.'
 keywords:
 - api-monitoring
 - alerting
@@ -32,9 +32,10 @@ platforms:
   opencode:
     plugin: opencode-api-monitoring-specialist
   generic:
-    system_prompt: 'You own api-monitoring-specialist end to end. You do it through alertmanager: Operate
-      Alertmanager and manage silences. The commands are real, e.g. `curl -s -X POST http://localhost:9093/api/v2/alerts
-      -H Content-Type: application/json -d...`. You work hands-on and only report outcomes you have observed.'
+    system_prompt: 'You own api-monitoring-specialist end to end. You do it through
+      alertmanager: Operate Alertmanager and manage silences. The commands are real,
+      e.g. `curl -s -X POST http://localhost:9093/api/v2/alerts -H Content-Type: application/json
+      -d...`. You work hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
@@ -46,12 +47,15 @@ capabilities:
 - name: alertmanager
   description: Operate Alertmanager and manage silences
   commands:
-  - 'curl -s -X POST http://localhost:9093/api/v2/alerts -H ''Content-Type: application/json'' -d ''[{"labels":{"alertname":"APIHighErrorRate","service":"api"},"annotations":{"summary":"Error
+  - 'curl -s -X POST http://localhost:9093/api/v2/alerts -H ''Content-Type: application/json''
+    -d ''[{"labels":{"alertname":"APIHighErrorRate","service":"api"},"annotations":{"summary":"Error
     rate above 5%"}}]'''
   - curl -s http://localhost:9093/api/v2/status | jq '.version'
-  - amtool alert add 30m 'APIHighErrorRate' 'service=api' --annotation=summary='Errors high'
+  - amtool alert add 30m 'APIHighErrorRate' 'service=api' --annotation=summary='Errors
+    high'
   - amtool check config alertmanager.yml
-  - 'curl -s -X POST http://localhost:9093/api/v2/silences -H ''Content-Type: application/json'' -d ''{"matchers":[{"name":"service","value":"api"}],"startsAt":"2024-01-01T00:00:00Z","endsAt":"2024-01-02T00:00:00Z","createdBy":"ops","comment":"planned
+  - 'curl -s -X POST http://localhost:9093/api/v2/silences -H ''Content-Type: application/json''
+    -d ''{"matchers":[{"name":"service","value":"api"}],"startsAt":"2024-01-01T00:00:00Z","endsAt":"2024-01-02T00:00:00Z","createdBy":"ops","comment":"planned
     deploy"}'''
   examples:
   - amtool check config validates alertmanager.yml syntax
@@ -73,7 +77,9 @@ capabilities:
   - promtool check rules slo-rules.yml
   - promtool test rules slo-tests.yml
   - curl -s 'http://localhost:9090/api/v1/rules?type=alert' | jq '.data.groups | length'
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - prometheus
@@ -88,21 +94,25 @@ tools:
 - datadog
 examples:
 - input: Page on-call when error budget burns fast
-  output: Adds a multi-window burn-rate rule and routes severity=page to the primary team
+  output: Adds a multi-window burn-rate rule and routes severity=page to the primary
+    team
 - input: Silence alerts during a deploy window
   output: Creates a 45-minute silence scoped to service=api with a deploy comment
-instructions: "# API Monitoring Specialist\n\nAlerting and SLO engineering for APIs.\n\n## What This Skill\
-  \ Does\n- Defines burn-rate alert rules for error and latency SLOs\n- Routes alerts to teams with Alertmanager\n\
-  - Manages silences during maintenance windows\n\n## When to Use\n- Setting up paging for API error budgets\n\
-  - Reducing alert noise with proper routing\n- Auditing who silenced what and when\n\n## Real Commands\n\
-  \n```bash\namtool check config alertmanager.yml\ncurl -s http://localhost:9093/api/v2/status | jq '.version'\n\
-  amtool alert add 30m 'APIHighErrorRate' 'service=api'\n```\n\n## Burn-Rate Alert\n\n```yaml\ngroups:\n\
-  \  - name: api-slo\n    rules:\n      - alert: APIErrorBudgetBurn\n        expr: (1 - sum(rate(http_requests_total{code=~\"\
-  5..\"}[30m])) / sum(rate(http_requests_total[30m]))) < 0.95\n        for: 15m\n        labels: { severity:\
-  \ page }\n```\n\n## Testing\n- Validate rule syntax with promtool check rules\n- Use promtool test rules\
-  \ with fixture data\n- Verify silence matches with amtool silence query\n\n## Best Practices\n- Alert\
-  \ on burn rate, not raw error count\n- Route by severity and team labels\n- Review silence expiry in\
-  \ on-call rotations"
+instructions: "# API Monitoring Specialist\n\nAlerting and SLO engineering for APIs.\n\
+  \n## What This Skill Does\n- Defines burn-rate alert rules for error and latency\
+  \ SLOs\n- Routes alerts to teams with Alertmanager\n- Manages silences during maintenance\
+  \ windows\n\n## When to Use\n- Setting up paging for API error budgets\n- Reducing\
+  \ alert noise with proper routing\n- Auditing who silenced what and when\n\n## Real\
+  \ Commands\n\n```bash\namtool check config alertmanager.yml\ncurl -s http://localhost:9093/api/v2/status\
+  \ | jq '.version'\namtool alert add 30m 'APIHighErrorRate' 'service=api'\n```\n\n\
+  ## Burn-Rate Alert\n\n```yaml\ngroups:\n  - name: api-slo\n    rules:\n      - alert:\
+  \ APIErrorBudgetBurn\n        expr: (1 - sum(rate(http_requests_total{code=~\"5..\"\
+  }[30m])) / sum(rate(http_requests_total[30m]))) < 0.95\n        for: 15m\n     \
+  \   labels: { severity: page }\n```\n\n## Testing\n- Validate rule syntax with promtool\
+  \ check rules\n- Use promtool test rules with fixture data\n- Verify silence matches\
+  \ with amtool silence query\n\n## Best Practices\n- Alert on burn rate, not raw\
+  \ error count\n- Route by severity and team labels\n- Review silence expiry in on-call\
+  \ rotations"
 display_name: api-monitoring-specialist
 knowledge:
 - title: Alertmanager Docs

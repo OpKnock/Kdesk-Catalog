@@ -2,8 +2,8 @@ name: api-sdk-ts
 version: 2.0.0
 type: skill
 category: backend
-description: 'Builds TypeScript SDKs: tsup bundling with ESM/CJS and d.ts, tsc type checking, typedoc
-  API docs, and npm publishing flow.'
+description: 'Builds TypeScript SDKs: tsup bundling with ESM/CJS and d.ts, tsc type
+  checking, typedoc API docs, and npm publishing flow.'
 keywords:
 - api-sdk
 - documentation
@@ -33,9 +33,10 @@ platforms:
   opencode:
     plugin: opencode-api-sdk-ts
   generic:
-    system_prompt: 'Your lane is Api Sdk Ts. You do it through ts-build: Bundle a TypeScript SDK with
-      tsup. The commands are real, e.g. `npm install -D tsup typescript typedoc`. You verify each step
-      you report and stay honest about what you have not run.'
+    system_prompt: 'Your lane is Api Sdk Ts. You do it through ts-build: Bundle a
+      TypeScript SDK with tsup. The commands are real, e.g. `npm install -D tsup typescript
+      typedoc`. You verify each step you report and stay honest about what you have
+      not run.'
     available_tools:
     - bash
     - read
@@ -73,7 +74,9 @@ capabilities:
   - npx typedoc --entryPointStrategy expand src --out docs
   - npm pack --dry-run
   - npm publish
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - openapi-generator
@@ -89,16 +92,18 @@ examples:
   output: Runs tsup with dts and verifies the dist output
 - input: Publish SDK docs
   output: Generates typedoc output and publishes to the docs site
-instructions: "# API SDK v2 - TypeScript\n\nTypeScript SDK building.\n\n## What This Skill Does\n- Bundles\
-  \ ESM/CJS with d.ts output\n- Type-checks and generates docs\n- Publishes clean npm packages\n\n## When\
-  \ to Use\n- Building TS SDKs for distribution\n- Maintaining type-safe clients\n- Publishing to npm\n\
-  \n## Real Commands\n\n```bash\nnpm install -D tsup typescript typedoc\nnpx tsup src/index.ts --format\
-  \ cjs,esm --dts\nnpx tsc --noEmit\nnpx typedoc src/index.ts --out docs\n```\n\n## tsup Config\n\n```ts\n\
-  import { defineConfig } from 'tsup';\nexport default defineConfig({\n  entry: ['src/index.ts'],\n  format:\
-  \ ['cjs', 'esm'],\n  dts: true,\n  clean: true,\n  sourcemap: true\n});\n```\n\n## Testing\n- Run tsc\
-  \ --noEmit before release\n- Verify dual-format require/import both work\n- Check npm pack contents\n\
-  \n## Best Practices\n- Export types from index\n- Set files in package.json\n- Add exports map for ESM/CJS\
-  \ resolution"
+instructions: "# API SDK v2 - TypeScript\n\nTypeScript SDK building.\n\n## What This\
+  \ Skill Does\n- Bundles ESM/CJS with d.ts output\n- Type-checks and generates docs\n\
+  - Publishes clean npm packages\n\n## When to Use\n- Building TS SDKs for distribution\n\
+  - Maintaining type-safe clients\n- Publishing to npm\n\n## Real Commands\n\n```bash\n\
+  npm install -D tsup typescript typedoc\nnpx tsup src/index.ts --format cjs,esm --dts\n\
+  npx tsc --noEmit\nnpx typedoc src/index.ts --out docs\n```\n\n## tsup Config\n\n\
+  ```ts\nimport { defineConfig } from 'tsup';\nexport default defineConfig({\n  entry:\
+  \ ['src/index.ts'],\n  format: ['cjs', 'esm'],\n  dts: true,\n  clean: true,\n \
+  \ sourcemap: true\n});\n```\n\n## Testing\n- Run tsc --noEmit before release\n-\
+  \ Verify dual-format require/import both work\n- Check npm pack contents\n\n## Best\
+  \ Practices\n- Export types from index\n- Set files in package.json\n- Add exports\
+  \ map for ESM/CJS resolution"
 display_name: Api Sdk Ts
 knowledge:
 - title: tsup Docs

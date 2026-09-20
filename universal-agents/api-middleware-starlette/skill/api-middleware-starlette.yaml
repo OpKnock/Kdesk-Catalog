@@ -2,8 +2,9 @@ name: api-middleware-starlette
 version: 2.0.0
 type: skill
 category: backend
-description: 'Builds Python ASGI middleware for FastAPI and Starlette: CORSMiddleware, GZipMiddleware,
-  TrustedHostMiddleware, and custom BaseHTTPMiddleware for auth and logging.'
+description: 'Builds Python ASGI middleware for FastAPI and Starlette: CORSMiddleware,
+  GZipMiddleware, TrustedHostMiddleware, and custom BaseHTTPMiddleware for auth and
+  logging.'
 keywords:
 - api-middleware
 - logging
@@ -32,9 +33,10 @@ platforms:
   opencode:
     plugin: opencode-api-middleware-starlette
   generic:
-    system_prompt: 'You are the Api Middleware Starlette specialist. You do it through starlette-middleware:
-      Apply Starlette built-in middleware classes to a FastAPI app. The commands are real, e.g. `pip install
-      fastapi uvicorn`. You run and verify the real CLI commands before you claim anything.'
+    system_prompt: 'You are the Api Middleware Starlette specialist. You do it through
+      starlette-middleware: Apply Starlette built-in middleware classes to a FastAPI
+      app. The commands are real, e.g. `pip install fastapi uvicorn`. You run and
+      verify the real CLI commands before you claim anything.'
     available_tools:
     - bash
     - read
@@ -48,7 +50,8 @@ capabilities:
   commands:
   - pip install fastapi uvicorn
   - uvicorn app:app --reload --port 8000
-  - 'curl -s -H ''Origin: http://localhost:5173'' -D- http://localhost:8000/api | grep -i access-control'
+  - 'curl -s -H ''Origin: http://localhost:5173'' -D- http://localhost:8000/api |
+    grep -i access-control'
   - 'curl -s -H ''Host: evil.example.com'' -o /dev/null -w ''%{http_code}\n'' http://localhost:8000/'
   - pytest -q
   examples:
@@ -69,9 +72,12 @@ capabilities:
   description: Write custom BaseHTTPMiddleware subclasses for auth and request logging
   commands:
   - python -c "from starlette.middleware.base import BaseHTTPMiddleware; print(BaseHTTPMiddleware.__mro__)"
-  - 'curl -s -H ''Authorization: Bearer test'' -o /dev/null -w ''%{http_code}\n'' http://localhost:8000/secure'
+  - 'curl -s -H ''Authorization: Bearer test'' -o /dev/null -w ''%{http_code}\n''
+    http://localhost:8000/secure'
   - curl -s http://localhost:8000/openapi.json | python -m json.tool | head -20
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -86,9 +92,11 @@ tools:
 - koa
 examples:
 - input: Allow my SPA to call the API
-  output: Adds CORSMiddleware with the SPA origin and verifies Access-Control headers with curl
+  output: Adds CORSMiddleware with the SPA origin and verifies Access-Control headers
+    with curl
 - input: Add custom auth middleware in FastAPI
-  output: Subclasses BaseHTTPMiddleware to validate Bearer tokens and short-circuit 401s
+  output: Subclasses BaseHTTPMiddleware to validate Bearer tokens and short-circuit
+    401s
 instructions: '# API Middleware v4 - Python ASGI
 
 
@@ -122,7 +130,8 @@ instructions: '# API Middleware v4 - Python ASGI
 
   uvicorn app:app --reload --port 8000
 
-  curl -s -H ''Origin: http://localhost:5173'' -D- http://localhost:8000/api | grep -i access-control
+  curl -s -H ''Origin: http://localhost:5173'' -D- http://localhost:8000/api | grep
+  -i access-control
 
   ```
 

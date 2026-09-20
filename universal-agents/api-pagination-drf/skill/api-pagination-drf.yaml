@@ -2,8 +2,8 @@ name: api-pagination-drf
 version: 2.0.0
 type: skill
 category: backend
-description: 'Implements pagination in Django REST Framework: PageNumberPagination, LimitOffsetPagination,
-  CursorPagination classes, and OpenAPI schema integration.'
+description: 'Implements pagination in Django REST Framework: PageNumberPagination,
+  LimitOffsetPagination, CursorPagination classes, and OpenAPI schema integration.'
 keywords:
 - pagination
 - cursor
@@ -33,9 +33,10 @@ platforms:
   opencode:
     plugin: opencode-api-pagination-drf
   generic:
-    system_prompt: 'Your lane is Api Pagination Drf. You do it through drf-pagination: Configure DRF pagination
-      classes and page metadata. The commands are real, e.g. `python manage.py runserver 8000`. You run
-      and verify the real CLI commands before you claim anything.'
+    system_prompt: 'Your lane is Api Pagination Drf. You do it through drf-pagination:
+      Configure DRF pagination classes and page metadata. The commands are real, e.g.
+      `python manage.py runserver 8000`. You run and verify the real CLI commands
+      before you claim anything.'
     available_tools:
     - bash
     - read
@@ -48,9 +49,12 @@ capabilities:
   description: Configure DRF pagination classes and page metadata
   commands:
   - python manage.py runserver 8000
-  - curl -s 'http://localhost:8000/api/users/?page=2&page_size=10' | jq '.count, .next, .previous'
-  - curl -s 'http://localhost:8000/api/users/?limit=5&offset=10' | jq '.count, .results | length'
-  - python manage.py shell -c "from rest_framework.pagination import PageNumberPagination; print(PageNumberPagination.page_size)"
+  - curl -s 'http://localhost:8000/api/users/?page=2&page_size=10' | jq '.count, .next,
+    .previous'
+  - curl -s 'http://localhost:8000/api/users/?limit=5&offset=10' | jq '.count, .results
+    | length'
+  - python manage.py shell -c "from rest_framework.pagination import PageNumberPagination;
+    print(PageNumberPagination.page_size)"
   - curl -s 'http://localhost:8000/api/schema/' -o schema.yaml
   examples:
   - ?page=2&page_size=10 returns count/next/previous metadata
@@ -72,7 +76,9 @@ capabilities:
   - curl -s 'http://localhost:8000/api/users/?ordering=created_at' | jq '.next'
   - python manage.py test api.tests.test_pagination -v 2
   - curl -s 'http://localhost:8000/api/users/?page=-5' -o /dev/null -w '%{http_code}\n'
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -89,18 +95,20 @@ examples:
   output: Sets DEFAULT_PAGINATION_CLASS and verifies count/next with curl
 - input: Cursor-based feed
   output: Switches the feed view to CursorPagination with ordering=-created_at
-instructions: "# API Pagination v4 - Django REST Framework\n\nPagination with DRF classes.\n\n## What\
-  \ This Skill Does\n- Applies PageNumber, LimitOffset, or Cursor pagination\n- Returns count/next/previous\
-  \ metadata\n- Documents paging parameters in OpenAPI schemas\n\n## When to Use\n- DRF APIs needing standard\
-  \ paging behavior\n- Admin list views with moderate data sizes\n- APIs where cursor stability matters\
+instructions: "# API Pagination v4 - Django REST Framework\n\nPagination with DRF\
+  \ classes.\n\n## What This Skill Does\n- Applies PageNumber, LimitOffset, or Cursor\
+  \ pagination\n- Returns count/next/previous metadata\n- Documents paging parameters\
+  \ in OpenAPI schemas\n\n## When to Use\n- DRF APIs needing standard paging behavior\n\
+  - Admin list views with moderate data sizes\n- APIs where cursor stability matters\
   \ less than simplicity\n\n## Real Commands\n\n```bash\ncurl -s 'http://localhost:8000/api/users/?page=2&page_size=10'\
-  \ | jq '.count, .next, .previous'\ncurl -s 'http://localhost:8000/api/users/?limit=5&offset=10' | jq\
-  \ '.count, .results | length'\n```\n\n## Settings\n\n```python\nREST_FRAMEWORK = {\n    'DEFAULT_PAGINATION_CLASS':\
-  \ 'rest_framework.pagination.PageNumberPagination',\n    'PAGE_SIZE': 20,\n    'MAX_PAGE_SIZE': 100,\n\
-  }\n```\n\n## Testing\n- Verify count stays consistent across pages\n- Test negative and oversized page\
-  \ values\n- Confirm cursor ordering survives record edits\n\n## Best Practices\n- Use CursorPagination\
-  \ for feeds and timelines\n- Set MAX_PAGE_SIZE to bound query cost\n- Keep pagination metadata in the\
-  \ serializer response"
+  \ | jq '.count, .next, .previous'\ncurl -s 'http://localhost:8000/api/users/?limit=5&offset=10'\
+  \ | jq '.count, .results | length'\n```\n\n## Settings\n\n```python\nREST_FRAMEWORK\
+  \ = {\n    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',\n\
+  \    'PAGE_SIZE': 20,\n    'MAX_PAGE_SIZE': 100,\n}\n```\n\n## Testing\n- Verify\
+  \ count stays consistent across pages\n- Test negative and oversized page values\n\
+  - Confirm cursor ordering survives record edits\n\n## Best Practices\n- Use CursorPagination\
+  \ for feeds and timelines\n- Set MAX_PAGE_SIZE to bound query cost\n- Keep pagination\
+  \ metadata in the serializer response"
 display_name: Api Pagination Drf
 knowledge:
 - title: DRF Pagination Guide

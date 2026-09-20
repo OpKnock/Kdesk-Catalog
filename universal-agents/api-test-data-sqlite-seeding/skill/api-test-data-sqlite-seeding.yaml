@@ -2,8 +2,8 @@ name: api-test-data-sqlite-seeding
 version: 2.0.0
 type: skill
 category: testing
-description: 'Seeds database test data with SQL scripts and Node scripts: sqlite3 import, PostgreSQL COPY/INSERT,
-  fixtures, and repeatable seed flows.'
+description: 'Seeds database test data with SQL scripts and Node scripts: sqlite3
+  import, PostgreSQL COPY/INSERT, fixtures, and repeatable seed flows.'
 keywords:
 - test-data
 platforms:
@@ -31,10 +31,10 @@ platforms:
   opencode:
     plugin: opencode-api-test-data-sqlite-seeding
   generic:
-    system_prompt: 'You take the Api Test Data Sqlite Seeding seat. You do it through sqlite-seeding:
-      Seed SQLite databases for API tests. The commands are real, e.g. `sqlite3 test.db CREATE TABLE users
-      (id INTEGER PRIMARY KEY, name TEXT, email TEXT)`. You work hands-on and only report outcomes you
-      have observed.'
+    system_prompt: 'You take the Api Test Data Sqlite Seeding seat. You do it through
+      sqlite-seeding: Seed SQLite databases for API tests. The commands are real,
+      e.g. `sqlite3 test.db CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT,
+      email TEXT)`. You work hands-on and only report outcomes you have observed.'
     available_tools:
     - bash
     - read
@@ -46,11 +46,14 @@ capabilities:
 - name: sqlite-seeding
   description: Seed SQLite databases for API tests
   commands:
-  - sqlite3 test.db "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TEXT)"
-  - sqlite3 test.db "INSERT INTO users (name, email) VALUES ('alice', 'a@localhost'), ('bob', 'b@localhost')"
+  - sqlite3 test.db "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email
+    TEXT)"
+  - sqlite3 test.db "INSERT INTO users (name, email) VALUES ('alice', 'a@localhost'),
+    ('bob', 'b@localhost')"
   - sqlite3 test.db "SELECT COUNT(*) FROM users"
-  - node -e "const db=require('better-sqlite3')('test.db'); db.prepare('INSERT INTO users (name,email)
-    VALUES (?,?)').run('carol','c@example.com'); console.log(db.prepare('SELECT COUNT(*) c FROM users').get())"
+  - node -e "const db=require('better-sqlite3')('test.db'); db.prepare('INSERT INTO
+    users (name,email) VALUES (?,?)').run('carol','c@example.com'); console.log(db.prepare('SELECT
+    COUNT(*) c FROM users').get())"
   - sqlite3 test.db ".dump" > seed.sql
   examples:
   - sqlite3 multi-row INSERT seeds fixtures
@@ -70,10 +73,13 @@ capabilities:
   description: Seed PostgreSQL for integration tests
   commands:
   - psql -d app -f seed.sql
-  - psql -d app -c "COPY users (name, email) FROM '/tmp/users.csv' WITH (FORMAT csv, HEADER true)"
+  - psql -d app -c "COPY users (name, email) FROM '/tmp/users.csv' WITH (FORMAT csv,
+    HEADER true)"
   - psql -d app -c "TRUNCATE users RESTART IDENTITY"
   - pg_dump --data-only -t users app > seed.sql
-  examples: []
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - faker
@@ -121,7 +127,8 @@ instructions: '# API Test Data v2 - Database Seeding
 
   sqlite3 test.db "INSERT INTO users (name, email) VALUES (''alice'', ''a@example.com'')"
 
-  psql -d app -c "COPY users (name, email) FROM ''/tmp/users.csv'' WITH (FORMAT csv, HEADER true)"
+  psql -d app -c "COPY users (name, email) FROM ''/tmp/users.csv'' WITH (FORMAT csv,
+  HEADER true)"
 
   psql -d app -c "TRUNCATE users RESTART IDENTITY"
 

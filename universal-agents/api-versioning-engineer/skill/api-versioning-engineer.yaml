@@ -2,8 +2,8 @@ name: api-versioning-engineer
 version: 2.0.0
 type: skill
 category: backend
-description: 'Implements versioning in Java/Spring Boot: versioned controllers, request mapping constraints,
-  media-type versioning, and endpoint tests.'
+description: 'Implements versioning in Java/Spring Boot: versioned controllers, request
+  mapping constraints, media-type versioning, and endpoint tests.'
 keywords:
 - api-versioning
 - content-negotiation
@@ -32,9 +32,10 @@ platforms:
   opencode:
     plugin: opencode-api-versioning-engineer
   generic:
-    system_prompt: 'You take the api-versioning-engineer seat. You do it through spring-versioning: Version
-      Spring REST controllers. The commands are real, e.g. `curl -s https://start.spring.io/starter.zip
-      -d dependencies=web,validation -d...`. You work hands-on and only report outcomes you have observed.'
+    system_prompt: 'You take the api-versioning-engineer seat. You do it through spring-versioning:
+      Version Spring REST controllers. The commands are real, e.g. `curl -s https://start.spring.io/starter.zip
+      -d dependencies=web,validation -d...`. You work hands-on and only report outcomes
+      you have observed.'
     available_tools:
     - bash
     - read
@@ -46,10 +47,12 @@ capabilities:
 - name: spring-versioning
   description: Version Spring REST controllers
   commands:
-  - curl -s https://start.spring.io/starter.zip -d dependencies=web,validation -d packageName=com.example
-    -o ver.zip && unzip -o ver.zip -d ver
-  - 'curl -s -H ''Accept: application/vnd.example.v1+json'' http://localhost:8080/api/users | jq ''.version'''
-  - 'curl -s -H ''Accept: application/vnd.example.v2+json'' http://localhost:8080/api/users | jq ''.version'''
+  - curl -s https://start.spring.io/starter.zip -d dependencies=web,validation -d
+    packageName=com.example -o ver.zip && unzip -o ver.zip -d ver
+  - 'curl -s -H ''Accept: application/vnd.example.v1+json'' http://localhost:8080/api/users
+    | jq ''.version'''
+  - 'curl -s -H ''Accept: application/vnd.example.v2+json'' http://localhost:8080/api/users
+    | jq ''.version'''
   - ./mvnw clean test
   - ./mvnw spring-boot:run
   examples:
@@ -70,10 +73,13 @@ capabilities:
   description: Test versioned endpoints
   commands:
   - ./mvnw test -Dtest=UserControllerTest
-  - 'curl -s -D- -H ''Accept: application/vnd.example.v1+json'' http://localhost:8080/api/users | grep
-    -i ''^vary:'''
-  - 'curl -s -H ''Accept: application/json'' http://localhost:8080/api/users -o /dev/null -w ''%{http_code}\n'''
-  examples: []
+  - 'curl -s -D- -H ''Accept: application/vnd.example.v1+json'' http://localhost:8080/api/users
+    | grep -i ''^vary:'''
+  - 'curl -s -H ''Accept: application/json'' http://localhost:8080/api/users -o /dev/null
+    -w ''%{http_code}\n'''
+  examples:
+  - -cli --help
+  - -api --help
   parameters: []
 prerequisites:
 - node.js
@@ -119,9 +125,11 @@ instructions: '# API Versioning Engineer
 
   ```bash
 
-  curl -s -H ''Accept: application/vnd.example.v1+json'' http://localhost:8080/api/users | jq ''.version''
+  curl -s -H ''Accept: application/vnd.example.v1+json'' http://localhost:8080/api/users
+  | jq ''.version''
 
-  curl -s -H ''Accept: application/vnd.example.v2+json'' http://localhost:8080/api/users | jq ''.version''
+  curl -s -H ''Accept: application/vnd.example.v2+json'' http://localhost:8080/api/users
+  | jq ''.version''
 
   ```
 

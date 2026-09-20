@@ -12,7 +12,7 @@ The new `kdesk` package adds the orchestration layer on top of the existing pipe
 
 1. **One source of truth.** `universal-agents/` YAML is canonical. `agents/`, `skills/`, `workflows/`, `platform-agents/` are regenerable artifacts (gitignored). Never edit generated output directly.
 2. **No invention.** Every derived field carries a `conversion` provenance block tracing it to its source (real CLI commands, declared tools, explicit references). Wiring links exist only when tool-evidence aligns.
-3. **Honest support claims.** Platform adapters declare `SUPPORTED | PARTIALLY_SUPPORTED | NOT_SUPPORTED | EMULATED | UNKNOWN` — never claim unverified support.
+3. **Honest support claims.** Platform adapters declare `FULLY_SUPPORTED | PARTIALLY_SUPPORTED | DEPRECATED | NOT_SUPPORTED | UNKNOWN` — never claim unverified support.
 4. **Concept separation.** Agent, subagent, skill, workflow, tool, MCP, hook, rule, memory, and model are distinct concepts connected only through the capability model.
 5. **Everything testable.** Every pipeline stage has unit tests; CI (`.github/workflows/ci.yml`) runs schema check, wiring, conversion validation, and the full test suite.
 6. **Portable.** No hard-coded `C:\Users\...` paths; paths derive from the repo (`Path(__file__).resolve().parents[1]`), environment variables, or `platformdirs`.
@@ -135,9 +135,9 @@ Each capability owns real CLI commands whose **first word is a tool binary** (e.
 
 | Level | Meaning |
 |-------|---------|
-| `SUPPORTED` | Native format emitted by the verified converter pipeline |
-| `PARTIALLY_SUPPORTED` | Format emitted, but some fields are dropped with warnings (e.g. void fragments) |
-| `EMULATED` | Content available only through a non-native representation |
+| `FULLY_SUPPORTED` | Native format emitted by the verified converter pipeline |
+| `PARTIALLY_SUPPORTED` | Format emitted, but some fields are dropped with warnings |
+| `DEPRECATED` | Legacy platform kept for compatibility, no longer actively maintained |
 | `NOT_SUPPORTED` | No output for this platform/feature |
 | `UNKNOWN` | No documented config; nothing claimed |
 

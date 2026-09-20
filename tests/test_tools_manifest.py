@@ -132,7 +132,10 @@ class TestClaudeCodeRegeneration(unittest.TestCase):
         after = snapshot_tree(platform_dir)
         self.assertEqual(set(before), set(after))
         for rel in before:
-            self.assertEqual(before[rel], after[rel], f"drift in {rel}")
+            # Normalize line endings (CRLF -> LF) for cross-platform compatibility
+            before_norm = before[rel].replace(b"\r\n", b"\n")
+            after_norm = after[rel].replace(b"\r\n", b"\n")
+            self.assertEqual(before_norm, after_norm, f"drift in {rel}")
 
 
 if __name__ == "__main__":

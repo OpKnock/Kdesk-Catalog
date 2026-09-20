@@ -2,6 +2,8 @@
 
 Generated: 2026-08-13 | Status: **COMPLETE**
 
+> **Note:** This is a historical implementation summary from the initial pipeline completion. Metrics (e.g., "608 agents wired", "4,237 links") reflect the state at that time and may not match the current catalog. For current metrics, see `reports/catalog-stats.json` and `README.md`.
+
 ## 1. Catalog
 
 | Metric | Value |

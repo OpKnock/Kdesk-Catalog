@@ -2,6 +2,8 @@
 
 **Generated:** 2026-08-13 · **Method:** manual forensic audit (PowerShell inventory + source inspection)
 
+> **Note:** This is a historical audit report from the initial pipeline setup. Metrics (e.g., "608 agents wired", "4,237 links") reflect the state at that time and may not match the current catalog. For current metrics, see `reports/catalog-stats.json` and `README.md`.
+
 ## 1. Repository State
 
 - **Git:** branch `main`, **0 commits**, **0 tracked files** — everything is untracked. `platform-agents/`, `agents/`, `skills/*`, `workflows/` are gitignored (regenerable artifacts).

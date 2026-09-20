@@ -26,7 +26,7 @@ universal-agents/<family>/agent|skill/<name>.yaml     (2,909 source files)
         ▼
 extract-skill-tools.py ──► prerequisites from real command binaries
 extract-parameters.py ───► parameters from real CLI flags
-wire-skills.py ──────────► skills/wiring.json  (631 agents, 4,534 links)
+wire-skills.py ──────────► skills/wiring.json  (611 agents wired, 4,242 links)
 yaml-to-json.py ─────────► agents/ (1,766) + skills/ (1,143) JSON definitions
         │                  workflows/ (1,766 *.workflow.json)
         ▼

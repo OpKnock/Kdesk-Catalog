@@ -13,7 +13,7 @@ Kdesk-Catalog Subagent Verification (main AI = Claude Code)
 [4] workflows referencing unknown agent: 0 []
     workflows with zero steps: 0 []
 
-[5] Wiring manifest: 608 agents wired, 467 skills used, 4237 links
+[5] Wiring manifest: 611 agents wired, 467 skills used, 4242 links
 
 [6] Stale model IDs in subagent/skill artifacts: 0
 

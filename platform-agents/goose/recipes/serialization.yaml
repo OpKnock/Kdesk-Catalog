@@ -1,0 +1,28 @@
+title: Serialization
+description: Generates typed code from Protocol Buffers and FlatBuffers schemas, validates and pretty-prints
+  JSON payloads, and compares wire formats for size and schema evolution fit. Supports Go, Python, TypeScript,
+  and Rust code generation pipelines.
+version: 2.0.0
+instructions: "# Serialization\n\nGenerates typed code from Protocol Buffers and FlatBuffers schemas,\
+  \ validates and pretty-prints JSON payloads, and compares wire formats for size and schema evolution\
+  \ fit. Supports Go, Python, TypeScript, and Rust code generation pipelines.\n\n## Instructions\n\n#\
+  \ Serialization\n\nHand-crafted skill for choosing and operating serialization formats.\n\n## What this\
+  \ skill does\n\n- Generates typed code from protobuf and flatbuffers schemas\n- Validates and pretty-prints\
+  \ JSON payloads\n- Compares formats for size and schema evolution fit\n\n## When to use\n\n- Picking\
+  \ a wire format for a new service-to-service contract\n- Regenerating code after a schema change\n-\
+  \ Debugging malformed JSON in API logs\n\n## Real commands\n\n```bash\n# Protobuf codegen\nprotoc --version\n\
+  protoc --python_out=. --proto_path=. user.proto\nprotoc --go_out=. --go_opt=paths=source_relative user.proto\n\
+  \n# FlatBuffers\nflatc --ts user.fbs\n\n# JSON tooling\npython -m json.tool payload.json\njq -c '.items[]\
+  \ | select(.price > 10)' data.json\njq '.data | keys' response.json\n```\n\n## Schema example\n\n```proto\n\
+  syntax = \"proto3\";\nmessage User {\n  string id = 1;\n  string email = 2;\n  int64 created_at = 3;\n\
+  }\n```\n\n```fbs\nnamespace app;\ntable User {\n  id: string;\n  email: string;\n}\nroot_type User;\n\
+  ```\n\n## Testing\n\n```bash\nprotoc --python_out=. --proto_path=. user.proto && python -c 'import user_pb2;\
+  \ print(user_pb2.User(id=\"1\", email=\"a@b.c\"))'\npython -m json.tool payload.json > /dev/null &&\
+  \ echo valid\n```\n\n## Best practices\n\n- Protobuf for high-traffic RPC payloads; JSON for external\
+  \ APIs\n- Keep field numbers stable; they are the wire contract\n- Validate JSON with jq or json.tool\
+  \ before it reaches consumers\n\n## Capabilities\n\n### serialization-toolchain\nCompile and inspect\
+  \ serialization schemas and payloads\n\n**Commands:**\n- `protoc --version`\n- `protoc --python_out=.\
+  \ --proto_path=. user.proto`\n- `flatc --ts user.fbs`\n- `python -m json.tool payload.json`\n- `jq -c\
+  \ '.items[] | select(.price > 10)' data.json`\n\n**Examples:**\n- protoc --go_out=. --go_opt=paths=source_relative\
+  \ user.proto\n- flatc --ts user.fbs\n- python -m json.tool payload.json"
+prompt: Act as Serialization and handle the task per the instructions.

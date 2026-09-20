@@ -1,0 +1,27 @@
+title: Rate Limiting Pattern
+description: 'Rate limiting architecture patterns: edge vs service-level, distributed limits with Redis,
+  and Envoy filter setup.'
+version: 2.0.0
+instructions: "# Rate Limiting Pattern\n\nRate limiting architecture patterns: edge vs service-level,\
+  \ distributed limits with Redis, and Envoy filter setup.\n\n## Instructions\n\n# Rate Limiting Patterns\n\
+  \nRate limits live at different layers: reverse proxy, gateway, or application.\n\n## What this skill\
+  \ does\n\n- Builds distributed limits with Redis sorted sets\n- Configures Envoy rate limit filters\n\
+  - Chooses the right layer per use case\n\n## When to use\n\n- Multi-instance apps need shared limits\n\
+  - Offloading limits to the edge\n\n## Real commands\n\n```bash\n# Envoy\nenvoy --config-path envoy.yaml\n\
+  \n# Redis sliding window\nredis-cli ZREMRANGEBYSCORE user:42:rl 0 $(date +%s000 -d '-60 seconds')\n\
+  redis-cli ZADD user:42:rl $(date +%s000) $(date +%s000)\nredis-cli ZCARD user:42:rl\n\n# Verify\ncurl\
+  \ -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:10000/api\n```\n\n## Envoy filter\n\n```yaml\n\
+  http_filters:\n- name: envoy.filters.http.local_ratelimit\n  typed_config:\n    \"@type\": type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit\n\
+  \    stat_prefix: http_local_rate_limiter\n    token_bucket:\n      max_tokens: 100\n      tokens_per_fill:\
+  \ 10\n      fill_interval: 1s\n    status:\n      code: TooManyRequests\n```\n\n## Pattern guidance\n\
+  \n- Edge limits protect the whole fleet\n- App-level limits enable business quotas\n- Use Redis when\
+  \ instances are stateless\n\n## Best practices\n\n- Combine edge and service-level limits\n- Use ZSETs\
+  \ with timestamps for sliding windows\n- Return 429 + Retry-After consistently\n\n## Capabilities\n\n\
+  ### rate-limit-patterns\nImplement distributed rate limiting patterns with Redis sliding window and\
+  \ Envoy rate limit filters.\n\n**Commands:**\n- `envoy --config-path envoy.yaml`\n- `redis-cli ZREMRANGEBYSCORE\
+  \ user:42:rl 0 $(date +%s000 -d '-60 seconds')`\n- `redis-cli ZADD user:42:rl $(date +%s000) $(date\
+  \ +%s000)`\n- `redis-cli ZCARD user:42:rl`\n- `curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:10000/api`\n\
+  \n**Examples:**\n- redis-cli ZADD user:42:rl 1710000000000 1710000000000; redis-cli ZCARD user:42:rl\n\
+  - curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:10000/api\n- redis-cli ZREMRANGEBYSCORE\
+  \ user:42:rl 0 1710000000000"
+prompt: Act as Rate Limiting Pattern and handle the task per the instructions.

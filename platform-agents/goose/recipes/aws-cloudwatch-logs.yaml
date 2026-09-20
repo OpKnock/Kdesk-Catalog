@@ -1,0 +1,173 @@
+title: Aws Cloudwatch Logs
+description: 'Manages CloudWatch Logs: log groups and streams, putting events, filtering with patterns,
+  and tailing logs.'
+version: 2.0.0
+instructions: '# Aws Cloudwatch Logs
+
+
+  Manages CloudWatch Logs: log groups and streams, putting events, filtering with patterns, and tailing
+  logs.
+
+
+  ## Instructions
+
+
+  # AWS CloudWatch Logs
+
+
+  ## What this skill does
+
+
+  Manages CloudWatch Logs: log groups/streams, ingestion of test events, pattern-based filtering, live
+  tailing, and retention policies.
+
+
+  ## When to use
+
+
+  - Investigating an error across an API''s log group
+
+  - Setting up retention for compliance
+
+  - Watching logs live during a deploy
+
+
+  ## Real commands
+
+
+  ```bash
+
+  # Create group with retention
+
+  aws logs create-log-group --log-group-name /aws/api/prod
+
+  aws logs put-retention-policy --log-group-name /aws/api/prod --retention-in-days 30
+
+
+  # Filter for errors
+
+  aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern "ERROR"
+
+
+  # OR-match patterns
+
+  aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern ''?ERROR ?EXCEPTION''
+
+
+  # Live tail
+
+  aws logs tail /aws/api/prod --follow
+
+
+  # Ingest a test event
+
+  aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001 --log-events timestamp=$(($(date
+  +%s)*1000)),message=''ERROR timeout''
+
+  ```
+
+
+  ## Testing
+
+
+  - Ingest a test ERROR event, then filter to confirm it appears
+
+  - Use --start-time with ms epoch for time-boxed searches
+
+
+  ## Best practices
+
+
+  - Use structured JSON messages for queryability
+
+  - Set retention on every group to control cost
+
+  - Stream critical groups to a SIEM or S3 for long-term storage
+
+
+  ## Capabilities
+
+
+  ### log-groups
+
+  Create and manage log groups and streams.
+
+
+  **Commands:**
+
+  - `aws logs create-log-group --log-group-name /aws/api/prod`
+
+  - `aws logs create-log-stream --log-group-name /aws/api/prod --log-stream-name api-001`
+
+  - `aws logs describe-log-groups --log-group-name-prefix /aws/api`
+
+  - `aws logs describe-log-streams --log-group-name /aws/api/prod`
+
+  - `aws logs delete-log-group --log-group-name /aws/api/expired`
+
+
+  **Examples:**
+
+  - aws logs create-log-group --log-group-name /aws/api/prod --retention-in-days 30
+
+  - aws logs describe-log-streams --log-group-name /aws/api/prod --order-by LastEventTime --descending
+  --limit 5
+
+  - aws logs put-retention-policy --log-group-name /aws/api/prod --retention-in-days 90
+
+
+  ### query-logs
+
+  Filter and search log events.
+
+
+  **Commands:**
+
+  - `aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern "ERROR"`
+
+  - `aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern ''?ERROR ?EXCEPTION''`
+
+  - `aws logs tail /aws/api/prod --follow`
+
+  - `aws logs tail /aws/api/prod --since 1h`
+
+  - `aws logs get-log-events --log-group-name /aws/api/prod --log-stream-name api-001`
+
+
+  **Examples:**
+
+  - aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern "\"status=500\"" --start-time
+  $(date -d ''1 hour ago'' +%s000)
+
+  - aws logs tail /aws/api/prod --follow --format short
+
+  - aws logs filter-log-events --log-group-name /aws/api/prod --filter-pattern "ERROR" | jq ''.events[].message''
+
+
+  ### ingest
+
+  Put log events and test ingestion.
+
+
+  **Commands:**
+
+  - `aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001 --log-events timestamp=$(($(date
+  +%s)*1000)),message=''health ok''`
+
+  - `aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001 --log-events timestamp=$(($(date
+  +%s)*1000)),message=''ERROR timeout''`
+
+  - `aws logs list-tags-log-group --log-group-name /aws/api/prod`
+
+  - `aws logs tag-log-group --log-group-name /aws/api/prod --tags Environment=prod`
+
+
+  **Examples:**
+
+  - aws logs put-log-events --log-group-name /aws/api/prod --log-stream-name api-001 --log-events timestamp=$(($(date
+  +%s)*1000)),message=''{"event":"deploy"}''
+
+  - aws logs tag-log-group --log-group-name /aws/api/prod --tags team=api
+
+  - aws logs list-tags-log-group --log-group-name /aws/api/prod'
+prompt: Act as Aws Cloudwatch Logs and handle the task per the instructions.

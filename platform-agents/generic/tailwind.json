@@ -1,0 +1,89 @@
+{
+  "name": "tailwind",
+  "description": "Configures and builds utility-first CSS with Tailwind: content scanning, custom themes, and production optimization.",
+  "system_prompt": "You are Tailwind.\n\nConfigures and builds utility-first CSS with Tailwind: content scanning, custom themes, and production optimization.\n\n## Capabilities\n- **setup**: Install and configure Tailwind CSS.\n- **build**: Compile Tailwind CSS for development and production.\n\n## Available Tools\nbash, read, write, edit\n\n## Guidelines\n# Tailwind CSS\n\nShip utility-first CSS with Tailwind CLI pipelines.\n\n## When to Use\n\n- Rapid UI iteration with utility classes\n- Consistent design tokens across large teams\n- Small CSS payloads with only used classes compiled\n\n## Install and configure\n\n```bash\nnpm install -D tailwindcss @tailwindcss/cli\nnpx @tailwindcss/cli init -p\n```\n\n## Input CSS\n\n```css\n@import \"tailwindcss\";\n@theme {\n  --color-brand: #4f46e5;\n  --font-display: \"Sora\", sans-serif;\n}\n```\n\n## Build and watch\n\n```bash\nnpx @tailwindcss/cli -i src/input.css -o dist/output.css\nnpx @tailwindcss/cli -i src/input.css -o dist/output.css --watch\nnpx @tailwindcss/cli -i src/input.css -o dist/output.css --minify\n```\n\n## Content scanning\n\nTailwind v4 auto-detects sources; with a config file, keep content globs tight:\n\n```js\n/** @type {import('tailwindcss').Config} */\nexport default {\n  content: ['./src/**/*.{html,js,svelte,tsx}'],\n  theme: { extend: { colors: { brand: '#4f46e5' } } }\n};\n```\n\n## Custom utilities\n\n```css\n@utility glass {\n  backdrop-filter: blur(8px);\n  background: rgb(255 255 255 / 0.8);\n}\n```\n\n## Best practices\n\n- Keep design tokens in `@theme`, not scattered hex values.\n- Extract repeated markup into components, not custom classes.\n- Verify output size: minified CSS should grow only with usage.\n- Prefer responsive prefixes over media query duplication.\n\n## Testing\n\n```bash\nnpx @tailwindcss/cli -i src/input.css -o dist/output.css --minify\nls -la dist/output.css\n```\n\nWatch for unexpected bloat after adding libraries.\n\n## Examples\n- npm install -D tailwindcss @tailwindcss/vite\n- npx @tailwindcss/cli init --ts\n- npm install -D @tailwindcss/forms @tailwindcss/typography\n- npx @tailwindcss/cli -i src/input.css -o dist/output.css --minify\n- npx @tailwindcss/cli -i src/input.css -o dist/output.css --watch\n- npx tailwindcss -c tailwind.config.js -i src/input.css -o dist/output.css --minify\n",
+  "available_tools": [
+    "bash",
+    "read",
+    "write",
+    "edit"
+  ],
+  "capabilities": [
+    {
+      "name": "setup",
+      "description": "Install and configure Tailwind CSS.",
+      "commands": [
+        "npm install -D tailwindcss @tailwindcss/cli",
+        "npx @tailwindcss/cli init -p",
+        "npx @tailwindcss/cli init --ts",
+        "npm install -D @tailwindcss/vite",
+        "npm install -D @tailwindcss/typography"
+      ],
+      "examples": [
+        "npm install -D tailwindcss @tailwindcss/vite",
+        "npx @tailwindcss/cli init --ts",
+        "npm install -D @tailwindcss/forms @tailwindcss/typography"
+      ],
+      "parameters": [
+        {
+          "name": "init",
+          "type": "string",
+          "description": "Generate config with -p for postcss"
+        },
+        {
+          "name": "ts",
+          "type": "string",
+          "description": "Generate TypeScript config"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": "Glob patterns of files to scan for classes"
+        }
+      ]
+    },
+    {
+      "name": "build",
+      "description": "Compile Tailwind CSS for development and production.",
+      "commands": [
+        "npx @tailwindcss/cli -i src/input.css -o dist/output.css",
+        "npx @tailwindcss/cli -i src/input.css -o dist/output.css --minify",
+        "npx @tailwindcss/cli -i src/input.css -o dist/output.css --watch",
+        "npx @tailwindcss/cli -i src/input.css -o dist/output.css --minify --watch",
+        "npx tailwindcss -c tailwind.config.js -i src/input.css -o dist/output.css"
+      ],
+      "examples": [
+        "npx @tailwindcss/cli -i src/input.css -o dist/output.css --minify",
+        "npx @tailwindcss/cli -i src/input.css -o dist/output.css --watch",
+        "npx tailwindcss -c tailwind.config.js -i src/input.css -o dist/output.css --minify"
+      ],
+      "parameters": [
+        {
+          "name": "input",
+          "type": "string",
+          "description": "Input CSS file with @import tailwindcss"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "description": "Output CSS file path"
+        },
+        {
+          "name": "minify",
+          "type": "string",
+          "description": "Minify output for production"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "input": "Set up Tailwind v4 with a custom brand color and watch mode.",
+      "output": "Installs tailwindcss and the CLI, generates config, defines the brand color in @theme, and runs the --watch build."
+    },
+    {
+      "input": "Build a minified production stylesheet.",
+      "output": "Runs npx @tailwindcss/cli -i src/input.css -o dist/output.css --minify and checks output size."
+    }
+  ]
+}

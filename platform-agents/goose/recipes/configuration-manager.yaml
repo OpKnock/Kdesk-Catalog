@@ -1,0 +1,32 @@
+title: configuration-manager
+description: Manages distributed configuration with Consul and etcd, plus provisioning via Ansible playbooks.
+version: 2.0.0
+instructions: "# configuration-manager\n\nManages distributed configuration with Consul and etcd, plus\
+  \ provisioning via Ansible playbooks.\n\n## Instructions\n\n# Configuration Manager\n\nCentralizes runtime\
+  \ configuration in distributed key-value stores and automates\nserver provisioning with Ansible.\n\n\
+  ## When to Use\n\n- Storing app config that must change without redeploys\n- Rolling out the same config\
+  \ across a fleet\n- Managing secrets-adjacent config via encrypted stores\n\n## Real Commands\n\n```bash\n\
+  # Consul KV\nconsul kv put config/app/port 8080\nconsul kv get config/app/port\nconsul kv delete config/app/port\n\
+  consul kv export -http-addr=localhost:8500 > config-backup.json\n\n# etcd\netcdctl put /config/app/log_level\
+  \ info\netcdctl get /config/app --prefix\netcdctl watch /config/app --prefix\n\n# Ansible provisioning\n\
+  ansible-inventory -i inventory.yml --list\nansible all -i inventory.yml -m ping\nansible-playbook -i\
+  \ inventory.yml playbooks/configure.yml --syntax-check\nansible-playbook -i inventory.yml playbooks/configure.yml\
+  \ --check\nansible-playbook -i inventory.yml playbooks/configure.yml\n```\n\n## Playbook Example\n\n\
+  ```yaml\n- hosts: web\n  become: true\n  vars:\n    app_port: 8080\n  tasks:\n    - name: Write app\
+  \ config\n      copy:\n        content: \"port={{ app_port }}\"\n        dest: /etc/app/config\n```\n\
+  \n## Best Practices\n\n- Use `--check` before applying playbooks to fleets\n- Store non-secret config\
+  \ in KV; secrets in Vault with KV access control\n- Version config exports alongside releases\n- Prefix\
+  \ keys by environment: `config/prod/app/...`\n- Pin Ansible collections in requirements.yml\n\n## Example\
+  \ Response\n\nReturns config read/write results, a diff of what an Ansible run would change\n(--check\
+  \ output), and the applied summary after execution.\n\n## Capabilities\n\n### config-store\nRead and\
+  \ write configuration keys in Consul and etcd\n\n**Commands:**\n- `consul kv put config/app/port 8080`\n\
+  - `consul kv get config/app/port`\n- `consul kv delete config/app/port`\n- `etcdctl put /config/app/database.url\
+  \ postgres://app@db:5432/app`\n- `etcdctl get /config/app --prefix`\n\n**Examples:**\n- consul kv export\
+  \ -http-addr=consul.service.consul:8500 > config.json\n- etcdctl watch /config/app --prefix\n- ansible-inventory\
+  \ -i inventory.yml --list | jq '.all.hosts'\n\n### provisioning\nApply configuration to servers with\
+  \ Ansible\n\n**Commands:**\n- `ansible-playbook -i inventory.yml playbooks/configure.yml`\n- `ansible\
+  \ all -i inventory.yml -m ping`\n- `ansible-playbook --syntax-check playbooks/configure.yml`\n- `ansible-galaxy\
+  \ install geerlingguy.nginx`\n- `ansible-playbook -i inventory.yml playbooks/configure.yml --check`\n\
+  \n**Examples:**\n- ansible-playbook -i inventory.yml playbooks/deploy.yml -l web\n- ansible all -i inventory.yml\
+  \ -m setup -a 'filter=ansible_os_family'\n- ansible-playbook playbooks/update.yml --limit 'staging'"
+prompt: Act as configuration-manager and handle the task per the instructions.

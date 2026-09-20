@@ -1,0 +1,37 @@
+title: Kafka Python
+description: 'Build Kafka producers and consumers in Python with confluent-kafka: SerializingProducer,
+  Consumer groups, and end-to-end event pipelines.'
+version: 2.0.0
+instructions: "# Kafka Python\n\nBuild Kafka producers and consumers in Python with confluent-kafka: SerializingProducer,\
+  \ Consumer groups, and end-to-end event pipelines.\n\n## Instructions\n\n# Kafka (Python)\n\nStream\
+  \ events with the confluent-kafka Python client.\n\n## What this skill does\n\n- Produces records with\
+  \ SerializingProducer.\n- Consumes in groups with on_assign/on_revoke callbacks.\n- Verifies end-to-end\
+  \ delivery with the Kafka CLI.\n\n## When to use\n\n- Python services publishing/consuming events.\n\
+  - Data pipelines feeding analytics.\n- ML feature streams from Kafka topics.\n\n## Real commands\n\n\
+  ```bash\n# Install\npip install confluent-kafka\n\n# Create topic\nkafka-topics.sh --bootstrap-server\
+  \ localhost:9092 \\\n  --create --topic events --partitions 6 --replication-factor 1\n\n# Produce\n\
+  python producer.py --topic events --count 500\n\n# Consume\npython consumer.py --topic events --group\
+  \ analytics\n\n# CLI verification\nkafka-console-consumer.sh --bootstrap-server localhost:9092 \\\n\
+  \  --topic events --from-beginning --max-messages 3\nkafka-consumer-groups.sh --bootstrap-server localhost:9092\
+  \ \\\n  --describe --group analytics\n```\n\n## Producer example\n\n```python\nfrom confluent_kafka\
+  \ import SerializingProducer\nfrom confluent_kafka.serialization import StringSerializer\n\nproducer\
+  \ = SerializingProducer({\n    'bootstrap.servers': 'localhost:9092',\n    'key.serializer': StringSerializer('utf_8'),\n\
+  \    'value.serializer': StringSerializer('utf_8'),\n    'acks': 'all',\n})\n\nproducer.produce('events',\
+  \ key='user-1', value='{\"action\":\"click\"}')\nproducer.flush()\n```\n\n## Testing\n\n```bash\npython\
+  \ -m pytest tests/\n```\n\n## Best practices\n\n- Always flush() before exiting to avoid losing buffered\
+  \ messages.\n- Set enable.auto.offset.store=false when committing offsets after processing.\n- Use librdkafka\
+  \ config keys exactly; unknown keys raise errors.\n\n## Capabilities\n\n### python-pipeline\nWrite Python\
+  \ producers/consumers with confluent-kafka and verify against the broker.\n\n**Commands:**\n- `pip install\
+  \ confluent-kafka`\n- `python producer.py --topic events --count 500`\n- `python consumer.py --topic\
+  \ events --group analytics`\n- `kafka-topics.sh --bootstrap-server localhost:9092 --create --topic events\
+  \ --partitions 6 --replication-factor 1`\n- `python -m pytest tests/`\n\n**Examples:**\n- python producer.py\
+  \ --topic events --count 500\n- python consumer.py --topic events --group analytics\n- kafka-topics.sh\
+  \ --bootstrap-server localhost:9092 --create --topic events --partitions 6 --replication-factor 1\n\n\
+  ### consume-check\nInspect consumed data and group state from the CLI.\n\n**Commands:**\n- `kafka-console-consumer.sh\
+  \ --bootstrap-server localhost:9092 --topic events --from-beginning --max-messages 3`\n- `kafka-consumer-groups.sh\
+  \ --bootstrap-server localhost:9092 --describe --group analytics`\n- `python consumer.py --topic events\
+  \ --group analytics --reset earliest --poll 5000`\n\n**Examples:**\n- kafka-console-consumer.sh --bootstrap-server\
+  \ localhost:9092 --topic events --from-beginning --max-messages 3\n- kafka-consumer-groups.sh --bootstrap-server\
+  \ localhost:9092 --describe --group analytics\n- python consumer.py --topic events --group analytics\
+  \ --reset earliest --poll 5000"
+prompt: Act as Kafka Python and handle the task per the instructions.

@@ -1,0 +1,37 @@
+title: grpc
+description: 'General gRPC API operations with grpcurl: listing services, describing schemas, invoking
+  unary and streaming RPCs, and debugging from the CLI.'
+version: 2.0.0
+instructions: "# grpc\n\nGeneral gRPC API operations with grpcurl: listing services, describing schemas,\
+  \ invoking unary and streaming RPCs, and debugging from the CLI.\n\n## Instructions\n\n# gRPC\n\nGeneral\
+  \ gRPC API operations using the real `grpcurl` CLI.\n\n## What this skill does\n\n- Lists services and\
+  \ methods on a running gRPC server.\n- Invokes unary and streaming RPCs with JSON payloads.\n- Describes\
+  \ message and service schemas (from reflection or proto files).\n- Handles both plaintext and TLS endpoints.\n\
+  \n## When to use\n\n- Testing gRPC services during development.\n- Debugging a production gRPC call\
+  \ path.\n- Learning a service contract before writing a client.\n\n## Real commands\n\n```bash\n# Install\n\
+  go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest\n\n# List services\ngrpcurl -plaintext\
+  \ localhost:50051 list\n\n# List methods\ngrpcurl -plaintext localhost:50051 list mypackage.MyService\n\
+  \n# Call a method\ngrpcurl -plaintext -d '{\"name\":\"John\"}' localhost:50051 mypackage.MyService/SayHello\n\
+  \n# Call with a local proto file\ngrpcurl -proto myservice.proto -d '{\"name\":\"John\"}' localhost:50051\
+  \ mypackage.MyService/SayHello\n\n# Streaming call\ngrpcurl -plaintext -d '{\"name\":\"John\"}' localhost:50051\
+  \ mypackage.MyService/StreamMessages\n\n# Describe schemas\ngrpcurl -plaintext localhost:50051 describe\
+  \ mypackage.MyService\ngrpcurl -plaintext localhost:50051 describe mypackage.HelloRequest\n```\n\n##\
+  \ Server Reflection\n\n```bash\n# With reflection enabled on the server:\ngrpcurl -plaintext localhost:50051\
+  \ list\ngrpcurl -plaintext localhost:50051 describe\n```\n\n## Example proto\n\n```protobuf\nsyntax\
+  \ = \"proto3\";\npackage mypackage;\n\nservice MyService {\n  rpc SayHello (HelloRequest) returns (HelloResponse);\n\
+  \  rpc StreamMessages (HelloRequest) returns (stream HelloResponse);\n}\n\nmessage HelloRequest { string\
+  \ name = 1; }\nmessage HelloResponse { string message = 1; }\n```\n\n## Testing\n\n```bash\ngrpcurl\
+  \ -plaintext -d '{\"name\":\"John\"}' localhost:50051 mypackage.MyService/SayHello\n# expected: { \"\
+  message\": \"Hello John\" }\n```\n\n## Best practices\n\n- Use `-max-time` on flaky endpoints: `grpcurl\
+  \ -plaintext -max-time 10 ...`.\n- Pipe responses through jq: `grpcurl ... | jq .`.\n- Prefer reflection\
+  \ when available; fall back to `-proto` files otherwise.\n- For interactive exploration, try evans (see\
+  \ grpc-v2 skill) with `-r` repl mode.\n\n## Example exchange\n\n```\nUser: What methods does the Greeter\
+  \ service expose?\nAgent: grpcurl -plaintext localhost:50051 list helloworld.Greeter\n```\n\n## Capabilities\n\
+  \n### grpcurl-ops\nInspect and call gRPC services from the command line with grpcurl.\n\n**Commands:**\n\
+  - `go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest`\n- `grpcurl -plaintext localhost:50051\
+  \ list`\n- `grpcurl -plaintext localhost:50051 list mypackage.MyService`\n- `grpcurl -plaintext -d '{\"\
+  name\":\"John\"}' localhost:50051 mypackage.MyService/SayHello`\n- `grpcurl -plaintext localhost:50051\
+  \ describe mypackage.MyService`\n\n**Examples:**\n- grpcurl -plaintext -proto myservice.proto -d '{\"\
+  name\":\"John\"}' localhost:50051 mypackage.MyService/SayHello\n- grpcurl -plaintext localhost:50051\
+  \ describe mypackage.HelloRequest\n- grpcurl -plaintext -d '{\"name\":\"x\"}' localhost:50051 mypackage.MyService/StreamMessages"
+prompt: Act as grpc and handle the task per the instructions.

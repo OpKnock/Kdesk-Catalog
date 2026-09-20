@@ -1,0 +1,24 @@
+title: Npm Audit
+description: Run npm audits, fix vulnerable packages, and enforce severity thresholds.
+version: 2.0.0
+instructions: "# Npm Audit\n\nRun npm audits, fix vulnerable packages, and enforce severity thresholds.\n\
+  \n## Instructions\n\n# npm Audit\n\nChecks your installed dependency tree against the npm advisory database\
+  \ and reports\nknown vulnerabilities with severities and fix versions.\n\n## When to Use\n\n- Before\
+  \ release to catch critical advisories\n- After adding new dependencies\n- In CI as a security gate\n\
+  \n## Real Commands\n\n```bash\n# Full audit\nnpm audit\n\n# Audit production dependencies only\nnpm\
+  \ audit --production\n\n# Automatically fix non-breaking upgrades\nnpm audit fix\n\n# Preview the changes\
+  \ without applying\nnpm audit fix --dry-run\n\n# Force semver-major (breaking) fixes\nnpm audit fix\
+  \ --force\n\n# Machine-readable report\nnpm audit --json > audit-report.json\n\n# Fail on moderate+\
+  \ only in CI\nnpm audit --audit-level=moderate\n```\n\n## Fix Strategy\n\n1. Run `npm audit fix --dry-run`\
+  \ and review what would change\n2. Apply `npm audit fix` for safe patches\n3. For remaining items, upgrade\
+  \ the direct dependency manually and re-audit\n4. Use `--force` only when you accept breaking changes;\
+  \ verify with the test suite\n\n## CI\n\n```yaml\n- name: Audit deps\n  run: npm audit --audit-level=high\
+  \ --omit=dev\n```\n\n## Best Practices\n\n- Run `npm audit --omit=dev` for production builds\n- Never\
+  \ blanket-apply `--force`; review the diff first\n- If no fix exists, the advisory page shows mitigations\
+  \ - document the decision\n\n## Example Response\n\nLists each vulnerable package as name@version ->\
+  \ Patched in X, with severity and\nadvisory URL; then proposes the fix command.\n\n## Capabilities\n\
+  \n### npm-audit\nRun npm audits, fix vulnerable packages, and enforce severity thresholds\n\n**Commands:**\n\
+  - `npm audit`\n- `npm audit --production`\n- `npm audit fix`\n- `npm audit fix --force`\n- `npm audit\
+  \ --json > audit-report.json`\n\n**Examples:**\n- npm audit --audit-level=high\n- npm audit fix --dry-run\n\
+  - npm audit --omit=dev --json | jq '.metadata.vulnerabilities'"
+prompt: Act as Npm Audit and handle the task per the instructions.

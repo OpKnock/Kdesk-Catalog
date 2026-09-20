@@ -1,0 +1,42 @@
+title: Grpc Security
+description: 'Secure gRPC communication: TLS/mTLS with generated certificates, grpcurl client auth flags,
+  authorization interceptors, and channel credentials in Go.'
+version: 2.0.0
+instructions: "# Grpc Security\n\nSecure gRPC communication: TLS/mTLS with generated certificates, grpcurl\
+  \ client auth flags, authorization interceptors, and channel credentials in Go.\n\n## Instructions\n\
+  \n# gRPC Security\n\nSecure gRPC endpoints with TLS, mutual TLS, and authorization interceptors.\n\n\
+  ## What this skill does\n\n- Generates CA, server, and client certificates for gRPC TLS.\n- Configures\
+  \ server-side TLS and client channel credentials.\n- Verifies encrypted gRPC connections with grpcurl\
+  \ and openssl s_client.\n- Enforces authz via interceptors on the server.\n\n## When to use\n\n- gRPC\
+  \ traffic crosses network boundaries and must be encrypted.\n- Compliance requires mutual TLS between\
+  \ microservices.\n- Auditing which services speak TLS (openssl s_client check).\n\n## Real commands\n\
+  \n```bash\n# Generate a CA and server cert for localhost\nopenssl req -x509 -newkey rsa:2048 -nodes\
+  \ -keyout ca.key -out ca.crt -days 365 -subj \"/CN=my-ca\"\nopenssl req -newkey rsa:2048 -nodes -keyout\
+  \ server.key -out server.csr -subj \"/CN=localhost\"\nopenssl x509 -req -in server.csr -CA ca.crt -CAkey\
+  \ ca.key -CAcreateserial -out server.crt -days 365\n\n# Probe a TLS-enabled server\ngrpcurl -cacert\
+  \ ca.crt -servername localhost localhost:50051 list\n\n# mTLS client\ngrpcurl -cacert ca.crt -cert client.pem\
+  \ -key client.key -servername localhost localhost:50051 list\n\n# Skip verification (dev only)\ngrpcurl\
+  \ -insecure localhost:50051 list\n```\n\n## Go server TLS\n\n```go\ncreds, _ := credentials.NewServerTLSFromFile(\"\
+  server.crt\", \"server.key\")\ns := grpc.NewServer(grpc.Creds(creds))\n```\n\n## Go client TLS\n\n```go\n\
+  creds, _ := credentials.NewClientTLSFromFile(\"ca.crt\", \"localhost\")\nconn, _ := grpc.NewClient(\"\
+  localhost:50051\", grpc.WithTransportCredentials(creds))\n```\n\n## Authz interceptor\n\n```go\nfunc\
+  \ authzInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler)\
+  \ (any, error) {\n    md, ok := metadata.FromIncomingContext(ctx)\n    if !ok || len(md.Get(\"authorization\"\
+  )) == 0 {\n        return nil, status.Error(codes.Unauthenticated, \"missing token\")\n    }\n    return\
+  \ handler(ctx, req)\n}\n```\n\n## Testing\n\n```bash\n# Verify cipher + protocol over the wire\nopenssl\
+  \ s_client -connect localhost:50051 -servername localhost -tls1_2 2>/dev/null | grep -E \"Protocol|Cipher\"\
+  \n```\n\n## Best practices\n\n- Never use `-insecure` or insecure credentials outside dev.\n- Set `-servername`\
+  \ to the cert CN to avoid hostname mismatch errors.\n- Rotate CA keys and reissue server certs on a\
+  \ schedule.\n- Use interceptors for authz, never trust the client to be honest.\n\n## Example exchange\n\
+  \n```\nUser: grpcurl says \"certificate signed by unknown authority\".\nAgent: Pass the CA bundle: grpcurl\
+  \ -cacert ca.crt -servername localhost localhost:50051 list\n```\n\n## Capabilities\n\n### grpc-tls-mtls\n\
+  Configure TLS and mutual TLS for gRPC servers and clients, and verify with grpcurl.\n\n**Commands:**\n\
+  - `openssl req -x509 -newkey rsa:2048 -nodes -keyout ca.key -out ca.crt -days 365 -subj \"/CN=my-ca\"\
+  `\n- `openssl req -newkey rsa:2048 -nodes -keyout server.key -out server.csr -subj \"/CN=localhost\"\
+  `\n- `grpcurl -cacert ca.crt -cert client.pem -key client.key -servername localhost -authority localhost\
+  \ localhost:50051 list`\n- `grpcurl -insecure localhost:50051 list`\n- `openssl s_client -connect localhost:50051\
+  \ -servername localhost -tls1_2 2>/dev/null | grep -E \"Protocol|Cipher\"`\n\n**Examples:**\n- grpcurl\
+  \ -cacert ca.crt localhost:50051 helloworld.Greeter/SayHello -d '{\"name\":\"tls\"}'\n- grpcurl -insecure\
+  \ -plaintext false localhost:50051 list\n- openssl x509 -in server.crt -noout -text | grep -A1 \"Subject\
+  \ Alternative\""
+prompt: Act as Grpc Security and handle the task per the instructions.

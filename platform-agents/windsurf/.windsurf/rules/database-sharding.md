@@ -1,0 +1,82 @@
+---
+trigger: glob
+description: "Shards large datasets: MongoDB sharded clusters, Vitess keyspaces, and partition strategy design."
+globs: ["**/*.go", "**/*.r", "**/*.sh", "**/*.sql"]
+---
+
+# database-sharding
+
+Shards large datasets: MongoDB sharded clusters, Vitess keyspaces, and partition strategy design.
+
+## Instructions
+
+# Database Sharding
+
+Scales databases horizontally: shard key design, cluster setup, chunk balancing,
+and resharding.
+
+## When to Use
+
+- A collection exceeds a single node's capacity
+- Write throughput needs horizontal scale
+- Planning resharding for growth
+
+## Real Commands
+
+```bash
+# MongoDB: add shards
+sudo mongosh --quiet --eval "sh.addShard('shard01.example.com:27018')"
+sudo mongosh --quiet --eval "sh.addShard('shard02.example.com:27018')"
+
+# Enable + shard collection
+sudo mongosh --quiet --eval "sh.enableSharding('app')"
+sudo mongosh --quiet --eval "sh.shardCollection('app.orders', {customer_id: 'hashed'})"
+
+# Monitor
+sudo mongosh --quiet --eval "sh.status().shards"
+sudo mongosh --quiet --eval "db.orders.getShardDistribution()"
+
+# Manual chunk moves (rare)
+sudo mongosh --quiet --eval "sh.moveChunk('app.orders', {customer_id: 'abc'}, 'shard02')"
+
+# Vitess: apply schema across keyspaces
+sudo vtctlclient ApplySchema -sql="CREATE TABLE orders (...)" commerce
+sudo vtctlclient Reshard --tablet_types=primary commerce.customer 0 '80-c0' customer/80-c0
+```
+
+## Shard Key Rules
+
+- High cardinality, evenly distributed values
+- Frequent query filter fields
+- Never use monotonically increasing keys (hot chunks)
+- Hashed keys for general workloads
+
+## Best Practices
+
+- Choose the shard key once; changing it means resharding
+- Monitor chunk balance; disable balancer during heavy writes
+- Route reads by shard key to avoid scatter-gather
+- Test resharding on staging first
+- Keep connection pooling through mongos/route
+
+## Example Response
+
+Enables sharding, picks and applies a shard key, and reports chunk distribution
+across shards plus balance status.
+
+## Capabilities
+
+### mongo-sharding
+Enable sharding and manage shard keys in MongoDB
+
+**Commands:**
+- `mongosh --quiet --eval "sh.enableSharding('app')"`
+- `mongosh --quiet --eval "sh.shardCollection('app.orders', {customer_id: 'hashed'})"`
+- `mongosh --quiet --eval "sh.status().databases"`
+- `mongosh --quiet --eval "sh.moveChunk('app.orders', {customer_id: 'abc'}, 'shard02')"`
+- `mongosh --quiet --eval "sh.addShard('shard02.example.com:27018')"`
+
+**Examples:**
+- mongosh --quiet --eval "sh.status().shards"
+- mongosh --quiet --eval "sh.disableBalancing('app.orders')"
+- mongosh --quiet --eval "db.orders.getShardDistribution()"

@@ -1,0 +1,95 @@
+---
+trigger: glob
+description: "Formats Python code with Black: deterministic formatting, config control, diff previews, and CI enforcement."
+globs: ["**/*.py", "**/*.r", "**/*.sh"]
+---
+
+# black
+
+Formats Python code with Black: deterministic formatting, config control, diff previews, and CI enforcement.
+
+## Instructions
+
+# Black
+
+The uncompromising Python formatter.
+
+## When to Use
+
+- Enforcing one consistent style across a Python codebase
+- Ending format debates (Black has no style options)
+- Pre-commit and CI format gates
+- Pairing with isort for import ordering
+
+## Commands
+
+```bash
+# Format a directory
+black src/
+
+# Check without modifying
+black --check src/
+
+# Show the diff only
+black --diff src/
+
+# Line length control
+black --line-length 100 src/
+
+# Exclude paths
+black --exclude "/(\.venv|node_modules|migrations)/" src/
+
+# Specific files
+black file1.py file2.py
+```
+
+## Config Example
+
+```toml
+# pyproject.toml
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+extend-exclude = """
+/(migrations|\.venv)/
+"""
+```
+
+## Best Practices
+
+- Use --check --diff in CI; format on pre-commit
+- Keep Black config in pyproject.toml, not CLI flags
+- Pair with isort --profile black for compatible sorting
+- Run Black on everything including tests
+- Pin the Black version to avoid churn between releases
+- Never mix hand-formatted code with Black-formatted code
+
+## Capabilities
+
+### black-format
+Format Python files and preview changes.
+
+**Commands:**
+- `black --safe src/`
+- `black --check src/`
+- `black --diff src/`
+- `black file1.py file2.py`
+- `black --line-length 100 src/`
+
+**Examples:**
+- black --check --diff src/
+- black --line-length 88 --target-version py312 src/
+- black --fast src/
+
+### black-config
+Configure Black per project.
+
+**Commands:**
+- `black --version`
+- `black --help | grep line-length`
+- `black --exclude "/(\\.venv|node_modules)/" src/`
+- `black --include "\\.pyi?$" src/`
+
+**Examples:**
+- black --exclude "/migrations/" src/
+- python -m black src/

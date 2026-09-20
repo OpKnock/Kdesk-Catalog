@@ -1,0 +1,26 @@
+title: Newrelic Monitoring
+description: Operates New Relic APM agents, runs NRQL queries against telemetry, searches entities, and
+  manages dashboards and alert conditions via the New Relic CLI.
+version: 2.0.0
+instructions: "# Newrelic Monitoring\n\nOperates New Relic APM agents, runs NRQL queries against telemetry,\
+  \ searches entities, and manages dashboards and alert conditions via the New Relic CLI.\n\n## Instructions\n\
+  \n# New Relic Monitoring\n\nInstrument apps with New Relic APM and drive it from the CLI for instant\
+  \ answers.\n\n## What this skill does\n\n- Installs and configures APM agents\n- Runs NRQL queries against\
+  \ telemetry\n- Manages entities and dashboards\n\n## When to use\n\n- Debugging slow transactions\n\
+  - Verifying agent health after deployment\n\n## Real commands\n\n```bash\n# Entity search\nnewrelic\
+  \ entity search --name \"my-app\"\nnewrelic entity search --domain APM --type APPLICATION\n\n# NRQL\
+  \ queries\nnewrelic nrql \"SELECT count(*) FROM Transaction SINCE 1 hour ago\"\nnewrelic nrql \"SELECT\
+  \ average(duration) FROM Transaction WHERE appName = 'my-app' SINCE 1 day ago\"\n\n# GraphQL access\n\
+  newrelic nerdgraph query --apiKey $NR_API_KEY \\\n  --query '{ actor { account(id: 1) { name } } }'\n\
+  \n# Agent diagnostics\nnewrelic diagnostics run\n```\n\n## APM agent config (Node example)\n\n```env\n\
+  NEW_RELIC_LICENSE_KEY=xxxx\nNEW_RELIC_APP_NAME=my-app\nNEW_RELIC_LOG_LEVEL=info\n```\n\n```js\nrequire('newrelic');\n\
+  ```\n\n## Best practices\n\n- Use the same app name across all instances\n- Query with explicit SINCE\
+  \ windows to bound cost\n- Alert on NRQL conditions, not static thresholds\n\n## Capabilities\n\n###\
+  \ newrelic-apm-operations\nInstall APM agents, query telemetry with NRQL, and inspect entities via the\
+  \ New Relic CLI.\n\n**Commands:**\n- `newrelic entity search --name \"my-app\"`\n- `newrelic nrql \"\
+  SELECT count(*) FROM Transaction SINCE 1 hour ago\"`\n- `newrelic nerdgraph query --apiKey $NR_API_KEY\
+  \ --query '{ actor { account(id: 1) { name } } }'`\n- `newrelic diagnostics run`\n- `curl -s 'https://api.newrelic.com/v2/applications.json'\
+  \ -H 'Api-Key: $NR_API_KEY'`\n\n**Examples:**\n- newrelic nrql \"SELECT average(duration) FROM Transaction\
+  \ WHERE appName = 'my-app' SINCE 1 day ago\"\n- newrelic entity search --domain APM --type APPLICATION\n\
+  - newrelic diagnostics run"
+prompt: Act as Newrelic Monitoring and handle the task per the instructions.

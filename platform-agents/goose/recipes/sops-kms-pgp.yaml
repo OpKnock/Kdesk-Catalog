@@ -1,0 +1,34 @@
+title: SOPS KMS PGP
+description: Encrypts files with SOPS using AWS KMS keys and PGP recipients. Supports mixed recipient
+  policies, edits encrypted files in place, patches single values, and scales to many files via .sops.yaml
+  creation rules for team-based secret management.
+version: 2.0.0
+instructions: "# SOPS KMS PGP\n\nEncrypts files with SOPS using AWS KMS keys and PGP recipients. Supports\
+  \ mixed recipient policies, edits encrypted files in place, patches single values, and scales to many\
+  \ files via .sops.yaml creation rules for team-based secret management.\n\n## Instructions\n\n# SOPS\
+  \ (KMS / PGP)\n\nHand-crafted skill for SOPS encryption with AWS KMS and PGP recipients.\n\n## What\
+  \ this skill does\n\n- Encrypts files with AWS KMS-managed data keys\n- Encrypts with PGP fingerprints\
+  \ for team access\n- Edits and decrypts in place, and scales via .sops.yaml creation rules\n\n## When\
+  \ to use\n\n- Teams already on AWS KMS wanting key rotation for free\n- Mixing recipients: some KMS,\
+  \ some PGP\n- Many config files with one policy, driven by creation rules\n\n## Real commands\n\n```bash\n\
+  # Encrypt with an AWS KMS key\nsops --kms arn:aws:kms:us-east-1:123456789012:key/abc --encrypt config/prod.yaml\
+  \ > config/prod.enc.yaml\n\n# Encrypt with a PGP fingerprint\nsops --pgp 8D7B6F2D4A1C9E3F --encrypt\
+  \ config/prod.yaml\n\n# Decrypt\nsops --decrypt config/prod.enc.yaml\n\n# Edit in place (decrypt, open\
+  \ editor, re-encrypt)\nsops --edit config/prod.enc.yaml\n\n# Patch a single value\nsops --set '[\"database\"\
+  ][\"host\"] \"db.internal\"' config/prod.enc.yaml\n\n# Short flags with a rule set\nsops -e config/staging.yaml\
+  \ > config/staging.enc.yaml\n```\n\n## .sops.yaml\n\n```yaml\ncreation_rules:\n  - path_regex: config/prod.*\\\
+  .yaml\n    kms: arn:aws:kms:us-east-1:123456789012:key/abc\n  - path_regex: config/dev.*\\.yaml\n  \
+  \  pgp: 8D7B6F2D4A1C9E3F\n```\n\n## Testing\n\n```bash\nsops --decrypt config/prod.enc.yaml | jq '.database.host'\n\
+  sops --decrypt config/prod.enc.yaml > /dev/null && echo 'decrypt ok'\n```\n\n## Best practices\n\n-\
+  \ Use KMS for cloud teams, PGP for hybrid teams; rotate recipients quarterly\n- Grant KMS usage (kms:Decrypt)\
+  \ only to deployers\n- Keep .sops.yaml committed so `sops -e` needs no flags\n\n## Capabilities\n\n\
+  ### sops-kms-pgp\nEncrypts files with SOPS using AWS KMS keys and PGP recipients. Supports mixed recipient\
+  \ policies, edits encrypted files in place, patches single values, and scales to many files via .sops.yaml\
+  \ creation rules for team-based secret management.\n\n**Commands:**\n- `sops --kms arn:aws:kms:us-east-1:123456789012:key/abc\
+  \ --encrypt config/prod.yaml`\n- `sops --pgp 8D7B6F2D4A1C9E3F --encrypt config/prod.yaml`\n- `sops --decrypt\
+  \ config/prod.enc.yaml`\n- `sops --edit config/prod.enc.yaml`\n- `sops --set '[\"database\"][\"host\"\
+  ] \"db.internal\"' config/prod.enc.yaml`\n- `sops -e config/staging.yaml`\n\n**Examples:**\n- sops --kms\
+  \ arn:aws:kms:us-east-1:123456789012:key/abc --encrypt config/prod.yaml\n- sops --pgp 8D7B6F2D4A1C9E3F\
+  \ --encrypt config/prod.yaml\n- sops --decrypt config/prod.enc.yaml\n- sops --edit config/prod.enc.yaml\n\
+  - sops --set '[\"database\"][\"host\"] \"db.internal\"' config/prod.enc.yaml"
+prompt: Act as SOPS KMS PGP and handle the task per the instructions.

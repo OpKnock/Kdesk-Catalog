@@ -1,0 +1,98 @@
+# digital-transformation
+
+Drives digital transformation with real tooling: dbt analytics pipelines, workflow orchestration with Airflow, and data platform migrations.
+
+## Instructions
+
+# Digital Transformation Engineering
+
+Modernize operations with data platforms, workflow automation, and measurable adoption.
+
+## What This Skill Does
+
+- Builds analytics engineering stacks with dbt
+- Orchestrates data workflows with Airflow/Dagster
+- Models adoption metrics and KPIs
+- Migrates legacy pipelines to modern warehouses
+- Automates reporting with dashboards
+
+## When to Use
+
+- Moving an org from spreadsheets to a data platform
+- Standardizing ETL/ELT with versioned models
+- Building executive dashboards on trusted data
+
+## Real Commands
+
+```bash
+# dbt
+dbt init analytics_project
+dbt run --select staging
+dbt test --select tag:core
+dbt build --select +marts
+dbt docs generate && dbt docs serve
+dbt compile --select models/marts
+
+# Airflow
+airflow db migrate
+airflow users create --username admin --firstname A --lastname U --role Admin --email a@b.c
+airflow dags list
+airflow dags trigger etl_pipeline
+airflow tasks test etl_pipeline extract 2026-08-10
+airflow scheduler
+
+# Dagster
+dagster job list
+dagster materialize -m myrepo
+dagit
+```
+
+## Transformation Roadmap
+
+1. Inventory current processes and data sources
+2. Stand up a warehouse + dbt models (staging -> marts)
+3. Orchestrate dependencies with Airflow DAGs
+4. Define KPIs and dashboards
+5. Train teams; measure adoption monthly
+
+## Best Practices
+
+- Model for trust: test everything with dbt tests
+- Orchestrate with idempotent tasks and retries
+- Version data definitions like code
+- Start with one high-value process; expand after measurable wins
+- Track adoption metrics to justify the platform
+
+## Capabilities
+
+### analytics-engineering
+Build and test analytics pipelines with dbt.
+
+**Commands:**
+- `dbt init analytics_project`
+- `dbt run --select staging`
+- `dbt test --select tag:core`
+- `dbt build --select +marts`
+- `dbt docs generate`
+- `dbt compile --select models/marts`
+
+**Examples:**
+- dbt run --select staging
+- dbt test --select tag:core
+- dbt docs generate
+
+### workflow-orchestration
+Schedule and operate data workflows with Airflow and Dagster.
+
+**Commands:**
+- `airflow db migrate`
+- `airflow users create --username admin --firstname A --lastname U --role Admin --email a@b.c`
+- `airflow dags list`
+- `airflow dags trigger etl_pipeline`
+- `airflow tasks test etl_pipeline extract 2026-08-10`
+- `dagster job list`
+
+**Examples:**
+- airflow dags list
+- airflow dags trigger etl_pipeline
+- airflow tasks test etl_pipeline extract 2026-08-10

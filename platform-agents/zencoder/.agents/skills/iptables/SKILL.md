@@ -1,0 +1,99 @@
+---
+name: "iptables"
+description: "Netfilter iptables operations: listing rules, adding/removing accept and drop rules, port redirects with NAT, and persisting rule sets."
+---
+
+# iptables
+
+Netfilter iptables operations: listing rules, adding/removing accept and drop rules, port redirects with NAT, and persisting rule sets.
+
+## Instructions
+
+# iptables
+
+Manage Linux packet filtering with iptables.
+
+## What this skill does
+48:   
+- Lists rules with counters for traffic visibility.
+- Adds and removes ACCEPT/DROP rules by port49:    and source.
+- Redirects ports with NAT PREROUTING.
+- Persists rulesets across reboots.
+
+## When50:    to use
+
+- Locking down a host's exposed ports.
+- Redirecting local ports during maintenance.
+51:   - Debugging dropped/blocked traffic.
+
+## Real commands
+
+```bash
+# List with counters
+iptables52:    -L -n -v
+
+# Allow SSH from the management subnet
+iptables -A INPUT -p tcp --dport 22 -s 10.0.0.0/853:    -j ACCEPT
+
+# Drop traffic to 8080
+iptables -A INPUT -p tcp --dport 8080 -j DROP
+
+# Allow established54:    traffic
+iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+# Redirect local55:    80 -> 8080
+iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+
+# Remove56:    a rule
+iptables -D INPUT -p tcp --dport 8080 -j DROP
+
+# Persist (Debian/Ubuntu)
+iptables-save57:    > /etc/iptables/rules.v4
+iptables-restore < /etc/iptables/rules.v4
+```
+
+## Policy default
+
+58:   ```bash
+iptables -P INPUT DROP   # then explicitly allow what is needed
+iptables -P FORWARD DROP
+59:   ```
+
+## Testing
+
+```bash
+iptables -L INPUT -n --line-numbers
+nc -zv localhost 8080   # should60:    fail when dropped
+```
+
+## Best practices
+
+- Always allow ESTABLISHED,RELATED before specific61:    drops.
+- Number rules with --line-numbers for surgical deletes.
+- Test policy changes in a sandbox;62:    a bad rule can lock you out.
+- Keep a cron/scheduled restore of the saved ruleset as a safety net.
+63:   
+## Example exchange
+
+```
+User: Block all traffic to port 8080 except from 10.0.0.0/8.
+Agent: iptables64:    -A INPUT -p tcp --dport 8080 -s 10.0.0.0/8 -j ACCEPT
+       iptables -A INPUT -p tcp --dport 808065:    -j DROP
+```
+
+## Capabilities
+
+### iptables-rules
+Inspect and modify iptables rulesets including NAT and persistence.
+
+**Commands:**
+- `iptables -L -n -v`
+- `iptables -A INPUT -p tcp --dport 22 -s 10.0.0.0/8 -j ACCEPT`
+- `iptables -A INPUT -p tcp --dport 8080 -j DROP`
+- `iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080`
+- `iptables-save > /etc/iptables/rules.v4`
+
+**Examples:**
+- iptables -D INPUT -p tcp --dport 8080 -j DROP
+- iptables -L INPUT -n --line-numbers
+- iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT

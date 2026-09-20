@@ -1,0 +1,32 @@
+title: terraform-docs
+description: 'Generates and maintains Terraform module documentation with terraform-docs: markdown tables,
+  JSON, and CI enforcement of freshness.'
+version: 2.0.0
+instructions: "# terraform-docs\n\nGenerates and maintains Terraform module documentation with terraform-docs:\
+  \ markdown tables, JSON, and CI enforcement of freshness.\n\n## Instructions\n\n# terraform-docs\n\n\
+  Keep Terraform module documentation generated, consistent, and fresh.\n\n## What This Skill Does\n\n\
+  - Renders inputs/outputs/providers tables into README sections\n- Supports markdown table, JSON, and\
+  \ Asciidoc formats\n- Sorts sections and filters by required fields\n- Fails CI when docs are stale\
+  \ (--check)\n- Formats generated docs with terraform-docs fmt\n\n## When to Use\n\n- Publishing reusable\
+  \ modules with accurate usage docs\n- CI gate ensuring README matches the code\n- Onboarding docs for\
+  \ internal modules\n\n## Real Commands\n\n```bash\n# Generate\nterraform-docs markdown table .\nterraform-docs\
+  \ markdown table --output-file README.md .\nterraform-docs json . > docs.json\nterraform-docs markdown\
+  \ . --sort-by-required\nterraform-docs markdown table --show inputs,outputs .\nterraform-docs markdown\
+  \ table --footer-from=./templates/footer.md .\n\n# Format and verify\nterraform-docs fmt ./README.md\n\
+  terraform-docs markdown table --check .     # exit 1 when stale\nterraform-docs version\n```\n\n## .terraform-docs.yml\
+  \ Example\n\n```yaml\nformatter: markdown table\noutput:\n  file: README.md\n  mode: inject\nsort:\n\
+  \  enabled: true\nsettings:\n  anchor: true\n  hide-empty: true\n```\n\n## Best Practices\n\n- Add `--check`\
+  \ to CI so docs cannot drift\n- Use output mode inject to keep hand-written sections\n- Commit generated\
+  \ docs (do not regenerate at apply time)\n- Keep `examples/` directories in sync with README usage blocks\n\
+  - Run terraform-docs after every module change, same commit\n\n## Capabilities\n\n### docs-generation\n\
+  Generate README and JSON docs from Terraform code.\n\n**Commands:**\n- `terraform-docs markdown table\
+  \ .`\n- `terraform-docs markdown table --output-file README.md .`\n- `terraform-docs json . > docs.json`\n\
+  - `terraform-docs markdown . --sort-by-required`\n- `terraform-docs --config .terraform-docs.yml markdown\
+  \ table .`\n\n**Examples:**\n- terraform-docs markdown table --output-file README.md .\n- terraform-docs\
+  \ json . > docs.json\n- terraform-docs --config .terraform-docs.yml markdown table .\n\n### fmt-and-verify\n\
+  Format output and verify docs are up to date in CI.\n\n**Commands:**\n- `terraform-docs fmt ./README.md`\n\
+  - `terraform-docs markdown table --check .`\n- `terraform-docs markdown table --footer-from=./templates/footer.md\
+  \ .`\n- `terraform-docs markdown table --show inputs,outputs .`\n- `terraform-docs version`\n\n**Examples:**\n\
+  - terraform-docs fmt ./README.md\n- terraform-docs markdown table --check .\n- terraform-docs markdown\
+  \ table --show inputs,outputs ."
+prompt: Act as terraform-docs and handle the task per the instructions.

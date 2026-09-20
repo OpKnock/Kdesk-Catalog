@@ -1,0 +1,33 @@
+title: Graphql Graphene
+description: 'GraphQL in Python with Graphene: define schema and resolvers with Python classes, integrate
+  with Django/Flask, and run queries.'
+version: 2.0.0
+instructions: "# Graphql Graphene\n\nGraphQL in Python with Graphene: define schema and resolvers with\
+  \ Python classes, integrate with Django/Flask, and run queries.\n\n## Instructions\n\n# GraphQL Graphene\n\
+  \n## What this skill does\n\nGraphene builds GraphQL schemas in Python with classes: ObjectType for\
+  \ objects, resolvers as methods, and Schema for the root. Graphene-Django adds ORM-friendly fields.\n\
+  \n## When to use\n\n- Adding GraphQL to a Python/Django service\n- Reusing existing ORM models in a\
+  \ graph\n- Python teams that want code-first GraphQL\n\n## Real commands\n\n```bash\n# Install\npip\
+  \ install graphene graphene-django\n\n# Inline smoke test\npython -c \"import graphene; s=graphene.Schema(query=Query);\
+  \ print(s.execute('{ hello }').data)\"\n\n# Export SDL for client tooling\npython manage.py graphql_schema\
+  \ --schema myapp.schema.schema --out schema.graphql\n\n# Serve and query\npython manage.py runserver\n\
+  curl -s -X POST http://localhost:8000/graphql -H 'Content-Type: application/json' -d '{\"query\":\"\
+  { hello }\"}' | jq\n```\n\n## Schema example\n\n```python\nimport graphene\n\nclass Order(graphene.ObjectType):\n\
+  \    id = graphene.ID()\n    status = graphene.String()\n\nclass Query(graphene.ObjectType):\n    hello\
+  \ = graphene.String()\n    order = graphene.Field(Order, id=graphene.ID(required=True))\n\n    def resolve_hello(self,\
+  \ info):\n        return \"world\"\n\n    def resolve_order(self, info, id):\n        return Orders.get(id)\
+  \  # None -> graphene returns null\n\nschema = graphene.Schema(query=Query)\n```\n\n## Testing\n\n```bash\n\
+  # Execute without HTTP\npython -c \"from myapp.schema import schema; r=schema.execute('{ order(id: \\\
+  \"1\\\") { id status } }'); print(r.data, r.errors)\"\n```\n\n## Best practices\n\n- Code-first: keep\
+  \ schema classes near the models they expose.\n- Use graphene-django's DjangoObjectType to avoid hand-written\
+  \ fields.\n- Export SDL to schema.graphql for the client pipeline.\n- Resolve N+1 queries with select_related/prefetch_related.\n\
+  - Return errors as GraphQL errors, not Python exceptions leaking.\n\n## Capabilities\n\n### graphene-schema\n\
+  Define Graphene schemas, wire Django/Flask integration, and test queries.\n\n**Commands:**\n- `pip install\
+  \ graphene django-graphql-graphene`\n- `python -c \"import graphene; s=graphene.Schema(query=Query);\
+  \ print(s.execute('{ hello }').data)\"`\n- `python manage.py graphql_schema --schema myapp.schema.schema\
+  \ --out schema.graphql`\n- `python manage.py runserver`\n- `curl -s -X POST http://localhost:8000/graphql\
+  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ hello }\"}' | jq`\n\n**Examples:**\n- python\
+  \ -c \"import graphene; s=graphene.Schema(query=Query); print(s.execute('{ hello }').data)\"\n- python\
+  \ manage.py graphql_schema --schema myapp.schema.schema --out schema.graphql\n- curl -s -X POST http://localhost:8000/graphql\
+  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ hello }\"}' | jq"
+prompt: Act as Graphql Graphene and handle the task per the instructions.

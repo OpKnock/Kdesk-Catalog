@@ -1,0 +1,79 @@
+---
+applyTo: "**/*.json **/*.py **/*.r **/*.sh"
+---
+
+# SMS OTP
+
+Delivers and verifies one-time passwords over SMS using Twilio Verify API with TOTP fallback via oathtool. Sends codes through Twilio's managed verification service, checks submitted codes, and generates time-based codes for offline scenarios.
+
+## Instructions
+
+# SMS OTP
+
+Hand-crafted skill for OTP delivery and verification over SMS.
+
+## What this skill does
+
+- Sends one-time codes via Twilio Messages and Verify
+- Checks submitted codes against the Verify service
+- Generates TOTP fallback codes with oathtool
+
+## When to use
+
+- Login flows that need a second factor
+- Account recovery via phone
+- Testing OTP delivery end to end
+
+## Real commands
+
+```bash
+# Raw SMS with the Messages API
+curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://api.twilio.com/2010-04-01/Accounts/$TWILIO_SID/Messages.json" --data-urlencode "To=+15551234567" --data-urlencode "From=+15559876543" --data-urlencode "Body=Your code is 123456"
+
+# Twilio Verify: send the code
+curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/Verifications" --data-urlencode "To=+15551234567" --data-urlencode "Channel=sms"
+
+# Twilio Verify: check the code
+curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/VerificationCheck" --data-urlencode "To=+15551234567" --data-urlencode "Code=123456"
+
+# TOTP fallback
+oathtool --totp --base32 "JBSWY3DPEHPK3PXP"
+
+# Python SDK
+pip install twilio
+```
+
+## Verify flow
+
+1. POST /Verifications to send a code
+2. User submits the code
+3. POST /VerificationCheck; status approved means valid
+
+## Testing
+
+```bash
+oathtool --totp --base32 "JBSWY3DPEHPK3PXP"   # current code
+curl -s -u "$TWILIO_SID:$TWILIO_AUTH" -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/VerificationCheck" --data-urlencode "To=+15551234567" --data-urlencode "Code=$(oathtool --totp --base32 'JBSWY3DPEHPK3PXP')"
+```
+
+## Best practices
+
+- Rate-limit sends per phone: max 3-5 per hour
+- Use Verify instead of raw Messages: it handles expiry and checking
+- Never log codes; hash them at rest
+
+## Capabilities
+
+### sms-otp-delivery
+Delivers and verifies one-time passwords over SMS using Twilio Verify API with TOTP fallback via oathtool. Sends codes through Twilio's managed verification service, checks submitted codes, and generates time-based codes for offline scenarios.
+
+**Commands:**
+- `curl -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/Verifications" -u "$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN" --data-urlencode "To=+15551234567" --data-urlencode "Channel=sms"`
+- `curl -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/VerificationChecks" -u "$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN" --data-urlencode "To=+15551234567" --data-urlencode "Code=123456"`
+- `oathtool --base32 --totp "JBSWY3DPEHPK3PXP"`
+- `pip install pyotp`
+
+**Examples:**
+- curl -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/Verifications" -u "$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN" --data-urlencode "To=+15551234567" --data-urlencode "Channel=sms"
+- curl -X POST "https://verify.twilio.com/v2/Services/$VERIFY_SID/VerificationChecks" -u "$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN" --data-urlencode "To=+15551234567" --data-urlencode "Code=123456"
+- oathtool --base32 --totp "JBSWY3DPEHPK3PXP"

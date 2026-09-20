@@ -1,0 +1,73 @@
+---
+name: "elasticsearch"
+description: "Operates Elasticsearch: index management, document CRUD, search, and cluster health via the REST API."
+globs: ["**/*.json", "**/*.r", "**/*.sh"]
+alwaysApply: false
+---
+
+# elasticsearch
+
+Operates Elasticsearch: index management, document CRUD, search, and cluster health via the REST API.
+
+## Instructions
+
+# Elasticsearch
+
+Search and analytics engine operations: index lifecycle, document CRUD, queries,
+and cluster health.
+
+## When to Use
+
+- Indexing and querying documents
+- Checking cluster/index health
+- Debugging mapping conflicts
+
+## Real Commands
+
+```bash
+# Cluster health
+curl 'localhost:9200/_cat/health?v'
+curl 'localhost:9200/_cat/nodes?v'
+
+# Index management
+curl -X PUT 'localhost:9200/orders?pretty'
+curl -X PUT 'localhost:9200/orders/_mapping?pretty' -H 'Content-Type: application/json' -d '{"properties": {"amount": {"type": "double"}}}'
+curl 'localhost:9200/_cat/indices?v'
+
+# Documents
+curl -X POST 'localhost:9200/orders/_doc?pretty' -H 'Content-Type: application/json' -d '{"order_id": 1, "amount": 99.5, "customer": "jane"}'
+curl -X GET 'localhost:9200/orders/_doc/1?pretty'
+
+# Search
+curl -X GET 'localhost:9200/orders/_search?pretty' -H 'Content-Type: application/json' -d '{"query": {"range": {"amount": {"gt": 50}}}, "size": 10}'
+```
+
+## Best Practices
+
+- Define mappings up front; dynamic mappings cause type conflicts
+- Use index lifecycle policies for time-series data
+- Search by query DSL, not q= strings, in apps
+- Check `_cat/health` for yellow/red shards
+- Set explicit shard/replica counts per index
+
+## Example Response
+
+Indexes documents, runs the search, and returns hits with scores plus cluster
+health status.
+
+## Capabilities
+
+### elasticsearch-rest
+Manage indices, documents, and searches with curl against Elasticsearch
+
+**Commands:**
+- `curl -X PUT 'localhost:9200/orders?pretty'`
+- `curl -X POST 'localhost:9200/orders/_doc?pretty' -H 'Content-Type: application/json' -d '{"order_id": 1, "amount": 99.5}'`
+- `curl 'localhost:9200/orders/_search?q=amount:>90&pretty'`
+- `curl 'localhost:9200/_cat/indices?v'`
+- `curl -X PUT 'localhost:9200/_cluster/settings?pretty' -H 'Content-Type: application/json' -d '{"transient": {"cluster.routing.allocation.enable": "all"}}'`
+
+**Examples:**
+- curl -X DELETE 'localhost:9200/orders'
+- curl 'localhost:9200/orders/_search' -H 'Content-Type: application/json' -d '{"query": {"match": {"customer": "jane"}}, "size": 5}'
+- curl 'localhost:9200/_cat/health?v'

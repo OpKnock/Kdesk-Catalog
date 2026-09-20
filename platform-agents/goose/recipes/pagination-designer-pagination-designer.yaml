@@ -1,0 +1,37 @@
+title: pagination-designer-pagination-designer
+description: 'Designs pagination for APIs and databases: offset vs cursor keysets, EXPLAIN verification,
+  and link-format pagination contracts.'
+version: 2.0.0
+instructions: "# pagination-designer-pagination-designer\n\nDesigns pagination for APIs and databases:\
+  \ offset vs cursor keysets, EXPLAIN verification, and link-format pagination contracts.\n\n## Instructions\n\
+  \n# Pagination Design\n\nPage data without surprise performance cliffs.\n\n## When to Use\n\n- API list\
+  \ endpoints\n- Admin grids and log viewers\n- Any ordered data access at scale\n\n## Offset vs cursor\n\
+  \n- Offset (`LIMIT/OFFSET`): simple, but O(n) skip and unstable on inserts.\n- Keyset/cursor (`WHERE\
+  \ id > x ORDER BY id LIMIT n`): stable, index-friendly.\n\n## Verify with EXPLAIN\n\n```bash\npsql -c\
+  \ 'EXPLAIN ANALYZE SELECT * FROM items ORDER BY id LIMIT 50 OFFSET 50000;'\npsql -c 'EXPLAIN ANALYZE\
+  \ SELECT * FROM items WHERE id > 50000 ORDER BY id LIMIT 50;'\n```\n\nAt deep pages, keyset stays index-scan\
+  \ fast while offset grows linearly.\n\n## API contract\n\n```json\n{\n  \"data\": [...],\n  \"pagination\"\
+  : {\n    \"next_cursor\": \"abc123\",\n    \"has_more\": true\n  }\n}\n```\n\nUse opaque cursors (base64\
+  \ of the composite key), never raw ids.\n\n## Edge cases\n\n- Duplicate values on the sort column: add\
+  \ id as tiebreaker.\n- Inserts during pagination: keyset returns consistent windows.\n- Huge limits:\
+  \ cap at 100 and return 400 beyond that.\n\n## Best practices\n\n- Always order by a unique key combination.\n\
+  - Enforce max page size server-side.\n- Return has_more/next to let clients iterate.\n- Test deep pagination\
+  \ in load tests.\n\n## Testing\n\n```bash\ncurl -s 'https://api.example.com/items?limit=100&page=3'\
+  \ | jq '.items | length'\ncurl -s 'https://api.example.com/items?limit=-1' -o /dev/null -w '%{http_code}\\\
+  n'\n```\n\nVerify page stability and input validation.\n\n## Capabilities\n\n### sql\nPrototype and\
+  \ verify pagination queries in SQL.\n\n**Commands:**\n- `psql -c 'EXPLAIN ANALYZE SELECT * FROM items\
+  \ ORDER BY id LIMIT 50 OFFSET 50000;'`\n- `psql -c 'EXPLAIN ANALYZE SELECT * FROM items WHERE id > 50000\
+  \ ORDER BY id LIMIT 50;'`\n- `mysql -u app -e 'SELECT COUNT(*) FROM items;'`\n- `mysql -u app -e 'SELECT\
+  \ id, name FROM items ORDER BY id LIMIT 50 OFFSET 1000;'`\n- `sqlite3 app.db \"SELECT id FROM items\
+  \ ORDER BY id DESC LIMIT 1;\"`\n\n**Examples:**\n- psql -c 'EXPLAIN ANALYZE SELECT * FROM orders WHERE\
+  \ created_at < %s ORDER BY created_at DESC, id DESC LIMIT 50;'\n- mysql -u app -e 'EXPLAIN SELECT *\
+  \ FROM items WHERE id > 50000 ORDER BY id LIMIT 50;'\n- sqlite3 app.db 'CREATE INDEX idx_items_id ON\
+  \ items(id);'\n\n### api\nVerify paginated API responses.\n\n**Commands:**\n- `curl -s 'http://localhost:8080/items?limit=100&page=3'\
+  \ | jq '.items | length'`\n- `curl -s 'http://localhost:8080/items?limit=100&cursor=abc123' | jq '.next_page'`\n\
+  - `curl -s 'http://localhost:8080/items?limit=100&page=3' | jq '{count: (.items|length), next: .links.next}'`\n\
+  - `curl -s 'http://localhost:8080/items?limit=1000000' -o /dev/null -w '%{http_code}\\n'`\n- `curl -s\
+  \ 'http://localhost:8080/items?limit=50&cursor=abc' | jq '.items[0].id'`\n\n**Examples:**\n- curl -s\
+  \ 'http://localhost:8080/items?limit=100&page=3' | jq '.links'\n- curl -s 'http://localhost:8080/items?limit=50&cursor=abc'\
+  \ | jq '.items | length'\n- curl -s 'http://localhost:8080/items?limit=-1' -o /dev/null -w '%{http_code}\\\
+  n'"
+prompt: Act as pagination-designer-pagination-designer and handle the task per the instructions.

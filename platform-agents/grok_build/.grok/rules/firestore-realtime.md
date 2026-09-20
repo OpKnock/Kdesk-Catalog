@@ -1,0 +1,75 @@
+# Firestore Realtime
+
+Firestore realtime updates: subscribe to document and collection snapshots, handle listener lifecycle, and debug sync lag.
+
+## Instructions
+
+# Firestore Realtime
+
+## What this skill does
+
+Firestore pushes document changes to subscribed clients via snapshot listeners. `onSnapshot` fires on server updates, local writes, and cache events; listeners auto-reconnect and dedupe.
+
+## When to use
+
+- Chat, presence, or collaborative screens
+- Dashboards that must reflect DB state instantly
+- Any screen that should update without polling
+
+## Real commands
+
+```bash
+# Document listener
+node -e "const {onSnapshot,doc}=require('firebase/firestore');onSnapshot(doc(db,'orders','o1'),s=>console.log(s.data()));setTimeout(()=>{},10000)"
+
+# Query listener with filter
+node -e "const {onSnapshot,collection,query,where}=require('firebase/firestore');onSnapshot(query(collection(db,'orders'),where('status','==','paid')),s=>console.log('size',s.size))"
+
+# Unsubscribe properly
+node -e "const unsub=onSnapshot(doc(db,'orders','o1'),()=>{});setTimeout(unsub,5000);console.log('unsubscribed')"
+
+# Find all listeners in code
+ grep -rn 'onSnapshot' src/ | head -10
+```
+
+## Metadata handling
+
+```javascript
+onSnapshot(docRef, { includeMetadataChanges: true }, (snap) => {
+  if (snap.metadata.hasPendingWrites) console.log('local write, not yet on server')
+  if (!snap.metadata.isFromCache) console.log('fresh from server')
+})
+```
+
+## Testing
+
+```bash
+firebase emulators:start --only firestore
+# write a doc via the emulator UI and watch the listener fire
+node -e "const {setDoc,doc}=require('firebase/firestore');setDoc(doc(db,'orders','o1'),{status:'paid'})"
+```
+
+## Best practices
+
+- Always store the unsubscribe function and call it on screen teardown.
+- Prefer filtered queries over listening to whole collections.
+- Use `includeMetadataChanges` to distinguish cache vs server events.
+- Cap concurrent listeners; each one is a connection/session on the backend.
+- Handle listener errors: log, retry, and surface offline state.
+
+## Capabilities
+
+### realtime-listeners
+Attach, manage, and debug Firestore snapshot listeners.
+
+**Commands:**
+- `node -e "const {onSnapshot,doc}=require('firebase/firestore');onSnapshot(doc(db,'orders','o1'),s=>console.log(s.data()));setTimeout(()=>{},10000)"`
+- `node -e "const {onSnapshot,collection,query,where}=require('firebase/firestore');onSnapshot(query(collection(db,'orders'),where('status','==','paid')),s=>console.log('size',s.size))"`
+- `grep -rn 'onSnapshot' src/ | head -10`
+- `firebase emulators:start --only firestore`
+- `node -e "const unsub=onSnapshot(doc(db,'orders','o1'),()=>{});setTimeout(unsub,5000);console.log('unsubscribed')"`
+
+**Examples:**
+- node -e "const {onSnapshot,doc}=require('firebase/firestore');onSnapshot(doc(db,'orders','o1'),s=>console.log(s.data()));setTimeout(()=>{},10000)"
+- node -e "const {onSnapshot,collection,query,where}=require('firebase/firestore');onSnapshot(query(collection(db,'orders'),where('status','==','paid')),s=>console.log('size',s.size))"
+- grep -rn 'onSnapshot' src/ | head -10

@@ -1,0 +1,48 @@
+title: Kafka Security
+description: 'Secure Kafka: SCRAM-SHA-256 credentials, ACLs for topics/groups/clusters, TLS client configs,
+  and verifying authorized access.'
+version: 2.0.0
+instructions: "# Kafka Security\n\nSecure Kafka: SCRAM-SHA-256 credentials, ACLs for topics/groups/clusters,\
+  \ TLS client configs, and verifying authorized access.\n\n## Instructions\n\n# Kafka Security\n\nLock\
+  \ down Kafka with SASL authentication, TLS encryption, and ACL authorization.\n\n## What this skill\
+  \ does\n\n- Creates SCRAM-SHA-256/512 credentials for clients.\n- Grants and revokes fine-grained ACLs\
+  \ (topic, group, cluster).\n- Writes client properties for SASL_SSL connections.\n\n## When to use\n\
+  \n- Enforcing multi-tenant access control on shared clusters.\n- Compliance audits that require principal-level\
+  \ accounting.\n- Securing replication and tooling connections.\n\n## Real commands\n\n```bash\n# Create\
+  \ SCRAM user\nkafka-configs.sh --bootstrap-server localhost:9092 \\\n  --entity-type users --entity-name\
+  \ alice --alter \\\n  --add-config \"SCRAM-SHA-256=[iterations=8192,password=secret]\"\n\n# Grant topic\
+  \ read/write\nkafka-acls.sh --bootstrap-server localhost:9092 \\\n  --add --allow-principal User:alice\
+  \ \\\n  --operation Read --operation Write --topic orders\n\n# Grant group read (required for consuming)\n\
+  kafka-acls.sh --bootstrap-server localhost:9092 \\\n  --add --allow-principal User:alice --group analytics\
+  \ --operation Read\n\n# Cluster admin ACL\nkafka-acls.sh --bootstrap-server localhost:9092 \\\n  --add\
+  \ --allow-principal User:admin --cluster --operation Alter\n\n# List ACLs for a topic\nkafka-acls.sh\
+  \ --bootstrap-server localhost:9092 --list --topic orders\n\n# Revoke\nkafka-acls.sh --bootstrap-server\
+  \ localhost:9092 \\\n  --remove --allow-principal User:alice --operation Write --topic orders\n```\n\
+  \n## Client properties (SASL_SSL)\n\n```properties\nsecurity.protocol=SASL_SSL\nsasl.mechanism=SCRAM-SHA-256\n\
+  sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username=\"alice\"\
+  \ password=\"secret\";\nssl.truststore.location=/etc/kafka/truststore.jks\n```\n\n## Testing\n\n```bash\n\
+  # Verify access\nkafka-console-consumer.sh --bootstrap-server localhost:9092 \\\n  --topic orders --group\
+  \ analytics --consumer.config client.properties --max-messages 1\n```\n\n## Best practices\n\n- Grant\
+  \ group ACLs alongside topic ACLs or consumption fails with GroupAuthorizationException.\n- Use prefixes\
+  \ for wildcard ACLs sparingly; explicit beats wildcard.\n- Rotate SCRAM credentials and keep JAAS passwords\
+  \ out of git.\n\n## Capabilities\n\n### authn\nManage SCRAM users and SASL credentials for clients.\n\
+  \n**Commands:**\n- `kafka-configs.sh --bootstrap-server localhost:9092 --entity-type users --entity-name\
+  \ alice --alter --add-config \"SCRAM-SHA-256=[iterations=8192,password=secret]\"`\n- `kafka-configs.sh\
+  \ --bootstrap-server localhost:9092 --entity-type users --entity-name alice --alter --add-config \"\
+  SCRAM-SHA-512=[iterations=8192,password=secret]\"`\n- `kafka-configs.sh --bootstrap-server localhost:9092\
+  \ --entity-type users --entity-name alice --describe`\n- `kafka-configs.sh --bootstrap-server localhost:9092\
+  \ --entity-type users --entity-name alice --alter --delete-config 'SCRAM-SHA-256'`\n\n**Examples:**\n\
+  - kafka-configs.sh --bootstrap-server localhost:9092 --entity-type users --entity-name alice --alter\
+  \ --add-config \"SCRAM-SHA-256=[iterations=8192,password=secret]\"\n- kafka-configs.sh --bootstrap-server\
+  \ localhost:9092 --entity-type users --entity-name alice --describe\n\n### authorization\nGrant and\
+  \ revoke ACLs on topics, consumer groups, and cluster operations.\n\n**Commands:**\n- `kafka-acls.sh\
+  \ --bootstrap-server localhost:9092 --add --allow-principal User:alice --operation Read --operation\
+  \ Write --topic orders`\n- `kafka-acls.sh --bootstrap-server localhost:9092 --add --allow-principal\
+  \ User:alice --group analytics --operation Read`\n- `kafka-acls.sh --bootstrap-server localhost:9092\
+  \ --add --allow-principal User:admin --cluster --operation Alter`\n- `kafka-acls.sh --bootstrap-server\
+  \ localhost:9092 --list --topic orders`\n- `kafka-acls.sh --bootstrap-server localhost:9092 --remove\
+  \ --allow-principal User:alice --operation Write --topic orders`\n\n**Examples:**\n- kafka-acls.sh --bootstrap-server\
+  \ localhost:9092 --add --allow-principal User:alice --operation Read --operation Write --topic orders\n\
+  - kafka-acls.sh --bootstrap-server localhost:9092 --list --topic orders\n- kafka-acls.sh --bootstrap-server\
+  \ localhost:9092 --remove --allow-principal User:alice --operation Write --topic orders"
+prompt: Act as Kafka Security and handle the task per the instructions.

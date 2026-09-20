@@ -1,0 +1,32 @@
+title: pulumi
+description: 'Builds and deploys infrastructure with Pulumi (TypeScript/Python/Go): stacks, previews,
+  outputs, imports, and state management.'
+version: 2.0.0
+instructions: "# pulumi\n\nBuilds and deploys infrastructure with Pulumi (TypeScript/Python/Go): stacks,\
+  \ previews, outputs, imports, and state management.\n\n## Instructions\n\n# Pulumi Infrastructure as\
+  \ Code\n\nProvision cloud resources with real programming languages: stacks, previews, and secrets.\n\
+  \n## What This Skill Does\n\n- Scaffolds projects in TypeScript, Python, Go, or .NET\n- Creates and\
+  \ selects stacks per environment\n- Previews diffs before applying changes\n- Manages config and encrypted\
+  \ secrets\n- Imports existing resources and refreshes state\n\n## When to Use\n\n- Preferring real code\
+  \ (loops, conditionals) over HCL\n- Multi-environment infrastructure with shared packages\n- Teams that\
+  \ want typed resource APIs\n\n## Real Commands\n\n```bash\n# Project setup\npulumi new aws-typescript\
+  \ --name infra --stack dev\npulumi stack init dev\npulumi stack select prod\n\n# Deploy loop\npulumi\
+  \ preview\npulumi up -y\npulumi destroy -y\n\n# Config and secrets\npulumi config set aws:region us-east-1\n\
+  pulumi config set --secret db_password 's3cr3t'\npulumi config get aws:region\n\n# Outputs and state\n\
+  pulumi stack output endpoint\npulumi stack output --json\npulumi import aws:s3/bucket:Bucket my-bucket\
+  \ aws-123456\npulumi state refresh\npulumi state unprotect 'urn:...'\n```\n\n## Minimal Program\n\n\
+  ```typescript\nimport * as aws from \"@pulumi/aws\";\nconst bucket = new aws.s3.Bucket(\"my-bucket\"\
+  , {\n  acl: \"private\",\n});\nexport const bucketName = bucket.id;\n```\n\n## Best Practices\n\n- One\
+  \ stack per environment (dev/staging/prod) with config separation\n- Always use `--secret` for credentials;\
+  \ never plaintext config\n- Run `pulumi preview` in CI and require human approval for prod up\n- Use\
+  \ automation API or policy-as-code (OPA) for guardrails\n- Lock provider versions via package manifests\n\
+  \n## Capabilities\n\n### stack-lifecycle\nCreate, preview, deploy, and destroy infrastructure stacks.\n\
+  \n**Commands:**\n- `pulumi new aws-typescript`\n- `pulumi stack init dev`\n- `pulumi preview`\n- `pulumi\
+  \ up -y`\n- `pulumi destroy -y`\n- `pulumi stack select prod`\n\n**Examples:**\n- pulumi new aws-typescript\n\
+  - pulumi preview\n- pulumi up -y\n\n### config-and-state\nManage configuration, secrets, outputs, and\
+  \ import existing resources.\n\n**Commands:**\n- `pulumi config set aws:region us-east-1`\n- `pulumi\
+  \ config set --secret db_password 's3cr3t'`\n- `pulumi config get aws:region`\n- `pulumi stack output`\n\
+  - `pulumi import aws:s3/bucket:Bucket my-bucket aws-123456`\n- `pulumi state refresh`\n\n**Examples:**\n\
+  - pulumi config set --secret db_password 's3cr3t'\n- pulumi stack output endpoint\n- pulumi import aws:s3/bucket:Bucket\
+  \ my-bucket aws-123456"
+prompt: Act as pulumi and handle the task per the instructions.

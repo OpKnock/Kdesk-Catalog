@@ -1,0 +1,33 @@
+title: e2e-testing
+description: End-to-end testing across browsers and devices with Playwright, including codegen, tracing,
+  and sharded CI runs.
+version: 2.0.0
+instructions: "# e2e-testing\n\nEnd-to-end testing across browsers and devices with Playwright, including\
+  \ codegen, tracing, and sharded CI runs.\n\n## Instructions\n\n# E2E Testing\n\nTest complete user journeys\
+  \ across real browsers with Playwright.\n\n## What This Skill Does\n\n- Runs E2E suites on Chromium,\
+  \ Firefox, and WebKit\n- Generates tests by recording interactions\n- Captures traces for flake debugging\n\
+  - Shards runs across CI workers\n\n## When to Use\n\n- Validating critical user journeys pre-release\n\
+  - Cross-browser compatibility checks\n- Regression protection for checkout/payment flows\n\n## Real\
+  \ Commands\n\n```bash\n# Run\nnpx playwright test\nnpx playwright test --project=chromium\nnpx playwright\
+  \ test tests/login.spec.ts --headed\nnpx playwright test --grep @smoke\n\n# Debug\nnpx playwright codegen\
+  \ https://example.com\nnpx playwright test --trace on\nnpx playwright show-report\n\n# CI\nnpx playwright\
+  \ install --with-deps\nnpx playwright test --shard=1/4 --retries=2\nnpx playwright test --workers=8\n\
+  ```\n\n## Sample Spec\n\n```ts\nimport { test, expect } from '@playwright/test';\n\ntest('user can checkout',\
+  \ async ({ page }) => {\n  await page.goto('/checkout');\n  await page.getByLabel('Email').fill('alice@example.com');\n\
+  \  await page.getByRole('button', { name: 'Pay' }).click();\n  await expect(page.getByText('Order confirmed')).toBeVisible();\n\
+  });\n```\n\n## Best Practices\n\n- Prefer getByRole/getByLabel over CSS selectors\n- Use web-first assertions\
+  \ (toBeVisible) over sleeps\n- Run smoke tags on PRs, full suite on release\n- Shard on CI; retry flakes\
+  \ with trace analysis\n- Test against production-like staging data\n\n## Capabilities\n\n### playwright-e2e\n\
+  Run E2E suites across browsers and projects.\n\n**Commands:**\n- `npx playwright test`\n- `npx playwright\
+  \ test --project=chromium`\n- `npx playwright test tests/login.spec.ts`\n- `npx playwright test --headed`\n\
+  - `npx playwright test --grep @regression`\n\n**Examples:**\n- npx playwright test --project=chromium\n\
+  - npx playwright test tests/login.spec.ts --headed\n- npx playwright test --grep @smoke\n\n### codegen-and-tracing\n\
+  Generate tests by recording and debug with traces.\n\n**Commands:**\n- `npx playwright codegen http://localhost:8080`\n\
+  - `npx playwright test --trace on`\n- `npx playwright test --debug`\n- `npx playwright show-report`\n\
+  - `npx playwright show-trace trace.zip`\n\n**Examples:**\n- npx playwright codegen http://localhost:8080\n\
+  - npx playwright test --trace on\n- npx playwright show-report\n\n### install-and-ci\nInstall browsers\
+  \ and run sharded CI jobs.\n\n**Commands:**\n- `npx playwright install chromium`\n- `npx playwright\
+  \ install --with-deps`\n- `npx playwright test --shard=1/4`\n- `npx playwright test --workers=8`\n-\
+  \ `npx playwright test --retries=2`\n\n**Examples:**\n- npx playwright install --with-deps\n- npx playwright\
+  \ test --shard=1/4 --retries=2\n- npx playwright test --workers=8"
+prompt: Act as e2e-testing and handle the task per the instructions.

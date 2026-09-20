@@ -1,0 +1,94 @@
+# Cost Gcp
+
+Manages GCP billing accounts, budgets, and BigQuery billing exports using gcloud and bq to control cloud spend.
+
+## Instructions
+
+# GCP Cost Optimization
+
+Control Google Cloud spend via billing accounts, budgets, and BigQuery exports.
+
+## When to Use
+
+- Auditing which projects are linked to which billing accounts
+- Enforcing budget alerts for teams and products
+- Analyzing cost with BigQuery billing exports
+- Cleaning up orphaned projects that still bill
+
+## Billing accounts
+
+```bash
+gcloud billing accounts list
+gcloud billing projects link my-app-prod --billing-account 012345-67890A-BCDEFG
+```
+
+Never link a production project to a sandbox billing account - always verify with `gcloud billing projects describe`.
+
+## Budgets
+
+```bash
+gcloud billing budgets create --billing-account=012345-67890A-BCDEFG --display-name=eng-monthly --budget-amount=15000 --threshold-rule=percent=80 --threshold-rule=percent=100
+```
+
+## BigQuery export analysis
+
+With billing export enabled, query costs by service and label:
+
+```sql
+SELECT service.description, SUM(cost) AS total
+FROM `billing_dataset.gcp_billing_export_v1`
+WHERE invoice.month = '202607'
+GROUP BY service.description
+ORDER BY total DESC
+```
+
+```bash
+bq query --use_legacy_sql=false "SELECT service.description, SUM(cost) AS total FROM \`billing_dataset.gcp_billing_export_v1\` WHERE invoice.month='202607' GROUP BY service.description ORDER BY total DESC"
+```
+
+## Best practices
+
+- Enforce labels (`team`, `env`, `app`) and include them in budgets with `--filter`.
+- Use committed use discounts for stable workloads.
+- Review BigQuery export monthly and archive to cheaper storage.
+- Set budget notifications to Slack via pub/sub before the threshold hits.
+
+## Testing
+
+```bash
+gcloud billing budgets list --billing-account=012345-67890A-BCDEFG
+```
+
+Confirm budget state after each create/update.
+
+## Capabilities
+
+### billing
+Manage GCP billing accounts and project linkage with gcloud billing.
+
+**Commands:**
+- `gcloud billing accounts list`
+- `gcloud billing projects describe $PROJECT_ID`
+- `gcloud billing projects link $PROJECT_ID --billing-account $BILLING_ACCOUNT_ID`
+- `gcloud billing accounts describe $BILLING_ACCOUNT_ID`
+- `gcloud billing projects unlink $PROJECT_ID`
+
+**Examples:**
+- gcloud billing accounts list --format='table(displayName,open,masterBillingAccount)'
+- gcloud billing projects link my-app-prod --billing-account 012345-67890A-BCDEFG
+- gcloud billing projects describe my-app-prod
+
+### budgets
+Create and monitor GCP budget thresholds.
+
+**Commands:**
+- `gcloud billing budgets create --billing-account=$BILLING_ACCOUNT_ID --display-name=eng-monthly --budget-amount=15000 --threshold-rule=percent=80 --threshold-rule=percent=100`
+- `gcloud billing budgets list --billing-account=$BILLING_ACCOUNT_ID`
+- `gcloud billing budgets describe eng-monthly --billing-account=$BILLING_ACCOUNT_ID`
+- `gcloud billing budgets update eng-monthly --billing-account=$BILLING_ACCOUNT_ID --budget-amount=18000`
+- `gcloud billing budgets delete eng-monthly --billing-account=$BILLING_ACCOUNT_ID`
+
+**Examples:**
+- gcloud billing budgets create --billing-account=012345-67890A-BCDEFG --display-name=eng --budget-amount=15000 --threshold-rule=percent=80
+- gcloud billing budgets list --billing-account=012345-67890A-BCDEFG --format='table(displayName,budgetFilter.creditTypesTreatment,amount)'
+- gcloud billing budgets describe eng --billing-account=012345-67890A-BCDEFG

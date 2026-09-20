@@ -1,0 +1,34 @@
+title: Connectrpc
+description: 'Develop modern RPC services with ConnectRPC: protocol choice, buf codegen, and calling services
+  from Go and browsers.'
+version: 2.0.0
+instructions: "# Connectrpc\n\nDevelop modern RPC services with ConnectRPC: protocol choice, buf codegen,\
+  \ and calling services from Go and browsers.\n\n## Instructions\n\n# ConnectRPC\n\nDevelop modern RPC\
+  \ services with the Connect protocol.\n\n## When to Use\n\n- New services needing gRPC interop plus\
+  \ JSON for browsers\n- Replacing REST with typed, generated RPC\n- Streaming without the complexity\
+  \ of raw gRPC\n\n## Setup\n\n```bash\ngo mod init example.com/rpc\ngo get connectrpc.com/connect@latest\n\
+  go get google.golang.org/protobuf@latest\n```\n\n## Proto\n\n```proto\nsyntax = \"proto3\";\npackage\
+  \ example.v1;\n\nservice GreetService {\n  rpc Greet(GreetRequest) returns (GreetResponse);\n}\n```\n\
+  \n## buf.gen.yaml\n\n```yaml\nversion: v2\nplugins:\n  - local: protoc-gen-go\n    out: gen\n  - local:\
+  \ protoc-gen-connect-go\n    out: gen\n```\n\n## Generate and Serve\n\n```bash\nbuf lint\nbuf generate\n\
+  buf breaking --against .git#branch=main\ngo run ./cmd/server\n```\n\n## Call from Three Protocols\n\n\
+  ```bash\n# Connect JSON\ncurl -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}' \\\n \
+  \ http://localhost:8080/example.v1.GreetService/Greet\n\n# gRPC (grpcurl)\ngrpcurl -plaintext -d '{\"\
+  name\":\"alice\"}' localhost:8080 example.v1.GreetService/Greet\n\n# gRPC-Web via browser transport\n\
+  ```\n\n## Testing\n\n```bash\ngo test ./...\ngrpcurl -plaintext localhost:8080 list\ncurl -s -o /dev/null\
+  \ -w \"%{http_code}\\n\" -H \"Content-Type: application/json\" -d '{}' http://localhost:8080/example.v1.GreetService/Greet\n\
+  ```\n\n## Best Practices\n\n- Prefer Connect protocol for browser and mobile clients\n- Run buf lint\
+  \ and buf breaking in CI\n- Use one proto as the single source of truth\n- Version the package in the\
+  \ proto namespace\n- Add interceptors for auth, logging, and metrics\n- Check health with connect grpchealth\n\
+  \n## Capabilities\n\n### proto-codegen\nLint, generate, and manage protobuf with buf for ConnectRPC\
+  \ projects\n\n**Commands:**\n- `buf lint`\n- `buf generate`\n- `buf breaking --against .git#branch=main`\n\
+  - `buf export --output gen`\n\n**Examples:**\n- buf lint proto && buf generate proto\n- buf breaking\
+  \ --against .git#branch=main\n- buf export --output gen && ls gen\n\n### protocol-calls\nCall ConnectRPC\
+  \ services over Connect, gRPC, and gRPC-Web protocols\n\n**Commands:**\n- `curl -H \"Content-Type: application/json\"\
+  \ -d '{\"name\":\"alice\"}' http://localhost:8080/example.v1.GreetService/Greet`\n- `curl -H \"Content-Type:\
+  \ application/proto\" --data-binary @req.bin http://localhost:8080/example.v1.GreetService/Greet`\n\
+  - `grpcurl -plaintext -d '{\"name\":\"alice\"}' localhost:8080 example.v1.GreetService/Greet`\n- `grpcurl\
+  \ -plaintext localhost:8080 list`\n\n**Examples:**\n- curl -H \"Content-Type: application/json\" -d\
+  \ '{\"name\":\"alice\"}' http://localhost:8080/example.v1.GreetService/Greet\n- grpcurl -plaintext localhost:8080\
+  \ list\n- grpcurl -plaintext -d '{}' localhost:8080 example.v1.GreetService/Greet"
+prompt: Act as Connectrpc and handle the task per the instructions.

@@ -1,0 +1,30 @@
+title: Api Error Express Middleware
+description: 'Implements error handling middleware for Express and FastAPI: centralized handlers, logging,
+  and consistent responses.'
+version: 2.0.0
+instructions: "# Api Error Express Middleware\n\nImplements error handling middleware for Express and\
+  \ FastAPI: centralized handlers, logging, and consistent responses.\n\n## Instructions\n\n# API Error\
+  \ (Implementation)\n\nImplements centralized error handling in Node and Python APIs.\n\n## When to Use\n\
+  - Errors returned ad hoc from handlers\n- Stack traces leaking in responses\n- Adding structured error\
+  \ logging\n\n## Real Commands\n\n```bash\n# Express\nnpm install http-errors express-async-errors\n\
+  node -e \"const h=require('http-errors');const e=h(422,'bad input');console.log(e.status)\"\n\n# FastAPI\n\
+  python -c \"from fastapi import HTTPException;print(HTTPException(status_code=422,detail={'code':'VALIDATION_1001'}))\"\
+  \n\n# Probe\ncurl -s http://localhost:3000/api/boom -w '\\n%{http_code}'\n```\n\n## Middleware Shape\n\
+  \n```js\napp.use((err, req, res, next) => {\n  res.status(err.status || 500).json({\n    code: err.code\
+  \ || 'INTERNAL',\n    title: err.message,\n    status: err.status || 500,\n    instance: req.originalUrl\n\
+  \  });\n});\n```\n\n## Testing\nAssert every route returns the same error body shape.\n\n## Best Practices\n\
+  - Log the stack, never expose it\n- Map unknown errors to 500 with INTERNAL code\n\n## Capabilities\n\
+  \n### express-middleware\nAdd centralized error middleware to Express APIs\n\n**Commands:**\n- `npm\
+  \ install http-errors`\n- `node -e \"const h=require('http-errors');const e=h(404,'missing');console.log(e.status,e.message)\"\
+  `\n- `npm install express-async-errors`\n- `node -e \"require('express-async-errors');console.log('async\
+  \ handlers patched')\"`\n- `curl -s http://localhost:3000/api/boom -w '\\n%{http_code}'`\n\n**Examples:**\n\
+  - node -e \"const h=require('http-errors');const e=h(422,'bad input',{code:'VALIDATION_1001'});console.log(e.status,e.expose)\"\
+  \n- curl -s http://localhost:3000/api/boom -w '\\n%{http_code}'\n- npm install http-errors express-async-errors\n\
+  \n### fastapi-handlers\nRegister exception handlers in FastAPI with consistent bodies\n\n**Commands:**\n\
+  - `pip install fastapi`\n- `python -c \"from fastapi import FastAPI,HTTPException;print(HTTPException(status_code=404,detail='missing'))\"\
+  `\n- `python -c \"import uvicorn;print('uvicorn ok')\"`\n- `curl -s http://localhost:8000/api/missing\
+  \ -w '\\n%{http_code}'`\n- `python -c \"from fastapi.responses import JSONResponse;r=JSONResponse({'detail':'x'},status_code=400);print(r.status_code)\"\
+  `\n\n**Examples:**\n- python -c \"from fastapi import HTTPException;print(HTTPException(status_code=422,detail={'code':'VALIDATION_1001'}))\"\
+  \n- curl -s http://localhost:8000/api/missing -w '\\n%{http_code}'\n- python -c \"from fastapi.responses\
+  \ import JSONResponse;print(JSONResponse({'detail':'x'},400).status_code)\""
+prompt: Act as Api Error Express Middleware and handle the task per the instructions.

@@ -1,0 +1,29 @@
+title: Graphql Hot Chocolate
+description: 'GraphQL in .NET with Hot Chocolate: build schemas from C# types, run the server, and use
+  Banana Cake Pop for testing.'
+version: 2.0.0
+instructions: "# Graphql Hot Chocolate\n\nGraphQL in .NET with Hot Chocolate: build schemas from C# types,\
+  \ run the server, and use Banana Cake Pop for testing.\n\n## Instructions\n\n# GraphQL Hot Chocolate\n\
+  \n## What this skill does\n\nHot Chocolate is the .NET GraphQL server from ChilliCream. It supports\
+  \ code-first (C# classes become schema types), schema-first (SDL), and a rich middleware pipeline.\n\
+  \n## When to use\n\n- Adding GraphQL to ASP.NET Core services\n- .NET teams wanting strong typing end\
+  \ to end\n- Reusing EF Core entities in the graph\n\n## Real commands\n\n```bash\n# Add the package\
+  \ and run\n dotnet add package HotChocolate.AspNetCore\ndotnet run\n\n# Build and test\ndotnet build\
+  \ --no-restore\n dotnet test\n\n# Query the endpoint\ncurl -s -X POST http://localhost:5000/graphql\
+  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ books { title } }\"}' | jq\n```\n\n## Program.cs\
+  \ example\n\n```csharp\nusing HotChocolate;\n\nvar builder = WebApplication.CreateBuilder(args);\nbuilder.Services.AddGraphQLServer().AddQueryType<Query>();\n\
+  \nvar app = builder.Build();\napp.MapGraphQL();\napp.Run();\n\npublic record Book(string Title, string\
+  \ Author);\n\npublic class Query\n{\n    public Book GetBook() => new(\"C# in Depth\", \"Jon Skeet\"\
+  );\n}\n```\n\n## Testing\n\n```bash\n# Export the schema SDL\ncurl -s -X POST http://localhost:5000/graphql\
+  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ __schema { queryType { name } } }\"}' | jq\
+  \ '.data'\n```\n\n## Best practices\n\n- Prefer code-first for .NET services; it keeps types in sync.\n\
+  - Use `[GraphQLName]` attributes for API naming conventions.\n- Register resolvers via `[Service]` injection,\
+  \ not globals.\n- Enable persisted operations for production caching.\n- Use Banana Cake Pop for exploratory\
+  \ queries in dev.\n\n## Capabilities\n\n### hotchocolate-development\nScaffold Hot Chocolate servers,\
+  \ add packages, and run queries.\n\n**Commands:**\n- `dotnet add package HotChocolate.AspNetCore`\n\
+  - `dotnet run`\n- `dotnet build --no-restore`\n- `curl -s -X POST http://localhost:5000/graphql -H 'Content-Type:\
+  \ application/json' -d '{\"query\":\"{ books { title } }\"}' | jq`\n- `dotnet test`\n\n**Examples:**\n\
+  - dotnet add package HotChocolate.AspNetCore && dotnet run\n- curl -s -X POST http://localhost:5000/graphql\
+  \ -H 'Content-Type: application/json' -d '{\"query\":\"{ books { title } }\"}' | jq\n- dotnet build\
+  \ --no-restore"
+prompt: Act as Graphql Hot Chocolate and handle the task per the instructions.

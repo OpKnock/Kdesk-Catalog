@@ -1,0 +1,111 @@
+---
+type: agent_requested
+description: "Creates and validates CircleCI config.yml pipelines, runs jobs locally, and manages orbs, contexts, and runner pools."
+---
+
+# circleci-devops
+
+Creates and validates CircleCI config.yml pipelines, runs jobs locally, and manages orbs, contexts, and runner pools.
+
+## Instructions
+
+# CircleCI Pipeline Engineering
+
+Author and operate CircleCI pipelines: config.yml, orbs, contexts, and local execution.
+
+## What This Skill Does
+
+- Validates and processes .circleci/config.yml
+- Runs jobs locally with Docker-in-Docker via `circleci local execute`
+- Publishes and consumes orbs
+- Manages contexts (secrets) and runner resource classes
+- Splits test suites across parallelism
+
+## When to Use
+
+- Setting up CircleCI for a repo
+- Debugging a failed pipeline from config or secrets
+- Reusing logic with custom orbs
+
+## Real Commands
+
+```bash
+# Validate and pack config
+circleci config validate .circleci/config.yml
+circleci config process .circleci/config.yml   # expanded view
+circleci config pack .circleci/config          # multi-file to single config
+
+# Local execution
+circleci local execute --job build
+circleci local execute --job test --env VAR=value
+
+# Orbs and contexts
+circleci orb create myorg/myorb@volatile
+circleci orb publish orb.yml myorg/myorb@1.0.0
+circleci context list myorg
+circleci context show myorg/production
+
+# Pipelines
+circleci config list-pipelines
+circleci pipeline retry <pipeline-id>
+```
+
+## Workflow Skeleton
+
+```yaml
+version: 2.1
+orbs:
+  node: circleci/node@5.2.0
+jobs:
+  test:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages
+      - run: npm test
+workflows:
+  main:
+    jobs:
+      - test
+```
+
+## Best Practices
+
+- Always validate config with `circleci config validate` before pushing
+- Pin orb versions (no @volatile in production)
+- Keep secrets in contexts, reference with `context: production`
+- Use parallelism and `circleci tests split` for large suites
+- Run `circleci local execute` only for simple Docker jobs (no services)
+
+## Capabilities
+
+### config-and-validation
+Validate, process, and execute CircleCI config locally before pushing.
+
+**Commands:**
+- `circleci config validate .circleci/config.yml`
+- `circleci config process .circleci/config.yml`
+- `circleci local execute --job build`
+- `circleci config pack .circleci/config`
+- `circleci config list-pipelines`
+
+**Examples:**
+- circleci config validate .circleci/config.yml
+- circleci local execute --job test
+- circleci config process .circleci/config.yml
+
+### orbs-and-contexts
+Publish orbs and manage environment contexts and runner pools.
+
+**Commands:**
+- `circleci orb create myorg/myorb@volatile`
+- `circleci orb publish orb.yml myorg/myorb@1.0.0`
+- `circleci orb list myorg`
+- `circleci context list myorg`
+- `circleci context show myorg/production`
+- `circleci runner resource-class list`
+
+**Examples:**
+- circleci orb publish orb.yml myorg/myorb@1.0.0
+- circleci context list myorg
+- circleci runner resource-class list

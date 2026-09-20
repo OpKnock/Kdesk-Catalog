@@ -1,0 +1,29 @@
+title: prettier-config
+description: Creates and validates Prettier configuration files (.prettierrc) shared across projects.
+version: 2.0.0
+instructions: "# prettier-config\n\nCreates and validates Prettier configuration files (.prettierrc) shared\
+  \ across projects.\n\n## Instructions\n\n# Prettier Config\n\nSpecializes in authoring and validating\
+  \ Prettier configuration files so formatting\nis deterministic across developers and CI.\n\n## When\
+  \ to Use\n\n- Creating a project's first .prettierrc\n- Extending a shared config package across a monorepo\n\
+  - Verifying the config resolves the same way in CI as locally\n\n## Real Commands\n\n```bash\n# Create\
+  \ a JSON config\nnpx prettier --single-quote --semi false --write . && cat .prettierrc.json\n\n# Verify\
+  \ which config a file resolves to\nnpx prettier --find-config-path src/app.js\n\n# Print the fully resolved\
+  \ config\nnpx prettier --print-config .prettierrc.json\n\n# Validate formatting against the config\n\
+  npx prettier --config .prettierrc.json --check src/\n\n# Debug-check a single file (no writes, no output\
+  \ on success)\nnpx prettier --debug-check src/app.js\n```\n\n## Config Example (.prettierrc.json)\n\n\
+  ```json\n{\n  \"semi\": false,\n  \"singleQuote\": true,\n  \"printWidth\": 100,\n  \"trailingComma\"\
+  : \"all\",\n  \"plugins\": [\"prettier-plugin-tailwindcss\"]\n}\n```\n\n## Shared Config Package\n\n\
+  ```json\n{\n  \"prettier\": \"@acme/prettier-config\"\n}\n```\n\n```js\n// @acme/prettier-config/index.js\n\
+  module.exports = { semi: false, singleQuote: true, printWidth: 100 };\n```\n\n## Best Practices\n\n\
+  - Commit the config and never mix configs across environments\n- Use `--config-precedence cli-override`\
+  \ for one-off experiments only\n- Test config changes with `--check` before rolling out\n- Keep editor/CI\
+  \ versions of Prettier in sync; configs can break across majors\n\n## Example Response\n\nConfirms the\
+  \ resolved config (shows the effective options), then reports how many\nfiles would change formatting\
+  \ when the config is applied.\n\n## Capabilities\n\n### prettier-config\nGenerate, validate, and extend\
+  \ Prettier configs\n\n**Commands:**\n- `npx prettier --config .prettierrc.json --check src/`\n- `npx\
+  \ prettier --config-precedence cli-override --single-quote --print-width 100 --write .`\n- `npx prettier\
+  \ --debug-check src/app.js`\n- `npx prettier --find-config-path src/app.js`\n- `npx prettier --ignore-path\
+  \ .gitignore --list-different .`\n\n**Examples:**\n- npx prettier --config .prettierrc.yml --check 'src/**/*.js'\n\
+  - npx prettier --print-config .prettierrc.json\n- echo '{\"semi\": false}' | npx prettier --config -\
+  \ --check /dev/stdin"
+prompt: Act as prettier-config and handle the task per the instructions.

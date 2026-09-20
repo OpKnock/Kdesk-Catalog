@@ -1,0 +1,77 @@
+---
+name: "flink"
+description: "Runs and manages Apache Flink streaming jobs: submission, monitoring, savepoints, and SQL clients."
+---
+
+# Flink
+
+Runs and manages Apache Flink streaming jobs: submission, monitoring, savepoints, and SQL clients.
+
+## Instructions
+
+# Flink
+
+Stream processing with Apache Flink: submit jobs, monitor the cluster, manage
+state via savepoints, and run SQL.
+
+## When to Use
+
+- Running real-time event processing jobs
+- Managing checkpoints and savepoints for stateful jobs
+- Developing queries with the SQL client
+
+## Real Commands
+
+```bash
+# Submit a job in detached mode
+flink run -d -p 4 ./target/streaming-job.jar \
+  --input kafka://orders --output clickhouse://events
+
+# With explicit main class
+flink run -d -c com.example.StreamingJob ./job.jar --parallelism 8
+
+# List running jobs
+flink list -m localhost:8081
+
+# Take a savepoint, then stop cleanly
+flink stop -p /tmp/savepoints <jobid>
+
+# Cancel (kill) with a savepoint
+flink cancel -m localhost:8081 <jobid> -s /tmp/savepoints
+
+# Restore from savepoint
+flink run -d -s /tmp/savepoints/savepoint-xxxx ./streaming-job.jar
+
+# SQL client
+sql-client.sh -f queries.sql
+```
+
+## Best Practices
+
+- Always take a savepoint before upgrading a stateful job
+- Use `flink stop` (graceful) over `flink cancel` for production
+- Align checkpoint intervals with throughput needs
+- Monitor the JobManager UI at the REST port (8081)
+- Version schemas in Kafka to avoid state deserialization failures
+
+## Example Response
+
+For a job upgrade: takes a savepoint, verifies it completed, submits the new jar
+with -s restore, and checks the job restarted in RUNNING state.
+
+## Capabilities
+
+### flink-cli
+Submit, list, cancel, and snapshot Flink jobs
+
+**Commands:**
+- `flink run -d -p 4 ./target/streaming-job.jar --input kafka://orders --output clickhouse://events`
+- `flink list -m localhost:8081`
+- `flink cancel -m localhost:8081 demo-jobid`
+- `flink savepoint demo-jobid /tmp/savepoints --yarn -yid demo-appid`
+- `sql-client.sh -f queries.sql`
+
+**Examples:**
+- flink run -d -c com.example.StreamingJob ./job.jar --parallelism 8
+- flink stop -p /tmp/savepoints demo-jobid
+- flink cancel -m localhost:8081 demo-jobid -s /tmp/savepoints

@@ -1,0 +1,34 @@
+title: Websocket Fallback
+description: Implements fallback transports when WebSockets are blocked. Negotiates Server-Sent Events,
+  long polling, and short polling automatically, tests each transport with curl, and verifies Last-Event-ID
+  resume for SSE.
+version: 2.0.0
+instructions: "# Websocket Fallback\n\nImplements fallback transports when WebSockets are blocked. Negotiates\
+  \ Server-Sent Events, long polling, and short polling automatically, tests each transport with curl,\
+  \ and verifies Last-Event-ID resume for SSE.\n\n## Instructions\n\n# WebSocket Fallback\n\n## What this\
+  \ skill does\n\nKeep realtime features working when WebSockets are blocked (proxies, firewalls, old\
+  \ clients) by falling back to Server-Sent Events, long polling, or short polling. Covers negotiation\
+  \ order and testing each transport.\n\n## When to use\n\n- Corporate networks block ws:// upgrade\n\
+  - Building realtime features for broad client support\n- Testing transport negotiation logic\n\n## Fallback\
+  \ ladder\n\n1. WebSocket (bidirectional)\n2. SSE (server push only)\n3. Long polling (hold connection)\n\
+  4. Short polling (interval)\n\n## Real commands\n\n```bash\n# SSE stream\ncurl -N -H \"Accept: text/event-stream\"\
+  \ http://localhost:8080/events\n\n# Long polling: server holds up to 25s\ncurl -s --max-time 30 \"http://localhost:8080/poll?timeout=25\"\
+  \ | jq \".events\"\n\n# Immediate poll\ncurl -s \"http://localhost:8080/poll?timeout=0\" | jq \".events\
+  \ | length\"\n\n# Transport negotiation\ncurl -s -X POST http://localhost:8080/negotiate \\\n  -H \"\
+  Content-Type: application/json\" \\\n  -d \"{\\\"supportsWs\\\":false,\\\"supportsSse\\\":true}\" |\
+  \ jq \".transport\"\n\n# Measure SSE hold time\ncurl -sN http://localhost:8080/sse -H \"Accept: text/event-stream\"\
+  \ -o /dev/null -w \"%{time_total}\\n\"\n```\n\n## SSE format\n\n```\nevent: order.created\ndata: {\"\
+  id\":42}\n\n```\n`id:` lines enable Last-Event-ID resume.\n\n## Best practices\n\n- Negotiate transport\
+  \ explicitly from client capabilities\n- Long polls must return immediately when events arrive\n- Set\
+  \ conservative timeouts slightly below LB idle time\n- Add `retry:` directives to SSE streams\n\n##\
+  \ Testing\n\n```bash\ncurl -N http://localhost:8080/events | head -3\ncurl -s \"http://localhost:8080/poll?timeout=1\"\
+  \ -w \"\\n%{time_total}s\\n\"\n```\n\n## Capabilities\n\n### fallback-protocols\nImplement SSE, long\
+  \ polling, and polling fallbacks\n\n**Commands:**\n- `curl -N -H \"Accept: text/event-stream\" http://localhost:8080/events`\n\
+  - `curl -s --max-time 30 \"http://localhost:8080/poll?timeout=25\" | jq \".events\"`\n- `curl -s \"\
+  http://localhost:8080/poll?timeout=0\" | jq \".events | length\"`\n- `curl -s -X POST http://localhost:8080/negotiate\
+  \ -H \"Content-Type: application/json\" -d \"{\\\"supportsWs\\\":false,\\\"supportsSse\\\":true}\" |\
+  \ jq \".transport\"`\n- `curl -sN http://localhost:8080/sse -H \"Accept: text/event-stream\" -o /dev/null\
+  \ -w \"%{time_total}\"`\n\n**Examples:**\n- curl -N http://localhost:8080/events | head -5\n- curl -s\
+  \ \"http://localhost:8080/poll?timeout=25\" -w \"\\n%{time_total}s\"\n- curl -s -X POST http://localhost:8080/negotiate\
+  \ -d \"{}\" | jq \".transports\""
+prompt: Act as Websocket Fallback and handle the task per the instructions.

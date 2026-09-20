@@ -1,0 +1,80 @@
+---
+name: "gateway-patterns"
+description: "API gateway design patterns: routing, aggregation, authentication, rate limiting, and versioning with Kong, nginx, and Envoy."
+type: knowledge
+triggers: ["gateway-patterns", "kong-gateway"]
+---
+
+# Gateway Patterns
+
+API gateway design patterns: routing, aggregation, authentication, rate limiting, and versioning with Kong, nginx, and Envoy.
+
+## Instructions
+
+# Gateway Patterns
+
+## What this skill does
+
+API gateways sit in front of services handling routing, auth, rate limits, aggregation, and versioning. This skill covers the common patterns using Kong as the reference gateway.
+
+## When to use
+
+- Placing a single entry point in front of microservices
+- Enforcing auth and rate limits in one place
+- Versioning APIs via paths or headers
+
+## Real commands
+
+```bash
+# Register a service and route
+curl -s -X POST http://localhost:8001/services -d 'name=orders' -d 'url=http://orders-service:8080' | jq '.id'
+curl -s -X POST http://localhost:8001/services/orders/routes -d 'paths[]=/api/orders' -d 'name=orders-route' | jq '.paths'
+
+# Attach a rate limit plugin
+curl -s -X POST http://localhost:8001/services/orders/plugins -d 'name=rate-limiting' -d 'config.minute=100' | jq '.name'
+
+# Verify through the gateway
+curl -s http://localhost:8000/api/orders | jq
+```
+
+## Pattern: versioned routing
+
+```bash
+# v1 and v2 map to different upstreams
+curl -s -X POST http://localhost:8001/services/orders-v1/routes -d 'paths[]=/v1/orders' | jq '.id'
+curl -s -X POST http://localhost:8001/services/orders-v2/routes -d 'paths[]=/v2/orders' | jq '.id'
+```
+
+## Pattern: auth offloading
+
+```bash
+# key-auth plugin turns the gateway into the token checkpoint
+curl -s -X POST http://localhost:8001/services/orders/plugins -d 'name=key-auth' | jq '.name'
+curl -s -X POST http://localhost:8001/consumers -d 'username=svc' -d 'custom_id=svc-1' | jq '.id'
+curl -s -X POST http://localhost:8001/consumers/svc/key-auth -d 'key=secret123' | jq '.key'
+```
+
+## Best practices
+
+- Keep gateway routing declarative (Kong decK or nginx config in git).
+- Offload cross-cutting concerns: auth, TLS, rate limits, CORS.
+- Avoid business logic in the gateway; that is the aggregation service's job.
+- Monitor gateway error codes and plugin latency separately from services.
+- Version early; renaming paths later breaks every client.
+
+## Capabilities
+
+### kong-gateway
+Manage Kong routes, services, and plugins; test gateway behavior.
+
+**Commands:**
+- `curl -s -X POST http://localhost:8001/services -d 'name=orders' -d 'url=http://orders-service:8080' | jq '.id'`
+- `curl -s -X POST http://localhost:8001/services/orders/routes -d 'paths[]=/api/orders' -d 'name=orders-route' | jq '.paths'`
+- `curl -s -X POST http://localhost:8001/services/orders/plugins -d 'name=rate-limiting' -d 'config.minute=100' | jq '.name'`
+- `curl -s http://localhost:8001/services | jq '.data[] | {name, host}'`
+- `nginx -t && curl -sI http://localhost:8000/api/orders | head -5`
+
+**Examples:**
+- curl -s -X POST http://localhost:8001/services/orders/routes -d 'paths[]=/api/orders' -d 'name=orders-route' | jq '.paths'
+- curl -s -X POST http://localhost:8001/services/orders/plugins -d 'name=rate-limiting' -d 'config.minute=100' | jq '.name'
+- curl -s http://localhost:8001/services | jq '.data[] | {name, host}'

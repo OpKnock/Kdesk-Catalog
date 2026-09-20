@@ -1,0 +1,99 @@
+---
+name: "package-management"
+description: "Manages dependencies across ecosystems: npm/pnpm/yarn, pip/uv, cargo, and go modules \u2014 install, update, audit, and CI strategies."
+globs: ["**/*.go", "**/*.java", "**/*.py", "**/*.r", "**/*.rs", "**/*.sh", "**/*.{js,ts,jsx,tsx}"]
+alwaysApply: false
+---
+
+# package-management
+
+Manages dependencies across ecosystems: npm/pnpm/yarn, pip/uv, cargo, and go modules — install, update, audit, and CI strategies.
+
+## Instructions
+
+# Cross-Ecosystem Package Management
+
+Install, update, and audit dependencies across languages.
+
+## What This Skill Does
+
+- Manages JS deps (npm/pnpm/yarn) with lockfiles
+- Manages Python deps (pip/uv) and virtualenvs
+- Manages Rust (cargo) and Go modules
+- Audits all ecosystems for vulnerabilities
+- Advises on lockfile and CI strategies
+
+## When to Use
+
+- Setting up dependency management for a project
+- Responding to vulnerability advisories
+- Standardizing package manager workflows
+
+## Real Commands
+
+```bash
+# JavaScript
+npm install
+npm ci                          # clean lockfile install
+npm audit --audit-level=high
+npm outdated
+pnpm dlx create-vite@latest myapp
+yarn upgrade-interactive
+
+# Python
+python -m venv .venv
+pip install -r requirements.txt
+pip-audit -r requirements.txt
+uv pip install -e ".[dev]"
+
+# Rust / Go
+cargo add serde --features derive
+cargo audit
+cargo update
+go mod tidy
+go get -u ./...
+```
+
+## Best Practices
+
+- Commit lockfiles and use npm ci / pnpm install --frozen-lockfile in CI
+- Run audits on every merge (npm audit, pip-audit, cargo audit)
+- Prefer one package manager per repo; do not mix
+- Pin direct deps, let transitive resolve from lockfile
+- Use uv for speed on large Python projects
+- Add `dependabot` or Renovate for automated update PRs
+
+## Capabilities
+
+### js-package-managers
+Install and audit JavaScript dependencies with npm/pnpm/yarn.
+
+**Commands:**
+- `npm install`
+- `npm ci`
+- `npm audit --audit-level=high`
+- `npm outdated`
+- `pnpm dlx create-vite@latest myapp`
+- `yarn upgrade-interactive`
+
+**Examples:**
+- npm ci
+- npm audit --audit-level=high
+- pnpm dlx create-vite@latest myapp
+
+### python-and-system
+Manage Python, Rust, and Go dependencies.
+
+**Commands:**
+- `pip install -r requirements.txt`
+- `pip-audit -r requirements.txt`
+- `uv pip install -r pyproject.toml`
+- `cargo add serde --features derive`
+- `cargo audit`
+- `go mod tidy`
+- `go get -u ./...`
+
+**Examples:**
+- pip-audit -r requirements.txt
+- cargo audit
+- go mod tidy

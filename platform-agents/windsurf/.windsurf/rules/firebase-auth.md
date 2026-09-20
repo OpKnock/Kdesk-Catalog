@@ -1,0 +1,95 @@
+---
+trigger: glob
+description: "Firebase Authentication operations: manage users and ID tokens, test sign-in flows with the CLI, and verify token validation."
+globs: ["**/*.go", "**/*.java", "**/*.json", "**/*.r", "**/*.rs", "**/*.sh", "**/*.{js,ts,jsx,tsx}"]
+---
+
+# Firebase Auth
+
+Firebase Authentication operations: manage users and ID tokens, test sign-in flows with the CLI, and verify token validation.
+
+## Instructions
+
+# Firebase Auth
+
+## What this skill does
+
+Firebase Auth handles email/password, social, and phone sign-ins, and issues ID tokens. The CLI and Admin SDK manage users, imports, custom tokens, and token verification.
+
+## When to use
+
+- Managing user accounts from the command line
+- Migrating users between projects via import/export
+- Verifying ID tokens server-side
+
+## Real commands
+
+```bash
+# List and manage users
+firebase auth:list
+firebase auth:create user@example.com
+firebase auth:delete user@example.com
+
+# Import users (hash config required for passwords)
+firebase auth:import users.json
+
+# Mint an ID token for a Google OAuth token
+firebase auth:token google-oauth-token
+
+# Verify an ID token with the Admin SDK
+node -e "const admin=require('firebase-admin');admin.initializeApp();admin.auth().verifyIdToken('ID_TOKEN').then(d=>console.log(d.uid,d.email)).catch(console.error)"
+```
+
+## users.json import example
+
+```json
+{
+  "users": [
+    {
+      "localId": "user-1",
+      "email": "a@example.com",
+      "emailVerified": true,
+      "passwordHash": "base64-encoded-hash",
+      "salt": "base64-salt"
+    }
+  ]
+}
+```
+
+## Custom claims
+
+```javascript
+await admin.auth().setCustomUserClaims(uid, { role: 'admin' })
+```
+
+## Testing
+
+```bash
+# Round trip: create -> sign in via REST -> verify
+curl -s -X POST 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$API_KEY' -H 'Content-Type: application/json' -d '{"email":"user@example.com","password":"pw","returnSecureToken":true}' | jq '.idToken | length > 0'
+```
+
+## Best practices
+
+- Always verify ID tokens server-side with the Admin SDK; never trust client claims.
+- Check `exp` and `auth_time` claims in token verification.
+- Use custom claims for roles, not for frequent-changing data.
+- Set a session revocation policy for sensitive apps (verifyIdToken with checkRevoked).
+
+## Capabilities
+
+### auth-admin
+Administer Firebase Auth users, issue custom tokens, and verify ID tokens.
+
+**Commands:**
+- `firebase auth:list`
+- `firebase auth:import users.json`
+- `firebase auth:create user@localhost`
+- `firebase auth:token google-oauth-token`
+- `node -e "const admin=require('firebase-admin');admin.initializeApp();admin.auth().verifyIdToken('ID_TOKEN').then(d=>console.log(d.uid,d.email)).catch(console.error)"`
+- `firebase auth:delete user@localhost`
+
+**Examples:**
+- firebase auth:list
+- firebase auth:import users.json
+- node -e "const admin=require('firebase-admin');admin.initializeApp();admin.auth().verifyIdToken('ID_TOKEN').then(d=>console.log(d.uid,d.email)).catch(console.error)"

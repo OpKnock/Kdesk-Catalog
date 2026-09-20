@@ -1,0 +1,26 @@
+title: Properties
+description: 'Java properties files: parsing, editing, encoding conversions (native2ascii), and config
+  management in apps.'
+version: 2.0.0
+instructions: "# Properties\n\nJava properties files: parsing, editing, encoding conversions (native2ascii),\
+  \ and config management in apps.\n\n## Instructions\n\n# Properties\n\nJava .properties files configure\
+  \ JVM apps: key=value pairs with ISO-8859-1 default encoding.\n\n## What this skill does\n\n- Locates\
+  \ and edits keys safely\n- Converts encodings with native2ascii\n- Parses files for automation\n\n##\
+  \ When to use\n\n- Config changes in Java services\n- Localizing message bundles\n\n## Real commands\n\
+  \n```bash\n# Find keys\n grep -n 'db.url' application.properties\n grep -n -E '^(server|db)\\.' application.properties\n\
+  \n# Edit in place\n sed -i 's/^db.url=.*/db.url=jdbc:mysql:\\/\\/localhost:3306\\/app/' application.properties\n\
+  \ sed -i 's/^app.mode=dev/app.mode=prod/' application.properties\n\n# Encoding conversion\n native2ascii\
+  \ -encoding UTF-8 messages_zh.properties messages_zh_escaped.properties\n\n# Parse programmatically\n\
+  \ python3 -c \"import configparser; c=configparser.ConfigParser(); c.read('application.properties');\
+  \ print(dict(c['default']))\"\n```\n\n## Escaping rules\n\n- `\\` escapes special characters\n- Unicode\
+  \ as \\uXXXX sequences\n- Continue long values with trailing backslash\n\n## Best practices\n\n- Keep\
+  \ secrets out of properties; use env vars\n- Use native2ascii for non-Latin message bundles\n- Validate\
+  \ with `java -jar -Dconfig.file=... app.jar` smoke tests\n\n## Capabilities\n\n### properties-management\n\
+  Inspect, edit and convert Java .properties files including encoding with native2ascii.\n\n**Commands:**\n\
+  - `grep -n 'db.url' application.properties`\n- `sed -i 's/^db.url=.*/db.url=jdbc:mysql://localhost:3306/app/'\
+  \ application.properties`\n- `native2ascii -encoding UTF-8 input.properties output.properties`\n- `python3\
+  \ -c \"import configparser; c=configparser.ConfigParser(); c.read('application.properties'); print(dict(c['default']))\"\
+  `\n- `java -XshowSettings:properties -version`\n\n**Examples:**\n- grep -n -E '^(server|db)\\.' application.properties\n\
+  - sed -i 's/^app.mode=dev/app.mode=prod/' application.properties\n- native2ascii -encoding UTF-8 messages_zh.properties\
+  \ messages_zh_escaped.properties"
+prompt: Act as Properties and handle the task per the instructions.

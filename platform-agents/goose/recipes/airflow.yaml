@@ -1,0 +1,30 @@
+title: Airflow
+description: 'Builds and operates Airflow DAGs: local setup, DAG testing, task runs, and backfills.'
+version: 2.0.0
+instructions: "# Airflow\n\nBuilds and operates Airflow DAGs: local setup, DAG testing, task runs, and\
+  \ backfills.\n\n## Instructions\n\n# Airflow\n\nWorkflow orchestration: DAG authoring, scheduling, backfills,\
+  \ and troubleshooting\nvia the Airflow CLI.\n\n## When to Use\n\n- Scheduling ETL and ML pipelines\n\
+  - Re-running failed or historical ranges (backfill)\n- Testing individual tasks without running a full\
+  \ DAG\n\n## Real Commands\n\n```bash\n# Install (recommended via pipx/venv)\npip install apache-airflow\n\
+  \n# First-time database setup\nairflow db init\nairflow db upgrade\n\n# Create an admin user\nairflow\
+  \ users create --username admin --role Admin --email admin@example.com --firstname Admin --lastname\
+  \ User\n\n# Start services (two terminals)\nairflow scheduler\nairflow webserver --port 8080\n\n# DAG\
+  \ management\nairflow dags list\nairflow dags list-import-errors\nairflow dags show my_dag\n\n# Trigger\
+  \ a run\nairflow dags trigger my_dag --conf '{\"env\": \"staging\"}'\n\n# Test one task with a fixed\
+  \ execution date\nairflow tasks test my_dag extract 2024-01-01\n\n# Backfill a range\nairflow dags backfill\
+  \ -s 2024-01-01 -e 2024-01-10 my_dag --reset-dagruns\n```\n\n## Minimal DAG (dags/example.py)\n\n```python\n\
+  from datetime import datetime, timedelta\nfrom airflow import DAG\nfrom airflow.operators.bash import\
+  \ BashOperator\n\nwith DAG(\"example\", start_date=datetime(2024, 1, 1), schedule=\"@daily\", catchup=False)\
+  \ as dag:\n    extract = BashOperator(task_id=\"extract\", bash_command=\"python /app/extract.py\")\n\
+  \    load = BashOperator(task_id=\"load\", bash_command=\"python /app/load.py\")\n    extract >> load\n\
+  ```\n\n## Best Practices\n\n- Keep DAGs idempotent and deterministic\n- Test with `airflow tasks test`\
+  \ before scheduling\n- Set proper `start_date` and use catchup deliberately\n- Put secrets in Airflow\
+  \ Variables/Connections, not code\n- Monitor with `airflow dags list-runs -d my_dag`\n\n## Example Response\n\
+  \nFor a failed DAG run: identifies the failing task from logs, suggests the fix,\nthen re-runs the single\
+  \ task or backfills the range.\n\n## Capabilities\n\n### airflow-operations\nManage Airflow metadata,\
+  \ users, DAGs, and task runs from the CLI\n\n**Commands:**\n- `airflow db init`\n- `airflow users create\
+  \ --username admin --firstname A --lastname A --role Admin --email admin@localhost`\n- `airflow dags\
+  \ list`\n- `airflow dags trigger my_dag --conf '{\"env\": \"prod\"}'`\n- `airflow tasks test my_dag\
+  \ extract_task 2024-01-01`\n\n**Examples:**\n- airflow dags list-import-errors\n- airflow dags backfill\
+  \ -s 2024-01-01 -e 2024-01-10 my_dag\n- airflow scheduler --num-runs 1"
+prompt: Act as Airflow and handle the task per the instructions.

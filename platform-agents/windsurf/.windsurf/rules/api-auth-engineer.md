@@ -1,0 +1,86 @@
+---
+trigger: glob
+description: "Implement API authentication: OAuth2 flows with Keycloak, token exchange, client registration, and end-to-end token verification."
+globs: ["**/*.json", "**/*.r", "**/*.sh"]
+---
+
+# api-auth-engineer
+
+Implement API authentication: OAuth2 flows with Keycloak, token exchange, client registration, and end-to-end token verification.
+
+## Instructions
+
+# API Auth Engineer
+
+## What this skill does
+Implement and verify API authentication using OAuth2 with Keycloak as the identity provider. Covers realm setup, the password and client-credentials grants, and verifying tokens at the API.
+
+## When to use
+- Adding OAuth2 to an API
+- Standing up a local identity provider
+- Testing grant flows and token verification
+
+## Real commands
+```bash
+# Start Keycloak (dev mode)
+docker run -d -p 8080:8080 \
+  -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin \
+  quay.io/keycloak/keycloak:latest start-dev
+
+# Discovery endpoints
+curl -s 'http://localhost:8080/realms/demo/.well-known/openid-configuration' | jq '.token_endpoint, .authorization_endpoint'
+
+# Password grant
+curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'grant_type=password&client_id=api&username=alice&password=secret' | jq -r '.access_token'
+
+# Client credentials grant
+curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' \
+  -d 'grant_type=client_credentials&client_id=orders-api&client_secret=abc123' | jq -r '.access_token'
+
+# Refresh token
+curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' \
+  -d 'grant_type=refresh_token&refresh_token=$REFRESH&client_id=api&client_secret=abc123' | jq -r '.access_token'
+
+# Revoke
+curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/revoke' -d 'token=$TOKEN&client_id=api'
+
+# Verify at the API
+curl -s http://localhost:8080/api/verify -H 'Authorization: Bearer $TOKEN' | jq '.subject'
+```
+
+## Flow selection
+- password: first-party apps with user creds (no longer recommended)
+- client_credentials: server-to-server
+- authorization_code + PKCE: SPAs and mobile
+- refresh_token: long-lived sessions
+
+## Best practices
+- Never use the password grant for third parties
+- Use PKCE for public clients
+- Validate signatures, issuer, audience, and expiry
+- Rotate client secrets and refresh tokens
+
+## Testing
+```bash
+TOKEN=$(curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' -d 'grant_type=password&client_id=api&username=alice&password=secret' | jq -r '.access_token')
+curl -s http://localhost:8080/api/verify -H "Authorization: Bearer $TOKEN" | jq
+```
+
+## Capabilities
+
+### oauth2-implementation
+Set up and verify OAuth2 flows against Keycloak
+
+**Commands:**
+- `docker run -d -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:latest start-dev`
+- `curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' -H 'Content-Type: application/x-www-form-urlencoded' -d 'grant_type=password&client_id=api&username=alice&password=secret' | jq -r '.access_token'`
+- `curl -s 'http://localhost:8080/realms/demo/.well-known/openid-configuration' | jq '.token_endpoint, .authorization_endpoint'`
+- `curl -s -X POST 'http://localhost:8080/admin/realms/demo/clients' -H 'Authorization: Bearer $ADMIN_TOKEN' -H 'Content-Type: application/json' -d '{"clientId":"orders-api","publicClient":false,"serviceAccountsEnabled":true}'`
+- `curl -s http://localhost:8080/api/verify -H 'Authorization: Bearer $TOKEN' | jq '.subject'`
+
+**Examples:**
+- curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/token' -d 'grant_type=client_credentials&client_id=orders-api&client_secret=abc123' | jq -r '.access_token'
+- curl -s -X POST 'http://localhost:8080/realms/demo/protocol/openid-connect/revoke' -d 'token=$REFRESH&client_id=api&client_secret=abc123'
+- curl -s -H 'Authorization: Bearer $TOKEN' http://localhost:8080/api/protected | jq '.role'

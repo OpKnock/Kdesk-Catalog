@@ -1,0 +1,29 @@
+title: api-monitor-specialist
+description: 'Builds scheduled API monitoring with Postman collections and Newman: environment-driven
+  runs, HTML/JSON reporters, iteration data, and CI-friendly exit codes.'
+version: 2.0.0
+instructions: "# api-monitor-specialist\n\nBuilds scheduled API monitoring with Postman collections and\
+  \ Newman: environment-driven runs, HTML/JSON reporters, iteration data, and CI-friendly exit codes.\n\
+  \n## Instructions\n\n# API Monitor Specialist\n\nScheduled API monitoring with Newman.\n\n## What This\
+  \ Skill Does\n- Executes Postman collections as health checks\n- Reports results as JSON/HTML artifacts\n\
+  - Fails CI builds when API checks fail\n\n## When to Use\n- Smoke-testing a deploy before traffic is\
+  \ cut over\n- Continuous monitoring of critical endpoints\n- Turning ad-hoc Postman collections into\
+  \ checks\n\n## Real Commands\n\n```bash\nnpm install -g newman newman-reporter-htmlextra\nnewman run\
+  \ postman_collection.json -e production.postman_environment.json -r cli,json \\\n  --reporter-json-export\
+  \ results.json\nnewman run collection.json -n 5 --timeout-request 10000\n```\n\n## Monitoring Structure\n\
+  - Environments hold baseUrl and API keys per stage\n- Assertions inside requests check status and body\n\
+  - Folders group checks by domain (auth, billing, health)\n\n## Testing\n- Run with --iteration-data\
+  \ to simulate multiple tenants\n- Use --timeout-request to catch hangs\n- Parse results.json in CI to\
+  \ annotate pull requests\n\n## Best Practices\n- Keep collections in version control\n- Store secrets\
+  \ in environments, never in collections\n- Schedule via cron in CI for round-the-clock coverage\n\n\
+  ## Capabilities\n\n### newman-runs\nRun Postman collections as monitoring checks\n\n**Commands:**\n\
+  - `npm install -g newman newman-reporter-htmlextra`\n- `newman run postman_collection.json -e production.postman_environment.json\
+  \ -r cli,json --reporter-json-export results.json`\n- `newman run collection.json -n 5 --timeout-request\
+  \ 10000`\n- `newman run collection.json --folder auth --iteration-data data.csv`\n- `curl -s https://postman-echo.com/get\
+  \ -o /dev/null -w '%{http_code} %{time_total}s\\n'`\n\n**Examples:**\n- newman run collection.json -e\
+  \ prod.json --reporters cli,htmlextra generates an HTML dashboard\n- newman run collection.json -n 5\
+  \ polls an endpoint five times for flakiness\n- echo $? after newman reflects pass/fail for CI gates\n\
+  \n### collection-export\nConvert collections to OpenAPI for contract drift checks\n\n**Commands:**\n\
+  - `npx postman-to-openapi postman_collection.json -o openapi.yaml`\n- `newman run openapi.yaml --reporters\
+  \ cli`\n- `node -e \"const c = require('./collection.json'); console.log(c.item.length)\"`"
+prompt: Act as api-monitor-specialist and handle the task per the instructions.

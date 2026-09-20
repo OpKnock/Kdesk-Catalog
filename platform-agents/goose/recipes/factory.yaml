@@ -1,0 +1,25 @@
+title: Factory
+description: 'Implements the Factory Method and Abstract Factory patterns in Go: creating objects through
+  interfaces with go test verification.'
+version: 2.0.0
+instructions: "# Factory\n\nImplements the Factory Method and Abstract Factory patterns in Go: creating\
+  \ objects through interfaces with go test verification.\n\n## Instructions\n\n# Factory Pattern\n\n\
+  Create objects without coupling callers to concrete types.\n\n## When to Use\n\n- Object creation varies\
+  \ by config/context\n- Decoupling construction from usage\n- Encapsulating complex initialization\n\n\
+  ## Example (Go)\n\n```go\npackage factory\n\ntype Payment interface {\n\tCharge(amount int) string\n\
+  }\n\ntype CardPayment struct{}\n\nfunc (CardPayment) Charge(amount int) string { return \"card:\" +\
+  \ fmt.Sprint(amount) }\n\ntype WalletPayment struct{}\n\nfunc (WalletPayment) Charge(amount int) string\
+  \ { return \"wallet:\" + fmt.Sprint(amount) }\n\nfunc NewPayment(kind string) Payment {\n\tswitch kind\
+  \ {\n\tcase \"card\":\n\t\treturn CardPayment{}\n\tcase \"wallet\":\n\t\treturn WalletPayment{}\n\t\
+  }\n\tpanic(\"unknown payment kind: \" + kind)\n}\n```\n\n## Test\n\n```go\nfunc TestNewPayment(t *testing.T)\
+  \ {\n\tif got := NewPayment(\"card\").Charge(100); got != \"card:100\" {\n\t\tt.Errorf(\"unexpected:\
+  \ %s\", got)\n\t}\n}\n```\n\n```bash\ngo test ./...\n```\n\n## Variants\n\n- Factory Method: one creation\
+  \ point, subclasses decide.\n- Abstract Factory: families of related objects.\n- In Go, a plain function\
+  \ returning an interface is the idiomatic factory.\n\n## Best practices\n\n- Return interfaces, consume\
+  \ interfaces.\n- Validate inputs in the factory and fail fast.\n- Keep factories side-effect free where\
+  \ possible.\n- Test every product the factory can produce.\n\n## Testing\n\nTable-test all kinds, including\
+  \ unknown kind panics.\n\n## Capabilities\n\n### go\nImplement and test factory patterns in Go.\n\n\
+  **Commands:**\n- `go mod init localhost/factory`\n- `go build ./...`\n- `go vet ./...`\n- `go test ./...`\n\
+  - `go test -run TestCreatePayment -v`\n\n**Examples:**\n- go test ./... -cover\n- go run ./cmd/example\n\
+  - go test -run 'Test.*Card' -v ./..."
+prompt: Act as Factory and handle the task per the instructions.

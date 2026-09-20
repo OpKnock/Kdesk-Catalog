@@ -1,0 +1,32 @@
+title: Timeout Pattern
+description: 'Apply timeouts at every layer of the call stack: HTTP client connect/read deadlines with
+  curl and requests, gRPC deadlines with grpcurl, and proxy timeouts in nginx. Establishes a timeout ladder
+  (client < proxy < backend) so hung downstreams fail fast without burning worker pools.'
+version: 2.0.0
+instructions: "# Timeout Pattern\n\nApply timeouts at every layer of the call stack: HTTP client connect/read\
+  \ deadlines with curl and requests, gRPC deadlines with grpcurl, and proxy timeouts in nginx. Establishes\
+  \ a timeout ladder (client < proxy < backend) so hung downstreams fail fast without burning worker pools.\n\
+  \n## Instructions\n\n# Timeout Pattern\n\nHand-crafted skill for bounding call durations end to end.\n\
+  \n## What this skill does\n\n- Sets connect and total timeouts on HTTP clients\n- Applies gRPC deadlines\
+  \ for RPC calls\n- Configures proxy timeouts so backends cannot hang forever\n\n## When to use\n\n-\
+  \ A downstream API occasionally hangs and burns workers\n- Proxies keep connections open to dead backends\n\
+  - Adding timeout hygiene to a service before load\n\n## Real commands\n\n```bash\n# curl: 5s connect,\
+  \ 15s total\ncurl --connect-timeout 5 --max-time 15 https://api.example.com/slow\n\n# gRPC: 10s deadline\n\
+  grpcurl -max-time 10 -d '{}' localhost:8080 svc.Health.Check\n\n# Python requests: connect + read timeouts\n\
+  python -c 'import requests; requests.get(\"https://api.example.com\", timeout=(3.05, 15))'\n\n# Measure\
+  \ what the endpoint actually takes\ncurl -s -o /dev/null -w '%{http_code} %{time_total}\\n' https://api.example.com/health\n\
+  ```\n\n## nginx config\n\n```nginx\nlocation /api/ {\n  proxy_connect_timeout 5s;\n  proxy_send_timeout\
+  \ 30s;\n  proxy_read_timeout 30s;\n}\n```\n\n## Timeout ladder\n\n- connect: 2-5s, first byte: 5-10s,\
+  \ total: 15-30s\n- gRPC deadlines slightly above expected p99 latency\n- Proxy read timeout longer than\
+  \ the slowest valid response\n\n## Testing\n\n```bash\n# Simulate a hang with a slow endpoint, then:\n\
+  curl --connect-timeout 5 --max-time 15 https://api.example.com/slow\n```\n\n## Best practices\n\n- Always\
+  \ set both connect and total timeouts\n- Return 504 from proxies when the backend times out\n- Timeouts\
+  \ should ladder: client < proxy < backend\n\n## Capabilities\n\n### timeout-application\nApply timeouts\
+  \ at client, proxy, and application layers\n\n**Commands:**\n- `curl --connect-timeout 5 --max-time\
+  \ 15 http://localhost:8080/slow`\n- `grpcurl -max-time 10 -d '{}' localhost:8080 svc.Health.Check`\n\
+  - `python -c 'import requests; requests.get(\"http://localhost:8080\", timeout=(3.05, 15))'`\n- `curl\
+  \ -s -o /dev/null -w '%{http_code} %{time_total}\\n' http://localhost:8080/health`\n\n**Examples:**\n\
+  - curl --connect-timeout 5 --max-time 15 http://localhost:8080/slow\n- grpcurl -max-time 10 -d '{}'\
+  \ localhost:8080 svc.Health.Check\n- python -c 'import requests; requests.get(\"http://localhost:8080\"\
+  , timeout=(3.05, 15))'"
+prompt: Act as Timeout Pattern and handle the task per the instructions.

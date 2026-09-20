@@ -1,0 +1,37 @@
+title: envoy
+description: Envoy proxy. Real envoy CLI.
+version: 1.0.0
+instructions: "# envoy\n\nEnvoy proxy. Real envoy CLI.\n\n## Instructions\n\n# Envoy Proxy\n\nEnvoy proxy\
+  \ using real CLI.\n\n## When to Use\n\n- Edge proxy\n- Service mesh data plane\n- Load balancing\n\n\
+  ## Commands\n\n```bash\n# Run Envoy\nenvoy -c envoy.yaml\n\n# Validate config\nenvoy -c envoy.yaml --mode\
+  \ validate\n\n# Hot reload\nenvoy -c envoy.yaml --restart-epoch 1\n\n# View stats\ncurl http://localhost:9901/stats\n\
+  \n# View config\ncurl http://localhost:9901/config_dump\n\n# Ready check\ncurl http://localhost:9901/ready\n\
+  \n# Server info\ncurl http://localhost:9901/server_info\n```\n\n## envoy.yaml\n\n```yaml\nstatic_resources:\n\
+  \  listeners:\n    - name: listener_0\n      address:\n        socket_address:\n          address: 0.0.0.0\n\
+  \          port_value: 8080\n      filter_chains:\n        - filters:\n            - name: envoy.filters.network.http_connection_manager\n\
+  \              typed_config:\n                \"@type\": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager\n\
+  \                stat_prefix: ingress_http\n                route_config:\n                  name: local_route\n\
+  \                  virtual_hosts:\n                    - name: backend\n                      domains:\
+  \ [\"*\"]\n                      routes:\n                        - match:\n                       \
+  \     prefix: \"/\"\n                          route:\n                            cluster: upstream\n\
+  \                http_filters:\n                  - name: envoy.filters.http.router\n  clusters:\n \
+  \   - name: upstream\n      connect_timeout: 0.25s\n      type: STRICT_DNS\n      load_assignment:\n\
+  \        cluster_name: upstream\n        endpoints:\n          - lb_endpoints:\n              - endpoint:\n\
+  \                  address:\n                    socket_address:\n                      address: 127.0.0.1\n\
+  \                      port_value: 3000\n```\n\n## Admin Interface\n\n```bash\n# Stats\ncurl http://localhost:9901/stats\n\
+  \n# Stats with prefix\ncurl http://localhost:9901/stats?filter=upstream\n\n# Config dump\ncurl http://localhost:9901/config_dump\n\
+  \n# Clusters\ncurl http://localhost:9901/clusters\n\n# Ready\ncurl http://localhost:9901/ready\n\n#\
+  \ Live\ncurl http://localhost:9901/server_info\n```\n\n## Filters\n\n```yaml\nhttp_filters:\n  - name:\
+  \ envoy.filters.http.cors\n    typed_config:\n      \"@type\": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors\n\
+  \  - name: envoy.filters.http.jwt_authn\n    typed_config:\n      \"@type\": type.googleapis.com/envoy.extensions.filters.http.jwt_authn.v3.JwtAuthentication\n\
+  \      providers:\n        auth:\n          issuer: https://auth.example.com\n          audiences: [\"\
+  api\"]\n          remote_jwks:\n            http_uri:\n              uri: https://auth.example.com/.well-known/jwks.json\n\
+  \              cluster: auth_cluster\n              timeout: 5s\n```\n\n## Capabilities\n\n### envoy\n\
+  Envoy proxy. Real envoy CLI.\n\n**Commands:**\n- `envoy -c envoy.yaml`\n- `envoy -c envoy.yaml --mode\
+  \ validate`\n- `envoy -c envoy.yaml --restart-epoch 1`\n- `curl http://localhost:9901/stats`\n- `curl\
+  \ http://localhost:9901/config_dump`\n- `curl http://localhost:9901/ready`\n- `curl http://localhost:9901/server_info`\n\
+  - `curl http://localhost:9901/stats`\n- `curl http://localhost:9901/stats?filter=upstream`\n- `curl\
+  \ http://localhost:9901/config_dump`\n- `curl http://localhost:9901/clusters`\n- `curl http://localhost:9901/ready`\n\
+  - `curl http://localhost:9901/server_info`\n\n**Examples:**\n- envoy -c envoy.yaml\n- envoy -c envoy.yaml\
+  \ --mode validate\n- envoy -c envoy.yaml --restart-epoch 1"
+prompt: Act as envoy and handle the task per the instructions.

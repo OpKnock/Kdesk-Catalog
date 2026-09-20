@@ -1,0 +1,34 @@
+title: SSE
+description: Consumes and produces Server-Sent Events streams from the terminal. Streams events incrementally
+  with curl -N, filters data lines, replays missed events via Last-Event-ID header, captures to files,
+  and provides Python sseclient-py consumers.
+version: 2.0.0
+instructions: "# SSE\n\nConsumes and produces Server-Sent Events streams from the terminal. Streams events\
+  \ incrementally with curl -N, filters data lines, replays missed events via Last-Event-ID header, captures\
+  \ to files, and provides Python sseclient-py consumers.\n\n## Instructions\n\n# Server-Sent Events (SSE)\n\
+  \nHand-crafted skill for one-way push with Server-Sent Events.\n\n## What this skill does\n\n- Consumes\
+  \ event streams from the terminal with curl -N\n- Parses data: lines and replays missed events with\
+  \ Last-Event-ID\n- Serves push endpoints that flush events incrementally\n\n## When to use\n\n- One-way\
+  \ server push to browsers (no WebSocket needed)\n- Live dashboards and activity feeds\n- Simpler alternative\
+  \ to polling for slow-changing data\n\n## Real commands\n\n```bash\n# Consume a stream, printing each\
+  \ event as it arrives\ncurl -N http://localhost:8080/events\n\n# Keep only payload lines\ncurl -N -H\
+  \ 'Accept: text/event-stream' http://localhost:8080/updates | grep -E '^data:'\n\n# Replay after a disconnect:\
+  \ tell the server where to resume\ncurl -N -H 'Last-Event-ID: 14' http://localhost:8080/events\n\n#\
+  \ Capture to a file\ncurl -N --no-buffer http://localhost:8080/stream > events.log\n\n# Python client\n\
+  pip install sseclient-py\n```\n\n## Stream format\n\n```\nid: 15\ndata: {\"user\":42,\"event\":\"login\"\
+  }\n\nid: 16\ndata: {\"user\":7,\"event\":\"logout\"}\n```\n\n## Python consumer\n\n```python\nimport\
+  \ sseclient, requests\n\nresp = requests.get(\"http://localhost:8080/events\", stream=True)\nfor event\
+  \ in sseclient.SSEClient(resp).events():\n    print(event.id, event.data)\n```\n\n## Testing\n\n```bash\n\
+  curl -N http://localhost:8080/events | head -3\ncurl -N --no-buffer http://localhost:8080/stream > events.log\
+  \ && wc -l events.log\n```\n\n## Best practices\n\n- Send id: lines and honor Last-Event-ID on the server\n\
+  - Send a comment line every 15s to keep proxies from timing out\n- Set Content-Type: text/event-stream\
+  \ and never buffer responses\n\n## Capabilities\n\n### sse-consumption\nConsumes and produces Server-Sent\
+  \ Events streams from the terminal. Streams events incrementally with curl -N, filters data lines, replays\
+  \ missed events via Last-Event-ID header, captures to files, and provides Python sseclient-py consumers.\n\
+  \n**Commands:**\n- `curl -N http://localhost:8080/events`\n- `curl -N -H \"Accept: text/event-stream\"\
+  \ http://localhost:8080/updates | grep -E \"^data:\"`\n- `curl -N -H \"Last-Event-ID: 14\" http://localhost:8080/events`\n\
+  - `curl -N --no-buffer http://localhost:8080/stream`\n- `pip install sseclient-py`\n\n**Examples:**\n\
+  - curl -N http://localhost:8080/events\n- curl -N -H \"Accept: text/event-stream\" http://localhost:8080/updates\
+  \ | grep -E \"^data:\"\n- curl -N -H \"Last-Event-ID: 14\" http://localhost:8080/events\n- curl -N --no-buffer\
+  \ http://localhost:8080/stream\n- pip install sseclient-py"
+prompt: Act as SSE and handle the task per the instructions.

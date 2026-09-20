@@ -1,0 +1,28 @@
+title: developer-experience
+description: 'Improves DX: unified dev commands, parallel task runners, instant feedback loops, and consistent
+  tooling.'
+version: 2.0.0
+instructions: "# developer-experience\n\nImproves DX: unified dev commands, parallel task runners, instant\
+  \ feedback loops, and consistent tooling.\n\n## Instructions\n\n# Developer Experience\n\nMakes local\
+  \ development fast and consistent: unified scripts, parallel runners,\ninstant checks, and low-friction\
+  \ setup.\n\n## When to Use\n\n- A repo where devs run 5 different command sequences\n- Slow feedback\
+  \ loops blocking iteration\n- New-hire onboarding friction\n\n## Real Commands\n\n```bash\n# One command\
+  \ to rule them all\nsudo npm pkg set scripts.dev=\"vite\" scripts.check=\"npm-run-all --parallel lint\
+  \ typecheck\"\nsudo npm pkg set scripts.test=\"vitest run\" scripts.dx=\"npm run check && npm run dev\"\
+  \n\n# Run web + api together\nsudo npx concurrently -k -n web,api -c blue,green \"npm run dev:web\"\
+  \ \"npm run dev:api\"\n\n# Parallel checks\nsudo npm-run-all --parallel lint typecheck test\n\n# Affected-only\
+  \ in monorepos\nsudo npx nx affected -t test --base=origin/main\n\n# One-time env setup\nsudo npx playwright\
+  \ install --with-deps\n```\n\n## Recommended Scripts\n\n```json\n{\n  \"scripts\": {\n    \"dev\": \"\
+  vite\",\n    \"build\": \"vite build\",\n    \"check\": \"npm-run-all --parallel lint typecheck\",\n\
+  \    \"test\": \"vitest run\",\n    \"test:watch\": \"vitest\"\n  }\n}\n```\n\n## Best Practices\n\n\
+  - Provide `dev`, `build`, `check`, `test` in every package\n- Prefer `--parallel` for independent checks\n\
+  - Add a CONTRIBUTING quick-start with one command\n- Automate dependency setup (playwright install,\
+  \ husky init)\n- Keep cold-start dev time under 10 seconds if possible\n\n## Example Response\n\nStandardizes\
+  \ the repo scripts, wires parallel runners, and verifies the whole\ndev loop works from a fresh clone.\n\
+  \n## Capabilities\n\n### dx-tooling\nStandardize scripts and run tasks in parallel for faster feedback\n\
+  \n**Commands:**\n- `npm pkg set scripts.dev=\"vite\" scripts.lint=\"eslint . --max-warnings 0\"`\n-\
+  \ `npx concurrently -k -n web,api -c blue,green \"npm run dev:web\" \"npm run dev:api\"`\n- `npm-run-all\
+  \ --parallel lint typecheck test`\n- `npx nx affected -t test --base=origin/main`\n- `npx playwright\
+  \ install --with-deps`\n\n**Examples:**\n- npx concurrently \"npm run dev\" \"npm run storybook\"\n\
+  - npm run check && npm run dev\n- npx nx run-many -t build --skip-nx-cache"
+prompt: Act as developer-experience and handle the task per the instructions.

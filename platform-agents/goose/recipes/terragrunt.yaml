@@ -1,0 +1,32 @@
+title: terragrunt
+description: 'Wraps Terraform with Terragrunt: DRY configurations, remote state management, dependencies,
+  run-all, and input validation.'
+version: 2.0.0
+instructions: "# terragrunt\n\nWraps Terraform with Terragrunt: DRY configurations, remote state management,\
+  \ dependencies, run-all, and input validation.\n\n## Instructions\n\n# Terragrunt\n\nKeep Terraform\
+  \ DRY across environments: shared backend configs, module versions, and orchestrated runs.\n\n## What\
+  \ This Skill Does\n\n- Generates consistent remote state backends from terragrunt.hcl\n- Runs multiple\
+  \ modules in dependency order (run-all)\n- Reads outputs from one module into another\n- Validates inputs\
+  \ before apply\n- Formats terragrunt HCL\n\n## When to Use\n\n- Many environments (dev/staging/prod)\
+  \ with the same modules\n- Orchestrating multi-module applies in one command\n- Centralizing state and\
+  \ provider config\n\n## Real Commands\n\n```bash\n# Single module\nterragrunt plan\nterragrunt apply\
+  \ -auto-approve\nterragrunt destroy\nterragrunt validate-inputs\n\n# Multi-module orchestration\nterragrunt\
+  \ run-all plan\nterragrunt run-all apply --terragrunt-non-interactive\nterragrunt run-all destroy\n\n\
+  # State and outputs\nterragrunt state list\nterragrunt output -json\nterragrunt init --backend-config\
+  \ backend.tfvars\nterragrunt hclfmt\n\n# Targeting\nterragrunt apply -target=module.vpc\n```\n\n## terragrunt.hcl\
+  \ Example\n\n```hcl\nterraform {\n  source = \"git::git@github.com:acme/infra-modules.git//vpc?ref=v1.2.0\"\
+  \n}\nremote_state {\n  backend = \"s3\"\n  config = {\n    bucket = \"acme-tfstate\"\n    key    = \"\
+  ${path_relative_to_include()}/terraform.tfstate\"\n    region = \"us-east-1\"\n  }\n}\ninputs = {\n\
+  \  environment = local.environment\n}\n```\n\n## Best Practices\n\n- Use `run-all` for environment-wide\
+  \ operations in dependency order\n- Keep one root terragrunt.hcl with locals for paths and regions\n\
+  - Version module sources with git refs/tags\n- Validate inputs before big applies\n- Lock Terragrunt\
+  \ version in CI to match developer versions\n\n## Capabilities\n\n### run-and-dependencies\nPlan/apply\
+  \ modules and manage cross-module dependencies.\n\n**Commands:**\n- `terragrunt plan`\n- `terragrunt\
+  \ apply -auto-approve`\n- `terragrunt run-all plan`\n- `terragrunt run-all apply --terragrunt-non-interactive`\n\
+  - `terragrunt run-all destroy`\n- `terragrunt validate-inputs`\n\n**Examples:**\n- terragrunt plan\n\
+  - terragrunt run-all plan\n- terragrunt validate-inputs\n\n### config-and-state\nGenerate remote state\
+  \ configs and read outputs across modules.\n\n**Commands:**\n- `terragrunt state list`\n- `terragrunt\
+  \ output`\n- `terragrunt output -json`\n- `terragrunt init --backend-config backend.tfvars`\n- `terragrunt\
+  \ apply -target=module.vpc`\n- `terragrunt hclfmt`\n\n**Examples:**\n- terragrunt output -json\n- terragrunt\
+  \ init --backend-config backend.tfvars\n- terragrunt hclfmt"
+prompt: Act as terragrunt and handle the task per the instructions.

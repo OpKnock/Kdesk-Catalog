@@ -1,0 +1,31 @@
+title: Fastapi
+description: 'Builds modern Python APIs with FastAPI: automatic OpenAPI docs, Pydantic models, async routes,
+  and deployment with uvicorn.'
+version: 2.0.0
+instructions: "# Fastapi\n\nBuilds modern Python APIs with FastAPI: automatic OpenAPI docs, Pydantic models,\
+  \ async routes, and deployment with uvicorn.\n\n## Instructions\n\n# FastAPI\n\nModern, fast Python\
+  \ API framework with automatic OpenAPI docs.\n\n## When to Use\n\n- REST APIs with automatic validation\
+  \ and interactive docs\n- Async and sync endpoints mixed in one service\n- Data-heavy services with\
+  \ Pydantic response models\n- Rapid prototyping that scales to production\n\n## Commands\n\n```bash\n\
+  pip install \"fastapi[standard]\"\n\n# Dev server with reload\nfastapi dev main.py\n\n# Production server\n\
+  fastapi run main.py\nuvicorn main:app --host 0.0.0.0 --port 8000 --workers 4\n\n# Docs\ncurl http://localhost:8000/docs\n\
+  curl -s http://localhost:8000/openapi.json | python -m json.tool\n```\n\n## App Example\n\n```python\n\
+  from fastapi import FastAPI, HTTPException\nfrom pydantic import BaseModel, Field\n\napp = FastAPI(title=\"\
+  Shop API\")\n\nclass Item(BaseModel):\n    name: str = Field(min_length=1)\n    price: float = Field(gt=0)\n\
+  \n@app.get(\"/items/{item_id}\")\nasync def get_item(item_id: int):\n    if item_id > 1000:\n      \
+  \  raise HTTPException(404, \"Item not found\")\n    return {\"id\": item_id}\n```\n\n## Best Practices\n\
+  \n- Use response_model to guarantee API output shape\n- Raise HTTPException instead of returning error\
+  \ dicts\n- Prefer async routes for I/O; sync routes run in a threadpool anyway\n- Validate with Pydantic\
+  \ constraints, not manual if-statements\n- Run with workers > 1 behind a load balancer in production\n\
+  - Check /openapi.json and /docs to confirm the contract\n\n## Capabilities\n\n### fastapi-dev\nScaffold\
+  \ and run FastAPI applications with auto-reload.\n\n**Commands:**\n- `pip install \"fastapi[standard]\"\
+  `\n- `fastapi dev main.py`\n- `fastapi run main.py`\n- `uvicorn main:app --reload`\n- `uvicorn main:app\
+  \ --host 0.0.0.0 --port 8000`\n\n**Examples:**\n- fastapi dev main.py --port 8080\n- uvicorn main:app\
+  \ --reload --reload-dir app\n- fastapi run main.py --workers 4\n\n### fastapi-openapi\nInspect generated\
+  \ OpenAPI schema and test endpoints.\n\n**Commands:**\n- `curl http://localhost:8000/openapi.json`\n\
+  - `curl http://localhost:8000/docs`\n- `curl -X POST http://localhost:8000/items -H \"Content-Type:\
+  \ application/json\" -d \"{\\\"name\\\":\\\"widget\\\"}\"`\n- `python -c \"import json,urllib.request;\
+  \ print(json.load(urllib.request.urlopen(\\\"http://localhost:8000/openapi.json\\\"))[\\\"paths\\\"\
+  ])\"`\n\n**Examples:**\n- curl -s http://localhost:8000/openapi.json | python -m json.tool | head -50\n\
+  - curl -X GET \"http://localhost:8000/items/1?verbose=true\""
+prompt: Act as Fastapi and handle the task per the instructions.

@@ -1,0 +1,28 @@
+title: WebSocket
+description: 'Build and test WebSocket endpoints: run a Node `ws` server with broadcasting and heartbeats,
+  connect with wscat, exchange JSON and binary frames, and monitor connected clients.'
+version: 2.0.0
+instructions: "# WebSocket\n\nBuild and test WebSocket endpoints: run a Node `ws` server with broadcasting\
+  \ and heartbeats, connect with wscat, exchange JSON and binary frames, and monitor connected clients.\n\
+  \n## Instructions\n\n# WebSocket\n\n## What this skill does\nBuild and test WebSocket endpoints: run\
+  \ a Node `ws` server with broadcasting and heartbeats, connect with wscat, exchange JSON and binary\
+  \ frames, and monitor connected clients.\n\n## When to use\n- Adding realtime push to an API\n- Writing\
+  \ WebSocket clients\n- Debugging connection drops\n\n## Real commands\n```bash\n# Install and start\
+  \ a server\nnpm install ws\nnode server.js\n\n# Interactive client\nwscat -c ws://localhost:8080\n\n\
+  # One-shot message\nwscat -c ws://localhost:8080 -x '{\"type\":\"ping\"}'\n\n# Connection count\ncurl\
+  \ -s http://localhost:8080/status | jq '.clients'\n```\n\n## Minimal server (server.js)\n```js\nconst\
+  \ { WebSocketServer } = require('ws');\nconst wss = new WebSocketServer({ port: 8080, path: '/socket'\
+  \ });\nwss.on('connection', (ws) => {\n  ws.on('message', (data, isBinary) => {\n    wss.clients.forEach((c)\
+  \ => { if (c !== ws && c.readyState === 1) c.send(data, { binary: isBinary }); });\n  });\n  ws.send(JSON.stringify({\
+  \ type: 'welcome' }));\n});\nsetInterval(() => {\n  wss.clients.forEach((c) => { if (c.readyState ===\
+  \ 1) c.ping(); });\n}, 30000);\n```\n\n## Heartbeats\n```js\nws.on('pong', () => { ws.isAlive = true;\
+  \ });\n// Terminate connections with no pong after 2 intervals\n```\n\n## Best practices\n- Terminate\
+  \ stale connections via ping/pong\n- Use `{ binary: isBinary }` when forwarding frames\n- Close code\
+  \ 1000 for normal, 1008 for policy violations\n- Compress frames only when clients negotiate permessage-deflate\n\
+  \n## Testing\n```bash\nnode server.js &\nwscat -c ws://localhost:8080 -x '{\"type\":\"ping\"}'\ncurl\
+  \ -s http://localhost:8080/status | jq '.clients'\n```\n\n## Capabilities\n\n### ws-implementation\n\
+  Build and test WebSocket servers and clients\n\n**Commands:**\n- `npm install ws`\n- `node server.js`\n\
+  - `wscat -c ws://localhost:8080`\n- `wscat -c ws://localhost:8080 -x '{\"type\":\"ping\"}'`\n- `curl\
+  \ -s http://localhost:8080/status | jq '.clients'`\n\n**Examples:**\n- npm install ws uws\n- node server.js\
+  \ --port 8080 --path /socket\n- wscat -c ws://localhost:8080 --wait 5"
+prompt: Act as WebSocket and handle the task per the instructions.

@@ -1,0 +1,36 @@
+title: Correlation Ids
+description: 'Implement correlation/request IDs across APIs: generate, propagate via headers, and trace
+  requests through logs.'
+version: 2.0.0
+instructions: "# Correlation Ids\n\nImplement correlation/request IDs across APIs: generate, propagate\
+  \ via headers, and trace requests through logs.\n\n## Instructions\n\n# Correlation IDs\n\nTrace a single\
+  \ request across services and logs with correlation IDs.\n\n## When to Use\n\n- Debugging multi-service\
+  \ requests\n- Joining logs and metrics across services\n- Supporting user support tickets with trace\
+  \ IDs\n\n## Naming Conventions\n\nUse X-Correlation-ID for cross-service traces and X-Request-ID for\
+  \ the immediate request; return it in the response.\n\n## Generate and Send\n\n```bash\nuuidgen\ncurl\
+  \ -H \"X-Correlation-ID: $(uuidgen)\" https://httpbin.org/get\n```\n\n## Middleware (Express)\n\n```js\n\
+  const crypto = require('crypto');\n\napp.use((req, res, next) => {\n  const cid = req.headers['x-correlation-id']\
+  \ || crypto.randomUUID();\n  req.correlationId = cid;\n  res.setHeader('X-Correlation-ID', cid);\n \
+  \ next();\n});\n```\n\n## Propagate Downstream\n\n```js\nconst headers = { 'X-Correlation-ID': req.correlationId\
+  \ };\nfetch(downstreamUrl, { headers });\n```\n\n## Log With the ID\n\n```js\nconsole.log(JSON.stringify({\
+  \ correlationId: cid, level: 'info', message: 'checkout started' }));\n```\n\n## Verify\n\n```bash\n\
+  node server.js &\ncurl -s -D - -o /dev/null http://localhost:8080/api | grep -i correlation\nCID=$(uuidgen)\n\
+  curl -s -D - -o /dev/null -H \"X-Correlation-ID: $CID\" http://localhost:8080/api | grep -i correlation\n\
+  ```\n\n## Testing\n\n```bash\n# Same ID must be echoed back in the response\ncurl -s -D - -o /dev/null\
+  \ -H \"X-Correlation-ID: test-123\" http://localhost:8080/api | grep -i 'correlation'\n```\n\n## Best\
+  \ Practices\n\n- Accept and echo inbound IDs, never regenerate them\n- Propagate to every downstream\
+  \ call\n- Include the ID in every log line and error response\n- Cap ID length and sanitize header values\n\
+  - Add a correlation ID to distributed traces (OpenTelemetry trace_id)\n- Standardize the header name\
+  \ across the org\n\n## Capabilities\n\n### id-generation\nGenerate and send correlation IDs with curl\
+  \ and system tools\n\n**Commands:**\n- `curl -H \"X-Correlation-ID: $(uuidgen)\" https://httpbin.org/get`\n\
+  - `uuidgen`\n- `curl -H \"X-Request-ID: $(uuidgen)\" -H \"X-Correlation-ID: $(uuidgen)\" https://httpbin.org/uuid`\n\
+  - `curl -s -D - -o /dev/null https://httpbin.org/get | grep -i correlation`\n\n**Examples:**\n- curl\
+  \ -H \"X-Correlation-ID: $(uuidgen)\" https://httpbin.org/get | jq '.trace_id'\n- CID=$(uuidgen) &&\
+  \ curl -H \"X-Correlation-ID: $CID\" https://httpbin.org/uuid\n- curl -s -D - -o /dev/null -H \"X-Correlation-ID:\
+  \ $(uuidgen)\" https://httpbin.org/get | grep -i 'correlation\\|request-id'\n\n### middleware\nImplement\
+  \ correlation ID middleware that accepts, generates, and propagates IDs\n\n**Commands:**\n- `npm install\
+  \ express`\n- `node server.js`\n- `curl -s -D - -o /dev/null -H \"X-Correlation-ID: $(uuidgen)\" http://localhost:8080/api\
+  \ | grep -i correlation`\n- `curl -s http://localhost:8080/api -D - -o /dev/null | grep -i correlation`\n\
+  \n**Examples:**\n- node server.js\n- curl -s -D - -o /dev/null -H \"X-Correlation-ID: test-123\" http://localhost:8080/api\
+  \ | grep -i correlation\n- curl -s -D - -o /dev/null http://localhost:8080/api | grep -i correlation"
+prompt: Act as Correlation Ids and handle the task per the instructions.

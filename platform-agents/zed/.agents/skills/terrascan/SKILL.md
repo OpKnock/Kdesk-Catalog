@@ -1,0 +1,87 @@
+---
+name: "terrascan"
+description: "Scan directories, files, and modules against policy packs. Emit reports and apply automatic fixes."
+---
+
+# terrascan
+
+Scan directories, files, and modules against policy packs. Emit reports and apply automatic fixes.
+
+## Instructions
+
+# Terrascan
+
+Static IaC security scanning with deep cloud policy coverage.
+
+## What This Skill Does
+
+- Scans Terraform, Kubernetes, Helm, and cloudformation
+- Applies 1500+ policies across AWS, Azure, GCP
+- Auto-fixes supported violations with --fix
+- Emits SARIF/JSON/HTML reports for CI
+
+## When to Use
+
+- Terraform module review before merge
+- Cloud misconfiguration auditing at scale
+- Kubernetes manifest checks with a single tool
+
+## Real Commands
+
+```bash
+# First-time policy download
+terrascan init
+
+# Scans
+terrascan scan -d .
+terrascan scan -f main.tf
+terrascan scan -d . --policy-type aws --severity high
+
+# Reports
+terrascan scan -d . -o sarif --output-file scan.sarif
+terrascan scan -d . -o json --output-file results.json
+
+# Fixes and exclusions
+terrascan scan -d . --fix
+terrascan scan -d . --skip-rules AWS.S3Bucket.DS.High.1043
+```
+
+## Best Practices
+
+- Run terrascan init in CI before scanning
+- Scan modules and root configs separately for clarity
+- Review auto-fixes (--fix) before merging
+- Skip rules with a documented reason, tracked in a config file
+- Combine with checkov for overlapping but complementary coverage
+
+## Capabilities
+
+### terrascan-scan
+Scan directories, files, and modules against policy packs.
+
+**Commands:**
+- `terrascan init`
+- `terrascan scan -d .`
+- `terrascan scan -f main.tf`
+- `terrascan scan -i terraform`
+- `terrascan scan -d . --policy-type aws`
+
+**Examples:**
+- terrascan init && terrascan scan -d .
+- terrascan scan -f main.tf -i terraform
+- terrascan scan -d . --policy-type aws --severity high
+
+### reporting-and-fixing
+Emit reports and apply automatic fixes.
+
+**Commands:**
+- `terrascan scan -d . -o sarif`
+- `terrascan scan -d . -o json --output-file results.json`
+- `terrascan scan -d . --fix`
+- `terrascan scan -d . --skip-rules AWS.S3Bucket.DS.High.1043`
+- `terrascan scan -d . --severity critical`
+
+**Examples:**
+- terrascan scan -d . -o sarif --output-file scan.sarif
+- terrascan scan -d . --fix
+- terrascan scan -d . --skip-rules AWS.S3Bucket.DS.High.1043

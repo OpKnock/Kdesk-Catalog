@@ -1,0 +1,30 @@
+title: Chi
+description: 'Build Go HTTP APIs with the chi router: routing, middleware, URL params, and subrouters.'
+version: 2.0.0
+instructions: "# Chi\n\nBuild Go HTTP APIs with the chi router: routing, middleware, URL params, and subrouters.\n\
+  \n## Instructions\n\n# Chi Router\n\nBuild lightweight Go HTTP APIs with chi.\n\n## When to Use\n\n\
+  - Go services needing a simple, composable router\n- REST APIs with path parameters and middleware\n\
+  - Adding CORS, logging, and request IDs without a framework\n\n## Setup\n\n```bash\ngo mod init example.com/api\n\
+  go get github.com/go-chi/chi/v5\ngo get github.com/go-chi/cors\n```\n\n## Basic Server\n\n```go\npackage\
+  \ main\n\nimport (\n  \"net/http\"\n  \"github.com/go-chi/chi/v5\"\n  \"github.com/go-chi/chi/v5/middleware\"\
+  \n)\n\nfunc main() {\n  r := chi.NewRouter()\n  r.Use(middleware.Logger)\n  r.Use(middleware.Recoverer)\n\
+  \n  r.Get(\"/health\", func(w http.ResponseWriter, req *http.Request) {\n    w.Write([]byte(\"ok\"))\n\
+  \  })\n\n  r.Route(\"/api\", func(r chi.Router) {\n    r.Get(\"/users\", listUsers)\n    r.Get(\"/users/{id}\"\
+  , getUser)\n    r.Post(\"/users\", createUser)\n  })\n\n  http.ListenAndServe(\":3000\", r)\n}\n```\n\
+  \n## Path Parameters\n\n```go\nfunc getUser(w http.ResponseWriter, req *http.Request) {\n  id := chi.URLParam(req,\
+  \ \"id\")\n  w.Write([]byte(id))\n}\n```\n\n## Run and Test\n\n```bash\ngo run main.go &\ncurl -i http://localhost:3000/api/users\n\
+  curl -s http://localhost:3000/api/users/42\ncurl -s -X POST -H \"Content-Type: application/json\" -d\
+  \ '{\"name\":\"alice\"}' http://localhost:3000/api/users\n```\n\n## Testing\n\n```bash\ngo test -v ./...\n\
+  go test -race ./...\ngo vet ./...\n```\n\n## Best Practices\n\n- Use r.Route groups to namespace endpoints\n\
+  - Add middleware early: Logger, Recoverer, Timeout, RealIP\n- Validate JSON bodies and return proper\
+  \ 400s\n- Use chi.URLParam for path params\n- Keep handlers small and unit-testable\n\n## Capabilities\n\
+  \n### chi-routing\nCreate chi routers with groups, middleware, and path parameters\n\n**Commands:**\n\
+  - `go get github.com/go-chi/chi/v5`\n- `go get github.com/go-chi/cors`\n- `go run main.go`\n- `go build\
+  \ ./...`\n\n**Examples:**\n- go get github.com/go-chi/chi/v5 && go run main.go\n- go mod tidy && go\
+  \ build ./...\n- go test -v ./...\n\n### chi-testing\nTest chi handlers and verify responses with curl\n\
+  \n**Commands:**\n- `go test ./...`\n- `curl -i http://localhost:3000/api/users`\n- `curl -s http://localhost:3000/api/users/42`\n\
+  - `curl -s -X POST -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}' http://localhost:3000/api/users`\n\
+  \n**Examples:**\n- curl -s http://localhost:3000/api/users | jq '.[0].name'\n- curl -s -o /dev/null\
+  \ -w \"%{http_code}\\n\" -X POST -H \"Content-Type: application/json\" -d '{\"name\":\"alice\"}' http://localhost:3000/api/users\n\
+  - go test -race ./..."
+prompt: Act as Chi and handle the task per the instructions.

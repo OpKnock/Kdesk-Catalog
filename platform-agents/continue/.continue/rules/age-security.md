@@ -1,0 +1,93 @@
+---
+name: "age-security"
+description: "Encrypts and decrypts files with the age encryption tool, managing X25519 keys, passphrase-based files, and SSH key recipients."
+globs: ["**/*.json", "**/*.r", "**/*.sh", "**/*.{yaml,yml}"]
+alwaysApply: false
+---
+
+# age-security
+
+Encrypts and decrypts files with the age encryption tool, managing X25519 keys, passphrase-based files, and SSH key recipients.
+
+## Instructions
+
+# age Encryption
+
+File encryption with the age tool: simple, modern, audited.
+
+## What This Skill Does
+
+- Generates X25519 key pairs with age-keygen
+- Encrypts files to one or more recipients
+- Decrypts with native keys or SSH identity files
+- Encrypts with passphrases for symmetric use
+- Manages recipient lists with -R for group sharing
+
+## When to Use
+
+- Encrypting secrets at rest outside of vaults or sops
+- Sharing encrypted files with team members by public key
+- Replacing GPG for simple file encryption workflows
+
+## Real Commands
+
+```bash
+# Generate a key pair
+age-keygen -o key.txt
+cat key.txt
+
+# Encrypt to a recipient
+age -r age1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu0q2xq -o secrets.age secrets.yaml
+
+# Decrypt with your key
+age -d -i key.txt secrets.age > secrets.yaml
+
+# Passphrase encryption (no keys needed)
+age -p -o backup.age backup.tar.gz
+age -d backup.age > backup.tar.gz
+
+# Encrypt to every key in a file
+age -R recipients.txt -o config.age config.json
+
+# Use an SSH public key as the recipient
+ssh-to-age -i ~/.ssh/id_ed25519.pub
+age -r ssh-ed25519 AAAAC3NzaC1lZDI1NTE5... -o file.age file.txt
+```
+
+## Best Practices
+
+- Store private keys in ~/.config/age/keys.txt with 0600 permissions
+- Never log key material; rotate keys by re-encrypting to new recipients
+- Use passphrase mode only when recipients are unavailable
+- Combine with git-crypt or sops for repository-scale encryption
+- Verify decrypted output integrity (age uses AEAD; verify with sha256sum)
+
+## Capabilities
+
+### age-encrypt-decrypt
+Encrypt and decrypt files or stdin with age recipient keys and passphrases.
+
+**Commands:**
+- `age-keygen -o key.txt`
+- `age -r age1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu0q2xq -o secrets.age secrets.yaml`
+- `age -d -i key.txt secrets.age > secrets.yaml`
+- `age -p -o backup.age backup.tar.gz`
+- `age -R recipients.txt -o config.age config.json`
+
+**Examples:**
+- age-keygen -o ~/.config/age/keys.txt
+- age -e -r age1xyz... -o .env.age .env
+- age -d -i keys.txt -o .env .env.age
+
+### ssh-recipient-conversion
+Use existing SSH public keys as age recipients and generate native age keys.
+
+**Commands:**
+- `ssh-to-age -i ~/.ssh/id_ed25519.pub`
+- `age-keygen -o key.txt && cat key.txt | tail -1`
+- `age -r ssh-ed25519 AAAAC3NzaC1lZDI1NTE5... -o file.age file.txt`
+
+**Examples:**
+- ssh-to-age -i ~/.ssh/id_ed25519.pub | age -R - -o out.age in.txt
+- age-keygen -o key.txt
+- cat key.txt

@@ -1,0 +1,90 @@
+---
+applyTo: "**/*.go **/*.json **/*.r **/*.sh **/*.{ts,tsx} **/*.{yaml,yml}"
+---
+
+# type-checking
+
+Static type checking with TypeScript: strictness, incremental builds, and monorepo project references.
+
+## Instructions
+
+# Type Checking
+
+Runs the TypeScript compiler in no-emit mode to validate types across the project,
+with strictness tuned per codebase.
+
+## When to Use
+
+- Pre-merge type gate in CI
+- Verifying a refactor didn't break type contracts
+- Onboarding strict mode incrementally
+
+## Real Commands
+
+```bash
+# Basic check
+npx tsc --noEmit
+
+# Strict + unused checks
+npx tsc --noEmit --strict --noUnusedLocals --noUnusedParameters
+
+# Fast re-checks with incremental cache
+npx tsc --noEmit --incremental --tsBuildInfoFile node_modules/.cache/tsbuildinfo
+
+# CI-friendly output
+npx tsc -p tsconfig.json --pretty false
+
+# Vue SFC projects
+npx vue-tsc --noEmit
+
+# Monorepo with project references
+npx tsc --build
+```
+
+## CI
+
+```yaml
+- name: Type check
+  run: npx tsc --noEmit --pretty false
+```
+
+## Strict-mode rollout
+
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true
+  }
+}
+```
+
+## Best Practices
+
+- Enforce `strict` in new projects; migrate old ones package by package
+- Use `--incremental` locally, disable or persist cache in CI
+- Add `skipLibCheck: true` to avoid slow .d.ts checking
+- Fail CI on any error: `tsc --noEmit --pretty false` exit code is 1 on errors
+
+## Example Response
+
+Reports each error as `path(file):line:col - TSxxxx: message`, grouped by file,
+plus the total error count and suggestions for fixing each category.
+
+## Capabilities
+
+### tsc-checking
+Type-check TypeScript projects with configurable strictness and outputs
+
+**Commands:**
+- `tsc --noEmit`
+- `tsc -p tsconfig.json --pretty false`
+- `tsc --noEmit --strict --noUnusedLocals`
+- `tsc --noEmit --incremental --tsBuildInfoFile .cache/tsconfig.tsbuildinfo`
+- `tsc --noEmit --project tsconfig.build.json`
+
+**Examples:**
+- npx vue-tsc --noEmit
+- tsc --noEmit --composite false
+- tsc --build --force

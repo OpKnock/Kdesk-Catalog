@@ -1,0 +1,115 @@
+---
+type: agent_requested
+description: "Implement compliance-grade logging: audit trails with auditd, systemd journal capture, logrotate policies, and immutable log shipping."
+---
+
+# Compliance Logging
+
+Implement compliance-grade logging: audit trails with auditd, systemd journal capture, logrotate policies, and immutable log shipping.
+
+## Instructions
+
+# Compliance Logging
+
+Build audit-grade logging for APIs: who did what, when, with what.
+
+## When to Use
+
+- SOC 2, PCI DSS, and GDPR audit requirements
+- Tracking admin and config changes
+- Proving log integrity and retention
+
+## auditd File Watches
+
+```bash
+auditctl -w /etc/passwd -p wa -k identity
+auditctl -w /etc/nginx/nginx.conf -p wa -k api-config
+auditctl -a always,exit -F arch=b64 -S execve -k process-exec
+auditctl -l
+```
+
+## Query Audits
+
+```bash
+ausearch -k identity -i
+ausearch -ts today -k api-config -i | tail -20
+```
+
+## systemd Journal
+
+```bash
+journalctl -u api.service -f
+journalctl -u api.service --since "1 hour ago"
+journalctl -u api.service -o json | jq '.MESSAGE'
+journalctl --disk-usage
+journalctl --vacuum-size=500M
+```
+
+## logrotate
+
+```
+/var/log/api/*.log {
+  daily
+  rotate 365
+  compress
+  delaycompress
+  missingok
+  notifempty
+  create 0640 api api
+  sharedscripts
+  postrotate
+    systemctl reload api
+  endscript
+}
+```
+
+```bash
+logrotate -d /etc/logrotate.d/api
+```
+
+## Testing
+
+```bash
+# Trigger a change and find it
+ausearch -k identity -i | tail -5
+journalctl -u api.service --since "10 min ago" | wc -l
+```
+
+## Best Practices
+
+- Ship logs to append-only storage (WORM) or SIEM
+- Add correlation IDs to all log entries
+- Rotate logs and enforce disk budgets
+- Restrict log file permissions to 0640
+- Persist audit rules via /etc/audit/rules.d
+- Test restoration from log archives
+
+## Capabilities
+
+### auditd
+Configure Linux audit rules for file, syscall, and identity monitoring
+
+**Commands:**
+- `auditctl -l`
+- `auditctl -w /etc/passwd -p wa -k identity`
+- `auditctl -a always,exit -F arch=b64 -S execve -k process-exec`
+- `ausearch -k identity -i`
+
+**Examples:**
+- auditctl -w /etc/nginx/nginx.conf -p wa -k api-config
+- ausearch -k process-exec -i | tail -20
+- auditctl -l | grep identity
+
+### journal-rotation
+Capture service logs in systemd journal and enforce rotation policies
+
+**Commands:**
+- `journalctl -u api.service`
+- `journalctl -u api.service --since "1 hour ago"`
+- `journalctl --disk-usage`
+- `journalctl --vacuum-size=500M`
+
+**Examples:**
+- journalctl -u api.service -f
+- journalctl -u api.service --since today -o json | jq '.MESSAGE'
+- journalctl --disk-usage && journalctl --vacuum-size=500M

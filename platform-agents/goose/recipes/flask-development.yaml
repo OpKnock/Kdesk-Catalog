@@ -1,0 +1,28 @@
+title: Flask Development
+description: 'Build Python APIs with Flask: run the dev server, use the Flask CLI, register blueprints
+  and error handlers, and test with pytest.'
+version: 2.0.0
+instructions: "# Flask Development\n\nBuild Python APIs with Flask: run the dev server, use the Flask\
+  \ CLI, register blueprints and error handlers, and test with pytest.\n\n## Instructions\n\n# Flask v2\n\
+  \n## What this skill does\n\nFlask is a lightweight Python WSGI framework. Modern Flask (2.x+) has a\
+  \ rich CLI: `flask run`, `flask routes`, `flask shell`, and application factories for testability.\n\
+  \n## When to use\n\n- Building small to medium Python APIs and dashboards\n- Prototyping services quickly\n\
+  - Teaching or internal tooling with minimal framework\n\n## Real commands\n\n```bash\n# Run with debug\
+  \ reloader\nflask --app app run --debug\n\n# Bind to all interfaces on another port\nflask --app app\
+  \ run --host 0.0.0.0 --port 5001\n\n# List registered routes\nflask --app app routes\n\n# Interactive\
+  \ shell with app context\nflask --app app shell\n\n# Tests\npython -m pytest -v\n```\n\n## App factory\
+  \ example\n\n```python\nfrom flask import Flask, jsonify\n\ndef create_app():\n    app = Flask(__name__)\n\
+  \n    @app.get(\"/api/orders/<order_id>\")\n    def get_order(order_id):\n        if order_id not in\
+  \ (“1”, “2”):\n            return jsonify({\"error\": \"not found\"}), 404\n        return jsonify({\"\
+  id\": order_id})\n\n    @app.errorhandler(404)\n    def not_found(e):\n        return jsonify({\"error\"\
+  : \"not found\"}), 404\n\n    return app\n```\n\n## Testing with the test client\n\n```python\nimport\
+  \ pytest\nfrom app import create_app\n\n@pytest.fixture\ndef client():\n    return create_app().test_client()\n\
+  \ndef test_missing_order(client):\n    assert client.get(\"/api/orders/99\").status_code == 404\n```\n\
+  \n## Best practices\n\n- Use the app factory pattern for testability.\n- Configure via env vars and\
+  \ app.config.from_prefixed_env.\n- Register blueprints for larger apps.\n- Run with a WSGI server (gunicorn)\
+  \ in production, not flask run.\n- Use `flask routes` in CI to catch route typos.\n\n## Capabilities\n\
+  \n### flask-development\nRun, debug, and test Flask applications with the flask CLI.\n\n**Commands:**\n\
+  - `flask --app app run --debug`\n- `flask --app app run --host 0.0.0.0 --port 5001`\n- `flask --app\
+  \ app routes`\n- `python -m pytest -v`\n- `flask --app app shell`\n\n**Examples:**\n- flask --app app\
+  \ run --debug\n- flask --app app routes\n- python -m pytest -v"
+prompt: Act as Flask Development and handle the task per the instructions.

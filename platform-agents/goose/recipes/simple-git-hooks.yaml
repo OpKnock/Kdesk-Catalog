@@ -1,0 +1,27 @@
+title: simple-git-hooks
+description: Configures git hooks via package.json with simple-git-hooks, a zero-dependency alternative
+  to husky.
+version: 2.0.0
+instructions: "# simple-git-hooks\n\nConfigures git hooks via package.json with simple-git-hooks, a zero-dependency\
+  \ alternative to husky.\n\n## Instructions\n\n# Simple Git Hooks\n\nDeclares git hooks directly in package.json\
+  \ without husky's shell wrapper or\nadditional dependencies.\n\n## When to Use\n\n- Lightweight pre-commit/pre-push\
+  \ hooks for JS projects\n- Teams that want hook config visible in package.json\n- Replacing husky in\
+  \ projects that avoid extra deps\n\n## Real Commands\n\n```bash\n# Install the tool\nnpm install --save-dev\
+  \ simple-git-hooks\n\n# Configure hooks in package.json\nnpm pkg set simple-git-hooks.pre-commit=\"\
+  npx lint-staged\"\nnpm pkg set simple-git-hooks.pre-push=\"npm test\"\n\n# Install the hooks into .git/hooks\n\
+  npx simple-git-hooks\n\n# Verify installed hooks match config\nnpx simple-git-hooks --validate\n\n#\
+  \ Remove all managed hooks\nnpx simple-git-hooks --remove\n```\n\n## Config in package.json\n\n```json\n\
+  {\n  \"simple-git-hooks\": {\n    \"pre-commit\": \"npx lint-staged\",\n    \"pre-push\": \"npm test\"\
+  ,\n    \"commit-msg\": \"npx commitlint --edit $1\"\n  }\n}\n```\n\n## postinstall for teammates\n\n\
+  ```json\n{\n  \"scripts\": {\n    \"postinstall\": \"node -e \\\"try{require('simple-git-hooks')()}catch(e){}\\\
+  \"\"\n  }\n}\n```\n\n## Best Practices\n\n- Always run `npx simple-git-hooks --validate` after changing\
+  \ config\n- Add the postinstall script so `npm install` refreshes hooks\n- Keep hook commands fast;\
+  \ move heavy checks to pre-push or CI\n- Note that hooks are per-clone (in .git/hooks) - reinstall after\
+  \ fresh clone\n\n## Example Response\n\nConfirms which hooks were installed (pre-commit, pre-push),\
+  \ validates them against\npackage.json, and shows the command each hook will run.\n\n## Capabilities\n\
+  \n### simple-git-hooks\nInstall, validate, and update git hooks declared in package.json\n\n**Commands:**\n\
+  - `npx simple-git-hooks`\n- `npx simple-git-hooks --validate`\n- `npx simple-git-hooks --remove`\n-\
+  \ `npm pkg set simple-git-hooks.pre-commit=\"npx lint-staged\"`\n- `npx simple-git-hooks --config .simple-git-hooks.json`\n\
+  \n**Examples:**\n- npm pkg set simple-git-hooks.pre-push=\"npm test\"\n- npx simple-git-hooks --validate\n\
+  - node -e \"require('simple-git-hooks')()\""
+prompt: Act as simple-git-hooks and handle the task per the instructions.

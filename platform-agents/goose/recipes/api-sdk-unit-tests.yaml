@@ -1,0 +1,25 @@
+title: Api Sdk Unit Tests
+description: 'Tests generated API SDKs: unit tests for clients, mock-server integration tests, generated
+  code quality gates, and regression suites.'
+version: 2.0.0
+instructions: "# Api Sdk Unit Tests\n\nTests generated API SDKs: unit tests for clients, mock-server integration\
+  \ tests, generated code quality gates, and regression suites.\n\n## Instructions\n\n# API SDK Engineer\
+  \ v2 - Testing\n\nSDK testing and validation.\n\n## What This Skill Does\n- Unit-tests client behavior\
+  \ with mocks\n- Integration-tests against mock servers\n- Gates SDK quality in CI\n\n## When to Use\n\
+  - Verifying generated clients\n- Catching SDK regressions\n- Testing error paths\n\n## Real Commands\n\
+  \n```bash\nnpm install vitest\nnpx vitest run tests/sdk.test.ts\nnpx @stoplight/prism-cli mock openapi.yaml\
+  \ -p 4010 &\nnode -e \"const sdk=require('./sdk'); sdk.defaultClient.basePath='http://localhost:4010';\
+  \ sdk.getUsers().then(r=>console.log(r.data.length))\"\n```\n\n## Test Pattern\n\n```ts\nimport nock\
+  \ from 'nock';\nimport { UsersApi } from '../sdk';\n\ntest('lists users', async () => {\n  nock('https://api.example.com').get('/users').reply(200,\
+  \ [{ id: 1 }]);\n  const api = new UsersApi();\n  const res = await api.getUsers();\n  expect(res.data).toHaveLength(1);\n\
+  });\n```\n\n## Testing\n- Cover success, 4xx, and 5xx paths\n- Test pagination and auth headers\n- Run\
+  \ coverage thresholds in CI\n\n## Best Practices\n- Keep tests independent of live APIs\n- Test through\
+  \ the public SDK surface\n- Regenerate mocks when specs change\n\n## Capabilities\n\n### sdk-unit-tests\n\
+  Write unit tests for SDK client code\n\n**Commands:**\n- `npm install vitest`\n- `npx vitest run tests/sdk.test.ts`\n\
+  - `npx vitest run --coverage`\n- `npm install nock`\n- `node -e \"const nock=require('nock'); nock('http://localhost:8080').get('/users').reply(200,[{id:1}]);\
+  \ fetch('https://api.example.com/users').then(r=>r.json()).then(console.log)\"`\n\n**Examples:**\n-\
+  \ nock intercepts HTTP for client tests\n- vitest run executes the SDK test suite\n- --coverage reports\
+  \ branch coverage\n\n### integration-tests\nRun SDKs against a live mock server\n\n**Commands:**\n-\
+  \ `npx @stoplight/prism-cli mock openapi.yaml -p 4010 &`\n- `node -e \"const sdk=require('./sdk'); sdk.defaultClient.basePath='http://localhost:4010';\
+  \ sdk.getUsers().then(r=>console.log(r.data.length))\"`\n- `npm test`\n- `npx vitest run`"
+prompt: Act as Api Sdk Unit Tests and handle the task per the instructions.

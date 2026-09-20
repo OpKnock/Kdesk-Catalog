@@ -1,0 +1,86 @@
+---
+trigger: glob
+description: "Tests Express APIs with supertest and jest: request assertions, route coverage, snapshot testing, and CI-friendly test configuration."
+globs: ["**/*.r", "**/*.sh"]
+---
+
+# Api Test Supertest
+
+Tests Express APIs with supertest and jest: request assertions, route coverage, snapshot testing, and CI-friendly test configuration.
+
+## Instructions
+
+# API Test v3 - Supertest/Jest
+
+In-process API testing.
+
+## What This Skill Does
+- Tests routes without binding a port
+- Asserts status, bodies, and headers
+- Reports coverage per route
+
+## When to Use
+- Node/Express API suites
+- Fast unit-style endpoint tests
+- Route regression coverage
+
+## Real Commands
+
+```bash
+npm install -D supertest jest
+npx jest test/api.test.js --verbose
+npx jest --coverage --collectCoverageFrom='routes/**/*.js'
+```
+
+## Test Example
+
+```js
+const request = require('supertest');
+const app = require('../app');
+
+test('creates a user', async () => {
+  const res = await request(app).post('/api/users').send({ name: 'alice' });
+  expect(res.status).toBe(201);
+  expect(res.body.id).toBeDefined();
+});
+```
+
+## Testing
+- Cover success and error paths per route
+- Use coverage thresholds in CI
+- Keep tests independent with in-memory DBs
+
+
+## Best Practices
+- Export the app separately from the server
+- Test through the HTTP interface
+- Group tests by route resource
+
+## Capabilities
+
+### supertest
+Test HTTP APIs in-process with supertest
+
+**Commands:**
+- `npm install -D supertest jest`
+- `npx jest test/api.test.js --verbose`
+- `npx jest --coverage --collectCoverageFrom='routes/**/*.js'`
+- `npx jest -t 'creates a user'`
+- `npm test`
+
+**Examples:**
+- supertest(app).get('/api/users') mounts the app in-process
+- jest --coverage reports route coverage
+- -t filters to a single test name
+
+### assertion-patterns
+Assert status, body, and headers
+
+**Commands:**
+- `node -e "const request=require('supertest'); console.log(typeof request)"`
+- `npx jest test/api.test.js --runInBand`
+- `npx jest --watch`
+
+**Examples:**
+- -cli --help
+- -api --help

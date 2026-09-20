@@ -1,0 +1,81 @@
+---
+name: "duckdb"
+description: "In-process analytical SQL with DuckDB: querying CSV/Parquet directly, extensions, and CLI use."
+---
+
+# Duckdb
+
+In-process analytical SQL with DuckDB: querying CSV/Parquet directly, extensions, and CLI use.
+
+## Instructions
+
+# DuckDB
+
+Analytical SQL engine that runs in-process: query CSV/Parquet/JSON files directly
+with no server.
+
+## When to Use
+
+- Ad-hoc analysis of local or remote files
+- Lightweight warehouse-style queries in scripts
+- Converting between formats (CSV -> Parquet)
+
+## Real Commands
+
+```bash
+# One-shot query
+sudo duckdb -c "SELECT count(*) FROM read_csv_auto('data.csv')"
+
+# Interactive shell
+sudo duckdb mydb.duckdb
+
+# Parquet globs
+sudo duckdb -c "SELECT year, sum(amount) FROM read_parquet('s3://bucket/orders/*.parquet') GROUP BY 1 ORDER BY 1 DESC LIMIT 5"
+
+# Extensions for remote/JSON data
+sudo duckdb -c "INSTALL httpfs; LOAD httpfs;"
+sudo duckdb -c "INSTALL json; LOAD json;"
+
+# JSON output
+sudo duckdb -json -c "SELECT order_id, amount FROM 'orders.parquet' LIMIT 3"
+
+# Convert CSV to Parquet
+sudo duckdb -c "COPY (SELECT * FROM read_csv_auto('data.csv')) TO 'data.parquet' (FORMAT PARQUET)"
+```
+
+## Python Usage
+
+```python
+import duckdb
+con = duckdb.connect()
+con.sql("SELECT * FROM read_csv_auto('data.csv')").df()
+```
+
+## Best Practices
+
+- Prefer Parquet over CSV for repeated queries
+- Install extensions per database (httpfs, json, spatial)
+- Use glob patterns instead of loading file lists
+- For ad-hoc: use :memory: database; persist only for reuse
+
+## Example Response
+
+Answers the analytical question with the query run and results, and can convert
+the source data into Parquet for faster future queries.
+
+## Capabilities
+
+### duckdb-cli
+Query files and databases with DuckDB's CLI and in-process SQL
+
+**Commands:**
+- `duckdb mydb.duckdb`
+- `duckdb -c "SELECT count(*) FROM read_csv_auto('data.csv')"`
+- `duckdb -c "SELECT * FROM read_parquet('s3://bucket/part-*.parquet')"`
+- `duckdb -c "INSTALL httpfs; LOAD httpfs;"`
+- `duckdb -json -c "SELECT 1 AS a"`
+
+**Examples:**
+- duckdb -c "SELECT * FROM 'orders.csv' WHERE amount > 100 LIMIT 5"
+- python -c "import duckdb; print(duckdb.sql('SELECT 42').fetchall())"
+- duckdb -c "ATTACH 's3://bucket/db.duckdb' AS remote; SHOW ALL TABLES"

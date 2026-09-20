@@ -1,0 +1,30 @@
+title: Compliance Logging
+description: 'Implement compliance-grade logging: audit trails with auditd, systemd journal capture, logrotate
+  policies, and immutable log shipping.'
+version: 2.0.0
+instructions: "# Compliance Logging\n\nImplement compliance-grade logging: audit trails with auditd, systemd\
+  \ journal capture, logrotate policies, and immutable log shipping.\n\n## Instructions\n\n# Compliance\
+  \ Logging\n\nBuild audit-grade logging for APIs: who did what, when, with what.\n\n## When to Use\n\n\
+  - SOC 2, PCI DSS, and GDPR audit requirements\n- Tracking admin and config changes\n- Proving log integrity\
+  \ and retention\n\n## auditd File Watches\n\n```bash\nauditctl -w /etc/passwd -p wa -k identity\nauditctl\
+  \ -w /etc/nginx/nginx.conf -p wa -k api-config\nauditctl -a always,exit -F arch=b64 -S execve -k process-exec\n\
+  auditctl -l\n```\n\n## Query Audits\n\n```bash\nausearch -k identity -i\nausearch -ts today -k api-config\
+  \ -i | tail -20\n```\n\n## systemd Journal\n\n```bash\njournalctl -u api.service -f\njournalctl -u api.service\
+  \ --since \"1 hour ago\"\njournalctl -u api.service -o json | jq '.MESSAGE'\njournalctl --disk-usage\n\
+  journalctl --vacuum-size=500M\n```\n\n## logrotate\n\n```\n/var/log/api/*.log {\n  daily\n  rotate 365\n\
+  \  compress\n  delaycompress\n  missingok\n  notifempty\n  create 0640 api api\n  sharedscripts\n  postrotate\n\
+  \    systemctl reload api\n  endscript\n}\n```\n\n```bash\nlogrotate -d /etc/logrotate.d/api\n```\n\n\
+  ## Testing\n\n```bash\n# Trigger a change and find it\nausearch -k identity -i | tail -5\njournalctl\
+  \ -u api.service --since \"10 min ago\" | wc -l\n```\n\n## Best Practices\n\n- Ship logs to append-only\
+  \ storage (WORM) or SIEM\n- Add correlation IDs to all log entries\n- Rotate logs and enforce disk budgets\n\
+  - Restrict log file permissions to 0640\n- Persist audit rules via /etc/audit/rules.d\n- Test restoration\
+  \ from log archives\n\n## Capabilities\n\n### auditd\nConfigure Linux audit rules for file, syscall,\
+  \ and identity monitoring\n\n**Commands:**\n- `auditctl -l`\n- `auditctl -w /etc/passwd -p wa -k identity`\n\
+  - `auditctl -a always,exit -F arch=b64 -S execve -k process-exec`\n- `ausearch -k identity -i`\n\n**Examples:**\n\
+  - auditctl -w /etc/nginx/nginx.conf -p wa -k api-config\n- ausearch -k process-exec -i | tail -20\n\
+  - auditctl -l | grep identity\n\n### journal-rotation\nCapture service logs in systemd journal and enforce\
+  \ rotation policies\n\n**Commands:**\n- `journalctl -u api.service`\n- `journalctl -u api.service --since\
+  \ \"1 hour ago\"`\n- `journalctl --disk-usage`\n- `journalctl --vacuum-size=500M`\n\n**Examples:**\n\
+  - journalctl -u api.service -f\n- journalctl -u api.service --since today -o json | jq '.MESSAGE'\n\
+  - journalctl --disk-usage && journalctl --vacuum-size=500M"
+prompt: Act as Compliance Logging and handle the task per the instructions.

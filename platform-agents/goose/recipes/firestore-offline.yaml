@@ -1,0 +1,35 @@
+title: Firestore Offline
+description: 'Firestore offline persistence: enable local caching, debug cache reads, and design apps
+  that work when connectivity drops.'
+version: 2.0.0
+instructions: "# Firestore Offline\n\nFirestore offline persistence: enable local caching, debug cache\
+  \ reads, and design apps that work when connectivity drops.\n\n## Instructions\n\n# Firestore Offline\n\
+  \n## What this skill does\n\nFirestore caches data locally so reads and queued writes continue offline.\
+  \ Mobile SDKs enable persistence by default; web needs explicit settings. This skill covers enabling\
+  \ and verifying the cache.\n\n## When to use\n\n- Mobile apps that must work on subways/airplanes\n\
+  - Web apps wanting instant re-renders from cache\n- Queuing writes that happened offline\n\n## Real\
+  \ commands\n\n```bash\n# Web: persistent cache with IndexedDB tab manager\nnode -e \"const {initializeFirestore,persistentLocalCache,indexedDbLocalCache}=require('firebase/firestore');const\
+  \ db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:indexedDbLocalCache()})});console.log(db)\"\
+  \n\n# Older web SDK pattern\nfirebase.firestore().enablePersistence().catch(e => console.log('multi-tab\
+  \ needs config'))\n\n# Local emulation to test offline behavior\nfirebase emulators:start --only firestore\n\
+  \n# Audit cache config in the codebase\n grep -rn 'enablePersistence\\|persistentLocalCache' src/ |\
+  \ head -10\n```\n\n## Read source options\n\n```javascript\n// Server-first vs cache-first reads\nimport\
+  \ { getDoc, source } from 'firebase/firestore'\nconst snap = await getDoc(docRef, { source: source.server\
+  \ })\nconst cached = await getDoc(docRef, { source: source.cache })\n```\n\n## Testing offline behavior\n\
+  \n```bash\n# Simulate offline: kill the emulator or disable the network\nfirebase emulators:start --only\
+  \ firestore\n# load the page, disconnect, verify reads still render from cache\n```\n\n## Best practices\n\
+  \n- Web: pick `persistentLocalCache` explicitly; avoid mixing persistence modes per tab.\n- Use `multiTabLocalCache`\
+  \ for multi-tab consistency on web.\n- Remember cache-only data may be stale: use `snapshotListeners`\
+  \ to reconcile.\n- Test with `getDoc(docRef, { source: source.cache })` to force cache reads.\n- Handle\
+  \ `failed-precondition` errors (persistence unavailable) gracefully.\n\n## Capabilities\n\n### offline-persistence\n\
+  Enable and debug offline persistence, and verify cache behavior in client SDKs.\n\n**Commands:**\n-\
+  \ `node -e \"const db=require('firebase/firestore');firebase.firestore().settings({persistence: true});firebase.firestore().enablePersistence().then(()=>console.log('offline\
+  \ ok'))\"`\n- `node -e \"const {initializeFirestore,persistentLocalCache,indexedDbLocalCache}=require('firebase/firestore');const\
+  \ db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:indexedDbLocalCache()})});console.log(db)\"\
+  `\n- `firebase emulators:start --only firestore`\n- `grep -rn 'enablePersistence\\|persistentLocalCache'\
+  \ src/ | head -10`\n- `curl -s 'http://localhost:8080/api/cache-stats' | jq '.localDocuments'`\n\n**Examples:**\n\
+  - node -e \"const {initializeFirestore,persistentLocalCache,indexedDbLocalCache}=require('firebase/firestore');const\
+  \ db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:indexedDbLocalCache()})});console.log(db)\"\
+  \n- firebase emulators:start --only firestore\n- grep -rn 'enablePersistence\\|persistentLocalCache'\
+  \ src/ | head -10"
+prompt: Act as Firestore Offline and handle the task per the instructions.

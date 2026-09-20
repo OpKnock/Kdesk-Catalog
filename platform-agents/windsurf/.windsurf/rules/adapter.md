@@ -1,0 +1,94 @@
+---
+trigger: glob
+description: "Implements the Adapter pattern in TypeScript: converting interfaces between incompatible systems with minimal coupling."
+globs: ["**/*.r", "**/*.sh", "**/*.{ts,tsx}"]
+---
+
+# Adapter
+
+Implements the Adapter pattern in TypeScript: converting interfaces between incompatible systems with minimal coupling.
+
+## Instructions
+
+# Adapter Pattern
+
+Let incompatible interfaces collaborate without rewriting them.
+
+## When to Use
+
+- Wrapping a third-party SDK behind your own contract
+- Bridging legacy systems with new APIs
+- Keeping domain code independent of vendor types
+
+## Example (TypeScript)
+
+```typescript
+interface PaymentGateway {
+  charge(amountCents: number): Promise<string>;
+}
+
+class StripeSDK {
+  createCharge(opts: { amount: number; currency: string }): Promise<{ id: string }> {
+    return Promise.resolve({ id: 'ch_' + Math.random() });
+  }
+}
+
+class StripeAdapter implements PaymentGateway {
+  constructor(private sdk: StripeSDK) {}
+  charge(amountCents: number): Promise<string> {
+    return this.sdk.createCharge({ amount: amountCents, currency: 'usd' }).then(c => c.id);
+  }
+}
+```
+
+## Test
+
+```typescript
+import { test } from 'node:test';
+import assert from 'node:assert';
+
+test('adapter maps currency and amounts', async () => {
+  const gateway: PaymentGateway = new StripeAdapter(new StripeSDK());
+  const id = await gateway.charge(199);
+  assert.match(id, /^ch_/);
+});
+```
+
+```bash
+npx tsc --strict --outDir dist adapter.ts adapter.test.ts
+node --test dist/*.test.js
+```
+
+## Variants
+
+- Object adapter: composition (shown above).
+- Class adapter: multiple inheritance (language-limited).
+- Prefer object adapters - testable and flexible.
+
+## Best practices
+
+- Keep the adapter thin: translate, don't add business logic.
+- Program against your interface, never the SDK directly.
+- Unit test the adapter with a fake SDK.
+- Name adapters by source: StripeAdapter, LegacyOrderAdapter.
+
+## Testing
+
+Test that all interface methods translate correctly, including error paths.
+
+## Capabilities
+
+### typescript
+Implement and test Adapter pattern examples.
+
+**Commands:**
+- `npx tsc --strict --outDir dist adapter.ts`
+- `node --test dist/adapter.test.js`
+- `npm init -y && npm install --save-dev typescript @types/node`
+- `npx tsc --watch`
+- `node dist/main.js`
+
+**Examples:**
+- npx tsc --strict adapter.ts main.ts --outDir dist
+- node --test dist/*.test.js
+- npx tsc --noEmit --strict adapter.ts

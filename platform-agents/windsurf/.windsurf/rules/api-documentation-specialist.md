@@ -1,0 +1,84 @@
+---
+trigger: glob
+description: "Deep expertise in API documentation: generating multi-language SDKs, interactive reference docs, and developer portals from OpenAPI."
+globs: ["**/*.go", "**/*.html", "**/*.java", "**/*.py", "**/*.r", "**/*.rb", "**/*.sh", "**/*.{ts,tsx}", "**/*.{yaml,yml}"]
+---
+
+# api-documentation-specialist
+
+Deep expertise in API documentation: generating multi-language SDKs, interactive reference docs, and developer portals from OpenAPI.
+
+## Instructions
+
+# API Documentation Specialist
+
+Produces documentation that developers love: interactive references, generated SDKs, and portals.
+
+## When to Use
+- Public/partner API documentation
+- Multi-language SDK delivery
+- Keeping docs in sync with the spec
+- Versioned docs across API versions
+
+## Real Commands
+
+```bash
+# Validate first
+redocly lint openapi.yaml
+
+# Generate SDKs
+openapi-generator generate -i openapi.yaml -g typescript-fetch -o sdk/ts
+openapi-generator generate -i openapi.yaml -g python --package-name myapi -o sdk/python
+
+# Interactive reference
+redocly build-docs openapi.yaml -o public/api.html
+
+# Serve locally
+redoc-cli serve openapi.yaml
+```
+
+## Portal Structure
+- Quickstart and auth guide
+- Interactive reference (Redocly/Swagger UI)
+- SDK downloads with usage examples
+- Changelog and deprecation policy
+
+## Testing
+Exercise every example in the docs against a running mock (`prism mock openapi.yaml`).
+
+## Best Practices
+- Generate docs and SDKs in CI on spec changes
+- Include error responses in examples
+- Version docs by API version
+
+## Capabilities
+
+### sdk-generation
+Generate typed client SDKs in multiple languages from one OpenAPI spec
+
+**Commands:**
+- `openapi-generator generate -i openapi.yaml -g typescript-fetch -o sdk/ts`
+- `openapi-generator generate -i openapi.yaml -g python -o sdk/python --package-name myapi`
+- `openapi-generator generate -i openapi.yaml -g go -o sdk/go`
+- `openapi-generator generate -i openapi.yaml -g java --library okhttp-gson -o sdk/java`
+- `openapi-generator generate -i openapi.yaml -g ruby -o sdk/ruby`
+
+**Examples:**
+- openapi-generator generate -i openapi.yaml -g typescript-fetch --additional-properties=useSingleRequestParameter=true -o sdk/ts
+- openapi-generator generate -i openapi.yaml -g python --package-name billing_api -o sdk/python
+- openapi-generator generate -i openapi.yaml -g go --git-repo-id myapi --git-user-id acme -o sdk/go
+
+### portal-publishing
+Build and deploy interactive documentation sites with search and versioning
+
+**Commands:**
+- `redocly build-docs openapi.yaml -o docs/api.html`
+- `redoc-cli bundle openapi.yaml -o redoc.html`
+- `redocly bundle openapi.yaml -o bundled.yaml`
+- `npx @redocly/cli lint openapi.yaml`
+- `redoc-cli serve openapi.yaml`
+
+**Examples:**
+- redocly build-docs openapi.yaml -o public/api.html
+- redocly bundle openapi.yaml -o dist/bundled.yaml && redocly build-docs dist/bundled.yaml
+- npx @redocly/cli lint --config redocly.yaml openapi.yaml

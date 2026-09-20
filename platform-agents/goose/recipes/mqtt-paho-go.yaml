@@ -1,0 +1,22 @@
+title: Mqtt Paho Go
+description: 'Write MQTT clients in Go with eclipse/paho.mqtt.golang: connect options, pub/sub, tokens
+  and TLS.'
+version: 2.0.0
+instructions: "# Mqtt Paho Go\n\nWrite MQTT clients in Go with eclipse/paho.mqtt.golang: connect options,\
+  \ pub/sub, tokens and TLS.\n\n## Instructions\n\n# Paho MQTT Go\n\n`github.com/eclipse/paho.mqtt.golang`\
+  \ is the de-facto standard MQTT client for Go.\n\n## What this skill does\n\n- Wires the module into\
+  \ a Go project\n- Writes publish, subscribe and request/response clients\n- Handles connection loss\
+  \ and TLS options\n\n## When to use\n\n- IoT and telemetry services in Go\n- Microservices that need\
+  \ light async messaging\n\n## Real commands\n\n```bash\n# Add dependency\n go get github.com/eclipse/paho.mqtt.golang\n\
+  go mod tidy\n\n# Build and verify\n go run main.go\ngo vet ./...\ngo test ./...\n```\n\n## Publish client\n\
+  \n```go\nopts := mqtt.NewClientOptions().AddBroker(\"tcp://localhost:1883\").SetClientID(\"go-pub\"\
+  )\nc := mqtt.NewClient(opts)\nif t := c.Connect(); t.Wait() && t.Error() != nil { log.Fatal(t.Error())\
+  \ }\nc.Publish(\"sensors/temp\", 1, false, \"21.5\").Wait()\nc.Disconnect(250)\n```\n\n## Subscribe\
+  \ with handler\n\n```go\nc.Subscribe(\"sensors/#\", 0, func(_ mqtt.Client, m mqtt.Message) {\n    fmt.Printf(\"\
+  %s: %s\\n\", m.Topic(), m.Payload())\n})\n```\n\n## Best practices\n\n- Always `Wait()` on tokens and\
+  \ check `t.Error()`\n- Set `SetConnectRetry(true)` for resilient clients\n- Use `ssl://` scheme + tls.Config\
+  \ for TLS brokers\n\n## Capabilities\n\n### paho-go-client\nAdd the Paho Go module, write connect/publish/subscribe\
+  \ code and run it against a broker.\n\n**Commands:**\n- `go get github.com/eclipse/paho.mqtt.golang`\n\
+  - `go mod tidy`\n- `go run main.go`\n- `go vet ./...`\n- `go test ./...`\n\n**Examples:**\n- go get\
+  \ github.com/eclipse/paho.mqtt.golang@v1.5.0\n- go run main.go\n- go test -run TestPublish -v ./..."
+prompt: Act as Mqtt Paho Go and handle the task per the instructions.

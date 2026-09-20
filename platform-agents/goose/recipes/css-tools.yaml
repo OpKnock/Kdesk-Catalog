@@ -1,0 +1,32 @@
+title: css-tools
+description: Processes, lints, and optimizes CSS with PostCSS, Stylelint, Sass, Lightning CSS, and PurgeCSS
+  pipelines.
+version: 2.0.0
+instructions: "# css-tools\n\nProcesses, lints, and optimizes CSS with PostCSS, Stylelint, Sass, Lightning\
+  \ CSS, and PurgeCSS pipelines.\n\n## Instructions\n\n# CSS Tooling\n\nCompile, lint, and minify CSS\
+  \ with a production-grade toolchain.\n\n## When to Use\n\n- Enforcing consistent CSS quality across\
+  \ a codebase\n- Building Sass/PostCSS pipelines with vendor prefixing\n- Shrinking shipped CSS by purging\
+  \ unused rules\n\n## Stylelint\n\n```css\n/* .stylelintrc.json */\n{\n  \"extends\": \"stylelint-config-standard\"\
+  ,\n  \"rules\": { \"declaration-block-no-duplicate-properties\": true }\n}\n```\n\n```bash\nnpx stylelint\
+  \ 'src/**/*.css' --max-warnings 0\nnpx stylelint --fix 'src/**/*.css'\n```\n\n## Sass pipeline\n\n```bash\n\
+  npx sass src/scss/main.scss dist/main.css --style compressed --watch\n```\n\n## PostCSS + autoprefixer\n\
+  \n```bash\nnpx postcss src/styles.css -o dist/styles.css --use autoprefixer\n```\n\n## PurgeCSS for\
+  \ shipped CSS\n\n```bash\nnpx purgecss --css dist/main.css --content 'dist/**/*.{html,js}' --output\
+  \ dist/\n```\n\nOnly purge on final production builds, never in dev.\n\n## Lightning CSS (alternative\
+  \ bundler-level pipeline)\n\n```bash\nnpx lightningcss --minify --targets '>= 0.5%' src/styles.css -o\
+  \ dist/styles.css\n```\n\n## Best practices\n\n- Run Stylelint in CI with `--max-warnings 0`.\n- Keep\
+  \ nesting depth under 3 levels.\n- Prefer CSS custom properties over Sass variables for runtime theming.\n\
+  - Measure CSS bytes with a size budget per route.\n\n## Capabilities\n\n### lint\nLint and auto-fix\
+  \ CSS and SCSS with Stylelint.\n\n**Commands:**\n- `npx stylelint 'src/**/*.css'`\n- `npx stylelint\
+  \ 'src/**/*.scss' --config .stylelintrc.json`\n- `npx stylelint --fix 'src/**/*.css'`\n- `npx stylelint\
+  \ --formatter json 'src/**/*.css'`\n- `npx stylelint --max-warnings 0 'src/**/*.css'`\n\n**Examples:**\n\
+  - npx stylelint 'src/**/*.css' --max-warnings 0\n- npx stylelint --fix 'src/**/*.scss'\n- npx stylelint\
+  \ 'src/**/*.css' --formatter=json > stylelint-report.json\n\n### process\nCompile and optimize CSS with\
+  \ PostCSS, Sass, and Lightning CSS.\n\n**Commands:**\n- `npx postcss src/styles.css -o dist/styles.css\
+  \ --use autoprefixer`\n- `npx sass src/scss/main.scss dist/main.css --style compressed`\n- `npx lightningcss\
+  \ --minify --browserslist '>= 0.5%' src/styles.css -o dist/styles.css`\n- `npx purgecss --css dist/styles.css\
+  \ --content 'dist/**/*.html' --output dist/`\n- `npx postcss --watch src/styles.css -o dist/styles.css`\n\
+  \n**Examples:**\n- npx sass src/scss/main.scss dist/main.css --watch --style compressed\n- npx purgecss\
+  \ --css build/*.css --content 'build/**/*.{html,js}' --output build/\n- npx lightningcss --minify --targets\
+  \ '>= 0.5%' src/a.css src/b.css -o dist/out.css"
+prompt: Act as css-tools and handle the task per the instructions.

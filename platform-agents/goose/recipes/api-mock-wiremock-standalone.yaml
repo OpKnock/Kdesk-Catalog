@@ -1,0 +1,34 @@
+title: Api Mock Wiremock Standalone
+description: 'Builds stateful mock APIs with WireMock standalone: stub mappings via Admin API, request
+  matching, record-and-playback proxying, and stateful scenarios.'
+version: 2.0.0
+instructions: "# Api Mock Wiremock Standalone\n\nBuilds stateful mock APIs with WireMock standalone: stub\
+  \ mappings via Admin API, request matching, record-and-playback proxying, and stateful scenarios.\n\n\
+  ## Instructions\n\n# API Mock v3 - WireMock\n\nStateful mocking with WireMock standalone.\n\n## What\
+  \ This Skill Does\n- Registers stubs at runtime through the Admin API\n- Matches requests on method,\
+  \ URL, headers, and bodies\n- Records live traffic and replays it as stubs\n- Models stateful flows\
+  \ with scenarios\n\n## When to Use\n- Consumer-driven contract testing against a local stub\n- Simulating\
+  \ flaky or failure modes of third-party APIs\n- Recording a session of a legacy API for offline tests\n\
+  \n## Real Commands\n\n```bash\njava -jar wiremock-standalone-3.9.1.jar --port 8080\ncurl -s -X POST\
+  \ http://localhost:8080/__admin/mappings -H 'Content-Type: application/json' \\\n  -d '{\"request\"\
+  :{\"method\":\"GET\",\"url\":\"/hello\"},\"response\":{\"status\":200,\"body\":\"Hello\"}}'\ncurl -s\
+  \ http://localhost:8080/hello\n```\n\n## Scenario Example\n\n```json\n{\n  \"scenarioName\": \"order\"\
+  ,\n  \"requiredScenarioState\": \"Started\",\n  \"request\": { \"method\": \"POST\", \"url\": \"/orders\"\
+  \ },\n  \"response\": { \"status\": 201, \"jsonBody\": { \"id\": \"ord_1\" } },\n  \"newScenarioState\"\
+  : \"Created\"\n}\n```\n\n## Testing\n- Assert stub hits with /__admin/requests\n- Clear state between\
+  \ tests to avoid cross-test pollution\n- Use proximity priorities for overlapping matchers\n\n## Best\
+  \ Practices\n- Store mappings as JSON files under mappings/ for reproducibility\n- Use urlPathPattern\
+  \ with regex for path-parameterized endpoints\n- Reset state in test teardown via the Admin API\n\n\
+  ## Capabilities\n\n### wiremock-standalone\nRun WireMock and register stub mappings dynamically\n\n\
+  **Commands:**\n- `java -jar wiremock-standalone-3.9.1.jar --port 8080`\n- `curl -s -X POST http://localhost:8080/__admin/mappings\
+  \ -H 'Content-Type: application/json' -d '{\"request\":{\"method\":\"GET\",\"url\":\"/hello\"},\"response\"\
+  :{\"status\":200,\"body\":\"Hello\"}}'`\n- `curl -s http://localhost:8080/hello`\n- `curl -s http://localhost:8080/__admin/mappings\
+  \ | jq '.mappings | length'`\n- `curl -s -X DELETE http://localhost:8080/__admin/mappings`\n\n**Examples:**\n\
+  - POST to /__admin/mappings registers a new stub at runtime\n- curl localhost:8080/hello resolves against\
+  \ registered stubs\n- GET /__admin/mappings lists all active stubs\n\n### record-playback\nRecord real\
+  \ traffic and replay it as stubs\n\n**Commands:**\n- `curl -s -X POST http://localhost:8080/__admin/recordings/start\
+  \ -d '{\"targetBaseUrl\":\"http://localhost:8080\"}' -H 'Content-Type: application/json'`\n- `curl -s\
+  \ -X POST http://localhost:8080/__admin/recordings/stop -H 'Content-Type: application/json'`\n- `curl\
+  \ -s http://localhost:8080/__admin/requests | jq '.requests | length'`\n- `curl -s -X DELETE http://localhost:8080/__admin/requests\
+  \ -o /dev/null -w '%{http_code}\\n'`"
+prompt: Act as Api Mock Wiremock Standalone and handle the task per the instructions.

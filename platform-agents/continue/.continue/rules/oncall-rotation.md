@@ -1,0 +1,79 @@
+---
+name: "Oncall Rotation"
+description: "Queries PagerDuty on-call schedules, creates overrides for shift swaps, and lists current on-call personnel via the REST API with UTC time windows."
+globs: ["**/*.go", "**/*.json", "**/*.r", "**/*.scala", "**/*.sh"]
+alwaysApply: false
+---
+
+# Oncall Rotation
+
+Queries PagerDuty on-call schedules, creates overrides for shift swaps, and lists current on-call personnel via the REST API with UTC time windows.
+
+## Instructions
+
+# On-Call Rotation
+
+Manage schedules so exactly the right person gets paged, and swap shifts cleanly with overrides.
+
+## What this skill does
+
+- Lists current on-call people and schedules
+- Creates overrides for shift swaps
+- Verifies rotation coverage over a window
+
+## When to use
+
+- Setting up rotations for a new team
+- Checking who is on call right now
+- Handling someone going on PTO
+
+## Real commands
+
+```bash
+# Who is on call now
+curl -H "Authorization: Token token=$PD_TOKEN" "https://api.pagerduty.com/oncalls"
+
+# List schedules
+curl -H "Authorization: Token token=$PD_TOKEN" "https://api.pagerduty.com/schedules"
+
+# On-call for a window
+curl -H "Authorization: Token token=$PD_TOKEN" "https://api.pagerduty.com/oncalls?since=2026-08-01&until=2026-08-31"
+
+# Add an override
+curl -X POST -H "Authorization: Token token=$PD_TOKEN" -H "Content-Type: application/json" \
+  -d @override.json "https://api.pagerduty.com/schedules/SCHEDULE_ID/overrides"
+```
+
+## override.json
+
+```json
+{
+  "override": {
+    "start": "2026-08-15T09:00:00Z",
+    "end": "2026-08-15T17:00:00Z",
+    "user": { "id": "PXXXXX" }
+  }
+}
+```
+
+## Best practices
+
+- Use UTC timestamps for windows and overrides
+- Check coverage gaps with `escalation_policies` queries
+- Rotate primary/secondary roles to avoid solo on-call
+
+## Capabilities
+
+### oncall-schedule-management
+Query on-call schedules, add overrides, and list who is on call with the PagerDuty API.
+
+**Commands:**
+- `curl -H "Authorization: Token token=$PD_TOKEN" "https://api.pagerduty.com/oncalls"`
+- `curl -H "Authorization: Token token=$PD_TOKEN" "https://api.pagerduty.com/schedules"`
+- `curl -X POST -H "Authorization: Token token=$PD_TOKEN" -H "Content-Type: application/json" -d @override.json "https://api.pagerduty.com/schedules/SCHEDULE_ID/overrides"`
+- `curl -H "Authorization: Token token=$PD_TOKEN" "https://api.pagerduty.com/oncalls?since=2026-08-01&until=2026-08-31"`
+- `curl -H "Authorization: Token token=$PD_TOKEN" "https://api.pagerduty.com/users"`
+
+**Examples:**
+- curl -H "Authorization: Token token=$PD_TOKEN" "https://api.pagerduty.com/oncalls?user_ids[]=PXXXXX" | jq '.oncalls[].escalation_policy.summary'
+- curl -X POST -H "Authorization: Token token=$PD_TOKEN" -H "Content-Type: application/json" -d '{"override":{"start":"2026-08-15T09:00:00Z","end":"2026-08-15T17:00:00Z","user":{"id":"PXXXXX"}}}' "https://api.pagerduty.com/schedules/PSCHED/overrides"

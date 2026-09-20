@@ -1,0 +1,32 @@
+title: api-auth-specialist
+description: 'Deep API auth expertise: JWT validation, JWKS fetching, token introspection, session revocation,
+  and auditing auth failures.'
+version: 2.0.0
+instructions: "# api-auth-specialist\n\nDeep API auth expertise: JWT validation, JWKS fetching, token\
+  \ introspection, session revocation, and auditing auth failures.\n\n## Instructions\n\n# API Auth Specialist\n\
+  \n## What this skill does\nExpert-level authentication: validate JWTs against JWKS, introspect opaque\
+  \ tokens, decode and check claims, revoke sessions, and audit failed logins.\n\n## When to use\n- Debugging\
+  \ rejected tokens\n- Enforcing revocation policies\n- Auditing authentication security\n\n## Real commands\n\
+  ```bash\n# Fetch the JWKS\ncurl -s http://localhost:8080/.well-known/jwks.json | jq '.keys[0] | {kid,\
+  \ kty}'\n\n# Decode JWT payload (no signature check!)\nnode -e \"const t=process.argv[1];console.log(JSON.parse(Buffer.from(t.split('.')[1],'base64url')))\"\
+  \ $TOKEN\n\n# Introspect an opaque token\ncurl -s -X POST http://localhost:8080/oauth/introspect \\\n\
+  \  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -d 'token=$TOKEN' | jq '.active'\n\n#\
+  \ Revoke a token\ncurl -s -X POST http://localhost:8080/oauth/revoke -d 'token=$TOKEN' | jq '.revoked'\n\
+  \n# Audit logins\ncurl -s 'http://localhost:8080/api/auth/audit?action=login' | jq '.events[-1] | {user,\
+  \ ip, result}'\n\n# Count failed logins\ncurl -s 'http://localhost:8080/api/auth/audit?result=failed'\
+  \ | jq '.events | length'\n```\n\n## JWT validation checklist\n- Verify signature with the JWKS key\
+  \ matching `kid`\n- Check `exp` (with leeway), `nbf`, `iat`\n- Validate `iss` and `aud`\n- Check scope/role\
+  \ claims against the route\n\n## Best practices\n- Cache JWKS and refresh on unknown `kid`\n- Use opaque\
+  \ tokens + introspection for instant revocation\n- Log failures with reason codes but never the token\n\
+  - Rate-limit auth endpoints against brute force\n\n## Testing\n```bash\nTOKEN=$(curl -s -X POST http://localhost:8080/oauth/token\
+  \ -d 'grant_type=password&username=a&password=b' | jq -r '.access_token')\ncurl -s -X POST http://localhost:8080/oauth/introspect\
+  \ -d \"token=$TOKEN\" | jq '.active'\n```\n\n## Capabilities\n\n### auth-deep\nValidate tokens, introspect,\
+  \ and audit auth flows\n\n**Commands:**\n- `curl -s http://localhost:8080/.well-known/jwks.json | jq\
+  \ '.keys[0] | {kid, kty}'`\n- `curl -s -X POST http://localhost:8080/oauth/introspect -H 'Content-Type:\
+  \ application/x-www-form-urlencoded' -d 'token=$TOKEN' | jq '.active'`\n- `node -e \"const t=process.argv[1];console.log(JSON.parse(Buffer.from(t.split('.')[1],'base64url')))\"\
+  \ $TOKEN`\n- `curl -s http://localhost:8080/api/auth/audit?action=login | jq '.events[-1] | {user, ip,\
+  \ result}'`\n- `curl -s -X POST http://localhost:8080/oauth/revoke -H 'Content-Type: application/x-www-form-urlencoded'\
+  \ -d 'token=$TOKEN' | jq '.revoked'`\n\n**Examples:**\n- curl -s 'http://localhost:8080/oauth/introspect?token=$TOKEN'\
+  \ | jq '.exp'\n- echo $TOKEN | cut -d. -f2 | base64 -d 2>/dev/null | jq '.exp, .scope'\n- curl -s http://localhost:8080/api/auth/audit?result=failed\
+  \ | jq '.events | length'"
+prompt: Act as api-auth-specialist and handle the task per the instructions.

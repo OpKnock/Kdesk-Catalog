@@ -1,0 +1,100 @@
+---
+name: "grafana-monitoring"
+description: "Monitors systems with Grafana: datasource health, alert rules, provisioning as code, and API-driven dashboards."
+type: knowledge
+triggers: ["grafana-monitoring", "api-ops", "provisioning"]
+---
+
+# grafana-monitoring
+
+Monitors systems with Grafana: datasource health, alert rules, provisioning as code, and API-driven dashboards.
+
+## Instructions
+
+# Grafana Monitoring
+
+Keep dashboards honest and alerts effective.
+
+## When to Use
+
+- Datasource connectivity issues
+- Rolling out dashboards as code
+- Alert rule audits before incidents
+
+## Health checks
+
+```bash
+curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/health
+curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/datasources | jq '.[] | {name, type, url}'
+```
+
+## Dashboards as code
+
+Export dashboards to JSON, review in git, and apply via API:
+
+```bash
+curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' http://localhost:3000/api/dashboards/db -d @dashboard.json
+```
+
+## Alert rule hygiene
+
+- Every rule has an owner and an actionable summary.
+- Test rules against recorded data before enabling.
+- Review firing alert counts weekly.
+
+```bash
+curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/alerts | jq '.[] | {name, state}'
+```
+
+## Annotations for deploys
+
+```bash
+curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' -d '{"text":"release v3.2.0"}' http://localhost:3000/api/annotations
+```
+
+## Best practices
+
+- Use service accounts with folder-scoped permissions.
+- Provision datasources from files in production.
+- Correlate dashboards with alert rules by name convention.
+- Version dashboards in git; diff before apply.
+
+## Testing
+
+```bash
+curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/health
+```
+
+Validate dashboard JSON with a dry-run before applying to prod.
+
+## Capabilities
+
+### api-ops
+Operate Grafana via its HTTP API.
+
+**Commands:**
+- `curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/health`
+- `curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/datasources | jq '.[] | {name, type, url}'`
+- `curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' 'http://localhost:3000/api/dashboards/uid/my-dash' | jq '.dashboard.title'`
+- `curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/alerts | jq '.[] | {name, state}'`
+- `curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' -d '{"text":"release v3.2.0"}' http://localhost:3000/api/annotations`
+
+**Examples:**
+- curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/health | jq '.database'
+- curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/alerts | jq '[.[].state] | group_by(.) | map({state: .[0], count: length})'
+- curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/datasources | jq 'length'
+
+### provisioning
+Manage Grafana as code with provisioning files.
+
+**Commands:**
+- `curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' http://localhost:3000/api/dashboards/db -d @dashboard.json`
+- `curl -s -X DELETE -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/datasources/uid/$DS_UID`
+- `curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' http://localhost:3000/api/datasources -d '{"name":"Loki","type":"loki","url":"http://loki:3100","access":"proxy"}'`
+- `curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/folders | jq '.[] | {id, title}'`
+- `curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' -d '{"title":"Team Dashboards","uid":"team-dash"}' http://localhost:3000/api/folders`
+
+**Examples:**
+- curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' http://localhost:3000/api/datasources -d '{"name":"Prometheus","type":"prometheus","url":"http://prometheus:9090","access":"proxy"}'
+- curl -s -H 'Authorization: Bearer $GRAFANA_TOKEN' http://localhost:3000/api/folders | jq 'length'
+- curl -s -X POST -H 'Authorization: Bearer $GRAFANA_TOKEN' -H 'Content-Type: application/json' http://localhost:3000/api/dashboards/db -d @dashboard.json | jq '.status'

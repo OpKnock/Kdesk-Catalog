@@ -1,0 +1,33 @@
+title: Configuration Management
+description: Manage API server and service configuration with Ansible playbooks, roles, and config validation
+  commands.
+version: 2.0.0
+instructions: "# Configuration Management\n\nManage API server and service configuration with Ansible\
+  \ playbooks, roles, and config validation commands.\n\n## Instructions\n\n# Configuration Management\n\
+  \nManage API configuration across servers with Ansible.\n\n## When to Use\n\n- Rolling out API config\
+  \ changes to fleets of servers\n- Templating per-environment config from a single source\n- Enforcing\
+  \ drift-free, idempotent configuration\n\n## Setup\n\n```bash\npip install ansible\nansible --version\n\
+  ```\n\n## Inventory\n\n```ini\n[web]\napi01.example.com\napi02.example.com\n\n[web:vars]\nansible_user=deploy\n\
+  api_port=8080\n```\n\n## Playbook\n\n```yaml\n---\n- name: Configure API servers\n  hosts: web\n  become:\
+  \ yes\n  tasks:\n    - name: Deploy config from template\n      ansible.builtin.template:\n        src:\
+  \ app.conf.j2\n        dest: /etc/api/config.json\n        mode: \"0644\"\n      notify: restart api\n\
+  \  handlers:\n    - name: restart api\n      ansible.builtin.systemd:\n        name: api\n        state:\
+  \ restarted\n```\n\n## Run\n\n```bash\nansible-playbook -i inventory.ini site.yml --syntax-check\nansible-playbook\
+  \ -i inventory.ini site.yml --check\nansible-playbook -i inventory.ini site.yml\n```\n\n## Roles\n\n\
+  ```bash\nansible-galaxy init api-config-role\nansible-galaxy role install geerlingguy.nginx\n```\n\n\
+  ## Testing\n\n```bash\nansible -i inventory.ini all -m ping\nansible -i inventory.ini web -m copy -a\
+  \ \"src=nginx.conf dest=/etc/nginx/nginx.conf backup=yes\" --check\n```\n\n## Best Practices\n\n- Always\
+  \ run --check and --syntax-check before real runs\n- Keep secrets in ansible-vault, never plain text\n\
+  - Use handlers to restart services only on change\n- Make tasks idempotent and declarative\n- Store\
+  \ inventory and playbooks in version control\n\n## Capabilities\n\n### ansible-playbooks\nWrite and\
+  \ run Ansible playbooks to deploy and configure API services\n\n**Commands:**\n- `ansible --version`\n\
+  - `ansible-playbook -i inventory.ini site.yml --check`\n- `ansible-playbook -i inventory.ini site.yml\
+  \ --syntax-check`\n- `ansible-playbook -i inventory.ini site.yml -l web`\n\n**Examples:**\n- ansible-playbook\
+  \ -i inventory.ini site.yml --syntax-check\n- ansible-playbook -i inventory.ini site.yml --check --diff\n\
+  - ansible-playbook -i inventory.ini site.yml -e \"api_port=8081\"\n\n### roles-and-config\nCreate reusable\
+  \ roles and manage templated configuration files\n\n**Commands:**\n- `ansible-galaxy init api-config-role`\n\
+  - `ansible-galaxy role install geerlingguy.nginx`\n- `ansible-config dump | grep -i timeout`\n- `ansible\
+  \ -i inventory.ini all -m ping`\n\n**Examples:**\n- ansible-galaxy init api-config-role\n- ansible -i\
+  \ inventory.ini web -m copy -a \"src=nginx.conf dest=/etc/nginx/nginx.conf backup=yes\"\n- ansible -i\
+  \ inventory.ini web -m template -a \"src=app.conf.j2 dest=/etc/app/config.json mode=0644\""
+prompt: Act as Configuration Management and handle the task per the instructions.

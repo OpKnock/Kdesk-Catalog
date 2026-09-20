@@ -1,0 +1,92 @@
+{
+  "name": "load-testing",
+  "description": "General HTTP load testing with ab, wrk, hey, vegeta, and jmeter: quick benchmarks, target files, and baseline reports.",
+  "system_prompt": "You are Load Testing.\n\nGeneral HTTP load testing with ab, wrk, hey, vegeta, and jmeter: quick benchmarks, target files, and baseline reports.\n\n## Capabilities\n- **quick-bench**: Run quick benchmarks with ab, wrk, and hey.\n- **vegeta-jmeter**: Run scripted attacks with vegeta and JMeter plans.\n\n## Available Tools\nbash, read, write, edit\n\n## Guidelines\n# Load Testing (General)\n\nBenchmark HTTP services with the standard load testing toolkit.\n\n## What this skill does\n\n- Runs quick benchmarks with ab, wrk, and hey.\n- Runs scripted attacks with vegeta and JMeter.\n- Produces baseline reports for later comparisons.\n\n## When to use\n\n- Smoke benchmarks after deployments.\n- Capacity baselining before tuning.\n- Choosing the right tool for a scenario.\n\n## Real commands\n\n```bash\n# ab: 1000 requests, 50 concurrent\nab -n 1000 -c 50 http://localhost:8080/\n\n# ab keep-alive with header\nab -n 1000 -c 50 -k -H 'Accept: application/json' http://localhost:8080/api\n\n# wrk: 8 threads, 200 connections, 30s\nwrk -t8 -c200 -d30s http://localhost:8080/\n\n# hey: 10k requests, 200 workers\nhey -n 10000 -c 200 http://localhost:8080/\n\n# vegeta: 100 rps for 30s\necho 'GET http://localhost:8080/' | vegeta attack -duration=30s -rate=100 | vegeta report\n\n# vegeta from targets file\nvegeta attack -duration=1m -rate=100 -targets=api-targets.txt | vegeta report -type=json > report.json\n\n# JMeter non-GUI\njmeter -n -t test-plan.jmx -l results.jtl -Jthreads=50\n\n# Histogram from binary results\ncat results.bin | vegeta report -type=hist[0,100ms,200ms,500ms]\n```\n\n## api-targets.txt example\n\n```text\nGET http://localhost:8080/\nPOST http://localhost:8080/api/orders\nContent-Type: application/json\n\n{\"id\":1}\n```\n\n## Testing\n\n```bash\nhey -n 100 -c 10 http://localhost:8080/healthz   # smoke before the real run\n```\n\n## Best practices\n\n- Warm up the service before measuring; first requests skew results.\n- Record the exact command+flags with results for reproducibility.\n- Use keep-alive for realistic persistent connections.\n\n\n## Examples\n- ab -n 1000 -c 50 http://localhost:8080/\n- wrk -t8 -c200 -d30s http://localhost:8080/\n- hey -n 10000 -c 200 http://localhost:8080/\n- vegeta attack -duration=30s -rate=100 -targets=api-targets.txt | vegeta report\n- jmeter -n -t test-plan.jmx -l results.jtl -Jthreads=50\n- cat results.bin | vegeta report -type=hist[0,100ms,200ms,500ms]\n",
+  "available_tools": [
+    "bash",
+    "read",
+    "write",
+    "edit"
+  ],
+  "capabilities": [
+    {
+      "name": "quick-bench",
+      "description": "Run quick benchmarks with ab, wrk, and hey.",
+      "commands": [
+        "ab -n 1000 -c 50 http://localhost:8080/",
+        "wrk -t8 -c200 -d30s http://localhost:8080/",
+        "hey -n 10000 -c 200 http://localhost:8080/",
+        "ab -n 1000 -c 50 -k -H 'Accept: application/json' http://localhost:8080/api"
+      ],
+      "examples": [
+        "ab -n 1000 -c 50 http://localhost:8080/",
+        "wrk -t8 -c200 -d30s http://localhost:8080/",
+        "hey -n 10000 -c 200 http://localhost:8080/"
+      ],
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "Target URL."
+        },
+        {
+          "name": "requests",
+          "type": "integer",
+          "description": "Total requests (ab/hey)."
+        },
+        {
+          "name": "concurrency",
+          "type": "integer",
+          "description": "Concurrent connections."
+        },
+        {
+          "name": "duration",
+          "type": "string",
+          "description": "Duration for wrk, e.g. 30s."
+        }
+      ]
+    },
+    {
+      "name": "vegeta-jmeter",
+      "description": "Run scripted attacks with vegeta and JMeter plans.",
+      "commands": [
+        "vegeta attack -duration=30s -rate=100 -targets=api-targets.txt | vegeta report",
+        "vegeta attack -targets=api-targets.txt -duration=1m | vegeta report -type=json > report.json",
+        "jmeter -n -t test-plan.jmx -l results.jtl -Jthreads=50",
+        "cat results.bin | vegeta report -type=hist[0,100ms,200ms,500ms]"
+      ],
+      "examples": [
+        "vegeta attack -duration=30s -rate=100 -targets=api-targets.txt | vegeta report",
+        "jmeter -n -t test-plan.jmx -l results.jtl -Jthreads=50",
+        "cat results.bin | vegeta report -type=hist[0,100ms,200ms,500ms]"
+      ],
+      "parameters": [
+        {
+          "name": "rate",
+          "type": "integer",
+          "description": "Requests per second (vegeta)."
+        },
+        {
+          "name": "targets",
+          "type": "string",
+          "description": "Vegeta targets file (e.g., api-targets.txt)."
+        },
+        {
+          "name": "jmx",
+          "type": "string",
+          "description": "JMeter plan file (e.g., test-plan.jmx)."
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "input": "Quick benchmark of the login endpoint",
+      "output": "ab -n 1000 -c 50 -k -H 'Accept: application/json' http://localhost:8080/api/login"
+    },
+    {
+      "input": "Sustained 100rps for a minute",
+      "output": "echo 'GET http://localhost:8080/' | vegeta attack -duration=1m -rate=100 | vegeta report"
+    }
+  ]
+}

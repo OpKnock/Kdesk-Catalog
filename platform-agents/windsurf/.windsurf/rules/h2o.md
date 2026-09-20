@@ -1,0 +1,100 @@
+---
+trigger: glob
+description: "H2O.ai machine learning platform: starting H2O clusters with java -jar h2o.jar, importing data, training models, and querying the REST API."
+globs: ["**/*.go", "**/*.java", "**/*.json", "**/*.r", "**/*.sh"]
+---
+
+# H2O
+
+H2O.ai machine learning platform: starting H2O clusters with java -jar h2o.jar, importing data, training models, and querying the REST API.
+
+## Instructions
+
+# H2O
+
+Run H2O.ai machine learning clusters and drive them with the REST API.
+
+## What this skill does
+
+- Starts single-node and multinode H2O clusters with the java jar.
+- Imports CSV/parquet data into H2O frames.
+- Trains GLM, GBM, XGBoost, and Deep Learning models via API.
+- Inspects models, frames, and predictions through Flow or REST.
+
+## When to use
+
+- Training tabular models locally without cloud dependencies.
+- Automating model training from scripts.
+- Verifying cluster health and memory across nodes.
+
+## Real commands
+
+```bash
+# Start a single-node cluster with 4GB heap
+java -Xmx4g -jar h2o.jar -port 54321 -name myCluster
+
+# Multinode: start more nodes on other hosts with the same name
+java -Xmx4g -jar h2o.jar -name myCluster -ip 10.0.0.5 -port 54322
+
+# Check the cloud (all nodes)
+curl http://localhost:54321/3/Cloud | jq .cloud_name
+
+# Import a dataset
+curl -X POST 'http://localhost:54321/3/ImportFiles?path=/data/housing.csv'
+curl -X POST 'http://localhost:54321/3/ParseSetup?source_frames=housing.hex'  # then Parse
+
+# List trained models
+curl 'http://localhost:54321/3/Models?all_states=true' | jq '.models[].model_id.name'
+
+# Train a GLM
+curl -X POST 'http://localhost:54321/3/TrainModel?model_id=glm1&training_frame=housing.hex&algo=glm' \
+  -H 'Content-Type: application/json' \
+  -d '{"parameters":{"x":["crim","rm","age"],"y":"medv"}}'
+```
+
+## Flow UI
+
+Open http://localhost:54321 in a browser for the Flow notebook UI.
+
+## Predictions
+
+```bash
+curl 'http://localhost:54321/3/Predictions/models/glm1/frames/housing.hex' | jq '.predictions.rows[0:5]'
+```
+
+## Testing
+
+```bash
+curl -fsS http://localhost:54321/3/Cloud > /dev/null && echo "cluster up"
+```
+
+## Best practices
+
+- Size heap for the dataset: rule of thumb 4x the data size in RAM.
+- Use parse job IDs to poll Parse completion before training.
+- Set `-nthreads` to leave cores for the training workload.
+- Save models as MOJO for production serving: POST /3/Models/<id>/mojo.
+
+## Example exchange
+
+```
+User: How many nodes are in my H2O cloud?
+Agent: curl http://localhost:54321/3/Cloud | jq .nodes  # lists node addresses
+```
+
+## Capabilities
+
+### h2o-cluster-ops
+Start H2O clusters, import datasets, and train/inspect models via the H2O REST API.
+
+**Commands:**
+- `java -Xmx4g -jar h2o.jar -port 54321 -name myCluster`
+- `curl http://localhost:54321/3/Cloud`
+- `curl -X POST 'http://localhost:54321/3/ImportFiles?path=/data/housing.csv'`
+- `curl 'http://localhost:54321/3/Models?all_states=true'`
+- `curl -X POST 'http://localhost:54321/3/TrainModel?model_id=glm1&training_frame=housing.hex&algo=glm'`
+
+**Examples:**
+- java -Xmx8g -jar h2o.jar -port 54322 -name prod
+- curl 'http://localhost:54321/3/Frames?row_count=5' | jq .frames[0].rows
+- curl 'http://localhost:54321/3/Predictions/models/glm1/frames/housing.hex'

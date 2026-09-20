@@ -1,0 +1,27 @@
+title: Rate Limiting Algorithms
+description: 'Rate limiting algorithms: token bucket, leaky bucket, fixed window, sliding window — implementation
+  and tuning.'
+version: 2.0.0
+instructions: "# Rate Limiting Algorithms\n\nRate limiting algorithms: token bucket, leaky bucket, fixed\
+  \ window, sliding window — implementation and tuning.\n\n## Instructions\n\n# Rate Limiting Algorithms\n\
+  \nChoose and implement the right algorithm: token bucket, leaky bucket, or sliding window.\n\n## What\
+  \ this skill does\n\n- Implements token bucket in Lua/Redis\n- Configures nginx leaky-bucket limiting\n\
+  - Tunes burst and refill\n\n## When to use\n\n- Designing a rate limiter from scratch\n- Explaining\
+  \ bursts and smoothness trade-offs\n\n## Real commands\n\n```bash\n# Token bucket via Redis Lua\nredis-cli\
+  \ --eval token_bucket.lua mykey , 10 1 5\n\n# nginx leaky bucket\nnginx -t && nginx -s reload\n\n# Verify\
+  \ status codes\ncurl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:8080/api\nab -n 200 -c\
+  \ 20 http://localhost:8080/api\n```\n\n## nginx config\n\n```nginx\nlimit_req_zone $binary_remote_addr\
+  \ zone=api:10m rate=10r/s;\nlocation /api {\n    limit_req zone=api burst=20 nodelay;\n}\n```\n\n##\
+  \ Token bucket Lua sketch\n\n```lua\nlocal key, rate, burst, cost = KEYS[1], tonumber(ARGV[1]), tonumber(ARGV[2]),\
+  \ tonumber(ARGV[3])\nlocal t = redis.call('GET', key..':t') or 0\nlocal tokens = tonumber(redis.call('GET',\
+  \ key..':n') or burst)\n-- refill per elapsed time, then spend\n```\n\n## Algorithm cheat sheet\n\n\
+  - Token bucket: allows bursts up to capacity\n- Leaky bucket: smooths rate, no bursts\n- Fixed window:\
+  \ simple, bursty at boundaries\n- Sliding window: smooth, memory-heavy\n\n## Best practices\n\n- Use\
+  \ Lua in Redis for atomicity\n- Prefer burst + nodelay for APIs with spikes\n- Test boundaries with\
+  \ ab/curl status codes\n\n## Capabilities\n\n### rate-limit-algorithms\nImplement token bucket and sliding\
+  \ window algorithms, and configure nginx burst handling.\n\n**Commands:**\n- `redis-cli --eval token_bucket.lua\
+  \ mykey, , 10 1 5`\n- `redis-cli EVALSHA $(redis-cli SCRIPT LOAD \"$(cat token_bucket.lua)\") 1 mykey\
+  \ 10 1 5`\n- `nginx -t`\n- `nginx -s reload`\n- `curl -s -o /dev/null -w \"%{http_code}\\n\" -X POST\
+  \ http://localhost:8080/api`\n\n**Examples:**\n- redis-cli --eval token_bucket.lua user:7 , 10 1 5\n\
+  - ab -n 200 -c 20 http://localhost:8080/api\n- curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:8080/api"
+prompt: Act as Rate Limiting Algorithms and handle the task per the instructions.

@@ -1,0 +1,46 @@
+title: Ksql
+description: 'Stream processing with ksqlDB: create streams/tables from Kafka topics, run push/pull queries,
+  and build materialized views with SQL.'
+version: 2.0.0
+instructions: "# Ksql\n\nStream processing with ksqlDB: create streams/tables from Kafka topics, run push/pull\
+  \ queries, and build materialized views with SQL.\n\n## Instructions\n\n# ksqlDB\n\nStream-process Kafka\
+  \ data with SQL.\n\n## What this skill does\n\n- Defines STREAMs and TABLEs over Kafka topics.\n- Runs\
+  \ push queries (continuous) and pull queries (point lookups).\n- Builds materialized aggregates with\
+  \ windowing.\n\n## When to use\n\n- Quick analytics on Kafka topics without writing Java/Go code.\n\
+  - Materialized views: per-key state backed by Kafka.\n- Prototyping stream pipelines before productionizing.\n\
+  \n## Real commands\n\n```bash\n# Interactive shell in the CLI container\ndocker exec -it ksqldb-cli\
+  \ ksql http://ksqldb-server:8088\n\n# Run a file of statements\nksql http://localhost:8088 --file statements.sql\n\
+  \n# Declare a stream\nksql> CREATE STREAM ORDERS (ID BIGINT, AMOUNT DOUBLE, CURRENCY STRING) \\\n  \
+  \    WITH (KAFKA_TOPIC='orders', VALUE_FORMAT='JSON', PARTITIONS=6);\n\n# Materialized table of per-currency\
+  \ sums\nksql> CREATE TABLE HIGH_VALUE_ORDERS AS \\\n      SELECT ID, AMOUNT FROM ORDERS \\\n      WHERE\
+  \ AMOUNT > 1000 EMIT CHANGES;\n\n# Push query over REST\ncurl -X POST http://localhost:8088/query \\\
+  \n  -H 'Content-Type: application/vnd.ksql.v1+json' \\\n  -d '{\"ksql\":\"SELECT * FROM ORDERS EMIT\
+  \ CHANGES;\"}'\n\n# Tumbling-window aggregate\ncurl -X POST http://localhost:8088/query \\\n  -H 'Content-Type:\
+  \ application/vnd.ksql.v1+json' \\\n  -d '{\"ksql\":\"SELECT CURRENCY, COUNT(*) FROM ORDERS WINDOW TUMBLING\
+  \ (SIZE 1 MINUTE) GROUP BY CURRENCY EMIT CHANGES;\"}'\n\n# Pull query (materialized table)\ncurl -X\
+  \ POST http://localhost:8088/query \\\n  -H 'Content-Type: application/vnd.ksql.v1+json' \\\n  -d '{\"\
+  ksql\":\"SELECT * FROM HIGH_VALUE_ORDERS WHERE ID=42;\"}'\n```\n\n## statements.sql example\n\n```sql\n\
+  CREATE STREAM ORDERS (ID BIGINT, AMOUNT DOUBLE, CURRENCY STRING)\n  WITH (KAFKA_TOPIC='orders', VALUE_FORMAT='JSON');\n\
+  \nCREATE STREAM HIGH_VALUE AS\n  SELECT ID, AMOUNT, CURRENCY\n  FROM ORDERS\n  WHERE AMOUNT > 1000\n\
+  \  EMIT CHANGES;\n```\n\n## Testing\n\n```bash\n# Feed an order and watch the push query\necho '{\"\
+  ID\":7,\"AMOUNT\":2500,\"CURRENCY\":\"USD\"}' | \\\n  kafka-console-producer.sh --bootstrap-server localhost:9092\
+  \ --topic orders\n```\n\n## Best practices\n\n- Streams map 1:1 to topics; tables materialize keys with\
+  \ changelogs.\n- Pull queries only work on materialized (TABLE) data.\n- Prefer EMIT CHANGES for continuous\
+  \ output; specify limits for one-shot reads.\n\n## Capabilities\n\n### ksql-shell\nConnect to the ksqlDB\
+  \ server and run SQL statements.\n\n**Commands:**\n- `docker exec -it ksqldb-cli ksql http://ksqldb-server:8088`\n\
+  - `ksql http://localhost:8088 --file statements.sql`\n- `ksql http://localhost:8088`\n- `curl -X POST\
+  \ http://localhost:8088/ksql -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"ksql\":\"SHOW STREAMS;\"\
+  }'`\n\n**Examples:**\n- docker exec -it ksqldb-cli ksql http://ksqldb-server:8088\n- ksql http://localhost:8088\
+  \ --file statements.sql\n- curl -X POST http://localhost:8088/ksql -H 'Content-Type: application/vnd.ksql.v1+json'\
+  \ -d '{\"ksql\":\"SHOW STREAMS;\"}'\n\n### sql-queries\nRun push and pull queries against streams and\
+  \ tables.\n\n**Commands:**\n- `curl -X POST http://localhost:8088/query -H 'Content-Type: application/vnd.ksql.v1+json'\
+  \ -d '{\"ksql\":\"SELECT * FROM ORDERS EMIT CHANGES;\"}'`\n- `curl -X POST http://localhost:8088/query\
+  \ -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"ksql\":\"SELECT COUNT(*) FROM ORDERS WINDOW\
+  \ TUMBLING (SIZE 1 MINUTE) GROUP BY CURRENCY EMIT CHANGES;\"}'`\n- `curl -X POST http://localhost:8088/ksql\
+  \ -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"ksql\":\"SHOW TABLES;\"}'`\n- `curl -X POST\
+  \ http://localhost:8088/query -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"ksql\":\"SELECT\
+  \ * FROM HIGH_VALUE_ORDERS WHERE ID=42;\"}'`\n\n**Examples:**\n- curl -X POST http://localhost:8088/query\
+  \ -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"ksql\":\"SELECT * FROM ORDERS EMIT CHANGES;\"\
+  }'\n- curl -X POST http://localhost:8088/ksql -H 'Content-Type: application/vnd.ksql.v1+json' -d '{\"\
+  ksql\":\"SHOW TABLES;\"}'"
+prompt: Act as Ksql and handle the task per the instructions.

@@ -1,0 +1,30 @@
+title: Mocking
+description: 'General-purpose API mocking: mountebank imposters, response templating, request matching,
+  and delay/fault simulation.'
+version: 2.0.0
+instructions: "# Mocking\n\nGeneral-purpose API mocking: mountebank imposters, response templating, request\
+  \ matching, and delay/fault simulation.\n\n## Instructions\n\n# Mocking\n\nMock HTTP services isolate\
+  \ your application from dependencies during development and testing.\n\n## What this skill does\n\n\
+  - Boots mountebank and registers imposter services\n- Matches requests with predicates and returns templated\
+  \ responses\n- Simulates latency, errors and flaky behavior\n\n## When to use\n\n- Testing against a\
+  \ third-party API that is expensive or flaky\n- Reproducing timeouts and 5xx for resilience work\n-\
+  \ Contract tests without spinning up real dependencies\n\n## Real commands\n\n```bash\n# Start mountebank\
+  \ control plane\nmb start --port 2525\n\n# Register an imposter from file\ncurl -X POST http://localhost:2525/imposters\
+  \ -d @imposter.json\n\n# Register inline: HTTP on 3000 returning 200 \"ok\"\ncurl -X POST -H \"Content-Type:\
+  \ application/json\" \\\n  -d '{\"port\":3000,\"protocol\":\"http\",\"stubs\":[{\"responses\":[{\"is\"\
+  :{\"statusCode\":200,\"body\":\"ok\"}}]}]}' \\\n  http://localhost:2525/imposters\n\n# Inspect requests\
+  \ captured by the imposter\ncurl http://localhost:2525/imposters/3000\n\n# Remove the imposter\ncurl\
+  \ -X DELETE http://localhost:2525/imposters/3000\n```\n\n## imposter.json with predicate + delay\n\n\
+  ```json\n{\n  \"port\": 3000,\n  \"protocol\": \"http\",\n  \"stubs\": [{\n    \"predicates\": [{ \"\
+  equals\": { \"method\": \"GET\", \"path\": \"/users/1\" } }],\n    \"responses\": [{ \"is\": { \"statusCode\"\
+  : 200, \"body\": \"{\\\"id\\\":1}\" }, \"behaviors\": [{ \"wait\": 2000 }] }]\n  }]\n}\n```\n\n## Best\
+  \ practices\n\n- Give every stub a distinct `name` for debuggability\n- Prefer deterministic responses\
+  \ in CI; use injection only locally\n- Clean up imposters in teardown (`mb stop`)\n\n## Capabilities\n\
+  \n### api-mocking\nCreate mock HTTP services with mountebank, add behavioral stubs, and simulate latency\
+  \ or faults.\n\n**Commands:**\n- `mb start --port 2525`\n- `curl -X POST http://localhost:2525/imposters\
+  \ -d @imposter.json`\n- `curl -X POST -H \"Content-Type: application/json\" -d '{\"port\":3000,\"protocol\"\
+  :\"http\",\"stubs\":[{\"responses\":[{\"is\":{\"statusCode\":200,\"body\":\"ok\"}}]}]}' http://localhost:2525/imposters`\n\
+  - `curl http://localhost:2525/imposters`\n- `curl -X DELETE http://localhost:2525/imposters/3000`\n\n\
+  **Examples:**\n- mb start --port 2525 --allowInjection\n- curl -X POST http://localhost:2525/imposters\
+  \ -d @imposter.json\n- curl http://localhost:2525/imposters/3000"
+prompt: Act as Mocking and handle the task per the instructions.

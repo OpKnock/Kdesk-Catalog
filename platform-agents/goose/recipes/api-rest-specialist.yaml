@@ -1,0 +1,29 @@
+title: api-rest-specialist
+description: 'Applies REST design standards: JSON:API style envelopes, problem+json errors, HATEOAS links,
+  and idempotency handling for robust consumers.'
+version: 2.0.0
+instructions: "# api-rest-specialist\n\nApplies REST design standards: JSON:API style envelopes, problem+json\
+  \ errors, HATEOAS links, and idempotency handling for robust consumers.\n\n## Instructions\n\n# API\
+  \ REST Specialist\n\nREST standards and conventions.\n\n## What This Skill Does\n- Applies consistent\
+  \ envelope and error formats\n- Adds HATEOAS links and idempotency\n- Makes APIs predictable for consumers\n\
+  \n## When to Use\n- Designing public APIs\n- Standardizing internal service contracts\n- Hardening retry\
+  \ behavior\n\n## Real Commands\n\n```bash\ncurl -s http://localhost:3000/api/orders | jq '.data[0],\
+  \ .links'\ncurl -s -X POST http://localhost:3000/api/orders -H 'Content-Type: application/json' -H 'Idempotency-Key:\
+  \ abc-123' -d '{\"total\":50}'\ncurl -s -X POST http://localhost:3000/api/orders -H 'Content-Type: application/json'\
+  \ -d '{}' | jq '.type, .status, .title'\n```\n\n## Problem Response\n\n```json\n{\n  \"type\": \"https://api.example.com/problems/validation\"\
+  ,\n  \"title\": \"Validation failed\",\n  \"status\": 400,\n  \"detail\": \"total is required\"\n}\n\
+  ```\n\n## Testing\n- Repeat the same Idempotency-Key and expect the same response\n- Validate error\
+  \ bodies match the problem format\n- Check Link headers expose navigation\n\n## Best Practices\n- Document\
+  \ the envelope format in OpenAPI\n- Store idempotency keys with TTL and status\n- Keep error details\
+  \ machine-readable\n\n## Capabilities\n\n### json-api-style\nShape responses with data envelopes and\
+  \ links\n\n**Commands:**\n- `curl -s http://localhost:3000/api/orders | jq '.data[0], .links'`\n- `curl\
+  \ -s -X POST http://localhost:3000/api/orders -H 'Content-Type: application/json' -H 'Idempotency-Key:\
+  \ abc-123' -d '{\"total\":50}' | jq '.data.id'`\n- `curl -s -D- -o /dev/null http://localhost:3000/api/orders\
+  \ | grep -i '^link:'`\n- `curl -s -o /dev/null -w '%{http_code}\\n' -X POST http://localhost:3000/api/orders\
+  \ -H 'Content-Type: application/json' -H 'Idempotency-Key: abc-123' -d '{\"total\":50}'`\n\n**Examples:**\n\
+  - Idempotency-Key deduplicates retried POSTs\n- Link headers advertise related resources\n- jq .data\
+  \ extracts the JSON:API envelope\n\n### problem-errors\nReturn RFC 7807 problem details for errors\n\
+  \n**Commands:**\n- `curl -s -X POST http://localhost:3000/api/orders -H 'Content-Type: application/json'\
+  \ -d '{}' | jq '.type, .status, .title'`\n- `curl -s -o /dev/null -w '%{http_code}\\n' http://localhost:3000/api/orders/404`\n\
+  - `curl -s http://localhost:3000/api/orders/404 | jq '.detail'`"
+prompt: Act as api-rest-specialist and handle the task per the instructions.

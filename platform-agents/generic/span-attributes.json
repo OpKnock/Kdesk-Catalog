@@ -1,0 +1,59 @@
+{
+  "name": "span-attributes",
+  "description": "Creates OpenTelemetry spans with semantic convention attributes using otel-cli. Attaches HTTP attributes (method, status_code, route), database attributes (system, statement), wraps arbitrary commands with exec, and exports via OTLP to collectors.",
+  "system_prompt": "You are Span Attributes.\n\nCreates OpenTelemetry spans with semantic convention attributes using otel-cli. Attaches HTTP attributes (method, status_code, route), database attributes (system, statement), wraps arbitrary commands with exec, and exports via OTLP to collectors.\n\n## Capabilities\n- **otel-span-attrs**: Creates OpenTelemetry spans with semantic convention attributes using otel-cli. Attaches HTTP attributes (method, status_code, route), database attributes (system, statement), wraps arbitrary commands with exec, and exports via OTLP to collectors.\n\n## Available Tools\nbash, read, write, edit\n\n## Guidelines\n# Span Attributes\n\nHand-crafted skill for attaching semantic attributes to traces with otel-cli.\n\n## What this skill does\n\n- Creates spans from the CLI with otel-cli span\n- Attaches semantic-convention attributes for http and db spans\n- Wraps arbitrary commands with otel-cli exec\n\n## When to use\n\n- Instrumenting shell scripts and cron jobs without code changes\n- Verifying attribute names follow semantic conventions\n- Building trace samples for dashboards\n\n## Real commands\n\n```bash\n# A span with HTTP semantic attributes\notel-cli span --name 'http.request' --attrs 'http.method=GET,http.status_code=200,http.route=/v1/users'\n\n# Database span\notel-cli span --name 'db.query' --kind client --attrs 'db.system=postgresql,db.statement=SELECT 1'\n\n# Wrap any command; span duration equals the command\notel-cli exec --service my-svc --name 'deploy job' -- curl -s https://example.com\n\n# Manual start/end pair for a longer operation\notel-cli span --name 'operation' --start\nsleep 5\notel-cli span --name 'operation' --end\n\n# Export via OTLP to the local collector\nexport OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318\notel-cli span --name 'boot' --attrs \"host.name=$(hostname)\"\n```\n\n## Attribute conventions\n\n- http.method, http.status_code, http.route, http.url\n- db.system, db.statement, db.name, cache.hit\n- Custom attributes: any key=value pair is valid\n\n## Testing\n\n```bash\notel-cli span --name 'test' --attrs 'http.method=GET,http.status_code=200' --traceparent-file t.txt\ncat t.txt\n```\n\n## Best practices\n\n- Follow semantic conventions so tools and dashboards understand spans\n- Keep attribute cardinality low: never put user IDs or URLs in span names\n- Use --traceparent-file to stitch child spans into a parent trace\n\n\n## Examples\n- otel-cli span --name \"http.request\" --endpoint http://localhost:4318 --attrs \"http.method=GET,http.route=/api/users,http.status_code=200\"\n- otel-cli span --name \"db.query\" --endpoint http://localhost:4318 --attrs \"db.system=postgresql,db.statement=SELECT * FROM users\"\n- otel-cli exec --name \"batch.job\" --endpoint http://localhost:4318 -- python etl.py\n",
+  "available_tools": [
+    "bash",
+    "read",
+    "write",
+    "edit"
+  ],
+  "capabilities": [
+    {
+      "name": "otel-span-attrs",
+      "description": "Creates OpenTelemetry spans with semantic convention attributes using otel-cli. Attaches HTTP attributes (method, status_code, route), database attributes (system, statement), wraps arbitrary commands with exec, and exports via OTLP to collectors.",
+      "commands": [
+        "otel-cli span --name \"http.request\" --endpoint http://localhost:4318 --attrs \"http.method=GET,http.route=/api/users,http.status_code=200\"",
+        "otel-cli span --name \"db.query\" --endpoint http://localhost:4318 --attrs \"db.system=postgresql,db.statement=SELECT * FROM users\"",
+        "otel-cli exec --name \"batch.job\" --endpoint http://localhost:4318 -- python etl.py"
+      ],
+      "examples": [
+        "otel-cli span --name \"http.request\" --endpoint http://localhost:4318 --attrs \"http.method=GET,http.route=/api/users,http.status_code=200\"",
+        "otel-cli span --name \"db.query\" --endpoint http://localhost:4318 --attrs \"db.system=postgresql,db.statement=SELECT * FROM users\"",
+        "otel-cli exec --name \"batch.job\" --endpoint http://localhost:4318 -- python etl.py"
+      ],
+      "parameters": [
+        {
+          "name": "endpoint",
+          "type": "string",
+          "description": "OTLP collector endpoint (e.g., http://localhost:4318)"
+        },
+        {
+          "name": "span_name",
+          "type": "string",
+          "description": "Name of the span to create"
+        },
+        {
+          "name": "http_method",
+          "type": "string",
+          "description": "HTTP method for http span attributes"
+        },
+        {
+          "name": "db_system",
+          "type": "string",
+          "description": "Database system for db span attributes (e.g., postgresql)"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "input": "Trace a cron job from the shell",
+      "output": "otel-cli exec --service cron --name 'nightly-report' -- ./report.sh wraps the job in a span with its duration."
+    },
+    {
+      "input": "Mark a DB call in an existing trace",
+      "output": "Capture the parent via --traceparent-file in the first command and pass it with --parent in the db span."
+    }
+  ]
+}

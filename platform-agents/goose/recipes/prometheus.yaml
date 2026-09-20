@@ -1,0 +1,36 @@
+title: prometheus
+description: Validate and test it configuration and rules. Write recording and alerting rules with tests.
+  production monitoring.'
+version: 2.0.0
+instructions: "# prometheus\n\nValidate and test it configuration and rules. Write recording and alerting\
+  \ rules with tests. production monitoring.'\n\n## Instructions\n\n# Prometheus\n\nRun Prometheus with\
+  \ validated configs and tested rules.\n\n## When to Use\n\n- Setting up scrape targets and retention\n\
+  - Adding recording rules for expensive queries\n- Alerting rules reviewed before deploy\n\n## Validate\
+  \ everything\n\n```bash\npromtool check config prometheus.yml --lint=error\npromtool check rules rules.yml\
+  \ --strict\n```\n\n## Recording rules\n\n```yaml\ngroups:\n  - name: api-usage\n    interval: 1m\n \
+  \   rules:\n      - record: job:http_requests:rate5m\n        expr: sum by (job) (rate(http_requests_total[5m]))\n\
+  ```\n\nRecording rules precompute heavy queries for dashboards.\n\n## Alert rules\n\n```yaml\ngroups:\n\
+  \  - name: availability\n    rules:\n      - alert: ApiDown\n        expr: up{job=\"api\"} == 0\n  \
+  \      for: 2m\n        labels: { severity: critical }\n        annotations:\n          summary: 'API\
+  \ {{ $labels.instance }} is down'\n```\n\n## Test rules\n\n```yaml\nrule_files:\n  - rules.yml\nevaluation_interval:\
+  \ 1m\ntests:\n  - interval: 1m\n    input_series:\n      - series: 'up{job=\"api\"}'\n        values:\
+  \ '0+0x30'\n    alert_rule_test:\n      - eval_time: 3m\n        alertname: ApiDown\n        exp_alerts:\
+  \ []\n```\n\n```bash\npromtool test rules tests/rules_test.yml\n```\n\n## Live inspection\n\n```bash\n\
+  curl -s http://localhost:9090/api/v1/alerts | jq '.data.alerts[] | {alertname: .labels.alertname, state}'\n\
+  curl -s http://localhost:9090/api/v1/rules | jq '.data.groups | length'\n```\n\n## Best practices\n\n\
+  - Add `for:` durations to suppress transient alerts.\n- Cap alert labels; too many produce notification\
+  \ storms.\n- Test every new rule before merge.\n- Keep retention and storage sizing reviewed quarterly.\n\
+  \n## Testing\n\n```bash\npromtool check config prometheus.yml\npromtool test rules tests/rules_test.yml\n\
+  ```\n\nBoth run in CI on every config change.\n\n## Capabilities\n\n### promtool\nValidate and test\
+  \ Prometheus configuration and rules.\n\n**Commands:**\n- `promtool check config prometheus.yml`\n-\
+  \ `promtool check rules rules.yml`\n- `promtool test rules test.yml`\n- `promtool check metrics /tmp/metrics.txt`\n\
+  - `promtool config routes prometheus.yml`\n\n**Examples:**\n- promtool check config prometheus.yml --lint=error\n\
+  - promtool test rules tests/rules_test.yml\n- promtool check rules rules/*.yml --strict\n\n### rules\n\
+  Write recording and alerting rules with tests.\n\n**Commands:**\n- `curl -s http://localhost:9090/api/v1/rules\
+  \ | jq '.data.groups[] | {name, rules: [.rules[].name]}'`\n- `curl -G http://localhost:9090/api/v1/query\
+  \ --data-urlencode 'query=up'`\n- `curl -s http://localhost:9090/api/v1/alerts | jq '.data.alerts[]\
+  \ | {labels: .labels.alertname, state}'`\n- `promtool tsdb list /var/lib/prometheus`\n- `curl -s http://localhost:9090/api/v1/status/tsdb\
+  \ | jq '.data'`\n\n**Examples:**\n- curl -s http://localhost:9090/api/v1/rules | jq '.data.groups |\
+  \ length'\n- curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=rate(http_requests_total[5m])'\n\
+  - promtool tsdb list /var/lib/prometheus | head"
+prompt: Act as prometheus and handle the task per the instructions.

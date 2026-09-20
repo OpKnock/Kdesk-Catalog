@@ -1,0 +1,30 @@
+title: Rocket
+description: Expert Rocket (Rust) reference covering routing with route attributes, state and guards,
+  Rocket.toml config, and cargo build/run workflows suited to web APIs.
+version: 2.0.0
+instructions: "# Rocket\n\nExpert Rocket (Rust) reference covering routing with route attributes, state\
+  \ and guards, Rocket.toml config, and cargo build/run workflows suited to web APIs.\n\n## Instructions\n\
+  \n# Rocket (Rust)\n\nExpert skill for building web APIs with the Rocket framework.\n\n## What this skill\
+  \ does\n\n- Defines typed routes with the get/post macro attributes\n- Shares mutable state via State<T>\
+  \ and protects routes with guards\n- Configures ports, limits, and profiles through Rocket.toml\n\n\
+  ## When to use\n\n- Greenfield Rust HTTP APIs with minimal boilerplate\n- Services that want compile-time\
+  \ route and request typing\n- Prototyping an endpoint before hardening it\n\n## Real commands\n\n```bash\n\
+  # Scaffold\ncargo new hello-rocket && cd hello-rocket && cargo add rocket\n\n# Run with the dev profile\n\
+  cargo run\n\n# Exercise routes\ncurl -s http://localhost:8000/hello/Ada\ncurl -X POST http://localhost:8000/submit\
+  \ -H 'Content-Type: application/json' -d '{\"title\":\"hi\"}'\n\n# Production build\ncargo build --release\n\
+  ```\n\n## Routes example\n\n```rust\nuse rocket::{get, post, State};\nuse std::sync::atomic::{AtomicU64,\
+  \ Ordering};\n\n#[get(\"/hello/<name>\")]\nfn hello(name: &str) -> String {\n    format!(\"Hello, {}!\"\
+  , name)\n}\n\n#[post(\"/submit\", data = \"<form>\")]\nfn submit(form: Form<Title>) -> String {\n  \
+  \  form.into_inner().title\n}\n\n#[launch]\nfn rocket() -> _ {\n    rocket::build()\n        .mount(\"\
+  /\", routes![hello, submit])\n        .manage(AtomicU64::new(0))\n}\n```\n\n## Rocket.toml\n\n```toml\n\
+  [default]\nport = 8000\n\n[release]\nport = 8080\nworkers = 16\n```\n\n## Testing\n\n```bash\ncargo\
+  \ run\ncurl -s http://localhost:8000/hello/Ada\ncurl -s -o /dev/null -w '%{http_code}\\n' -X POST http://localhost:8000/submit\
+  \ -d 'title=test'\n```\n\n## Best practices\n\n- Keep routes in a routes module mounted once in rocket()\n\
+  - Use managed state for shared counters/caches, not statics\n- Build release for deployment; dev profile\
+  \ compiles faster\n\n## Capabilities\n\n### rocket-web\nBuild Rust web APIs with Rocket: routes, state,\
+  \ config\n\n**Commands:**\n- `cargo new hello-rocket && cd hello-rocket && cargo add rocket`\n- `cargo\
+  \ run`\n- `curl -s http://localhost:8000/hello/Ada`\n- `curl -X POST http://localhost:8000/submit -H\
+  \ 'Content-Type: application/json' -d '{\"title\":\"hi\"}'`\n- `cargo build --release`\n\n**Examples:**\n\
+  - cargo run\n- curl -s http://localhost:8000/hello/Ada\n- curl -s -X POST http://localhost:8000/submit\
+  \ -H 'Content-Type: application/json' -d '{\"title\":\"hi\"}'"
+prompt: Act as Rocket and handle the task per the instructions.

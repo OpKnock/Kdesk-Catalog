@@ -1,0 +1,99 @@
+---
+type: agent_requested
+description: "Queries Prometheus for live monitoring: PromQL, the HTTP API, targets health, and ad-hoc alert inspection."
+---
+
+# prometheus-monitoring-2
+
+Queries Prometheus for live monitoring: PromQL, the HTTP API, targets health, and ad-hoc alert inspection.
+
+## Instructions
+
+# Prometheus Monitoring
+
+Answer live monitoring questions directly from the API.
+
+## When to Use
+
+- On-call queries during incidents
+- Validating dashboards and alerts
+- Auditing target health
+
+## Target health
+
+```bash
+curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | {scrapeUrl, health}'
+```
+
+## Instant queries
+
+```bash
+curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=up{job="api"}'
+curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=rate(http_requests_total[5m])'
+```
+
+## Range queries
+
+```bash
+curl -G http://localhost:9090/api/v1/query_range --data-urlencode 'query=node_memory_Active_bytes' --data-urlencode 'start=...' --data-urlencode 'end=...' --data-urlencode 'step=60'
+```
+
+## Common recipes
+
+- CPU: `100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)`
+- Error rate: `sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))`
+- Restarts: `changes(process_start_time_seconds[15m]) > 0`
+- p99: `histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))`
+
+## Alerts
+
+```bash
+curl -s http://localhost:9090/api/v1/alerts | jq '.data.alerts[] | {name: .labels.alertname, state}'
+```
+
+## Best practices
+
+- Prefer rates over raw counters in dashboards.
+- Use recording rules for expensive queries.
+- Check label cardinality quarterly via /api/v1/series.
+- Timeout every ad-hoc query to avoid long API hangs.
+
+## Testing
+
+```bash
+curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=up' | jq '.data.result | length'
+```
+
+Assert expected target counts after config changes.
+
+## Capabilities
+
+### api-query
+Query Prometheus data with the HTTP API.
+
+**Commands:**
+- `curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=up'`
+- `curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=rate(http_requests_total[5m])'`
+- `curl -G http://localhost:9090/api/v1/query_range --data-urlencode 'query=node_cpu_seconds_total' --data-urlencode 'start=1750000000' --data-urlencode 'end=1750086400' --data-urlencode 'step=60'`
+- `curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | {scrapeUrl, health}'`
+- `curl -s http://localhost:9090/api/v1/alerts | jq '.data.alerts[] | {name: .labels.alertname, state}'`
+
+**Examples:**
+- curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)'
+- curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))' | jq '.data.result'
+- curl -s http://localhost:9090/api/v1/targets | jq '[.data.activeTargets[] | select(.health=="down")] | length'
+
+### promql
+Write and validate PromQL for dashboards and alerts.
+
+**Commands:**
+- `curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=sum by (job) (rate(http_requests_total[5m]))'`
+- `curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=sum(rate(container_cpu_usage_seconds_total[5m])) by (namespace)'`
+- `curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=changes(process_start_time_seconds{job="api"}[15m]) > 0'`
+- `curl -s http://localhost:9090/api/v1/labels | jq '.data'`
+- `curl -G http://localhost:9090/api/v1/series --data-urlencode 'match[]=up' | jq '.data | length'`
+
+**Examples:**
+- curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=rate(node_network_receive_bytes_total[5m])'
+- curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))' | jq '.data.result[0].value[1]'
+- curl -G http://localhost:9090/api/v1/query --data-urlencode 'query=topk(5, sum by (job) (rate(http_requests_total[5m])))'

@@ -1,0 +1,187 @@
+title: stateless-api-designer-stateless-api-designer
+description: Designs stateless, versioned REST/HTTP APIs with OpenAPI specs, validating contracts with
+  Redocly, Spectral, and Swagger CLI.
+version: 2.0.0
+instructions: '# stateless-api-designer-stateless-api-designer
+
+
+  Designs stateless, versioned REST/HTTP APIs with OpenAPI specs, validating contracts with Redocly, Spectral,
+  and Swagger CLI.
+
+
+  ## Instructions
+
+
+  # Stateless API Design
+
+
+  Design stateless, versioned HTTP APIs with contract-first tooling.
+
+
+  ## What This Skill Does
+
+
+  - Authors OpenAPI 3.x specs for REST endpoints
+
+  - Validates and bundles specs with Redocly
+
+  - Enforces API style with Spectral rulesets
+
+  - Generates server stubs and typed clients
+
+
+  ## When to Use
+
+
+  - Designing a new public/internal API
+
+  - Reviewing a spec for breaking changes
+
+  - Generating SDKs that match the contract
+
+
+  ## Real Commands
+
+
+  ```bash
+
+  # Author and validate
+
+  npx @redocly/cli init
+
+  npx @redocly/cli lint openapi.yaml
+
+  npx swagger-cli validate openapi.yaml
+
+
+  # Bundle for distribution
+
+  npx @redocly/cli bundle openapi.yaml -o bundled.yaml
+
+
+  # Preview docs
+
+  npx @redocly/cli preview-docs openapi.yaml
+
+
+  # Style enforcement
+
+  npx spectral lint openapi.yaml --ruleset api-style.rules.yaml
+
+
+  # Generate code
+
+  openapi-generator-cli generate -i openapi.yaml -g python-fastapi -o server/
+
+  openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o client/
+
+  ```
+
+
+  ## Stateless API Principles
+
+
+  - No server-side session state; all state in request/response or client
+
+  - Version in the URL (or header) from day one
+
+  - Use idempotency keys for mutating operations
+
+  - Paginate list endpoints; document cursor semantics
+
+  - Return RFC 7807 problem details on errors
+
+
+  ## Best Practices
+
+
+  - Contract-first: the spec is the source of truth
+
+  - Lint in CI with Spectral; block breaking changes
+
+  - Keep one spec per major version
+
+  - Use OpenAPI 3.1 for webhook and JSON Schema alignment
+
+  - Generate clients from the bundled spec only
+
+
+  ## Capabilities
+
+
+  ### openapi-authoring
+
+  Create, bundle, and validate OpenAPI documents.
+
+
+  **Commands:**
+
+  - `npx @redocly/cli init`
+
+  - `npx @redocly/cli bundle openapi.yaml -o bundled.yaml`
+
+  - `npx @redocly/cli lint openapi.yaml`
+
+  - `npx @redocly/cli preview-docs openapi.yaml`
+
+  - `npx swagger-cli validate openapi.yaml`
+
+
+  **Examples:**
+
+  - npx @redocly/cli lint openapi.yaml
+
+  - npx @redocly/cli bundle openapi.yaml -o bundled.yaml
+
+  - npx swagger-cli validate openapi.yaml
+
+
+  ### spectral-linting
+
+  Enforce API style rules with Spectral.
+
+
+  **Commands:**
+
+  - `npx spectral lint openapi.yaml`
+
+  - `npx spectral lint openapi.yaml --ruleset api-style.rules.yaml`
+
+  - `npx spectral lint openapi.yaml --format sarif`
+
+  - `npx spectral validate .spectral.yaml`
+
+
+  **Examples:**
+
+  - npx spectral lint openapi.yaml
+
+  - npx spectral lint openapi.yaml --format sarif
+
+  - npx spectral lint openapi.yaml --ruleset team-rules.yaml
+
+
+  ### code-generation
+
+  Generate server stubs and clients from specs.
+
+
+  **Commands:**
+
+  - `openapi-generator-cli generate -i openapi.yaml -g python-fastapi -o server/`
+
+  - `openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o client/`
+
+  - `openapi-generator-cli validate -i openapi.yaml`
+
+  - `npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g go -o api/ --skip-validate-spec`
+
+
+  **Examples:**
+
+  - openapi-generator-cli generate -i openapi.yaml -g python-fastapi -o server/
+
+  - openapi-generator-cli validate -i openapi.yaml
+
+  - npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o client/'
+prompt: Act as stateless-api-designer-stateless-api-designer and handle the task per the instructions.

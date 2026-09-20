@@ -1,0 +1,114 @@
+---
+name: "Grpc Cpp"
+description: "Build gRPC services and clients in C++: protoc codegen with grpc_cpp_plugin, CMake integration, and sync server patterns."
+globs: ["**/*.r", "**/*.sh", "**/*.{cpp,cc,h,hpp}"]
+alwaysApply: false
+---
+
+# Grpc Cpp
+
+Build gRPC services and clients in C++: protoc codegen with grpc_cpp_plugin, CMake integration, and sync server patterns.
+
+## Instructions
+
+# gRPC C++
+
+Real gRPC services and clients in C++ using protoc, grpc_cpp_plugin, and CMake.
+
+## What this skill does
+
+- Generates C++ stubs from .proto files.
+- Wires gRPC into CMake-based projects.
+- Runs sync servers and blocking clients.
+- Resolves common build errors (plugin not found, missing include paths).
+
+## When to use
+
+- A C++ service needs a high-performance RPC layer.
+- Integrating gRPC into an existing CMake codebase.
+- Debugging link or protoc plugin issues.
+
+## Real commands
+
+```bash
+# Generate C++ stubs (messages + service)
+protoc -I . --cpp_out=. helloworld.proto
+protoc -I . --grpc_out=. --plugin=protoc-gen-grpc=$(which grpc_cpp_plugin) helloworld.proto
+
+# Build with CMake
+cmake -B build -DCMAKE_PREFIX_PATH=$(pwd)/cmake
+cmake --build build -j4
+
+# Run server then client
+./build/greeter_server &
+./build/greeter_client
+```
+
+## CMake config
+
+```cmake
+find_package(gRPC CONFIG REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
+
+set(PROTO_FILES helloworld.proto)
+set(PROTO_GENERATED "${CMAKE_CURRENT_BINARY_DIR}/helloworld.pb.cc"
+                    "${CMAKE_CURRENT_BINARY_DIR}/helloworld.grpc.pb.cc")
+
+add_custom_command(
+  OUTPUT ${PROTO_GENERATED}
+  COMMAND protobuf::protoc -I ${CMAKE_CURRENT_SOURCE_DIR}
+          --cpp_out ${CMAKE_CURRENT_BINARY_DIR}
+          --grpc_out ${CMAKE_CURRENT_BINARY_DIR}
+          --plugin=protoc-gen-grpc=$<TARGET_FILE:gRPC::grpc_cpp_plugin>
+  DEPENDS ${PROTO_FILES})
+```
+
+## Sync server pattern
+
+```cpp
+#include <grpcpp/grpcpp.h>
+class GreeterServiceImpl final : public Greeter::Service {
+  grpc::Status SayHello(grpc::ServerContext* ctx, const HelloRequest* req, HelloReply* rep) override {
+    rep->set_message("Hello " + req->name());
+    return grpc::Status::OK;
+  }
+};
+```
+
+## Testing
+
+```bash
+cmake --build build --target test && ctest --test-dir build --output-on-failure
+```
+
+## Best practices
+
+- Always pass the full plugin path via `--plugin`; protoc does not find grpc_cpp_plugin by default.
+- Keep generated .pb.cc files in the build dir, not the source tree.
+- Use sync APIs for small QPS, the Callback API for high concurrency.
+- Set a deadline on client calls: `ctx.set_deadline(gpr_time_add(gpr_now(GPR_CLOCK_REALTIME), gpr_time_from_seconds(5, GPR_TIMESPAN)))`.
+
+## Example exchange
+
+```
+User: My build fails with "protoc-gen-grpc: not found".
+Agent: Run protoc with an explicit plugin path:
+       protoc -I . --grpc_out=. --plugin=protoc-gen-grpc=$(which grpc_cpp_plugin) helloworld.proto
+```
+
+## Capabilities
+
+### cpp-grpc-build
+Generate C++ gRPC stubs and build servers/clients with CMake and grpc_cpp_plugin.
+
+**Commands:**
+- `protoc -I . --cpp_out=. --grpc_out=. --plugin=protoc-gen-grpc=$(which grpc_cpp_plugin) helloworld.proto`
+- `cmake -B build -DCMAKE_PREFIX_PATH=$(pwd)/cmake`
+- `cmake --build build -j4`
+- `./build/greeter_client`
+- `grpc_cpp_plugin --version`
+
+**Examples:**
+- cmake -B build -DgRPC_BUILD_TESTS=OFF && cmake --build build
+- ./build/greeter_server & ./build/greeter_client
+- protoc -I . --cpp_out=. helloworld.proto

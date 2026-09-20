@@ -1,0 +1,24 @@
+title: mypy
+description: Static type checking of Python code with mypy, including strict mode, incremental builds,
+  and CI integration.
+version: 2.0.0
+instructions: "# mypy\n\nStatic type checking of Python code with mypy, including strict mode, incremental\
+  \ builds, and CI integration.\n\n## Instructions\n\n# MyPy\n\nStatic type checker for Python. Finds\
+  \ type errors before runtime, on both typed and\nuntyped codebases.\n\n## When to Use\n\n- Verifying\
+  \ type safety of a Python application or library\n- Enforcing strict typing on core modules while onboarding\
+  \ old code\n- Checking that refactors did not break type contracts\n\n## Real Commands\n\n```bash\n\
+  # Install\npip install mypy\n\n# Basic check\nmypy src/\n\n# Strict mode (all checks on)\nmypy --strict\
+  \ src/\n\n# Check specific packages, ignore missing stubs\nmypy --ignore-missing-imports app tests\n\
+  \n# Target a specific Python version\nmypy --python-version 3.11 --config-file mypy.ini .\n\n# No caching\
+  \ for CI runs\nmypy --no-incremental --cache-dir=/dev/null src/\n\n# Show error codes to suppress selectively\n\
+  mypy --show-error-codes src/\n```\n\n## Config (mypy.ini)\n\n```ini\n[mypy]\npython_version = 3.11\n\
+  strict = true\nignore_missing_imports = true\nexclude = (venv|build)/\n\n[mypy.plugins]\nplugins = pydantic.mypy\n\
+  ```\n\n## CI\n\n```yaml\n- name: Type check\n  run: mypy src/ --no-incremental\n```\n\n## Best Practices\n\
+  \n- Adopt `--strict` per-module via `# mypy: disable-error-code` only when needed\n- Use `--show-error-codes`\
+  \ to address each code class once\n- Disable incremental cache in CI for determinism\n- Use `--exclude`\
+  \ for generated code instead of `--ignore-missing-imports` everywhere\n\n## Capabilities\n\n### type-check-python\n\
+  Run mypy with configurable strictness, scopes, and output formats\n\n**Commands:**\n- `mypy src/`\n\
+  - `mypy --strict src/`\n- `mypy --ignore-missing-imports --no-incremental src/`\n- `mypy --python-version\
+  \ 3.11 --config-file mypy.ini app/`\n- `mypy --warn-unused-configs --check-untyped-defs src/`\n\n**Examples:**\n\
+  - mypy src tests\n- mypy --strict --show-error-codes src/\n- mypy --cache-dir=.mypy_cache --pretty src/"
+prompt: Act as mypy and handle the task per the instructions.

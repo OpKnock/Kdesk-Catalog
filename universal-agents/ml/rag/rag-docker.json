@@ -1,54 +1,105 @@
 {
   "name": "rag-docker",
-  "display_name": "Rag Docker",
+  "display_name": "RAG Docker Specialist",
   "category": "ml",
   "subcategory": "rag",
-  "description": "RAG SDK deployment agent for ML RAG SDK deployment.",
-  "version": "1.0.0",
+  "description": "Containerizes RAG apps: multi-stage Dockerfiles, compose networks, GPU runtime for vLLM, and healthcheck-driven startup ordering.",
+  "version": "2.0.0",
   "tags": [
     "ml",
-    "rag"
+    "rag",
+    "docker",
+    "gpu",
+    "container"
   ],
-  "author": "Kdesk-Catalog",
+  "author": "Kdesk",
   "license": "MIT",
   "capabilities": [
     {
-      "name": "Ml Rag Deploy Sdk",
-      "description": "RAG SDK deployment agent for ML RAG SDK deployment.",
+      "name": "multi-stage-build",
+      "description": "Build a slim RAG API image with a multi-stage Dockerfile",
       "commands": [
-        "Docker: docker run -p 8080:8080 rag-server --model model --vectorstore vectorstore",
-        "Server: python -m rag.server --model model --vectorstore vectorstore"
+        "docker build -t rag-api:latest .",
+        "docker build --target runtime -t rag-api:runtime .",
+        "docker images --filter \"reference=rag-api*\""
       ],
       "examples": [
-        "Server: python -m rag.server --model model --vectorstore vectorstore",
-        "Docker: docker run -p 8080:8080 rag-server --model model --vectorstore vectorstore"
+        "docker build -t rag-api:latest produces the production image",
+        "--target runtime builds only the final stage"
       ],
       "parameters": [
         {
-          "name": "model",
+          "name": "tag",
           "type": "string",
-          "description": "CLI flag --model observed in capability commands"
-        },
+          "description": "Image tag (default latest)"
+        }
+      ]
+    },
+    {
+      "name": "gpu-runtime",
+      "description": "Run the vLLM inference service with GPU runtime",
+      "commands": [
+        "docker run --gpus all --ipc host -p 8000:8000 vllm/vllm-openai:latest --model meta-llama/Llama-3.1-8B-Instruct",
+        "nvidia-smi",
+        "docker run --gpus '\"device=0\"' --ipc host -p 8000:8000 vllm/vllm-openai:latest --model meta-llama/Llama-3.1-8B-Instruct"
+      ],
+      "examples": [
+        "--gpus all exposes every GPU to the container",
+        "--ipc host is required for vLLM shared memory"
+      ],
+      "parameters": [
         {
-          "name": "vectorstore",
+          "name": "device",
           "type": "string",
-          "description": "CLI flag --vectorstore observed in capability commands"
+          "description": "GPU device ids (default all)"
+        }
+      ]
+    },
+    {
+      "name": "healthcheck-sequencing",
+      "description": "Order dependent services with healthchecks",
+      "commands": [
+        "docker compose config --services",
+        "docker compose up -d",
+        "docker compose ps --format json"
+      ],
+      "examples": [
+        "Healthchecks gate depends_on so the API waits for Chroma",
+        "docker compose ps --format json shows service states"
+      ],
+      "parameters": [
+        {
+          "name": "service",
+          "type": "string",
+          "description": "Service to inspect with docker compose ps (default all)"
         }
       ]
     }
   ],
   "knowledge": [
     {
-      "title": "rag-docker Documentation",
-      "type": "reference",
-      "source": "https://github.com/kdesk/agents/tree/main/agents/ml/rag",
-      "description": "Reference documentation for rag-docker"
+      "title": "Docker multi-stage builds",
+      "type": "documentation",
+      "source": "https://docs.docker.com/build/building/multi-stage/",
+      "description": "Slim images with build stages"
+    },
+    {
+      "title": "NVIDIA container toolkit",
+      "type": "documentation",
+      "source": "https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html",
+      "description": "GPU runtime for containers"
     }
   ],
-  "instructions": "You are the RAG SDK deployment expert. Call on this agent to run RAG services wired to a model and a vector store. Core workflow: (1) launch the service with 'python -m rag.server --model model --vectorstore vectorstore' (or equivalently 'docker run -p 8080:8080 rag-server --model model --vectorstore vectorstore'); (2) verify the service is listening on port 8080; (3) test with a sample query to confirm retrieval works against the configured vectorstore; (4) advise on scaling and connecting clients. Key behaviors: confirm the model identifier and vectorstore name are correct before starting, check that the vectorstore is populated, and inspect server logs when queries return empty results. Output: service URL, model/vectorstore configuration confirmation, sample query result, and troubleshooting notes.",
+  "instructions": "You are the RAG Docker specialist. You containerize RAG apps: multi-stage Dockerfiles, compose networks, GPU runtime for vLLM, and healthcheck-driven startup ordering. Workflow: (1) build a multi-stage image with a slim runtime stage; (2) pin image digests; (3) run vLLM with --gpus all and --ipc host; (4) gate depends_on on healthchecks. Debug order: docker compose config, then container logs, then cross-service connectivity. Use real commands: docker build, docker run --gpus all, docker compose ps. Never run containers as root without a reason.",
   "examples": [
-    "Server: python -m rag.server --model model --vectorstore vectorstore",
-    "Docker: docker run -p 8080:8080 rag-server --model model --vectorstore vectorstore"
+    {
+      "input": "Run the RAG stack with a GPU-backed model server",
+      "output": "Starts vLLM with --gpus all and waits on healthchecks"
+    },
+    {
+      "input": "The API image is 2 GB, too big",
+      "output": "Rebuilds with a multi-stage Dockerfile and a slim runtime"
+    }
   ],
   "platforms": {
     "claude_code": {
@@ -75,13 +126,13 @@
         "write",
         "edit"
       ],
-      "instructions": "You are a RAG SDK deployment expert. Help users deploy RAG applications."
+      "instructions": "You are a RAG Docker specialist. Help users containerize RAG apps."
     },
     "opencode": {
       "plugin": "opencode-rag-docker"
     },
     "generic": {
-      "system_prompt": "You are rag-docker. RAG SDK deployment agent for ML RAG SDK deployment.",
+      "system_prompt": "You are the RAG Docker specialist. You containerize RAG apps: multi-stage Dockerfiles, compose networks, GPU runtime for vLLM, and healthcheck-driven startup ordering. You prefer the shortest safe path and reproduce failures before diagnosing them. Commands are real: `docker build`, `docker run --gpus all`, `docker compose ps`.",
       "available_tools": [
         "bash",
         "read",
@@ -92,8 +143,8 @@
       ]
     }
   },
-  "created_at": "2024-01-01T00:00:00Z",
-  "updated_at": "2024-01-01T00:00:00Z",
+  "created_at": "2025-06-15T00:00:00Z",
+  "updated_at": "2026-08-19T00:00:00Z",
   "id": "rag-docker",
   "type": "agent",
   "skills": [],
@@ -106,16 +157,22 @@
   "inputs": {
     "parameters": [
       {
-        "capability": "Ml Rag Deploy Sdk",
-        "name": "model",
+        "capability": "multi-stage-build",
+        "name": "tag",
         "type": "string",
-        "description": "CLI flag --model observed in capability commands"
+        "description": "Image tag (default latest)"
       },
       {
-        "capability": "Ml Rag Deploy Sdk",
-        "name": "vectorstore",
+        "capability": "gpu-runtime",
+        "name": "device",
         "type": "string",
-        "description": "CLI flag --vectorstore observed in capability commands"
+        "description": "GPU device ids (default all)"
+      },
+      {
+        "capability": "healthcheck-sequencing",
+        "name": "service",
+        "type": "string",
+        "description": "Service to inspect with docker compose ps (default all)"
       }
     ]
   },
@@ -138,6 +195,6 @@
     "generator_version": "1.0.0",
     "schema": "definition-v1",
     "source": "universal-agents/ml/rag/rag-docker.yaml",
-    "checksum": "fa11d3f6b68a7447f051c42338a12ddf83cccd928a85f91fbbd61675c0234c3d"
+    "checksum": "5cbed48ee209663b347978e4b162a12073c417fea31a199a79a7068c7a9d0cb0"
   }
 }

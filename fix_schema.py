@@ -61,12 +61,12 @@ Output: Expert guidance, code examples, architecture diagrams, and implementatio
 
 def main():
     fixed = 0
-    for root_dir, dirs, files in os.walk(r'C:\Users\wagde\Kdesk-Catalog\universal-agents'):
+    for root_dir, dirs, files in os.walk(r'<repo-root>\universal-agents'):
         for f in files:
             if f.endswith('.yaml') and f != 'registry.yaml':
                 path = os.path.join(root_dir, f)
                 if fix_file(os.path.join(root_dir, f)):
-                    print(f'Fixed: {os.path.relpath(os.path.join(root_dir, f), r"C:\\Users\\wagde\\Kdesk-Catalog\\universal-agents")}')
+                    print(f'Fixed: {os.path.relpath(os.path.join(root_dir, f), r"<repo-root>\\universal-agents")}')
                     fixed += 1
     print(f'Fixed {fixed} files')
 

@@ -31,7 +31,7 @@ Run developer team workflows from the terminal with GitHub CLI.
 
 ```bash
 # PRs
-gh pr list --state open --author wagde
+gh pr list --state open --author octocat
 gh pr review 123 --approve
 gh pr merge 123 --squash --delete-branch
 gh pr checks 123
@@ -47,7 +47,7 @@ gh release create v1.2.3 --target main --notes 'Release notes'
 
 # Team data
 gh api orgs/ORG/teams/TEAM/members --jq '.[].login'
-gh api search/commits -f q='author:wagde' --jq '.items[].commit.message'
+gh api search/commits -f q='author:octocat' --jq '.items[].commit.message'
 ```
 
 ## Workflow Template
@@ -84,7 +84,7 @@ List, review, merge, and manage pull requests.
 - `gh pr checks 123`
 
 **Examples:**
-- gh pr list --state open --author wagde
+- gh pr list --state open --author octocat
 - gh pr review 123 --approve
 - gh pr merge 123 --squash --delete-branch
 
@@ -110,7 +110,7 @@ Create releases and inspect team activity.
 - `gh release create v1.2.3 --generate-notes`
 - `gh release create v1.2.3 --target main --notes 'Release notes'`
 - `gh api orgs/ORG/teams/TEAM/members --jq '.[].login'`
-- `gh api search/commits -f q='author:wagde committer-date:>2024-01-01' --jq '.items[].commit.message'`
+- `gh api search/commits -f q='author:octocat committer-date:>2024-01-01' --jq '.items[].commit.message'`
 
 **Examples:**
 - gh release create v1.2.3 --generate-notes

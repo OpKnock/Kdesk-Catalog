@@ -73,3 +73,7 @@ Convert collections to OpenAPI for contract drift checks
 - `npx postman-to-openapi postman_collection.json -o openapi.yaml`
 - `newman run openapi.yaml --reporters cli`
 - `node -e "const c = require('./collection.json'); console.log(c.item.length)"`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -69,3 +69,7 @@ Mark fields deprecated in the schema
 - `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ __type(name: \"User\") { fields { name isDeprecated deprecationReason } } }"}' | jq '.data.__type.fields[0]'`
 - `npx @graphql-inspector/cli diff schema.graphql schema-next.graphql --rule dangerous`
 - `grep -c 'deprecated' schema.graphql`
+
+**Examples:**
+- -cli --help
+- -api --help

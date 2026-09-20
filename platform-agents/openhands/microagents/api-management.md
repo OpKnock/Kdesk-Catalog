@@ -1,13 +1,13 @@
 ---
 name: "api-management"
-description: "Implement it."
+description: "Manage API gateways, developer portals, and analytics."
 type: knowledge
 triggers: ["api-management"]
 ---
 
 # API Management
 
-Implement it.
+Manage API gateways, developer portals, and analytics.
 
 ## Instructions
 

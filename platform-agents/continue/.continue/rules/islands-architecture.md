@@ -1,13 +1,13 @@
 ---
 name: "Islands Architecture"
-description: "Implement it."
+description: "Build interactive islands with partial hydration for fast loads."
 globs: ["**/*.java", "**/*.r", "**/*.{js,ts,jsx,tsx}"]
 alwaysApply: false
 ---
 
 # Islands Architecture
 
-Implement it.
+Build interactive islands with partial hydration for fast loads.
 
 ## Instructions
 

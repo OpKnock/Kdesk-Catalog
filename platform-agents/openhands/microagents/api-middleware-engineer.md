@@ -92,3 +92,7 @@ Verify middleware behavior with supertest against a mounted app instance
 - `npx jest --coverage`
 - `curl -s -X POST http://localhost:3000/api/items -d '{}' -H 'Content-Type: application/json'`
 - `curl -s http://localhost:3000/api/protected`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -80,3 +80,7 @@ Cap concurrent connections per client
 - `nginx -t -c /etc/nginx/nginx.conf`
 - `curl -s -o /dev/null -w '%{http_code}\n' http://localhost/api/health`
 - `ab -n 500 -c 100 http://localhost/api/ 2>&1 | grep -i 'non-2xx'`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -83,3 +83,7 @@ Start and stop the mock server in tests and development
 - `node test-setup.js`
 - `npx vitest run`
 - `curl -s http://localhost:3000/api/health | jq .`
+
+**Examples:**
+- -cli --help
+- -api --help

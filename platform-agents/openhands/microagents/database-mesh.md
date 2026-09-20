@@ -1,13 +1,13 @@
 ---
 name: "database-mesh"
-description: "Implement it."
+description: "Build a distributed database mesh with sharding and replication."
 type: knowledge
 triggers: ["database-mesh"]
 ---
 
 # Database Mesh
 
-Implement it.
+Build a distributed database mesh with sharding and replication.
 
 ## Instructions
 

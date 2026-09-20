@@ -75,3 +75,7 @@ Validate the packaged artifact works when installed in a consumer project
 - `npm install ../my-middleware --save`
 - `node -e "const mw = require('my-middleware'); console.log(mw().length)"`
 - `npm ls --depth=0`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -76,3 +76,7 @@ Implement retry and backoff for transient failures
 - `npm install p-retry`
 - `node -e "const pRetry=require('p-retry'); const fn=async()=>{const r=await fetch('http://localhost:8080/users'); if(!r.ok) throw new Error('fail'); return r.json()}; pRetry(fn,{retries:3,factor:2}).then(console.log).catch(console.error)"`
 - `node -e "const r=require('retry'); console.log(r.operation({retries:3,factor:2}).attempt)"`
+
+**Examples:**
+- -cli --help
+- -api --help

@@ -66,3 +66,7 @@ Simulate webhook deliveries
 - `curl -s -X POST http://localhost:3000/webhook-test -H 'Content-Type: application/json' -d '{"event":"test"}' -w '\n%{http_code}\n'`
 - `curl -s -X POST http://localhost:3000/webhook-test -H 'Content-Type: application/json' -d '{"event":"test"}' --retry 2 --retry-delay 1 -w '\n%{http_code}\n'`
 - `curl -s https://webhook.site/token | jq '.uuid'`
+
+**Examples:**
+- -cli --help
+- -api --help

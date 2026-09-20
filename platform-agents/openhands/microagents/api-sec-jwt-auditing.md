@@ -74,3 +74,7 @@ Verify bearer and basic auth enforcement
 - `curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/me`
 - `curl -s -o /dev/null -w '%{http_code}\n' -H 'Authorization: Bearer expired-token' http://localhost:8080/me`
 - `node -e "const jwt=require('jsonwebtoken'); const t=jwt.sign({sub:'1'},'secret',{expiresIn:'1h'}); console.log(t.split('.')[0]); console.log(jwt.verify(t,'secret').sub)"`
+
+**Examples:**
+- -cli --help
+- -api --help

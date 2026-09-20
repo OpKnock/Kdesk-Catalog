@@ -66,3 +66,7 @@ Compare endpoints and payloads to rank bottlenecks
 - `curl -s -o /dev/null -w '%{time_total}\n' http://localhost:8080/v2/items/1`
 - `curl -s http://localhost:8080/v1/items | jq '.data | length'`
 - `curl -s http://localhost:8080/v1/items | wc -c`
+
+**Examples:**
+- -cli --help
+- -api --help

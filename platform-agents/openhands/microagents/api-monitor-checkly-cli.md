@@ -81,3 +81,7 @@ Script multi-step user journeys as Playwright browser checks
 - `npx playwright test --project=chromium`
 - `npx checkly test --browser`
 - `npx checkly login`
+
+**Examples:**
+- -cli --help
+- -api --help

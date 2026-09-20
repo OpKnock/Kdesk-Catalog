@@ -80,3 +80,7 @@ Map custom URLs and add middleware to the mock server
 - `curl -s http://localhost:3001/users/1 | jq .`
 - `curl -s -X PUT http://localhost:3001/users/1 -H 'Content-Type: application/json' -d '{"name":"bob"}'`
 - `curl -s -X DELETE http://localhost:3001/users/1 -o /dev/null -w '%{http_code}\n'`
+
+**Examples:**
+- -cli --help
+- -api --help

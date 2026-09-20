@@ -77,3 +77,7 @@ Parse and filter structured API logs with LogQL
 - `logcli query '{app="api"} | json | latency_ms > 1000 | drop timestamp'`
 - `curl -s -G 'http://localhost:3100/loki/api/v1/labels' | jq '.data.values'`
 - `logcli series '{app=~"api.+"}'`
+
+**Examples:**
+- -cli --help
+- -api --help

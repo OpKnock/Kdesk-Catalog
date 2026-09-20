@@ -24,12 +24,10 @@ class FixEngine:
             self.backup_dir = self.project_root / ".kdesk_doctor_backups"
 
     def apply_fixes(self, issues: List[Any], catalog, platform: str, registry_root: Path, project_root: Optional[Path] = None) -> FixReport:
-        """Apply fixes for all fixable issues."""
+        """Apply fixes for all fixable issues. Transactional: rollback on failure."""
         from kdesk.diagnostics import FixReport
 
-        # Use provided project_root or fall back to self.project_root
         active_root = project_root or self.project_root
-        
         report = FixReport(
             project_root=str(active_root),
             platform=platform,
@@ -42,20 +40,49 @@ class FixEngine:
 
         fixable_issues = [i for i in issues if i.fixable]
 
-        for issue in fixable_issues:
-            result = self._apply_fix(issue, project_root=project_root or self.project_root)
-            report.fixes.append(result)
+        # Take snapshot of all files we might touch
+        snapshot = self._snapshot(active_root, fixable_issues)
 
-            if not result.success:
-                report.manual_actions.append(
-                    f"Manual action required for {issue.id}: {issue.suggested_fix}"
-                )
+        try:
+            for issue in fixable_issues:
+                result = self._apply_fix(issue, project_root=active_root)
+                report.fixes.append(result)
 
-        # Calculate real scores from issue severity counts
-        report.before_score = self._calculate_score(issues)
-        report.after_score = self._calculate_score(issues, applied_fixes=report.fixes)
+                if not result.success:
+                    report.manual_actions.append(
+                        f"Manual action required for {issue.id}: {issue.suggested_fix}"
+                    )
+
+            report.before_score = self._calculate_score(issues)
+            report.after_score = self._calculate_score(issues, applied_fixes=report.fixes)
+
+        except Exception as exc:
+            # Rollback: restore all snapshot files
+            self._rollback(snapshot)
+            report.manual_actions.append(f"TRANSACTION ROLLED BACK due to error: {exc}")
+            raise
 
         return report
+
+    @staticmethod
+    def _snapshot(root: Path, issues: List[Any]) -> Dict[Path, bytes]:
+        """Capture file contents before modification."""
+        snap = {}
+        for issue in issues:
+            fp = root / getattr(issue, "file", "")
+            if fp and fp.is_file():
+                snap[fp] = fp.read_bytes()
+        return snap
+
+    @staticmethod
+    def _rollback(snapshot: Dict[Path, bytes]) -> None:
+        """Restore all snapshotted files to their pre-fix state."""
+        for path, content in snapshot.items():
+            if content:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(content)
+            elif path.exists():
+                path.unlink()
 
     @staticmethod
     def _calculate_score(issues, applied_fixes=None) -> int:

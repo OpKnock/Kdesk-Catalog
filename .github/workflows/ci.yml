@@ -27,6 +27,9 @@ jobs:
       - name: Generate JSON from YAML
         run: python scripts/yaml-to-json.py
 
+      - name: Generate platform-agents
+        run: python scripts/universal-converter.py --platforms all --quiet
+
       - name: Stats validation (authoritative counts, zero-file guard)
         run: python -m kdesk.cli stats --format json --root .
 

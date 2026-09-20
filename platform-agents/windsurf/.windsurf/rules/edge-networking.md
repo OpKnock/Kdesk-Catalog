@@ -1,12 +1,12 @@
 ---
 trigger: glob
-description: "Configure it."
+description: "Manage edge CDN, DNS, and global load balancing configurations."
 globs: ["**/*.json", "**/*.r"]
 ---
 
 # Edge Networking
 
-Configure it.
+Manage edge CDN, DNS, and global load balancing configurations.
 
 ## Instructions
 

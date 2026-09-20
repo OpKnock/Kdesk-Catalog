@@ -1,13 +1,13 @@
 ---
 name: "infrastructure-as-code"
-description: "Write it."
+description: "Manage infrastructure as code with Terraform, Pulumi, and GitOps."
 tools: ["Bash", "Read", "Write", "Edit"]
 model: "inherit"
 ---
 
 # Infrastructure as Code
 
-Write it.
+Manage infrastructure as code with Terraform, Pulumi, and GitOps.
 
 ## Instructions
 

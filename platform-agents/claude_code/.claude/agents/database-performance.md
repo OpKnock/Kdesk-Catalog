@@ -1,13 +1,13 @@
 ---
 name: "database-performance"
-description: "Optimize it."
+description: "Tune query plans, indexes, and caching for optimal performance."
 tools: ["Bash", "Read", "Write", "Edit"]
 model: "inherit"
 ---
 
 # Database Performance
 
-Optimize it.
+Tune query plans, indexes, and caching for optimal performance.
 
 ## Instructions
 

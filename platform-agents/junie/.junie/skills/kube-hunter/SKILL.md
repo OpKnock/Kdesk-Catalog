@@ -1,13 +1,35 @@
 ---
 name: "kube-hunter"
-description: "Probes Kubernetes clusters for exploitable attack surfaces with kube-hunter active and passive scans."
+description: "Probes Kubernetes clusters for exploitable attack surfaces with kube-hunter active and passive scans. Use when working with cluster hunting, reporting, security or when the user mentions cluster hunting, reporting, security."
+license: "MIT"
+compatibility: "Requires kube-hunter."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "security"}
+allowed-tools: "Glob Grep Read Bash(kube-hunter:*)"
 ---
-
-# kube-hunter
 
 Probes Kubernetes clusters for exploitable attack surfaces with kube-hunter active and passive scans.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kube-hunter`, `kube-hunter --report report.json --format json`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # kube-hunter
 
@@ -60,6 +82,11 @@ kube-hunter --report findings.json --format json
 ### cluster-hunting
 Scan clusters locally, remotely, or across CIDR ranges.
 
+**Parameters:**
+- `remote` (string): Remote endpoint host:port to scan
+- `cidr` (string): CIDR range to scan for clusters
+- `active` (boolean): Run active exploits/hunting checks
+
 **Commands:**
 - `kube-hunter`
 - `kube-hunter --remote 10.0.0.5:6443`
@@ -75,6 +102,10 @@ Scan clusters locally, remotely, or across CIDR ranges.
 ### reporting
 Capture findings to reports and logs.
 
+**Parameters:**
+- `report` (string): Report file path
+- `format` (string): Report format: html, json, console
+
 **Commands:**
 - `kube-hunter --report report.json --format json`
 - `kube-hunter --report report.html --format html`
@@ -85,3 +116,7 @@ Capture findings to reports and logs.
 - kube-hunter --report report.html
 - kube-hunter --report findings.json --format json
 - kube-hunter --active --report report.html
+
+## References
+- [kube-hunter GitHub](https://github.com/aquasecurity/kube-hunter)
+- [kube-hunter Hunting Scenarios](https://github.com/aquasecurity/kube-hunter/blob/master/docs/HUNTING_SCENARIOS.md)

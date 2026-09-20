@@ -1,8 +1,26 @@
-# Datadog
-
 Operates the Datadog Agent and dashboards: agent status, live checks, monitors, and diagnostics via the CLI and API.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `datadog-agent status`, `curl -s -H 'DD-API-KEY: $DD_API_KEY' -H 'DD-APPLICATION-KEY:`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Datadog
 
@@ -64,6 +82,11 @@ Confirm checks pass after config changes.
 ### agent
 Manage the Datadog agent locally.
 
+**Parameters:**
+- `check` (string): Integrations check name like nginx, disk
+- `flare` (string): Bundle diagnostics for support
+- `restart` (string): Restart the agent service
+
 **Commands:**
 - `datadog-agent status`
 - `datadog-agent check nginx`
@@ -79,6 +102,11 @@ Manage the Datadog agent locally.
 ### monitors
 Manage monitors and metrics via the Datadog API.
 
+**Parameters:**
+- `api-key` (string): Datadog API key
+- `app-key` (string): Datadog application key
+- `query` (string): Metric or event query
+
 **Commands:**
 - `curl -s -H 'DD-API-KEY: $DD_API_KEY' -H 'DD-APPLICATION-KEY: $DD_APP_KEY' 'https://api.datadoghq.com/api/v1/monitor' | jq '.[] | {id, name, status}'`
 - `curl -s -X POST -H 'DD-API-KEY: $DD_API_KEY' -H 'DD-APPLICATION-KEY: $DD_APP_KEY' -H 'Content-Type: application/json' -d '{"type":"metric alert","query":"avg(last_5m):avg:system.cpu.user{*} > 80","name":"High CPU","message":"CPU above 80%"}' https://api.datadoghq.com/api/v1/monitor`
@@ -90,3 +118,8 @@ Manage monitors and metrics via the Datadog API.
 - curl -s -H 'DD-API-KEY: $K' -H 'DD-APPLICATION-KEY: $A' 'https://api.datadoghq.com/api/v1/monitor' | jq '.[] | select(.status != "OK") | {name, status}'
 - curl -s -X POST -H 'DD-API-KEY: $K' -H 'DD-APPLICATION-KEY: $A' -H 'Content-Type: application/json' -d '{"type":"service check","query":"\"api.up\".over(\"last_5m\").last(5).count_by_status()","name":"API up check"}' https://api.datadoghq.com/api/v1/monitor
 - curl -s -H 'DD-API-KEY: $K' -H 'DD-APPLICATION-KEY: $A' 'https://api.datadoghq.com/api/v1/monitor' | jq 'length'
+
+## References
+- [Datadog Agent](https://docs.datadoghq.com/agent/basic_agent_usage/)
+- [Datadog API](https://docs.datadoghq.com/api/latest/monitors/)
+- [Datadog Integrations](https://docs.datadoghq.com/integrations/)

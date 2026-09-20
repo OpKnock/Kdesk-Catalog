@@ -2,6 +2,7 @@
 name: "httprouter"
 description: "Go httprouter: radix-tree routing with typed path params, method handlers, middleware wrapping, and benchmark-grade request dispatch. Use when working with httprouter routing, api or when the user mentions httprouter routing, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*) Bash(go:*)"
 ---

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Cloud Firestore database operations: manage data, indexes, and security rules; read and write documents from the CLI."
+description: "Cloud Firestore database operations: manage data, indexes, and security rules; read and write documents from the CLI. Use when working with firestore data, api or when the user mentions firestore data, api."
 ---
-
-# Firebase Firestore
 
 Cloud Firestore database operations: manage data, indexes, and security rules; read and write documents from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `firebase firestore:indexes`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Firebase Firestore
 
@@ -90,6 +108,11 @@ firebase deploy --only firestore:rules --dry-run
 ### firestore-data
 Read, write, and administer Firestore data, indexes, and rules.
 
+**Parameters:**
+- `collection` (string): Collection to query or modify
+- `rules-file` (string): Path to firestore.rules
+- `indexes-file` (string): Path to firestore.indexes.json
+
 **Commands:**
 - `firebase firestore:indexes`
 - `firebase deploy --only firestore:rules`
@@ -101,3 +124,7 @@ Read, write, and administer Firestore data, indexes, and rules.
 - firebase deploy --only firestore:rules
 - firebase deploy --only firestore:indexes
 - node -e "const admin=require('firebase-admin');admin.initializeApp();admin.firestore().collection('orders').where('status','==','paid').limit(5).get().then(s=>console.log(s.size))"
+
+## References
+- [Firestore data model](https://firebase.google.com/docs/firestore/data-model)
+- [Firestore security rules](https://firebase.google.com/docs/firestore/security/get-started)

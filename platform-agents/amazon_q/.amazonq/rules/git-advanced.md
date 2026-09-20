@@ -1,8 +1,26 @@
-# git-advanced
-
 Performs advanced git surgery: bisect debugging, reflog recovery, history rewriting with filter-repo, subtrees, worktrees, and partial clones.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `git bisect start`, `git filter-repo --path server/ --invert-paths`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Advanced Git Techniques
 
@@ -67,6 +85,10 @@ git subtree pull --prefix=vendor/libs vendor-repo main
 ### bisect-and-recovery
 Find the commit that introduced a bug and recover lost work.
 
+**Parameters:**
+- `command` (string): Test command for git bisect run
+- `revision` (string): Reflog entry, e.g. HEAD@{3}
+
 **Commands:**
 - `git bisect start`
 - `git bisect good v1.0 && git bisect bad HEAD`
@@ -83,6 +105,10 @@ Find the commit that introduced a bug and recover lost work.
 ### history-and-trees
 Rewrite history, split repos, and manage subtree and worktree workflows.
 
+**Parameters:**
+- `path` (string): Path to remove or add via subtree
+- `remote` (string): Remote repo URL for subtree operations
+
 **Commands:**
 - `git filter-repo --path server/ --invert-paths`
 - `git filter-repo --strip-blobs-bigger-than 10M`
@@ -95,3 +121,8 @@ Rewrite history, split repos, and manage subtree and worktree workflows.
 - git filter-repo --path secrets/ --invert-paths
 - git worktree add ../hotfix v1.2.3
 - git subtree pull --prefix=vendor/libs vendor-repo main
+
+## References
+- [git-filter-repo](https://github.com/newren/git-filter-repo)
+- [git reflog](https://git-scm.com/docs/git-reflog)
+- [git worktree](https://git-scm.com/docs/git-worktree)

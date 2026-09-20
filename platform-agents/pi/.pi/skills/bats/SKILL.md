@@ -1,13 +1,35 @@
 ---
 name: "bats"
-description: "Writes and runs BASH unit tests with Bats, covering assertions, setup/teardown, and CI-friendly TAP output."
+description: "Writes and runs BASH unit tests with Bats, covering assertions, setup/teardown, and CI-friendly TAP output. Use when working with bats testing, assertions and fixtures or when the user mentions bats testing, assertions and fixtures."
+license: "MIT"
+compatibility: "Requires assert_output, assert_success, bats, load, run."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "testing"}
+allowed-tools: "Glob Grep Read Bash(assert_output:*) Bash(assert_success:*) Bash(bats:*) Bash(load:*) Bash(run:*)"
 ---
-
-# Bats
 
 Writes and runs BASH unit tests with Bats, covering assertions, setup/teardown, and CI-friendly TAP output.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `bats test.bats`, `load 'test_helper/bats-support/load'`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Bats
 
@@ -80,6 +102,11 @@ teardown() {
 ### bats-testing
 Author and run Bats test files with filters.
 
+**Parameters:**
+- `filter` (string): Run only tests matching the regex (-f)
+- `tap` (boolean): TAP output format
+- `dryRun` (boolean): Count and print tests without running (-c)
+
 **Commands:**
 - `bats test.bats`
 - `bats -t test.bats`
@@ -95,6 +122,10 @@ Author and run Bats test files with filters.
 ### assertions-and-fixtures
 Use bats-assert helpers and fixtures in tests.
 
+**Parameters:**
+- `command` (string): Command to run under `run`
+- `expected` (string): Expected output for assertions
+
 **Commands:**
 - `load 'test_helper/bats-support/load'`
 - `load 'test_helper/bats-assert/load'`
@@ -106,3 +137,7 @@ Use bats-assert helpers and fixtures in tests.
 - assert_success
 - assert_output --regexp 'deploying.*prod'
 - run ./script.sh -h && assert_failure
+
+## References
+- [Bats Documentation](https://bats-core.readthedocs.io/)
+- [bats-assert GitHub](https://github.com/bats-core/bats-assert)

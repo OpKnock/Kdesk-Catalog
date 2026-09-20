@@ -1,8 +1,26 @@
-# Graphql Security
-
 GraphQL API security: test for introspection abuse, injection, and excessive depth; apply protections like query cost limits and allowlists.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -s -X POST http://localhost:4000/graphql -H 'Content-Ty`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GraphQL Security
 
@@ -61,6 +79,11 @@ import { EnvelopArmorPlugin } from '@envelop/armor'
 ### graphql-security
 Probe GraphQL endpoints for common vulnerabilities and validate protections.
 
+**Parameters:**
+- `endpoint` (string): GraphQL endpoint URL
+- `query` (string): Probe query to send
+- `protection` (string): introspection, depth-limit, cost-limit, allowlist
+
 **Commands:**
 - `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ __schema { types { name } } }"}' | jq '.data.__schema.types | length'`
 - `curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ __typename }"}' | jq '.errors'`
@@ -72,3 +95,7 @@ Probe GraphQL endpoints for common vulnerabilities and validate protections.
 - curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ __schema { types { name } } }"}' | jq '.data.__schema.types | length'
 - npx graphql-cop -t http://localhost:4000/graphql
 - curl -s -X POST http://localhost:4000/graphql -H 'Content-Type: application/json' -d '{"query":"{ a: __typename b: __typename c: __typename }"}' | jq '.data | length'
+
+## References
+- [OWASP GraphQL Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/GraphQL_Cheat_Sheet.html)
+- [graphql-cop](https://github.com/dolevf/graphql-cop)

@@ -2,6 +2,7 @@
 name: "oauth2-revocation"
 description: "Revokes OAuth2 access and refresh tokens against RFC 7009 endpoints. Handles 200 responses for processed revocations and verifies revoked state by attempting token refresh. Use when working with token revocation, api or when the user mentions token revocation, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

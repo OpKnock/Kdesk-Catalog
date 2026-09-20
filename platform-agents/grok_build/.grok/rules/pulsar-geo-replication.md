@@ -1,8 +1,26 @@
-# Pulsar Geo Replication
-
 Pulsar geo-replication: cluster configuration, namespace replication, and cross-region topic replication.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `bin/pulsar-admin clusters list`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Pulsar Geo-Replication
 
@@ -56,6 +74,11 @@ replicationClusters=primary,backup
 ### pulsar-geo-replication
 Configure namespaces for replication across clusters and monitor replication state.
 
+**Parameters:**
+- `namespace` (string): Tenant/namespace, e.g. public/default
+- `clusters` (array): Cluster names participating in replication
+- `topic` (string): Persistent topic to inspect
+
 **Commands:**
 - `bin/pulsar-admin clusters list`
 - `bin/pulsar-admin namespaces set-clusters public/default --clusters primary,backup`
@@ -67,3 +90,7 @@ Configure namespaces for replication across clusters and monitor replication sta
 - bin/pulsar-admin namespaces set-clusters public/default --clusters us-east,eu-west
 - bin/pulsar-admin namespaces get-clusters public/default
 - bin/pulsar-admin topics stats persistent://primary/my-topic | jq '.replicationBacklog'
+
+## References
+- [Pulsar Geo-replication docs](https://pulsar.apache.org/docs/3.0.x/administration-geo/)
+- [Replication concepts](https://pulsar.apache.org/docs/3.0.x/concepts-replication/)

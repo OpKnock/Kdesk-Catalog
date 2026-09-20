@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Anonymizes and masks test data for safe environments: Presidio PII redaction, jq field masking, and synthetic data generation for compliance."
+description: "Anonymizes and masks test data for safe environments: Presidio PII redaction, jq field masking, and synthetic data generation for compliance. Use when working with presidio redaction, field masking or when the user mentions presidio redaction, field masking."
 ---
-
-# Api Test Data Presidio Redaction
 
 Anonymizes and masks test data for safe environments: Presidio PII redaction, jq field masking, and synthetic data generation for compliance.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install presidio-analyzer presidio-anonymizer`, `curl -s http://localhost:3000/api/users | jq 'map(.email |= `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Test Data v4 - Masking
 
@@ -52,6 +70,11 @@ curl -s http://localhost:3000/api/users | jq 'map(.email |= sub("(?<=.{3}).*(?=@
 ### presidio-redaction
 Redact PII with Microsoft Presidio
 
+**Parameters:**
+- `text` (string): Input text to process
+- `language` (string): Language of the input
+- `entities` (array): PII entity types to detect
+
 **Commands:**
 - `pip install presidio-analyzer presidio-anonymizer`
 - `presidio-anonymizer --text "Contact alice@localhost or 555-1234" --language en`
@@ -74,3 +97,7 @@ Mask fields with jq transformations
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Presidio Docs](https://microsoft.github.io/presidio/)
+- [jq Manual](https://jqlang.github.io/jq/manual/)

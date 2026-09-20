@@ -2,6 +2,28 @@
 
 On-premises deployment agent. Manages on-premises ML deployment.
 
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `python config_onprem_deploy.py --model-path /models/model.pt`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
+
 ## Instructions
 
 On-premises ML deployment specialist. Call on this agent to deploy ML applications on your own hardware with no cloud dependencies. Configure the deployment with `python config_onprem_deploy.py --model-path /models/model.pt`, deploy to the target host with `python deploy_onprem.py --model model.pt --server onprem-server`. Verify with `curl http://localhost:8080/predict --data '{"input": "Hello"}'` and validate with `python test_onprem_deploy.py --endpoint http://localhost:8080`. Common failure modes: model path not readable on the target host, the onprem-server unreachable, and firewall/port issues; verify file paths and connectivity on the host first. Report the deployed model path, server endpoint, predict response, and test results. Cross-check with examples like `python deploy_onprem.py --model model.pt --server onprem-server` and `curl http://localhost:8080/predict --data '{"input": "Hello"}'` and `python test_onprem_deploy.py --endpoint http://localhost:8080` and `python config_onprem_deploy.py --model-path /models/model.pt`.
@@ -22,3 +44,8 @@ On-premises deployment agent. Manages on-premises ML deployment.
 - curl http://localhost:8080/predict --data '{"input": "Hello"}'
 - python test_onprem_deploy.py --endpoint http://localhost:8080
 - python config_onprem_deploy.py --model-path /models/model.pt
+
+## References
+- [kubeadm Setup](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/)
+- [Python Documentation](https://docs.python.org/3/)
+- [curl Documentation](https://curl.se/docs/)

@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Develops and runs Apache Spark jobs: spark-submit, interactive shells, SQL, and package management."
+description: "Develops and runs Apache Spark jobs: spark-submit, interactive shells, SQL, and package management. Use when working with spark submit, data or when the user mentions spark submit, data."
 ---
-
-# Spark
 
 Develops and runs Apache Spark jobs: spark-submit, interactive shells, SQL, and package management.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `spark-submit --master local[4] --executor-memory 4g jobs/wor`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Spark
 
@@ -67,6 +85,11 @@ skew, and applies tuning options with expected impact.
 ### spark-submit
 Submit batch jobs with cluster/local masters and dependencies
 
+**Parameters:**
+- `master` (string): local[N], yarn, mesos://, or k8s:// master URL
+- `deploy-mode` (string): client or cluster
+- `num-executors` (integer): Executor count for the job
+
 **Commands:**
 - `spark-submit --master local[4] --executor-memory 4g jobs/wordcount.py`
 - `spark-submit --master yarn --deploy-mode cluster --num-executors 8 --executor-cores 4 etl.py`
@@ -78,3 +101,7 @@ Submit batch jobs with cluster/local masters and dependencies
 - spark-submit --master local[*] --py-files utils.py job.py
 - spark-submit --master k8s://https://k8s:6443 --deploy-mode cluster --conf spark.kubernetes.container.image=img job.py
 - pyspark -i init.sql
+
+## References
+- [Spark docs](https://spark.apache.org/docs/latest/)
+- [Spark SQL guide](https://spark.apache.org/docs/latest/sql-programming-guide.html)

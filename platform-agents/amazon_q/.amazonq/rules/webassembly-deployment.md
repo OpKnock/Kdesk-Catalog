@@ -1,8 +1,26 @@
-# webassembly-deployment
-
 Build, validate, optimize, and run WebAssembly modules and components with wasmtime, wasm-tools, and wasm-opt.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `wasmtime run hello.wasm`, `wasm-tools validate module.wasm`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # WebAssembly Deployment
 
@@ -61,6 +79,10 @@ Package, verify, optimize, and operate WebAssembly modules and components in pro
 ### Run WebAssembly with wasmtime
 Execute wasm modules and WASI apps locally, serve modules over HTTP, and compile ahead-of-time for fast starts.
 
+**Parameters:**
+- `invoke` (string): Name of the exported function to call (reactor modules).
+- `dir` (string): Directory mapping to grant the module filesystem access, e.g. --dir .::.
+
 **Commands:**
 - `wasmtime run hello.wasm`
 - `wasmtime run --invoke add -- --x 2 --y 3 math.wasm`
@@ -74,6 +96,10 @@ Execute wasm modules and WASI apps locally, serve modules over HTTP, and compile
 
 ### Validate and inspect modules with wasm-tools
 Check wasm binary validity, pretty-print internals, and build components from core modules.
+
+**Parameters:**
+- `adapt` (string): WASI preview1 adapter module used when wrapping a core module into a component.
+- `output` (string): Output file path for component wrapping or parse conversion.
 
 **Commands:**
 - `wasm-tools validate module.wasm`
@@ -89,6 +115,10 @@ Check wasm binary validity, pretty-print internals, and build components from co
 ### Optimize binaries with wasm-opt
 Shrink and speed up wasm binaries, strip debug info, and produce deployment-ready artifacts.
 
+**Parameters:**
+- `optimization level` (string): -O0 to -O4 or -Os; -O3 maximizes speed, -Os minimizes size.
+- `strip-debug` (flag): Remove the debug name section and DWARF info to reduce size.
+
 **Commands:**
 - `wasm-opt -O3 -o app.opt.wasm app.wasm`
 - `wasm-opt -Os --strip-debug -o app.min.wasm app.wasm`
@@ -98,3 +128,9 @@ Shrink and speed up wasm binaries, strip debug info, and produce deployment-read
 **Examples:**
 - wasm-opt -Os --strip-debug -o app.min.wasm app.wasm
 - wasm-opt --metrics app.wasm
+
+## References
+- [](https://docs.wasmtime.dev/)
+- [](https://github.com/bytecodealliance/wasm-tools)
+- [](https://github.com/WebAssembly/binaryen)
+- [](https://webassembly.org/)

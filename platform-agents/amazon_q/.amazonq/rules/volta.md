@@ -1,8 +1,26 @@
-# Volta
-
 Manages Node.js toolchains with Volta: install and pin node/npm/yarn per project, automatic version switching, and speed.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `volta install node`, `volta pin node@20`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Volta Node Toolchain
 
@@ -73,6 +91,10 @@ volta uninstall node@16
 ### toolchain-install
 Install Node.js versions and package managers.
 
+**Parameters:**
+- `tool` (string): Tool: node, npm, yarn, pnpm
+- `version` (string): Version or channel: 20, lts, latest
+
 **Commands:**
 - `volta install node`
 - `volta install node@20`
@@ -89,6 +111,10 @@ Install Node.js versions and package managers.
 ### pinning-and-switching
 Pin tool versions per project and switch automatically.
 
+**Parameters:**
+- `version` (string): Version to pin
+- `tool` (string): Tool to manage
+
 **Commands:**
 - `volta pin node@20`
 - `volta pin node@20.11.0 yarn@1.22.22`
@@ -101,3 +127,7 @@ Pin tool versions per project and switch automatically.
 - volta pin node@20
 - volta pin node@20.11.0 yarn@1.22.22
 - volta which node
+
+## References
+- [Volta Documentation](https://docs.volta.sh/)
+- [Volta GitHub](https://github.com/volta-cli/volta)

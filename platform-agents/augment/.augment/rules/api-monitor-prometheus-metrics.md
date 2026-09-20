@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Monitors API performance with Prometheus and Grafana: exporting metrics, promtool validation, HTTP API queries, and alert rule checking."
+description: "Monitors API performance with Prometheus and Grafana: exporting metrics, promtool validation, HTTP API queries, and alert rule checking. Use when working with prometheus metrics, alert rules or when the user mentions prometheus metrics, alert rules."
 ---
-
-# Api Monitor Prometheus Metrics
 
 Monitors API performance with Prometheus and Grafana: exporting metrics, promtool validation, HTTP API queries, and alert rule checking.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `promtool check config prometheus.yml`, `promtool check rules rules.yml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Monitor v2 - Prometheus/Grafana
 
@@ -55,6 +73,11 @@ scrape_configs:
 ### prometheus-metrics
 Query API metrics from the Prometheus HTTP API
 
+**Parameters:**
+- `promql` (string): PromQL expression to evaluate
+- `range` (string): start/end/step for range queries
+- `config-file` (string): prometheus.yml path for validation
+
 **Commands:**
 - `promtool check config prometheus.yml`
 - `curl -s 'http://localhost:9090/api/v1/query' --data-urlencode 'query=rate(http_requests_total[5m])' | jq '.data.result'`
@@ -78,3 +101,7 @@ Validate and test alerting rules for API SLOs
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Prometheus HTTP API](https://prometheus.io/docs/prometheus/latest/querying/api/)
+- [PromQL Basics](https://prometheus.io/docs/prometheus/latest/querying/basics/)

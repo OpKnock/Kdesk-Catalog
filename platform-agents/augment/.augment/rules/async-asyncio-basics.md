@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Builds concurrent Python services with asyncio: coroutines, task groups, aiohttp clients, timeouts, and semaphore-bounded concurrency."
+description: "Builds concurrent Python services with asyncio: coroutines, task groups, aiohttp clients, timeouts, and semaphore-bounded concurrency. Use when working with asyncio basics, async http, api or when the user mentions asyncio basics, async http, api."
 ---
-
-# Async Asyncio Basics
 
 Builds concurrent Python services with asyncio: coroutines, task groups, aiohttp clients, timeouts, and semaphore-bounded concurrency.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `python -c "import asyncio; asyncio.run(asyncio.sleep(0.1)); `, `pip install aiohttp`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Async v2 (Python asyncio)
 
@@ -66,6 +84,10 @@ async def fetch_all(urls, limit=10):
 ### asyncio-basics
 Run coroutines and tasks on the asyncio event loop.
 
+**Parameters:**
+- `tasks` (string): Comma-separated coroutines to gather
+- `timeout` (number): asyncio.timeout value in seconds
+
 **Commands:**
 - `python -c "import asyncio; asyncio.run(asyncio.sleep(0.1)); print('ok')"`
 - `python -c "import asyncio, time; async def m(): t=time.perf_counter(); await asyncio.gather(asyncio.sleep(1), asyncio.sleep(1)); print(f'{time.perf_counter()-t:.2f}s')"`
@@ -80,6 +102,11 @@ Run coroutines and tasks on the asyncio event loop.
 ### async-http
 Make concurrent HTTP calls with aiohttp and bound timeouts.
 
+**Parameters:**
+- `url` (string): Endpoint to call
+- `total_timeout` (number): aiohttp.ClientTimeout total seconds
+- `concurrency` (number): Concurrent requests via gather/semaphore
+
 **Commands:**
 - `pip install aiohttp`
 - `python -c "import aiohttp, asyncio; async def m(): async with aiohttp.ClientSession() as s: r=await s.get('https://httpbin.org/get'); print(r.status)"`
@@ -90,3 +117,8 @@ Make concurrent HTTP calls with aiohttp and bound timeouts.
 - python -c "import aiohttp, asyncio; async def m(): async with aiohttp.ClientSession() as s: r=await s.post('https://httpbin.org/post', json={'a':1}); print(r.status); print((await r.json())['json'])"
 - python -c "import aiohttp, asyncio; async def m(): async with aiohttp.ClientSession() as s: await asyncio.gather(*(s.get('https://httpbin.org/get') for _ in range(10)))"
 - python -c "import aiohttp; print([k for k in aiohttp.__dict__ if 'Client' in k])"
+
+## References
+- [Python asyncio](https://docs.python.org/3/library/asyncio.html)
+- [aiohttp](https://docs.aiohttp.org/en/stable/)
+- [uvloop](https://github.com/MagicStack/uvloop)

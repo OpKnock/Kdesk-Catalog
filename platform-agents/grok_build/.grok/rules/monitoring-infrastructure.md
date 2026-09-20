@@ -1,8 +1,26 @@
-# monitoring-infrastructure
-
 Baseline host monitoring on Linux: CPU, memory, disk, and network telemetry with top, vmstat, iostat, and sar.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `uptime`, `sar -u 1 3`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Host Monitoring
 
@@ -84,6 +102,11 @@ Generate load and confirm metrics move - otherwise the collector is broken.
 ### host-metrics
 Collect instant host utilization snapshots.
 
+**Parameters:**
+- `interval` (number): Sample interval in seconds
+- `count` (number): Number of samples
+- `extended` (string): -x extended statistics for iostat
+
 **Commands:**
 - `uptime`
 - `vmstat 1 5`
@@ -99,6 +122,11 @@ Collect instant host utilization snapshots.
 ### history
 Review historical utilization with sysstat sar.
 
+**Parameters:**
+- `report` (string): Report type: -u CPU, -r memory, -d disk, -n network, -q load
+- `interval` (number): Sample interval
+- `file` (string): Historical sa file with -f
+
 **Commands:**
 - `sar -u 1 3`
 - `sar -r 1 3`
@@ -110,3 +138,8 @@ Review historical utilization with sysstat sar.
 - sar -u -f /var/log/sysstat/sa10
 - sar -n TCP 1 5
 - sar -q 1 5
+
+## References
+- [sysstat (sar/iostat)](https://github.com/sysstat/sysstat)
+- [vmstat man page](https://man7.org/linux/man-pages/man8/vmstat.8.html)
+- [Linux Performance](https://www.brendangregg.com/linuxperf.html)

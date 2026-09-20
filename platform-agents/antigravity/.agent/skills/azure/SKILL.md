@@ -1,13 +1,35 @@
 ---
 name: "azure"
-description: "Operates Microsoft Azure with the az CLI: resource groups, VMs, AKS, functions, storage, and Azure AD."
+description: "Operates Microsoft Azure with the az CLI: resource groups, VMs, AKS, functions, storage, and Azure AD. Use when working with azure core, azure aks, azure functions, cloud or when the user mentions azure core, azure aks, azure functions, cloud."
+license: "MIT"
+compatibility: "Requires func, kubectl. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "cloud"}
+allowed-tools: "Glob Grep Read Bash(az:*) Bash(func:*) Bash(kubectl:*)"
 ---
-
-# azure
 
 Operates Microsoft Azure with the az CLI: resource groups, VMs, AKS, functions, storage, and Azure AD.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `az login`, `az aks create --resource-group myrg --name mycluster --node-`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Azure
 
@@ -59,6 +81,10 @@ az functionapp config appsettings set --name myfuncapp --resource-group myrg --s
 ### azure-core
 Manage subscriptions, groups, and storage.
 
+**Parameters:**
+- `resource-group` (string): Resource group name
+- `location` (string): Azure region
+
 **Commands:**
 - `az login`
 - `az account list --output table`
@@ -74,6 +100,10 @@ Manage subscriptions, groups, and storage.
 ### azure-aks
 Manage AKS clusters and get credentials.
 
+**Parameters:**
+- `cluster` (string): AKS cluster name
+- `node-count` (integer): Number of worker nodes
+
 **Commands:**
 - `az aks create --resource-group myrg --name mycluster --node-count 3 --enable-managed-identity`
 - `az aks get-credentials --resource-group myrg --name mycluster`
@@ -88,6 +118,10 @@ Manage AKS clusters and get credentials.
 ### azure-functions
 Deploy and manage Azure Functions.
 
+**Parameters:**
+- `app` (string): Function app name
+- `runtime` (string): Function runtime: python, node, dotnet
+
 **Commands:**
 - `func azure functionapp publish myfuncapp`
 - `az functionapp list --resource-group myrg`
@@ -97,3 +131,7 @@ Deploy and manage Azure Functions.
 **Examples:**
 - func azure functionapp publish myfuncapp --build remote
 - az functionapp show --name myfuncapp --query "defaultHostName"
+
+## References
+- [Azure CLI Reference](https://learn.microsoft.com/cli/azure/)
+- [Azure for Developers](https://learn.microsoft.com/azure/)

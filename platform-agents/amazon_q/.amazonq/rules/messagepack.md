@@ -1,8 +1,26 @@
-# Messagepack
-
 MessagePack binary serialization: encode/decode payloads, integrate MessagePack into APIs, and debug binary message dumps.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `cat user-data.json | json2msgpack > user-data.msgpack`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # MessagePack
 
@@ -74,6 +92,11 @@ python3 -c "import json,sys; a=json.load(open('user-data.json')); b=json.load(op
 ### messagepack-encode-decode
 Encode JSON to MessagePack, decode MessagePack to JSON, and inspect binary payloads using the msgpack-tools utilities.
 
+**Parameters:**
+- `input_file` (string): JSON file to encode into MessagePack (e.g., user-data.json)
+- `pretty` (boolean): Pretty-print decoded JSON output
+- `use_bin_type` (boolean): Use msgpack bin type for bytes instead of str
+
 **Commands:**
 - `cat user-data.json | json2msgpack > user-data.msgpack`
 - `cat user-data.msgpack | msgpack2json`
@@ -85,3 +108,7 @@ Encode JSON to MessagePack, decode MessagePack to JSON, and inspect binary paylo
 - cat user-data.json | json2msgpack > user-data.msgpack
 - cat user-data.msgpack | msgpack2json -j
 - python3 -c "import msgpack; print(msgpack.packb({'a':1,'b':[1,2,3]}, use_bin_type=True))"
+
+## References
+- [MessagePack Official Site](https://msgpack.org/)
+- [msgpack-tools GitHub](https://github.com/ludocode/msgpack-tools)

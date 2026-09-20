@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Column-level and field-level encryption: encrypt sensitive database fields with pgcrypto, envelope encryption in app code, and searchability trade-offs."
+description: "Column-level and field-level encryption: encrypt sensitive database fields with pgcrypto, envelope encryption in app code, and searchability trade-offs. Use when working with column encryption, api or when the user mentions column encryption, api."
 ---
-
-# Field Encryption
 
 Column-level and field-level encryption: encrypt sensitive database fields with pgcrypto, envelope encryption in app code, and searchability trade-offs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `psql -c "CREATE EXTENSION IF NOT EXISTS pgcrypto;"`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Field Encryption
 
@@ -69,6 +87,11 @@ psql -t -c "SELECT pgp_sym_decrypt(pgp_sym_encrypt('roundtrip','k'), 'k') = 'rou
 ### column-encryption
 Encrypt and decrypt specific fields with pgcrypto and application-level envelope keys.
 
+**Parameters:**
+- `field` (string): Column/field to encrypt, e.g. email
+- `cipher` (string): Cipher choice: pgp_sym, AES-256 via app, or KMS envelope
+- `key-source` (string): Where keys live: DB passphrase, env var, or KMS
+
 **Commands:**
 - `psql -c "CREATE EXTENSION IF NOT EXISTS pgcrypto;"`
 - `psql -c "SELECT pgp_sym_encrypt('sensitive value', 'secret-passphrase') AS cipher;"`
@@ -80,3 +103,7 @@ Encrypt and decrypt specific fields with pgcrypto and application-level envelope
 - psql -c "CREATE EXTENSION IF NOT EXISTS pgcrypto;"
 - aws kms generate-data-key --key-id alias/my-key --key-spec AES_256 --output json | jq -r '.CiphertextBlob'
 - psql -c "SELECT id, pgp_sym_decrypt(email_cipher, 'app-key') FROM users WHERE id = 1;"
+
+## References
+- [pgcrypto documentation](https://www.postgresql.org/docs/current/pgcrypto.html)
+- [AWS KMS Data Keys](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#data-keys)

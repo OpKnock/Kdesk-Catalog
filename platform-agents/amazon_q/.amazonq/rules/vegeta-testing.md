@@ -1,8 +1,26 @@
-# vegeta-testing
-
 Load-tests HTTP endpoints with Vegeta attack/plot/report pipelines and encoded result files.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `echo 'GET http://localhost:8080' | vegeta attack -duration=3`, `vegeta report results.bin`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Vegeta
 
@@ -61,6 +79,11 @@ Content-Type: application/json
 ### vegeta-attacks
 Generate load with targets and rate controls.
 
+**Parameters:**
+- `rate` (number): Requests per second
+- `duration` (string): Attack duration
+- `targets` (string): Targets file path
+
 **Commands:**
 - `echo 'GET http://localhost:8080' | vegeta attack -duration=30s -rate=100 > results.bin`
 - `echo 'POST http://localhost:8080/api' | vegeta attack -duration=1m -rate=50 -body post.json -header 'Content-Type: application/json' > results.bin`
@@ -74,6 +97,10 @@ Generate load with targets and rate controls.
 
 ### vegeta-reports
 Report metrics and histograms from results.
+
+**Parameters:**
+- `type` (string): Report type: text, json, hist
+- `every` (string): Periodic report interval
 
 **Commands:**
 - `vegeta report results.bin`
@@ -89,6 +116,10 @@ Report metrics and histograms from results.
 ### vegeta-plots
 Generate latency plots and encode results.
 
+**Parameters:**
+- `format` (string): Encode format: json, gob, csv
+- `title` (string): Plot title
+
 **Commands:**
 - `vegeta plot results.bin > plot.html`
 - `vegeta encode -format=json < results.bin | jq .`
@@ -99,3 +130,7 @@ Generate latency plots and encode results.
 - vegeta plot results.bin > plot.html
 - vegeta encode -format=json < results.bin | jq .
 - vegeta plot -title="Release 1.2" results.bin > release.html
+
+## References
+- [Vegeta GitHub](https://github.com/tsenart/vegeta)
+- [Vegeta Docs](https://github.com/tsenart/vegeta/tree/master/docs)

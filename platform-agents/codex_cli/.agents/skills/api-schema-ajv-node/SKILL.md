@@ -1,13 +1,35 @@
 ---
 name: "api-schema-ajv-node"
-description: "Uses JSON Schema in Node.js validation pipelines: ajv with formats, custom keywords, schema compilation caching, and request validation middleware."
+description: "Uses JSON Schema in Node.js validation pipelines: ajv with formats, custom keywords, schema compilation caching, and request validation middleware. Use when working with ajv node, request validation or when the user mentions ajv node, request validation."
+license: "MIT"
+compatibility: "Requires openapi, json-schema, node.js, python, stoplight-studio. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "data"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(node:*) Bash(npm:*)"
 ---
-
-# Api Schema Ajv Node
 
 Uses JSON Schema in Node.js validation pipelines: ajv with formats, custom keywords, schema compilation caching, and request validation middleware.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install ajv ajv-formats`, `node -e "const Ajv=require('ajv'); const v=new Ajv().compile`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Schema v2 - Node Validation
 
@@ -55,6 +77,11 @@ app.post('/api/users', (req, res) => {
 ### ajv-node
 Compile and use ajv validators in Node
 
+**Parameters:**
+- `schema` (object): Schema object
+- `data` (object): Payload to validate
+- `allErrors` (boolean): Report all errors
+
 **Commands:**
 - `npm install ajv ajv-formats`
 - `node -e "const Ajv=require('ajv'); const addFormats=require('ajv-formats'); const a=new Ajv({allErrors:true}); addFormats(a); const v=a.compile({type:'object',properties:{email:{type:'string',format:'email'}},required:['email']}); console.log(v({email:'a@b.co'}), JSON.stringify(v.errors))"`
@@ -77,3 +104,7 @@ Validate request bodies in middleware
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Ajv Guide](https://ajv.js.org/guide/getting-started.html)
+- [Ajv Keywords](https://ajv.js.org/docs/guide/custom-keywords.html)

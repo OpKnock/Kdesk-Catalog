@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Chaos engineering for API resilience: inject network latency and aborts via Istio VirtualService, run Chaos Mesh pod/network/stress experiments on Kubernetes, and use Toxiproxy for proxy-level fault simulation to validate retry and fallback behavior before production."
+description: "Chaos engineering for API resilience: inject network latency and aborts via Istio VirtualService, run Chaos Mesh pod/network/stress experiments on Kubernetes, and use Toxiproxy for proxy-level fault simulation to validate retry and fallback behavior before production. Use when working with chaos experiments, api or when the user mentions chaos experiments, api."
 ---
-
-# Fault Injection
 
 Chaos engineering for API resilience: inject network latency and aborts via Istio VirtualService, run Chaos Mesh pod/network/stress experiments on Kubernetes, and use Toxiproxy for proxy-level fault simulation to validate retry and fallback behavior before production.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kubectl apply -f fault-injection.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Fault Injection
 
@@ -83,6 +101,11 @@ curl -s -o /dev/null -w '%{http_code} %{time_total}s\n' http://gateway.example/r
 ### chaos-experiments
 Inject faults at proxy, mesh, and node level, then verify application resilience.
 
+**Parameters:**
+- `fault-type` (string): delay, abort, or packet-loss
+- `target` (string): Service or pod targeted by the experiment
+- `duration` (string): Fault duration like 30s or 5m
+
 **Commands:**
 - `kubectl apply -f fault-injection.yaml`
 - `kubectl get virtualservice reviews -o yaml | grep -A5 fault`
@@ -95,3 +118,7 @@ Inject faults at proxy, mesh, and node level, then verify application resilience
 - kubectl apply -f fault-injection.yaml && kubectl get virtualservice reviews -o yaml | grep -A5 fault
 - curl -s -X POST localhost:8474/proxies -d '{"name":"db","listen":"0.0.0.0:5433","upstream":"db:5432"}'
 - kubectl get chaosexperiments -n chaos-mesh
+
+## References
+- [Istio Fault Injection](https://istio.io/latest/docs/tasks/traffic-management/fault-injection/)
+- [Chaos Mesh docs](https://chaos-mesh.org/docs/)

@@ -2,6 +2,7 @@
 name: "chi"
 description: "Build Go HTTP APIs with the chi router: routing, middleware, URL params, and subrouters. Use when working with chi routing, chi testing, api or when the user mentions chi routing, chi testing, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*) Bash(go:*)"
 ---

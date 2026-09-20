@@ -1,13 +1,35 @@
 ---
 name: "disk-stress-testing"
-description: "Benchmarks storage subsystems with fio, dd, hdparm, and iostat to measure IOPS, throughput, and latency under load."
+description: "Benchmarks storage subsystems with fio, dd, hdparm, and iostat to measure IOPS, throughput, and latency under load. Use when working with io benchmark, api or when the user mentions io benchmark, api."
+license: "MIT"
+compatibility: "Requires fio, hdparm, iostat."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(dd:*) Bash(fio:*) Bash(hdparm:*) Bash(iostat:*)"
 ---
-
-# Disk Stress Testing
 
 Benchmarks storage subsystems with fio, dd, hdparm, and iostat to measure IOPS, throughput, and latency under load.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `fio --name=randwrite --ioengine=libaio --iodepth=16 --rw=ran`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Disk Stress Testing
 
@@ -66,6 +88,11 @@ fio --name=bw --ioengine=libaio --direct=1 --rw=read --bs=1M --size=4G --numjobs
 ### io-benchmark
 Run fio jobs, raw dd writes, and live IO statistics to characterize disk performance and detect degradation.
 
+**Parameters:**
+- `rw` (string): fio workload pattern: randwrite, randread, read, write, rw, or randrw
+- `blocksize` (string): IO block size such as 4k or 1M
+- `runtime` (integer): Benchmark duration in seconds
+
 **Commands:**
 - `fio --name=randwrite --ioengine=libaio --iodepth=16 --rw=randwrite --bs=4k --size=4G --numjobs=1 --runtime=60 --time_based --direct=1`
 - `fio --name=seqread --ioengine=libaio --iodepth=32 --rw=read --bs=1M --size=8G --runtime=60 --time_based --direct=1`
@@ -77,3 +104,6 @@ Run fio jobs, raw dd writes, and live IO statistics to characterize disk perform
 - fio --name=randread --ioengine=libaio --iodepth=16 --rw=randread --bs=4k --size=4G --runtime=60 --time_based --direct=1
 - dd if=/dev/zero of=/tmp/testfile bs=1M count=4096 oflag=direct conv=fdatasync && rm -f /tmp/testfile
 - iostat -x 2 5 | grep sda
+
+## References
+- [fio HOWTO](https://fio.readthedocs.io/en/latest/fio_doc.html)

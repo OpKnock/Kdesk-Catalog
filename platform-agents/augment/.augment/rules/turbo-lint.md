@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Runs lint targets across Turborepo monorepos with caching, filters, and affected-scope execution."
+description: "Runs lint targets across Turborepo monorepos with caching, filters, and affected-scope execution. Use when working with turbo lint, code quality or when the user mentions turbo lint, code quality."
 ---
-
-# turbo-lint
 
 Runs lint targets across Turborepo monorepos with caching, filters, and affected-scope execution.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx turbo lint`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Turbo Lint
 
@@ -73,6 +91,11 @@ Shows per-package task status (cached/full), durations, and error counts, with
 ### turbo-lint
 Execute lint tasks in a Turborepo with caching and filtering
 
+**Parameters:**
+- `filter` (string): Include only matching packages, e.g. web or @acme/*
+- `affected` (boolean): Run only packages affected by the change (uses git)
+- `output-logs` (string): new-only, full, hash-only, none - log verbosity
+
 **Commands:**
 - `npx turbo lint`
 - `npx turbo run lint --filter=web`
@@ -84,3 +107,7 @@ Execute lint tasks in a Turborepo with caching and filtering
 - npx turbo run lint --filter=@acme/*
 - npx turbo run lint test --affected --base=main
 - npx turbo lint --output-logs=hash-only
+
+## References
+- [Turborepo docs](https://turbo.build/repo/docs)
+- [Turbo filters](https://turbo.build/repo/docs/reference/filters)

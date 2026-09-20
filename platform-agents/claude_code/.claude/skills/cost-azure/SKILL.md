@@ -2,6 +2,7 @@
 name: "cost-azure"
 description: "Tracks Azure cloud spend with Cost Management queries, exports, budgets, and consumption APIs to keep billing under control. Use when working with cost management, budgets, finops or when the user mentions cost management, budgets, finops."
 license: "MIT"
+compatibility: "No special requirements."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "finops"}
 allowed-tools: "Glob Grep Read Bash(az:*)"
 ---

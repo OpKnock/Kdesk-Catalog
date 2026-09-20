@@ -1,8 +1,26 @@
-# grpc
-
 General gRPC API operations with grpcurl: listing services, describing schemas, invoking unary and streaming RPCs, and debugging from the CLI.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `go install github.com/fullstorydev/grpcurl/cmd/grpcurl@lates`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gRPC
 
@@ -96,6 +114,11 @@ Agent: grpcurl -plaintext localhost:50051 list helloworld.Greeter
 ### grpcurl-ops
 Inspect and call gRPC services from the command line with grpcurl.
 
+**Parameters:**
+- `target` (string): gRPC endpoint host:port.
+- `method` (string): Fully-qualified method, e.g. mypackage.MyService/SayHello.
+- `data` (string): JSON payload for the call (-d).
+
 **Commands:**
 - `go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest`
 - `grpcurl -plaintext localhost:50051 list`
@@ -107,3 +130,7 @@ Inspect and call gRPC services from the command line with grpcurl.
 - grpcurl -plaintext -proto myservice.proto -d '{"name":"John"}' localhost:50051 mypackage.MyService/SayHello
 - grpcurl -plaintext localhost:50051 describe mypackage.HelloRequest
 - grpcurl -plaintext -d '{"name":"x"}' localhost:50051 mypackage.MyService/StreamMessages
+
+## References
+- [gRPC Core Docs](https://grpc.io/docs/)
+- [grpcurl README](https://github.com/fullstorydev/grpcurl)

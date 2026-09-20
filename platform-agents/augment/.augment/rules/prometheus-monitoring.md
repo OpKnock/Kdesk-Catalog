@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Prometheus server operations: config, relabeling, recording rules, queries via promtool, and API access."
+description: "Prometheus server operations: config, relabeling, recording rules, queries via promtool, and API access. Use when working with prometheus operations, api or when the user mentions prometheus operations, api."
 ---
-
-# Prometheus Monitoring
 
 Prometheus server operations: config, relabeling, recording rules, queries via promtool, and API access.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `prometheus --config.file=prometheus.yml --storage.tsdb.path=`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Prometheus Monitoring
 
@@ -67,6 +85,11 @@ scrape_configs:
 ### prometheus-operations
 Run Prometheus, validate config and rules, run instant/range queries and manage targets.
 
+**Parameters:**
+- `config_file` (string): Path to prometheus.yml
+- `query` (string): PromQL query string
+- `url` (string): Prometheus API base URL
+
 **Commands:**
 - `prometheus --config.file=prometheus.yml --storage.tsdb.path=/data/prom`
 - `promtool check config prometheus.yml`
@@ -78,3 +101,7 @@ Run Prometheus, validate config and rules, run instant/range queries and manage 
 - promtool query instant 'sum(rate(http_requests_total[5m]))' --url http://localhost:9090
 - promtool check config prometheus.yml && promtool check rules rules.yml
 - curl -s 'http://localhost:9090/api/v1/targets' | jq '.data.activeTargets[].health' | sort | uniq -c
+
+## References
+- [Prometheus Docs](https://prometheus.io/docs/prometheus/latest/)
+- [promtool reference](https://prometheus.io/docs/prometheus/latest/command-line/promtool/)

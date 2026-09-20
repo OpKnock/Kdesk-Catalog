@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Consume Redis Streams with consumer groups: read via XREADGROUP, acknowledge with XACK, inspect pending entries, and recover stalled work with XCLAIM."
+description: "Consume Redis Streams with consumer groups: read via XREADGROUP, acknowledge with XACK, inspect pending entries, and recover stalled work with XCLAIM. Use when working with stream consumer groups, api or when the user mentions stream consumer groups, api."
 ---
-
-# Redis Streams Consumer
 
 Consume Redis Streams with consumer groups: read via XREADGROUP, acknowledge with XACK, inspect pending entries, and recover stalled work with XCLAIM.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-cli XREADGROUP GROUP pay-group c1 COUNT 5 STREAMS orde`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Redis Streams - Consumer Groups
 
@@ -73,6 +91,11 @@ redis-cli XPENDING orders:pay pay-group
 ### stream-consumer-groups
 Consume streams with consumer groups: read, ack, inspect pending, claim
 
+**Parameters:**
+- `group` (string): Consumer group name to read from
+- `consumer` (string): Consumer name within the group
+- `count` (integer): Maximum number of entries to read
+
 **Commands:**
 - `redis-cli XREADGROUP GROUP pay-group c1 COUNT 5 STREAMS orders:pay >`
 - `redis-cli XACK orders:pay pay-group 1699999999999-0`
@@ -84,3 +107,7 @@ Consume streams with consumer groups: read, ack, inspect pending, claim
 - redis-cli XREADGROUP GROUP pay-group c1 COUNT 5 STREAMS orders:pay >
 - redis-cli XPENDING orders:pay pay-group - + 10 c2
 - redis-cli XAUTOCLAIM orders:pay pay-group c2 60000 0-0
+
+## References
+- [Redis Streams intro](https://redis.io/docs/latest/develop/data-types/streams/)
+- [XREADGROUP command](https://redis.io/docs/latest/commands/xreadgroup/)

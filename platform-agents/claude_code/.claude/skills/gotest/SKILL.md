@@ -2,6 +2,7 @@
 name: "gotest"
 description: "Runs Go tests with go test, covering race detection, coverage profiles, benchmarks, and focused runs. Use when working with go testing, race and coverage, benchmarks and vet or when the user mentions go testing, race and coverage, benchmarks and vet."
 license: "MIT"
+compatibility: "No special requirements."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "testing"}
 allowed-tools: "Glob Grep Read Bash(go:*)"
 ---

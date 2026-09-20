@@ -1,8 +1,26 @@
-# Gcp Api Gateway
-
 Create API configs, deploy gateways, and manage keys via gcloud. API keys for access control.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gcloud api-gateway apis create orders-api`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GCP API Gateway
 
@@ -71,6 +89,11 @@ curl -s "https://$HOST/v1/orders?key=$API_KEY" | jq
 ### gcp-api-gateway
 Create API configs, deploy gateways, and manage keys via gcloud.
 
+**Parameters:**
+- `api-name` (string): API Gateway API name
+- `config-name` (string): API config version name
+- `region` (string): Gateway location like us-central1
+
 **Commands:**
 - `gcloud api-gateway apis create orders-api`
 - `gcloud api-gateway api-configs create orders-v1 --api=orders-api --openapi-spec=openapi.yaml --display-name=orders-v1`
@@ -82,3 +105,7 @@ Create API configs, deploy gateways, and manage keys via gcloud.
 - gcloud api-gateway apis create orders-api && gcloud api-gateway api-configs create orders-v1 --api=orders-api --openapi-spec=openapi.yaml
 - gcloud api-gateway gateways create orders-gw --api=orders-api --api-config=orders-v1 --location=us-central1
 - gcloud api-gateway gateways describe orders-gw --location=us-central1 --format='value(defaultHostname)'
+
+## References
+- [API Gateway overview](https://cloud.google.com/api-gateway/docs)
+- [API Gateway gcloud reference](https://cloud.google.com/sdk/gcloud/reference/api-gateway)

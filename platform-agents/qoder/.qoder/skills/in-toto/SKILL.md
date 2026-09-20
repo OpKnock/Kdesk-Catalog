@@ -1,13 +1,35 @@
 ---
 name: "in-toto"
-description: "Creates and verifies supply-chain integrity layouts with in-toto: step signatures, product attestation, and full-chain verification."
+description: "Creates and verifies supply-chain integrity layouts with in-toto: step signatures, product attestation, and full-chain verification. Use when working with step execution, layout verification, security or when the user mentions step execution, layout verification, security."
+license: "MIT"
+compatibility: "Requires in-toto-keygen, in-toto-record, in-toto-run, in-toto-sign, in-toto-verify."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "security"}
+allowed-tools: "Glob Grep Read Bash(in-toto-keygen:*) Bash(in-toto-record:*) Bash(in-toto-run:*) Bash(in-toto-sign:*) Bash(in-toto-verify:*)"
 ---
-
-# in-toto
 
 Creates and verifies supply-chain integrity layouts with in-toto: step signatures, product attestation, and full-chain verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `in-toto-run --step-name build --key build.key --products art`, `in-toto-keygen alice`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # in-toto
 
@@ -72,6 +94,11 @@ layout = Layout(
 ### step-execution
 Record supply chain steps with in-toto-run and in-toto-record wrappers.
 
+**Parameters:**
+- `stepName` (string): Identifier of the step in the layout
+- `key` (string): Signing key for the step
+- `products` (array): Glob patterns of files produced by the step
+
 **Commands:**
 - `in-toto-run --step-name build --key build.key --products artifacts/ -- make build`
 - `in-toto-record start --step-name test --key test.key`
@@ -86,6 +113,10 @@ Record supply chain steps with in-toto-run and in-toto-record wrappers.
 ### layout-verification
 Sign layouts and verify the whole chain against keys and rules.
 
+**Parameters:**
+- `layout` (string): Path to the signed layout file
+- `layoutKeys` (array): Public keys authorized to sign the layout
+
 **Commands:**
 - `in-toto-keygen alice`
 - `in-toto-sign --file root.layout --key root.key`
@@ -97,3 +128,7 @@ Sign layouts and verify the whole chain against keys and rules.
 - in-toto-keygen alice
 - in-toto-sign --file root.layout --key root.key
 - in-toto-verify --layout root.layout --layout-keys root.pub
+
+## References
+- [in-toto Documentation](https://in-toto.io/in-toto/)
+- [in-toto GitHub](https://github.com/in-toto/in-toto)

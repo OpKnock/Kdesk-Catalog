@@ -1,8 +1,26 @@
-# Locust Output
-
 Load testing with Locust: HttpUser task files, headless runs, web UI, CSV collection, and distributed execution for large-scale tests.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `locust -f locustfile.py --headless -u 1000 -r 100 --host htt`, `locust -f locustfile.py --headless -u 500 -r 50 --csv=result`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Locust
 
@@ -74,6 +92,12 @@ locust -f locustfile.py --headless -u 10 -r 2 -t 30s   # smoke run
 ### locust-run
 Run locust tests headless or with the web UI.
 
+**Parameters:**
+- `file` (string): Locustfile path.
+- `users` (integer): Peak number of users (-u).
+- `spawn_rate` (integer): Users spawned per second (-r).
+- `time` (string): Stop time, e.g. 2m (-t).
+
 **Commands:**
 - `locust -f locustfile.py --headless -u 1000 -r 100 --host https://httpbin.org`
 - `locust -f locustfile.py`
@@ -88,6 +112,11 @@ Run locust tests headless or with the web UI.
 ### locust-output
 Collect CSV results and run distributed tests.
 
+**Parameters:**
+- `csv` (string): CSV output prefix.
+- `csv_full_history` (boolean): Log every stats sample, not just final.
+- `master_bind_port` (integer): Master port, default 5557.
+
 **Commands:**
 - `locust -f locustfile.py --headless -u 500 -r 50 --csv=results --csv-full-history -t 5m`
 - `locust -f locustfile.py --master --master-bind-port=5557 --csv=dist-results`
@@ -98,3 +127,7 @@ Collect CSV results and run distributed tests.
 - locust -f locustfile.py --headless -u 500 -r 50 --csv=results --csv-full-history -t 5m
 - locust -f locustfile.py --worker --master-host=10.0.0.10
 - ls results_*.csv
+
+## References
+- [Locust Documentation](https://docs.locust.io/en/stable/)
+- [Locust Running Distributed](https://docs.locust.io/en/stable/running-distributed.html)

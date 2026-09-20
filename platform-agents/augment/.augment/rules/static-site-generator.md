@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Builds and serves static sites with Hugo and Eleventy, managing content, themes, and production builds."
+description: "Builds and serves static sites with Hugo and Eleventy, managing content, themes, and production builds. Use when working with hugo build, eleventy build, content publishing or when the user mentions hugo build, eleventy build, content publishing."
 ---
-
-# static-site-generator
 
 Builds and serves static sites with Hugo and Eleventy, managing content, themes, and production builds.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `hugo new site mysite`, `npx @11ty/eleventy --input=src --output=dist`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Static Site Generation
 
@@ -68,6 +86,11 @@ enableGitInfo = true
 ### hugo-build
 Scaffold, develop, and build Hugo sites.
 
+**Parameters:**
+- `draft` (boolean): Include draft content (-D)
+- `minify` (boolean): Minify output HTML/CSS/JS
+- `baseURL` (string): Site base URL for the build
+
 **Commands:**
 - `hugo new site mysite`
 - `hugo new posts/first-post.md`
@@ -82,6 +105,11 @@ Scaffold, develop, and build Hugo sites.
 
 ### eleventy-build
 Scaffold, serve, and build Eleventy sites.
+
+**Parameters:**
+- `input` (string): Source content directory
+- `output` (string): Output directory
+- `pathprefix` (string): Sub-path prefix for the site
 
 **Commands:**
 - `npx @11ty/eleventy --input=src --output=dist`
@@ -98,6 +126,10 @@ Scaffold, serve, and build Eleventy sites.
 ### content-publishing
 Manage content, taxonomies, and deployment output.
 
+**Parameters:**
+- `gc` (boolean): Clean up generated cache
+- `outputDir` (string): Destination directory for the generated site.
+
 **Commands:**
 - `hugo new docs/guide/_index.md`
 - `hugo --gc --minify --enableGitInfo`
@@ -109,3 +141,7 @@ Manage content, taxonomies, and deployment output.
 - hugo --gc --minify --enableGitInfo
 - hugo list drafts
 - hugo config
+
+## References
+- [Hugo Documentation](https://gohugo.io/documentation/)
+- [Eleventy Documentation](https://www.11ty.dev/docs/)

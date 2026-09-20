@@ -2,6 +2,7 @@
 name: "rest"
 description: "Expert core reference covering resource modeling, curl CRUD flows, status code semantics, and JSON handling with jq suited to daily API work. Use when working with rest crud, api or when the user mentions rest crud, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

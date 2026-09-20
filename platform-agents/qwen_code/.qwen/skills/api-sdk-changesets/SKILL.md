@@ -1,13 +1,35 @@
 ---
 name: "api-sdk-changesets"
-description: "Manages SDK versioning and releases with changesets: change tracking, version bumps, changelogs, and semantic-release automation."
+description: "Manages SDK versioning and releases with changesets: change tracking, version bumps, changelogs, and semantic-release automation. Use when working with changesets, semantic release or when the user mentions changesets, semantic release."
+license: "MIT"
+compatibility: "Requires openapi-generator, node.js, python, typescript."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
+allowed-tools: "Glob Grep Read Bash(git:*) Bash(npm:*) Bash(npx:*)"
 ---
-
-# Api Sdk Changesets
 
 Manages SDK versioning and releases with changesets: change tracking, version bumps, changelogs, and semantic-release automation.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx @changesets/cli init`, `npx semantic-release --dry-run`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API SDK v5 - Releases
 
@@ -53,6 +75,11 @@ npx semantic-release --dry-run
 ### changesets
 Track SDK changes with changesets
 
+**Parameters:**
+- `semver` (string): major, minor, or patch bump
+- `package` (string): Package to release
+- `tag` (string): npm dist-tag
+
 **Commands:**
 - `npx @changesets/cli init`
 - `npx changeset`
@@ -77,3 +104,7 @@ Automate releases from commit messages
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Changesets](https://github.com/changesets/changesets)
+- [Semantic Release](https://semantic-release.gitbook.io/)

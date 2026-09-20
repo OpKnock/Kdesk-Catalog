@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Performs end-to-end host and network security audits with Lynis, ssh-audit, and nmap, producing hardening recommendations."
+description: "Performs end-to-end host and network security audits with Lynis, ssh-audit, and nmap, producing hardening recommendations. Use when working with lynis system audit, network and service scan, security or when the user mentions lynis system audit, network and service scan, security."
 ---
-
-# security-audit
 
 Performs end-to-end host and network security audits with Lynis, ssh-audit, and nmap, producing hardening recommendations.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `lynis audit system`, `ssh-audit 10.0.0.5`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Security Audit
 
@@ -65,6 +83,10 @@ nmap -p- --min-rate 1000 10.0.0.5
 ### lynis-system-audit
 Run Lynis hardening audits on Linux/macOS hosts.
 
+**Parameters:**
+- `auditor` (string): Name of the auditor for the report
+- `logFile` (string): Log file path for the audit
+
 **Commands:**
 - `lynis audit system`
 - `lynis audit system --quick`
@@ -80,6 +102,10 @@ Run Lynis hardening audits on Linux/macOS hosts.
 ### network-and-service-scan
 Scan services and SSH configurations for weaknesses.
 
+**Parameters:**
+- `target` (string): Hostname or IP of the target
+- `ports` (string): Port range for nmap scans
+
 **Commands:**
 - `ssh-audit 10.0.0.5`
 - `ssh-audit --level=info 10.0.0.5`
@@ -91,3 +117,8 @@ Scan services and SSH configurations for weaknesses.
 - ssh-audit 10.0.0.5
 - nmap -sV -sC 10.0.0.5
 - lynis audit policies
+
+## References
+- [Lynis Documentation](https://cisofy.com/lynis/)
+- [Lynis GitHub](https://github.com/CISOfy/lynis)
+- [Nmap Reference](https://nmap.org/docs.html)

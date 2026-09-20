@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Creates and manages Datadog monitors, dashboards, and synthetic API tests using the Datadog API and datadog-ci CLI for alerting on latency, error rates, and uptime."
+description: "Creates and manages Datadog monitors, dashboards, and synthetic API tests using the Datadog API and datadog-ci CLI for alerting on latency, error rates, and uptime. Use when working with monitors, synthetics, api or when the user mentions monitors, synthetics, api."
 ---
-
-# Datadog Monitoring
 
 Creates and manages Datadog monitors, dashboards, and synthetic API tests using the Datadog API and datadog-ci CLI for alerting on latency, error rates, and uptime.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -X POST "https://api.datadoghq.com/api/v1/monitor" -H "`, `npx @datadog/datadog-ci synthetics run-tests --public-id abc`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Datadog Monitoring
 
@@ -70,6 +88,10 @@ curl -X GET "https://api.datadoghq.com/api/v1/monitor/123456" -H "DD-API-KEY: $D
 ### monitors
 Create, update, mute, and query Datadog monitors via the API
 
+**Parameters:**
+- `monitor_id` (string): Numeric Datadog monitor ID
+- `query` (string): Monitor query such as avg(last_5m):avg:api.request.latency{*} > 500
+
 **Commands:**
 - `curl -X POST "https://api.datadoghq.com/api/v1/monitor" -H "Content-Type: application/json" -H "DD-API-KEY: $DD_API_KEY" -H "DD-APPLICATION-KEY: $DD_APP_KEY" -d @monitor.json`
 - `curl -X GET "https://api.datadoghq.com/api/v1/monitor" -H "DD-API-KEY: $DD_API_KEY" -H "DD-APPLICATION-KEY: $DD_APP_KEY"`
@@ -84,6 +106,10 @@ Create, update, mute, and query Datadog monitors via the API
 ### synthetics
 Run synthetic API tests from datadog-ci and check results
 
+**Parameters:**
+- `public_id` (string): Synthetic test public ID
+- `files_glob` (string): Glob pattern for synthetic test definition files
+
 **Commands:**
 - `npx @datadog/datadog-ci synthetics run-tests --public-id abc-123-def`
 - `npx @datadog/datadog-ci synthetics run-tests --config synthetics.global.json --files ./e2e/*.synthetics.json`
@@ -94,3 +120,7 @@ Run synthetic API tests from datadog-ci and check results
 - npx @datadog/datadog-ci synthetics run-tests --public-id abc-123-def
 - npx @datadog/datadog-ci synthetics run-tests --files "./e2e/*.synthetics.json"
 - curl -s "https://api.datadoghq.com/api/v1/synthetics/tests" -H "DD-API-KEY: $DD_API_KEY" -H "DD-APPLICATION-KEY: $DD_APP_KEY" | jq '.synthetics[].name'
+
+## References
+- [Datadog Monitors API](https://docs.datadoghq.com/api/latest/monitors/)
+- [datadog-ci Synthetics](https://docs.datadoghq.com/synthetics/cicd_integrations/)

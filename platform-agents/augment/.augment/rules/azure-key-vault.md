@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Centralizes credentials and cryptographic material in a managed HSM-backed store using the Azure CLI: provisions vault instances, performs secret CRUD with versioning and expiry, manages asymmetric keys, and configures access policies or RBAC for service identities."
+description: "Centralizes credentials and cryptographic material in a managed HSM-backed store using the Azure CLI: provisions vault instances, performs secret CRUD with versioning and expiry, manages asymmetric keys, and configures access policies or RBAC for service identities. Use when working with vault lifecycle, secrets, keys access, api or when the user mentions vault lifecycle, secrets, keys access, api."
 ---
-
-# Azure Key Vault
 
 Centralizes credentials and cryptographic material in a managed HSM-backed store using the Azure CLI: provisions vault instances, performs secret CRUD with versioning and expiry, manages asymmetric keys, and configures access policies or RBAC for service identities.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `az keyvault create --name mykv --resource-group rg`, `az keyvault secret set --vault-name mykv --name db-password `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Azure Key Vault
 
@@ -58,6 +76,11 @@ az keyvault set-policy --vault-name mykv --object-id a1b2c3d4-e5f6-7890-abcd-ef1
 ### vault-lifecycle
 Create and manage Key Vault instances.
 
+**Parameters:**
+- `vault_name` (string): Key Vault name
+- `resource_group` (string): Resource group
+- `location` (string): Azure region
+
 **Commands:**
 - `az keyvault create --name mykv --resource-group rg`
 - `az keyvault show --name mykv`
@@ -72,6 +95,11 @@ Create and manage Key Vault instances.
 
 ### secrets
 Store and retrieve secrets.
+
+**Parameters:**
+- `secret_name` (string): Secret name
+- `value` (string): Secret value
+- `expires` (string): Expiry date ISO format
 
 **Commands:**
 - `az keyvault secret set --vault-name mykv --name db-password --value secret123`
@@ -88,6 +116,11 @@ Store and retrieve secrets.
 ### keys-access
 Manage keys and access policies.
 
+**Parameters:**
+- `key_name` (string): Key name
+- `protection` (string): software or hsm
+- `permissions` (string): Permission set (get, list, set, delete, wrapKey...)
+
 **Commands:**
 - `az keyvault key create --vault-name mykv --name rsa-key --protection software`
 - `az keyvault key list --vault-name mykv`
@@ -99,3 +132,7 @@ Manage keys and access policies.
 - az keyvault key create --vault-name mykv --name rsa-key --protection software --size 4096
 - az keyvault set-policy --vault-name mykv --object-id a1b2c3d4-e5f6-7890-abcd-ef1234567890 --key-permissions get unwrapKey wrapKey
 - az keyvault key list --vault-name mykv --query '[].{name:name,kid:key.kid}' -o table
+
+## References
+- [Key Vault Docs](https://learn.microsoft.com/en-us/azure/key-vault/)
+- [Azure CLI keyvault Reference](https://learn.microsoft.com/en-us/cli/azure/keyvault)

@@ -1,8 +1,26 @@
-# digital-transformation
-
 Drives digital transformation with real tooling: dbt analytics pipelines, workflow orchestration with Airflow, and data platform migrations.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `dbt init analytics_project`, `airflow db migrate`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Digital Transformation Engineering
 
@@ -68,6 +86,10 @@ dagit
 ### analytics-engineering
 Build and test analytics pipelines with dbt.
 
+**Parameters:**
+- `select` (string): Node selection, e.g. staging, +marts
+- `project` (string): Project name for dbt init
+
 **Commands:**
 - `dbt init analytics_project`
 - `dbt run --select staging`
@@ -84,6 +106,10 @@ Build and test analytics pipelines with dbt.
 ### workflow-orchestration
 Schedule and operate data workflows with Airflow and Dagster.
 
+**Parameters:**
+- `dag-id` (string): Airflow DAG id
+- `task-id` (string): Task id to test
+
 **Commands:**
 - `airflow db migrate`
 - `airflow users create --username admin --firstname A --lastname U --role Admin --email a@b.c`
@@ -96,3 +122,8 @@ Schedule and operate data workflows with Airflow and Dagster.
 - airflow dags list
 - airflow dags trigger etl_pipeline
 - airflow tasks test etl_pipeline extract 2026-08-10
+
+## References
+- [dbt Documentation](https://docs.getdbt.com/)
+- [Apache Airflow Docs](https://airflow.apache.org/docs/)
+- [AWS Digital Transformation](https://aws.amazon.com/executive-insights/content/digital-transformation/)

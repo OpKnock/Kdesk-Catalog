@@ -1,13 +1,35 @@
 ---
 name: "nats"
-description: "Publishes, subscribes, and performs request-reply over NATS subjects using the CLI. Supports wildcard patterns, queue groups enabling load balancing, and server info queries against a running instance."
+description: "Publishes, subscribes, and performs request-reply over NATS subjects using the CLI. Supports wildcard patterns, queue groups enabling load balancing, and server info queries against a running instance. Use when working with nats core messaging, api or when the user mentions nats core messaging, api."
+license: "MIT"
+compatibility: "Requires nats."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(nats:*)"
 ---
-
-# Nats
 
 Publishes, subscribes, and performs request-reply over NATS subjects using the CLI. Supports wildcard patterns, queue groups enabling load balancing, and server info queries against a running instance.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `nats pub orders.created '{"id":1}'`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # NATS
 
@@ -68,6 +90,11 @@ nats server info
 ### nats-core-messaging
 Publish, subscribe, request-reply and queue-group with the nats CLI against a running server.
 
+**Parameters:**
+- `subject` (string): Subject with optional wildcards
+- `payload` (string): Message payload string
+- `queue` (string): Queue group name for load balancing
+
 **Commands:**
 - `nats pub orders.created '{"id":1}'`
 - `nats sub 'orders.>' --all`
@@ -79,3 +106,7 @@ Publish, subscribe, request-reply and queue-group with the nats CLI against a ru
 - nats pub sensors.temp 21.5
 - nats sub 'orders.*' --raw
 - nats req service.echo 'hello' --timeout 3s
+
+## References
+- [NATS Documentation](https://docs.nats.io/)
+- [NATS CLI Docs](https://docs.nats.io/using-nats/command-line/)

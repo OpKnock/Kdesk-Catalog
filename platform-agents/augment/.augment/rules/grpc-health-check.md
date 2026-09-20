@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "gRPC health checking protocol: probing services with grpc_health_probe and grpcurl against the grpc.health.v1.Health service, including per-service checks."
+description: "gRPC health checking protocol: probing services with grpc_health_probe and grpcurl against the grpc.health.v1.Health service, including per-service checks. Use when working with health probing, api or when the user mentions health probing, api."
 ---
-
-# Grpc Health Check
 
 gRPC health checking protocol: probing services with grpc_health_probe and grpcurl against the grpc.health.v1.Health service, including per-service checks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `grpc_health_probe -addr=localhost:50051`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gRPC Health Check
 
@@ -94,6 +112,11 @@ Agent: Add a readiness probe for the specific service:
 ### health-probing
 Probe gRPC endpoints for health status using the standard grpc.health.v1.Health protocol.
 
+**Parameters:**
+- `addr` (string): gRPC endpoint host:port to probe.
+- `service` (string): Specific service name to health check (default checks overall status).
+- `connect_timeout` (string): Connection timeout, e.g. 5s.
+
 **Commands:**
 - `grpc_health_probe -addr=localhost:50051`
 - `grpc_health_probe -addr=localhost:50051 -service helloworld.Greeter`
@@ -105,3 +128,7 @@ Probe gRPC endpoints for health status using the standard grpc.health.v1.Health 
 - grpc_health_probe -addr=localhost:50051 -connect-timeout 5s
 - kubectl exec deployment/myapp -- grpc_health_probe -addr=:50051
 - grpcurl -plaintext localhost:50051 list | grep health
+
+## References
+- [gRPC Health Checking Protocol](https://github.com/grpc/grpc/blob/master/doc/health-checking.md)
+- [grpc-health-probe](https://github.com/grpc-ecosystem/grpc-health-probe)

@@ -1,13 +1,35 @@
 ---
 name: "strategy"
-description: "Implements the Strategy pattern in Python with pytest: interchangeable algorithms selected at runtime."
+description: "Implements the Strategy pattern in Python with pytest: interchangeable algorithms selected at runtime. Use when working with python pytest, strategy or when the user mentions python pytest, strategy."
+license: "MIT"
+compatibility: "Requires python."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "patterns"}
+allowed-tools: "Glob Grep Read Bash(python:*)"
 ---
-
-# Strategy
 
 Implements the Strategy pattern in Python with pytest: interchangeable algorithms selected at runtime.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `python -m pytest tests/ -v`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Strategy Pattern
 
@@ -83,6 +105,11 @@ Test each strategy and the registry lookups, including unknown keys.
 ### python-pytest
 Implement and test strategy examples.
 
+**Parameters:**
+- `k` (string): Test name filter
+- `cov` (string): Coverage target module
+- `tb` (string): Traceback format: short, long, line
+
 **Commands:**
 - `python -m pytest tests/ -v`
 - `python -m pytest tests/test_strategy.py -k discount`
@@ -94,3 +121,7 @@ Implement and test strategy examples.
 - python -m pytest tests/test_strategy.py -v
 - python -m pytest --cov=strategy --cov-report=term-missing tests/
 - python -c 'from strategy import apply_discount; print(apply_discount(100, "holiday"))'
+
+## References
+- [Refactoring Guru: Strategy](https://refactoring.guru/design-patterns/strategy)
+- [pytest](https://docs.pytest.org/)

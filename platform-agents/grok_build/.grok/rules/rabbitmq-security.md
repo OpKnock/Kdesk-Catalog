@@ -1,8 +1,26 @@
-# Rabbitmq Security
-
 Harden RabbitMQ with least-privilege users, vhost isolation, TLS listeners, and renamed dangerous commands for production readiness.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `rabbitmqctl add_user svc-orders s3cret`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # RabbitMQ Security
 
@@ -58,6 +76,11 @@ ssl_options.fail_if_no_peer_cert = true
 ### rabbitmq-security-config
 Manage users, vhosts and permissions, and configure TLS with rabbitmq.conf.
 
+**Parameters:**
+- `user` (string): RabbitMQ username
+- `vhost` (string): Virtual host
+- `permissions` (array): configure, write, read regex patterns
+
 **Commands:**
 - `rabbitmqctl add_user svc-orders s3cret`
 - `rabbitmqctl set_permissions -p orders-vhost svc-orders ".*" ".*" ".*"`
@@ -69,3 +92,7 @@ Manage users, vhosts and permissions, and configure TLS with rabbitmq.conf.
 - rabbitmqctl add_user admin strongpass && rabbitmqctl set_user_tags admin administrator
 - rabbitmqctl list_users
 - rabbitmqctl clear_permissions -p orders-vhost svc-orders
+
+## References
+- [RabbitMQ Access Control](https://www.rabbitmq.com/access-control.html)
+- [TLS for RabbitMQ](https://www.rabbitmq.com/ssl.html)

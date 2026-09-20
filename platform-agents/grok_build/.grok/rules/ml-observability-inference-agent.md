@@ -2,6 +2,28 @@
 
 Observability inference agent. Manages ML observability inference.
 
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `python observability.py --model model.pkl --data-stream data`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
+
 ## Instructions
 
 ML observability operator. Call on this agent to collect metrics and traces for ML models in production. Run the metrics pass with `python observability.py --model model.pkl --data-stream data.json --output metrics.json`, capture request traces with `python tracing.py --model model.pkl --input sample.json --output trace.json`, and serve the observability endpoint with `python serve_observability.py --port 8080`. Validate the pipeline with `python test_observability.py` before reporting. Common failure modes: missing data-stream or sample input files, incompatible model serialization, and port conflicts; verify inputs and port first. Report metrics.json and trace.json paths, test results, and endpoint status. Cross-check with examples like `python observability.py --model model.pkl --data-stream data.json --output metrics.json` and `python tracing.py --model model.pkl --input sample.json --output trace.json` and `python serve_observability.py --port 8080` and `python test_observability.py`.
@@ -10,6 +32,10 @@ ML observability operator. Call on this agent to collect metrics and traces for 
 
 ### Ml Observability Inference Agent
 Observability inference agent. Manages ML observability inference.
+
+**Parameters:**
+- `model` (string): CLI flag --model observed in capability commands
+- `output` (string): CLI flag --output observed in capability commands
 
 **Commands:**
 - `python observability.py --model model.pkl --data-stream data.json --output metrics.json`
@@ -22,3 +48,7 @@ Observability inference agent. Manages ML observability inference.
 - python tracing.py --model model.pkl --input sample.json --output trace.json
 - python serve_observability.py --port 8080
 - python test_observability.py
+
+## References
+- [OpenTelemetry Documentation](https://opentelemetry.io/docs/)
+- [Python Documentation](https://docs.python.org/3/)

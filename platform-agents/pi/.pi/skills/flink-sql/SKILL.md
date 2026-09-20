@@ -1,13 +1,35 @@
 ---
 name: "flink-sql"
-description: "Stream processing with Flink SQL: start the SQL client, run streaming queries against Kafka topics, and manage table sources and sinks."
+description: "Stream processing with Flink SQL: start the SQL client, run streaming queries against Kafka topics, and manage table sources and sinks. Use when working with flink sql client, api or when the user mentions flink sql client, api."
+license: "MIT"
+compatibility: "Requires flink, kafka-console-producer, sql-client.sh."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(flink:*) Bash(kafka-console-producer:*) Bash(sql-client.sh:*)"
 ---
-
-# Flink Sql
 
 Stream processing with Flink SQL: start the SQL client, run streaming queries against Kafka topics, and manage table sources and sinks.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `sql-client.sh embedded --defaults conf/sql-client-defaults.y`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Flink SQL
 
@@ -83,6 +105,11 @@ sql-client.sh embedded -f /opt/jobs/test.sql
 ### flink-sql-client
 Run Flink SQL queries, define sources/sinks, and manage jobs.
 
+**Parameters:**
+- `script-file` (string): Path to a .sql script for batch execution
+- `kafka-topic` (string): Topic backing the source/sink table
+- `checkpoint-interval` (string): Checkpoint interval like 60s
+
 **Commands:**
 - `sql-client.sh embedded --defaults conf/sql-client-defaults.yaml`
 - `sql-client.sh embedded -f /opt/jobs/orders.sql`
@@ -94,3 +121,7 @@ Run Flink SQL queries, define sources/sinks, and manage jobs.
 - sql-client.sh embedded -f /opt/jobs/orders.sql
 - kafka-console-producer --bootstrap-server localhost:9092 --topic orders.events
 - sql-client.sh embedded --help
+
+## References
+- [Flink SQL Reference](https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/table/sql/overview/)
+- [Flink SQL Client](https://nightlies.apache.org/flink/flink-docs-stable/docs/dev/table/sqlclient/)

@@ -1,13 +1,35 @@
 ---
 name: "kerberos"
-description: "Authenticate and administer Kerberos: kinit/klist sessions, keytab management with kadmin, and troubleshooting ticket errors."
+description: "Authenticate and administer Kerberos: kinit/klist sessions, keytab management with kadmin, and troubleshooting ticket errors. Use when working with session mgmt, admin ops, api or when the user mentions session mgmt, admin ops, api."
+license: "MIT"
+compatibility: "Requires kadmin, kdestroy, kinit, klist."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(kadmin:*) Bash(kdestroy:*) Bash(kinit:*) Bash(klist:*)"
 ---
-
-# Kerberos
 
 Authenticate and administer Kerberos: kinit/klist sessions, keytab management with kadmin, and troubleshooting ticket errors.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `kinit alice@STAGING.MYAPP.TEST`, `kadmin -p admin/admin@STAGING.MYAPP.TEST -q "addprinc -pw s3`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kerberos
 
@@ -91,6 +113,10 @@ kvno host/web-01.staging.myapp.test@STAGING.MYAPP.TEST
 ### session-mgmt
 Obtain, list, and destroy Kerberos tickets.
 
+**Parameters:**
+- `principal` (string): User principal, e.g. alice@STAGING.MYAPP.TEST.
+- `lifetime` (string): Ticket lifetime, e.g. 10h.
+
 **Commands:**
 - `kinit alice@STAGING.MYAPP.TEST`
 - `kinit -l 10h alice@STAGING.MYAPP.TEST`
@@ -106,6 +132,11 @@ Obtain, list, and destroy Kerberos tickets.
 ### admin-ops
 Create principals and manage keytabs with kadmin.
 
+**Parameters:**
+- `principal` (string): Principal to create or add to keytab.
+- `keytab` (string): Keytab file path.
+- `password` (string): Password for new principals.
+
 **Commands:**
 - `kadmin -p admin/admin@STAGING.MYAPP.TEST -q "addprinc -pw s3cret bob@STAGING.MYAPP.TEST"`
 - `kadmin -p admin/admin@STAGING.MYAPP.TEST -q "ktadd -k /etc/krb5.keytab host/web-01.staging.myapp.test@STAGING.MYAPP.TEST"`
@@ -117,3 +148,7 @@ Create principals and manage keytabs with kadmin.
 - kadmin -p admin/admin@STAGING.MYAPP.TEST -q "addprinc -pw s3cret bob@STAGING.MYAPP.TEST"
 - kadmin -p admin/admin@STAGING.MYAPP.TEST -q "ktadd -k /etc/krb5.keytab host/web-01.staging.myapp.test@STAGING.MYAPP.TEST"
 - klist -kt /etc/krb5.keytab
+
+## References
+- [MIT Kerberos Documentation](https://web.mit.edu/kerberos/krb5-latest/doc/)
+- [kinit/klist man pages](https://web.mit.edu/kerberos/krb5-latest/doc/user/user_commands/kinit.html)

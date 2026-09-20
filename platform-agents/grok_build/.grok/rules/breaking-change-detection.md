@@ -1,8 +1,26 @@
-# Breaking Change Detection
-
 Detects breaking changes in OpenAPI specs with openapi-diff, Redocly lint, and changelog-based CI gates.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx openapi-diff old.yaml new.yaml`, `npx @redocly/cli lint openapi.yaml`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Breaking Change Detection
 
@@ -56,6 +74,11 @@ Note: ` git show` with a leading space is just shell formatting; use `git show` 
 ### openapi-diff
 Diff OpenAPI specs for breaking changes.
 
+**Parameters:**
+- `old_spec` (string): Baseline spec
+- `new_spec` (string): Candidate spec
+- `fail_on` (string): Fail on 'incompatible' changes
+
 **Commands:**
 - `npx openapi-diff old.yaml new.yaml`
 - `npx openapi-diff old.yaml new.yaml --output console --fail-on incompatible`
@@ -69,6 +92,10 @@ Diff OpenAPI specs for breaking changes.
 
 ### redocly-lint
 Lint specs and enforce API style rules in CI.
+
+**Parameters:**
+- `extends` (string): Config to extend (recommended, minimal)
+- `format` (string): stylish, json
 
 **Commands:**
 - `npx @redocly/cli lint openapi.yaml`
@@ -84,6 +111,10 @@ Lint specs and enforce API style rules in CI.
 ### ci-gates
 Wire compat checks into CI.
 
+**Parameters:**
+- `tag` (string): Git tag for the baseline spec
+- `spec_path` (string): Path to the spec in the repo
+
 **Commands:**
 - `git diff --exit-code v1.0.0 v1.1.0 -- openapi.yaml`
 - `npx swagger-cli validate new.yaml`
@@ -94,3 +125,8 @@ Wire compat checks into CI.
 - git show v1.0.0:openapi.yaml > old.yaml && npx openapi-diff old.yaml new.yaml
 - npx swagger-cli validate new.yaml
 - npx openapi-diff old.yaml new.yaml > compat.txt && grep -c incompatible compat.txt
+
+## References
+- [openapi-diff](https://github.com/OpenAPITools/openapi-diff)
+- [Redocly CLI](https://redocly.com/docs/cli/)
+- [openapi-changes](https://github.com/oasdiff/oasdiff)

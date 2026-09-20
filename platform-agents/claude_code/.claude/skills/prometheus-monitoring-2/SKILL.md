@@ -2,6 +2,7 @@
 name: "prometheus-monitoring-2"
 description: "Queries Prometheus for live monitoring: PromQL, the HTTP API, targets health, and ad-hoc alert inspection. Use when working with api query, promql, monitoring or when the user mentions api query, promql, monitoring."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "monitoring"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

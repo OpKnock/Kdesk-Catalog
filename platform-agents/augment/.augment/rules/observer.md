@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Implements the Observer pattern in Node.js: event-driven notifications with EventEmitter and node --test suites."
+description: "Implements the Observer pattern in Node.js: event-driven notifications with EventEmitter and node --test suites. Use when working with node, observer or when the user mentions node, observer."
 ---
-
-# Observer
 
 Implements the Observer pattern in Node.js: event-driven notifications with EventEmitter and node --test suites.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `node --test tests/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Observer Pattern
 
@@ -70,6 +88,11 @@ Verify delivery order, payload shape, and listener cleanup.
 ### node
 Implement and test observer examples.
 
+**Parameters:**
+- `test-name-pattern` (string): Filter tests by name
+- `watch` (string): Watch mode
+- `file` (string): Test file path
+
 **Commands:**
 - `node --test tests/`
 - `node --test tests/observer.test.mjs`
@@ -81,3 +104,8 @@ Implement and test observer examples.
 - node --test tests/observer.test.mjs -v
 - node --test-name-pattern 'notify' tests/
 - node -e "const {EventEmitter}=require('events'); const e=new EventEmitter(); console.log(e.listenerCount('x'))"
+
+## References
+- [Refactoring Guru: Observer](https://refactoring.guru/design-patterns/observer)
+- [Node.js EventEmitter](https://nodejs.org/api/events.html)
+- [node --test runner](https://nodejs.org/api/test.html)

@@ -1,8 +1,26 @@
-# scorecard
-
 Evaluates open-source project health and supply-chain risk with OSSF Scorecard, checking CI, code review, and dependency practices.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `scorecard --repo github.com/org/repo`, `scorecard --npm=lodash`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # OSSF Scorecard
 
@@ -61,6 +79,11 @@ scorecard --repo github.com/org/repo --format json
 ### repo-assessment
 Assess repositories locally or on GitHub.
 
+**Parameters:**
+- `repo` (string): GitHub repository in owner/name form
+- `checks` (array): Checks to run: Code-Review, Branch-Protection, Signed-Releases, etc.
+- `format` (string): Output: default, json, sarif
+
 **Commands:**
 - `scorecard --repo github.com/org/repo`
 - `scorecard --local .`
@@ -76,6 +99,10 @@ Assess repositories locally or on GitHub.
 ### dependency-assessment
 Score package dependencies for supply-chain risk.
 
+**Parameters:**
+- `package` (string): Package name for npm or pypi scoring
+- `format` (string): Output format for package scoring: json, csv, sarif, sonar.
+
 **Commands:**
 - `scorecard --npm=lodash`
 - `scorecard --pypi=requests`
@@ -86,3 +113,7 @@ Score package dependencies for supply-chain risk.
 - scorecard --npm=express
 - scorecard --pypi=requests
 - scorecard --npm=lodash --show-details
+
+## References
+- [OSSF Scorecard GitHub](https://github.com/ossf/scorecard)
+- [OpenSSF Scorecard Site](https://securityscorecards.dev/)

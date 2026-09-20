@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Run it from the command line or Gradle. Manage existing debt with baselines. and Gradle integration.'"
+description: "Run it from the command line or Gradle. Manage existing debt with baselines. and Gradle integration.'. Use when working with detekt cli, detekt baseline, code quality or when the user mentions detekt cli, detekt baseline, code quality."
 ---
-
-# Detekt
 
 Run it from the command line or Gradle. Manage existing debt with baselines. and Gradle integration.'
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `detekt --input src/main/kotlin`, `detekt --baseline detekt-baseline.xml --input src/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # detekt
 
@@ -72,6 +90,11 @@ style:
 ### detekt-cli
 Run detekt from the command line or Gradle.
 
+**Parameters:**
+- `input` (string): Source directory
+- `config` (string): Config yaml path
+- `baseline` (string): Baseline xml path
+
 **Commands:**
 - `detekt --input src/main/kotlin`
 - `detekt --config detekt.yml --input src/`
@@ -87,6 +110,10 @@ Run detekt from the command line or Gradle.
 ### detekt-baseline
 Manage existing debt with baselines.
 
+**Parameters:**
+- `generate-config` (boolean): Generate default config
+- `input` (string): Source directory to scan
+
 **Commands:**
 - `detekt --baseline detekt-baseline.xml --input src/`
 - `detekt --build-upon-default-config`
@@ -96,3 +123,7 @@ Manage existing debt with baselines.
 **Examples:**
 - gradle detektBaseline && gradle detekt
 - detekt --generate-config --config detekt.yml
+
+## References
+- [detekt Docs](https://detekt.dev)
+- [detekt on GitHub](https://github.com/detekt/detekt)

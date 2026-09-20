@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Generates realistic fake data for tests and demos with Faker, mock JSON servers, and database seed tools."
+description: "Generates realistic fake data for tests and demos with Faker, mock JSON servers, and database seed tools. Use when working with faker generation, mock json servers, database seeding or when the user mentions faker generation, mock json servers, database seeding."
 ---
-
-# test-data-generator
 
 Generates realistic fake data for tests and demos with Faker, mock JSON servers, and database seed tools.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `faker name`, `npx json-server --watch db.json --port 3000`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Test Data Generation
 
@@ -70,6 +88,11 @@ echo ']' >> db.json
 ### faker-generation
 Generate fake records from the command line.
 
+**Parameters:**
+- `provider` (string): Faker provider: name, address, profile, pystr
+- `locale` (string): Locale, e.g. en_US, fr_FR, ja_JP
+- `repeat` (number): Number of records (-i)
+
 **Commands:**
 - `faker name`
 - `faker profile --locale=fr_FR`
@@ -85,6 +108,10 @@ Generate fake records from the command line.
 ### mock-json-servers
 Serve and reset fake API data for development.
 
+**Parameters:**
+- `dbFile` (string): JSON database file
+- `port` (number): Server port
+
 **Commands:**
 - `npx json-server --watch db.json --port 3000`
 - `npx json-server db.json --routes routes.json`
@@ -99,6 +126,10 @@ Serve and reset fake API data for development.
 ### database-seeding
 Seed databases with realistic volumes.
 
+**Parameters:**
+- `scale` (number): pgbench scale factor (-s)
+- `clients` (number): Concurrent clients (-c)
+
 **Commands:**
 - `pgbench -i -s 10 mydb`
 - `pgbench -c 10 -j 2 -t 1000 mydb`
@@ -109,3 +140,8 @@ Seed databases with realistic volumes.
 - pgbench -i -s 10 mydb
 - pgbench -c 10 -j 2 -t 1000 mydb
 - sqlite3 app.db < seed.sql
+
+## References
+- [Faker Python Documentation](https://faker.readthedocs.io/)
+- [json-server GitHub](https://github.com/typicode/json-server)
+- [pgbench Documentation](https://www.postgresql.org/docs/current/pgbench.html)

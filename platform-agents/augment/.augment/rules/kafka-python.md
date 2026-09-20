@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Build Kafka producers and consumers in Python with confluent-kafka: SerializingProducer, Consumer groups, and end-to-end event pipelines."
+description: "Build Kafka producers and consumers in Python with confluent-kafka: SerializingProducer, Consumer groups, and end-to-end event pipelines. Use when working with python pipeline, consume check, api or when the user mentions python pipeline, consume check, api."
 ---
-
-# Kafka Python
 
 Build Kafka producers and consumers in Python with confluent-kafka: SerializingProducer, Consumer groups, and end-to-end event pipelines.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install confluent-kafka`, `kafka-console-consumer.sh --bootstrap-server localhost:9092 `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kafka (Python)
 
@@ -82,6 +100,11 @@ python -m pytest tests/
 ### python-pipeline
 Write Python producers/consumers with confluent-kafka and verify against the broker.
 
+**Parameters:**
+- `topic` (string): Topic name.
+- `group` (string): Consumer group id.
+- `count` (integer): Messages to produce.
+
 **Commands:**
 - `pip install confluent-kafka`
 - `python producer.py --topic events --count 500`
@@ -97,6 +120,10 @@ Write Python producers/consumers with confluent-kafka and verify against the bro
 ### consume-check
 Inspect consumed data and group state from the CLI.
 
+**Parameters:**
+- `reset` (string): auto.offset.reset: earliest or latest.
+- `poll` (integer): Poll timeout in milliseconds.
+
 **Commands:**
 - `kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning --max-messages 3`
 - `kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group analytics`
@@ -106,3 +133,7 @@ Inspect consumed data and group state from the CLI.
 - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic events --from-beginning --max-messages 3
 - kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group analytics
 - python consumer.py --topic events --group analytics --reset earliest --poll 5000
+
+## References
+- [confluent-kafka-python](https://docs.confluent.io/platform/current/clients/confluent-kafka-python/)
+- [confluent_kafka on PyPI](https://pypi.org/project/confluent-kafka/)

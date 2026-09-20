@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Architects test strategies across the pyramid with tiered suites, coverage budgets, and CI orchestration."
+description: "Architects test strategies across the pyramid with tiered suites, coverage budgets, and CI orchestration. Use when working with tier strategy, coverage budgets, ci orchestration or when the user mentions tier strategy, coverage budgets, ci orchestration."
 ---
-
-# testing-pyramid-architect
 
 Architects test strategies across the pyramid with tiered suites, coverage budgets, and CI orchestration.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pytest tests/unit -n 4`, `pytest --cov=src --cov-fail-under=80 tests/unit`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Testing Pyramid Architecture
 
@@ -75,6 +93,10 @@ stages:
 ### tier-strategy
 Define and enforce tiered test suites.
 
+**Parameters:**
+- `tier` (string): Tier directory: unit, integration, e2e
+- `framework` (string): Framework per tier
+
 **Commands:**
 - `pytest tests/unit -n 4`
 - `pytest tests/integration --cov=src`
@@ -90,6 +112,10 @@ Define and enforce tiered test suites.
 ### coverage-budgets
 Enforce coverage budgets per tier.
 
+**Parameters:**
+- `threshold` (number): Minimum coverage percentage
+- `covFailUnder` (number): pytest fail threshold
+
 **Commands:**
 - `pytest --cov=src --cov-fail-under=80 tests/unit`
 - `npx jest --coverage --coverageThreshold='{"global":{"lines":80}}'`
@@ -104,6 +130,10 @@ Enforce coverage budgets per tier.
 ### ci-orchestration
 Orchestrate tiers across CI stages.
 
+**Parameters:**
+- `stage` (string): CI stage for the tier
+- `shards` (integer): Total shards for e2e parallelization, e.g. 4 for 1/4.
+
 **Commands:**
 - `npm run test:unit && npm run test:api`
 - `pytest tests/unit -m 'not e2e'`
@@ -115,3 +145,8 @@ Orchestrate tiers across CI stages.
 - npm run test:unit && npm run test:api
 - npx playwright test tests/e2e --shard=1/4
 - pytest -m smoke tests/
+
+## References
+- [Test Pyramid - Martin Fowler](https://martinfowler.com/bliki/TestPyramid.html)
+- [Google Testing Blog](https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html)
+- [pyramid by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/test-pyramid-anti-patterns/)

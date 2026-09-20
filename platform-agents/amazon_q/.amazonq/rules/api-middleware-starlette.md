@@ -1,8 +1,26 @@
-# Api Middleware Starlette
-
 Builds Python ASGI middleware for FastAPI and Starlette: CORSMiddleware, GZipMiddleware, TrustedHostMiddleware, and custom BaseHTTPMiddleware for auth and logging.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install fastapi uvicorn`, `python -c "from starlette.middleware.base import BaseHTTPMid`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Middleware v4 - Python ASGI
 
@@ -54,6 +72,11 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 ### starlette-middleware
 Apply Starlette built-in middleware classes to a FastAPI app
 
+**Parameters:**
+- `allow_origins` (array): CORS allowed origins list
+- `minimum_size` (integer): Minimum response bytes before gzip compression
+- `allowed_hosts` (array): Hosts allowed through TrustedHostMiddleware
+
 **Commands:**
 - `pip install fastapi uvicorn`
 - `uvicorn app:app --reload --port 8000`
@@ -77,3 +100,7 @@ Write custom BaseHTTPMiddleware subclasses for auth and request logging
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [FastAPI Middleware](https://fastapi.tiangolo.com/tutorial/middleware/)
+- [Starlette Middleware](https://www.starlette.io/middleware/)

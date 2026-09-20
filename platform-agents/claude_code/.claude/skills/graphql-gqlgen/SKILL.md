@@ -2,6 +2,7 @@
 name: "graphql-gqlgen"
 description: "GraphQL in Go with gqlgen: generate resolvers from SDL, run the server, and iterate on schema-driven development. Use when working with gqlgen codegen, api or when the user mentions gqlgen codegen, api."
 license: "MIT"
+compatibility: "No special requirements."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(go:*)"
 ---

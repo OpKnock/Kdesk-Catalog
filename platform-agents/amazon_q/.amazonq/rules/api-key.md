@@ -1,8 +1,26 @@
-# Api Key
-
 Designs, generates, stores, and rotates API keys: high-entropy generation with openssl, hashed storage, and Vault-backed issuance.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `openssl rand -hex 32`, `vault kv put secret/api-keys/prod key=$(openssl rand -hex 32`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Keys
 
@@ -68,6 +86,10 @@ Show the raw key exactly once, then hash it.
 ### key-generation
 Generate strong API keys and inspect their entropy.
 
+**Parameters:**
+- `bytes` (number): Number of random bytes (32 = 256 bits)
+- `encoding` (string): hex, base64, or base64url
+
 **Commands:**
 - `openssl rand -hex 32`
 - `openssl rand -base64 32`
@@ -83,6 +105,10 @@ Generate strong API keys and inspect their entropy.
 ### vault-issuance
 Store, retrieve, and rotate API keys in HashiCorp Vault KV.
 
+**Parameters:**
+- `path` (string): Vault KV path, e.g. secret/api-keys/prod
+- `field` (string): Single field to read from the secret
+
 **Commands:**
 - `vault kv put secret/api-keys/prod key=$(openssl rand -hex 32)`
 - `vault kv get secret/api-keys/prod`
@@ -94,3 +120,8 @@ Store, retrieve, and rotate API keys in HashiCorp Vault KV.
 - vault kv put secret/api-keys/prod service=payments key=$(openssl rand -hex 32)
 - vault kv get -field=key secret/api-keys/prod
 - vault kv metadata get secret/api-keys/prod
+
+## References
+- [Vault KV v2](https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v2)
+- [OWASP API Key Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/API_Key_Security_Cheat_Sheet.html)
+- [RFC 9110 Authorization](https://www.rfc-editor.org/rfc/rfc9110#name-authorization)

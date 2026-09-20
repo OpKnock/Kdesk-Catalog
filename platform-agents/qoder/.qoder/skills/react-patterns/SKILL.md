@@ -1,13 +1,35 @@
 ---
 name: "react-patterns"
-description: "Applies production React architecture patterns: composition, state management, Storybook, and code quality gates for component libraries."
+description: "Applies production React architecture patterns: composition, state management, Storybook, and code quality gates for component libraries. Use when working with storybook, code quality, frontend or when the user mentions storybook, code quality, frontend."
+license: "MIT"
+compatibility: "Requires npm, npx."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "frontend"}
+allowed-tools: "Glob Grep Read Bash(npm:*) Bash(npx:*)"
 ---
-
-# react-patterns
 
 Applies production React architecture patterns: composition, state management, Storybook, and code quality gates for component libraries.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx storybook@latest init --type react-vite`, `npx eslint src --ext .ts,.tsx --max-warnings 0`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # React Patterns
 
@@ -81,6 +103,11 @@ Run unit + storybook interaction tests before visual review.
 ### storybook
 Build and maintain a component library with Storybook.
 
+**Parameters:**
+- `type` (string): react-vite, react-webpack5, or framework preset
+- `project-token` (string): Chromatic visual regression token
+- `addon` (string): Storybook addon package to install
+
 **Commands:**
 - `npx storybook@latest init --type react-vite`
 - `npx storybook@latest add @storybook/addon-a11y`
@@ -96,6 +123,11 @@ Build and maintain a component library with Storybook.
 ### code-quality
 Enforce React patterns with ESLint and dependency hygiene.
 
+**Parameters:**
+- `max-warnings` (number): CI gate on warnings
+- `rule` (string): Inline rule override
+- `ext` (string): File extensions to lint
+
 **Commands:**
 - `npx eslint src --ext .ts,.tsx --max-warnings 0`
 - `npx eslint src --fix`
@@ -107,3 +139,8 @@ Enforce React patterns with ESLint and dependency hygiene.
 - npx eslint src --max-warnings 0 --rule 'react-hooks/rules-of-hooks:error'
 - npx npm-check-updates -u && npm install
 - npx eslint src/components --fix
+
+## References
+- [React Docs](https://react.dev/learn)
+- [Storybook](https://storybook.js.org/docs)
+- [React Hooks rules](https://react.dev/reference/rules)

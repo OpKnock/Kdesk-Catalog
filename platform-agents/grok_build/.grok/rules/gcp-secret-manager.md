@@ -1,8 +1,26 @@
-# Gcp Secret Manager
-
 Store and manage secrets in GCP Secret Manager: create and version secrets, access values, and grant access via IAM.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `printf 'postgres://app:pass@db:5432/app' | gcloud secrets ve`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GCP Secret Manager
 
@@ -63,6 +81,11 @@ test "$V" = "$EXPECTED" && echo OK
 ### secret-manager
 Create, access, version, and delete secrets with gcloud.
 
+**Parameters:**
+- `secret-name` (string): Secret identifier
+- `version` (string): Version number or latest
+- `replication` (string): automatic or user-managed replication
+
 **Commands:**
 - `printf 'postgres://app:pass@db:5432/app' | gcloud secrets versions add db-url --data-file=-`
 - `gcloud secrets create db-url --replication-policy=automatic --data-file=- <<< 'postgres://...'`
@@ -75,3 +98,7 @@ Create, access, version, and delete secrets with gcloud.
 - gcloud secrets versions access latest --secret=db-url
 - gcloud secrets create db-url --replication-policy=automatic --data-file=- <<< 'postgres://...'
 - gcloud secrets add-iam-policy-binding db-url --member=serviceAccount:app-sa@my-project.iam.gserviceaccount.com --role=roles/secretmanager.secretAccessor
+
+## References
+- [Secret Manager docs](https://cloud.google.com/secret-manager/docs)
+- [gcloud secrets reference](https://cloud.google.com/sdk/gcloud/reference/secrets)

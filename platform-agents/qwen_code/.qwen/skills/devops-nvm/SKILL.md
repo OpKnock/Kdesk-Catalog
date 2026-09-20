@@ -1,11 +1,37 @@
 ---
 name: "devops-nvm"
-description: "nvm agent for Node.js version management."
+description: "nvm agent for Node.js version management. Use when working with Devops Nvm, deployment or when the user mentions Devops Nvm, deployment."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "devops"}
+allowed-tools: "Glob Grep Read Bash(Default::*) Bash(Install::*) Bash(List::*) Bash(Use::*)"
 ---
 
 # Devops Nvm
 
 nvm agent for Node.js version management.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `Use: nvm use 20`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -35,3 +61,6 @@ nvm agent for Node.js version management.
 - Use: nvm use 20
 - Default: nvm alias default 20
 - List: nvm ls
+
+## References
+- [nvm Documentation](https://github.com/nvm-sh/nvm)

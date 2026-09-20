@@ -1,13 +1,35 @@
 ---
 name: "graphql-schema-designer"
-description: "Designs and evolves GraphQL schemas: linting with graphql-schema-linter, drift checks with graphql-inspector, and typed codegen."
+description: "Designs and evolves GraphQL schemas: linting with graphql-schema-linter, drift checks with graphql-inspector, and typed codegen. Use when working with lint, diff or when the user mentions lint, diff."
+license: "MIT"
+compatibility: "Requires apollo-server, graphql-codegen, rover, altair, postman, graphql-inspector."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
+allowed-tools: "Glob Grep Read Bash(npx:*)"
 ---
-
-# graphql-schema-designer
 
 Designs and evolves GraphQL schemas: linting with graphql-schema-linter, drift checks with graphql-inspector, and typed codegen.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx graphql-schema-linter schema.graphql`, `npx graphql-inspector diff old.graphql new.graphql`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # GraphQL Schema Design
 
@@ -90,6 +112,11 @@ Run the linter and inspector diff in CI on every PR touching schema files.
 ### lint
 Lint GraphQL schemas against rulesets.
 
+**Parameters:**
+- `rules` (string): Comma-separated rule names
+- `format` (string): stylish or json output
+- `ignore` (string): Rules to skip
+
 **Commands:**
 - `npx graphql-schema-linter schema.graphql`
 - `npx graphql-schema-linter schema.graphql --rules fields-have-descriptions,types-have-descriptions`
@@ -105,6 +132,11 @@ Lint GraphQL schemas against rulesets.
 ### diff
 Compare schema versions and generate typed clients.
 
+**Parameters:**
+- `schema` (string): Schema file(s) to analyze
+- `config` (string): codegen configuration file
+- `watch` (string): Regenerate on file changes
+
 **Commands:**
 - `npx graphql-inspector diff old.graphql new.graphql`
 - `npx graphql-inspector validate --schema new.graphql 'operations/**/*.graphql'`
@@ -116,3 +148,8 @@ Compare schema versions and generate typed clients.
 - npx graphql-inspector diff schema-2026-07.graphql schema-2026-08.graphql
 - npx graphql-codegen --config codegen.ts --silent
 - npx graphql-inspector validate --schema schema.graphql 'src/**/*.graphql'
+
+## References
+- [GraphQL Schema Spec](https://graphql.org/learn/schema/)
+- [GraphQL Inspector](https://the-guild.dev/graphql/inspector/docs)
+- [GraphQL Codegen](https://the-guild.dev/graphql/codegen/docs)

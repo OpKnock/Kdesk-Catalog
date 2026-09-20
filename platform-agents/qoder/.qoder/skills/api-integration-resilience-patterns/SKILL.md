@@ -1,13 +1,35 @@
 ---
 name: "api-integration-resilience-patterns"
-description: "Troubleshoots and hardens third-party API integrations: retries, circuit breakers, idempotency, and webhook reliability."
+description: "Troubleshoots and hardens third-party API integrations: retries, circuit breakers, idempotency, and webhook reliability. Use when working with resilience patterns, webhook debugging or when the user mentions resilience patterns, webhook debugging."
+license: "MIT"
+compatibility: "Requires node.js, python, ngrok, redis, stripe-cli. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(ngrok:*) Bash(node:*) Bash(npm:*) Bash(stripe:*)"
 ---
-
-# Api Integration Resilience Patterns
 
 Troubleshoots and hardens third-party API integrations: retries, circuit breakers, idempotency, and webhook reliability.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install p-retry`, `ngrok http 3000`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Integration (Reliability)
 
@@ -51,6 +73,10 @@ Use `stripe trigger` and replay endpoints to simulate duplicates, late arrivals,
 ### resilience-patterns
 Add retry backoff, circuit breakers, and fallbacks around flaky third-party calls
 
+**Parameters:**
+- `retries` (string): Retry count
+- `timeoutMs` (string): Per-request timeout
+
 **Commands:**
 - `npm install p-retry`
 - `node -e "const r=require('p-retry'); const f=()=>Promise.reject(new Error('flaky')); r(f,{retries:3,onFailedAttempt:e=>console.log(e.attemptNumber)}).catch(()=>{})"`
@@ -66,6 +92,10 @@ Add retry backoff, circuit breakers, and fallbacks around flaky third-party call
 ### webhook-debugging
 Forward, replay, and verify webhooks from third-party services
 
+**Parameters:**
+- `port` (string): Local webhook listener port
+- `event` (string): Third-party event to trigger
+
 **Commands:**
 - `ngrok http 3000`
 - `stripe listen --forward-to localhost:3000/webhooks/stripe`
@@ -77,3 +107,8 @@ Forward, replay, and verify webhooks from third-party services
 - ngrok http 3000 --subdomain my-dev
 - stripe listen --forward-to localhost:3000/webhooks/stripe --events payment_intent.succeeded
 - stripe trigger invoice.paid
+
+## References
+- [Stripe CLI](https://docs.stripe.com/stripe-cli)
+- [ngrok Docs](https://ngrok.com/docs)
+- [Resilience Patterns](https://docs.aws.amazon.com/prescriptive-guidance/latest/backup-and-restore/resilience.html)

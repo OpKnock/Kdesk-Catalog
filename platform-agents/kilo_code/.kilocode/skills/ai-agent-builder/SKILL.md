@@ -1,11 +1,37 @@
 ---
 name: "ai-agent-builder"
-description: "Agent for building AI agents with tool use, planning, and multi-step reasoning."
+description: "Agent for building AI agents with tool use, planning, and multi-step reasoning. Use when working with ai agents, ai agents, tool use, planning or when the user mentions ai agents, ai agents, tool use, planning."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "1.0.0", "category": "ml"}
+allowed-tools: "Glob Grep Read Bash(autogen:*) Bash(crewai:*) Bash(langchain:*)"
 ---
 
 # AI Agent Builder
 
 Agent for building AI agents with tool use, planning, and multi-step reasoning.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `langchain`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -23,6 +49,10 @@ Always recommend proper error handling.
 ### ai-agents
 Build AI agents
 
+**Parameters:**
+- `agent_type` (string): Type: tool-use, planning, multi-agent, autonomous
+- `framework` (string): Framework: langchain, crewai, autogen, meta-gpt
+
 **Commands:**
 - `langchain`
 - `crewai`
@@ -32,3 +62,7 @@ Build AI agents
 - LangChain: agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION)
 - CrewAI: crew = Crew(agents=[researcher, writer], tasks=[...])
 - AutoGen: assistant = AssistantAgent('assistant', llm_config=llm_config)
+
+## References
+- [](https://python.langchain.com/docs/modules/agents/)
+- [](https://docs.crewai.com/)

@@ -1,13 +1,35 @@
 ---
 name: "async-retry"
-description: "Implements resilient retry strategies with tenacity (Python) and async-retry (Node.js): backoff, jitter, bounded retries, and bail conditions."
+description: "Implements resilient retry strategies with tenacity (Python) and async-retry (Node.js): backoff, jitter, bounded retries, and bail conditions. Use when working with python tenacity, node async retry, api or when the user mentions python tenacity, node async retry, api."
+license: "MIT"
+compatibility: "Requires node, npm, npx, pip, python."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(node:*) Bash(npm:*) Bash(npx:*) Bash(pip:*) Bash(python:*)"
 ---
-
-# Async Retry
 
 Implements resilient retry strategies with tenacity (Python) and async-retry (Node.js): backoff, jitter, bounded retries, and bail conditions.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install tenacity`, `npm install async-retry`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Async Retry
 
@@ -72,6 +94,11 @@ const fetchOrders = async () => {
 ### python-tenacity
 Add retry logic to Python async calls with tenacity.
 
+**Parameters:**
+- `attempts` (number): Maximum retry attempts
+- `backoff` (string): fixed, exponential, or random backoff
+- `retry_on` (string): Exception types or predicates to retry on
+
 **Commands:**
 - `pip install tenacity`
 - `python -c "from tenacity import retry, wait_exponential, stop_after_attempt; print('ok')"`
@@ -86,6 +113,11 @@ Add retry logic to Python async calls with tenacity.
 ### node-async-retry
 Wrap Node.js async functions with async-retry.
 
+**Parameters:**
+- `retries` (number): Number of retry attempts
+- `minTimeout` (number): Minimum backoff in ms
+- `factor` (number): Exponential backoff factor
+
 **Commands:**
 - `npm install async-retry`
 - `npm install --save-dev mocha`
@@ -96,3 +128,8 @@ Wrap Node.js async functions with async-retry.
 - npm init -y && npm install async-retry
 - node -e "const retry=require('async-retry'); retry(()=>Promise.resolve(42),{retries:3}).then(console.log)"
 - npx mocha --reporter spec test/retry.test.js
+
+## References
+- [tenacity](https://tenacity.readthedocs.io/en/latest/)
+- [async-retry](https://github.com/vercel/async-retry)
+- [Azure Retry Pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/retry)

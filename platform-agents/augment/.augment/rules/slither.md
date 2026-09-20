@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Run it detectors, printers, and inheritance checks on Solidity projects. printing contract info."
+description: "Run it detectors, printers, and inheritance checks on Solidity projects. printing contract info. Use when working with slither analysis, code quality or when the user mentions slither analysis, code quality."
 ---
-
-# Slither
 
 Run it detectors, printers, and inheritance checks on Solidity projects. printing contract info.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `slither contracts/`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Slither
 
@@ -78,6 +96,11 @@ summary and inheritance output requested.
 ### slither-analysis
 Run Slither detectors, printers, and inheritance checks on Solidity projects
 
+**Parameters:**
+- `detect` (string): Comma-separated detector list to run, e.g. reentrancy-eth,uninitialized-state
+- `exclude` (string): Comma-separated detectors to skip
+- `filter-paths` (string): Skip paths matching this regex, e.g. node_modules
+
 **Commands:**
 - `slither contracts/`
 - `slither . --filter-paths node_modules`
@@ -89,3 +112,7 @@ Run Slither detectors, printers, and inheritance checks on Solidity projects
 - slither --exclude reentrancy-no-eth contracts/
 - slither --detect assembly --json report.json .
 - slither --print inheritance contracts/
+
+## References
+- [Slither docs](https://github.com/crytic/slither)
+- [Slither wiki](https://github.com/crytic/slither/wiki)

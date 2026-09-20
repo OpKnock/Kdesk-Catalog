@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Build Kafka producers in Go with segmentio/kafka-go and IBM/sarama: async writes, batching, acks tuning, and delivery verification."
+description: "Build Kafka producers in Go with segmentio/kafka-go and IBM/sarama: async writes, batching, acks tuning, and delivery verification. Use when working with go producer app, delivery verify, api or when the user mentions go producer app, delivery verify, api."
 ---
-
-# Kafka Producer Go
 
 Build Kafka producers in Go with segmentio/kafka-go and IBM/sarama: async writes, batching, acks tuning, and delivery verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `go get github.com/segmentio/kafka-go`, `kafka-console-consumer.sh --bootstrap-server localhost:9092 `
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Kafka Producer (Go)
 
@@ -81,6 +99,11 @@ go test ./...
 ### go-producer-app
 Scaffold and run Go producers using kafka-go Writer or sarama AsyncProducer.
 
+**Parameters:**
+- `topic` (string): Topic to produce to.
+- `count` (integer): Number of messages to send.
+- `brokers` (string): Bootstrap brokers.
+
 **Commands:**
 - `go get github.com/segmentio/kafka-go`
 - `go get github.com/IBM/sarama`
@@ -96,6 +119,9 @@ Scaffold and run Go producers using kafka-go Writer or sarama AsyncProducer.
 ### delivery-verify
 Verify produced records landed correctly with consumers and offsets.
 
+**Parameters:**
+- `topic` (string): Topic to verify.
+
 **Commands:**
 - `kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages 5`
 - `kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group verify`
@@ -104,3 +130,7 @@ Verify produced records landed correctly with consumers and offsets.
 **Examples:**
 - kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning --max-messages 5
 - kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic orders --time -1
+
+## References
+- [segmentio/kafka-go Writer](https://pkg.go.dev/github.com/segmentio/kafka-go)
+- [IBM/sarama](https://github.com/IBM/sarama)

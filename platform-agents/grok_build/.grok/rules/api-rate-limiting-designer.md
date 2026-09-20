@@ -1,8 +1,26 @@
-# api-rate-limiting-designer
-
 Designs rate limiting algorithms and data models: token bucket, sliding window, fixed window, and Redis-backed counters with Lua atomicity.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `redis-cli INCR rate:user:42`, `redis-cli --eval ratelimit.lua 1 rate:user:42 , 10 60`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Rate Limiting Designer
 
@@ -57,6 +75,11 @@ return c
 ### redis-windows
 Model rate limit windows with Redis primitives
 
+**Parameters:**
+- `key` (string): Rate limit key, usually rate:<scope>:<client>
+- `window-ms` (integer): Sliding window length in milliseconds
+- `limit` (integer): Maximum requests per window
+
 **Commands:**
 - `redis-cli INCR rate:user:42`
 - `redis-cli EXPIRE rate:user:42 60`
@@ -81,3 +104,7 @@ Use Lua scripts for atomic check-and-increment
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Redis Commands Reference](https://redis.io/docs/latest/commands/)
+- [Cloudflare Blog: Rate Limiting Algorithms](https://blog.cloudflare.com/counting-things-a-lot-of-different-ways/)

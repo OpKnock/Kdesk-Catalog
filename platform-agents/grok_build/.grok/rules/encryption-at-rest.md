@@ -1,8 +1,26 @@
-# Encryption At Rest
-
 Data-at-rest encryption: full-disk encryption with LUKS, file encryption with openssl, and key management with cloud KMS services.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `sudo cryptsetup luksFormat /dev/sdb1`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Encryption at Rest
 
@@ -62,6 +80,11 @@ sudo lsblk -o NAME,TYPE,MOUNTPOINT /dev/sdb1
 ### disk-encryption
 Set up LUKS volumes, encrypt files with openssl, and manage keys via AWS KMS.
 
+**Parameters:**
+- `device` (string): Block device to encrypt, e.g. /dev/sdb1
+- `cipher` (string): Cipher for openssl enc, e.g. aes-256-cbc
+- `kms-key-id` (string): KMS key id or alias for envelope encryption
+
 **Commands:**
 - `sudo cryptsetup luksFormat /dev/sdb1`
 - `sudo cryptsetup open /dev/sdb1 secretdata && sudo mkfs.ext4 /dev/mapper/secretdata`
@@ -73,3 +96,7 @@ Set up LUKS volumes, encrypt files with openssl, and manage keys via AWS KMS.
 - sudo cryptsetup luksFormat /dev/sdb1 && sudo cryptsetup open /dev/sdb1 secretdata
 - openssl enc -aes-256-cbc -pbkdf2 -iter 200000 -salt -in secrets.txt -out secrets.txt.enc
 - aws kms decrypt --ciphertext-blob fileb://payload.enc --output text --query Plaintext | base64 -d
+
+## References
+- [cryptsetup/LUKS](https://gitlab.com/cryptsetup/cryptsetup/-/wikis/home)
+- [AWS KMS Developer Guide](https://docs.aws.amazon.com/kms/latest/developerguide/overview.html)

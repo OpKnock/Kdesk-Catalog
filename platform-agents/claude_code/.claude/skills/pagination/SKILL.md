@@ -2,6 +2,7 @@
 name: "pagination"
 description: "Designs and tests paginated REST endpoints with page/limit and cursor-based strategies. Emits RFC 8288 Link headers, enforces max page size, and validates cursor stability under concurrent writes. Use when working with pagination design, api or when the user mentions pagination design, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

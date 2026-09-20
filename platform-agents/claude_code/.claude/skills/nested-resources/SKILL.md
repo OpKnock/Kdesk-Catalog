@@ -2,6 +2,7 @@
 name: "nested-resources"
 description: "Designs and tests REST API nested resource hierarchies with URI structures, depth limits, pagination, and RFC 8288 Link headers for client navigation. Use when working with nested resource design, api or when the user mentions nested resource design, api."
 license: "MIT"
+compatibility: "Requires network access."
 metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
 allowed-tools: "Glob Grep Read Bash(curl:*)"
 ---

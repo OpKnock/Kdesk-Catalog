@@ -1,8 +1,26 @@
-# climate-tech
-
 Analyzes climate and energy data with Python ecosystem: pandas, xarray, rasterio, and emissions computation workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `pip install pandas xarray netcdf4`, `python -c "import pandas as pd; df=pd.read_csv(\"emissions.c`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Climate Tech
 
@@ -60,6 +78,10 @@ print(annual_mean.isel(year=-1))
 ### climate-data
 Process climate and weather datasets.
 
+**Parameters:**
+- `file` (string): NetCDF, CSV, or GeoTIFF path
+- `engine` (string): Backend: xarray, pandas, or rasterio
+
 **Commands:**
 - `pip install pandas xarray netcdf4`
 - `python -c "import xarray as xr; ds=xr.open_dataset(\"data.nc\"); print(ds)"`
@@ -74,6 +96,10 @@ Process climate and weather datasets.
 ### emissions-accounting
 Compute and report emissions metrics.
 
+**Parameters:**
+- `dataset` (string): Emissions dataset path
+- `unit` (string): Units: tCO2e, kgCO2e, or MtCO2e
+
 **Commands:**
 - `python -c "import pandas as pd; df=pd.read_csv(\"emissions.csv\"); df[\"co2e\"]=df.co2*df.gwp; print(df.groupby(\"sector\").co2e.sum())"`
 - `python -m venv .venv && source .venv/bin/activate`
@@ -83,3 +109,8 @@ Compute and report emissions metrics.
 **Examples:**
 - python -c "import pandas as pd; df=pd.read_csv(\"emissions.csv\"); print(df.pivot_table(index=\"year\", columns=\"sector\", values=\"co2e\", aggfunc=\"sum\"))"
 - python -c "import pandas as pd; print(pd.read_excel(\"report.xlsx\"))"
+
+## References
+- [xarray Docs](https://docs.xarray.dev)
+- [Rasterio Docs](https://rasterio.readthedocs.io)
+- [IPCC GWP Values](https://www.ipcc.ch/report/ar6/wg1/)

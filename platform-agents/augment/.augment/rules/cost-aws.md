@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Analyzes and reduces AWS spend with Cost Explorer, Budgets, Compute Optimizer, and Cost Optimization Hub CLI queries."
+description: "Analyzes and reduces AWS spend with Cost Explorer, Budgets, Compute Optimizer, and Cost Optimization Hub CLI queries. Use when working with cost explorer, optimization, cost aws or when the user mentions cost explorer, optimization, cost aws."
 ---
-
-# Cost Aws
 
 Analyzes and reduces AWS spend with Cost Explorer, Budgets, Compute Optimizer, and Cost Optimization Hub CLI queries.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `aws ce get-cost-and-usage --time-period Start=2026-07-01,End`, `aws cost-optimization-hub list-recommendations --category Co`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # AWS Cost Optimization
 
@@ -74,6 +92,11 @@ aws ce get-anomaly-monitors
 ### cost-explorer
 Query AWS cost and usage data, forecasts, and reservations via the ce API.
 
+**Parameters:**
+- `time-period` (string): Start and end dates in YYYY-MM-DD format
+- `granularity` (string): DAILY, MONTHLY, or HOURLY aggregation
+- `metrics` (string): Metrics like UnblendedCost, BlendedCost, UsageQuantity
+
 **Commands:**
 - `aws ce get-cost-and-usage --time-period Start=2026-07-01,End=2026-08-01 --granularity MONTHLY --metrics UnblendedCost --group-by Type=DIMENSION,Key=SERVICE`
 - `aws ce get-cost-forecast --time-period Start=2026-08-01,End=2026-09-01 --metric UNBLENDED_COST --granularity MONTHLY`
@@ -89,6 +112,11 @@ Query AWS cost and usage data, forecasts, and reservations via the ce API.
 ### optimization
 Find rightsizing and cost optimization recommendations.
 
+**Parameters:**
+- `category` (string): Optimization category: Compute, Storage, License
+- `account-ids` (string): AWS account id list to scan
+- `implementation-effort` (string): Low, Medium, High effort filter for recommendations
+
 **Commands:**
 - `aws cost-optimization-hub list-recommendations --category Compute`
 - `aws compute-optimizer get-ec2-instance-recommendations --account-ids 123456789012`
@@ -100,3 +128,8 @@ Find rightsizing and cost optimization recommendations.
 - aws cost-optimization-hub list-recommendations --category Storage --implementation-effort High | jq '.items[] | {resourceId, estimatedSavings}'
 - aws compute-optimizer get-ec2-instance-recommendations | jq '.instanceRecommendations[] | {instanceArn, finding}'
 - aws budgets describe-budgets --account-id 123456789012 --budget-type COST
+
+## References
+- [AWS Cost Management Docs](https://docs.aws.amazon.com/cost-management/)
+- [Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/)
+- [Cost Optimization Hub](https://docs.aws.amazon.com/aws-cost-management/latest/userguide/cost-optimization-hub.html)

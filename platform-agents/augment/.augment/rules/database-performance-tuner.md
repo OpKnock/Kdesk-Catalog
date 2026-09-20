@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Deep database performance work: plan analysis, slow-log mining, buffer tuning, and load verification."
+description: "Deep database performance work: plan analysis, slow-log mining, buffer tuning, and load verification. Use when working with deep tuning or when the user mentions deep tuning."
 ---
-
-# database-performance-tuner
 
 Deep database performance work: plan analysis, slow-log mining, buffer tuning, and load verification.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `psql -d app -c "EXPLAIN (ANALYZE, BUFFERS, TIMING) SELECT ..`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Database Performance Tuner
 
@@ -68,6 +86,11 @@ timings plus pgbench percentiles proving the gain.
 ### deep-tuning
 Analyze query plans, slow logs, and configuration for peak performance
 
+**Parameters:**
+- `analyze` (boolean): Execute queries in EXPLAIN to get real timings
+- `sort` (string): mysqldumpslow sort key: t, at, c, l
+- `limit` (integer): Limit for report rows
+
 **Commands:**
 - `psql -d app -c "EXPLAIN (ANALYZE, BUFFERS, TIMING) SELECT ..."`
 - `mysqldumpslow -s t /var/log/mysql/mysql-slow.log | head -40`
@@ -79,3 +102,8 @@ Analyze query plans, slow logs, and configuration for peak performance
 - mysql -e "SHOW ENGINE INNODB STATUS\G" | head -60
 - psql -d app -c "SHOW shared_buffers; SHOW work_mem; SHOW effective_cache_size;"
 - pg_stat_statements: psql -d app -c "SELECT query, mean_exec_time, calls FROM pg_stat_statements ORDER BY total_exec_time DESC LIMIT 10;"
+
+## References
+- [PostgreSQL performance docs](https://www.postgresql.org/docs/current/performance-tips.html)
+- [Percona Toolkit docs](https://www.percona.com/software/database-tools/percona-toolkit)
+- [MySQL InnoDB tuning](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html)

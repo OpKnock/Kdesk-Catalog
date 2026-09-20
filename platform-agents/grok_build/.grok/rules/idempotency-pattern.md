@@ -1,8 +1,26 @@
-# Idempotency Pattern
-
 Implement request deduplication using Idempotency-Key headers, atomic Redis SET NX EX operations, and database unique constraints to make retries safe for payment and order endpoints.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `curl -X POST -H "Idempotency-Key: 7d1a-4f2b" http://localhos`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Idempotency Patterns
 
@@ -78,6 +96,11 @@ Agent: Add a server-side Idempotency-Key claim:
 ### dedup-patterns
 Implement request deduplication with headers, Redis atomic ops, and DB constraints.
 
+**Parameters:**
+- `key` (string): Client-supplied idempotency key.
+- `ttl` (integer): Dedup window in seconds.
+- `header_name` (string): Header carrying the key, default Idempotency-Key.
+
 **Commands:**
 - `curl -X POST -H "Idempotency-Key: 7d1a-4f2b" http://localhost:8080/payments`
 - `redis-cli SET idem:pay:7d1a created NX EX 3600`
@@ -89,3 +112,7 @@ Implement request deduplication with headers, Redis atomic ops, and DB constrain
 - redis-cli SET idem:pay:7d1a done EX 3600 NX && echo claimed
 - curl -s -X POST -H "Idempotency-Key: k-1" http://localhost:8080/payments -o r1.json && curl -s -X POST -H "Idempotency-Key: k-1" http://localhost:8080/payments -o r2.json && diff r1.json r2.json
 - mysql -e "ALTER TABLE payments ADD UNIQUE KEY uk_idem (idempotency_key);"
+
+## References
+- [IETF Idempotency-Key Draft](https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/)
+- [Redis SET command](https://redis.io/commands/set/)

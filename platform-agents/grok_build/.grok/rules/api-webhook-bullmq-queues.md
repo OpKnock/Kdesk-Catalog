@@ -1,8 +1,26 @@
-# Api Webhook Bullmq Queues
-
 Builds reliable webhook delivery with queues: BullMQ workers, Redis persistence, dead-letter handling, and delivery monitoring.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install bullmq ioredis`, `node -e "const {Queue}=require('bullmq'); const q=new Queue(`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Webhook v4 - Reliability
 
@@ -51,6 +69,11 @@ new Worker('webhook-delivery', async (job) => {
 ### bullmq-queues
 Queue webhook deliveries with BullMQ
 
+**Parameters:**
+- `queue-name` (string): Queue name
+- `job` (string): Job type
+- `payload` (object): Job data
+
 **Commands:**
 - `npm install bullmq ioredis`
 - `node -e "const {Queue}=require('bullmq'); const q=new Queue('webhook-delivery'); q.add('order.created',{id:1}).then(j=>console.log('job',j.id))"`
@@ -75,3 +98,7 @@ Monitor retries and dead letters
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [BullMQ Docs](https://docs.bullmq.io/)
+- [Redis Docs](https://redis.io/docs/latest/)

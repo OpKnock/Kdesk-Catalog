@@ -1,13 +1,35 @@
 ---
 name: "azure-functions"
-description: "Builds, tests, and ships serverless functions on Azure using Core Tools: initializes projects, scaffolds HTTP and timer triggers, runs the local emulator, publishes to function apps, and validates endpoints with curl."
+description: "Builds, tests, and ships serverless functions on Azure using Core Tools: initializes projects, scaffolds HTTP and timer triggers, runs the local emulator, publishes to function apps, and validates endpoints with curl. Use when working with local dev, publish, test function, api or when the user mentions local dev, publish, test function, api."
+license: "MIT"
+compatibility: "Requires func. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(az:*) Bash(curl:*) Bash(func:*)"
 ---
-
-# Azure Functions
 
 Builds, tests, and ships serverless functions on Azure using Core Tools: initializes projects, scaffolds HTTP and timer triggers, runs the local emulator, publishes to function apps, and validates endpoints with curl.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `func new --template "HttpTrigger" --name MyFunction`, `func azure functionapp publish MyFunctionApp`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Azure Functions
 
@@ -60,6 +82,11 @@ curl -s "https://api.your-app.test/api/MyFunction?name=azure"
 ### local-dev
 Create and run functions locally with Core Tools.
 
+**Parameters:**
+- `template` (string): Trigger template (HttpTrigger, TimerTrigger, etc.)
+- `runtime` (string): node, python, dotnet, java, powershell
+- `port` (number): Local runtime port
+
 **Commands:**
 - `func new --template "HttpTrigger" --name MyFunction`
 - `func new --template "TimerTrigger" --name DailyJob --runtime node`
@@ -74,6 +101,10 @@ Create and run functions locally with Core Tools.
 
 ### publish
 Deploy functions to Azure.
+
+**Parameters:**
+- `app_name` (string): Function app name in Azure
+- `publish_settings` (boolean): Publish local app settings
 
 **Commands:**
 - `func azure functionapp publish MyFunctionApp`
@@ -90,6 +121,10 @@ Deploy functions to Azure.
 ### test-function
 Invoke functions locally and in Azure.
 
+**Parameters:**
+- `url` (string): Function URL
+- `query` (string): Query parameters
+
 **Commands:**
 - `curl -X POST http://localhost:7071/api/MyFunction -d '{"name":"test"}'`
 - `curl -s http://localhost:7071/api/MyFunction?name=world`
@@ -101,3 +136,8 @@ Invoke functions locally and in Azure.
 - curl -s "http://localhost:7071/api/MyFunction?name=world"
 - curl -s "https://api.your-app.test/api/MyFunction?name=azure"
 - func start --functions MyFunction --verbose
+
+## References
+- [Azure Functions Docs](https://learn.microsoft.com/en-us/azure/azure-functions/)
+- [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local)
+- [HTTP Trigger Reference](https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-http-webhook-trigger)

@@ -1,13 +1,35 @@
 ---
 name: "openapi-documentation-builder"
-description: "Builds comprehensive OpenAPI/Swagger documentation with validation, code generation, and interactive publishing. Authors specs with reusable components, generates typed clients for multiple languages, and deploys Redoc/Swagger UI documentation sites."
+description: "Builds comprehensive OpenAPI/Swagger documentation with validation, code generation, and interactive publishing. Authors specs with reusable components, generates typed clients for multiple languages, and deploys Redoc/Swagger UI documentation sites. Use when working with spec authoring, client generation, documentation publishing, openapi or when the user mentions spec authoring, client generation, documentation publishing, openapi."
+license: "MIT"
+compatibility: "No special requirements."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(npx:*) Bash(openapi-generator-cli:*) Bash(redoc-cli:*) Bash(redocly:*) Bash(spectral:*) Bash(swagger-cli:*) Bash(swagger-ui-serve:*)"
 ---
-
-# OpenAPI Documentation Builder
 
 Builds comprehensive OpenAPI/Swagger documentation with validation, code generation, and interactive publishing. Authors specs with reusable components, generates typed clients for multiple languages, and deploys Redoc/Swagger UI documentation sites.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `swagger-cli validate openapi.yaml`, `openapi-generator-cli generate -i openapi.yaml -g typescript`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # OpenAPI Documentation Builder
 
@@ -130,6 +152,10 @@ rules:
 ### spec-authoring
 Authors OpenAPI 3.1 documents with reusable components, security schemes, and examples.
 
+**Parameters:**
+- `spec_path` (string): Path to OpenAPI document
+- `ruleset` (string): Spectral ruleset for validation
+
 **Commands:**
 - `swagger-cli validate openapi.yaml`
 - `spectral lint openapi.yaml --ruleset=spectral:oas`
@@ -142,6 +168,11 @@ Authors OpenAPI 3.1 documents with reusable components, security schemes, and ex
 
 ### client-generation
 Generates typed client SDKs, server stubs, and TypeScript types from validated OpenAPI specs.
+
+**Parameters:**
+- `spec_path` (string): Path to validated OpenAPI spec
+- `generator` (string): Generator name (typescript-axios, python-fastapi, go, kotlin-spring, java-spring)
+- `output_dir` (string): Output directory
 
 **Commands:**
 - `openapi-generator-cli generate -i openapi.yaml -g typescript-axios -o ./client/ts`
@@ -159,6 +190,11 @@ Generates typed client SDKs, server stubs, and TypeScript types from validated O
 ### documentation-publishing
 Builds and deploys interactive API documentation with Redoc and Swagger UI.
 
+**Parameters:**
+- `spec_path` (string): Path to OpenAPI document
+- `output_dir` (string): Output directory for built docs
+- `tool` (string): Documentation tool (redoc, redocly, swagger-ui)
+
 **Commands:**
 - `redoc-cli bundle openapi.yaml -o docs/index.html`
 - `redocly build-docs openapi.yaml -o ./docs`
@@ -170,3 +206,10 @@ Builds and deploys interactive API documentation with Redoc and Swagger UI.
 - redocly build-docs ./api/openapi.yaml -o ./docs
 - swagger-ui-serve ./api/openapi.yaml -p 8080
 - npx @redocly/cli preview-docs ./api/openapi.yaml
+
+## References
+- [OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0)
+- [OpenAPI Generator](https://openapi-generator.tech/docs/generators)
+- [Redoc Documentation](https://redocly.com/docs/redoc/)
+- [Redocly CLI](https://redocly.com/docs/cli/)
+- [Spectral Linting](https://meta.stoplight.io/docs/spectral)

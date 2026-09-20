@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Detects hardcoded secrets in git history and files with gitleaks, including CI-safe configs and custom allowlists."
+description: "Detects hardcoded secrets in git history and files with gitleaks, including CI-safe configs and custom allowlists. Use when working with secret detection, config and ci, security or when the user mentions secret detection, config and ci, security."
 ---
-
-# gitleaks
 
 Detects hardcoded secrets in git history and files with gitleaks, including CI-safe configs and custom allowlists.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `gitleaks detect --source . -v`, `gitleaks generate`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # gitleaks
 
@@ -76,6 +94,11 @@ paths = ['''fixtures/.*''']
 ### secret-detection
 Scan working trees, git history, and stashes for leaked secrets.
 
+**Parameters:**
+- `source` (string): Directory or repo to scan
+- `logOpts` (string): Git log options to limit scan range
+- `redact` (boolean): Mask secret values in output
+
 **Commands:**
 - `gitleaks detect --source . -v`
 - `gitleaks git --log-opts="--all"`
@@ -91,6 +114,10 @@ Scan working trees, git history, and stashes for leaked secrets.
 ### config-and-ci
 Generate baseline configs and run gitleaks in CI workflows.
 
+**Parameters:**
+- `config` (string): Custom config TOML path
+- `reportPath` (string): Output report file path
+
 **Commands:**
 - `gitleaks generate`
 - `gitleaks detect --source . --config gitleaks.toml`
@@ -102,3 +129,7 @@ Generate baseline configs and run gitleaks in CI workflows.
 - gitleaks generate > gitleaks.toml
 - gitleaks protect --staged
 - gitleaks detect --source . --report-path gitleaks-report.json
+
+## References
+- [gitleaks GitHub](https://github.com/gitleaks/gitleaks)
+- [gitleaks Configuration](https://github.com/gitleaks/gitleaks#configuration)

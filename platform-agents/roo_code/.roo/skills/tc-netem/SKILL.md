@@ -1,13 +1,35 @@
 ---
 name: "tc-netem"
-description: "Simulate network faults with the Linux tc netem qdisc to test API client resilience. Injects latency with jitter, packet loss, duplication, and corruption on any interface, then measures the impact with ping or curl timing. Removes faults instantly after testing."
+description: "Simulate network faults with the Linux tc netem qdisc to test API client resilience. Injects latency with jitter, packet loss, duplication, and corruption on any interface, then measures the impact with ping or curl timing. Removes faults instantly after testing. Use when working with netem injection, api or when the user mentions netem injection, api."
+license: "MIT"
+compatibility: "Requires ping."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(ping:*) Bash(tc:*)"
 ---
-
-# Tc Netem
 
 Simulate network faults with the Linux tc netem qdisc to test API client resilience. Injects latency with jitter, packet loss, duplication, and corruption on any interface, then measures the impact with ping or curl timing. Removes faults instantly after testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `tc qdisc add dev eth0 root netem delay 100ms 20ms distributi`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # tc netem
 
@@ -69,6 +91,11 @@ tc qdisc del dev eth0 root
 ### netem-injection
 Simulate network faults with tc netem qdiscs
 
+**Parameters:**
+- `delay_ms` (integer): Base latency in milliseconds
+- `loss_percent` (float): Packet loss percentage
+- `jitter_ms` (integer): Delay variation around the base
+
 **Commands:**
 - `tc qdisc add dev eth0 root netem delay 100ms 20ms distribution normal`
 - `tc qdisc change dev eth0 root netem loss 10%`
@@ -81,3 +108,7 @@ Simulate network faults with tc netem qdiscs
 - tc qdisc change dev eth0 root netem loss 25%
 - tc qdisc add dev eth0 root netem delay 200ms
 - tc qdisc del dev eth0 root
+
+## References
+- [tc-netem man page](https://man7.org/linux/man-pages/man8/tc-netem.8.html)
+- [Linux tc man page](https://man7.org/linux/man-pages/man8/tc.8.html)

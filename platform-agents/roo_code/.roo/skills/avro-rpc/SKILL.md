@@ -1,13 +1,35 @@
 ---
 name: "avro-rpc"
-description: "Implements RPC services with Apache Avro: schema compilation, avro-tools operations, and Java RPC server/client testing."
+description: "Implements RPC services with Apache Avro: schema compilation, avro-tools operations, and Java RPC server/client testing. Use when working with schema tools, rpc protocol, java server, api or when the user mentions schema tools, rpc protocol, java server, api."
+license: "MIT"
+compatibility: "Requires java, mvn. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(java:*) Bash(mvn:*)"
 ---
-
-# Avro Rpc
 
 Implements RPC services with Apache Avro: schema compilation, avro-tools operations, and Java RPC server/client testing.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `java -jar avro-tools.jar compile schema user.avsc .`, `java -jar avro-tools.jar compile protocol chat.avpr .`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Avro RPC
 
@@ -64,6 +86,10 @@ protocol Chat {
 ### schema-tools
 Compile schemas and convert data with avro-tools.
 
+**Parameters:**
+- `schema_file` (string): Avro schema .avsc file
+- `output_dir` (string): Directory for compiled classes
+
 **Commands:**
 - `java -jar avro-tools.jar compile schema user.avsc .`
 - `java -jar avro-tools.jar tojson user.avro`
@@ -79,6 +105,10 @@ Compile schemas and convert data with avro-tools.
 ### rpc-protocol
 Define and compile RPC protocols with avro-tools.
 
+**Parameters:**
+- `protocol_file` (string): .avpr protocol file or .avdl IDL
+- `output_dir` (string): Output for generated stubs
+
 **Commands:**
 - `java -jar avro-tools.jar compile protocol chat.avpr .`
 - `java -jar avro-tools.jar idl src/main/avro/chat.avdl chat.avpr`
@@ -93,6 +123,10 @@ Define and compile RPC protocols with avro-tools.
 ### java-server
 Build and test a Java Avro RPC server.
 
+**Parameters:**
+- `main_class` (string): Server/client main class
+- `port` (number): RPC server port (default 8080)
+
 **Commands:**
 - `mvn package`
 - `mvn exec:java -Dexec.mainClass=com.example.ChatServer`
@@ -104,3 +138,8 @@ Build and test a Java Avro RPC server.
 - mvn package && java -jar target/chat-rpc-1.0.jar server
 - mvn exec:java -Dexec.mainClass=com.example.ChatClient -Dexec.args=localhost
 - mvn test -Dtest=ChatRpcTest
+
+## References
+- [Apache Avro Docs](https://avro.apache.org/docs/current/)
+- [Avro Spec](https://avro.apache.org/docs/current/specification/)
+- [avro-tools Reference](https://avro.apache.org/docs/current/getting-started-java/)

@@ -1,8 +1,26 @@
-# Terraform
-
 Writes and applies Terraform configurations: init, plan, apply, format, validate, workspaces, providers, and outputs.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `terraform init`, `terraform get -update`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Terraform Operations
 
@@ -60,6 +78,10 @@ terraform console
 ### core-workflow
 Initialize, plan, apply, and destroy infrastructure.
 
+**Parameters:**
+- `plan-file` (string): Saved plan file
+- `dir` (string): Config directory
+
 **Commands:**
 - `terraform init`
 - `terraform plan -out plan.tfplan`
@@ -76,6 +98,10 @@ Initialize, plan, apply, and destroy infrastructure.
 ### modules-and-workspaces
 Work with modules, workspaces, outputs, and provider configs.
 
+**Parameters:**
+- `workspace` (string): Workspace name
+- `output` (string): Output name to query
+
 **Commands:**
 - `terraform get -update`
 - `terraform workspace new prod`
@@ -88,3 +114,8 @@ Work with modules, workspaces, outputs, and provider configs.
 - terraform get -update
 - terraform workspace select prod
 - terraform output -json
+
+## References
+- [Terraform Documentation](https://developer.hashicorp.com/terraform/docs)
+- [Terraform Language](https://developer.hashicorp.com/terraform/language)
+- [Terraform Registry](https://registry.terraform.io/)

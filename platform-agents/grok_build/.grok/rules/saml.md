@@ -1,8 +1,26 @@
-# Saml
-
 Expert SAML 2.0 reference covering signing and verifying assertions with xmlsec1, base64-decoding SAMLResponses, exchanging metadata, and wiring SP-initiated login.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `xmlsec1 --verify --pubkey-cert-pem sp-cert.pem saml-response`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # SAML 2.0
 
@@ -63,6 +81,11 @@ xmlsec1 --verify --pubkey-cert-pem idp-cert.pem response.xml
 ### saml-assertion-tooling
 Sign, verify, and decode SAML assertions with xmlsec1 and openssl
 
+**Parameters:**
+- `cert_file` (string): PEM certificate used for verification
+- `key_file` (string): Private key used for signing
+- `acs_url` (string): Assertion Consumer Service endpoint
+
 **Commands:**
 - `xmlsec1 --verify --pubkey-cert-pem sp-cert.pem saml-response.xml`
 - `xmlsec1 --sign --privkey-pem idp-key.pem --pubkey-pem idp-cert.pem --output signed.xml unsigned-assertion.xml`
@@ -74,3 +97,7 @@ Sign, verify, and decode SAML assertions with xmlsec1 and openssl
 - python -c 'import base64; print(base64.b64decode(open("saml-response.b64").read()).decode())'
 - xmlsec1 --verify --pubkey-cert-pem sp-cert.pem signed.xml
 - curl -d "SAMLResponse=$(cat saml-response.b64)" https://app.your-app.test/acs
+
+## References
+- [xmlsec1 documentation](https://www.aleksey.com/xmlsec/api.html)
+- [SAML V2.0 standard](https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf)

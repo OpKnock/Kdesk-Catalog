@@ -1,13 +1,31 @@
 ---
 type: agent_requested
-description: "Tests generated API SDKs: unit tests for clients, mock-server integration tests, generated code quality gates, and regression suites."
+description: "Tests generated API SDKs: unit tests for clients, mock-server integration tests, generated code quality gates, and regression suites. Use when working with sdk unit tests, integration tests or when the user mentions sdk unit tests, integration tests."
 ---
-
-# Api Sdk Unit Tests
 
 Tests generated API SDKs: unit tests for clients, mock-server integration tests, generated code quality gates, and regression suites.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npm install vitest`, `npx @stoplight/prism-cli mock openapi.yaml -p 4010 &`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API SDK Engineer v2 - Testing
 
@@ -61,6 +79,11 @@ test('lists users', async () => {
 ### sdk-unit-tests
 Write unit tests for SDK client code
 
+**Parameters:**
+- `test-file` (string): Test file path
+- `mock-target` (string): URL intercepted by nock
+- `coverage` (boolean): Collect coverage
+
 **Commands:**
 - `npm install vitest`
 - `npx vitest run tests/sdk.test.ts`
@@ -85,3 +108,7 @@ Run SDKs against a live mock server
 **Examples:**
 - -cli --help
 - -api --help
+
+## References
+- [Vitest Docs](https://vitest.dev/guide/)
+- [nock Docs](https://github.com/nock/nock)

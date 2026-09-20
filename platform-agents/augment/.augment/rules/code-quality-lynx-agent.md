@@ -1,11 +1,33 @@
 ---
 type: agent_requested
-description: "Security auditing for Solidity smart contracts. Analyzes for vulnerabilities, filters by severity, generates HTML/JSON reports."
+description: "Security auditing for Solidity smart contracts. Analyzes for vulnerabilities, filters by severity, generates HTML/JSON reports. Use when working with audit solidity, code quality, agent or when the user mentions audit solidity, code quality, agent."
 ---
 
 # Code Quality Lynx Agent
 
 Security auditing for Solidity smart contracts. Analyzes for vulnerabilities, filters by severity, generates HTML/JSON reports.
+
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `lynx analyze contract.sol`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 ## Instructions
 
@@ -36,6 +58,12 @@ Configure via lynx.yaml for rule exclusions, severity thresholds, and output set
 ### audit-solidity
 Security audit Solidity smart contracts with Lynx
 
+**Parameters:**
+- `contract` (string): Solidity contract file to analyze
+- `format` (string): Output format (text, json, html)
+- `threshold` (string): Minimum severity (low, medium, high, critical)
+- `output` (string): Output file path for HTML report
+
 **Commands:**
 - `lynx analyze contract.sol`
 - `lynx analyze --format json contract.sol`
@@ -47,3 +75,10 @@ Security audit Solidity smart contracts with Lynx
 - lynx analyze --format json MyContract.sol > lynx-report.json
 - lynx analyze --threshold high MyContract.sol
 - lynx analyze --output report.html MyContract.sol
+
+## References
+- [Lynx Documentation](https://github.com/ConsenSys/lynx)
+- [Lynx Rules](https://github.com/ConsenSys/lynx/wiki/Rules)
+- [Output Formats](https://github.com/ConsenSys/lynx/wiki/Output-Formats)
+- [CI Integration](https://github.com/ConsenSys/lynx/wiki/CI-Integration)
+- [False Positive Handling](https://github.com/ConsenSys/lynx/wiki/False-Positives)

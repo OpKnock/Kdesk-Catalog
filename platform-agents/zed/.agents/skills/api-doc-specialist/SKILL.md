@@ -1,13 +1,35 @@
 ---
 name: "api-doc-specialist"
-description: "Deep expertise in API documentation quality: spec consistency, example correctness, and docs-as-code workflows."
+description: "Deep expertise in API documentation quality: spec consistency, example correctness, and docs-as-code workflows. Use when working with doc quality, example verification or when the user mentions doc quality, example verification."
+license: "MIT"
+compatibility: "Requires swagger-cli, redoc-cli, openapi-generator, stoplight-studio, postman. Needs network access."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "backend"}
+allowed-tools: "Glob Grep Read Bash(curl:*) Bash(node:*) Bash(npm:*) Bash(npx:*) Bash(prism:*) Bash(python:*) Bash(redocly:*)"
 ---
-
-# api-doc-specialist
 
 Deep expertise in API documentation quality: spec consistency, example correctness, and docs-as-code workflows.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `npx @stoplight/spectral-cli lint -r doc-rules.yaml openapi.y`, `prism mock openapi.yaml -p 4010`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # API Doc Specialist
 
@@ -50,6 +72,10 @@ Run prism mock and click through generated docs.
 ### doc-quality
 Lint specs for documentation completeness: descriptions, examples, and summaries
 
+**Parameters:**
+- `spec` (string): OpenAPI spec path
+- `ruleset` (string): Doc-focused ruleset
+
 **Commands:**
 - `npx @stoplight/spectral-cli lint -r doc-rules.yaml openapi.yaml`
 - `redocly lint openapi.yaml --extends=recommended`
@@ -65,6 +91,10 @@ Lint specs for documentation completeness: descriptions, examples, and summaries
 ### example-verification
 Verify every documented example is correct with a mock server
 
+**Parameters:**
+- `spec` (string): OpenAPI spec path
+- `port` (string): Mock server port
+
 **Commands:**
 - `prism mock openapi.yaml -p 4010`
 - `curl -s http://localhost:4010/api/products | python -m json.tool`
@@ -76,3 +106,7 @@ Verify every documented example is correct with a mock server
 - prism mock openapi.yaml -p 4010 && curl -s http://localhost:4010/api/products | python -m json.tool
 - prism proxy http://localhost:3000/api http://localhost:4010
 - curl -s -o /dev/null -w 'status=%{http_code}\n' http://localhost:4010/api/products/1
+
+## References
+- [Redocly Lint Rules](https://redocly.com/docs/rules/)
+- [Prism](https://meta.stoplight.io/docs/prism)

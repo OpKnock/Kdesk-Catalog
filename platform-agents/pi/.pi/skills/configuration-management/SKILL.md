@@ -1,13 +1,35 @@
 ---
 name: "configuration-management"
-description: "Manage API server and service configuration with Ansible playbooks, roles, and config validation commands."
+description: "Manage API server and service configuration with Ansible playbooks, roles, and config validation commands. Use when working with ansible playbooks, roles and config, api or when the user mentions ansible playbooks, roles and config, api."
+license: "MIT"
+compatibility: "Requires ansible, ansible-config, ansible-galaxy, ansible-playbook."
+metadata: {"author": "Kdesk", "version": "2.0.0", "category": "api"}
+allowed-tools: "Glob Grep Read Bash(ansible:*) Bash(ansible-config:*) Bash(ansible-galaxy:*) Bash(ansible-playbook:*)"
 ---
-
-# Configuration Management
 
 Manage API server and service configuration with Ansible playbooks, roles, and config validation commands.
 
-## Instructions
+## Agentic Workflow: Read -> Reason -> Act
+
+You are an AI agent that **Reads, Reasons, and Acts** — not a chatbot. Follow this loop for every task:
+
+### 1. Read
+Gather context before acting:
+- Read relevant files with `Read`, `Glob`, `Grep` (never assume structure)
+- Domain context: `ansible --version`, `ansible-galaxy init api-config-role`
+- Check `knowledge` references and prerequisites before proceeding
+
+### 2. Reason
+Analyze and plan:
+- Compare current state vs desired state (drift, checksums, policy)
+- Evaluate trust, compatibility, and risk: use `kdesk trust` and `kdesk doctor` patterns
+- Decide: which capabilities/tools are needed, which can be skipped
+
+### 3. Act
+Execute with guards:
+- Run only `allowed-tools` (see frontmatter); use `safe_path` for writes
+- Prefer `Bash` with explicit binaries (`curl`, `kubectl`, `kdesk`) over generic shell
+- Record evidence: file paths, checksums, and tool outputs for verification
 
 # Configuration Management
 
@@ -94,6 +116,11 @@ ansible -i inventory.ini web -m copy -a "src=nginx.conf dest=/etc/nginx/nginx.co
 ### ansible-playbooks
 Write and run Ansible playbooks to deploy and configure API services
 
+**Parameters:**
+- `inventory` (string): Path to inventory file such as inventory.ini
+- `playbook` (string): Path to the playbook yaml file
+- `extra_vars` (string): Extra variables in key=value form via -e
+
 **Commands:**
 - `ansible --version`
 - `ansible-playbook -i inventory.ini site.yml --check`
@@ -108,6 +135,10 @@ Write and run Ansible playbooks to deploy and configure API services
 ### roles-and-config
 Create reusable roles and manage templated configuration files
 
+**Parameters:**
+- `role_name` (string): Name of the role to scaffold
+- `template` (string): Jinja2 template path
+
 **Commands:**
 - `ansible-galaxy init api-config-role`
 - `ansible-galaxy role install geerlingguy.nginx`
@@ -118,3 +149,7 @@ Create reusable roles and manage templated configuration files
 - ansible-galaxy init api-config-role
 - ansible -i inventory.ini web -m copy -a "src=nginx.conf dest=/etc/nginx/nginx.conf backup=yes"
 - ansible -i inventory.ini web -m template -a "src=app.conf.j2 dest=/etc/app/config.json mode=0644"
+
+## References
+- [Ansible Documentation](https://docs.ansible.com/ansible/latest/)
+- [Ansible Galaxy](https://galaxy.ansible.com/)
